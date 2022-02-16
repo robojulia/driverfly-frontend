@@ -1,13 +1,13 @@
 import "../public/css/owl.carousel.css";
 import "../public/css/owl.theme.default.min.css";
 import "bootstrap/dist/css/bootstrap.css";
-// import "../public/css/bootstrap.min.css";
 import "../public/css/style.css";
 import "../public/css/responsive.css";
 
 import { useEffect } from "react";
 
 function MyApp({ Component, pageProps }) {
+
   const getLayout = Component.getLayout || ((page) => page)
 
   useEffect(() => {

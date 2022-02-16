@@ -5,16 +5,16 @@
   "devFiles": [],
   "ampDevFiles": [],
   "lowPriorityFiles": [
-    "static/_FIjMZE2t522mgU0xJ0Kb/_buildManifest.js",
-    "static/_FIjMZE2t522mgU0xJ0Kb/_ssgManifest.js",
-    "static/_FIjMZE2t522mgU0xJ0Kb/_middlewareManifest.js"
+    "static/5aZRnUMA9QEy-VdW_WUt5/_buildManifest.js",
+    "static/5aZRnUMA9QEy-VdW_WUt5/_ssgManifest.js",
+    "static/5aZRnUMA9QEy-VdW_WUt5/_middlewareManifest.js"
   ],
   "pages": {
     "/": [
       "static/chunks/webpack-bef531b5ed7ae66f.js",
       "static/chunks/framework-91d7f78b5b4003c8.js",
       "static/chunks/main-7f8acbe569c9ddeb.js",
-      "static/chunks/57-3b77cb8ab2de0174.js",
+      "static/chunks/57-ff0edeaf42a52402.js",
       "static/chunks/pages/index-e771c508b5497960.js"
     ],
     "/_app": [
@@ -34,14 +34,14 @@
       "static/chunks/webpack-bef531b5ed7ae66f.js",
       "static/chunks/framework-91d7f78b5b4003c8.js",
       "static/chunks/main-7f8acbe569c9ddeb.js",
-      "static/chunks/57-3b77cb8ab2de0174.js",
+      "static/chunks/57-ff0edeaf42a52402.js",
       "static/chunks/pages/about-ca9d1b26c3e2eed6.js"
     ],
     "/find-jobs": [
       "static/chunks/webpack-bef531b5ed7ae66f.js",
       "static/chunks/framework-91d7f78b5b4003c8.js",
       "static/chunks/main-7f8acbe569c9ddeb.js",
-      "static/chunks/57-3b77cb8ab2de0174.js",
+      "static/chunks/57-ff0edeaf42a52402.js",
       "static/chunks/pages/find-jobs-32c6f7fe8850f041.js"
     ],
     "/index-old": [

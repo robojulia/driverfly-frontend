@@ -608,19 +608,16 @@ function Scripts() {
     return(/*#__PURE__*/ (0,jsx_runtime_.jsxs)(jsx_runtime_.Fragment, {
         children: [
             /*#__PURE__*/ jsx_runtime_.jsx((script_default()), {
-                src: "../public/js/jquery-3.4.1.min.js"
+                src: "js/jquery-3.4.1.min.js"
             }),
             /*#__PURE__*/ jsx_runtime_.jsx((script_default()), {
-                src: "../public/js/popper.min.js"
+                src: "js/popper.min.js"
             }),
             /*#__PURE__*/ jsx_runtime_.jsx((script_default()), {
-                src: "../public/js/customs.js"
+                src: "js/customs.js"
             }),
             /*#__PURE__*/ jsx_runtime_.jsx((script_default()), {
-                src: "../public/js/bootstrap.min.js"
-            }),
-            /*#__PURE__*/ jsx_runtime_.jsx((script_default()), {
-                src: "../public/js/owl.carousel.js"
+                src: "js/owl.carousel.js"
             }),
             /*#__PURE__*/ jsx_runtime_.jsx((script_default()), {
                 src: "https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"
