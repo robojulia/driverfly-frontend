@@ -8,7 +8,6 @@ export default function Scripts()
             <Script src="js/popper.min.js" />
             <Script src="js/customs.js" />
             <Script src="js/owl.carousel.js" />
-            <Script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js" />
         </>
     )
 }

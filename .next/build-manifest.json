@@ -5,9 +5,9 @@
   "devFiles": [],
   "ampDevFiles": [],
   "lowPriorityFiles": [
-    "static/5aZRnUMA9QEy-VdW_WUt5/_buildManifest.js",
-    "static/5aZRnUMA9QEy-VdW_WUt5/_ssgManifest.js",
-    "static/5aZRnUMA9QEy-VdW_WUt5/_middlewareManifest.js"
+    "static/WgEAXura--L7BkWyk2hj5/_buildManifest.js",
+    "static/WgEAXura--L7BkWyk2hj5/_ssgManifest.js",
+    "static/WgEAXura--L7BkWyk2hj5/_middlewareManifest.js"
   ],
   "pages": {
     "/": [
@@ -35,7 +35,7 @@
       "static/chunks/framework-91d7f78b5b4003c8.js",
       "static/chunks/main-7f8acbe569c9ddeb.js",
       "static/chunks/57-ff0edeaf42a52402.js",
-      "static/chunks/pages/about-ca9d1b26c3e2eed6.js"
+      "static/chunks/pages/about-1a529a286117ba82.js"
     ],
     "/find-jobs": [
       "static/chunks/webpack-bef531b5ed7ae66f.js",
