@@ -14,21 +14,42 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(997);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(689);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 
 
 
+
+// import "../public/css/bootstrap.min.css";
 
 
 
 function MyApp({ Component , pageProps  }) {
     const getLayout = Component.getLayout || ((page)=>page
     );
+    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{
+        Promise.resolve(/* import() */).then(__webpack_require__.t.bind(__webpack_require__, 64, 23));
+    }, []);
     return getLayout(/*#__PURE__*/ react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx(Component, {
         ...pageProps
     }));
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MyApp);
 
+
+/***/ }),
+
+/***/ 64:
+/***/ ((module) => {
+
+module.exports = require("bootstrap/dist/js/bootstrap");
+
+/***/ }),
+
+/***/ 689:
+/***/ ((module) => {
+
+module.exports = require("react");
 
 /***/ }),
 
