@@ -61,12 +61,13 @@ export default function Header()
                                 <ul className="d-flex align-items-center">
                                     <li><a href="#" className="nav-link"> <i className="fa fa-bell-o pt-1"
                                                                              aria-hidden="true"></i></a></li>
-                                    <li><a href="#" className="nav-link">
-                                        <button type="button" className="btn btn-primary">Login</button>
-                                    </a></li>
-                                    <li><a href="#" className="nav-link">
-                                        <button type="button" className="btn btn-primary">Sign Up</button>
-                                    </a></li>
+                                    <Link href="/login">
+                                       <button type="button" className="btn btn-primary mr-4">Login</button>
+                                    </Link>
+                                    <l1></l1>
+                                    <Link href="/signup">
+                                       <button type="button" className="btn btn-primary mr-4">Sign Up</button>
+                                    </Link>
                                 </ul>
                             </div>
                         </nav>
