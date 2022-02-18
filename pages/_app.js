@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import "../public/css/style.css";
 import "../public/css/responsive.css";
 
+
 import { useEffect } from "react";
 
 function MyApp({ Component, pageProps }) {

@@ -53,7 +53,11 @@ export default function Header()
                                             <li><a className="dropdown-item" href="#"> Request A Quote </a></li>
                                             <li><a className="dropdown-item" href="#"> Free Digital Application </a>
                                             </li>
-                                            <li><a className="dropdown-item" href="#"> Third Party Resources </a></li>
+                                            <li>
+                                                <Link href="/Third-Party-Resources">
+                                                  <a className="dropdown-item" href="#"> Third Party Resources </a>
+                                                </Link>
+                                            </li>
                                         </ul>
                                     </li>
 
