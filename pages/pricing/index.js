@@ -15,14 +15,63 @@ return (
         </div>
     </div>
 </div>
-    <div className={Pric.pricesec}>
-        
-
+   <div className="container mb-5 p-lg-2 p-0">
+        <p className="text-center mt-5 text-secondary">Are you a driver? <a className={Pric.link} href="#">Sign up</a> and apply to jobs for free</p>
+        <h2 className='text-center mt-5'>Motor Carrier Company Packages</h2>
     </div>
-        <div className="container mb-5 p-lg-2 p-0">
-            <p className="text-center mt-5 text-secondary">Are you a driver? <a className={Pric.link} href="#">Sign up</a> and apply to jobs for free</p>
-            <h2 className='text-center mt-5'>Motor Carrier Company Packages</h2>
+        <div className='container p-0'>
+        <div className={Pric.pricesec}>
+            <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"  />
+            </div>
+            <div className='row show'>
+                <div className='col'>
+                <div className={Pric.basic}>
+                   <h2 className='my-3'>Basic Subscription</h2>
+                   <p className='mb-3'> 1 complementary listing</p>
+                   <p className='mb-3'>Job distribution to major job boards</p>
+                   <p className='mb-3'>Track and contact applicants</p>
+                   <div className='pric-footer my-5'>
+                        <p className='mb-3'>You could…</p>
+                        <p className='mb-3'>Save 50 hours of recruiting per hire</p>
+                        <p className='mb-3'>Get tens of views per job*</p>
+                    </div>
+                    <button type="button" className='btn  w-100 p-3'>Get Started</button>
+                 </div>
+                 </div>
+                <div className='col'>
+                    <div className={Pric.premium}>
+                        <h2 className='my-3'>Premium Subscription</h2>
+                        <p className='mb-3'> 3 complementary listing</p>
+                        <p className='mb-3'>Job distribution to major job boards</p>
+                        <p className='mb-3'>Track and contact applicants</p>
+                        <p className='mb-3'>Promotion on social media platforms</p>
+                        <p className='mb-3'>Digital driver application</p>
+                        <div className='pric-footer my-5'>
+                            <p className='mb-3'>You could…</p>
+                            <p className='mb-3'>Save 25 hours of recruiting per hire</p>
+                            <p className='mb-3'>Get hundreds of views per job*</p>
+                        </div>
+                        <button type="button" className='btn bg-white w-100 p-3'>Get Started</button>
+                    </div>
+                 </div>
+                 <div className='col'>
+                   <h2 className='my-3'>Premium Subscription</h2>
+                   <p className='mb-3'> 3 complementary listing</p>
+                   <p className='mb-3'>Job distribution to major job boards</p>
+                   <p className='mb-3'>Track and contact applicants</p>
+                   <p className='mb-3'>Promotion on social media platforms</p>
+                   <p className='mb-3'>Digital driver application</p>
+                   <div className='pric-footer my-5'>
+                        <p className='mb-3'>You could…</p>
+                        <p className='mb-3'>Save 50 hours of recruiting per hire</p>
+                        <p className='mb-3'>Get tens of views per job*</p>
+                    </div>
+                    <button type="button" className='btn bg-white'>Get Started</button>
+                 </div>
+            </div>
         </div>
+    </div>    
         <div className="container">
             <p className='my-4'>* Resultant estimated benefits are as follows:</p>
             <div className="row">

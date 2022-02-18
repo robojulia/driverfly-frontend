@@ -26,13 +26,13 @@ return (
             <div className='col-lg-8'>
             <form action="/action_page.php" className={login.loginform}>
                 <div className="form-group">
-                    <input type="email" className="form-control" placeholder="Enter email" id="email" />
+                    <input type="email" className="form-control" placeholder="Username or email" id="email" />
                 </div>
                 <div className="form-group">
                     <input type="password" className="form-control" placeholder="Enter password" id="pwd" />
                 </div>
                 <div className="form-group form-check">
-                    <label className="form-check-label w-75">
+                    <label className="form-check-label w-50">
                     <input className="form-check-input" type="checkbox" /> Keep me signed in
                     </label>
                     <a href='#' className={login.pricol}>Lost Your Password?</a>
