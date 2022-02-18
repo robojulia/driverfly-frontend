@@ -32,7 +32,9 @@ document.addEventListener("DOMContentLoaded", function(){
     // end if innerWidth
     });
 
-
+    window.onload = function() {
+        
+     
 jQuery(document).ready(function(){
         // Add minus icon for collapse element which is open by default
         $(".collapse.show").each(function(){
@@ -99,7 +101,7 @@ jQuery(document).ready(function(){
     
 
 
-jQuery(document).ready(function($){
+jQuery(document).ready(function(){
     $('.owl-carousel').owlCarousel({
         loop:true,
         margin:10,
@@ -120,10 +122,8 @@ jQuery(document).ready(function($){
     });
 
 
+    $("#flexSwitchCheckChecked").click(function(){
+        $("p").toggleClass("main");
+      });
 
-
-
-
-
-
-    
+    }

@@ -7,7 +7,9 @@
 }
 .pricol{
     color: #2da2af;
-    margin-left: 32px;
+    width: 50%;
+    display: inline-block;
+    text-align: right;
 }
 .pricol:hover  {
     color: #000000;
@@ -15,7 +17,7 @@
 }
 
 .loginform input{
-    background:#2da2af;
+  padding: 25px 10px;
 }
 .submit{
     width: 100%;

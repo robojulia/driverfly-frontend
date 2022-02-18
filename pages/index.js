@@ -17,6 +17,7 @@ export default function Index() {
                             <h2>Choose from thousands of CDL and Non-CDL truck driving jobs. Get hired fast. Start Searching.</h2>
                         </div>
                           <div className="hero-search">
+                              
                             <div className="input-group w-25">
                                 <div className="input-group-prepend">
                                  <i className="fa fa-search" aria-hidden="true"></i>
@@ -30,8 +31,9 @@ export default function Index() {
                                     <span className="find-me"></span>
                                 </div>
                              </form>
+                             
                              <select className="form-control custom-sel" id="exampleFormControlSelect1">
-                                <option>All Types</option>
+                                 <option>All Types</option>
                                 <option>Solo (27)</option>
                                 <option>Team Drivers(4)</option>
                               </select>
@@ -342,6 +344,7 @@ export default function Index() {
             <div className="container how-it-work-sec">
                 <h3>How It Works</h3>
                 <h3>Drivers</h3>
+                
                <div className="row mb-4">
                    <div className="col-md-4">
                        <div className="card">
