@@ -695,7 +695,7 @@ export default function FindJobs() {
                         <div className="col-md-9 outer pl-4 ">
 
                             <form action="">
-                                <div className="filter-inner d-flex align-items-baseline pl-3 mt-2 ml-3">
+                                <div className="filter-inner d-flex align-items-baseline pl-lg-3 mt-lg-2 ml-lg-3">
                                     <i className="fa fa-map-marker" aria-hidden="true"></i>
                                     <input type="text" className="form-control border-0 w-25" placeholder="Location"/>
                                     <span className="find-me"></span>
