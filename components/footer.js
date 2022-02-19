@@ -1,3 +1,4 @@
+import Link from "next/link";
 
 export default function Footer() {
     return (
@@ -51,7 +52,9 @@ justify-content-md-end justify-content-center  ">
                                             <a className="nav-link" href="#">The DriverFly on the Wall Blog</a>
                                         </li>
                                         <li className="nav-item">
-                                            <a className="nav-link" href="#">Contact</a>
+                                            <Link href="./contact">
+                                              <a className="nav-link" >Contact</a>
+                                            </Link>
                                         </li>
                                     </ul>
                                 </div>
