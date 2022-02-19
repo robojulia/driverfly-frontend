@@ -6,7 +6,7 @@ export default function Contact() {
     return (
         <>
         <Head>
-            <title>Home - DriverFly</title>
+            <title>Contact - DriverFly</title>
         </Head>
 
 
