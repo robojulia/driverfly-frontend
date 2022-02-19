@@ -37,7 +37,12 @@ export default function Header()
                                         <a className="nav-link  dropdown-toggle" href="#"
                                            data-bs-toggle="dropdown"> Driver Resources</a>
                                         <ul className="dropdown-menu">
-                                            <li><a className="dropdown-item" href="#"> FAQ</a></li>
+                                            <li>
+                                                
+                                                <Link href="/faq">
+                                                    <a className="dropdown-item">FAQ</a>
+                                                </Link>
+                                            </li>
                                             <li><a className="dropdown-item" href="#"> Get Your CDL </a></li>
                                             <li><a className="dropdown-item" href="#"> Owner Operators </a></li>
                                             <li><a className="dropdown-item" href="#"> The DriverFly On The Wall
