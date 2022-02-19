@@ -997,7 +997,7 @@
      font-size: 18px;
  }
  .custom-tst .item {
-     width: 100%;
+     width: 70%;
      margin: auto;
  }
  .custom-tst button.owl-next {
@@ -1402,6 +1402,9 @@
      .custom-tst .item {
          width: 100%;
      }
+     .testimonial-sec .about-testominial .custom-tst .item{
+        width: 50px !important;
+     }
      .custom-tst button.owl-next {
          width: 40px;
          height: 40px;
@@ -1509,3 +1512,13 @@
      border-right: solid 0px;
  }
  }
+ .owl-carousel .owl-dots.disabled, .owl-carousel .owl-nav.disabled {
+     display: block !important;
+ }
+ .about-testominial .owl-nav .disabled{
+    display: none !important;
+ }
+ .form-switch #flexSwitchCheckChecked {
+    width: 2em !important;
+    font-size: 31px !important;
+}

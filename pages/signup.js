@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 import Layout from "../components/layouts";
 import SignupStyle from "../public/css/signup.module.css";
 export default function Signup()
@@ -23,8 +24,20 @@ export default function Signup()
             <div className={SignupStyle.banner}>
                 <div className="container">
                     <h1>Drivers, have access<br />to over 1,000 jobs for free.</h1>
-                    <p>Are you a motor carrier? View our pricing <a href="#"> here</a> or <a href="#">contact us</a> for an account.</p>
-                    <p>If you are already a user, login​<a href="#"> here.</a></p>
+                    <p>Are you a motor carrier? View our pricing 
+                        <Link href="/pricing">
+                            <a> here</a>
+                        </Link>
+                         or
+                         <Link href="/contact">
+                            <a> contact us</a>
+                        </Link> 
+                         for an account.</p>
+                    <p>If you are already a user, login​
+                         <Link href="/login">
+                            <a> here.</a>
+                        </Link> 
+                    </p>
                 </div>
             </div>
             <div className="container">
