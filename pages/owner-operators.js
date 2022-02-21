@@ -1,13 +1,37 @@
 import Link from 'next/link';
 import Layout from "../components/layouts";
+import Owneroperator from '../public/css/Owneroperator.module.css'
 
-export default function FindJobs() {
+
+export default function Owneroperators() {
     return (
         <>
+            <div className="top-links-sec">
+                <div className="container">
+                    <div className="top-links-inner d-flex align-items-center justify-content-between">
+                        <h2>Owner Operators</h2>
+                        <ul className="d-flex">
+                            <li><a href="index.html" className="nav-link text-dark px-0">Home <i className="fa fa-caret-right px-2" aria-hidden="true"></i></a></li>
+                            <li><a href="#" className="nav-link text-dark px-0">Owner Operators
+</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
             <div className="filter-sec">
                 <div className="container">
                     <div className="row">
-                        <div className="col-md-3">
+                    <div className="col-lg-8 mr-lg-5  mr-0 p-0 ">
+                    <div className={Owneroperator.owneroperators}>
+                   <h2 className="text-center text-white lg-pt-5 pt-3">Owner Operators</h2>
+                   <p className="mt-5 text-white">Are you looking to lease on to a Motor Carrier? We’ve got opportunities for you too!
+                    Go to the job search and select owner operator for job type.</p>
+                    <div className={Owneroperator.btn__custom}>
+                        <button className="form-control"className="bt btn-lg mt-5 text-center">Lease On To A Carrier</button>
+                    </div>
+                   </div>
+                    </div>
+                        <div className="col-12 col-lg-3 lg-mt-0 mt-5">
                             <h3>Filter Results</h3>
                             <form action="">
                                 <label className="heading-label my-4">Search Keywords </label>
@@ -72,14 +96,13 @@ export default function FindJobs() {
                                                         <div className="custom-control custom-radio">
                                                             <input type="radio" id="customRadio1" name="customRadio"
                                                                    className="custom-control-input"/>
-                                                            <label className="custom-control-label" htmlFor="customRadio1">Toggle
-                                                                this custom radio</label>
+                                                            <label className="custom-control-label" htmlFor="customRadio1">Solo(17)</label>
                                                         </div>
                                                         <div className="custom-control custom-radio">
                                                             <input type="radio" id="customRadio2" name="customRadio"
                                                                    className="custom-control-input"/>
-                                                            <label className="custom-control-label" htmlFor="customRadio2">Or
-                                                                toggle this other custom radio</label>
+                                                            <label className="custom-control-label" htmlFor="customRadio2">
+                                                                Team Drivers(2)</label>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -149,7 +172,6 @@ export default function FindJobs() {
                                                                    className="custom-control-input"/>
                                                             <label className="custom-control-label"
                                                                  htmlFor="customRadio4">Weekly</label>
-
                                                         </div>
                                                         <div className="custom-control custom-radio">
                                                             <input type="radio" id="customRadio5" name="customRadio"
@@ -235,7 +257,43 @@ export default function FindJobs() {
 
                                                     </div>
                                                 </div>
+                                                <div className="card">
+                                                <div className="card-header" id="headingNine">
+                                                    <h4 className="clearfix mb-0">
+                                                        <a className="btn-3 btn-link" data-toggle="collapse"
+                                                           data-target="#collapseNine" aria-expanded="true"
+                                                           aria-controls="collapseNine">Areas Covered<i
+                                                            className="fa fa-angle-down"></i></a>
+                                                    </h4>
+                                                </div>
+                                                <div id="collapseNine" className="collapse show"
+                                                     aria-labelledby="headingNine" data-parent="#accordionExample">
+                                                    <div className="card-body">
+                                                        <div className="custom-control custom-checkbox">
+                                                            <input type="checkbox" className="custom-control-input"
+                                                                   id="customCheck2"/>
+                                                            <label className="custom-control-label" htmlFor="customCheck2">Local
+                                                                (5)</label>
+                                                            <input type="checkbox" className="custom-control-input"
+                                                                   id="customCheck3"/>
+                                                            <label className="custom-control-label" htmlFor="customCheck3">Regional
+                                                                (7)</label>
+                                                            <input type="checkbox" className="custom-control-input"
+                                                                   id="customCheck4"/>
+                                                            <label className="custom-control-label" htmlFor="customCheck4">OTR
+                                                                (12)</label>
+                                                            <input type="checkbox" className="custom-control-input"
+                                                                   id="customCheck5"/>
+                                                            <label className="custom-control-label" htmlFor="customCheck5">Cross
+                                                                Border (1)</label>
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
                                             </div>
+                                            </div>
+
                                             <div className="card">
                                                 <div className="card-header" id="headingSeven">
                                                     <h4 className="clearfix mb-0">
@@ -259,8 +317,6 @@ export default function FindJobs() {
                                                                 (5))</label>
                                                             <input type="checkbox" className="custom-control-input"
                                                                    id="customCheck4"/>
-                                                            <label className="custom-control-label" htmlFor="customCheck4">Hourly
-                                                                (3)</label>
                                                             <input type="checkbox" className="custom-control-input"
                                                                    id="customCheck5"/>
                                                             <label className="custom-control-label" htmlFor="customCheck5">Auto
@@ -399,41 +455,7 @@ export default function FindJobs() {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="card">
-                                                <div className="card-header" id="headingNine">
-                                                    <h4 className="clearfix mb-0">
-                                                        <a className="btn-3 btn-link" data-toggle="collapse"
-                                                           data-target="#collapseNine" aria-expanded="true"
-                                                           aria-controls="collapseNine">Areas Covered<i
-                                                            className="fa fa-angle-down"></i></a>
-                                                    </h4>
-                                                </div>
-                                                <div id="collapseNine" className="collapse show"
-                                                     aria-labelledby="headingNine" data-parent="#accordionExample">
-                                                    <div className="card-body">
-                                                        <div className="custom-control custom-checkbox">
-                                                            <input type="checkbox" className="custom-control-input"
-                                                                   id="customCheck2"/>
-                                                            <label className="custom-control-label" htmlFor="customCheck2">Local
-                                                                (5)</label>
-                                                            <input type="checkbox" className="custom-control-input"
-                                                                   id="customCheck3"/>
-                                                            <label className="custom-control-label" htmlFor="customCheck3">Regional
-                                                                (7)</label>
-                                                            <input type="checkbox" className="custom-control-input"
-                                                                   id="customCheck4"/>
-                                                            <label className="custom-control-label" htmlFor="customCheck4">OTR
-                                                                (12)</label>
-                                                            <input type="checkbox" className="custom-control-input"
-                                                                   id="customCheck5"/>
-                                                            <label className="custom-control-label" htmlFor="customCheck5">Cross
-                                                                Border (1)</label>
-                                                        </div>
-
-
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            
                                             <div className="card">
                                                 <div className="card-header" id="headingTen">
                                                     <h4 className="clearfix mb-0">
@@ -692,272 +714,7 @@ export default function FindJobs() {
 
                             </form>
                         </div>
-                        <div className="col-md-9 outer pl-4 ">
-
-                            <form action="">
-                                <div className="filter-inner d-flex align-items-baseline pl-lg-3 mt-lg-2 ml-lg-3">
-                                    <i className="fa fa-map-marker" aria-hidden="true"></i>
-                                    <input type="text" className="form-control border-0 w-25" placeholder="Location"/>
-                                    <span className="find-me"></span>
-                                    <button type="submit" className="btn btn-danger btn-lg br-0 ">Search</button>
-                                </div>
-                            </form>
-
-                            <div className="results-count mt-4 ">
-                                Showing <span className="first">1</span> – <span className="last">10</span> of 32 results
-                            </div>
-
-                            <div className="filter-btn-groups mt-3">
-                                <button type="button" className="btn btn-danger  "><i className="fa fa-envelope-o"
-                                                                                  aria-hidden="true"></i> Get Jobs
-                                    Alerts
-                                </button>
-                                <button type="button" className="btn btn-danger  "> Mass Job Apply</button>
-                                <button type="button" className="btn btn-danger  "><i className="fa fa-wifi"
-                                                                                  aria-hidden="true"></i>
-                                    RSS Feed
-                                </button>
-                                <span className="text-secondary w-sm-25">Sort by:
-                                          <select className="custom-select shadow-none mt-lg-0 mt-md-3">
-                                            <option>Default</option>
-                                            <option value="1">Newest</option>
-                                            <option value="2">Oldest</option>
-                                            <option value="3">Random</option>
-                                          </select></span>
-
-                            </div>
-                            <div className="filter-outer mt-5">
-                                <div className="media align-items-center shadow-sm">
-                                    <label className="checkbox-inline" htmlFor="remember">
-                                        <input type="checkbox" name="remember" id="remember" value="1"/>
-
-                                    </label>
-                                    <img className="d-flex mr-4 truck-img" src="img/CTR-logo-cartoon.png" alt=""/>
-                                    <div className="media-body">
-                                        <span className="urgent">URGENT</span>
-                                        <h6>Solo</h6>
-                                        <h4 className="mt-0">Class A CDL OTR Truck Drivers (W-2)<span className=""
-                                                                                                  data-toggle="tooltip"
-                                                                                                  data-placement="top"
-                                                                                                  title="Tooltip on top"> <i
-                                            className="fa fa-star" aria-hidden="true"></i> </span></h4>
-                                        <div className="job-date-author">
-                                            posted 3 days ago
-                                            by <a href="" className="employer text-theme">Custom Trucker Recruiting</a>
-                                        </div>
-                                        <div className="job-metas text-secondary
-                                             text-secondary">
-                                            <div className="job-location">
-                                                <i className="fa fa-map-marker" aria-hidden="true"></i>Burnsville, MN
-                                            </div>
-                                            <div className="job-location">
-                                                <i className="fa fa-star-o" aria-hidden="true"></i><strong
-                                                className="text-secondary" className="text-secondary">Accepting drivers from
-                                                anywhere in Illinois, Indiana, Iowa, Kansas, Michigan, Minnesota,
-                                                Missouri, Nebraska, North Dakota, Ohio, South Dakota and
-                                                Wisconsin</strong>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <button type="button" className="btn btn-outline-danger">Browse Job</button>
-
-                                </div>
-                                <div className="media align-items-center shadow-sm">
-                                    <label className="checkbox-inline" htmlFor="remember">
-                                        <input type="checkbox" name="remember" id="remember" value="1"/>
-
-                                    </label>
-                                    <img className="d-flex mr-4 truck-img" src="img/DriverFly-Official-Favicon.png" alt=""/>
-                                    <div className="media-body">
-                                        <span className="urgent">URGENT</span>
-                                        <h6>Solo</h6>
-                                        <h4 className="mt-0">Class A CDL OTR Truck Drivers (W-2)<span className=""
-                                                                                                  data-toggle="tooltip"
-                                                                                                  data-placement="top"
-                                                                                                  title="Tooltip on top"> <i
-                                            className="fa fa-star" aria-hidden="true"></i> </span></h4>
-                                        <div className="job-date-author">
-                                            posted 3 days ago
-                                            by <a href="" className="employer text-theme">Custom Trucker Recruiting</a>
-                                        </div>
-                                        <div className="job-metas text-secondary
-                                            ">
-                                            <div className="job-location">
-                                                <i className="fa fa-map-marker" aria-hidden="true"></i>Burnsville, MN
-                                            </div>
-                                            <div className="job-location">
-                                                <i className="fa fa-star-o" aria-hidden="true"></i><strong
-                                                className="text-secondary">Accepting drivers from anywhere in Illinois,
-                                                Indiana, Iowa, Kansas, Michigan, Minnesota, Missouri, Nebraska, North
-                                                Dakota, Ohio, South Dakota and Wisconsin</strong>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <button type="button" className="btn btn-outline-danger">Browse Job</button>
-
-                                </div>
-                                <div className="media align-items-center shadow-sm">
-                                    <label className="checkbox-inline" htmlFor="remember">
-                                        <input type="checkbox" name="remember" id="remember" value="1"/>
-
-                                    </label>
-                                    <img className="d-flex mr-4 truck-img" src="img/Hahn-Transportation-Inc-1.jpg" alt=""/>
-                                    <div className="media-body">
-                                        <span className="urgent">URGENT</span>
-                                        <h6>Solo</h6>
-                                        <h4 className="mt-0">Class A CDL OTR Truck Drivers (W-2)<span className=""
-                                                                                                  data-toggle="tooltip"
-                                                                                                  data-placement="top"
-                                                                                                  title="Tooltip on top"> <i
-                                            className="fa fa-star" aria-hidden="true"></i> </span></h4>
-                                        <div className="job-date-author">
-                                            posted 3 days ago
-                                            by <a href="" className="employer text-theme">Custom Trucker Recruiting</a>
-                                        </div>
-                                        <div className="job-metas text-secondary
-                                            ">
-                                            <div className="job-location">
-                                                <i className="fa fa-map-marker" aria-hidden="true"></i>Burnsville, MN
-                                            </div>
-                                            <div className="job-location">
-                                                <i className="fa fa-star-o" aria-hidden="true"></i><strong
-                                                className="text-secondary">Accepting drivers from anywhere in Illinois,
-                                                Indiana, Iowa, Kansas, Michigan, Minnesota, Missouri, Nebraska, North
-                                                Dakota, Ohio, South Dakota and Wisconsin</strong>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <button type="button" className="btn btn-outline-danger">Browse Job</button>
-
-                                </div>
-                                <div className="media align-items-center shadow-sm">
-                                    <label className="checkbox-inline" htmlFor="remember">
-                                        <input type="checkbox" name="remember" id="remember" value="1"/>
-
-                                    </label>
-                                    <img className="d-flex mr-4 truck-img" src="img/CTR-logo-cartoon.png" alt=""/>
-                                    <div className="media-body">
-                                        <span className="urgent">URGENT</span>
-                                        <h6>Solo</h6>
-                                        <h4 className="mt-0">Class A CDL OTR Truck Drivers (W-2)<span className=""
-                                                                                                  data-toggle="tooltip"
-                                                                                                  data-placement="top"
-                                                                                                  title="Tooltip on top"> <i
-                                            className="fa fa-star" aria-hidden="true"></i> </span></h4>
-                                        <div className="job-date-author">
-                                            posted 3 days ago
-                                            by <a href="" className="employer text-theme">Custom Trucker Recruiting</a>
-                                        </div>
-                                        <div className="job-metas text-secondary
-                                            ">
-                                            <div className="job-location">
-                                                <i className="fa fa-map-marker" aria-hidden="true"></i>Burnsville, MN
-                                            </div>
-                                            <div className="job-location">
-                                                <i className="fa fa-star-o" aria-hidden="true"></i><strong
-                                                className="text-secondary">Accepting drivers from anywhere in Illinois,
-                                                Indiana, Iowa, Kansas, Michigan, Minnesota, Missouri, Nebraska, North
-                                                Dakota, Ohio, South Dakota and Wisconsin</strong>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <button type="button" className="btn btn-outline-danger">Browse Job</button>
-
-                                </div>
-                                <div className="media align-items-center shadow-sm">
-                                    <label className="checkbox-inline" htmlFor="remember">
-                                        <input type="checkbox" name="remember" id="remember" value="1"/>
-
-                                    </label>
-                                    <img className="d-flex mr-4 truck-img" src="img/CTR-logo-cartoon.png" alt=""/>
-                                    <div className="media-body">
-                                        <span className="urgent">URGENT</span>
-                                        <h6>Solo</h6>
-                                        <h4 className="mt-0">Class A CDL OTR Truck Drivers (W-2)<span className=""
-                                                                                                  data-toggle="tooltip"
-                                                                                                  data-placement="top"
-                                                                                                  title="Tooltip on top"> <i
-                                            className="fa fa-star" aria-hidden="true"></i> </span></h4>
-                                        <div className="job-date-author">
-                                            posted 3 days ago
-                                            by <a href="" className="employer text-theme">Custom Trucker Recruiting</a>
-                                        </div>
-                                        <div className="job-metas text-secondary
-                                            ">
-                                            <div className="job-location">
-                                                <i className="fa fa-map-marker" aria-hidden="true"></i>Burnsville, MN
-                                            </div>
-                                            <div className="job-location">
-                                                <i className="fa fa-star-o" aria-hidden="true"></i><strong
-                                                className="text-secondary">Accepting drivers from anywhere in Illinois,
-                                                Indiana, Iowa, Kansas, Michigan, Minnesota, Missouri, Nebraska, North
-                                                Dakota, Ohio, South Dakota and Wisconsin</strong>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <button type="button" className="btn btn-outline-danger">Browse Job</button>
-
-                                </div>
-                                <div className="media align-items-center shadow-sm">
-                                    <label className="checkbox-inline" htmlFor="remember">
-                                        <input type="checkbox" name="remember" id="remember" value="1"/>
-
-                                    </label>
-                                    <img className="d-flex mr-4 truck-img" src="img/CTR-logo-cartoon.png" alt=""/>
-                                    <div className="media-body">
-                                        <span className="urgent">URGENT</span>
-                                        <h6>Solo</h6>
-                                        <h4 className="mt-0">Class A CDL OTR Truck Drivers (W-2)<span className=""
-                                                                                                  data-toggle="tooltip"
-                                                                                                  data-placement="top"
-                                                                                                  title="Tooltip on top"> <i
-                                            className="fa fa-star" aria-hidden="true"></i> </span></h4>
-                                        <div className="job-date-author">
-                                            posted 3 days ago
-                                            by <a href="" className="employer text-theme">Custom Trucker Recruiting</a>
-                                        </div>
-                                        <div className="job-metas text-secondary
-                                            ">
-                                            <div className="job-location">
-                                                <i className="fa fa-map-marker" aria-hidden="true"></i>Burnsville, MN
-                                            </div>
-                                            <div className="job-location">
-                                                <i className="fa fa-star-o" aria-hidden="true"></i><strong
-                                                className="text-secondary">Accepting drivers from anywhere in Illinois,
-                                                Indiana, Iowa, Kansas, Michigan, Minnesota, Missouri, Nebraska, North
-                                                Dakota, Ohio, South Dakota and Wisconsin</strong>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <button type="button" className="btn btn-outline-danger">Browse Job</button>
-
-                                </div>
-                                <ul className="pagination ">
-                                    <li>
-                                        <span className="page-numbers current active">1</span>
-                                    </li>
-                                    <li>
-                                        <a className="page-numbers" href="#">2</a>
-                                    </li>
-                                    <li>
-                                        <a className="page-numbers" href="#">3</a>
-                                    </li>
-                                    <li>
-                                        <a className="page-numbers" href="#">4</a>
-                                    </li>
-                                    <li>
-                                        <a className="next page-numbers" href="#">Next <i
-                                            className="fa fa-long-arrow-right ml-2" aria-hidden="true"></i></a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                      
                     </div>
                 </div>
             </div>
@@ -966,7 +723,7 @@ export default function FindJobs() {
 
 }
 
-FindJobs.getLayout = function getLayout(page){
+Owneroperators.getLayout = function getLayout(page){
     return (
         <Layout>
             {page}
