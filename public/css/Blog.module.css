@@ -89,7 +89,7 @@ i .fa .fa-search {
 }
 
 .sidebarwigt {
-    box-shadow: 0 1px 4px 0 rgb(0 0 0 / 9%);
+    box-shadow: 0 0px 20px 0 rgb(0 0 0 / 9%);
     padding: 10px;
 }
 .sidebarwigt a {
@@ -120,7 +120,7 @@ i .fa .fa-search {
     margin-bottom: 10px;
 }
 .tag a{
-    padding: 10px 30px;
+    padding: 10px 15px;
     margin-bottom: 10px;
     background: #f3f3f3;
     color: #6a6a6a;
