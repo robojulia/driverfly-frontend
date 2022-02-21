@@ -18,6 +18,9 @@
     border-radius: 6px;
     position: relative;
 }
+.postthumbnail:hover img{
+    transform: scale(1.1);
+}
 .post{
     position: relative;
     top: 0;
@@ -53,6 +56,9 @@
 }
 .topinfo:hover h4{
 	color: #2da2af;
+}
+.topinfo:hover a{
+	text-decoration: none;
 }
 .comments{
 	color: #6a6a6a;
@@ -98,6 +104,7 @@ i .fa .fa-search {
 .sidebarwigt a:hover {
     color: #2da2af;
     text-decoration: none;
+
 
   }
   .sidebarwigt img{
