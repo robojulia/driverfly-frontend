@@ -106,24 +106,19 @@ jQuery(document).ready(function(){
         loop:true,
         margin:10,
         dots:true,
-        nav:false,
         responsive:{
             0:{
                 items:1
             },
             600:{
-                items:2
+                items:1
             },
             1000:{
-                items:2
+                items:1
             }
         }
     })
     });
 
-
-    $("#flexSwitchCheckChecked").click(function(){
-        $("p").toggleClass("main");
-      });
 
     }

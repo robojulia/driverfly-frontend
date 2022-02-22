@@ -56,7 +56,7 @@
  .header-sec ul li a:hover, .header-sec .nav-link:focus {
     text-decoration: none !important;
     color: #fff !important;
-    background-color: #0d0d0d;
+    background-color: #171717;
     
 }
 
@@ -138,6 +138,8 @@
  .tab-content .card-body {
      padding: 20px 0px 0px;
  }
+
+
  .btn-3.btn-link {
      font-size: 20px;
      font-weight: 500;
@@ -653,6 +655,7 @@
      border: none;
      background-color: transparent;
  }
+
  .card-header {
      background-color: white!important;
      border-radius: 5px!important;
@@ -958,6 +961,10 @@
  .tab-content .truck-img {
      height: auto;
      object-fit: cover;
+ }
+ .tab-content .card:hover i {
+     color: #171717 !important;
+
  }
  .tab-sec .nav-link.active {
      background: #252834!important;

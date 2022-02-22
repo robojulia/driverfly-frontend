@@ -133,7 +133,7 @@ export default function About()
                 </div>
             </div>
 
-            <div className="testimonial-sec">
+            <div className="testimonial-sec about-testominial">
                 <div className="container">
                     <h2 className="text-center">What Drivers Say About Us</h2>
                     <div className="row owl-carousel owl-theme d-block">
