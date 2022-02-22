@@ -138,6 +138,9 @@
  .tab-content .card-body {
      padding: 20px 0px 0px;
  }
+ .tab-content .card-header:hover  i{
+     color: #1a1a1a !important;
+ } 
  .btn-3.btn-link {
      font-size: 20px;
      font-weight: 500;
