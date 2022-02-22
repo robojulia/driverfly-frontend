@@ -37,7 +37,12 @@ export default function Header()
                                         <a className="nav-link  dropdown-toggle" href="#"
                                            data-bs-toggle="dropdown"> Driver Resources</a>
                                         <ul className="dropdown-menu">
-                                            <li><a className="dropdown-item" href="#"> FAQ</a></li>
+                                            <li>
+                                                
+                                                <Link href="/faq">
+                                                    <a className="dropdown-item">FAQ</a>
+                                                </Link>
+                                            </li>
                                             <li><a className="dropdown-item" href="#"> Get Your CDL </a></li>
                                             <li>
                                             <Link href="/owner-operators">
@@ -45,21 +50,26 @@ export default function Header()
                                             </Link>
                                             
                                             </li>
-                                            <li><a className="dropdown-item" href="#"> The DriverFly On The Wall
-                                                Blog </a></li>
+                                            <Link href="/blog">
+                                                  <a className="dropdown-item" href="#"> The DriverFly On The Wall
+                                                Blog </a>
+                                                </Link>
+
                                         </ul>
                                     </li>
                                     <li className="nav-item dropdown">
                                         <a className="nav-link  dropdown-toggle" href="#"
                                            data-bs-toggle="dropdown"> Motor Carrier Solutions</a>
                                         <ul className="dropdown-menu">
-                                            <li><a className="dropdown-item" href="#">Over Solution </a></li>
-                                            <li><a className="dropdown-item" href="#"> Option & Pricing </a></li>
+                                            <li><a className="dropdown-item" >Over Solution </a></li>
+                                            <Link href="/pricing">
+                                                <a className="dropdown-item">Option & Pricing </a>
+                                            </Link>
                                             <li><a className="dropdown-item" href="#"> Request A Quote </a></li>
                                             <li><a className="dropdown-item" href="#"> Free Digital Application </a>
                                             </li>
                                             <li>
-                                                <Link href="/Third-Party-Resources">
+                                                <Link href="/third-party-resources">
                                                   <a className="dropdown-item" href="#"> Third Party Resources </a>
                                                 </Link>
                                             </li>
