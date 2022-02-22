@@ -30,11 +30,6 @@
       "static/chunks/main.js",
       "static/chunks/pages/faq.js"
     ],
-    "/find-jobs": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/find-jobs.js"
-    ],
     "/owner-operators": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
