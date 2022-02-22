@@ -16,7 +16,11 @@ return (
     </div>
 </div>
     <div className="container mb-5 p-lg-2 p-0">
-        <p className=" mt-5 text-secondary  p-lg-0 p-2">Don't have an account? Make one<a className={login.link} href="#"> here!</a></p>
+        <p className=" mt-5 text-secondary  p-lg-0 p-2">Don't have an account? Make one
+            <Link href="/signup">
+                <a className={login.link}> here!</a>
+            </Link>
+        </p>
         <h2 className='text-center mt-5'>Quick Login</h2>
         <p className="mt-3  text-center">Login Your Account</p>
     </div>
