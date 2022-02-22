@@ -473,6 +473,7 @@
  .footer-sec {
      padding: 55px 0px;
  }
+
  .widget-title {
      font-size: 20px;
      margin: 0 0 20px;
@@ -521,6 +522,10 @@
      color: #7C7C7F;
      margin-bottom: 5px;
  }
+ .menu-item:hover a{
+    color: #7C7C7F;
+}
+
  .footer-social-icons h6 {
      color: #979797;
      margin-right: 10px;
