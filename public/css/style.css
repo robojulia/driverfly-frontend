@@ -665,6 +665,10 @@
      color: #fff!important;
      background: #2da2af!important;
  }
+ .accordion>.card>.card-header {
+    border-radius: 0;
+    margin-bottom: 0px !important; 
+}
  /************************************** ABOUT-SEC *********************************/
  .about-sec {
      background-image: url("../img/iphone-6-mockup-featuring-a-construction-worker-driving-a-truck-a4073-3.png");
@@ -1528,6 +1532,7 @@
      border-right: solid 0px;
  }
  }
+
  .owl-carousel .owl-dots.disabled, .owl-carousel .owl-nav.disabled {
      display: block !important;
  }
@@ -1538,3 +1543,4 @@
     width: 2em !important;
     font-size: 31px !important;
 }
+
