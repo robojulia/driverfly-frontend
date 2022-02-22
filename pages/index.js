@@ -435,7 +435,7 @@ export default function Index() {
            </div>
         </section>
 
-        <div className="testimonial-sec">
+        <div className="testimonial-sec home-testominial">
             <div className="container">
                 <h2 className="text-center">What Drivers Say About Us</h2>
                 <div className="custom-tst pb-5">

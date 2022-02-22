@@ -44,7 +44,12 @@ export default function Header()
                                                 </Link>
                                             </li>
                                             <li><a className="dropdown-item" href="#"> Get Your CDL </a></li>
-                                            <li><a className="dropdown-item" href="#"> Owner Operators </a></li>
+                                            <li>
+                                            <Link href="/owner-operators">
+                                                <a className="dropdown-item"> Owner Operators </a>
+                                            </Link>
+                                            
+                                            </li>
                                             <li><a className="dropdown-item" href="#"> The DriverFly On The Wall
                                                 Blog </a></li>
                                         </ul>
@@ -67,7 +72,7 @@ export default function Header()
                                     </li>
 
                                 </ul>
-                                <ul className="d-flex align-items-center">
+                                <ul className="d-flex align-items-center mb-0">
                                     <li><a href="#" className="nav-link"> <i className="fa fa-bell-o pt-1"
                                                                              aria-hidden="true"></i></a></li>
                                     <Link href="/login">

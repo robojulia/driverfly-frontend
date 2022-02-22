@@ -56,7 +56,7 @@
  .header-sec ul li a:hover, .header-sec .nav-link:focus {
     text-decoration: none !important;
     color: #fff !important;
-    background-color: #0d0d0d;
+    background-color: #171717;
     
 }
 
@@ -138,6 +138,8 @@
  .tab-content .card-body {
      padding: 20px 0px 0px;
  }
+
+
  .btn-3.btn-link {
      font-size: 20px;
      font-weight: 500;
@@ -555,6 +557,9 @@
  .top-links-sec h2{
      font-weight: 400;
  }
+ .top-links-sec ul li a{
+     padding-top: 18px;
+ }
  .contact-form {
      background-color: #fafafa;
      padding-bottom: 90px;
@@ -575,6 +580,12 @@
  }
  .address_list li {
      margin-bottom: 5px;
+ }
+ .contact-form  a{
+    text-decoration: none;
+ }
+ .address_list li a:hover,.address_list li a:focus{
+    color: #fff;
  }
  .contact-inner h3 {
      margin: 26px 0 25px;
@@ -644,6 +655,7 @@
      border: none;
      background-color: transparent;
  }
+
  .card-header {
      background-color: white!important;
      border-radius: 5px!important;
@@ -954,6 +966,10 @@
      height: auto;
      object-fit: cover;
  }
+ .tab-content .card:hover i {
+     color: #171717 !important;
+
+ }
  .tab-sec .nav-link.active {
      background: #252834!important;
      color: white!important;
@@ -1001,7 +1017,7 @@
      font-size: 18px;
  }
  .custom-tst .item {
-     width: 100%;
+     width: 70%;
      margin: auto;
  }
  .custom-tst button.owl-next {
@@ -1406,6 +1422,9 @@
      .custom-tst .item {
          width: 100%;
      }
+     .testimonial-sec .about-testominial .custom-tst .item{
+        width: 50px !important;
+     }
      .custom-tst button.owl-next {
          width: 40px;
          height: 40px;
@@ -1513,4 +1532,15 @@
      border-right: solid 0px;
  }
  }
+
+ .owl-carousel .owl-dots.disabled, .owl-carousel .owl-nav.disabled {
+     display: block !important;
+ }
+ .about-testominial .owl-nav .disabled{
+    display: none !important;
+ }
+ .form-switch #flexSwitchCheckChecked {
+    width: 2em !important;
+    font-size: 31px !important;
+}
 
