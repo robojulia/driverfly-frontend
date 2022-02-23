@@ -473,6 +473,7 @@
  .footer-sec {
      padding: 55px 0px;
  }
+
  .widget-title {
      font-size: 20px;
      margin: 0 0 20px;
@@ -521,6 +522,10 @@
      color: #7C7C7F;
      margin-bottom: 5px;
  }
+ .menu-item:hover a{
+    color: #7C7C7F;
+}
+
  .footer-social-icons h6 {
      color: #979797;
      margin-right: 10px;
@@ -601,7 +606,7 @@
      padding-left: 20px;
  }
  .form-control:focus {
-     border-color: #b9b8b8;
+     border-color: #b9b8b8 !important;
  }
  .contact-icon-inner {
      line-height: 124px;
@@ -989,13 +994,13 @@
      justify-content: center;
      border: none;
      background: #252834!important;
-     width: 35%;
-     margin: 0px auto 30px;
+     width: 400px;
+     margin: 0px auto;
      padding: 6px 0px;
      border-radius: 4px;
  }
  .tab-sec ul.nav.nav-tabs li {
-     padding: 0px;
+     padding: 1px;
  }
  /************************** DRIVER-SEC **********************/
  .driver-sec {
@@ -1408,7 +1413,7 @@
          padding: 12px 35px;
      }
      .tab-sec ul.nav.nav-tabs {
-         width: 75%;
+         width: 350px;
      }
      .tab-sec {
          padding: 30px 0px;
@@ -1503,7 +1508,7 @@
  
  @media screen and (max-width:464px) {
      .tab-sec ul.nav.nav-tabs {
-     width: 100%;
+     width: 300px;
  }
  }
  
@@ -1543,4 +1548,6 @@
     width: 2em !important;
     font-size: 31px !important;
 }
-
+.hero-search .custom-sel:hover select {
+    background: #fff !important;
+  }
