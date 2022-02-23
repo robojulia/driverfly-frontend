@@ -1,4 +1,3 @@
-
 export default function FilterResults() {
     return (
         <>
@@ -506,49 +505,7 @@ export default function FilterResults() {
                                                 </div>
                                             </div>
 
-                                            <div className="card">
-                                                <div className="card-header" id="headingthirty">
-                                                    <h4 className="clearfix mb-0">
-                                                        <a className="btn-3 btn-link" data-toggle="collapse"
-                                                           data-target="#collapsethirty" aria-expanded="true"
-                                                           aria-controls="collapsethirty">Pay Structure<i
-                                                            className="fa fa-angle-down"></i></a>
-                                                    </h4>
-                                                </div>
-                                                <div id="collapsethirty" className="collapse show"
-                                                     aria-labelledby="headingthirty" data-parent="#Structure">
-                                                    <div className="card-body">
-                                                        <div className="custom-control custom-checkbox">
-                                                            <input type="checkbox" className="custom-control-input"
-                                                                   id="customCheck2"/>
-                                                            <label className="custom-control-label" htmlFor="customCheck2">Rate
-                                                                per mile (9)</label>
-                                                            <input type="checkbox" className="custom-control-input"
-                                                                   id="customCheck3"/>
-                                                            <label className="custom-control-label" htmlFor="customCheck3">Percent
-                                                                per move (5)</label>
-                                                            <input type="checkbox" className="custom-control-input"
-                                                                   id="customCheck4"/>
-                                                            <label className="custom-control-label" htmlFor="customCheck4">Hourly
-                                                                (3)</label>
-                                                            <input type="checkbox" className="custom-control-input"
-                                                                   id="customCheck5"/>
-                                                            <label className="custom-control-label" htmlFor="customCheck5">Set
-                                                                Weekly (7)</label>
-                                                            <input type="checkbox" className="custom-control-input"
-                                                                   id="customCheck5"/>
-                                                            <label className="custom-control-label" htmlFor="customCheck5">Salaried
-                                                                (2)</label>
-                                                            <input type="checkbox" className="custom-control-input"
-                                                                   id="customCheck5"/>
-                                                            <label className="custom-control-label" htmlFor="customCheck5">Percent
-                                                                weight (1)</label>
-                                                        </div>
-
-
-                                                    </div>
-                                                </div>
-                                            </div>
+                                         
 
                                             <div className="card">
                                                 <div className="card-header" id="headingfourty">
