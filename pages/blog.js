@@ -71,7 +71,7 @@ return (
             <div className="col-12">
                <h5 className="mt-5 mb-4"><span>Category</span></h5>
                <div className={Blog.sidebarwigt}>
-                  <div className="card">
+                  <div className="card border-0">
                      <ul className="list-group list-group-flush">
                         <li className="list-group-item">
                            <a href="">Changes in Trucking (1)</a>
@@ -121,7 +121,7 @@ return (
             <div className="col-12">
                <h5 className="mt-5 mb-4"><span>Meta</span></h5>
                <div className={Blog.sidebarwigt}>
-                  <div className="card">
+                  <div className="card border-0">
                      <ul className="list-group list-group-flush">
                         <li className="list-group-item">
                            <a href="">Register</a>
@@ -144,7 +144,7 @@ return (
             </div>
             <div className="col-12">
                <h5 className="mt-5 mb-4"><span>Tags</span></h5>
-                  <div className="card">
+                  <div className="card border-0">
                      <div className='row mb-3'>
                         <div className='col-5 p-0'>
                            <ul className="list-group list-group-flush">

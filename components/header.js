@@ -37,36 +37,56 @@ export default function Header()
                                         <a className="nav-link  dropdown-toggle" href="#"
                                            data-bs-toggle="dropdown"> Driver Resources</a>
                                         <ul className="dropdown-menu">
-                                            <li><a className="dropdown-item" href="#"> FAQ</a></li>
+                                            <li>
+                                                
+                                                <Link href="/faq">
+                                                    <a className="dropdown-item">FAQ</a>
+                                                </Link>
+                                            </li>
                                             <li><a className="dropdown-item" href="#"> Get Your CDL </a></li>
-                                            <li><a className="dropdown-item" href="#"> Owner Operators </a></li>
-                                            <li><a className="dropdown-item" href="#"> The DriverFly On The Wall
-                                                Blog </a></li>
+                                            <li>
+                                            <Link href="/owner-operators">
+                                                <a className="dropdown-item"> Owner Operators </a>
+                                            </Link>
+                                            
+                                            </li>
+                                            <Link href="/blog">
+                                                  <a className="dropdown-item" href="#"> The DriverFly On The Wall
+                                                Blog </a>
+                                                </Link>
+
                                         </ul>
                                     </li>
                                     <li className="nav-item dropdown">
                                         <a className="nav-link  dropdown-toggle" href="#"
                                            data-bs-toggle="dropdown"> Motor Carrier Solutions</a>
                                         <ul className="dropdown-menu">
-                                            <li><a className="dropdown-item" href="#">Over Solution </a></li>
-                                            <li><a className="dropdown-item" href="#"> Option & Pricing </a></li>
+                                            <li><a className="dropdown-item" >Over Solution </a></li>
+                                            <Link href="/pricing">
+                                                <a className="dropdown-item">Option & Pricing </a>
+                                            </Link>
                                             <li><a className="dropdown-item" href="#"> Request A Quote </a></li>
                                             <li><a className="dropdown-item" href="#"> Free Digital Application </a>
                                             </li>
-                                            <li><a className="dropdown-item" href="#"> Third Party Resources </a></li>
+                                            <li>
+                                                <Link href="/third-party-resources">
+                                                  <a className="dropdown-item" href="#"> Third Party Resources </a>
+                                                </Link>
+                                            </li>
                                         </ul>
                                     </li>
 
                                 </ul>
-                                <ul className="d-flex align-items-center">
+                                <ul className="d-flex align-items-center mb-0">
                                     <li><a href="#" className="nav-link"> <i className="fa fa-bell-o pt-1"
                                                                              aria-hidden="true"></i></a></li>
-                                    <li><a href="#" className="nav-link">
-                                        <button type="button" className="btn btn-primary">Login</button>
-                                    </a></li>
-                                    <li><a href="#" className="nav-link">
-                                        <button type="button" className="btn btn-primary">Sign Up</button>
-                                    </a></li>
+                                    <Link href="/login">
+                                       <button type="button" className="btn btn-primary mr-4">Login</button>
+                                    </Link>
+                                    <l1></l1>
+                                    <Link href="/signup">
+                                       <button type="button" className="btn btn-primary mr-4">Sign Up</button>
+                                    </Link>
                                 </ul>
                             </div>
                         </nav>

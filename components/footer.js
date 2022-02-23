@@ -1,3 +1,4 @@
+import Link from "next/link";
 
 export default function Footer() {
     return (
@@ -6,10 +7,11 @@ export default function Footer() {
                 <div className="footer-top">
                     <div className="container">
                         <div className="row">
-                            <div className="col-md-2">
+                            <div className="col-md-2 text-center">
                                 <img src="img/driverfly-logo-square.png" alt="" className="footer-logo"/>
                             </div>
-                            <div className="col-md-10 d-flex justify-content-end">
+                            <div className="col-md-10 d-flex justify-content-lg-end
+justify-content-md-end justify-content-center  ">
                                 <div className="footer-social-icons">
                                     <h6>Follow Us</h6>
                                     <div className="social">
@@ -30,7 +32,7 @@ export default function Footer() {
                 <div className="footer-sec">
                     <div className="container">
                         <div className="row">
-                            <div className="col-md-3">
+                            <div className="col-12 col-md-3 col-lg-3 col-sm-4">
                                 <div className="footer-inner">
                                     <h2 className="widget-title">Quick Links</h2>
                                     <ul className="p-0">
@@ -50,12 +52,14 @@ export default function Footer() {
                                             <a className="nav-link" href="#">The DriverFly on the Wall Blog</a>
                                         </li>
                                         <li className="nav-item">
-                                            <a className="nav-link" href="#">Contact</a>
+                                            <Link href="./contact">
+                                              <a className="nav-link" >Contact</a>
+                                            </Link>
                                         </li>
                                     </ul>
                                 </div>
                             </div>
-                            <div className="col-md-2">
+                            <div className="col-lg-2 col-12">
                                 <div className="footer-inner">
                                     <h2 className="widget-title">For Employers</h2>
                                     <ul className="p-0">
@@ -74,8 +78,8 @@ export default function Footer() {
                                     </ul>
                                 </div>
                             </div>
-                            <div className="col-md-2">
-                                <div className="footer-inner pl-4">
+                            <div className="col-lg-2 col-12">
+                                <div className="footer-inner pl-lg-4 pl-0">
                                     <h2 className="widget-title">For Drivers</h2>
                                     <ul className="p-0">
                                         <li className="nav-item">
@@ -93,14 +97,11 @@ export default function Footer() {
                                     </ul>
                                 </div>
                             </div>
-                            <div className="col-md-5 pl-5">
+                            <div className="col-lg-5 pl-lg-5 p-2">
                                 <div className="footer-inner">
-                                    <h2 className="widget-title">Drivers Newsletter</h2>
+                                <h2 class="widget-title">Drivers Newsletter</h2>
                                     <ul className="p-0">
-                                        <li className="nav-item">
-                                            <a className="nav-link" href="#">Subscribe to the DriverFly Newsletter to get the latest
-                                                jobs feeds.</a>
-                                        </li>
+                                    <p class="text-secondary mb-4">Subscribe to the DriverFly Newsletter to get the latest jobs feeds.</p>
                                         <form action="">
                                             <input type="email" className="form-control" placeholder="Email Adress"/>
                                             <button type="submit" className="btn btn-danger btn-lg btn-block mt-3">Submit</button>
@@ -110,11 +111,9 @@ export default function Footer() {
                                 <div className="footer-inner">
                                     <h2 className="widget-title">
                                         Companies Newsletter</h2>
+                                        <p class="text-secondary mb-4">Subscribe to the DriverFly Newsletter to get the latest <br /> discount codes & coupons, and major news headlines.</p>
                                     <ul className="p-0">
-                                        <li className="nav-item">
-                                            <a className="nav-link" href="#">Subscribe to the DriverFly Newsletter to get the
-                                                latest <br/> discount codes & coupons, and major news headlines.</a>
-                                        </li>
+                                    
                                         <form action="">
                                             <input type="email" className="form-control" placeholder="Email Adress"/>
                                             <button type="submit" className="btn btn-danger btn-lg btn-block mt-3">Submit</button>
@@ -133,7 +132,11 @@ export default function Footer() {
                             <div className="copy-text">© 2021 DriverFly. All Rights Reserved.</div>
                             <ul id="menu-copyright" className="menu d-flex align-items-center">
                                 <li id="menu-item-4034" className="menu-item mr-4"><a href="#">Site Map</a></li>
-                                <li id="menu-item-4033" className="menu-item"><a href="#">Terms and Policies</a></li>
+                                <li id="menu-item-4033" className="menu-item">
+                                    <Link href="/terms-and-policies">
+                                    <a>Terms and Policies</a>
+                                    </Link>
+                                </li>
                             </ul>
                         </div>
                     </div>
