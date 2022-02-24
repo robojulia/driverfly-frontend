@@ -1,4 +1,15 @@
+import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
+import React, { useState } from 'react';
+import RangeSlider from 'react-bootstrap-range-slider';
+
+
 export default function FilterResults() {
+
+
+const [ value, setValue ] = React.useState(50);
+const [ finalValue, setFinalValue ] = React.useState(null);
+
+
     return (
         <>
               <div className="col-md-3">
@@ -37,17 +48,24 @@ export default function FilterResults() {
                                                         <a className="btn-3 btn-link" data-toggle="collapse"
                                                            data-target="#collapseTwo" aria-expanded="true"
                                                            aria-controls="collapseTwo">Location <i
-                                                            className="fa fa-angle-down"></i></a>
+                                                            className="fa fa-angle-down"></i></a> 
+
+                                                                                                                 
                                                     </h4>
                                                 </div>
                                                 <div id="collapseTwo" className="collapse show "
                                                      aria-labelledby="headingTwo" data-parent="#accordionExample">
                                                     <div className="card-body">
-                                                        <input type="text" className="form-control"
+                                                     <input type="text" className="form-control"
                                                                placeholder="All Location"/>
-                                                        <label htmlFor="customRange1" className="range-sl">Radius: 50
-                                                            miles</label>
-                                                        <input type="range" className="custom-range" id="customRange1"/>
+                                                        <div className='mt-3 text-info'>Radius: {finalValue} miles</div> 
+                                                         <RangeSlider
+                                                            value={value}
+                                                            onChange={e => setValue(e.target.value)}
+                                                            onAfterChange={e => setFinalValue(e.target.value)}
+                                                            variant='info'
+                                                            />
+                                                             
                                                     </div>
                                                 </div>
                                             </div>
@@ -609,26 +627,26 @@ export default function FilterResults() {
                                                 <div className="card-header" id="headingseventy">
                                                     <h4 className="clearfix mb-0">
                                                         <a className="btn-3 btn-link" data-toggle="collapse"
-                                                           data-target="#collapseseventy" aria-expanded="true"
-                                                           aria-controls="collapseseventy">MVR Requirements<i
+                                                           data-target="#collapsesedventy" aria-expanded="true"
+                                                           aria-controls="collapsesedventy">MVR Requirements<i
                                                             className="fa fa-angle-down"></i></a>
                                                     </h4>
                                                 </div>
-                                                <div id="collapseseventy" className="collapse show"
+                                                <div id="collapsesedventy" className="collapse show"
                                                      aria-labelledby="headingseventy" data-parent="#accordionExample">
                                                     <div className="card-body">
                                                         <div className="custom-control custom-checkbox">
                                                             <input type="checkbox" className="custom-control-input"
-                                                                   id="customCheck2"/>
-                                                            <label className="custom-control-label" htmlFor="customCheck2">Clean
+                                                                   id="mvronly"/>
+                                                            <label className="custom-control-label" htmlFor="mvronly">Clean
                                                                 MVR Only (10)</label>
                                                             <input type="checkbox" className="custom-control-input"
-                                                                   id="customCheck3"/>
-                                                            <label className="custom-control-label" htmlFor="customCheck3">Moving
+                                                                   id="violationok"/>
+                                                            <label className="custom-control-label" htmlFor="violationok">Moving
                                                                 Violation Okay (2)</label>
                                                             <input type="checkbox" className="custom-control-input"
-                                                                   id="customCheck3"/>
-                                                            <label className="custom-control-label" htmlFor="customCheck3">Non
+                                                                   id="accidentokay"/>
+                                                            <label className="custom-control-label" htmlFor="accidentokay">Non
                                                                 "At Fault" Accident Okay (7)</label>
 
                                                         </div>

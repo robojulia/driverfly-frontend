@@ -1,57 +1,57 @@
-document.addEventListener("DOMContentLoaded", function(){
-    // make it as accordion for smaller screens
-    if (window.innerWidth > 992) {
+// document.addEventListener("DOMContentLoaded", function(){
+//     // make it as accordion for smaller screens
+//     if (window.innerWidth > 992) {
     
-        document.querySelectorAll('.navbar .nav-item').forEach(function(everyitem){
+//         document.querySelectorAll('.navbar .nav-item').forEach(function(everyitem){
     
-            everyitem.addEventListener('mouseover', function(e){
+//             everyitem.addEventListener('mouseover', function(e){
     
-                let el_link = this.querySelector('a[data-bs-toggle]');
+//                 let el_link = this.querySelector('a[data-bs-toggle]');
     
-                if(el_link != null){
-                    let nextEl = el_link.nextElementSibling;
-                    el_link.classList.add('show');
-                    nextEl.classList.add('show');
-                }
+//                 if(el_link != null){
+//                     let nextEl = el_link.nextElementSibling;
+//                     el_link.classList.add('show');
+//                     nextEl.classList.add('show');
+//                 }
     
-            });
-            everyitem.addEventListener('mouseleave', function(e){
-                let el_link = this.querySelector('a[data-bs-toggle]');
+//             });
+//             everyitem.addEventListener('mouseleave', function(e){
+//                 let el_link = this.querySelector('a[data-bs-toggle]');
     
-                if(el_link != null){
-                    let nextEl = el_link.nextElementSibling;
-                    el_link.classList.remove('show');
-                    nextEl.classList.remove('show');
-                }
+//                 if(el_link != null){
+//                     let nextEl = el_link.nextElementSibling;
+//                     el_link.classList.remove('show');
+//                     nextEl.classList.remove('show');
+//                 }
     
     
-            })
-        });
+//             })
+//         });
     
-    }
-    // end if innerWidth
-    });
+//     }
+//     // end if innerWidth
+//     });
 
-    window.onload = function() {
+//     window.onload = function() {
         
      
-jQuery(document).ready(function(){
-        // Add minus icon for collapse element which is open by default
-        $(".collapse.show").each(function(){
-            $(this).prev(".card-header").find(".fa").addClass("fa-angle-down").removeClass("fa-angle-up");
-        });
+// jQuery(document).ready(function(){
+//         // Add minus icon for collapse element which is open by default
+//         $(".collapse.show").each(function(){
+//             $(this).prev(".card-header").find(".fa").addClass("fa-angle-down").removeClass("fa-angle-up");
+//         });
         
-        // Toggle plus minus icon on show hide of collapse element
-        $(".collapse").on('show.bs.collapse', function(){
-            $(this).prev(".card-header").find(".fa").removeClass("fa-angle-up").addClass("fa-angle-down");
-        }).on('hide.bs.collapse', function(){
-            $(this).prev(".card-header").find(".fa").removeClass("fa-angle-down").addClass("fa-angle-up");
-        });
+//         // Toggle plus minus icon on show hide of collapse element
+//         $(".collapse").on('show.bs.collapse', function(){
+//             $(this).prev(".card-header").find(".fa").removeClass("fa-angle-up").addClass("fa-angle-down");
+//         }).on('hide.bs.collapse', function(){
+//             $(this).prev(".card-header").find(".fa").removeClass("fa-angle-down").addClass("fa-angle-up");
+//         });
 
 
 
         
-    });
+//     });
 
 
 
