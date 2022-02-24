@@ -127,7 +127,7 @@
      font-size: 20px;
  }
  .tab-content .card-header {
-     padding: 20px 0px 0px;
+     padding: 0px 0px 0px;
      margin-bottom: 0;
      background-color: transparent;
      border-bottom: none;
@@ -1551,3 +1551,24 @@
 .hero-search .custom-sel:hover select {
     background: #fff !important;
   }
+.topping input{
+    margin-right: 7px;
+    width: 1rem;
+    height: 1rem;
+}
+.topping {
+    color: #6d6d6d;
+}
+.container .topping {
+    font-size: 16px;
+    font-weight: 400;
+    color: #6d6d6d;
+}
+.read-or-hide {
+    display: block;
+    color: #2da2af;
+    font-size: 14px;
+    font-style: italic;
+    cursor: pointer;
+    margin-top: 10px;
+}
