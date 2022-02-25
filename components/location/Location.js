@@ -26,7 +26,7 @@ const [finalValue, setFinalValue] = React.useState(null);
                                     <div id="collapseTwo" className="collapse show "
                                         aria-labelledby="headingTwo" data-parent="#accordionExample">
                                         <div className="card-body">
-                                            <input type="text" className="form-control"
+                                            <input type="text" className="form-control p-4"
                                                 placeholder="All Location" />
                                             <div className='mt-3 text-info'>Radius: {finalValue} miles</div>
 
