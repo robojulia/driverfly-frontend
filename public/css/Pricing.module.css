@@ -20,6 +20,13 @@
     padding: 5px;
     margin-bottom: 20px;
 }
+.averagebg{
+    background:#2ec8c4;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    padding: 5px;
+    margin-bottom: 20px;
+}
 .basic,.premium,.platinum{
     padding: 25px 30px;
 }

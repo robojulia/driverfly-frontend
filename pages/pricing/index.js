@@ -63,14 +63,14 @@ return (
                     <p className='my-2 text-secondary'>Enterprise</p>
                 </div>
                 <div className="col-lg-4  col-sm-4 col-12">
-                    <p className={Pric.Averagebg}>Average Resultant Cost Per Hire</p>
+                    <p className={Pric.averagebg}>Average Resultant Cost Per Hire</p>
                     <p className='my-2 text-secondary text-lg-center'>$1800</p>
                     <p className='my-2 text-secondary text-lg-center'>$1650</p>
                     <p className='my-2 text-secondary text-lg-center'>$1300</p>
                     <p className='my-2 text-secondary text-lg-center'>$1050</p>
                 </div>
                 <div className="col-lg-4  col-sm-4 col-12l">
-                    <p className={Pric.Averagebg}>Average Monthly Hires</p>
+                    <p className={Pric.averagebg}>Average Monthly Hires</p>
                     <p className='my-2 text-secondary text-lg-center'>1.5</p>
                     <p className='my-2 text-secondary text-lg-center'>6</p>
                     <p className='my-2 text-secondary text-lg-center'>26</p>
