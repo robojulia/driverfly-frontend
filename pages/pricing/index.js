@@ -56,21 +56,21 @@ return (
         <div className="container p-lg-0">
             <p className='my-4'>* Resultant estimated benefits are as follows:</p>
             <div className="row">
-                <div className="col-lg-4 col-sm-12 col-md-12 col-12">
+                <div className="col-lg-4 col-md-4 col-12">
                     <p className={Pric.pkg}>Package</p>
                     <p className='my-2 text-secondary text-lg-left text-center'>Basic</p>
                     <p className='my-2 text-secondary  text-lg-left text-center'>Standard</p>
                     <p className='my-2 text-secondary  text-lg-left text-center'>Premium</p>
                     <p className='my-2 text-secondary  text-lg-left text-center'>Enterprise</p>
                 </div>
-                <div className="col-lg-4 col-sm-12 col-md-12 col-12">
+                <div className="col-lg-4 col-md-4 col-12">
                     <p className={Pric.averagebg}>Average Resultant Cost Per Hire</p>
                     <p className='my-2 text-secondary text-center'>$1800</p>
                     <p className='my-2 text-secondary text-center'>$1650</p>
                     <p className='my-2 text-secondary text-center'>$1300</p>
                     <p className='my-2 text-secondary text-center'>$1050</p>
                 </div>
-                <div className="col-lg-4 col-sm-12 col-md-12 col-12">
+                <div className="col-lg-4 col-md-4 col-12">
                     <p className={Pric.averagebg}>Average Monthly Hires</p>
                     <p className='my-2 text-secondary text-center'>1.5</p>
                     <p className='my-2 text-secondary text-center'>6</p>
