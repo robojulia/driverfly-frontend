@@ -3,89 +3,95 @@ import Link from "next/link";
 import Layout from "../components/layouts";
 import SignupStyle from "../public/css/signup.module.css";
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 export default function Signup()
 {
 
 
     const [inputValues, setInputValue] = useState({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
+        firstName: null,
+        lastName: null,
+        email: null,
+        password: null,
+        confirmPassword: null,
+        phone:null
       });
 
-    const [validation, setValidation] = useState({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      });
+    const [validation, setValidation] = useState();
 
       
-    function handleChange(event) {
+    const handleChange = (event) => {
         const { name, value } = event.target;
-        setInputValue({ ...inputValues, [name]: value });
-    }
+        setInputValue((preValue) => {
+            return {
+              ...preValue,
+              [name]: value,
+            };
+          });
+        };
     
-    const signUpHandler = (event) => {
-        event.preventDefault();
 
-        // console.log(firstName, lastName, email, password, confirmPassword, phone);
-    }
+    // const signUpHandler = async (e) => {
+    //     e.preventDefault();
+    //     //console.log(firstName, lastName, email, password, confirmPassword, phone);
+
+    //     await axios.post('http://localhost:4000/users', inputValues)
+    //         .then(data => {
+    //             console.log("handle success", data);
+    //         })
+    //         .catch(function (error) {
+    //             console.log('error', error.response)
+    //         });
+
+    // }
 
 
-    const checkValidation = () => {
-        let errors = validation;
+    const signUpHandler = () => {
+        let errors = {};
     
         //first Name validation
-        if (!inputValues.firstName.trim()) {
+        if (!inputValues.firstName) {
           errors.firstName = "First name is required";
-        } else {
-          errors.firstName = "";
         }
         //last Name validation
-        if (!inputValues.lastName.trim()) {
+        if (!inputValues.lastName) {
           errors.lastName = "Last name is required";
-        } else {
-          errors.lastName = "";
         }
     
         // email validation
-        if (!inputValues.email.trim()) {
+        if (!inputValues.email) {
           errors.email = "Email is required";
-        } else {
-          errors.email = "";
-        }
+        } 
     
         //password validation
-        const password = inputValues.password;
-        if (!password) {
+        
+        if (!inputValues.password) {
           errors.password = "password is required";
-        }else {
-          errors.password = "";
         }
     
         //matchPassword validation
 
-        console.log(inputValues);
+        
         if (!inputValues.confirmPassword) {
           errors.confirmPassword = "Password confirmation is required";
         } else if (inputValues.confirmPassword !== inputValues.password) {
           errors.confirmPassword = "Password does not match confirmation password";
-        } else {
-          errors.password = "";
-          errors.confirmPassword = "";
         }
+
+
+        if (!inputValues.phone) {
+            errors.phone = "Phone number is required";
+          }
     
         setValidation(errors);
-      };
 
-      useEffect(() => {
-        checkValidation();
-      }, [inputValues]);
+        // Call API of signup
+        if(Object.keys(errors).length == 0){
+            console.log('you can proceed with the API');
+        }
+
+      };
 
     
     return (
@@ -131,36 +137,41 @@ export default function Signup()
                     <div class="col-lg-8">
                     <div className={SignupStyle.form}>
                         <h2 className="text-center my-5">Create New Driver Account</h2>
-                        <form className="my-5" onSubmit={signUpHandler}>
+                        <div className="my-5">
                            <div class="form-group">
-                                <input type="ematextil" class="form-control" onChange={(e) => handleChange(e)} name="firstName" value={inputValues.firstName} aria-describedby="emailHelp" placeholder="First Name" />
-                                {validation.firstName && <p>{validation.firstName}</p>}
+                                <input type="text" class="form-control" onChange={(e) => handleChange(e)} name="firstName" value={inputValues.firstName} aria-describedby="emailHelp" placeholder="First Name" />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.firstName}</p>
                             </div>
                             <div class="form-group">
-                                <input type="ematextil" class="form-control" onChange={(e) => handleChange(e)} name="lastName" value={inputValues.lastName} aria-describedby="emailHelp" placeholder="Last Name" />
-                                {validation.lastName && <p>{validation.lastName}</p>}
+                                <input type="text" class="form-control" onChange={(e) => handleChange(e)} name="lastName" value={inputValues.lastName} aria-describedby="emailHelp" placeholder="Last Name" />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.lastName}</p>
                             </div>
                             <div class="form-group">
                                 <input type="email" class="form-control" onChange={(e) => handleChange(e)} name="email" id="exampleInputUsername" value={inputValues.email} aria-describedby="emailHelp" placeholder="Email" />
-                                {validation.email && <p>{validation.email}</p>}
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.email}</p>
                             </div>
                             <div class="form-group">
                                 <input type="password" class="form-control" onChange={(e) => handleChange(e)} name="password" id="exampleInputPassword1" value={inputValues.password} placeholder="Password" required/>
-                                {validation.password && <p>{validation.password}</p>}
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.password}</p>
                             </div>
                             <div class="form-group">
                                 <input type="password" class="form-control" onChange={(e) => handleChange(e)} name="confirmPassword" id="exampleInputPassword1" value={inputValues.confirmPassword} placeholder="Confirm Password" required />
+                                <p style={{ fontStyle: "italic", color: "red" }}>
+          {validation?.confirmPassword
+            ? validation?.confirmPassword
+            : validation?.confirmPassword}
+        </p>
                             </div>
                             <div class="form-group">
                                 <input type="tel" class="form-control" onChange={(e) => handleChange(e)} name="phone" id="exampleInputPhone" placeholder="Phone" />
-                               
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.phone}</p>
                             </div>
                             <div class="form-group form-check">
                                 <input type="checkbox" class="form-check-input" id="exampleCheck1"/>
                                 <label class="form-check-label" for="exampleCheck1">You accept our <a href="" className={SignupStyle.link}>Terms and Conditions and Privacy Policy</a></label>
                             </div>
-                            <button type="submit" class="btn btn-dark w-100 d-block p-3 my-5">Register now</button>
-                        </form>
+                            <button type="submit" class="btn btn-dark w-100 d-block p-3 my-5" onClick={signUpHandler}>Register now</button>
+                        </div>
                      </div>
                     </div>
                     <div class="col-lg-2">
