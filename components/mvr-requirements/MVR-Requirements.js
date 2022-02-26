@@ -15,13 +15,13 @@ export default function MvrRequirement() {
                     aria-labelledby="headingseventy" data-parent="#accordionExample">
                     <div className="card-body">
                         <div className="topping pt-2 ">
-                            <input type="checkbox" id="topping" name="topping" value="Paneer" />Clean MVR Only (19)
+                            <input type="checkbox" id="clearmvr" name="topping" value="Paneer" />Clean MVR Only (19)
                         </div>
                         <div className="topping pt-2 ">
-                            <input type="checkbox" id="topping" name="topping" value="Paneer" />Moving Violation Okay (2)
+                            <input type="checkbox" id="moving" name="topping" value="Paneer" />Moving Violation Okay (2)
                         </div>
                         <div className="topping pt-2 ">
-                            <input type="checkbox" id="topping" name="topping" value="Paneer" />Non "At Fault" Accident Okay (8)
+                            <input type="checkbox" id="fault" name="topping" value="Paneer" />Non "At Fault" Accident Okay (8)
                         </div>
 
                     </div>

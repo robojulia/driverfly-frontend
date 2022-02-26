@@ -16,22 +16,22 @@ export default function PayStructure() {
                     <div className="card-body">
                         <div className="App">
                             <div className="topping pt-2">
-                                <input type="checkbox" id="topping" name="topping" value="Paneer" />Rate per mile (8)
+                                <input type="checkbox" id="permile" name="topping" value="Rate per mile" />Rate per mile (8)
                             </div>
                             <div className="topping pt-2">
-                                <input type="checkbox" id="topping" name="topping" value="Paneer" />Percent per move (5)
+                                <input type="checkbox" id="percentage" name="topping" value="Percent per move" />Percent per move (5)
                             </div>
                             <div className="topping pt-2">
-                                <input type="checkbox" id="topping" name="topping" value="Paneer" />Hourly (3)
+                                <input type="checkbox" id="hourly" name="topping" value=">Hourly" />Hourly (3)
                             </div>
                             <div className="topping pt-2">
-                                <input type="checkbox" id="topping" name="topping" value="Paneer" />Set Weekly (6)
+                                <input type="checkbox" id="setweekly" name="topping" value="Set Weekly" />Set Weekly (6)
                             </div>
                             <div className="topping pt-2">
-                                <input type="checkbox" id="topping" name="topping" value="Paneer" />Salaried (2)
+                                <input type="checkbox" id="salaried" name="topping" value="Salaried" />Salaried (2)
                             </div>
                             <div className="topping pt-2 ">
-                                <input type="checkbox" id="topping" name="topping" value="Paneer" />Percent weight (1)
+                                <input type="checkbox" id="perweight" name="topping" value="Percent weight" />Percent weight (1)
                             </div>
                         </div>
                     </div>

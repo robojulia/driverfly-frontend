@@ -15,7 +15,7 @@ export default function EmploymentType() {
                     <div className="card-body">
                         <div className="App">
                             <div className="topping pt-2">
-                                <input type="radio" id="lasthour" name="areas" value="Paneer" />W-2 (18)
+                                <input type="radio" id="lasthour" name="areas" value="W-2" />W-2 (18)
                             </div>
                             <div className="topping pt-2">
                                 <input type="radio" id="hour" name="areas" value="Paneer" />1099 (12)

@@ -15,13 +15,13 @@ export default function MinimumAge() {
                     aria-labelledby="headingfourty" data-parent="#accordionExample">
                     <div className="card-body">
                         <div className="topping pt-2 ">
-                            <input type="checkbox" id="topping" name="topping" value="Paneer" />18 (1)
+                            <input type="checkbox" id="eighteen" name="eighteen" value="Paneer" />18 (1)
                         </div>
                         <div className="topping pt-2 ">
-                            <input type="checkbox" id="topping" name="topping" value="Paneer" />23 (28)
+                            <input type="checkbox" id="twentythree" name="topping" value="Paneer" />23 (28)
                         </div>
                         <div className="topping pt-2 ">
-                            <input type="checkbox" id="topping" name="topping" value="Paneer" />24 (1)
+                            <input type="checkbox" id="twentyfour" name="topping" value="Paneer" />24 (1)
                         </div>'
 
 

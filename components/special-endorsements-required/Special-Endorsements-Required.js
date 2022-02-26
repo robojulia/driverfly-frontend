@@ -15,16 +15,16 @@ export default function SpecialEndorsementsRequired() {
                     aria-labelledby="headingsixty" data-parent="#accordionExample">
                     <div className="card-body">
                         <div className="topping pt-2 ">
-                            <input type="checkbox" id="topping" name="topping" value="Paneer" />TWIC (4)
+                            <input type="checkbox" id="twic" name="topping" value="Paneer" />TWIC (4)
                         </div>
                         <div className="topping pt-2 ">
-                            <input type="checkbox" id="topping" name="topping" value="Paneer" />(H) Hazardous Materials (HAZMAT) (2)
+                            <input type="checkbox" id="hazardos" name="topping" value="Paneer" />(H) Hazardous Materials (HAZMAT) (2)
                         </div>
                         <div className="topping pt-2 ">
-                            <input type="checkbox" id="topping" name="topping" value="Paneer" />(N) Tank Vehicle(Tanker) (1)
+                            <input type="checkbox" id="tank" name="topping" value="Paneer" />(N) Tank Vehicle(Tanker) (1)
                         </div>
                         <div className="topping pt-2 ">
-                            <input type="checkbox" id="topping" name="topping" value="Paneer" />(X) Tanker/HAZMAT Combo (2)
+                            <input type="checkbox" id="tankcombo" name="topping" value="Paneer" />(X) Tanker/HAZMAT Combo (2)
                         </div>
 
 

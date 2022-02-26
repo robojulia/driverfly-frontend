@@ -15,10 +15,10 @@ export default function SpecialAccommodations() {
                     aria-labelledby="headingfivety" data-parent="#accordionExample">
                     <div className="card-body">
                         <div className="topping pt-2 ">
-                            <input type="checkbox" id="topping" name="topping" value="Paneer" />Open to candidates with past felonies (6)
+                            <input type="checkbox" id="candidatesfelonies" name="topping" value="Paneer" />Open to candidates with past felonies (6)
                         </div>
                         <div className="topping pt-2 ">
-                            <input type="checkbox" id="topping" name="topping" value="Paneer" />Open to candidates with past misdemeanors (6)
+                            <input type="checkbox" id="candidatesmisdemeanors" name="topping" value="Paneer" />Open to candidates with past misdemeanors (6)
                         </div>
 
                     </div>

@@ -18,19 +18,19 @@ export default function DatePosted() {
                                 <input type="radio" id="lasthour" name="topping" value="Paneer" />Last Hour
                             </div>
                             <div className="topping pt-2">
-                                <input type="radio" id="hour" name="topping" value="Paneer" />Last 24 Hour
+                                <input type="radio" id="lasttwentyfour" name="topping" value="Paneer" />Last 24 Hour
                             </div>
                             <div className="topping pt-2">
-                                <input type="radio" id="topping" name="topping" value="Paneer" />Last 7 days
+                                <input type="radio" id="lastseven" name="topping" value="Paneer" />Last 7 days
                             </div>
                             <div className="topping pt-2">
-                                <input type="radio" id="topping" name="topping" value="Paneer" /> Last 14 days
+                                <input type="radio" id="lastfourteen" name="topping" value="Paneer" /> Last 14 days
                             </div>
                             <div className="topping pt-2">
-                                <input type="radio" id="topping" name="topping" value="Paneer" />Last 30 days
+                                <input type="radio" id="lastthirty" name="topping" value="Paneer" />Last 30 days
                             </div>
                             <div className="topping pt-2">
-                                <input type="radio" id="topping" name="topping" value="Paneer" />All
+                                <input type="radio" id="all" name="topping" value="Paneer" />All
                             </div>
                         </div>
 

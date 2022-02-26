@@ -15,16 +15,16 @@ export default function AreasCovered() {
                     <div className="card-body">
                         <div className="App">
                             <div className="topping pt-2">
-                                <input type="checkbox" id="lasthour" name="areas" value="Paneer" /> Local(5)
+                                <input type="checkbox" id="Local" name="areas" value="Paneer" /> Local(5)
                             </div>
                             <div className="topping pt-2">
-                                <input type="checkbox" id="hour" name="areas" value="Paneer" /> Regional(7)
+                                <input type="checkbox" id="Regional" name="areas" value="Paneer" /> Regional(7)
                             </div>
                             <div className="topping pt-2">
-                                <input type="checkbox" id="topping" name="areas" value="Paneer" /> OTR (12)
+                                <input type="checkbox" id="ort" name="areas" value="Paneer" /> OTR (12)
                             </div>
                             <div className="topping pt-2">
-                                <input type="checkbox" id="topping" name="areas" value="Paneer" />  CrossBorder (1)
+                                <input type="checkbox" id="crossBorder" name="areas" value="Paneer" />  CrossBorder (1)
                             </div>
                         </div>
                     </div>

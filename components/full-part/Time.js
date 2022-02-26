@@ -15,10 +15,10 @@ export default function FullParty() {
                     <div className="card-body">
                         <div className="App">
                             <div className="topping pt-2">
-                                <input type="radio" id="lasthour" name="areas" value="Paneer" />Part-time (1)
+                                <input type="radio" id="part-time" name="time" value="Part-time" />Part-time (1)
                             </div>
                             <div className="topping pt-2">
-                                <input type="radio" id="hour" name="areas" value="Paneer" />Full-time (29)
+                                <input type="radio" id="full-time" name="time" value="Full-time" />Full-time (29)
                             </div>
                         </div>
 

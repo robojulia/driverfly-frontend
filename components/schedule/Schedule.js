@@ -16,16 +16,16 @@ export default function Schedule() {
                     <div className="card-body">
                         <div className="App">
                             <div className="topping pt-2">
-                                <input type="radio" id="lasthour" name="areas" value="Paneer" />Multiple weeks on the road (6)
+                                <input type="radio" id="multipleweeks" name="areas" value="Paneer" />Multiple weeks on the road (6)
                             </div>
                             <div className="topping pt-2">
-                                <input type="radio" id="hour" name="areas" value="Paneer" />Most weekends off (2)
+                                <input type="radio" id="mostweekends" name="areas" value="Paneer" />Most weekends off (2)
                             </div>
                             <div className="topping pt-2">
-                                <input type="radio" id="lasthour" name="areas" value="Paneer" />Weekends off (7)
+                                <input type="radio" id="Weekendsoff" name="areas" value="Paneer" />Weekends off (7)
                             </div>
                             <div className="topping pt-2">
-                                <input type="radio" id="hour" name="areas" value="Paneer" />Other (12)
+                                <input type="radio" id="Other" name="areas" value="Paneer" />Other (12)
                             </div>
                         </div>
                     </div>

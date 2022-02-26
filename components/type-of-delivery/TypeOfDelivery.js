@@ -15,16 +15,16 @@ export default function TypeOfDelivery() {
                     <div className="card-body">
                         <div className="App">
                             <div className="topping pt-2">
-                                <input type="checkbox" id="lasthour" name="areas" value="Paneer" />Touch (1)
+                                <input type="checkbox" id="touch" name="areas" value="Paneer" />Touch (1)
                             </div>
                             <div className="topping pt-2">
-                                <input type="checkbox" id="hour" name="areas" value="Paneer" />No Touch (1)
+                                <input type="checkbox" id=">notouch" name="areas" value="Paneer" />No Touch (1)
                             </div>
                             <div className="topping pt-2">
-                                <input type="checkbox" id="lasthour" name="areas" value="Paneer" />Drop-and-hook (6)
+                                <input type="checkbox" id="Drop-and-hook" name="areas" value="Paneer" />Drop-and-hook (6)
                             </div>
                             <div className="topping pt-2">
-                                <input type="checkbox" id="hour" name="areas" value="Paneer" />Dedicated Lanes (1)
+                                <input type="checkbox" id="Dedicated" name="areas" value="Paneer" />Dedicated Lanes (1)
                             </div>
                         </div>
                     </div>
