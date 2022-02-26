@@ -1,7 +1,7 @@
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 import React, { useState } from 'react';
 import RangeSlider from 'react-bootstrap-range-slider';
-import Search from '../search/keywords-search';
+import Search from '../search/search';
 import Category from '../category/Category'
 import Location from '../location/Location'
 import JobType from '../jobtype/JobType'
@@ -28,7 +28,7 @@ export default function FilterResults() {
     return (
         <>
             <div className="col">
-                <h3>Filter Results</h3>
+                <h5 className='font-weight-normal'>Filter Results</h5>
                 <form action="">
                     < Search />
                     <div className="bs-example">

@@ -1,4 +1,12 @@
+import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
+import React, { useState } from 'react';
+import RangeSlider from 'react-bootstrap-range-slider';
+
 export default function Salary() {
+
+    const [value, setValue] = React.useState(18);
+
+
     return (
         <>
             <div className="card">
@@ -30,15 +38,24 @@ export default function Salary() {
                                 <input type="radio" id="yearly" name="salry" value="Paneer" />Yearly
                             </div>
                         </div>
+                        <RangeSlider
+                            value={value}
+                            min={18}
+                            max={95000}
+                            onChange={e => setValue(e.target.value)}
 
-                        <div className="rangeslider mt-3 p-0">
-                            <input className="min" name="range_1" type="range" min="1"
-                                max="95000" value="18" />
-                            <input className="max" name="range_1" type="range" min="1"
-                                max="95000" value="95000" />
-                            <span className="range_min light left">$18 </span>
-                            <span className="range_max light right">95000 </span>
+                            variant='info'
+                        />
+                        
+                         <div className='row'>
+                            <div className='col'>
+                                ${value}
+                            </div>
+                            <div className='col text-right'>
+                                95000
+                            </div>
                         </div>
+
 
                     </div>
                 </div>
