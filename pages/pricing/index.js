@@ -51,30 +51,31 @@ return (
             }
           
         </div>
-    </div>    
-        <div className="container p-0">
+    </div>  
+    < div className=' estmate_pric__sec'>
+        <div className="container p-lg-0">
             <p className='my-4'>* Resultant estimated benefits are as follows:</p>
             <div className="row">
-                <div className="col-lg-4 col-sm-4 col-12">
+                <div className="col-lg-4 col-sm-12 col-md-12 col-12">
                     <p className={Pric.pkg}>Package</p>
-                    <p className='my-2 text-secondary'>Basic</p>
-                    <p className='my-2 text-secondary'>Standard</p>
-                    <p className='my-2 text-secondary'>Premium</p>
-                    <p className='my-2 text-secondary'>Enterprise</p>
+                    <p className='my-2 text-secondary text-lg-left text-center'>Basic</p>
+                    <p className='my-2 text-secondary  text-lg-left text-center'>Standard</p>
+                    <p className='my-2 text-secondary  text-lg-left text-center'>Premium</p>
+                    <p className='my-2 text-secondary  text-lg-left text-center'>Enterprise</p>
                 </div>
-                <div className="col-lg-4  col-sm-4 col-12">
+                <div className="col-lg-4 col-sm-12 col-md-12 col-12">
                     <p className={Pric.averagebg}>Average Resultant Cost Per Hire</p>
-                    <p className='my-2 text-secondary text-lg-center'>$1800</p>
-                    <p className='my-2 text-secondary text-lg-center'>$1650</p>
-                    <p className='my-2 text-secondary text-lg-center'>$1300</p>
-                    <p className='my-2 text-secondary text-lg-center'>$1050</p>
+                    <p className='my-2 text-secondary text-center'>$1800</p>
+                    <p className='my-2 text-secondary text-center'>$1650</p>
+                    <p className='my-2 text-secondary text-center'>$1300</p>
+                    <p className='my-2 text-secondary text-center'>$1050</p>
                 </div>
-                <div className="col-lg-4  col-sm-4 col-12l">
+                <div className="col-lg-4 col-sm-12 col-md-12 col-12">
                     <p className={Pric.averagebg}>Average Monthly Hires</p>
-                    <p className='my-2 text-secondary text-lg-center'>1.5</p>
-                    <p className='my-2 text-secondary text-lg-center'>6</p>
-                    <p className='my-2 text-secondary text-lg-center'>26</p>
-                    <p className='my-2 text-secondary text-lg-center'> 105</p>
+                    <p className='my-2 text-secondary text-center'>1.5</p>
+                    <p className='my-2 text-secondary text-center'>6</p>
+                    <p className='my-2 text-secondary text-center'>26</p>
+                    <p className='my-2 text-secondary text-center'> 105</p>
                 </div>
             </div>
             <div className={Pric.offer}>
@@ -93,6 +94,7 @@ return (
                 </div>
             </div>
         </div>
+        </div> 
         <div class="container my-5 p-0 ">
             <div className={Pric.services}>
                 <h2 className="text-white text-center font-weight-normal">More Reasons to Use DriverFly</h2>
