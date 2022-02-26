@@ -107,5 +107,10 @@
     background-color: #2da2af;
     color: #ffffff;
 }
-
+@media screen and (max-width: 767px) {
+    .whatweoffer {
+        font-size: 25px;
+        text-align: center;
+    }
+  }
 
