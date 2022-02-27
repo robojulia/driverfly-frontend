@@ -2,14 +2,16 @@ import Link from 'next/link';
 import Layout from "../components/layouts";
 import FilterResult from '../components/filter-results/filter-results'
 import JobsList from '../components/jobslisting/jobslist'
+import 'bootstrap/dist/css/bootstrap.css'; 
+import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 
 export default function FindJobs() {
+   
     return (
         <>
             <div className="filter-sec">
                 <div className="container">
-                    <div className="row">
-                        
+                    <div className="row"> 
                       < FilterResult />
 
                         <div className="col-md-9 outer pl-4 ">

@@ -127,7 +127,7 @@
      font-size: 20px;
  }
  .tab-content .card-header {
-     padding: 20px 0px 0px;
+     padding: 0px 0px 0px;
      margin-bottom: 0;
      background-color: transparent;
      border-bottom: none;
@@ -1551,3 +1551,44 @@
 .hero-search .custom-sel:hover select {
     background: #fff !important;
   }
+.topping input{
+    width: 2rem;
+    height: 1.1rem;
+    vertical-align: bottom;
+}
+.topping {
+    color: #6d6d6d;
+}
+.container .topping {
+    font-size: 16px;
+    font-weight: 400;
+    color: #6d6d6d;
+}
+.read-or-hide {
+    display: block;
+    color: #2da2af;
+    font-size: 14px;
+    font-style: italic;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+ 
+.ui-slider .ui-btn-inner {
+    padding: 4px 0 0 0 !important;
+}
+ 
+.ui-slider-popup {
+    position: absolute !important;
+    width: 64px;
+    height: 64px;
+    text-align: center;
+    font-size: 36px;
+    padding-top: 14px;
+    z-index: 100;
+    opacity: 0.8;
+}
+field.checkbox input:checked + check {
+	background-color: rgb(0, 0, 0);
+	transition: 0s;
+}
