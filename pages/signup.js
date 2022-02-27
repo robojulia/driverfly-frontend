@@ -12,11 +12,14 @@ export default function Signup()
     const [inputValues, setInputValue] = useState({
         firstName: null,
         lastName: null,
+        name: null,
         email: null,
         password: null,
         confirmPassword: null,
         phone:null
       });
+    
+    const [serverValidation, setServerValidation] = useState([]);
 
     const [validation, setValidation] = useState();
 
@@ -47,22 +50,26 @@ export default function Signup()
     // }
 
 
-    const signUpHandler = () => {
+    const signUpHandler = async () => {
         let errors = {};
     
         //first Name validation
-        if (!inputValues.firstName) {
-          errors.firstName = "First name is required";
-        }
+        // if (!inputValues.firstName) {
+        //   errors.firstName = "First name is required";
+        // }
         //last Name validation
-        if (!inputValues.lastName) {
-          errors.lastName = "Last name is required";
-        }
+        // if (!inputValues.lastName) {
+        //   errors.lastName = "Last name is required";
+        // }
+
+        // if (!inputValues.name) {
+        //   errors.name = "Name is required";
+        // }
     
         // email validation
-        if (!inputValues.email) {
-          errors.email = "Email is required";
-        } 
+        // if (!inputValues.email) {
+        //   errors.email = "Email is required";
+        // } 
     
         //password validation
         
@@ -89,6 +96,23 @@ export default function Signup()
         // Call API of signup
         if(Object.keys(errors).length == 0){
             console.log('you can proceed with the API');
+
+            await axios.post('http://localhost:4000/api/users', inputValues)
+            .then(data => {
+                console.log("handle success", data);
+                
+            })
+            .catch(function (error) {
+                console.log("handle error success");
+                if (error.response) {
+                    // console.log(error.response.status)
+                    console.log(error.response.data.message)
+
+                    setServerValidation(error.response.data.message);
+                 }
+            }).then(function () {
+                console.log("always executed");
+            });
         }
 
       };
@@ -138,13 +162,18 @@ export default function Signup()
                     <div className={SignupStyle.form}>
                         <h2 className="text-center my-5">Create New Driver Account</h2>
                         <div className="my-5">
-                           <div class="form-group">
+                           {/* <div class="form-group">
                                 <input type="text" class="form-control" onChange={(e) => handleChange(e)} name="firstName" value={inputValues.firstName} aria-describedby="emailHelp" placeholder="First Name" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.firstName}</p>
                             </div>
                             <div class="form-group">
                                 <input type="text" class="form-control" onChange={(e) => handleChange(e)} name="lastName" value={inputValues.lastName} aria-describedby="emailHelp" placeholder="Last Name" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.lastName}</p>
+                            </div> */}
+
+                            <div class="form-group">
+                                <input type="text" class="form-control" onChange={(e) => handleChange(e)} name="name" value={inputValues.name} aria-describedby="emailHelp" placeholder="Name" />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.name}</p>
                             </div>
                             <div class="form-group">
                                 <input type="email" class="form-control" onChange={(e) => handleChange(e)} name="email" id="exampleInputUsername" value={inputValues.email} aria-describedby="emailHelp" placeholder="Email" />
@@ -170,6 +199,14 @@ export default function Signup()
                                 <input type="checkbox" class="form-check-input" id="exampleCheck1"/>
                                 <label class="form-check-label" for="exampleCheck1">You accept our <a href="" className={SignupStyle.link}>Terms and Conditions and Privacy Policy</a></label>
                             </div>
+                            {console.log(serverValidation)}
+                            {console.log('serverValidation')}
+                            {serverValidation instanceof Array ? serverValidation.map((inValid) => {
+                                return (
+                                    <p style={{ fontStyle: "italic", color: "red" }}>{inValid}</p>
+                                )
+                                
+                            }) : ''}
                             <button type="submit" class="btn btn-dark w-100 d-block p-3 my-5" onClick={signUpHandler}>Register now</button>
                         </div>
                      </div>
