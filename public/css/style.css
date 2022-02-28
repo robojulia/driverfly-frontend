@@ -557,14 +557,28 @@
  /************************************ CONTACT-PAGE ****************************/
  .top-links-sec {
      background-color: #f0f0f0;
-     padding: 18px 0px;
+     padding: 24px 0px;
  }
  .top-links-sec h2{
      font-weight: 400;
+     margin: 0;
+ }
+ .top-links-sec ul{
+     margin: 0;
+ }
+ .top-links-sec ul li{
+     display: inline-block;
  }
  .top-links-sec ul li a{
      padding-top: 18px;
+     text-transform: capitalize;
+     text-decoration: none;
  }
+ .top-links-sec ol li > a:first-child {
+    margin-right: 10px;
+    color: #6a6a6a;
+
+  }
  .contact-form {
      background-color: #fafafa;
      padding-bottom: 90px;
