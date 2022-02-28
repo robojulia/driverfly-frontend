@@ -1,0 +1,147 @@
+.postthumbnail:before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background: #221f1f;
+    opacity: .4;
+    filter: alpha(opacity=40);
+    -webkit-transition: all 0.6s ease-in-out 0s;
+    -o-transition: all 0.6s ease-in-out 0s;
+    transition: all 0.6s ease-in-out 0s;
+}
+
+.postthumbnail{
+    width: 100%;
+    height: 250px;
+    border-radius: 6px;
+    position: relative;
+    transition:.5s all ease-in-out;
+}
+.postthumbnail:hover img:hover{
+    transform:scale(1.1);
+    transition:.5s all ease-in-out;
+}
+.post{
+    position: relative;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.custombtn{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    opacity: .8;
+    background: #221f1f9c;
+    border-radius: 6px;
+   
+}
+.custombtn button{
+	background: #2da2af;
+	opacity: 1;
+}
+.description{
+	font-size: 16px;
+	margin-top: 10px;
+	color: #6a6a6a;
+}
+.topinfo .time{
+	color: #6a6a6a;
+	margin-right: 20px;
+	text-decoration: none;
+}
+.topinfo:hover h4{
+	color: #2da2af;
+}
+.topinfo:hover a{
+	text-decoration: none;
+}
+.comments{
+	color: #6a6a6a;
+}
+.readmore{
+	color: #2da2af;
+	margin-top: 10px;
+	display: block;
+}
+.readmore:hover{
+	color: #2da2af;
+	text-decoration: underline;
+}
+.cusbtn{
+    top: 0;
+    position: absolute;
+    width: 100%;
+    left: 10%;
+}
+.cusbtn button{
+    background:#2da2af;
+    font-size: 14px;
+}
+.space{
+    padding-top: 20px;
+}
+.searchbar{
+    border: 1px solid;
+    padding: 10px;
+}
+i .fa .fa-search {
+    float: right;
+   
+}
+
+.sidebarwigt {
+    box-shadow: 0 0px 20px 0 rgb(0 0 0 / 9%);
+    padding: 10px;
+}
+.sidebarwigt a {
+  color: black;
+}
+.sidebarwigt a:hover {
+    color: #2da2af;
+    text-decoration: none;
+
+
+  }
+  .sidebarwigt img{
+    width: 88px;
+    height: 88px;
+    border-radius: 4px;
+
+  }
+  .date {
+    margin-top: 10px;
+}
+  .date a{
+      color: #6a6a6a ;
+      margin-top: 10px;
+  }
+  .date a:hover{
+    color: #000000 ;
+}
+.tag {
+    margin-bottom: 10px;
+}
+.tag a{
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    background: #f3f3f3;
+    color: #6a6a6a;
+}
+.tag a:hover{
+    background: #000000;
+    color: #ffffff;
+    text-decoration: none;
+}
+@media screen and (min-width: 767px) {
+    .cusbtn {
+        width: 75%;
+        left: 0%;
+    }
+}

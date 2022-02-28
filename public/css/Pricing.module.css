@@ -1,0 +1,116 @@
+.link  {
+    color: #000000;
+}
+ .link:hover {
+    color: #2da2af;
+    text-decoration: none;
+}
+.pricesec h1{
+    font-size: 26px;
+    font-weight: 400;
+}
+.pricesec h1{
+    font-size: 26px;
+    font-weight: 400;
+} 
+.pkg{
+    background:#dedede;
+    text-align:center;
+    color: rgb(0, 0, 0);
+    padding: 5px;
+    margin-bottom: 20px;
+}
+.averagebg{
+    background:#2ec8c4;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    padding: 5px;
+    margin-bottom: 20px;
+}
+.basic,.premium,.platinum{
+    padding: 25px 30px;
+}
+.premium{
+    background-color: #2ec8c4;
+    color: #fff;
+    margin-bottom: 20px;
+    border-radius: 3px;
+}
+.pric-footer{
+    border-bottom: solid 1px;
+}
+
+.offer h3{
+    font-size: 28px;;
+}
+.contactlink{
+    color: #000000;
+}
+ .contactlink:hover {
+    color: #2da2af;
+    text-decoration: none;
+}
+.whatweoffer{
+    background-color: #2ec8c4;
+    color: #fff;
+    padding: 5px;
+    margin:65px 0px 37px 0px;
+    font-weight: 400;
+}
+.services {
+    background-color: #2ec8c4;
+    padding: 40px 12px;
+    margin: 30px 0px;
+    border-radius: 5px;
+}
+.pricesec{
+    margin: 40px 0px;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 19%), 0 10px 20px rgb(0 0 0 / 0%);
+    padding: 15px 30px;
+}
+
+.pricesec .premium{
+    background-image: linear-gradient( 60deg,#2da2af,#25e1e8);
+    background-image: -webkit-linear-gradient( 60deg,#2da2af,#25e1e8);
+    padding: 28px 30px;
+    border-radius: 5px;
+}
+.pricesec .premium p,.pricesec .premium h2{
+   color: #fff;
+}
+.premium button , .platinum button{
+    color: #2da2af;
+ }
+ .premium button:hover{
+    color: #2da2af;
+ }
+ .basic {
+    padding: 28px 30px;
+}
+.pricfooter{
+    border-top: solid 1px;
+}
+.basic .pricfooter{
+    margin-top: 185px;
+}
+.premium .pricfooter{
+    margin-top: 105px;
+}
+.platinum .pricfooter{
+    margin-top: 68px;
+}
+ .basic button ,.platinum button{
+     border: solid 1px #2da2af;
+     color: #2da2af;
+ }
+ .basic button:hover, .platinum button:hover{
+    background-color: #2da2af;
+    color: #ffffff;
+}
+@media screen and (max-width: 767px) {
+    .whatweoffer {
+        font-size: 25px;
+        text-align: center;
+    }
+  }
+
