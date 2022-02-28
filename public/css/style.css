@@ -566,7 +566,7 @@
  .top-links-sec ul{
      margin: 0;
  }
- .top-links-sec ul li{
+ .top-links-sec ol li{
      display: inline-block;
  }
  .top-links-sec ul li a{
@@ -574,11 +574,20 @@
      text-transform: capitalize;
      text-decoration: none;
  }
- .top-links-sec ol li > a:first-child {
-    margin-right: 10px;
+ .top-links-sec ol li :first-child {
     color: #6a6a6a;
 
   }
+  .top-links-sec  nav li:first-child:after {
+    content:"\f0da";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    margin-left:5px;
+    color:#6a6a6a;
+    margin: 0px 10px;
+}
  .contact-form {
      background-color: #fafafa;
      padding-bottom: 90px;
