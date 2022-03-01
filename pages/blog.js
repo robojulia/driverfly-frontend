@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Layout from "../components/layouts";
 import Blog from '../public/css/Blog.module.css'
 import BlogSidebar from '../components/blog-sidebar/Blog-Sidebar';
+import Breadcrumbs from 'nextjs-breadcrumbs';
 export default function Blogs() {
 return (
 <>
@@ -9,10 +10,7 @@ return (
    <div className="container">
       <div className="top-links-inner d-flex align-items-center justify-content-between">
          <h2>Owner Operators</h2>
-         <ul className="d-flex">
-            <li><a href="index.html" className="nav-link text-dark px-0">Home <i className="fa fa-caret-right px-2" aria-hidden="true"></i></a></li>
-            <li><a href="#" className="nav-link text-dark px-0">Blog</a></li>
-         </ul>
+       < Breadcrumbs />
       </div>
    </div>
 </div>

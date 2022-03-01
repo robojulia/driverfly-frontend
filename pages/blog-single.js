@@ -6,6 +6,7 @@ import JonInformation from '../components/job-information-sidebar/JobInformation
 import JobDescription from '../components/job-description/JobDescription';
 import BlogSidebar from '../components/blog-sidebar/Blog-Sidebar';
 import Breadcrumbs from 'nextjs-breadcrumbs';
+import Tags from '../components/tags/Tags';
 
 export default function Detail() {
     return (

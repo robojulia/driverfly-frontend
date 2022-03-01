@@ -1,4 +1,5 @@
 import Blog from '../../public/css/Blog.module.css'
+import Tags from '../tags/Tags'
 export default function BlogSidebr() {
     return (
         <>
@@ -6,14 +7,14 @@ export default function BlogSidebr() {
                 <div className="col-12">
                     <div className="search-container" />
                     <div className="input-group box-shadows rounded-sm font-0 border">
-                        <input id="search-input" type="search" className="form-control border-0" placeholder="Search" />
+                        <input id="search-input " type="search" className="form-control border-0 py-4" placeholder="Search" />
                         <button id="search-button" type="button" className="btn">
                             <i className="fa fa-search"></i>
                         </button>
                     </div>
                 </div>
                 <div className="col-12">
-                    <h5 className="mt-5 mb-4"><span>Category</span></h5>
+                    <h5 className="mt-5 mb-4"><span className='text-dark'>Category</span></h5>
                     <div className={Blog.sidebarwigt}>
                         <div className="card border-0">
                             <ul className="list-group list-group-flush">
@@ -28,7 +29,7 @@ export default function BlogSidebr() {
                     </div>
                 </div>
                 <div className="col-12">
-                    <h5 className="mt-5 mb-4"><span>Category</span></h5>
+                    <h5 className="mt-5 mb-4"><span  className='text-dark'>Recent Posts</span></h5>
                     <div className={Blog.sidebarwigt}>
                         <div className="row mb-4">
                             <div className="col-3 mr-2 ml-3 p-0">
@@ -63,7 +64,7 @@ export default function BlogSidebr() {
                     </div>
                 </div>
                 <div className="col-12">
-                    <h5 className="mt-5 mb-4"><span>Meta</span></h5>
+                    <h5 className="mt-5 mb-4"><span  className='text-dark'>Meta</span></h5>
                     <div className={Blog.sidebarwigt}>
                         <div className="card border-0">
                             <ul className="list-group list-group-flush">
@@ -86,44 +87,8 @@ export default function BlogSidebr() {
                         </div>
                     </div>
                 </div>
-                <div className="col-12">
-                    <h5 className="mt-5 mb-4"><span>Tags</span></h5>
-                    <div className="card border-0">
-                        <div className='row mb-3'>
-                            <div className='col-5 p-0'>
-                                <ul className="list-group list-group-flush">
-                                    <li className={Blog.tag}>
-                                        <a href="">Register</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div className='col-5 p-0'>
-                                <ul className="list-group list-group-flush">
-                                    <li className={Blog.tag}>
-                                        <a href="">Log in</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div className='row mb-3'>
-                            <div className='col-5 p-0'>
-                                <ul className="list-group list-group-flush">
-                                    <li className={Blog.tag}>
-                                        <a href="">Training</a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div className='col-5 p-0'>
-                                <ul className="list-group list-group-flush">
-                                    <li className={Blog.tag}>
-                                        <a href="">Trucking laws</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
+        
+                <Tags />
             </div>
         </>
     )

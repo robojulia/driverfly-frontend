@@ -31,12 +31,6 @@
       -webkit-filter: grayscale(1);
       -webkit-transition: all .8s ease-in-out;  
     }
-
-    .job__deatails__sec img:hover {
-        filter:#000;
-      -webkit-filter: grayscale(0);
-      -webkit-transform: scale(1.1);
-    }
     .comment_form{
         background:#e8e8e8;
     }
