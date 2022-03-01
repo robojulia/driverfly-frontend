@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Breadcrumbs from 'nextjs-breadcrumbs';
 import Layout from "../components/layouts";
 
 export default function FAQ() {
@@ -10,10 +11,7 @@ export default function FAQ() {
     <div class="container">
         <div class="top-links-inner d-flex align-items-center justify-content-between">
             <h2>FAQ</h2>
-            <ul class="d-flex">
-                <li><a href="index.html" class="nav-link text-dark px-0">Home <i class="fa fa-caret-right px-2" aria-hidden="true"></i></a></li>
-                <li><a href="#" class="nav-link text-dark px-0">FAQ</a></li>
-            </ul>
+            < Breadcrumbs />
         </div>
     </div>
 </div>
