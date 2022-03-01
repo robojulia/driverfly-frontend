@@ -1,21 +1,28 @@
 import Link from 'next/link';
 import Layout from "../components/layouts";
 import BlogDetail from '../public/css/BlogDetail.module.css'
-// import SocilShare from '../components/share-link/ShareLink';
-// import JonInformation from '../components/job-information-sidebar/JobInformation';
-// import JobDescription from '../components/job-description/JobDescription';
+import SocilShare from '../components/share-link/ShareLink';
+import JonInformation from '../components/job-information-sidebar/JobInformation';
+import JobDescription from '../components/job-description/JobDescription';
+import BlogSidebar from '../components/blog-sidebar/Blog-Sidebar';
+import Breadcrumbs from 'nextjs-breadcrumbs';
 
 export default function Detail() {
     return (
         <>
+            <div className="top-links-sec">
+                <div className="container">
+                    <div className="top-links-inner d-flex align-items-center justify-content-between">
+                        <h2>Owner Operators</h2>
+                       <Breadcrumbs />
+                    </div>
+                </div>
+            </div>
 
             <div className={BlogDetail.job__deatails__sec}>
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-8 ">
-                            {/* < JobDescription />
-                            < SocilShare />
-                            < RelatedJobs /> */}
                             <img src="img/Freight1.jpg" className='w-100' />
                             <p className='mt-3'>Changes in Trucking</p>
                             <h2 className='font-weight-normal'> What Is This New ELDT Program You Speak Of?</h2>
@@ -42,7 +49,7 @@ export default function Detail() {
                             <h2 className='font-weight-normal my-4'>Resources</h2>
                             <p>Of course, this is just an overview of the new ELDT regulations. For the official source of information, refer to <Link href=''><a>FMCSA’s site</a></Link> or the <Link href=''><a>Code of Federal Regulations.</a></Link></p>
 
-
+                            < SocilShare />
 
                             <div className="comment mb-5">
                                 <h3>Leave a Comment</h3>
@@ -61,10 +68,10 @@ export default function Detail() {
                                                         <div className="col p-0"> <input type="email" className="form-control p-4" name="email" required="required" /></div>
                                                     </div>
                                                     <div className="form-check mb-3">
-                                                        <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault"/>
-                                                            <label className="form-check-label" for="flexCheckDefault">
+                                                        <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                                                        <label className="form-check-label" for="flexCheckDefault">
                                                             Save my name, email, and website in this browser for the next time I comment.
-                                                            </label>
+                                                        </label>
                                                     </div>
                                                     <div className="form-group">
                                                         <label>Comment</label>
@@ -80,9 +87,9 @@ export default function Detail() {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-lg-4">
-                            {/* < JonInformation /> */}
-                        </div>
+
+                        < BlogSidebar />
+
                     </div>
                 </div>
             </div>
