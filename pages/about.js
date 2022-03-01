@@ -1,5 +1,7 @@
 import Head from "next/head";
 import Layout from "../components/layouts";
+import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
+
 
 export default function About()
 {
@@ -10,13 +12,10 @@ export default function About()
             </Head>
 
             <div className="top-links-sec">
-                <div className="container">
+                <div className="container p-0">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
                         <h2>About</h2>
-                        <ul className="d-flex">
-                            <li><a href="index.html" className="nav-link text-dark px-0">Home <i className="fa fa-caret-right px-2" aria-hidden="true"></i></a></li>
-                            <li><a href="#" className="nav-link text-dark px-0">About</a></li>
-                        </ul>
+                       < Breadcrumb/>
                     </div>
                 </div>
             </div>
