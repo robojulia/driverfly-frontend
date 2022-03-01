@@ -7,7 +7,7 @@ import axios from 'axios';
 
 export default function Signup()
 {
-
+    const [color, setColor] = useState('red');
 
     const [inputValues, setInputValue] = useState({
         firstName: null,
@@ -62,14 +62,14 @@ export default function Signup()
         //   errors.lastName = "Last name is required";
         // }
 
-        // if (!inputValues.name) {
-        //   errors.name = "Name is required";
-        // }
+        if (!inputValues.name) {
+          errors.name = "Name is required";
+        }
     
-        // email validation
-        // if (!inputValues.email) {
-        //   errors.email = "Email is required";
-        // } 
+        //email validation
+        if (!inputValues.email) {
+          errors.email = "Email is required";
+        } 
     
         //password validation
         
@@ -105,10 +105,23 @@ export default function Signup()
             .catch(function (error) {
                 console.log("handle error success");
                 if (error.response) {
-                    // console.log(error.response.status)
-                    console.log(error.response.data.message)
-
-                    setServerValidation(error.response.data.message);
+                    if(error.response.data.message){
+                        setServerValidation(error.response.data.message);
+                    }else if (error.response.data.errors){
+                        setColor("red");
+                        console.log('here');
+                        console.log(error.response.data.errors.user);
+                        if(error.response.data.errors.user){
+                            setServerValidation(error.response.data.errors.user);
+                        }else{
+                            setServerValidation(error.response.data.errors.username);
+                        }
+                        
+                    }else if(error.response.data.err){
+                        setColor("green");
+                        setServerValidation('User registered successfully');
+                    }
+                    
                  }
             }).then(function () {
                 console.log("always executed");
@@ -206,7 +219,7 @@ export default function Signup()
                                     <p style={{ fontStyle: "italic", color: "red" }}>{inValid}</p>
                                 )
                                 
-                            }) : ''}
+                            }) : <p style={{ fontStyle: "italic", color: color }}>{serverValidation}</p>}
                             <button type="submit" class="btn btn-dark w-100 d-block p-3 my-5" onClick={signUpHandler}>Register now</button>
                         </div>
                      </div>
