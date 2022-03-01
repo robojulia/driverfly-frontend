@@ -1,0 +1,4 @@
+.bloglist ul li{
+    list-style: disc !important;
+    background:red;
+}
