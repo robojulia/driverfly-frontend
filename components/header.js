@@ -1,7 +1,6 @@
 import Link from "next/link";
 
-export default function Header()
-{
+export default function Header() {
     return (
         <>
             <header>
@@ -9,11 +8,11 @@ export default function Header()
                     <div className="container-fluid">
                         <nav className="navbar navbar-expand-lg navbar p-0">
                             <div className="logo">
-                                <img src="img/DriverFly-Official-Favicon.png" className="logo"/>
+                                <img src="img/DriverFly-Official-Favicon.png" className="logo" />
                             </div>
                             <button className="navbar-toggler" type="button" data-toggle="collapse"
-                                    data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
-                                    aria-label="Toggle navigation">
+                                data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                                aria-label="Toggle navigation">
                                 <i className="fa fa-bars" aria-hidden="true"></i>
                             </button>
                             <div className="collapse navbar-collapse justify-content-between" id="navbarNav">
@@ -35,31 +34,27 @@ export default function Header()
                                     </li>
                                     <li className="nav-item dropdown">
                                         <a className="nav-link  dropdown-toggle" href="#"
-                                           data-bs-toggle="dropdown"> Driver Resources</a>
+                                            data-bs-toggle="dropdown"> Driver Resources</a>
                                         <ul className="dropdown-menu">
                                             <li>
-                                                
+
                                                 <Link href="/faq">
                                                     <a className="dropdown-item">FAQ</a>
                                                 </Link>
                                             </li>
                                             <li><a className="dropdown-item" href="#"> Get Your CDL </a></li>
                                             <li>
-                                            <Link href="/owner-operators">
-                                                <a className="dropdown-item"> Owner Operators </a>
-                                            </Link>
-                                            
-                                            </li>
-                                            <Link href="/blog">
-                                                  <a className="dropdown-item" href="#"> The DriverFly On The Wall
-                                                Blog </a>
+                                                <Link href="/owner-operators">
+                                                    <a className="dropdown-item"> Owner Operators </a>
                                                 </Link>
 
+                                            </li>
+                                         
                                         </ul>
                                     </li>
                                     <li className="nav-item dropdown">
                                         <a className="nav-link  dropdown-toggle" href="#"
-                                           data-bs-toggle="dropdown"> Motor Carrier Solutions</a>
+                                            data-bs-toggle="dropdown"> Motor Carrier Solutions</a>
                                         <ul className="dropdown-menu">
                                             <li><a className="dropdown-item" >Over Solution </a></li>
                                             <Link href="/pricing">
@@ -70,7 +65,7 @@ export default function Header()
                                             </li>
                                             <li>
                                                 <Link href="/third-party-resources">
-                                                  <a className="dropdown-item" href="#"> Third Party Resources </a>
+                                                    <a className="dropdown-item" href="#"> Third Party Resources </a>
                                                 </Link>
                                             </li>
                                         </ul>
@@ -79,13 +74,13 @@ export default function Header()
                                 </ul>
                                 <ul className="d-flex align-items-center mb-0">
                                     <li><a href="#" className="nav-link"> <i className="fa fa-bell-o pt-1"
-                                                                             aria-hidden="true"></i></a></li>
+                                        aria-hidden="true"></i></a></li>
                                     <Link href="/login">
-                                       <button type="button" className="btn btn-primary mr-4">Login</button>
+                                        <button type="button" className="btn btn-primary mr-4">Login</button>
                                     </Link>
                                     <l1></l1>
                                     <Link href="/signup">
-                                       <button type="button" className="btn btn-primary mr-4">Sign Up</button>
+                                        <button type="button" className="btn btn-primary mr-4">Sign Up</button>
                                     </Link>
                                 </ul>
                             </div>
