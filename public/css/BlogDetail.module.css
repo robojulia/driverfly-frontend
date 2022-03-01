@@ -37,3 +37,6 @@
       -webkit-filter: grayscale(0);
       -webkit-transform: scale(1.1);
     }
+    .comment_form{
+        background:#e8e8e8;
+    }
