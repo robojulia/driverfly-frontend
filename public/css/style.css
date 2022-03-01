@@ -576,6 +576,8 @@
  }
  .top-links-sec ol li :first-child {
     color: #6a6a6a;
+    text-decoration: none;
+    text-transform: capitalize;
 
   }
   .top-links-sec  nav li:first-child:after {
