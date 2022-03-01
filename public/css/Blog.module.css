@@ -14,10 +14,9 @@
 
 .postthumbnail{
     width: 100%;
-    height: 250px;
+    height: 257px;
     border-radius: 6px;
     position: relative;
-    transition:.5s all ease-in-out;
 }
 .postthumbnail:hover img:hover{
     transform:scale(1.1);
@@ -72,7 +71,7 @@
 }
 .readmore:hover{
 	color: #2da2af;
-	text-decoration: underline;
+	text-decoration: underline !important;
 }
 .cusbtn{
     top: 0;

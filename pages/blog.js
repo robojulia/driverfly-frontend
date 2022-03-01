@@ -33,7 +33,7 @@ return (
                   <a  className={Blog.time} href="#"><i className="flaticon-clock "></i>January 26, 2022</a>
                   <span className={Blog.comments}><i className="flaticon-chat"></i>0 Comments</span>
                   <p className={Blog.description}>Starting February 7, 2022, the Entry-Level Driver Training (ELDT) regulations will be changed, now requiring all aspiring CDL drivers to receive ...</p>
-                  <a href=""className={Blog.readmore}>Read More</a>
+                  <a href=""className={Blog.readmore}>Read More <i class="fa fa-long-arrow-right pl-1" aria-hidden="true"></i></a>
                </div>
             </div>
              <div className="col-lg-4 col-md-4 p-0 mr-lg-4 mt-5 ">
@@ -51,7 +51,7 @@ return (
                   <a  className={Blog.time} href="#"><i className="flaticon-clock "></i>January 26, 2022</a>
                   <span className={Blog.comments}><i className="flaticon-chat"></i>0 Comments</span>
                   <p className={Blog.description}>Starting February 7, 2022, the Entry-Level Driver Training (ELDT) regulations will be changed, now requiring all aspiring CDL drivers to receive ...</p>
-                  <a href=""className={Blog.readmore}>Read More</a>
+                  <a href=""className={Blog.readmore}>Read More <i class="fa fa-long-arrow-right pl-1" aria-hidden="true"></i></a>
                </div>
             </div>
         </div>
