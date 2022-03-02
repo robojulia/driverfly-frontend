@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import Breadcrumbs from "nextjs-breadcrumbs";
 import Layout from "../components/layouts";
 import SignupStyle from "../public/css/signup.module.css";
 export default function Signup()
@@ -14,10 +15,7 @@ export default function Signup()
                 <div class="container">
                     <div class="top-links-inner d-flex align-items-center justify-content-between">
                         <h2>Sign Up</h2>
-                        <ul class="d-flex">
-                            <li><a href="index.html" class="nav-link text-dark px-0">Home <i class="fa fa-caret-right px-2" aria-hidden="true"></i></a></li>
-                            <li><a href="#" class="nav-link text-dark px-0">Sign Up</a></li>
-                        </ul>
+                       <Breadcrumbs />
                     </div>
                 </div>
             </div> 
