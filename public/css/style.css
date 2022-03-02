@@ -671,8 +671,15 @@
      box-shadow: 1px 1px 4px rgb(0 0 0 / 9%);
     
  }
+ .card-header{
+    color: #6a6a6a;
+    text-align: left;
+
+
+} 
  .card-header:hover{
      color: #2da2af;
+
  } 
 
  .faq_question_widget .widget_list {
@@ -687,7 +694,7 @@
      line-height: 28px;
  }
  .faq_question_widget a{
-     color: #1a1a1a;
+     color: #6a6a6a;
     
 
  }

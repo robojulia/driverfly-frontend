@@ -55,7 +55,7 @@ export default function FAQ() {
                                     <div class="card">
                                         <div class="card-header" id="headingOne">
                                             <h2 class="clearfix mb-0">
-                                                <a class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> I can’t remember my user id and/or password, can you reset it?</a>
+                                                <a class="btn btn-link font-weight-bold font-weight-bold" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"> I can’t remember my user id and/or password, can you reset it?</a>
                                             </h2>
                                         </div>
                                         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
@@ -67,7 +67,7 @@ export default function FAQ() {
                                     <div class="card">
                                         <div class="card-header" id="headingTwo">
                                             <h2 class="mb-0">
-                                                <a class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> I am having trouble with the online process, is there an alternative method to apply?</a>
+                                                <a class="btn btn-link font-weight-bold collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> I am having trouble with the online process, is there an alternative method to apply?</a>
                                             </h2>
                                         </div>
                                         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
@@ -79,7 +79,7 @@ export default function FAQ() {
                                     <div class="card">
                                         <div class="card-header" id="headingThree">
                                             <h2 class="mb-0">
-                                                <a class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"> Do your services cost money for drivers?</a>
+                                                <a class="btn btn-link font-weight-bold collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"> Do your services cost money for drivers?</a>
                                             </h2>
                                         </div>
                                         <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
@@ -91,7 +91,7 @@ export default function FAQ() {
                                     <div class="card">
                                         <div class="card-header" id="headingFour">
                                             <h2 class="mb-0">
-                                                <a class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">What benefits does DriverFly offer?</a>
+                                                <a class="btn btn-link font-weight-bold collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">What benefits does DriverFly offer?</a>
                                             </h2>
                                         </div>
                                         <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
@@ -104,7 +104,7 @@ export default function FAQ() {
                                     <div class="card">
                                         <div class="card-header" id="headingFive">
                                             <h2 class="mb-0">
-                                                <a class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">How can I find out who is the hiring manager or lead recruiter on this posting?</a>
+                                                <a class="btn btn-link font-weight-bold collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">How can I find out who is the hiring manager or lead recruiter on this posting?</a>
                                             </h2>
                                         </div>
                                         <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordionExample">
@@ -116,7 +116,7 @@ export default function FAQ() {
                                     <div class="card">
                                         <div class="card-header" id="headingSix">
                                             <h2 class="mb-0">
-                                                <a class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">I have several accounts, can they be purged or deleted?</a>
+                                                <a class="btn btn-link font-weight-bold collapsed" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">I have several accounts, can they be purged or deleted?</a>
                                             </h2>
                                         </div>
                                         <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordionExample">
@@ -128,7 +128,7 @@ export default function FAQ() {
                                     <div class="card">
                                         <div class="card-header" id="headingSeven">
                                             <h2 class="mb-0">
-                                                <a class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">When can I expect to hear back from the hiring department?</a>
+                                                <a class="btn btn-link font-weight-bold collapsed" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">When can I expect to hear back from the hiring department?</a>
                                             </h2>
                                         </div>
                                         <div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#accordionExample">
