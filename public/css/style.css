@@ -557,7 +557,7 @@
  /************************************ CONTACT-PAGE ****************************/
  .top-links-sec {
      background-color: #f0f0f0;
-     padding: 24px 0px;
+     padding: 24px 15px;
  }
  .top-links-sec h2{
      font-weight: 400;
@@ -590,14 +590,17 @@
     color:#6a6a6a;
     margin: 0px 10px;
 }
+.top-links-sec ol{
+    margin-bottom: 0px;
+}
  .contact-form {
      background-color: #fafafa;
      padding-bottom: 90px;
  }
  .contact-infomation {
      background-color: #2da2af;
-     padding: 40px 35px 50px 30px;
-     border-radius: 6px 0 0 6px;
+     padding: 60px 35px 55px 30px;
+     border-radius: 6px;
  }
  .contact-infomation p {
      color: white;
@@ -659,12 +662,26 @@
  }
  .faq-sec .input-group {
      border: 1px solid lightgray;
-     border-radius: 5px;
  }
  .faq-sec i.fa.fa-search {
      font-size: 18px;
      font-weight: 200;
  }
+ .faq-sec .card-header{
+     box-shadow: 1px 1px 4px rgb(0 0 0 / 9%);
+    
+ }
+ .card-header{
+    color: #6a6a6a;
+    text-align: left;
+
+
+} 
+ .card-header:hover{
+     color: #2da2af;
+
+ } 
+
  .faq_question_widget .widget_list {
      background-color: #fff;
      border-radius: 4px;
@@ -676,6 +693,17 @@
      color: #6a6a6a;
      line-height: 28px;
  }
+ .faq_question_widget a{
+     color: #6a6a6a;
+    
+
+ }
+ .faq_question_widget a:hover{
+    color: #1a1a1a;
+    text-decoration: none;
+   
+    
+}
  .title {
      font-size: 18px;
      margin: 20px 0 20px;
@@ -1534,6 +1562,9 @@
  @media screen and (max-width:464px) {
      .tab-sec ul.nav.nav-tabs {
      width: 300px;
+ }
+ .top-links-sec h2{
+     font-size: 20px;
  }
  }
  

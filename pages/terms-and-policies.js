@@ -4,16 +4,16 @@ import Layout from "../components/layouts";
 export default function TermsAndPolicies() {
     return (
         <>
-          <div class="top-links-sec">
-              <div class="container">
-                  <div class="top-links-inner d-flex align-items-center justify-content-between">
+          <div className="top-links-sec">
+              <div className="container">
+                  <div className="top-links-inner d-flex align-items-center justify-content-between">
                       <h2>Terms And Policies</h2>
-                      <ul class="d-flex">
+                      <ul className="d-flex">
                           <li>
-                              <a href="index.html" class="nav-link text-dark px-0">Home <i class="fa fa-caret-right px-2" aria-hidden="true"></i></a>
+                              <a href="index.html" className="nav-link text-dark px-0">Home <i className="fa fa-caret-right px-2" aria-hidden="true"></i></a>
                             </li>
                             <li>
-                                <a href="#" class="nav-link text-dark px-0">Terms and Policies</a>
+                                <a href="#" className="nav-link text-dark px-0">Terms and Policies</a>
                             </li>
                         </ul>
                     </div>

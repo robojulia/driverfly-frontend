@@ -3,7 +3,7 @@ import Tags from '../tags/Tags'
 export default function BlogSidebr() {
     return (
         <>
-            <div className="col-lg-4 col-12 p-0">
+            <div className="col-lg-4 col-12 p-0 mt-lg-0 mt-5">
                 <div className="col-12">
                     <div className="search-container" />
                     <div className="input-group box-shadows rounded-sm font-0 border">
