@@ -68,7 +68,7 @@ export default function Contact() {
                   <div className="contact-icon-inner">
                   <i className="fa fa-address-card-o" aria-hidden="true"></i>
                   </div>
-                  <h3 className="title text-center  my-4"><Link href="/signup"><a classNameName='text-black'>Want to join us?</a></Link></h3>
+                  <h3 className="title text-center  my-4"><Link href="/signup"><a className='text-black'>Want to join us?</a></Link></h3>
               </div>
               <div className="col-md-4">
                 <div className="contact-icon-inner">
@@ -77,14 +77,14 @@ export default function Contact() {
 
                  
                   </div>
-                  <h3 className="title text-center  my-4"><Link href=""><a classNameName='text-black'>Read our latest news</a></Link></h3>
+                  <h3 className="title text-center  my-4"><Link href=""><a className='text-black'>Read our latest news</a></Link></h3>
                  
               </div>
               <div className="col-md-4">
                 <div className="contact-icon-inner">
                     <i className="fa fa-question-circle-o" aria-hidden="true"></i>
                   </div>
-                  <h3 className="title text-center  my-4"><Link href=""><a classNameName='text-black'>Have questions?</a></Link></h3>
+                  <h3 className="title text-center  my-4"><Link href=""><a className='text-black'>Have questions?</a></Link></h3>
               </div>
           </div>
     </div>
