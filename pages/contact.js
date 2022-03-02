@@ -47,15 +47,15 @@ export default function Contact() {
                     <h3>We want to hear form you!</h3>
                     <div className="form-group">
                         <div className="row">
-                            <div className="col"><input type="text" className="form-control shadow-sm" name="your_name" placeholder="Your Name" required="required" /></div>
-                            <div className="col"> <input type="email" className="form-control shadow-sm" name="email" placeholder="Email Address" required="required" /></div>
+                            <div className="col"><input type="text" className="form-control shadow-sm p-4" name="your_name" placeholder="Your Name" required="required" /></div>
+                            <div className="col"> <input type="email" className="form-control shadow-sm p-4" name="email" placeholder="Email Address" required="required" /></div>
                         </div>        	
                     </div>
                     <div className="form-group">
-                        <input type="text" className="form-control shadow-sm" name="subject" placeholder="Subject" required="required" />
+                        <input type="text" className="form-control shadow-sm p-4" name="subject" placeholder="Subject" required="required" />
                     </div>
                     <div className="form-group">
-                        <textarea name="message" id="message" cols="20" rows="6" className="form-control shadow-sm" placeholder="Message"></textarea>
+                        <textarea name="message" id="message" cols="20" rows="6" className="form-control shadow-sm " placeholder="Message"></textarea>
                     </div>        
                     <div className="form-group">
                         <button type="submit" className="btn btn-danger float-right py-3 px-5 mb-4">Submit <i className="fa fa-long-arrow-right ml-2" aria-hidden="true"></i> </button>

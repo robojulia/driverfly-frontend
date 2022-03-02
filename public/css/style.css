@@ -599,8 +599,8 @@
  }
  .contact-infomation {
      background-color: #2da2af;
-     padding: 40px 35px 50px 30px;
-     border-radius: 6px 0 0 6px;
+     padding: 60px 35px 55px 30px;
+     border-radius: 6px;
  }
  .contact-infomation p {
      color: white;

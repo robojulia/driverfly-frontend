@@ -47,19 +47,19 @@ export default function Signup()
                         <h2 className="text-center my-5">Create New Driver Account</h2>
                         <form className="my-5">
                            <div class="form-group">
-                                <input type="ematextil" class="form-control" id="exampleInputUsername" aria-describedby="emailHelp" placeholder="User Name" />
+                                <input type="ematextil" class="form-control py-4" id="exampleInputUsername" aria-describedby="emailHelp" placeholder="User Name" />
                             </div>
                             <div class="form-group">
-                                <input type="email" class="form-control" id="exampleInputUsername" aria-describedby="emailHelp" placeholder="Email" />
+                                <input type="email" class="form-control py-4" id="exampleInputUsername" aria-describedby="emailHelp" placeholder="Email" />
                             </div>
                             <div class="form-group">
-                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
+                                <input type="password" class="form-control py-4" id="exampleInputPassword1" placeholder="Password" />
                             </div>
                             <div class="form-group">
-                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Confirm Password" />
+                                <input type="password" class="form-control py-4" id="exampleInputPassword1" placeholder="Confirm Password" />
                             </div>
                             <div class="form-group">
-                                <input type="tel" class="form-control" id="exampleInputPhone" placeholder="Phone" />
+                                <input type="tel" class="form-control py-4" id="exampleInputPhone" placeholder="Phone" />
                             </div>
                             <div class="form-group form-check">
                                 <input type="checkbox" class="form-check-input" id="exampleCheck1"/>
