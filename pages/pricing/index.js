@@ -4,6 +4,7 @@ import Pric from '../../public/css/Pricing.module.css'
 import MonthlyPricing from '../../components/pricing/monthly'
 import YearlyPricing from '../../components/pricing/yearly'
 import React,{useState} from 'react';
+import Breadcrumbs from 'nextjs-breadcrumbs';
 export default function Pricing() {
 
 const [showMonthly, setShowMonthly] = useState(true);
@@ -22,10 +23,7 @@ return (
    <div className="container p-0">
         <div className="top-links-inner d-flex align-items-center justify-content-between">
             <h2>Pricing</h2>
-            <ul className="d-flex">
-                <li><a href="index.html" className="nav-link text-dark px-0">Home <i className="fa fa-caret-right px-2" aria-hidden="true"></i></a></li>
-                <li><a href="#" className="nav-link text-dark px-0">Pricing</a></li>
-            </ul>
+            < Breadcrumbs />
         </div>
     </div>
 </div>
@@ -36,10 +34,10 @@ return (
         <div className='container p-0'>
         <div className={Pric.pricesec}>
             <h4 className='font-weight-normal mb-4'>Packages</h4>
-            <div class="form-check form-switch p-0">
+            <div className="form-check form-switch p-0">
                 <span className='mr-5 align-sub'>Monthly</span>
                 <span className='ml-5'>
-                 <input class="form-check-input p-0" onClick={updateState} type="checkbox" role="switch" id="flexSwitchCheckChecked"  />
+                 <input className="form-check-input p-0" onClick={updateState} type="checkbox" role="switch" id="flexSwitchCheckChecked"  />
                  </span>
                 <span> Yearly</span>
             </div>
@@ -51,30 +49,31 @@ return (
             }
           
         </div>
-    </div>    
-        <div className="container p-0">
+    </div>  
+    < div className=' estmate_pric__sec'>
+        <div className="container p-lg-0">
             <p className='my-4'>* Resultant estimated benefits are as follows:</p>
             <div className="row">
-                <div className="col-lg-4 col-sm-4 col-12">
+                <div className="col-lg-4 col-md-4 col-12">
                     <p className={Pric.pkg}>Package</p>
-                    <p className='my-2 text-secondary'>Basic</p>
-                    <p className='my-2 text-secondary'>Standard</p>
-                    <p className='my-2 text-secondary'>Premium</p>
-                    <p className='my-2 text-secondary'>Enterprise</p>
+                    <p className='my-2 text-secondary text-lg-left text-center'>Basic</p>
+                    <p className='my-2 text-secondary  text-lg-left text-center'>Standard</p>
+                    <p className='my-2 text-secondary  text-lg-left text-center'>Premium</p>
+                    <p className='my-2 text-secondary  text-lg-left text-center'>Enterprise</p>
                 </div>
-                <div className="col-lg-4  col-sm-4 col-12">
-                    <p className={Pric.Averagebg}>Average Resultant Cost Per Hire</p>
-                    <p className='my-2 text-secondary text-lg-center'>$1800</p>
-                    <p className='my-2 text-secondary text-lg-center'>$1650</p>
-                    <p className='my-2 text-secondary text-lg-center'>$1300</p>
-                    <p className='my-2 text-secondary text-lg-center'>$1050</p>
+                <div className="col-lg-4 col-md-4 col-12">
+                    <p className={Pric.averagebg}>Average Resultant Cost Per Hire</p>
+                    <p className='my-2 text-secondary text-center'>$1800</p>
+                    <p className='my-2 text-secondary text-center'>$1650</p>
+                    <p className='my-2 text-secondary text-center'>$1300</p>
+                    <p className='my-2 text-secondary text-center'>$1050</p>
                 </div>
-                <div className="col-lg-4  col-sm-4 col-12l">
-                    <p className={Pric.Averagebg}>Average Monthly Hires</p>
-                    <p className='my-2 text-secondary text-lg-center'>1.5</p>
-                    <p className='my-2 text-secondary text-lg-center'>6</p>
-                    <p className='my-2 text-secondary text-lg-center'>26</p>
-                    <p className='my-2 text-secondary text-lg-center'> 105</p>
+                <div className="col-lg-4 col-md-4 col-12">
+                    <p className={Pric.averagebg}>Average Monthly Hires</p>
+                    <p className='my-2 text-secondary text-center'>1.5</p>
+                    <p className='my-2 text-secondary text-center'>6</p>
+                    <p className='my-2 text-secondary text-center'>26</p>
+                    <p className='my-2 text-secondary text-center'> 105</p>
                 </div>
             </div>
             <div className={Pric.offer}>
@@ -93,19 +92,20 @@ return (
                 </div>
             </div>
         </div>
-        <div class="container my-5 p-0 ">
+        </div> 
+        <div className="container my-5 p-0 ">
             <div className={Pric.services}>
                 <h2 className="text-white text-center font-weight-normal">More Reasons to Use DriverFly</h2>
-                <div class="row p-3 ">
-                    <div class="col-sm ">
+                <div className="row p-3 ">
+                    <div className="col-sm ">
                         <h4 className=' my-3 font-weight-normal'>Spending less time searching.</h4>
                         <p className='text-white'> We know you’ve got a business to run. Don’t spend all your time searching the depths of the internet when you can find you next hire here! Access hundreds of qualifying candidates today.</p>
                     </div>
-                    <div class="col-sm ">
+                    <div className="col-sm ">
                        <h4 className=' my-3 font-weight-normal'>Attract the best candidates.</h4>
                         <p className='text-white'> To reach more qualified drivers, you need a top-notch profile. We provide you with easy-to-use tools to help you personalize your profile and make it stand out.</p>
                     </div>
-                    <div class="col-sm ">
+                    <div className="col-sm ">
                        <h4 className=' my-3 font-weight-normal'>Find drivers near you.</h4>
                         <p className='text-white'> Use our detailed map and easily find candidates based near you that match your job requirements. You can instantly ask them to apply to your job opening. For platinum subscribers, anytime your job description matches a driver’s search, they’ll be emailed about your position.</p>
                     </div>

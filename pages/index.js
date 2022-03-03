@@ -1,11 +1,11 @@
 import Head from 'next/head';
 import Layout from "../components/layouts";
-import Featured from '../components/Jobs/featured'
-import Recent from '../components/Jobs/recent'
+import Featured from '../components/jobs/Featured'
+import Recent from '../components/jobs/Recent'
 import Drivers from '../components/works/drivers'
 import Companies from '../components/works/companies'
 import HomeSearch from '../components/megasearch/search'
-import Slider from '../components/testominial-slider/slider'
+import Slider from '../components/testominial-slider/Slider'
 import Pric from '../public/css/Pricing.module.css'
 import React,{useState} from 'react';
 

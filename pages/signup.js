@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import Breadcrumbs from "nextjs-breadcrumbs";
 import Layout from "../components/layouts";
 import SignupStyle from "../public/css/signup.module.css";
 import { useState, useEffect } from 'react';
@@ -137,14 +138,11 @@ export default function Signup()
                 <title>Signup - DriverFly</title>
             </Head>
 
-            <div class="top-links-sec">
-                <div class="container">
-                    <div class="top-links-inner d-flex align-items-center justify-content-between">
+            <div className="top-links-sec">
+                <div className="container">
+                    <div className="top-links-inner d-flex align-items-center justify-content-between">
                         <h2>Sign Up</h2>
-                        <ul class="d-flex">
-                            <li><a href="index.html" class="nav-link text-dark px-0">Home <i class="fa fa-caret-right px-2" aria-hidden="true"></i></a></li>
-                            <li><a href="#" class="nav-link text-dark px-0">Sign Up</a></li>
-                        </ul>
+                       <Breadcrumbs />
                     </div>
                 </div>
             </div> 
@@ -168,10 +166,10 @@ export default function Signup()
                 </div>
             </div>
             <div className="container">
-                <div class="row">
-                    <div class="col-lg-2">
+                <div className="row">
+                    <div className="col-lg-2">
                     </div>
-                    <div class="col-lg-8">
+                    <div className="col-lg-8">
                     <div className={SignupStyle.form}>
                         <h2 className="text-center my-5">Create New Driver Account</h2>
                         <div className="my-5">
@@ -207,10 +205,11 @@ export default function Signup()
                             <div class="form-group">
                                 <input type="tel" class="form-control" onChange={(e) => handleChange(e)} name="phone" id="exampleInputPhone" placeholder="Phone" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.phone}</p>
+
                             </div>
-                            <div class="form-group form-check">
-                                <input type="checkbox" class="form-check-input" id="exampleCheck1"/>
-                                <label class="form-check-label" for="exampleCheck1">You accept our <a href="" className={SignupStyle.link}>Terms and Conditions and Privacy Policy</a></label>
+                            <div className="form-group form-check">
+                                <input type="checkbox" className="form-check-input" id="exampleCheck1"/>
+                                <label className="form-check-label" for="exampleCheck1">You accept our <a href="" className={SignupStyle.link}>Terms and Conditions and Privacy Policy</a></label>
                             </div>
                             {console.log(serverValidation)}
                             {console.log('serverValidation')}
@@ -224,7 +223,7 @@ export default function Signup()
                         </div>
                      </div>
                     </div>
-                    <div class="col-lg-2">
+                    <div className="col-lg-2">
                     </div>
                     
                 </div>

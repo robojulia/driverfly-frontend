@@ -52,7 +52,7 @@ justify-content-md-end justify-content-center  ">
                                             <a className="nav-link" href="#">The DriverFly on the Wall Blog</a>
                                         </li>
                                         <li className="nav-item">
-                                            <Link href="./contact">
+                                            <Link href="/contact">
                                               <a className="nav-link" >Contact</a>
                                             </Link>
                                         </li>
@@ -99,9 +99,9 @@ justify-content-md-end justify-content-center  ">
                             </div>
                             <div className="col-lg-5 pl-lg-5 p-2">
                                 <div className="footer-inner">
-                                <h2 class="widget-title">Drivers Newsletter</h2>
+                                <h2 className="widget-title">Drivers Newsletter</h2>
                                     <ul className="p-0">
-                                    <p class="text-secondary mb-4">Subscribe to the DriverFly Newsletter to get the latest jobs feeds.</p>
+                                    <p className="text-secondary mb-4">Subscribe to the DriverFly Newsletter to get the latest jobs feeds.</p>
                                         <form action="">
                                             <input type="email" className="form-control" placeholder="Email Adress"/>
                                             <button type="submit" className="btn btn-danger btn-lg btn-block mt-3">Submit</button>
@@ -111,7 +111,7 @@ justify-content-md-end justify-content-center  ">
                                 <div className="footer-inner">
                                     <h2 className="widget-title">
                                         Companies Newsletter</h2>
-                                        <p class="text-secondary mb-4">Subscribe to the DriverFly Newsletter to get the latest <br /> discount codes & coupons, and major news headlines.</p>
+                                        <p className="text-secondary mb-4">Subscribe to the DriverFly Newsletter to get the latest <br /> discount codes & coupons, and major news headlines.</p>
                                     <ul className="p-0">
                                     
                                         <form action="">

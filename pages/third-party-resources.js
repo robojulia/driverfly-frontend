@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Breadcrumbs from 'nextjs-breadcrumbs';
 import Layout from "../components/layouts";
 import ThirdParty from '../public/css/ThirdParty.module.css'
 export default function ThirdPartys() {
@@ -8,10 +9,7 @@ return (
       <div className="container">
          <div className="top-links-inner d-flex align-items-center justify-content-between">
             <h2>Third Party Resources</h2>
-            <ul className="d-flex">
-               <li><a href="index.html" className="nav-link text-dark px-0">Home <i className="fa fa-caret-right px-2" aria-hidden="true"></i></a></li>
-               <li><a href="#" className="nav-link text-dark px-0">Third Party Resources</a></li>
-            </ul>
+             < Breadcrumbs />
          </div>
       </div>
    </div>
