@@ -84,6 +84,7 @@ export default function Index() {
                         :
                         < Recent />
                 }
+                
             </section>
             <section className="driver-sec">
                 <div className="container how-it-work-sec">
