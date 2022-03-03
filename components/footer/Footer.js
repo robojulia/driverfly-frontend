@@ -19,7 +19,7 @@ export default function Footer() {
                         </div>
                     </div>
                 </div>
-                <div className="footer-FollowUs my-5">
+                <div className="footer-FollowUs mt-5">
                     <div className="container">
                         <div className="row">
                             <div className="col-12 col-md-3 col-lg-3 col-sm-4">
