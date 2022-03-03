@@ -2,7 +2,7 @@
   "name": "driverfly-frontend",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001np",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -20,7 +20,6 @@
     "react-bootstrap-range-slider": "^3.0.3",
     "react-bootstrap-slider": "^3.0.0",
     "react-dom": "17.0.2",
-    "react-native-range-slider": "^0.1.2",
     "react-rangeslider": "^2.2.0",
     "react-select": "^5.2.2"
   },
