@@ -1,31 +1,16 @@
-export default function JobDescription() {
-
+export default function JobDescription(props) {
 
     return (
         <>
             <div className="job-deatails-inner">
                 <h3>Job Description</h3>
                 <figure>
-                    <img src="img/Freight1.jpg" alt="Trulli" className="img-fluid" />
-                    <figcaption className="my-3 text-center">OTR General Freight Drivers</figcaption>
+                    <img src={props.job.truck_image} alt="Trulli" className="img-fluid" />
+                    <figcaption className="my-3 text-center">{props.job.title}</figcaption>
                 </figure>
 
                 <p>Looking for OTR drivers for a company in Dallas, TX</p>
-                <p>1099 Position
-                    1300-1700 ($78k annual)
-                    $1k after 60 days
-                    Contract percentage base 22-25% (Fuel expenses included in calculation)
-                    Pay is weekly
-                    Must be willing to be on the road for 10 days or more then home time
-                    2-3 days off
-                    routes: states that we run, primarily are: Texas, Arkansas, Oklahoma, Louisiana, Mississippi, Alabama, Georgia, the Carolinas, Tennessee, Kentucky, Missouri, and Pennsylvania.
-                    HR can offer health insurance package
-                    If they need to drive w companion, they offer companion insurance
-                    Trucks come w inverters and small refrigerator. New bed
-                    Freightliner 2015+
-                    Take the truck w them when they go home
-                    Will be partial contract work
-                    Open to owner ops under their authority</p>
+                <p>{props.job.description}</p>
 
                 <p><strong>Requirements:</strong>
                     Willing to do some live unloads, some drop and hook
