@@ -3,7 +3,7 @@ export default function QuickLinks() {
     return (
         <>
             <div className="footer-inner">
-                <h2 className="widget-title">Quick Links</h2>
+                <h2 className="widget-title font-weight-normal">Quick Links</h2>
                 <ul className="p-0">
                     <li className="nav-item">
                         <a className="nav-link" href="#">Login</a>
