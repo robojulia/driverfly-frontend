@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Footer from "./footer";
+import Footer from "./footer/Footer";
 import Header from "./header";
 import Scripts from './scripts';
 
