@@ -2,7 +2,7 @@
   "name": "driverfly-frontend",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001np",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
