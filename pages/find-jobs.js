@@ -66,7 +66,7 @@ export default function FindJobs ( { data } ) {
 }
 
 export async function getServerSideProps () {
-  const { data } = await axios.get( 'http://localhost:3000/jobs' )
+  const { data } = await axios.get( 'http://localhost:4000/api/jobs' )
   return { props: { data } }
 }
 FindJobs.getLayout = function getLayout ( page ) {
