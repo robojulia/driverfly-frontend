@@ -3,28 +3,17 @@ import Layout from "../../components/layouts";
 // import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
 
 
-export default function About()
+export default function Index()
 {
     return (
         <>
+        <h1>Jobs</h1>
         </>
     )
 
-    export async function getStaticProps(context) {
-
-        const res = await fetch('https://jsonplaceholder.typicode.com/users/' + context.params.id)
-        const user = await res.json()
-    
-        return {
-            props: {
-                user,
-            },
-        }
-    }
-    
 }
 
-About.getLayout = function getLayout(page) {
+Index.getLayout = function getLayout(page) {
     return (
         <Layout>
             {page}
