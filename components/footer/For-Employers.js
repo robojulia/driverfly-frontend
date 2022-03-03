@@ -3,7 +3,7 @@ export default function ForEmployers() {
     return (
         <>
             <div className="footer-inner">
-                <h2 className="widget-title">For Employers</h2>
+                <h2 className="widget-title font-weight-normal">For Employers</h2>
                 <ul className="p-0">
                     <li className="nav-item">
                         <a className="nav-link" href="#">My Dashboard</a>

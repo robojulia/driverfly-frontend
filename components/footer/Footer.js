@@ -14,7 +14,7 @@ export default function Footer() {
                 <div className="footer-top">
                     <div className="container">
                         <div className="row">
-                           < Logo />
+                            < Logo />
                             < FollowUs />
                         </div>
                     </div>
@@ -26,13 +26,13 @@ export default function Footer() {
                                 <QuickLinks />
                             </div>
                             <div className="col-lg-2 col-12">
-                               <ForEmployers />
+                                <ForEmployers />
                             </div>
                             <div className="col-lg-2 col-12">
-                                < ForDrivers />
+                                <ForDrivers />
                             </div>
                             <div className="col-lg-5 pl-lg-5 p-2">
-                            <DriversNewsletter />
+                                <DriversNewsletter />
                             </div>
                         </div>
                     </div>
@@ -42,7 +42,7 @@ export default function Footer() {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-12">
-                           < CopyRight />
+                            < CopyRight />
                         </div>
                     </div>
                 </div>
