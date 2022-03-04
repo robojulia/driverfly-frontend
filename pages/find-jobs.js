@@ -61,7 +61,11 @@ export default function FindJobs() {
 
 }
 
-FindJobs.getLayout = function getLayout(page) {
+export async function getServerSideProps () {
+  const { data } = await axios.get( 'http://localhost:4000/api/jobs' )
+  return { props: { data } }
+}
+FindJobs.getLayout = function getLayout ( page ) {
   return (
     <Layout>
       {page}
