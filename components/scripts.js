@@ -1,7 +1,6 @@
 import Script from "next/script";
 
-export default function Scripts()
-{
+export default function Scripts() {
     return (
         <>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" crossOrigin="anonymous" referrerPolicy="no-referrer" />   
@@ -12,7 +11,7 @@ export default function Scripts()
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"  crossOrigin="anonymous" referrerPolicy="no-referrer" /> 
     
             <script src="js/customs.js" />
-            
+
         </>
     )
 }

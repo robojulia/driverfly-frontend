@@ -58,6 +58,9 @@
 .facebooklogin a{
    color: #fff;
 }
+.facebooklogin a:hover{
+    color: #4aa2af;
+ }
 
 .facebooklogin a:hover{
     text-decoration: none;

@@ -1,3 +1,4 @@
+import Link from "next/link";
 
 export default function Footer() {
     return (
@@ -51,7 +52,9 @@ justify-content-md-end justify-content-center  ">
                                             <a className="nav-link" href="#">The DriverFly on the Wall Blog</a>
                                         </li>
                                         <li className="nav-item">
-                                            <a className="nav-link" href="#">Contact</a>
+                                            <Link href="/contact">
+                                              <a className="nav-link" >Contact</a>
+                                            </Link>
                                         </li>
                                     </ul>
                                 </div>
@@ -96,9 +99,9 @@ justify-content-md-end justify-content-center  ">
                             </div>
                             <div className="col-lg-5 pl-lg-5 p-2">
                                 <div className="footer-inner">
-                                <h2 class="widget-title">Drivers Newsletter</h2>
+                                <h2 className="widget-title">Drivers Newsletter</h2>
                                     <ul className="p-0">
-                                    <p class="text-secondary mb-4">Subscribe to the DriverFly Newsletter to get the latest jobs feeds.</p>
+                                    <p className="text-secondary mb-4">Subscribe to the DriverFly Newsletter to get the latest jobs feeds.</p>
                                         <form action="">
                                             <input type="email" className="form-control" placeholder="Email Adress"/>
                                             <button type="submit" className="btn btn-danger btn-lg btn-block mt-3">Submit</button>
@@ -108,7 +111,7 @@ justify-content-md-end justify-content-center  ">
                                 <div className="footer-inner">
                                     <h2 className="widget-title">
                                         Companies Newsletter</h2>
-                                        <p class="text-secondary mb-4">Subscribe to the DriverFly Newsletter to get the latest <br /> discount codes & coupons, and major news headlines.</p>
+                                        <p className="text-secondary mb-4">Subscribe to the DriverFly Newsletter to get the latest <br /> discount codes & coupons, and major news headlines.</p>
                                     <ul className="p-0">
                                     
                                         <form action="">
@@ -129,7 +132,11 @@ justify-content-md-end justify-content-center  ">
                             <div className="copy-text">© 2021 DriverFly. All Rights Reserved.</div>
                             <ul id="menu-copyright" className="menu d-flex align-items-center">
                                 <li id="menu-item-4034" className="menu-item mr-4"><a href="#">Site Map</a></li>
-                                <li id="menu-item-4033" className="menu-item"><a href="#">Terms and Policies</a></li>
+                                <li id="menu-item-4033" className="menu-item">
+                                    <Link href="/terms-and-policies">
+                                    <a>Terms and Policies</a>
+                                    </Link>
+                                </li>
                             </ul>
                         </div>
                     </div>

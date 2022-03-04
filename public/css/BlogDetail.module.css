@@ -1,0 +1,36 @@
+.job__deatails__sec{
+    color:#6c757d;
+    margin-top: 60px;
+}
+.job__deatails__sec img{
+    border-radius: 3px;
+}
+.bloglist{
+    padding-left: 35px !important;
+}
+.bloglist li{
+    list-style: disc;
+   
+}
+.job__deatails__sec a{
+    color: black;
+    text-decoration: none;
+}
+.job__deatails__sec a:hover{
+   
+    text-decoration: none;
+    color: #2da2af;
+}
+.job__deatails__sec p{
+   
+    line-height: 30px;
+}
+
+.job__deatails__sec img {
+    filter: #000;
+      -webkit-filter: grayscale(1);
+      -webkit-transition: all .8s ease-in-out;  
+    }
+    .comment_form{
+        background:#e8e8e8;
+    }
