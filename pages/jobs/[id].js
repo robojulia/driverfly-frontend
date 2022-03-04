@@ -8,12 +8,38 @@ import RelatedJobs from '../../components/related-jobs/Related-Jobs'
 import SocilShare from '../../components/share-link/ShareLink'
 
 export default function Detail({ data }) {
-    console.log('data', data);
     const jobDetail = data
 
     const router = useRouter();
     const { id } = router.query
-    console.log('id', id);
+
+    function timeSince(date) {
+
+        var seconds = Math.floor((new Date() - date) / 1000);
+
+        var interval = seconds / 31536000;
+
+        if (interval > 1) {
+            return Math.floor(interval) + " years";
+        }
+        interval = seconds / 2592000;
+        if (interval > 1) {
+            return Math.floor(interval) + " months";
+        }
+        interval = seconds / 86400;
+        if (interval > 1) {
+            return Math.floor(interval) + " days";
+        }
+        interval = seconds / 3600;
+        if (interval > 1) {
+            return Math.floor(interval) + " hours";
+        }
+        interval = seconds / 60;
+        if (interval > 1) {
+            return Math.floor(interval) + " minutes";
+        }
+        return Math.floor(seconds) + " seconds";
+    }
 
     return (
         <>
@@ -26,16 +52,24 @@ export default function Detail({ data }) {
                                     <a href="#" className="text-dark text-center text-decoration-none"> <img className="d-flex mr-4 truck-img mb-3" src="img/CTR-logo-cartoon.png" alt="" /> View all jobs <i className="fa fa-long-arrow-right pl-1" aria-hidden="true"></i></a>
                                     <div className="media-body">
                                         <h6>Solo</h6>
-                                        <h4 className="mt-0">{jobDetail.title} <span className="" data-toggle="tooltip"
-                                            data-placement="top" title="Tooltip on top"> <i className="fa fa-star" aria-hidden="true"></i> </span> <span className="urgent">{jobDetail.work_type}</span></h4>
+                                        <h4 className="mt-0">
+                                            {jobDetail.title}
+                                            <span className="" data-toggle="tooltip"
+                                                data-placement="top" title="{jobDetail.title}">
+                                                <i className="fa fa-star" aria-hidden="true"></i>
+                                            </span>
+                                            <span className="urgent">
+                                                {jobDetail.work_type}
+                                            </span>
+                                        </h4>
                                         <div className="job-date-author">
-                                            posted 3 days ago
+                                            posted {timeSince(new Date(jobDetail.created_at))} ago
                                             by <a href="" className="employer text-theme">{jobDetail.complany_name}</a>
                                         </div>
                                         <div className="job-metas">
                                             <div className="job-location d-flex align-items-center">
                                                 <p className="pr-4"> <i className="fa fa-map-marker mr-2" aria-hidden="true"></i>{jobDetail.location}</p>
-                                                <p><i className="fa fa-usd mr-2" aria-hidden="true"></i> ${jobDetail.min_weekely_pay} - ${jobDetail.max_weekely_pay} per week</p>
+                                                <p><i className="fa fa-usd mr-2" aria-hidden="true"></i>{jobDetail.min_weekely_pay ? jobDetail.min_weekely_pay : 0} - {jobDetail.max_weekely_pay ? jobDetail.max_weekely_pay : 0} per week</p>
                                             </div>
                                         </div>
                                     </div>
@@ -72,9 +106,8 @@ export default function Detail({ data }) {
 }
 export async function getServerSideProps(context) {
     // Fetch data from external API
-    console.log('before getServerSideProps', context.params)
     const { data } = await axios.get(`${process.env.BASE_URL_API}/jobs/${context.params.id}`)
-    // console.log('after getServerSideProps ', data)
+
     return { props: { data } }
 }
 
