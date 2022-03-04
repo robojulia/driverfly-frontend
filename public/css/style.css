@@ -138,8 +138,13 @@
  .tab-content .card-body {
      padding: 20px 0px 0px;
  }
+ .tab-content .card-header:hover  i{
+     color: #1a1a1a !important;
+ } 
 
 
+
+>>>>>>> public/css/style.css
  .btn-3.btn-link {
      font-size: 20px;
      font-weight: 500;
@@ -149,6 +154,9 @@
      line-height: 35px;
      font-weight: 400;
  }
+ .tab-content .card-header:hover  i{
+    color: #1a1a1a !important;
+} 
 
  .tab-content i.fa.fa-angle-down {
      color: #cbcbcb;

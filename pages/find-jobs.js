@@ -1,5 +1,6 @@
-import Link from 'next/link';
-import Layout from "../components/layouts";
+import Link from 'next/link'
+import axios from "axios"
+import Layout from "../components/layouts"
 import FilterResult from '../components/filter-results/filter-results'
 import JobsList from '../components/jobslisting/jobslist'
 import 'bootstrap/dist/css/bootstrap.css';
@@ -14,7 +15,14 @@ export default function FindJobs() {
                     <div className="row">
                         < FilterResult />
 
-                        <div className="col-md-9 outer pl-4 ">
+  return (
+    <>
+      <div className="filter-sec">
+        <div className="container">
+          <div className="row">
+            < FilterResult />
+            <div className="col-md-9 outer pl-4 ">
+              {/* <h2>{data}</h2> */}
 
                             <form action="">
                                 <div className="filter-inner d-flex align-items-baseline pl-lg-3 mt-lg-2 ml-lg-3">
@@ -25,9 +33,9 @@ export default function FindJobs() {
                                 </div>
                             </form>
 
-                            <div className="results-count mt-4 ">
-                                Showing <span className="first">1</span> – <span className="last">10</span> of 32 results
-                            </div>
+              <div className="results-count mt-4 ">
+                Showing <span className="first">1</span> – <span className="last">10</span> of 32 results
+              </div>
 
                             <div className="filter-btn-groups mt-3">
                                 <button type="button" className="btn btn-danger  "><i className="fa fa-envelope-o"
@@ -54,8 +62,11 @@ export default function FindJobs() {
                     </div>
                 </div>
             </div>
-        </>
-    )
+          </div>
+        </div>
+      </div>
+    </>
+  )
 
 }
 
