@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Breadcrumbs from 'nextjs-breadcrumbs';
 import Layout from "../components/layouts";
 import login from '../public/css/Login.module.css'
+import Back from '../components/back-to-login/Back-Login';
 export default function Login() {
 return (
 <>
@@ -14,11 +15,7 @@ return (
     </div>
 </div>
     <div className="container mb-5 p-lg-2 p-0">
-        <p className=" mt-5 text-secondary  p-lg-0 p-2">Don't have an account? Make one
-            <Link href="/signup">
-                <a className={login.link}> here!</a>
-            </Link>
-        </p>
+    < Back />
         <h2 className='text-center mt-5'>Quick Login</h2>
         <p className="mt-3  text-center">Login Your Account</p>
     </div>
@@ -37,7 +34,8 @@ return (
                     <label className="form-check-label w-50">
                     <input className="form-check-input" type="checkbox" /> Keep me signed in
                     </label>
-                    <a href='#' className={login.pricol}>Lost Your Password?</a>
+                    
+                    <a  className={login.pricol}> <Link href='/forgot-password'>Lost Your Password?</Link></a>
                 </div>
                 <button type="submit" className={login.submit}>Login</button>
             </form>
