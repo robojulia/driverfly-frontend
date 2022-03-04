@@ -1,4 +1,4 @@
-export default function JonInformation ({job}) {
+export default function JonInformation({ job }) {
 
   return (
     <>

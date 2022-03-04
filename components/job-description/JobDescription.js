@@ -12,14 +12,10 @@ export default function JobDescription(props) {
                 <p>Looking for OTR drivers for a company in Dallas, TX</p>
                 <p>{props.job.description}</p>
 
-                <p><strong>Requirements:</strong>
-                    Willing to do some live unloads, some drop and hook
-                    Willing to drive some dry van, some reefer (will provide reefer training if needed)
-                    Must have at least 2 years of commercial driving experience
-                    Must have Manual driving experience
-                    Must have no felony charges
-                    Ideally, must have clean record for the past 4 years
-                    Must have class A CDL</p>
+                <p>
+                    <strong>Requirements:</strong>
+                    {props.job.mvr_requirements}
+                </p>
             </div>
 
         </>
