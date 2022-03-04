@@ -1,3 +1,4 @@
+import axios from "axios"
 import Link from 'next/link'
 import Breadcrumbs from 'nextjs-breadcrumbs'
 import { useState } from "react"
@@ -7,21 +8,32 @@ import Forgotpassword from '../public/css/Forgot.module.css'
 
 export default function Forgot () {
 
-  const [username, setUsername] = useState("")
-const [error, setError] = useState("")
+  const [email, setEmail] = useState( "" )
+  const [error, setError] = useState( "" )
 
-  const submitHandler = e => {
+  const submitHandler = async ( e ) => {
     e.preventDefault()
-    if (!username) {
-      setError( "Username or email is required")
+    if ( !email ) {
+      setError( "Username or email is required" )
       return
     }
-    // clear error
-    if (error) {
-      setError("")
+
+    // validate email
+    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    if ( !emailRegex.test( email ) ) {
+      setError( "Please enter a valid email address" )
+      return
     }
-    // TODO: send email to user to reset password
-    console.log(username);
+
+
+    // clear error
+    if ( error ) {
+      setError( "" )
+    }
+    console.log( email )
+    await axios.post( "http://localhost:4000/api/forgot-password", {
+      email
+    } )
   }
 
   return (
@@ -46,7 +58,7 @@ const [error, setError] = useState("")
               <p className="mt-2 mb-5 text-center  text-secondary ">Please Enter Username or Email</p>
               <form onSubmit={submitHandler} className={Forgotpassword.mb}>
                 <div className="form-group">
-                  <input value={username} onChange={(e) => setUsername(e.target.value)} type="text" className="form-control py-4" placeholder="Username or E-mail" id="useremail" />
+                  <input value={email} onChange={( e ) => setEmail( e.target.value )} type="text" className="form-control py-4" placeholder="Username or E-mail" id="useremail" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{error}</p>
                 </div>
 

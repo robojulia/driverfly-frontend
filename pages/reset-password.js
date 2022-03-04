@@ -1,3 +1,4 @@
+import axios from "axios"
 import Link from 'next/link'
 import Breadcrumbs from 'nextjs-breadcrumbs'
 import { useState } from "react"
@@ -11,7 +12,7 @@ export default function Forgot () {
   const [confirmPassword, setConfirmPassword] = useState("")
   const [confirmPasswordError, setConfirmPasswordError] = useState("")
 
-  const submitHandler  = e => {
+  const submitHandler  = async (e) => {
     e.preventDefault()
     // validate password
     if(!password){
@@ -34,12 +35,13 @@ export default function Forgot () {
       setConfirmPasswordError("")
     }
 
-    // if no errors, submit form
-    console.log({
-      password,
-      confirmPassword
-    });
 
+    const resp = await axios.post("http://localhost:4000/api/new-password", {
+      password,
+      passwordConfirm: confirmPassword
+    })
+
+    console.log(resp)
   
   }
 
