@@ -1,26 +1,14 @@
 import { NextResponse } from "next/server"
+import useAuth from '../../hooks/useAuth';
 
-export async function middleware(req) {
-  // return early if url isn't supposed to be protected
-  debugger
-  if (typeof window !== "undefined") {
+export async function middleware(req, NextResponse) {
 
-    console.log('window', window)
+  const { authCheck } = useAuth();
 
-    // localStorage.setItem(key, value)
-
-
-    const data = localStorage.getItem('userData');
-    console.log('datadatadatadata', data)
-    if (!data) {
-      return NextResponse.next()
-    }
-
-    // You could also check for any property on the session object,
-    // like role === "admin" or name === "John Doe", etc.
-    if (!data) return NextResponse.redirect("/login")
-
-    // If user is authenticated, continue.
+  if (authCheck()) {
     return NextResponse.next()
   }
+
+  // return NextResponse.redirect("/login")
+
 }
