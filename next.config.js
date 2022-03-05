@@ -1,4 +1,4 @@
 module.exports = {
   reactStrictMode: true,
-  "presets": ["next/babel"]
+  presets: ["next/babel"]
 }
