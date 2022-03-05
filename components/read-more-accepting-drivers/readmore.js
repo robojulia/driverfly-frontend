@@ -1,71 +1,78 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
+import { updateQueryStringParameter } from "../../logics/utils"
+import { useRouter } from "next/router"
 
-
-const ReadMore = ({ children }) => {
-    const text = children;
-    const [isReadMore, setIsReadMore] = useState(true);
-    const toggleReadMore = () => {
-        setIsReadMore(!isReadMore);
-    };
-    return (
-        <p className="text">
-            {isReadMore ? text.slice(1) : text}
-            <span onClick={toggleReadMore} className="read-or-hide">
-                {isReadMore ? "Show More +" : " Show less -"}
-            </span>
-        </p>
-    );
-};
+const ReadMore = ( { children } ) => {
+  const text = children
+  const [isReadMore, setIsReadMore] = useState( true )
+  const toggleReadMore = () => {
+    setIsReadMore( !isReadMore )
+  }
+  return (
+    <p className="text">
+      {isReadMore ? text.slice( 1 ) : text}
+      <span onClick={toggleReadMore} className="read-or-hide">
+        {isReadMore ? "Show More +" : " Show less -"}
+      </span>
+    </p>
+  )
+}
 
 const Content = () => {
-    return (
-        <div className="container p-0">
-            <h2>
-                <ReadMore>
+  const router = useRouter()
+  function changeHandler ( e ) {
+    const a = updateQueryStringParameter( window.location.href, 'filter-accepting-driver', e.target.value )
+    router.replace( a )
+  }
+  
+  return (
+    <div className="container p-0">
+      <h2>
+        <ReadMore>
 
-                    <div className="App">
-                        <div className="topping pt-2">
-                            <input type="checkbox" id="lasthour" name="areas" value="Paneer" />Delaware (1)
-                        </div>
-                        <div className="topping pt-2">
-                            <input type="checkbox" id="hour" name="areas" value="Paneer" />Georgia (2)
-                        </div>
-                        <div className="topping pt-2">
-                            <input type="checkbox" id="lasthour" name="areas" value="Paneer" />Illinois (2)
-                        </div>
-                        <div className="topping pt-2">
-                            <input type="checkbox" id="hour" name="areas" value="Paneer" />Indiana (4)
-                        </div>
-                       
-                 
-                    </div>
-
-                    <div className="App">
-                        <div className="topping pt-2">
-                            <input type="checkbox" id="anywhere" name="areas" value="Paneer" />Anywhere in the US (5)
-                        </div>
-                        <div className="topping pt-2">
-                            <input type="checkbox" id="alabama" name="areas" value="Paneer" />Alabama (2)
-                        </div>
-                        <div className="topping pt-2">
-                            <input type="checkbox" id="arizona" name="areas" value="Paneer" />Arizona (2)
-                        </div>
-                        <div className="topping pt-2">
-                            <input type="checkbox" id="california" name="areas" value="Paneer" />California (8)
-                        </div>
-                        <div className="topping pt-2">
-                            <input type="checkbox" id="california" name="areas" value="Paneer" />Colorado (1)
-                        </div>
-                        <div className="topping pt-2">
-                            <input type="checkbox" id="connecticut" name="areas" value="Paneer" />Connecticut (1)
-                        </div>
-                    </div>
+          <div onChange={changeHandler} className="App">
+            <div className="topping pt-2">
+              <input type="checkbox" id="lasthour" name="areas" value="delaware" />Delaware (1)
+            </div>
+            <div className="topping pt-2">
+              <input type="checkbox" id="hour" name="areas" value="georgia" />Georgia (2)
+            </div>
+            <div className="topping pt-2">
+              <input type="checkbox" id="lasthour" name="areas" value="illinois" />Illinois (2)
+            </div>
+            <div className="topping pt-2">
+              <input type="checkbox" id="hour" name="areas" value="indiana" />Indiana (4)
+            </div>
 
 
-                </ReadMore>
-            </h2>
-        </div>
-    );
-};
+          </div>
 
-export default Content;
+          <div  onChange={changeHandler} className="App">
+            <div className="topping pt-2">
+              <input type="checkbox" id="anywhere" name="areas" value="anywhere" />Anywhere in the US (5)
+            </div>
+            <div className="topping pt-2">
+              <input type="checkbox" id="alabama" name="areas" value="alabama" />Alabama (2)
+            </div>
+            <div className="topping pt-2">
+              <input type="checkbox" id="arizona" name="areas" value="arizona" />Arizona (2)
+            </div>
+            <div className="topping pt-2">
+              <input type="checkbox" id="california" name="areas" value="california" />California (8)
+            </div>
+            <div className="topping pt-2">
+              <input type="checkbox" id="california" name="areas" value="Colorado" />Colorado (1)
+            </div>
+            <div className="topping pt-2">
+              <input type="checkbox" id="connecticut" name="areas" value="connecticut" />Connecticut (1)
+            </div>
+          </div>
+
+
+        </ReadMore>
+      </h2>
+    </div>
+  )
+}
+
+export default Content

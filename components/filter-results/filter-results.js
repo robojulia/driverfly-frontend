@@ -1,35 +1,38 @@
+import React from 'react'
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css'
-import React, { useState } from 'react'
-import RangeSlider from 'react-bootstrap-range-slider'
-import Search from '../search/search'
-import Category from '../category/Category'
-import Location from '../location/Location'
-import JobType from '../jobtype/JobType'
-import Salary from '../salary/salary'
-import PostedDate from '../postedate/PostedDate'
-import AreasCovered from '../areascovered/AreasCovered'
-import FullParty from '../full-part/Time'
-import EmploymentType from '../employment-type/Employment-Type'
-import TypeOfDelivery from '../type-of-delivery/TypeOfDelivery'
 import AcceptingDriversFrom from '../accepting-drivers-from/AcceptingDriversFrom'
-import ShowMoreEquipment from '../show-more-equipment/ShowMoreEquipment'
-import Schedule from '../schedule/Schedule'
-import PayStructure from '../pay-structure/Pay-Structure'
+import AreasCovered from '../areascovered/AreasCovered'
+import Category from '../category/Category'
+import EmploymentType from '../employment-type/Employment-Type'
+import FullParty from '../full-part/Time'
+import JobType from '../jobtype/JobType'
+import Location from '../location/Location'
 import MinimumAge from '../minimum-age/Minimum-Age'
+import MvrRequirement from '../mvr-requirements/MVR-Requirements'
+import PayStructure from '../pay-structure/Pay-Structure'
+import PostedDate from '../postedate/PostedDate'
+import Salary from '../salary/salary'
+import Schedule from '../schedule/Schedule'
+import Search from '../search/search'
+import ShowMoreEquipment from '../show-more-equipment/ShowMoreEquipment'
 import SpecialAccommodations from '../special-accommodations/Special-Accommodations'
 import SpecialEndorsementsRequired from '../special-endorsements-required/Special-Endorsements-Required'
-import MvrRequirement from '../mvr-requirements/MVR-Requirements'
+import TypeOfDelivery from '../type-of-delivery/TypeOfDelivery'
 
 
 
 
 export default function FilterResults () {
 
+
+
+
+
   return (
     <>
       <div className="col">
         <h5 className='font-weight-normal'>Filter Results</h5>
-        <form action="">
+        <form >
           < Search />
           <div className="bs-example">
             <div className="tab-content">
