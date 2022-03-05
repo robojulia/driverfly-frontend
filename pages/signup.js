@@ -181,34 +181,34 @@ export default function Signup () {
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.lastName}</p>
                             </div> */}
 
-                <div class="form-group">
-                  <input type="text" class="form-control" onChange={( e ) => handleChange( e )} name="name" value={inputValues.name} aria-describedby="emailHelp" placeholder="Name" />
+                <div className="form-group">
+                  <input type="text" className="form-control" onChange={( e ) => handleChange( e )} name="name" value={inputValues.name} aria-describedby="emailHelp" placeholder="Name" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.name}</p>
                 </div>
-                <div class="form-group">
-                  <input type="email" class="form-control" onChange={( e ) => handleChange( e )} name="email" id="exampleInputUsername" value={inputValues.email} aria-describedby="emailHelp" placeholder="Email" />
+                <div className="form-group">
+                  <input type="email" className="form-control" onChange={( e ) => handleChange( e )} name="email" id="exampleInputUsername" value={inputValues.email} aria-describedby="emailHelp" placeholder="Email" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.email}</p>
                 </div>
-                <div class="form-group">
-                  <input type="password" class="form-control" onChange={( e ) => handleChange( e )} name="password" id="exampleInputPassword1" value={inputValues.password} placeholder="Password" required />
+                <div className="form-group">
+                  <input type="password" className="form-control" onChange={( e ) => handleChange( e )} name="password" id="exampleInputPassword1" value={inputValues.password} placeholder="Password" required />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.password}</p>
                 </div>
-                <div class="form-group">
-                  <input type="password" class="form-control" onChange={( e ) => handleChange( e )} name="confirmPassword" id="exampleInputPassword1" value={inputValues.confirmPassword} placeholder="Confirm Password" required />
+                <div className="form-group">
+                  <input type="password" className="form-control" onChange={( e ) => handleChange( e )} name="confirmPassword" id="exampleInputPassword1" value={inputValues.confirmPassword} placeholder="Confirm Password" required />
                   <p style={{ fontStyle: "italic", color: "red" }}>
                     {validation?.confirmPassword
                       ? validation?.confirmPassword
                       : validation?.confirmPassword}
                   </p>
                 </div>
-                <div class="form-group">
-                  <input type="tel" class="form-control" onChange={( e ) => handleChange( e )} name="phone" id="exampleInputPhone" placeholder="Phone" />
+                <div className="form-group">
+                  <input type="tel" className="form-control" onChange={( e ) => handleChange( e )} name="phone" id="exampleInputPhone" placeholder="Phone" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.phone}</p>
 
                 </div>
                 <div className="form-group form-check">
                   <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-                  <label className="form-check-label" for="exampleCheck1">You accept our <a href="" className={SignupStyle.link}>Terms and Conditions and Privacy Policy</a></label>
+                  <label className="form-check-label" htmlFor="exampleCheck1">You accept our <a href="" className={SignupStyle.link}>Terms and Conditions and Privacy Policy</a></label>
                 </div>
                 {console.log( serverValidation )}
                 {console.log( 'serverValidation' )}
@@ -218,7 +218,7 @@ export default function Signup () {
                   )
 
                 } ) : <p style={{ fontStyle: "italic", color: color }}>{serverValidation}</p>}
-                <button type="submit" class="btn btn-dark w-100 d-block p-3 my-5" onClick={signUpHandler}>Register now</button>
+                <button type="submit" className='btn btn-dark w-100 d-block p-3 my-5' onClick={signUpHandler}>Register now</button>
               </div>
             </div>
           </div>

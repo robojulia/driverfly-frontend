@@ -8,7 +8,7 @@ export default function Header() {
                     <div className="container-fluid">
                         <nav className="navbar navbar-expand-lg navbar p-0">
                             <div className="logo">
-                                <img src="img/DriverFly-Official-Favicon.png" className="logo" />
+                                <img src="/img/DriverFly-Official-Favicon.png" className="logo" />
                             </div>
                             <button className="navbar-toggler" type="button" data-toggle="collapse"
                                 data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
