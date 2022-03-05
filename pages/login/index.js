@@ -8,21 +8,37 @@ import Link from 'next/link';
 import Breadcrumbs from 'nextjs-breadcrumbs';
 
 export default function Login() {
+
+    if (typeof window !== 'undefined') {
+        console.log('You are on the browser')
+        // 👉️ can use localStorage here
+        // console.log('userData', sessionsStorage.getItem('userData') ? sessionsStorage.getItem('userData') : 'empty')
+    } else {
+        console.log('You are on the server')
+        // 👉️ can't use localStorage
+    }
+
     const [formData, setFormData] = useState({
         email: '',
         password: ''
-    })
+    });
+
+    const [message, setMessage] = useState('');
+    const [auth, setAuth] = useState(false);
 
     const submit = async (e) => {
         e.preventDefault();
-        console.log('formData', formData)
+        console.log('formData', formData);
 
-        await axios.post(`${process.env.BASE_URL_API}/auth/login`, formData)
+        await axios.post(`http://localhost:4000/api/auth/login`, formData)
             .then(data => {
 
                 console.log("handle success", data);
-                if (data.status === 201) {
-                    localStorage.setItem('userData', data.data)
+                if (data.status == 201) {
+                    console.log("handle success data", data.data);
+                    // sessionsStorage.setItem('userData', data.data.user)
+                    // console.log('userData', sessionsStorage.getItem('userData') ? sessionsStorage.getItem('userData') : 'empty')
+                    setAuth(true);
                     Router.push('/dashboard')
                 } else {
                     console.log('not 201')
@@ -31,6 +47,7 @@ export default function Login() {
             .catch(function (error) {
                 // handle error
 
+                // setAuth(false);
                 console.log('handle error', error.response)
             })
             .then(function () {
