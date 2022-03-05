@@ -1,4 +1,5 @@
 import axios from "axios"
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Breadcrumbs from 'nextjs-breadcrumbs'
 import { useState } from "react"
@@ -7,42 +8,46 @@ import Layout from "../components/layouts"
 import Forgotpassword from '../public/css/Forgot.module.css'
 
 export default function Forgot () {
-  const [password, setPassword] = useState("")
-  const [passwordError, setPasswordError] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [confirmPasswordError, setConfirmPasswordError] = useState("")
+  const [password, setPassword] = useState( "" )
+  const [passwordError, setPasswordError] = useState( "" )
+  const [confirmPassword, setConfirmPassword] = useState( "" )
+  const [confirmPasswordError, setConfirmPasswordError] = useState( "" )
+  const router = useRouter()
+  const { passwordResetToken } = router.query
 
-  const submitHandler  = async (e) => {
+  const submitHandler = async ( e ) => {
     e.preventDefault()
+
     // validate password
-    if(!password){
-      setPasswordError("password is required")
+    if ( !password ) {
+      setPasswordError( "password is required" )
+      return
     }
 
-    // confirm password
-    if(!confirmPassword){
-      setConfirmPasswordError("password confirmation is required")
-    }else{
-      // confrimation password is given, make sure it matches with password
-      if (confirmPassword !== password) {
-        setConfirmPasswordError("password does not match confirmation password")
-      }
+    if ( !confirmPassword ) {
+      setConfirmPasswordError( "password confirmation is required" )
+      return
+    }
+
+    if ( confirmPassword !== password ) {
+      setConfirmPasswordError( "password does not match confirmation password" )
+      return
     }
 
     // clear errors
-    if (passwordError || confirmPasswordError) {
-      setPasswordError("")
-      setConfirmPasswordError("")
+    if ( passwordError || confirmPasswordError ) {
+      setPasswordError( "" )
+      setConfirmPasswordError( "" )
     }
 
 
-    const resp = await axios.post("http://localhost:4000/api/new-password", {
+    await axios.post( "http://localhost:4000/api/new-password", {
       password,
-      passwordConfirm: confirmPassword
-    })
+      passwordConfirm: confirmPassword,
+      passwordResetToken
+    } )
 
-    console.log(resp)
-  
+
   }
 
   return (
@@ -67,11 +72,11 @@ export default function Forgot () {
               <p className="mt-2 mb-5 text-center  text-secondary ">Please Enter Your New Password</p>
               <form onSubmit={submitHandler} className={Forgotpassword.mb}>
                 <div className="form-group">
-                  <input value={password} onChange={(e) => setPassword(e.target.value)}  type="password" className="form-control py-4" placeholder="Password" id="password" />
+                  <input value={password} onChange={( e ) => setPassword( e.target.value )} type="password" className="form-control py-4" placeholder="Password" id="password" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{passwordError}</p>
                 </div>
                 <div className="form-group">
-                  <input value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}  type="password" className="form-control py-4" placeholder="Confirmed Password" id="password" />
+                  <input value={confirmPassword} onChange={( e ) => setConfirmPassword( e.target.value )} type="password" className="form-control py-4" placeholder="Confirmed Password" id="password" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{confirmPasswordError}</p>
                 </div>
 

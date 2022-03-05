@@ -30,7 +30,6 @@ export default function Forgot () {
     if ( error ) {
       setError( "" )
     }
-    console.log( email )
     await axios.post( "http://localhost:4000/api/forgot-password", {
       email
     } )
