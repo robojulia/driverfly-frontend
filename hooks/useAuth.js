@@ -2,7 +2,7 @@ import useStorage from './useStorage';
 
 const useAuth = () => {
 
-    const { getItem, setItem } = useStorage();
+    const { getItem, setItem, removeItem } = useStorage();
 
     const authCheck = () => {
         return getItem('token') ? getItem('token') : false;
@@ -13,7 +13,7 @@ const useAuth = () => {
     }
 
     const removeAuth = () => {
-        return removeItem('token');
+        return removeItem('token')
     }
 
     return {

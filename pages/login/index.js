@@ -11,7 +11,10 @@ import Breadcrumbs from 'nextjs-breadcrumbs';
 export default function Login() {
 
     const { authCheck, setAuth } = useAuth();
-    console.log('token', authCheck());
+
+    if (authCheck()) {
+        Router.push('/dashboard')
+    }
 
     const [formData, setFormData] = useState({
         email: '',
