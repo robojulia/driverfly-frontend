@@ -1,19 +1,26 @@
 import { useState } from 'react'
+import { useRouter } from "next/router"
+import axios from "axios"
 
 export default function JobApply () {
 
-
+  const router = useRouter()
   const [inputValues, setInputValues] = useState( {
-    fullName: "",
-    phoneNumber: "",
+    first_name: "",
+    last_name: "",
+    phone: "",
     email: "",
-    qualification: "",
-    violationYears: "",
-    cvFile: "",
-    licenseFile: "",
-    cardFile: "",
-    experience: "",
+    qualifications: "",
+    voilations: "",
+    // resume: "",
+    // commercial_driving_license: "",
+    // medical_card: "",
+    cdl_experience: "",
   } )
+
+  const [resume, setResume] = useState( null )
+  const [commercial_driving_license, setCommercial_driving_license] = useState( null )
+  const [medical_card, setMedical_card] = useState( null )
 
   const handleChange = e => {
     const { name, value } = e.target
@@ -30,28 +37,14 @@ export default function JobApply () {
       const t = event.target.name
       const file = event.target.files[0]
       if ( t == "cv" ) {
-        setInputValues( preValue => {
-          return {
-            ...preValue,
-            cvFile: URL.createObjectURL( file )
-          }
-        } )
+        setResume( file )
+        console.log( file )
       }
       if ( t == "card" ) {
-        setInputValues( preValue => {
-          return {
-            ...preValue,
-            cardFile: URL.createObjectURL( file )
-          }
-        } )
+        setMedical_card( file )
       }
       if ( t == "license" ) {
-        setInputValues( preValue => {
-          return {
-            ...preValue,
-            licenseFile: URL.createObjectURL( file )
-          }
-        } )
+        setCommercial_driving_license( file )
       }
     }
   }
@@ -59,15 +52,18 @@ export default function JobApply () {
 
   const [validation, setValidation] = useState()
 
-  const submitHandler = e => {
+  const submitHandler = async ( e ) => {
     e.preventDefault()
     let errors = {}
-    if ( !inputValues.fullName ) {
-      errors.fullName = "Name is required"
+    if ( !inputValues.first_name ) {
+      errors.first_name = "First Name is required"
+    }
+    if ( !inputValues.last_name ) {
+      errors.last_name = "Last Name is required"
     }
 
-    if ( !inputValues.phoneNumber ) {
-      errors.phoneNumber = "phoneNumber is required"
+    if ( !inputValues.phone ) {
+      errors.phone = "phone is required"
     }
 
     if ( !inputValues.email ) {
@@ -75,59 +71,69 @@ export default function JobApply () {
     }
 
 
-    if ( !inputValues.qualification ) {
-      errors.qualification = "qualification is required"
+    if ( !inputValues.qualifications ) {
+      errors.qualifications = "qualifications is required"
     }
 
-    if ( !inputValues.violationYears ) {
-      errors.violationYears = "violationYears is required"
+    if ( !inputValues.voilations ) {
+      errors.voilations = "voilations is required"
     }
 
-    if ( !inputValues.cvFile ) {
-      errors.cvFile = "CV is required"
+    if ( !resume ) {
+      errors.resume = "CV is required"
     }
 
-    if ( !inputValues.licenseFile ) {
-      errors.licenseFile = "Lisense is required"
+    if ( !commercial_driving_license ) {
+      errors.commercial_driving_license = "Lisense is required"
     }
 
-    if ( !inputValues.cardFile ) {
-      errors.cardFile = "cardFile is required"
+    if ( !medical_card ) {
+      errors.medical_card = "medical_card is required"
     }
 
-    if ( !inputValues.experience ) {
-      errors.experience = "experience is required"
+    if ( !inputValues.cdl_experience ) {
+      errors.cdl_experience = "cdl_experience is required"
     }
 
-    if ( !inputValues.experience ) {
-      errors.experience = "experience is required"
-    }
+    // if ( !inputValues.resume ) {
+    //   errors.resume = "CV File is required"
+    // }
 
-    if ( !inputValues.cvFile ) {
-      errors.cvFile = "CV File is required"
-    }
+    // if ( !inputValues.medical_card ) {
+    //   errors.medical_card = "Card is required"
+    // }
 
-    if ( !inputValues.cardFile ) {
-      errors.cardFile = "Card is required"
-    }
-
-    if ( !inputValues.licenseFile ) {
-      errors.licenseFile = "Liscense is required"
-    }
+    // if ( !inputValues.commercial_driving_license ) {
+    //   errors.commercial_driving_license = "Liscense is required"
+    // }
 
 
     setValidation( errors )
 
     if ( Object.keys( errors ).length == 0 ) {
-      console.log( "here we go" )
+      const drug_test = e.target.drugTest.value
+      const driverfly_account = e.target.createAccount.checked ? 1 : 0
       // TODO api call to apply for job
-      const canClearDrugTest = e.target.drugTest.value
-      const createAccount = e.target.createAccount.checked
-      console.log({
+      // console.log(`${process.env.BASE_URL_API}/jobs/apply/${router.query.id}`);
+      const reqBody = {
         ...inputValues,
-        canClearDrugTest,
-        createAccount
-      });
+        drug_test,
+        driverfly_account
+      }
+      const formData = new FormData()
+      // const formData = serialize(reqBody)
+      for ( const key in reqBody ) {
+        formData.set( key, reqBody[key] )
+      }
+      formData.append( "resume", resume )
+      formData.append( "commercial_driving_license", commercial_driving_license )
+      formData.append( "medical_card", medical_card )
+
+      for ( let [key, value] of formData.entries() ) {
+        console.log( `${key}: ${value}` )
+      }
+      await axios.post( `http://localhost:4000/api/jobs/apply/${router.query.id}`, formData )
+      alert("Your application has been submitted successfully")
     }
 
   }
@@ -146,15 +152,22 @@ export default function JobApply () {
             <form onSubmit={submitHandler} className="modal-body">
               {/* <div>{inputValues}</div> */}
               <div className="row">
+                {/* First Name */}
                 <div className="col-lg-6 col-12">
-                  <label>*Fullname</label>
-                  <input onChange={( e ) => handleChange( e )} value={inputValues.fullName} name="fullName" type="text" className="form-control" placeholder="Full Name" />
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.fullName}</p>
+                  <label>*First Name</label>
+                  <input onChange={( e ) => handleChange( e )} value={inputValues.first_name} name="first_name" type="text" className="form-control" placeholder="First Name" />
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.first_name}</p>
                 </div>
+                {/* Last Name */}
                 <div className="col-lg-6 col-12">
+                  <label>*Last Name</label>
+                  <input onChange={( e ) => handleChange( e )} value={inputValues.last_name} name="last_name" type="text" className="form-control" placeholder="Last Name" />
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.last_name}</p>
+                </div>
+                <div className="col-12">
                   <label>*Phone</label>
-                  <input onChange={( e ) => handleChange( e )} value={inputValues.phoneNumber} type="text" name="phoneNumber" className="form-control" placeholder="Phone" />
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.phoneNumber}</p>
+                  <input onChange={( e ) => handleChange( e )} value={inputValues.phone} type="text" name="phone" className="form-control" placeholder="Phone" />
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.phone}</p>
                 </div>
               </div>
               <div className="row">
@@ -167,32 +180,32 @@ export default function JobApply () {
               <div className="row">
                 <div className="col-12 mt-3">
                   <label>* Qualifications</label>
-                  <textarea onChange={( e ) => handleChange( e )} value={inputValues.qualification} name="qualification" className="form-control" id="validationTextarea" placeholder="Qualifications"></textarea>
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.qualification}</p>
+                  <textarea onChange={( e ) => handleChange( e )} value={inputValues.qualifications} name="qualifications" className="form-control" id="validationTextarea" placeholder="Qualifications"></textarea>
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.qualifications}</p>
                 </div>
               </div>
               <div className="row">
                 <div className="col-lg-6 col-12 mt-3">
                   <label>Upload your CV</label>
                   <input onChange={Upload} name="cv" type="file" className="form-control mt-lg-4 mt-0" />
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.cvFile}</p>
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.resume}</p>
                 </div>
                 <div className="col-lg-6 col-12 mt-3">
                   <label>Upload your Commercial Driver’s License</label>
                   <input onChange={Upload} name="license" type="file" className="form-control" />
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.licenseFile}</p>
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.commercial_driving_license}</p>
                 </div>
               </div>
               <div className="row">
                 <div className="col-lg-6 col-12 mt-3">
                   <label>Upload your Medical card</label>
                   <input onChange={Upload} name="card" type="file" className="form-control mt-lg-4 mt-0" />
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.cardFile}</p>
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.medical_card}</p>
                 </div>
                 <div className="col-lg-6 col-12 mt-3">
-                  <label>* Years of CDL driving experience</label>
-                  <select onChange={( e ) => handleChange( e )} value={inputValues.experience} name="experience" className="form-select" aria-label="Default select example">
-                    <option selected>Select CDL Driving Experience</option>
+                  <label>* Years of CDL driving cdl_experience</label>
+                  <select onChange={( e ) => handleChange( e )} value={inputValues.cdl_experience} name="cdl_experience" className="form-select" aria-label="Default select example">
+                    <option selected>Select CDL Driving cdl_experience</option>
                     <option value="1">1-5 Months</option>
                     <option value="2">6-11 Months</option>
                     <option value="3">1 Year</option>
@@ -201,13 +214,13 @@ export default function JobApply () {
                     <option value="3">4 Years</option>
                     <option value="1">5+ Years</option>
                   </select>
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.experience}</p>
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.cdl_experience}</p>
                 </div>
               </div>
               <div className="row">
                 <div className="col-lg-6 col-12 mt-3">
                   <label>* Number of moving violations in the last 3 years</label>
-                  <select onChange={( e ) => handleChange( e )} value={inputValues.violationYears} name="violationYears" className="form-select" aria-label="Default select example">
+                  <select onChange={( e ) => handleChange( e )} value={inputValues.voilations} name="voilations" className="form-select" aria-label="Default select example">
                     <option selected>Select One</option>
                     <option value="1">0</option>
                     <option value="2">1</option>
@@ -221,18 +234,18 @@ export default function JobApply () {
                     <option value="2">9</option>
                     <option value="3">10+</option>
                   </select>
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.violationYears}</p>
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.voilations}</p>
                 </div>
                 <div className="col-lg-6 col-12 mt-3">
                   <label>* Can you pass a drug & alcohol test</label>
                   <div class="form-check">
-                    <input value='yes' class="form-check-input" type="radio" name="drugTest" id="flexRadioDefault1" checked />
+                    <input value='1' class="form-check-input" type="radio" name="drugTest" id="flexRadioDefault1" checked />
                     <label class="form-check-label" for="flexRadioDefault1">
                       Yes
                     </label>
                   </div>
                   <div class="form-check">
-                    <input value='no' class="form-check-input" type="radio" name="drugTest" id="flexRadioDefault2" />
+                    <input value='0' class="form-check-input" type="radio" name="drugTest" id="flexRadioDefault2" />
                     <label class="form-check-label" for="flexRadioDefault2">
                       No
                     </label>
@@ -243,7 +256,7 @@ export default function JobApply () {
                 <div className="col-12 mt-3">
                   <label>Create a DriverFly account?</label>
                   <div className="form-check ">
-                    <input onChange={( e ) => handleChange( e )} name="createAccount" className="form-check-input" type="checkbox" value="option2" />
+                    <input onChange={( e ) => handleChange( e )} name="createAccount" className="form-check-input" type="checkbox" value="1" />
                     <label className="form-check-label" htmlfor="inlineCheckbox2">Yes</label>
                   </div>
                 </div>
