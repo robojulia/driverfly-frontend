@@ -1,3 +1,4 @@
+import useAuth from '../../hooks/useAuth';
 import Router from 'next/router'
 import axios from 'axios';
 
@@ -9,51 +10,61 @@ import Breadcrumbs from 'nextjs-breadcrumbs';
 
 export default function Login() {
 
-    if (typeof window !== 'undefined') {
-        console.log('You are on the browser')
-        // 👉️ can use localStorage here
-        // console.log('userData', sessionsStorage.getItem('userData') ? sessionsStorage.getItem('userData') : 'empty')
-    } else {
-        console.log('You are on the server')
-        // 👉️ can't use localStorage
-    }
+    const { authCheck, setAuth } = useAuth();
+    console.log('token', authCheck());
 
     const [formData, setFormData] = useState({
         email: '',
         password: ''
     });
 
-    const [message, setMessage] = useState('');
-    const [auth, setAuth] = useState(false);
+    const [serverValidation, setServerValidation] = useState([]);
+    const [validation, setValidation] = useState();
+
+    const validateForm = () => {
+
+        let errors = {};
+
+        if (!formData.email) {
+            errors.email = "Email is required";
+        }
+
+        if (!formData.password) {
+            errors.password = "Password is required";
+        }
+
+        setValidation(errors);
+        return Object.keys(errors).length == 0;
+    }
 
     const submit = async (e) => {
         e.preventDefault();
-        console.log('formData', formData);
 
-        await axios.post(`http://localhost:4000/api/auth/login`, formData)
-            .then(data => {
+        if (validateForm()) {
 
-                console.log("handle success", data);
-                if (data.status == 201) {
-                    console.log("handle success data", data.data);
-                    // sessionsStorage.setItem('userData', data.data.user)
-                    // console.log('userData', sessionsStorage.getItem('userData') ? sessionsStorage.getItem('userData') : 'empty')
-                    setAuth(true);
-                    Router.push('/dashboard')
-                } else {
-                    console.log('not 201')
-                }
-            })
-            .catch(function (error) {
-                // handle error
+            await axios.post(`${process.env.BASE_URL_API}/auth/login`, formData)
+                .then(data => {
 
-                // setAuth(false);
-                console.log('handle error', error.response)
-            })
-            .then(function () {
-                // always executed
-                console.log("always executed");
-            });
+                    // console.log("handle success", data);
+                    if (data.status == 201) {
+                        console.log("handle success data", data.data);
+                        setAuth(data.data.user.token)
+
+                        Router.push('/dashboard')
+                    } else {
+                        console.log('not 201')
+                    }
+                })
+                .catch(function (error) {
+                    // handle error
+
+                    setServerValidation(error.response.data.errors.user);
+                })
+                .then(function () {
+                    // always executed
+                    console.log("always executed");
+                });
+        }
 
     }
 
@@ -88,13 +99,13 @@ export default function Login() {
                                     onChange={e => setFormData({ ...formData, email: e.target.value })}
                                     className="form-control"
                                     placeholder="Username or email" id="email" />
-                                <div className="text-danger"></div>
-
+                                <div className="text-danger">{validation?.email}</div>
                             </div>
                             <div className="form-group">
                                 <input type="password"
                                     onChange={e => setFormData({ ...formData, password: e.target.value })}
                                     className="form-control" placeholder="Enter password" id="pwd" />
+                                <div className="text-danger">{validation?.password}</div>
                             </div>
                             <div className="form-group form-check">
                                 <label className="form-check-label w-50">
@@ -102,6 +113,12 @@ export default function Login() {
                                 </label>
                                 <a href='#' className={login.pricol}>Lost Your Password?</a>
                             </div>
+                            {serverValidation instanceof Array ? serverValidation.map((inValid) => {
+                                return (
+                                    <div className="text-danger">{inValid}</div>
+                                )
+
+                            }) : <div className="text-danger">{serverValidation}</div>}
                             <button type="submit" className={login.submit}>Login</button>
                         </form>
                         <div className={login.sociallogin}>
