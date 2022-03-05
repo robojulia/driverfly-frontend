@@ -1,4 +1,16 @@
+import { useRouter } from "next/router"
+import { updateQueryStringParameter } from "../../logics/utils"
+
 export default function Category () {
+  const router = useRouter()
+  const categoryFilter = ( e ) => {
+    console.log(e.target.checked)
+    if ( e.target.checked ) {
+      const a = updateQueryStringParameter( window.location.href, 'filter-category', e.target.value )
+      router.replace( a )
+      console.log( e.target.value )
+    }
+  }
   return (
     <>
       <div className="card mt-3">
@@ -16,7 +28,7 @@ export default function Category () {
             <div className="custom-control custom-checkbox p-0">
               <div className="App">
                 <div className="topping">
-                  <input type="checkbox" id="classcdl" name="classcdl" value="Paneer" />Class A CDL(30)
+                  <input onChange={categoryFilter} type="checkbox" id="classcdl" name="classcdl" value="414" />Class A CDL(30)
                 </div>
               </div>
             </div>

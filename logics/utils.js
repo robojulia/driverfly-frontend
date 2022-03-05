@@ -1,0 +1,14 @@
+
+export function updateQueryStringParameter ( uri, key, value ) {
+  var re = new RegExp( "([?&])" + key + "=.*?(&|$)", "i" )
+  var separator = uri.indexOf( '?' ) !== -1 ? "&" : "?"
+  let url
+  if ( uri.match( re ) ) {
+    url = uri.replace( re, '$1' + key + "=" + value + '$2' )
+  }
+  else {
+    url = uri + separator + key + "=" + value
+  }
+  window.history.pushState( "", "", url )
+  return url
+}
