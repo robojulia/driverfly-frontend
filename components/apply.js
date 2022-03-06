@@ -1,121 +1,279 @@
-export default function JobApply() {
-    return (
+import { useState } from 'react'
+import { useRouter } from "next/router"
+import axios from "axios"
+
+export default function JobApply () {
+
+  const router = useRouter()
+  const [inputValues, setInputValues] = useState( {
+    first_name: "",
+    last_name: "",
+    phone: "",
+    email: "",
+    qualifications: "",
+    voilations: "",
+    // resume: "",
+    // commercial_driving_license: "",
+    // medical_card: "",
+    cdl_experience: "",
+  } )
+
+  const [resume, setResume] = useState( null )
+  const [commercial_driving_license, setCommercial_driving_license] = useState( null )
+  const [medical_card, setMedical_card] = useState( null )
+
+  const handleChange = e => {
+    const { name, value } = e.target
+    setInputValues( preValue => {
+      return {
+        ...preValue,
+        [name]: value
+      }
+    } )
+  }
+
+  function Upload ( event ) {
+    if ( event.target.files && event.target.files[0] ) {
+      const t = event.target.name
+      const file = event.target.files[0]
+      if ( t == "cv" ) {
+        setResume( file )
+        console.log( file )
+      }
+      if ( t == "card" ) {
+        setMedical_card( file )
+      }
+      if ( t == "license" ) {
+        setCommercial_driving_license( file )
+      }
+    }
+  }
+
+
+  const [validation, setValidation] = useState()
+
+  const submitHandler = async ( e ) => {
+    e.preventDefault()
+    let errors = {}
+    if ( !inputValues.first_name ) {
+      errors.first_name = "First Name is required"
+    }
+    if ( !inputValues.last_name ) {
+      errors.last_name = "Last Name is required"
+    }
+
+    if ( !inputValues.phone ) {
+      errors.phone = "phone is required"
+    }
+
+    if ( !inputValues.email ) {
+      errors.email = "email is required"
+    }
+
+
+    if ( !inputValues.qualifications ) {
+      errors.qualifications = "qualifications is required"
+    }
+
+    if ( !inputValues.voilations ) {
+      errors.voilations = "voilations is required"
+    }
+
+    if ( !resume ) {
+      errors.resume = "CV is required"
+    }
+
+    if ( !commercial_driving_license ) {
+      errors.commercial_driving_license = "Lisense is required"
+    }
+
+    if ( !medical_card ) {
+      errors.medical_card = "medical_card is required"
+    }
+
+    if ( !inputValues.cdl_experience ) {
+      errors.cdl_experience = "cdl_experience is required"
+    }
+
+    // if ( !inputValues.resume ) {
+    //   errors.resume = "CV File is required"
+    // }
+
+    // if ( !inputValues.medical_card ) {
+    //   errors.medical_card = "Card is required"
+    // }
+
+    // if ( !inputValues.commercial_driving_license ) {
+    //   errors.commercial_driving_license = "Liscense is required"
+    // }
+
+
+    setValidation( errors )
+
+    if ( Object.keys( errors ).length == 0 ) {
+      const drug_test = e.target.drugTest.value
+      const driverfly_account = e.target.createAccount.checked ? 1 : 0
+      // TODO api call to apply for job
+      // console.log(`${process.env.BASE_URL_API}/jobs/apply/${router.query.id}`);
+      const reqBody = {
+        ...inputValues,
+        drug_test,
+        driverfly_account
+      }
+      const formData = new FormData()
+      // const formData = serialize(reqBody)
+      for ( const key in reqBody ) {
+        formData.set( key, reqBody[key] )
+      }
+      formData.append( "resume", resume )
+      formData.append( "commercial_driving_license", commercial_driving_license )
+      formData.append( "medical_card", medical_card )
+
+      for ( let [key, value] of formData.entries() ) {
+        console.log( `${key}: ${value}` )
+      }
+      await axios.post( `http://localhost:4000/api/jobs/apply/${router.query.id}`, formData )
+      alert("Your application has been submitted successfully")
+    }
+
+  }
+
+  return (
     <>
-       
-        <div className="modal fade p-0" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div className="modal fade p-0" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="modal-dialog" role="document">
-            <div className="modal-content">
-                <div className="modal-header border-0">
-                    <h5 className="modal-title font-weight-normal" id="exampleModalLabel">Apply for this job</h5>
-                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
+          <div className="modal-content">
+            <div className="modal-header border-0">
+              <h5 className="modal-title font-weight-normal" id="exampleModalLabel">Apply for this job</h5>
+              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form onSubmit={submitHandler} className="modal-body">
+              {/* <div>{inputValues}</div> */}
+              <div className="row">
+                {/* First Name */}
+                <div className="col-lg-6 col-12">
+                  <label>*First Name</label>
+                  <input onChange={( e ) => handleChange( e )} value={inputValues.first_name} name="first_name" type="text" className="form-control" placeholder="First Name" />
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.first_name}</p>
                 </div>
-                <div className="modal-body">
-                <form>
-                    <div className="row">
-                        <div className="col-lg-6 col-12">
-                            <label>*Fullname</label>
-                            <input type="text" className="form-control" placeholder="Full Name" />
-                        </div>
-                        <div className="col-lg-6 col-12">
-                            <label>*Phone</label>
-                            <input type="number" className="form-control" placeholder="Phone" />
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12 mt-3">
-                            <label>*Email</label>
-                            <input type="emain" className="form-control" placeholder="E-mail" />
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12 mt-3">
-                            <label>* Qualifications</label>
-                            <textarea className="form-control" id="validationTextarea" placeholder="Qualifications" required></textarea>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-lg-6 col-12 mt-3">
-                            <label>Upload your CV</label>
-                            <input type="file" className="form-control mt-lg-4 mt-0" />
-                        </div>
-                        <div className="col-lg-6 col-12 mt-3">
-                            <label>Upload your Commercial Driver’s License</label>
-                            <input type="file" className="form-control" />
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-lg-6 col-12 mt-3">
-                            <label>Upload your Medical card</label>
-                            <input type="file" className="form-control mt-lg-4 mt-0"  />
-                        </div>
-                        <div className="col-lg-6 col-12 mt-3">
-                            <label>* Years of CDL driving experience</label>
-                                <select className="form-select" aria-label="Default select example">
-                                    <option selected>Select CDL Driving Experience</option>
-                                    <option value="1">1-5 Months</option>
-                                    <option value="2">6-11 Months</option>
-                                    <option value="3">1 Year</option>
-                                    <option value="1">2 Years</option>
-                                    <option value="2">3 Years</option>
-                                    <option value="3">4 Years</option>
-                                    <option value="1">5+ Years</option>
-                                </select>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-lg-6 col-12 mt-3">
-                            <label>* Number of moving violations in the last 3 years</label>
-                            <select className="form-select" aria-label="Default select example">
-                                <option selected>Select One</option>
-                                <option value="1">0</option>
-                                <option value="2">1</option>
-                                <option value="3">2</option>
-                                <option value="1">3</option>
-                                <option value="2">4</option>
-                                <option value="3">5</option>
-                                <option value="1">6</option>
-                                <option value="2">7</option>
-                                <option value="3">8</option>
-                                <option value="2">9</option>
-                                <option value="3">10+</option>
-                            </select>
-                        </div>
-                        <div className="col-lg-6 col-12 mt-3">
-                            <label>* Can you pass a drug & alcohol test</label>
-                            <div className="form-check form-check-inline mt-2">
-                                <input className="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" />
-                                <label className="form-check-label" for="inlineCheckbox1">Yes</label>
-                            </div>
-                            <div className="form-check form-check-inline">
-                                <input className="form-check-input" type="checkbox"  value="option2" />
-                                <label className="form-check-label" for="inlineCheckbox2">No</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row my-lg-4">
-                        <div className="col-12 mt-3">
-                            <label>Create a DriverFly account?</label>
-                            <div className="form-check ">
-                                <input className="form-check-input" type="checkbox"  value="option2" />
-                                <label className="form-check-label" htmlfor="inlineCheckbox2">Yes</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className=" col-12">
-                            <p>By clicking the submit button below, I hereby agree to and accept the <br /> <a href="#"> terms and conditions</a></p>
-                        </div>
-                    </div>
+                {/* Last Name */}
+                <div className="col-lg-6 col-12">
+                  <label>*Last Name</label>
+                  <input onChange={( e ) => handleChange( e )} value={inputValues.last_name} name="last_name" type="text" className="form-control" placeholder="Last Name" />
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.last_name}</p>
+                </div>
+                <div className="col-12">
+                  <label>*Phone</label>
+                  <input onChange={( e ) => handleChange( e )} value={inputValues.phone} type="text" name="phone" className="form-control" placeholder="Phone" />
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.phone}</p>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-12 mt-3">
+                  <label>*Email</label>
+                  <input onChange={( e ) => handleChange( e )} value={inputValues.email} type="email" name="email" className="form-control" placeholder="E-mail" />
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.email}</p>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-12 mt-3">
+                  <label>* Qualifications</label>
+                  <textarea onChange={( e ) => handleChange( e )} value={inputValues.qualifications} name="qualifications" className="form-control" id="validationTextarea" placeholder="Qualifications"></textarea>
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.qualifications}</p>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-lg-6 col-12 mt-3">
+                  <label>Upload your CV</label>
+                  <input onChange={Upload} name="cv" type="file" className="form-control mt-lg-4 mt-0" />
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.resume}</p>
+                </div>
+                <div className="col-lg-6 col-12 mt-3">
+                  <label>Upload your Commercial Driver’s License</label>
+                  <input onChange={Upload} name="license" type="file" className="form-control" />
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.commercial_driving_license}</p>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-lg-6 col-12 mt-3">
+                  <label>Upload your Medical card</label>
+                  <input onChange={Upload} name="card" type="file" className="form-control mt-lg-4 mt-0" />
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.medical_card}</p>
+                </div>
+                <div className="col-lg-6 col-12 mt-3">
+                  <label>* Years of CDL driving cdl_experience</label>
+                  <select onChange={( e ) => handleChange( e )} value={inputValues.cdl_experience} name="cdl_experience" className="form-select" aria-label="Default select example">
+                    <option selected>Select CDL Driving cdl_experience</option>
+                    <option value="1">1-5 Months</option>
+                    <option value="2">6-11 Months</option>
+                    <option value="3">1 Year</option>
+                    <option value="1">2 Years</option>
+                    <option value="2">3 Years</option>
+                    <option value="3">4 Years</option>
+                    <option value="1">5+ Years</option>
+                  </select>
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.cdl_experience}</p>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-lg-6 col-12 mt-3">
+                  <label>* Number of moving violations in the last 3 years</label>
+                  <select onChange={( e ) => handleChange( e )} value={inputValues.voilations} name="voilations" className="form-select" aria-label="Default select example">
+                    <option selected>Select One</option>
+                    <option value="1">0</option>
+                    <option value="2">1</option>
+                    <option value="3">2</option>
+                    <option value="1">3</option>
+                    <option value="2">4</option>
+                    <option value="3">5</option>
+                    <option value="1">6</option>
+                    <option value="2">7</option>
+                    <option value="3">8</option>
+                    <option value="2">9</option>
+                    <option value="3">10+</option>
+                  </select>
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.voilations}</p>
+                </div>
+                <div className="col-lg-6 col-12 mt-3">
+                  <label>* Can you pass a drug & alcohol test</label>
+                  <div class="form-check">
+                    <input value='1' class="form-check-input" type="radio" name="drugTest" id="flexRadioDefault1" checked />
+                    <label class="form-check-label" for="flexRadioDefault1">
+                      Yes
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input value='0' class="form-check-input" type="radio" name="drugTest" id="flexRadioDefault2" />
+                    <label class="form-check-label" for="flexRadioDefault2">
+                      No
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div className="row my-lg-4">
+                <div className="col-12 mt-3">
+                  <label>Create a DriverFly account?</label>
+                  <div className="form-check ">
+                    <input onChange={( e ) => handleChange( e )} name="createAccount" className="form-check-input" type="checkbox" value="1" />
+                    <label className="form-check-label" htmlfor="inlineCheckbox2">Yes</label>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className=" col-12">
+                  <p>By clicking the submit button below, I hereby agree to and accept the <br /> <a href="#"> terms and conditions</a></p>
+                </div>
+              </div>
+              {/* </form> */}
+              <div className="modal-footer">
+                <button type="submit" className="btn btn-primary w-100 p-lg-3 p-5">Submit</button>
+              </div>
             </form>
-            </div>
-                <div className="modal-footer">
-                    <button type="button" className="btn btn-primary w-100 p-lg-3 p-5">Submit</button>
-                </div>
-            </div>
+          </div>
         </div>
-        </div>
-</>
-    )
+      </div>
+    </>
+  )
 }

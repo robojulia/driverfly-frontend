@@ -19,6 +19,12 @@
 .loginform input{
   padding: 25px 10px;
 }
+.loginform a{
+    color: #2da2af;
+}
+.loginform a:hover{
+    color: #2da2af;
+}
 .submit{
     width: 100%;
     background:#2da2af;

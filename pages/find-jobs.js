@@ -1,12 +1,26 @@
-import Link from 'next/link'
 import axios from "axios"
-import Layout from "../components/layouts"
+import 'bootstrap/dist/css/bootstrap.css'
+import { useRouter } from 'next/router'
+import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css'
 import FilterResult from '../components/filter-results/filter-results'
 import JobsList from '../components/jobslisting/jobslist'
-import 'bootstrap/dist/css/bootstrap.css';
-import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
+import Layout from "../components/layouts"
 
-export default function FindJobs() {
+export default function FindJobs () {
+  const router = useRouter()
+  console.log(router.query);
+
+  const searchByLocation = e => {
+    e.preventDefault()
+    console.log(e.target.location.value);
+  }
+  
+  const sortHandler = e => {
+    e.preventDefault()
+    console.log(e.target.value);  
+  }
+
+  // console.log(router)
 
   return (
     <>
@@ -17,10 +31,10 @@ export default function FindJobs() {
             <div className="col-md-9 outer pl-4 ">
               {/* <h2>{data}</h2> */}
 
-              <form action="">
+              <form onSubmit={searchByLocation}>
                 <div className="filter-inner d-flex align-items-baseline pl-lg-3 mt-lg-2 ml-lg-3">
                   <i className="fa fa-map-marker" aria-hidden="true"></i>
-                  <input type="text" className="form-control border-0 w-25" placeholder="Location" />
+                  <input name="location" type="text" className="form-control border-0 w-25" placeholder="Location"/>
                   <span className="find-me"></span>
                   <button type="submit" className="btn btn-danger btn-lg br-0 ">Search</button>
                 </div>
@@ -41,7 +55,7 @@ export default function FindJobs() {
                   RSS Feed
                 </button>
                 <span className="text-secondary w-sm-25">Sort by:
-                  <select className="custom-select shadow-none mt-lg-0 mt-md-3">
+                  <select onChange={sortHandler} className="custom-select shadow-none mt-lg-0 mt-md-3">
                     <option>Default</option>
                     <option value="1">Newest</option>
                     <option value="2">Oldest</option>
@@ -62,7 +76,7 @@ export default function FindJobs() {
 }
 
 export async function getServerSideProps () {
-  const { data } = await axios.get( 'http://localhost:4000/api/jobs' )
+  const { data } = await axios.get( `${process.env.BASE_URL_API}/jobs/` )
   return { props: { data } }
 }
 FindJobs.getLayout = function getLayout ( page ) {
