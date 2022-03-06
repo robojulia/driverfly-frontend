@@ -1,11 +1,9 @@
-const Dashboard = () => {
-    const logout = () => {
-        window.localStorage.removeItem('userData')
-    }
+import LogoutButton from '../../components/buttons/Logout';
 
+const Dashboard = () => {
     return (
         <>
-            <button className="btn btn" onClick={logout}>Logout</button>
+            <LogoutButton />
         </>
     )
 };

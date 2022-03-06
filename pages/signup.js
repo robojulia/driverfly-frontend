@@ -6,10 +6,10 @@ import { useState } from 'react'
 import Layout from "../components/layouts"
 import SignupStyle from "../public/css/signup.module.css"
 
-export default function Signup () {
-  const [color, setColor] = useState( 'red' )
+export default function Signup() {
+  const [color, setColor] = useState('red')
 
-  const [inputValues, setInputValue] = useState( {
+  const [inputValues, setInputValue] = useState({
     firstName: null,
     lastName: null,
     name: null,
@@ -17,21 +17,21 @@ export default function Signup () {
     password: null,
     confirmPassword: null,
     phone: null
-  } )
+  })
 
-  const [serverValidation, setServerValidation] = useState( [] )
+  const [serverValidation, setServerValidation] = useState([])
 
   const [validation, setValidation] = useState()
 
 
-  const handleChange = ( event ) => {
+  const handleChange = (event) => {
     const { name, value } = event.target
-    setInputValue( ( preValue ) => {
+    setInputValue((preValue) => {
       return {
         ...preValue,
         [name]: value,
       }
-    } )
+    })
   }
 
 
@@ -62,70 +62,70 @@ export default function Signup () {
     //   errors.lastName = "Last name is required";
     // }
 
-    if ( !inputValues.name ) {
+    if (!inputValues.name) {
       errors.name = "Name is required"
     }
 
     //email validation
-    if ( !inputValues.email ) {
+    if (!inputValues.email) {
       errors.email = "Email is required"
     }
 
     //password validation
 
-    if ( !inputValues.password ) {
+    if (!inputValues.password) {
       errors.password = "password is required"
     }
 
     //matchPassword validation
 
 
-    if ( !inputValues.confirmPassword ) {
+    if (!inputValues.confirmPassword) {
       errors.confirmPassword = "Password confirmation is required"
-    } else if ( inputValues.confirmPassword !== inputValues.password ) {
+    } else if (inputValues.confirmPassword !== inputValues.password) {
       errors.confirmPassword = "Password does not match confirmation password"
     }
 
 
-    if ( !inputValues.phone ) {
+    if (!inputValues.phone) {
       errors.phone = "Phone number is required"
     }
 
-    setValidation( errors )
+    setValidation(errors)
 
     // Call API of signup
-    if ( Object.keys( errors ).length == 0 ) {
-      console.log( 'you can proceed with the API' )
+    if (Object.keys(errors).length == 0) {
+      console.log('you can proceed with the API')
 
-      await axios.post( 'http://localhost:4000/api/users', inputValues )
-        .then( data => {
-          console.log( "handle success", data )
+      await axios.post('http://localhost:4000/api/users', inputValues)
+        .then(data => {
+          console.log("handle success", data)
 
-        } )
-        .catch( function ( error ) {
-          console.log( "handle error success" )
-          if ( error.response ) {
-            if ( error.response.data.message ) {
-              setServerValidation( error.response.data.message )
-            } else if ( error.response.data.errors ) {
-              setColor( "red" )
-              console.log( 'here' )
-              console.log( error.response.data.errors.user )
-              if ( error.response.data.errors.user ) {
-                setServerValidation( error.response.data.errors.user )
+        })
+        .catch(function (error) {
+          console.log("handle error success")
+          if (error.response) {
+            if (error.response.data.message) {
+              setServerValidation(error.response.data.message)
+            } else if (error.response.data.errors) {
+              setColor("red")
+              console.log('here')
+              console.log(error.response.data.errors.user)
+              if (error.response.data.errors.user) {
+                setServerValidation(error.response.data.errors.user)
               } else {
-                setServerValidation( error.response.data.errors.username )
+                setServerValidation(error.response.data.errors.username)
               }
 
-            } else if ( error.response.data.err ) {
-              setColor( "green" )
-              setServerValidation( 'User registered successfully' )
+            } else if (error.response.data.err) {
+              setColor("green")
+              setServerValidation('User registered successfully')
             }
 
           }
-        } ).then( function () {
-          console.log( "always executed" )
-        } )
+        }).then(function () {
+          console.log("always executed")
+        })
     }
 
   }
@@ -182,19 +182,19 @@ export default function Signup () {
                             </div> */}
 
                 <div className="form-group">
-                  <input type="text" className="form-control" onChange={( e ) => handleChange( e )} name="name" value={inputValues.name} aria-describedby="emailHelp" placeholder="Name" />
+                  <input type="text" className="form-control" onChange={(e) => handleChange(e)} name="name" value={inputValues.name} aria-describedby="emailHelp" placeholder="Name" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.name}</p>
                 </div>
                 <div className="form-group">
-                  <input type="email" className="form-control" onChange={( e ) => handleChange( e )} name="email" id="exampleInputUsername" value={inputValues.email} aria-describedby="emailHelp" placeholder="Email" />
+                  <input type="email" className="form-control" onChange={(e) => handleChange(e)} name="email" id="exampleInputUsername" value={inputValues.email} aria-describedby="emailHelp" placeholder="Email" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.email}</p>
                 </div>
                 <div className="form-group">
-                  <input type="password" className="form-control" onChange={( e ) => handleChange( e )} name="password" id="exampleInputPassword1" value={inputValues.password} placeholder="Password" required />
+                  <input type="password" className="form-control" onChange={(e) => handleChange(e)} name="password" id="exampleInputPassword1" value={inputValues.password} placeholder="Password" required />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.password}</p>
                 </div>
                 <div className="form-group">
-                  <input type="password" className="form-control" onChange={( e ) => handleChange( e )} name="confirmPassword" id="exampleInputPassword1" value={inputValues.confirmPassword} placeholder="Confirm Password" required />
+                  <input type="password" className="form-control" onChange={(e) => handleChange(e)} name="confirmPassword" id="exampleInputPassword1" value={inputValues.confirmPassword} placeholder="Confirm Password" required />
                   <p style={{ fontStyle: "italic", color: "red" }}>
                     {validation?.confirmPassword
                       ? validation?.confirmPassword
@@ -202,7 +202,7 @@ export default function Signup () {
                   </p>
                 </div>
                 <div className="form-group">
-                  <input type="tel" className="form-control" onChange={( e ) => handleChange( e )} name="phone" id="exampleInputPhone" placeholder="Phone" />
+                  <input type="tel" className="form-control" onChange={(e) => handleChange(e)} name="phone" id="exampleInputPhone" placeholder="Phone" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.phone}</p>
 
                 </div>
@@ -210,14 +210,14 @@ export default function Signup () {
                   <input type="checkbox" className="form-check-input" id="exampleCheck1" />
                   <label className="form-check-label" htmlFor="exampleCheck1">You accept our <a href="" className={SignupStyle.link}>Terms and Conditions and Privacy Policy</a></label>
                 </div>
-                {console.log( serverValidation )}
-                {console.log( 'serverValidation' )}
-                {serverValidation instanceof Array ? serverValidation.map( ( inValid ) => {
+                {console.log(serverValidation)}
+                {console.log('serverValidation')}
+                {serverValidation instanceof Array ? serverValidation.map((inValid) => {
                   return (
                     <p style={{ fontStyle: "italic", color: "red" }}>{inValid}</p>
                   )
 
-                } ) : <p style={{ fontStyle: "italic", color: color }}>{serverValidation}</p>}
+                }) : <p style={{ fontStyle: "italic", color: color }}>{serverValidation}</p>}
                 <button type="submit" className='btn btn-dark w-100 d-block p-3 my-5' onClick={signUpHandler}>Register now</button>
               </div>
             </div>
@@ -231,7 +231,7 @@ export default function Signup () {
   )
 }
 
-Signup.getLayout = function getLayout ( page ) {
+Signup.getLayout = function getLayout(page) {
   return (
     <Layout>
       {page}
