@@ -1,7 +1,5 @@
 
 export default function FeaturedJobs() {
-    // const featuredjobs = ["Featured Jobs", "CDL-A Regional/OTR – No Touch Freight, Live Load/Unload ", "Custom Trucker Recruiting "];
-    // const data = [{ "name": "test1" }, { "name": "test2" }];
     return (
         <>
 
@@ -15,14 +13,7 @@ export default function FeaturedJobs() {
                                         <div className="media align-items-center ">
                                             <img className="d-flex mr-4 truck-img border-0 " src="img/CTR-logo-cartoon.png" width="100" height="75" alt="" />
                                             <div className="media-body">
-                                                {/* <ol>
-                                                    {featuredjobs.map((featuredjobs) => (
-                                                        <li>{featuredjobs}</li>
-                                                    ))}
-                                                </ol>
-                                                {data.map(function (d, idx) {
-                                                    return (<li key={idx}>{d.name}</li>)
-                                                })} */}
+                                               
                                                 <span className="urgent">URGENT</span>
                                                 <h6>Featured Jobs</h6>
                                                 <h4 className="mt-0">CDL-A Regional/OTR – No Touch Freight, Live Load/Unload<span className="d-block" data-toggle="tooltip"

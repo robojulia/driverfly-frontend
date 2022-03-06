@@ -30,7 +30,7 @@ export default function Index() {
                                 <h1>Find The Job That Fits Your Life</h1>
                                 <h2>Choose from thousands of CDL and Non-CDL truck driving jobs. Get hired fast. Start Searching.</h2>
                             </div>
-                            {/* < HomeSearch /> */}
+                           
                             <div className="hero-search">
 
                                 <div className="input-group w-25">
