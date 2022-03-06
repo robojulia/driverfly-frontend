@@ -68,13 +68,8 @@ export default function Header() {
                                                 </Link>
                                             </li>
                                             <li>
-                                                <Link href="/vendors">
-                                                  <a className="dropdown-item" href="#"> Vendors </a>
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link href="/vendors">
-                                                  <a className="dropdown-item" href="#"> Vendors </a>
+                                                <Link href="/resources">
+                                                  <a className="dropdown-item" href="#"> Trucking Industry Resources </a>
                                                 </Link>
                                             </li>
                                         </ul>

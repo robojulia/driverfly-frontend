@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import Head from "next/head";
 import Layout from "../components/layouts";
-import vendor from '../public/css/Vendors.module.css'
+import resource from '../public/css/Resources.module.css'
 
-export default function Vendors()
+export default function Resources()
 {
     const types = [
         {
@@ -98,7 +98,7 @@ export default function Vendors()
         },
     ]
 
-    const vendors = [
+    const resources = [
         {
             company: "Zuum",
             type: "TMS",
@@ -288,12 +288,12 @@ export default function Vendors()
     ];
 
     const [audience, setAudience] = useState("all");
-    const [vendorType, setVendorType] = useState("All");
-    const [filteredVendors, setFilteredVendors] = useState([]);
+    const [resourceType, setResourceType] = useState("All");
+    const [filteredResources, setFilteredResources] = useState([]);
 
     useEffect( () => {
         // filter for audience (drivers vs companies)
-        let fv = vendors.filter( v => {
+        let fr = resources.filter( v => {
             if (audience === "drivers") {
                 return v.for_drivers;
             }
@@ -306,17 +306,17 @@ export default function Vendors()
             return true;
         });
 
-        // filter for vendor type
-        fv = fv.filter( v => {
-            return (vendorType === "All" || vendorType === v.type);
+        // filter for resource type
+        fr = fr.filter( v => {
+            return (resourceType === "All" || resourceType === v.type);
         });
 
-        setFilteredVendors(fv);
-    }, [audience, vendorType]);
+        setFilteredResources(fr);
+    }, [audience, resourceType]);
 
-    const handleChangeVendorType = event => {
+    const handleChangeResourceType = event => {
         let type = event.target.name;
-        setVendorType(type);
+        setResourceType(type);
     };
 
     const handleChangeAudience = event => {
@@ -327,23 +327,23 @@ export default function Vendors()
     return (
         <>
             <Head>
-                <title>Vendors</title>
+                <title>Trucking Industry Resources</title>
             </Head>
 
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
-                        <h2>Vendors</h2>
+                        <h2>Trucking Industry Resources</h2>
                         <ul className="d-flex">
                             <li><a href="index.html" className="nav-link text-dark px-0">Home <i className="fa fa-caret-right px-2" aria-hidden="true"></i></a></li>
-                            <li><a href="#" className="nav-link text-dark px-0">Vendors</a></li>
+                            <li><a href="#" className="nav-link text-dark px-0">Trucking Industry Resources</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
 
             <div className="container mt-5 mb-5 p-lg-2 p-0">
-                <div className="vendor-audience-filter-sec">
+                <div className="resource-audience-filter-sec">
                     <label>
                         Audience Type:
                         <select className="m-2" value={audience} onChange={handleChangeAudience}>
@@ -354,9 +354,9 @@ export default function Vendors()
                         </select>
                     </label>
                 </div>
-                <div className="vendor-type-filter-sec">
+                <div className="resource-type-filter-sec">
                     <label>
-                        Vendor Type:
+                        Resource Type:
                         {
                             // only show types for the chosen audience type
                             types.map(function(obj, id) {
@@ -368,10 +368,10 @@ export default function Vendors()
                                 )
                                 {
                                     return (
-                                        <div className={vendor.vendor_type_button}>
+                                        <div className={resource.resource_type_button}>
                                             <button
                                                 name={obj.type}
-                                                onClick={handleChangeVendorType}
+                                                onClick={handleChangeResourceType}
                                             >
                                                 { obj.type }
                                             </button>
@@ -383,9 +383,9 @@ export default function Vendors()
                     </label>
                 </div>
 
-                <div className="vendor-list-sec">
+                <div className="resource-list-sec">
                     {
-                        filteredVendors.map(function(obj, id) {
+                        filteredResources.map(function(obj, id) {
                             return (
                                 <div>
                                     <h5> { obj.company } </h5>
@@ -404,7 +404,7 @@ export default function Vendors()
     )
 }
 
-Vendors.getLayout = function getLayout(page) {
+Resources.getLayout = function getLayout(page) {
     return (
         <Layout>
         {page}
