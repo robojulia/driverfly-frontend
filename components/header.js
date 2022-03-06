@@ -47,9 +47,8 @@ export default function Header() {
                                                 <Link href="/owner-operators">
                                                     <a className="dropdown-item"> Owner Operators </a>
                                                 </Link>
-
                                             </li>
-                                         
+
                                         </ul>
                                     </li>
                                     <li className="nav-item dropdown">
@@ -66,6 +65,16 @@ export default function Header() {
                                             <li>
                                                 <Link href="/third-party-resources">
                                                     <a className="dropdown-item" href="#"> Third Party Resources </a>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link href="/vendors">
+                                                  <a className="dropdown-item" href="#"> Vendors </a>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link href="/vendors">
+                                                  <a className="dropdown-item" href="#"> Vendors </a>
                                                 </Link>
                                             </li>
                                         </ul>
