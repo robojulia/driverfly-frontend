@@ -3,8 +3,11 @@ import { useRouter } from "next/router"
 export default function SpecialEndorsementsRequired () {
   const router = useRouter()
   function changeHandler ( e ) {
-    const a = updateQueryStringParameter( window.location.href, 'filter-endorsement', e.target.value )
-    router.replace( a )
+    if (e.target.checked) {
+    
+      const a = updateQueryStringParameter( window.location.href, 'endoresements_type[]', e.target.value )
+      router.replace( a )
+    }
   }
 
   return (

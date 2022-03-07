@@ -3,8 +3,10 @@ import { useRouter } from "next/router"
 export default function TypeOfDelivery () {
   const router = useRouter()
   function changeHandler ( e ) {
-    const a = updateQueryStringParameter( window.location.href, 'filter-delivery-type', e.target.value )
-    router.replace( a )
+    if (e.target.checked) {
+      const a = updateQueryStringParameter( window.location.href, 'delivery_type[]', e.target.value )
+      router.replace( a )
+    }
   }
 
   return (

@@ -5,7 +5,7 @@ export default function JobType () {
   const router = useRouter()
 
   function handleChange ( e ) {
-    const a = updateQueryStringParameter( window.location.href, 'filter-type', e.target.value )
+    const a = updateQueryStringParameter( window.location.href, 'job_type', e.target.value )
     router.replace( a )
   }
 

@@ -1,10 +1,13 @@
-import { updateQueryStringParameter } from "../../logics/utils"
+import { deleteKey, updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
 export default function AreasCovered () {
 const router = useRouter()
 function changeHandler ( e ) {
-  const a = updateQueryStringParameter( window.location.href, 'filter-area', e.target.value )
-  router.replace( a )
+  // if its not checked, add it to the query string
+  if (e.target.checked) {
+    const a = updateQueryStringParameter( window.location.href, 'areas_covered[]', e.target.value )
+    router.replace( a )
+  }
 }
 
   return (
@@ -36,8 +39,6 @@ function changeHandler ( e ) {
               </div>
             </div>
           </div>
-
-
         </div>
       </div>
     </>

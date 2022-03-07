@@ -3,7 +3,7 @@ import { useRouter } from "next/router"
 export default function EmploymentType () {
   const router = useRouter()
   function changeHandler ( e ) {
-    const a = updateQueryStringParameter( window.location.href, 'filter-employment-type', e.target.value )
+    const a = updateQueryStringParameter( window.location.href, 'employment_type', e.target.value )
     router.replace( a )
   }
   return (

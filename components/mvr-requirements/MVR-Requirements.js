@@ -3,8 +3,11 @@ import { useRouter } from "next/router"
 export default function MvrRequirement () {
   const router = useRouter()
   function changeHandler ( e ) {
-    const a = updateQueryStringParameter( window.location.href, 'filter-mvr', e.target.value )
-    router.replace( a )
+    if (e.target.checked) {
+    
+      const a = updateQueryStringParameter( window.location.href, 'mvr_requirements[]', e.target.value )
+      router.replace( a )
+    }
   }
 
   return (
