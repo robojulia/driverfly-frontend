@@ -7,13 +7,13 @@ import  { NextRequest } from 'next/server'
 export async function middleware(NextRequest, NextFetchEvent) {
 
   const { authCheck } = useAuth();
-  const router = useRouter();
+  // const router = useRouter();
 
   if (authCheck()) {
     return NextResponse.next()
   }
 
-  router.push('/')
+  // router.push('/')
   // return NextResponse.redirect("/login")
 
 }
