@@ -7,19 +7,20 @@ import Companies from '../components/works/companies'
 import HomeSearch from '../components/megasearch/search'
 import Slider from '../components/testominial-slider/Slider'
 import Pric from '../public/css/Pricing.module.css'
-import React,{useState} from 'react';
+import React, { useState } from 'react';
+import TrendingWords from '../components/trending-words/Trending';
 
 export default function Index() {
 
     const [showRecent, setShowRecent] = useState(true);
-    function updateState(){
+    function updateState() {
         setShowRecent(!showRecent);
     }
-return (
-<>
-        <Head>
-            <title>Home - DriverFly</title>
-        </Head>
+    return (
+        <>
+            <Head>
+                <title>Home - DriverFly</title>
+            </Head>
 
             <section className="hero-sec">
                 <div className="container ">
@@ -29,31 +30,31 @@ return (
                                 <h1>Find The Job That Fits Your Life</h1>
                                 <h2>Choose from thousands of CDL and Non-CDL truck driving jobs. Get hired fast. Start Searching.</h2>
                             </div>
-                            {/* < HomeSearch /> */}
+                           
                             <div className="hero-search">
-                                
+
                                 <div className="input-group w-25">
                                     <div className="input-group-prepend">
-                                    <i className="fa fa-search" aria-hidden="true"></i>
+                                        <i className="fa fa-search" aria-hidden="true"></i>
                                     </div>
                                     <input type="text" className="" placeholder="Job Title or Keywords" aria-label="" aria-describedby="basic-addon1" />
                                 </div>
                                 <form action="">
                                     <div className="filter-inner d-flex align-items-center pl-3">
                                         <i className="fa fa-map-marker" aria-hidden="true"></i>
-                                            <input type="text" className="form-control border-0" placeholder="Location" />
+                                        <input type="text" className="form-control border-0" placeholder="Location" />
                                         <span className="find-me"></span>
                                     </div>
                                 </form>
-                                
-                                <select className=" form-control  form-select custom-sel"  aria-label="Default select example" id="exampleFormControlSelect1">
+
+                                <select className=" form-control  form-select custom-sel" aria-label="Default select example" id="exampleFormControlSelect1">
                                     <option className='selectbg'
                                     >All Types</option>
-                                    
+
                                     <option className='selectbg'>Solo (27)</option>
                                     <option className='selectbg'>Team Drivers(4)</option>
                                 </select>
-                                
+
                                 <select className="form-select custom-sel border-0" aria-label="Default select example" id="exampleFormControlSelect1">
                                     <option>All Categories</option>
                                     <option> Class A CDL(30)</option>
@@ -62,55 +63,29 @@ return (
                                     <button className="btn-submit btn btn-block btn-theme" type="submit">Search</button>
                                 </div>
                             </div>
-                            <div className="content-trending ">
-                                <ul className="trending-keywords">
-                                    <li className="title">Trending Keywords:</li>
-                                        <li className="item"><a href="#">Drivers,</a></li>
-                                        <li className="item"><a href="#">CDL Driver,</a></li>
-                                        <li className="item"><a href="#">Truck Drivers,</a></li>
-                                        <li className="item"><a href="#">Truck Driving,</a></li>
-                                        <li className="item"><a href="#">All CDL Jobs,</a></li>
-                                        <li className="item"><a href="#">Trucking Jobs,</a></li>
-                                        <li className="item"><a href="#">Class A CDL,</a></li>
-                                        <li className="item"><a href="#">Class B CDL,</a></li>
-                                        <li className="item"><a href="#">Local Driver,</a></li>
-                                        <li className="item"><a href="#">Regional Drivers,</a></li>
-                                        <li className="item"><a href="#">Over The Road,</a></li>
-                                        <li className="item"><a href="#">OTR / Long Haul Truck Driver,</a></li>
-                                        <li className="item"><a href="#">White Glove Delivery Drivers,</a></li>
-                                        <li className="item"><a href="#">Drayage &amp; Intermodal Container,</a></li>
-                                        <li className="item"><a href="#">Transport Drivers,</a></li>
-                                        <li className="item"><a href="#">Owner Operator Truck Driver,</a></li>
-                                        <li className="item"><a href="#">Heavy Towing,</a></li>
-                                        <li className="item"><a href="#">Boxtruck Drivers,</a></li>
-                                        <li className="item"><a href="#">Hazmat Certified Drivers,</a></li>
-                                        <li className="item"><a href="#">Auto Hauling Drivers,</a></li>
-                                        <li className="item"><a href="#">Construction Transport Haulers,</a></li>
-                                        <li className="item"><a href="#">Logging Drivers,</a></li>
-                                        <li className="item"><a href="#">Pick-Up &amp; Delivery Drivers</a></li>
-                                    </ul>
-                            </div>
+                            <TrendingWords />
                         </div>
                     </div>
                 </div>
             </section>
             <section className="tab-sec">
-            <ul className="nav nav-tabs">
-                <li className="nav-item">
-                    <a href="#home" className="nav-link active" data-toggle="tab" onClick={updateState}>
-                        Featured Jobs</a>
+                <ul className="nav nav-tabs">
+                    <li className="nav-item">
+                        <a href="#home" className="nav-link active" data-toggle="tab" onClick={updateState}>
+                            Featured Jobs</a>
                     </li>
-                <li className="nav-item">
-                    <a href="#profile" className="nav-link" data-toggle="tab" onClick={updateState}>
-                        Recent Jobs </a>
-            </li>
-            </ul>
-            {
-                showRecent ? < Featured />
-                :
-                < Recent />
-            }
-         </section>
+                    <li className="nav-item">
+                        <a href="#profile" className="nav-link" data-toggle="tab" onClick={updateState}>
+                            Recent Jobs </a>
+                    </li>
+                </ul>
+                {
+                    showRecent ? < Featured />
+                        :
+                        < Recent />
+                }
+                
+            </section>
             <section className="driver-sec">
                 <div className="container how-it-work-sec">
                     <Drivers />
@@ -124,10 +99,10 @@ return (
                         <div className="row owl-carousel owl-theme d-block" id="owl-demo">
                             < Slider />
                         </div>
-                </div>
+                    </div>
                 </div>
             </div>
-    </>
+        </>
     )
 }
 
