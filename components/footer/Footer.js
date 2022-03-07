@@ -43,6 +43,7 @@ export default function Footer() {
                     <div className="row">
                         <div className="col-md-12">
                             < CopyRight />
+                            <h1>test</h1>
                         </div>
                     </div>
                 </div>
