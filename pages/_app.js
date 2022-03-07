@@ -3,6 +3,8 @@ import "../public/css/owl.theme.default.min.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "../public/css/style.css";
 import "../public/css/responsive.css";
+import "../public/dashboard/styles/css/global.css";
+
 
 
 import { useEffect } from "react";

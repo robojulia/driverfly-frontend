@@ -58,10 +58,7 @@ const ProjectTables = () => {
   return (
     <Card>
       <CardBody>
-        <CardTitle tag="h5">Project Listing</CardTitle>
-        <CardSubtitle className="mb-2 text-muted" tag="h6">
-          Overview of the projects
-        </CardSubtitle>
+       
         <div className="table-responsive">
           <Table className="text-nowrap mt-3 align-middle" borderless>
             <thead>

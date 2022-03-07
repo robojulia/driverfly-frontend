@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
+
 import {
   Navbar,
   Collapse,
@@ -17,6 +18,7 @@ import {
 import LogoWhite from "../../../../public/dashboard/assets/images/logos/amplelogowhite.svg";
 import user1 from "../../../../public/dashboard/assets/images/users/user1.jpg";
 
+
 const Header = ({ showMobmenu }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
@@ -27,16 +29,16 @@ const Header = ({ showMobmenu }) => {
   };
 
   return (
-    <Navbar color="secondary" dark expand="md">
+    <Navbar color="" dark expand="md">
       <div className="d-flex align-items-center">
         <NavbarBrand href="/" className="d-lg-none">
           <Image src={LogoWhite} alt="logo" />
         </NavbarBrand>
-        <Button color="secondary" className="d-lg-none" onClick={showMobmenu}>
+        <Button color="" className="d-lg-none" onClick={showMobmenu}>
           <i className="bi bi-list"></i>
         </Button>
       </div>
-      <div className="hstack gap-2">
+      <div className="hstack gap-2 bg-success">
         <Button
           color="secondary"
           size="sm"
@@ -52,7 +54,14 @@ const Header = ({ showMobmenu }) => {
       </div>
 
       <Collapse navbar isOpen={isOpen}>
-        <Nav className="me-auto" navbar>
+        <div className="input-group rounded w-25 m-auto py-2">
+        <i className="fas fa-search"></i>
+        <i class="fa fa-search" aria-hidden="true"></i>
+          <input type="search" className="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+          <span className="input-group-text border-0" id="search-addon">
+          </span>
+        </div>
+        {/* <Nav className="me-auto" navbar>
           <NavItem>
             <Link href="/">
               <a className="nav-link">Starter</a>
@@ -74,7 +83,7 @@ const Header = ({ showMobmenu }) => {
               <DropdownItem>Reset</DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
-        </Nav>
+        </Nav> */}
         <Dropdown isOpen={dropdownOpen} toggle={toggle}>
           <DropdownToggle color="secondary">
             <div style={{ lineHeight: "0px" }}>

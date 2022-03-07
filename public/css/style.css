@@ -142,9 +142,6 @@
      color: #1a1a1a !important;
  } 
 
-
-
->>>>>>> public/css/style.css
  .btn-3.btn-link {
      font-size: 20px;
      font-weight: 500;
@@ -1656,3 +1653,4 @@ field.checkbox input:checked + check {
 	background-color: rgb(0, 0, 0);
 	transition: 0s;
 }
+
