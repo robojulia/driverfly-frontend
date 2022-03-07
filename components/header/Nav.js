@@ -1,5 +1,12 @@
 import Link from "next/link";
+import useAuth from '../../hooks/useAuth';
+import LoginButton from '../../components/buttons/Login';
+import SignupButton from '../../components/buttons/Signup';
+import LogoutButton from '../../components/buttons/Logout';
+
 export default function Nav() {
+    const { authCheck } = useAuth();
+
     return (
         <>
             <button className="navbar-toggler" type="button" data-toggle="collapse"
@@ -67,13 +74,7 @@ export default function Nav() {
                 <ul className="d-flex align-items-center mb-0">
                     <li><a href="#" className="nav-link"> <i className="fa fa-bell-o pt-1"
                         aria-hidden="true"></i></a></li>
-                    <Link href="/login">
-                        <button type="button" className="btn btn-primary mr-4">Login</button>
-                    </Link>
-                    <l1></l1>
-                    <Link href="/signup">
-                        <button type="button" className="btn btn-primary mr-4">Sign Up</button>
-                    </Link>
+                    {authCheck() ? <LogoutButton className="btn btn-primary mr-4" /> : <><LoginButton className="btn btn-primary mr-4" /> <SignupButton className="btn btn-primary mr-4" /></>}
                 </ul>
             </div>
         </>

@@ -75,7 +75,7 @@ export default function Header() {
                                             </li>
                                             <li>
                                                 <Link href="/resources">
-                                                  <a className="dropdown-item" href="#"> Trucking Industry Resources </a>
+                                                    <a className="dropdown-item" href="#"> Trucking Industry Resources </a>
                                                 </Link>
                                             </li>
                                         </ul>
