@@ -1,7 +1,7 @@
 import useAuth from '../../hooks/useAuth';
 import Router from 'next/router'
 
-export default function Logout() {
+export default function Logout(props) {
 
     const { removeAuth } = useAuth();
 
@@ -15,7 +15,7 @@ export default function Logout() {
             <button
                 onClick={handleLogoutClick}
                 type="button"
-                className="btn btn-primary mr-4">
+                className={props.className}>
                 Logout
             </button>
         </>
