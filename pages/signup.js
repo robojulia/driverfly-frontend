@@ -5,8 +5,17 @@ import Breadcrumbs from "nextjs-breadcrumbs"
 import { useState } from 'react'
 import Layout from "../components/layouts"
 import SignupStyle from "../public/css/signup.module.css"
+import useAuth from '../hooks/useAuth';
+import Router from 'next/router'
 
 export default function Signup() {
+
+  const { authCheck, setAuth } = useAuth();
+
+  if (authCheck()) {
+    Router.push('/dashboard')
+  }
+
   const [color, setColor] = useState('red')
 
   const [inputValues, setInputValue] = useState({
@@ -120,6 +129,9 @@ export default function Signup() {
             } else if (error.response.data.err) {
               setColor("green")
               setServerValidation('User registered successfully')
+              setTimeout(() => {
+                Router.push('/login')
+              }, 3000);
             }
 
           }
