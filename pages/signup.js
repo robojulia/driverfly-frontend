@@ -106,7 +106,7 @@ export default function Signup() {
     if (Object.keys(errors).length == 0) {
       console.log('you can proceed with the API')
 
-      await axios.post('${process.env.BASE_URL_API}/users', inputValues)
+      await axios.post(`${process.env.BASE_URL_API}/users`, inputValues)
         .then(data => {
           console.log("handle success", data)
 
