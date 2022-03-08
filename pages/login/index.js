@@ -1,6 +1,7 @@
 import useAuth from '../../hooks/useAuth';
 import Router from 'next/router'
 import axios from 'axios';
+import { withRouter } from 'next/router'
 
 import { useState } from 'react';
 import Layout from "../../components/layouts";
@@ -51,7 +52,7 @@ export default function Login() {
                     // console.log("handle success", data);
                     if (data.status == 201) {
                         console.log("handle success data", data.data);
-                        setAuth(data.data.user.token)
+                        setAuth(data.data.user)
 
                         Router.push('/dashboard')
                     } else {
@@ -61,7 +62,11 @@ export default function Login() {
                 .catch(function (error) {
                     // handle error
 
-                    setServerValidation(error.response.data.errors.user);
+                    if (error?.response?.data?.errors?.user) {
+                        setServerValidation(error.response.data.errors.user);
+                    }else{
+                        setServerValidation("Invalid Credentials");
+                    }
                 })
                 .then(function () {
                     // always executed

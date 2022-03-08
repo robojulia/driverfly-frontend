@@ -5,15 +5,15 @@ const useAuth = () => {
     const { getItem, setItem, removeItem } = useStorage();
 
     const authCheck = () => {
-        return getItem('token') ? getItem('token') : false;
+        return getItem('user') ? getItem('user') : false;
     }
 
-    const setAuth = (token) => {
-        return setItem('token', token);
+    const setAuth = (user) => {
+        return setItem('user', user);
     }
 
     const removeAuth = () => {
-        return removeItem('token')
+        return removeItem('user')
     }
 
     return {
