@@ -5,53 +5,18 @@ import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css'
 import FilterResult from '../components/filter-results/filter-results'
 import JobsList from '../components/jobslisting/jobslist'
 import Layout from "../components/layouts"
-import { useState } from 'react';
 
-export default function FindJobs() {
-
+export default function FindJobs () {
   const router = useRouter()
-
   console.log(router.query);
-
-  const [jobs, setJobs] = useState();
-  const [location, setLocation] = useState();
-
-  const search = async (e) => {
-    e.preventDefault();
-
-    await axios.get(`${process.env.BASE_URL_API}/jobs`, {
-      params: {
-        location: location
-      }
-    })
-      .then(data => {
-
-        console.log("handle success", data);
-        if (data.status == 200) {
-          setJobs(data.data)
-        } else {
-          console.log('not 201')
-        }
-      })
-      .catch(function (error) {
-        // handle error
-
-        console.log("handle error", error);
-      })
-      .then(function () {
-        // always executed
-        console.log("always executed");
-      });
-  }
-
   const searchByLocation = e => {
     e.preventDefault()
     console.log(e.target.location.value);
   }
-
+  
   const sortHandler = e => {
     e.preventDefault()
-    console.log(e.target.value);
+    console.log(e.target.value);  
   }
 
   // console.log(router)
@@ -65,15 +30,10 @@ export default function FindJobs() {
             <div className="col-md-9 outer pl-4 ">
               {/* <h2>{data}</h2> */}
 
-              <form onSubmit={search}>
+              <form onSubmit={searchByLocation}>
                 <div className="filter-inner d-flex align-items-baseline pl-lg-3 mt-lg-2 ml-lg-3">
                   <i className="fa fa-map-marker" aria-hidden="true"></i>
-                  <input
-                    onChange={e => setLocation(e.target.value)}
-                    name="location"
-                    type="text"
-                    className="form-control border-0 w-25"
-                    placeholder="Location" />
+                  <input name="location" type="text" className="form-control border-0 w-25" placeholder="Location"/>
                   <span className="find-me"></span>
                   <button type="submit" className="btn btn-danger btn-lg br-0 ">Search</button>
                 </div>
@@ -102,7 +62,7 @@ export default function FindJobs() {
                   </select></span>
 
               </div>
-              < JobsList jobs={jobs}/>
+              < JobsList />
 
             </div>
           </div>
@@ -114,7 +74,7 @@ export default function FindJobs() {
 
 }
 
-FindJobs.getLayout = function getLayout(page) {
+FindJobs.getLayout = function getLayout ( page ) {
   return (
     <Layout>
       {page}
