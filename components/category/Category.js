@@ -6,7 +6,7 @@ export default function Category () {
   const categoryFilter = ( e ) => {
     console.log(e.target.checked)
     if ( e.target.checked ) {
-      const a = updateQueryStringParameter( window.location.href, 'filter-category', e.target.value )
+      const a = updateQueryStringParameter( window.location.href, 'category', e.target.value )
       router.replace( a )
       console.log( e.target.value )
     }

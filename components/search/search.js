@@ -6,7 +6,7 @@ export default function Search () {
   const router = useRouter()
   const searchHandler = e => {
     if ( e.key === 'Enter' ) {
-      const a = updateQueryStringParameter( window.location.href, 'filter-title', e.target.value )
+      const a = updateQueryStringParameter( window.location.href, 'title', e.target.value )
       router.replace( a )
     }
   }
