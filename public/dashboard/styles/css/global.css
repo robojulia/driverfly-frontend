@@ -13,7 +13,6 @@
 
 .logoicon img{ 
     top: -75px !important;
-    width: 170px !important;
     height: 146px !important;
 }
 .header nav{
@@ -25,8 +24,8 @@
 }
 
 
-.dashboardsidebar{
-    border-radius: 50px;
+.dashboardsidebar a{
+    color: #000;
 }
 .dashboardsidebar aside{
     background-color: #1b4454;
@@ -40,4 +39,38 @@
 }
 .space{
     height: 100vh;
+}
+.profile button{
+    padding: 5px 20px;
+}
+.profile .btn-secondary{
+    background: transparent;
+    border: 0;
+}
+
+
+.profile .dropdown-item:hover{
+    color: #000 !important;
+    text-decoration:underline;
+}
+.profile span{
+    color: #000;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+.alerts{
+    width: 15%;
+}
+.nav-link{
+    color: rgb(255, 255, 255) !important;
+}
+.nav-link:hover, .nav-link:focus{
+    background-color: rgb(255, 255, 255);
+    color: #000 !important;
+}
+.space_35{
+    padding: 35px;
+}
+.space_6{
+    padding: 6px;
 }

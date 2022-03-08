@@ -59,7 +59,7 @@ const BlogData = [
   ];
   
   
-  export default function Dashboard() {
+  export default function Profile() {
     return (
         <>
             
@@ -125,7 +125,7 @@ const BlogData = [
     )
 };
 
-Dashboard.getLayout = function getLayout(page) {
+Profile.getLayout = function getLayout(page) {
     return (
         <FullLayout>
             {page}
