@@ -11,10 +11,10 @@
     height: 80px;
 }
 
-.logoicon img{ 
+/* .logoicon img{ 
     top: -75px !important;
     height: 146px !important;
-}
+} */
 .header nav{
     background:#f2f2f2 !important;
     color: rgb(0, 0, 0);

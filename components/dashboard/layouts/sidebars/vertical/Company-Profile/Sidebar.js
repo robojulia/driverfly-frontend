@@ -10,15 +10,9 @@ const navigation = [
     icon: "bi bi-speedometer2",
     
   },
-  // {
-  //   title: "Account Settings",
-  //   href: "/dashboard/account-settings",
-  //   icon: "bi bi-bell",
-  // },
-
   {
     title: "Job Listings",
-    href: "//dashboard/company-profile/job-listing",
+    href: "/dashboard/company-profile/job-listing",
     icon: "bi bi-hdd-stack",
   },
   {
