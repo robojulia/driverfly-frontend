@@ -3,27 +3,29 @@ import { useRouter } from "next/router"
 import axios from "axios"
 import { useEffect, useState } from "react"
 
-export default function JobsList () {
+export default function JobsList(props) {
+  console.log('props.jobs', props.jobs)
   const router = useRouter()
-  const [jobs, setJobs] = useState( [] )
-  useEffect( async () => {
+  const [jobs, setJobs] = useState([])
+
+  useEffect(async () => {
     let str = ""
-    for ( const key in router.query ) {
+    for (const key in router.query) {
       // if str is empty, don't add & to the beginning
-      if ( !str ) {
+      if (!str) {
         str = `${key}=${router.query[key]}`
       } else {
         str += `&${key}=${router.query[key]}`
       }
     }
-    console.log( str )
-    const { data } = await axios.get( `${process.env.BASE_URL_API}/jobs?${str}` )
-    setJobs( data )
-  }, [] )
+    console.log(str)
+    const { data } = await axios.get(`${process.env.BASE_URL_API}/jobs?${str}`)
+    setJobs(data)
+  }, [])
   return (
     <>
       <div className="filter-outer mt-5">
-        {jobs.map( job => (
+        {jobs.map(job => (
           <div key={job.id} className="media align-items-center shadow-sm">
             <label className="checkbox-inline" htmlFor="remember">
               <input type="checkbox" name="remember" id="remember" value="1" />
@@ -61,7 +63,7 @@ export default function JobsList () {
             </Link>
 
           </div>
-        ) )}
+        ))}
 
         <ul className="pagination ">
           <li>
