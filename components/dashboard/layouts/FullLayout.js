@@ -2,7 +2,7 @@ import React from "react";
 import LogoutButton from '../../buttons/Logout';
 import { Container } from "reactstrap";
 import Header from "./header/Header";
-import Sidebar from "./sidebars/vertical/Sidebar";
+import Sidebar from "./sidebars/vertical/Driver-Account/Sidebar";
 import Head from "next/head";
 
 
@@ -22,6 +22,12 @@ const FullLayout = ({ children }) => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <div className="header">
+            <div className="contentArea ">
+              {/********header**********/}
+              <Header showMobmenu={() => showMobilemenu()} />
+            </div>
+            </div>
       <main className="maincontainer">
         < div className="dashboardsidebar">
           <div className="pageWrapper d-md-block d-lg-flex">
@@ -34,9 +40,7 @@ const FullLayout = ({ children }) => {
             </aside>
             {/********Content Area**********/}
             <div className="header">
-            <div className="contentArea ">
-              {/********header**********/}
-              <Header showMobmenu={() => showMobilemenu()} />
+           
 
               {/********Middle Content**********/}
               <Container className="p-4 wrapper" fluid>
@@ -45,7 +49,7 @@ const FullLayout = ({ children }) => {
             </div>
             </div>
           </div>
-        </div>
+       
       </main>
     </>
   );

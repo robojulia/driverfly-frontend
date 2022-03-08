@@ -1,6 +1,9 @@
 import React from "react";
 import Link from "next/link";
+import Logo from "../logo/Logo";
 import Image from "next/image";
+import LogoutButton from '../../../buttons/Logout';
+
 
 import {
   Navbar,
@@ -52,14 +55,21 @@ const Header = ({ showMobmenu }) => {
           )}
         </Button>
       </div>
+      <div className="d-flex align-items-center bg_color">
+          <Logo />
+        </div>
 
       <Collapse navbar isOpen={isOpen}>
         <div className="input-group rounded w-25 m-auto py-2">
-        <i className="fas fa-search"></i>
-        <i class="fa fa-search" aria-hidden="true"></i>
+          <i className="fas fa-search"></i>
+          <i class="fa fa-search" aria-hidden="true"></i>
           <input type="search" className="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
           <span className="input-group-text border-0" id="search-addon">
           </span>
+        </div>
+        
+        <div className="alerts">
+          <h3>Alerts (5)</h3>
         </div>
         {/* <Nav className="me-auto" navbar>
           <NavItem>
@@ -84,28 +94,37 @@ const Header = ({ showMobmenu }) => {
             </DropdownMenu>
           </UncontrolledDropdown>
         </Nav> */}
-        <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-          <DropdownToggle color="secondary">
-            <div style={{ lineHeight: "0px" }}>
-              <Image
-                src={user1}
-                alt="profile"
-                className="rounded-circle"
-                width="30"
-                height="30"
-              />
-            </div>
-          </DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem header>Info</DropdownItem>
-            <DropdownItem>My Account</DropdownItem>
-            <DropdownItem>Edit Profile</DropdownItem>
-            <DropdownItem divider />
-            <DropdownItem>My Balance</DropdownItem>
-            <DropdownItem>Inbox</DropdownItem>
-            <DropdownItem>Logout</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
+        <div className="profile">
+          <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+            <DropdownToggle>
+              
+              <div style={{ lineHeight: "0px" }}>
+              
+                <Image
+                  src={user1}
+                  alt="profile"
+                  className="rounded-circle"
+                  width="30"
+                  height="30"
+
+                />
+                <span>Timothy N.</span>
+                <p></p>
+              </div>
+
+            </DropdownToggle >
+            <DropdownMenu>
+              <DropdownItem>Account Settings</DropdownItem>
+              <DropdownItem>Integrations</DropdownItem>
+              <DropdownItem>Billing & Subscriptions</DropdownItem>
+              <DropdownItem>Company Profile</DropdownItem>
+              <DropdownItem>My Referrals</DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem><LogoutButton /></DropdownItem>
+            </DropdownMenu>
+
+          </Dropdown>
+        </div>
       </Collapse>
     </Navbar>
   );

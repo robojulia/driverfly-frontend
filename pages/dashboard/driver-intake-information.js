@@ -47,7 +47,7 @@ const BlogData = [
 ];
 
 
-export default function Dashboard() {
+export default function DriverIntakeInfo() {
   return (
     <>
 
@@ -171,7 +171,7 @@ export default function Dashboard() {
   )
 };
 
-Dashboard.getLayout = function getLayout(page) {
+DriverIntakeInfo.getLayout = function getLayout(page) {
   return (
     <FullLayout>
       {page}

@@ -11,7 +11,7 @@ import bg2 from "../../public/dashboard/assets/images/bg/bg2.jpg";
 import bg3 from "../../public/dashboard/assets/images/bg/bg3.jpg";
 import bg4 from "../../public/dashboard/assets/images/bg/bg4.jpg";
 
-export default function Dashboard() {
+export default function SuggestedJobes() {
   return (
     <>
 
@@ -34,7 +34,7 @@ export default function Dashboard() {
   )
 };
 
-Dashboard.getLayout = function getLayout(page) {
+SuggestedJobes.getLayout = function getLayout(page) {
   return (
     <FullLayout>
       {page}

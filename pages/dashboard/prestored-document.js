@@ -12,7 +12,7 @@ import bg3 from "../../public/dashboard/assets/images/bg/bg3.jpg";
 import bg4 from "../../public/dashboard/assets/images/bg/bg4.jpg";
 
 
-export default function Dashboard() {
+export default function PrestoresDocuments() {
   return (
     <>
 
@@ -69,7 +69,7 @@ export default function Dashboard() {
   )
 };
 
-Dashboard.getLayout = function getLayout(page) {
+PrestoresDocuments.getLayout = function getLayout(page) {
   return (
     <FullLayout>
       {page}
