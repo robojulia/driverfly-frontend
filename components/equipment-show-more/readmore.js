@@ -24,8 +24,10 @@ const Content = () => {
 const router = useRouter()
 
 function changeHandler ( e ) {
-  const a = updateQueryStringParameter( window.location.href, 'filter-equipment-type', e.target.value )
-  router.replace( a )
+  if (e.target.checked) { 
+    const a = updateQueryStringParameter( window.location.href, 'equipment_type[]', e.target.value )
+    router.replace( a )
+  }
 }
 
   return (

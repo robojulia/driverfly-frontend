@@ -5,7 +5,7 @@ export default function Schedule () {
 const router = useRouter()
 
 function changeHandler ( e ) {
-  const a = updateQueryStringParameter( window.location.href, 'filter-schedule', e.target.value )
+  const a = updateQueryStringParameter( window.location.href, 'schedule', e.target.value )
   router.replace( a )
 }
 

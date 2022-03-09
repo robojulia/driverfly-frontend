@@ -9,7 +9,6 @@ import Layout from "../components/layouts"
 export default function FindJobs () {
   const router = useRouter()
   console.log(router.query);
-
   const searchByLocation = e => {
     e.preventDefault()
     console.log(e.target.location.value);
@@ -75,10 +74,6 @@ export default function FindJobs () {
 
 }
 
-export async function getServerSideProps () {
-  const { data } = await axios.get( `${process.env.BASE_URL_API}/jobs/` )
-  return { props: { data } }
-}
 FindJobs.getLayout = function getLayout ( page ) {
   return (
     <Layout>

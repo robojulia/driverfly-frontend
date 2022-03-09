@@ -5,8 +5,17 @@ import Breadcrumbs from "nextjs-breadcrumbs"
 import { useState } from 'react'
 import Layout from "../components/layouts"
 import SignupStyle from "../public/css/signup.module.css"
+import useAuth from '../hooks/useAuth';
+import Router from 'next/router'
 
 export default function Signup() {
+
+  const { authCheck, setAuth } = useAuth();
+
+  if (authCheck()) {
+    Router.push('/dashboard')
+  }
+
   const [color, setColor] = useState('red')
 
   const [inputValues, setInputValue] = useState({
@@ -97,7 +106,7 @@ export default function Signup() {
     if (Object.keys(errors).length == 0) {
       console.log('you can proceed with the API')
 
-      await axios.post('http://localhost:4000/api/users', inputValues)
+      await axios.post(`${process.env.BASE_URL_API}/users`, inputValues)
         .then(data => {
           console.log("handle success", data)
 
@@ -120,6 +129,9 @@ export default function Signup() {
             } else if (error.response.data.err) {
               setColor("green")
               setServerValidation('User registered successfully')
+              setTimeout(() => {
+                Router.push('/login')
+              }, 3000);
             }
 
           }
