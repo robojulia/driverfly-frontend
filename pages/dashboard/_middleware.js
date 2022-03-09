@@ -1,19 +1,14 @@
 import { NextResponse } from "next/server"
-import useAuth from '../../hooks/useAuth';
-import { useRouter } from "next/router";
-import  { NextFetchEvent } from 'next/server'
-import  { NextRequest } from 'next/server'
+import useAuth from '../../hooks/useAuth'
 
-export async function middleware(NextRequest, NextFetchEvent) {
+export async function middleware() {
 
   const { authCheck } = useAuth();
-  // const router = useRouter();
 
   if (authCheck()) {
     return NextResponse.next()
   }
-
-  // router.push('/')
-  // return NextResponse.redirect("/login")
+  // const base = process.env.APP_BASE_URL || "http://localhost:3000"
+  // return NextResponse.redirect(`${base}/login`)
 
 }
