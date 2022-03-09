@@ -5,11 +5,11 @@ const useAuth = () => {
     const { getItem, setItem, removeItem } = useStorage();
 
     const authCheck = () => {
-        return getItem('user') ? getItem('user') : false;
+        return getItem('user') ? JSON.parse(getItem('user')) : false;
     }
 
     const setAuth = (user) => {
-        return setItem('user', user);
+        return setItem('user', JSON.stringify(user));
     }
 
     const removeAuth = () => {
