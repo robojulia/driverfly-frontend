@@ -11,48 +11,13 @@ import bg2 from "../../../public/dashboard/assets/images/bg/bg2.jpg";
 import bg3 from "../../../public/dashboard/assets/images/bg/bg3.jpg";
 import bg4 from "../../../public/dashboard/assets/images/bg/bg4.jpg";
 
-const BlogData = [
-  {
-    image: bg1,
-    title: "This is simple blog",
-    subtitle: "2 comments, 1 Like",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    btnbg: "primary",
-  },
-  {
-    image: bg2,
-    title: "Lets be simple blog",
-    subtitle: "2 comments, 1 Like",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    btnbg: "primary",
-  },
-  {
-    image: bg3,
-    title: "Don't Lamp blog",
-    subtitle: "2 comments, 1 Like",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    btnbg: "primary",
-  },
-  {
-    image: bg4,
-    title: "Simple is beautiful",
-    subtitle: "2 comments, 1 Like",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    btnbg: "primary",
-  },
-];
-
 
 export default function DriverIntakeInfo() {
   return (
     <>
 
       <div>
-        {/***Top Cards***/}
+  
         <Row>
           <h1>Information</h1>
         </Row>
@@ -60,15 +25,12 @@ export default function DriverIntakeInfo() {
           <div className="modal-header border-0">
           </div>
           <form className="modal-body">
-            {/* <div>{inputValues}</div> */}
             <div className="row">
-              {/* First Name */}
               <div className="col-lg-6 col-12">
                 <label>*First Name</label>
                 <input name="first_name" type="text" className="form-control" placeholder="First Name" />
 
               </div>
-              {/* Last Name */}
               <div className="col-lg-6 col-12">
                 <label>*Last Name</label>
                 <input name="last_name" type="text" className="form-control" placeholder="Last Name" />
