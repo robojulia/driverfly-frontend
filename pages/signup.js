@@ -25,7 +25,8 @@ export default function Signup() {
     email: null,
     password: null,
     confirmPassword: null,
-    phone: null
+    phone: null,
+    role: null 
   })
 
   const [serverValidation, setServerValidation] = useState([])
@@ -100,6 +101,12 @@ export default function Signup() {
       errors.phone = "Phone number is required"
     }
 
+     //Role Validation
+
+     if (!inputValues.role) {
+      errors.role = "Role is required"
+    }
+
     setValidation(errors)
 
     // Call API of signup
@@ -130,7 +137,7 @@ export default function Signup() {
               setColor("green")
               setServerValidation('User registered successfully')
               setTimeout(() => {
-                Router.push('/login')
+                // Router.push('/login')
               }, 3000);
             }
 
@@ -209,11 +216,12 @@ export default function Signup() {
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.phone}</p>
 
                 </div>
-                <select class="form-select mb-4 p-3" aria-label="Default select role">
+                <select class="form-select p-3" name="role" aria-label="Default select role" onChange={(e) => handleChange(e)} value={inputValues.role}>
                   <option selected>Select Role</option>
-                  <option value="">Company</option>
-                  <option value="">Driver</option>
+                  <option value="company">Company</option>
+                  <option value="driver">Driver</option>
                 </select>
+                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.role}</p>
                 <div className="form-group form-check">
                   <input type="checkbox" className="form-check-input" id="exampleCheck1" />
                   <label className="form-check-label" htmlFor="exampleCheck1">You accept our <a href="" className={SignupStyle.link}>Terms and Conditions and Privacy Policy</a></label>
