@@ -184,20 +184,20 @@ export default function Signup() {
             <div className={SignupStyle.form}>
               <h2 className="text-center my-5">Create New Driver Account</h2>
               <div className="my-5">
-               <div className="form-group">
-                  <input type="text" className="form-control" onChange={(e) => handleChange(e)} name="name" value={inputValues.name} aria-describedby="emailHelp" placeholder="Name" />
+                <div className="form-group">
+                  <input type="text" className="form-control p-4" onChange={(e) => handleChange(e)} name="name" value={inputValues.name} aria-describedby="emailHelp" placeholder="Name" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.name}</p>
                 </div>
                 <div className="form-group">
-                  <input type="email" className="form-control" onChange={(e) => handleChange(e)} name="email" id="exampleInputUsername" value={inputValues.email} aria-describedby="emailHelp" placeholder="Email" />
+                  <input type="email" className="form-control p-4" onChange={(e) => handleChange(e)} name="email" id="exampleInputUsername" value={inputValues.email} aria-describedby="emailHelp" placeholder="Email" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.email}</p>
                 </div>
                 <div className="form-group">
-                  <input type="password" className="form-control" onChange={(e) => handleChange(e)} name="password" id="exampleInputPassword1" value={inputValues.password} placeholder="Password" required />
+                  <input type="password" className="form-control p-4" onChange={(e) => handleChange(e)} name="password" id="exampleInputPassword1" value={inputValues.password} placeholder="Password" required />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.password}</p>
                 </div>
                 <div className="form-group">
-                  <input type="password" className="form-control" onChange={(e) => handleChange(e)} name="confirmPassword" id="exampleInputPassword1" value={inputValues.confirmPassword} placeholder="Confirm Password" required />
+                  <input type="password" className="form-control p-4" onChange={(e) => handleChange(e)} name="confirmPassword" id="exampleInputPassword1" value={inputValues.confirmPassword} placeholder="Confirm Password" required />
                   <p style={{ fontStyle: "italic", color: "red" }}>
                     {validation?.confirmPassword
                       ? validation?.confirmPassword
@@ -205,10 +205,15 @@ export default function Signup() {
                   </p>
                 </div>
                 <div className="form-group">
-                  <input type="tel" className="form-control" onChange={(e) => handleChange(e)} name="phone" id="exampleInputPhone" placeholder="Phone" />
+                  <input type="tel" className="form-control p-4" onChange={(e) => handleChange(e)} name="phone" id="exampleInputPhone" placeholder="Phone" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.phone}</p>
 
                 </div>
+                <select class="form-select mb-4 p-3" aria-label="Default select role">
+                  <option selected>Select Role</option>
+                  <option value="">Company</option>
+                  <option value="">Driver</option>
+                </select>
                 <div className="form-group form-check">
                   <input type="checkbox" className="form-check-input" id="exampleCheck1" />
                   <label className="form-check-label" htmlFor="exampleCheck1">You accept our <a href="" className={SignupStyle.link}>Terms and Conditions and Privacy Policy</a></label>

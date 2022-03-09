@@ -1653,4 +1653,12 @@ field.checkbox input:checked + check {
 	background-color: rgb(0, 0, 0);
 	transition: 0s;
 }
+.form-select:focus {
+    border-color: #ced4da; 
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.25); 
+}
+.form-select {
+   color: #686e73;
+}
 
