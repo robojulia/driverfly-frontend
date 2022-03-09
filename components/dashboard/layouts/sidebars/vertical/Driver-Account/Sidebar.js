@@ -6,38 +6,34 @@ import { useRouter } from "next/router";
 const navigation = [
   {
     title: "Dashboard",
-    href: "/dashboard",
+    href: "/dashboard/driver/driver",
     icon: "bi bi-speedometer2",
     
   },
-  // {
-  //   title: "Account Settings",
-  //   href: "/dashboard/account-settings",
-  //   icon: "bi bi-bell",
-  // },
+
   {
     title: "Profile",
-    href: "/dashboard/profile",
+    href: "/dashboard/driver/profile",
     icon: "bi bi-patch-check",
   },
   {
     title: "My Applications",
-    href: "/dashboard/application",
+    href: "/dashboard/driver/application",
     icon: "bi bi-hdd-stack",
   },
   {
     title: "Driver intake information",
-    href: "/dashboard/driver-intake-information",
+    href: "/dashboard/driver/driver-intake-information",
     icon: "bi bi-card-text",
   },
   {
     title: "Suggested jobs",
-    href: "/dashboard/suggested-jobs",
+    href: "/dashboard/driver/suggested-jobs",
     icon: "bi bi-columns",
   },
   {
     title: "Prestored Resume/ documents",
-    href: "/dashboard/prestored-document",
+    href: "/dashboard/driver/prestored-document",
     icon: "bi bi-layout-split",
   },
 

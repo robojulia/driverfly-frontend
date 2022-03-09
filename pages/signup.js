@@ -184,16 +184,7 @@ export default function Signup() {
             <div className={SignupStyle.form}>
               <h2 className="text-center my-5">Create New Driver Account</h2>
               <div className="my-5">
-                {/* <div class="form-group">
-                                <input type="text" class="form-control" onChange={(e) => handleChange(e)} name="firstName" value={inputValues.firstName} aria-describedby="emailHelp" placeholder="First Name" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.firstName}</p>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" onChange={(e) => handleChange(e)} name="lastName" value={inputValues.lastName} aria-describedby="emailHelp" placeholder="Last Name" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.lastName}</p>
-                            </div> */}
-
-                <div className="form-group">
+               <div className="form-group">
                   <input type="text" className="form-control" onChange={(e) => handleChange(e)} name="name" value={inputValues.name} aria-describedby="emailHelp" placeholder="Name" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.name}</p>
                 </div>

@@ -114,29 +114,17 @@ export default function JobListing() {
                                                 <td>
                                                     <span className={JobList.tags}>OTR</span>
                                                     <span className={JobList.tags}>1099</span>
-                                                    <span className={JobList.repost}>Repost</span>
+                                                    <input className={JobList.repost}
+                                                        type="button"
+                                                        value="Repost"></input>
                                                 </td>
                                                 <td>
-                                                    <span className={JobList.depolybtn}>Depoly</span>
+                                                    <input className={JobList.depolybtn}
+                                                        type="button"
+                                                        value="Depoly"></input>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td>Class A CDL – Texas –NE OTR</td>
-                                                <td>November 12, 20</td>
-                                                <td>Dec 2, 2022</td>
-                                                <td>Expired</td>
-                                                <td> <span className={JobList.applied}>6</span></td>
-                                                <td> <span className={JobList.approved}>4</span></td>
-                                                <td> <span className={JobList.hired}>1</span></td>
-                                                <td>
-                                                    <span className={JobList.tags}>OTR</span>
-                                                    <span className={JobList.tags}>1099</span>
-                                                    <span className={JobList.repost}>Repost</span>
-                                                </td>
-                                                <td>
-                                                    <span className={JobList.depolybtn}>Depoly</span>
-                                                </td>
-                                            </tr>
+
 
                                         </tbody>
                                     </Table>
@@ -153,7 +141,7 @@ export default function JobListing() {
                                             </ul>
                                         </nav>
                                     </Col>
-                                    <Col sm="6" lg="2">
+                                    <Col sm="6" lg="2" >
                                         <input className={JobList.repost}
                                             type="button"
                                             value="+ New Job"></input>
@@ -177,7 +165,7 @@ export default function JobListing() {
                                 <input className={JobList.edit__btn}
                                     type="button"
                                     value="Edit"></input>
-                                   
+
                             </div>
                         </Col>
 
@@ -293,14 +281,22 @@ export default function JobListing() {
                                 <h3>Analyze Performance</h3>
                             </div>
                             <div className={JobList.status_job__body}>
-                            <Col sm="6" lg="2">
-                                        <input className={JobList.status__btn}
-                                            type="button"
-                                            value="View Stats "></input>
-                                    </Col>
+                                <Col sm="6" lg="2">
+                                    <input className={JobList.status__btn}
+                                        type="button"
+                                        value="View Stats "></input>
+                                </Col>
                             </div>
                         </Col>
 
+                    </Row>
+                    <Row>
+                        <Col className="text-center mt-5">
+                            <input className={JobList.status__btn}
+                                type="button"
+                                value="View Public Posting
+                                "></input>
+                        </Col>
                     </Row>
                 </div>
             </div>
