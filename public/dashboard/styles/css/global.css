@@ -45,6 +45,11 @@
 }
 .profile button{
     padding: 5px 20px;
+    color: #aaa!important;
+    font-size: 15px;
+    line-height: 35px;
+    background: transparent;
+
 }
 .profile .btn-secondary{
     background: transparent;
@@ -52,7 +57,7 @@
 }
 
 
-.profile .dropdown-item:hover{
+.profile button:hover,.profile .dropdown-item:hover{
     color: #000 !important;
     text-decoration:underline;
 }
