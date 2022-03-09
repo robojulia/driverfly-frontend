@@ -16,7 +16,7 @@ import useAuth from '../../../hooks/useAuth';
   
   export default function Dashboard() {
     const { authCheck } = useAuth();
-    console.log('middleware  authCheck', authCheck())
+    console.log('Dashboard  authCheck', authCheck())
     return (
         <>
          

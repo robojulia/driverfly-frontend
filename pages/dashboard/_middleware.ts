@@ -7,16 +7,14 @@ export function middleware(req: NextRequest, ev: NextFetchEvent) {
 
   const { authCheck } = useAuth();
 
-  // return NextResponse.rewrite("/underConstraction");
-
   console.log('middleware  authCheck', authCheck())
+  // return NextResponse.redirect("/underConstraction");
+
   // if (authCheck()) {
-    // console.log('not auth')
-    // return NextResponse.rewrite(`${process.env.FRONTEND_BASE_URL}/dashboard/driver`)
+    // return NextResponse.redirect(`${process.env.FRONTEND_BASE_URL}/dashboard/driver`)
   // }
 
-  // console.log('auth')
-  // return NextResponse.rewrite(`${process.env.FRONTEND_BASE_URL}/login`)
+  // return NextResponse.redirect(`${process.env.FRONTEND_BASE_URL}/login`)
   // return NextResponse.next()
 
 
