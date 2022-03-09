@@ -62,7 +62,7 @@ const Header = ({ showMobmenu }) => {
       <Collapse navbar isOpen={isOpen}>
         <div className="input-group rounded w-25 m-auto py-2">
           <i className="fas fa-search"></i>
-          <i class="fa fa-search" aria-hidden="true"></i>
+          <i className="fa fa-search" aria-hidden="true"></i>
           <input type="search" className="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
           <span className="input-group-text border-0" id="search-addon">
           </span>

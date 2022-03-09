@@ -6,53 +6,53 @@ import { useRouter } from "next/router";
 const navigation = [
   {
     title: "Dashboard",
-    href: "/dashboard/company-profile",
+    href: "/dashboard/company",
     icon: "bi bi-speedometer2",
     
   },
   {
     title: "Job Listings",
-    href: "/dashboard/company-profile/job-listing",
+    href: "/dashboard/company/job-listing",
     icon: "bi bi-hdd-stack",
   },
   {
     title: "Add new Jobs",
-    href: "/dashboard/company-profile/new-job",
+    href: "/dashboard/company/new-job",
     icon: "bi bi-card-text",
   },
   {
     title: "Applicants ",
-    href: "/dashboard/company-profile/applicants",
+    href: "/dashboard/company/applicants",
     icon: "bi bi-columns",
   },
   {
     title: "Send SMS",
-    href: "/dashboard/company-profile/sms",
+    href: "/dashboard/company/sms",
     icon: "bi bi-layout-split",
   },
   {
     title: "Driver applications and resume",
-    href: "/dashboard/company-profile/driver-applications-and-resume",
+    href: "/dashboard/company/driver-applications-and-resume",
     icon: "bi bi-layout-split",
   },
   {
     title: "Driver Directory",
-    href: "/dashboard/company-profile/driver-directory",
+    href: "/dashboard/company/driver-directory",
     icon: "bi bi-layout-split",
   },
   {
     title: "Safety and Complience",
-    href: "/dashboard/company-profile/safety-and-complience",
+    href: "/dashboard/company/safety-and-complience",
     icon: "bi bi-layout-split",
   },
   {
     title: "Account settings",
-    href: "/dashboard/company-profile/account-settings",
+    href: "/dashboard/company/account-settings",
     icon: "bi bi-layout-split",
   },
   {
     title: "Admin approval for jobs",
-    href: "/dashboard/company-profile/admin-approval-jobs",
+    href: "/dashboard/company/admin-approval-jobs",
     icon: "bi bi-layout-split",
   },
 

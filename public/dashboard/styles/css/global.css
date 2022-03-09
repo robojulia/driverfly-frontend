@@ -27,6 +27,9 @@
 .dashboardsidebar a{
     color: #000;
 }
+.dashboardsidebar  .page-link:hover{
+    color: #000;
+}
 .dashboardsidebar aside{
     background-color: #1b4454;
     height: 100vh;
@@ -74,3 +77,9 @@
 .space_6{
     padding: 6px;
 }
+@media screen and (max-width: 992px) {
+    .dashboardsidebar aside{
+        background-color: #1b4454;
+        height: auto;
+    }
+  }

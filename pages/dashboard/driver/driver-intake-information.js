@@ -1,15 +1,15 @@
-import LogoutButton from '../../components/buttons/Logout';
-import FullLayout from "../../components/dashboard/layouts/FullLayout";
+import LogoutButton from '../../../components/buttons/Logout';
+import FullLayout from "../../../components/dashboard/layouts/FullLayout";
 import { Col, Row } from "reactstrap";
-// import SalesChart from "../../components/dashboard/components/dashboard/SalesChart";
-import Feeds from "../../components/dashboard/components/dashboard/Feeds";
-import ProjectTables from "../../components/dashboard/components/dashboard/ProjectTable";
-import TopCards from "../../components/dashboard/components/dashboard/TopCards";
-import Blog from "../../components/dashboard/components/dashboard/Blog";
-import bg1 from "../../public/dashboard/assets/images/bg/bg1.jpg";
-import bg2 from "../../public/dashboard/assets/images/bg/bg2.jpg";
-import bg3 from "../../public/dashboard/assets/images/bg/bg3.jpg";
-import bg4 from "../../public/dashboard/assets/images/bg/bg4.jpg";
+// import SalesChart from "../../../components/dashboard/components/dashboard/SalesChart";
+import Feeds from "../../../components/dashboard/components/dashboard/Feeds";
+import ProjectTables from "../../../components/dashboard/components/dashboard/ProjectTable";
+import TopCards from "../../../components/dashboard/components/dashboard/TopCards";
+import Blog from "../../../components/dashboard/components/dashboard/Blog";
+import bg1 from "../../../public/dashboard/assets/images/bg/bg1.jpg";
+import bg2 from "../../../public/dashboard/assets/images/bg/bg2.jpg";
+import bg3 from "../../../public/dashboard/assets/images/bg/bg3.jpg";
+import bg4 from "../../../public/dashboard/assets/images/bg/bg4.jpg";
 
 const BlogData = [
   {
@@ -145,15 +145,15 @@ export default function DriverIntakeInfo() {
               </div>
               <div className="col-lg-6 col-12 mt-3">
                 <label>* Can you pass a drug & alcohol test</label>
-                <div class="form-check">
-                  <input value='1' class="form-check-input" type="radio" name="drugTest" id="flexRadioDefault1" checked />
-                  <label class="form-check-label" for="flexRadioDefault1">
+                <div className="form-check">
+                  <input value='1' className="form-check-input" type="radio" name="drugTest" id="flexRadioDefault1" checked />
+                  <label className="form-check-label" for="flexRadioDefault1">
                     Yes
                   </label>
                 </div>
-                <div class="form-check">
-                  <input value='0' class="form-check-input" type="radio" name="drugTest" id="flexRadioDefault2" />
-                  <label class="form-check-label" for="flexRadioDefault2">
+                <div className="form-check">
+                  <input value='0' className="form-check-input" type="radio" name="drugTest" id="flexRadioDefault2" />
+                  <label className="form-check-label" for="flexRadioDefault2">
                     No
                   </label>
                 </div>
