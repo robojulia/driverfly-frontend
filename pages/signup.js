@@ -26,7 +26,7 @@ export default function Signup() {
     password: null,
     confirmPassword: null,
     phone: null,
-    role: null 
+    role: null
   })
 
   const [serverValidation, setServerValidation] = useState([])
@@ -101,9 +101,9 @@ export default function Signup() {
       errors.phone = "Phone number is required"
     }
 
-     //Role Validation
+    //Role Validation
 
-     if (!inputValues.role) {
+    if (!inputValues.role) {
       errors.role = "Role is required"
     }
 
@@ -137,7 +137,7 @@ export default function Signup() {
               setColor("green")
               setServerValidation('User registered successfully')
               setTimeout(() => {
-                // Router.push('/login')
+                Router.push('/login')
               }, 3000);
             }
 
