@@ -5,30 +5,39 @@ import {
 import FullLayout from "../../components/dashboard/layouts/FullLayout"
 import { useFormik } from "formik"
 import * as yup from "yup"
+import axios from "axios"
 
 
 export default function Profile () {
   const formik = useFormik( {
     initialValues: {
-      email: "",
       first_name: "",
       last_name: "",
       contact_number: "",
+      zip_code: "",
       state: "",
+      address: "",
       country: "",
     },
     validationSchema: yup.object( {
-      email: yup.string().email( "Invalid email address" ).required( "Email is required" ),
       first_name: yup.string().required( "First name is required" ),
       last_name: yup.string().required( "Last name is required" ),
-      contact_number: yup.string().optional( "Contact number is required" ),
-      state: yup.string().optional( "State is required" ),
-      country: yup.string().optional( "Country is required" ),
+      contact_number: yup.string().required( "Contact number is required" ),
+      address: yup.string().required( "Address is required" ),
+      zip_code: yup.number().required( "Zip code is required" ),
+      state: yup.string().required( "State is required" ),
+      country: yup.string().required( "Country is required" ),
     } ),
-    onSubmit: v => {
-      console.log( v )
+    onSubmit: async(v) => {
+      await axios.put(`${process.env.BASE_URL_API}/user/3`, {
+        ...v
+      } )
     }
   } )
+
+  const handleReset = () => {
+    console.log("handleReset");
+  }
 
   return (
     <>
@@ -42,21 +51,7 @@ export default function Profile () {
           <Col>
             <Card>
               <CardBody>
-                <Form onSubmit={formik.handleSubmit}>
-                  {/* email */}
-                  <FormGroup>
-                    <Label for="email">Email</Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      placeholder="Email"
-                      onChange={formik.handleChange}
-                      value={formik.values.email}
-                      onBlur={formik.handleBlur}
-                      type="text"
-                    />
-                    {formik.touched.email && formik.errors.email ? <p style={{ fontStyle: "italic", color: "red", fontSize: '13px' }}>{formik.errors.email}</p> : null}
-                  </FormGroup>
+                <Form onSubmit={formik.handleSubmit} onReset={handleReset}>
                   {/* firstname */}
                   <FormGroup>
                     <Label for="firstname">First Name</Label>
@@ -99,6 +94,20 @@ export default function Profile () {
                     />
                     {formik.touched.contact_number && formik.errors.contact_number ? <p style={{ fontStyle: "italic", color: "red", fontSize: '13px' }}>{formik.errors.contact_number}</p> : null}
                   </FormGroup>
+                  {/* address */}
+                  <FormGroup>
+                    <Label for="address">Address</Label>
+                    <Input
+                      id="address"
+                      onChange={formik.handleChange}
+                      value={formik.values.address}
+                      onBlur={formik.handleBlur}
+                      name="address"
+                      placeholder="Enter Address"
+                      type="text"
+                    />
+                    {formik.touched.address && formik.errors.address ? <p style={{ fontStyle: "italic", color: "red", fontSize: '13px' }}>{formik.errors.address}</p> : null}
+                  </FormGroup>
                   {/* state */}
                   <FormGroup>
                     <Label for="state">State</Label>
@@ -126,6 +135,20 @@ export default function Profile () {
                       type="text"
                     />
                     {formik.touched.country && formik.errors.country ? <p style={{ fontStyle: "italic", color: "red", fontSize: '13px' }}>{formik.errors.country}</p> : null}
+                  </FormGroup>
+                  {/* country */}
+                  <FormGroup>
+                    <Label for="zip_code">Zip Code</Label>
+                    <Input
+                      id="zip_code"
+                      name="zip_code"
+                      onChange={formik.handleChange}
+                      value={formik.values.zip_code}
+                      onBlur={formik.handleBlur}
+                      placeholder="Enter Zip Code"
+                      type="text"
+                    />
+                    {formik.touched.zip_code && formik.errors.zip_code ? <p style={{ fontStyle: "italic", color: "red", fontSize: '13px' }}>{formik.errors.zip_code}</p> : null}
                   </FormGroup>
                   <Button type="submit">Submit</Button>
                 </Form>
