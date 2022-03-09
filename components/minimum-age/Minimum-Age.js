@@ -1,12 +1,16 @@
 import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
+import { useContext } from "react"
+import jobContext from "../../context/jobContext"
 
 export default function MinimumAge () {
+  const ctx = useContext( jobContext )
   const router = useRouter()
   function changeHandler ( e ) {
     if ( e.target.checked ) {
       const a = updateQueryStringParameter( window.location.href, 'filter-age[]', e.target.value )
       router.replace( a )
+      ctx.applyFilters()
     }
   }
 

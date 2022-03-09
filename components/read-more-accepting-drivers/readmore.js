@@ -1,6 +1,8 @@
 import React, { useState } from "react"
 import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
+import { useContext } from "react"
+import jobContext from "../../context/jobContext"
 
 const ReadMore = ( { children } ) => {
   const text = children
@@ -20,10 +22,12 @@ const ReadMore = ( { children } ) => {
 
 const Content = () => {
   const router = useRouter()
+  const ctx = useContext( jobContext )
   function changeHandler ( e ) {
     if (e.target.checked) {
       const a = updateQueryStringParameter( window.location.href, 'drivers_from[]', e.target.value )
       router.replace( a )
+      ctx.applyFilters()
     }
   }
   
