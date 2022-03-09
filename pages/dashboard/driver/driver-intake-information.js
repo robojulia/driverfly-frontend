@@ -1,50 +1,15 @@
-import LogoutButton from '../../components/buttons/Logout';
-import FullLayout from "../../components/dashboard/layouts/FullLayout";
+import LogoutButton from '../../../components/buttons/Logout';
+import FullLayout from "../../../components/dashboard/layouts/FullLayout";
 import { Col, Row } from "reactstrap";
-// import SalesChart from "../../components/dashboard/components/dashboard/SalesChart";
-import Feeds from "../../components/dashboard/components/dashboard/Feeds";
-import ProjectTables from "../../components/dashboard/components/dashboard/ProjectTable";
-import TopCards from "../../components/dashboard/components/dashboard/TopCards";
-import Blog from "../../components/dashboard/components/dashboard/Blog";
-import bg1 from "../../public/dashboard/assets/images/bg/bg1.jpg";
-import bg2 from "../../public/dashboard/assets/images/bg/bg2.jpg";
-import bg3 from "../../public/dashboard/assets/images/bg/bg3.jpg";
-import bg4 from "../../public/dashboard/assets/images/bg/bg4.jpg";
-
-const BlogData = [
-  {
-    image: bg1,
-    title: "This is simple blog",
-    subtitle: "2 comments, 1 Like",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    btnbg: "primary",
-  },
-  {
-    image: bg2,
-    title: "Lets be simple blog",
-    subtitle: "2 comments, 1 Like",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    btnbg: "primary",
-  },
-  {
-    image: bg3,
-    title: "Don't Lamp blog",
-    subtitle: "2 comments, 1 Like",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    btnbg: "primary",
-  },
-  {
-    image: bg4,
-    title: "Simple is beautiful",
-    subtitle: "2 comments, 1 Like",
-    description:
-      "This is a wider card with supporting text below as a natural lead-in to additional content.",
-    btnbg: "primary",
-  },
-];
+// import SalesChart from "../../../components/dashboard/components/dashboard/SalesChart";
+import Feeds from "../../../components/dashboard/components/dashboard/Feeds";
+import ProjectTables from "../../../components/dashboard/components/dashboard/ProjectTable";
+import TopCards from "../../../components/dashboard/components/dashboard/TopCards";
+import Blog from "../../../components/dashboard/components/dashboard/Blog";
+import bg1 from "../../../public/dashboard/assets/images/bg/bg1.jpg";
+import bg2 from "../../../public/dashboard/assets/images/bg/bg2.jpg";
+import bg3 from "../../../public/dashboard/assets/images/bg/bg3.jpg";
+import bg4 from "../../../public/dashboard/assets/images/bg/bg4.jpg";
 
 
 export default function DriverIntakeInfo() {
@@ -52,7 +17,7 @@ export default function DriverIntakeInfo() {
     <>
 
       <div>
-        {/***Top Cards***/}
+  
         <Row>
           <h1>Information</h1>
         </Row>
@@ -60,15 +25,12 @@ export default function DriverIntakeInfo() {
           <div className="modal-header border-0">
           </div>
           <form className="modal-body">
-            {/* <div>{inputValues}</div> */}
             <div className="row">
-              {/* First Name */}
               <div className="col-lg-6 col-12">
                 <label>*First Name</label>
                 <input name="first_name" type="text" className="form-control" placeholder="First Name" />
 
               </div>
-              {/* Last Name */}
               <div className="col-lg-6 col-12">
                 <label>*Last Name</label>
                 <input name="last_name" type="text" className="form-control" placeholder="Last Name" />
@@ -145,15 +107,15 @@ export default function DriverIntakeInfo() {
               </div>
               <div className="col-lg-6 col-12 mt-3">
                 <label>* Can you pass a drug & alcohol test</label>
-                <div class="form-check">
-                  <input value='1' class="form-check-input" type="radio" name="drugTest" id="flexRadioDefault1" checked />
-                  <label class="form-check-label" for="flexRadioDefault1">
+                <div className="form-check">
+                  <input value='1' className="form-check-input" type="radio" name="drugTest" id="flexRadioDefault1" checked />
+                  <label className="form-check-label" for="flexRadioDefault1">
                     Yes
                   </label>
                 </div>
-                <div class="form-check">
-                  <input value='0' class="form-check-input" type="radio" name="drugTest" id="flexRadioDefault2" />
-                  <label class="form-check-label" for="flexRadioDefault2">
+                <div className="form-check">
+                  <input value='0' className="form-check-input" type="radio" name="drugTest" id="flexRadioDefault2" />
+                  <label className="form-check-label" for="flexRadioDefault2">
                     No
                   </label>
                 </div>

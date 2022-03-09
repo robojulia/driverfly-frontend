@@ -11,10 +11,10 @@
     height: 80px;
 }
 
-.logoicon img{ 
+/* .logoicon img{ 
     top: -75px !important;
     height: 146px !important;
-}
+} */
 .header nav{
     background:#f2f2f2 !important;
     color: rgb(0, 0, 0);
@@ -25,6 +25,9 @@
 
 
 .dashboardsidebar a{
+    color: #000;
+}
+.dashboardsidebar  .page-link:hover{
     color: #000;
 }
 .dashboardsidebar aside{
@@ -42,6 +45,11 @@
 }
 .profile button{
     padding: 5px 20px;
+    color: #aaa!important;
+    font-size: 15px;
+    line-height: 35px;
+    background: transparent;
+
 }
 .profile .btn-secondary{
     background: transparent;
@@ -49,7 +57,7 @@
 }
 
 
-.profile .dropdown-item:hover{
+.profile button:hover,.profile .dropdown-item:hover{
     color: #000 !important;
     text-decoration:underline;
 }
@@ -74,3 +82,9 @@
 .space_6{
     padding: 6px;
 }
+@media screen and (max-width: 992px) {
+    .dashboardsidebar aside{
+        background-color: #1b4454;
+        height: auto;
+    }
+  }

@@ -25,7 +25,8 @@ export default function Signup() {
     email: null,
     password: null,
     confirmPassword: null,
-    phone: null
+    phone: null,
+    role: null
   })
 
   const [serverValidation, setServerValidation] = useState([])
@@ -100,13 +101,19 @@ export default function Signup() {
       errors.phone = "Phone number is required"
     }
 
+    //Role Validation
+
+    if (!inputValues.role) {
+      errors.role = "Role is required"
+    }
+
     setValidation(errors)
 
     // Call API of signup
     if (Object.keys(errors).length == 0) {
       console.log('you can proceed with the API')
 
-      await axios.post('http://localhost:4000/api/users', inputValues)
+      await axios.post(`${process.env.BASE_URL_API}/users`, inputValues)
         .then(data => {
           console.log("handle success", data)
 
@@ -184,29 +191,20 @@ export default function Signup() {
             <div className={SignupStyle.form}>
               <h2 className="text-center my-5">Create New Driver Account</h2>
               <div className="my-5">
-                {/* <div class="form-group">
-                                <input type="text" class="form-control" onChange={(e) => handleChange(e)} name="firstName" value={inputValues.firstName} aria-describedby="emailHelp" placeholder="First Name" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.firstName}</p>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control" onChange={(e) => handleChange(e)} name="lastName" value={inputValues.lastName} aria-describedby="emailHelp" placeholder="Last Name" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.lastName}</p>
-                            </div> */}
-
                 <div className="form-group">
-                  <input type="text" className="form-control" onChange={(e) => handleChange(e)} name="name" value={inputValues.name} aria-describedby="emailHelp" placeholder="Name" />
+                  <input type="text" className="form-control p-4" onChange={(e) => handleChange(e)} name="name" value={inputValues.name} aria-describedby="emailHelp" placeholder="Name" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.name}</p>
                 </div>
                 <div className="form-group">
-                  <input type="email" className="form-control" onChange={(e) => handleChange(e)} name="email" id="exampleInputUsername" value={inputValues.email} aria-describedby="emailHelp" placeholder="Email" />
+                  <input type="email" className="form-control p-4" onChange={(e) => handleChange(e)} name="email" id="exampleInputUsername" value={inputValues.email} aria-describedby="emailHelp" placeholder="Email" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.email}</p>
                 </div>
                 <div className="form-group">
-                  <input type="password" className="form-control" onChange={(e) => handleChange(e)} name="password" id="exampleInputPassword1" value={inputValues.password} placeholder="Password" required />
+                  <input type="password" className="form-control p-4" onChange={(e) => handleChange(e)} name="password" id="exampleInputPassword1" value={inputValues.password} placeholder="Password" required />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.password}</p>
                 </div>
                 <div className="form-group">
-                  <input type="password" className="form-control" onChange={(e) => handleChange(e)} name="confirmPassword" id="exampleInputPassword1" value={inputValues.confirmPassword} placeholder="Confirm Password" required />
+                  <input type="password" className="form-control p-4" onChange={(e) => handleChange(e)} name="confirmPassword" id="exampleInputPassword1" value={inputValues.confirmPassword} placeholder="Confirm Password" required />
                   <p style={{ fontStyle: "italic", color: "red" }}>
                     {validation?.confirmPassword
                       ? validation?.confirmPassword
@@ -214,10 +212,16 @@ export default function Signup() {
                   </p>
                 </div>
                 <div className="form-group">
-                  <input type="tel" className="form-control" onChange={(e) => handleChange(e)} name="phone" id="exampleInputPhone" placeholder="Phone" />
+                  <input type="tel" className="form-control p-4" onChange={(e) => handleChange(e)} name="phone" id="exampleInputPhone" placeholder="Phone" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.phone}</p>
 
                 </div>
+                <select class="form-select p-3" name="role" aria-label="Default select role" onChange={(e) => handleChange(e)} value={inputValues.role}>
+                  <option selected>Select Role</option>
+                  <option value="company">Company</option>
+                  <option value="driver">Driver</option>
+                </select>
+                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.role}</p>
                 <div className="form-group form-check">
                   <input type="checkbox" className="form-check-input" id="exampleCheck1" />
                   <label className="form-check-label" htmlFor="exampleCheck1">You accept our <a href="" className={SignupStyle.link}>Terms and Conditions and Privacy Policy</a></label>

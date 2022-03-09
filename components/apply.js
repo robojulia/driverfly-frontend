@@ -238,15 +238,15 @@ export default function JobApply () {
                 </div>
                 <div className="col-lg-6 col-12 mt-3">
                   <label>* Can you pass a drug & alcohol test</label>
-                  <div class="form-check">
+                  <div className="form-check">
                     <input value='1' class="form-check-input" type="radio" name="drugTest" id="flexRadioDefault1" checked />
                     <label class="form-check-label" for="flexRadioDefault1">
                       Yes
                     </label>
                   </div>
-                  <div class="form-check">
-                    <input value='0' class="form-check-input" type="radio" name="drugTest" id="flexRadioDefault2" />
-                    <label class="form-check-label" for="flexRadioDefault2">
+                  <div className="form-check">
+                    <input value='0' className="form-check-input" type="radio" name="drugTest" id="flexRadioDefault2" />
+                    <label className="form-check-label" for="flexRadioDefault2">
                       No
                     </label>
                   </div>
