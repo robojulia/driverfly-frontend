@@ -15,7 +15,7 @@ const FullLayout = ({ children }) => {
   return (
     <>
       <Head>
-        <title>Ample Admin Next Js Free Aadmin Dashboard </title>
+        <title>Driver-Dashboard</title>
         <meta
           name="description"
           content="Ample Admin Next Js Aadmin Dashboard "
