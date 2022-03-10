@@ -1,12 +1,15 @@
 import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
+import { useContext } from "react"
+import jobContext from "../../context/jobContext"
 
 export default function Schedule () {
 const router = useRouter()
-
+const ctx = useContext( jobContext )
 function changeHandler ( e ) {
   const a = updateQueryStringParameter( window.location.href, 'schedule', e.target.value )
   router.replace( a )
+  ctx.applyFilters()
 }
 
   return (

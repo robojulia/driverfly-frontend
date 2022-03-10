@@ -37,11 +37,11 @@ export default function FilterResults () {
           <div className="bs-example">
             <div className="tab-content">
               <div className="accordion bg-transparent" id="accordionExample">
-                {/* < Category />
+                < Category />
                 < Location />
                 < JobType />
                 < Salary />
-                < PostedDate /> */}
+                < PostedDate />
                 < AreasCovered />
                 < FullParty />
                 < EmploymentType />

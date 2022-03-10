@@ -1,14 +1,17 @@
 import { useRouter } from "next/router"
 import { updateQueryStringParameter } from "../../logics/utils"
 
+import { useContext } from "react"
+import jobContext from "../../context/jobContext"
+
 export default function Category () {
+  const ctx = useContext( jobContext )
   const router = useRouter()
   const categoryFilter = ( e ) => {
-    console.log(e.target.checked)
     if ( e.target.checked ) {
       const a = updateQueryStringParameter( window.location.href, 'category', e.target.value )
       router.replace( a )
-      console.log( e.target.value )
+      ctx.applyFilters()
     }
   }
   return (

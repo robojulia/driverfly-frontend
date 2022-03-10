@@ -1,28 +1,38 @@
 import axios from "axios"
 import 'bootstrap/dist/css/bootstrap.css'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from "react"
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css'
 import FilterResult from '../components/filter-results/filter-results'
 import JobsList from '../components/jobslisting/jobslist'
 import Layout from "../components/layouts"
+import jobsContext from "../context/jobContext"
 
 export default function FindJobs () {
+  const [jobs, setJobs] = useState( [] )
   const router = useRouter()
-  console.log(router.query);
   const searchByLocation = e => {
     e.preventDefault()
-    console.log(e.target.location.value);
+    console.log( e.target.location.value )
   }
-  
+
   const sortHandler = e => {
     e.preventDefault()
-    console.log(e.target.value);  
+    console.log( e.target.value )
   }
 
-  // console.log(router)
+  
+
+  const fetchJobs = async() => {
+    const queries = window.location.href.split("?")[1]
+    const { data } = await axios.get( `${process.env.BASE_URL_API}/jobs?${queries || ""}` )
+    setJobs( data )
+  }
+
+  useEffect( fetchJobs, [] )
 
   return (
-    <>
+    <jobsContext.Provider value={{ jobs, applyFilters: fetchJobs }}>
       <div className="filter-sec">
         <div className="container">
           <div className="row">
@@ -33,7 +43,7 @@ export default function FindJobs () {
               <form onSubmit={searchByLocation}>
                 <div className="filter-inner d-flex align-items-baseline pl-lg-3 mt-lg-2 ml-lg-3">
                   <i className="fa fa-map-marker" aria-hidden="true"></i>
-                  <input name="location" type="text" className="form-control border-0 w-25" placeholder="Location"/>
+                  <input name="location" type="text" className="form-control border-0 w-25" placeholder="Location" />
                   <span className="find-me"></span>
                   <button type="submit" className="btn btn-danger btn-lg br-0 ">Search</button>
                 </div>
@@ -68,8 +78,7 @@ export default function FindJobs () {
           </div>
         </div>
       </div>
-
-    </>
+    </jobsContext.Provider>
   )
 
 }

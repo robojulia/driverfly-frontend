@@ -1,6 +1,8 @@
 import React, { useState } from "react"
 import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
+import { useContext } from "react"
+import jobContext from "../../context/jobContext"
 
 
 const ReadMore = ( { children } ) => {
@@ -20,13 +22,14 @@ const ReadMore = ( { children } ) => {
 }
 
 const Content = () => {
-
+  const ctx = useContext( jobContext )
 const router = useRouter()
 
 function changeHandler ( e ) {
   if (e.target.checked) { 
     const a = updateQueryStringParameter( window.location.href, 'equipment_type[]', e.target.value )
     router.replace( a )
+    ctx.applyFilters()
   }
 }
 

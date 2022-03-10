@@ -1,12 +1,16 @@
 import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
+import { useContext } from "react"
+import jobContext from "../../context/jobContext"
 
 export default function PayStructure () {
+  const ctx = useContext( jobContext )
   const router = useRouter()
   function changeHandler ( e ) {
     if (e.target.checked) {
       const a = updateQueryStringParameter( window.location.href, 'pay_structure[]', e.target.value )
       router.replace( a )
+      ctx.applyFilters()
     }
   }
   return (
@@ -32,7 +36,7 @@ export default function PayStructure () {
                 <input type="checkbox" id="percentage" name="topping" value="Percent per move" />Percent per move (5)
               </div>
               <div className="topping pt-2">
-                <input type="checkbox" id="hourly" name="topping" value=">Hourly" />Hourly (3)
+                <input type="checkbox" id="hourly" name="topping" value="Hourly" />Hourly (3)
               </div>
               <div className="topping pt-2">
                 <input type="checkbox" id="setweekly" name="topping" value="Set Weekly" />Set Weekly (6)

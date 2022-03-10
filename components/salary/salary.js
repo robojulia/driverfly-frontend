@@ -3,15 +3,18 @@ import React, { useState } from 'react'
 import RangeSlider from 'react-bootstrap-range-slider'
 import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
+import { useContext } from "react"
+import jobContext from "../../context/jobContext"
 
 
 export default function Salary () {
-
+  const ctx = useContext( jobContext )
   const [value, setValue] = useState( 18 )
   const router = useRouter()
   function changeHandler ( e ) {
     const a = updateQueryStringParameter( window.location.href, 'filter-salary-type', e.target.value )
     router.replace( a )
+    ctx.applyFilters()
   }
 
   return (
