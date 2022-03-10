@@ -2,9 +2,40 @@ import { useFormik } from "formik"
 import { Row } from "reactstrap"
 import FullLayout from "../../../components/dashboard/layouts/FullLayout"
 import * as yup from "yup"
+import axios from "axios"
 
 
 export default function DriverIntakeInfo () {
+  const experienceValues = [
+    {
+      value: "1-5-months",
+      label: "1-5 Months"
+    },
+    {
+      value: "6-11-months",
+      label: "6-11 Months"
+    },
+    {
+      value: "1-year",
+      label: "1 Year"
+    },
+    {
+      value: "2-year",
+      label: "2 Years"
+    },
+    {
+      value: "3-year",
+      label: "3 Years"
+    },
+    {
+      value: "4-year",
+      label: "4 Years"
+    },
+    {
+      value: "plus-5-year",
+      label: "+5 Years"
+    },
+  ]
 
   const formik = useFormik( {
     initialValues: {
@@ -12,8 +43,8 @@ export default function DriverIntakeInfo () {
       last_name: "",
       phone: "",
       email: "",
-      cdl_experience: 0,
-      voilations: 0,
+      cdl_experience: "",
+      voilations: "",
       drugTest: 0,
     },
     validationSchema: yup.object( {
@@ -21,12 +52,17 @@ export default function DriverIntakeInfo () {
       last_name: yup.string().required( "Required" ),
       email: yup.string().email( "Invalid email address" ).required( "Required" ),
       phone: yup.string().required( "Required" ),
-      cdl_experience: yup.number().required( "Required" ),
-      voilations: yup.number().required( "Required" ),
+      cdl_experience: yup.string().required( "Required" ),
+      voilations: yup.string().required( "Required" ),
       drugTest: yup.number().optional()
     } ),
-    onSubmit: values => {
-      console.log( "ali" )
+    onSubmit: async ( values ) => {
+      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFsaUBhbGkuY29tIiwic3ViIjozLCJpYXQiOjE2NDY5Mzc2MzV9.ebRyTQNmniuBGTJ2EODxPiOe765_fGFuwC3R4lTNLFo"
+      await axios.put( `${process.env.BASE_URL_API}/user/driver/3`, values, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      } )
       console.log( values )
     }
   } )
@@ -119,13 +155,7 @@ export default function DriverIntakeInfo () {
                   onBlur={formik.handleBlur}
                   name="cdl_experience" className="form-select" aria-label="Default select example">
                   <option selected>Select CDL Driving cdl_experience</option>
-                  <option value="1">1-5 Months</option>
-                  <option value="2">6-11 Months</option>
-                  <option value="3">1 Year</option>
-                  <option value="4">2 Years</option>
-                  <option value="5">3 Years</option>
-                  <option value="6">4 Years</option>
-                  <option value="7">5+ Years</option>
+                  {experienceValues.map( ( item, index ) => ( <option key={index} value={item.value}>{item.label}</option> ) )}
                 </select>
                 {formik.touched.cdl_experience && formik.errors.cdl_experience ? <p style={{ fontStyle: "italic", color: "red", fontSize: '13px' }}>{formik.errors.cdl_experience}</p> : null}
               </div>
@@ -160,7 +190,7 @@ export default function DriverIntakeInfo () {
                   </label>
                 </div>
                 <div className="form-check">
-                  <input value='0' className="form-check-input" type="radio" name="drugTest" id="flexRadioDefault2" checked={formik.values.drugTest == 0}/>
+                  <input value='0' className="form-check-input" type="radio" name="drugTest" id="flexRadioDefault2" checked={formik.values.drugTest == 0} />
                   <label className="form-check-label" for="flexRadioDefault2">
                     No
                   </label>
