@@ -16,14 +16,14 @@ import bg4 from "../../../public/dashboard/assets/images/bg/bg4.jpg";
 
 
 
-export default function Application() {
+export default function NewJobs() {
     return (
         <>
 
             <div>
                 {/***Top Cards***/}
                 <Row>
-                    <h1>Application</h1>
+                    <h1>New Jobs</h1>
                 </Row>
                 {/***Sales & Feed***/}
 
@@ -74,7 +74,7 @@ export default function Application() {
     )
 };
 
-Application.getLayout = function getLayout(page) {
+NewJobs.getLayout = function getLayout(page) {
     return (
         <FullLayout>
             {page}
