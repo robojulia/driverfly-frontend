@@ -1,13 +1,14 @@
 .contentArea {
     background-color: #fff;
 }
+
 .bg_color {
     background-color: #f2f2f2;
 }
 
 
-.logoicon{
-    background:#f2f2f2 !important;
+.logoicon {
+    background: #f2f2f2 !important;
     height: 80px;
 }
 
@@ -15,76 +16,126 @@
     top: -75px !important;
     height: 146px !important;
 } */
-.header nav{
-    background:#f2f2f2 !important;
+.header nav {
+    background: #f2f2f2 !important;
     color: rgb(0, 0, 0);
 }
-.dashboardsidebar  .header {
-   width: 100%;
+
+.dashboardsidebar .header {
+    width: 100%;
 }
 
 
-.dashboardsidebar a{
+.dashboardsidebar a {
     color: #000;
 }
-.dashboardsidebar  .page-link:hover{
+
+.dashboardsidebar .page-link:hover {
     color: #000;
 }
-.dashboardsidebar aside{
+
+.dashboardsidebar aside {
     background-color: #1b4454;
     height: 100vh;
 }
+
 .bg {
-    background-color:#fff !important;
+    background-color: #fff !important;
 }
-.dashboardsidebar li{
+
+.dashboardsidebar li {
     padding: 0;
 }
-.space{
+
+.space {
     height: 100vh;
 }
-.profile button{
+
+.profile button {
     padding: 5px 20px;
-    color: #aaa!important;
+    color: #aaa !important;
     font-size: 15px;
     line-height: 35px;
     background: transparent;
 
 }
-.profile .btn-secondary{
+
+.profile .btn-secondary {
     background: transparent;
     border: 0;
 }
 
 
-.profile button:hover,.profile .dropdown-item:hover{
+.profile button:hover,
+.profile .dropdown-item:hover {
     color: #000 !important;
-    text-decoration:underline;
+    text-decoration: underline;
 }
-.profile span{
+
+.profile span {
     color: #000;
     vertical-align: middle;
     margin-left: 10px;
 }
-.alerts{
+
+.alerts {
     width: 15%;
 }
-.nav-link{
+
+.nav-link {
     color: rgb(255, 255, 255) !important;
 }
-.nav-link:hover, .nav-link:focus{
+
+.nav-link:hover,
+.nav-link:focus {
     background-color: rgb(255, 255, 255);
     color: #000 !important;
 }
-.space_35{
+
+.space_35 {
     padding: 35px;
 }
-.space_6{
+
+.space_6 {
     padding: 6px;
 }
+
+
+/*Applicants scroll bar */
+.applicants__section .scrollbar {
+    margin-top: 30px;
+    float: left;
+    height: 400px;
+    background: #fff;
+    overflow-y: scroll;
+    margin-bottom: 25px;
+}
+
+.applicants__section .force-overflow {
+    min-height: 400;
+}
+
+.applicants__section .scrollbar-primary::-webkit-scrollbar {
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+.applicants__section .scrollbar-primary::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    background-color: #5eccc4;
+}
+
+.applicants__section{
+    overflow-x: auto;
+}
+
+
 @media screen and (max-width: 992px) {
-    .dashboardsidebar aside{
+    .dashboardsidebar aside {
         background-color: #1b4454;
         height: auto;
     }
-  }
+    .applicants__section{
+        overflow-x: auto;
+    }
+}
