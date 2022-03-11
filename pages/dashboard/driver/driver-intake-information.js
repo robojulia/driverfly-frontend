@@ -3,6 +3,9 @@ import { Row } from "reactstrap"
 import FullLayout from "../../../components/dashboard/layouts/FullLayout"
 import * as yup from "yup"
 import axios from "axios"
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 
 
 export default function DriverIntakeInfo () {
@@ -64,11 +67,22 @@ export default function DriverIntakeInfo () {
         }
       } )
       console.log( values )
+      toast.success("Driver Intake Information Updated Successfully", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   } )
 
   return (
     <>
+      <ToastContainer />
+
       <div>
         <Row>
           <h1>Information</h1>
