@@ -4,7 +4,6 @@ import { Col, Row } from "reactstrap";
 import useAuth from '../../../hooks/useAuth';
 import { useRouter } from 'next/router'
 
-
 export default function Dashboard() {
 
     const { isDriver } = useAuth();
@@ -13,6 +12,7 @@ export default function Dashboard() {
 
     if (!isDriver()) {
         // router.push('/')
+        
     }
 
     return (
