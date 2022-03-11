@@ -10,6 +10,7 @@ import bg1 from "../../public/dashboard/assets/images/bg/bg1.jpg";
 import bg2 from "../../public/dashboard/assets/images/bg/bg2.jpg";
 import bg3 from "../../public/dashboard/assets/images/bg/bg3.jpg";
 import bg4 from "../../public/dashboard/assets/images/bg/bg4.jpg";
+import useRedirect from '../../../hooks/useRedirect';
 
 const BlogData = [
     {
@@ -48,6 +49,11 @@ const BlogData = [
   
   
   export default function AccountSettings() {
+
+    const { authDriver } = useRedirect();
+
+    authDriver()
+
     return (
         <>
             

@@ -5,10 +5,16 @@ import download from "../../../public/dashboard/assets/images/download/download.
 import Applicant from "../../../public/dashboard/styles/css/Applicants.module.css"
 import Link from 'next/link';
 import Image from 'next/image';
+import useRedirect from '../../../hooks/useRedirect';
 
 
 
 export default function Dashboard() {
+
+    const { authCompany } = useRedirect();
+
+    authCompany()
+
     return (
         <>
 

@@ -4,8 +4,13 @@ import useAuth from '../../../hooks/useAuth';
 import Router from 'next/router';
 import axios from 'axios';
 import { useState } from 'react'
+import useRedirect from '../../../hooks/useRedirect';
 
 export default function Profile() {
+
+  const { authDriver } = useRedirect();
+
+  authDriver()
 
   const { authCheck, setAuth } = useAuth();
   const user = authCheck();
