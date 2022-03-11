@@ -9,9 +9,10 @@ export default function Profile() {
 
   const { authCheck, setAuth } = useAuth();
   const user = authCheck();
-  // if (!user()) {
-  //   Router.push('/login')
-  // }
+  console.log('user', user);
+  if (!user) {
+    Router.push('/login')
+  }
 
   const [color, setColor] = useState('red')
 
@@ -191,7 +192,7 @@ export default function Profile() {
                 <input onChange={(e) => handleChange(e)} name="state" value={inputValues.state} type="text" className="form-control" placeholder="State" />
                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.state}</p>
               </div>
-          
+
             </div>
             <div className="row">
               <div className="col-lg-6 col-12 mt-3">
@@ -199,7 +200,7 @@ export default function Profile() {
                 <input onChange={(e) => handleChange(e)} name="city" value={inputValues.city} type="text" className="form-control" placeholder="City" />
                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.city}</p>
               </div>
-          
+
               <div className="col-lg-6 col-12 mt-3">
                 <label>Zipcode</label>
                 <input onChange={(e) => handleChange(e)} name="zipcode" value={inputValues.zipcode} type="text" className="form-control" placeholder="Zipcode" />

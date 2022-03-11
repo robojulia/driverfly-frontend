@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 const navigation = [
   {
     title: "Dashboard",
-    href: "/dashboard/driver/driver",
+    href: "/dashboard/driver",
     icon: "bi bi-speedometer2",
     
   },
