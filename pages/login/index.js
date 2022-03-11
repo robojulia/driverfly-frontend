@@ -8,16 +8,18 @@ import Layout from "../../components/layouts";
 import login from '../../public/css/Login.module.css'
 import Link from 'next/link';
 import Breadcrumbs from 'nextjs-breadcrumbs';
-import useRedirect from '../../hooks/useRedirect';
 
 export default function Login() {
 
     const { authCheck, isDriver, isCompany, setAuth } = useAuth();
 
-    const { authDriver, authCompany } = useRedirect();
+    if (isDriver()) {
+        Router.push('/dashboard/driver')
+    }
 
-    authDriver()
-    authCompany()
+    if (isCompany()) {
+        Router.push('/dashboard/company')
+    }
 
     const [formData, setFormData] = useState({
         email: '',
