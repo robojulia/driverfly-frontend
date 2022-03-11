@@ -3,12 +3,12 @@ import FullLayout from "../../../components/dashboard/layouts/FullLayout";
 import { Col, Row } from "reactstrap";
 import useRedirect from '../../../hooks/useRedirect';
 
-
 export default function Dashboard() {
 
     const { authDriver } = useRedirect();
 
     authDriver()
+
 
     return (
         <>
