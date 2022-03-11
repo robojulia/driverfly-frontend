@@ -13,12 +13,18 @@ import bg3 from "../../../public/dashboard/assets/images/bg/bg3.jpg";
 import bg4 from "../../../public/dashboard/assets/images/bg/bg4.jpg";
 import JobList from "../../../public/dashboard/styles/css/JobList.module.css"
 import Link from "next/link";
+import useRedirect from '../../../hooks/useRedirect';
 
 
 
 
 
 export default function JobListing() {
+
+    const { authCompany } = useRedirect();
+
+    authCompany()
+
     return (
         <>
             <div className={JobList.joblisting}>

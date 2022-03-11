@@ -1,12 +1,13 @@
 import LogoutButton from '../../../components/buttons/Logout';
 import FullLayout from "../../../components/dashboard/layouts/Layout/FullLayout";
 import { Col, Row } from "reactstrap";
-import Router from 'next/router';
-import axios from 'axios';
-import { useState } from 'react';
-import useAuth from '../../../hooks/useAuth';
+import useRedirect from '../../../hooks/useRedirect';
 
 export default function AccountSettings() {
+    const { authCompany } = useRedirect();
+
+    authCompany()
+    
     const { authCheck, setAuth } = useAuth();
     const user = authCheck();
     console.log('user', user);
@@ -151,7 +152,9 @@ export default function AccountSettings() {
         }
 
     }
-    return (
+
+
+   return (
         <>
 
             <div>

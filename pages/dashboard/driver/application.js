@@ -10,12 +10,18 @@ import bg2 from "../../../public/dashboard/assets/images/bg/bg2.jpg";
 import bg3 from "../../../public/dashboard/assets/images/bg/bg3.jpg";
 import bg4 from "../../../public/dashboard/assets/images/bg/bg4.jpg";
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
+import useRedirect from '../../../hooks/useRedirect';
 
 
 
 
 
 export default function Application() {
+
+    const { authDriver } = useRedirect();
+
+    authDriver()
+
     return (
         <>
 

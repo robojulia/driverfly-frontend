@@ -1,21 +1,14 @@
 import LogoutButton from '../../../components/buttons/Logout';
 import FullLayout from "../../../components/dashboard/layouts/Layout/FullLayout";
 import { Col, Row } from "reactstrap";
-import useAuth from '../../../hooks/useAuth';
+import useRedirect from '../../../hooks/useRedirect';
 import { useRouter } from 'next/router'
-
-
-
 
 export default function Dashboard() {
 
-    const { isDriver } = useAuth();
+    const { authCompany } = useRedirect();
 
-    const router = useRouter()
-
-    if (!isDriver()) {
-        // router.push('/')
-    }
+    authCompany()
 
     return (
         <>

@@ -2,8 +2,14 @@
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import LogoutButton from '../../../components/buttons/Logout';
 import FullLayout from "../../../components/dashboard/layouts/Layout/FullLayout";
+import useRedirect from '../../../hooks/useRedirect';
 
 export default function NewJobs() {
+
+    const { authCompany } = useRedirect();
+
+    authCompany()
+
     return (
         <>
 
