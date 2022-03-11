@@ -20,13 +20,13 @@ export default function Profile() {
   const [color, setColor] = useState('red')
 
   const [inputValues, setInputValue] = useState({
-    first_name: null,
-    last_name: null,
-    email: null,
-    contact_number: null,
-    state: null,
-    country: null,
-    city: null,
+    first_name: user.first_name,
+    last_name: user.last_name,
+    contact_number: user.contact_number,
+    state: user.state,
+    country: user.country,
+    city: user.city,
+    zipcode: user.zipcode,
   })
 
   const [serverValidation, setServerValidation] = useState([])
@@ -62,11 +62,6 @@ export default function Profile() {
       errors.last_name = "Last Name is required"
     }
 
-    //email validation
-
-    if (!inputValues.email) {
-      errors.email = "Email is required"
-    }
 
     //contact_number validation
     if (!inputValues.contact_number) {
@@ -109,14 +104,32 @@ export default function Profile() {
 
     setValidation(errors)
 
-    // Call API of signup
     if (Object.keys(errors).length == 0) {
-      console.log('you can proceed with the API')
 
-      await axios.put(`${process.env.BASE_URL_API}/users/${user.id}`, inputValues)
+      const headers = {
+        'Authorization': `Bearer ${user.token}`,
+        // 'token': `${user.token}`,
+        "content-type": "application/json; charset=utf-8"
+      };
+
+      await axios.put(
+        `${process.env.BASE_URL_API}/user/${user.id}`,
+        { user: { ...inputValues } },
+        { headers }
+      )
         .then(data => {
-          console.log("handle success", data.data)
-
+          console.log("handle success", data.data.user)
+          setValidation({})
+          user.first_name = data.data.user.first_name
+          user.last_name = data.data.user.last_name
+          user.contact_number = data.data.user.contact_number
+          user.state = data.data.user.state
+          user.country = data.data.user.country
+          user.city = data.data.user.city
+          user.zipcode = data.data.user.zipcode
+          console.log('before setAuth', user)
+          setAuth(user)
+          console.log('after setAuth', authCheck())
         })
         .catch(function (error) {
           console.log("handle error success", error.response)
@@ -135,10 +148,7 @@ export default function Profile() {
 
             } else if (error.response.data.err) {
               setColor("green")
-              setServerValidation('User registered successfully')
-              setTimeout(() => {
-                Router.push('/login')
-              }, 3000);
+              setServerValidation('Profile Updated')
             }
 
           }
@@ -175,8 +185,7 @@ export default function Profile() {
             <div className='row'>
               <div className="col-lg-6 col-12 mt-3">
                 <label>Email</label>
-                <input type="email" onChange={(e) => handleChange(e)} name="email" value={inputValues.email} className="form-control" placeholder="E-mail" />
-                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.email}</p>
+                <input type="email" value={user.email} className="form-control" placeholder="E-mail" disabled />
               </div>
               <div className="col-lg-6 col-12 mt-3">
                 <label>Contact Number</label>
@@ -211,6 +220,12 @@ export default function Profile() {
               </div>
             </div>
             <div className="border-0 mt-5">
+              {serverValidation instanceof Array ? serverValidation.map((inValid) => {
+                return (
+                  <div className="text-danger">{inValid}</div>
+                )
+
+              }) : <div className="text-danger">{serverValidation}</div>}
 
               <button type="submit" onClick={profileHandler} className="btn btn-primary  m-auto p-lg-3 p-5">Submit</button>
             </div>
