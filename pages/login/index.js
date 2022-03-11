@@ -66,7 +66,7 @@ export default function Login() {
                             Router.push('/dashboard/company')
                         }
 
-                        Router.push('/')
+                        // Router.push('/')
                     } else {
                         console.log('not 201')
                         setServerValidation("Something went south");
