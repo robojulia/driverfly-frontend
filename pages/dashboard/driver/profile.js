@@ -15,9 +15,7 @@ export default function Profile() {
   const { authCheck, setAuth } = useAuth();
   const user = authCheck();
   console.log('user', user);
-  if (!user) {
-    Router.push('/login')
-  }
+
 
   const [color, setColor] = useState('red')
 

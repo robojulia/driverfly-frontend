@@ -7,13 +7,11 @@ export default function AccountSettings() {
     const { authCompany } = useRedirect();
 
     authCompany()
-    
+
     const { authCheck, setAuth } = useAuth();
     const user = authCheck();
     console.log('user', user);
-    // if (!user) {
-    //     Router.push('/login')
-    // }
+
 
     const [color, setColor] = useState('red')
 
@@ -26,7 +24,7 @@ export default function AccountSettings() {
         code: null,
         about: null,
         location: null,
-       
+
     })
 
     const [serverValidation, setServerValidation] = useState([])
@@ -43,11 +41,11 @@ export default function AccountSettings() {
             }
         })
     }
-  // if (!inputValues.confirmPassword) {
-        //   errors.confirmPassword = "Password confirmation is required"
-        // } else if (inputValues.confirmPassword !== inputValues.password) {
-        //   errors.confirmPassword = "Password does not match confirmation password"
-        // }
+    // if (!inputValues.confirmPassword) {
+    //   errors.confirmPassword = "Password confirmation is required"
+    // } else if (inputValues.confirmPassword !== inputValues.password) {
+    //   errors.confirmPassword = "Password does not match confirmation password"
+    // }
 
 
 
@@ -88,27 +86,27 @@ export default function AccountSettings() {
             errors.state = "State is required"
         }
 
-          //Postalcode validation
+        //Postalcode validation
 
-          if (!inputValues.code) {
+        if (!inputValues.code) {
             errors.code = "Postalcode is required"
         }
- 
+
         //About validation
 
         if (!inputValues.about) {
             errors.about = "About is required"
         }
 
-          //Location validation
+        //Location validation
 
-          if (!inputValues.location) {
+        if (!inputValues.location) {
             errors.location = "Location is required"
         }
 
-      
 
-        
+
+
 
 
         setValidation(errors)
@@ -154,7 +152,7 @@ export default function AccountSettings() {
     }
 
 
-   return (
+    return (
         <>
 
             <div>
@@ -174,20 +172,20 @@ export default function AccountSettings() {
                             </div>
                             <div className="col-lg-6 col-12">
                                 <label>Email</label>
-                                <input onChange={(e) => handleChange(e)} name="email" value={inputValues.email}  type="text" className="form-control" placeholder="Email" />
+                                <input onChange={(e) => handleChange(e)} name="email" value={inputValues.email} type="text" className="form-control" placeholder="Email" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.email}</p>
                             </div>
                         </div>
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>Address</label>
-                                <input  onChange={(e) => handleChange(e)} name="address" value={inputValues.address} type="text" className="form-control" placeholder="Address" />
+                                <input onChange={(e) => handleChange(e)} name="address" value={inputValues.address} type="text" className="form-control" placeholder="Address" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.address}</p>
                             </div>
 
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>City</label>
-                                <input  onChange={(e) => handleChange(e)}  value={inputValues.city} type="text" className="form-control" placeholder="City" />
+                                <input onChange={(e) => handleChange(e)} value={inputValues.city} type="text" className="form-control" placeholder="City" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.city}</p>
                             </div>
                         </div>
@@ -195,19 +193,19 @@ export default function AccountSettings() {
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>State</label>
-                                <input type="text" onChange={(e) => handleChange(e)} name="state" value={inputValues.state}  className="form-control" placeholder="State" />
+                                <input type="text" onChange={(e) => handleChange(e)} name="state" value={inputValues.state} className="form-control" placeholder="State" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.state}</p>
                             </div>
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>Postal Code</label>
-                                <input type="number" onChange={(e) => handleChange(e)} name="code" value={inputValues.code}  className="form-control" placeholder="Postal Code" />
+                                <input type="number" onChange={(e) => handleChange(e)} name="code" value={inputValues.code} className="form-control" placeholder="Postal Code" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.code}</p>
                             </div>
                         </div>
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>About Company</label>
-                                <textarea  onChange={(e) => handleChange(e)} name="about" value={inputValues.about} className="form-control" placeholder="About"></textarea>
+                                <textarea onChange={(e) => handleChange(e)} name="about" value={inputValues.about} className="form-control" placeholder="About"></textarea>
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.about}</p>
                             </div>
                             <div className="col-lg-6 col-12 mt-3">
@@ -218,7 +216,7 @@ export default function AccountSettings() {
                         </div>
 
                         <div className="modal-footer border-0 mt-5">
-                            <button type="submit" onClick={profileHandler}  className="btn btn-primary w-25 m-auto p-lg-3 p-5">Save</button>
+                            <button type="submit" onClick={profileHandler} className="btn btn-primary w-25 m-auto p-lg-3 p-5">Save</button>
                         </div>
 
                     </form>
