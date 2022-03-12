@@ -11,10 +11,14 @@ import Breadcrumbs from 'nextjs-breadcrumbs';
 
 export default function Login() {
 
-    const { authCheck, setAuth } = useAuth();
+    const { authCheck, isDriver, isCompany, setAuth } = useAuth();
 
-    if (authCheck()) {
-        Router.push('/dashboard')
+    if (isDriver()) {
+        Router.push('/dashboard/driver')
+    }
+
+    if (isCompany()) {
+        Router.push('/dashboard/company')
     }
 
     const [formData, setFormData] = useState({
@@ -54,9 +58,18 @@ export default function Login() {
                         console.log("handle success data", data.data);
                         setAuth(data.data.user)
 
-                        Router.push('/dashboard')
+                        if (isDriver()) {
+                            Router.push('/dashboard/driver')
+                        }
+
+                        if (isCompany()) {
+                            Router.push('/dashboard/company')
+                        }
+
+                        // Router.push('/')
                     } else {
                         console.log('not 201')
+                        setServerValidation("Something went south");
                     }
                 })
                 .catch(function (error) {
@@ -64,7 +77,7 @@ export default function Login() {
 
                     if (error?.response?.data?.errors?.user) {
                         setServerValidation(error.response.data.errors.user);
-                    }else{
+                    } else {
                         setServerValidation("Invalid Credentials");
                     }
                 })
