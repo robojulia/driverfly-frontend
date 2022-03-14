@@ -50,6 +50,11 @@ const navigation = [
     href: "/dashboard/company/company-settings",
     icon: "bi bi-layout-split",
   },
+  {
+    title: "Company Profile",
+    href: "/dashboard/company/company-profile",
+    icon: "bi bi-layout-split",
+  },
   
   {
     title: "Admin approval for jobs",
