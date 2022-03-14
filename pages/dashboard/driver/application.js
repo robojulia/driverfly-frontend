@@ -11,16 +11,20 @@ import bg3 from "../../../public/dashboard/assets/images/bg/bg3.jpg";
 import bg4 from "../../../public/dashboard/assets/images/bg/bg4.jpg";
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import useRedirect from '../../../hooks/useRedirect';
+import { useEffect, useState } from "react"
+import axios from "axios"
+import timeSince from '../../../utils/timeSince';
 
 
 
 
 
-export default function Application() {
+export default function Application({ jobs }) {
 
     const { authDriver } = useRedirect();
 
     authDriver()
+
 
     return (
         <>
@@ -41,34 +45,18 @@ export default function Application() {
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Full Name</th>
+                                        <th>Title</th>
                                         <th>Post Date</th>
-                                        <th>Expiration Date</th>
-                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Mark</td>
-                                        <td>November 12, 20</td>
-                                        <td>Dec 2, 2022</td>
-                                        <td>Expired</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>November 12, 20</td>
-                                        <td>Jun 2, 2022</td>
-                                        <td>Active</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>Feb 2, 2022</td>
-                                        <td>Jun 2, 2022</td>
-                                        <td>Active</td>
-                                    </tr>
+                                    {jobs.length > 0 && jobs.map((job, index) => (
+                                        <tr>
+                                            <th scope="row">{index + 1}</th>
+                                            <td>{job.title}</td>
+                                            <td>{timeSince(job.created_at)}</td>
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </Table>
                         </CardBody>
@@ -78,6 +66,13 @@ export default function Application() {
         </>
     )
 };
+
+Application.getInitialProps = async () => {
+
+    const res = await fetch(`${process.env.BASE_URL_API}/jobs`)
+    const json = await res.json()
+    return { jobs: json }
+}
 
 Application.getLayout = function getLayout(page) {
     return (

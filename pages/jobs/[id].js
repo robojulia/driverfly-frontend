@@ -6,40 +6,12 @@ import JonInformation from '../../components/job-information-sidebar/JobInformat
 import Layout from "../../components/layouts"
 import RelatedJobs from '../../components/related-jobs/Related-Jobs'
 import SocilShare from '../../components/share-link/ShareLink'
+import timeSince from "../../utils/timeSince"
 
 export default function Detail ( { data } ) {
   const jobDetail = data
 
   const router = useRouter()
-  const { id } = router.query
-
-  function timeSince ( date ) {
-
-    var seconds = Math.floor( ( new Date() - date ) / 1000 )
-
-    var interval = seconds / 31536000
-
-    if ( interval > 1 ) {
-      return Math.floor( interval ) + " years"
-    }
-    interval = seconds / 2592000
-    if ( interval > 1 ) {
-      return Math.floor( interval ) + " months"
-    }
-    interval = seconds / 86400
-    if ( interval > 1 ) {
-      return Math.floor( interval ) + " days"
-    }
-    interval = seconds / 3600
-    if ( interval > 1 ) {
-      return Math.floor( interval ) + " hours"
-    }
-    interval = seconds / 60
-    if ( interval > 1 ) {
-      return Math.floor( interval ) + " minutes"
-    }
-    return Math.floor( seconds ) + " seconds"
-  }
 
   return (
     <>
@@ -63,7 +35,7 @@ export default function Detail ( { data } ) {
                       </span>
                     </h4>
                     <div className="job-date-author">
-                      posted {timeSince( new Date( jobDetail.created_at ) )} ago
+                      posted {timeSince( jobDetail.created_at )} ago
                       by <a href="" className="employer text-theme">{jobDetail.complany_name}</a>
                     </div>
                     <div className="job-metas">
@@ -106,40 +78,9 @@ export default function Detail ( { data } ) {
 }
 export async function getServerSideProps ( context ) {
   // Fetch data from external API
-  console.log(`${process.env.BASE_URL_API}/jobs/${context.params.id}`);
-  // const { data } = await axios.get( `${process.env.BASE_URL_API}/jobs/${context.params.id}` )
+  const id = context.params.id;
+  const { data } = await axios.get( `${process.env.BASE_URL_API}/jobs/${context.params.id}` )
 
-  const data = {
-    title: "Class A CDL OTR Truck Drivers (W-2)",
-    description: "1099 Position 1300-1700 ($78k annual) $1k after 60 days Contract percentage base 22-25% (Fuel expenses included in calculation) Pay is weekly Must be willing to be on the road for 10 days or more then home time 2-3 days off routes: states that we run, primarily are: Texas, Arkansas, Oklahoma, Louisiana, Mississippi, Alabama, Georgia, the Carolinas, Tennessee, Kentucky, Missouri, and Pennsylvania. HR can offer health insurance package If they need to drive w companion, they offer companion insurance Trucks come w inverters and small refrigerator. New bed Freightliner 2015+ Take the truck w them when they go home Will be partial contract work Open to owner ops under their authority",
-    location: "Lahore, Pk",
-    areas_covered: "don't know",
-    delivery_type: "home delivery",
-    work_type: "work type",
-    employment_type: "employment type",
-    job_type: "job type",
-    drivers_from: "kasur",
-    truck_image: "https://image.shutterstock.com/image-photo/truck-container-on-highway-cargo-260nw-1197587089.jpg",
-    license_type: "LTV",
-    equipment_type: "bazoka",
-    schedule: "out of schedule",
-    pay_structure: "pay structure",
-    min_weekely_pay: 4000,
-    max_weekely_pay: 20000,
-    application_dead_line: "october",
-    max_rate_per_mile: 34,
-    min_rate_per_mile: 12,
-    min_age: 18,
-    complany_name: "company name",
-    special_accomodations: "accomodations goes here",
-    job_apply_type: "job apply type here",
-    endoresements_type: "endorse him",
-    mvr_requirements: "rquireemnts",
-    friendle_address: "address of lahore",
-    map_location: "lahore location",
-    latitude: 31.515650187764656,
-    longitude: 74.36322077934418
-  }
   return { props: { data } }
 }
 
