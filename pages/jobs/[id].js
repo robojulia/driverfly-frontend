@@ -6,40 +6,13 @@ import JonInformation from '../../components/job-information-sidebar/JobInformat
 import Layout from "../../components/layouts"
 import RelatedJobs from '../../components/related-jobs/Related-Jobs'
 import SocilShare from '../../components/share-link/ShareLink'
+import timeSince from "../../utils/timeSince"
 
 export default function Detail ( { data } ) {
   const jobDetail = data
 
   const router = useRouter()
   const { id } = router.query
-
-  function timeSince ( date ) {
-
-    var seconds = Math.floor( ( new Date() - date ) / 1000 )
-
-    var interval = seconds / 31536000
-
-    if ( interval > 1 ) {
-      return Math.floor( interval ) + " years"
-    }
-    interval = seconds / 2592000
-    if ( interval > 1 ) {
-      return Math.floor( interval ) + " months"
-    }
-    interval = seconds / 86400
-    if ( interval > 1 ) {
-      return Math.floor( interval ) + " days"
-    }
-    interval = seconds / 3600
-    if ( interval > 1 ) {
-      return Math.floor( interval ) + " hours"
-    }
-    interval = seconds / 60
-    if ( interval > 1 ) {
-      return Math.floor( interval ) + " minutes"
-    }
-    return Math.floor( seconds ) + " seconds"
-  }
 
   return (
     <>
@@ -63,7 +36,7 @@ export default function Detail ( { data } ) {
                       </span>
                     </h4>
                     <div className="job-date-author">
-                      posted {timeSince( new Date( jobDetail.created_at ) )} ago
+                      posted {timeSince( jobDetail.created_at )} ago
                       by <a href="" className="employer text-theme">{jobDetail.complany_name}</a>
                     </div>
                     <div className="job-metas">
