@@ -46,10 +46,11 @@ const navigation = [
     icon: "bi bi-layout-split",
   },
   {
-    title: "Account settings",
-    href: "/dashboard/company/account-settings",
+    title: "Company settings",
+    href: "/dashboard/company/company-settings",
     icon: "bi bi-layout-split",
   },
+  
   {
     title: "Admin approval for jobs",
     href: "/dashboard/company/admin-approval-jobs",

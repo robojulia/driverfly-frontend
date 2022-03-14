@@ -18,7 +18,7 @@ const FullLayout = ({ children }) => {
         <title>Company-Dashboard</title>
         <meta
           name="description"
-          content="Ample Admin Next Js Aadmin Dashboard "
+          content="Driverfly Dashboard"
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
