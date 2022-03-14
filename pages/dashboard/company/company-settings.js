@@ -23,14 +23,13 @@ export default function AccountSettings() {
     const [inputValues, setInputValue] = useState({
 
 
-        company_name: user.company_name,
-        email: user.email,
-        address: user.address,
-        city: user.city,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        contact_number: user.contact_number,
         state: user.state,
+        country: user.country,
+        city: user.city,
         zipcode: user.zipcode,
-        about: user.about,
-        location: user.location,
 
     })
 
@@ -53,56 +52,53 @@ export default function AccountSettings() {
         e.preventDefault();
         let errors = {}
 
-        //Company Name validation
+       //First Name validation
 
-        if (!inputValues.company_name) {
-            errors.company_name = "Company Name is required"
-        }
-
-        //email validation
-
-        if (!inputValues.email) {
-            errors.email = "Email is required"
-        }
-
-        //contact_number validation
-        if (!inputValues.address) {
-            errors.address = "Address is required"
-        }
-
-        //City validation
-
-        if (!inputValues.city) {
-            errors.city = "City is required"
-        }
-
-        //State validation
-
-        if (!inputValues.state) {
-            errors.state = "State is required"
-        }
-
-        //zipcode validation
-
-        if (!inputValues.zipcode) {
-            errors.zipcode = "zipcode is required"
-        }
-
-        //About validation
-
-        if (!inputValues.about) {
-            errors.about = "About is required"
-        }
-
-        //Location validation
-
-        if (!inputValues.location) {
-            errors.location = "Location is required"
-        }
-
-
-
-
+    if (!inputValues.first_name) {
+        errors.first_name = "First Name is required"
+      }
+  
+      //last_name validation
+      if (!inputValues.last_name) {
+        errors.last_name = "Last Name is required"
+      }
+  
+  
+      //contact_number validation
+      if (!inputValues.contact_number) {
+        errors.contact_number = "Contact number is required"
+      }
+  
+      //State validation
+  
+      if (!inputValues.state) {
+        errors.state = "State is required"
+      }
+      //Country validation
+  
+      if (!inputValues.country) {
+        errors.country = "Country is required"
+      }
+  
+      //Zipcode validation
+  
+      if (!inputValues.zipcode) {
+        errors.zipcode = "Zipcode is required"
+      }
+  
+  
+      //City validation
+  
+      if (!inputValues.city) {
+        errors.city = "City is required"
+      }
+  
+  
+      // if (!inputValues.confirmPassword) {
+      //   errors.confirmPassword = "Password confirmation is required"
+      // } else if (inputValues.confirmPassword !== inputValues.password) {
+      //   errors.confirmPassword = "Password does not match confirmation password"
+      // }
 
 
         setValidation(errors)
@@ -111,57 +107,55 @@ export default function AccountSettings() {
         if (Object.keys(errors).length == 0) {
 
             const headers = {
-                'Authorization': `Bearer ${user.token}`,
-                // 'token': `${user.token}`,
-                "content-type": "application/json; charset=utf-8"
+              'Authorization': `Bearer ${user.token}`,
+              // 'token': `${user.token}`,
+              "content-type": "application/json; charset=utf-8"
             };
-
+      
             await axios.put(
-                `${process.env.BASE_URL_API}/user/${user.id}`,
-                { user: { ...inputValues } },
-                { headers }
+              `${process.env.BASE_URL_API}/user/${user.id}`,
+              { user: { ...inputValues } },
+              { headers }
             )
-                .then(data => {
-                    console.log("handle success", data.data.user)
-                    setValidation({})
-                    user.company_name = data.data.user.company_name
-                    user.email = data.data.user.email
-                    user.address = data.data.user.address
-                    user.city = data.data.user.city
-                    user.state = data.data.user.state
-                    user.zipcode = data.data.user.zipcode
-                    user.about = data.data.user.about
-                    user.location = data.data.user.location
-
-                    console.log('before setAuth', user)
-                    setAuth(user)
-                    console.log('after setAuth', authCheck())
-                })
-                .catch(function (error) {
-                    console.log("handle error success", error.response)
-                    if (error.response) {
-                        if (error.response.data.message) {
-                            setServerValidation(error.response.data.message)
-                        } else if (error.response.data.errors) {
-                            setColor("red")
-                            console.log('here')
-                            console.log(error.response.data.errors.user)
-                            if (error.response.data.errors.user) {
-                                setServerValidation(error.response.data.errors.user)
-                            } else {
-                                setServerValidation(error.response.data.errors.username)
-                            }
-
-                        } else if (error.response.data.err) {
-                            setColor("green")
-                            setServerValidation('Profile Updated')
-                        }
-
+              .then(data => {
+                console.log("handle success", data.data.user)
+                setValidation({})
+                user.first_name = data.data.user.first_name
+                user.last_name = data.data.user.last_name
+                user.contact_number = data.data.user.contact_number
+                user.state = data.data.user.state
+                user.country = data.data.user.country
+                user.city = data.data.user.city
+                user.zipcode = data.data.user.zipcode
+                console.log('before setAuth', user)
+                setAuth(user)
+                console.log('after setAuth', authCheck())
+              })
+              .catch(function (error) {
+                console.log("handle error success", error.response)
+                if (error.response) {
+                  if (error.response.data.message) {
+                    setServerValidation(error.response.data.message)
+                  } else if (error.response.data.errors) {
+                    setColor("red")
+                    console.log('here')
+                    console.log(error.response.data.errors.user)
+                    if (error.response.data.errors.user) {
+                      setServerValidation(error.response.data.errors.user)
+                    } else {
+                      setServerValidation(error.response.data.errors.username)
                     }
-                }).then(function () {
-                    console.log("always executed")
-                })
-        }
+      
+                  } else if (error.response.data.err) {
+                    setColor("green")
+                    setServerValidation('Profile Updated')
+                  }
+      
+                }
+              }).then(function () {
+                console.log("always executed")
+              })
+          }
 
     }
 
@@ -175,66 +169,71 @@ export default function AccountSettings() {
                     <h1>Company Settings</h1>
                 </Row>
                 <div className='container-fluid'>
-                    <div className="modal-header border-0">
-                    </div>
-                    <form className="modal-body">
-                        <div className="row">
-                            <div className="col-lg-6 col-12">
-                                <label>Company Name</label>
-                                <input onChange={(e) => handleChange(e)} name="company_name" value={inputValues.company_name} type="text" className="form-control" placeholder=" Company Name" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.company_name}</p>
-                            </div>
-                            <div className="col-lg-6 col-12">
-                                <label>Email</label>
-                                <input onChange={(e) => handleChange(e)} name="email" value={inputValues.email} type="text" className="form-control" placeholder="Email" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.email}</p>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Address</label>
-                                <input onChange={(e) => handleChange(e)} name="address" value={inputValues.address} type="text" className="form-control" placeholder="Address" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.address}</p>
-                            </div>
+          <div className="modal-header border-0">
+          </div>
+          <form className="modal-body" >
+            <div className="row">
+              <div className="col-lg-6 col-12 mt-3">
+                <label>First Name</label>
+                <input onChange={(e) => handleChange(e)} name="first_name" value={inputValues.first_name} type="text" className="form-control" placeholder="First Name" />
+                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.first_name}</p>
+              </div>
+              <div className="col-lg-6 col-12 mt-3">
+                <label>Last Name</label>
+                <input onChange={(e) => handleChange(e)} name="last_name" value={inputValues.last_name} type="text" className="form-control" placeholder="Last Name" />
+                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.last_name}</p>
+              </div>
+            </div>
+            <div className='row'>
+              <div className="col-lg-6 col-12 mt-3">
+                <label>Email</label>
+                <input type="email" value={user.email} className="form-control" placeholder="E-mail" disabled />
+              </div>
+              <div className="col-lg-6 col-12 mt-3">
+                <label>Contact Number</label>
+                <input type="number" onChange={(e) => handleChange(e)} name="contact_number" value={inputValues.contact_number} className="form-control" placeholder="Contact Number" />
+                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.contact_number}</p>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-lg-6 col-12 mt-3">
+                <label>Country</label>
+                <input onChange={(e) => handleChange(e)} name="country" value={inputValues.country} type="text" className="form-control" placeholder="Country" />
+                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.country}</p>
+              </div>
+              <div className="col-lg-6 col-12 mt-3">
+                <label>State</label>
+                <input onChange={(e) => handleChange(e)} name="state" value={inputValues.state} type="text" className="form-control" placeholder="State" />
+                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.state}</p>
+              </div>
 
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>City</label>
-                                <input onChange={(e) => handleChange(e)} name="city" value={inputValues.city} type="text" className="form-control" placeholder="City" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.city}</p>
-                            </div>
-                        </div>
+            </div>
+            <div className="row">
+              <div className="col-lg-6 col-12 mt-3">
+                <label>City</label>
+                <input onChange={(e) => handleChange(e)} name="city" value={inputValues.city} type="text" className="form-control" placeholder="City" />
+                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.city}</p>
+              </div>
 
-                        <div className="row">
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>State</label>
-                                <input type="text" onChange={(e) => handleChange(e)} name="state" value={inputValues.state} className="form-control" placeholder="State" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.state}</p>
-                            </div>
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Zipcode</label>
-                                <input onChange={(e) => handleChange(e)} name="zipcode" value={inputValues.zipcode} type="text" className="form-control" placeholder="Zipcode" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.zipcode}</p>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>About Company</label>
-                                <textarea onChange={(e) => handleChange(e)} name="about" value={inputValues.about} className="form-control" placeholder="About"></textarea>
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.about}</p>
-                            </div>
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Company Location</label>
-                                <input type="text" onChange={(e) => handleChange(e)} name="location" value={inputValues.location} className="form-control" placeholder="Company Location" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.location}</p>
-                            </div>
-                        </div>
+              <div className="col-lg-6 col-12 mt-3">
+                <label>Zipcode</label>
+                <input onChange={(e) => handleChange(e)} name="zipcode" value={inputValues.zipcode} type="text" className="form-control" placeholder="Zipcode" />
+                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.zipcode}</p>
+              </div>
+            </div>
+            <div className="border-0 mt-5">
+              {serverValidation instanceof Array ? serverValidation.map((inValid) => {
+                return (
+                  <div className="text-danger">{inValid}</div>
+                )
 
-                        <div className="modal-footer border-0 mt-5">
-                            <button type="submit" onClick={profileHandler} className="btn btn-primary w-25 m-auto p-lg-3 p-5">Save</button>
-                        </div>
+              }) : <div className="text-danger">{serverValidation}</div>}
 
-                    </form>
-                </div>
+              <button type="submit" onClick={profileHandler} className="btn btn-primary  m-auto p-lg-3 p-5">Submit</button>
+            </div>
+
+          </form>
+        </div>
             </div>
         </>
     )
