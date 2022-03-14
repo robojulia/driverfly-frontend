@@ -62,24 +62,19 @@ export default function AccountSettings() {
             errors.address = "Address is required"
         }
 
-        //Company Name validation
-
-        // if (!inputValues.company_name) {
-        //     errors.company_name = "Company Name is required"
-        // }
 
 
         //About validation
 
-        // if (!inputValues.about) {
-        //     errors.about = "About is required"
-        // }
+        if (!inputValues.about) {
+            errors.about = "About is required"
+        }
 
         //Location validation
 
-        // if (!inputValues.location) {
-        //     errors.location = "Location is required"
-        // }
+        if (!inputValues.location) {
+            errors.location = "Location is required"
+        }
 
 
 
@@ -166,26 +161,20 @@ export default function AccountSettings() {
                             </div>
 
                         </div>
-                        {/* <div className="row">
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Company Name</label>
-                                <input onChange={(e) => handleChange(e)} name="company_name" value={inputValues.company_name} type="text" className="form-control" placeholder=" Company Name" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.company_name}</p>
-                            </div> */}
-
-                            {/* <div className="col-lg-6 col-12 mt-3">
-                                <label>Company Location</label>
-                                <input type="text" onChange={(e) => handleChange(e)} name="location" value={inputValues.location} className="form-control" placeholder="Company Location" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.location}</p>
-                            </div>
-                        </div> */}
-                        {/* <div className="row">
-                            <div className="col-lg-6 col-12 mt-3">
+                        <div className="row">
+                        <div className="col-lg-6 col-12 mt-3">
                                 <label>About Company</label>
                                 <textarea onChange={(e) => handleChange(e)} name="about" value={inputValues.about} className="form-control" placeholder="About"></textarea>
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.about}</p>
                             </div>
-                        </div> */}
+
+                            <div className="col-lg-6 col-12 mt-3">
+                                <label>Company Location</label>
+                                <input type="text" onChange={(e) => handleChange(e)} name="location" value={inputValues.location} className="form-control" placeholder="Company Location" />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.location}</p>
+                            </div>
+                        </div>
+                      
                         <div className="border-0 mt-5">
                             <button type="submit" onClick={profileHandler} className="btn btn-primary  p-lg-3 p-5">Update</button>
                         </div>
