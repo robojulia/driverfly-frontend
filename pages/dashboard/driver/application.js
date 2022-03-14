@@ -13,6 +13,7 @@ import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import useRedirect from '../../../hooks/useRedirect';
 import { useEffect, useState } from "react"
 import axios from "axios"
+import timeSince from '../../../utils/timeSince';
 
 
 
@@ -24,35 +25,8 @@ export default function Application({ jobs }) {
 
     authDriver()
 
-    function timeSince ( date ) {
 
-        var seconds = Math.floor( ( new Date() - date ) / 1000 )
-    
-        var interval = seconds / 31536000
-    
-        if ( interval > 1 ) {
-          return Math.floor( interval ) + " years"
-        }
-        interval = seconds / 2592000
-        if ( interval > 1 ) {
-          return Math.floor( interval ) + " months"
-        }
-        interval = seconds / 86400
-        if ( interval > 1 ) {
-          return Math.floor( interval ) + " days"
-        }
-        interval = seconds / 3600
-        if ( interval > 1 ) {
-          return Math.floor( interval ) + " hours"
-        }
-        interval = seconds / 60
-        if ( interval > 1 ) {
-          return Math.floor( interval ) + " minutes"
-        }
-        return Math.floor( seconds ) + " seconds"
-      }
-
-      return (
+    return (
         <>
 
             <div>
@@ -78,9 +52,9 @@ export default function Application({ jobs }) {
                                 <tbody>
                                     {jobs.length > 0 && jobs.map((job, index) => (
                                         <tr>
-                                            <th scope="row">{index+1}</th>
+                                            <th scope="row">{index + 1}</th>
                                             <td>{job.title}</td>
-                                            <td>{timeSince( new Date( job.created_at ) )}</td>
+                                            <td>{timeSince(job.created_at)}</td>
                                         </tr>
                                     ))}
                                 </tbody>
