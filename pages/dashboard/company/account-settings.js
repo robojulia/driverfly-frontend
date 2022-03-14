@@ -1,9 +1,14 @@
 import LogoutButton from '../../../components/buttons/Logout';
 import FullLayout from "../../../components/dashboard/layouts/Layout/FullLayout";
 import { Col, Row } from "reactstrap";
+import useAuth from '../../../hooks/useAuth';
+import Router from 'next/router';
+import axios from 'axios';
+import { useState } from 'react'
 import useRedirect from '../../../hooks/useRedirect';
 
 export default function AccountSettings() {
+
     const { authCompany } = useRedirect();
 
     authCompany()
@@ -16,14 +21,16 @@ export default function AccountSettings() {
     const [color, setColor] = useState('red')
 
     const [inputValues, setInputValue] = useState({
-        company_name: null,
-        email: null,
-        address: null,
-        city: null,
-        state: null,
-        code: null,
-        about: null,
-        location: null,
+
+
+        company_name: user.company_name,
+        email: user.email,
+        address: user.address,
+        city: user.city,
+        state: user.state,
+        zipcode: user.zipcode,
+        about: user.about,
+        location: user.location,
 
     })
 
@@ -41,17 +48,6 @@ export default function AccountSettings() {
             }
         })
     }
-    // if (!inputValues.confirmPassword) {
-    //   errors.confirmPassword = "Password confirmation is required"
-    // } else if (inputValues.confirmPassword !== inputValues.password) {
-    //   errors.confirmPassword = "Password does not match confirmation password"
-    // }
-
-
-
-
-
-
 
     const profileHandler = async (e) => {
         e.preventDefault();
@@ -59,7 +55,7 @@ export default function AccountSettings() {
 
         //First Name validation
 
-        if (!inputValues.first_name) {
+        if (!inputValues.company_name) {
             errors.company_name = "Company Name is required"
         }
 
@@ -86,10 +82,10 @@ export default function AccountSettings() {
             errors.state = "State is required"
         }
 
-        //Postalcode validation
+        //zipcode validation
 
-        if (!inputValues.code) {
-            errors.code = "Postalcode is required"
+        if (!inputValues.zipcode) {
+            errors.zipcode = "zipcode is required"
         }
 
         //About validation
@@ -113,12 +109,33 @@ export default function AccountSettings() {
 
         // Call API of signup
         if (Object.keys(errors).length == 0) {
-            console.log('you can proceed with the API')
 
-            await axios.put(`${process.env.BASE_URL_API}/users/${user.id}`, inputValues)
+            const headers = {
+                'Authorization': `Bearer ${user.token}`,
+                // 'token': `${user.token}`,
+                "content-type": "application/json; charset=utf-8"
+            };
+
+            await axios.put(
+                `${process.env.BASE_URL_API}/user/${user.id}`,
+                { user: { ...inputValues } },
+                { headers }
+            )
                 .then(data => {
-                    console.log("handle success", data.data)
+                    console.log("handle success", data.data.user)
+                    setValidation({})
+                    user.company_name = data.data.user.company_name
+                    user.email = data.data.user.email
+                    user.address = data.data.user.address
+                    user.city = data.data.user.city
+                    user.state = data.data.user.state
+                    user.zipcode = data.data.user.zipcode
+                    user.about = data.data.user.about
+                    user.location = data.data.user.location
 
+                    console.log('before setAuth', user)
+                    setAuth(user)
+                    console.log('after setAuth', authCheck())
                 })
                 .catch(function (error) {
                     console.log("handle error success", error.response)
@@ -137,10 +154,7 @@ export default function AccountSettings() {
 
                         } else if (error.response.data.err) {
                             setColor("green")
-                            setServerValidation('User registered successfully')
-                            setTimeout(() => {
-                                Router.push('/login')
-                            }, 3000);
+                            setServerValidation('Profile Updated')
                         }
 
                     }
@@ -185,7 +199,7 @@ export default function AccountSettings() {
 
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>City</label>
-                                <input onChange={(e) => handleChange(e)} value={inputValues.city} type="text" className="form-control" placeholder="City" />
+                                <input onChange={(e) => handleChange(e)} name="city" value={inputValues.city} type="text" className="form-control" placeholder="City" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.city}</p>
                             </div>
                         </div>
@@ -197,9 +211,9 @@ export default function AccountSettings() {
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.state}</p>
                             </div>
                             <div className="col-lg-6 col-12 mt-3">
-                                <label>Postal Code</label>
-                                <input type="number" onChange={(e) => handleChange(e)} name="code" value={inputValues.code} className="form-control" placeholder="Postal Code" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.code}</p>
+                                <label>Zipcode</label>
+                                <input onChange={(e) => handleChange(e)} name="zipcode" value={inputValues.zipcode} type="text" className="form-control" placeholder="Zipcode" />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.zipcode}</p>
                             </div>
                         </div>
                         <div className="row">
@@ -210,7 +224,7 @@ export default function AccountSettings() {
                             </div>
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>Company Location</label>
-                                <input type="text" name="location" className="form-control" placeholder="Company Location" />
+                                <input type="text" onChange={(e) => handleChange(e)} name="location" value={inputValues.location} className="form-control" placeholder="Company Location" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.location}</p>
                             </div>
                         </div>
