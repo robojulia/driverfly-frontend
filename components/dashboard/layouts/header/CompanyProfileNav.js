@@ -45,7 +45,7 @@ export default function DriverProfileNav(props) {
                                 height="30"
 
                             />
-                            <span>{ props.user.name}.</span>
+                            <span>{props.user.name}.</span>
                             <p></p>
                         </div>
 

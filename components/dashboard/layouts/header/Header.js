@@ -76,14 +76,14 @@ const Header = ({ showMobmenu }) => {
           </span>
         </div>
 
-
-
         {
           isDriver() ? < DriverProfileNav user={user} isOpen={isOpen} /> : ""
         }
+
         {
           isCompany() ? < CompanyProfileNav user={user} isOpen={isOpen} /> : ""
         }
+
       </Collapse>
     </Navbar>
   );
