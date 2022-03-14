@@ -3,6 +3,7 @@ import Link from "next/link";
 import Logo from "../logo/Logo";
 import Image from "next/image";
 import LogoutButton from '../../../buttons/Logout';
+import useAuth from "../../../../hooks/useAuth";
 
 
 import {
@@ -20,9 +21,15 @@ import {
 } from "reactstrap";
 import LogoWhite from "../../../../public/dashboard/assets/images/logos/amplelogowhite.svg";
 import user1 from "../../../../public/dashboard/assets/images/users/user1.jpg";
-
+import DriverProfileNav from "./DriverProfileNav";
+import CompanyProfileNav from "./CompanyProfileNav";
 
 const Header = ({ showMobmenu }) => {
+
+  const { authCheck, isDriver, isCompany, setAuth } = useAuth();
+
+
+
   const [isOpen, setIsOpen] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
@@ -68,63 +75,14 @@ const Header = ({ showMobmenu }) => {
           </span>
         </div>
         
-        <div className="alerts">
-          <h3>Alerts (5)</h3>
-        </div>
-        {/* <Nav className="me-auto" navbar>
-          <NavItem>
-            <Link href="/">
-              <a className="nav-link">Starter</a>
-            </Link>
-          </NavItem>
-          <NavItem>
-            <Link href="/about">
-              <a className="nav-link">About</a>
-            </Link>
-          </NavItem>
-          <UncontrolledDropdown inNavbar nav>
-            <DropdownToggle caret nav>
-              DD Menu
-            </DropdownToggle>
-            <DropdownMenu end>
-              <DropdownItem>Option 1</DropdownItem>
-              <DropdownItem>Option 2</DropdownItem>
-              <DropdownItem divider />
-              <DropdownItem>Reset</DropdownItem>
-            </DropdownMenu>
-          </UncontrolledDropdown>
-        </Nav> */}
-        <div className="profile">
-          <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-            <DropdownToggle>
-              
-              <div style={{ lineHeight: "0px" }}>
-              
-                <Image
-                  src={user1}
-                  alt="profile"
-                  className="rounded-circle"
-                  width="30"
-                  height="30"
 
-                />
-                <span>Timothy N.</span>
-                <p></p>
-              </div>
-
-            </DropdownToggle >
-            <DropdownMenu>
-              <DropdownItem>Account Settings</DropdownItem>
-              <DropdownItem>Integrations</DropdownItem>
-              <DropdownItem>Billing & Subscriptions</DropdownItem>
-              <DropdownItem>Company Profile</DropdownItem>
-              <DropdownItem>My Referrals</DropdownItem>
-              <DropdownItem divider />
-              <DropdownItem><LogoutButton /></DropdownItem>
-            </DropdownMenu>
-
-          </Dropdown>
-        </div>
+        
+       {
+         isDriver()? < DriverProfileNav /> : ""
+       }
+        {
+         isCompany()? < CompanyProfileNav /> : ""
+       }
       </Collapse>
     </Navbar>
   );
