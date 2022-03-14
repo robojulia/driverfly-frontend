@@ -172,7 +172,7 @@ export default function AccountSettings() {
             <div>
 
                 <Row>
-                    <h1>Account Settings</h1>
+                    <h1>Company Settings</h1>
                 </Row>
                 <div className='container-fluid'>
                     <div className="modal-header border-0">
