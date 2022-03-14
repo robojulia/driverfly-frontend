@@ -14,16 +14,48 @@ import useRedirect from '../../../hooks/useRedirect';
 import { useEffect, useState } from "react"
 import axios from "axios"
 import timeSince from '../../../utils/timeSince';
+import useAuth from '../../../hooks/useAuth';
 
 
 
 
 
-export default function Application({ jobs }) {
+export default function Application() {
 
     const { authDriver } = useRedirect();
 
     authDriver()
+
+    const { authCheck } = useAuth();
+
+    const user = authCheck();
+
+    const [applications, setApplications] = useState([])
+
+    const fetchApplications = () => {
+
+        const headers = {
+            'Authorization': `Bearer ${user.token}`,
+        };
+
+        axios.get(
+            `${process.env.BASE_URL_API}/jobs/applications/user`,
+            { headers: headers }
+        )
+            .then(data => {
+                console.log("handle success", data.data)
+                setApplications(data.data)
+            })
+            .catch(function (error) {
+                console.log("handle error success", error.response)
+            }).then(function () {
+                console.log("always executed")
+            })
+    }
+
+    useEffect(() => {
+        fetchApplications()
+    }, []);
 
 
     return (
@@ -45,16 +77,22 @@ export default function Application({ jobs }) {
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Title</th>
+                                        <th>Job Title</th>
+                                        <th>Job Type</th>
+                                        <th>Company</th>
                                         <th>Post Date</th>
+                                        <th>Applied Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {jobs.length > 0 && jobs.map((job, index) => (
+                                    {applications.length > 0 && applications.map((application, index) => (
                                         <tr>
                                             <th scope="row">{index + 1}</th>
-                                            <td>{job.title}</td>
-                                            <td>{timeSince(job.created_at)}</td>
+                                            <td>{application.job.title}</td>
+                                            <td>{application.job.job_type}</td>
+                                            <td>{application.job.company}</td>
+                                            <td>{timeSince(application.job.created_at)}</td>
+                                            <td>{timeSince(application.created_at)}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -67,12 +105,6 @@ export default function Application({ jobs }) {
     )
 };
 
-Application.getInitialProps = async () => {
-
-    const res = await fetch(`${process.env.BASE_URL_API}/jobs`)
-    const json = await res.json()
-    return { jobs: json }
-}
 
 Application.getLayout = function getLayout(page) {
     return (
