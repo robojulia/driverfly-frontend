@@ -28,6 +28,7 @@ const Header = ({ showMobmenu }) => {
 
   const { authCheck, isDriver, isCompany, setAuth } = useAuth();
 
+  const user = authCheck();
 
 
   const [isOpen, setIsOpen] = React.useState(false);
@@ -63,8 +64,8 @@ const Header = ({ showMobmenu }) => {
         </Button>
       </div>
       <div className="d-flex align-items-center bg_color">
-          <Logo />
-        </div>
+        <Logo />
+      </div>
 
       <Collapse navbar isOpen={isOpen}>
         <div className="input-group rounded w-25 m-auto py-2">
@@ -74,15 +75,15 @@ const Header = ({ showMobmenu }) => {
           <span className="input-group-text border-0" id="search-addon">
           </span>
         </div>
-        
 
-        
-       {
-         isDriver()? < DriverProfileNav /> : ""
-       }
         {
-         isCompany()? < CompanyProfileNav /> : ""
-       }
+          isDriver() ? < DriverProfileNav user={user} isOpen={isOpen} /> : ""
+        }
+
+        {
+          isCompany() ? < CompanyProfileNav user={user} isOpen={isOpen} /> : ""
+        }
+
       </Collapse>
     </Navbar>
   );

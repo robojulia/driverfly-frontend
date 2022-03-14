@@ -10,25 +10,29 @@ import {
     DropdownItem,
     Dropdown,
     Button,
-  } from "reactstrap";
-  import React from "react";
+} from "reactstrap";
+import React from "react";
 import Link from "next/link";
 import Logo from "../logo/Logo";
 import Image from "next/image";
-import LogoutButton from './../../../buttons/Logout';
-import useAuth from "./../../../../hooks/useAuth";
+import LogoutButton from '../../../buttons/Logout';
+import useAuth from "../../../../hooks/useAuth";
 import { useRouter } from "next/router"
+import user1 from "../../../../public/dashboard/assets/images/users/user1.jpg";
 
 
+export default function DriverProfileNav(props) {
 
-export default function DriverProfileNav() {
+    const [isOpen, setIsOpen] = React.useState(props.isOpen);
+    const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
+    const toggle = () => setDropdownOpen((prevState) => !prevState);
 
 
     return (
         <>
             <div className="profile">
-                <Dropdown >
+                <Dropdown isOpen={dropdownOpen} toggle={toggle}>
                     <DropdownToggle>
 
                         <div style={{ lineHeight: "0px" }}>
@@ -41,7 +45,7 @@ export default function DriverProfileNav() {
                                 height="30"
 
                             />
-                            <span>Timothy N.</span>
+                            <span>{props.user.name}.</span>
                             <p></p>
                         </div>
 
@@ -61,3 +65,4 @@ export default function DriverProfileNav() {
         </>
     )
 }
+
