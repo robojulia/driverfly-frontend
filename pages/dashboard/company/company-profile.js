@@ -23,14 +23,12 @@ export default function AccountSettings() {
     const [inputValues, setInputValue] = useState({
 
 
-        company_name: user.company_name,
-        email: user.email,
+        name: user.name,
         address: user.address,
-        city: user.city,
-        state: user.state,
-        zipcode: user.zipcode,
+        company_name: user.company_name,
         about: user.about,
         location: user.location,
+
 
     })
 
@@ -53,16 +51,10 @@ export default function AccountSettings() {
         e.preventDefault();
         let errors = {}
 
-        //Company Name validation
+        //First Name validation
 
-        if (!inputValues.company_name) {
-            errors.company_name = "Company Name is required"
-        }
-
-        //email validation
-
-        if (!inputValues.email) {
-            errors.email = "Email is required"
+        if (!inputValues.name) {
+            errors.name = "Name is required"
         }
 
         //contact_number validation
@@ -70,23 +62,12 @@ export default function AccountSettings() {
             errors.address = "Address is required"
         }
 
-        //City validation
+        //Company Name validation
 
-        if (!inputValues.city) {
-            errors.city = "City is required"
+        if (!inputValues.company_name) {
+            errors.company_name = "Company Name is required"
         }
 
-        //State validation
-
-        if (!inputValues.state) {
-            errors.state = "State is required"
-        }
-
-        //zipcode validation
-
-        if (!inputValues.zipcode) {
-            errors.zipcode = "zipcode is required"
-        }
 
         //About validation
 
@@ -124,14 +105,8 @@ export default function AccountSettings() {
                 .then(data => {
                     console.log("handle success", data.data.user)
                     setValidation({})
-                    user.company_name = data.data.user.company_name
-                    user.email = data.data.user.email
+                    user.name = data.data.user.name
                     user.address = data.data.user.address
-                    user.city = data.data.user.city
-                    user.state = data.data.user.state
-                    user.zipcode = data.data.user.zipcode
-                    user.about = data.data.user.about
-                    user.location = data.data.user.location
 
                     console.log('before setAuth', user)
                     setAuth(user)
@@ -172,7 +147,7 @@ export default function AccountSettings() {
             <div>
 
                 <Row>
-                    <h1>Company Settings</h1>
+                    <h1>Company Profile</h1>
                 </Row>
                 <div className='container-fluid'>
                     <div className="modal-header border-0">
@@ -180,40 +155,28 @@ export default function AccountSettings() {
                     <form className="modal-body">
                         <div className="row">
                             <div className="col-lg-6 col-12">
-                                <label>Company Name</label>
-                                <input onChange={(e) => handleChange(e)} name="company_name" value={inputValues.company_name} type="text" className="form-control" placeholder=" Company Name" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.company_name}</p>
+                                <label>Name</label>
+                                <input onChange={(e) => handleChange(e)} name="name" value={inputValues.name} type="text" className="form-control" placeholder=" Company Name" />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.name}</p>
                             </div>
-                            <div className="col-lg-6 col-12">
-                                <label>Email</label>
-                                <input onChange={(e) => handleChange(e)} name="email" value={inputValues.email} type="text" className="form-control" placeholder="Email" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.email}</p>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-lg-6 col-12 mt-3">
+                            <div className="col-lg-6 col-12 ">
                                 <label>Address</label>
                                 <input onChange={(e) => handleChange(e)} name="address" value={inputValues.address} type="text" className="form-control" placeholder="Address" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.address}</p>
                             </div>
 
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>City</label>
-                                <input onChange={(e) => handleChange(e)} name="city" value={inputValues.city} type="text" className="form-control" placeholder="City" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.city}</p>
-                            </div>
                         </div>
-
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
-                                <label>State</label>
-                                <input type="text" onChange={(e) => handleChange(e)} name="state" value={inputValues.state} className="form-control" placeholder="State" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.state}</p>
+                                <label>Company Name</label>
+                                <input onChange={(e) => handleChange(e)} name="company_name" value={inputValues.company_name} type="text" className="form-control" placeholder=" Company Name" />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.company_name}</p>
                             </div>
+
                             <div className="col-lg-6 col-12 mt-3">
-                                <label>Zipcode</label>
-                                <input onChange={(e) => handleChange(e)} name="zipcode" value={inputValues.zipcode} type="text" className="form-control" placeholder="Zipcode" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.zipcode}</p>
+                                <label>Company Location</label>
+                                <input type="text" onChange={(e) => handleChange(e)} name="location" value={inputValues.location} className="form-control" placeholder="Company Location" />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.location}</p>
                             </div>
                         </div>
                         <div className="row">
@@ -222,15 +185,9 @@ export default function AccountSettings() {
                                 <textarea onChange={(e) => handleChange(e)} name="about" value={inputValues.about} className="form-control" placeholder="About"></textarea>
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.about}</p>
                             </div>
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Company Location</label>
-                                <input type="text" onChange={(e) => handleChange(e)} name="location" value={inputValues.location} className="form-control" placeholder="Company Location" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.location}</p>
-                            </div>
                         </div>
-
-                        <div className="modal-footer border-0 mt-5">
-                            <button type="submit" onClick={profileHandler} className="btn btn-primary w-25 m-auto p-lg-3 p-5">Save</button>
+                        <div className="border-0 mt-5">
+                            <button type="submit" onClick={profileHandler} className="btn btn-primary  p-lg-3 p-5">Update</button>
                         </div>
 
                     </form>
