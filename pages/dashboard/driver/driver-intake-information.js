@@ -5,10 +5,15 @@ import * as yup from "yup"
 import axios from "axios"
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import useAuth from "../../../hooks/useAuth"
+import useStorage from "../../../hooks/useStorage"
 
 
 
 export default function DriverIntakeInfo () {
+
+  const localStorage = useStorage()
+
   const experienceValues = [
     {
       value: "1-5-months",
@@ -42,32 +47,33 @@ export default function DriverIntakeInfo () {
 
   const formik = useFormik( {
     initialValues: {
-      first_name: "",
-      last_name: "",
-      phone: "",
-      email: "",
+      // first_name: "",
+      // last_name: "",
+      // phone: "",
+      // email: "",
       cdl_experience: "",
       voilations: "",
       drugTest: 0,
     },
     validationSchema: yup.object( {
-      first_name: yup.string().required( "Required" ),
-      last_name: yup.string().required( "Required" ),
-      email: yup.string().email( "Invalid email address" ).required( "Required" ),
-      phone: yup.string().required( "Required" ),
+      // first_name: yup.string().required( "Required" ),
+      // last_name: yup.string().required( "Required" ),
+      // email: yup.string().email( "Invalid email address" ).required( "Required" ),
+      // phone: yup.string().required( "Required" ),
       cdl_experience: yup.string().required( "Required" ),
       voilations: yup.string().required( "Required" ),
       drugTest: yup.number().optional()
     } ),
     onSubmit: async ( values ) => {
-      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFsaUBhbGkuY29tIiwic3ViIjozLCJpYXQiOjE2NDY5Mzc2MzV9.ebRyTQNmniuBGTJ2EODxPiOe765_fGFuwC3R4lTNLFo"
-      await axios.put( `${process.env.BASE_URL_API}/user/driver/3`, values, {
+      const token = JSON.parse(localStorage.getItem('user')).token
+      const id = JSON.parse(localStorage.getItem('user')).id
+      await axios.put( `${process.env.BASE_URL_API}/user/${id}`, values, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       } )
-      console.log( values )
-      toast.success("Driver Intake Information Updated Successfully", {
+      window.document.getElementById("my-form").reset()
+      toast.success( "Driver Intake Information Updated Successfully", {
         position: "bottom-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -75,7 +81,7 @@ export default function DriverIntakeInfo () {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-      });
+      } )
     }
   } )
 
@@ -90,8 +96,8 @@ export default function DriverIntakeInfo () {
         <div className='container-fluid'>
           <div className="modal-header border-0">
           </div>
-          <form onSubmit={formik.handleSubmit} className="modal-body">
-            <div className="row">
+          <form onSubmit={formik.handleSubmit} className="modal-body" id="my-form">
+            {/* <div className="row">
               <div className="col-lg-6 col-12">
                 <label>*First Name</label>
                 <input
@@ -134,7 +140,7 @@ export default function DriverIntakeInfo () {
                 {formik.touched.phone && formik.errors.phone ? <p style={{ fontStyle: "italic", color: "red", fontSize: '13px' }}>{formik.errors.phone}</p> : null}
               </div>
             </div>
-            {/* <div className="row">
+            <div className="row">
               <div className="col-12 mt-3">
                 <label>* Qualifications</label>
                 <textarea name="qualifications" className="form-control" id="validationTextarea" placeholder="Qualifications"></textarea>
@@ -157,7 +163,6 @@ export default function DriverIntakeInfo () {
             <div className="col-lg-6 col-12 mt-3">
             <label>Upload your Medical card</label>
             <input name="card" type="file" className="form-control " />
-            
             </div>
              */}
             <div className="row">
