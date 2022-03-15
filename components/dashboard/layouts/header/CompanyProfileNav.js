@@ -50,11 +50,21 @@ export default function CompanyProfileNav(props) {
 
                     </DropdownToggle >
                     <DropdownMenu>
-                        <DropdownItem >Account Settings</DropdownItem>
-                        <DropdownItem>Integrations</DropdownItem>
-                        <DropdownItem>Billing & Subscriptions</DropdownItem>
-                        <DropdownItem>Company Profile</DropdownItem>
-                        <DropdownItem>My Referrals</DropdownItem>
+                        <Link href="/dashboard/company/company-settings">
+                            <DropdownItem >Company Settings</DropdownItem>
+                        </Link>
+                        <Link href="#">
+                            <DropdownItem>Integrations</DropdownItem>
+                        </Link>
+                        <Link href="#">
+                            <DropdownItem>Billing & Subscriptions</DropdownItem>
+                        </Link>
+                        <Link href="/dashboard/company/company-profile">
+                            <DropdownItem>Company Profile</DropdownItem>
+                        </Link>
+                        <Link href="#">
+                            <DropdownItem>My Referrals</DropdownItem>
+                        </Link>
                         <DropdownItem divider />
                         <DropdownItem><LogoutButton /></DropdownItem>
                     </DropdownMenu>
