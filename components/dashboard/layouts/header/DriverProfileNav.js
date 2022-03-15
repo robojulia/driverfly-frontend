@@ -50,8 +50,12 @@ export default function DriverProfileNav(props) {
 
           </DropdownToggle >
           <DropdownMenu>
-            <DropdownItem>Account Settings</DropdownItem>
-            <DropdownItem>My Referrals</DropdownItem>
+            <Link href="/dashboard/driver/profile">
+              <DropdownItem>Profile</DropdownItem>
+            </Link>
+            <Link href="#">
+              <DropdownItem>My Referrals</DropdownItem>
+            </Link>
             <DropdownItem divider />
             <DropdownItem><LogoutButton /></DropdownItem>
           </DropdownMenu>
