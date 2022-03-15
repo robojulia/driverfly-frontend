@@ -17,10 +17,11 @@ export default function Signup() {
   }
 
   const [color, setColor] = useState('red')
+  const [signupButtonDisabled, setSignupButtonDisabled] = useState(false)
 
   const [inputValues, setInputValue] = useState({
-    firstName: null,
-    lastName: null,
+    first_name: null,
+    last_name: null,
     name: null,
     email: null,
     password: null,
@@ -44,36 +45,17 @@ export default function Signup() {
     })
   }
 
-
-  // const signUpHandler = async (e) => {
-  //     e.preventDefault();
-  //     //console.log(firstName, lastName, email, password, confirmPassword, phone);
-
-  //     await axios.post('http://localhost:4000/users', inputValues)
-  //         .then(data => {
-  //             console.log("handle success", data);
-  //         })
-  //         .catch(function (error) {
-  //             console.log('error', error.response)
-  //         });
-
-  // }
-
-
   const signUpHandler = async () => {
     let errors = {}
+    setServerValidation('')
 
-    //first Name validation
-    // if (!inputValues.firstName) {
-    //   errors.firstName = "First name is required";
-    // }
-    //last Name validation
-    // if (!inputValues.lastName) {
-    //   errors.lastName = "Last name is required";
-    // }
-
-    if (!inputValues.name) {
-      errors.name = "Name is required"
+    // first Name validation
+    if (!inputValues.first_name) {
+      errors.first_name = "First name is required";
+    }
+    // last Name validation
+    if (!inputValues.last_name) {
+      errors.last_name = "Last name is required";
     }
 
     //email validation
@@ -111,11 +93,19 @@ export default function Signup() {
 
     // Call API of signup
     if (Object.keys(errors).length == 0) {
+      setSignupButtonDisabled(true)
       console.log('you can proceed with the API')
 
       await axios.post(`${process.env.BASE_URL_API}/users`, inputValues)
         .then(data => {
           console.log("handle success", data)
+          if (data.status == 201) {
+            setColor("green")
+            setServerValidation('Registered successfully! Please Check Your Email')
+            setTimeout(() => {
+              Router.push('/login')
+            }, 3000);
+          }
 
         })
         .catch(function (error) {
@@ -144,6 +134,7 @@ export default function Signup() {
           }
         }).then(function () {
           console.log("always executed")
+          setSignupButtonDisabled(false)
         })
     }
 
@@ -192,8 +183,12 @@ export default function Signup() {
               <h2 className="text-center my-5">Create New Driver Account</h2>
               <div className="my-5">
                 <div className="form-group">
-                  <input type="text" className="form-control p-4" onChange={(e) => handleChange(e)} name="name" value={inputValues.name} aria-describedby="emailHelp" placeholder="Name" />
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.name}</p>
+                  <input type="text" className="form-control p-4" onChange={(e) => handleChange(e)} name="first_name" value={inputValues.first_name} aria-describedby="emailHelp" placeholder="First Name" />
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.first_name}</p>
+                </div>
+                <div className="form-group">
+                  <input type="text" className="form-control p-4" onChange={(e) => handleChange(e)} name="last_name" value={inputValues.last_name} aria-describedby="emailHelp" placeholder="Last Name" />
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.last_name}</p>
                 </div>
                 <div className="form-group">
                   <input type="email" className="form-control p-4" onChange={(e) => handleChange(e)} name="email" id="exampleInputUsername" value={inputValues.email} aria-describedby="emailHelp" placeholder="Email" />
@@ -234,7 +229,12 @@ export default function Signup() {
                   )
 
                 }) : <p style={{ fontStyle: "italic", color: color }}>{serverValidation}</p>}
-                <button type="submit" className='btn btn-dark w-100 d-block p-3 my-5' onClick={signUpHandler}>Register now</button>
+                <button disabled={signupButtonDisabled}
+                  type="submit"
+                  className='btn btn-dark w-100 d-block p-3 my-5'
+                  onClick={signUpHandler}>
+                  Register now
+                </button>
               </div>
             </div>
           </div>
