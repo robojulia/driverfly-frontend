@@ -18,8 +18,10 @@ export default function Profile() {
 
 
   const [color, setColor] = useState('red')
+  const [saveButtonDisabled, setSaveButtonDisabled] = useState(false)
 
   const [inputValues, setInputValue] = useState({
+    name: user.name,
     first_name: user.first_name,
     last_name: user.last_name,
     contact_number: user.contact_number,
@@ -50,6 +52,7 @@ export default function Profile() {
   const profileHandler = async (e) => {
     e.preventDefault();
     let errors = {}
+    setServerValidation('')
 
     //First Name validation
 
@@ -106,9 +109,11 @@ export default function Profile() {
 
     if (Object.keys(errors).length == 0) {
 
+      setSaveButtonDisabled(true)
+      inputValues.name = `${inputValues.first_name} ${inputValues.last_name}`
+
       const headers = {
         'Authorization': `Bearer ${user.token}`,
-        // 'token': `${user.token}`,
         "content-type": "application/json; charset=utf-8"
       };
 
@@ -122,14 +127,18 @@ export default function Profile() {
           setValidation({})
           user.first_name = data.data.user.first_name
           user.last_name = data.data.user.last_name
+          user.name = data.data.user.name
           user.contact_number = data.data.user.contact_number
           user.state = data.data.user.state
           user.country = data.data.user.country
           user.city = data.data.user.city
           user.zipcode = data.data.user.zipcode
-          console.log('before setAuth', user)
           setAuth(user)
-          console.log('after setAuth', authCheck())
+          setColor("green")
+          setServerValidation('Updated successfully!')
+          setTimeout(() => {
+            setServerValidation('')
+          }, 5000);
         })
         .catch(function (error) {
           console.log("handle error success", error.response)
@@ -150,10 +159,12 @@ export default function Profile() {
               setColor("green")
               setServerValidation('Profile Updated')
             }
-
+          }else{
+            setServerValidation('Something went south')
           }
         }).then(function () {
           console.log("always executed")
+          setSaveButtonDisabled(false)
         })
     }
 
@@ -222,12 +233,17 @@ export default function Profile() {
             <div className="border-0 mt-5">
               {serverValidation instanceof Array ? serverValidation.map((inValid) => {
                 return (
-                  <div className="text-danger">{inValid}</div>
+                  <div style={{ fontStyle: "italic", color: color }}>{inValid}</div>
                 )
 
-              }) : <div className="text-danger">{serverValidation}</div>}
+              }) : <div style={{ fontStyle: "italic", color: color }}>{serverValidation}</div>}
 
-              <button type="submit" onClick={profileHandler} className="btn btn-primary  m-auto p-lg-3 p-5">Submit</button>
+              <button disabled={saveButtonDisabled}
+                type="submit"
+                onClick={profileHandler}
+                className="btn btn-primary  m-auto p-lg-3 p-5">
+                Submit
+              </button>
             </div>
 
           </form>
