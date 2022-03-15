@@ -9,166 +9,174 @@ import useRedirect from '../../../hooks/useRedirect';
 
 export default function AccountSettings() {
 
-    const { authCompany } = useRedirect();
+  const { authCompany } = useRedirect();
 
-    authCompany()
+  authCompany()
 
-    const { authCheck, setAuth } = useAuth();
-    const user = authCheck();
-    console.log('user', user);
-
-
-    const [color, setColor] = useState('red')
-
-    const [inputValues, setInputValue] = useState({
+  const { authCheck, setAuth } = useAuth();
+  const user = authCheck();
+  console.log('user', user);
 
 
-        first_name: user.first_name,
-        last_name: user.last_name,
-        contact_number: user.contact_number,
-        state: user.state,
-        country: user.country,
-        city: user.city,
-        zipcode: user.zipcode,
+  const [color, setColor] = useState('red')
+  const [saveButtonDisabled, setSaveButtonDisabled] = useState(false)
 
+  const [inputValues, setInputValue] = useState({
+    name: user.name,
+    first_name: user.first_name,
+    last_name: user.last_name,
+    contact_number: user.contact_number,
+    state: user.state,
+    country: user.country,
+    city: user.city,
+    zipcode: user.zipcode,
+
+  })
+
+  const [serverValidation, setServerValidation] = useState([])
+
+  const [validation, setValidation] = useState()
+
+
+  const handleChange = (event) => {
+    const { name, value } = event.target
+    setInputValue((preValue) => {
+      return {
+        ...preValue,
+        [name]: value,
+      }
     })
+  }
 
-    const [serverValidation, setServerValidation] = useState([])
+  const profileHandler = async (e) => {
+    e.preventDefault();
+    let errors = {}
+    setServerValidation('')
 
-    const [validation, setValidation] = useState()
+    //First Name validation
+
+    if (!inputValues.first_name) {
+      errors.first_name = "First Name is required"
+    }
+
+    //last_name validation
+    if (!inputValues.last_name) {
+      errors.last_name = "Last Name is required"
+    }
 
 
-    const handleChange = (event) => {
-        const { name, value } = event.target
-        setInputValue((preValue) => {
-            return {
-                ...preValue,
-                [name]: value,
+    //contact_number validation
+    if (!inputValues.contact_number) {
+      errors.contact_number = "Contact number is required"
+    }
+
+    //State validation
+
+    if (!inputValues.state) {
+      errors.state = "State is required"
+    }
+    //Country validation
+
+    if (!inputValues.country) {
+      errors.country = "Country is required"
+    }
+
+    //Zipcode validation
+
+    if (!inputValues.zipcode) {
+      errors.zipcode = "Zipcode is required"
+    }
+
+
+    //City validation
+
+    if (!inputValues.city) {
+      errors.city = "City is required"
+    }
+
+
+    // if (!inputValues.confirmPassword) {
+    //   errors.confirmPassword = "Password confirmation is required"
+    // } else if (inputValues.confirmPassword !== inputValues.password) {
+    //   errors.confirmPassword = "Password does not match confirmation password"
+    // }
+
+
+    setValidation(errors)
+
+    if (Object.keys(errors).length == 0) {
+
+      setSaveButtonDisabled(true)
+      inputValues.name = `${inputValues.first_name} ${inputValues.last_name}`
+
+      const headers = {
+        'Authorization': `Bearer ${user.token}`,
+        "content-type": "application/json; charset=utf-8"
+      };
+
+      await axios.put(
+        `${process.env.BASE_URL_API}/user/${user.id}`,
+        { user: { ...inputValues } },
+        { headers }
+      )
+        .then(data => {
+          console.log("handle success", data.data.user)
+          setValidation({})
+          user.name = data.data.user.name
+          user.first_name = data.data.user.first_name
+          user.last_name = data.data.user.last_name
+          user.contact_number = data.data.user.contact_number
+          user.state = data.data.user.state
+          user.country = data.data.user.country
+          user.city = data.data.user.city
+          user.zipcode = data.data.user.zipcode
+          setAuth(user)
+          setColor("green")
+          setServerValidation('Updated successfully!')
+          setTimeout(() => {
+            setServerValidation('')
+          }, 5000);
+        })
+        .catch(function (error) {
+          console.log("handle error success", error.response)
+          if (error.response) {
+            if (error.response.data.message) {
+              setServerValidation(error.response.data.message)
+            } else if (error.response.data.errors) {
+              setColor("red")
+              console.log('here')
+              console.log(error.response.data.errors.user)
+              if (error.response.data.errors.user) {
+                setServerValidation(error.response.data.errors.user)
+              } else {
+                setServerValidation(error.response.data.errors.username)
+              }
+
+            } else if (error.response.data.err) {
+              setColor("green")
+              setServerValidation('Profile Updated')
             }
+          } else {
+            setServerValidation('Something went south')
+          }
+        }).then(function () {
+          console.log("always executed")
+          setSaveButtonDisabled(false)
         })
     }
 
-    const profileHandler = async (e) => {
-        e.preventDefault();
-        let errors = {}
-
-       //First Name validation
-
-    if (!inputValues.first_name) {
-        errors.first_name = "First Name is required"
-      }
-  
-      //last_name validation
-      if (!inputValues.last_name) {
-        errors.last_name = "Last Name is required"
-      }
-  
-  
-      //contact_number validation
-      if (!inputValues.contact_number) {
-        errors.contact_number = "Contact number is required"
-      }
-  
-      //State validation
-  
-      if (!inputValues.state) {
-        errors.state = "State is required"
-      }
-      //Country validation
-  
-      if (!inputValues.country) {
-        errors.country = "Country is required"
-      }
-  
-      //Zipcode validation
-  
-      if (!inputValues.zipcode) {
-        errors.zipcode = "Zipcode is required"
-      }
-  
-  
-      //City validation
-  
-      if (!inputValues.city) {
-        errors.city = "City is required"
-      }
-  
-  
-      // if (!inputValues.confirmPassword) {
-      //   errors.confirmPassword = "Password confirmation is required"
-      // } else if (inputValues.confirmPassword !== inputValues.password) {
-      //   errors.confirmPassword = "Password does not match confirmation password"
-      // }
+  }
 
 
-        setValidation(errors)
+  return (
+    <>
 
-        // Call API of signup
-        if (Object.keys(errors).length == 0) {
+      <div>
 
-            const headers = {
-              'Authorization': `Bearer ${user.token}`,
-              // 'token': `${user.token}`,
-              "content-type": "application/json; charset=utf-8"
-            };
-      
-            await axios.put(
-              `${process.env.BASE_URL_API}/user/${user.id}`,
-              { user: { ...inputValues } },
-              { headers }
-            )
-              .then(data => {
-                console.log("handle success", data.data.user)
-                setValidation({})
-                user.first_name = data.data.user.first_name
-                user.last_name = data.data.user.last_name
-                user.contact_number = data.data.user.contact_number
-                user.state = data.data.user.state
-                user.country = data.data.user.country
-                user.city = data.data.user.city
-                user.zipcode = data.data.user.zipcode
-                console.log('before setAuth', user)
-                setAuth(user)
-                console.log('after setAuth', authCheck())
-              })
-              .catch(function (error) {
-                console.log("handle error success", error.response)
-                if (error.response) {
-                  if (error.response.data.message) {
-                    setServerValidation(error.response.data.message)
-                  } else if (error.response.data.errors) {
-                    setColor("red")
-                    console.log('here')
-                    console.log(error.response.data.errors.user)
-                    if (error.response.data.errors.user) {
-                      setServerValidation(error.response.data.errors.user)
-                    } else {
-                      setServerValidation(error.response.data.errors.username)
-                    }
-      
-                  } else if (error.response.data.err) {
-                    setColor("green")
-                    setServerValidation('Profile Updated')
-                  }
-      
-                }
-              }).then(function () {
-                console.log("always executed")
-              })
-          }
-
-    }
-
-
-    return (
-        <>
-
-            <div>
-
-                <Row>
-                    <h1>Company Settings</h1>
-                </Row>
-                <div className='container-fluid'>
+        <Row>
+          <h1>Company Settings</h1>
+        </Row>
+        <div className='container-fluid'>
           <div className="modal-header border-0">
           </div>
           <form className="modal-body" >
@@ -224,25 +232,30 @@ export default function AccountSettings() {
             <div className="border-0 mt-5">
               {serverValidation instanceof Array ? serverValidation.map((inValid) => {
                 return (
-                  <div className="text-danger">{inValid}</div>
+                  <div style={{ fontStyle: "italic", color: color }}>{inValid}</div>
                 )
 
-              }) : <div className="text-danger">{serverValidation}</div>}
+              }) : <div style={{ fontStyle: "italic", color: color }}>{serverValidation}</div>}
 
-              <button type="submit" onClick={profileHandler} className="btn btn-primary  m-auto p-lg-3 p-5">Submit</button>
+              <button disabled={saveButtonDisabled}
+                type="submit"
+                onClick={profileHandler}
+                className="btn btn-primary  m-auto p-lg-3 p-5">
+                Submit
+              </button>
             </div>
 
           </form>
         </div>
-            </div>
-        </>
-    )
+      </div>
+    </>
+  )
 };
 
 AccountSettings.getLayout = function getLayout(page) {
-    return (
-        <FullLayout>
-            {page}
-        </FullLayout>
-    )
+  return (
+    <FullLayout>
+      {page}
+    </FullLayout>
+  )
 }

@@ -10,43 +10,41 @@ import {
   DropdownItem,
   Dropdown,
   Button,
-} from "reactstrap"
-import React, { useState } from "react"
-import Link from "next/link"
-import Logo from "../logo/Logo"
-import Image from "next/image"
-import LogoutButton from '../../../buttons/Logout'
-import useAuth from "../../../../hooks/useAuth"
+} from "reactstrap";
+import React from "react";
+import Link from "next/link";
+import Logo from "../logo/Logo";
+import Image from "next/image";
+import LogoutButton from '../../../buttons/Logout';
+import useAuth from "../../../../hooks/useAuth";
 import { useRouter } from "next/router"
-import useStorage from "../../../../hooks/useStorage"
+import user1 from "../../../../public/dashboard/assets/images/users/user1.jpg";
 
 
-export default function DriverProfileNav () {
-  const localStorage = useStorage()
+export default function DriverProfileNav(props) {
 
-  const [isOpen, setIsOpen] = useState( false )
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
-  const toggle = () => setIsOpen( !isOpen )
+  const toggle = () => setDropdownOpen((prevState) => !prevState);
 
-  const user = JSON.parse(localStorage.getItem('user'))
 
   return (
     <>
       <div className="profile">
-        <Dropdown isOpen={isOpen} toggle={toggle} />
-        <Dropdown >
+        <Dropdown isOpen={dropdownOpen} toggle={toggle}>
           <DropdownToggle>
 
             <div style={{ lineHeight: "0px" }}>
 
-              {/* <Image
-                src="https://cdn.pixabay.com/photo/2018/08/28/13/29/avatar-3637561_1280.png"
+              <Image
+                src={user1}
                 alt="profile"
                 className="rounded-circle"
                 width="30"
                 height="30"
-              /> */}
-              <span>{user.name || "DriverFly User"}</span>
+
+              />
+              <span>{props.user.name || "DriverFly User"}.</span>
               <p></p>
             </div>
 
@@ -63,3 +61,4 @@ export default function DriverProfileNav () {
     </>
   )
 }
+
