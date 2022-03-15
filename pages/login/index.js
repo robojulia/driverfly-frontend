@@ -8,6 +8,10 @@ import Layout from "../../components/layouts";
 import login from '../../public/css/Login.module.css'
 import Link from 'next/link';
 import Breadcrumbs from 'nextjs-breadcrumbs';
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
+
 
 export default function Login() {
 
@@ -79,7 +83,17 @@ export default function Login() {
                         setServerValidation(error.response.data.errors.user);
                     } else {
                         setServerValidation("Invalid Credentials");
+                        toast.warning("Invalid Credentials", {
+                            position: "top-right",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                        });
                     }
+
                 })
                 .then(function () {
                     // always executed
@@ -91,6 +105,7 @@ export default function Login() {
 
     return (
         <>
+          <ToastContainer />
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">

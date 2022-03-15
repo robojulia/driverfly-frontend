@@ -6,6 +6,9 @@ import Router from 'next/router';
 import axios from 'axios';
 import { useState } from 'react'
 import useRedirect from '../../../hooks/useRedirect';
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 
 export default function AccountSettings() {
 
@@ -133,6 +136,15 @@ export default function AccountSettings() {
           setAuth(user)
           setColor("green")
           setServerValidation('Updated successfully!')
+          toast.success("Updated Successfully! ", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
           setTimeout(() => {
             setServerValidation('')
           }, 5000);
@@ -170,7 +182,7 @@ export default function AccountSettings() {
 
   return (
     <>
-
+      <ToastContainer />
       <div>
 
         <Row>

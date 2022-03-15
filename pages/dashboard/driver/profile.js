@@ -5,6 +5,8 @@ import Router from 'next/router';
 import axios from 'axios';
 import { useState } from 'react'
 import useRedirect from '../../../hooks/useRedirect';
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function Profile() {
 
@@ -136,6 +138,15 @@ export default function Profile() {
           setAuth(user)
           setColor("green")
           setServerValidation('Updated successfully!')
+          toast.success("Profile Updated Successfully! ", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
           setTimeout(() => {
             setServerValidation('')
           }, 5000);
@@ -158,8 +169,9 @@ export default function Profile() {
             } else if (error.response.data.err) {
               setColor("green")
               setServerValidation('Profile Updated')
+             
             }
-          }else{
+          } else {
             setServerValidation('Something went south')
           }
         }).then(function () {
@@ -172,7 +184,7 @@ export default function Profile() {
 
   return (
     <>
-
+      <ToastContainer />
       <div>
         < div className='row'>
           <h1>Profile</h1>

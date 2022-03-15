@@ -6,6 +6,9 @@ import Router from 'next/router';
 import axios from 'axios';
 import { useState } from 'react'
 import useRedirect from '../../../hooks/useRedirect';
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 
 export default function AccountSettings() {
 
@@ -25,9 +28,8 @@ export default function AccountSettings() {
 
         name: user.name,
         address: user.address,
-        // company_name: user.company_name,
-        // about: user.about,
-        // location: user.location,
+        about: user.about,
+        location: user.location
 
 
     })
@@ -51,13 +53,13 @@ export default function AccountSettings() {
         e.preventDefault();
         let errors = {}
 
-        //First Name validation
+        // Name validation
 
         if (!inputValues.name) {
             errors.name = "Name is required"
         }
 
-        //contact_number validation
+        //address validation
         if (!inputValues.address) {
             errors.address = "Address is required"
         }
@@ -102,6 +104,8 @@ export default function AccountSettings() {
                     setValidation({})
                     user.name = data.data.user.name
                     user.address = data.data.user.address
+                    user.about = data.data.user.about
+                    user.location = data.data.user.location
 
                     console.log('before setAuth', user)
                     setAuth(user)
@@ -125,11 +129,22 @@ export default function AccountSettings() {
                         } else if (error.response.data.err) {
                             setColor("green")
                             setServerValidation('Profile Updated')
+                            
                         }
-
+                       
                     }
                 }).then(function () {
                     console.log("always executed")
+                    toast.success("Profile Updated Successfully! ", {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                      });
+                   
                 })
         }
 
@@ -138,7 +153,7 @@ export default function AccountSettings() {
 
     return (
         <>
-
+<ToastContainer />
             <div>
 
                 <Row>
@@ -151,7 +166,7 @@ export default function AccountSettings() {
                         <div className="row">
                             <div className="col-lg-6 col-12">
                                 <label>Name</label>
-                                <input onChange={(e) => handleChange(e)} name="name" value={inputValues.name} type="text" className="form-control" placeholder=" Company Name" />
+                                <input  onChange={(e) => handleChange(e)} name="name" value={inputValues.name} type="text" className="form-control" placeholder=" Company Name" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.name}</p>
                             </div>
                             <div className="col-lg-6 col-12 ">
@@ -164,8 +179,9 @@ export default function AccountSettings() {
                         <div className="row">
                         <div className="col-lg-6 col-12 mt-3">
                                 <label>About Company</label>
-                                <textarea onChange={(e) => handleChange(e)} name="about" value={inputValues.about} className="form-control" placeholder="About"></textarea>
+                                <textarea onChange={(e) => handleChange(e)} name="about"  value={inputValues.about} className="form-control" placeholder="About"></textarea>
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.about}</p>
+                                
                             </div>
 
                             <div className="col-lg-6 col-12 mt-3">

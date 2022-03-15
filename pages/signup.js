@@ -7,6 +7,9 @@ import Layout from "../components/layouts"
 import SignupStyle from "../public/css/signup.module.css"
 import useAuth from '../hooks/useAuth';
 import Router from 'next/router'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 
 export default function Signup() {
 
@@ -102,6 +105,15 @@ export default function Signup() {
           if (data.status == 201) {
             setColor("green")
             setServerValidation('Registered successfully! Please Check Your Email')
+            toast.success("Registered successfully! Please Check Your Email", {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
             setTimeout(() => {
               Router.push('/login')
             }, 3000);
@@ -126,6 +138,7 @@ export default function Signup() {
             } else if (error.response.data.err) {
               setColor("green")
               setServerValidation('User registered successfully')
+             
               setTimeout(() => {
                 Router.push('/login')
               }, 3000);
@@ -146,7 +159,7 @@ export default function Signup() {
       <Head>
         <title>Signup - DriverFly</title>
       </Head>
-
+      
       <div className="top-links-sec">
         <div className="container">
           <div className="top-links-inner d-flex align-items-center justify-content-between">
@@ -180,6 +193,7 @@ export default function Signup() {
           </div>
           <div className="col-lg-8">
             <div className={SignupStyle.form}>
+            <ToastContainer />
               <h2 className="text-center my-5">Create New Driver Account</h2>
               <div className="my-5">
                 <div className="form-group">
