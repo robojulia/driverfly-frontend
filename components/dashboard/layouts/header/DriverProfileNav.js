@@ -1,15 +1,15 @@
 import {
-    Navbar,
-    Collapse,
-    Nav,
-    NavItem,
-    NavbarBrand,
-    UncontrolledDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    Dropdown,
-    Button,
+  Navbar,
+  Collapse,
+  Nav,
+  NavItem,
+  NavbarBrand,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  Dropdown,
+  Button,
 } from "reactstrap";
 import React from "react";
 import Link from "next/link";
@@ -23,42 +23,42 @@ import user1 from "../../../../public/dashboard/assets/images/users/user1.jpg";
 
 export default function DriverProfileNav(props) {
 
-    const [isOpen, setIsOpen] = React.useState(props.isOpen);
-    const [dropdownOpen, setDropdownOpen] = React.useState(false);
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
-    const toggle = () => setDropdownOpen((prevState) => !prevState);
+  const toggle = () => setDropdownOpen((prevState) => !prevState);
 
 
-    return (
-        <>
-            <div className="profile">
-                <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-                    <DropdownToggle>
+  return (
+    <>
+      <div className="profile">
+        <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+          <DropdownToggle>
 
-                        <div style={{ lineHeight: "0px" }}>
+            <div style={{ lineHeight: "0px" }}>
 
-                            <Image
-                                src={user1}
-                                alt="profile"
-                                className="rounded-circle"
-                                width="30"
-                                height="30"
+              <Image
+                src={user1}
+                alt="profile"
+                className="rounded-circle"
+                width="30"
+                height="30"
 
-                            />
-                            <span>{props.user.name}</span>
-                            <p></p>
-                        </div>
-
-                    </DropdownToggle >
-                    <DropdownMenu>
-                        <DropdownItem>Account Settings</DropdownItem>
-                        <DropdownItem>My Referrals</DropdownItem>
-                        <DropdownItem divider />
-                        <DropdownItem><LogoutButton /></DropdownItem>
-                    </DropdownMenu>
-
-                </Dropdown>
+              />
+              <span>{props.user.name || "DriverFly User"}.</span>
+              <p></p>
             </div>
-        </>
-    )
+
+          </DropdownToggle >
+          <DropdownMenu>
+            <DropdownItem>Account Settings</DropdownItem>
+            <DropdownItem>My Referrals</DropdownItem>
+            <DropdownItem divider />
+            <DropdownItem><LogoutButton /></DropdownItem>
+          </DropdownMenu>
+
+        </Dropdown>
+      </div>
+    </>
+  )
 }
+

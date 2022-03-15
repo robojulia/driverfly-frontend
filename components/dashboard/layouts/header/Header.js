@@ -77,11 +77,11 @@ const Header = ({ showMobmenu }) => {
         </div>
 
         {
-          isDriver() ? < DriverProfileNav user={user} isOpen={isOpen} /> : ""
+          isDriver() ? < DriverProfileNav user={user}  /> : ""
         }
 
         {
-          isCompany() ? < CompanyProfileNav user={user} isOpen={isOpen} /> : ""
+          isCompany() ? < CompanyProfileNav user={user}  /> : ""
         }
 
       </Collapse>

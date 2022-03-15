@@ -3,10 +3,16 @@ import FullLayout from "../../../components/dashboard/layouts/FullLayout"
 import useRedirect from '../../../hooks/useRedirect'
 import Select from 'react-select'
 import { useFormik } from "formik"
+import axios from "axios";
 import { useState } from "react"
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import useStorage from "../../../hooks/useStorage"
 
 
 export default function PrestoresDocuments () {
+
+  const localStorage = useStorage()
   const [qualifications, setQualifications] = useState( [] )
 
   const [resume, setResume] = useState( null )
@@ -40,7 +46,7 @@ export default function PrestoresDocuments () {
   authDriver()
 
 
-  const submitHandler = ( e ) => {
+  const submitHandler = async( e ) => {
     e.preventDefault()
     let errors = []
     if ( qualifications.length < 1 ) {
@@ -60,20 +66,47 @@ export default function PrestoresDocuments () {
 
     if ( Object.keys( errors ).length == 0 ) {
       const formData = new FormData()
-      formData.set("qualifications", qualifications)
+      formData.set("qualifications", qualifications.map(q => q.value))
       formData.append( "resume", resume )
       formData.append( "commercial_driving_license", commercial_driving_license )
       formData.append( "medical_card", medical_card )
-      for ( let [key, value] of formData.entries() ) {
-        console.dir( `${key}: ${value}` )
-      }
-      // TODO make api call here
+      // for ( let [key, value] of formData.entries() ) {
+      //   console.dir( `${key}: ${value}` )
+      // }
+      const token = JSON.parse(localStorage.getItem('user')).token
+      await axios.post( `${process.env.BASE_URL_API}/user/documents`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      toast.success("Documents uploaded successfully", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      
+      setQualifications([])
+      setResume(null)
+      setCommercial_driving_license(null)
+      setMedical_card(null)
+      document.getElementById("myForm").reset();
+
     }
   }
   
 
+  // const handleChange = (value) => {
+    
+  // }
+
   return (
     <>
+    <ToastContainer />
       <div>
         {/***Top Cards***/}
         <Row>
@@ -82,7 +115,7 @@ export default function PrestoresDocuments () {
         <div className='container-fluid'>
           <div className="modal-header border-0">
           </div>
-          <form onSubmit={submitHandler} className="modal-body">
+          <form onSubmit={submitHandler} className="modal-body" id="myForm">
             {/* <div>{inputValues}</div> */}
             <div className="row">
               {/* First Name */}
@@ -92,7 +125,9 @@ export default function PrestoresDocuments () {
                 <label>* Qualifications</label>
                 <Select
                   placeholder="Select your Qualifications..."
-                  onChange={( s ) => setQualifications( s.map( i => i.value ) )}
+                  // onChange={( s ) => setQualifications( s.map( i => i.value ) )}
+                  value={qualifications}
+                  onChange={(v) => setQualifications(v)}
                   isMulti options={qualificationOptions} />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.qualifications}</p>
               </div>

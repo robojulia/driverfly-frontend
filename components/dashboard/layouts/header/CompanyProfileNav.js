@@ -21,9 +21,8 @@ import { useRouter } from "next/router"
 import user1 from "../../../../public/dashboard/assets/images/users/user1.jpg";
 
 
-export default function DriverProfileNav(props) {
+export default function CompanyProfileNav(props) {
 
-    const [isOpen, setIsOpen] = React.useState(props.isOpen);
     const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
     const toggle = () => setDropdownOpen((prevState) => !prevState);
@@ -45,13 +44,13 @@ export default function DriverProfileNav(props) {
                                 height="30"
 
                             />
-                            <span>{props.user.name}.</span>
+                            <span>{props.user.name || "DriverFly User"}.</span>
                             <p></p>
                         </div>
 
                     </DropdownToggle >
                     <DropdownMenu>
-                        <DropdownItem>Account Settings</DropdownItem>
+                        <DropdownItem >Account Settings</DropdownItem>
                         <DropdownItem>Integrations</DropdownItem>
                         <DropdownItem>Billing & Subscriptions</DropdownItem>
                         <DropdownItem>Company Profile</DropdownItem>
