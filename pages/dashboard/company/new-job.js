@@ -11,11 +11,19 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useRouter } from 'next/router';
 import Link from "next/link";
+import Select from 'react-select'
 
+
+const options = [
+    { value: 'internal', label: 'Internal' },
+    { value: 'external url', label: 'External URL' },
+    { value: 'by email', label: 'By Email' }
+]
 
 export default function NewJobs() {
     const router = useRouter();
     const { authCompany } = useRedirect();
+    const [qualifications, setQualifications] = useState( [] )
 
     authCompany()
 
@@ -33,7 +41,7 @@ export default function NewJobs() {
         location: user.location,
         state: user.state,
         country: user.country,
-        city: user.city,
+        expiry_date: user.expiry_date,
         zipcode: user.zipcode,
 
     })
@@ -93,10 +101,10 @@ export default function NewJobs() {
         }
 
 
-        //City validation
+        //expiry_date validation
 
-        if (!inputValues.city) {
-            errors.city = "City is required"
+        if (!inputValues.expiry_date) {
+            errors.expiry_date = "expiry_date is required"
         }
 
 
@@ -132,7 +140,7 @@ export default function NewJobs() {
                     user.location = data.data.user.location
                     user.state = data.data.user.state
                     user.country = data.data.user.country
-                    user.city = data.data.user.city
+                    user.expiry_date = data.data.user.expiry_date
                     user.zipcode = data.data.user.zipcode
                     setAuth(user)
                     setColor("green")
@@ -146,6 +154,12 @@ export default function NewJobs() {
                         draggable: true,
                         progress: undefined,
                     });
+                    setQualifications([])
+                    setResume(null)
+                    setCommercial_driving_license(null)
+                    setMedical_card(null)
+                    document.getElementById("myForm").reset();
+
                     setTimeout(() => {
                         setServerValidation('')
                     }, 5000);
@@ -182,7 +196,9 @@ export default function NewJobs() {
 
 
     return (
+
         <>
+
             <ToastContainer />
             <div>
 
@@ -190,59 +206,210 @@ export default function NewJobs() {
                     <h1>Add New Jobs</h1>
                 </Row>
                 <div className='container-fluid'>
-                    <div className="modal-header border-0">
+                    <div className="modal-header border-0 add_job__container">
                     </div>
-                    <form className="modal-body" >
+                    <form className="modal-body" id="myForm" >
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
-                                <label>Title</label>
-                                <input onChange={(e) => handleChange(e)} name="title" value={inputValues.title} type="text" className="form-control" placeholder="Title" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.title}</p>
+                                <label>Expiry Date</label>
+                                <input onChange={(e) => handleChange(e)} name="expiry_date" value={inputValues.expiry_date} type="date" className="form-control" />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.expiry_date}</p>
                             </div>
+
                             <div className="col-lg-6 col-12 mt-3">
-                                <label>Company</label>
-                                <input onChange={(e) => handleChange(e)} name="company" value={inputValues.company} type="text" className="form-control" placeholder="Company" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.company}</p>
-                            </div>
-                        </div>
-                        <div className='row'>
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Category</label>
-                                <input onChange={(e) => handleChange(e)} name="title" value={inputValues.category} value={user.category} className="form-control" placeholder="Category" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.category}</p>
-                            </div>
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Location</label>
-                                <input type="number" onChange={(e) => handleChange(e)} name="location" value={inputValues.location} className="form-control" placeholder="Location" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.location}</p>
+                                <label>Application Deadline Date</label>
+                                <input onChange={(e) => handleChange(e)} name="application_deadline_date" value={inputValues.application_deadline_date} type="date" className="form-control" />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.application_deadline_date}</p>
                             </div>
                         </div>
                         <div className="row">
+                        <div className="col-12 mt-3">
+                <label>Job Apply Type</label>
+                <Select
+                  placeholder="Select your Qualifications..."
+                  // onChange={( s ) => setQualifications( s.map( i => i.value ) )}
+                  value={options}
+                  onChange={(v) => setQualifications(v)}
+                  isMulti options={options} />
+                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.options}</p>
+              </div>
+
                             <div className="col-lg-6 col-12 mt-3">
-                                <label>Country</label>
-                                <input onChange={(e) => handleChange(e)} name="country" value={inputValues.country} type="text" className="form-control" placeholder="Country" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.country}</p>
+                                <label>Job Apply Email</label>
+                                <input onChange={(e) => handleChange(e)} name="email" value={inputValues.email} type="text" className="form-control" placeholder="Email" />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.email}</p>
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-lg-6 col-12 mt-3">
+                                <label>Min. Salary</label>
+                                <input onChange={(e) => handleChange(e)} name="min_salary" value={inputValues.min_salary} type="number" className="form-control" placeholder="Min Salary" />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.min_salary}</p>
+                            </div>
+
+                            <div className="col-lg-6 col-12 mt-3">
+                                <label>Max. Salary</label>
+                                <input onChange={(e) => handleChange(e)} name="max_salary" value={inputValues.max_salary} type="number" className="form-control" placeholder="Max Salary" />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.max_salary}</p>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-lg-6 col-12 mt-3">
+                                <label>Salary Type</label>
+                                <select name="salary_type" id="salary_type" className="w-100 select_pading" >
+                                    <option value="monthly">Monthly</option>
+                                    <option value="weekly">weekly</option>
+                                    <option value="daily">Daily</option>
+                                    <option value="Hourly">Hourly</option>
+                                    <option value="Yearly">Yearly</option>
+                                </select>
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.salary_type}</p>
                             </div>
                             <div className="col-lg-6 col-12 mt-3">
-                                <label>State</label>
-                                <input onChange={(e) => handleChange(e)} name="state" value={inputValues.state} type="text" className="form-control" placeholder="State" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.state}</p>
+                                <label>Posted By</label>
+                                <input onChange={(e) => handleChange(e)} name="posted_by" value={inputValues.posted_by} type="text" className="form-control" placeholder="Posted By" />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.posted_by}</p>
+                            </div>
+
+
+                        </div>
+                        <div className="row">
+                            <div className="col-lg-6 col-12 mt-3">
+                                <label className="w-100">Featured</label>
+                                <input onChange={(e) => handleChange(e)} name="featured" value={inputValues.featured} type="checkbox" className="job_check_box" id="featured" value="featured" />
+                                <label className="ml-4" for="featured"> Featured jobs will be sticky during searches, and can be styled differently.</label><br></br>
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.featured}</p>
+
+                            </div>
+                            <div className="col-lg-6 col-12 mt-3">
+                                <label className="w-100">Urgent Job</label>
+                                <input onChange={(e) => handleChange(e)} name="urgent_job" value={inputValues.urgent_job} type="checkbox" className="job_check_box" id="urgent_job" value="urgent job" />
+                                <label className="ml-4" for="urgent_job">  Urgent jobs will be sticky during searches, and can be styled differently.</label><br></br>
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.urgent_job}</p>
+
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-lg-6 col-12 mt-3">
+                                <label className="w-100">Filled</label>
+                                <input onChange={(e) => handleChange(e)} name="filled" value={inputValues.filled} type="checkbox" className="job_check_box" id="filled" value="filled job" />
+                                <label className="ml-4" for="filled">  Filled listings will no longer accept applications.</label><br></br>
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.filled}</p>
+
+                            </div>
+                        </div>
+                        <div className="row">
+
+                            <div className="col-12 mt-3">
+                                <label>Posted By</label>
+                                <input onChange={(e) => handleChange(e)} name="posted_by" value={inputValues.posted_by} type="text" className="form-control" placeholder="Posted By" />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.posted_by}</p>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-lg-6 col-12 mt-3">
+                                <label className="w-100">Areas Covered</label>
+                                <input name="area_covered" type="checkbox" className="job_check_box" id="area_covered" value="Area Covered" />
+                                <label className="ml-4" for="area_covered"> Local</label><br></br>
+                                <input name="area_covered" type="checkbox" className="job_check_box" id="area_covered" value=" Regional" />
+                                <label className="ml-4" for="area_covered"> Regional</label><br></br>
+                                <input name="area_covered" type="checkbox" className="job_check_box" id="area_covered" value=" OTR" />
+                                <label className="ml-4" for="area_covered"> OTR</label><br></br>
+                                <input name="area_covered" type="checkbox" className="job_check_box" id="area_covered" value=" Cross Border" />
+                                <label className="ml-4" for="area_covered"> Cross Border</label><br></br>
+
                             </div>
 
                         </div>
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
-                                <label>City</label>
-                                <input onChange={(e) => handleChange(e)} name="city" value={inputValues.city} type="text" className="form-control" placeholder="City" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.city}</p>
+                                <label>Full-time/Part-time</label>
+                                <select name="full_part_time" id="full_part_time" className="w-100 select_pading" >
+                                    <option value="part-time">Part-time</option>
+                                    <option value="Full-time">Full-time</option>
+                                    <option value="full-time_part-time">Either Full-time or Part-time</option>
+
+                                </select>
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.full_part_time}</p>
+                            </div>
+                            <div className="col-lg-6 col-12 mt-3">
+                                <label>Employment Type</label>
+                                <select name="employment_type" id="employment_type" className="w-100 select_pading" >
+                                    <option value="w-2">W-2</option>
+                                    <option value="1999">1999</option>
+                                </select>
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.employment_type}</p>
                             </div>
 
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Zipcode</label>
-                                <input onChange={(e) => handleChange(e)} name="zipcode" value={inputValues.zipcode} type="text" className="form-control" placeholder="Zipcode" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.zipcode}</p>
-                            </div>
+
                         </div>
+                        <div className="row">
+                            <div className="col-lg-6 col-12 mt-3">
+                                <label className="w-100">Type of Delivery</label>
+                                <input name="type_of_delivery" type="checkbox" className="job_check_box" id="type_of_delivery" value="Touch" />
+                                <label className="ml-4" for="type_of_delivery"> Touch</label><br></br>
+                                <input name="type_of_delivery" type="checkbox" className="job_check_box" id="type_of_delivery" value="  No Touch" />
+                                <label className="ml-4" for="type_of_delivery"> No Touch</label><br></br>
+                                <input name="type_of_delivery" type="checkbox" className="job_check_box" id="type_of_delivery" value="  Drop-and-hook" />
+                                <label className="ml-4" for="type_of_delivery"> Drop-and-hook</label><br></br>
+                                <input name="type_of_delivery" type="checkbox" className="job_check_box" id="type_of_delivery" value=" Dedicated Lanes" />
+                                <label className="ml-4" for="type_of_delivery">Dedicated Lanes</label><br></br>
+
+                            </div>
+
+                        </div>
+                        <div className="row">
+                            <div className="col-lg-6 col-12 mt-3">
+                                <label className="w-100">Accepting Drivers From...</label>
+                                <input name="accepting_drivers_from" type="checkbox" className="job_check_box" id="accepting_drivers_from" value="Anywhere in the US" />
+                                <label className="ml-4" for="accepting_drivers_from"> Anywhere in the US</label><br></br>
+                                <input name="accepting_drivers_from" type="checkbox" className="job_check_box" id="accepting_drivers_from" value="  Alabama" />
+                                <label className="ml-4" for="accepting_drivers_from">  Alabama</label><br></br>
+                                <input name="accepting_drivers_from" type="checkbox" className="job_check_box" id="accepting_drivers_from" value=" Alaska" />
+                                <label className="ml-4" for="accepting_drivers_from">  Alaska</label><br></br>
+                                <input name="accepting_drivers_from" type="checkbox" className="job_check_box" id="accepting_drivers_from" value="Arizona" />
+                                <label className="ml-4" for="accepting_drivers_from">Arizona</label><br></br>
+
+                                <input name="accepting_drivers_from" type="checkbox" className="job_check_box" id="accepting_drivers_from" value="Anywhere in the US" />
+                                <label className="ml-4" for="accepting_drivers_from"> Anywhere in the US</label><br></br>
+                                <input name="accepting_drivers_from" type="checkbox" className="job_check_box" id="accepting_drivers_from" value="  Alabama" />
+                                <label className="ml-4" for="accepting_drivers_from">  Alabama</label><br></br>
+                                <input name="accepting_drivers_from" type="checkbox" className="job_check_box" id="accepting_drivers_from" value=" Alaska" />
+                                <label className="ml-4" for="accepting_drivers_from">  Alaska</label><br></br>
+                                <input name="accepting_drivers_from" type="checkbox" className="job_check_box" id="accepting_drivers_from" value="Arizona" />
+                                <label className="ml-4" for="accepting_drivers_from">Arizona</label><br></br>
+
+                            </div>
+
+                        </div>
+                        <div className="row">
+                            <div className="col-lg-6 col-12 mt-3">
+                                <label className="w-100">Equipment Type</label>
+                                <input name="equipment_type" type="checkbox" className="job_check_box" id="equipment_type" value=" Tractor trailer" />
+                                <label className="ml-4" for="equipment_type">  Tractor trailer</label><br></br>
+                             </div>
+                         </div>
+                         <div className="row">
+                            <div className="col-lg-6 col-12 mt-3">
+                                <label className="w-100">Schedule</label>
+                                <input name="schedule" type="radio" className="job_check_box" id="schedule" value=" Multiple weeks on the road" />
+                                <label className="ml-4" for="schedule"> Multiple weeks on the road</label><br></br>
+                                <input name="schedule" type="radio" className="job_check_box" id="schedule" value=" Multiple weeks on the road" />
+                                <label className="ml-4" for="schedule"> Multiple weeks on the road</label><br></br>
+                             </div>
+                         </div>
+                         <div className="row">
+                            <div className="col-lg-6 col-12 mt-3">
+                                <label className="w-100">Pay Structure</label>
+                                <input name="pay_structure" type="checkbox" className="job_check_box" id="pay_structure" value="Rate per mile" />
+                                <label className="ml-4" for="pay_structure"> Rate per mile</label><br></br>
+                                <input name="pay_structure" type="checkbox" className="job_check_box" id="pay_structure" value="Percent per move" />
+                                <label className="ml-4" for="pay_structure">Percent per move</label><br></br>
+                            </div>
+
+                        </div>
+
                         <div className="border-0 mt-5">
                             {serverValidation instanceof Array ? serverValidation.map((inValid) => {
                                 return (
@@ -262,6 +429,7 @@ export default function NewJobs() {
                     </form>
                 </div>
             </div>
+
         </>
     )
 };
