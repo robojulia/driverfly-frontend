@@ -50,8 +50,16 @@
     color: #fff;
 
 }
+
+.dashboardsidebar li a {
+    text-decoration: none;
+    display: block;
+    color: #fff;
+    margin-left: 10px;
+}
 .dashboardsidebar li {
-    padding: 0px 0px;
+    padding: 16px 10px;
+
   
 } 
 .dashboardsidebar .active {
