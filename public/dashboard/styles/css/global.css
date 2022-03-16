@@ -46,7 +46,24 @@
 .dashboardsidebar li {
     padding: 0;
 }
+.dashboardsidebar li a {
+    text-decoration: none;
+    display: block;
+    color: #fff;
+    margin-left: 10px;
+}
+.dashboardsidebar li {
+    padding: 16px 10px;
+  
+} 
+.dashboardsidebar .active {
 
+    background-color: #fff;
+    color: #000;
+}
+.dashboardsidebar .active a {
+    color: #000;
+}
 .space {
     height: 100vh;
 }
