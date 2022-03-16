@@ -43,10 +43,25 @@
     background-color: #fff !important;
 }
 
-.dashboardsidebar li {
-    padding: 0;
-}
 
+.dashboardsidebar li a {
+    text-decoration: none;
+    display: block;
+    color: #fff;
+
+}
+.dashboardsidebar li {
+    padding: 0px 0px;
+  
+} 
+.dashboardsidebar .active {
+
+    background-color: #fff;
+    color: #000;
+}
+.dashboardsidebar .active a {
+    color: #000;
+}
 .space {
     height: 100vh;
 }
@@ -138,3 +153,13 @@
         overflow-x: auto;
     }
 }
+.select_pading{
+    padding: 14px;
+    outline: #ced4da;
+    border: 1px solid #ced4da;
+    background: white;
+    border-radius: 5px;
+}
+.job_check_box { 
+    margin: 10px;
+ }
