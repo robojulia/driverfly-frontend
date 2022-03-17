@@ -3,80 +3,48 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 
-const navigation = [
-  {
-    title: "Dashboard",
-    href: "/dashboard/driver",
-    icon: "bi bi-speedometer2",
-    
-  },
-
-  {
-    title: "Profile",
-    href: "/dashboard/driver/profile",
-    icon: "bi bi-patch-check",
-  },
-  {
-    title: "My Applications",
-    href: "/dashboard/driver/application",
-    icon: "bi bi-hdd-stack",
-  },
-  {
-    title: "Driver intake information",
-    href: "/dashboard/driver/driver-intake-information",
-    icon: "bi bi-card-text",
-  },
-  {
-    title: "Suggested jobs",
-    href: "/dashboard/driver/suggested-jobs",
-    icon: "bi bi-columns",
-  },
-  {
-    title: "Prestored Resume/ documents",
-    href: "/dashboard/driver/prestored-document",
-    icon: "bi bi-layout-split",
-  },
-
-];
-
 const Sidebar = ({ showMobilemenu }) => {
-  let curl = useRouter();
-  const location = curl.pathname;
+  const router = useRouter();
 
   return (
-   
+
+    <div className="">
+      <div className="d-flex align-items-center bg_color">
+        <Button
+          close
+          size="sm"
+          className="ms-auto d-lg-none"
+          onClick={showMobilemenu}
+        ></Button>
+      </div>
       <div className="">
-        <div className="d-flex align-items-center bg_color">
-          <Button
-            close
-            size="sm"
-            className="ms-auto d-lg-none"
-            onClick={showMobilemenu}
-          ></Button>
-        </div>
         <div className="">
-          <Nav vertical className="sidebarNav">
-            {navigation.map((navi, index) => (
-              <NavItem key={index} className="sidenav-bg">
-                <Link href={navi.href}>
-                  <a
-                    className={
-                      location === navi.href
-                        ? "text-primary nav-link py-3"
-                        : "nav-link text-secondary py-3"
-                    }
-                  >
-                    <i className={navi.icon}></i>
-            
-                    <span className="ms-3 d-inline-block">{navi.title}</span>
-                  </a>
-                </Link>
-              </NavItem>
-            ))}
-          </Nav>
+          <ul className="dashboardsidebar">
+            <li className={router.pathname == "/dashboard/driver" ? "active" : ""}>
+              <Link className="sidenav-bg" href="/dashboard/driver">Dashboard</Link>
+            </li>
+            <li className={router.pathname == "/dashboard/driver/profile" ? "active" : ""}>
+              <Link href="/dashboard/driver/profile">Profile</Link>
+
+            </li>
+            <li className={router.pathname == "/dashboard/driver/application" ? "active" : ""}>
+              <Link href="/dashboard/driver/application">My Application</Link>
+            </li>
+            <li className={router.pathname == "/dashboard/driver/driver-intake-information" ? "active" : ""}>
+              <Link href="/dashboard/driver/driver-intake-information">Driver Intake Information</Link>
+            </li>
+            <li className={router.pathname == "/dashboard/driver/suggested-jobs" ? "active" : ""}>
+              <Link href="/dashboard/driver/suggested-jobs">Suggested Jobs</Link>
+            </li>
+            <li className={router.pathname == "/dashboard/driver/prestored-document" ? "active" : ""}>
+              <Link href="/dashboard/driver/prestored-document"> Prestored Resume/ documents</Link>
+            </li>
+          </ul>
+
         </div>
       </div>
-   
+    </div>
+
   );
 };
 
