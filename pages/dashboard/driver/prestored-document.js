@@ -2,17 +2,25 @@ import { Row } from "reactstrap"
 import FullLayout from "../../../components/dashboard/layouts/FullLayout"
 import useRedirect from '../../../hooks/useRedirect'
 import Select from 'react-select'
-import { useFormik } from "formik"
-import axios from "axios";
-import { useState } from "react"
+import axios from "axios"
+import { useEffect, useState } from "react"
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import useStorage from "../../../hooks/useStorage"
+import useAuth from "../../../hooks/useAuth"
 
 
 export default function PrestoresDocuments () {
 
   const localStorage = useStorage()
+  const [myUser, setUser] = useState( null )
+
+  useEffect( async () => {
+    // set token
+    const user = JSON.parse( localStorage.getItem( 'user' ) )
+    setUser( user )
+  } ,[])
+
   const [qualifications, setQualifications] = useState( [] )
 
   const [resume, setResume] = useState( null )
@@ -21,10 +29,20 @@ export default function PrestoresDocuments () {
   const [validation, setValidation] = useState()
 
   const qualificationOptions = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' }
+    { value: "high-school-diploma", label: "High School Diploma" },
+    { value: "certificate-sub-bachelor", label: "Certificate (Sub-bachelor or vocational)" },
+    { value: "diploma-sub-bachelor", label: "Diploma (Sub-bachelor or vocational)" },
+    { value: "associate-degree", label: "Associate Degree" },
+    { value: "bachelor-degree", label: "Bachelor's Degree" },
+    { value: "first-professional-degree", label: "First Professional Degree" },
+    { value: "post-bachelor-diploma/certificate", label: "Post-bachelor's Diploma/Certificate" },
+    { value: "master-degree", label: "Master's Degree" },
+    { value: "certificate-advanced-study", label: "Certificate of Advanced Study" },
+    { value: "education-specialist-degree", label: "Education Specialist Degree" },
+    { value: "doctorate", label: "Doctorate" }
   ]
+
+  const { setAuth } = useAuth()
 
   function Upload ( event ) {
     if ( event.target.files && event.target.files[0] ) {
@@ -46,7 +64,7 @@ export default function PrestoresDocuments () {
   authDriver()
 
 
-  const submitHandler = async( e ) => {
+  const submitHandler = async ( e ) => {
     e.preventDefault()
     let errors = []
     if ( qualifications.length < 1 ) {
@@ -66,21 +84,29 @@ export default function PrestoresDocuments () {
 
     if ( Object.keys( errors ).length == 0 ) {
       const formData = new FormData()
-      formData.set("qualifications", qualifications.map(q => q.value))
+      formData.set( "qualifications", qualifications.map( q => q.value ) )
       formData.append( "resume", resume )
       formData.append( "commercial_driving_license", commercial_driving_license )
       formData.append( "medical_card", medical_card )
       // for ( let [key, value] of formData.entries() ) {
       //   console.dir( `${key}: ${value}` )
       // }
-      const token = JSON.parse(localStorage.getItem('user')).token
-      await axios.post( `${process.env.BASE_URL_API}/user/documents`, formData, {
+      const resp = await axios.post( `${process.env.BASE_URL_API}/user/documents`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${myUser.token}`
         }
-      })
-      toast.success("Documents uploaded successfully", {
+      } )
+      const user = {
+        ...JSON.parse( localStorage.getItem( 'user' ) ),
+        commercial_driving_license: resp.data.commercial_driving_license,
+        qualifications: resp.data.qualifications,
+        medical_card: resp.data.medical_card,
+        resume: resp.data.resume,
+        
+      }
+      setAuth(user)
+      toast.success( "Documents uploaded successfully", {
         position: "bottom-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -88,30 +114,33 @@ export default function PrestoresDocuments () {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-      });
-      
-      setQualifications([])
-      setResume(null)
-      setCommercial_driving_license(null)
-      setMedical_card(null)
-      document.getElementById("myForm").reset();
+      } )
+
+      // setQualifications([])
+      // setResume(null)
+      // setCommercial_driving_license(null)
+      // setMedical_card(null)
+      // document.getElementById("myForm").reset();
 
     }
   }
-  
 
   // const handleChange = (value) => {
-    
+
   // }
 
   return (
     <>
-    <ToastContainer />
+      <ToastContainer />
       <div>
         {/***Top Cards***/}
         <Row>
           <h1>Prestored Document</h1>
         </Row>
+        {myUser && <a href={"http://localhost:4000/"+myUser.resume} download> Resume </a>} <br />
+        {myUser && <a href={"http://localhost:4000/"+myUser.commercial_driving_license} download> License </a>} <br />
+        {myUser && <a href={"http://localhost:4000/"+myUser.medical_card} download> Medical Card </a>} <br />
+
         <div className='container-fluid'>
           <div className="modal-header border-0">
           </div>
@@ -127,9 +156,9 @@ export default function PrestoresDocuments () {
                   placeholder="Select your Qualifications..."
                   // onChange={( s ) => setQualifications( s.map( i => i.value ) )}
                   value={qualifications}
-                  onChange={(v) => setQualifications(v)}
+                  onChange={( v ) => setQualifications( v )}
                   isMulti options={qualificationOptions} />
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.qualifications}</p>
+                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.qualifications}</p>
               </div>
             </div>
             <div className="row">

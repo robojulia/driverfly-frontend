@@ -60,6 +60,7 @@ export default function Login() {
                     // console.log("handle success", data);
                     if (data.status == 201) {
                         console.log("handle success data", data.data);
+                        console.log(data.data);
                         setAuth(data.data.user)
 
                         if (isDriver()) {
