@@ -1,5 +1,6 @@
 
-import { Row, Col, Table, Card, CardTitle, CardBody, Checkbox } from "reactstrap";
+import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
+import { Checkbox } from 'pretty-checkbox-react';
 import LogoutButton from '../../../components/buttons/Logout';
 import FullLayout from "../../../components/dashboard/layouts/Layout/FullLayout";
 import useRedirect from '../../../hooks/useRedirect';
@@ -15,14 +16,25 @@ import Select from 'react-select'
 import { apply_type } from '../../../enums/jobs/job-fields'
 import { salary_type } from '../../../enums/jobs/job-fields'
 import { job_type } from '../../../enums/jobs/job-fields'
-import {  delivery_type} from '../../../enums/jobs/job-fields'
- 
+import { delivery_type } from '../../../enums/jobs/job-fields'
+import { mvr_requirement } from '../../../enums/jobs/job-fields'
+import { areas_covered } from '../../../enums/jobs/job-fields'
+import { accepting_drivers_from } from '../../../enums/jobs/job-fields'
+import { equipment_type } from '../../../enums/jobs/job-fields'
+import { schedule } from '../../../enums/jobs/job-fields'
+import { pay_structure } from '../../../enums/jobs/job-fields'
+
+
+
+
+
+import { Check } from "react-feather";
 
 
 export default function NewJobs() {
     const router = useRouter();
     const { authCompany } = useRedirect();
- 
+
     const [ApplyType, setApplyType] = useState([])
     const apply_type_options = []
     for (const [key, itemVal] of Object.entries(apply_type)) {
@@ -47,13 +59,7 @@ export default function NewJobs() {
         })
     }
 
-    const [DeliveryType, setDeliveryType] = useState([])
-    const delivery_type_options = []
-    for (const [key, itemVal] of Object.entries(delivery_type)) {
-        delivery_type_options.push({
-            value: itemVal, label: itemVal
-        })
-    }
+
 
 
     authCompany()
@@ -98,9 +104,9 @@ export default function NewJobs() {
         setServerValidation('')
 
 
-         //expiry date validation
+        //expiry date validation
 
-         if (!inputValues.expiry_date) {
+        if (!inputValues.expiry_date) {
             errors.expiry_date = "Expiry Date is required"
         }
 
@@ -121,8 +127,8 @@ export default function NewJobs() {
             errors.min_salary = "Min Salary is required"
         }
 
-         //max_salary validation
-         if (!inputValues.max_salary) {
+        //max_salary validation
+        if (!inputValues.max_salary) {
             errors.max_salary = "Max Salary is required"
         }
 
@@ -143,9 +149,9 @@ export default function NewJobs() {
             errors.urgent_job = "Urgent Job is required"
         }
 
-          //Fill Job validation
+        //Fill Job validation
 
-          if (!inputValues.filled) {
+        if (!inputValues.filled) {
             errors.filled = "Fill is required"
         }
 
@@ -155,8 +161,14 @@ export default function NewJobs() {
             errors.area_covered = "Area Covered is required"
         }
 
+        //Max Rate Per Mile ($) validation
 
-       
+        if (!inputValues.max_rate_per_mile) {
+            errors.max_rate_per_mile = "Max Rate Per Mile ($) is required"
+        }
+
+
+
 
 
         // if (!inputValues.confirmPassword) {
@@ -348,20 +360,16 @@ export default function NewJobs() {
 
                             </div>
                         </div>
-                      
+
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label className="w-100">Areas Covered</label>
-                                <input name="area_covered" type="checkbox" className="job_check_box" id="area_covered" value="Area Covered" />
-                                <label className="ml-4" for="area_covered"> Local</label><br></br>
-                                <input name="area_covered" type="checkbox" className="job_check_box" id="area_covered" value=" Regional" />
-                                <label className="ml-4" for="area_covered"> Regional</label><br></br>
-                                <input name="area_covered" type="checkbox" className="job_check_box" id="area_covered" value=" OTR" />
-                                <label className="ml-4" for="area_covered"> OTR</label><br></br>
-                                <input name="area_covered" type="checkbox" className="job_check_box" id="area_covered" value=" Cross Border" />
-                                <label className="ml-4" for="area_covered"> Cross Border</label><br></br>
-                                
-
+                                {
+                                    areas_covered &&
+                                    Object.entries(areas_covered).map((val) => {
+                                        return (<div><input type="checkbox" name="areas_covered" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
+                                    })
+                                }
                             </div>
 
                         </div>
@@ -390,68 +398,82 @@ export default function NewJobs() {
                             <div className="col-lg-6 col-12 mt-3">
                                 <label className="w-100">Type of Delivery</label>
 
-
-                                <Checkbox
-                                    placeholder="Select Type of Delivery"
-                                    value={DeliveryType}
-                                    onChange={(v) => DeliveryType(v)}
-                                    isMulti options={delivery_type_options} />
-
-
-                               
-
+                                {
+                                    delivery_type &&
+                                    Object.entries(delivery_type).map((val) => {
+                                        return (<div><input type="checkbox" name="delivery_type" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
+                                    })
+                                }
                             </div>
 
                         </div>
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label className="w-100">Accepting Drivers From...</label>
-                                <input name="accepting_drivers_from" type="checkbox" className="job_check_box" id="accepting_drivers_from" value="Anywhere in the US" />
-                                <label className="ml-4" for="accepting_drivers_from"> Anywhere in the US</label><br></br>
-                                <input name="accepting_drivers_from" type="checkbox" className="job_check_box" id="accepting_drivers_from" value="  Alabama" />
-                                <label className="ml-4" for="accepting_drivers_from">  Alabama</label><br></br>
-                                <input name="accepting_drivers_from" type="checkbox" className="job_check_box" id="accepting_drivers_from" value=" Alaska" />
-                                <label className="ml-4" for="accepting_drivers_from">  Alaska</label><br></br>
-                                <input name="accepting_drivers_from" type="checkbox" className="job_check_box" id="accepting_drivers_from" value="Arizona" />
-                                <label className="ml-4" for="accepting_drivers_from">Arizona</label><br></br>
-
-                                <input name="accepting_drivers_from" type="checkbox" className="job_check_box" id="accepting_drivers_from" value="Anywhere in the US" />
-                                <label className="ml-4" for="accepting_drivers_from"> Anywhere in the US</label><br></br>
-                                <input name="accepting_drivers_from" type="checkbox" className="job_check_box" id="accepting_drivers_from" value="  Alabama" />
-                                <label className="ml-4" for="accepting_drivers_from">  Alabama</label><br></br>
-                                <input name="accepting_drivers_from" type="checkbox" className="job_check_box" id="accepting_drivers_from" value=" Alaska" />
-                                <label className="ml-4" for="accepting_drivers_from">  Alaska</label><br></br>
-                                <input name="accepting_drivers_from" type="checkbox" className="job_check_box" id="accepting_drivers_from" value="Arizona" />
-                                <label className="ml-4" for="accepting_drivers_from">Arizona</label><br></br>
-
+                                {
+                                    accepting_drivers_from &&
+                                    Object.entries(accepting_drivers_from).map((val) => {
+                                        return (<div><input type="checkbox" name="accepting_drivers_from" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
+                                    })
+                                }
                             </div>
 
                         </div>
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label className="w-100">Equipment Type</label>
-                                <input name="equipment_type" type="checkbox" className="job_check_box" id="equipment_type" value=" Tractor trailer" />
-                                <label className="ml-4" for="equipment_type">  Tractor trailer</label><br></br>
+                                {
+                                    equipment_type &&
+                                    Object.entries(equipment_type).map((val) => {
+                                        return (<div><input type="checkbox" name="equipment_type" value={val[1]} /> <span className="job_check_box"  >{val[1]} </span></div>)
+                                    })
+                                }
                             </div>
                         </div>
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label className="w-100">Schedule</label>
-                                <input name="schedule" type="radio" className="job_check_box" id="schedule" value=" Multiple weeks on the road" />
-                                <label className="ml-4" for="schedule"> Multiple weeks on the road</label><br></br>
-                                <input name="schedule" type="radio" className="job_check_box" id="schedule" value=" Multiple weeks on the road" />
-                                <label className="ml-4" for="schedule"> Multiple weeks on the road</label><br></br>
+                                {
+                                    schedule &&
+                                    Object.entries(schedule).map((val) => {
+                                        return (<div><input type="radio" name="schedule" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
+                                    })
+                                }
                             </div>
                         </div>
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label className="w-100">Pay Structure</label>
-                                <input name="pay_structure" type="checkbox" className="job_check_box" id="pay_structure" value="Rate per mile" />
-                                <label className="ml-4" for="pay_structure"> Rate per mile</label><br></br>
-                                <input name="pay_structure" type="checkbox" className="job_check_box" id="pay_structure" value="Percent per move" />
-                                <label className="ml-4" for="pay_structure">Percent per move</label><br></br>
+                                {
+                                    pay_structure &&
+                                    Object.entries(pay_structure).map((val) => {
+                                        return (<div><input type="checkbox" name="pay_structure" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
+                                    })
+                                }
                             </div>
 
+                        </div>
+                        <div className="row">
+                            <div className="col-lg-6 col-12 mt-3">
+                                <label>Minimum Age</label>
+                                <select class="form-select" aria-label="Default select example">
+                                    <option selected> Select Age</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                    <option value="20">20</option>
+                                    <option value="18">21</option>
+                                    <option value="19">22</option>
+                                    <option value="20">23</option>
+                                    <option value="18">24</option>
+                                </select>
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.minimum_age}</p>
+                            </div>
+
+                            <div className="col-lg-6 col-12 mt-3">
+                                <label>Max Rate Per Mile ($)</label>
+                                <input onChange={(e) => handleChange(e)} name="max_rate_per_mile" value={inputValues.max_rate_per_mile} type="text" className="form-control" />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.max_rate_per_mile}</p>
+                            </div>
                         </div>
 
                         <div className="border-0 mt-5">
