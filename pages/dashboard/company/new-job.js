@@ -23,9 +23,8 @@ import { accepting_drivers_from } from '../../../enums/jobs/job-fields'
 import { equipment_type } from '../../../enums/jobs/job-fields'
 import { schedule } from '../../../enums/jobs/job-fields'
 import { pay_structure } from '../../../enums/jobs/job-fields'
-
-
-
+import {special_accommodations } from '../../../enums/jobs/job-fields'
+import {special_endorsements_required } from '../../../enums/jobs/job-fields'
 
 
 import { Check } from "react-feather";
@@ -58,7 +57,13 @@ export default function NewJobs() {
             value: itemVal, label: itemVal
         })
     }
-
+    const [MvrRequirement, setMvrRequirement] = useState([])
+    const mvr_requirement_options = []
+    for (const [key, itemVal] of Object.entries(mvr_requirement)) {
+        mvr_requirement_options.push({
+            value: itemVal, label: itemVal
+        })
+    }
 
 
 
@@ -167,7 +172,11 @@ export default function NewJobs() {
             errors.max_rate_per_mile = "Max Rate Per Mile ($) is required"
         }
 
+        //Min Rate Per Mile ($) validation
 
+        if (!inputValues.min_rate_per_mile) {
+            errors.min_rate_per_mile = "Min Rate Per Mile ($) is required"
+        }
 
 
 
@@ -221,6 +230,7 @@ export default function NewJobs() {
                     setSalaryType([])
                     setJobType([])
                     DeliveryType([])
+                    MvrRequirement([])
 
                     document.getElementById("myForm").reset();
 
@@ -405,8 +415,18 @@ export default function NewJobs() {
                                     })
                                 }
                             </div>
-
+                          
+                            <div className="col-lg-6 col-12 mt-3">
+                                <label className="w-100">Schedule</label>
+                                {
+                                    schedule &&
+                                    Object.entries(schedule).map((val) => {
+                                        return (<div><input type="radio" name="schedule" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
+                                    })
+                                }
+                            </div>
                         </div>
+
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label className="w-100">Accepting Drivers From...</label>
@@ -418,8 +438,7 @@ export default function NewJobs() {
                                 }
                             </div>
 
-                        </div>
-                        <div className="row">
+                      
                             <div className="col-lg-6 col-12 mt-3">
                                 <label className="w-100">Equipment Type</label>
                                 {
@@ -430,17 +449,7 @@ export default function NewJobs() {
                                 }
                             </div>
                         </div>
-                        <div className="row">
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label className="w-100">Schedule</label>
-                                {
-                                    schedule &&
-                                    Object.entries(schedule).map((val) => {
-                                        return (<div><input type="radio" name="schedule" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
-                                    })
-                                }
-                            </div>
-                        </div>
+                      
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label className="w-100">Pay Structure</label>
@@ -451,7 +460,7 @@ export default function NewJobs() {
                                     })
                                 }
                             </div>
-
+4
                         </div>
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
@@ -471,8 +480,27 @@ export default function NewJobs() {
 
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>Max Rate Per Mile ($)</label>
-                                <input onChange={(e) => handleChange(e)} name="max_rate_per_mile" value={inputValues.max_rate_per_mile} type="text" className="form-control" />
+                                <input onChange={(e) => handleChange(e)} name="max_rate_per_mile" value={inputValues.max_rate_per_mile} type="text" className="form-control" placeholder="e.g. 0.60" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.max_rate_per_mile}</p>
+                            </div>
+                           
+                        </div>
+                        <div className="row">
+                        <div className="col-lg-6 col-12 mt-3">
+                                <label>Min Rate Per Mile ($)</label>
+                                <input onChange={(e) => handleChange(e)} name="max_rate_per_mile" value={inputValues.min_rate_per_mile} type="text" className="form-control" placeholder="e.g. 0.50" />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.min_rate_per_mile}</p>
+                            </div>
+
+                            <div className="col-lg-6 col-12 mt-3">
+                            <label className="w-100"> Mvr Requirement</label>
+                            <Select
+                                    placeholder="Select Mvr Requirement"
+                                    value={MvrRequirement}
+                                    onChange={(v) => setMvrRequirement(v)}
+                                    isMulti options={mvr_requirement_options} />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.MvrRequirement}</p>
+                         
                             </div>
                         </div>
 
@@ -507,3 +535,4 @@ NewJobs.getLayout = function getLayout(page) {
         </FullLayout>
     )
 }
+special_accommodations
