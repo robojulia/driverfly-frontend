@@ -1,5 +1,5 @@
 
-import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
+import { Row, Col, Table, Card, CardTitle, CardBody, Checkbox } from "reactstrap";
 import LogoutButton from '../../../components/buttons/Logout';
 import FullLayout from "../../../components/dashboard/layouts/Layout/FullLayout";
 import useRedirect from '../../../hooks/useRedirect';
@@ -12,18 +12,49 @@ import 'react-toastify/dist/ReactToastify.css'
 import { useRouter } from 'next/router';
 import Link from "next/link";
 import Select from 'react-select'
+import { apply_type } from '../../../enums/jobs/job-fields'
+import { salary_type } from '../../../enums/jobs/job-fields'
+import { job_type } from '../../../enums/jobs/job-fields'
+import {  delivery_type} from '../../../enums/jobs/job-fields'
+ 
 
-
-const options = [
-    { value: 'internal', label: 'Internal' },
-    { value: 'external url', label: 'External URL' },
-    { value: 'by email', label: 'By Email' }
-]
 
 export default function NewJobs() {
     const router = useRouter();
     const { authCompany } = useRedirect();
-    const [qualifications, setQualifications] = useState( [] )
+ 
+    const [ApplyType, setApplyType] = useState([])
+    const apply_type_options = []
+    for (const [key, itemVal] of Object.entries(apply_type)) {
+        apply_type_options.push({
+            value: itemVal, label: itemVal
+        })
+    }
+
+    const [SalaryType, setSalaryType] = useState([])
+    const salary_type_options = []
+    for (const [key, itemVal] of Object.entries(salary_type)) {
+        salary_type_options.push({
+            value: itemVal, label: itemVal
+        })
+    }
+
+    const [JobType, setJobType] = useState([])
+    const job_type_options = []
+    for (const [key, itemVal] of Object.entries(job_type)) {
+        job_type_options.push({
+            value: itemVal, label: itemVal
+        })
+    }
+
+    const [DeliveryType, setDeliveryType] = useState([])
+    const delivery_type_options = []
+    for (const [key, itemVal] of Object.entries(delivery_type)) {
+        delivery_type_options.push({
+            value: itemVal, label: itemVal
+        })
+    }
+
 
     authCompany()
 
@@ -66,46 +97,66 @@ export default function NewJobs() {
         let errors = {}
         setServerValidation('')
 
-        //Title validation
 
-        if (!inputValues.title) {
-            errors.title = "Title is required"
+         //expiry date validation
+
+         if (!inputValues.expiry_date) {
+            errors.expiry_date = "Expiry Date is required"
         }
 
-        //company validation
-        if (!inputValues.company) {
-            errors.company = "Company is required"
+        //application_deadline_date validation
+
+        if (!inputValues.application_deadline_date) {
+            errors.application_deadline_date = "Application Deadline Date is required"
         }
 
-
-        //category validation
-        if (!inputValues.category) {
-            errors.category = "Category is required"
-        }
-
-        //State validation
-
-        if (!inputValues.location) {
-            errors.location = "Location is required"
-        }
-        //Country validation
-
-        if (!inputValues.country) {
-            errors.country = "Country is required"
-        }
-
-        //Zipcode validation
-
-        if (!inputValues.zipcode) {
-            errors.zipcode = "Zipcode is required"
+        //email validation
+        if (!inputValues.email) {
+            errors.email = "Email is required"
         }
 
 
-        //expiry_date validation
-
-        if (!inputValues.expiry_date) {
-            errors.expiry_date = "expiry_date is required"
+        //min_salary validation
+        if (!inputValues.min_salary) {
+            errors.min_salary = "Min Salary is required"
         }
+
+         //max_salary validation
+         if (!inputValues.max_salary) {
+            errors.max_salary = "Max Salary is required"
+        }
+
+        //posted_by validation
+
+        if (!inputValues.posted_by) {
+            errors.posted_by = "Posted By is required"
+        }
+        //featured validation
+
+        if (!inputValues.featured) {
+            errors.featured = "Featured is required"
+        }
+
+        //Urgent Job validation
+
+        if (!inputValues.urgent_job) {
+            errors.urgent_job = "Urgent Job is required"
+        }
+
+          //Fill Job validation
+
+          if (!inputValues.filled) {
+            errors.filled = "Fill is required"
+        }
+
+        //area_covered validation
+
+        if (!inputValues.area_covered) {
+            errors.area_covered = "Area Covered is required"
+        }
+
+
+       
 
 
         // if (!inputValues.confirmPassword) {
@@ -149,15 +200,16 @@ export default function NewJobs() {
                         position: "top-right",
                         autoClose: 3000,
                         hideProgressBar: false,
-                        closeOnClick: true,
+                        closeOnClick: truApplyType,
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
                     });
-                    setQualifications([])
-                    setResume(null)
-                    setCommercial_driving_license(null)
-                    setMedical_card(null)
+                    setApplyType([])
+                    setSalaryType([])
+                    setJobType([])
+                    DeliveryType([])
+
                     document.getElementById("myForm").reset();
 
                     setTimeout(() => {
@@ -194,7 +246,6 @@ export default function NewJobs() {
 
     }
 
-
     return (
 
         <>
@@ -223,16 +274,16 @@ export default function NewJobs() {
                             </div>
                         </div>
                         <div className="row">
-                        <div className="col-12 mt-3">
-                <label>Job Apply Type</label>
-                <Select
-                  placeholder="Select your Qualifications..."
-                  // onChange={( s ) => setQualifications( s.map( i => i.value ) )}
-                  value={options}
-                  onChange={(v) => setQualifications(v)}
-                  isMulti options={options} />
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.options}</p>
-              </div>
+                            <div className=" col-lg-6 col-12 mt-3">
+                                <label>Job Apply Type</label>
+                                <Select
+                                    placeholder="Select your ApplyType..."
+                                    value={ApplyType}
+                                    onChange={(v) => setApplyType(v)}
+                                    isMulti options={apply_type_options} />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.ApplyType}</p>
+
+                            </div>
 
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>Job Apply Email</label>
@@ -257,13 +308,11 @@ export default function NewJobs() {
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>Salary Type</label>
-                                <select name="salary_type" id="salary_type" className="w-100 select_pading" >
-                                    <option value="monthly">Monthly</option>
-                                    <option value="weekly">weekly</option>
-                                    <option value="daily">Daily</option>
-                                    <option value="Hourly">Hourly</option>
-                                    <option value="Yearly">Yearly</option>
-                                </select>
+                                <Select
+                                    placeholder="Select your ApplyType..."
+                                    value={SalaryType}
+                                    onChange={(v) => setSalaryType(v)}
+                                    isMulti options={salary_type_options} />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.salary_type}</p>
                             </div>
                             <div className="col-lg-6 col-12 mt-3">
@@ -299,14 +348,7 @@ export default function NewJobs() {
 
                             </div>
                         </div>
-                        <div className="row">
-
-                            <div className="col-12 mt-3">
-                                <label>Posted By</label>
-                                <input onChange={(e) => handleChange(e)} name="posted_by" value={inputValues.posted_by} type="text" className="form-control" placeholder="Posted By" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.posted_by}</p>
-                            </div>
-                        </div>
+                      
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label className="w-100">Areas Covered</label>
@@ -318,6 +360,7 @@ export default function NewJobs() {
                                 <label className="ml-4" for="area_covered"> OTR</label><br></br>
                                 <input name="area_covered" type="checkbox" className="job_check_box" id="area_covered" value=" Cross Border" />
                                 <label className="ml-4" for="area_covered"> Cross Border</label><br></br>
+                                
 
                             </div>
 
@@ -325,13 +368,12 @@ export default function NewJobs() {
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>Full-time/Part-time</label>
-                                <select name="full_part_time" id="full_part_time" className="w-100 select_pading" >
-                                    <option value="part-time">Part-time</option>
-                                    <option value="Full-time">Full-time</option>
-                                    <option value="full-time_part-time">Either Full-time or Part-time</option>
-
-                                </select>
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.full_part_time}</p>
+                                <Select
+                                    placeholder="Select Job Type..."
+                                    value={JobType}
+                                    onChange={(v) => setJobType(v)}
+                                    isMulti options={job_type_options} />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.job_type}</p>
                             </div>
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>Employment Type</label>
@@ -347,14 +389,16 @@ export default function NewJobs() {
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label className="w-100">Type of Delivery</label>
-                                <input name="type_of_delivery" type="checkbox" className="job_check_box" id="type_of_delivery" value="Touch" />
-                                <label className="ml-4" for="type_of_delivery"> Touch</label><br></br>
-                                <input name="type_of_delivery" type="checkbox" className="job_check_box" id="type_of_delivery" value="  No Touch" />
-                                <label className="ml-4" for="type_of_delivery"> No Touch</label><br></br>
-                                <input name="type_of_delivery" type="checkbox" className="job_check_box" id="type_of_delivery" value="  Drop-and-hook" />
-                                <label className="ml-4" for="type_of_delivery"> Drop-and-hook</label><br></br>
-                                <input name="type_of_delivery" type="checkbox" className="job_check_box" id="type_of_delivery" value=" Dedicated Lanes" />
-                                <label className="ml-4" for="type_of_delivery">Dedicated Lanes</label><br></br>
+
+
+                                <Checkbox
+                                    placeholder="Select Type of Delivery"
+                                    value={DeliveryType}
+                                    onChange={(v) => DeliveryType(v)}
+                                    isMulti options={delivery_type_options} />
+
+
+                               
 
                             </div>
 
@@ -388,18 +432,18 @@ export default function NewJobs() {
                                 <label className="w-100">Equipment Type</label>
                                 <input name="equipment_type" type="checkbox" className="job_check_box" id="equipment_type" value=" Tractor trailer" />
                                 <label className="ml-4" for="equipment_type">  Tractor trailer</label><br></br>
-                             </div>
-                         </div>
-                         <div className="row">
+                            </div>
+                        </div>
+                        <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label className="w-100">Schedule</label>
                                 <input name="schedule" type="radio" className="job_check_box" id="schedule" value=" Multiple weeks on the road" />
                                 <label className="ml-4" for="schedule"> Multiple weeks on the road</label><br></br>
                                 <input name="schedule" type="radio" className="job_check_box" id="schedule" value=" Multiple weeks on the road" />
                                 <label className="ml-4" for="schedule"> Multiple weeks on the road</label><br></br>
-                             </div>
-                         </div>
-                         <div className="row">
+                            </div>
+                        </div>
+                        <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label className="w-100">Pay Structure</label>
                                 <input name="pay_structure" type="checkbox" className="job_check_box" id="pay_structure" value="Rate per mile" />
