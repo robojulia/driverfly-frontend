@@ -64,9 +64,7 @@ export default function NewJobs() {
             value: itemVal, label: itemVal
         })
     }
-
-
-
+  
     authCompany()
 
     const { authCheck, setAuth } = useAuth();
@@ -78,14 +76,21 @@ export default function NewJobs() {
     const [saveButtonDisabled, setSaveButtonDisabled] = useState(false)
 
     const [inputValues, setInputValue] = useState({
-        title: user.title,
-        company: user.company,
-        location: user.location,
-        state: user.state,
-        country: user.country,
-        expiry_date: user.expiry_date,
-        zipcode: user.zipcode,
-        ApplyType: "",
+        expiry_date: user.expiry_dates,
+        application_deadline_date: user.application_deadline_date,
+        email: user.email,
+        min_salary: user.min_salary,
+        max_salary: user.max_salary,
+        featured: user.featured,
+        posted_by: user.posted_by,
+
+        urgent_job: user.urgent_job,
+        filled: user.filled,
+        area_covered: user.area_covered,
+        min_rate_per_mile: user.min_rate_per_mile,
+        max_rate_per_mile: user.max_rate_per_mile,
+        ApplyType: user.ApplyType,
+        areas_covered: user.areas_covered,
 
     })
 
@@ -161,11 +166,11 @@ export default function NewJobs() {
             errors.filled = "Fill is required"
         }
 
-        //area_covered validation
+        // //area_covered validation
 
-        if (!inputValues.area_covered) {
-            errors.area_covered = "Area Covered is required"
-        }
+        // if (!inputValues.area_covered) {
+        //     errors.area_covered = "Area Covered is required"
+        // }
 
         //Max Rate Per Mile ($) validation
 
@@ -180,47 +185,47 @@ export default function NewJobs() {
         }
         //ApplyType validation
 
-        if (!inputValues.ApplyType) {
-            errors.ApplyType = "ApplyType is required"
-        }
-        
-         //Areas Covered validation
+        // if (!inputValues.ApplyType) {
+        //     errors.ApplyType = "ApplyType is required"
+        // }
 
-         if (!inputValues. areas_covered) {
-            errors. areas_covered = " Areas Covered is required"
-        }
+        // //Areas Covered validation
 
-          //Delivery Type validation
+        // if (!inputValues.areas_covered) {
+        //     errors.areas_covered = " Areas Covered is required"
+        // }
 
-          if (!inputValues. delivery_type) {
-            errors. delivery_type = " Delivery Type is required"
-        }
+        //Delivery Type validation
 
-           //schedule validation
-
-           if (!inputValues. schedule) {
-            errors. schedule = " Schedule is required"
+        if (!inputValues.delivery_type) {
+            errors.delivery_type = " Delivery Type is required"
         }
 
-             //accepting_drivers_from validation
+        //schedule validation
 
-             if (!inputValues. accepting_drivers_from) {
-                errors. accepting_drivers_from = " Accepting Drivers From is required"
-            }
+        if (!inputValues.schedule) {
+            errors.schedule = " Schedule is required"
+        }
 
-               //equipment_type validation
+        //accepting_drivers_from validation
 
-             if (!inputValues. equipment_type) {
-                errors. equipment_type = " Equipment Type is required"
-            }
-    
+        if (!inputValues.accepting_drivers_from) {
+            errors.accepting_drivers_from = " Accepting Drivers From is required"
+        }
 
-            //Pay Structure validation
+        //equipment_type validation
 
-            if (!inputValues. pay_structure) {
-                errors. pay_structure = " Pay Structure is required"
-            }
-       
+        if (!inputValues.equipment_type) {
+            errors.equipment_type = " Equipment Type is required"
+        }
+
+
+        //Pay Structure validation
+
+        // if (!inputValues.pay_structure) {
+        //     errors.pay_structure = " Pay Structure is required"
+        // }
+
         // if (!inputValues.confirmPassword) {
         //   errors.confirmPassword = "Password confirmation is required"
         // } else if (inputValues.confirmPassword !== inputValues.password) {
@@ -229,7 +234,7 @@ export default function NewJobs() {
 
 
         setValidation(errors)
-
+        console.log("errors" , errors)
         if (Object.keys(errors).length == 0) {
 
             setSaveButtonDisabled(true)
@@ -242,7 +247,8 @@ export default function NewJobs() {
 
             await axios.post(
                 `${process.env.BASE_URL_API}/jobs}`,
-               { ...inputValues } ,
+                { ...inputValues },
+              
                 { headers }
             )
                 .then(data => {
@@ -298,7 +304,7 @@ export default function NewJobs() {
                                 pauseOnHover: true,
                                 draggable: true,
                                 progress: undefined,
-                              });
+                            });
 
                         }
                     } else {
@@ -311,7 +317,7 @@ export default function NewJobs() {
                             pauseOnHover: true,
                             draggable: true,
                             progress: undefined,
-                          });
+                        });
 
                     }
                 }).then(function () {
@@ -337,6 +343,11 @@ export default function NewJobs() {
                     </div>
                     <form className="modal-body" id="myForm" >
                         <div className="row">
+                        <div className="col-lg-6 col-12 mt-3">
+                                <label>WYS</label>
+                                <input onChange={(e) => handleChange(e)} name="expiry_date" value={inputValues.expiry_date} type="date" className="form-control " id="dot" />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.expiry_date}</p>
+                            </div>
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>Expiry Date</label>
                                 <input onChange={(e) => handleChange(e)} name="expiry_date" value={inputValues.expiry_date} type="date" className="form-control" />
@@ -431,11 +442,11 @@ export default function NewJobs() {
                                 {
                                     areas_covered &&
                                     Object.entries(areas_covered).map((val) => {
-                                        return (<div ><input onChange={(e) => handleChange(e)} name="areas_covered" value={inputValues.areas_covered} type="checkbox" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
+                                        return (<div ><input  type="checkbox" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
                                     })
-                                    
+
                                 }
-                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.areas_covered}</p>
+                                
                             </div>
 
                         </div>
@@ -470,7 +481,7 @@ export default function NewJobs() {
                                         return (<div><input onChange={(e) => handleChange(e)} name="delivery_type" value={inputValues.delivery_type} type="checkbox" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
                                     })
                                 }
-                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.delivery_type}</p>
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.delivery_type}</p>
                             </div>
 
                             <div className="col-lg-6 col-12 mt-3">
@@ -478,7 +489,7 @@ export default function NewJobs() {
                                 {
                                     schedule &&
                                     Object.entries(schedule).map((val) => {
-                                        return (<div><input onChange={(e) => handleChange(e)} name="schedule" value={inputValues.schedule}  type="radio" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
+                                        return (<div><input onChange={(e) => handleChange(e)} name="schedule" value={inputValues.schedule} type="radio" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
                                     })
                                 }
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.schedule}</p>
@@ -491,10 +502,10 @@ export default function NewJobs() {
                                 {
                                     accepting_drivers_from &&
                                     Object.entries(accepting_drivers_from).map((val) => {
-                                        return (<div><input onChange={(e) => handleChange(e)} name="accepting_drivers_from" value={inputValues.accepting_drivers_from} type="checkbox"  value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
+                                        return (<div><input onChange={(e) => handleChange(e)} name="accepting_drivers_from" value={inputValues.accepting_drivers_from} type="checkbox" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
                                     })
                                 }
-                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.accepting_drivers_from}</p>
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.accepting_drivers_from}</p>
                             </div>
 
 
@@ -506,7 +517,7 @@ export default function NewJobs() {
                                         return (<div><input onChange={(e) => handleChange(e)} name="equipment_type" value={inputValues.equipment_type} type="checkbox" value={val[1]} /> <span className="job_check_box"  >{val[1]} </span></div>)
                                     })
                                 }
-                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.equipment_type}</p>
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.equipment_type}</p>
                             </div>
                         </div>
 
@@ -516,16 +527,16 @@ export default function NewJobs() {
                                 {
                                     pay_structure &&
                                     Object.entries(pay_structure).map((val) => {
-                                        return (<div><input onChange={(e) => handleChange(e)} name="pay_structure" value={inputValues.pay_structure} type="checkbox"  value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
+                                        return (<div><input onChange={(e) => handleChange(e)} name="pay_structure" value={inputValues.pay_structure} type="checkbox" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
                                     })
                                 }
-                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.pay_structure}</p>
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.pay_structure}</p>
                             </div>
                         </div>
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>Minimum Age</label>
-                                <select  class="form-select select" aria-label="Default select example">
+                                <select class="form-select select" aria-label="Default select example">
                                     <option selected> Select Age</option>
                                     <option value="18">18</option>
                                     <option value="19">19</option>
@@ -548,7 +559,7 @@ export default function NewJobs() {
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>Min Rate Per Mile ($)</label>
-                                <input onChange={(e) => handleChange(e)} name="max_rate_per_mile" value={inputValues.min_rate_per_mile} type="text" className="form-control" placeholder="e.g. 0.50" />
+                                <input onChange={(e) => handleChange(e)} name="min_rate_per_mile" value={inputValues.min_rate_per_mile} type="text" className="form-control" placeholder="e.g. 0.50" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.min_rate_per_mile}</p>
                             </div>
 

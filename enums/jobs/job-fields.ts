@@ -136,8 +136,8 @@ export enum delivery_type {
 }
 
 export enum employment_type {
-    $w2 = "w2",
-    $1099 = "1099"
+    REGULAR_WAGE = "w2",
+    SELF_EMPOLIYED = "1099"
 }
 
 export enum job_type {
