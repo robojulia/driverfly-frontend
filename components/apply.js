@@ -1,50 +1,74 @@
 import { useState } from 'react'
 import { useRouter } from "next/router"
 import axios from "axios"
+import useAuth from '../hooks/useAuth'
+import { ToastContainer, toast } from 'react-toastify'
 
-export default function JobApply () {
+export default function JobApply() {
+
+  const { authCheck } = useAuth();
+  const user = authCheck()
+
+  console.log('user auth', user)
 
   const router = useRouter()
-  const [inputValues, setInputValues] = useState( {
-    first_name: "",
-    last_name: "",
-    phone: "",
-    email: "",
-    qualifications: "",
-    voilations: "",
+
+  const [inputValues, setInputValues] = useState({
+    userId: user.id ?? null,
+    first_name: user.first_name ?? "",
+    last_name: user.last_name ?? "",
+    phone: user.contact_number ?? "",
+    email: user.email ?? "",
+    qualifications: user.qualifications ?? "",
+    voilations: user.voilations ?? "",
     // resume: "",
     // commercial_driving_license: "",
     // medical_card: "",
-    cdl_experience: "",
-  } )
+    cdl_experience: user.cdl_experience ?? "",
+  })
 
-  const [resume, setResume] = useState( null )
-  const [commercial_driving_license, setCommercial_driving_license] = useState( null )
-  const [medical_card, setMedical_card] = useState( null )
+  const inputDisabled = {
+    first_name: user.first_name ? true : false,
+    first_name: user.first_name ? true : false,
+    last_name: user.last_name ? true : false,
+    phone: user.contact_number ? true : false,
+    email: user.email ? true : false,
+    qualifications: user.qualifications ? true : false,
+    voilations: user.voilations ? true : false,
+    resume: user.resume ? true : false,
+    commercial_driving_license: user.commercial_driving_license ? true : false,
+    medical_card: user.medical_card ? true : false,
+    cdl_experience: user.cdl_experience ? true : false,
+  }
+  console.log('inputDisabled', inputDisabled)
+
+  const [resume, setResume] = useState(null)
+  const [commercial_driving_license, setCommercial_driving_license] = useState(null)
+  const [medical_card, setMedical_card] = useState(null)
 
   const handleChange = e => {
     const { name, value } = e.target
-    setInputValues( preValue => {
+    setInputValues(preValue => {
       return {
         ...preValue,
         [name]: value
       }
-    } )
+    })
   }
 
-  function Upload ( event ) {
-    if ( event.target.files && event.target.files[0] ) {
+  function Upload(event) {
+    if (event.target.files && event.target.files[0]) {
       const t = event.target.name
       const file = event.target.files[0]
-      if ( t == "cv" ) {
-        setResume( file )
-        console.log( file )
+      if (t == "cv") {
+        setResume(file)
+        console.log(file)
       }
-      if ( t == "card" ) {
-        setMedical_card( file )
+      if (t == "card") {
+        setMedical_card(file)
       }
-      if ( t == "license" ) {
-        setCommercial_driving_license( file )
+      if (t == "license") {
+        setCommercial_driving_license(file)
       }
     }
   }
@@ -52,46 +76,46 @@ export default function JobApply () {
 
   const [validation, setValidation] = useState()
 
-  const submitHandler = async ( e ) => {
+  const submitHandler = async (e) => {
     e.preventDefault()
     let errors = {}
-    if ( !inputValues.first_name ) {
+    if (!inputValues.first_name) {
       errors.first_name = "First Name is required"
     }
-    if ( !inputValues.last_name ) {
+    if (!inputValues.last_name) {
       errors.last_name = "Last Name is required"
     }
 
-    if ( !inputValues.phone ) {
+    if (!inputValues.phone) {
       errors.phone = "phone is required"
     }
 
-    if ( !inputValues.email ) {
+    if (!inputValues.email) {
       errors.email = "email is required"
     }
 
 
-    if ( !inputValues.qualifications ) {
+    if (!inputValues.qualifications) {
       errors.qualifications = "qualifications is required"
     }
 
-    if ( !inputValues.voilations ) {
+    if (!inputValues.voilations) {
       errors.voilations = "voilations is required"
     }
 
-    if ( !resume ) {
+    if (!resume) {
       errors.resume = "CV is required"
     }
 
-    if ( !commercial_driving_license ) {
+    if (!commercial_driving_license) {
       errors.commercial_driving_license = "Lisense is required"
     }
 
-    if ( !medical_card ) {
+    if (!medical_card) {
       errors.medical_card = "medical_card is required"
     }
 
-    if ( !inputValues.cdl_experience ) {
+    if (!inputValues.cdl_experience) {
       errors.cdl_experience = "cdl_experience is required"
     }
 
@@ -108,9 +132,9 @@ export default function JobApply () {
     // }
 
 
-    setValidation( errors )
+    setValidation(errors)
 
-    if ( Object.keys( errors ).length == 0 ) {
+    if (Object.keys(errors).length == 0) {
       const drug_test = e.target.drugTest.value
       const driverfly_account = e.target.createAccount.checked ? 1 : 0
       // TODO api call to apply for job
@@ -122,24 +146,47 @@ export default function JobApply () {
       }
       const formData = new FormData()
       // const formData = serialize(reqBody)
-      for ( const key in reqBody ) {
-        formData.set( key, reqBody[key] )
+      for (const key in reqBody) {
+        formData.set(key, reqBody[key])
       }
-      formData.append( "resume", resume )
-      formData.append( "commercial_driving_license", commercial_driving_license )
-      formData.append( "medical_card", medical_card )
+      formData.append("resume", resume)
+      formData.append("commercial_driving_license", commercial_driving_license)
+      formData.append("medical_card", medical_card)
 
-      for ( let [key, value] of formData.entries() ) {
-        console.log( `${key}: ${value}` )
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`)
       }
-      await axios.post( `http://localhost:4000/api/jobs/apply/${router.query.id}`, formData )
-      alert("Your application has been submitted successfully")
+
+      const headers = {
+        'Authorization': `Bearer ${user.token}`,
+        "content-type": "application/json; charset=utf-8"
+      };
+
+      await axios.post(`http://localhost:4000/api/jobs/apply/${router.query.id}`,
+        formData,
+        { headers }
+      )
+        .then(data => {
+          console.log("handle success", data)
+          if (data.status == 201) {
+            const closeButton = document.getElementsByClassName('close')
+            closeButton[0].click()
+          }
+          alert("Your application has been submitted successfully")
+
+        })
+        .catch(function (error) {
+          console.log("handle error", error)
+        }).then(function () {
+          console.log("always executed")
+        })
     }
 
   }
 
   return (
     <>
+      <ToastContainer />
       <div className="modal fade p-0" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="modal-dialog" role="document">
           <div className="modal-content">
@@ -155,32 +202,62 @@ export default function JobApply () {
                 {/* First Name */}
                 <div className="col-lg-6 col-12">
                   <label>*First Name</label>
-                  <input onChange={( e ) => handleChange( e )} value={inputValues.first_name} name="first_name" type="text" className="form-control" placeholder="First Name" />
+                  <input disabled={inputDisabled.first_name}
+                    onChange={(e) => handleChange(e)}
+                    value={inputValues.first_name}
+                    name="first_name"
+                    type="text"
+                    className="form-control"
+                    placeholder="First Name" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.first_name}</p>
                 </div>
                 {/* Last Name */}
                 <div className="col-lg-6 col-12">
                   <label>*Last Name</label>
-                  <input onChange={( e ) => handleChange( e )} value={inputValues.last_name} name="last_name" type="text" className="form-control" placeholder="Last Name" />
+                  <input disabled={inputDisabled.last_name}
+                    onChange={(e) => handleChange(e)}
+                    value={inputValues.last_name}
+                    name="last_name"
+                    type="text"
+                    className="form-control"
+                    placeholder="Last Name" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.last_name}</p>
                 </div>
                 <div className="col-12">
                   <label>*Phone</label>
-                  <input onChange={( e ) => handleChange( e )} value={inputValues.phone} type="text" name="phone" className="form-control" placeholder="Phone" />
+                  <input disabled={inputDisabled.phone}
+                    onChange={(e) => handleChange(e)}
+                    value={inputValues.phone}
+                    type="text"
+                    name="phone"
+                    className="form-control"
+                    placeholder="Phone" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.phone}</p>
                 </div>
               </div>
               <div className="row">
                 <div className="col-12 mt-3">
                   <label>*Email</label>
-                  <input onChange={( e ) => handleChange( e )} value={inputValues.email} type="email" name="email" className="form-control" placeholder="E-mail" />
+                  <input disabled={inputDisabled.email}
+                    onChange={(e) => handleChange(e)}
+                    value={inputValues.email}
+                    type="email"
+                    name="email"
+                    className="form-control"
+                    placeholder="E-mail" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.email}</p>
                 </div>
               </div>
               <div className="row">
                 <div className="col-12 mt-3">
                   <label>* Qualifications</label>
-                  <textarea onChange={( e ) => handleChange( e )} value={inputValues.qualifications} name="qualifications" className="form-control" id="validationTextarea" placeholder="Qualifications"></textarea>
+                  <textarea disabled={inputDisabled.qualifications}
+                    onChange={(e) => handleChange(e)}
+                    value={inputValues.qualifications}
+                    name="qualifications"
+                    className="form-control"
+                    id="validationTextarea"
+                    placeholder="Qualifications"></textarea>
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.qualifications}</p>
                 </div>
               </div>
@@ -203,16 +280,30 @@ export default function JobApply () {
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.medical_card}</p>
                 </div>
                 <div className="col-lg-6 col-12 mt-3">
-                  <label>* Years of CDL driving cdl_experience</label>
-                  <select onChange={( e ) => handleChange( e )} value={inputValues.cdl_experience} name="cdl_experience" className="form-select" aria-label="Default select example">
-                    <option selected>Select CDL Driving cdl_experience</option>
-                    <option value="1">1-5 Months</option>
-                    <option value="2">6-11 Months</option>
-                    <option value="3">1 Year</option>
-                    <option value="1">2 Years</option>
-                    <option value="2">3 Years</option>
-                    <option value="3">4 Years</option>
-                    <option value="1">5+ Years</option>
+                  <label>* Years of CDL Driving Experience</label>
+                  <select onChange={(e) => handleChange(e)} value={inputValues.cdl_experience} name="cdl_experience" className="form-select" aria-label="Default select example">
+                    <option >Select CDL Driving Experience</option>
+                    <option value="1-5 Months" selected={user?.cdl_experience == "1-5 Months" ? "selected" : ''}>
+                      1-5 Months
+                    </option>
+                    <option value="6-11 Months" selected={user?.cdl_experience == "1-5 Months" ? "selected" : ''}>
+                      6-11 Months
+                    </option>
+                    <option value="1 Year" selected={user?.cdl_experience == "1 Year" ? "selected" : ''}>
+                      1 Year
+                    </option>
+                    <option value="2 Years" selected={user?.cdl_experience == "2 Years" ? "selected" : ''}>
+                      2 Years
+                    </option>
+                    <option value="3 Years" selected={user?.cdl_experience == "3 Years" ? "selected" : ''}>
+                      3 Years
+                    </option>
+                    <option value="4 Years" selected={user?.cdl_experience == "4 Years" ? "selected" : ''}>
+                      4 Years
+                    </option>
+                    <option value="5+ Years" selected={user?.cdl_experience == "5+ Years" ? "selected" : ''}>
+                      5+ Years
+                    </option>
                   </select>
                   <p style={{ fontStyle: "italic", color: "red" }}>{validation?.cdl_experience}</p>
                 </div>
@@ -220,7 +311,7 @@ export default function JobApply () {
               <div className="row">
                 <div className="col-lg-6 col-12 mt-3">
                   <label>* Number of moving violations in the last 3 years</label>
-                  <select onChange={( e ) => handleChange( e )} value={inputValues.voilations} name="voilations" className="form-select" aria-label="Default select example">
+                  <select onChange={(e) => handleChange(e)} value={inputValues.voilations} name="voilations" className="form-select" aria-label="Default select example">
                     <option selected>Select One</option>
                     <option value="1">0</option>
                     <option value="2">1</option>
@@ -256,7 +347,7 @@ export default function JobApply () {
                 <div className="col-12 mt-3">
                   <label>Create a DriverFly account?</label>
                   <div className="form-check ">
-                    <input onChange={( e ) => handleChange( e )} name="createAccount" className="form-check-input" type="checkbox" value="1" />
+                    <input onChange={(e) => handleChange(e)} name="createAccount" className="form-check-input" type="checkbox" value="1" />
                     <label className="form-check-label" htmlfor="inlineCheckbox2">Yes</label>
                   </div>
                 </div>

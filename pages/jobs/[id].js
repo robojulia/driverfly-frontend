@@ -7,14 +7,16 @@ import Layout from "../../components/layouts"
 import RelatedJobs from '../../components/related-jobs/Related-Jobs'
 import SocilShare from '../../components/share-link/ShareLink'
 import timeSince from "../../utils/timeSince"
+import { ToastContainer, toast } from 'react-toastify'
 
-export default function Detail ( { data } ) {
+export default function Detail({ data }) {
   const jobDetail = data
 
   const router = useRouter()
 
   return (
     <>
+      <ToastContainer />
       <section className="top-links-sec ort-general">
         <div className="container">
           <div className="row">
@@ -35,7 +37,7 @@ export default function Detail ( { data } ) {
                       </span>
                     </h4>
                     <div className="job-date-author">
-                      posted {timeSince( jobDetail.created_at )} ago
+                      posted {timeSince(jobDetail.created_at)} ago
                       by <a href="" className="employer text-theme">{jobDetail.complany_name}</a>
                     </div>
                     <div className="job-metas">
@@ -76,15 +78,15 @@ export default function Detail ( { data } ) {
     </>
   )
 }
-export async function getServerSideProps ( context ) {
+export async function getServerSideProps(context) {
   // Fetch data from external API
   const id = context.params.id;
-  const { data } = await axios.get( `${process.env.BASE_URL_API}/jobs/${context.params.id}` )
+  const { data } = await axios.get(`${process.env.BASE_URL_API}/jobs/${context.params.id}`)
 
   return { props: { data } }
 }
 
-Detail.getLayout = function getLayout ( page ) {
+Detail.getLayout = function getLayout(page) {
   return (
     <Layout>
       {page}
