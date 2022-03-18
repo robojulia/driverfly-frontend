@@ -153,7 +153,7 @@ export enum areas_covered {
     CROSS_BORDER = "Cross Border"
 }
 
-export enum alary_type {
+export enum salary_type {
     HOURLY = "Hourly",
     DAILY = "Daily",
     WEEKLY = "Weekly",
@@ -166,3 +166,5 @@ export enum apply_type {
     WITH_EMAIL = "By Email",
     EXTERNAL = "External URL"
 }
+
+
