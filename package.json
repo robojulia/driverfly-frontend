@@ -38,6 +38,7 @@
     "reactstrap": "^9.0.1",
     "sass": "^1.45.1",
     "simplebar-react": "^2.3.6",
+    "wysiwyg": "^2.0.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
