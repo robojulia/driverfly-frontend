@@ -23,8 +23,8 @@ import { accepting_drivers_from } from '../../../enums/jobs/job-fields'
 import { equipment_type } from '../../../enums/jobs/job-fields'
 import { schedule } from '../../../enums/jobs/job-fields'
 import { pay_structure } from '../../../enums/jobs/job-fields'
-import {special_accommodations } from '../../../enums/jobs/job-fields'
-import {special_endorsements_required } from '../../../enums/jobs/job-fields'
+import { special_accommodations } from '../../../enums/jobs/job-fields'
+import { special_endorsements_required } from '../../../enums/jobs/job-fields'
 
 
 import { Check } from "react-feather";
@@ -85,6 +85,7 @@ export default function NewJobs() {
         country: user.country,
         expiry_date: user.expiry_date,
         zipcode: user.zipcode,
+        ApplyType: "",
 
     })
 
@@ -177,9 +178,49 @@ export default function NewJobs() {
         if (!inputValues.min_rate_per_mile) {
             errors.min_rate_per_mile = "Min Rate Per Mile ($) is required"
         }
+        //ApplyType validation
 
+        if (!inputValues.ApplyType) {
+            errors.ApplyType = "ApplyType is required"
+        }
+        
+         //Areas Covered validation
 
+         if (!inputValues. areas_covered) {
+            errors. areas_covered = " Areas Covered is required"
+        }
 
+          //Delivery Type validation
+
+          if (!inputValues. delivery_type) {
+            errors. delivery_type = " Delivery Type is required"
+        }
+
+           //schedule validation
+
+           if (!inputValues. schedule) {
+            errors. schedule = " Schedule is required"
+        }
+
+             //accepting_drivers_from validation
+
+             if (!inputValues. accepting_drivers_from) {
+                errors. accepting_drivers_from = " Accepting Drivers From is required"
+            }
+
+               //equipment_type validation
+
+             if (!inputValues. equipment_type) {
+                errors. equipment_type = " Equipment Type is required"
+            }
+    
+
+            //Pay Structure validation
+
+            if (!inputValues. pay_structure) {
+                errors. pay_structure = " Pay Structure is required"
+            }
+       
         // if (!inputValues.confirmPassword) {
         //   errors.confirmPassword = "Password confirmation is required"
         // } else if (inputValues.confirmPassword !== inputValues.password) {
@@ -199,22 +240,14 @@ export default function NewJobs() {
                 "content-type": "application/json; charset=utf-8"
             };
 
-            await axios.put(
-                `${process.env.BASE_URL_API}/user/}`,
-                { user: { ...inputValues } },
+            await axios.post(
+                `${process.env.BASE_URL_API}/jobs}`,
+               { ...inputValues } ,
                 { headers }
             )
                 .then(data => {
                     console.log("handle success", data.data.user)
                     setValidation({})
-                    user.title = data.data.user.title
-                    user.company = data.data.user.company
-                    user.location = data.data.user.location
-                    user.state = data.data.user.state
-                    user.country = data.data.user.country
-                    user.expiry_date = data.data.user.expiry_date
-                    user.zipcode = data.data.user.zipcode
-                    setAuth(user)
                     setColor("green")
                     setServerValidation('Updated successfully!')
                     toast.success("Updated Successfully! ", {
@@ -251,14 +284,35 @@ export default function NewJobs() {
                                 setServerValidation(error.response.data.errors.user)
                             } else {
                                 setServerValidation(error.response.data.errors.username)
+
                             }
 
                         } else if (error.response.data.err) {
                             setColor("green")
                             setServerValidation('Profile Updated')
+                            toast.success("Profile Updated Successfully! ", {
+                                position: "top-right",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                              });
+
                         }
                     } else {
                         setServerValidation('Something went south')
+                        toast.warning("Something went south ", {
+                            position: "top-right",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                          });
+
                     }
                 }).then(function () {
                     console.log("always executed")
@@ -298,7 +352,7 @@ export default function NewJobs() {
                         <div className="row">
                             <div className=" col-lg-6 col-12 mt-3">
                                 <label>Job Apply Type</label>
-                                <Select
+                                <Select className="job__select" onChange={(e) => handleChange(e)} value={inputValues.ApplyType} name="ApplyType"
                                     placeholder="Select your ApplyType..."
                                     value={ApplyType}
                                     onChange={(v) => setApplyType(v)}
@@ -330,7 +384,7 @@ export default function NewJobs() {
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>Salary Type</label>
-                                <Select
+                                <Select className="job__select"
                                     placeholder="Select your ApplyType..."
                                     value={SalaryType}
                                     onChange={(v) => setSalaryType(v)}
@@ -377,16 +431,18 @@ export default function NewJobs() {
                                 {
                                     areas_covered &&
                                     Object.entries(areas_covered).map((val) => {
-                                        return (<div><input type="checkbox" name="areas_covered" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
+                                        return (<div ><input onChange={(e) => handleChange(e)} name="areas_covered" value={inputValues.areas_covered} type="checkbox" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
                                     })
+                                    
                                 }
+                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.areas_covered}</p>
                             </div>
 
                         </div>
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>Full-time/Part-time</label>
-                                <Select
+                                <Select className="job__select"
                                     placeholder="Select Job Type..."
                                     value={JobType}
                                     onChange={(v) => setJobType(v)}
@@ -411,19 +467,21 @@ export default function NewJobs() {
                                 {
                                     delivery_type &&
                                     Object.entries(delivery_type).map((val) => {
-                                        return (<div><input type="checkbox" name="delivery_type" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
+                                        return (<div><input onChange={(e) => handleChange(e)} name="delivery_type" value={inputValues.delivery_type} type="checkbox" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
                                     })
                                 }
+                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.delivery_type}</p>
                             </div>
-                          
+
                             <div className="col-lg-6 col-12 mt-3">
                                 <label className="w-100">Schedule</label>
                                 {
                                     schedule &&
                                     Object.entries(schedule).map((val) => {
-                                        return (<div><input type="radio" name="schedule" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
+                                        return (<div><input onChange={(e) => handleChange(e)} name="schedule" value={inputValues.schedule}  type="radio" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
                                     })
                                 }
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.schedule}</p>
                             </div>
                         </div>
 
@@ -433,39 +491,41 @@ export default function NewJobs() {
                                 {
                                     accepting_drivers_from &&
                                     Object.entries(accepting_drivers_from).map((val) => {
-                                        return (<div><input type="checkbox" name="accepting_drivers_from" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
+                                        return (<div><input onChange={(e) => handleChange(e)} name="accepting_drivers_from" value={inputValues.accepting_drivers_from} type="checkbox"  value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
                                     })
                                 }
+                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.accepting_drivers_from}</p>
                             </div>
 
-                      
+
                             <div className="col-lg-6 col-12 mt-3">
                                 <label className="w-100">Equipment Type</label>
                                 {
                                     equipment_type &&
                                     Object.entries(equipment_type).map((val) => {
-                                        return (<div><input type="checkbox" name="equipment_type" value={val[1]} /> <span className="job_check_box"  >{val[1]} </span></div>)
+                                        return (<div><input onChange={(e) => handleChange(e)} name="equipment_type" value={inputValues.equipment_type} type="checkbox" value={val[1]} /> <span className="job_check_box"  >{val[1]} </span></div>)
                                     })
                                 }
+                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.equipment_type}</p>
                             </div>
                         </div>
-                      
+
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label className="w-100">Pay Structure</label>
                                 {
                                     pay_structure &&
                                     Object.entries(pay_structure).map((val) => {
-                                        return (<div><input type="checkbox" name="pay_structure" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
+                                        return (<div><input onChange={(e) => handleChange(e)} name="pay_structure" value={inputValues.pay_structure} type="checkbox"  value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
                                     })
                                 }
+                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.pay_structure}</p>
                             </div>
-4
                         </div>
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>Minimum Age</label>
-                                <select class="form-select" aria-label="Default select example">
+                                <select  class="form-select select" aria-label="Default select example">
                                     <option selected> Select Age</option>
                                     <option value="18">18</option>
                                     <option value="19">19</option>
@@ -483,24 +543,24 @@ export default function NewJobs() {
                                 <input onChange={(e) => handleChange(e)} name="max_rate_per_mile" value={inputValues.max_rate_per_mile} type="text" className="form-control" placeholder="e.g. 0.60" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.max_rate_per_mile}</p>
                             </div>
-                           
+
                         </div>
                         <div className="row">
-                        <div className="col-lg-6 col-12 mt-3">
+                            <div className="col-lg-6 col-12 mt-3">
                                 <label>Min Rate Per Mile ($)</label>
                                 <input onChange={(e) => handleChange(e)} name="max_rate_per_mile" value={inputValues.min_rate_per_mile} type="text" className="form-control" placeholder="e.g. 0.50" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.min_rate_per_mile}</p>
                             </div>
 
                             <div className="col-lg-6 col-12 mt-3">
-                            <label className="w-100"> Mvr Requirement</label>
-                            <Select
+                                <label className="w-100"> Mvr Requirement</label>
+                                <Select className="job__select"
                                     placeholder="Select Mvr Requirement"
                                     value={MvrRequirement}
                                     onChange={(v) => setMvrRequirement(v)}
                                     isMulti options={mvr_requirement_options} />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.MvrRequirement}</p>
-                         
+
                             </div>
                         </div>
 
@@ -535,4 +595,3 @@ NewJobs.getLayout = function getLayout(page) {
         </FullLayout>
     )
 }
-special_accommodations

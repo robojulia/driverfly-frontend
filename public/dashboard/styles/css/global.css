@@ -171,3 +171,10 @@
 .job_check_box { 
     margin: 10px;
  }
+
+ .job__select input{
+     padding: 6px !important;
+ }
+ .select {
+    padding: 6px !important;
+}
