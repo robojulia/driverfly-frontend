@@ -5,21 +5,29 @@ import Select from 'react-select'
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { ToastContainer, toast } from 'react-toastify'
+import Modal from "react-bootstrap/Modal"
+import Button from "react-bootstrap/Button"
+import "bootstrap/dist/css/bootstrap.min.css"
 import 'react-toastify/dist/ReactToastify.css'
 import useStorage from "../../../hooks/useStorage"
 import useAuth from "../../../hooks/useAuth"
+import { Viewer } from '@react-pdf-viewer/core'
+import '@react-pdf-viewer/core/lib/styles/index.css'
+import { Worker } from '@react-pdf-viewer/core'
 
 
 export default function PrestoresDocuments () {
 
   const localStorage = useStorage()
   const [myUser, setUser] = useState( null )
+  const [showModal, setShowModal] = useState( false )
+  const [viewPDF, setViewPDF] = useState( "" )
 
   useEffect( async () => {
     // set token
     const user = JSON.parse( localStorage.getItem( 'user' ) )
     setUser( user )
-  } ,[])
+  }, [] )
 
   const [qualifications, setQualifications] = useState( [] )
 
@@ -63,6 +71,20 @@ export default function PrestoresDocuments () {
   const { authDriver } = useRedirect()
   authDriver()
 
+  const openModal = (str) => {
+    let txt;
+    if (str == "resume") {
+      txt = "Resume"
+    }
+    if (str == "card") {
+      txt = "Medical Card"
+    }
+    if (str == "license") {
+      txt = "Commercial Driving License"
+    }
+    setViewPDF(txt)
+    setShowModal( true )
+  }
 
   const submitHandler = async ( e ) => {
     e.preventDefault()
@@ -103,9 +125,9 @@ export default function PrestoresDocuments () {
         qualifications: resp.data.qualifications,
         medical_card: resp.data.medical_card,
         resume: resp.data.resume,
-        
+
       }
-      setAuth(user)
+      setAuth( user )
       toast.success( "Documents uploaded successfully", {
         position: "bottom-right",
         autoClose: 3000,
@@ -125,10 +147,6 @@ export default function PrestoresDocuments () {
     }
   }
 
-  // const handleChange = (value) => {
-
-  // }
-
   return (
     <>
       <ToastContainer />
@@ -137,9 +155,10 @@ export default function PrestoresDocuments () {
         <Row>
           <h1>Prestored Document</h1>
         </Row>
-        {myUser && <a href={"http://localhost:4000/"+myUser.resume} download> Resume </a>} <br />
-        {myUser && <a href={"http://localhost:4000/"+myUser.commercial_driving_license} download> License </a>} <br />
-        {myUser && <a href={"http://localhost:4000/"+myUser.medical_card} download> Medical Card </a>} <br />
+        {myUser && <Button className="mx-1" variant="info" onClick={() => openModal("resume")}>View Resume</Button>}
+        {myUser && <Button variant="info" className="mx-1" onClick={() => openModal("license")}>View License</Button>}
+        {myUser && <Button variant="info" className="mx-1" onClick={() => openModal("card")}>View Medical Card</Button>}
+
 
         <div className='container-fluid'>
           <div className="modal-header border-0">
@@ -186,6 +205,23 @@ export default function PrestoresDocuments () {
           </form>
         </div>
       </div>
+      <Modal show={showModal} onHide={() => setShowModal( false )}>
+        <Modal.Header>{viewPDF}</Modal.Header>
+        <Modal.Body>
+          <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.13.216/build/pdf.worker.min.js">
+            <div style={{
+              border: '1px solid rgba(0, 0, 0, 0.3)',
+              height: '750px',
+            }}>
+              {/* <<Viewer fileUrl={"http://localhost:4000/"+myUser.medical_card} /> */}
+              <Viewer fileUrl="/resume.pdf" />
+            </div>
+          </Worker>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal( false )}>Close</Button>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 };
