@@ -86,27 +86,32 @@ export default function NewJobs() {
     const { authCheck, setAuth } = useAuth();
     const user = authCheck();
     console.log('user', user);
+    const company = {};
+    console.log('company', company);
 
 
     const [color, setColor] = useState('red')
     const [saveButtonDisabled, setSaveButtonDisabled] = useState(false)
 
     const [inputValues, setInputValue] = useState({
-        expiry_date: user.expiry_dates,
-        application_deadline_date: user.application_deadline_date,
-        email: user.email,
-        min_salary: user.min_salary,
-        max_salary: user.max_salary,
-        featured: user.featured,
-        posted_by: user.posted_by,
+        title: company.title,
+        description: company.description,
+        location: company.location,
+        expiry_date: company.expiry_dates,
+        application_deadline_date: company.application_deadline_date,
+        email: company.email,
+        min_salary: company.min_salary,
+        max_salary: company.max_salary,
+        featured: company.featured,
+        posted_by: company.posted_by,
 
-        urgent_job: user.urgent_job,
-        filled: user.filled,
-        area_covered: user.area_covered,
-        min_rate_per_mile: user.min_rate_per_mile,
-        max_rate_per_mile: user.max_rate_per_mile,
-        ApplyType: user.ApplyType,
-        areas_covered: user.areas_covered,
+        urgent_job: company.urgent_job,
+        filled: company.filled,
+        area_covered: company.area_covered,
+        min_rate_per_mile: parseInt(company.min_rate_per_mile) ?? 0,
+        max_rate_per_mile: parseInt(company.max_rate_per_mile) ?? 0,
+        ApplyType: company.ApplyType,
+        areas_covered: company.areas_covered,
 
     })
 
@@ -117,6 +122,11 @@ export default function NewJobs() {
 
     const handleChange = (event) => {
         const { name, value } = event.target
+
+        if (name == "min_rate_per_mile" || name == 'max_rate_per_mile') {
+            value = parseInt(value)
+        }
+
         setInputValue((preValue) => {
             return {
                 ...preValue,
@@ -130,16 +140,30 @@ export default function NewJobs() {
         let errors = {}
         setServerValidation('')
 
-        console.log('ckeditor data', CKData)
+
+        //Title validation
+        if (!inputValues.title) {
+            errors.title = "Title is required"
+        }
+
+        //location validation
+        if (!inputValues.location) {
+            errors.location = "location is required"
+        }
+
+        console.log('CKData.length', CKData)
+        //Description validation
+        inputValues.description = CKData
+        if (!inputValues.description) {
+            errors.description = "Description is required"
+        }
 
         //expiry date validation
-
         if (!inputValues.expiry_date) {
             errors.expiry_date = "Expiry Date is required"
         }
 
         //application_deadline_date validation
-
         if (!inputValues.application_deadline_date) {
             errors.application_deadline_date = "Application Deadline Date is required"
         }
@@ -255,7 +279,6 @@ export default function NewJobs() {
         if (Object.keys(errors).length == 0) {
 
             setSaveButtonDisabled(true)
-            inputValues.name = `${inputValues.title} ${inputValues.company}`
 
             const headers = {
                 'Authorization': `Bearer ${user.token}`,
@@ -263,21 +286,22 @@ export default function NewJobs() {
             };
 
             await axios.post(
-                `${process.env.BASE_URL_API}/jobs}`,
+                `${process.env.BASE_URL_API}/jobs`,
+
                 { ...inputValues },
 
                 { headers }
             )
                 .then(data => {
-                    console.log("handle success", data.data.user)
+                    console.log("handle success", data.data)
                     setValidation({})
                     setColor("green")
                     setServerValidation('Updated successfully!')
-                    toast.success("Updated Successfully! ", {
+                    toast.success("Job Created Successfully! ", {
                         position: "top-right",
                         autoClose: 3000,
                         hideProgressBar: false,
-                        closeOnClick: truApplyType,
+                        closeOnClick: true,
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
@@ -295,48 +319,18 @@ export default function NewJobs() {
                     }, 5000);
                 })
                 .catch(function (error) {
-                    console.log("handle error success", error.response)
-                    if (error.response) {
-                        if (error.response.data.message) {
-                            setServerValidation(error.response.data.message)
-                        } else if (error.response.data.errors) {
-                            setColor("red")
-                            console.log('here')
-                            console.log(error.response.data.errors.user)
-                            if (error.response.data.errors.user) {
-                                setServerValidation(error.response.data.errors.user)
-                            } else {
-                                setServerValidation(error.response.data.errors.username)
+                    console.log("handle error success", error)
+                    setServerValidation('Something went south')
+                    toast.warning("Something went south ", {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
 
-                            }
-
-                        } else if (error.response.data.err) {
-                            setColor("green")
-                            setServerValidation('Profile Updated')
-                            toast.success("Profile Updated Successfully! ", {
-                                position: "top-right",
-                                autoClose: 3000,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                            });
-
-                        }
-                    } else {
-                        setServerValidation('Something went south')
-                        toast.warning("Something went south ", {
-                            position: "top-right",
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                        });
-
-                    }
                 }).then(function () {
                     console.log("always executed")
                     setSaveButtonDisabled(false)
@@ -361,10 +355,17 @@ export default function NewJobs() {
                     <form className="modal-body" id="myForm" >
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
-                                <label>WYS</label>
-                                <input onChange={(e) => handleChange(e)} name="expiry_date" value={inputValues.expiry_date} type="date" className="form-control " id="dot" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.expiry_date}</p>
+                                <label>Title</label>
+                                <input onChange={(e) => handleChange(e)} name="title" value={inputValues.title} type="text" className="form-control " id="title" />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.title}</p>
                             </div>
+                            <div className="col-lg-6 col-12 mt-3">
+                                <label>Location</label>
+                                <input onChange={(e) => handleChange(e)} name="location" value={inputValues.location} type="text" className="form-control " id="location" />
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.location}</p>
+                            </div>
+                        </div>
+                        <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>Expiry Date</label>
                                 <input onChange={(e) => handleChange(e)} name="expiry_date" value={inputValues.expiry_date} type="date" className="form-control" />
@@ -399,13 +400,13 @@ export default function NewJobs() {
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>Min. Salary</label>
-                                <input onChange={(e) => handleChange(e)} name="min_salary" value={inputValues.min_salary} type="number" className="form-control" placeholder="Min Salary" />
+                                <input onChange={(e) => handleChange(e)} name="min_salary" value={parseInt(inputValues.min_salary)} type="number" className="form-control" placeholder="Min Salary" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.min_salary}</p>
                             </div>
 
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>Max. Salary</label>
-                                <input onChange={(e) => handleChange(e)} name="max_salary" value={inputValues.max_salary} type="number" className="form-control" placeholder="Max Salary" />
+                                <input onChange={(e) => handleChange(e)} name="max_salary" value={parseInt(inputValues.max_salary)} type="number" className="form-control" placeholder="Max Salary" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.max_salary}</p>
                             </div>
                         </div>
@@ -568,7 +569,7 @@ export default function NewJobs() {
 
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>Max Rate Per Mile ($)</label>
-                                <input onChange={(e) => handleChange(e)} name="max_rate_per_mile" value={inputValues.max_rate_per_mile} type="text" className="form-control" placeholder="e.g. 0.60" />
+                                <input onChange={(e) => handleChange(e)} name="max_rate_per_mile" value={inputValues.max_rate_per_mile} type="number" className="form-control" placeholder="e.g. 0.60" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.max_rate_per_mile}</p>
                             </div>
 
@@ -576,7 +577,7 @@ export default function NewJobs() {
                         <div className="row">
                             <div className="col-lg-6 col-12 mt-3">
                                 <label>Min Rate Per Mile ($)</label>
-                                <input onChange={(e) => handleChange(e)} name="min_rate_per_mile" value={inputValues.min_rate_per_mile} type="text" className="form-control" placeholder="e.g. 0.50" />
+                                <input onChange={(e) => handleChange(e)} name="min_rate_per_mile" value={inputValues.min_rate_per_mile} type="number" className="form-control" placeholder="e.g. 0.50" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.min_rate_per_mile}</p>
                             </div>
 
@@ -607,6 +608,7 @@ export default function NewJobs() {
                                         setCKData(data);
                                     }}
                                 /> : <p>Loading Editor...</p>}
+                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.description}</p>
 
                             </div>
                         </div>
