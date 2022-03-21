@@ -35,38 +35,34 @@ export default function FeaturedJobs() {
         <>
 
             <section className="tab-sec">
-                
+
                 <div className="container">
                     <div className="bs-example">
                         <div className="tab-content">
                             <div className="tab-pane fade show active" id="home">
                                 <div className="row">
-                                    <div className="col-md-6">
-                                        {jobs.length > 0 && jobs.map((job, index) => (
-                                               <>
-                                               
-                                               {job.title}
-                                               </>
-                                        ))}
-                                             {/* <div className="media align-items-center ">
+                                    {jobs.length > 0 && jobs.map((job, index) => (
+                                        <div className="col-md-6">
+                                            <div className="media align-items-center ">
+                                                <img className="d-flex mr-4 truck-img border-0 " src="img/CTR-logo-cartoon.png" width="100" height="75" alt="" />
+                                                <div className="media-body">
 
-                                            <img className="d-flex mr-4 truck-img border-0 " src="img/CTR-logo-cartoon.png" width="100" height="75" alt="" />
-                                            <div className="media-body">
-
-                                                <span className="urgent">URGENT</span>
-                                                <h6>Featured Jobs</h6>
-                                                <h4 className="mt-0">CDL-A Regional/OTR – No Touch Freight, Live Load/Unload<span className="d-block" data-toggle="tooltip"
-                                                    data-placement="top" title="Tooltip on top"> <i className="fa fa-star" aria-hidden="true"></i> </span></h4>
-                                                <div className="job-metas">
-                                                    <div className="job-location">
-                                                        <strong>Custom Trucker Recruiting</strong>
+                                                    <span className="urgent">URGENT</span>
+                                                    <h6>Featured Jobs</h6>
+                                                    <h4 className="mt-0">{job.title}<span className="d-block" data-toggle="tooltip"
+                                                        data-placement="top" title="Tooltip on top"> <i className="fa fa-star" aria-hidden="true"></i> </span></h4>
+                                                    <div className="job-metas">
+                                                        <div className="job-location">
+                                                            <strong>{job.location}</strong>
+                                                        </div>
                                                     </div>
-                                                </div>
 
+                                                </div>
                                             </div>
-                                        </div> */}
-                                   
-                                    </div>
+
+
+                                        </div>
+                                    ))}
                                     {/* <div className="col-md-6">
 
                                         <div className="media align-items-center ">
