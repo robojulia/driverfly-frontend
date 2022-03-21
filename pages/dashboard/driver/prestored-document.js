@@ -183,24 +183,24 @@ export default function PrestoresDocuments () {
             <div className="row">
               <div className="col-lg-6 col-12 mt-3">
                 <label>Upload your CV</label>
-                <input name="cv" onChange={Upload} type="file" className="form-control  " />
+                <input name="cv" onChange={Upload} type="file" className="form-control file_field  " />
                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.resume}</p>
               </div>
               <div className="col-lg-6 col-12 mt-3">
                 <label>Upload your Commercial Driver’s License</label>
-                <input onChange={Upload} name="license" type="file" className="form-control" />
+                <input onChange={Upload} name="license" type="file" className="form-control file_field" />
                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.commercial_driving_license}</p>
               </div>
             </div>
             <div className="row">
               <div className="col col-12 mt-3">
                 <label>Upload your Medical card</label>
-                <input onChange={Upload} name="card" type="file" className="form-control " />
+                <input onChange={Upload} name="card" type="file" className="form-control file_field " />
                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.medical_card}</p>
               </div>
             </div>
-            <div className="modal-footer border-0 mt-5">
-              <button type="submit" className="btn btn-primary w-25 m-auto p-lg-3 p-5">Submit</button>
+            <div className="border-0 mt-5">
+              <button type="submit" className="btn btn-primary  p-lg-3 p-5">Submit</button>
             </div>
           </form>
         </div>

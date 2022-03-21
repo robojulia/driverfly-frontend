@@ -217,8 +217,8 @@ export default function DriverIntakeInfo () {
               </div>
             </div>
 
-            <div className="modal-footer border-0 mt-5">
-              <button type="submit" className="btn btn-primary w-50 m-auto p-lg-3 p-5">Submit</button>
+            <div className=" border-0 mt-5">
+              <button type="submit" className="btn btn-primary p-lg-3 p-5">Submit</button>
             </div>
           </form>
         </div>
