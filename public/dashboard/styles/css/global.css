@@ -44,10 +44,8 @@
 }
 
 
-.dashboardsidebar li a {
-    text-decoration: none;
-    display: block;
-    color: #fff;
+.sidebarArea  ul   {
+    padding: 0;
 
 }
 
@@ -91,9 +89,25 @@
 
 .profile button:hover,
 .profile .dropdown-item:hover {
-    color: #000 !important;
+    background-color: transparent !important;
     text-decoration: underline;
+    color: #000 !important;
 }
+
+.btn-check:focus+.btn-secondary, .btn-secondary:focus, .btn-secondary:hover {
+    background-color: transparent !important;
+}
+.dashboardsidebar .btn-info {
+    color: #fff;
+    background-color: #1b4454;
+    border-color: #1b4454;
+}
+.dashboardsidebar .btn-check:focus+.btn-info,  .dashboardsidebar .btn-info:focus, .dashboardsidebar .btn-info:hover {
+    color: #fff;
+    background-color: #1b4454;
+    border-color: #1b4454;
+}
+
 
 .profile span {
     color: #000;
@@ -177,4 +191,12 @@
  }
  .select {
     padding: 6px !important;
+}
+.dropdown-item.active, .dropdown-item:active {
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    background-color: transparent !important;
+}
+.file_field {
+    padding: 12px 20px !important;
 }
