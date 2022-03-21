@@ -25,14 +25,32 @@ import { schedule } from '../../../enums/jobs/job-fields'
 import { pay_structure } from '../../../enums/jobs/job-fields'
 import { special_accommodations } from '../../../enums/jobs/job-fields'
 import { special_endorsements_required } from '../../../enums/jobs/job-fields'
+import { useRef, useEffect } from "react";
 
 
 import { Check } from "react-feather";
 
 
 export default function NewJobs() {
-    const router = useRouter();
+
     const { authCompany } = useRedirect();
+    authCompany()
+
+    const editorRef = useRef()
+    const [editorLoaded, setEditorLoaded] = useState(false)
+    const { CKEditor, ClassicEditor } = editorRef.current || {}
+
+    useEffect(() => {
+        editorRef.current = {
+            CKEditor: require('@ckeditor/ckeditor5-react').CKEditor, //Added .CKEditor
+            ClassicEditor: require('@ckeditor/ckeditor5-build-classic'),
+        }
+        setEditorLoaded(true)
+    }, []);
+    const [CKData, setCKData] = useState('');
+
+
+    const router = useRouter();
 
     const [ApplyType, setApplyType] = useState([])
     const apply_type_options = []
@@ -64,8 +82,6 @@ export default function NewJobs() {
             value: itemVal, label: itemVal
         })
     }
-  
-    authCompany()
 
     const { authCheck, setAuth } = useAuth();
     const user = authCheck();
@@ -114,6 +130,7 @@ export default function NewJobs() {
         let errors = {}
         setServerValidation('')
 
+        console.log('ckeditor data', CKData)
 
         //expiry date validation
 
@@ -234,7 +251,7 @@ export default function NewJobs() {
 
 
         setValidation(errors)
-        console.log("errors" , errors)
+        console.log("errors", errors)
         if (Object.keys(errors).length == 0) {
 
             setSaveButtonDisabled(true)
@@ -248,7 +265,7 @@ export default function NewJobs() {
             await axios.post(
                 `${process.env.BASE_URL_API}/jobs}`,
                 { ...inputValues },
-              
+
                 { headers }
             )
                 .then(data => {
@@ -343,7 +360,7 @@ export default function NewJobs() {
                     </div>
                     <form className="modal-body" id="myForm" >
                         <div className="row">
-                        <div className="col-lg-6 col-12 mt-3">
+                            <div className="col-lg-6 col-12 mt-3">
                                 <label>WYS</label>
                                 <input onChange={(e) => handleChange(e)} name="expiry_date" value={inputValues.expiry_date} type="date" className="form-control " id="dot" />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.expiry_date}</p>
@@ -442,11 +459,11 @@ export default function NewJobs() {
                                 {
                                     areas_covered &&
                                     Object.entries(areas_covered).map((val) => {
-                                        return (<div ><input  type="checkbox" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
+                                        return (<div ><input type="checkbox" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
                                     })
 
                                 }
-                                
+
                             </div>
 
                         </div>
@@ -571,6 +588,25 @@ export default function NewJobs() {
                                     onChange={(v) => setMvrRequirement(v)}
                                     isMulti options={mvr_requirement_options} />
                                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.MvrRequirement}</p>
+
+                            </div>
+                        </div>
+
+                        <div className="row">
+                            <div className="col-lg-12 col-12 mt-3">
+                                <label>WYS</label>
+                                {editorLoaded ? <CKEditor
+                                    editor={ClassicEditor}
+                                    data={CKData}
+                                    onReady={editor => {
+                                        // You can store the "editor" and use when it is needed.
+                                        // console.log('Editor is ready to use!', editor);
+                                    }}
+                                    onChange={(event, editor) => {
+                                        const data = editor.getData()
+                                        setCKData(data);
+                                    }}
+                                /> : <p>Loading Editor...</p>}
 
                             </div>
                         </div>
