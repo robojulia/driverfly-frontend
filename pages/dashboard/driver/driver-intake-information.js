@@ -7,10 +7,18 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import useAuth from "../../../hooks/useAuth"
 import useStorage from "../../../hooks/useStorage"
+import useRedirect from '../../../hooks/useRedirect';
 
 
 
-export default function DriverIntakeInfo () {
+export default function DriverIntakeInfo() {
+
+  const { authDriver } = useRedirect();
+  authDriver()
+
+  const { authCheck, setAuth } = useAuth()
+  const user = authCheck()
+  console.log('user', user)
 
   const localStorage = useStorage()
 
@@ -45,45 +53,60 @@ export default function DriverIntakeInfo () {
     },
   ]
 
-  const formik = useFormik( {
+  const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      // first_name: "",
-      // last_name: "",
-      // phone: "",
-      // email: "",
-      cdl_experience: "",
-      voilations: "",
-      drugTest: 0,
+      cdl_experience: user.cdl_experience ?? "",
+      voilations: user.voilations ?? "",
+      drug_test: parseInt(user.drug_test) ?? 0,
     },
-    validationSchema: yup.object( {
-      // first_name: yup.string().required( "Required" ),
-      // last_name: yup.string().required( "Required" ),
-      // email: yup.string().email( "Invalid email address" ).required( "Required" ),
-      // phone: yup.string().required( "Required" ),
-      cdl_experience: yup.string().required( "Required" ),
-      voilations: yup.string().required( "Required" ),
-      drugTest: yup.number().optional()
-    } ),
-    onSubmit: async ( values ) => {
-      const token = JSON.parse(localStorage.getItem('user')).token
-      const id = JSON.parse(localStorage.getItem('user')).id
-      await axios.put( `${process.env.BASE_URL_API}/user/${id}`, values, {
+    validationSchema: yup.object({
+      cdl_experience: yup.string().required("Required"),
+      voilations: yup.string().required("Required"),
+      drug_test: yup.bool()
+    }),
+    onSubmit: async (values) => {
+      values.drug_test = parseInt(values.drug_test)
+      await axios.put(`${process.env.BASE_URL_API}/user/${user.id}`, values, {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${user.token}`
         }
-      } )
-      window.document.getElementById("my-form").reset()
-      toast.success( "Driver Intake Information Updated Successfully", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      } )
+      })
+        .then(data => {
+          console.log("handle success", data.data)
+          user.cdl_experience = data.data.user.cdl_experience
+          user.voilations = data.data.user.voilations
+          user.drug_test = data.data.user.drug_test
+          setAuth(user)
+          toast.success("Driver Intake Information Updated Successfully ", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+          setTimeout(() => {
+            window.document.getElementById("my-form").reset()
+          }, 5000);
+        })
+        .catch(function (error) {
+          console.log("handle error success", error)
+          toast.error("Something Went South!", {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          })
+        }).then(function () {
+          console.log("always executed")
+        })
     }
-  } )
+  })
 
   return (
     <>
@@ -97,56 +120,7 @@ export default function DriverIntakeInfo () {
           <div className="modal-header border-0">
           </div>
           <form onSubmit={formik.handleSubmit} className="modal-body" id="my-form">
-            {/* <div className="row">
-              <div className="col-lg-6 col-12">
-                <label>*First Name</label>
-                <input
-                  name="first_name" type="text" className="form-control" placeholder="First Name"
-                  onChange={formik.handleChange}
-                  value={formik.values.first_name}
-                  onBlur={formik.handleBlur}
-                />
-                {formik.touched.first_name && formik.errors.first_name ? <p style={{ fontStyle: "italic", color: "red", fontSize: '13px' }}>{formik.errors.first_name}</p> : null}
-
-              </div>
-              <div className="col-lg-6 col-12">
-                <label>*Last Name</label>
-                <input
-                  onChange={formik.handleChange}
-                  value={formik.values.last_name}
-                  onBlur={formik.handleBlur}
-                  name="last_name" type="text" className="form-control" placeholder="Last Name" />
-                {formik.touched.last_name && formik.errors.last_name ? <p style={{ fontStyle: "italic", color: "red", fontSize: '13px' }}>{formik.errors.last_name}</p> : null}
-
-              </div>
-            </div>
-            <div className="row mt-3">
-              <div className="col-6">
-                <label>*Email</label>
-                <input
-                  onChange={formik.handleChange}
-                  value={formik.values.email}
-                  onBlur={formik.handleBlur}
-                  type="email" name="email" className="form-control" placeholder="E-mail" />
-                {formik.touched.email && formik.errors.email ? <p style={{ fontStyle: "italic", color: "red", fontSize: '13px' }}>{formik.errors.email}</p> : null}
-              </div>
-              <div className="col-6">
-                <label>*Phone</label>
-                <input
-                  onChange={formik.handleChange}
-                  value={formik.values.phone}
-                  onBlur={formik.handleBlur}
-                  type="text" name="phone" className="form-control" placeholder="Phone" />
-                {formik.touched.phone && formik.errors.phone ? <p style={{ fontStyle: "italic", color: "red", fontSize: '13px' }}>{formik.errors.phone}</p> : null}
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-12 mt-3">
-                <label>* Qualifications</label>
-                <textarea name="qualifications" className="form-control" id="validationTextarea" placeholder="Qualifications"></textarea>
-
-              </div>
-            </div>
+            {/* 
             <div className="row">
               <div className="col-lg-6 col-12 mt-3">
                 <label>Upload your CV</label>
@@ -167,14 +141,14 @@ export default function DriverIntakeInfo () {
              */}
             <div className="row">
               <div className="col-lg-6 col-12 mt-3">
-                <label>* Years of CDL driving cdl_experience</label>
+                <label>* Years of CDL Driving Experience</label>
                 <select
                   onChange={formik.handleChange}
                   value={formik.values.cdl_experience}
                   onBlur={formik.handleBlur}
                   name="cdl_experience" className="form-select" aria-label="Default select example">
-                  <option selected>Select CDL Driving cdl_experience</option>
-                  {experienceValues.map( ( item, index ) => ( <option key={index} value={item.value}>{item.label}</option> ) )}
+                  <option >Select CDL Driving Experience</option>
+                  {experienceValues.map((item, index) => (<option key={index} value={item.value}>{item.label}</option>))}
                 </select>
                 {formik.touched.cdl_experience && formik.errors.cdl_experience ? <p style={{ fontStyle: "italic", color: "red", fontSize: '13px' }}>{formik.errors.cdl_experience}</p> : null}
               </div>
@@ -185,7 +159,7 @@ export default function DriverIntakeInfo () {
                   value={formik.values.voilations}
                   onBlur={formik.handleBlur}
                   name="voilations" className="form-select" aria-label="Default select example">
-                  <option selected>Select One</option>
+                  <option >Select One</option>
                   <option value="0">0</option>
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -199,17 +173,17 @@ export default function DriverIntakeInfo () {
 
               </div>
               <div className="col-lg-6 col-12 mt-3" onChange={formik.handleChange}
-                value={formik.values.drugTest}
+                value={formik.values.drug_test}
                 onBlur={formik.handleBlur} >
                 <label>* Can you pass a drug & alcohol test</label>
                 <div className="form-check">
-                  <input value='1' className="form-check-input" type="radio" name="drugTest" id="flexRadioDefault1" checked={formik.values.drugTest == 1} />
+                  <input value='1' className="form-check-input" type="radio" name="drug_test" id="flexRadioDefault1" checked={formik.values.drug_test == 1} />
                   <label className="form-check-label" for="flexRadioDefault1">
                     Yes
                   </label>
                 </div>
                 <div className="form-check">
-                  <input value='0' className="form-check-input" type="radio" name="drugTest" id="flexRadioDefault2" checked={formik.values.drugTest == 0} />
+                  <input value='0' className="form-check-input" type="radio" name="drug_test" id="flexRadioDefault2" checked={formik.values.drug_test == 0} />
                   <label className="form-check-label" for="flexRadioDefault2">
                     No
                   </label>
@@ -227,7 +201,7 @@ export default function DriverIntakeInfo () {
   )
 };
 
-DriverIntakeInfo.getLayout = function getLayout ( page ) {
+DriverIntakeInfo.getLayout = function getLayout(page) {
   return (
     <FullLayout>
       {page}
