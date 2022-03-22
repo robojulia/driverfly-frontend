@@ -79,6 +79,15 @@ export default function Signup() {
       errors.confirmPassword = "Password confirmation is required"
     } else if (inputValues.confirmPassword !== inputValues.password) {
       errors.confirmPassword = "Password does not match confirmation password"
+      toast.warning("Password does not match confirmation password", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
 
 
@@ -104,7 +113,7 @@ export default function Signup() {
           console.log("handle success", data)
           if (data.status == 201) {
             setColor("green")
-            setServerValidation('Registered successfully! Please Check Your Email')
+            // setServerValidation('Registered successfully! Please Check Your Email')
             toast.success("Registered successfully! Please Check Your Email", {
               position: "top-right",
               autoClose: 3000,
@@ -125,12 +134,22 @@ export default function Signup() {
           if (error.response) {
             if (error.response.data.message) {
               setServerValidation(error.response.data.message)
+             
             } else if (error.response.data.errors) {
               setColor("red")
               console.log('here')
               console.log(error.response.data.errors.user)
               if (error.response.data.errors.user) {
-                setServerValidation(error.response.data.errors.user)
+              
+                toast.warning("Email must be unique.", {
+                  position: "top-right",
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                });
               } else {
                 setServerValidation(error.response.data.errors.username)
               }
@@ -138,6 +157,15 @@ export default function Signup() {
             } else if (error.response.data.err) {
               setColor("green")
               setServerValidation('User registered successfully')
+              toast.success("User registered successfully", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
              
               setTimeout(() => {
                 Router.push('/login')
