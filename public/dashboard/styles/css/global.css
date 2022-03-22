@@ -5,17 +5,6 @@
 .bg_color {
     background-color: #f2f2f2;
 }
-
-
-.logoicon {
-    background: #f2f2f2 !important;
-    height: 80px;
-}
-
-/* .logoicon img{ 
-    top: -75px !important;
-    height: 146px !important;
-} */
 .header nav {
     background: #f2f2f2 !important;
     color: rgb(0, 0, 0);
@@ -46,6 +35,7 @@
 
 .sidebarArea  ul   {
     padding: 0;
+    border: 0;
 
 }
 
@@ -62,8 +52,8 @@
 } 
 .dashboardsidebar .active {
 
-    background-color: #fff;
-    color: #000;
+    background-color: #fff !important;
+    color: #000 !important;
 }
 .dashboardsidebar .active a {
     color: #000;
@@ -199,4 +189,24 @@
 }
 .file_field {
     padding: 12px 20px !important;
+}
+
+.dashboard__mbl_menu span{
+    width: 25px;
+    height: 4px;
+    display: block;
+    background-color: #5fcbc4;
+    margin-top: 3px;
+    display: none;
+}
+@media screen and (max-width: 768px) {
+    .logo_container{
+        width: 35%;
+    }
+}
+
+.side_bar .bg-light
+{
+    background-color: transparent !important;
+
 }
