@@ -1625,6 +1625,7 @@
  .navbar-toggler{
      background: #4aa2af;
      color: #fff;
+     margin:0px 15px 10px;
  }
  .btn.btn-primary {
      padding: 3px 10px !important;
