@@ -12,11 +12,17 @@ import 'react-toastify/dist/ReactToastify.css'
 import useStorage from "../../../hooks/useStorage"
 import useAuth from "../../../hooks/useAuth"
 import { Viewer } from '@react-pdf-viewer/core'
+import Spinner from 'react-bootstrap/Spinner'
 import '@react-pdf-viewer/core/lib/styles/index.css'
 import { Worker } from '@react-pdf-viewer/core'
+import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import { SpecialZoomLevel } from '@react-pdf-viewer/core';
 
 
 export default function PrestoresDocuments () {
+
+  const defaultLayoutPluginInstance = defaultLayoutPlugin()
 
   const localStorage = useStorage()
   const [myUser, setUser] = useState( null )
@@ -71,18 +77,18 @@ export default function PrestoresDocuments () {
   const { authDriver } = useRedirect()
   authDriver()
 
-  const openModal = (str) => {
-    let txt;
-    if (str == "resume") {
+  const openModal = ( str ) => {
+    let txt
+    if ( str == "resume" ) {
       txt = "Resume"
     }
-    if (str == "card") {
+    if ( str == "card" ) {
       txt = "Medical Card"
     }
-    if (str == "license") {
+    if ( str == "license" ) {
       txt = "Commercial Driving License"
     }
-    setViewPDF(txt)
+    setViewPDF( txt )
     setShowModal( true )
   }
 
@@ -155,9 +161,9 @@ export default function PrestoresDocuments () {
         <Row>
           <h1>Prestored Document</h1>
         </Row>
-        {myUser && <Button className="mx-1" variant="info" onClick={() => openModal("resume")}>View Resume</Button>}
-        {myUser && <Button variant="info" className="mx-1" onClick={() => openModal("license")}>View License</Button>}
-        {myUser && <Button variant="info" className="mx-1" onClick={() => openModal("card")}>View Medical Card</Button>}
+        {myUser && <Button className="mx-1" variant="info" onClick={() => openModal( "resume" )}>View Resume</Button>}
+        {myUser && <Button variant="info" className="mx-1" onClick={() => openModal( "license" )}>View License</Button>}
+        {myUser && <Button variant="info" className="mx-1" onClick={() => openModal( "card" )}>View Medical Card</Button>}
 
 
         <div className='container-fluid'>
@@ -205,22 +211,27 @@ export default function PrestoresDocuments () {
           </form>
         </div>
       </div>
-      <Modal show={showModal} onHide={() => setShowModal( false )}>
-        <Modal.Header>{viewPDF}</Modal.Header>
+      <Modal size="xl" show={showModal} onHide={() => setShowModal( false )}>
+        <Modal.Header closeButton>{viewPDF}</Modal.Header>
         <Modal.Body>
           <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.13.216/build/pdf.worker.min.js">
             <div style={{
               border: '1px solid rgba(0, 0, 0, 0.3)',
-              height: '750px',
+              height: '800px',
+
             }}>
-              {/* <<Viewer fileUrl={"http://localhost:4000/"+myUser.medical_card} /> */}
-              <Viewer fileUrl="/resume.pdf" />
+              {/* <<Viewer fileUrl={"http://localhost:4000/"+myUser.medical_card} />np */}
+              <Viewer defaultScale={SpecialZoomLevel.PageWidth} plugins={[defaultLayoutPluginInstance]} renderLoader={(  ) => (
+                <Spinner animation="border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+              )} fileUrl="/resume.pdf" />
             </div>
           </Worker>
         </Modal.Body>
-        <Modal.Footer>
+        {/* <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal( false )}>Close</Button>
-        </Modal.Footer>
+        </Modal.Footer> */}
       </Modal>
     </>
   )
