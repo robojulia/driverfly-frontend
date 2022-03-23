@@ -76,6 +76,17 @@ export default function MyAccount() {
                         <span className={style.earn_btn}>Earn More</span>
                     </div>
                 </div>
+
+
+                <div className='row'>
+                    <div className="col-lg-6 col-12 mt-4 border-0">
+                        <div className="col-lg-6 col-12 mt-3">
+                            <label>Preferred hours</label>
+                            <input name="preferred_hours" type="text" className="form-control" placeholder="Preferred hours" />
+                        </div>
+                    </div>
+                </div>
+
                 <div className='row'>
                     <div className="col-lg-6 col-12 mt-4 border-0">
                         <span className={style.lable}>Receive suggested job feeds? </span>
@@ -197,6 +208,16 @@ export default function MyAccount() {
                         <input class="form-check-input" type="checkbox" value="Required Benefits:
 " />
                     </div>
+                </div>
+
+            </div>
+            <div className='row'>
+                <div className="col-lg-6 col-12 mt-3"></div>
+                <div className="col-lg-2 col-12"></div>
+                <div className="col-lg-4 col-12 mt-4 border-0 ">
+                    <label>Preferred Schedule:</label>
+                    <input name="name" type="text" className="form-control" placeholder="Preferred Schedule:" />
+
                 </div>
             </div>
 
