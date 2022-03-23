@@ -21,6 +21,10 @@ export default function Sidebar() {
                 <Link href="/dashboard/driver/profile">Profile</Link>
 
               </li>
+              <li className={router.pathname == "/dashboard/driver/my-account" ? "active" : ""}>
+                <Link href="/dashboard/driver/my-account">My Account</Link>
+
+              </li>
               <li className={router.pathname == "/dashboard/driver/application" ? "active" : ""}>
                 <Link href="/dashboard/driver/application">My Application</Link>
               </li>

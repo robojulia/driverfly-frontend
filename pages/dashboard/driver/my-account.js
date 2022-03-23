@@ -111,7 +111,7 @@ export default function MyAccount() {
                         <input class="form-check-input" type="checkbox" value="No" />
                     </div>
                 </div>
-            </div>
+           
 
 
             <div className='row'>
@@ -220,7 +220,7 @@ export default function MyAccount() {
 
                 </div>
             </div>
-
+            </div>
 
         </>
     )
