@@ -33,13 +33,13 @@ export default function Dashboard() {
             { headers: headers }
         )
             .then(data => {
-                console.log("handle success", data.data)
+               
                 setJobs(data.data)
             })
             .catch(function (error) {
-                console.log("handle error success", error.response)
+               
             }).then(function () {
-                console.log("always executed")
+               
             })
     }
 
