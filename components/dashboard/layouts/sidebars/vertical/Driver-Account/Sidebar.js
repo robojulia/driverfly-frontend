@@ -17,28 +17,31 @@ export default function Sidebar() {
               <li className={router.pathname == "/dashboard/driver" ? "active" : ""}>
                 <Link className="sidenav-bg" href="/dashboard/driver">Dashboard</Link>
               </li>
-              <li className={router.pathname == "/dashboard/driver/profile" ? "active" : ""}>
-                <Link href="/dashboard/driver/profile">Profile</Link>
-
-              </li>
+    
               <li className={router.pathname == "/dashboard/driver/my-account" ? "active" : ""}>
                 <Link href="/dashboard/driver/my-account">My Account</Link>
+               </li>
 
-              </li>
               <li className={router.pathname == "/dashboard/driver/my-application" ? "active" : ""}>
                 <Link href="/dashboard/driver/my-application">My Application</Link>
+              </li>
 
-              </li>
-              <li className={router.pathname == "/dashboard/driver/jobs-offered" ? "active" : ""}>
-                <Link href="/dashboard/driver/jobs-offered">Jobs Offered</Link>
-
-              </li>
-              <li className={router.pathname == "/dashboard/driver/suggested-jobs" ? "active" : ""}>
-                <Link href="/dashboard/driver/suggested-jobs">Suggested Jobs</Link>
-              </li>
               <li className={router.pathname == "/dashboard/driver/my-docs" ? "active" : ""}>
                 <Link href="/dashboard/driver/my-docs">My Docs</Link>
               </li>
+
+              <li className={router.pathname == "/dashboard/driver/jobs-offered" ? "active" : ""}>
+                <Link href="/dashboard/driver/jobs-offered">Jobs Offered</Link>
+                </li>
+
+                <li className={router.pathname == "/dashboard/driver/profile" ? "active" : ""}>
+                <Link href="/dashboard/driver/profile">Profile</Link>
+              </li>
+              
+              <li className={router.pathname == "/dashboard/driver/suggested-jobs" ? "active" : ""}>
+                <Link href="/dashboard/driver/suggested-jobs">Suggested Jobs</Link>
+              </li>
+             
             </ul>
            
           </Navbar.Collapse>
