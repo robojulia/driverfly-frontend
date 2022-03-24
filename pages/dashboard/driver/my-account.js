@@ -330,7 +330,7 @@ export default function MyAccount() {
                 },
                 driver: {
                     ...formState.driver,
-                    birthdate: driver.birthdate || "",
+                    birthdate: (driver.birthdate || "").split("T")[0],
                     street: driver.street || "",
                     city: driver.city || "",
                     state: driver.state || "",
