@@ -11,6 +11,8 @@ import 'react-toastify/dist/ReactToastify.css'
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+import { jobBenefits, jobGeography, jobPayMethod, jobType } from '../../../utils/jobs';
+
 
 
 export default function MyAccount() {
@@ -254,12 +256,12 @@ export default function MyAccount() {
                 CONTACT_PAST_EMPLOYERS: "NEVER",
             },
             MATCHING: {
-                GEOGRAPHY: [ "OTR", "REGIONAL" ],
+                GEOGRAPHY: jobBenefits.map(v => v.key),
                 PREFERRED_SCHEDULE: "",
-                JOB_TYPE: [ "W2", "CONTRACT", "OWNER_OPERATOR" ],
+                JOB_TYPE: jobType.map(v => v.key),
                 MIN_PAY: "",
-                PAY_METHOD: [ "RATE_PER_MILE", "PERCENT_PER_MOVE", "HOURLY", "SET_WEEKLY", "SALARY", "PERCENT_WEIGHT" ],
-                BENEFITS: []
+                PAY_METHOD: jobPayMethod.map(v => v.key),
+                BENEFITS: jobBenefits.map(v => v.key)
             }
         }
     });
@@ -613,8 +615,8 @@ export default function MyAccount() {
             <div className={style.info}>
                 <div className='row'>
                     <div className="col-sm-6">
-                        <h3>Communication Preferences:</h3>
                         <div className='row'>
+                            <h3>Communication Preferences:</h3>
                             <div className='col-12 mt-3'>
                                 <span className={style.lable}>Preferred method:</span>
                                 <div class="form-check form-check-inline">
@@ -627,7 +629,7 @@ export default function MyAccount() {
                                 </div>
                             </div>
                             <div className="col-12 mt-3">
-                                <label>Preferred hours</label>
+                                <label>Preferred hours:</label>
                                 <input type="text" className="form-control" placeholder="Preferred hours" name="COMMUNICATION.PREFERRED_HOURS" onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.COMMUNICATION.PREFERRED_HOURS} />
                             </div>
                             <div className="col-12 mt-3">
@@ -653,137 +655,106 @@ export default function MyAccount() {
                                 </div>
                             </div>
                         </div>
+                        <div className='row mt-3'>
+                            <h3>Sharing Preferences:</h3>
+                            <div className='row'>
+                                <div className='col-12 mt-3'>
+                                    <span className={style.lable}>Share my MVR:</span>
+                                    <select class="form-control form-select" name="SHARING.MVR" onChange={e => onPreferenceChange(e)} value={formState.preferences.SHARING.MVR}>
+                                        <option value="NEVER">Never</option>
+                                        <option value="ALWAYS">Always</option>
+                                        <option value="ASK">Depending on company</option>
+                                    </select>
+                                </div>
+                                <div className="col-12 mt-3">
+                                    <span className={style.lable}>Share copy of my Drivers License</span>
+                                    <select class="form-control form-select" name="SHARING.DRIVERS_LICENSE" onChange={e => onPreferenceChange(e)} value={formState.preferences.SHARING.DRIVERS_LICENSE}>
+                                        <option value="NEVER">Never</option>
+                                        <option value="ALWAYS">Always</option>
+                                        <option value="ASK">Depending on company</option>
+                                    </select>
+                                </div>
+                                <div className="col-12 mt-3">
+                                    <span className={style.lable}>Share copy of my Medical Card:</span>
+                                    <select class="form-control form-select" name="SHARING.MEDICAL_CARD" onChange={e => onPreferenceChange(e)} value={formState.preferences.SHARING.MEDICAL_CARD}>
+                                        <option value="NEVER">Never</option>
+                                        <option value="ALWAYS">Always</option>
+                                        <option value="ASK">Depending on company</option>
+                                    </select>
+                                </div>
+                                <div className="col-12 mt-3">
+                                    <span className={style.lable}>Authorize companies to contact my past employers:</span>
+                                    <select class="form-control form-select" name="SHARING.CONTACT_PAST_EMPLOYERS" onChange={e => onPreferenceChange(e)} value={formState.preferences.SHARING.CONTACT_PAST_EMPLOYERS}>
+                                        <option value="NEVER">Never</option>
+                                        <option value="ALWAYS">Always</option>
+                                        <option value="ASK">Depending on company</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="col-sm-6 mt-3 text-lg-center" style={{ display: "none" }}>
+                    <div className="col-sm-6">
+                        <h3>Matching Preferences:</h3>
+                        <div className="col-12 mt-3">
+                            <span className={style.lable}>Geography:</span>
+                            {jobGeography.map(v => (
+                                <div key={v.key} className="form-check form-check-inline">
+                                    <label className="form-check-label">{v.label}</label>
+                                    <input className="form-check-input" type="checkbox" value={v.key} name="MATCHING.GEOGRAPHY" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.GEOGRAPHY.includes(v.key)} />
+                                </div>
+                            ))}
+                        </div>
+                        <div className="col-12 mt-3">
+                            <label>Preferred Schedule:</label>
+                            <input type="text" className="form-control" placeholder="Preferred Schedule" name="MATCHING.PREFERRED_SCHEDULE" onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.MATCHING.PREFERRED_SCHEDULE} />
+                        </div>
+                        <div className="col-12 mt-3">
+                            <span className={style.lable}>Type:</span>
+                            {jobType.map(v => (
+                                <div key={v.key} className="form-check form-check-inline">
+                                    <label className="form-check-label">{v.label}</label>
+                                    <input className="form-check-input" type="checkbox" value={v.key} name="MATCHING.JOB_TYPE" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.JOB_TYPE.includes(v.key)} />
+                                </div>
+                            ))}
+                        </div>
+                        <div className="col-12 mt-3">
+                            <label>Min Pay:</label>
+                            <input type="text" className="form-control" placeholder="Minimum pay" name="MATCHING.MIN_PAY" onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.MATCHING.MIN_PAY} />
+                        </div>
+                        <div className="col-12 mt-3">
+                            <span className={style.lable}>Pay Method:</span>
+                            <div className="row mt-1">
+                                {jobPayMethod.map(v => (
+                                    <div key={v.key} className='col-6'>
+                                        <div className="form-check form-check-inline">
+                                            <label className="form-check-label">{v.label}</label>
+                                            <input className="form-check-input" type="checkbox" value={v.key} name="MATCHING.PAY_METHOD" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.PAY_METHOD.includes(v.key)} />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="col-12 mt-3">
+                            <span className={style.lable}>Required Benefits:</span>
+                            <div className="row mt-1">
+                                {jobBenefits.map(v => (
+                                    <div key={v.key} className='col-6'>
+                                        <div className="form-check form-check-inline">
+                                            <label className="form-check-label">{v.label}</label>
+                                            <input className="form-check-input" type="checkbox" value={v.key} name="MATCHING.BENEFITS" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.BENEFITS.includes(v.key)} />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* <div className="col-sm-6 mt-3 text-lg-center" style={{ display: "none" }}>
                         <h2 className='my-4'>Points</h2>
                         <span>1300</span>
                         <span className={style.earn_btn}>Earn More</span>
-                    </div>
+                    </div> */}
                 </div>
-           
-
-
-            <div className='row'>
-                <div className="col-sm-6 mt-3">
-                    <h3>Sharing Preferences:</h3>
-                    <div className='row'>
-                        <div className='col-12 mt-3'>
-                            <span className={style.lable}>Share my MVR:</span>
-                            <select class="form-control form-select" name="SHARING.MVR" onChange={e => onPreferenceChange(e)} value={formState.preferences.SHARING.MVR}>
-                                <option value="NEVER">Never</option>
-                                <option value="ALWAYS">Always</option>
-                                <option value="ASK">Depending on company</option>
-                            </select>
-                        </div>
-                        <div className="col-12 mt-3">
-                            <span className={style.lable}>Share copy of my Drivers License</span>
-                            <select class="form-control form-select" name="SHARING.DRIVERS_LICENSE" onChange={e => onPreferenceChange(e)} value={formState.preferences.SHARING.DRIVERS_LICENSE}>
-                                <option value="NEVER">Never</option>
-                                <option value="ALWAYS">Always</option>
-                                <option value="ASK">Depending on company</option>
-                            </select>
-                        </div>
-                        <div className="col-12 mt-3">
-                            <span className={style.lable}>Share copy of my Medical Card:</span>
-                            <select class="form-control form-select" name="SHARING.MEDICAL_CARD" onChange={e => onPreferenceChange(e)} value={formState.preferences.SHARING.MEDICAL_CARD}>
-                                <option value="NEVER">Never</option>
-                                <option value="ALWAYS">Always</option>
-                                <option value="ASK">Depending on company</option>
-                            </select>
-                        </div>
-                        <div className="col-12 mt-3">
-                            <span className={style.lable}>Authorize companies to contact my past employers:</span>
-                            <select class="form-control form-select" name="SHARING.CONTACT_PAST_EMPLOYERS" onChange={e => onPreferenceChange(e)} value={formState.preferences.SHARING.CONTACT_PAST_EMPLOYERS}>
-                                <option value="NEVER">Never</option>
-                                <option value="ALWAYS">Always</option>
-                                <option value="ASK">Depending on company</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-sm-6 mt-3">
-                    <h3>Matching Preferences:</h3>
-                    <div className="col-12 mt-3">
-                        <span className={style.lable}>Geography:</span>
-                        <div className="form-check form-check-inline">
-                            <label className="form-check-label">OTR</label>
-                            <input className="form-check-input" type="checkbox" value="OTR" name="MATCHING.GEOGRAPHY" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.GEOGRAPHY.includes("OTR")} />
-                        </div>
-                        <div className="form-check form-check-inline">
-                            <label className="form-check-label" >Regional</label>
-                            <input className="form-check-input" type="checkbox" value="REGIONAL" name="MATCHING.GEOGRAPHY" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.GEOGRAPHY.includes("REGIONAL")} />
-                        </div>
-                    </div>
-                    <div className="col-12 mt-3">
-                        <label>Preferred Schedule:</label>
-                        <input type="text" className="form-control" placeholder="Preferred Schedule" name="MATCHING.PREFERRED_SCHEDULE" onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.MATCHING.PREFERRED_SCHEDULE} />
-                    </div>
-                    <div className="col-12 mt-3">
-                        <span className={style.lable}>Type:</span>
-                        <div className="form-check form-check-inline">
-                            <label className="form-check-label">W2</label>
-                            <input className="form-check-input" type="checkbox" value="W2" name="MATCHING.JOB_TYPE" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.JOB_TYPE.includes("W2")} />
-                        </div>
-                        <div className="form-check form-check-inline">
-                            <label className="form-check-label" >1099</label>
-                            <input className="form-check-input" type="checkbox" value="CONTRACT" name="MATCHING.JOB_TYPE" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.JOB_TYPE.includes("CONTRACT")} />
-                        </div>
-                        <div className="form-check form-check-inline">
-                            <label className="form-check-label" >Owner Operator</label>
-                            <input className="form-check-input" type="checkbox" value="OWNER_OPERATOR" name="MATCHING.JOB_TYPE" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.JOB_TYPE.includes("OWNER_OPERATOR")} />
-                        </div>
-                    </div>
-                    <div className="col-12 mt-3">
-                        <label>Min Pay:</label>
-                        <input type="text" className="form-control" placeholder="Minimum pay" name="MATCHING.MIN_PAY" onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.MATCHING.MIN_PAY} />
-                    </div>
-                    <div className="col-12 mt-3">
-                        <span className={style.lable}>Pay Method:</span>
-                        <div className="row mt-1">
-                            <div className='col-6'>
-                                <div className="form-check">
-                                    <label className="form-check-label">Rate per mile</label>
-                                    <input className="form-check-input" type="checkbox" value="RATE_PER_MILE" name="MATCHING.PAY_METHOD" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.PAY_METHOD.includes("RATE_PER_MILE")} />
-                                </div>
-                            </div>
-                            <div className='col-6'>
-                                <div className="form-check">
-                                    <label className="form-check-label">Percent per move</label>
-                                    <input className="form-check-input" type="checkbox" value="PERCENT_PER_MOVE" name="MATCHING.PAY_METHOD" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.PAY_METHOD.includes("PERCENT_PER_MOVE")} />
-                                </div>
-                            </div>
-                            <div className='col-6'>
-                                <div className="form-check">
-                                    <label className="form-check-label">Hourly</label>
-                                    <input className="form-check-input" type="checkbox" value="HOURLY" name="MATCHING.PAY_METHOD" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.PAY_METHOD.includes("HOURLY")} />
-                                </div>
-                            </div>
-                            <div className='col-6'>
-                                <div className="form-check">
-                                    <label className="form-check-label">Set weekly</label>
-                                    <input className="form-check-input" type="checkbox" value="SET_WEEKLY" name="MATCHING.PAY_METHOD" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.PAY_METHOD.includes("SET_WEEKLY")} />
-                                </div>
-                            </div>
-                            <div className='col-6'>
-                                <div className="form-check">
-                                    <label className="form-check-label">Salary</label>
-                                    <input className="form-check-input" type="checkbox" value="SALARY" name="MATCHING.PAY_METHOD" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.PAY_METHOD.includes("SALARY")} />
-                                </div>
-                            </div>
-                            <div className='col-6'>
-                                <div className="form-check">
-                                    <label className="form-check-label">Percent weight</label>
-                                    <input className="form-check-input" type="checkbox" value="PERCENT_WEIGHT" name="MATCHING.PAY_METHOD" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.PAY_METHOD.includes("PERCENT_WEIGHT")} />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-12 mt-3" style={{ display: "none" }}>
-                        <span className={style.lable}>Required Benefits:</span>
-                        <input className="form-check-input" type="checkbox" />
-                    </div>
-                </div>
-            </div>
         </div>
 
         </>
