@@ -33,9 +33,6 @@ export default function Sidebar() {
                 <Link href="/dashboard/driver/jobs-offered">Jobs Offered</Link>
 
               </li>
-              <li className={router.pathname == "/dashboard/driver/driver-intake-information" ? "active" : ""}>
-                <Link href="/dashboard/driver/driver-intake-information">Driver Intake Information</Link>
-              </li>
               <li className={router.pathname == "/dashboard/driver/suggested-jobs" ? "active" : ""}>
                 <Link href="/dashboard/driver/suggested-jobs">Suggested Jobs</Link>
               </li>
