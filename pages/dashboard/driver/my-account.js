@@ -256,7 +256,7 @@ export default function MyAccount() {
             MATCHING: {
                 GEOGRAPHY: [ "OTR", "REGIONAL" ],
                 PREFERRED_SCHEDULE: "",
-                JOB_TYPE: [ "W2", "CONTRACT" ],
+                JOB_TYPE: [ "W2", "CONTRACT", "OWNER_OPERATOR" ],
                 MIN_PAY: "",
                 PAY_METHOD: [ "RATE_PER_MILE", "PERCENT_PER_MOVE", "HOURLY", "SET_WEEKLY", "SALARY", "PERCENT_WEIGHT" ],
                 BENEFITS: []
@@ -346,9 +346,11 @@ export default function MyAccount() {
             preferences.forEach(v => {
                 let { category, label, value } = v;
 
+                value = value || "";
+
                 if (category === "COMMUNICATION") {
                     if (label === "PREFERRED_METHOD") {
-                        value = value.split(",");
+                        value = value ? value.split(",") : [];
                     }
                     else if (label === "RECEIVE_SUGGESTED_JOBS") {
                         value = value == "true";
@@ -358,17 +360,11 @@ export default function MyAccount() {
                     }
                 }
                 else if (category === "MATCHING") {
-                    if (label === "GEOGRAPHY") {
-                        value = value.split(",");
-                    }
-                    else if (label === "JOB_TYPE") {
-                        value = value.split(",");
-                    }
-                    else if (label === "PAY_METHOD") {
-                        value = value.split(",");
-                    }
-                    else if (label === "BENEFITS") {
-                        value = value.split(",");
+                    if (label === "GEOGRAPHY" ||
+                        label === "JOB_TYPE" ||
+                        label === "PAY_METHOD" ||
+                        label === "BENEFITS") {
+                        value = value ? value.split(",") : [];
                     }
                 }
 
@@ -509,6 +505,8 @@ export default function MyAccount() {
             if (value === currentValue) return;
             newValue = dbValue = value;
         }
+
+        console.log("new preference value", newValue);
 
         preferences[category][label] = newValue;
 
@@ -704,7 +702,7 @@ export default function MyAccount() {
                     </div>
                 </div>
                 <div className="col-sm-6 mt-3">
-                    <h3>Matching Preferences</h3>
+                    <h3>Matching Preferences:</h3>
                     <div className="col-12 mt-3">
                         <span className={style.lable}>Geography:</span>
                         <div className="form-check form-check-inline">
@@ -727,8 +725,12 @@ export default function MyAccount() {
                             <input className="form-check-input" type="checkbox" value="W2" name="MATCHING.JOB_TYPE" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.JOB_TYPE.includes("W2")} />
                         </div>
                         <div className="form-check form-check-inline">
-                            <label className="form-check-label" >1099:</label>
+                            <label className="form-check-label" >1099</label>
                             <input className="form-check-input" type="checkbox" value="CONTRACT" name="MATCHING.JOB_TYPE" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.JOB_TYPE.includes("CONTRACT")} />
+                        </div>
+                        <div className="form-check form-check-inline">
+                            <label className="form-check-label" >Owner Operator</label>
+                            <input className="form-check-input" type="checkbox" value="OWNER_OPERATOR" name="MATCHING.JOB_TYPE" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.JOB_TYPE.includes("OWNER_OPERATOR")} />
                         </div>
                     </div>
                     <div className="col-12 mt-3">
