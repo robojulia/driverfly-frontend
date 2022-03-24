@@ -227,7 +227,7 @@ export default function PrestoresDocuments() {
           </div>
           <form onSubmit={submitHandler} className="modal-body" id="myForm">
             <div className="row">
-              <h2>My Documents</h2>
+            <h2>My Documents</h2>
               <div className="col-lg-6 col-12 mt-5">
                 <h3>Driver’s License</h3>
                 <p>Upload Date:</p>
@@ -267,28 +267,8 @@ export default function PrestoresDocuments() {
               </div>
               <div className="col-lg-6 col-12 mt-5">
                 <h3>Motor Vehicle Record (MVR)</h3>
-                <div className="row">
-                      <div class="form-group row">
-                        <label for="inputDateUploaded" class="col-sm-3 mt-2 col-form-label">Date Uploaded:</label>
-                        <div class="col-lg-7 col-12">
-                          <input type="date" class="form-control" />
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="inputStateIssued" class="col-sm-3 mt-2 col-form-label">State Issued:</label>
-                        <div class="col-lg-7 col-12  mt-2">
-                          <input type="text" class="form-control" />
-                        </div>
-                      </div>
-                      <div class="form-group row mt-2 mb-4">
-                        <label for="inputSource" class="col-sm-3 mt-2 col-form-label">Source:</label>
-                        <div class="col-lg-7 col-12 ">
-                          <input type="text" class="form-control" />
-                        </div>
-                      </div>
-                   
-                </div>
-
+                <p>Date Uploaded:</p>
+              
                 {myUser && <button className="applied" onClick={() => openModal("resume")}>View</button>}
 
                 <input type="file" class="custom-file-input" />
@@ -299,37 +279,7 @@ export default function PrestoresDocuments() {
 
               </div>
             </div>
-            {/* <div className="row">
-              <div className="col-12 mt-3">
-                <label>* Qualification</label>
-                <Select
-                  placeholder="Select your Qualification..."
-                  // onChange={( s ) => setQualification( s.map( i => i.value ) )}
-                  value={user.qualification}
-                  onChange={(v) => setQualification(v)}
-                  options={qualificationOptions} />
-                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.qualification}</p>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-lg-6 col-12 mt-3">
-                <label>Upload your CV</label>
-                <input name="cv" onChange={Upload} type="file" className="form-control file_field  " />
-                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.resume}</p>
-              </div>
-              <div className="col-lg-6 col-12 mt-3">
-                <label>Upload your Commercial Driver’s License</label>
-                <input onChange={Upload} name="license" type="file" className="form-control file_field" />
-                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.commercial_driving_license}</p>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col col-12 mt-3">
-                <label>Upload your Medical card</label>
-                <input onChange={Upload} name="card" type="file" className="form-control file_field " />
-                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.medical_card}</p>
-              </div>
-            </div> */}
+           
             {/* <div className="border-0 mt-5">
               <button type="submit" className="btn btn-primary  p-lg-3 p-5">Submit</button>
             </div> */}
