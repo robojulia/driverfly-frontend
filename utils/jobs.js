@@ -36,10 +36,10 @@ const jobBenefits = [
         key: "FUEL_CARD",
         label: "Fuel cards / discount programs"
     },
-    // {
-    //     key: "GUARANTEED_BASE_PAY",
-    //     label: "Gauranteed baseline pay"
-    // },
+    {
+        key: "GUARANTEED_BASE_PAY",
+        label: "Gauranteed baseline pay"
+    },
     {
         key: "NEW_EQUIPMENT",
         label: "New equipment"
