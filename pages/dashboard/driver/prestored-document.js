@@ -20,26 +20,33 @@ import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import { SpecialZoomLevel } from '@react-pdf-viewer/core';
 
 
-export default function PrestoresDocuments () {
+export default function PrestoresDocuments() {
+
+  const { authDriver } = useRedirect()
+  authDriver()
+
+  const { authCheck, setAuth } = useAuth()
+  const user = authCheck()
+  console.log('user', user)
 
   const defaultLayoutPluginInstance = defaultLayoutPlugin()
 
   const localStorage = useStorage()
-  const [myUser, setUser] = useState( null )
-  const [showModal, setShowModal] = useState( false )
-  const [viewPDF, setViewPDF] = useState( "" )
+  const [myUser, setUser] = useState(null)
+  const [showModal, setShowModal] = useState(false)
+  const [viewPDF, setViewPDF] = useState("")
 
-  useEffect( async () => {
+  useEffect(async () => {
     // set token
-    const user = JSON.parse( localStorage.getItem( 'user' ) )
-    setUser( user )
-  }, [] )
+    const user = JSON.parse(localStorage.getItem('user'))
+    setUser(user)
+  }, [])
 
-  const [qualifications, setQualifications] = useState( [] )
+  const [qualification, setQualification] = useState(user.qualification ?? [])
 
-  const [resume, setResume] = useState( null )
-  const [commercial_driving_license, setCommercial_driving_license] = useState( null )
-  const [medical_card, setMedical_card] = useState( null )
+  const [resume, setResume] = useState(null)
+  const [commercial_driving_license, setCommercial_driving_license] = useState(null)
+  const [medical_card, setMedical_card] = useState(null)
   const [validation, setValidation] = useState()
 
   const qualificationOptions = [
@@ -56,26 +63,25 @@ export default function PrestoresDocuments () {
     { value: "doctorate", label: "Doctorate" }
   ]
 
-  const { setAuth } = useAuth()
 
-  function Upload ( event ) {
-    if ( event.target.files && event.target.files[0] ) {
+  function Upload(event) {
+    if (event.target.files && event.target.files[0]) {
       const t = event.target.name
       const file = event.target.files[0]
-      if ( t == "cv" ) {
-        setResume( file )
+      if (t == "cv") {
+        setResume(file)
       }
-      if ( t == "card" ) {
-        setMedical_card( file )
+      if (t == "card") {
+        setMedical_card(file)
       }
-      if ( t == "license" ) {
-        setCommercial_driving_license( file )
+      if (t == "license") {
+        setCommercial_driving_license(file)
       }
     }
   }
 
-  const { authDriver } = useRedirect()
-  authDriver()
+
+ 
 
   const openModal = ( str ) => {
     let txt
@@ -88,63 +94,126 @@ export default function PrestoresDocuments () {
     if ( str == "license" ) {
       txt = "Commercial Driving License"
     }
-    setViewPDF( txt )
-    setShowModal( true )
+
+    setViewPDF(txt)
+    setShowModal(true)
   }
 
-  const submitHandler = async ( e ) => {
+  const submitHandler = async (e) => {
     e.preventDefault()
     let errors = []
-    if ( qualifications.length < 1 ) {
-      errors.qualifications = "Please select at least one qualification"
+    if (qualification.length < 1) {
+      errors.qualification = "Please select at least one qualification"
     }
-    if ( !resume ) {
+    if (!resume) {
       errors.resume = "Please upload your resume"
     }
-    if ( !commercial_driving_license ) {
+    if (!commercial_driving_license) {
       errors.commercial_driving_license = "Please upload your commercial driving license"
     }
-    if ( !medical_card ) {
+    if (!medical_card) {
       errors.medical_card = "Please upload your medical card"
     }
 
-    setValidation( errors )
+    setValidation(errors)
 
-    if ( Object.keys( errors ).length == 0 ) {
+    if (Object.keys(errors).length == 0) {
       const formData = new FormData()
-      formData.set( "qualifications", qualifications.map( q => q.value ) )
-      formData.append( "resume", resume )
-      formData.append( "commercial_driving_license", commercial_driving_license )
-      formData.append( "medical_card", medical_card )
-      // for ( let [key, value] of formData.entries() ) {
-      //   console.dir( `${key}: ${value}` )
-      // }
-      const resp = await axios.post( `${process.env.BASE_URL_API}/user/documents`, formData, {
+
+      formData.append("resume", resume)
+      formData.append("commercial_driving_license", commercial_driving_license)
+      formData.append("medical_card", medical_card)
+
+      await axios.post(`${process.env.BASE_URL_API}/user/documents`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           'Authorization': `Bearer ${myUser.token}`
         }
-      } )
-      const user = {
-        ...JSON.parse( localStorage.getItem( 'user' ) ),
-        commercial_driving_license: resp.data.commercial_driving_license,
-        qualifications: resp.data.qualifications,
-        medical_card: resp.data.medical_card,
-        resume: resp.data.resume,
+      }).then(data => {
+        console.log('data', data)
+        if (data.status == 201) {
+          user.commercial_driving_license = data.data.commercial_driving_license
+          user.medical_card = data.data.medical_card
+          user.resume = data.data.resume
+          setAuth(user)
+          toast.success("Documents uploaded successfully", {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          })
 
-      }
-      setAuth( user )
-      toast.success( "Documents uploaded successfully", {
-        position: "bottom-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      } )
+        } else {
+          toast.error("Something Went South", {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          })
+        }
 
-      // setQualifications([])
+      }).catch(error => {
+        console.log('error', error)
+        toast.error("Something Went South", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
+      })
+
+      await axios.put(`${process.env.BASE_URL_API}/user/${user.id}`,
+        {
+          qualification: qualification.value
+        }, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`
+        }
+      })
+        .then(data => {
+          console.log("handle success", data.data)
+          user.qualification = data.data.user.qualification
+          setAuth(user)
+          toast.success("Qualification Updated Successfully ", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+          setTimeout(() => {
+            // window.document.getElementById("my-form").reset()
+          }, 5000);
+        })
+        .catch(function (error) {
+          console.log("handle error success", error)
+          toast.error("Something Went South!", {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          })
+        }).then(function () {
+          console.log("always executed")
+        })
+
+      // setAuth(user)
+
+      // setQualification([])
       // setResume(null)
       // setCommercial_driving_license(null)
       // setMedical_card(null)
@@ -176,43 +245,48 @@ export default function PrestoresDocuments () {
             </div>
             <div className="row">
               <div className="col-12 mt-3">
-                <label>* Qualifications</label>
+                <label>* Qualification</label>
                 <Select
-                  placeholder="Select your Qualifications..."
-                  // onChange={( s ) => setQualifications( s.map( i => i.value ) )}
-                  value={qualifications}
-                  onChange={( v ) => setQualifications( v )}
-                  isMulti options={qualificationOptions} />
-                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.qualifications}</p>
+                  placeholder="Select your Qualification..."
+                  // onChange={( s ) => setQualification( s.map( i => i.value ) )}
+                  value={user.qualification}
+                  onChange={(v) => setQualification(v)}
+                  options={qualificationOptions} />
+                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.qualification}</p>
               </div>
             </div>
             <div className="row">
               <div className="col-lg-6 col-12 mt-3">
                 <label>Upload your CV</label>
-                <input name="cv" onChange={Upload} type="file" className="form-control  " />
+                <input name="cv" onChange={Upload} type="file" className="form-control file_field  " />
                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.resume}</p>
               </div>
               <div className="col-lg-6 col-12 mt-3">
                 <label>Upload your Commercial Driver’s License</label>
-                <input onChange={Upload} name="license" type="file" className="form-control" />
+                <input onChange={Upload} name="license" type="file" className="form-control file_field" />
                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.commercial_driving_license}</p>
               </div>
             </div>
             <div className="row">
               <div className="col col-12 mt-3">
                 <label>Upload your Medical card</label>
-                <input onChange={Upload} name="card" type="file" className="form-control " />
+                <input onChange={Upload} name="card" type="file" className="form-control file_field " />
                 <p style={{ fontStyle: "italic", color: "red" }}>{validation?.medical_card}</p>
               </div>
             </div>
-            <div className="modal-footer border-0 mt-5">
-              <button type="submit" className="btn btn-primary w-25 m-auto p-lg-3 p-5">Submit</button>
+            <div className="border-0 mt-5">
+              <button type="submit" className="btn btn-primary  p-lg-3 p-5">Submit</button>
             </div>
           </form>
         </div>
       </div>
-      <Modal size="xl" show={showModal} onHide={() => setShowModal( false )}>
-        <Modal.Header closeButton>{viewPDF}</Modal.Header>
+
+      {/* <Modal size="xl" show={showModal} onHide={() => setShowModal( false )}>
+        <Modal.Header closeButton>{viewPDF}</Modal.Header> */}
+
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header>{viewPDF}</Modal.Header>
+
         <Modal.Body>
           <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.13.216/build/pdf.worker.min.js">
             <div style={{
@@ -229,15 +303,17 @@ export default function PrestoresDocuments () {
             </div>
           </Worker>
         </Modal.Body>
-        {/* <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal( false )}>Close</Button>
-        </Modal.Footer> */}
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>Close</Button>
+        </Modal.Footer>
+
       </Modal>
     </>
   )
 };
 
-PrestoresDocuments.getLayout = function getLayout ( page ) {
+PrestoresDocuments.getLayout = function getLayout(page) {
   return (
     <FullLayout>
       {page}

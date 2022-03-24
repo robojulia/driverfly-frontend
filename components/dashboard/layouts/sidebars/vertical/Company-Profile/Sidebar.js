@@ -1,24 +1,20 @@
-import { Button, Nav, NavItem } from "reactstrap";
+
+import { Button, Nav, Navbar, Container, NavDropdown, Item, NavItem, Dropdown } from "react-bootstrap";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 
-const Sidebar = ({ showMobilemenu }) => {
-
+export default function Sidebar() {
   const router = useRouter();
   return (
 
-    <div className="">
-      <div className="d-flex align-items-center bg_color">
-        <Button
-          close
-          size="sm"
-          className="ms-auto d-lg-none"
-          onClick={showMobilemenu}
-        ></Button>
-      </div>
-      <div className="">
-        <ul className="dashboardsidebar">
+    <div className="side_bar">
+      <Navbar bg="light" expand="lg">
+        <Container className="p-0">
+          <Navbar.Toggle aria-controls="basic-navbar-nav " />
+          <Navbar.Collapse id="basic-navbar-nav">
+           
+          <ul className="dashboardsidebar ">
           <li className={router.pathname == "/dashboard/company" ? "active" : ""}>
             <Link className="sidenav-bg" href="/dashboard/company">Dashboard</Link>
           </li>
@@ -54,10 +50,14 @@ const Sidebar = ({ showMobilemenu }) => {
             <Link href="/dashboard/company/admin-approval-jobs">Admin approval for jobs</Link>
           </li>
         </ul>
-      </div>
+           
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
     </div>
 
   );
 };
 
-export default Sidebar;
+
+

@@ -121,7 +121,7 @@ export default function Profile() {
 
       await axios.put(
         `${process.env.BASE_URL_API}/user/${user.id}`,
-        { user: { ...inputValues } },
+        { ...inputValues },
         { headers }
       )
         .then(data => {
@@ -169,7 +169,7 @@ export default function Profile() {
             } else if (error.response.data.err) {
               setColor("green")
               setServerValidation('Profile Updated')
-             
+
             }
           } else {
             setServerValidation('Something went south')

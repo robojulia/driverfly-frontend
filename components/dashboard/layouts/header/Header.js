@@ -41,51 +41,26 @@ const Header = ({ showMobmenu }) => {
 
   return (
     <Navbar color="" dark expand="md">
-      <div className="d-flex align-items-center">
-        <NavbarBrand href="/" className="d-lg-none">
-          <Image src={LogoWhite} alt="logo" />
-        </NavbarBrand>
-        <Button color="" className="d-lg-none" onClick={showMobmenu}>
-          <i className="bi bi-list"></i>
-        </Button>
-      </div>
-      <div className="hstack gap-2 bg-success">
-        <Button
-          color="secondary"
-          size="sm"
-          className="d-sm-block d-md-none"
-          onClick={Handletoggle}
-        >
-          {isOpen ? (
-            <i className="bi bi-x"></i>
-          ) : (
-            <i className="bi bi-three-dots-vertical"></i>
-          )}
-        </Button>
-      </div>
-      <div className="d-flex align-items-center bg_color">
+      <div className="logo_container">
         <Logo />
       </div>
 
-      <Collapse navbar isOpen={isOpen}>
-        <div className="input-group rounded w-25 m-auto py-2">
-          <i className="fas fa-search"></i>
-          <i className="fa fa-search" aria-hidden="true"></i>
-          <input type="search" className="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-          <span className="input-group-text border-0" id="search-addon">
-          </span>
-        </div>
+      <Collapse className="d-block">
+
 
         {
-          isDriver() ? < DriverProfileNav user={user}  /> : ""
+          isDriver() ? < DriverProfileNav user={user} /> : ""
         }
 
         {
-          isCompany() ? < CompanyProfileNav user={user}  /> : ""
+          isCompany() ? < CompanyProfileNav user={user} /> : ""
         }
 
       </Collapse>
+
+     
     </Navbar>
+
   );
 };
 

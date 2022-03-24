@@ -6,16 +6,6 @@
     background-color: #f2f2f2;
 }
 
-
-.logoicon {
-    background: #f2f2f2 !important;
-    height: 80px;
-}
-
-/* .logoicon img{ 
-    top: -75px !important;
-    height: 146px !important;
-} */
 .header nav {
     background: #f2f2f2 !important;
     color: rgb(0, 0, 0);
@@ -44,10 +34,9 @@
 }
 
 
-.dashboardsidebar li a {
-    text-decoration: none;
-    display: block;
-    color: #fff;
+.sidebarArea ul {
+    padding: 0;
+    border: 0;
 
 }
 
@@ -57,19 +46,23 @@
     color: #fff;
     margin-left: 10px;
 }
+
 .dashboardsidebar li {
     padding: 16px 10px;
 
-  
-} 
+
+}
+
 .dashboardsidebar .active {
 
-    background-color: #fff;
-    color: #000;
+    background-color: #fff !important;
+    color: #000 !important;
 }
+
 .dashboardsidebar .active a {
     color: #000;
 }
+
 .space {
     height: 100vh;
 }
@@ -91,9 +84,31 @@
 
 .profile button:hover,
 .profile .dropdown-item:hover {
-    color: #000 !important;
+    background-color: transparent !important;
     text-decoration: underline;
+    color: #000 !important;
 }
+
+.btn-check:focus+.btn-secondary,
+.btn-secondary:focus,
+.btn-secondary:hover {
+    background-color: transparent !important;
+}
+
+.dashboardsidebar .btn-info {
+    color: #fff;
+    background-color: #1b4454;
+    border-color: #1b4454;
+}
+
+.dashboardsidebar .btn-check:focus+.btn-info,
+.dashboardsidebar .btn-info:focus,
+.dashboardsidebar .btn-info:hover {
+    color: #fff;
+    background-color: #1b4454;
+    border-color: #1b4454;
+}
+
 
 .profile span {
     color: #000;
@@ -147,7 +162,7 @@
     background-color: #5eccc4;
 }
 
-.applicants__section{
+.applicants__section {
     overflow-x: auto;
 }
 
@@ -157,24 +172,112 @@
         background-color: #1b4454;
         height: auto;
     }
-    .applicants__section{
+
+    .applicants__section {
         overflow-x: auto;
     }
 }
-.select_pading{
+
+.select_pading {
     padding: 14px;
     outline: #ced4da;
     border: 1px solid #ced4da;
     background: white;
     border-radius: 5px;
 }
-.job_check_box { 
-    margin: 10px;
- }
 
- .job__select input{
-     padding: 6px !important;
- }
- .select {
+.job_check_box {
+    margin: 10px;
+}
+
+.job__select input {
     padding: 6px !important;
 }
+
+.select {
+    padding: 6px !important;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    background-color: transparent !important;
+}
+
+.file_field {
+    padding: 12px 20px !important;
+}
+
+.dashboard__mbl_menu span {
+    width: 25px;
+    height: 4px;
+    display: block;
+    background-color: #5fcbc4;
+    margin-top: 3px;
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    .logo_container {
+        width: 35%;
+    }
+}
+
+.side_bar .bg-light {
+    background-color: transparent !important;
+
+
+
+}
+
+/* Driver Dashboard  */
+
+.bg_yellow {
+    background-color: #f5c018;
+    border-radius: 5px;
+    margin: 0% 1%;
+
+}
+
+.bg_green {
+
+    background-color: #5cc8c4;
+    border-radius: 5px;
+    margin: 0% 1%;
+
+}
+
+.bg_blue {
+
+    background-color: #1d4354;
+    border-radius: 5px;
+    margin: 0% 1%;
+
+}
+
+.myrtlegreen {
+
+    background-color: #2A7869;
+    border-radius: 5px;
+    margin: 2% 1%;
+
+}
+
+.w-24 {
+
+    width: 23%;
+    display: inline-block;
+}
+
+@media screen and (max-width: 768px) {
+    .w-24 {
+
+        width: 100%;
+        margin: 2% 1%;
+    }
+}
+
+textarea {
+    height: 200px !important;
+  }
