@@ -37,7 +37,7 @@
 .sidebarArea ul {
     padding: 0;
     border: 0;
-    width: 200px;
+    width: 230px;
 
 }
 
@@ -346,4 +346,6 @@ textarea {
     float: left;
     color: #5dcac4;
     margin-right:  20px;
+    height: 30px;
+    width: 30px;
 }
