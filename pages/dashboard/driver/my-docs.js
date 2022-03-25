@@ -15,6 +15,8 @@ import { Viewer } from '@react-pdf-viewer/core'
 import Spinner from 'react-bootstrap/Spinner'
 import '@react-pdf-viewer/core/lib/styles/index.css'
 import { Worker } from '@react-pdf-viewer/core'
+import Link from "next/link"
+
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import { SpecialZoomLevel } from '@react-pdf-viewer/core';
@@ -226,6 +228,10 @@ export default function PrestoresDocuments() {
     <>
       <ToastContainer />
       <div>
+
+        {/* {myUser && <Button variant="info" className="mx-1" onClick={() => openModal("license")}>View License</Button>}
+        {myUser && <Button variant="info" className="mx-1" onClick={() => openModal("card")}>View Medical Card</Button>} */}
+
         {/***Top Cards***/}
         <Row>
           <h1>Prestored Document</h1>
@@ -239,44 +245,63 @@ export default function PrestoresDocuments() {
           <div className="modal-header border-0">
           </div>
           <form onSubmit={submitHandler} className="modal-body" id="myForm">
-            {/* <div>{inputValues}</div> */}
-            <div className="row">
-              {/* First Name */}
-            </div>
-            <div className="row">
-              <div className="col-12 mt-3">
-                <label>* Qualification</label>
-                <Select
-                  placeholder="Select your Qualification..."
-                  // onChange={( s ) => setQualification( s.map( i => i.value ) )}
-                  value={user.qualification}
-                  onChange={(v) => setQualification(v)}
-                  options={qualificationOptions} />
-                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.qualification}</p>
+            <div className="row my_docs_section ">
+            <h2>My Documents</h2>
+              <div className="col-lg-6 col-12 mt-5">
+                <h3>Driver’s License</h3>
+                <p>Upload Date:</p>
+                {myUser && <Button className="applied" onClick={() => openModal("resume")}>View</Button>}
+
+                <input type="file" class="custom-file-input" />
+                {/* <p style={{ fontStyle: "italic", color: "red" }}>{validation?.medical_card}</p> */}
+                <Link href="#">
+                  <Button className="approved"> View Past Records</Button>
+                </Link>
+              </div>
+              <div className="col-lg-6 col-12 mt-5">
+                <h3>Medical Card</h3>
+                <p>Upload Date:</p>
+                {myUser && <Button className="applied" onClick={() => openModal("resume")}>View</Button>}
+
+                <input type="file" class="custom-file-input" />
+                {/* <p style={{ fontStyle: "italic", color: "red" }}>{validation?.medical_card}</p> */}
+                <Link href="#">
+                  <Button className="approved"> View Past Records</Button>
+                </Link>
+
               </div>
             </div>
-            <div className="row">
-              <div className="col-lg-6 col-12 mt-3">
-                <label>Upload your CV</label>
-                <input name="cv" onChange={Upload} type="file" className="form-control file_field  " />
-                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.resume}</p>
+
+            <div className="row mt-5 my_docs_section ">
+              <div className="col-lg-6 col-12 mt-5">
+                <h3>Resume</h3>
+                <p>Upload Date:</p>
+                {myUser && <Button className="applied" onClick={() => openModal("resume")}>View</Button>}
+
+                <input type="file" class="custom-file-input" />
+                {/* <p style={{ fontStyle: "italic", color: "red" }}>{validation?.medical_card}</p> */}
+                <Link href="#">
+                  <Button className="approved"> View Past Records</Button>
+                </Link>
               </div>
-              <div className="col-lg-6 col-12 mt-3">
-                <label>Upload your Commercial Driver’s License</label>
-                <input onChange={Upload} name="license" type="file" className="form-control file_field" />
-                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.commercial_driving_license}</p>
+              <div className="col-lg-6 col-12 mt-5">
+                <h3>Motor Vehicle Record (MVR)</h3>
+                <p>Date Uploaded:</p>
+              
+                {myUser && <Button className="applied" onClick={() => openModal("resume")}>View</Button>}
+
+                <input type="file" class="custom-file-input" />
+                {/* <p style={{ fontStyle: "italic", color: "red" }}>{validation?.medical_card}</p> */}
+                <Link href="#">
+                  <Button className="approved"> View Past Records</Button>
+                </Link>
+
               </div>
             </div>
-            <div className="row">
-              <div className="col col-12 mt-3">
-                <label>Upload your Medical card</label>
-                <input onChange={Upload} name="card" type="file" className="form-control file_field " />
-                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.medical_card}</p>
-              </div>
-            </div>
-            <div className="border-0 mt-5">
+           
+            {/* <div className="border-0 mt-5">
               <button type="submit" className="btn btn-primary  p-lg-3 p-5">Submit</button>
-            </div>
+            </div> */}
           </form>
         </div>
       </div>
