@@ -10,6 +10,7 @@ import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
 import WorkIcon from '@mui/icons-material/Work';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 
 
@@ -62,7 +63,7 @@ export default function Sidebar() {
               </li>
               <li className={router.pathname == "/dashboard/driver/jobs-applied-to" ? "active" : ""}>
                 <span className="float-left">
-                  < WorkIcon className="icon_left" />
+                  < CheckBoxIcon className="icon_left" />
                 </span>
                 <Link href="/dashboard/driver/jobs-applied-to">Jobs Applied To</Link>
               </li>
