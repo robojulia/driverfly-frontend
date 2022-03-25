@@ -287,23 +287,23 @@
 textarea {
     height: 200px !important;
   }
-  .hired,.approved,.applied {
-    padding: 7px 23px;
+  .my_docs_section .hired, .my_docs_section .approved,.my_docs_section .applied {
+    padding: 7px 23px !important;
     border-radius: 5px;
     color: #fff;
     margin-right: 3px;
 }
-.applied {
+.my_docs_section .applied {
     background-color: #f4be18 !important;
     vertical-align: top;
 }
-.approved {
-    background-color: #5dcac4 ;
+.my_docs_section  .approved {
+    background-color: #5dcac4 !important ;
     vertical-align: top;
 
 }
-.hired {
-    background-color: #1b4454 ;
+.my_docs_section  .hired {
+    background-color: #1b4454 !important;
 }
 .custom-file-input {
     color: transparent;
@@ -315,7 +315,7 @@ textarea {
   }
   .custom-file-input::before {
     content: 'Update';
-    padding: 7px 23px;
+    padding: 8px 23px;
     border-radius: 5px;
     color: #fff;
     margin-right: 3px;
@@ -332,3 +332,11 @@ textarea {
     background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9); 
   }
   
+  .modal-dialog {
+    max-width: 1000px !important;
+}
+.modal-dialog button {
+    color: #fff;
+    background-color: #5c636a !important;
+    border-color: #565e64 !important;
+}

@@ -12,9 +12,13 @@ import 'react-toastify/dist/ReactToastify.css'
 import useStorage from "../../../hooks/useStorage"
 import useAuth from "../../../hooks/useAuth"
 import { Viewer } from '@react-pdf-viewer/core'
+import Spinner from 'react-bootstrap/Spinner'
 import '@react-pdf-viewer/core/lib/styles/index.css'
 import { Worker } from '@react-pdf-viewer/core'
 import Link from "next/link"
+import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import { SpecialZoomLevel } from '@react-pdf-viewer/core';
 
 
 export default function PrestoresDocuments() {
@@ -25,6 +29,8 @@ export default function PrestoresDocuments() {
   const { authCheck, setAuth } = useAuth()
   const user = authCheck()
   console.log('user', user)
+
+  const defaultLayoutPluginInstance = defaultLayoutPlugin()
 
   const localStorage = useStorage()
   const [myUser, setUser] = useState(null)
@@ -75,17 +81,21 @@ export default function PrestoresDocuments() {
     }
   }
 
-  const openModal = (str) => {
-    let txt;
-    if (str == "resume") {
+
+ 
+
+  const openModal = ( str ) => {
+    let txt
+    if ( str == "resume" ) {
       txt = "Resume"
     }
-    if (str == "card") {
+    if ( str == "card" ) {
       txt = "Medical Card"
     }
-    if (str == "license") {
+    if ( str == "license" ) {
       txt = "Commercial Driving License"
     }
+
     setViewPDF(txt)
     setShowModal(true)
   }
@@ -221,60 +231,68 @@ export default function PrestoresDocuments() {
         {/* {myUser && <Button variant="info" className="mx-1" onClick={() => openModal("license")}>View License</Button>}
         {myUser && <Button variant="info" className="mx-1" onClick={() => openModal("card")}>View Medical Card</Button>} */}
 
+        {/***Top Cards***/}
+        <Row>
+          <h1>Prestored Document</h1>
+        </Row>
+        {myUser && <Button className="mx-1" variant="info" onClick={() => openModal( "resume" )}>View Resume</Button>}
+        {myUser && <Button variant="info" className="mx-1" onClick={() => openModal( "license" )}>View License</Button>}
+        {myUser && <Button variant="info" className="mx-1" onClick={() => openModal( "card" )}>View Medical Card</Button>}
+
 
         <div className='container-fluid'>
           <div className="modal-header border-0">
           </div>
           <form onSubmit={submitHandler} className="modal-body" id="myForm">
-            <div className="row">
+            <div className="row my_docs_section ">
             <h2>My Documents</h2>
               <div className="col-lg-6 col-12 mt-5">
                 <h3>Driver’s License</h3>
                 <p>Upload Date:</p>
-                {myUser && <button className="applied" onClick={() => openModal("resume")}>View</button>}
+                {myUser && <Button className="applied" onClick={() => openModal("resume")}>View</Button>}
 
                 <input type="file" class="custom-file-input" />
                 {/* <p style={{ fontStyle: "italic", color: "red" }}>{validation?.medical_card}</p> */}
                 <Link href="#">
-                  <button className="approved"> View Past Records</button>
+                  <Button className="approved"> View Past Records</Button>
                 </Link>
               </div>
               <div className="col-lg-6 col-12 mt-5">
                 <h3>Medical Card</h3>
                 <p>Upload Date:</p>
-                {myUser && <button className="applied" onClick={() => openModal("resume")}>View</button>}
+                {myUser && <Button className="applied" onClick={() => openModal("resume")}>View</Button>}
 
                 <input type="file" class="custom-file-input" />
                 {/* <p style={{ fontStyle: "italic", color: "red" }}>{validation?.medical_card}</p> */}
                 <Link href="#">
-                  <button className="approved"> View Past Records</button>
+                  <Button className="approved"> View Past Records</Button>
                 </Link>
 
               </div>
             </div>
 
-            <div className="row mt-5">
+            <div className="row mt-5 my_docs_section ">
               <div className="col-lg-6 col-12 mt-5">
                 <h3>Resume</h3>
                 <p>Upload Date:</p>
-                {myUser && <button className="applied" onClick={() => openModal("resume")}>View</button>}
+                {myUser && <Button className="applied" onClick={() => openModal("resume")}>View</Button>}
 
                 <input type="file" class="custom-file-input" />
                 {/* <p style={{ fontStyle: "italic", color: "red" }}>{validation?.medical_card}</p> */}
                 <Link href="#">
-                  <button className="approved"> View Past Records</button>
+                  <Button className="approved"> View Past Records</Button>
                 </Link>
               </div>
               <div className="col-lg-6 col-12 mt-5">
                 <h3>Motor Vehicle Record (MVR)</h3>
                 <p>Date Uploaded:</p>
               
-                {myUser && <button className="applied" onClick={() => openModal("resume")}>View</button>}
+                {myUser && <Button className="applied" onClick={() => openModal("resume")}>View</Button>}
 
                 <input type="file" class="custom-file-input" />
                 {/* <p style={{ fontStyle: "italic", color: "red" }}>{validation?.medical_card}</p> */}
                 <Link href="#">
-                  <button className="approved"> View Past Records</button>
+                  <Button className="approved"> View Past Records</Button>
                 </Link>
 
               </div>
@@ -286,22 +304,34 @@ export default function PrestoresDocuments() {
           </form>
         </div>
       </div>
+
+      {/* <Modal size="xl" show={showModal} onHide={() => setShowModal( false )}>
+        <Modal.Header closeButton>{viewPDF}</Modal.Header> */}
+
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header>{viewPDF}</Modal.Header>
+
         <Modal.Body>
           <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.13.216/build/pdf.worker.min.js">
             <div style={{
               border: '1px solid rgba(0, 0, 0, 0.3)',
-              height: '750px',
+              height: '800px',
+
             }}>
-              {/* <<Viewer fileUrl={"http://localhost:4000/"+myUser.medical_card} /> */}
-              <Viewer fileUrl="/resume.pdf" />
+              {/* <<Viewer fileUrl={"http://localhost:4000/"+myUser.medical_card} />np */}
+              <Viewer defaultScale={SpecialZoomLevel.PageWidth} plugins={[defaultLayoutPluginInstance]} renderLoader={(  ) => (
+                <Spinner animation="border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </Spinner>
+              )} fileUrl="/resume.pdf" />
             </div>
           </Worker>
         </Modal.Body>
+
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal(false)}>Close</Button>
         </Modal.Footer>
+
       </Modal>
     </>
   )
