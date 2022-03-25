@@ -171,9 +171,14 @@
 
 
 @media screen and (max-width: 992px) {
+
     .dashboardsidebar aside {
         background-color: #1b4454;
         height: auto;
+    }
+    .sidebarArea ul {
+     width: 100%;
+     
     }
 
     .applicants__section {
@@ -224,11 +229,6 @@
 @media screen and (max-width: 768px) {
     .logo_container {
         width: 35%;
-    }
-    .sidebarArea ul {
-      
-        width: 100%;
-    
     }
 }
 
