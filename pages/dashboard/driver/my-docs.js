@@ -233,12 +233,12 @@ export default function PrestoresDocuments() {
         {myUser && <Button variant="info" className="mx-1" onClick={() => openModal("card")}>View Medical Card</Button>} */}
 
         {/***Top Cards***/}
-        <Row>
+        {/* <Row>
           <h1>Prestored Document</h1>
-        </Row>
-        {myUser && <Button className="mx-1" variant="info" onClick={() => openModal( "resume" )}>View Resume</Button>}
+        </Row> */}
+        {/* {myUser && <Button className="mx-1" variant="info" onClick={() => openModal( "resume" )}>View Resume</Button>}
         {myUser && <Button variant="info" className="mx-1" onClick={() => openModal( "license" )}>View License</Button>}
-        {myUser && <Button variant="info" className="mx-1" onClick={() => openModal( "card" )}>View Medical Card</Button>}
+        {myUser && <Button variant="info" className="mx-1" onClick={() => openModal( "card" )}>View Medical Card</Button>} */}
 
 
         <div className='container-fluid'>
