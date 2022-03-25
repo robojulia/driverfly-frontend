@@ -11,6 +11,7 @@ import WorkIcon from '@mui/icons-material/Work';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import StarIcon from '@mui/icons-material/Star';
 
 
 
@@ -66,6 +67,13 @@ export default function Sidebar() {
                   < CheckBoxIcon className="icon_left" />
                 </span>
                 <Link href="/dashboard/driver/jobs-applied-to">Jobs Applied To</Link>
+              </li>
+
+              <li className={router.pathname == "/dashboard/driver/jobs-saved" ? "active" : ""}>
+                <span className="float-left">
+                  < StarIcon className="icon_left" />
+                </span>
+                <Link href="/dashboard/driver/jobs-saved">Jobs Saved</Link>
               </li>
 
               <li className={router.pathname == "/dashboard/driver/profile" ? "active" : ""}>
