@@ -16,6 +16,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import '@react-pdf-viewer/core/lib/styles/index.css'
 import { Worker } from '@react-pdf-viewer/core'
 import Link from "next/link"
+
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import { SpecialZoomLevel } from '@react-pdf-viewer/core';
@@ -232,12 +233,12 @@ export default function PrestoresDocuments() {
         {myUser && <Button variant="info" className="mx-1" onClick={() => openModal("card")}>View Medical Card</Button>} */}
 
         {/***Top Cards***/}
-        <Row>
+        {/* <Row>
           <h1>Prestored Document</h1>
-        </Row>
-        {myUser && <Button className="mx-1" variant="info" onClick={() => openModal( "resume" )}>View Resume</Button>}
+        </Row> */}
+        {/* {myUser && <Button className="mx-1" variant="info" onClick={() => openModal( "resume" )}>View Resume</Button>}
         {myUser && <Button variant="info" className="mx-1" onClick={() => openModal( "license" )}>View License</Button>}
-        {myUser && <Button variant="info" className="mx-1" onClick={() => openModal( "card" )}>View Medical Card</Button>}
+        {myUser && <Button variant="info" className="mx-1" onClick={() => openModal( "card" )}>View Medical Card</Button>} */}
 
 
         <div className='container-fluid'>
