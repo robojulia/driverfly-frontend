@@ -44,8 +44,10 @@
 .dashboardsidebar li a {
     text-decoration: none;
     display: block;
-    color: #fff;
+    color: #5dcac4;
     margin-left: 10px;
+    margin-top: 5px;
+    font-weight: 500;
 }
 
 .dashboardsidebar li {
@@ -61,7 +63,7 @@
 }
 
 .dashboardsidebar .active a {
-    color: #000;
+    color: #4ca7a8;
 }
 
 .space {
@@ -339,4 +341,9 @@ textarea {
     color: #fff;
     background-color: #5c636a !important;
     border-color: #565e64 !important;
+}
+.icon_left{
+    float: left;
+    color: #5dcac4;
+    margin-right:  20px;
 }
