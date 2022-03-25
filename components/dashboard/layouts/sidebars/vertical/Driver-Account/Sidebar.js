@@ -60,6 +60,12 @@ export default function Sidebar() {
                 </span>
                 <Link href="/dashboard/driver/jobs-offered">Jobs Offered</Link>
               </li>
+              <li className={router.pathname == "/dashboard/driver/jobs-applied-to" ? "active" : ""}>
+                <span className="float-left">
+                  < WorkIcon className="icon_left" />
+                </span>
+                <Link href="/dashboard/driver/jobs-applied-to">Jobs Applied To</Link>
+              </li>
 
               <li className={router.pathname == "/dashboard/driver/profile" ? "active" : ""}>
                 <span className="float-left">
