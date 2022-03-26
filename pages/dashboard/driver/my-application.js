@@ -1,11 +1,12 @@
-import { Container } from 'reactstrap'
-import LogoutButton from '../../../components/buttons/Logout'
-import FullLayout from "../../../components/dashboard/layouts/FullLayout"
-import style from '../../../public/dashboard/styles/css/Driver/my-account.module.css'
-import BaseInput from "../../../components/BaseInput"
+import axios from "axios"
 import { useFormik } from "formik"
 import * as yup from "yup"
-
+import BaseInput from "../../../components/BaseInput"
+import FullLayout from "../../../components/dashboard/layouts/FullLayout"
+import useAuth from "../../../hooks/useAuth"
+import style from '../../../public/dashboard/styles/css/Driver/my-account.module.css'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 
 
@@ -13,54 +14,85 @@ import * as yup from "yup"
 
 export default function MyApplication () {
 
+  const { authCheck } = useAuth()
+  const user = authCheck()
+
 
   const acc_form = useFormik( {
     initialValues: {
       name: '',
-      driver_licence: '',
+      license_number: '',
       age_limit: '',
       phone: '',
-      exp_date: '',
-      high_degree: '',
+      license_expiry: '',
+      highest_degree: '',
       email: '',
-      state: '',
+      license_state: '',
       street: '',
       cdl_class: '',
-      emergency_contact: '',
+      emergency_contact_number: '',
       city: '',
-      cdl_exp: '',
+      years_cdl_experience: '',
       phoneNumber: '',
-      zip: '',
+      zip_code: '',
       equipment_type: '',
-      years_exp: '',
-      relationship: '',
+      equipment_experience: '',
+      emergency_contact_relationship: '',
     },
     validationSchema: yup.object( {
       name: yup.string().required( 'Name is required' ),
-      driver_licence: yup.string().required( 'Driver licence is required' ),
+      license_number: yup.string().required( 'Driver licence is required' ),
       phone: yup.string().required( 'Phone is required' ),
-      exp_date: yup.string().required( 'Exp date is required' ),
-      high_degree: yup.string().required( 'High degree is required' ),
+      license_expiry: yup.string().required( 'Exp date is required' ),
+      highest_degree: yup.string().required( 'High degree is required' ),
       email: yup.string().required( 'Email is required' ).email( "Enter valid email" ),
-      state: yup.string().required( 'State is required' ),
+      license_state: yup.string().required( 'license_state is required' ),
       street: yup.string().required( 'Street is required' ),
       cdl_class: yup.string().required( 'Cdl class is required' ),
-      emergency_contact: yup.string().required( 'Emergency contact is required' ),
+      emergency_contact_number: yup.string().required( 'Emergency contact is required' ),
       city: yup.string().required( 'City is required' ),
-      cdl_exp: yup.string().required( 'Cdl exp is required' ),
+      years_cdl_experience: yup.string().required( 'Cdl exp is required' ),
       phoneNumber: yup.string().required( 'Phone number is required' ),
-      zip: yup.string().required( 'Zip is required' ),
+      zip_code: yup.string().required( 'Zip Code is required' ),
       equipment_type: yup.string().required( 'Equipment type is required' ),
-      years_exp: yup.string(),
-      relationship: yup.string().required( 'Relationship is required' ),
+      equipment_experience: yup.string(),
+      emergency_contact_relationship: yup.string().required( 'emergency_contact_relationship is required' ),
     } ),
-    onSubmit: values => {
-      console.log( values )
+    onSubmit: async ( values ) => {
+      try {
+        const resp = await axios.post( `${process.env.BASE_URL_API}/drivers`, values, {
+          headers: {
+            Authorization: `Bearer ${user.token}`
+          }
+        } )
+        if ( resp.status === 201 ) {
+          toast.success( "Uploaded successfully", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          } )
+        }
+      } catch ( error ) {
+        toast.error( "Some Error occured", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        } )
+      }
     }
   } )
 
   return (
     <>
+      <ToastContainer />
       <div className={style.application_container}>
 
         <div>
@@ -85,10 +117,10 @@ export default function MyApplication () {
                   className="col-lg-4 col-12"
                   label="Drivers License Number:"
                   placeholder="Drivers License Number"
-                  name="driver_licence"
-                  value={acc_form.values.driver_licence}
-                  touched={acc_form.touched.driver_licence}
-                  error={acc_form.errors.driver_licence}
+                  name="license_number"
+                  value={acc_form.values.license_number}
+                  touched={acc_form.touched.license_number}
+                  error={acc_form.errors.license_number}
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
                 />
@@ -123,11 +155,11 @@ export default function MyApplication () {
                   className="col-lg-4 col-12"
                   label="Expiration Date:"
                   placeholder="Expiration Date"
-                  name="exp_date"
+                  name="license_expiry"
                   type="date"
-                  value={acc_form.values.exp_date}
-                  touched={acc_form.touched.exp_date}
-                  error={acc_form.errors.exp_date}
+                  value={acc_form.values.license_expiry}
+                  touched={acc_form.touched.license_expiry}
+                  error={acc_form.errors.license_expiry}
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
                 />
@@ -135,10 +167,10 @@ export default function MyApplication () {
                   className="col-lg-4 col-12"
                   label="Highest Degree:"
                   placeholder="Highest Degree"
-                  name="high_degree"
-                  value={acc_form.values.high_degree}
-                  touched={acc_form.touched.high_degree}
-                  error={acc_form.errors.high_degree}
+                  name="highest_degree"
+                  value={acc_form.values.highest_degree}
+                  touched={acc_form.touched.highest_degree}
+                  error={acc_form.errors.highest_degree}
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
                 />
@@ -157,12 +189,12 @@ export default function MyApplication () {
                 />
                 <BaseInput
                   className="col-lg-4 col-12"
-                  label="State Issued:"
-                  placeholder="State Issued"
-                  name="state"
-                  value={acc_form.values.state}
-                  touched={acc_form.touched.state}
-                  error={acc_form.errors.state}
+                  label="license_state Issued:"
+                  placeholder="license_state Issued"
+                  name="license_state"
+                  value={acc_form.values.license_state}
+                  touched={acc_form.touched.license_state}
+                  error={acc_form.errors.license_state}
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
                 />
@@ -196,10 +228,10 @@ export default function MyApplication () {
                   className="col-lg-4 col-12"
                   label="Emergency Contact:"
                   placeholder="Emergency Contact"
-                  name="emergency_contact"
-                  value={acc_form.values.emergency_contact}
-                  touched={acc_form.touched.emergency_contact}
-                  error={acc_form.errors.emergency_contact}
+                  name="emergency_contact_number"
+                  value={acc_form.values.emergency_contact_number}
+                  touched={acc_form.touched.emergency_contact_number}
+                  error={acc_form.errors.emergency_contact_number}
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
                 />
@@ -222,11 +254,11 @@ export default function MyApplication () {
                   className="col-lg-4 col-12"
                   label="Years of CDL Experience:"
                   placeholder="Years of CDL Experience"
-                  name="cdl_exp"
+                  name="years_cdl_experience"
                   type="number"
-                  value={acc_form.values.cdl_exp}
-                  touched={acc_form.touched.cdl_exp}
-                  error={acc_form.errors.cdl_exp}
+                  value={acc_form.values.years_cdl_experience}
+                  touched={acc_form.touched.years_cdl_experience}
+                  error={acc_form.errors.years_cdl_experience}
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
                 />
@@ -247,10 +279,10 @@ export default function MyApplication () {
                   className="col-lg-4 col-12"
                   label="State and Zip:"
                   placeholder="State and Zip"
-                  name="zip"
-                  value={acc_form.values.zip}
-                  touched={acc_form.touched.zip}
-                  error={acc_form.errors.zip}
+                  name="zip_code"
+                  value={acc_form.values.zip_code}
+                  touched={acc_form.touched.zip_code}
+                  error={acc_form.errors.zip_code}
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
                 />
@@ -267,7 +299,7 @@ export default function MyApplication () {
                 />
                 <div className="col-lg-2 col-12 mt-3">
                   <span className={style.lable}>Years Experience</span>
-                  <select class="form-select" name="years_exp" aria-label="Default select example">
+                  <select class="form-select" name="equipment_experience" aria-label="Default select example">
                     <option selected>Years Experience</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -279,10 +311,10 @@ export default function MyApplication () {
                   className="col-lg-4 col-12"
                   label="Relationship:"
                   placeholder="Relationship"
-                  name="relationship"
-                  value={acc_form.values.relationship}
-                  touched={acc_form.touched.relationship}
-                  error={acc_form.errors.relationship}
+                  name="emergency_contact_relationship"
+                  value={acc_form.values.emergency_contact_relationship}
+                  touched={acc_form.touched.emergency_contact_relationship}
+                  error={acc_form.errors.emergency_contact_relationship}
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
                 />
