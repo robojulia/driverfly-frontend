@@ -2,6 +2,10 @@ import { Container } from 'reactstrap'
 import LogoutButton from '../../../components/buttons/Logout'
 import FullLayout from "../../../components/dashboard/layouts/FullLayout"
 import style from '../../../public/dashboard/styles/css/Driver/my-account.module.css'
+import BaseInput from "../../../components/BaseInput"
+import { useFormik } from "formik"
+import * as yup from "yup"
+
 
 
 
@@ -9,24 +13,86 @@ import style from '../../../public/dashboard/styles/css/Driver/my-account.module
 
 export default function MyApplication () {
 
+
+  const acc_form = useFormik( {
+    initialValues: {
+      name: '',
+      driver_licence: '',
+      age_limit: '',
+      phone: '',
+      exp_date: '',
+      high_degree: '',
+      email: '',
+      state: '',
+      street: '',
+      cdl_class: '',
+      emergency_contact: '',
+      city: '',
+      cdl_exp: '',
+      phoneNumber: '',
+      zip: '',
+      equipment_type: '',
+      years_exp: '',
+      relationship: '',
+    },
+    validationSchema: yup.object( {
+      name: yup.string().required( 'Name is required' ),
+      driver_licence: yup.string().required( 'Driver licence is required' ),
+      phone: yup.string().required( 'Phone is required' ),
+      exp_date: yup.string().required( 'Exp date is required' ),
+      high_degree: yup.string().required( 'High degree is required' ),
+      email: yup.string().required( 'Email is required' ).email( "Enter valid email" ),
+      state: yup.string().required( 'State is required' ),
+      street: yup.string().required( 'Street is required' ),
+      cdl_class: yup.string().required( 'Cdl class is required' ),
+      emergency_contact: yup.string().required( 'Emergency contact is required' ),
+      city: yup.string().required( 'City is required' ),
+      cdl_exp: yup.string().required( 'Cdl exp is required' ),
+      phoneNumber: yup.string().required( 'Phone number is required' ),
+      zip: yup.string().required( 'Zip is required' ),
+      equipment_type: yup.string().required( 'Equipment type is required' ),
+      years_exp: yup.string(),
+      relationship: yup.string().required( 'Relationship is required' ),
+    } ),
+    onSubmit: values => {
+      console.log( values )
+    }
+  } )
+
   return (
     <>
       <div className={style.application_container}>
 
         <div>
           <div className='container-fluid'>
-            <form className="modal-body" >
+            <form className="modal-body" onSubmit={acc_form.handleSubmit}>
               <h2>Account Settings</h2>
               <div className="row">
-                <div className="col-lg-4 col-12 mt-3">
-                  <label>Name</label>
-                  <input name="name" type="text" className="form-control" placeholder="Name" />
-                </div>
-                <div className="col-lg-4 col-12 mt-3">
-                  <label>Drivers License Number:</label>
-                  <input name="driver_licence" type="text" className="form-control" placeholder="Drivers License Number:" />
-                </div>
-
+                {/* name */}
+                <BaseInput
+                  className="col-lg-4 col-12"
+                  label="Name:"
+                  placeholder="Name"
+                  name="name"
+                  value={acc_form.values.name}
+                  onChange={acc_form.handleChange}
+                  handleBlur={acc_form.handleBlur}
+                  touched={acc_form.touched.name}
+                  error={acc_form.errors.name}
+                />
+                {/* Drivers License */}
+                <BaseInput
+                  className="col-lg-4 col-12"
+                  label="Drivers License Number:"
+                  placeholder="Drivers License Number"
+                  name="driver_licence"
+                  value={acc_form.values.driver_licence}
+                  touched={acc_form.touched.driver_licence}
+                  error={acc_form.errors.driver_licence}
+                  onChange={acc_form.handleChange}
+                  handleBlur={acc_form.handleBlur}
+                />
+                {/* age limit */}
                 <div className="col-lg-4 col-12 mt-3">
                   <label>Above 21?</label>
                   <div className="col-lg-6 col-12 mt-2 border-0">
@@ -42,92 +108,187 @@ export default function MyApplication () {
                 </div>
               </div>
               <div className='row'>
-                <div className="col-lg-4 col-12 mt-3">
-                  <label>Phone</label>
-                  <input name="phone" type="text" className="form-control" placeholder="Phone" />
-                </div>
-                <div className="col-lg-4 col-12 mt-3">
-                  <label>Expiration Date:</label>
-                  <input name="exp_date" type="date" className="form-control" placeholder="Expiration Date:" />
-                </div>
-
-                <div className="col-lg-4 col-12 mt-3">
-                  <label>Highest Degree:</label>
-                  <input type="text" name="high_degree" className="form-control" placeholder=" Highest Degree:" />
-
-                </div>
+                <BaseInput
+                  className="col-lg-4 col-12"
+                  label="Phone:"
+                  placeholder="Phone"
+                  name="phone"
+                  value={acc_form.values.phone}
+                  touched={acc_form.touched.phone}
+                  error={acc_form.errors.phone}
+                  onChange={acc_form.handleChange}
+                  handleBlur={acc_form.handleBlur}
+                />
+                <BaseInput
+                  className="col-lg-4 col-12"
+                  label="Expiration Date:"
+                  placeholder="Expiration Date"
+                  name="exp_date"
+                  type="date"
+                  value={acc_form.values.exp_date}
+                  touched={acc_form.touched.exp_date}
+                  error={acc_form.errors.exp_date}
+                  onChange={acc_form.handleChange}
+                  handleBlur={acc_form.handleBlur}
+                />
+                <BaseInput
+                  className="col-lg-4 col-12"
+                  label="Highest Degree:"
+                  placeholder="Highest Degree"
+                  name="high_degree"
+                  value={acc_form.values.high_degree}
+                  touched={acc_form.touched.high_degree}
+                  error={acc_form.errors.high_degree}
+                  onChange={acc_form.handleChange}
+                  handleBlur={acc_form.handleBlur}
+                />
               </div>
               <div className='row'>
-                <div className="col-lg-4 col-12 mt-3">
-                  <label>Email</label>
-                  <input type="email" name="email" className="form-control" placeholder="E-mail" />
-                </div>
-                <div className="col-lg-4 col-12 mt-3">
-                  <label>State Issued:</label>
-                  <input type="text" name="state" className="form-control" placeholder="State Issued:" />
-                </div>
+                <BaseInput
+                  className="col-lg-4 col-12"
+                  label="Email:"
+                  placeholder="Email"
+                  name="email"
+                  value={acc_form.values.email}
+                  touched={acc_form.touched.email}
+                  error={acc_form.errors.email}
+                  onChange={acc_form.handleChange}
+                  handleBlur={acc_form.handleBlur}
+                />
+                <BaseInput
+                  className="col-lg-4 col-12"
+                  label="State Issued:"
+                  placeholder="State Issued"
+                  name="state"
+                  value={acc_form.values.state}
+                  touched={acc_form.touched.state}
+                  error={acc_form.errors.state}
+                  onChange={acc_form.handleChange}
+                  handleBlur={acc_form.handleBlur}
+                />
               </div>
 
 
               <div className='row'>
-                <div className="col-lg-4 col-12 mt-3">
-                  <label>Street:</label>
-                  <input type="text" className="form-control" name="street" placeholder="Street:" />
-                </div>
-                <div className="col-lg-4 col-12 mt-3">
-                  <label>CDL Class Type:</label>
-                  <input type="text" name="cdl_class" className="form-control" placeholder="CDL Class Type:" />
-                </div>
-                <div className="col-lg-4 col-12 mt-3">
-                  <label>Emergency Contact:</label>
-                  <input type="text" name="emergency" className="form-control" placeholder="Emergency Contact:" />
-                </div>
+                <BaseInput
+                  className="col-lg-4 col-12"
+                  label="Street:"
+                  placeholder="Street"
+                  name="street"
+                  value={acc_form.values.street}
+                  touched={acc_form.touched.street}
+                  error={acc_form.errors.street}
+                  onChange={acc_form.handleChange}
+                  handleBlur={acc_form.handleBlur}
+                />
+                <BaseInput
+                  className="col-lg-4 col-12"
+                  label="CDL Class Type:"
+                  placeholder="CDL Class Type"
+                  name="cdl_class"
+                  value={acc_form.values.cdl_class}
+                  touched={acc_form.touched.cdl_class}
+                  error={acc_form.errors.cdl_class}
+                  onChange={acc_form.handleChange}
+                  handleBlur={acc_form.handleBlur}
+                />
+                <BaseInput
+                  className="col-lg-4 col-12"
+                  label="Emergency Contact:"
+                  placeholder="Emergency Contact"
+                  name="emergency_contact"
+                  value={acc_form.values.emergency_contact}
+                  touched={acc_form.touched.emergency_contact}
+                  error={acc_form.errors.emergency_contact}
+                  onChange={acc_form.handleChange}
+                  handleBlur={acc_form.handleBlur}
+                />
 
               </div>
 
               <div className='row'>
-                <div className="col-lg-4 col-12 mt-3">
-                  <label>City:</label>
-                  <input type="text" className="form-control" name="city" placeholder="City:" />
-                </div>
-                <div className="col-lg-4 col-12 mt-3">
-                  <label>Years of CDL Experience:</label>
-                  <input type="text" name="year_exp" className="form-control" placeholder="Years of CDL Experience:" />
-                </div>
-                <div className="col-lg-4 col-12 mt-3">
-                  <label>Phone Number:</label>
-                  <input type="text" name="number" className="form-control" placeholder="Phone Number:" />
-                </div>
-
+                <BaseInput
+                  className="col-lg-4 col-12"
+                  label="City:"
+                  placeholder="City"
+                  name="city"
+                  value={acc_form.values.city}
+                  touched={acc_form.touched.city}
+                  error={acc_form.errors.city}
+                  onChange={acc_form.handleChange}
+                  handleBlur={acc_form.handleBlur}
+                />
+                <BaseInput
+                  className="col-lg-4 col-12"
+                  label="Years of CDL Experience:"
+                  placeholder="Years of CDL Experience"
+                  name="cdl_exp"
+                  type="number"
+                  value={acc_form.values.cdl_exp}
+                  touched={acc_form.touched.cdl_exp}
+                  error={acc_form.errors.cdl_exp}
+                  onChange={acc_form.handleChange}
+                  handleBlur={acc_form.handleBlur}
+                />
+                <BaseInput
+                  className="col-lg-4 col-12"
+                  label="Phone Number:"
+                  placeholder="Phone Number"
+                  name="phoneNumber"
+                  value={acc_form.values.phoneNumber}
+                  touched={acc_form.touched.phoneNumber}
+                  error={acc_form.errors.phoneNumber}
+                  onChange={acc_form.handleChange}
+                  handleBlur={acc_form.handleBlur}
+                />
               </div>
               <div className='row'>
-                <div className="col-lg-4 col-12 mt-3">
-                  <label>State & Zip:</label>
-                  <input type="text" className="form-control" name="zip" placeholder="State & Zip:" />
-                </div>
-                <div className="col-lg-2 col-12 mt-3">
-                  <label>Equipment Experience</label>
-                  <input type="text" name="equ_type" className="form-control" placeholder="Equipment Experience" />
-                </div>
+                <BaseInput
+                  className="col-lg-4 col-12"
+                  label="State and Zip:"
+                  placeholder="State and Zip"
+                  name="zip"
+                  value={acc_form.values.zip}
+                  touched={acc_form.touched.zip}
+                  error={acc_form.errors.zip}
+                  onChange={acc_form.handleChange}
+                  handleBlur={acc_form.handleBlur}
+                />
+                <BaseInput
+                  className="col-lg-4 col-12"
+                  label="Equipment Type:"
+                  placeholder="Equipment Type"
+                  name="equipment_type"
+                  value={acc_form.values.equipment_type}
+                  touched={acc_form.touched.equipment_type}
+                  error={acc_form.errors.equipment_type}
+                  onChange={acc_form.handleChange}
+                  handleBlur={acc_form.handleBlur}
+                />
                 <div className="col-lg-2 col-12 mt-3">
                   <span className={style.lable}>Years Experience</span>
-                  <select class="form-select" name="year_exp" aria-label="Default select example">
+                  <select class="form-select" name="years_exp" aria-label="Default select example">
                     <option selected>Years Experience</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
                   </select>
                 </div>
-                <div className="col-lg-4 col-12 mt-3">
-                  <label>Relationship</label>
-                  <input type="text" name="relationship" className="form-control" placeholder="Relationship" />
-                </div>
 
+                <BaseInput
+                  className="col-lg-4 col-12"
+                  label="Relationship:"
+                  placeholder="Relationship"
+                  name="relationship"
+                  value={acc_form.values.relationship}
+                  touched={acc_form.touched.relationship}
+                  error={acc_form.errors.relationship}
+                  onChange={acc_form.handleChange}
+                  handleBlur={acc_form.handleBlur}
+                />
               </div>
               <div className="col-lg-12 col-12 mt-4 border-0 text-end">
-                <button
-                  type="submit" className={`  ${style.update_btn}`} >
-
+                <button type="submit" className={`  ${style.update_btn}`} >
                   Update
                 </button>
               </div>
