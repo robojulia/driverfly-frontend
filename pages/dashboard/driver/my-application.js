@@ -20,17 +20,41 @@ export default function MyApplication () {
 
 
   const driverDegree = [
-    "HIGH_SCHOOL",
-    "ASSOCIATE",
-    "BACHELOR",
-    "MASTER",
-    "DOCTORAL"
+    {
+      label: "High School",
+      value: "HIGH_SCHOOL"
+    },
+    {
+      label: "Bachelor",
+      value: "BACHELOR"
+    },
+    {
+      label: "Master",
+      value: "MASTER"
+    },
+    {
+      label: "Associate",
+      value: "ASSOCIATE"
+    },
+    {
+      label: "Doctoral",
+      value: "DOCTORAL"
+    }
   ]
 
   const cdl_classes = [
-    "CDL_CLASS_A",
-    "CDL_CLASS_B",
-    "CDL_CLASS_C"
+    {
+      label: "CDL Class A",
+      value: "CDL_CLASS_A"
+    },
+    {
+      label: "CDL Class B",
+      value: "CDL_CLASS_B"
+    },
+    {
+      label: "CDL Class C",
+      value: "CDL_CLASS_C"
+    }
   ]
 
   const acc_form = useFormik( {
@@ -50,28 +74,30 @@ export default function MyApplication () {
       years_cdl_experience: '',
       // phoneNumber: '',
       zip_code: '',
+      state: '',
       equipment_type: '',
       equipment_experience: '',
       emergency_contact_relationship: '',
     },
     validationSchema: yup.object( {
-      // name: yup.string().required( 'Name is required' ),
-      license_number: yup.string().required( 'Driver licence is required' ),
-      // phone: yup.string().required( 'Phone is required' ),
-      license_expiry: yup.string().required( 'Exp date is required' ),
-      highest_degree: yup.string().required( 'High degree is required' ),
-      // email: yup.string().required( 'Email is required' ).email( "Enter valid email" ),
-      license_state: yup.string().required( 'license_state is required' ),
-      street: yup.string().required( 'Street is required' ),
-      cdl_class: yup.string().required( 'Cdl class is required' ),
-      emergency_contact_number: yup.string().required( 'Emergency contact is required' ),
-      city: yup.string().required( 'City is required' ),
-      years_cdl_experience: yup.string().required( 'Cdl exp is required' ),
-      // phoneNumber: yup.string().required( 'Phone number is required' ),
-      zip_code: yup.string().required( 'Zip Code is required' ),
-      equipment_type: yup.string().required( 'Equipment type is required' ),
+      // name: yup.string(),
+      license_number: yup.string(),
+      // phone: yup.string(),
+      license_expiry: yup.string(),
+      highest_degree: yup.string(),
+      // email: yup.string(),
+      license_state: yup.string(),
+      street: yup.string(),
+      cdl_class: yup.string(),
+      emergency_contact_number: yup.string(),
+      city: yup.string(),
+      years_cdl_experience: yup.number(),
+      // phoneNumber: yup.string(),
+      zip_code: yup.string(),
+      state: yup.string(),
+      equipment_type: yup.string(),
       equipment_experience: yup.string(),
-      emergency_contact_relationship: yup.string().required( 'emergency_contact_relationship is required' ),
+      emergency_contact_relationship: yup.string(),
     } ),
     onSubmit: async ( values ) => {
       try {
@@ -114,6 +140,12 @@ export default function MyApplication () {
   const [can_contact, set_can_contact] = useState( false )
   const [is_subject_to_fmcsrs, set_is_subject_to_fmcsrs] = useState( false )
   const [is_subject_to_drug_tests, set_is_subject_to_drug_tests] = useState( false )
+
+  // company address
+  const [companyStreet, set_companyStreet] = useState( "" )
+  const [companyCity, set_companyCity] = useState( "" )
+  const [companyState, set_companyState] = useState( "" )
+  const [companyZip, set_companyZip] = useState( "" )
 
   const [can_pass_drug_test, set_can_pass_drug_test] = useState( false )
   const [has_past_dui, set_has_past_dui] = useState( false )
@@ -159,6 +191,7 @@ export default function MyApplication () {
       city: data.city,
       years_cdl_experience: data.years_cdl_experience,
       zip_code: data.zip_code,
+      state: data.state,
       equipment_type: data.equipment_type,
       equipment_experience: data.equipment_experience,
       emergency_contact_relationship: data.emergency_contact_relationship,
@@ -175,6 +208,12 @@ export default function MyApplication () {
       set_can_contact( employer.can_contact )
       set_is_subject_to_fmcsrs( employer.is_subject_to_fmcsrs )
       set_is_subject_to_drug_tests( employer.is_subject_to_drug_tests )
+
+      // address
+      set_companyStreet( employer.street )
+      set_companyCity( employer.city )
+      set_companyState( employer.state )
+      set_companyZip( employer.zip_code )
     }
 
     set_can_pass_drug_test( data.can_pass_drug_test )
@@ -209,6 +248,10 @@ export default function MyApplication () {
         can_contact,
         is_subject_to_drug_tests,
         is_subject_to_fmcsrs,
+        street: companyStreet,
+        city: companyCity,
+        state: companyState,
+        zip_code: companyZip,
       }
     ]
 
@@ -365,7 +408,7 @@ export default function MyApplication () {
                   >
                     <option selected>Highest Degree:</option>
                     {driverDegree.map( ( degree, index ) => {
-                      return ( <option selected={acc_form.values.highest_degree === degree} value={degree} key={index}>{degree}</option>
+                      return ( <option selected={acc_form.values.highest_degree === degree.value} value={degree.value} key={index}>{degree.label}</option>
                       )
                     } )}
                   </select>
@@ -426,8 +469,9 @@ export default function MyApplication () {
                     selected={acc_form.values.cdl_class}
                   >
                     <option selected>CDL Class Type:</option>
-                    {cdl_classes.map( ( degree, index ) => {
-                      return ( <option selected={acc_form.values.cdl_class === degree} value={degree} key={index}>{degree}</option>
+                    {cdl_classes.map( ( cdl, index ) => {
+                      return ( 
+                      <option selected={acc_form.values.cdl_class === cdl.value} value={cdl.value} key={index}>{cdl.label}</option>
                       )
                     } )}
                   </select>
@@ -485,8 +529,19 @@ export default function MyApplication () {
               <div className='row'>
                 <BaseInput
                   className="col-lg-4 col-12"
-                  label="State and Zip:"
-                  placeholder="State and Zip"
+                  label="State:"
+                  placeholder="State"
+                  name="state"
+                  value={acc_form.values.state}
+                  touched={acc_form.touched.state}
+                  error={acc_form.errors.state}
+                  onChange={acc_form.handleChange}
+                  handleBlur={acc_form.handleBlur}
+                />
+                <BaseInput
+                  className="col-lg-4 col-12"
+                  label="Zip:"
+                  placeholder="Zip"
                   name="zip_code"
                   value={acc_form.values.zip_code}
                   touched={acc_form.touched.zip_code}
@@ -563,9 +618,26 @@ export default function MyApplication () {
                   <input onChange={( e ) => setTitle( e.target.value )} value={title} type="text" name="position_title" className="form-control" placeholder="Position Title:" />
                 </div>
                 {/* company address */}
+                <h5 className="my-2">Company Address</h5>
+                {/* company street */}
                 <div className="col-lg-11 col-12 mt-3">
-                  <label>Company Address:</label>
-                  <input type="text" name="company_address" className="form-control" placeholder="Company Address:" />
+                  <label>Street:</label>
+                  <input type="text" name="companyStreet" className="form-control" placeholder="Company Street:" value={companyStreet} onChange={(e) => set_companyStreet(e.target.value)} />
+                </div>
+                {/* company city */}
+                <div className="col-lg-11 col-12 mt-3">
+                  <label>City:</label>
+                  <input type="text" name="companyCity" className="form-control" placeholder="Company City:" value={companyCity} onChange={(e) => set_companyCity(e.target.value)} />
+                </div>
+                {/* company state */}
+                <div className="col-lg-11 col-12 mt-3">
+                  <label>State:</label>
+                  <input type="text" name="companyState" className="form-control" placeholder="Company State:" value={companyState} onChange={(e) => set_companyState(e.target.value)} />
+                </div>
+                {/* company zip */}
+                <div className="col-lg-11 col-12 mt-3">
+                  <label>Company Zip:</label>
+                  <input type="text" name="companyZip" className="form-control" placeholder="Company Zip:" value={companyZip} onChange={(e) => set_companyZip(e.target.value)} />
                 </div>
                 {/* company phone */}
                 <div className="col-lg-11 col-12 mt-3">
