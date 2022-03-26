@@ -124,15 +124,13 @@ export default function MyApplication () {
   const [criminal_history, set_criminal_history] = useState( "" )
 
 
-  const [details, set_details] = useState( "" )
+  const [revoked, setRevoked] = useState(false)
+  const [violations, setViolations] = useState(false)
+  const [ticketsDetails, set_ticketsDetails] = useState( "" )
+  const [drugTestDetails, set_drugTestDetails] = useState( "" )
 
   useEffect( async () => {
     const { data } = await axios.get( `${process.env.BASE_URL_API}/drivers`, {
-      headers: {
-        Authorization: `Bearer ${user.token}`
-      }
-    } )
-    const { data: prefData } = await axios.get( `${process.env.BASE_URL_API}/drivers/preferences`, {
       headers: {
         Authorization: `Bearer ${user.token}`
       }
@@ -150,7 +148,6 @@ export default function MyApplication () {
       return
     }
     console.log( data )
-    console.log( prefData )
     acc_form.setValues( {
       license_number: data.license_number,
       license_expiry: moment(data.license_expiry).format("YYYY-MM-DD"),
@@ -192,7 +189,7 @@ export default function MyApplication () {
 
     const safety_details = data.safety_questions[0]
     if ( safety_details ) {
-      set_details( safety_details.details )
+      set_ticketsDetails( safety_details.details )
 
     }
 
@@ -218,9 +215,26 @@ export default function MyApplication () {
     const safety_questions = [
       {
         type: "LICENSE_REVOKED",
-        details,
-      }
+        details: "",
+        response: revoked,
+      },
+      {
+        type: "VIOLATIONS_PSP",
+        details: "",
+        response: violations,
+      },
+      {
+        type: "TICKETS",
+        response: false,
+        details: ticketsDetails,
+      },
+      {
+        type: "POSITIVE_DRUG_TEST",
+        response: false,
+        details: drugTestDetails,
+      },
     ]
+    console.log(safety_questions)
     try {
       const a = {
         employers,
@@ -629,25 +643,25 @@ export default function MyApplication () {
                     <div className="col-lg-11 col-12 mt-3">
                       <div class="form-check form-switch">
                         <label class="form-check-label" for="licence">Has any of your license, permit or privilege to operate a CMV ever been suspended or revoked? If so, please explain:</label>
-                        <input class="form-check-input" type="checkbox" role="switch" id="licence" />
+                        <input class="form-check-input" type="checkbox" role="switch" id="licence" checked={revoked} onClick={( e ) => setRevoked( e.target.checked )} />
                       </div>
                     </div>
                     {/* violation */}
                     <div className="col-lg-11 col-12 mt-3">
                       <div class="form-check form-switch">
                         <label class="form-check-label" for="violation">Do you have any violation on you PSP from previous three years? If so please explain:</label>
-                        <input class="form-check-input" type="checkbox" role="switch" id="violation" />
+                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={violations} onClick={( e ) => setViolations( e.target.checked )}/>
                       </div>
                     </div>
                     {/* 5 years tickets */}
                     <div className="col-lg-11 col-12 mt-3">
                       <label for="exampleFormControlTextarea1" class="form-label">Have you had any tickets in the previous 5 years? If so, please explain:</label>
-                      <textarea class="form-control" name="any_tickets" id="exampleFormControlTextarea1" rows="3"></textarea>
+                      <textarea class="form-control" name="any_tickets" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => set_ticketsDetails( e.target.value )} value={ticketsDetails}></textarea>
                     </div>
                     {/* refused */}
                     <div className="col-lg-11 col-12 mt-3">
                       <label for="exampleFormControlTextarea1" class="form-label">Have you ever refused to be tested or had a positive drug/alcohol test? if so, explain here:</label>
-                      <textarea class="form-control" name="refused" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => set_details( e.target.value )} value={details}></textarea>
+                      <textarea class="form-control" name="refused" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => set_drugTestDetails( e.target.value )} value={drugTestDetails}></textarea>
                     </div>
                   </div>
                 </div>
