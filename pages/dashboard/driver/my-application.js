@@ -13,6 +13,7 @@ import moment from "moment";
 
 
 
+
 export default function MyApplication () {
   const { authCheck } = useAuth()
   const user = authCheck()
@@ -24,6 +25,12 @@ export default function MyApplication () {
     "BACHELOR",
     "MASTER",
     "DOCTORAL"
+  ]
+
+  const cdl_classes = [
+    "CDL_CLASS_A",
+    "CDL_CLASS_B",
+    "CDL_CLASS_C"
   ]
 
   const acc_form = useFormik( {
@@ -384,7 +391,7 @@ export default function MyApplication () {
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
                 />
-                <BaseInput
+                {/* <BaseInput
                   className="col-lg-4 col-12"
                   label="CDL Class Type:"
                   placeholder="CDL Class Type"
@@ -394,7 +401,19 @@ export default function MyApplication () {
                   error={acc_form.errors.cdl_class}
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
-                />
+                /> */}
+                <div className="col-lg-4 col-12 mt-3">
+                  <span className={style.lable}>CDL Class Type:</span>
+                  <select class="form-select" name="cdl_class" aria-label="Default select example"
+                    selected={acc_form.values.cdl_class}
+                  >
+                    <option selected>CDL Class Type:</option>
+                    {cdl_classes.map( ( degree, index ) => {
+                      return ( <option selected={acc_form.values.cdl_class === degree} value={degree} key={index}>{degree}</option>
+                      )
+                    } )}
+                  </select>
+                </div>
                 <BaseInput
                   className="col-lg-4 col-12"
                   label="Emergency Contact:"
