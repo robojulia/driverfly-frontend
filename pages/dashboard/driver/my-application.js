@@ -130,7 +130,8 @@ export default function MyApplication () {
       }
     }
   } )
-
+  
+  const [birthDate, set_birthDate] = useState( "" )
 
   const [name, setName] = useState( "" )
   const [startDate, setStartDate] = useState( "" )
@@ -179,6 +180,7 @@ export default function MyApplication () {
       } )
       return
     }
+    set_birthDate( data.birthdate )
     console.log( data )
     acc_form.setValues( {
       license_number: data.license_number,
@@ -234,7 +236,12 @@ export default function MyApplication () {
 
   }, [] )
 
-
+  const is21 = () => {
+    if ( moment( ).diff( birthDate, "years" ) >= 21 ) {
+      return true
+    }
+    return false
+  }
 
   const postSecondForm = async ( e ) => {
     e.preventDefault()
@@ -254,6 +261,9 @@ export default function MyApplication () {
         zip_code: companyZip,
       }
     ]
+
+
+    
 
     const safety_questions = [
       {
@@ -362,7 +372,7 @@ export default function MyApplication () {
                 <div className="col-lg-4 col-12 mt-3">
                   <div class="form-check form-switch mt-5">
                     <label class="form-check-label" for="age_limit">Above 21?</label>
-                    <input class="form-check-input" type="checkbox" onChange={acc_form.handleChange} value={acc_form.values.age_limit} role="switch" id="age_limit" />
+                    <input class="form-check-input" type="checkbox" disabled checked={is21()} role="switch" id="age_limit" />
                   </div>
                 </div>
               </div>
