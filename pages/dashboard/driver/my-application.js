@@ -117,8 +117,8 @@ export default function MyApplication () {
 
   const [can_pass_drug_test, set_can_pass_drug_test] = useState( false )
   const [has_past_dui, set_has_past_dui] = useState( false )
-  const [dui_start_years, set_dui_start_years] = useState( "" )
-  const [dui_end_years, set_dui_end_years] = useState( "" )
+  const [dui_past_year1, set_dui_past_year1] = useState( "" )
+  const [dui_past_year2, set_dui_past_year2] = useState( "" )
   const [accident_count, set_accident_count] = useState( 0 )
   const [accident_details, set_accident_details] = useState( "" )
   const [criminal_history, set_criminal_history] = useState( "" )
@@ -179,8 +179,8 @@ export default function MyApplication () {
 
     set_can_pass_drug_test( data.can_pass_drug_test )
     set_has_past_dui( data.has_past_dui )
-    set_dui_start_years( data.dui_years[0] )
-    set_dui_end_years( data.dui_years[1] )
+    set_dui_past_year1( data.dui_years[0] )
+    set_dui_past_year2( data.dui_years[1] )
     set_accident_count( data.accident_count )
     set_accident_details( data.accident_details )
     set_criminal_history( data.criminal_history )
@@ -234,13 +234,17 @@ export default function MyApplication () {
         details: drugTestDetails,
       },
     ]
+    const dui_years = [
+      dui_past_year1,
+      dui_past_year2,
+    ]
     console.log(safety_questions)
     try {
       const a = {
         employers,
         can_pass_drug_test,
         has_past_dui,
-        dui_years: dui_start_years + ", " + dui_end_years,
+        dui_years,
         accident_count,
         accident_details,
         criminal_history,
@@ -616,9 +620,8 @@ export default function MyApplication () {
                     <div className="col-lg-11 col-12 mt-3">
                       <label>Year(s) of Past DUI’s:</label>
                       <div className="d-flex align-items-center">
-                        <input type="text" placeholder="Start Year" name="dui_start_years" className="form-control" onChange={( e ) => set_dui_start_years( e.target.value )} value={dui_start_years} />
-                        <span className="mx-1"> - </span>
-                        <input type="input" placeholder="End Year" name="years_past_dui" className="form-control" onChange={( e ) => set_dui_end_years( e.target.value )} value={dui_end_years} />
+                        <input type="text" placeholder="Year" name="dui_start_years" className="form-control mx-1" onChange={( e ) => set_dui_past_year1( e.target.value )} value={dui_past_year1} />
+                        <input type="text" placeholder="Year" name="dui_start_years" className="form-control mx-1" onChange={( e ) => set_dui_past_year2( e.target.value )} value={dui_past_year2} />
                       </div>
                     </div>
                     {/* criminal history */}
