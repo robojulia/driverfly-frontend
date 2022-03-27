@@ -167,8 +167,15 @@ export default function MyApplication () {
 
 
   const [revoked, setRevoked] = useState( false )
+  const [revokedDetails, setRevokedDetails] = useState( "" )
+
   const [violations, setViolations] = useState( false )
+  const [violationsDetails, setViolationsDetails] = useState( "" )
+
+  const [tickets, set_tickets] = useState( false )
   const [ticketsDetails, set_ticketsDetails] = useState( "" )
+
+  const [drugTest, set_drugTest] = useState( false )
   const [drugTestDetails, set_drugTestDetails] = useState( "" )
 
   useEffect( async () => {
@@ -243,6 +250,28 @@ export default function MyApplication () {
     set_criminal_history( data.criminal_history )
 
 
+    const revokedFetched = data.safety_questions.find( q => q.type === "LICENSE_REVOKED" )
+    if (revokedFetched) {
+      setRevoked( revokedFetched.response )
+      setRevokedDetails( revokedFetched.details )
+    }
+    const violationsFetched = data.safety_questions.find( q => q.type === "VIOLATIONS_PSP" )
+    if (violationsFetched) {
+      setRevoked( violationsFetched.response )
+      setRevokedDetails( violationsFetched.details )
+    }
+    const tickets = data.safety_questions.find( q => q.type === "TICKETS" )
+    if (tickets) {
+      setRevoked( tickets.response )
+      setRevokedDetails( tickets.details )
+    }
+    const drugsFetched = data.safety_questions.find( q => q.type === "POSITIVE_DRUG_TEST" )
+    if (drugsFetched) {
+      setRevoked( drugsFetched.response )
+      setRevokedDetails( drugsFetched.details )
+    }
+
+
 
     const safety_details = data.safety_questions[0]
     if ( safety_details ) {
@@ -306,22 +335,22 @@ export default function MyApplication () {
     const safety_questions = [
       {
         type: "LICENSE_REVOKED",
-        details: "",
+        details: revokedDetails,
         response: revoked,
       },
       {
         type: "VIOLATIONS_PSP",
-        details: "",
+        details: violationsDetails,
         response: violations,
       },
       {
         type: "TICKETS",
-        response: false,
+        response: tickets,
         details: ticketsDetails,
       },
       {
         type: "POSITIVE_DRUG_TEST",
-        response: false,
+        response: drugTest,
         details: drugTestDetails,
       },
     ]
@@ -329,7 +358,6 @@ export default function MyApplication () {
       dui_past_year1,
       dui_past_year2,
     ]
-    console.log( safety_questions )
     try {
       const a = {
         employers,
@@ -780,6 +808,15 @@ export default function MyApplication () {
                         <input class="form-check-input" type="checkbox" role="switch" id="licence" checked={revoked} onClick={( e ) => setRevoked( e.target.checked )} />
                       </div>
                     </div>
+                    {/* revoked details */}
+                    {
+                      revoked && (
+                        <div className="col-lg-11 col-12 mt-3">
+                          <label for="exampleFormControlTextarea1" class="form-label">Details:</label>
+                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => setRevokedDetails( e.target.value )} value={revokedDetails} />
+                        </div>
+                      )
+                    }
                     {/* violation */}
                     <div className="col-lg-11 col-12 mt-3">
                       <div class="form-check form-switch">
@@ -787,16 +824,49 @@ export default function MyApplication () {
                         <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={violations} onClick={( e ) => setViolations( e.target.checked )} />
                       </div>
                     </div>
+                    {/* violation details */}
+                    {
+                      violations && (
+                        <div className="col-lg-11 col-12 mt-3">
+                          <label for="exampleFormControlTextarea1" class="form-label">Violation Details:</label>
+                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => setViolationsDetails( e.target.value )} value={violationsDetails} />
+                        </div>
+                      )
+                    }
                     {/* 5 years tickets */}
                     <div className="col-lg-11 col-12 mt-3">
-                      <label for="exampleFormControlTextarea1" class="form-label">Have you had any tickets in the previous 5 years? If so, please explain:</label>
-                      <textarea class="form-control" name="any_tickets" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => set_ticketsDetails( e.target.value )} value={ticketsDetails}></textarea>
+                      <div class="form-check form-switch">
+                        <label class="form-check-label" for="violation">Have you had any tickets in the previous 5 years?</label>
+                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={tickets} onClick={( e ) => set_tickets( e.target.checked )} />
+                      </div>
                     </div>
-                    {/* refused */}
+                    {/* 5 years tickets details*/}
+                    {
+                      tickets && (
+                        <div className="col-lg-11 col-12 mt-3">
+                          <label for="exampleFormControlTextarea1" class="form-label">If so, please explain:</label>
+                          <textarea class="form-control" name="any_tickets" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => set_ticketsDetails( e.target.value )} value={ticketsDetails}></textarea>
+                        </div>
+                      )
+                    }
+
+                    {/* drug test */}
                     <div className="col-lg-11 col-12 mt-3">
-                      <label for="exampleFormControlTextarea1" class="form-label">Have you ever refused to be tested or had a positive drug/alcohol test? if so, explain here:</label>
-                      <textarea class="form-control" name="refused" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => set_drugTestDetails( e.target.value )} value={drugTestDetails}></textarea>
+                      <div class="form-check form-switch">
+                        <label class="form-check-label" for="violation">Have you ever refused to be tested or had a positive drug/alcohol test?</label>
+                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={drugTest} onClick={( e ) => set_drugTest( e.target.checked )} />
+                      </div>
                     </div>
+
+                    {/* drug test details */}
+                    {
+                      drugTest && (
+                        <div className="col-lg-11 col-12 mt-3">
+                          <label for="exampleFormControlTextarea1" class="form-label">if so, explain here:</label>
+                          <textarea class="form-control" name="refused" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => set_drugTestDetails( e.target.value )} value={drugTestDetails}></textarea>
+                        </div>
+                      )
+                    }
                   </div>
                 </div>
               </div>
