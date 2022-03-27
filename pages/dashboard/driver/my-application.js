@@ -8,7 +8,8 @@ import style from '../../../public/dashboard/styles/css/Driver/my-account.module
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useEffect, useState } from "react"
-import moment from "moment";
+import { random } from "lodash"
+import moment from "moment"
 
 
 
@@ -56,6 +57,12 @@ export default function MyApplication () {
       value: "CDL_CLASS_C"
     }
   ]
+  // {
+  //   id: Date.now(),
+  //   years: 0,
+  //   type: ""
+  // }
+  const [equipments, set_equipments] = useState( [] )
 
   const acc_form = useFormik( {
     initialValues: {
@@ -75,8 +82,6 @@ export default function MyApplication () {
       // phoneNumber: '',
       zip_code: '',
       state: '',
-      equipment_type: '',
-      equipment_experience: '',
       emergency_contact_relationship: '',
     },
     validationSchema: yup.object( {
@@ -95,13 +100,18 @@ export default function MyApplication () {
       // phoneNumber: yup.string(),
       zip_code: yup.string(),
       state: yup.string(),
-      equipment_type: yup.string(),
-      equipment_experience: yup.string(),
       emergency_contact_relationship: yup.string(),
     } ),
     onSubmit: async ( values ) => {
+      const data = {
+        ...values,
+        equipment_experience: equipments.map( eq => ( {
+          years: eq.years,
+          type: eq.type
+        } ) ),
+      }
       try {
-        const resp = await axios.post( `${process.env.BASE_URL_API}/drivers`, values, {
+        const resp = await axios.post( `${process.env.BASE_URL_API}/drivers`, data, {
           headers: {
             Authorization: `Bearer ${user.token}`
           }
@@ -130,9 +140,8 @@ export default function MyApplication () {
       }
     }
   } )
-  
-  const [birthDate, set_birthDate] = useState( "" )
 
+  const [birthDate, set_birthDate] = useState( "" )
   const [name, setName] = useState( "" )
   const [startDate, setStartDate] = useState( "" )
   const [endDate, setEndDate] = useState( "" )
@@ -157,8 +166,8 @@ export default function MyApplication () {
   const [criminal_history, set_criminal_history] = useState( "" )
 
 
-  const [revoked, setRevoked] = useState(false)
-  const [violations, setViolations] = useState(false)
+  const [revoked, setRevoked] = useState( false )
+  const [violations, setViolations] = useState( false )
   const [ticketsDetails, set_ticketsDetails] = useState( "" )
   const [drugTestDetails, set_drugTestDetails] = useState( "" )
 
@@ -180,11 +189,19 @@ export default function MyApplication () {
       } )
       return
     }
+
+    const equipmentsFetched = data.equipment_experience.map( eq => ( {
+      years: eq.years,
+      id: randomId(),
+      type: eq.type
+    } ) )
+
     set_birthDate( data.birthdate )
+    set_equipments( equipmentsFetched )
     console.log( data )
     acc_form.setValues( {
       license_number: data.license_number,
-      license_expiry: moment(data.license_expiry).format("YYYY-MM-DD"),
+      license_expiry: moment( data.license_expiry ).format( "YYYY-MM-DD" ),
       highest_degree: data.highest_degree,
       license_state: data.license_state,
       street: data.street,
@@ -194,7 +211,6 @@ export default function MyApplication () {
       years_cdl_experience: data.years_cdl_experience,
       zip_code: data.zip_code,
       state: data.state,
-      equipment_type: data.equipment_type,
       equipment_experience: data.equipment_experience,
       emergency_contact_relationship: data.emergency_contact_relationship,
     } )
@@ -237,10 +253,32 @@ export default function MyApplication () {
   }, [] )
 
   const is21 = () => {
-    if ( moment( ).diff( birthDate, "years" ) >= 21 ) {
+    if ( moment().diff( birthDate, "years" ) >= 21 ) {
       return true
     }
     return false
+  }
+
+  const randomId = () => Date.now() + "-" + random( 0, 200 )
+
+  const setEquipmentExperience = ( id, value ) => {
+    const newArr = equipments.map( eq => {
+      if ( eq.id === id ) {
+        return { ...eq, years: value }
+      }
+      return eq
+    } )
+    set_equipments( newArr )
+  }
+
+  const setEquipmentType = ( id, value ) => {
+    const newArr = equipments.map( eq => {
+      if ( eq.id === id ) {
+        return { ...eq, type: value }
+      }
+      return eq
+    } )
+    set_equipments( newArr )
   }
 
   const postSecondForm = async ( e ) => {
@@ -263,7 +301,7 @@ export default function MyApplication () {
     ]
 
 
-    
+
 
     const safety_questions = [
       {
@@ -291,7 +329,7 @@ export default function MyApplication () {
       dui_past_year1,
       dui_past_year2,
     ]
-    console.log(safety_questions)
+    console.log( safety_questions )
     try {
       const a = {
         employers,
@@ -330,6 +368,10 @@ export default function MyApplication () {
         progress: undefined,
       } )
     }
+  }
+
+  const addEquipment = () => {
+    set_equipments( [...equipments, { type: "", years: 0, id: randomId() }] )
   }
 
 
@@ -480,8 +522,8 @@ export default function MyApplication () {
                   >
                     <option selected>CDL Class Type:</option>
                     {cdl_classes.map( ( cdl, index ) => {
-                      return ( 
-                      <option selected={acc_form.values.cdl_class === cdl.value} value={cdl.value} key={index}>{cdl.label}</option>
+                      return (
+                        <option selected={acc_form.values.cdl_class === cdl.value} value={cdl.value} key={index}>{cdl.label}</option>
                       )
                     } )}
                   </select>
@@ -559,26 +601,6 @@ export default function MyApplication () {
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
                 />
-                <BaseInput
-                  className="col-lg-4 col-12"
-                  label="Equipment Type:"
-                  placeholder="Equipment Type"
-                  name="equipment_type"
-                  value={acc_form.values.equipment_type}
-                  touched={acc_form.touched.equipment_type}
-                  error={acc_form.errors.equipment_type}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                />
-                <div className="col-lg-2 col-12 mt-3">
-                  <span className={style.lable}>Years Experience</span>
-                  <select class="form-select" name="equipment_experience" aria-label="Default select example">
-                    <option selected>Years Experience</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                  </select>
-                </div>
 
                 <BaseInput
                   className="col-lg-4 col-12"
@@ -591,6 +613,33 @@ export default function MyApplication () {
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
                 />
+                <div className="col-lg-8 col-12">
+                  <span>Equipments</span> <br />
+                  {equipments.map( ( eq ) => {
+                    return (
+                      <div key={eq.id}>
+                        <BaseInput
+                          className="col-lg-8 col-12"
+                          label="Equipment Type:"
+                          placeholder="Equipment Type"
+                          value={eq.type}
+                          onChange={( e ) => setEquipmentType( eq.id, e.target.value )}
+                          name="equipment_type"
+                        />
+                        <BaseInput
+                          className="col-lg-8 col-12"
+                          label="Years Experience:"
+                          type="number"
+                          onChange={( e ) => setEquipmentExperience( eq.id, e.target.value )}
+                          value={eq.years}
+                          placeholder="Years Experience"
+                        />
+                      </div>
+                    )
+                  } )}
+                  <span className="btn btn-success col-4 mt-2" onClick={addEquipment}>+ more</span>
+                </div>
+
               </div>
               <div className="col-lg-12 col-12 mt-4 border-0 text-end">
                 <button type="submit" className={`  ${style.update_btn}`} >
@@ -632,22 +681,22 @@ export default function MyApplication () {
                 {/* company street */}
                 <div className="col-lg-11 col-12 mt-3">
                   <label>Street:</label>
-                  <input type="text" name="companyStreet" className="form-control" placeholder="Company Street:" value={companyStreet} onChange={(e) => set_companyStreet(e.target.value)} />
+                  <input type="text" name="companyStreet" className="form-control" placeholder="Company Street:" value={companyStreet} onChange={( e ) => set_companyStreet( e.target.value )} />
                 </div>
                 {/* company city */}
                 <div className="col-lg-11 col-12 mt-3">
                   <label>City:</label>
-                  <input type="text" name="companyCity" className="form-control" placeholder="Company City:" value={companyCity} onChange={(e) => set_companyCity(e.target.value)} />
+                  <input type="text" name="companyCity" className="form-control" placeholder="Company City:" value={companyCity} onChange={( e ) => set_companyCity( e.target.value )} />
                 </div>
                 {/* company state */}
                 <div className="col-lg-11 col-12 mt-3">
                   <label>State:</label>
-                  <input type="text" name="companyState" className="form-control" placeholder="Company State:" value={companyState} onChange={(e) => set_companyState(e.target.value)} />
+                  <input type="text" name="companyState" className="form-control" placeholder="Company State:" value={companyState} onChange={( e ) => set_companyState( e.target.value )} />
                 </div>
                 {/* company zip */}
                 <div className="col-lg-11 col-12 mt-3">
                   <label>Company Zip:</label>
-                  <input type="text" name="companyZip" className="form-control" placeholder="Company Zip:" value={companyZip} onChange={(e) => set_companyZip(e.target.value)} />
+                  <input type="text" name="companyZip" className="form-control" placeholder="Company Zip:" value={companyZip} onChange={( e ) => set_companyZip( e.target.value )} />
                 </div>
                 {/* company phone */}
                 <div className="col-lg-11 col-12 mt-3">
@@ -735,7 +784,7 @@ export default function MyApplication () {
                     <div className="col-lg-11 col-12 mt-3">
                       <div class="form-check form-switch">
                         <label class="form-check-label" for="violation">Do you have any violation on you PSP from previous three years? If so please explain:</label>
-                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={violations} onClick={( e ) => setViolations( e.target.checked )}/>
+                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={violations} onClick={( e ) => setViolations( e.target.checked )} />
                       </div>
                     </div>
                     {/* 5 years tickets */}
