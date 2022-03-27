@@ -19,6 +19,210 @@ export default function MyApplication () {
   const { authCheck } = useAuth()
   const user = authCheck()
 
+
+  const stateList = [
+    {
+      value: "AL",
+      label: "Alabama"
+    },
+    {
+      value: "AK",
+      label: "Alaska"
+    },
+    {
+      value: "AZ",
+      label: "Arizona"
+    },
+    {
+      value: "AR",
+      label: "Arkansas"
+    },
+    {
+      value: "CA",
+      label: "California"
+    },
+    {
+      value: "CO",
+      label: "Colorado"
+    },
+    {
+      value: "CT",
+      label: "Connecticut"
+    },
+    {
+      value: "DE",
+      label: "Delaware"
+    },
+    {
+      value: "FL",
+      label: "Florida"
+    },
+    {
+      value: "GA",
+      label: "Georgia"
+    },
+    {
+      value: "HI",
+      label: "Hawaii"
+    },
+    {
+      value: "ID",
+      label: "Idaho"
+    },
+    {
+      value: "IL",
+      label: "Illinois"
+    },
+    {
+      value: "IN",
+      label: "Indiana"
+    },
+    {
+      value: "IA",
+      label: "Iowa"
+    },
+    {
+      value: "KS",
+      label: "Kansas"
+    },
+    {
+      value: "KY",
+      label: "Kentucky"
+    },
+    {
+      value: "LA",
+      label: "Louisiana"
+    },
+    {
+      value: "ME",
+      label: "Maine"
+    },
+    {
+      value: "MD",
+      label: "Maryland"
+    },
+    {
+      value: "MA",
+      label: "Massachusettes"
+    },
+    {
+      value: "MI",
+      label: "Michigan"
+    },
+    {
+      value: "MN",
+      label: "Minnesota"
+    },
+    {
+      value: "MS",
+      label: "Mississippi"
+    },
+    {
+      value: "MO",
+      label: "Missouri"
+    },
+    {
+      value: "MT",
+      label: "Montana"
+    },
+    {
+      value: "NE",
+      label: "Nebraska"
+    },
+    {
+      value: "NV",
+      label: "Nevada"
+    },
+    {
+      value: "NH",
+      label: "New Hampshire"
+    },
+    {
+      value: "NJ",
+      label: "New Jersey"
+    },
+    {
+      value: "NM",
+      label: "New Mexico"
+    },
+    {
+      value: "NY",
+      label: "New York"
+    },
+    {
+      value: "NC",
+      label: "North Carolina"
+    },
+    {
+      value: "ND",
+      label: "North Dakota"
+    },
+    {
+      value: "OH",
+      label: "Ohio"
+    },
+    {
+      value: "OK",
+      label: "Oklahoma"
+    },
+    {
+      value: "OR",
+      label: "Oregon"
+    },
+    {
+      value: "PA",
+      label: "Pennsylvania"
+    },
+    {
+      value: "RI",
+      label: "Rhode Island"
+    },
+    {
+      value: "SC",
+      label: "South Carolina"
+    },
+    {
+      value: "SD",
+      label: "South Dakota"
+    },
+    {
+      value: "TN",
+      label: "Tennessee"
+    },
+    {
+      value: "TX",
+      label: "Texas"
+    },
+    {
+      value: "UT",
+      label: "Utah"
+    },
+    {
+      value: "VT",
+      label: "Vermont"
+    },
+    {
+      value: "VA",
+      label: "Virginia"
+    },
+    {
+      value: "WA",
+      label: "Washington"
+    },
+    {
+      value: "WV",
+      label: "West Virginia"
+    },
+    {
+      value: "WI",
+      label: "Wisconsin"
+    },
+    {
+      value: "WY",
+      label: "Wyoming"
+    },
+  ]
+
   const randomId = () => Date.now() + "-" + random( 0, 200 )
 
   const driverDegree = [
@@ -336,7 +540,7 @@ export default function MyApplication () {
     } )
 
     let pastEmployersFetched = []
-      if ( data.employers.length ) {
+    if ( data.employers.length ) {
       pastEmployersFetched = data.employers.map( emp => ( {
         id: randomId(),
         name: emp.name,
@@ -352,7 +556,7 @@ export default function MyApplication () {
         state: emp.state,
         zip_code: emp.zip_code,
       } ) )
-    }else {
+    } else {
       pastEmployersFetched = [{
         id: randomId(),
         name: "",
@@ -617,21 +821,11 @@ export default function MyApplication () {
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
                 />
-                {/* <BaseInput
-                  className="col-lg-4 col-12"
-                  label="Highest Degree:"
-                  placeholder="Highest Degree"
-                  name="highest_degree"
-                  value={acc_form.values.highest_degree}
-                  touched={acc_form.touched.highest_degree}
-                  error={acc_form.errors.highest_degree}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                /> */}
                 <div className="col-lg-4 col-12 mt-3">
                   <span className={style.lable}>Highest Degree:</span>
                   <select class="form-select" name="highest_degree" aria-label="Default select example"
-                    selected={acc_form.values.highest_degree}
+                    value={acc_form.values.highest_degree}
+                    onChange={acc_form.handleChange}
                   >
                     <option selected>Highest Degree:</option>
                     {driverDegree.map( ( degree, index ) => {
@@ -653,17 +847,24 @@ export default function MyApplication () {
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
                 /> */}
-                <BaseInput
-                  className="col-lg-4 col-12"
-                  label="license_state Issued:"
-                  placeholder="license_state Issued"
-                  name="license_state"
-                  value={acc_form.values.license_state}
-                  touched={acc_form.touched.license_state}
-                  error={acc_form.errors.license_state}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                />
+                <div className="col-lg-4 col-12 mt-3">
+                  <label>State Issued:</label>
+                  <select class="form-select" name="license_state" aria-label="Default select example"
+                    value={acc_form.values.license_state}
+                    onChange={acc_form.handleChange}
+                  >
+                    <option selected>State Issued:</option>
+                    {stateList.map( ( state, index ) => {
+                      return (
+                        <option
+                          key={index}
+                          selected={acc_form.values.license_state === state.value}
+                          value={state.value}
+                        >{state.label}</option>
+                      )
+                    } )}
+                  </select>
+                </div>
               </div>
 
 
@@ -679,21 +880,11 @@ export default function MyApplication () {
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
                 />
-                {/* <BaseInput
-                  className="col-lg-4 col-12"
-                  label="CDL Class Type:"
-                  placeholder="CDL Class Type"
-                  name="cdl_class"
-                  value={acc_form.values.cdl_class}
-                  touched={acc_form.touched.cdl_class}
-                  error={acc_form.errors.cdl_class}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                /> */}
                 <div className="col-lg-4 col-12 mt-3">
                   <span className={style.lable}>CDL Class Type:</span>
                   <select class="form-select" name="cdl_class" aria-label="Default select example"
-                    selected={acc_form.values.cdl_class}
+                    value={acc_form.values.cdl_class}
+                    onChange={acc_form.handleChange}
                   >
                     <option selected>CDL Class Type:</option>
                     {cdl_classes.map( ( cdl, index ) => {
@@ -754,17 +945,24 @@ export default function MyApplication () {
                 /> */}
               </div>
               <div className='row'>
-                <BaseInput
-                  className="col-lg-4 col-12"
-                  label="State:"
-                  placeholder="State"
-                  name="state"
-                  value={acc_form.values.state}
-                  touched={acc_form.touched.state}
-                  error={acc_form.errors.state}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                />
+                <div className="col-lg-4 col-12 mt-3">
+                  <label>State:</label>
+                  <select class="form-select" name="state" aria-label="Default select example"
+                    value={acc_form.values.state}
+                    onChange={acc_form.handleChange}
+                  >
+                    <option selected>State:</option>
+                    {stateList.map( ( state, index ) => {
+                      return (
+                        <option
+                          key={index}
+                          selected={acc_form.values.state === state.value}
+                          value={state.value}
+                        >{state.label}</option>
+                      )
+                    } )}
+                  </select>
+                </div>
                 <BaseInput
                   className="col-lg-4 col-12"
                   label="Zip:"
@@ -840,68 +1038,86 @@ export default function MyApplication () {
                         {/* Last employer */}
                         <div className="col-lg-11 col-12 mt-3">
                           <label>Last Employer:</label>
-                          <input value={past.name} name="last_emp" type="text" className="form-control" placeholder="Last Employer:" onChange={( e ) => setCompanyName( past.id, e.target.value )}/>
+                          <input value={past.name} name="last_emp" type="text" className="form-control" placeholder="Last Employer:" onChange={( e ) => setCompanyName( past.id, e.target.value )} />
                         </div>
                         {/* Date employed */}
                         <div className="col-lg-11 col-12 mt-3">
                           <label>Date Employed:</label>
                           <div className="d-flex align-items-center">
-                            <input onChange={( e ) => setCompanyStartDate(past.id, e.target.value )} value={past.start_at} name="sta_date" type="date" className="form-control" /> <h2 className="mx-2">to</h2>
+                            <input onChange={( e ) => setCompanyStartDate( past.id, e.target.value )} value={past.start_at} name="sta_date" type="date" className="form-control" /> <h2 className="mx-2">to</h2>
                             <input onChange={( e ) => setCompanyEndDate( past.id, e.target.value )} value={past.end_at} name="sta_date" type="date" className="form-control" />
                           </div>
                         </div>
                         {/* position title */}
                         <div className="col-lg-11 col-12 mt-3">
                           <label>Position Title:</label>
-                          <input  onChange={( e ) => setCompanyTitle(past.id, e.target.value )} value={past.title} type="text" name="position_title" className="form-control" placeholder="Position Title:" />
+                          <input onChange={( e ) => setCompanyTitle( past.id, e.target.value )} value={past.title} type="text" name="position_title" className="form-control" placeholder="Position Title:" />
                         </div>
                         {/* company address */}
                         <h5 className="my-2">Company Address</h5>
                         {/* company street */}
                         <div className="col-lg-11 col-12 mt-3">
                           <label>Street:</label>
-                          <input type="text" name="companyStreet" className="form-control" placeholder="Company Street:" value={past.street}  onChange={( e ) => setCompanyStreet(past.id, e.target.value )} />
+                          <input type="text" name="companyStreet" className="form-control" placeholder="Company Street:" value={past.street} onChange={( e ) => setCompanyStreet( past.id, e.target.value )} />
                         </div>
                         {/* company city */}
                         <div className="col-lg-11 col-12 mt-3">
                           <label>City:</label>
-                          <input type="text" name="companyCity" className="form-control" placeholder="Company City:" value={past.city} onChange={( e ) => setCompanyCity(past.id, e.target.value )} />
+                          <input type="text" name="companyCity" className="form-control" placeholder="Company City:" value={past.city} onChange={( e ) => setCompanyCity( past.id, e.target.value )} />
                         </div>
                         {/* company state */}
-                        <div className="col-lg-11 col-12 mt-3">
+                        {/* <div className="col-lg-11 col-12 mt-3">
                           <label>State:</label>
-                          <input type="text" name="companyState" className="form-control" placeholder="Company State:" value={past.state}  onChange={( e ) => setCompanyState(past.id, e.target.value )}/>
+                          <input type="text" name="companyState" className="form-control" placeholder="Company State:" value={past.state} onChange={( e ) => setCompanyState( past.id, e.target.value )} />
+                        </div> */}
+                        <div className="col-lg-4 col-12 mt-3">
+                          <label>State:</label>
+                          <select class="form-select" name="state" aria-label="Default select example"
+                            value={past.state}
+                            onChange={( e ) => setCompanyState( past.id, e.target.value )}
+                          >
+                            <option selected>State Issued:</option>
+                            {stateList.map( ( state, index ) => {
+                              return (
+                                <option
+                                  key={index}
+                                  selected={past.state === state.value}
+                                  value={state.value}
+                                >{state.label}</option>
+                              )
+                            } )}
+                          </select>
                         </div>
                         {/* company zip */}
                         <div className="col-lg-11 col-12 mt-3">
                           <label>Company Zip:</label>
-                          <input type="text" name="companyZip" className="form-control" placeholder="Company Zip:" value={past.zip_code} onChange={( e ) => setCompanyZipCode(past.id, e.target.value )}/>
+                          <input type="text" name="companyZip" className="form-control" placeholder="Company Zip:" value={past.zip_code} onChange={( e ) => setCompanyZipCode( past.id, e.target.value )} />
                         </div>
                         {/* company phone */}
                         <div className="col-lg-11 col-12 mt-3">
                           <label>Company Phone:</label>
-                          <input value={past.phone} type="text" name="phone" className="form-control" placeholder="Company Phone:"  onChange={( e ) => setCompanyPhone(past.id, e.target.value )}/>
+                          <input value={past.phone} type="text" name="phone" className="form-control" placeholder="Company Phone:" onChange={( e ) => setCompanyPhone( past.id, e.target.value )} />
                         </div>
                         {/* authorize */}
                         <div className="col-lg-11 col-12 mt-3">
                           <div class="form-check form-switch">
                             <label class="form-check-label" for="authorize">Do you authorize prospective employers to contact this company?</label>
                             {/* onClick={( e ) => set_can_contact( e.target.checked )} */}
-                            <input class="form-check-input" type="checkbox" role="switch" id="authorize" checked={past.can_contact}  onClick={( e ) => setCompanyCanContact(past.id, e.target.checked )}/>
+                            <input class="form-check-input" type="checkbox" role="switch" id="authorize" checked={past.can_contact} onClick={( e ) => setCompanyCanContact( past.id, e.target.checked )} />
                           </div>
                         </div>
                         {/* FMCSRs */}
                         <div className="col-lg-11 col-12 mt-3">
                           <div class="form-check form-switch">
                             <label class="form-check-label" for="FMCSRs">Were you subject to the FMCSRs?</label>
-                            <input checked={past.is_subject_to_fmcsrs} class="form-check-input" type="checkbox" role="switch" id="FMCSRs" onClick={( e ) => setCompanyIsSubjectToFmcsrs(past.id, e.target.checked )}/>
+                            <input checked={past.is_subject_to_fmcsrs} class="form-check-input" type="checkbox" role="switch" id="FMCSRs" onClick={( e ) => setCompanyIsSubjectToFmcsrs( past.id, e.target.checked )} />
                           </div>
                         </div>
                         {/* is_subject_to_drug_tests */}
                         <div className="col-lg-11 col-12 mt-3">
                           <div class="form-check form-switch">
                             <label class="form-check-label" for="is_subject_to_drug_tests">Was your job designated as a safety-sensitive function in any DOT- regulated mode subject to the drug and alcohol testing requirements of 49 CFR Part 40?</label>
-                            <input checked={past.is_subject_to_drug_tests} class="form-check-input" type="checkbox" role="switch" id="is_subject_to_drug_tests" onClick={( e ) => setCompanyIsSubjectToDrugTests(past.id, e.target.checked )}/>
+                            <input checked={past.is_subject_to_drug_tests} class="form-check-input" type="checkbox" role="switch" id="is_subject_to_drug_tests" onClick={( e ) => setCompanyIsSubjectToDrugTests( past.id, e.target.checked )} />
                           </div>
                         </div>
 
@@ -914,7 +1130,7 @@ export default function MyApplication () {
                   <div className="col-lg-11 col-12 mt-3">
                     <span className="btn btn-success" onClick={addPastEmployer}>+{3 - pastEmployers.length} more jobs</span>
                   </div>
-                    
+
                 }
               </div>
 
