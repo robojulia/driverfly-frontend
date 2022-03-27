@@ -1,24 +1,17 @@
-import { Row } from "reactstrap"
-import FullLayout from "../../../components/dashboard/layouts/FullLayout"
-import useRedirect from '../../../hooks/useRedirect'
-import Select from 'react-select'
-import axios from "axios"
-import { useEffect, useState } from "react"
-import { ToastContainer, toast } from 'react-toastify'
-import Modal from "react-bootstrap/Modal"
-import Button from "react-bootstrap/Button"
-import "bootstrap/dist/css/bootstrap.min.css"
-import 'react-toastify/dist/ReactToastify.css'
-import useStorage from "../../../hooks/useStorage"
-import useAuth from "../../../hooks/useAuth"
-import { Viewer } from '@react-pdf-viewer/core'
-import Spinner from 'react-bootstrap/Spinner'
+import { SpecialZoomLevel, Viewer, Worker } from '@react-pdf-viewer/core'
 import '@react-pdf-viewer/core/lib/styles/index.css'
-import { Worker } from '@react-pdf-viewer/core'
-import Link from "next/link"
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout'
 import '@react-pdf-viewer/default-layout/lib/styles/index.css'
-import { SpecialZoomLevel } from '@react-pdf-viewer/core'
+import axios from "axios"
+import "bootstrap/dist/css/bootstrap.min.css"
+import { useEffect, useState } from "react"
+import Button from "react-bootstrap/Button"
+import Modal from "react-bootstrap/Modal"
+import Spinner from 'react-bootstrap/Spinner'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import FullLayout from "../../../components/dashboard/layouts/FullLayout"
+import useAuth from "../../../hooks/useAuth"
 
 
 export default function PrestoresDocuments () {
@@ -30,6 +23,7 @@ export default function PrestoresDocuments () {
 
   const [showModal, setShowModal] = useState( false )
   const [pdfModalTxt, set_pdfModalTxt] = useState( "" )
+  const [pdfModalURL, set_pdfModalURL] = useState( "" )
 
   const [isUploading, set_isUploading] = useState( false )
 
@@ -57,24 +51,43 @@ export default function PrestoresDocuments () {
     }
   }
 
+  const [fetchedData, set_fetchedData] = useState( [] )
 
+  useEffect( async () => {
+    const { data } = await axios.get( `${process.env.BASE_URL_API}/user/uploaded/documents`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`
+      }
+    } )
+    set_fetchedData( data )
+  }, [] )
 
 
   const viewFile = ( str ) => {
     let txt
+    let url
     if ( str == "RESUME" ) {
+      const file = fetchedData.find( ( item ) => item.type === "RESUME" )
+      url = file ? file.path : ""
       txt = "Resume"
     }
     if ( str == "MEDICAL_CARD" ) {
+      const file = fetchedData.find( ( item ) => item.type === "MEDICAL_CARD" )
+      url = file ? file.path : ""
       txt = "Medical Card"
     }
     if ( str == "DRIVER_LICENSE" ) {
+      const file = fetchedData.find( ( item ) => item.type === "DRIVER_LICENSE" )
+      url = file ? file.path : ""
       txt = "Driver's License"
     }
     if ( str == "MVR" ) {
+      const file = fetchedData.find( ( item ) => item.type === "MVR" )
+      url = file ? file.path : ""
       txt = "Motor Vehicle Record"
     }
     set_pdfModalTxt( txt )
+    set_pdfModalURL( url )
     setShowModal( true )
   }
 
@@ -219,7 +232,7 @@ export default function PrestoresDocuments () {
                 <Spinner animation="border" role="status">
                   <span className="visually-hidden">Loading...</span>
                 </Spinner>
-              )} fileUrl="https://s3.us-east-2.amazonaws.com/driverfly-docs/documents/2f6376b3-14e6-4c3d-b588-8753e3144eb1/mongodb-cheat.pdf" />
+              )} fileUrl={pdfModalURL} />
               {/* )} fileUrl="/resume.pdf" /> */}
             </div>
           </Worker>
