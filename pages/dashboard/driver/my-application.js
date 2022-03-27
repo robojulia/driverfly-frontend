@@ -20,6 +20,211 @@ export default function MyApplication () {
   const user = authCheck()
 
 
+  const stateList = [
+    {
+      value: "AL",
+      label: "Alabama"
+    },
+    {
+      value: "AK",
+      label: "Alaska"
+    },
+    {
+      value: "AZ",
+      label: "Arizona"
+    },
+    {
+      value: "AR",
+      label: "Arkansas"
+    },
+    {
+      value: "CA",
+      label: "California"
+    },
+    {
+      value: "CO",
+      label: "Colorado"
+    },
+    {
+      value: "CT",
+      label: "Connecticut"
+    },
+    {
+      value: "DE",
+      label: "Delaware"
+    },
+    {
+      value: "FL",
+      label: "Florida"
+    },
+    {
+      value: "GA",
+      label: "Georgia"
+    },
+    {
+      value: "HI",
+      label: "Hawaii"
+    },
+    {
+      value: "ID",
+      label: "Idaho"
+    },
+    {
+      value: "IL",
+      label: "Illinois"
+    },
+    {
+      value: "IN",
+      label: "Indiana"
+    },
+    {
+      value: "IA",
+      label: "Iowa"
+    },
+    {
+      value: "KS",
+      label: "Kansas"
+    },
+    {
+      value: "KY",
+      label: "Kentucky"
+    },
+    {
+      value: "LA",
+      label: "Louisiana"
+    },
+    {
+      value: "ME",
+      label: "Maine"
+    },
+    {
+      value: "MD",
+      label: "Maryland"
+    },
+    {
+      value: "MA",
+      label: "Massachusettes"
+    },
+    {
+      value: "MI",
+      label: "Michigan"
+    },
+    {
+      value: "MN",
+      label: "Minnesota"
+    },
+    {
+      value: "MS",
+      label: "Mississippi"
+    },
+    {
+      value: "MO",
+      label: "Missouri"
+    },
+    {
+      value: "MT",
+      label: "Montana"
+    },
+    {
+      value: "NE",
+      label: "Nebraska"
+    },
+    {
+      value: "NV",
+      label: "Nevada"
+    },
+    {
+      value: "NH",
+      label: "New Hampshire"
+    },
+    {
+      value: "NJ",
+      label: "New Jersey"
+    },
+    {
+      value: "NM",
+      label: "New Mexico"
+    },
+    {
+      value: "NY",
+      label: "New York"
+    },
+    {
+      value: "NC",
+      label: "North Carolina"
+    },
+    {
+      value: "ND",
+      label: "North Dakota"
+    },
+    {
+      value: "OH",
+      label: "Ohio"
+    },
+    {
+      value: "OK",
+      label: "Oklahoma"
+    },
+    {
+      value: "OR",
+      label: "Oregon"
+    },
+    {
+      value: "PA",
+      label: "Pennsylvania"
+    },
+    {
+      value: "RI",
+      label: "Rhode Island"
+    },
+    {
+      value: "SC",
+      label: "South Carolina"
+    },
+    {
+      value: "SD",
+      label: "South Dakota"
+    },
+    {
+      value: "TN",
+      label: "Tennessee"
+    },
+    {
+      value: "TX",
+      label: "Texas"
+    },
+    {
+      value: "UT",
+      label: "Utah"
+    },
+    {
+      value: "VT",
+      label: "Vermont"
+    },
+    {
+      value: "VA",
+      label: "Virginia"
+    },
+    {
+      value: "WA",
+      label: "Washington"
+    },
+    {
+      value: "WV",
+      label: "West Virginia"
+    },
+    {
+      value: "WI",
+      label: "Wisconsin"
+    },
+    {
+      value: "WY",
+      label: "Wyoming"
+    },
+  ]
+
+  const randomId = () => Date.now() + "-" + random( 0, 200 )
+
   const driverDegree = [
     {
       label: "High School",
@@ -142,20 +347,132 @@ export default function MyApplication () {
   } )
 
   const [birthDate, set_birthDate] = useState( "" )
-  const [name, setName] = useState( "" )
-  const [startDate, setStartDate] = useState( "" )
-  const [endDate, setEndDate] = useState( "" )
-  const [title, setTitle] = useState( "" )
-  const [phone, setPhone] = useState( "" )
-  const [can_contact, set_can_contact] = useState( false )
-  const [is_subject_to_fmcsrs, set_is_subject_to_fmcsrs] = useState( false )
-  const [is_subject_to_drug_tests, set_is_subject_to_drug_tests] = useState( false )
 
-  // company address
-  const [companyStreet, set_companyStreet] = useState( "" )
-  const [companyCity, set_companyCity] = useState( "" )
-  const [companyState, set_companyState] = useState( "" )
-  const [companyZip, set_companyZip] = useState( "" )
+  const [pastEmployers, set_pastEmployers] = useState( [] )
+
+  const setCompanyName = ( id, value ) => {
+    const newArr = pastEmployers.map( emp => {
+      if ( emp.id === id ) {
+        return { ...emp, name: value }
+      }
+      return emp
+    } )
+    set_pastEmployers( newArr )
+  }
+  const setCompanyStartDate = ( id, value ) => {
+    const newArr = pastEmployers.map( emp => {
+      if ( emp.id === id ) {
+        return { ...emp, start_at: value }
+      }
+      return emp
+    } )
+    set_pastEmployers( newArr )
+  }
+  const setCompanyEndDate = ( id, value ) => {
+    const newArr = pastEmployers.map( emp => {
+      if ( emp.id === id ) {
+        return { ...emp, end_at: value }
+      }
+      return emp
+    } )
+    set_pastEmployers( newArr )
+  }
+  const setCompanyTitle = ( id, value ) => {
+    const newArr = pastEmployers.map( emp => {
+      if ( emp.id === id ) {
+        return { ...emp, title: value }
+      }
+      return emp
+    } )
+    set_pastEmployers( newArr )
+  }
+  const setCompanyPhone = ( id, value ) => {
+    const newArr = pastEmployers.map( emp => {
+      if ( emp.id === id ) {
+        return { ...emp, phone: value }
+      }
+      return emp
+    } )
+    set_pastEmployers( newArr )
+  }
+  const setCompanyCanContact = ( id, value ) => {
+    const newArr = pastEmployers.map( emp => {
+      if ( emp.id === id ) {
+        return { ...emp, can_contact: value }
+      }
+      return emp
+    } )
+    set_pastEmployers( newArr )
+  }
+  const setCompanyIsSubjectToFmcsrs = ( id, value ) => {
+    const newArr = pastEmployers.map( emp => {
+      if ( emp.id === id ) {
+        return { ...emp, is_subject_to_fmcsrs: value }
+      }
+      return emp
+    } )
+    set_pastEmployers( newArr )
+  }
+  const setCompanyIsSubjectToDrugTests = ( id, value ) => {
+    const newArr = pastEmployers.map( emp => {
+      if ( emp.id === id ) {
+        return { ...emp, is_subject_to_drug_tests: value }
+      }
+      return emp
+    } )
+    set_pastEmployers( newArr )
+  }
+  const setCompanyStreet = ( id, value ) => {
+    const newArr = pastEmployers.map( emp => {
+      if ( emp.id === id ) {
+        return { ...emp, street: value }
+      }
+      return emp
+    } )
+    set_pastEmployers( newArr )
+  }
+  const setCompanyCity = ( id, value ) => {
+    const newArr = pastEmployers.map( emp => {
+      if ( emp.id === id ) {
+        return { ...emp, city: value }
+      }
+      return emp
+    } )
+    set_pastEmployers( newArr )
+  }
+  const setCompanyState = ( id, value ) => {
+    const newArr = pastEmployers.map( emp => {
+      if ( emp.id === id ) {
+        return { ...emp, state: value }
+      }
+      return emp
+    } )
+    set_pastEmployers( newArr )
+  }
+  const setCompanyZipCode = ( id, value ) => {
+    const newArr = pastEmployers.map( emp => {
+      if ( emp.id === id ) {
+        return { ...emp, zip_code: value }
+      }
+      return emp
+    } )
+    set_pastEmployers( newArr )
+  }
+
+  // const [name, setName] = useState( "" )
+  // const [startDate, setStartDate] = useState( "" )
+  // const [endDate, setEndDate] = useState( "" )
+  // const [title, setTitle] = useState( "" )
+  // const [phone, setPhone] = useState( "" )
+  // const [can_contact, set_can_contact] = useState( false )
+  // const [is_subject_to_fmcsrs, set_is_subject_to_fmcsrs] = useState( false )
+  // const [is_subject_to_drug_tests, set_is_subject_to_drug_tests] = useState( false )
+
+  // // company address
+  // const [companyStreet, set_companyStreet] = useState( "" )
+  // const [companyCity, set_companyCity] = useState( "" )
+  // const [companyState, set_companyState] = useState( "" )
+  // const [companyZip, set_companyZip] = useState( "" )
 
   const [can_pass_drug_test, set_can_pass_drug_test] = useState( false )
   const [has_past_dui, set_has_past_dui] = useState( false )
@@ -222,24 +539,43 @@ export default function MyApplication () {
       emergency_contact_relationship: data.emergency_contact_relationship,
     } )
 
-
-    const employer = data.employers[0]
-    if ( employer ) {
-      setName( employer.name )
-      setStartDate( employer.start_at )
-      setEndDate( employer.end_at )
-      setTitle( employer.title )
-      setPhone( employer.phone )
-      set_can_contact( employer.can_contact )
-      set_is_subject_to_fmcsrs( employer.is_subject_to_fmcsrs )
-      set_is_subject_to_drug_tests( employer.is_subject_to_drug_tests )
-
-      // address
-      set_companyStreet( employer.street )
-      set_companyCity( employer.city )
-      set_companyState( employer.state )
-      set_companyZip( employer.zip_code )
+    let pastEmployersFetched = []
+    if ( data.employers.length ) {
+      pastEmployersFetched = data.employers.map( emp => ( {
+        id: randomId(),
+        name: emp.name,
+        start_at: moment( emp.start_at ).format( "YYYY-MM-DD" ),
+        end_at: moment( emp.end_at ).format( "YYYY-MM-DD" ),
+        title: emp.title,
+        phone: emp.phone,
+        can_contact: emp.can_contact,
+        is_subject_to_fmcsrs: emp.is_subject_to_fmcsrs,
+        is_subject_to_drug_tests: emp.is_subject_to_drug_tests,
+        street: emp.street,
+        city: emp.city,
+        state: emp.state,
+        zip_code: emp.zip_code,
+      } ) )
+    } else {
+      pastEmployersFetched = [{
+        id: randomId(),
+        name: "",
+        start_at: "",
+        end_at: "",
+        title: "",
+        phone: "",
+        can_contact: false,
+        is_subject_to_fmcsrs: false,
+        is_subject_to_drug_tests: false,
+        street: "",
+        city: "",
+        state: "",
+        zip_code: "",
+      }]
     }
+
+    // set past employers
+    set_pastEmployers( pastEmployersFetched )
 
     set_can_pass_drug_test( data.can_pass_drug_test )
     set_has_past_dui( data.has_past_dui )
@@ -251,22 +587,22 @@ export default function MyApplication () {
 
 
     const revokedFetched = data.safety_questions.find( q => q.type === "LICENSE_REVOKED" )
-    if (revokedFetched) {
+    if ( revokedFetched ) {
       setRevoked( revokedFetched.response )
       setRevokedDetails( revokedFetched.details )
     }
     const violationsFetched = data.safety_questions.find( q => q.type === "VIOLATIONS_PSP" )
-    if (violationsFetched) {
+    if ( violationsFetched ) {
       setRevoked( violationsFetched.response )
       setRevokedDetails( violationsFetched.details )
     }
     const tickets = data.safety_questions.find( q => q.type === "TICKETS" )
-    if (tickets) {
+    if ( tickets ) {
       setRevoked( tickets.response )
       setRevokedDetails( tickets.details )
     }
     const drugsFetched = data.safety_questions.find( q => q.type === "POSITIVE_DRUG_TEST" )
-    if (drugsFetched) {
+    if ( drugsFetched ) {
       setRevoked( drugsFetched.response )
       setRevokedDetails( drugsFetched.details )
     }
@@ -288,7 +624,6 @@ export default function MyApplication () {
     return false
   }
 
-  const randomId = () => Date.now() + "-" + random( 0, 200 )
 
   const setEquipmentExperience = ( id, value ) => {
     const newArr = equipments.map( eq => {
@@ -312,24 +647,22 @@ export default function MyApplication () {
 
   const postSecondForm = async ( e ) => {
     e.preventDefault()
-    const employers = [
-      {
-        name,
-        startDate,
-        endDate,
-        title,
-        phone,
-        can_contact,
-        is_subject_to_drug_tests,
-        is_subject_to_fmcsrs,
-        street: companyStreet,
-        city: companyCity,
-        state: companyState,
-        zip_code: companyZip,
+    const employers = pastEmployers.map( emp => {
+      return {
+        name: emp.name,
+        start_at: emp.start_at,
+        end_at: emp.end_at,
+        title: emp.title,
+        phone: emp.phone,
+        can_contact: emp.can_contact,
+        is_subject_to_fmcsrs: emp.is_subject_to_fmcsrs,
+        is_subject_to_drug_tests: emp.is_subject_to_drug_tests,
+        street: emp.street,
+        city: emp.city,
+        state: emp.state,
+        zip_code: emp.zip_code,
       }
-    ]
-
-
+    } )
 
 
     const safety_questions = [
@@ -402,6 +735,24 @@ export default function MyApplication () {
     set_equipments( [...equipments, { type: "", years: 0, id: randomId() }] )
   }
 
+  const addPastEmployer = () => {
+    set_pastEmployers( [...pastEmployers, {
+      id: randomId(),
+      name: "",
+      start_at: "",
+      end_at: "",
+      title: "",
+      phone: "",
+      can_contact: false,
+      is_subject_to_fmcsrs: false,
+      is_subject_to_drug_tests: false,
+      street: "",
+      city: "",
+      state: "",
+      zip_code: "",
+    }] )
+  }
+
 
 
   return (
@@ -470,21 +821,11 @@ export default function MyApplication () {
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
                 />
-                {/* <BaseInput
-                  className="col-lg-4 col-12"
-                  label="Highest Degree:"
-                  placeholder="Highest Degree"
-                  name="highest_degree"
-                  value={acc_form.values.highest_degree}
-                  touched={acc_form.touched.highest_degree}
-                  error={acc_form.errors.highest_degree}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                /> */}
                 <div className="col-lg-4 col-12 mt-3">
                   <span className={style.lable}>Highest Degree:</span>
                   <select class="form-select" name="highest_degree" aria-label="Default select example"
-                    selected={acc_form.values.highest_degree}
+                    value={acc_form.values.highest_degree}
+                    onChange={acc_form.handleChange}
                   >
                     <option selected>Highest Degree:</option>
                     {driverDegree.map( ( degree, index ) => {
@@ -506,17 +847,24 @@ export default function MyApplication () {
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
                 /> */}
-                <BaseInput
-                  className="col-lg-4 col-12"
-                  label="license_state Issued:"
-                  placeholder="license_state Issued"
-                  name="license_state"
-                  value={acc_form.values.license_state}
-                  touched={acc_form.touched.license_state}
-                  error={acc_form.errors.license_state}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                />
+                <div className="col-lg-4 col-12 mt-3">
+                  <label>State Issued:</label>
+                  <select class="form-select" name="license_state" aria-label="Default select example"
+                    value={acc_form.values.license_state}
+                    onChange={acc_form.handleChange}
+                  >
+                    <option selected>State Issued:</option>
+                    {stateList.map( ( state, index ) => {
+                      return (
+                        <option
+                          key={index}
+                          selected={acc_form.values.license_state === state.value}
+                          value={state.value}
+                        >{state.label}</option>
+                      )
+                    } )}
+                  </select>
+                </div>
               </div>
 
 
@@ -532,21 +880,11 @@ export default function MyApplication () {
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
                 />
-                {/* <BaseInput
-                  className="col-lg-4 col-12"
-                  label="CDL Class Type:"
-                  placeholder="CDL Class Type"
-                  name="cdl_class"
-                  value={acc_form.values.cdl_class}
-                  touched={acc_form.touched.cdl_class}
-                  error={acc_form.errors.cdl_class}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                /> */}
                 <div className="col-lg-4 col-12 mt-3">
                   <span className={style.lable}>CDL Class Type:</span>
                   <select class="form-select" name="cdl_class" aria-label="Default select example"
-                    selected={acc_form.values.cdl_class}
+                    value={acc_form.values.cdl_class}
+                    onChange={acc_form.handleChange}
                   >
                     <option selected>CDL Class Type:</option>
                     {cdl_classes.map( ( cdl, index ) => {
@@ -607,17 +945,24 @@ export default function MyApplication () {
                 /> */}
               </div>
               <div className='row'>
-                <BaseInput
-                  className="col-lg-4 col-12"
-                  label="State:"
-                  placeholder="State"
-                  name="state"
-                  value={acc_form.values.state}
-                  touched={acc_form.touched.state}
-                  error={acc_form.errors.state}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                />
+                <div className="col-lg-4 col-12 mt-3">
+                  <label>State:</label>
+                  <select class="form-select" name="state" aria-label="Default select example"
+                    value={acc_form.values.state}
+                    onChange={acc_form.handleChange}
+                  >
+                    <option selected>State:</option>
+                    {stateList.map( ( state, index ) => {
+                      return (
+                        <option
+                          key={index}
+                          selected={acc_form.values.state === state.value}
+                          value={state.value}
+                        >{state.label}</option>
+                      )
+                    } )}
+                  </select>
+                </div>
                 <BaseInput
                   className="col-lg-4 col-12"
                   label="Zip:"
@@ -686,73 +1031,107 @@ export default function MyApplication () {
             <form onSubmit={postSecondForm} className="row">
               <div className="col-lg-4 col-12 mt-3">
                 <h2>Past Employment</h2>
-                {/* Last employer */}
-                <div className="col-lg-11 col-12 mt-3">
-                  <label>Last Employer:</label>
-                  <input onChange={( e ) => setName( e.target.value )} value={name} name="last_emp" type="text" className="form-control" placeholder="Last Employer:" />
-                </div>
-                {/* Date employed */}
-                <div className="col-lg-11 col-12 mt-3">
-                  <label>Date Employed:</label>
-                  <div className="d-flex align-items-center">
-                    <input onChange={( e ) => setStartDate( e.target.value )} value={startDate} name="sta_date" type="date" className="form-control" /> <h2 className="mx-2">to</h2>
-                    <input onChange={( e ) => setEndDate( e.target.value )} value={endDate} name="sta_date" type="date" className="form-control" />
-                  </div>
-                </div>
-                {/* position title */}
-                <div className="col-lg-11 col-12 mt-3">
-                  <label>Position Title:</label>
-                  <input onChange={( e ) => setTitle( e.target.value )} value={title} type="text" name="position_title" className="form-control" placeholder="Position Title:" />
-                </div>
-                {/* company address */}
-                <h5 className="my-2">Company Address</h5>
-                {/* company street */}
-                <div className="col-lg-11 col-12 mt-3">
-                  <label>Street:</label>
-                  <input type="text" name="companyStreet" className="form-control" placeholder="Company Street:" value={companyStreet} onChange={( e ) => set_companyStreet( e.target.value )} />
-                </div>
-                {/* company city */}
-                <div className="col-lg-11 col-12 mt-3">
-                  <label>City:</label>
-                  <input type="text" name="companyCity" className="form-control" placeholder="Company City:" value={companyCity} onChange={( e ) => set_companyCity( e.target.value )} />
-                </div>
-                {/* company state */}
-                <div className="col-lg-11 col-12 mt-3">
-                  <label>State:</label>
-                  <input type="text" name="companyState" className="form-control" placeholder="Company State:" value={companyState} onChange={( e ) => set_companyState( e.target.value )} />
-                </div>
-                {/* company zip */}
-                <div className="col-lg-11 col-12 mt-3">
-                  <label>Company Zip:</label>
-                  <input type="text" name="companyZip" className="form-control" placeholder="Company Zip:" value={companyZip} onChange={( e ) => set_companyZip( e.target.value )} />
-                </div>
-                {/* company phone */}
-                <div className="col-lg-11 col-12 mt-3">
-                  <label>Company Phone:</label>
-                  <input onChange={( e ) => setPhone( e.target.value )} value={phone} type="text" name="phone" className="form-control" placeholder="Company Phone:" />
-                </div>
-                {/* authorize */}
-                <div className="col-lg-11 col-12 mt-3">
-                  <div class="form-check form-switch">
-                    <label class="form-check-label" for="authorize">Do you authorize prospective employers to contact this company?</label>
-                    <input class="form-check-input" type="checkbox" role="switch" id="authorize" checked={can_contact} onClick={( e ) => set_can_contact( e.target.checked )} />
-                  </div>
-                </div>
-                {/* FMCSRs */}
-                <div className="col-lg-11 col-12 mt-3">
-                  <div class="form-check form-switch">
-                    <label class="form-check-label" for="FMCSRs">Were you subject to the FMCSRs?</label>
-                    <input checked={is_subject_to_fmcsrs} onClick={( e ) => set_is_subject_to_fmcsrs( e.target.checked )} class="form-check-input" type="checkbox" role="switch" id="FMCSRs" />
-                  </div>
-                </div>
-                {/* is_subject_to_drug_tests */}
-                <div className="col-lg-11 col-12 mt-3">
-                  <div class="form-check form-switch">
-                    <label class="form-check-label" for="is_subject_to_drug_tests">Was your job designated as a safety-sensitive function in any DOT- regulated mode subject to the drug and alcohol testing requirements of 49 CFR Part 40?</label>
-                    <input checked={is_subject_to_drug_tests} onClick={( e ) => set_is_subject_to_drug_tests( e.target.checked )} class="form-check-input" type="checkbox" role="switch" id="is_subject_to_drug_tests" />
-                  </div>
-                </div>
+                {
+                  pastEmployers.map( ( past ) => {
+                    return (
+                      <div key={past.id}>
+                        {/* Last employer */}
+                        <div className="col-lg-11 col-12 mt-3">
+                          <label>Last Employer:</label>
+                          <input value={past.name} name="last_emp" type="text" className="form-control" placeholder="Last Employer:" onChange={( e ) => setCompanyName( past.id, e.target.value )} />
+                        </div>
+                        {/* Date employed */}
+                        <div className="col-lg-11 col-12 mt-3">
+                          <label>Date Employed:</label>
+                          <div className="d-flex align-items-center">
+                            <input onChange={( e ) => setCompanyStartDate( past.id, e.target.value )} value={past.start_at} name="sta_date" type="date" className="form-control" /> <h2 className="mx-2">to</h2>
+                            <input onChange={( e ) => setCompanyEndDate( past.id, e.target.value )} value={past.end_at} name="sta_date" type="date" className="form-control" />
+                          </div>
+                        </div>
+                        {/* position title */}
+                        <div className="col-lg-11 col-12 mt-3">
+                          <label>Position Title:</label>
+                          <input onChange={( e ) => setCompanyTitle( past.id, e.target.value )} value={past.title} type="text" name="position_title" className="form-control" placeholder="Position Title:" />
+                        </div>
+                        {/* company address */}
+                        <h5 className="my-2">Company Address</h5>
+                        {/* company street */}
+                        <div className="col-lg-11 col-12 mt-3">
+                          <label>Street:</label>
+                          <input type="text" name="companyStreet" className="form-control" placeholder="Company Street:" value={past.street} onChange={( e ) => setCompanyStreet( past.id, e.target.value )} />
+                        </div>
+                        {/* company city */}
+                        <div className="col-lg-11 col-12 mt-3">
+                          <label>City:</label>
+                          <input type="text" name="companyCity" className="form-control" placeholder="Company City:" value={past.city} onChange={( e ) => setCompanyCity( past.id, e.target.value )} />
+                        </div>
+                        {/* company state */}
+                        {/* <div className="col-lg-11 col-12 mt-3">
+                          <label>State:</label>
+                          <input type="text" name="companyState" className="form-control" placeholder="Company State:" value={past.state} onChange={( e ) => setCompanyState( past.id, e.target.value )} />
+                        </div> */}
+                        <div className="col-lg-4 col-12 mt-3">
+                          <label>State:</label>
+                          <select class="form-select" name="state" aria-label="Default select example"
+                            value={past.state}
+                            onChange={( e ) => setCompanyState( past.id, e.target.value )}
+                          >
+                            <option selected>State Issued:</option>
+                            {stateList.map( ( state, index ) => {
+                              return (
+                                <option
+                                  key={index}
+                                  selected={past.state === state.value}
+                                  value={state.value}
+                                >{state.label}</option>
+                              )
+                            } )}
+                          </select>
+                        </div>
+                        {/* company zip */}
+                        <div className="col-lg-11 col-12 mt-3">
+                          <label>Company Zip:</label>
+                          <input type="text" name="companyZip" className="form-control" placeholder="Company Zip:" value={past.zip_code} onChange={( e ) => setCompanyZipCode( past.id, e.target.value )} />
+                        </div>
+                        {/* company phone */}
+                        <div className="col-lg-11 col-12 mt-3">
+                          <label>Company Phone:</label>
+                          <input value={past.phone} type="text" name="phone" className="form-control" placeholder="Company Phone:" onChange={( e ) => setCompanyPhone( past.id, e.target.value )} />
+                        </div>
+                        {/* authorize */}
+                        <div className="col-lg-11 col-12 mt-3">
+                          <div class="form-check form-switch">
+                            <label class="form-check-label" for="authorize">Do you authorize prospective employers to contact this company?</label>
+                            {/* onClick={( e ) => set_can_contact( e.target.checked )} */}
+                            <input class="form-check-input" type="checkbox" role="switch" id="authorize" checked={past.can_contact} onClick={( e ) => setCompanyCanContact( past.id, e.target.checked )} />
+                          </div>
+                        </div>
+                        {/* FMCSRs */}
+                        <div className="col-lg-11 col-12 mt-3">
+                          <div class="form-check form-switch">
+                            <label class="form-check-label" for="FMCSRs">Were you subject to the FMCSRs?</label>
+                            <input checked={past.is_subject_to_fmcsrs} class="form-check-input" type="checkbox" role="switch" id="FMCSRs" onClick={( e ) => setCompanyIsSubjectToFmcsrs( past.id, e.target.checked )} />
+                          </div>
+                        </div>
+                        {/* is_subject_to_drug_tests */}
+                        <div className="col-lg-11 col-12 mt-3">
+                          <div class="form-check form-switch">
+                            <label class="form-check-label" for="is_subject_to_drug_tests">Was your job designated as a safety-sensitive function in any DOT- regulated mode subject to the drug and alcohol testing requirements of 49 CFR Part 40?</label>
+                            <input checked={past.is_subject_to_drug_tests} class="form-check-input" type="checkbox" role="switch" id="is_subject_to_drug_tests" onClick={( e ) => setCompanyIsSubjectToDrugTests( past.id, e.target.checked )} />
+                          </div>
+                        </div>
 
+                      </div>
+                    )
+                  } )
+                }
+                {
+                  pastEmployers.length < 3 &&
+                  <div className="col-lg-11 col-12 mt-3">
+                    <span className="btn btn-success" onClick={addPastEmployer}>+{3 - pastEmployers.length} more jobs</span>
+                  </div>
+
+                }
               </div>
 
               {/* Safety column */}
