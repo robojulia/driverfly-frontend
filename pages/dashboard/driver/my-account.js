@@ -11,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-import { jobBenefits, jobGeography, jobPayMethod, jobType } from '../../../utils/jobs';
+import { jobBenefits, jobGeography, jobPayMethod, jobTeamDriver, jobType } from '../../../utils/jobs';
 import stateList from "../../../utils/stateList";
 
 
@@ -59,6 +59,7 @@ export default function MyAccount() {
                 GEOGRAPHY: jobBenefits.map(v => v.key),
                 PREFERRED_SCHEDULE: "",
                 JOB_TYPE: jobType.map(v => v.key),
+                TEAM_DRIVER: "NO_TEAM_DRIVER",
                 MIN_PAY: "",
                 PAY_METHOD: jobPayMethod.map(v => v.key),
                 BENEFITS: jobBenefits.map(v => v.key)
@@ -431,7 +432,7 @@ export default function MyAccount() {
                                 </div>
                             </div>
                             <div className='col-12 mt-3'>
-                                <span className={style.lable}>Preferred method:</span>
+                                <span className={style.lable}>How should employers contact you:</span>
                                 <div class="form-check form-check-inline">
                                     <label class="form-check-label">Call</label>
                                     <input class="form-check-input" type="checkbox" name="COMMUNICATION.PREFERRED_METHOD" value="CALL" onChange={e => onPreferenceChange(e)} checked={formState.preferences.COMMUNICATION.PREFERRED_METHOD.includes("CALL")} />
@@ -525,6 +526,12 @@ export default function MyAccount() {
                             </div>
                         </div>
                         <div className="col-12 mt-3">
+                            <span className={style.lable}>Team drivers:</span>
+                            <select class="form-control form-select" name="MATCHING.TEAM_DRIVER" onChange={e => onPreferenceChange(e)} value={formState.preferences.MATCHING.TEAM_DRIVER}>
+                                {jobTeamDriver.map(v => (<option key={v.key} value={v.key}>{v.label}</option>))}
+                            </select>
+                        </div>
+                        <div className="col-12 mt-3">
                             <label>Min Pay (per week):</label>
                             <input type="number" className="form-control" placeholder="Minimum pay" name="MATCHING.MIN_PAY" onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.MATCHING.MIN_PAY} />
                         </div>
@@ -562,7 +569,8 @@ export default function MyAccount() {
                         <span className={style.earn_btn}>Earn More</span>
                     </div> */}
                 </div>
-        </div>
+            </div>
+            <span>If you would like to delete your account, please contact our support team at <a href="mailto:support@driverfly.co">support@driverfly.co</a></span>
 
         </>
     )

@@ -120,6 +120,21 @@ const jobType = [
     },
 ];
 
+const jobTeamDriver = [
+    {
+        key: "HAS_TEAM_DRIVER",
+        label: "Has team drivers"
+    },
+    {
+        key: "OPEN_TEAM_DRIVER",
+        label: "Open to team drivers"
+    },
+    {
+        key: "NO_TEAM_DRIVER",
+        label: "Not open to team drivers"
+    },
+];
+
 const jobPayMethod = [
     {
         key: "RATE_PER_MILE",
@@ -151,5 +166,6 @@ export {
     jobBenefits,
     jobGeography,
     jobType,
+    jobTeamDriver,
     jobPayMethod
 }
