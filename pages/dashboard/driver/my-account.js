@@ -30,7 +30,7 @@ export default function MyAccount() {
     const [ formState, setFormState ] = useState({
         user: {
             name: user.name || "",
-            phone: user.contact_number || "",
+            contact_number: user.contact_number || "",
             email: user.email || ""
         },
         driver: {
@@ -232,7 +232,7 @@ export default function MyAccount() {
             setAuth({
                 ...user,
                 name: newUser.name,
-                phone: newUser.phone,
+                contact_number: newUser.contact_number,
                 email: newUser.email
             });
             toast.success("Info saved successfully");
@@ -366,7 +366,7 @@ export default function MyAccount() {
                             <div className='row'>
                                 <div className="col-sm-6 mt-3">
                                     <label>Phone</label>
-                                    <input name="phone" type="text" className="form-control" placeholder="Phone" onChange={e => onUserChange(e)} value={formState.user.phone} />
+                                    <input name="contact_number" type="text" className="form-control" placeholder="Phone" onChange={e => onUserChange(e)} value={formState.user.contact_number} />
                                 </div>
                                 <div className="col-sm-6 mt-3">
                                     <label>Email</label>
