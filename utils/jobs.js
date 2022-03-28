@@ -87,6 +87,10 @@ const jobGeography = [
         key: "REGIONAL",
         label: "Regional"
     },
+    {
+        key: "LOCAL",
+        label: "Local"
+    },
 ];
 
 const jobType = [

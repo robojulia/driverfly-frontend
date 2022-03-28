@@ -31,6 +31,7 @@ export default function MyAccount() {
         user: {
             name: user.name || "",
             contact_number: user.contact_number || "",
+            cell_number: user.cell_number || "",
             email: user.email || ""
         },
         driver: {
@@ -46,6 +47,7 @@ export default function MyAccount() {
                 PREFERRED_HOURS: "",
                 RECEIVE_SUGGESTED_JOBS: true,
                 RECEIVE_NEWSLETTER: true,
+                RECEIVE_DRIVERFLY: true,
             },
             SHARING: {
                 MVR: "NEVER",
@@ -152,10 +154,9 @@ export default function MyAccount() {
                     if (label === "PREFERRED_METHOD") {
                         value = value ? value.split(",") : [];
                     }
-                    else if (label === "RECEIVE_SUGGESTED_JOBS") {
-                        value = value == "true";
-                    }
-                    else if (label === "RECEIVE_NEWSLETTER") {
+                    else if (label === "RECEIVE_SUGGESTED_JOBS" ||
+                        label === "RECEIVE_NEWSLETTER" ||
+                        label === "RECEIVE_DRIVERFLY") {
                         value = value == "true";
                     }
                 }
@@ -233,6 +234,7 @@ export default function MyAccount() {
                 ...user,
                 name: newUser.name,
                 contact_number: newUser.contact_number,
+                cell_number: newUser.cell_number,
                 email: newUser.email
             });
             toast.success("Info saved successfully");
@@ -270,8 +272,9 @@ export default function MyAccount() {
                 dbValue = newValue.join(",");
             }
             else if (label === "RECEIVE_SUGGESTED_JOBS"
-            || label === "RECEIVE_NEWSLETTER") {
-                newValue = e.target.checked ? (value === "true") : currentValue;
+            || label === "RECEIVE_NEWSLETTER"
+            || label === "RECEIVE_DRIVERFLY") {
+                newValue = e.target.checked;// ? (value === "true") : currentValue;
 
                 if (newValue === currentValue) return;
                 dbValue = newValue.toString();
@@ -335,7 +338,7 @@ export default function MyAccount() {
             }
         })
         .then(response => {
-            toast.success("Successfully saved your preference");
+            //toast.success("Successfully saved your preference");
         })
         .catch(error => {
             toast.error("Unable to save your preference");
@@ -369,8 +372,14 @@ export default function MyAccount() {
                                     <input name="contact_number" type="text" className="form-control" placeholder="Phone" onChange={e => onUserChange(e)} value={formState.user.contact_number} />
                                 </div>
                                 <div className="col-sm-6 mt-3">
+                                    <label>Cell</label>
+                                    <input name="cell_number" type="text" className="form-control" placeholder="Cell" onChange={e => onUserChange(e)} value={formState.user.cell_number} />
+                                </div>
+                            </div>
+                            <div className='row'>
+                                <div className="col-sm-12 mt-3">
                                     <label>Email</label>
-                                    <input name="email" type="email" className="form-control" placeholder="E-mail" onChange={e => onUserChange(e)} value={formState.user.email} />
+                                    <input name="email" readOnly={true} type="email" className="form-control" placeholder="E-mail" value={formState.user.email} />
                                 </div>
                             </div>
                             <div className='row'>
@@ -415,6 +424,12 @@ export default function MyAccount() {
                     <div className="col-sm-6">
                         <div className='row'>
                             <h3>Communication Preferences:</h3>
+                            <div className="col-12 mt-3">
+                                <div class="form-check form-switch">
+                                    <input checked={formState.preferences.COMMUNICATION.RECEIVE_DRIVERFLY} name="COMMUNICATION.RECEIVE_DRIVERFLY" class="form-check-input" type="checkbox" role="switch" onClick={( e ) => onPreferenceChange(e)} />
+                                    <label class="form-check-label">Consent to receive text messages from DriverFly &amp; any third parties of DriverFly</label>
+                                </div>
+                            </div>
                             <div className='col-12 mt-3'>
                                 <span className={style.lable}>Preferred method:</span>
                                 <div class="form-check form-check-inline">
@@ -431,25 +446,15 @@ export default function MyAccount() {
                                 <input type="text" className="form-control" placeholder="Preferred hours" name="COMMUNICATION.PREFERRED_HOURS" onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.COMMUNICATION.PREFERRED_HOURS} />
                             </div>
                             <div className="col-12 mt-3">
-                                <span className={style.lable}>Receive suggested job feeds? </span>
-                                <div class="form-check form-check-inline">
-                                    <label class="form-check-label">Yes</label>
-                                    <input class="form-check-input" type="radio" value="true" name="COMMUNICATION.RECEIVE_SUGGESTED_JOBS" onChange={e => onPreferenceChange(e)} checked={formState.preferences.COMMUNICATION.RECEIVE_SUGGESTED_JOBS} />
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <label class="form-check-label" >No</label>
-                                    <input class="form-check-input" type="radio" value="false" name="COMMUNICATION.RECEIVE_SUGGESTED_JOBS" onChange={e => onPreferenceChange(e)} checked={!formState.preferences.COMMUNICATION.RECEIVE_SUGGESTED_JOBS} />
+                                <div class="form-check form-switch">
+                                    <input checked={formState.preferences.COMMUNICATION.RECEIVE_SUGGESTED_JOBS} name="COMMUNICATION.RECEIVE_SUGGESTED_JOBS" class="form-check-input" type="checkbox" role="switch" onClick={( e ) => onPreferenceChange(e)} />
+                                    <label class="form-check-label">Receive suggested job feeds?</label>
                                 </div>
                             </div>
                             <div className="col-12 mt-3">
-                                <span className={style.lable}>Receive newsletters?</span>
-                                <div class="form-check form-check-inline">
-                                    <label class="form-check-label">Yes</label>
-                                    <input class="form-check-input" type="radio" value="true" name="COMMUNICATION.RECEIVE_NEWSLETTER" onChange={e => onPreferenceChange(e)} checked={formState.preferences.COMMUNICATION.RECEIVE_NEWSLETTER} />
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <label class="form-check-label" >No</label>
-                                    <input class="form-check-input" type="radio" value="false" name="COMMUNICATION.RECEIVE_NEWSLETTER" onChange={e => onPreferenceChange(e)} checked={!formState.preferences.COMMUNICATION.RECEIVE_NEWSLETTER} />
+                                <div class="form-check form-switch">
+                                    <input checked={formState.preferences.COMMUNICATION.RECEIVE_NEWSLETTER} name="COMMUNICATION.RECEIVE_NEWSLETTER" class="form-check-input" type="checkbox" role="switch" onClick={( e ) => onPreferenceChange(e)} />
+                                    <label class="form-check-label">Receive newsletters?</label>
                                 </div>
                             </div>
                         </div>
@@ -507,17 +512,21 @@ export default function MyAccount() {
                             <input type="text" className="form-control" placeholder="Preferred Schedule" name="MATCHING.PREFERRED_SCHEDULE" onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.MATCHING.PREFERRED_SCHEDULE} />
                         </div>
                         <div className="col-12 mt-3">
-                            <span className={style.lable}>Type:</span>
-                            {jobType.map(v => (
-                                <div key={v.key} className="form-check form-check-inline">
-                                    <label className="form-check-label">{v.label}</label>
-                                    <input className="form-check-input" type="checkbox" value={v.key} name="MATCHING.JOB_TYPE" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.JOB_TYPE.includes(v.key)} />
-                                </div>
-                            ))}
+                            <span className={style.lable}>Job Type:</span>
+                            <div className='row mt-1'>
+                                {jobType.map(v => (
+                                    <div key={v.key} className='col-6'>
+                                        <div className="form-check form-check-inline">
+                                            <label className="form-check-label">{v.label}</label>
+                                            <input className="form-check-input" type="checkbox" value={v.key} name="MATCHING.JOB_TYPE" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.JOB_TYPE.includes(v.key)} />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                         <div className="col-12 mt-3">
-                            <label>Min Pay:</label>
-                            <input type="text" className="form-control" placeholder="Minimum pay" name="MATCHING.MIN_PAY" onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.MATCHING.MIN_PAY} />
+                            <label>Min Pay (per week):</label>
+                            <input type="number" className="form-control" placeholder="Minimum pay" name="MATCHING.MIN_PAY" onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.MATCHING.MIN_PAY} />
                         </div>
                         <div className="col-12 mt-3">
                             <span className={style.lable}>Pay Method:</span>
