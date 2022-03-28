@@ -11,6 +11,8 @@ import Breadcrumbs from 'nextjs-breadcrumbs';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
+import AuthApi from "../api/auth";
+
 
 
 export default function Login() {
@@ -53,8 +55,10 @@ export default function Login() {
         e.preventDefault();
 
         if (validateForm()) {
+            const api = new AuthApi();
 
-            await axios.post(`${process.env.BASE_URL_API}/auth/login`, formData)
+            //await axios.post(`${process.env.BASE_URL_API}/auth/login`, formData)
+            await api.login(formData)
                 .then(data => {
 
                     // console.log("handle success", data);

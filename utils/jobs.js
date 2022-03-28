@@ -92,15 +92,27 @@ const jobGeography = [
 const jobType = [
     {
         key: "W2",
-        label: "W2"
+        label: "Salaried (W2)"
     },
     {
         key: "CONTRACT",
-        label: "1099"
+        label: "Contractor (1099)"
     },
     {
         key: "OWNER_OPERATOR",
         label: "Owner-Operator"
+    },
+    {
+        key: "PART_TIME",
+        label: "Part-Time"
+    },
+    {
+        key: "SEASONAL",
+        label: "Seasonal"
+    },
+    {
+        key: "ONE_TIME_GIG",
+        label: "One Time Gig"
     },
 ];
 
