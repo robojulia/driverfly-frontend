@@ -294,7 +294,7 @@ export default function MyApplication () {
       license_number: yup.string(),
       // phone: yup.string(),
       license_expiry: yup.string(),
-      highest_degree: yup.string(),
+      highest_degree: yup.string().required("This field is required"),
       // email: yup.string(),
       license_state: yup.string(),
       street: yup.string(),
@@ -827,12 +827,13 @@ export default function MyApplication () {
                     value={acc_form.values.highest_degree}
                     onChange={acc_form.handleChange}
                   >
-                    <option selected>Highest Degree:</option>
+                    <option selected value="">Highest Degree:</option>
                     {driverDegree.map( ( degree, index ) => {
                       return ( <option selected={acc_form.values.highest_degree === degree.value} value={degree.value} key={index}>{degree.label}</option>
                       )
                     } )}
                   </select>
+                  {acc_form.touched.highest_degree && acc_form.errors.highest_degree ? <span className="text-danger small">{acc_form.errors.highest_degree}</span> : null}
                 </div>
               </div>
               <div className='row'>
@@ -853,7 +854,7 @@ export default function MyApplication () {
                     value={acc_form.values.license_state}
                     onChange={acc_form.handleChange}
                   >
-                    <option selected>State Issued:</option>
+                    <option selected value="">State Issued:</option>
                     {stateList.map( ( state, index ) => {
                       return (
                         <option
@@ -886,7 +887,7 @@ export default function MyApplication () {
                     value={acc_form.values.cdl_class}
                     onChange={acc_form.handleChange}
                   >
-                    <option selected>CDL Class Type:</option>
+                    <option selected value="">CDL Class Type:</option>
                     {cdl_classes.map( ( cdl, index ) => {
                       return (
                         <option selected={acc_form.values.cdl_class === cdl.value} value={cdl.value} key={index}>{cdl.label}</option>
@@ -951,7 +952,7 @@ export default function MyApplication () {
                     value={acc_form.values.state}
                     onChange={acc_form.handleChange}
                   >
-                    <option selected>State:</option>
+                    <option selected value="">State:</option>
                     {stateList.map( ( state, index ) => {
                       return (
                         <option
@@ -1076,7 +1077,7 @@ export default function MyApplication () {
                             value={past.state}
                             onChange={( e ) => setCompanyState( past.id, e.target.value )}
                           >
-                            <option selected>State Issued:</option>
+                            <option selected value="">State Issued:</option>
                             {stateList.map( ( state, index ) => {
                               return (
                                 <option
