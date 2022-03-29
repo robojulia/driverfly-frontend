@@ -179,9 +179,11 @@
         height: auto;
     }
 
+    .side_bar {
+        height: auto !important; 
+    }
     .sidebarArea ul {
         width: 100%;
-
     }
 
     .applicants__section {
