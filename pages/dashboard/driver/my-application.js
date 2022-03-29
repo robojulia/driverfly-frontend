@@ -593,7 +593,7 @@ export default function MyApplication() {
                 <div className="col-lg-4 col-12 mt-3">
                   <div class="form-check form-switch mt-5">
                     <label class="form-check-label" htmlFor="age_limit">Above 21?</label>
-                    <input class="form-check-input" readOnly type="checkbox" checked={is21} onClick={(e) => setIs21(e.target.checked)} role="switch" id="age_limit" />
+                    <input class="form-check-input" readOnly type="checkbox" checked={is21} role="switch" id="age_limit" />
                   </div>
                 </div>
               </div>
