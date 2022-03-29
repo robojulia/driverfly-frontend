@@ -79,7 +79,7 @@ export default function MyApplication() {
       // email: '',
       license_state: '',
       street: '',
-      cdl_class: '',
+      license_type: '',
       emergency_contact_number: '',
       city: '',
       years_cdl_experience: '',
@@ -94,7 +94,7 @@ export default function MyApplication() {
       highest_degree: yup.string().required("This field is required").nullable(),
       license_state: yup.string().required("This field is required").nullable(),
       street: yup.string().required("This field is required").nullable(),
-      cdl_class: yup.string().required("This field is required").nullable(),
+      license_type: yup.string().required("This field is required").nullable(),
       emergency_contact_number: yup.string().required("This field is required").nullable(),
       city: yup.string().required("This field is required").nullable(),
       years_cdl_experience: yup.number().required("This field is required").nullable().min(0, "Please select 0 or above."),
@@ -334,7 +334,7 @@ export default function MyApplication() {
       highest_degree: data.highest_degree,
       license_state: data.license_state,
       street: data.street,
-      cdl_class: data.cdl_class,
+      license_type: data.license_type,
       emergency_contact_number: data.emergency_contact_number,
       city: data.city,
       years_cdl_experience: data.years_cdl_experience,
@@ -665,18 +665,18 @@ export default function MyApplication() {
                 {/* CDL class types */}
                 <div className="col-lg-4 col-12 mt-3">
                   <span className={style.lable}>CDL Class Type:</span>
-                  <select class="form-select" name="cdl_class" aria-label="Default select example"
-                    value={acc_form.values.cdl_class}
+                  <select class="form-select" name="license_type" aria-label="Default select example"
+                    value={acc_form.values.license_type}
                     onChange={acc_form.handleChange}
                   >
                     <option selected value="">CDL Class Type:</option>
                     {cdl_classes.map((cdl, index) => {
                       return (
-                        <option selected={acc_form.values.cdl_class === cdl.value} value={cdl.value} key={index}>{cdl.label}</option>
+                        <option selected={acc_form.values.license_type === cdl.value} value={cdl.value} key={index}>{cdl.label}</option>
                       )
                     })}
                   </select>
-                  {acc_form.touched.cdl_class && acc_form.errors.cdl_class ? <span className="text-danger small">{acc_form.errors.cdl_class}</span> : null}
+                  {acc_form.touched.license_type && acc_form.errors.license_type ? <span className="text-danger small">{acc_form.errors.license_type}</span> : null}
                 </div>
                 <BaseInput
                   className="col-lg-4 col-12"
