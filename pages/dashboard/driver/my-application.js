@@ -290,22 +290,18 @@ export default function MyApplication () {
       emergency_contact_relationship: '',
     },
     validationSchema: yup.object( {
-      // name: yup.string(),
-      license_number: yup.string(),
-      // phone: yup.string(),
-      license_expiry: yup.string(),
+      license_number: yup.string().required("This field is required"),
+      license_expiry: yup.string().required("This field is required"),
       highest_degree: yup.string().required("This field is required"),
-      // email: yup.string(),
-      license_state: yup.string(),
-      street: yup.string(),
-      cdl_class: yup.string(),
-      emergency_contact_number: yup.string(),
-      city: yup.string(),
-      years_cdl_experience: yup.number(),
-      // phoneNumber: yup.string(),
-      zip_code: yup.string(),
-      state: yup.string(),
-      emergency_contact_relationship: yup.string(),
+      license_state: yup.string().required("This field is required"),
+      street: yup.string().required("This field is required"),
+      cdl_class: yup.string().required("This field is required"),
+      emergency_contact_number: yup.string().required("This field is required"),
+      city: yup.string().required("This field is required"),
+      years_cdl_experience: yup.number().required("This field is required"),
+      zip_code: yup.string().required("This field is required"),
+      state: yup.string().required("This field is required"),
+      emergency_contact_relationship: yup.string().required("This field is required"),
     } ),
     onSubmit: async ( values ) => {
       const data = {
@@ -765,18 +761,6 @@ export default function MyApplication () {
             <form className="modal-body" onSubmit={acc_form.handleSubmit}>
               <h2>Account Settings</h2>
               <div className="row">
-                {/* name */}
-                {/* <BaseInput
-                  className="col-lg-4 col-12"
-                  label="Name:"
-                  placeholder="Name"
-                  name="name"
-                  value={acc_form.values.name}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                  touched={acc_form.touched.name}
-                  error={acc_form.errors.name}
-                /> */}
                 {/* Drivers License */}
                 <BaseInput
                   className="col-lg-4 col-12"
@@ -798,17 +782,6 @@ export default function MyApplication () {
                 </div>
               </div>
               <div className='row'>
-                {/* <BaseInput
-                  className="col-lg-4 col-12"
-                  label="Phone:"
-                  placeholder="Phone"
-                  name="phone"
-                  value={acc_form.values.phone}
-                  touched={acc_form.touched.phone}
-                  error={acc_form.errors.phone}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                /> */}
                 <BaseInput
                   className="col-lg-4 col-12"
                   label="Expiration Date:"
@@ -821,6 +794,7 @@ export default function MyApplication () {
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
                 />
+                {/* Highest degree */}
                 <div className="col-lg-4 col-12 mt-3">
                   <span className={style.lable}>Highest Degree:</span>
                   <select class="form-select" name="highest_degree" aria-label="Default select example"
@@ -837,17 +811,7 @@ export default function MyApplication () {
                 </div>
               </div>
               <div className='row'>
-                {/* <BaseInput
-                  className="col-lg-4 col-12"
-                  label="Email:"
-                  placeholder="Email"
-                  name="email"
-                  value={acc_form.values.email}
-                  touched={acc_form.touched.email}
-                  error={acc_form.errors.email}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                /> */}
+                {/* state issued */}
                 <div className="col-lg-4 col-12 mt-3">
                   <label>State Issued:</label>
                   <select class="form-select" name="license_state" aria-label="Default select example"
@@ -865,6 +829,7 @@ export default function MyApplication () {
                       )
                     } )}
                   </select>
+                  {acc_form.touched.license_state && acc_form.errors.license_state ? <span className="text-danger small">{acc_form.errors.license_state}</span> : null}
                 </div>
               </div>
 
@@ -881,6 +846,7 @@ export default function MyApplication () {
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
                 />
+                {/* CDL class types */}
                 <div className="col-lg-4 col-12 mt-3">
                   <span className={style.lable}>CDL Class Type:</span>
                   <select class="form-select" name="cdl_class" aria-label="Default select example"
@@ -894,6 +860,7 @@ export default function MyApplication () {
                       )
                     } )}
                   </select>
+                  {acc_form.touched.cdl_class && acc_form.errors.cdl_class ? <span className="text-danger small">{acc_form.errors.cdl_class}</span> : null}
                 </div>
                 <BaseInput
                   className="col-lg-4 col-12"
@@ -933,17 +900,6 @@ export default function MyApplication () {
                   onChange={acc_form.handleChange}
                   handleBlur={acc_form.handleBlur}
                 />
-                {/* <BaseInput
-                  className="col-lg-4 col-12"
-                  label="Phone Number:"
-                  placeholder="Phone Number"
-                  name="phoneNumber"
-                  value={acc_form.values.phoneNumber}
-                  touched={acc_form.touched.phoneNumber}
-                  error={acc_form.errors.phoneNumber}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                /> */}
               </div>
               <div className='row'>
                 <div className="col-lg-4 col-12 mt-3">
@@ -963,6 +919,7 @@ export default function MyApplication () {
                       )
                     } )}
                   </select>
+                  {acc_form.touched.state && acc_form.errors.state ? <span className="text-danger small">{acc_form.errors.state}</span> : null}
                 </div>
                 <BaseInput
                   className="col-lg-4 col-12"
