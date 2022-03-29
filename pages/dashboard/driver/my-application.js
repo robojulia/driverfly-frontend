@@ -142,6 +142,7 @@ export default function MyApplication() {
   })
 
   const [birthDate, set_birthDate] = useState("")
+  const [is21, setIs21] = useState(false)
 
   const [pastEmployers, set_pastEmployers] = useState([])
 
@@ -290,6 +291,7 @@ export default function MyApplication() {
   const [drugTest, set_drugTest] = useState(false)
   const [drugTestDetails, set_drugTestDetails] = useState("")
 
+
   useEffect(async () => {
     const { data } = await axios.get(`${process.env.BASE_URL_API}/drivers`, {
       headers: {
@@ -316,6 +318,14 @@ export default function MyApplication() {
     }))
 
     set_birthDate(data.birthdate)
+
+    setIs21(() => {
+      if (moment().diff(birthDate, "years") >= 21) {
+        return true
+      }
+      return false
+    })
+
     set_equipments(equipmentsFetched)
     console.log(data)
     acc_form.setValues({
@@ -430,14 +440,6 @@ export default function MyApplication() {
         e.preventDefault()
     }
   }
-
-  const is21 = () => {
-    if (moment().diff(birthDate, "years") >= 21) {
-      return true
-    }
-    return false
-  }
-
 
   const setEquipmentExperience = (id, value) => {
     const newArr = equipments.map(eq => {
@@ -591,7 +593,7 @@ export default function MyApplication() {
                 <div className="col-lg-4 col-12 mt-3">
                   <div class="form-check form-switch mt-5">
                     <label class="form-check-label" htmlFor="age_limit">Above 21?</label>
-                    <input class="form-check-input" readOnly type="checkbox" checked={is21()} role="switch" id="age_limit" />
+                    <input class="form-check-input" readOnly type="checkbox" checked={is21} onClick={(e) => setIs21(e.target.checked)} role="switch" id="age_limit" />
                   </div>
                 </div>
               </div>
