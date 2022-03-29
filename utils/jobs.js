@@ -87,6 +87,10 @@ const jobGeography = [
         key: "REGIONAL",
         label: "Regional"
     },
+    {
+        key: "LOCAL",
+        label: "Local"
+    },
 ];
 
 const jobType = [
@@ -113,6 +117,21 @@ const jobType = [
     {
         key: "ONE_TIME_GIG",
         label: "One Time Gig"
+    },
+];
+
+const jobTeamDriver = [
+    {
+        key: "HAS_TEAM_DRIVER",
+        label: "Has team drivers"
+    },
+    {
+        key: "OPEN_TEAM_DRIVER",
+        label: "Open to team drivers"
+    },
+    {
+        key: "NO_TEAM_DRIVER",
+        label: "Not open to team drivers"
     },
 ];
 
@@ -147,5 +166,6 @@ export {
     jobBenefits,
     jobGeography,
     jobType,
+    jobTeamDriver,
     jobPayMethod
 }
