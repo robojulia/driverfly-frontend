@@ -10,6 +10,8 @@ import 'react-toastify/dist/ReactToastify.css'
 import { useEffect, useState } from "react"
 import { random } from "lodash"
 import moment from "moment"
+import CreatableSelect from 'react-select/creatable'
+import { ActionMeta, OnChangeValue } from 'react-select'
 
 
 
@@ -290,18 +292,18 @@ export default function MyApplication () {
       emergency_contact_relationship: '',
     },
     validationSchema: yup.object( {
-      license_number: yup.string().required("This field is required"),
-      license_expiry: yup.string().required("This field is required"),
-      highest_degree: yup.string().required("This field is required"),
-      license_state: yup.string().required("This field is required"),
-      street: yup.string().required("This field is required"),
-      cdl_class: yup.string().required("This field is required"),
-      emergency_contact_number: yup.string().required("This field is required"),
-      city: yup.string().required("This field is required"),
-      years_cdl_experience: yup.number().required("This field is required"),
-      zip_code: yup.string().required("This field is required"),
-      state: yup.string().required("This field is required"),
-      emergency_contact_relationship: yup.string().required("This field is required"),
+      license_number: yup.string().required( "This field is required" ),
+      license_expiry: yup.string().required( "This field is required" ),
+      highest_degree: yup.string().required( "This field is required" ),
+      license_state: yup.string().required( "This field is required" ),
+      street: yup.string().required( "This field is required" ),
+      cdl_class: yup.string().required( "This field is required" ),
+      emergency_contact_number: yup.string().required( "This field is required" ),
+      city: yup.string().required( "This field is required" ),
+      years_cdl_experience: yup.number().required( "This field is required" ),
+      zip_code: yup.string().required( "This field is required" ),
+      state: yup.string().required( "This field is required" ),
+      emergency_contact_relationship: yup.string().required( "This field is required" ),
     } ),
     onSubmit: async ( values ) => {
       const data = {
@@ -472,8 +474,8 @@ export default function MyApplication () {
 
   const [can_pass_drug_test, set_can_pass_drug_test] = useState( false )
   const [has_past_dui, set_has_past_dui] = useState( false )
-  const [dui_past_year1, set_dui_past_year1] = useState( "" )
-  const [dui_past_year2, set_dui_past_year2] = useState( "" )
+  const [dui_past_years, set_dui_past_years] = useState( [] )
+  const [dui_input_value, set_dui_input_value] = useState( "" )
   const [accident_count, set_accident_count] = useState( 0 )
   const [accident_details, set_accident_details] = useState( "" )
   const [criminal_history, set_criminal_history] = useState( "" )
@@ -575,11 +577,13 @@ export default function MyApplication () {
 
     set_can_pass_drug_test( data.can_pass_drug_test )
     set_has_past_dui( data.has_past_dui )
-    set_dui_past_year1( data.dui_years[0] )
-    set_dui_past_year2( data.dui_years[1] )
     set_accident_count( data.accident_count )
     set_accident_details( data.accident_details )
     set_criminal_history( data.criminal_history )
+
+    if ( data.dui_years.length ) {
+      set_dui_past_years( data.dui_years.map( y => createOption( y ) ) )
+    }
 
 
     const revokedFetched = data.safety_questions.find( q => q.type === "LICENSE_REVOKED" )
@@ -612,6 +616,24 @@ export default function MyApplication () {
     }
 
   }, [] )
+
+
+  const createOption = ( label ) => ( {
+    label,
+    value: label,
+  } )
+
+  const handleKeyDown = ( e ) => {
+    // e.preventDefault()
+    if ( !dui_input_value ) return
+    switch ( e.key ) {
+      case 'Enter':
+      case 'Tab':
+        set_dui_input_value( "" )
+        set_dui_past_years( [...dui_past_years, createOption( dui_input_value )] )
+        e.preventDefault()
+    }
+  }
 
   const is21 = () => {
     if ( moment().diff( birthDate, "years" ) >= 21 ) {
@@ -683,16 +705,12 @@ export default function MyApplication () {
         details: drugTestDetails,
       },
     ]
-    const dui_years = [
-      dui_past_year1,
-      dui_past_year2,
-    ]
     try {
       const a = {
         employers,
         can_pass_drug_test,
         has_past_dui,
-        dui_years,
+        dui_years: dui_past_years.map( y => y.value ),
         accident_count,
         accident_details,
         criminal_history,
@@ -776,8 +794,8 @@ export default function MyApplication () {
                 {/* age limit */}
                 <div className="col-lg-4 col-12 mt-3">
                   <div class="form-check form-switch mt-5">
-                    <label class="form-check-label" for="age_limit">Above 21?</label>
-                    <input class="form-check-input" type="checkbox" disabled checked={is21()} role="switch" id="age_limit" />
+                    <label class="form-check-label" htmlFor="age_limit">Above 21?</label>
+                    <input class="form-check-input" readOnly type="checkbox" checked={is21()} role="switch" id="age_limit" />
                   </div>
                 </div>
               </div>
@@ -1059,7 +1077,7 @@ export default function MyApplication () {
                         {/* authorize */}
                         <div className="col-lg-11 col-12 mt-3">
                           <div class="form-check form-switch">
-                            <label class="form-check-label" for="authorize">Do you authorize prospective employers to contact this company?</label>
+                            <label class="form-check-label" htmlFor="authorize">Do you authorize prospective employers to contact this company?</label>
                             {/* onClick={( e ) => set_can_contact( e.target.checked )} */}
                             <input class="form-check-input" type="checkbox" role="switch" id="authorize" checked={past.can_contact} onClick={( e ) => setCompanyCanContact( past.id, e.target.checked )} />
                           </div>
@@ -1067,14 +1085,14 @@ export default function MyApplication () {
                         {/* FMCSRs */}
                         <div className="col-lg-11 col-12 mt-3">
                           <div class="form-check form-switch">
-                            <label class="form-check-label" for="FMCSRs">Were you subject to the FMCSRs?</label>
+                            <label class="form-check-label" htmlFor="FMCSRs">Were you subject to the FMCSRs?</label>
                             <input checked={past.is_subject_to_fmcsrs} class="form-check-input" type="checkbox" role="switch" id="FMCSRs" onClick={( e ) => setCompanyIsSubjectToFmcsrs( past.id, e.target.checked )} />
                           </div>
                         </div>
                         {/* is_subject_to_drug_tests */}
                         <div className="col-lg-11 col-12 mt-3">
                           <div class="form-check form-switch">
-                            <label class="form-check-label" for="is_subject_to_drug_tests">Was your job designated as a safety-sensitive function in any DOT- regulated mode subject to the drug and alcohol testing requirements of 49 CFR Part 40?</label>
+                            <label class="form-check-label" htmlFor="is_subject_to_drug_tests">Was your job designated as a safety-sensitive function in any DOT- regulated mode subject to the drug and alcohol testing requirements of 49 CFR Part 40?</label>
                             <input checked={past.is_subject_to_drug_tests} class="form-check-input" type="checkbox" role="switch" id="is_subject_to_drug_tests" onClick={( e ) => setCompanyIsSubjectToDrugTests( past.id, e.target.checked )} />
                           </div>
                         </div>
@@ -1101,24 +1119,34 @@ export default function MyApplication () {
                     {/* drug test */}
                     <div className="col-lg-11 col-12 mt-3">
                       <div class="form-check form-switch">
-                        <label class="form-check-label" for="drug_test">Can I pass a drug test?</label>
+                        <label class="form-check-label" htmlFor="drug_test">Can I pass a drug test?</label>
                         <input checked={can_pass_drug_test} onClick={( e ) => set_can_pass_drug_test( e.target.checked )} class="form-check-input" type="checkbox" role="switch" id="drug_test" />
                       </div>
                     </div>
                     {/* DUI? */}
                     <div className="col-lg-11 col-12 mt-3">
                       <div class="form-check form-switch">
-                        <label class="form-check-label" for="DUI">Past DUI’s:</label>
+                        <label class="form-check-label" htmlFor="DUI">Past DUI’s:</label>
                         <input checked={has_past_dui} onClick={( e ) => set_has_past_dui( e.target.checked )} class="form-check-input" type="checkbox" role="switch" id="DUI" />
                       </div>
                     </div>
                     {/* PUI Date */}
                     <div className="col-lg-11 col-12 mt-3">
                       <label>Year(s) of Past DUI’s:</label>
-                      <div className="d-flex align-items-center">
-                        <input type="text" placeholder="Year" name="dui_start_years" className="form-control mx-1" onChange={( e ) => set_dui_past_year1( e.target.value )} value={dui_past_year1} />
-                        <input type="text" placeholder="Year" name="dui_start_years" className="form-control mx-1" onChange={( e ) => set_dui_past_year2( e.target.value )} value={dui_past_year2} />
-                      </div>
+                      <CreatableSelect
+                        isMulti
+                        components={{
+                          DropdownIndicator: null,
+                        }}
+                        isClearable
+                        menuIsOpen={false}
+                        placeholder="Year(s) of Past DUI’s:"
+                        inputValue={dui_input_value}
+                        onInputChange={( value ) => set_dui_input_value( value )}
+                        onChange={( value ) => set_dui_past_years( value )}
+                        onKeyDown={handleKeyDown}
+                        value={dui_past_years}
+                      />
                     </div>
                     {/* criminal history */}
                     <div className="col-lg-11 col-12 mt-3">
@@ -1132,7 +1160,7 @@ export default function MyApplication () {
                     </div>
                     {/* accident details */}
                     <div className="col-lg-11 col-12 mt-3">
-                      <label for="exampleFormControlTextarea1" class="form-label">Accidents details:</label>
+                      <label htmlFor="exampleFormControlTextarea1" class="form-label">Accidents details:</label>
                       <textarea class="form-control mt-4 " name="accident_detail" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => set_accident_details( e.target.value )} value={accident_details}></textarea>
                     </div>
                   </div>
@@ -1141,7 +1169,7 @@ export default function MyApplication () {
                     {/* license */}
                     <div className="col-lg-11 col-12 mt-3">
                       <div class="form-check form-switch">
-                        <label class="form-check-label" for="licence">Has any of your license, permit or privilege to operate a CMV ever been suspended or revoked? If so, please explain:</label>
+                        <label class="form-check-label" htmlFor="licence">Has any of your license, permit or privilege to operate a CMV ever been suspended or revoked? If so, please explain:</label>
                         <input class="form-check-input" type="checkbox" role="switch" id="licence" checked={revoked} onClick={( e ) => setRevoked( e.target.checked )} />
                       </div>
                     </div>
@@ -1149,7 +1177,7 @@ export default function MyApplication () {
                     {
                       revoked && (
                         <div className="col-lg-11 col-12 mt-3">
-                          <label for="exampleFormControlTextarea1" class="form-label">Details:</label>
+                          <label htmlFor="exampleFormControlTextarea1" class="form-label">Details:</label>
                           <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => setRevokedDetails( e.target.value )} value={revokedDetails} />
                         </div>
                       )
@@ -1157,7 +1185,7 @@ export default function MyApplication () {
                     {/* violation */}
                     <div className="col-lg-11 col-12 mt-3">
                       <div class="form-check form-switch">
-                        <label class="form-check-label" for="violation">Do you have any violation on you PSP from previous three years? If so please explain:</label>
+                        <label class="form-check-label" htmlFor="violation">Do you have any violation on you PSP from previous three years? If so please explain:</label>
                         <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={violations} onClick={( e ) => setViolations( e.target.checked )} />
                       </div>
                     </div>
@@ -1165,7 +1193,7 @@ export default function MyApplication () {
                     {
                       violations && (
                         <div className="col-lg-11 col-12 mt-3">
-                          <label for="exampleFormControlTextarea1" class="form-label">Violation Details:</label>
+                          <label htmlFor="exampleFormControlTextarea1" class="form-label">Violation Details:</label>
                           <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => setViolationsDetails( e.target.value )} value={violationsDetails} />
                         </div>
                       )
@@ -1173,7 +1201,7 @@ export default function MyApplication () {
                     {/* 5 years tickets */}
                     <div className="col-lg-11 col-12 mt-3">
                       <div class="form-check form-switch">
-                        <label class="form-check-label" for="violation">Have you had any tickets in the previous 5 years?</label>
+                        <label class="form-check-label" htmlFor="violation">Have you had any tickets in the previous 5 years?</label>
                         <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={tickets} onClick={( e ) => set_tickets( e.target.checked )} />
                       </div>
                     </div>
@@ -1181,7 +1209,7 @@ export default function MyApplication () {
                     {
                       tickets && (
                         <div className="col-lg-11 col-12 mt-3">
-                          <label for="exampleFormControlTextarea1" class="form-label">If so, please explain:</label>
+                          <label htmlFor="exampleFormControlTextarea1" class="form-label">If so, please explain:</label>
                           <textarea class="form-control" name="any_tickets" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => set_ticketsDetails( e.target.value )} value={ticketsDetails}></textarea>
                         </div>
                       )
@@ -1190,7 +1218,7 @@ export default function MyApplication () {
                     {/* drug test */}
                     <div className="col-lg-11 col-12 mt-3">
                       <div class="form-check form-switch">
-                        <label class="form-check-label" for="violation">Have you ever refused to be tested or had a positive drug/alcohol test?</label>
+                        <label class="form-check-label" htmlFor="violation">Have you ever refused to be tested or had a positive drug/alcohol test?</label>
                         <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={drugTest} onClick={( e ) => set_drugTest( e.target.checked )} />
                       </div>
                     </div>
@@ -1199,7 +1227,7 @@ export default function MyApplication () {
                     {
                       drugTest && (
                         <div className="col-lg-11 col-12 mt-3">
-                          <label for="exampleFormControlTextarea1" class="form-label">if so, explain here:</label>
+                          <label htmlFor="exampleFormControlTextarea1" class="form-label">if so, explain here:</label>
                           <textarea class="form-control" name="refused" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => set_drugTestDetails( e.target.value )} value={drugTestDetails}></textarea>
                         </div>
                       )
