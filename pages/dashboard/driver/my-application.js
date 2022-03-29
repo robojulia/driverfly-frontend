@@ -97,7 +97,7 @@ export default function MyApplication() {
       cdl_class: yup.string().required("This field is required").nullable(),
       emergency_contact_number: yup.string().required("This field is required").nullable(),
       city: yup.string().required("This field is required").nullable(),
-      years_cdl_experience: yup.number().required("This field is required").nullable(),
+      years_cdl_experience: yup.number().required("This field is required").nullable().min(0, "Please select 0 or above."),
       zip_code: yup.string().required("This field is required").nullable(),
       state: yup.string().required("This field is required").nullable(),
       emergency_contact_relationship: yup.string().required("This field is required").nullable(),
@@ -710,6 +710,7 @@ export default function MyApplication() {
                   placeholder="Years of CDL Experience"
                   name="years_cdl_experience"
                   type="number"
+                  min
                   value={acc_form.values.years_cdl_experience}
                   touched={acc_form.touched.years_cdl_experience}
                   error={acc_form.errors.years_cdl_experience}
