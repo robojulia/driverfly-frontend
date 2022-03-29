@@ -17,12 +17,12 @@ import stateList from "../../../utils/stateList"
 
 
 
-export default function MyApplication () {
+export default function MyApplication() {
   const { authCheck } = useAuth()
   const user = authCheck()
 
 
-  const randomId = () => Date.now() + "-" + random( 0, 200 )
+  const randomId = () => Date.now() + "-" + random(0, 200)
 
   const driverDegree = [
     {
@@ -66,9 +66,9 @@ export default function MyApplication () {
   //   years: 0,
   //   type: ""
   // }
-  const [equipments, set_equipments] = useState( [] )
+  const [equipments, set_equipments] = useState([])
 
-  const acc_form = useFormik( {
+  const acc_form = useFormik({
     initialValues: {
       // name: '',
       license_number: '',
@@ -88,36 +88,36 @@ export default function MyApplication () {
       state: '',
       emergency_contact_relationship: '',
     },
-    validationSchema: yup.object( {
-      license_number: yup.string().required( "This field is required" ),
-      license_expiry: yup.string().required( "This field is required" ),
-      highest_degree: yup.string().required( "This field is required" ),
-      license_state: yup.string().required( "This field is required" ),
-      street: yup.string().required( "This field is required" ),
-      cdl_class: yup.string().required( "This field is required" ),
-      emergency_contact_number: yup.string().required( "This field is required" ),
-      city: yup.string().required( "This field is required" ),
-      years_cdl_experience: yup.number().required( "This field is required" ),
-      zip_code: yup.string().required( "This field is required" ),
-      state: yup.string().required( "This field is required" ),
-      emergency_contact_relationship: yup.string().required( "This field is required" ),
-    } ),
-    onSubmit: async ( values ) => {
+    validationSchema: yup.object({
+      license_number: yup.string().required("This field is required"),
+      license_expiry: yup.string().required("This field is required"),
+      highest_degree: yup.string().required("This field is required"),
+      license_state: yup.string().required("This field is required"),
+      street: yup.string().required("This field is required"),
+      cdl_class: yup.string().required("This field is required"),
+      emergency_contact_number: yup.string().required("This field is required"),
+      city: yup.string().required("This field is required"),
+      years_cdl_experience: yup.number().required("This field is required"),
+      zip_code: yup.string().required("This field is required"),
+      state: yup.string().required("This field is required"),
+      emergency_contact_relationship: yup.string().required("This field is required"),
+    }),
+    onSubmit: async (values) => {
       const data = {
         ...values,
-        equipment_experience: equipments.map( eq => ( {
+        equipment_experience: equipments.map(eq => ({
           years: eq.years,
           type: eq.type
-        } ) ),
+        })),
       }
       try {
-        const resp = await axios.post( `${process.env.BASE_URL_API}/drivers`, data, {
+        const resp = await axios.post(`${process.env.BASE_URL_API}/drivers`, data, {
           headers: {
             Authorization: `Bearer ${user.token}`
           }
-        } )
-        if ( resp.status === 201 ) {
-          toast.success( "Uploaded successfully", {
+        })
+        if (resp.status === 201) {
+          toast.success("Uploaded successfully", {
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
@@ -125,10 +125,10 @@ export default function MyApplication () {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-          } )
+          })
         }
-      } catch ( error ) {
-        toast.error( "Some Error occured", {
+      } catch (error) {
+        toast.error("Some Error occured", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -136,122 +136,122 @@ export default function MyApplication () {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-        } )
+        })
       }
     }
-  } )
+  })
 
-  const [birthDate, set_birthDate] = useState( "" )
+  const [birthDate, set_birthDate] = useState("")
 
-  const [pastEmployers, set_pastEmployers] = useState( [] )
+  const [pastEmployers, set_pastEmployers] = useState([])
 
-  const setCompanyName = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyName = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, name: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyStartDate = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyStartDate = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, start_at: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyEndDate = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyEndDate = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, end_at: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyTitle = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyTitle = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, title: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyPhone = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyPhone = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, phone: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyCanContact = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyCanContact = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, can_contact: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyIsSubjectToFmcsrs = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyIsSubjectToFmcsrs = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, is_subject_to_fmcsrs: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyIsSubjectToDrugTests = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyIsSubjectToDrugTests = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, is_subject_to_drug_tests: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyStreet = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyStreet = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, street: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyCity = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyCity = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, city: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyState = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyState = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, state: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyZipCode = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyZipCode = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, zip_code: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
 
   // const [name, setName] = useState( "" )
@@ -269,35 +269,35 @@ export default function MyApplication () {
   // const [companyState, set_companyState] = useState( "" )
   // const [companyZip, set_companyZip] = useState( "" )
 
-  const [can_pass_drug_test, set_can_pass_drug_test] = useState( false )
-  const [has_past_dui, set_has_past_dui] = useState( false )
-  const [dui_past_years, set_dui_past_years] = useState( [] )
-  const [dui_input_value, set_dui_input_value] = useState( "" )
-  const [accident_count, set_accident_count] = useState( 0 )
-  const [accident_details, set_accident_details] = useState( "" )
-  const [criminal_history, set_criminal_history] = useState( "" )
+  const [can_pass_drug_test, set_can_pass_drug_test] = useState(false)
+  const [has_past_dui, set_has_past_dui] = useState(false)
+  const [dui_past_years, set_dui_past_years] = useState([])
+  const [dui_input_value, set_dui_input_value] = useState("")
+  const [accident_count, set_accident_count] = useState(0)
+  const [accident_details, set_accident_details] = useState("")
+  const [criminal_history, set_criminal_history] = useState("")
 
 
-  const [revoked, setRevoked] = useState( false )
-  const [revokedDetails, setRevokedDetails] = useState( "" )
+  const [revoked, setRevoked] = useState(false)
+  const [revokedDetails, setRevokedDetails] = useState("")
 
-  const [violations, setViolations] = useState( false )
-  const [violationsDetails, setViolationsDetails] = useState( "" )
+  const [violations, setViolations] = useState(false)
+  const [violationsDetails, setViolationsDetails] = useState("")
 
-  const [tickets, set_tickets] = useState( false )
-  const [ticketsDetails, set_ticketsDetails] = useState( "" )
+  const [tickets, set_tickets] = useState(false)
+  const [ticketsDetails, set_ticketsDetails] = useState("")
 
-  const [drugTest, set_drugTest] = useState( false )
-  const [drugTestDetails, set_drugTestDetails] = useState( "" )
+  const [drugTest, set_drugTest] = useState(false)
+  const [drugTestDetails, set_drugTestDetails] = useState("")
 
-  useEffect( async () => {
-    const { data } = await axios.get( `${process.env.BASE_URL_API}/drivers`, {
+  useEffect(async () => {
+    const { data } = await axios.get(`${process.env.BASE_URL_API}/drivers`, {
       headers: {
         Authorization: `Bearer ${user.token}`
       }
-    } )
-    if ( !data ) {
-      toast.error( "Data could not fetched", {
+    })
+    if (!data) {
+      toast.error("Data could not fetched", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -305,22 +305,22 @@ export default function MyApplication () {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-      } )
+      })
       return
     }
 
-    const equipmentsFetched = data.equipment_experience.map( eq => ( {
+    const equipmentsFetched = data.equipment_experience.map(eq => ({
       years: eq.years,
       id: randomId(),
       type: eq.type
-    } ) )
+    }))
 
-    set_birthDate( data.birthdate )
-    set_equipments( equipmentsFetched )
-    console.log( data )
-    acc_form.setValues( {
+    set_birthDate(data.birthdate)
+    set_equipments(equipmentsFetched)
+    console.log(data)
+    acc_form.setValues({
       license_number: data.license_number,
-      license_expiry: moment( data.license_expiry ).format( "YYYY-MM-DD" ),
+      license_expiry: moment(data.license_expiry).format("YYYY-MM-DD"),
       highest_degree: data.highest_degree,
       license_state: data.license_state,
       street: data.street,
@@ -332,15 +332,15 @@ export default function MyApplication () {
       state: data.state,
       equipment_experience: data.equipment_experience,
       emergency_contact_relationship: data.emergency_contact_relationship,
-    } )
+    })
 
     let pastEmployersFetched = []
-    if ( data.employers.length ) {
-      pastEmployersFetched = data.employers.map( emp => ( {
+    if (data.employers.length) {
+      pastEmployersFetched = data.employers.map(emp => ({
         id: randomId(),
         name: emp.name,
-        start_at: moment( emp.start_at ).format( "YYYY-MM-DD" ),
-        end_at: moment( emp.end_at ).format( "YYYY-MM-DD" ),
+        start_at: moment(emp.start_at).format("YYYY-MM-DD"),
+        end_at: moment(emp.end_at).format("YYYY-MM-DD"),
         title: emp.title,
         phone: emp.phone,
         can_contact: emp.can_contact,
@@ -350,7 +350,7 @@ export default function MyApplication () {
         city: emp.city,
         state: emp.state,
         zip_code: emp.zip_code,
-      } ) )
+      }))
     } else {
       pastEmployersFetched = [{
         id: randomId(),
@@ -370,99 +370,98 @@ export default function MyApplication () {
     }
 
     // set past employers
-    set_pastEmployers( pastEmployersFetched )
+    set_pastEmployers(pastEmployersFetched)
 
-    set_can_pass_drug_test( data.can_pass_drug_test )
-    set_has_past_dui( data.has_past_dui )
-    set_accident_count( data.accident_count )
-    set_accident_details( data.accident_details )
-    set_criminal_history( data.criminal_history )
+    set_can_pass_drug_test(data.can_pass_drug_test)
+    set_has_past_dui(data.has_past_dui)
+    set_accident_count(data.accident_count)
+    set_accident_details(data.accident_details)
+    set_criminal_history(data.criminal_history)
 
-    if ( data.dui_years.length ) {
-      set_dui_past_years( data.dui_years.map( y => createOption( y ) ) )
+    if (data.dui_years && data.dui_years.length) {
+      set_dui_past_years(data.dui_years.map(y => createOption(y)))
     }
 
-
-    const revokedFetched = data.safety_questions.find( q => q.type === "LICENSE_REVOKED" )
-    if ( revokedFetched ) {
-      setRevoked( revokedFetched.response )
-      setRevokedDetails( revokedFetched.details )
+    const revokedFetched = data.safety_questions.find(q => q.type === "LICENSE_REVOKED")
+    if (revokedFetched) {
+      setRevoked(revokedFetched.response)
+      setRevokedDetails(revokedFetched.details)
     }
-    const violationsFetched = data.safety_questions.find( q => q.type === "VIOLATIONS_PSP" )
-    if ( violationsFetched ) {
-      setRevoked( violationsFetched.response )
-      setRevokedDetails( violationsFetched.details )
+    const violationsFetched = data.safety_questions.find(q => q.type === "VIOLATIONS_PSP")
+    if (violationsFetched) {
+      setRevoked(violationsFetched.response)
+      setRevokedDetails(violationsFetched.details)
     }
-    const tickets = data.safety_questions.find( q => q.type === "TICKETS" )
-    if ( tickets ) {
-      setRevoked( tickets.response )
-      setRevokedDetails( tickets.details )
+    const tickets = data.safety_questions.find(q => q.type === "TICKETS")
+    if (tickets) {
+      setRevoked(tickets.response)
+      setRevokedDetails(tickets.details)
     }
-    const drugsFetched = data.safety_questions.find( q => q.type === "POSITIVE_DRUG_TEST" )
-    if ( drugsFetched ) {
-      setRevoked( drugsFetched.response )
-      setRevokedDetails( drugsFetched.details )
+    const drugsFetched = data.safety_questions.find(q => q.type === "POSITIVE_DRUG_TEST")
+    if (drugsFetched) {
+      setRevoked(drugsFetched.response)
+      setRevokedDetails(drugsFetched.details)
     }
 
 
 
     const safety_details = data.safety_questions[0]
-    if ( safety_details ) {
-      set_ticketsDetails( safety_details.details )
+    if (safety_details) {
+      set_ticketsDetails(safety_details.details)
 
     }
 
-  }, [] )
+  }, [])
 
 
-  const createOption = ( label ) => ( {
+  const createOption = (label) => ({
     label,
     value: label,
-  } )
+  })
 
-  const handleKeyDown = ( e ) => {
+  const handleKeyDown = (e) => {
     // e.preventDefault()
-    if ( !dui_input_value ) return
-    switch ( e.key ) {
+    if (!dui_input_value) return
+    switch (e.key) {
       case 'Enter':
       case 'Tab':
-        set_dui_input_value( "" )
-        set_dui_past_years( [...dui_past_years, createOption( dui_input_value )] )
+        set_dui_input_value("")
+        set_dui_past_years([...dui_past_years, createOption(dui_input_value)])
         e.preventDefault()
     }
   }
 
   const is21 = () => {
-    if ( moment().diff( birthDate, "years" ) >= 21 ) {
+    if (moment().diff(birthDate, "years") >= 21) {
       return true
     }
     return false
   }
 
 
-  const setEquipmentExperience = ( id, value ) => {
-    const newArr = equipments.map( eq => {
-      if ( eq.id === id ) {
+  const setEquipmentExperience = (id, value) => {
+    const newArr = equipments.map(eq => {
+      if (eq.id === id) {
         return { ...eq, years: value }
       }
       return eq
-    } )
-    set_equipments( newArr )
+    })
+    set_equipments(newArr)
   }
 
-  const setEquipmentType = ( id, value ) => {
-    const newArr = equipments.map( eq => {
-      if ( eq.id === id ) {
+  const setEquipmentType = (id, value) => {
+    const newArr = equipments.map(eq => {
+      if (eq.id === id) {
         return { ...eq, type: value }
       }
       return eq
-    } )
-    set_equipments( newArr )
+    })
+    set_equipments(newArr)
   }
 
-  const postSecondForm = async ( e ) => {
+  const postSecondForm = async (e) => {
     e.preventDefault()
-    const employers = pastEmployers.map( emp => {
+    const employers = pastEmployers.map(emp => {
       return {
         name: emp.name,
         start_at: emp.start_at,
@@ -477,7 +476,7 @@ export default function MyApplication () {
         state: emp.state,
         zip_code: emp.zip_code,
       }
-    } )
+    })
 
 
     const safety_questions = [
@@ -507,19 +506,19 @@ export default function MyApplication () {
         employers,
         can_pass_drug_test,
         has_past_dui,
-        dui_years: dui_past_years.map( y => y.value ),
+        dui_years: dui_past_years.map(y => y.value),
         accident_count,
         accident_details,
         criminal_history,
         safety_questions
       }
-      const resp = await axios.post( `${process.env.BASE_URL_API}/drivers`, a, {
+      const resp = await axios.post(`${process.env.BASE_URL_API}/drivers`, a, {
         headers: {
           Authorization: `Bearer ${user.token}`
         }
-      } )
-      if ( resp.status === 201 ) {
-        toast.success( "Uploaded successfully", {
+      })
+      if (resp.status === 201) {
+        toast.success("Uploaded successfully", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -527,10 +526,10 @@ export default function MyApplication () {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-        } )
+        })
       }
-    } catch ( error ) {
-      toast.error( "Error occured", {
+    } catch (error) {
+      toast.error("Error occured", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -538,16 +537,16 @@ export default function MyApplication () {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-      } )
+      })
     }
   }
 
   const addEquipment = () => {
-    set_equipments( [...equipments, { type: "", years: 0, id: randomId() }] )
+    set_equipments([...equipments, { type: "", years: 0, id: randomId() }])
   }
 
   const addPastEmployer = () => {
-    set_pastEmployers( [...pastEmployers, {
+    set_pastEmployers([...pastEmployers, {
       id: randomId(),
       name: "",
       start_at: "",
@@ -561,7 +560,7 @@ export default function MyApplication () {
       city: "",
       state: "",
       zip_code: "",
-    }] )
+    }])
   }
 
 
@@ -617,10 +616,10 @@ export default function MyApplication () {
                     onChange={acc_form.handleChange}
                   >
                     <option selected value="">Highest Degree:</option>
-                    {driverDegree.map( ( degree, index ) => {
-                      return ( <option selected={acc_form.values.highest_degree === degree.value} value={degree.value} key={index}>{degree.label}</option>
+                    {driverDegree.map((degree, index) => {
+                      return (<option selected={acc_form.values.highest_degree === degree.value} value={degree.value} key={index}>{degree.label}</option>
                       )
-                    } )}
+                    })}
                   </select>
                   {acc_form.touched.highest_degree && acc_form.errors.highest_degree ? <span className="text-danger small">{acc_form.errors.highest_degree}</span> : null}
                 </div>
@@ -634,7 +633,7 @@ export default function MyApplication () {
                     onChange={acc_form.handleChange}
                   >
                     <option selected value="">State Issued:</option>
-                    {stateList.map( ( state, index ) => {
+                    {stateList.map((state, index) => {
                       return (
                         <option
                           key={index}
@@ -642,7 +641,7 @@ export default function MyApplication () {
                           value={state.value}
                         >{state.label}</option>
                       )
-                    } )}
+                    })}
                   </select>
                   {acc_form.touched.license_state && acc_form.errors.license_state ? <span className="text-danger small">{acc_form.errors.license_state}</span> : null}
                 </div>
@@ -669,11 +668,11 @@ export default function MyApplication () {
                     onChange={acc_form.handleChange}
                   >
                     <option selected value="">CDL Class Type:</option>
-                    {cdl_classes.map( ( cdl, index ) => {
+                    {cdl_classes.map((cdl, index) => {
                       return (
                         <option selected={acc_form.values.cdl_class === cdl.value} value={cdl.value} key={index}>{cdl.label}</option>
                       )
-                    } )}
+                    })}
                   </select>
                   {acc_form.touched.cdl_class && acc_form.errors.cdl_class ? <span className="text-danger small">{acc_form.errors.cdl_class}</span> : null}
                 </div>
@@ -724,7 +723,7 @@ export default function MyApplication () {
                     onChange={acc_form.handleChange}
                   >
                     <option selected value="">State:</option>
-                    {stateList.map( ( state, index ) => {
+                    {stateList.map((state, index) => {
                       return (
                         <option
                           key={index}
@@ -732,7 +731,7 @@ export default function MyApplication () {
                           value={state.value}
                         >{state.label}</option>
                       )
-                    } )}
+                    })}
                   </select>
                   {acc_form.touched.state && acc_form.errors.state ? <span className="text-danger small">{acc_form.errors.state}</span> : null}
                 </div>
@@ -761,7 +760,7 @@ export default function MyApplication () {
                 />
                 <div className="col-lg-8 col-12">
                   <span>Equipments</span> <br />
-                  {equipments.map( ( eq ) => {
+                  {equipments.map((eq) => {
                     return (
                       <div key={eq.id}>
                         <BaseInput
@@ -769,20 +768,20 @@ export default function MyApplication () {
                           label="Equipment Type:"
                           placeholder="Equipment Type"
                           value={eq.type}
-                          onChange={( e ) => setEquipmentType( eq.id, e.target.value )}
+                          onChange={(e) => setEquipmentType(eq.id, e.target.value)}
                           name="equipment_type"
                         />
                         <BaseInput
                           className="col-lg-8 col-12"
                           label="Years Experience:"
                           type="number"
-                          onChange={( e ) => setEquipmentExperience( eq.id, e.target.value )}
+                          onChange={(e) => setEquipmentExperience(eq.id, e.target.value)}
                           value={eq.years}
                           placeholder="Years Experience"
                         />
                       </div>
                     )
-                  } )}
+                  })}
                   <span className="btn btn-success col-4 mt-2" onClick={addEquipment}>+ more</span>
                 </div>
 
@@ -805,38 +804,38 @@ export default function MyApplication () {
               <div className="col-lg-4 col-12 mt-3">
                 <h2>Past Employment</h2>
                 {
-                  pastEmployers.map( ( past ) => {
+                  pastEmployers.map((past) => {
                     return (
                       <div key={past.id}>
                         {/* Last employer */}
                         <div className="col-lg-11 col-12 mt-3">
                           <label>Last Employer:</label>
-                          <input value={past.name} name="last_emp" type="text" className="form-control" placeholder="Last Employer:" onChange={( e ) => setCompanyName( past.id, e.target.value )} />
+                          <input value={past.name} name="last_emp" type="text" className="form-control" placeholder="Last Employer:" onChange={(e) => setCompanyName(past.id, e.target.value)} />
                         </div>
                         {/* Date employed */}
                         <div className="col-lg-11 col-12 mt-3">
                           <label>Date Employed:</label>
                           <div className="d-flex align-items-center">
-                            <input onChange={( e ) => setCompanyStartDate( past.id, e.target.value )} value={past.start_at} name="sta_date" type="date" className="form-control" /> <h2 className="mx-2">to</h2>
-                            <input onChange={( e ) => setCompanyEndDate( past.id, e.target.value )} value={past.end_at} name="sta_date" type="date" className="form-control" />
+                            <input onChange={(e) => setCompanyStartDate(past.id, e.target.value)} value={past.start_at} name="sta_date" type="date" className="form-control" /> <h2 className="mx-2">to</h2>
+                            <input onChange={(e) => setCompanyEndDate(past.id, e.target.value)} value={past.end_at} name="sta_date" type="date" className="form-control" />
                           </div>
                         </div>
                         {/* position title */}
                         <div className="col-lg-11 col-12 mt-3">
                           <label>Position Title:</label>
-                          <input onChange={( e ) => setCompanyTitle( past.id, e.target.value )} value={past.title} type="text" name="position_title" className="form-control" placeholder="Position Title:" />
+                          <input onChange={(e) => setCompanyTitle(past.id, e.target.value)} value={past.title} type="text" name="position_title" className="form-control" placeholder="Position Title:" />
                         </div>
                         {/* company address */}
                         <h5 className="my-2">Company Address</h5>
                         {/* company street */}
                         <div className="col-lg-11 col-12 mt-3">
                           <label>Street:</label>
-                          <input type="text" name="companyStreet" className="form-control" placeholder="Company Street:" value={past.street} onChange={( e ) => setCompanyStreet( past.id, e.target.value )} />
+                          <input type="text" name="companyStreet" className="form-control" placeholder="Company Street:" value={past.street} onChange={(e) => setCompanyStreet(past.id, e.target.value)} />
                         </div>
                         {/* company city */}
                         <div className="col-lg-11 col-12 mt-3">
                           <label>City:</label>
-                          <input type="text" name="companyCity" className="form-control" placeholder="Company City:" value={past.city} onChange={( e ) => setCompanyCity( past.id, e.target.value )} />
+                          <input type="text" name="companyCity" className="form-control" placeholder="Company City:" value={past.city} onChange={(e) => setCompanyCity(past.id, e.target.value)} />
                         </div>
                         {/* company state */}
                         {/* <div className="col-lg-11 col-12 mt-3">
@@ -847,10 +846,10 @@ export default function MyApplication () {
                           <label>State:</label>
                           <select class="form-select" name="state" aria-label="Default select example"
                             value={past.state}
-                            onChange={( e ) => setCompanyState( past.id, e.target.value )}
+                            onChange={(e) => setCompanyState(past.id, e.target.value)}
                           >
                             <option selected value="">State Issued:</option>
-                            {stateList.map( ( state, index ) => {
+                            {stateList.map((state, index) => {
                               return (
                                 <option
                                   key={index}
@@ -858,45 +857,45 @@ export default function MyApplication () {
                                   value={state.value}
                                 >{state.label}</option>
                               )
-                            } )}
+                            })}
                           </select>
                         </div>
                         {/* company zip */}
                         <div className="col-lg-11 col-12 mt-3">
                           <label>Company Zip:</label>
-                          <input type="text" name="companyZip" className="form-control" placeholder="Company Zip:" value={past.zip_code} onChange={( e ) => setCompanyZipCode( past.id, e.target.value )} />
+                          <input type="text" name="companyZip" className="form-control" placeholder="Company Zip:" value={past.zip_code} onChange={(e) => setCompanyZipCode(past.id, e.target.value)} />
                         </div>
                         {/* company phone */}
                         <div className="col-lg-11 col-12 mt-3">
                           <label>Company Phone:</label>
-                          <input value={past.phone} type="text" name="phone" className="form-control" placeholder="Company Phone:" onChange={( e ) => setCompanyPhone( past.id, e.target.value )} />
+                          <input value={past.phone} type="text" name="phone" className="form-control" placeholder="Company Phone:" onChange={(e) => setCompanyPhone(past.id, e.target.value)} />
                         </div>
                         {/* authorize */}
                         <div className="col-lg-11 col-12 mt-3">
                           <div class="form-check form-switch">
                             <label class="form-check-label" htmlFor="authorize">Do you authorize prospective employers to contact this company?</label>
                             {/* onClick={( e ) => set_can_contact( e.target.checked )} */}
-                            <input class="form-check-input" type="checkbox" role="switch" id="authorize" checked={past.can_contact} onClick={( e ) => setCompanyCanContact( past.id, e.target.checked )} />
+                            <input class="form-check-input" type="checkbox" role="switch" id="authorize" checked={past.can_contact} onClick={(e) => setCompanyCanContact(past.id, e.target.checked)} />
                           </div>
                         </div>
                         {/* FMCSRs */}
                         <div className="col-lg-11 col-12 mt-3">
                           <div class="form-check form-switch">
                             <label class="form-check-label" htmlFor="FMCSRs">Were you subject to the FMCSRs?</label>
-                            <input checked={past.is_subject_to_fmcsrs} class="form-check-input" type="checkbox" role="switch" id="FMCSRs" onClick={( e ) => setCompanyIsSubjectToFmcsrs( past.id, e.target.checked )} />
+                            <input checked={past.is_subject_to_fmcsrs} class="form-check-input" type="checkbox" role="switch" id="FMCSRs" onClick={(e) => setCompanyIsSubjectToFmcsrs(past.id, e.target.checked)} />
                           </div>
                         </div>
                         {/* is_subject_to_drug_tests */}
                         <div className="col-lg-11 col-12 mt-3">
                           <div class="form-check form-switch">
                             <label class="form-check-label" htmlFor="is_subject_to_drug_tests">Was your job designated as a safety-sensitive function in any DOT- regulated mode subject to the drug and alcohol testing requirements of 49 CFR Part 40?</label>
-                            <input checked={past.is_subject_to_drug_tests} class="form-check-input" type="checkbox" role="switch" id="is_subject_to_drug_tests" onClick={( e ) => setCompanyIsSubjectToDrugTests( past.id, e.target.checked )} />
+                            <input checked={past.is_subject_to_drug_tests} class="form-check-input" type="checkbox" role="switch" id="is_subject_to_drug_tests" onClick={(e) => setCompanyIsSubjectToDrugTests(past.id, e.target.checked)} />
                           </div>
                         </div>
 
                       </div>
                     )
-                  } )
+                  })
                 }
                 {
                   pastEmployers.length < 3 &&
@@ -917,14 +916,14 @@ export default function MyApplication () {
                     <div className="col-lg-11 col-12 mt-3">
                       <div class="form-check form-switch">
                         <label class="form-check-label" htmlFor="drug_test">Can I pass a drug test?</label>
-                        <input checked={can_pass_drug_test} onClick={( e ) => set_can_pass_drug_test( e.target.checked )} class="form-check-input" type="checkbox" role="switch" id="drug_test" />
+                        <input checked={can_pass_drug_test} onClick={(e) => set_can_pass_drug_test(e.target.checked)} class="form-check-input" type="checkbox" role="switch" id="drug_test" />
                       </div>
                     </div>
                     {/* DUI? */}
                     <div className="col-lg-11 col-12 mt-3">
                       <div class="form-check form-switch">
                         <label class="form-check-label" htmlFor="DUI">Past DUI’s:</label>
-                        <input checked={has_past_dui} onClick={( e ) => set_has_past_dui( e.target.checked )} class="form-check-input" type="checkbox" role="switch" id="DUI" />
+                        <input checked={has_past_dui} onClick={(e) => set_has_past_dui(e.target.checked)} class="form-check-input" type="checkbox" role="switch" id="DUI" />
                       </div>
                     </div>
                     {/* PUI Date */}
@@ -939,8 +938,8 @@ export default function MyApplication () {
                         menuIsOpen={false}
                         placeholder="Year(s) of Past DUI’s:"
                         inputValue={dui_input_value}
-                        onInputChange={( value ) => set_dui_input_value( value )}
-                        onChange={( value ) => set_dui_past_years( value )}
+                        onInputChange={(value) => set_dui_input_value(value)}
+                        onChange={(value) => set_dui_past_years(value)}
                         onKeyDown={handleKeyDown}
                         value={dui_past_years}
                       />
@@ -948,17 +947,17 @@ export default function MyApplication () {
                     {/* criminal history */}
                     <div className="col-lg-11 col-12 mt-3">
                       <label>Criminal History in last 3 years?</label>
-                      <input type="text" name="criminal_history" className="form-control" placeholder="Criminal History in last 3 years?" onChange={( e ) => set_criminal_history( e.target.value )} value={criminal_history} />
+                      <input type="text" name="criminal_history" className="form-control" placeholder="Criminal History in last 3 years?" onChange={(e) => set_criminal_history(e.target.value)} value={criminal_history} />
                     </div>
                     {/* accidents */}
                     <div className="col-lg-11 col-12 mt-3">
                       <label>Accidents within the last 5 years:</label>
-                      <input type="number" name="academy_year" className="form-control" placeholder="Accidents within the last 5 years:" onChange={( e ) => set_accident_count( e.target.value )} value={accident_count} />
+                      <input type="number" name="academy_year" className="form-control" placeholder="Accidents within the last 5 years:" onChange={(e) => set_accident_count(e.target.value)} value={accident_count} />
                     </div>
                     {/* accident details */}
                     <div className="col-lg-11 col-12 mt-3">
                       <label htmlFor="exampleFormControlTextarea1" class="form-label">Accidents details:</label>
-                      <textarea class="form-control mt-4 " name="accident_detail" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => set_accident_details( e.target.value )} value={accident_details}></textarea>
+                      <textarea class="form-control mt-4 " name="accident_detail" id="exampleFormControlTextarea1" rows="3" onChange={(e) => set_accident_details(e.target.value)} value={accident_details}></textarea>
                     </div>
                   </div>
                   {/* col-2 */}
@@ -967,7 +966,7 @@ export default function MyApplication () {
                     <div className="col-lg-11 col-12 mt-3">
                       <div class="form-check form-switch">
                         <label class="form-check-label" htmlFor="licence">Has any of your license, permit or privilege to operate a CMV ever been suspended or revoked? If so, please explain:</label>
-                        <input class="form-check-input" type="checkbox" role="switch" id="licence" checked={revoked} onClick={( e ) => setRevoked( e.target.checked )} />
+                        <input class="form-check-input" type="checkbox" role="switch" id="licence" checked={revoked} onClick={(e) => setRevoked(e.target.checked)} />
                       </div>
                     </div>
                     {/* revoked details */}
@@ -975,7 +974,7 @@ export default function MyApplication () {
                       revoked && (
                         <div className="col-lg-11 col-12 mt-3">
                           <label htmlFor="exampleFormControlTextarea1" class="form-label">Details:</label>
-                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => setRevokedDetails( e.target.value )} value={revokedDetails} />
+                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => setRevokedDetails(e.target.value)} value={revokedDetails} />
                         </div>
                       )
                     }
@@ -983,7 +982,7 @@ export default function MyApplication () {
                     <div className="col-lg-11 col-12 mt-3">
                       <div class="form-check form-switch">
                         <label class="form-check-label" htmlFor="violation">Do you have any violation on you PSP from previous three years? If so please explain:</label>
-                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={violations} onClick={( e ) => setViolations( e.target.checked )} />
+                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={violations} onClick={(e) => setViolations(e.target.checked)} />
                       </div>
                     </div>
                     {/* violation details */}
@@ -991,7 +990,7 @@ export default function MyApplication () {
                       violations && (
                         <div className="col-lg-11 col-12 mt-3">
                           <label htmlFor="exampleFormControlTextarea1" class="form-label">Violation Details:</label>
-                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => setViolationsDetails( e.target.value )} value={violationsDetails} />
+                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => setViolationsDetails(e.target.value)} value={violationsDetails} />
                         </div>
                       )
                     }
@@ -999,7 +998,7 @@ export default function MyApplication () {
                     <div className="col-lg-11 col-12 mt-3">
                       <div class="form-check form-switch">
                         <label class="form-check-label" htmlFor="violation">Have you had any tickets in the previous 5 years?</label>
-                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={tickets} onClick={( e ) => set_tickets( e.target.checked )} />
+                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={tickets} onClick={(e) => set_tickets(e.target.checked)} />
                       </div>
                     </div>
                     {/* 5 years tickets details*/}
@@ -1007,7 +1006,7 @@ export default function MyApplication () {
                       tickets && (
                         <div className="col-lg-11 col-12 mt-3">
                           <label htmlFor="exampleFormControlTextarea1" class="form-label">If so, please explain:</label>
-                          <textarea class="form-control" name="any_tickets" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => set_ticketsDetails( e.target.value )} value={ticketsDetails}></textarea>
+                          <textarea class="form-control" name="any_tickets" id="exampleFormControlTextarea1" rows="3" onChange={(e) => set_ticketsDetails(e.target.value)} value={ticketsDetails}></textarea>
                         </div>
                       )
                     }
@@ -1016,7 +1015,7 @@ export default function MyApplication () {
                     <div className="col-lg-11 col-12 mt-3">
                       <div class="form-check form-switch">
                         <label class="form-check-label" htmlFor="violation">Have you ever refused to be tested or had a positive drug/alcohol test?</label>
-                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={drugTest} onClick={( e ) => set_drugTest( e.target.checked )} />
+                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={drugTest} onClick={(e) => set_drugTest(e.target.checked)} />
                       </div>
                     </div>
 
@@ -1025,7 +1024,7 @@ export default function MyApplication () {
                       drugTest && (
                         <div className="col-lg-11 col-12 mt-3">
                           <label htmlFor="exampleFormControlTextarea1" class="form-label">if so, explain here:</label>
-                          <textarea class="form-control" name="refused" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => set_drugTestDetails( e.target.value )} value={drugTestDetails}></textarea>
+                          <textarea class="form-control" name="refused" id="exampleFormControlTextarea1" rows="3" onChange={(e) => set_drugTestDetails(e.target.value)} value={drugTestDetails}></textarea>
                         </div>
                       )
                     }
@@ -1049,7 +1048,7 @@ export default function MyApplication () {
 };
 
 
-MyApplication.getLayout = function getLayout ( page ) {
+MyApplication.getLayout = function getLayout(page) {
   return (
     <FullLayout>
       {page}
