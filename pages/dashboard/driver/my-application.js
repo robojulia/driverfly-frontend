@@ -572,7 +572,7 @@ export default function MyApplication() {
       <div className={style.application_container}>
 
         <div>
-          <div className='container-fluid'>
+          <div className='container-fluid p-0'>
             <form className="modal-body" onSubmit={acc_form.handleSubmit}>
               <h2>My Application</h2>
               <div className="row">
@@ -800,9 +800,9 @@ export default function MyApplication() {
                     {equipments.map((eq) => {
                       return (
                         <div key={eq.id}>
-                          <div className='row px-5'>
+                          <div className='row px-lg-5'>
                             <BaseInput
-                              className="col"
+                              className="col-md-6"
                               label="Type :"
                               placeholder="Equipment Type"
                               value={eq.type}
