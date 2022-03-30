@@ -1006,7 +1006,7 @@ export default function MyApplication() {
                   {/* accidents */}
                   <div className="col mt-3">
                     <label>Accidents within the last 5 years:</label>
-                    <input type="number" name="academy_year" className="form-control" placeholder="Accidents within the last 5 years:" onChange={(e) => set_accident_count(e.target.value)} value={accident_count} />
+                    <input type="number" name="academy_year" min={0} className="form-control" placeholder="Accidents within the last 5 years:" onChange={(e) => set_accident_count(e.target.value)} value={accident_count} />
                   </div>
                   {/* accident details */}
                   <div className="col mt-3 mt-17">
