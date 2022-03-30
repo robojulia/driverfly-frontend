@@ -715,18 +715,18 @@ export default function MyApplication() {
                   {/* CDL class types */}
                   <div className="col-12 mt-3">
                     <span className={style.lable}>CDL Class Type:</span>
-                    <select class="application_select form-select" name="cdl_class" aria-label="Default select example"
+                    <select class="application_select form-select" name="license_type" aria-label="Default select example"
                       value={acc_form.values.cdl_class}
                       onChange={acc_form.handleChange}
                     >
                       <option selected value="">CDL Class Type:</option>
                       {cdl_classes.map((cdl, index) => {
                         return (
-                          <option selected={acc_form.values.cdl_class === cdl.value} value={cdl.value} key={index}>{cdl.label}</option>
+                          <option selected={acc_form.values.license_type === cdl.value} value={cdl.value} key={index}>{cdl.label}</option>
                         )
                       })}
                     </select>
-                    {acc_form.touched.cdl_class && acc_form.errors.cdl_class ? <span className="text-danger small">{acc_form.errors.cdl_class}</span> : null}
+                    {acc_form.touched.license_type && acc_form.errors.license_type ? <span className="text-danger small">{acc_form.errors.license_type}</span> : null}
                   </div>
                   <BaseInput
                     className="col-12"
