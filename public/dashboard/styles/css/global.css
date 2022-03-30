@@ -388,6 +388,10 @@ textarea {
     margin-bottom: 34px;
 }
 
+.mt-34 {
+    margin-top: 34px;
+}
+
 .ml_5 {
     margin-left: 5px;
 }
@@ -414,6 +418,10 @@ textarea {
 
 .mt-48 {
     margin-top: 48px !important;
+}
+
+.mb-48 {
+    margin-bottom: 48px !important;
 }
 
 .btn-yellow {
