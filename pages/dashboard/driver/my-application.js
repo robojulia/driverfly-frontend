@@ -14,6 +14,7 @@ import CreatableSelect from 'react-select/creatable'
 import { ActionMeta, OnChangeValue } from 'react-select'
 
 import stateList from "../../../utils/stateList"
+import { Accordion } from "react-bootstrap"
 
 
 
@@ -822,7 +823,7 @@ export default function MyApplication() {
                       )
                     })}
                     <div className="row">
-                    <span className="btn btn-approved col-4 mt-2 ml-5" onClick={addEquipment}>+ more</span>
+                      <span className="btn btn-approved col-4 mt-2 ml-5" onClick={addEquipment}>+ more</span>
                     </div>
                   </div>
                 </div>
@@ -843,6 +844,20 @@ export default function MyApplication() {
           <hr />
 
           <div className='container-fluid'>
+            <Accordion>
+              <Accordion.Item eventKey="0">
+                <Accordion.Header>Accordion Item #1</Accordion.Header>
+                <Accordion.Body>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                  veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                  commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+                  velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+                  cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+                  est laborum.
+                </Accordion.Body>
+              </Accordion.Item>
+            </Accordion>
             <form onSubmit={postSecondForm}>
               <div className="row">
                 <div className="col-md-4 mt-lg-0 mt-3">
