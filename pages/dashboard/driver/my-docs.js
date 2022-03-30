@@ -258,9 +258,7 @@ export default function PrestoresDocuments() {
           progress: undefined,
         })
       }
-      setTimeout(() => {
-        set_isUploading(false)
-      }, 3000)
+      set_isUploading(false)
     } else {
       toast.error("Select atleast one file to upload", {
         position: "top-right",
