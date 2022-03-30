@@ -740,42 +740,6 @@ export default function MyApplication() {
                     onChange={acc_form.handleChange}
                     handleBlur={acc_form.handleBlur}
                   />
-                  <div className='row ml_5'>
-
-                    <span className="p-0">Equipment Experience</span> <br />
-                    {equipments.map((eq) => {
-
-                      return (
-
-                        <div key={eq.id}>
-                          <div className='row '>
-                            <BaseInput
-                              className="col"
-                              label="Type :"
-                              placeholder="Equipment Type"
-                              value={eq.type}
-                              onChange={(e) => setEquipmentType(eq.id, e.target.value)}
-                              name="equipment_type"
-                            />
-                            <BaseInput
-                              className="col"
-                              label="Years Experience:"
-                              type="number"
-                              onChange={(e) => setEquipmentExperience(eq.id, e.target.value)}
-                              value={eq.years}
-                              placeholder="Years Experience"
-                            />
-                          </div>
-                        </div>
-
-                      )
-                    })}
-                    <span className="btn btn-approved col-4 mt-2" onClick={addEquipment}>+ more</span>
-
-                  </div>
-
-
-
                 </div>
                 <div className="col-md-4">
                   {/* age limit */}
@@ -827,6 +791,41 @@ export default function MyApplication() {
                 </div>
 
 
+              </div>
+
+              <div className='row'>
+                <div className="col-md-12">
+                  <div className={style.account_container}>
+                    <span className="p-5">Equipment Experience</span> <br />
+                    {equipments.map((eq) => {
+                      return (
+                        <div key={eq.id}>
+                          <div className='row px-5'>
+                            <BaseInput
+                              className="col"
+                              label="Type :"
+                              placeholder="Equipment Type"
+                              value={eq.type}
+                              onChange={(e) => setEquipmentType(eq.id, e.target.value)}
+                              name="equipment_type"
+                            />
+                            <BaseInput
+                              className="col"
+                              label="Years Experience:"
+                              type="number"
+                              onChange={(e) => setEquipmentExperience(eq.id, e.target.value)}
+                              value={eq.years}
+                              placeholder="Years Experience"
+                            />
+                          </div>
+                        </div>
+                      )
+                    })}
+                    <div className="row">
+                    <span className="btn btn-approved col-4 mt-2 ml-5" onClick={addEquipment}>+ more</span>
+                    </div>
+                  </div>
+                </div>
               </div>
 
 
