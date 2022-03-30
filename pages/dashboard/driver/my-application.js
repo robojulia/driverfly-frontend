@@ -795,8 +795,8 @@ export default function MyApplication() {
 
               <div className='row'>
                 <div className="col-md-12">
-                  <div className={style.account_container}>
-                    <span className="p-5">Equipment Experience</span> <br />
+                  <div className={` mt-3  p-4 ${style.account_container}`}>
+                    <span>Equipment Experience</span> <br />
                     {equipments.map((eq) => {
                       return (
                         <div key={eq.id}>
@@ -821,9 +821,9 @@ export default function MyApplication() {
                         </div>
                       )
                     })}
-                    <div className="row">
-                    <span className="btn btn-approved col-4 mt-2 ml-5" onClick={addEquipment}>+ more</span>
-                    </div>
+                   
+                    <span className="btn btn-approved  mt-3" onClick={addEquipment}>+ more</span>
+                   
                   </div>
                 </div>
               </div>
