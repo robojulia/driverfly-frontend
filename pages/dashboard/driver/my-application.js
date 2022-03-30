@@ -399,18 +399,18 @@ export default function MyApplication() {
     }
     const violationsFetched = data.safety_questions.find(q => q.type === "VIOLATIONS_PSP")
     if (violationsFetched) {
-      setRevoked(violationsFetched.response)
-      setRevokedDetails(violationsFetched.details)
+      setViolations(violationsFetched.response)
+      setViolationsDetails(violationsFetched.details)
     }
     const tickets = data.safety_questions.find(q => q.type === "TICKETS")
     if (tickets) {
-      setRevoked(tickets.response)
-      setRevokedDetails(tickets.details)
+      set_tickets(tickets.response)
+      set_ticketsDetails(tickets.details)
     }
     const drugsFetched = data.safety_questions.find(q => q.type === "POSITIVE_DRUG_TEST")
     if (drugsFetched) {
-      setRevoked(drugsFetched.response)
-      setRevokedDetails(drugsFetched.details)
+      set_drugTest(drugsFetched.response)
+      set_drugTestDetails(drugsFetched.details)
     }
 
 
