@@ -119,11 +119,6 @@ export default function PrestoresDocuments() {
   }
 
   const deleteFile = async (type) => {
-    console.log('type', type)
-
-    const formData = new FormData()
-    formData.append('type', type)
-    console.log('formData', formData)
 
     try {
       const resp = await axios.delete(
@@ -133,7 +128,7 @@ export default function PrestoresDocuments() {
             'Authorization': `Bearer ${user.token}`
           },
           data: {
-            source: source
+            type: type
           }
         },
       )
