@@ -1019,7 +1019,14 @@ export default function MyApplication() {
                   {/* accident details */}
                   <div className="col mt-3 mt-17">
                     <label htmlFor="exampleFormControlTextarea1" class="form-label m-0">Accidents details:</label>
-                    <textarea class="form-control " name="accident_detail" id="exampleFormControlTextarea1" rows="3" onChange={(e) => set_accident_details(e.target.value)} value={accident_details}></textarea>
+                    <textarea
+                      disabled={accident_count == 0}
+                      class="form-control "
+                      name="accident_detail"
+                      id="exampleFormControlTextarea1"
+                      rows="3"
+                      onChange={(e) => set_accident_details(e.target.value)}
+                      value={accident_details}></textarea>
                   </div>
 
                   {/* col-2 */}
