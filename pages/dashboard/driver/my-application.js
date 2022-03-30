@@ -854,7 +854,7 @@ export default function MyApplication() {
                         return (
                           <div key={past.id}>
                             <Accordion.Item eventKey={index}>
-                              <Accordion.Header>Experience #{index + 1}</Accordion.Header>
+                              <Accordion.Header>{past.name}</Accordion.Header>
                               <Accordion.Body>
                                 {/* Last employer4 */}
                                 <div className="col mt-3">
