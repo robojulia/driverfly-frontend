@@ -183,6 +183,7 @@
         height: auto !important;
     }
 
+
     .sidebarArea ul {
         width: 100%;
     }
@@ -247,6 +248,10 @@
 
 .side_bar .bg-light {
     background-color: transparent !important;
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+    display: none;
 }
 
 /* Driver Dashboard  */
@@ -375,8 +380,6 @@ textarea {
     width: 30px;
 }
 
-
-
 .application_select {
     padding: 12px;
 }
@@ -430,3 +433,4 @@ textarea {
     color: #fff;
 
 }
+
