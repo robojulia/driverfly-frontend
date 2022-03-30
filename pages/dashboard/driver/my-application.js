@@ -417,7 +417,7 @@ export default function MyApplication() {
 
     const safety_details = data.safety_questions[0]
     if (safety_details) {
-      set_ticketsDetails(safety_details.details)
+      // set_ticketsDetails(safety_details.details)
 
     }
 
