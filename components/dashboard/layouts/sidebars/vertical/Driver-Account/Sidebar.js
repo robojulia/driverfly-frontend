@@ -82,15 +82,7 @@ export default function Sidebar() {
                 </span>
                 <Link href="/dashboard/driver/free-resources">Free Resources</Link>
               </li>
-
-              <li className={router.pathname == "/dashboard/driver/profile" ? "active" : ""}>
-                <span className="float-left">
-                  < AccountBoxIcon className="icon_left" />
-                </span>
-                <Link href="/dashboard/driver/profile">Profile</Link>
-              </li>
-
-              <li className={router.pathname == "/dashboard/driver/suggested-jobs" ? "active" : ""}>
+               <li className={router.pathname == "/dashboard/driver/suggested-jobs" ? "active" : ""}>
                 <span className="float-left">
                   < WorkHistoryIcon className="icon_left" />
                 </span>
