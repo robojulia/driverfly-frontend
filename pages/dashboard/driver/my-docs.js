@@ -133,7 +133,24 @@ export default function PrestoresDocuments() {
         },
       )
       console.log('resp', resp)
-      if (resp.status === 201) {
+      if (resp.status === 200) {
+
+        if (type == "DRIVER_LICENSE") {
+          setCanViewLicense(false)
+        }
+
+        if (type == "MEDICAL_CARD") {
+          setCanViewMedicalCard(false)
+        }
+
+        if (type == "RESUME") {
+          setCanViewResume(false)
+        }
+
+        if (type == "MVR") {
+          setCanViewMvr(false)
+        }
+
         toast.success("Documents deleted successfully", {
           position: "top-right",
           autoClose: 3000,
@@ -240,7 +257,7 @@ export default function PrestoresDocuments() {
                   canViewLicense &&
                   <>
                     <Button className="applied" onClick={() => viewFile("DRIVER_LICENSE")}>View</Button>
-                    <Button className="applied" onClick={() => deleteFile("DRIVER_LICENSE")}>Delete</Button>
+                    <Button className="btn_danger" onClick={() => deleteFile("DRIVER_LICENSE")}>Delete</Button>
                   </>
                 }
                 <input type="file" class="custom-file-input" onChange={(event) => upload(event, "DRIVER_LICENSE")} />
@@ -256,7 +273,7 @@ export default function PrestoresDocuments() {
                   canViewMedicalCard &&
                   <>
                     <Button className="applied" onClick={() => viewFile("MEDICAL_CARD")}>View</Button>
-                    <Button className="applied" onClick={() => deleteFile("MEDICAL_CARD")}>Delete</Button>
+                    <Button className="btn_danger" onClick={() => deleteFile("MEDICAL_CARD")}>Delete</Button>
                   </>
                 }
                 <input type="file" class="custom-file-input" onChange={(event) => upload(event, "MEDICAL_CARD")} />
@@ -274,7 +291,7 @@ export default function PrestoresDocuments() {
                   canViewResume &&
                   <>
                     <Button className="applied" onClick={() => viewFile("RESUME")}>View</Button>
-                    <Button className="applied" onClick={() => deleteFile("RESUME")}>Delete</Button>
+                    <Button className="btn_danger" onClick={() => deleteFile("RESUME")}>Delete</Button>
                   </>
                 }
                 <input type="file" class="custom-file-input" onChange={(event) => upload(event, "RESUME")} />
@@ -290,7 +307,7 @@ export default function PrestoresDocuments() {
                   canViewMvr &&
                   <>
                     <Button className="applied" onClick={() => viewFile("MVR")}>View</Button>
-                    <Button className="applied" onClick={() => deleteFile("MVR")}>Delete</Button>
+                    <Button className="btn_danger" onClick={() => deleteFile("MVR")}>Delete</Button>
                   </>
                 }
                 <input type="file" class="custom-file-input" onChange={(event) => upload(event, "MVR")} />
