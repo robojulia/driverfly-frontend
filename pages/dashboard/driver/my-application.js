@@ -578,7 +578,7 @@ export default function MyApplication() {
               <div className="row">
                 {/* Drivers Name */}
                 <div className="col-md-4">
-                  <BaseInput
+                  {/* <BaseInput
                     className="col-12"
                     label="Name:"
                     placeholder="Name"
@@ -588,9 +588,9 @@ export default function MyApplication() {
                     error={acc_form.errors.driver_name}
                     onChange={acc_form.handleChange}
                     handleBlur={acc_form.handleBlur}
-                  />
+                  /> */}
                   {/* Number */}
-                  <BaseInput
+                  {/* <BaseInput
                     className="col-12"
                     label="Number:"
                     placeholder=" Number"
@@ -601,8 +601,8 @@ export default function MyApplication() {
                     error={acc_form.errors.number}
                     onChange={acc_form.handleChange}
                     handleBlur={acc_form.handleBlur}
-                  />
-                  <BaseInput
+                  /> */}
+                  {/* <BaseInput
                     className="col-12"
                     label="Email:"
                     placeholder="Email"
@@ -613,7 +613,7 @@ export default function MyApplication() {
                     error={acc_form.errors.email}
                     onChange={acc_form.handleChange}
                     handleBlur={acc_form.handleBlur}
-                  />
+                  /> */}
                   <BaseInput
                     className="col-12"
                     label="Street:"
