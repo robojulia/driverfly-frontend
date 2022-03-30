@@ -79,7 +79,7 @@ export default function MyApplication() {
       // email: '',
       license_state: '',
       street: '',
-      cdl_class: '',
+      license_type: '',
       emergency_contact_number: '',
       city: '',
       years_cdl_experience: '',
@@ -89,18 +89,18 @@ export default function MyApplication() {
       emergency_contact_relationship: '',
     },
     validationSchema: yup.object({
-      license_number: yup.string().required("This field is required"),
-      license_expiry: yup.string().required("This field is required"),
-      highest_degree: yup.string().required("This field is required"),
-      license_state: yup.string().required("This field is required"),
-      street: yup.string().required("This field is required"),
-      cdl_class: yup.string().required("This field is required"),
-      emergency_contact_number: yup.string().required("This field is required"),
-      city: yup.string().required("This field is required"),
-      years_cdl_experience: yup.number().required("This field is required"),
-      zip_code: yup.string().required("This field is required"),
-      state: yup.string().required("This field is required"),
-      emergency_contact_relationship: yup.string().required("This field is required"),
+      license_number: yup.string().required("This field is required").nullable(),
+      license_expiry: yup.string().required("This field is required").nullable(),
+      highest_degree: yup.string().required("This field is required").nullable(),
+      license_state: yup.string().required("This field is required").nullable(),
+      street: yup.string().required("This field is required").nullable(),
+      license_type: yup.string().required("This field is required").nullable(),
+      emergency_contact_number: yup.string().required("This field is required").nullable(),
+      city: yup.string().required("This field is required").nullable(),
+      years_cdl_experience: yup.number().required("This field is required").nullable().min(0, "Please select 0 or above."),
+      zip_code: yup.string().required("This field is required").nullable(),
+      state: yup.string().required("This field is required").nullable(),
+      emergency_contact_relationship: yup.string().required("This field is required").nullable(),
     }),
     onSubmit: async (values) => {
       const data = {
@@ -142,6 +142,7 @@ export default function MyApplication() {
   })
 
   const [birthDate, set_birthDate] = useState("")
+  const [is21, setIs21] = useState(false)
 
   const [pastEmployers, set_pastEmployers] = useState([])
 
@@ -316,6 +317,14 @@ export default function MyApplication() {
     }))
 
     set_birthDate(data.birthdate)
+
+    setIs21(() => {
+      if (moment().diff(birthDate, "years") >= 21) {
+        return true
+      }
+      return false
+    })
+
     set_equipments(equipmentsFetched)
     console.log(data)
     acc_form.setValues({
@@ -324,7 +333,7 @@ export default function MyApplication() {
       highest_degree: data.highest_degree,
       license_state: data.license_state,
       street: data.street,
-      cdl_class: data.cdl_class,
+      license_type: data.license_type,
       emergency_contact_number: data.emergency_contact_number,
       city: data.city,
       years_cdl_experience: data.years_cdl_experience,
@@ -378,10 +387,9 @@ export default function MyApplication() {
     set_accident_details(data.accident_details)
     set_criminal_history(data.criminal_history)
 
-    if (data.dui_years.length) {
+    if (data.dui_years && data.dui_years.length) {
       set_dui_past_years(data.dui_years.map(y => createOption(y)))
     }
-
 
     const revokedFetched = data.safety_questions.find(q => q.type === "LICENSE_REVOKED")
     if (revokedFetched) {
@@ -431,14 +439,6 @@ export default function MyApplication() {
         e.preventDefault()
     }
   }
-
-  const is21 = () => {
-    if (moment().diff(birthDate, "years") >= 21) {
-      return true
-    }
-    return false
-  }
-
 
   const setEquipmentExperience = (id, value) => {
     const newArr = equipments.map(eq => {
@@ -782,7 +782,7 @@ export default function MyApplication() {
                   <div className="col-lg-4 col-12 mt-2 mb-34">
                     <div class="form-check form-switch mt-5">
                       <label class="form-check-label" htmlFor="age_limit">Above 21?</label>
-                      <input class="form-check-input" readOnly type="checkbox" checked={is21()} role="switch" id="age_limit" />
+                      <input class="form-check-input" readOnly type="checkbox" checked={is21} role="switch" id="age_limit" />
                     </div>
                   </div>
                   {/* Highest degree */}
@@ -921,7 +921,7 @@ export default function MyApplication() {
                             <label>Company Zip:</label>
                             <input type="text" name="companyZip" className="form-control" placeholder="Company Zip:" value={past.zip_code} onChange={(e) => setCompanyZipCode(past.id, e.target.value)} />
                           </div>
-                          
+
                           {/* authorize */}
                           <div className="col mt-3">
                             <div class="form-check form-switch">
@@ -956,149 +956,149 @@ export default function MyApplication() {
                     </div>
 
                   }
-                
+
                 </div>
 
                 {/* Safety column */}
                 <div className="col-md-4 mt-lg-0 mt-3">
                   <h2>Safety Background</h2>
-                 
-                  
-                      {/* drug test */}
-                      <div className="col mt-3">
-                        <div class="form-check form-switch mb-34 mt-55">
-                          <label class="form-check-label" htmlFor="drug_test">Can I pass a drug test?</label>
-                          <input checked={can_pass_drug_test} onClick={(e) => set_can_pass_drug_test(e.target.checked)} class="form-check-input" type="checkbox" role="switch" id="drug_test" />
-                        </div>
-                      </div>
-                      {/* DUI? */}
-                      <div className="col mt-3">
-                        <div class="form-check form-switch  mb-34 mt-60">
-                          <label class="form-check-label" htmlFor="DUI">Past DUI’s:</label>
-                          <input checked={has_past_dui} onClick={(e) => set_has_past_dui(e.target.checked)} class="form-check-input" type="checkbox" role="switch" id="DUI" />
-                        </div>
-                      </div>
-                      {/* PUI Date */}
-                      <div className="col mt-40">
-                        <label>Year(s) of Past DUI’s:</label>
-                        <CreatableSelect
 
-                          isMulti
-                          components={{
-                            DropdownIndicator: null,
-                          }}
-                          isClearable
-                          menuIsOpen={false}
-                          placeholder="Year(s) of Past DUI’s:"
-                          inputValue={dui_input_value}
-                          onInputChange={(value) => set_dui_input_value(value)}
-                          onChange={(value) => set_dui_past_years(value)}
-                          onKeyDown={handleKeyDown}
-                          value={dui_past_years}
-                          
-                        />
-                      </div>
-                      {/* criminal history */}
-                      <div className="col mt-3 mt-17">
-                        <label>Criminal History in last 3 years?</label>
-                        <input type="text" name="criminal_history" className="form-control" placeholder="Criminal History in last 3 years?" onChange={(e) => set_criminal_history(e.target.value)} value={criminal_history} />
-                      </div>
-                      {/* accidents */}
-                      <div className="col mt-3">
-                        <label>Accidents within the last 5 years:</label>
-                        <input type="number" name="academy_year" className="form-control" placeholder="Accidents within the last 5 years:" onChange={(e) => set_accident_count(e.target.value)} value={accident_count} />
-                      </div>
-                      {/* accident details */}
-                      <div className="col mt-3 mt-17">
-                        <label htmlFor="exampleFormControlTextarea1" class="form-label m-0">Accidents details:</label>
-                        <textarea class="form-control " name="accident_detail" id="exampleFormControlTextarea1" rows="3" onChange={(e) => set_accident_details(e.target.value)} value={accident_details}></textarea>
-                      </div>
-                    
-                    {/* col-2 */}
-                  
-                 
+
+                  {/* drug test */}
+                  <div className="col mt-3">
+                    <div class="form-check form-switch mb-34 mt-55">
+                      <label class="form-check-label" htmlFor="drug_test">Can I pass a drug test?</label>
+                      <input checked={can_pass_drug_test} onClick={(e) => set_can_pass_drug_test(e.target.checked)} class="form-check-input" type="checkbox" role="switch" id="drug_test" />
+                    </div>
+                  </div>
+                  {/* DUI? */}
+                  <div className="col mt-3">
+                    <div class="form-check form-switch  mb-34 mt-60">
+                      <label class="form-check-label" htmlFor="DUI">Past DUI’s:</label>
+                      <input checked={has_past_dui} onClick={(e) => set_has_past_dui(e.target.checked)} class="form-check-input" type="checkbox" role="switch" id="DUI" />
+                    </div>
+                  </div>
+                  {/* PUI Date */}
+                  <div className="col mt-40">
+                    <label>Year(s) of Past DUI’s:</label>
+                    <CreatableSelect
+
+                      isMulti
+                      components={{
+                        DropdownIndicator: null,
+                      }}
+                      isClearable
+                      menuIsOpen={false}
+                      placeholder="Year(s) of Past DUI’s:"
+                      inputValue={dui_input_value}
+                      onInputChange={(value) => set_dui_input_value(value)}
+                      onChange={(value) => set_dui_past_years(value)}
+                      onKeyDown={handleKeyDown}
+                      value={dui_past_years}
+
+                    />
+                  </div>
+                  {/* criminal history */}
+                  <div className="col mt-3 mt-17">
+                    <label>Criminal History in last 3 years?</label>
+                    <input type="text" name="criminal_history" className="form-control" placeholder="Criminal History in last 3 years?" onChange={(e) => set_criminal_history(e.target.value)} value={criminal_history} />
+                  </div>
+                  {/* accidents */}
+                  <div className="col mt-3">
+                    <label>Accidents within the last 5 years:</label>
+                    <input type="number" name="academy_year" className="form-control" placeholder="Accidents within the last 5 years:" onChange={(e) => set_accident_count(e.target.value)} value={accident_count} />
+                  </div>
+                  {/* accident details */}
+                  <div className="col mt-3 mt-17">
+                    <label htmlFor="exampleFormControlTextarea1" class="form-label m-0">Accidents details:</label>
+                    <textarea class="form-control " name="accident_detail" id="exampleFormControlTextarea1" rows="3" onChange={(e) => set_accident_details(e.target.value)} value={accident_details}></textarea>
+                  </div>
+
+                  {/* col-2 */}
+
+
                 </div>
                 <div className="col-md-4 border-0 text-end">
-                <div className="col mt-85 ">
-                      {/* license */}
-                      <div className="col mt-3">
-                        <div class="form-check form-switch">
-                          <label class="form-check-label" htmlFor="licence">Has any of your license, permit or privilege to operate a CMV ever been suspended or revoked? If so, please explain:</label>
-                          <input class="form-check-input" type="checkbox" role="switch" id="licence" checked={revoked} onClick={(e) => setRevoked(e.target.checked)} />
-                        </div>
+                  <div className="col mt-85 ">
+                    {/* license */}
+                    <div className="col mt-3">
+                      <div class="form-check form-switch">
+                        <label class="form-check-label" htmlFor="licence">Has any of your license, permit or privilege to operate a CMV ever been suspended or revoked? If so, please explain:</label>
+                        <input class="form-check-input" type="checkbox" role="switch" id="licence" checked={revoked} onClick={(e) => setRevoked(e.target.checked)} />
                       </div>
-                      {/* revoked details */}
-                      {
-                        revoked && (
-                          <div className="col mt-3">
-                            <label htmlFor="exampleFormControlTextarea1" class="form-label">Details:</label>
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => setRevokedDetails(e.target.value)} value={revokedDetails} />
-                          </div>
-                        )
-                      }
-                      {/* violation */}
-                      <div className="col mt-34 ">
-                        <div class="form-check form-switch">
-                          <label class="form-check-label" htmlFor="violation">Do you have any violation on you PSP from previous three years? If so please explain:</label>
-                          <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={violations} onClick={(e) => setViolations(e.target.checked)} />
-                        </div>
-                      </div>
-                      {/* violation details */}
-                      {
-                        violations && (
-                          <div className="col mt-48">
-                            <label htmlFor="exampleFormControlTextarea1" class="form-label">Violation Details:</label>
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => setViolationsDetails(e.target.value)} value={violationsDetails} />
-                          </div>
-                        )
-                      }
-                      {/* 5 years tickets */}
-                      <div className="col mt-48">
-                        <div class="form-check form-switch">
-                          <label class="form-check-label" htmlFor="violation">Have you had any tickets in the previous 5 years?</label>
-                          <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={tickets} onClick={(e) => set_tickets(e.target.checked)} />
-                        </div>
-                      </div>
-                      {/* 5 years tickets details*/}
-                      {
-                        tickets && (
-                          <div className="col mt-48">
-                            <label htmlFor="exampleFormControlTextarea1" class="form-label">If so, please explain:</label>
-                            <textarea class="form-control" name="any_tickets" id="exampleFormControlTextarea1" rows="3" onChange={(e) => set_ticketsDetails(e.target.value)} value={ticketsDetails}></textarea>
-                          </div>
-                        )
-                      }
-
-                      {/* drug test */}
-                      <div className="col">
-                        <div class="form-check form-switch  mt-55">
-                          <label class="form-check-label" htmlFor="violation">Have you ever refused to be tested or had a positive drug/alcohol test?</label>
-                          <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={drugTest} onClick={(e) => set_drugTest(e.target.checked)} />
-                        </div>
-                      </div>
-
-                      {/* drug test details */}
-                      {
-                        drugTest && (
-                          <div className="col mt-3">
-                            <label htmlFor="exampleFormControlTextarea1" class="form-label">if so, explain here:</label>
-                            <textarea class="form-control" name="refused" id="exampleFormControlTextarea1" rows="3" onChange={(e) => set_drugTestDetails(e.target.value)} value={drugTestDetails}></textarea>
-                          </div>
-                        )
-                      }
                     </div>
-                 
+                    {/* revoked details */}
+                    {
+                      revoked && (
+                        <div className="col mt-3">
+                          <label htmlFor="exampleFormControlTextarea1" class="form-label">Details:</label>
+                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => setRevokedDetails(e.target.value)} value={revokedDetails} />
+                        </div>
+                      )
+                    }
+                    {/* violation */}
+                    <div className="col mt-34 ">
+                      <div class="form-check form-switch">
+                        <label class="form-check-label" htmlFor="violation">Do you have any violation on you PSP from previous three years? If so please explain:</label>
+                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={violations} onClick={(e) => setViolations(e.target.checked)} />
+                      </div>
+                    </div>
+                    {/* violation details */}
+                    {
+                      violations && (
+                        <div className="col mt-48">
+                          <label htmlFor="exampleFormControlTextarea1" class="form-label">Violation Details:</label>
+                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => setViolationsDetails(e.target.value)} value={violationsDetails} />
+                        </div>
+                      )
+                    }
+                    {/* 5 years tickets */}
+                    <div className="col mt-48">
+                      <div class="form-check form-switch">
+                        <label class="form-check-label" htmlFor="violation">Have you had any tickets in the previous 5 years?</label>
+                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={tickets} onClick={(e) => set_tickets(e.target.checked)} />
+                      </div>
+                    </div>
+                    {/* 5 years tickets details*/}
+                    {
+                      tickets && (
+                        <div className="col mt-48">
+                          <label htmlFor="exampleFormControlTextarea1" class="form-label">If so, please explain:</label>
+                          <textarea class="form-control" name="any_tickets" id="exampleFormControlTextarea1" rows="3" onChange={(e) => set_ticketsDetails(e.target.value)} value={ticketsDetails}></textarea>
+                        </div>
+                      )
+                    }
+
+                    {/* drug test */}
+                    <div className="col">
+                      <div class="form-check form-switch  mt-55">
+                        <label class="form-check-label" htmlFor="violation">Have you ever refused to be tested or had a positive drug/alcohol test?</label>
+                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={drugTest} onClick={(e) => set_drugTest(e.target.checked)} />
+                      </div>
+                    </div>
+
+                    {/* drug test details */}
+                    {
+                      drugTest && (
+                        <div className="col mt-3">
+                          <label htmlFor="exampleFormControlTextarea1" class="form-label">if so, explain here:</label>
+                          <textarea class="form-control" name="refused" id="exampleFormControlTextarea1" rows="3" onChange={(e) => set_drugTestDetails(e.target.value)} value={drugTestDetails}></textarea>
+                        </div>
+                      )
+                    }
+                  </div>
+
                 </div>
                 <div className="col-md-12 border-0 text-end">
-                <div className="col">
-                <button
-                    type="submit" className={`  ${style.update_btn}`} >
+                  <div className="col">
+                    <button
+                      type="submit" className={`  ${style.update_btn}`} >
 
-                    Update
-                  </button>
+                      Update
+                    </button>
                   </div>
-                  </div>
-               
+                </div>
+
               </div>
             </form>
           </div>
