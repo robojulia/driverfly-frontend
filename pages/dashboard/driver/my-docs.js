@@ -118,6 +118,51 @@ export default function PrestoresDocuments() {
     setShowModal(true)
   }
 
+  const deleteFile = async (type) => {
+    console.log('type', type)
+
+    const formData = new FormData()
+    formData.append('type', type)
+    console.log('formData', formData)
+
+    try {
+      const resp = await axios.delete(
+        `${process.env.BASE_URL_API}/user/documents`,
+        {
+          headers: {
+            'Authorization': `Bearer ${user.token}`
+          },
+          data: {
+            source: source
+          }
+        },
+      )
+      console.log('resp', resp)
+      if (resp.status === 201) {
+        toast.success("Documents deleted successfully", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
+      }
+    } catch (error) {
+      console.log('error', error)
+      toast.error("Something Went Wrong", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
+    }
+  }
+
   const submitHandler = async (e) => {
     e.preventDefault()
     const formData = new FormData()
@@ -198,7 +243,10 @@ export default function PrestoresDocuments() {
                 <h3>Driver's License</h3>
                 {
                   canViewLicense &&
-                  <Button className="applied" onClick={() => viewFile("DRIVER_LICENSE")}>View</Button>
+                  <>
+                    <Button className="applied" onClick={() => viewFile("DRIVER_LICENSE")}>View</Button>
+                    <Button className="applied" onClick={() => deleteFile("DRIVER_LICENSE")}>Delete</Button>
+                  </>
                 }
                 <input type="file" class="custom-file-input" onChange={(event) => upload(event, "DRIVER_LICENSE")} />
                 {/* <Link href="#">
@@ -211,7 +259,10 @@ export default function PrestoresDocuments() {
                 <h3>Medical Card</h3>
                 {
                   canViewMedicalCard &&
-                  <Button className="applied" onClick={() => viewFile("MEDICAL_CARD")}>View</Button>
+                  <>
+                    <Button className="applied" onClick={() => viewFile("MEDICAL_CARD")}>View</Button>
+                    <Button className="applied" onClick={() => deleteFile("MEDICAL_CARD")}>Delete</Button>
+                  </>
                 }
                 <input type="file" class="custom-file-input" onChange={(event) => upload(event, "MEDICAL_CARD")} />
                 {/* <Link href="#">
@@ -226,7 +277,10 @@ export default function PrestoresDocuments() {
                 <h3>Resume</h3>
                 {
                   canViewResume &&
-                  <Button className="applied" onClick={() => viewFile("RESUME")}>View</Button>
+                  <>
+                    <Button className="applied" onClick={() => viewFile("RESUME")}>View</Button>
+                    <Button className="applied" onClick={() => deleteFile("RESUME")}>Delete</Button>
+                  </>
                 }
                 <input type="file" class="custom-file-input" onChange={(event) => upload(event, "RESUME")} />
                 {/* <Link href="#">
@@ -239,7 +293,10 @@ export default function PrestoresDocuments() {
                 <h3>Motor Vehicle Record (MVR)</h3>
                 {
                   canViewMvr &&
-                  <Button className="applied" onClick={() => viewFile("MVR")}>View</Button>
+                  <>
+                    <Button className="applied" onClick={() => viewFile("MVR")}>View</Button>
+                    <Button className="applied" onClick={() => deleteFile("MVR")}>Delete</Button>
+                  </>
                 }
                 <input type="file" class="custom-file-input" onChange={(event) => upload(event, "MVR")} />
                 {/* <Link href="#">
