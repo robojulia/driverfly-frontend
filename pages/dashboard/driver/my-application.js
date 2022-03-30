@@ -844,125 +844,119 @@ export default function MyApplication() {
           <hr />
 
           <div className='container-fluid'>
-            <Accordion>
-              <Accordion.Item eventKey="0">
-                <Accordion.Header>Accordion Item #1</Accordion.Header>
-                <Accordion.Body>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                  veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                  commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-                  velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                  cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-                  est laborum.
-                </Accordion.Body>
-              </Accordion.Item>
-            </Accordion>
             <form onSubmit={postSecondForm}>
               <div className="row">
                 <div className="col-md-4 mt-lg-0 mt-3">
                   <h2>Past Employment</h2>
-                  {
-                    pastEmployers.map((past) => {
-                      return (
-                        <div key={past.id}>
-                          {/* Last employer4 */}
-                          <div className="col mt-3">
-                            <label>Last Employer:</label>
-                            <input value={past.name} name="last_emp" type="text" className="form-control" placeholder="Last Employer:" onChange={(e) => setCompanyName(past.id, e.target.value)} />
-                          </div>
-                          {/* Date employed */}
-                          <div className="col mt-3">
-                            <label>Date Employed:</label>
-                            <div className="d-flex align-items-center">
-                              <input onChange={(e) => setCompanyStartDate(past.id, e.target.value)} value={past.start_at} name="sta_date" type="date" className="form-control" /> <p className="mx-2">to</p>
-                              <input onChange={(e) => setCompanyEndDate(past.id, e.target.value)} value={past.end_at} name="sta_date" type="date" className="form-control" />
-                            </div>
-                          </div>
-                          {/* position title */}
-                          <div className="col mt-3">
-                            <label>Position Title:</label>
-                            <input onChange={(e) => setCompanyTitle(past.id, e.target.value)} value={past.title} type="text" name="position_title" className="form-control" placeholder="Position Title:" />
-                          </div>
-                          {/* company address */}
-                          {/* <h5 className="my-2">Company Address</h5> */}
-                          <div className="col mt-3">
-                            <label>Company Address:</label>
-                            <input onChange={(e) => setCompanyTitle(past.id, e.target.value)} value={past.title} type="text" name="compant_address" className="form-control" placeholder=" Company Address:" />
-                          </div>
-                          {/* company phone */}
-                          <div className="col mt-3">
-                            <label>Company Phone:</label>
-                            <input value={past.phone} type="text" name="phone" className="form-control" placeholder="Company Phone:" onChange={(e) => setCompanyPhone(past.id, e.target.value)} />
-                          </div>
+                  <Accordion defaultActiveKey="0">
+                    {
+                      pastEmployers.map((past, index) => {
+                        return (
+                          <div key={past.id}>
+                            <Accordion.Item eventKey={index}>
+                              <Accordion.Header>Experience #{index + 1}</Accordion.Header>
+                              <Accordion.Body>
+                                {/* Last employer4 */}
+                                <div className="col mt-3">
+                                  <label>Last Employer:</label>
+                                  <input value={past.name} name="last_emp" type="text" className="form-control" placeholder="Last Employer:" onChange={(e) => setCompanyName(past.id, e.target.value)} />
+                                </div>
+                                {/* Date employed */}
+                                <div className="col mt-3">
+                                  <label>Date Employed:</label>
+                                  <div className="d-flex align-items-center">
+                                    <input onChange={(e) => setCompanyStartDate(past.id, e.target.value)} value={past.start_at} name="sta_date" type="date" className="form-control" /> <p className="mx-2">to</p>
+                                    <input onChange={(e) => setCompanyEndDate(past.id, e.target.value)} value={past.end_at} name="sta_date" type="date" className="form-control" />
+                                  </div>
+                                </div>
+                                {/* position title */}
+                                <div className="col mt-3">
+                                  <label>Position Title:</label>
+                                  <input onChange={(e) => setCompanyTitle(past.id, e.target.value)} value={past.title} type="text" name="position_title" className="form-control" placeholder="Position Title:" />
+                                </div>
+                                {/* company address */}
+                                {/* <h5 className="my-2">Company Address</h5> */}
+                                <div className="col mt-3">
+                                  <label>Company Address:</label>
+                                  <input onChange={(e) => setCompanyTitle(past.id, e.target.value)} value={past.title} type="text" name="compant_address" className="form-control" placeholder=" Company Address:" />
+                                </div>
+                                {/* company phone */}
+                                <div className="col mt-3">
+                                  <label>Company Phone:</label>
+                                  <input value={past.phone} type="text" name="phone" className="form-control" placeholder="Company Phone:" onChange={(e) => setCompanyPhone(past.id, e.target.value)} />
+                                </div>
 
 
-                          {/* company street */}
-                          <div className="col mt-3">
-                            <label>Street:</label>
-                            <input type="text" name="companyStreet" className="form-control" placeholder="Company Street:" value={past.street} onChange={(e) => setCompanyStreet(past.id, e.target.value)} />
-                          </div>
-                          {/* company city */}
-                          <div className="col mt-3">
-                            <label>City:</label>
-                            <input type="text" name="companyCity" className="form-control" placeholder="Company City:" value={past.city} onChange={(e) => setCompanyCity(past.id, e.target.value)} />
-                          </div>
-                          {/* company state */}
-                          {/* <div className="col mt-3">
+                                {/* company street */}
+                                <div className="col mt-3">
+                                  <label>Street:</label>
+                                  <input type="text" name="companyStreet" className="form-control" placeholder="Company Street:" value={past.street} onChange={(e) => setCompanyStreet(past.id, e.target.value)} />
+                                </div>
+                                {/* company city */}
+                                <div className="col mt-3">
+                                  <label>City:</label>
+                                  <input type="text" name="companyCity" className="form-control" placeholder="Company City:" value={past.city} onChange={(e) => setCompanyCity(past.id, e.target.value)} />
+                                </div>
+                                {/* company state */}
+                                {/* <div className="col mt-3">
                           <label>State:</label>
                           <input type="text" name="companyState" className="form-control" placeholder="Company State:" value={past.state} onChange={( e ) => setCompanyState( past.id, e.target.value )} />
                         </div> */}
-                          <div className="col mt-3">
-                            <label>State:</label>
-                            <select class="application_select form-select" name="state" aria-label="Default select example"
-                              value={past.state}
-                              onChange={(e) => setCompanyState(past.id, e.target.value)}
-                            >
-                              <option selected value="">State Issued:</option>
-                              {stateList.map((state, index) => {
-                                return (
-                                  <option
-                                    key={index}
-                                    selected={past.state === state.value}
-                                    value={state.value}
-                                  >{state.label}</option>
-                                )
-                              })}
-                            </select>
-                          </div>
-                          {/* company zip */}
-                          <div className="col mt-3">
-                            <label>Company Zip:</label>
-                            <input type="text" name="companyZip" className="form-control" placeholder="Company Zip:" value={past.zip_code} onChange={(e) => setCompanyZipCode(past.id, e.target.value)} />
-                          </div>
+                                <div className="col mt-3">
+                                  <label>State:</label>
+                                  <select class="application_select form-select" name="state" aria-label="Default select example"
+                                    value={past.state}
+                                    onChange={(e) => setCompanyState(past.id, e.target.value)}
+                                  >
+                                    <option selected value="">State Issued:</option>
+                                    {stateList.map((state, index) => {
+                                      return (
+                                        <option
+                                          key={index}
+                                          selected={past.state === state.value}
+                                          value={state.value}
+                                        >{state.label}</option>
+                                      )
+                                    })}
+                                  </select>
+                                </div>
+                                {/* company zip */}
+                                <div className="col mt-3">
+                                  <label>Company Zip:</label>
+                                  <input type="text" name="companyZip" className="form-control" placeholder="Company Zip:" value={past.zip_code} onChange={(e) => setCompanyZipCode(past.id, e.target.value)} />
+                                </div>
 
-                          {/* authorize */}
-                          <div className="col mt-3">
-                            <div class="form-check form-switch">
-                              <label class="form-check-label" htmlFor="authorize">Do you authorize prospective employers to contact this company?</label>
-                              {/* onClick={( e ) => set_can_contact( e.target.checked )} */}
-                              <input class="form-check-input" type="checkbox" role="switch" id="authorize" checked={past.can_contact} onClick={(e) => setCompanyCanContact(past.id, e.target.checked)} />
-                            </div>
-                          </div>
-                          {/* FMCSRs */}
-                          <div className="col mt-3">
-                            <div class="form-check form-switch">
-                              <label class="form-check-label" htmlFor="FMCSRs">Were you subject to the FMCSRs?</label>
-                              <input checked={past.is_subject_to_fmcsrs} class="form-check-input" type="checkbox" role="switch" id="FMCSRs" onClick={(e) => setCompanyIsSubjectToFmcsrs(past.id, e.target.checked)} />
-                            </div>
-                          </div>
-                          {/* is_subject_to_drug_tests */}
-                          <div className="col mt-3">
-                            <div class="form-check form-switch">
-                              <label class="form-check-label" htmlFor="is_subject_to_drug_tests">Was your job designated as a safety-sensitive function in any DOT- regulated mode subject to the drug and alcohol testing requirements of 49 CFR Part 40?</label>
-                              <input checked={past.is_subject_to_drug_tests} class="form-check-input" type="checkbox" role="switch" id="is_subject_to_drug_tests" onClick={(e) => setCompanyIsSubjectToDrugTests(past.id, e.target.checked)} />
-                            </div>
-                          </div>
+                                {/* authorize */}
+                                <div className="col mt-3">
+                                  <div class="form-check form-switch">
+                                    <label class="form-check-label" htmlFor="authorize">Do you authorize prospective employers to contact this company?</label>
+                                    {/* onClick={( e ) => set_can_contact( e.target.checked )} */}
+                                    <input class="form-check-input" type="checkbox" role="switch" id="authorize" checked={past.can_contact} onClick={(e) => setCompanyCanContact(past.id, e.target.checked)} />
+                                  </div>
+                                </div>
+                                {/* FMCSRs */}
+                                <div className="col mt-3">
+                                  <div class="form-check form-switch">
+                                    <label class="form-check-label" htmlFor="FMCSRs">Were you subject to the FMCSRs?</label>
+                                    <input checked={past.is_subject_to_fmcsrs} class="form-check-input" type="checkbox" role="switch" id="FMCSRs" onClick={(e) => setCompanyIsSubjectToFmcsrs(past.id, e.target.checked)} />
+                                  </div>
+                                </div>
+                                {/* is_subject_to_drug_tests */}
+                                <div className="col mt-3">
+                                  <div class="form-check form-switch">
+                                    <label class="form-check-label" htmlFor="is_subject_to_drug_tests">Was your job designated as a safety-sensitive function in any DOT- regulated mode subject to the drug and alcohol testing requirements of 49 CFR Part 40?</label>
+                                    <input checked={past.is_subject_to_drug_tests} class="form-check-input" type="checkbox" role="switch" id="is_subject_to_drug_tests" onClick={(e) => setCompanyIsSubjectToDrugTests(past.id, e.target.checked)} />
+                                  </div>
+                                </div>
+                              </Accordion.Body>
+                            </Accordion.Item>
 
-                        </div>
-                      )
-                    })
-                  }
+                          </div>
+                        )
+                      })
+                    }
+                  </Accordion>
+
                   {
                     pastEmployers.length < 3 &&
                     <div className="col mt-3">
