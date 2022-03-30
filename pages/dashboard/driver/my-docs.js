@@ -14,122 +14,144 @@ import FullLayout from "../../../components/dashboard/layouts/FullLayout"
 import useAuth from "../../../hooks/useAuth"
 
 
-export default function PrestoresDocuments () {
+export default function PrestoresDocuments() {
 
   const { authCheck } = useAuth()
   const user = authCheck()
 
   const defaultLayoutPluginInstance = defaultLayoutPlugin()
 
-  const [showModal, setShowModal] = useState( false )
-  const [pdfModalTxt, set_pdfModalTxt] = useState( "" )
-  const [pdfModalURL, set_pdfModalURL] = useState( "" )
+  const [showModal, setShowModal] = useState(false)
+  const [pdfModalTxt, set_pdfModalTxt] = useState("")
+  const [pdfModalURL, set_pdfModalURL] = useState("")
 
-  const [isUploading, set_isUploading] = useState( false )
+  const [isUploading, set_isUploading] = useState(false)
 
 
-  const [resume, setResume] = useState( null )
-  const [license, set_license] = useState( null )
-  const [medical_card, set_medical_card] = useState( null )
-  const [mvr, set_mvr] = useState( null )
+  const [resume, setResume] = useState(null)
+  const [canViewResume, setCanViewResume] = useState(false)
+  const [license, set_license] = useState(null)
+  const [canViewLicense, setCanViewLicense] = useState(false)
+  const [medical_card, set_medical_card] = useState(null)
+  const [canViewMedicalCard, setCanViewMedicalCard] = useState(false)
+  const [mvr, set_mvr] = useState(null)
+  const [canViewMvr, setCanViewMvr] = useState(false)
 
-  function upload ( event, type ) {
-    if ( event.target.files && event.target.files[0] ) {
+  function upload(event, type) {
+    if (event.target.files && event.target.files[0]) {
       const file = event.target.files[0]
-      if ( type === 'DRIVER_LICENSE' ) {
-        set_license( file )
+      if (type === 'DRIVER_LICENSE') {
+        set_license(file)
       }
-      if ( type === 'MEDICAL_CARD' ) {
-        set_medical_card( file )
+      if (type === 'MEDICAL_CARD') {
+        set_medical_card(file)
       }
-      if ( type === 'RESUME' ) {
-        setResume( file )
+      if (type === 'RESUME') {
+        setResume(file)
       }
-      if ( type === 'MVR' ) {
-        set_mvr( file )
+      if (type === 'MVR') {
+        set_mvr(file)
       }
     }
   }
 
-  const [fetchedData, set_fetchedData] = useState( [] )
+  const [fetchedData, set_fetchedData] = useState([])
 
-  useEffect( async () => {
-    const { data } = await axios.get( `${process.env.BASE_URL_API}/user/uploaded/documents`, {
+  useEffect(async () => {
+    const { data } = await axios.get(`${process.env.BASE_URL_API}/user/uploaded/documents`, {
       headers: {
         Authorization: `Bearer ${user.token}`
       }
-    } )
-    set_fetchedData( data )
-  }, [] )
+    })
+    set_fetchedData(data)
+
+    const file_RESUME = data.find((item) => item.type === "RESUME")
+    if (file_RESUME) {
+      setCanViewResume(true)
+    }
+
+    const file_MEDICAL_CARD = data.find((item) => item.type === "MEDICAL_CARD")
+    if (file_MEDICAL_CARD) {
+      setCanViewMedicalCard(true)
+    }
+
+    const file_DRIVER_LICENSE = data.find((item) => item.type === "DRIVER_LICENSE")
+    if (file_DRIVER_LICENSE) {
+      setCanViewLicense(true)
+    }
+
+    const file_MVR = data.find((item) => item.type === "MVR")
+    if (file_MVR) {
+      setCanViewMvr(true)
+    }
 
 
-  const viewFile = ( str ) => {
+
+  }, [])
+
+
+  const viewFile = (str) => {
     let txt
     let url
-    if ( str == "RESUME" ) {
-      const file = fetchedData.find( ( item ) => item.type === "RESUME" )
+    if (str == "RESUME") {
+      const file = fetchedData.find((item) => item.type === "RESUME")
       url = file ? file.path : ""
       txt = "Resume"
     }
-    if ( str == "MEDICAL_CARD" ) {
-      const file = fetchedData.find( ( item ) => item.type === "MEDICAL_CARD" )
+    if (str == "MEDICAL_CARD") {
+      const file = fetchedData.find((item) => item.type === "MEDICAL_CARD")
       url = file ? file.path : ""
       txt = "Medical Card"
     }
-    if ( str == "DRIVER_LICENSE" ) {
-      const file = fetchedData.find( ( item ) => item.type === "DRIVER_LICENSE" )
+    if (str == "DRIVER_LICENSE") {
+      const file = fetchedData.find((item) => item.type === "DRIVER_LICENSE")
       url = file ? file.path : ""
       txt = "Driver's License"
     }
-    if ( str == "MVR" ) {
-      const file = fetchedData.find( ( item ) => item.type === "MVR" )
+    if (str == "MVR") {
+      const file = fetchedData.find((item) => item.type === "MVR")
       url = file ? file.path : ""
       txt = "Motor Vehicle Record"
     }
-    set_pdfModalTxt( txt )
-    set_pdfModalURL( url )
-    setShowModal( true )
+    set_pdfModalTxt(txt)
+    set_pdfModalURL(url)
+    setShowModal(true)
   }
 
-  const submitHandler = async ( e ) => {
-    e.preventDefault()
-    const formData = new FormData()
-    if ( resume ) {
-      formData.append( 'resume', resume )
-    }
-    if ( license ) {
-      formData.append( 'commercial_driving_license', license )
-    }
-    if ( medical_card ) {
-      formData.append( 'medical_card', medical_card )
-    }
-    if ( mvr ) {
-      formData.append( 'mvr_record', mvr )
-    }
-    // make sure user can not make api call with empty form data
-    if ( resume || license || medical_card || mvr ) {
-      try {
-        set_isUploading( true )
-        const resp = await axios.post( `${process.env.BASE_URL_API}/user/documents`, formData, {
+  const deleteFile = async (type) => {
+
+    try {
+      const resp = await axios.delete(
+        `${process.env.BASE_URL_API}/user/documents`,
+        {
           headers: {
-            'Content-Type': 'multipart/form-data',
             'Authorization': `Bearer ${user.token}`
+          },
+          data: {
+            type
           }
-        } )
-        if ( resp.status === 201 ) {
-          set_isUploading( false )
-          toast.success( "Documents uploaded successfully", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          } )
+        },
+      )
+
+      if (resp.status === 200) {
+
+        if (type == "DRIVER_LICENSE") {
+          setCanViewLicense(false)
         }
-      } catch ( error ) {
-        toast.error( "Something Went Wrong", {
+
+        if (type == "MEDICAL_CARD") {
+          setCanViewMedicalCard(false)
+        }
+
+        if (type == "RESUME") {
+          setCanViewResume(false)
+        }
+
+        if (type == "MVR") {
+          setCanViewMvr(false)
+        }
+
+        toast.success("Documents deleted successfully", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -137,10 +159,10 @@ export default function PrestoresDocuments () {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-        } )
+        })
       }
-    } else {
-      toast.error( "Select atleast one file to upload", {
+    } catch (error) {
+      toast.error("Something Went Wrong", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -148,7 +170,107 @@ export default function PrestoresDocuments () {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-      } )
+      })
+    }
+  }
+
+  const submitHandler = async (e) => {
+    e.preventDefault()
+    const formData = new FormData()
+    if (resume) {
+      formData.append('resume', resume)
+    }
+    if (license) {
+      formData.append('commercial_driving_license', license)
+    }
+    if (medical_card) {
+      formData.append('medical_card', medical_card)
+    }
+    if (mvr) {
+      formData.append('mvr_record', mvr)
+    }
+
+    // make sure user can not make api call with empty form data
+    if (resume || license || medical_card || mvr) {
+      try {
+        set_isUploading(true)
+        const resp = await axios.post(`${process.env.BASE_URL_API}/user/documents`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': `Bearer ${user.token}`
+          }
+        })
+
+        if (resp.status === 201) {
+          let { data } = resp
+          toast.success("Documents uploaded successfully", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          })
+          set_license(null)
+          set_medical_card(null)
+          setResume(null)
+          set_mvr(null)
+
+          const file_RESUME = data.find((item) => item.type === "RESUME")
+          if (file_RESUME) {
+            setCanViewResume(true)
+          } else {
+            setCanViewResume(false)
+          }
+
+          const file_MEDICAL_CARD = data.find((item) => item.type === "MEDICAL_CARD")
+          if (file_MEDICAL_CARD) {
+            setCanViewMedicalCard(true)
+          } else {
+            setCanViewMedicalCard(false)
+          }
+
+          const file_DRIVER_LICENSE = data.find((item) => item.type === "DRIVER_LICENSE")
+          if (file_DRIVER_LICENSE) {
+            setCanViewLicense(true)
+          } else {
+            setCanViewLicense(false)
+          }
+
+          const file_MVR = data.find((item) => item.type === "MVR")
+          if (file_MVR) {
+            setCanViewMvr(true)
+          } else {
+            setCanViewMvr(false)
+          }
+
+
+        }
+      } catch (error) {
+        toast.error("Something Went Wrong", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
+      }
+      setTimeout(() => {
+        set_isUploading(false)
+      }, 3000)
+    } else {
+      toast.error("Select atleast one file to upload", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
     }
   }
 
@@ -163,18 +285,18 @@ export default function PrestoresDocuments () {
             <div className="row my_docs_section ">
               <div className="row">
                 <h2 className="col-lg-8 col-12">My Documents</h2>
-                <button type="submit" disabled={isUploading} className="btn btn-success col-lg-4 col-12">
-                  {isUploading ?
-                    ( <div class="spinner-border" role="status" /> )
-                    : ( <span>Save</span> )
-                  }
-                </button>
               </div>
               {/* Driver's License */}
               <div className="col-lg-6 col-12 mt-5">
                 <h3>Driver's License</h3>
-                <Button className="applied" onClick={() => viewFile( "DRIVER_LICENSE" )}>View</Button>
-                <input type="file" class="custom-file-input" onChange={( event ) => upload( event, "DRIVER_LICENSE" )} />
+                {
+                  canViewLicense &&
+                  <>
+                    <Button className="applied" onClick={() => viewFile("DRIVER_LICENSE")}>View</Button>
+                    <Button className="btn_danger" onClick={() => deleteFile("DRIVER_LICENSE")}>Delete</Button>
+                  </>
+                }
+                <input type="file" class="custom-file-input" onChange={(event) => upload(event, "DRIVER_LICENSE")} />
                 {/* <Link href="#">
                   <Button className="approved"> View Past Records</Button>
                 </Link> */}
@@ -183,8 +305,14 @@ export default function PrestoresDocuments () {
               {/* Medical Card */}
               <div className="col-lg-6 col-12 mt-5">
                 <h3>Medical Card</h3>
-                <Button className="applied" onClick={() => viewFile( "MEDICAL_CARD" )}>View</Button>
-                <input type="file" class="custom-file-input" onChange={( event ) => upload( event, "MEDICAL_CARD" )} />
+                {
+                  canViewMedicalCard &&
+                  <>
+                    <Button className="applied" onClick={() => viewFile("MEDICAL_CARD")}>View</Button>
+                    <Button className="btn_danger" onClick={() => deleteFile("MEDICAL_CARD")}>Delete</Button>
+                  </>
+                }
+                <input type="file" class="custom-file-input" onChange={(event) => upload(event, "MEDICAL_CARD")} />
                 {/* <Link href="#">
                   <Button className="approved"> View Past Records</Button>
                 </Link> */}
@@ -195,8 +323,14 @@ export default function PrestoresDocuments () {
               {/* Resume */}
               <div className="col-lg-6 col-12 mt-5">
                 <h3>Resume</h3>
-                <Button className="applied" onClick={() => viewFile( "RESUME" )}>View</Button>
-                <input type="file" class="custom-file-input" onChange={( event ) => upload( event, "RESUME" )} />
+                {
+                  canViewResume &&
+                  <>
+                    <Button className="applied" onClick={() => viewFile("RESUME")}>View</Button>
+                    <Button className="btn_danger" onClick={() => deleteFile("RESUME")}>Delete</Button>
+                  </>
+                }
+                <input type="file" class="custom-file-input" onChange={(event) => upload(event, "RESUME")} />
                 {/* <Link href="#">
                   <Button className="approved"> View Past Records</Button>
                 </Link> */}
@@ -205,11 +339,26 @@ export default function PrestoresDocuments () {
               {/* MVR */}
               <div className="col-lg-6 col-12 mt-5">
                 <h3>Motor Vehicle Record (MVR)</h3>
-                <Button className="applied" onClick={() => viewFile( "MVR" )}>View</Button>
-                <input type="file" class="custom-file-input" onChange={( event ) => upload( event, "MVR" )} />
+                {
+                  canViewMvr &&
+                  <>
+                    <Button className="applied" onClick={() => viewFile("MVR")}>View</Button>
+                    <Button className="btn_danger" onClick={() => deleteFile("MVR")}>Delete</Button>
+                  </>
+                }
+                <input type="file" class="custom-file-input" onChange={(event) => upload(event, "MVR")} />
                 {/* <Link href="#">
                   <Button className="approved"> View Past Records</Button>
                 </Link> */}
+              </div>
+
+              <div className='col-md-12 mt-5'>
+                <button type="submit" disabled={isUploading} className="btn btn-success col-lg-4 col-12">
+                  {isUploading ?
+                    (<div class="spinner-border" role="status" />)
+                    : (<span>Save</span>)
+                  }
+                </button>
               </div>
             </div>
           </form>
@@ -217,7 +366,7 @@ export default function PrestoresDocuments () {
       </div>
 
 
-      <Modal show={showModal} onHide={() => setShowModal( false )}>
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header>{pdfModalTxt}</Modal.Header>
 
         <Modal.Body>
@@ -239,7 +388,7 @@ export default function PrestoresDocuments () {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal( false )}>Close</Button>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>Close</Button>
         </Modal.Footer>
 
       </Modal>
@@ -247,7 +396,7 @@ export default function PrestoresDocuments () {
   )
 };
 
-PrestoresDocuments.getLayout = function getLayout ( page ) {
+PrestoresDocuments.getLayout = function getLayout(page) {
   return (
     <FullLayout>
       {page}

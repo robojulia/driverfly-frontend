@@ -305,6 +305,7 @@ textarea {
     height: 200px !important;
 }
 
+.my_docs_section .btn_danger, 
 .my_docs_section .hired,
 .my_docs_section .approved,
 .my_docs_section .applied {
@@ -312,6 +313,11 @@ textarea {
     border-radius: 5px;
     color: #fff;
     margin-right: 3px;
+}
+
+.my_docs_section .btn_danger {
+    background-color: #F44336 !important;
+    vertical-align: top;
 }
 
 .my_docs_section .applied {
