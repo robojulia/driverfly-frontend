@@ -128,11 +128,11 @@ export default function PrestoresDocuments() {
             'Authorization': `Bearer ${user.token}`
           },
           data: {
-            type: type
+            type
           }
         },
       )
-      console.log('resp', resp)
+
       if (resp.status === 200) {
 
         if (type == "DRIVER_LICENSE") {
@@ -162,7 +162,6 @@ export default function PrestoresDocuments() {
         })
       }
     } catch (error) {
-      console.log('error', error)
       toast.error("Something Went Wrong", {
         position: "top-right",
         autoClose: 3000,
@@ -190,6 +189,7 @@ export default function PrestoresDocuments() {
     if (mvr) {
       formData.append('mvr_record', mvr)
     }
+
     // make sure user can not make api call with empty form data
     if (resume || license || medical_card || mvr) {
       try {
@@ -200,7 +200,9 @@ export default function PrestoresDocuments() {
             'Authorization': `Bearer ${user.token}`
           }
         })
+
         if (resp.status === 201) {
+          let { data } = resp
           toast.success("Documents uploaded successfully", {
             position: "top-right",
             autoClose: 3000,
@@ -210,6 +212,40 @@ export default function PrestoresDocuments() {
             draggable: true,
             progress: undefined,
           })
+          set_license(null)
+          set_medical_card(null)
+          setResume(null)
+          set_mvr(null)
+
+          const file_RESUME = data.find((item) => item.type === "RESUME")
+          if (file_RESUME) {
+            setCanViewResume(true)
+          } else {
+            setCanViewResume(false)
+          }
+
+          const file_MEDICAL_CARD = data.find((item) => item.type === "MEDICAL_CARD")
+          if (file_MEDICAL_CARD) {
+            setCanViewMedicalCard(true)
+          } else {
+            setCanViewMedicalCard(false)
+          }
+
+          const file_DRIVER_LICENSE = data.find((item) => item.type === "DRIVER_LICENSE")
+          if (file_DRIVER_LICENSE) {
+            setCanViewLicense(true)
+          } else {
+            setCanViewLicense(false)
+          }
+
+          const file_MVR = data.find((item) => item.type === "MVR")
+          if (file_MVR) {
+            setCanViewMvr(true)
+          } else {
+            setCanViewMvr(false)
+          }
+
+
         }
       } catch (error) {
         toast.error("Something Went Wrong", {
