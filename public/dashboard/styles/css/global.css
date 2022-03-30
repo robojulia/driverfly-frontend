@@ -180,7 +180,7 @@
     }
 
     .side_bar {
-        height: auto !important; 
+        height: auto !important;
     }
 
 
@@ -319,7 +319,8 @@ textarea {
     vertical-align: top;
 }
 
-.my_docs_section .approved {
+
+.btn-approved, .my_docs_section .approved {
     background-color: #5dcac4 !important;
     vertical-align: top;
 
@@ -377,5 +378,51 @@ textarea {
     margin-right: 20px;
     height: 30px;
     width: 30px;
+}
+
+.application_select {
+    padding: 12px;
+}
+
+.mb-34 {
+    margin-bottom: 34px;
+}
+
+.ml_5 {
+    margin-left: 5px;
+}
+
+.mt-55 {
+    margin-top: 55px;
+}
+
+.mt-60 {
+    margin-top: 60px !important;
+}
+
+.mt-85 {
+    margin-top: 85px !important;
+}
+
+.mt-17 {
+    margin-top: 17px !important;
+}
+
+.css-319lph-ValueContainer {
+    padding: 7px;
+}
+
+.mt-48 {
+    margin-top: 48px !important;
+}
+
+.btn-yellow {
+    background-color: #f4be18 !important;
+    color: #fff;
+}
+.btn-approved, .my_docs_section .approved {
+    background-color: #5dcac4 !important;
+    color: #fff;
+
 }
 

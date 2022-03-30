@@ -17,12 +17,12 @@ import stateList from "../../../utils/stateList"
 
 
 
-export default function MyApplication () {
+export default function MyApplication() {
   const { authCheck } = useAuth()
   const user = authCheck()
 
 
-  const randomId = () => Date.now() + "-" + random( 0, 200 )
+  const randomId = () => Date.now() + "-" + random(0, 200)
 
   const driverDegree = [
     {
@@ -66,9 +66,9 @@ export default function MyApplication () {
   //   years: 0,
   //   type: ""
   // }
-  const [equipments, set_equipments] = useState( [] )
+  const [equipments, set_equipments] = useState([])
 
-  const acc_form = useFormik( {
+  const acc_form = useFormik({
     initialValues: {
       // name: '',
       license_number: '',
@@ -79,7 +79,7 @@ export default function MyApplication () {
       // email: '',
       license_state: '',
       street: '',
-      cdl_class: '',
+      license_type: '',
       emergency_contact_number: '',
       city: '',
       years_cdl_experience: '',
@@ -88,36 +88,36 @@ export default function MyApplication () {
       state: '',
       emergency_contact_relationship: '',
     },
-    validationSchema: yup.object( {
-      license_number: yup.string().required( "This field is required" ),
-      license_expiry: yup.string().required( "This field is required" ),
-      highest_degree: yup.string().required( "This field is required" ),
-      license_state: yup.string().required( "This field is required" ),
-      street: yup.string().required( "This field is required" ),
-      cdl_class: yup.string().required( "This field is required" ),
-      emergency_contact_number: yup.string().required( "This field is required" ),
-      city: yup.string().required( "This field is required" ),
-      years_cdl_experience: yup.number().required( "This field is required" ),
-      zip_code: yup.string().required( "This field is required" ),
-      state: yup.string().required( "This field is required" ),
-      emergency_contact_relationship: yup.string().required( "This field is required" ),
-    } ),
-    onSubmit: async ( values ) => {
+    validationSchema: yup.object({
+      license_number: yup.string().required("This field is required").nullable(),
+      license_expiry: yup.string().required("This field is required").nullable(),
+      highest_degree: yup.string().required("This field is required").nullable(),
+      license_state: yup.string().required("This field is required").nullable(),
+      street: yup.string().required("This field is required").nullable(),
+      license_type: yup.string().required("This field is required").nullable(),
+      emergency_contact_number: yup.string().required("This field is required").nullable(),
+      city: yup.string().required("This field is required").nullable(),
+      years_cdl_experience: yup.number().required("This field is required").nullable().min(0, "Please select 0 or above."),
+      zip_code: yup.string().required("This field is required").nullable(),
+      state: yup.string().required("This field is required").nullable(),
+      emergency_contact_relationship: yup.string().required("This field is required").nullable(),
+    }),
+    onSubmit: async (values) => {
       const data = {
         ...values,
-        equipment_experience: equipments.map( eq => ( {
+        equipment_experience: equipments.map(eq => ({
           years: eq.years,
           type: eq.type
-        } ) ),
+        })),
       }
       try {
-        const resp = await axios.post( `${process.env.BASE_URL_API}/drivers`, data, {
+        const resp = await axios.post(`${process.env.BASE_URL_API}/drivers`, data, {
           headers: {
             Authorization: `Bearer ${user.token}`
           }
-        } )
-        if ( resp.status === 201 ) {
-          toast.success( "Uploaded successfully", {
+        })
+        if (resp.status === 201) {
+          toast.success("Uploaded successfully", {
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
@@ -125,10 +125,10 @@ export default function MyApplication () {
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
-          } )
+          })
         }
-      } catch ( error ) {
-        toast.error( "Some Error occured", {
+      } catch (error) {
+        toast.error("Some Error occured", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -136,122 +136,123 @@ export default function MyApplication () {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-        } )
+        })
       }
     }
-  } )
+  })
 
-  const [birthDate, set_birthDate] = useState( "" )
+  const [birthDate, set_birthDate] = useState("")
+  const [is21, setIs21] = useState(false)
 
-  const [pastEmployers, set_pastEmployers] = useState( [] )
+  const [pastEmployers, set_pastEmployers] = useState([])
 
-  const setCompanyName = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyName = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, name: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyStartDate = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyStartDate = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, start_at: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyEndDate = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyEndDate = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, end_at: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyTitle = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyTitle = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, title: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyPhone = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyPhone = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, phone: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyCanContact = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyCanContact = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, can_contact: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyIsSubjectToFmcsrs = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyIsSubjectToFmcsrs = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, is_subject_to_fmcsrs: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyIsSubjectToDrugTests = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyIsSubjectToDrugTests = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, is_subject_to_drug_tests: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyStreet = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyStreet = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, street: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyCity = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyCity = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, city: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyState = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyState = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, state: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
-  const setCompanyZipCode = ( id, value ) => {
-    const newArr = pastEmployers.map( emp => {
-      if ( emp.id === id ) {
+  const setCompanyZipCode = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
         return { ...emp, zip_code: value }
       }
       return emp
-    } )
-    set_pastEmployers( newArr )
+    })
+    set_pastEmployers(newArr)
   }
 
   // const [name, setName] = useState( "" )
@@ -269,35 +270,35 @@ export default function MyApplication () {
   // const [companyState, set_companyState] = useState( "" )
   // const [companyZip, set_companyZip] = useState( "" )
 
-  const [can_pass_drug_test, set_can_pass_drug_test] = useState( false )
-  const [has_past_dui, set_has_past_dui] = useState( false )
-  const [dui_past_years, set_dui_past_years] = useState( [] )
-  const [dui_input_value, set_dui_input_value] = useState( "" )
-  const [accident_count, set_accident_count] = useState( 0 )
-  const [accident_details, set_accident_details] = useState( "" )
-  const [criminal_history, set_criminal_history] = useState( "" )
+  const [can_pass_drug_test, set_can_pass_drug_test] = useState(false)
+  const [has_past_dui, set_has_past_dui] = useState(false)
+  const [dui_past_years, set_dui_past_years] = useState([])
+  const [dui_input_value, set_dui_input_value] = useState("")
+  const [accident_count, set_accident_count] = useState(0)
+  const [accident_details, set_accident_details] = useState("")
+  const [criminal_history, set_criminal_history] = useState("")
 
 
-  const [revoked, setRevoked] = useState( false )
-  const [revokedDetails, setRevokedDetails] = useState( "" )
+  const [revoked, setRevoked] = useState(false)
+  const [revokedDetails, setRevokedDetails] = useState("")
 
-  const [violations, setViolations] = useState( false )
-  const [violationsDetails, setViolationsDetails] = useState( "" )
+  const [violations, setViolations] = useState(false)
+  const [violationsDetails, setViolationsDetails] = useState("")
 
-  const [tickets, set_tickets] = useState( false )
-  const [ticketsDetails, set_ticketsDetails] = useState( "" )
+  const [tickets, set_tickets] = useState(false)
+  const [ticketsDetails, set_ticketsDetails] = useState("")
 
-  const [drugTest, set_drugTest] = useState( false )
-  const [drugTestDetails, set_drugTestDetails] = useState( "" )
+  const [drugTest, set_drugTest] = useState(false)
+  const [drugTestDetails, set_drugTestDetails] = useState("")
 
-  useEffect( async () => {
-    const { data } = await axios.get( `${process.env.BASE_URL_API}/drivers`, {
+  useEffect(async () => {
+    const { data } = await axios.get(`${process.env.BASE_URL_API}/drivers`, {
       headers: {
         Authorization: `Bearer ${user.token}`
       }
-    } )
-    if ( !data ) {
-      toast.error( "Data could not fetched", {
+    })
+    if (!data) {
+      toast.error("Data could not fetched", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -305,26 +306,34 @@ export default function MyApplication () {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-      } )
+      })
       return
     }
 
-    const equipmentsFetched = data.equipment_experience.map( eq => ( {
+    const equipmentsFetched = data.equipment_experience.map(eq => ({
       years: eq.years,
       id: randomId(),
       type: eq.type
-    } ) )
+    }))
 
-    set_birthDate( data.birthdate )
-    set_equipments( equipmentsFetched )
-    console.log( data )
-    acc_form.setValues( {
+    set_birthDate(data.birthdate)
+
+    setIs21(() => {
+      if (moment().diff(birthDate, "years") >= 21) {
+        return true
+      }
+      return false
+    })
+
+    set_equipments(equipmentsFetched)
+    console.log(data)
+    acc_form.setValues({
       license_number: data.license_number,
-      license_expiry: moment( data.license_expiry ).format( "YYYY-MM-DD" ),
+      license_expiry: moment(data.license_expiry).format("YYYY-MM-DD"),
       highest_degree: data.highest_degree,
       license_state: data.license_state,
       street: data.street,
-      cdl_class: data.cdl_class,
+      license_type: data.license_type,
       emergency_contact_number: data.emergency_contact_number,
       city: data.city,
       years_cdl_experience: data.years_cdl_experience,
@@ -332,15 +341,15 @@ export default function MyApplication () {
       state: data.state,
       equipment_experience: data.equipment_experience,
       emergency_contact_relationship: data.emergency_contact_relationship,
-    } )
+    })
 
     let pastEmployersFetched = []
-    if ( data.employers.length ) {
-      pastEmployersFetched = data.employers.map( emp => ( {
+    if (data.employers.length) {
+      pastEmployersFetched = data.employers.map(emp => ({
         id: randomId(),
         name: emp.name,
-        start_at: moment( emp.start_at ).format( "YYYY-MM-DD" ),
-        end_at: moment( emp.end_at ).format( "YYYY-MM-DD" ),
+        start_at: moment(emp.start_at).format("YYYY-MM-DD"),
+        end_at: moment(emp.end_at).format("YYYY-MM-DD"),
         title: emp.title,
         phone: emp.phone,
         can_contact: emp.can_contact,
@@ -350,7 +359,7 @@ export default function MyApplication () {
         city: emp.city,
         state: emp.state,
         zip_code: emp.zip_code,
-      } ) )
+      }))
     } else {
       pastEmployersFetched = [{
         id: randomId(),
@@ -370,99 +379,90 @@ export default function MyApplication () {
     }
 
     // set past employers
-    set_pastEmployers( pastEmployersFetched )
+    set_pastEmployers(pastEmployersFetched)
 
-    set_can_pass_drug_test( data.can_pass_drug_test )
-    set_has_past_dui( data.has_past_dui )
-    set_accident_count( data.accident_count )
-    set_accident_details( data.accident_details )
-    set_criminal_history( data.criminal_history )
+    set_can_pass_drug_test(data.can_pass_drug_test)
+    set_has_past_dui(data.has_past_dui)
+    set_accident_count(data.accident_count)
+    set_accident_details(data.accident_details)
+    set_criminal_history(data.criminal_history)
 
-    if ( data.dui_years.length ) {
-      set_dui_past_years( data.dui_years.map( y => createOption( y ) ) )
+    if (data.dui_years && data.dui_years.length) {
+      set_dui_past_years(data.dui_years.map(y => createOption(y)))
     }
 
-
-    const revokedFetched = data.safety_questions.find( q => q.type === "LICENSE_REVOKED" )
-    if ( revokedFetched ) {
-      setRevoked( revokedFetched.response )
-      setRevokedDetails( revokedFetched.details )
+    const revokedFetched = data.safety_questions.find(q => q.type === "LICENSE_REVOKED")
+    if (revokedFetched) {
+      setRevoked(revokedFetched.response)
+      setRevokedDetails(revokedFetched.details)
     }
-    const violationsFetched = data.safety_questions.find( q => q.type === "VIOLATIONS_PSP" )
-    if ( violationsFetched ) {
-      setRevoked( violationsFetched.response )
-      setRevokedDetails( violationsFetched.details )
+    const violationsFetched = data.safety_questions.find(q => q.type === "VIOLATIONS_PSP")
+    if (violationsFetched) {
+      setRevoked(violationsFetched.response)
+      setRevokedDetails(violationsFetched.details)
     }
-    const tickets = data.safety_questions.find( q => q.type === "TICKETS" )
-    if ( tickets ) {
-      setRevoked( tickets.response )
-      setRevokedDetails( tickets.details )
+    const tickets = data.safety_questions.find(q => q.type === "TICKETS")
+    if (tickets) {
+      setRevoked(tickets.response)
+      setRevokedDetails(tickets.details)
     }
-    const drugsFetched = data.safety_questions.find( q => q.type === "POSITIVE_DRUG_TEST" )
-    if ( drugsFetched ) {
-      setRevoked( drugsFetched.response )
-      setRevokedDetails( drugsFetched.details )
+    const drugsFetched = data.safety_questions.find(q => q.type === "POSITIVE_DRUG_TEST")
+    if (drugsFetched) {
+      setRevoked(drugsFetched.response)
+      setRevokedDetails(drugsFetched.details)
     }
 
 
 
     const safety_details = data.safety_questions[0]
-    if ( safety_details ) {
-      set_ticketsDetails( safety_details.details )
+    if (safety_details) {
+      set_ticketsDetails(safety_details.details)
 
     }
 
-  }, [] )
+  }, [])
 
 
-  const createOption = ( label ) => ( {
+  const createOption = (label) => ({
     label,
     value: label,
-  } )
+  })
 
-  const handleKeyDown = ( e ) => {
+  const handleKeyDown = (e) => {
     // e.preventDefault()
-    if ( !dui_input_value ) return
-    switch ( e.key ) {
+    if (!dui_input_value) return
+    switch (e.key) {
       case 'Enter':
       case 'Tab':
-        set_dui_input_value( "" )
-        set_dui_past_years( [...dui_past_years, createOption( dui_input_value )] )
+        set_dui_input_value("")
+        set_dui_past_years([...dui_past_years, createOption(dui_input_value)])
         e.preventDefault()
     }
   }
 
-  const is21 = () => {
-    if ( moment().diff( birthDate, "years" ) >= 21 ) {
-      return true
-    }
-    return false
-  }
-
-
-  const setEquipmentExperience = ( id, value ) => {
-    const newArr = equipments.map( eq => {
-      if ( eq.id === id ) {
+  const setEquipmentExperience = (id, value) => {
+    const newArr = equipments.map(eq => {
+      if (eq.id === id) {
         return { ...eq, years: value }
       }
       return eq
-    } )
-    set_equipments( newArr )
+    })
+    set_equipments(newArr)
   }
 
-  const setEquipmentType = ( id, value ) => {
-    const newArr = equipments.map( eq => {
-      if ( eq.id === id ) {
+  const setEquipmentType = (id, value) => {
+    const newArr = equipments.map(eq => {
+      if (eq.id === id) {
         return { ...eq, type: value }
       }
       return eq
-    } )
-    set_equipments( newArr )
+    })
+    set_equipments(newArr)
   }
 
-  const postSecondForm = async ( e ) => {
+  const postSecondForm = async (e) => {
     e.preventDefault()
-    const employers = pastEmployers.map( emp => {
+    const employers = pastEmployers.map(emp => {
       return {
         name: emp.name,
         start_at: emp.start_at,
@@ -477,7 +477,7 @@ export default function MyApplication () {
         state: emp.state,
         zip_code: emp.zip_code,
       }
-    } )
+    })
 
 
     const safety_questions = [
@@ -507,19 +507,19 @@ export default function MyApplication () {
         employers,
         can_pass_drug_test,
         has_past_dui,
-        dui_years: dui_past_years.map( y => y.value ),
+        dui_years: dui_past_years.map(y => y.value),
         accident_count,
         accident_details,
         criminal_history,
         safety_questions
       }
-      const resp = await axios.post( `${process.env.BASE_URL_API}/drivers`, a, {
+      const resp = await axios.post(`${process.env.BASE_URL_API}/drivers`, a, {
         headers: {
           Authorization: `Bearer ${user.token}`
         }
-      } )
-      if ( resp.status === 201 ) {
-        toast.success( "Uploaded successfully", {
+      })
+      if (resp.status === 201) {
+        toast.success("Uploaded successfully", {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -527,10 +527,10 @@ export default function MyApplication () {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-        } )
+        })
       }
-    } catch ( error ) {
-      toast.error( "Error occured", {
+    } catch (error) {
+      toast.error("Error occured", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -538,16 +538,16 @@ export default function MyApplication () {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-      } )
+      })
     }
   }
 
   const addEquipment = () => {
-    set_equipments( [...equipments, { type: "", years: 0, id: randomId() }] )
+    set_equipments([...equipments, { type: "", years: 0, id: randomId() }])
   }
 
   const addPastEmployer = () => {
-    set_pastEmployers( [...pastEmployers, {
+    set_pastEmployers([...pastEmployers, {
       id: randomId(),
       name: "",
       start_at: "",
@@ -561,7 +561,7 @@ export default function MyApplication () {
       city: "",
       state: "",
       zip_code: "",
-    }] )
+    }])
   }
 
 
@@ -574,219 +574,262 @@ export default function MyApplication () {
         <div>
           <div className='container-fluid'>
             <form className="modal-body" onSubmit={acc_form.handleSubmit}>
-              <h2>Account Settings</h2>
+              <h2>My Application</h2>
               <div className="row">
-                {/* Drivers License */}
-                <BaseInput
-                  className="col-lg-4 col-12"
-                  label="Drivers License Number:"
-                  placeholder="Drivers License Number"
-                  name="license_number"
-                  value={acc_form.values.license_number}
-                  touched={acc_form.touched.license_number}
-                  error={acc_form.errors.license_number}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                />
-                {/* age limit */}
-                <div className="col-lg-4 col-12 mt-3">
-                  <div class="form-check form-switch mt-5">
-                    <label class="form-check-label" htmlFor="age_limit">Above 21?</label>
-                    <input class="form-check-input" readOnly type="checkbox" checked={is21()} role="switch" id="age_limit" />
+                {/* Drivers Name */}
+                <div className="col-md-4">
+                  {/* <BaseInput
+                    className="col-12"
+                    label="Name:"
+                    placeholder="Name"
+                    name="driver_name"
+                    value={acc_form.values.driver_name}
+                    touched={acc_form.touched.driver_name}
+                    error={acc_form.errors.driver_name}
+                    onChange={acc_form.handleChange}
+                    handleBlur={acc_form.handleBlur}
+                  /> */}
+                  {/* Number */}
+                  {/* <BaseInput
+                    className="col-12"
+                    label="Number:"
+                    placeholder=" Number"
+                    name="number"
+                    type="text"
+                    value={acc_form.values.number}
+                    touched={acc_form.touched.number}
+                    error={acc_form.errors.number}
+                    onChange={acc_form.handleChange}
+                    handleBlur={acc_form.handleBlur}
+                  /> */}
+                  {/* <BaseInput
+                    className="col-12"
+                    label="Email:"
+                    placeholder="Email"
+                    name="email"
+                    type="email"
+                    value={acc_form.values.email}
+                    touched={acc_form.touched.email}
+                    error={acc_form.errors.email}
+                    onChange={acc_form.handleChange}
+                    handleBlur={acc_form.handleBlur}
+                  /> */}
+                  <BaseInput
+                    className="col-12"
+                    label="Street:"
+                    placeholder="Street"
+                    name="street"
+                    value={acc_form.values.street}
+                    touched={acc_form.touched.street}
+                    error={acc_form.errors.street}
+                    onChange={acc_form.handleChange}
+                    handleBlur={acc_form.handleBlur}
+                  />
+                  <BaseInput
+                    className="col-12"
+                    label="City:"
+                    placeholder="City"
+                    name="city"
+                    value={acc_form.values.city}
+                    touched={acc_form.touched.city}
+                    error={acc_form.errors.city}
+                    onChange={acc_form.handleChange}
+                    handleBlur={acc_form.handleBlur}
+                  />
+                  <div className="col-12 mt-3">
+                    <label>State:</label>
+                    <select class="application_select form-select" name="state" aria-label="Default select example"
+                      value={acc_form.values.state}
+                      onChange={acc_form.handleChange}
+                    >
+                      <option selected value="">State:</option>
+                      {stateList.map((state, index) => {
+                        return (
+                          <option
+                            key={index}
+                            selected={acc_form.values.state === state.value}
+                            value={state.value}
+                          >{state.label}</option>
+                        )
+                      })}
+                    </select>
+                    {acc_form.touched.state && acc_form.errors.state ? <span className="text-danger small">{acc_form.errors.state}</span> : null}
                   </div>
-                </div>
-              </div>
-              <div className='row'>
-                <BaseInput
-                  className="col-lg-4 col-12"
-                  label="Expiration Date:"
-                  placeholder="Expiration Date"
-                  name="license_expiry"
-                  type="date"
-                  value={acc_form.values.license_expiry}
-                  touched={acc_form.touched.license_expiry}
-                  error={acc_form.errors.license_expiry}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                />
-                {/* Highest degree */}
-                <div className="col-lg-4 col-12 mt-3">
-                  <span className={style.lable}>Highest Degree:</span>
-                  <select class="form-select" name="highest_degree" aria-label="Default select example"
-                    value={acc_form.values.highest_degree}
+                  <BaseInput
+                    className="col-12"
+                    label="Zip:"
+                    placeholder="Zip"
+                    name="zip_code"
+                    value={acc_form.values.zip_code}
+                    touched={acc_form.touched.zip_code}
+                    error={acc_form.errors.zip_code}
                     onChange={acc_form.handleChange}
-                  >
-                    <option selected value="">Highest Degree:</option>
-                    {driverDegree.map( ( degree, index ) => {
-                      return ( <option selected={acc_form.values.highest_degree === degree.value} value={degree.value} key={index}>{degree.label}</option>
-                      )
-                    } )}
-                  </select>
-                  {acc_form.touched.highest_degree && acc_form.errors.highest_degree ? <span className="text-danger small">{acc_form.errors.highest_degree}</span> : null}
+                    handleBlur={acc_form.handleBlur}
+                  />
                 </div>
-              </div>
-              <div className='row'>
-                {/* state issued */}
-                <div className="col-lg-4 col-12 mt-3">
-                  <label>State Issued:</label>
-                  <select class="form-select" name="license_state" aria-label="Default select example"
-                    value={acc_form.values.license_state}
+                <div className="col-md-4">
+                  {/* Drivers License */}
+                  <BaseInput
+                    className="col-12"
+                    label="Drivers License Number:"
+                    placeholder="Drivers License Number"
+                    name="license_number"
+                    value={acc_form.values.license_number}
+                    touched={acc_form.touched.license_number}
+                    error={acc_form.errors.license_number}
                     onChange={acc_form.handleChange}
-                  >
-                    <option selected value="">State Issued:</option>
-                    {stateList.map( ( state, index ) => {
+                    handleBlur={acc_form.handleBlur}
+                  />
+                  <BaseInput
+                    className="col-12"
+                    label="Expiration Date:"
+                    placeholder="Expiration Date"
+                    name="license_expiry"
+                    type="date"
+                    value={acc_form.values.license_expiry}
+                    touched={acc_form.touched.license_expiry}
+                    error={acc_form.errors.license_expiry}
+                    onChange={acc_form.handleChange}
+                    handleBlur={acc_form.handleBlur}
+                  />
+                  {/* state issued */}
+                  <div className="col-12">
+                    <label>State Issued:</label>
+                    <select class="application_select form-select" name="license_state" aria-label="Default select example"
+                      value={acc_form.values.license_state}
+                      onChange={acc_form.handleChange}
+                    >
+                      <option selected value="">State Issued:</option>
+                      {stateList.map((state, index) => {
+                        return (
+                          <option
+                            key={index}
+                            selected={acc_form.values.license_state === state.value}
+                            value={state.value}
+                          >{state.label}</option>
+                        )
+                      })}
+                    </select>
+                    {acc_form.touched.license_state && acc_form.errors.license_state ? <span className="text-danger small">{acc_form.errors.license_state}</span> : null}
+                  </div>
+                  {/* CDL class types */}
+                  <div className="col-12 mt-3">
+                    <span className={style.lable}>CDL Class Type:</span>
+                    <select class="application_select form-select" name="license_type" aria-label="Default select example"
+                      value={acc_form.values.cdl_class}
+                      onChange={acc_form.handleChange}
+                    >
+                      <option selected value="">CDL Class Type:</option>
+                      {cdl_classes.map((cdl, index) => {
+                        return (
+                          <option selected={acc_form.values.license_type === cdl.value} value={cdl.value} key={index}>{cdl.label}</option>
+                        )
+                      })}
+                    </select>
+                    {acc_form.touched.license_type && acc_form.errors.license_type ? <span className="text-danger small">{acc_form.errors.license_type}</span> : null}
+                  </div>
+                  <BaseInput
+                    className="col-12"
+                    label="Years of CDL Experience:"
+                    placeholder="Years of CDL Experience"
+                    name="years_cdl_experience"
+                    type="number"
+                    value={acc_form.values.years_cdl_experience}
+                    touched={acc_form.touched.years_cdl_experience}
+                    error={acc_form.errors.years_cdl_experience}
+                    onChange={acc_form.handleChange}
+                    handleBlur={acc_form.handleBlur}
+                  />
+                  <div className='row ml_5'>
+
+                    <span className="p-0">Equipment Experience</span> <br />
+                    {equipments.map((eq) => {
+
                       return (
-                        <option
-                          key={index}
-                          selected={acc_form.values.license_state === state.value}
-                          value={state.value}
-                        >{state.label}</option>
+
+                        <div key={eq.id}>
+                          <div className='row '>
+                            <BaseInput
+                              className="col"
+                              label="Type :"
+                              placeholder="Equipment Type"
+                              value={eq.type}
+                              onChange={(e) => setEquipmentType(eq.id, e.target.value)}
+                              name="equipment_type"
+                            />
+                            <BaseInput
+                              className="col"
+                              label="Years Experience:"
+                              type="number"
+                              onChange={(e) => setEquipmentExperience(eq.id, e.target.value)}
+                              value={eq.years}
+                              placeholder="Years Experience"
+                            />
+                          </div>
+                        </div>
+
                       )
-                    } )}
-                  </select>
-                  {acc_form.touched.license_state && acc_form.errors.license_state ? <span className="text-danger small">{acc_form.errors.license_state}</span> : null}
+                    })}
+                    <span className="btn btn-approved col-4 mt-2" onClick={addEquipment}>+ more</span>
+
+                  </div>
+
+
+
                 </div>
-              </div>
-
-
-              <div className='row'>
-                <BaseInput
-                  className="col-lg-4 col-12"
-                  label="Street:"
-                  placeholder="Street"
-                  name="street"
-                  value={acc_form.values.street}
-                  touched={acc_form.touched.street}
-                  error={acc_form.errors.street}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                />
-                {/* CDL class types */}
-                <div className="col-lg-4 col-12 mt-3">
-                  <span className={style.lable}>CDL Class Type:</span>
-                  <select class="form-select" name="cdl_class" aria-label="Default select example"
-                    value={acc_form.values.cdl_class}
+                <div className="col-md-4">
+                  {/* age limit */}
+                  <div className="col-lg-4 col-12 mt-2 mb-34">
+                    <div class="form-check form-switch mt-5">
+                      <label class="form-check-label" htmlFor="age_limit">Above 21?</label>
+                      <input class="form-check-input" readOnly type="checkbox" checked={is21} role="switch" id="age_limit" />
+                    </div>
+                  </div>
+                  {/* Highest degree */}
+                  <div className=" col-12 mt-3 ">
+                    <span className={style.lable}>Highest Degree:</span>
+                    <select class="application_select form-select" name="highest_degree" aria-label="Default select example"
+                      value={acc_form.values.highest_degree}
+                      onChange={acc_form.handleChange}
+                    >
+                      <option selected value="">Highest Degree:</option>
+                      {driverDegree.map((degree, index) => {
+                        return (<option selected={acc_form.values.highest_degree === degree.value} value={degree.value} key={index}>{degree.label}</option>
+                        )
+                      })}
+                    </select>
+                    {acc_form.touched.highest_degree && acc_form.errors.highest_degree ? <span className="text-danger small">{acc_form.errors.highest_degree}</span> : null}
+                  </div>
+                  <BaseInput
+                    className="col-12"
+                    label="Emergency Contact:"
+                    placeholder="Emergency Contact"
+                    name="emergency_contact_number"
+                    value={acc_form.values.emergency_contact_number}
+                    touched={acc_form.touched.emergency_contact_number}
+                    error={acc_form.errors.emergency_contact_number}
                     onChange={acc_form.handleChange}
-                  >
-                    <option selected value="">CDL Class Type:</option>
-                    {cdl_classes.map( ( cdl, index ) => {
-                      return (
-                        <option selected={acc_form.values.cdl_class === cdl.value} value={cdl.value} key={index}>{cdl.label}</option>
-                      )
-                    } )}
-                  </select>
-                  {acc_form.touched.cdl_class && acc_form.errors.cdl_class ? <span className="text-danger small">{acc_form.errors.cdl_class}</span> : null}
-                </div>
-                <BaseInput
-                  className="col-lg-4 col-12"
-                  label="Emergency Contact:"
-                  placeholder="Emergency Contact"
-                  name="emergency_contact_number"
-                  value={acc_form.values.emergency_contact_number}
-                  touched={acc_form.touched.emergency_contact_number}
-                  error={acc_form.errors.emergency_contact_number}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                />
-
-              </div>
-
-              <div className='row'>
-                <BaseInput
-                  className="col-lg-4 col-12"
-                  label="City:"
-                  placeholder="City"
-                  name="city"
-                  value={acc_form.values.city}
-                  touched={acc_form.touched.city}
-                  error={acc_form.errors.city}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                />
-                <BaseInput
-                  className="col-lg-4 col-12"
-                  label="Years of CDL Experience:"
-                  placeholder="Years of CDL Experience"
-                  name="years_cdl_experience"
-                  type="number"
-                  value={acc_form.values.years_cdl_experience}
-                  touched={acc_form.touched.years_cdl_experience}
-                  error={acc_form.errors.years_cdl_experience}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                />
-              </div>
-              <div className='row'>
-                <div className="col-lg-4 col-12 mt-3">
-                  <label>State:</label>
-                  <select class="form-select" name="state" aria-label="Default select example"
-                    value={acc_form.values.state}
+                    handleBlur={acc_form.handleBlur}
+                  />
+                  <BaseInput
+                    className=" col-12"
+                    label="Relationship:"
+                    placeholder="Relationship"
+                    name="emergency_contact_relationship"
+                    value={acc_form.values.emergency_contact_relationship}
+                    touched={acc_form.touched.emergency_contact_relationship}
+                    error={acc_form.errors.emergency_contact_relationship}
                     onChange={acc_form.handleChange}
-                  >
-                    <option selected value="">State:</option>
-                    {stateList.map( ( state, index ) => {
-                      return (
-                        <option
-                          key={index}
-                          selected={acc_form.values.state === state.value}
-                          value={state.value}
-                        >{state.label}</option>
-                      )
-                    } )}
-                  </select>
-                  {acc_form.touched.state && acc_form.errors.state ? <span className="text-danger small">{acc_form.errors.state}</span> : null}
-                </div>
-                <BaseInput
-                  className="col-lg-4 col-12"
-                  label="Zip:"
-                  placeholder="Zip"
-                  name="zip_code"
-                  value={acc_form.values.zip_code}
-                  touched={acc_form.touched.zip_code}
-                  error={acc_form.errors.zip_code}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                />
+                    handleBlur={acc_form.handleBlur}
+                  />
 
-                <BaseInput
-                  className="col-lg-4 col-12"
-                  label="Relationship:"
-                  placeholder="Relationship"
-                  name="emergency_contact_relationship"
-                  value={acc_form.values.emergency_contact_relationship}
-                  touched={acc_form.touched.emergency_contact_relationship}
-                  error={acc_form.errors.emergency_contact_relationship}
-                  onChange={acc_form.handleChange}
-                  handleBlur={acc_form.handleBlur}
-                />
-                <div className="col-lg-8 col-12">
-                  <span>Equipments</span> <br />
-                  {equipments.map( ( eq ) => {
-                    return (
-                      <div key={eq.id}>
-                        <BaseInput
-                          className="col-lg-8 col-12"
-                          label="Equipment Type:"
-                          placeholder="Equipment Type"
-                          value={eq.type}
-                          onChange={( e ) => setEquipmentType( eq.id, e.target.value )}
-                          name="equipment_type"
-                        />
-                        <BaseInput
-                          className="col-lg-8 col-12"
-                          label="Years Experience:"
-                          type="number"
-                          onChange={( e ) => setEquipmentExperience( eq.id, e.target.value )}
-                          value={eq.years}
-                          placeholder="Years Experience"
-                        />
-                      </div>
-                    )
-                  } )}
-                  <span className="btn btn-success col-4 mt-2" onClick={addEquipment}>+ more</span>
+
                 </div>
+
 
               </div>
+
+
               <div className="col-lg-12 col-12 mt-4 border-0 text-end">
                 <button type="submit" className={`  ${style.update_btn}`} >
                   Update
@@ -801,243 +844,261 @@ export default function MyApplication () {
           <hr />
 
           <div className='container-fluid'>
-            <form onSubmit={postSecondForm} className="row">
-              <div className="col-lg-4 col-12 mt-3">
-                <h2>Past Employment</h2>
-                {
-                  pastEmployers.map( ( past ) => {
-                    return (
-                      <div key={past.id}>
-                        {/* Last employer */}
-                        <div className="col-lg-11 col-12 mt-3">
-                          <label>Last Employer:</label>
-                          <input value={past.name} name="last_emp" type="text" className="form-control" placeholder="Last Employer:" onChange={( e ) => setCompanyName( past.id, e.target.value )} />
-                        </div>
-                        {/* Date employed */}
-                        <div className="col-lg-11 col-12 mt-3">
-                          <label>Date Employed:</label>
-                          <div className="d-flex align-items-center">
-                            <input onChange={( e ) => setCompanyStartDate( past.id, e.target.value )} value={past.start_at} name="sta_date" type="date" className="form-control" /> <h2 className="mx-2">to</h2>
-                            <input onChange={( e ) => setCompanyEndDate( past.id, e.target.value )} value={past.end_at} name="sta_date" type="date" className="form-control" />
+            <form onSubmit={postSecondForm}>
+              <div className="row">
+                <div className="col-md-4 mt-lg-0 mt-3">
+                  <h2>Past Employment</h2>
+                  {
+                    pastEmployers.map((past) => {
+                      return (
+                        <div key={past.id}>
+                          {/* Last employer4 */}
+                          <div className="col mt-3">
+                            <label>Last Employer:</label>
+                            <input value={past.name} name="last_emp" type="text" className="form-control" placeholder="Last Employer:" onChange={(e) => setCompanyName(past.id, e.target.value)} />
                           </div>
-                        </div>
-                        {/* position title */}
-                        <div className="col-lg-11 col-12 mt-3">
-                          <label>Position Title:</label>
-                          <input onChange={( e ) => setCompanyTitle( past.id, e.target.value )} value={past.title} type="text" name="position_title" className="form-control" placeholder="Position Title:" />
-                        </div>
-                        {/* company address */}
-                        <h5 className="my-2">Company Address</h5>
-                        {/* company street */}
-                        <div className="col-lg-11 col-12 mt-3">
-                          <label>Street:</label>
-                          <input type="text" name="companyStreet" className="form-control" placeholder="Company Street:" value={past.street} onChange={( e ) => setCompanyStreet( past.id, e.target.value )} />
-                        </div>
-                        {/* company city */}
-                        <div className="col-lg-11 col-12 mt-3">
-                          <label>City:</label>
-                          <input type="text" name="companyCity" className="form-control" placeholder="Company City:" value={past.city} onChange={( e ) => setCompanyCity( past.id, e.target.value )} />
-                        </div>
-                        {/* company state */}
-                        {/* <div className="col-lg-11 col-12 mt-3">
+                          {/* Date employed */}
+                          <div className="col mt-3">
+                            <label>Date Employed:</label>
+                            <div className="d-flex align-items-center">
+                              <input onChange={(e) => setCompanyStartDate(past.id, e.target.value)} value={past.start_at} name="sta_date" type="date" className="form-control" /> <p className="mx-2">to</p>
+                              <input onChange={(e) => setCompanyEndDate(past.id, e.target.value)} value={past.end_at} name="sta_date" type="date" className="form-control" />
+                            </div>
+                          </div>
+                          {/* position title */}
+                          <div className="col mt-3">
+                            <label>Position Title:</label>
+                            <input onChange={(e) => setCompanyTitle(past.id, e.target.value)} value={past.title} type="text" name="position_title" className="form-control" placeholder="Position Title:" />
+                          </div>
+                          {/* company address */}
+                          {/* <h5 className="my-2">Company Address</h5> */}
+                          <div className="col mt-3">
+                            <label>Company Address:</label>
+                            <input onChange={(e) => setCompanyTitle(past.id, e.target.value)} value={past.title} type="text" name="compant_address" className="form-control" placeholder=" Company Address:" />
+                          </div>
+                          {/* company phone */}
+                          <div className="col mt-3">
+                            <label>Company Phone:</label>
+                            <input value={past.phone} type="text" name="phone" className="form-control" placeholder="Company Phone:" onChange={(e) => setCompanyPhone(past.id, e.target.value)} />
+                          </div>
+
+
+                          {/* company street */}
+                          <div className="col mt-3">
+                            <label>Street:</label>
+                            <input type="text" name="companyStreet" className="form-control" placeholder="Company Street:" value={past.street} onChange={(e) => setCompanyStreet(past.id, e.target.value)} />
+                          </div>
+                          {/* company city */}
+                          <div className="col mt-3">
+                            <label>City:</label>
+                            <input type="text" name="companyCity" className="form-control" placeholder="Company City:" value={past.city} onChange={(e) => setCompanyCity(past.id, e.target.value)} />
+                          </div>
+                          {/* company state */}
+                          {/* <div className="col mt-3">
                           <label>State:</label>
                           <input type="text" name="companyState" className="form-control" placeholder="Company State:" value={past.state} onChange={( e ) => setCompanyState( past.id, e.target.value )} />
                         </div> */}
-                        <div className="col-lg-4 col-12 mt-3">
-                          <label>State:</label>
-                          <select class="form-select" name="state" aria-label="Default select example"
-                            value={past.state}
-                            onChange={( e ) => setCompanyState( past.id, e.target.value )}
-                          >
-                            <option selected value="">State Issued:</option>
-                            {stateList.map( ( state, index ) => {
-                              return (
-                                <option
-                                  key={index}
-                                  selected={past.state === state.value}
-                                  value={state.value}
-                                >{state.label}</option>
-                              )
-                            } )}
-                          </select>
-                        </div>
-                        {/* company zip */}
-                        <div className="col-lg-11 col-12 mt-3">
-                          <label>Company Zip:</label>
-                          <input type="text" name="companyZip" className="form-control" placeholder="Company Zip:" value={past.zip_code} onChange={( e ) => setCompanyZipCode( past.id, e.target.value )} />
-                        </div>
-                        {/* company phone */}
-                        <div className="col-lg-11 col-12 mt-3">
-                          <label>Company Phone:</label>
-                          <input value={past.phone} type="text" name="phone" className="form-control" placeholder="Company Phone:" onChange={( e ) => setCompanyPhone( past.id, e.target.value )} />
-                        </div>
-                        {/* authorize */}
-                        <div className="col-lg-11 col-12 mt-3">
-                          <div class="form-check form-switch">
-                            <label class="form-check-label" htmlFor="authorize">Do you authorize prospective employers to contact this company?</label>
-                            {/* onClick={( e ) => set_can_contact( e.target.checked )} */}
-                            <input class="form-check-input" type="checkbox" role="switch" id="authorize" checked={past.can_contact} onClick={( e ) => setCompanyCanContact( past.id, e.target.checked )} />
+                          <div className="col mt-3">
+                            <label>State:</label>
+                            <select class="application_select form-select" name="state" aria-label="Default select example"
+                              value={past.state}
+                              onChange={(e) => setCompanyState(past.id, e.target.value)}
+                            >
+                              <option selected value="">State Issued:</option>
+                              {stateList.map((state, index) => {
+                                return (
+                                  <option
+                                    key={index}
+                                    selected={past.state === state.value}
+                                    value={state.value}
+                                  >{state.label}</option>
+                                )
+                              })}
+                            </select>
                           </div>
-                        </div>
-                        {/* FMCSRs */}
-                        <div className="col-lg-11 col-12 mt-3">
-                          <div class="form-check form-switch">
-                            <label class="form-check-label" htmlFor="FMCSRs">Were you subject to the FMCSRs?</label>
-                            <input checked={past.is_subject_to_fmcsrs} class="form-check-input" type="checkbox" role="switch" id="FMCSRs" onClick={( e ) => setCompanyIsSubjectToFmcsrs( past.id, e.target.checked )} />
+                          {/* company zip */}
+                          <div className="col mt-3">
+                            <label>Company Zip:</label>
+                            <input type="text" name="companyZip" className="form-control" placeholder="Company Zip:" value={past.zip_code} onChange={(e) => setCompanyZipCode(past.id, e.target.value)} />
                           </div>
-                        </div>
-                        {/* is_subject_to_drug_tests */}
-                        <div className="col-lg-11 col-12 mt-3">
-                          <div class="form-check form-switch">
-                            <label class="form-check-label" htmlFor="is_subject_to_drug_tests">Was your job designated as a safety-sensitive function in any DOT- regulated mode subject to the drug and alcohol testing requirements of 49 CFR Part 40?</label>
-                            <input checked={past.is_subject_to_drug_tests} class="form-check-input" type="checkbox" role="switch" id="is_subject_to_drug_tests" onClick={( e ) => setCompanyIsSubjectToDrugTests( past.id, e.target.checked )} />
+
+                          {/* authorize */}
+                          <div className="col mt-3">
+                            <div class="form-check form-switch">
+                              <label class="form-check-label" htmlFor="authorize">Do you authorize prospective employers to contact this company?</label>
+                              {/* onClick={( e ) => set_can_contact( e.target.checked )} */}
+                              <input class="form-check-input" type="checkbox" role="switch" id="authorize" checked={past.can_contact} onClick={(e) => setCompanyCanContact(past.id, e.target.checked)} />
+                            </div>
                           </div>
+                          {/* FMCSRs */}
+                          <div className="col mt-3">
+                            <div class="form-check form-switch">
+                              <label class="form-check-label" htmlFor="FMCSRs">Were you subject to the FMCSRs?</label>
+                              <input checked={past.is_subject_to_fmcsrs} class="form-check-input" type="checkbox" role="switch" id="FMCSRs" onClick={(e) => setCompanyIsSubjectToFmcsrs(past.id, e.target.checked)} />
+                            </div>
+                          </div>
+                          {/* is_subject_to_drug_tests */}
+                          <div className="col mt-3">
+                            <div class="form-check form-switch">
+                              <label class="form-check-label" htmlFor="is_subject_to_drug_tests">Was your job designated as a safety-sensitive function in any DOT- regulated mode subject to the drug and alcohol testing requirements of 49 CFR Part 40?</label>
+                              <input checked={past.is_subject_to_drug_tests} class="form-check-input" type="checkbox" role="switch" id="is_subject_to_drug_tests" onClick={(e) => setCompanyIsSubjectToDrugTests(past.id, e.target.checked)} />
+                            </div>
+                          </div>
+
                         </div>
+                      )
+                    })
+                  }
+                  {
+                    pastEmployers.length < 3 &&
+                    <div className="col mt-3">
+                      <span className="btn btn-yellow" onClick={addPastEmployer}>+{3 - pastEmployers.length} more jobs</span>
+                    </div>
 
-                      </div>
-                    )
-                  } )
-                }
-                {
-                  pastEmployers.length < 3 &&
-                  <div className="col-lg-11 col-12 mt-3">
-                    <span className="btn btn-success" onClick={addPastEmployer}>+{3 - pastEmployers.length} more jobs</span>
-                  </div>
+                  }
 
-                }
-              </div>
+                </div>
 
-              {/* Safety column */}
-              <div className="col-lg-8 col-12 mt-3">
-                <h2>Safety Background</h2>
-                <div className="row">
-                  {/* col-1 */}
-                  <div className="col-lg-6 col-12">
-                    {/* drug test */}
-                    <div className="col-lg-11 col-12 mt-3">
-                      <div class="form-check form-switch">
-                        <label class="form-check-label" htmlFor="drug_test">Can I pass a drug test?</label>
-                        <input checked={can_pass_drug_test} onClick={( e ) => set_can_pass_drug_test( e.target.checked )} class="form-check-input" type="checkbox" role="switch" id="drug_test" />
-                      </div>
-                    </div>
-                    {/* DUI? */}
-                    <div className="col-lg-11 col-12 mt-3">
-                      <div class="form-check form-switch">
-                        <label class="form-check-label" htmlFor="DUI">Past DUI’s:</label>
-                        <input checked={has_past_dui} onClick={( e ) => set_has_past_dui( e.target.checked )} class="form-check-input" type="checkbox" role="switch" id="DUI" />
-                      </div>
-                    </div>
-                    {/* PUI Date */}
-                    <div className="col-lg-11 col-12 mt-3">
-                      <label>Year(s) of Past DUI’s:</label>
-                      <CreatableSelect
-                        isMulti
-                        components={{
-                          DropdownIndicator: null,
-                        }}
-                        isClearable
-                        menuIsOpen={false}
-                        placeholder="Year(s) of Past DUI’s:"
-                        inputValue={dui_input_value}
-                        onInputChange={( value ) => set_dui_input_value( value )}
-                        onChange={( value ) => set_dui_past_years( value )}
-                        onKeyDown={handleKeyDown}
-                        value={dui_past_years}
-                      />
-                    </div>
-                    {/* criminal history */}
-                    <div className="col-lg-11 col-12 mt-3">
-                      <label>Criminal History in last 3 years?</label>
-                      <input type="text" name="criminal_history" className="form-control" placeholder="Criminal History in last 3 years?" onChange={( e ) => set_criminal_history( e.target.value )} value={criminal_history} />
-                    </div>
-                    {/* accidents */}
-                    <div className="col-lg-11 col-12 mt-3">
-                      <label>Accidents within the last 5 years:</label>
-                      <input type="number" name="academy_year" className="form-control" placeholder="Accidents within the last 5 years:" onChange={( e ) => set_accident_count( e.target.value )} value={accident_count} />
-                    </div>
-                    {/* accident details */}
-                    <div className="col-lg-11 col-12 mt-3">
-                      <label htmlFor="exampleFormControlTextarea1" class="form-label">Accidents details:</label>
-                      <textarea class="form-control mt-4 " name="accident_detail" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => set_accident_details( e.target.value )} value={accident_details}></textarea>
+                {/* Safety column */}
+                <div className="col-md-4 mt-lg-0 mt-3">
+                  <h2>Safety Background</h2>
+
+
+                  {/* drug test */}
+                  <div className="col mt-3">
+                    <div class="form-check form-switch mb-34 mt-55">
+                      <label class="form-check-label" htmlFor="drug_test">Can I pass a drug test?</label>
+                      <input checked={can_pass_drug_test} onClick={(e) => set_can_pass_drug_test(e.target.checked)} class="form-check-input" type="checkbox" role="switch" id="drug_test" />
                     </div>
                   </div>
+                  {/* DUI? */}
+                  <div className="col mt-3">
+                    <div class="form-check form-switch  mb-34 mt-60">
+                      <label class="form-check-label" htmlFor="DUI">Past DUI’s:</label>
+                      <input checked={has_past_dui} onClick={(e) => set_has_past_dui(e.target.checked)} class="form-check-input" type="checkbox" role="switch" id="DUI" />
+                    </div>
+                  </div>
+                  {/* PUI Date */}
+                  <div className="col mt-40">
+                    <label>Year(s) of Past DUI’s:</label>
+                    <CreatableSelect
+
+                      isMulti
+                      components={{
+                        DropdownIndicator: null,
+                      }}
+                      isClearable
+                      menuIsOpen={false}
+                      placeholder="Year(s) of Past DUI’s:"
+                      inputValue={dui_input_value}
+                      onInputChange={(value) => set_dui_input_value(value)}
+                      onChange={(value) => set_dui_past_years(value)}
+                      onKeyDown={handleKeyDown}
+                      value={dui_past_years}
+
+                    />
+                  </div>
+                  {/* criminal history */}
+                  <div className="col mt-3 mt-17">
+                    <label>Criminal History in last 3 years?</label>
+                    <input type="text" name="criminal_history" className="form-control" placeholder="Criminal History in last 3 years?" onChange={(e) => set_criminal_history(e.target.value)} value={criminal_history} />
+                  </div>
+                  {/* accidents */}
+                  <div className="col mt-3">
+                    <label>Accidents within the last 5 years:</label>
+                    <input type="number" name="academy_year" min={0} className="form-control" placeholder="Accidents within the last 5 years:" onChange={(e) => set_accident_count(e.target.value)} value={accident_count} />
+                  </div>
+                  {/* accident details */}
+                  <div className="col mt-3 mt-17">
+                    <label htmlFor="exampleFormControlTextarea1" class="form-label m-0">Accidents details:</label>
+                    <textarea class="form-control " name="accident_detail" id="exampleFormControlTextarea1" rows="3" onChange={(e) => set_accident_details(e.target.value)} value={accident_details}></textarea>
+                  </div>
+
                   {/* col-2 */}
-                  <div className="col-lg-6 col-12">
+
+
+                </div>
+                <div className="col-md-4 border-0 text-end">
+                  <div className="col mt-85 ">
                     {/* license */}
-                    <div className="col-lg-11 col-12 mt-3">
+                    <div className="col mt-3">
                       <div class="form-check form-switch">
                         <label class="form-check-label" htmlFor="licence">Has any of your license, permit or privilege to operate a CMV ever been suspended or revoked? If so, please explain:</label>
-                        <input class="form-check-input" type="checkbox" role="switch" id="licence" checked={revoked} onClick={( e ) => setRevoked( e.target.checked )} />
+                        <input class="form-check-input" type="checkbox" role="switch" id="licence" checked={revoked} onClick={(e) => setRevoked(e.target.checked)} />
                       </div>
                     </div>
                     {/* revoked details */}
                     {
                       revoked && (
-                        <div className="col-lg-11 col-12 mt-3">
+                        <div className="col mt-3">
                           <label htmlFor="exampleFormControlTextarea1" class="form-label">Details:</label>
-                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => setRevokedDetails( e.target.value )} value={revokedDetails} />
+                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => setRevokedDetails(e.target.value)} value={revokedDetails} />
                         </div>
                       )
                     }
                     {/* violation */}
-                    <div className="col-lg-11 col-12 mt-3">
+                    <div className="col mt-34 ">
                       <div class="form-check form-switch">
                         <label class="form-check-label" htmlFor="violation">Do you have any violation on you PSP from previous three years? If so please explain:</label>
-                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={violations} onClick={( e ) => setViolations( e.target.checked )} />
+                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={violations} onClick={(e) => setViolations(e.target.checked)} />
                       </div>
                     </div>
                     {/* violation details */}
                     {
                       violations && (
-                        <div className="col-lg-11 col-12 mt-3">
+                        <div className="col mt-48">
                           <label htmlFor="exampleFormControlTextarea1" class="form-label">Violation Details:</label>
-                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => setViolationsDetails( e.target.value )} value={violationsDetails} />
+                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => setViolationsDetails(e.target.value)} value={violationsDetails} />
                         </div>
                       )
                     }
                     {/* 5 years tickets */}
-                    <div className="col-lg-11 col-12 mt-3">
+                    <div className="col mt-48">
                       <div class="form-check form-switch">
                         <label class="form-check-label" htmlFor="violation">Have you had any tickets in the previous 5 years?</label>
-                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={tickets} onClick={( e ) => set_tickets( e.target.checked )} />
+                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={tickets} onClick={(e) => set_tickets(e.target.checked)} />
                       </div>
                     </div>
                     {/* 5 years tickets details*/}
                     {
                       tickets && (
-                        <div className="col-lg-11 col-12 mt-3">
+                        <div className="col mt-48">
                           <label htmlFor="exampleFormControlTextarea1" class="form-label">If so, please explain:</label>
-                          <textarea class="form-control" name="any_tickets" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => set_ticketsDetails( e.target.value )} value={ticketsDetails}></textarea>
+                          <textarea class="form-control" name="any_tickets" id="exampleFormControlTextarea1" rows="3" onChange={(e) => set_ticketsDetails(e.target.value)} value={ticketsDetails}></textarea>
                         </div>
                       )
                     }
 
                     {/* drug test */}
-                    <div className="col-lg-11 col-12 mt-3">
-                      <div class="form-check form-switch">
+                    <div className="col">
+                      <div class="form-check form-switch  mt-55">
                         <label class="form-check-label" htmlFor="violation">Have you ever refused to be tested or had a positive drug/alcohol test?</label>
-                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={drugTest} onClick={( e ) => set_drugTest( e.target.checked )} />
+                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={drugTest} onClick={(e) => set_drugTest(e.target.checked)} />
                       </div>
                     </div>
 
                     {/* drug test details */}
                     {
                       drugTest && (
-                        <div className="col-lg-11 col-12 mt-3">
+                        <div className="col mt-3">
                           <label htmlFor="exampleFormControlTextarea1" class="form-label">if so, explain here:</label>
-                          <textarea class="form-control" name="refused" id="exampleFormControlTextarea1" rows="3" onChange={( e ) => set_drugTestDetails( e.target.value )} value={drugTestDetails}></textarea>
+                          <textarea class="form-control" name="refused" id="exampleFormControlTextarea1" rows="3" onChange={(e) => set_drugTestDetails(e.target.value)} value={drugTestDetails}></textarea>
                         </div>
                       )
                     }
                   </div>
-                </div>
-              </div>
-              <div className="col-lg-12 col-12 mt-4 border-0 text-end">
-                <button
-                  type="submit" className={`  ${style.update_btn}`} >
 
-                  Update
-                </button>
+                </div>
+                <div className="col-md-12 border-0 text-end">
+                  <div className="col">
+                    <button
+                      type="submit" className={`  ${style.update_btn}`} >
+
+                      Update
+                    </button>
+                  </div>
+                </div>
+
               </div>
             </form>
           </div>
@@ -1049,7 +1110,7 @@ export default function MyApplication () {
 };
 
 
-MyApplication.getLayout = function getLayout ( page ) {
+MyApplication.getLayout = function getLayout(page) {
   return (
     <FullLayout>
       {page}
