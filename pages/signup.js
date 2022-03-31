@@ -222,7 +222,7 @@ export default function Signup() {
           <div className="col-lg-8">
             <div className={SignupStyle.form}>
             <ToastContainer />
-              <h2 className="text-center my-5">Create New Driver Account</h2>
+              <h2 className="text-center my-5">Create New Account</h2>
               <div className="my-5">
                 <div className="form-group">
                   <input type="text" className="form-control p-4" onChange={(e) => handleChange(e)} name="first_name" value={inputValues.first_name} aria-describedby="emailHelp" placeholder="First Name" />
