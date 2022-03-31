@@ -861,7 +861,7 @@ export default function MyApplication() {
                         <div key={eq.id}>
                           <div className='row px-lg-5'>
                             <BaseInput
-                              className="col-md-6"
+                              className="col-md-5"
                               label="Type :"
                               placeholder="Equipment Type"
                               value={eq.type}
@@ -869,14 +869,16 @@ export default function MyApplication() {
                               name="equipment_type"
                             />
                             <BaseInput
-                              className="col"
+                              className="col-md-5"
                               label="Years Experience:"
                               type="number"
                               onChange={(e) => setEquipmentExperience(eq.id, e.target.value)}
                               value={eq.years}
                               placeholder="Years Experience"
                             />
-                            <span className="btn btn-approved  mt-3" onClick={() => { removeEquipment(eq.id) }}>x Remove</span>
+                            <div className="col-md-2 mt-5">
+                              <span className="btn btn-yellow" onClick={() => { removeEquipment(eq.id) }}>x Remove</span>
+                            </div>
                           </div>
                         </div>
                       )
