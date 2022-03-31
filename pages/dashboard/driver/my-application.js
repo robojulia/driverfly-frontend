@@ -735,7 +735,7 @@ export default function MyApplication() {
                     placeholder="Years of CDL Experience"
                     name="years_cdl_experience"
                     type="number"
-                    min={0}
+                    min={1}
                     value={acc_form.values.years_cdl_experience}
                     touched={acc_form.touched.years_cdl_experience}
                     error={acc_form.errors.years_cdl_experience}
