@@ -71,6 +71,45 @@ export default function MyApplication() {
   // }
   const [equipments, set_equipments] = useState([])
 
+  yup.addMethod(yup.object, "typeUnique", function (errorMessage) {
+    return this.test(`unique`, errorMessage, function () {
+      let valueArr = equipments.map(function (item) { return item.type });
+      let isDuplicate = valueArr.some(function (item, idx) {
+        return valueArr.indexOf(item) != idx
+      });
+      if (isDuplicate) {
+        toast.warning(errorMessage, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
+      }
+      return !isDuplicate;
+    });
+  });
+
+  yup.addMethod(yup.object, "typeNotEmpty", function (errorMessage) {
+    return this.test(`not-empty`, errorMessage, function () {
+      let isEmpty = equipments.some(function (item) { return item.type == "" });
+      if (isEmpty) {
+        toast.warning(errorMessage, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
+      }
+      return !isEmpty;
+    });
+  });
+
   const acc_form = useFormik({
     initialValues: {
       // name: '',
@@ -104,6 +143,9 @@ export default function MyApplication() {
       zip_code: yup.string().required("This field is required").nullable(),
       state: yup.string().required("This field is required").nullable(),
       emergency_contact_relationship: yup.string().required("This field is required").nullable(),
+      equipments: yup.object()
+        .typeUnique("Equipmets type can not be duplicate")
+        .typeNotEmpty("Equipmets type can not be empty")
     }),
     onSubmit: async (values) => {
       const data = {
@@ -807,6 +849,13 @@ export default function MyApplication() {
                 <div className="col-md-12">
                   <div className={` mt-3  p-4 ${style.account_container}`}>
                     <span>Equipment Experience</span> <br />
+                    <div>
+                      {
+                        acc_form.errors.equipments &&
+                        <span className="text-danger small">{acc_form.errors.equipments}</span>
+                      }
+
+                    </div>
                     {equipments.map((eq) => {
                       return (
                         <div key={eq.id}>
