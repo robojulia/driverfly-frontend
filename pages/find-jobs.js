@@ -14,6 +14,19 @@ export default function FindJobs() {
   let filters = {
     keywords: "",
     category: "",
+    location: "",
+    work_type: "",
+    job_type: "",
+    areas_covered: "",
+    employment_type: "",
+    delivery_type: "",
+    drivers_from: "",
+    equipment_type: "",
+    schedule: "",
+    pay_structure: "",
+    pay_structure: "",
+    endoresements_type: "",
+    mvr_requirements: "",
   }
   const router = useRouter()
 
