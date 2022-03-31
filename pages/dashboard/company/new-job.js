@@ -121,7 +121,7 @@ export default function NewJobs() {
 
 
     const handleChange = (event) => {
-        const { name, value } = event.target
+        let { name, value } = event.target
 
         if (name == "min_rate_per_mile" || name == 'max_rate_per_mile') {
             value = parseInt(value)

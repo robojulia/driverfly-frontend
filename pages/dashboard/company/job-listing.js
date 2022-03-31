@@ -42,13 +42,10 @@ export default function JobListing() {
             { headers: headers }
         )
             .then(data => {
-                console.log("handle success", data.data)
                 setJobs(data.data)
             })
             .catch(function (error) {
-                console.log("handle error success", error.response)
             }).then(function () {
-                console.log("always executed")
             })
     }
 
@@ -66,77 +63,238 @@ export default function JobListing() {
                 </Row>
                 <Row className="mt-5">
                     <Col lg="12 ">
-                        <Card>
+                        <Card className="job_listing">
                             <CardBody className={JobList.jobtable}>
                                 <div className="table-responsive">
                                     <Table striped>
-                                        <thead>
+                                        <thead className="listing_head">
                                             <tr>
-                                                <th>Title</th>
+                                                <th>File Name</th>
                                                 <th>Post Date</th>
-                                                <th>Job Type</th>
+                                                <th>Expiration Date</th>
+                                                <th>Status</th>
                                                 <th>Applied</th>
                                                 <th>Approved</th>
                                                 <th>Hired</th>
-                                                <th className={JobList.display}>
+                                                <th>Tags</th>
+                                                <th>Platforms deployed on</th>
+                                                {/* <th className={JobList.display}>
                                                     <span className={JobList.tag}>  </span>
-                                                </th>
+                                                </th> */}
 
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {jobs.length > 0 && jobs.map((job, index) => (
-
+                                            {/* {jobs.length > 0 && jobs.map((job, index) => ( */}
                                                 <tr>
-                                                    <td>
-                                                        {job.title}
-                                                    </td>
-                                                    <td>
-                                                        {new Date(job.created_at).toDateString()}
-                                                    </td>
-                                                    <td>
-                                                        {job.job_type}
-                                                    </td>
-                                                    <td>
-                                                        <span className={JobList.applied}>
-                                                            6
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <span className={JobList.approved}>
-                                                            4
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <span className={JobList.hired}>
-                                                            1
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <span className={JobList.tags}>
-                                                            {job.employment_type}
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            ))}
+                                                <td>
+                                                    {/* {job.title} */}
+                                                    Class A CDL – Texas –NE OTR
+                                                </td>
+                                                <td>
+                                                    {/* {new Date(job.created_at).toDateString()} */}
+                                                    November 12, 2021
+                                                </td>
+                                                <td>
+                                                    Dec 12, 2021
+                                                </td>
+                                                <td>
+                                                    Expired
+                                                </td>
+                                                <td>
+                                                    <span className={JobList.applied}>
+                                                        6
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className={JobList.approved}>
+                                                        4
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className={JobList.hired}>
+                                                        1
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className={JobList.tags}>
+                                                        {/* {job.employment_type} */}
+                                                        1099
+                                                    </span>
+                                                    <span className={JobList.repost}>
+                                                        Repost
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className={JobList.bg_light}>
+                                                        DriverFly Job Board
+                                                    </span>
+                                                    <span className={JobList.bg_light}>
+                                                        Facebook
+                                                    </span>
+                                                </td>
+
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    {/* {job.title} */}
+                                                    Class A CDL – Texas –NE OTR
+                                                </td>
+                                                <td>
+                                                    {/* {new Date(job.created_at).toDateString()} */}
+                                                    November 12, 2021
+                                                </td>
+                                                <td>
+                                                    Dec 12, 2021
+                                                </td>
+                                                <td>
+                                                    Expired
+                                                </td>
+                                                <td>
+                                                    <span className={JobList.applied}>
+                                                        6
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className={JobList.approved}>
+                                                        4
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className={JobList.hired}>
+                                                        1
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className={JobList.tags}>
+                                                        {/* {job.employment_type} */}
+                                                        OTR
+                                                    </span>
+                                                    <span className={JobList.repost}>
+                                                        Repost
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className={JobList.hired}>
+                                                        DriverFly Job Board
+                                                    </span>
+                                                    <span className={JobList.hired}>
+                                                        Facebook
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    {/* {job.title} */}
+                                                    Class A CDL – Texas –NE OTR
+                                                </td>
+                                                <td>
+                                                    {/* {new Date(job.created_at).toDateString()} */}
+                                                    November 12, 2021
+                                                </td>
+                                                <td>
+                                                    Dec 12, 2021
+                                                </td>
+                                                <td>
+                                                    Expired
+                                                </td>
+                                                <td>
+                                                    <span className={JobList.applied}>
+                                                        6
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className={JobList.approved}>
+                                                        4
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className={JobList.hired}>
+                                                        1
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className={JobList.tags}>
+                                                        {/* {job.employment_type} */}
+                                                        1099
+                                                    </span>
+                                                    <span className={JobList.repost}>
+                                                        Repost
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className={JobList.bg_light}>
+                                                        DriverFly Job Board
+                                                    </span>
+                                                    <span className={JobList.bg_light}>
+                                                        Facebook
+                                                    </span>
+                                                </td>
+
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    {/* {job.title} */}
+                                                    Class A CDL – Texas –NE OTR
+                                                </td>
+                                                <td>
+                                                    {/* {new Date(job.created_at).toDateString()} */}
+                                                    November 12, 2021
+                                                </td>
+                                                <td>
+                                                    Dec 12, 2021
+                                                </td>
+                                                <td>
+                                                    Expired
+                                                </td>
+                                                <td>
+                                                    <span className={JobList.applied}>
+                                                        6
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className={JobList.approved}>
+                                                        4
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className={JobList.hired}>
+                                                        1
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className={JobList.tags}>
+                                                        {/* {job.employment_type} */}
+                                                        OTR
+                                                    </span>
+                                                    <span className={JobList.repost}>
+                                                        Repost
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span className={JobList.hired}>
+                                                        DriverFly Job Board
+                                                    </span>
+                                                    <span className={JobList.hired}>
+                                                        Facebook
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            {/* ))} */}
 
 
                                         </tbody>
                                     </Table>
                                 </div>
                                 <Row className="py-4">
-                                    {/* <Col sm="6" lg="10">
+                                    <Col sm="6" lg="9">
                                         <nav aria-label="Page navigation example p-0">
                                             <ul className="pagination p-0">
-                                                <li className="page-item"><a className="page-link" href="#">Previous</a></li>
-                                                <li className="page-item"><a className="page-link" href="#">1</a></li>
-                                                <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                                <li className="page-item"><a className="page-link" href="#">3</a></li>
-                                                <li className="page-item"><a className="page-link" href="#">Next</a></li>
+                                                <li className="page-item"><a className="page-link" href="#">Page 1</a></li>
                                             </ul>
                                         </nav>
-                                    </Col> */}
-                                    <Col sm="6" lg="2" >
+                                    </Col>
+                                    <Col sm="6" lg="3" className="mt-4 text-center" >
                                         <Link href="/dashboard/company/new-job">
                                             <a className={JobList.repost}>
                                                 + New Job
@@ -149,7 +307,7 @@ export default function JobListing() {
                         </Card>
                     </Col>
                 </Row>
-                {/* <div className={JobList.job__overview}>
+                <div className={JobList.job__overview}>
                     <Row>
 
                         <Col className="p-0" lg="2">
@@ -159,11 +317,14 @@ export default function JobListing() {
                             <div className={JobList.job__overview__body}>
                                 <p className="p-3">Hi we’re a general freight hauler looking for a dedicated OTR CDL Class A Driver. We offer great pay with flexible dispatch and home time. Reach out to us today if you’re interested in hauling across the country on good loads that pay well.</p>
                                 <div className="space_6"></div>
-                                <input className={JobList.edit__btn}
-                                    type="button"
-                                    value="Edit"></input>
+                                     <Row className="">
+                                        <Col className="text-end"><input className={JobList.edit__btn}
+                                            type="button"
+                                            value="Edit"></input></Col>
+                                    </Row>
 
                             </div>
+                            
                         </Col>
 
                         <Col className="p-0" lg="4">
@@ -246,8 +407,8 @@ export default function JobListing() {
 
                                         </Col>
                                     </Row>
-                                    <Row className="p-3 ">
-                                        <Col><input className={JobList.edit__btn}
+                                    <Row className="spacer">
+                                        <Col className="text-end"><input className={JobList.edit__btn}
                                             type="button"
                                             value="Edit"></input></Col>
                                     </Row>
@@ -258,7 +419,7 @@ export default function JobListing() {
 
                         <Col className="p-0" lg="2">
                             <div className={JobList.job__overview__header}>
-                                <h3>Job Summary</h3>
+                                <h3 >Total Hires</h3>
                             </div>
                             <div className={JobList.job__overview__body}>
                                 <p className="p-3">Days active:  12</p>
@@ -295,7 +456,7 @@ export default function JobListing() {
                                 "></input>
                         </Col>
                     </Row>
-                </div> */}
+                </div>
             </div>
         </>
     )
