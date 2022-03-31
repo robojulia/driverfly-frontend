@@ -294,7 +294,8 @@ export default function PrestoresDocuments() {
                     <Button className="btn_danger" onClick={() => deleteFile("DRIVER_LICENSE")}>Delete</Button>
                   </>
                 }
-                <input type="file"
+                <input
+                  type="file"
                   accept="application/pdf"
                   class="custom-file-input"
                   onChange={(event) => upload(event, "DRIVER_LICENSE")} />
@@ -313,7 +314,8 @@ export default function PrestoresDocuments() {
                     <Button className="btn_danger" onClick={() => deleteFile("MEDICAL_CARD")}>Delete</Button>
                   </>
                 }
-                <input type="file"
+                <input
+                  type="file"
                   accept="application/pdf"
                   class="custom-file-input"
                   onChange={(event) => upload(event, "MEDICAL_CARD")} />
@@ -334,7 +336,8 @@ export default function PrestoresDocuments() {
                     <Button className="btn_danger" onClick={() => deleteFile("RESUME")}>Delete</Button>
                   </>
                 }
-                <input type="file"
+                <input
+                  type="file"
                   accept="application/pdf"
                   class="custom-file-input"
                   onChange={(event) => upload(event, "RESUME")} />
@@ -353,7 +356,8 @@ export default function PrestoresDocuments() {
                     <Button className="btn_danger" onClick={() => deleteFile("MVR")}>Delete</Button>
                   </>
                 }
-                <input type="file"
+                <input
+                  type="file"
                   accept="application/pdf"
                   class="custom-file-input"
                   onChange={(event) => upload(event, "MVR")} />
