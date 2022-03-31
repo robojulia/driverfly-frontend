@@ -547,6 +547,13 @@ export default function MyApplication() {
     set_equipments([...equipments, { type: "", years: 0, id: randomId() }])
   }
 
+  const removeEquipment = (id) => {
+    let newEquipments = equipments.filter((value, index, arr) => {
+      return value.id != id
+    })
+    set_equipments(newEquipments)
+  }
+
   const addPastEmployer = () => {
     set_pastEmployers([...pastEmployers, {
       id: randomId(),
@@ -820,6 +827,7 @@ export default function MyApplication() {
                               value={eq.years}
                               placeholder="Years Experience"
                             />
+                            <span className="btn btn-approved  mt-3" onClick={() => { removeEquipment(eq.id) }}>x Remove</span>
                           </div>
                         </div>
                       )
