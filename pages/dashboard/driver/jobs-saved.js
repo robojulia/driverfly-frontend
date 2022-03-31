@@ -120,22 +120,20 @@ export default function JobsAppliedTo() {
                                                     <td>
 
                                                         Schedule
-                                                        <Link href="#">
-                                                            <button className={` mt-3 text-white ${JobList.hired}`}>Contact</button>
-                                                        </Link>
+                                                       
                                                     </td>
                                                     <td>
                                                         Equipment
                                                         <Link href="#">
-                                                            <button className={` mt-3 text-white ${JobList.approved}`}>Contact</button>
+                                                            <button className={` mt-3 text-white ${JobList.hired}`}>View More</button>
                                                         </Link>
                                                     </td>
                                                     <td>
                                                         <td>
                                                             Truck
                                                             <Link href="#">
-                                                                <button className={` mt-3 text-white ${JobList.applied}`}>Hired</button>
-                                                            </Link>
+                                                            <button className={` mt-3 text-white ${JobList.approved}`}>Contact Company</button>
+                                                        </Link>
                                                         </td>
 
 

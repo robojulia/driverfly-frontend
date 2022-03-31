@@ -119,20 +119,20 @@ export default function OfferedJobs() {
 
                                                         Schedule
                                                         <Link href="#">
-                                                            <button className={` mt-3 text-white ${JobList.hired}`}>Contact</button>
+                                                            <button className={` mt-3 text-white ${JobList.hired}`}>View More</button>
                                                         </Link>
                                                     </td>
                                                     <td>
                                                         Equipment
                                                         <Link href="#">
-                                                            <button className={` mt-3 text-white ${JobList.approved}`}>Contact</button>
+                                                            <button className={` mt-3 text-white ${JobList.approved}`}>Contact Company</button>
                                                         </Link>
                                                      </td>
                                                     <td>
                                                         <td>
                                                          Truck
                                                          <Link href="#">
-                                                                <button className={` mt-3 text-white ${JobList.applied}`}>Hired</button>
+                                                                <button className={` mt-3 text-white ${JobList.applied}`}>Mark As Hired</button>
                                                             </Link>
                                                      </td>
 
@@ -192,12 +192,12 @@ export default function OfferedJobs() {
                                                     </td>
                                                     <td>
                                                         <Link href="#">
-                                                            <button className={` mt-3 text-white ${JobList.hired}`}>View</button>
+                                                            <button className={` mt-3 text-white ${JobList.hired}`}>View Job</button>
                                                         </Link>
                                                     </td>
                                                     <td>
                                                         <Link href="#">
-                                                            <button className={` mt-3 text-white ${JobList.hired}`}>Contact</button>
+                                                            <button className={` mt-3 text-white ${JobList.hired}`}>Contact Company</button>
                                                         </Link>
                                                     </td>
 
