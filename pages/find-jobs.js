@@ -8,31 +8,38 @@ import JobsList from '../components/jobslisting/jobslist'
 import Layout from "../components/layouts"
 import jobsContext from "../context/jobContext"
 
-export default function FindJobs () {
-  const [jobs, setJobs] = useState( [] )
+export default function FindJobs() {
+
+  const [jobs, setJobs] = useState([])
+  let filters = {}
   const router = useRouter()
+
   const searchByLocation = e => {
     e.preventDefault()
-    console.log( e.target.location.value )
+    console.log(e.target.location.value)
   }
 
   const sortHandler = e => {
     e.preventDefault()
-    console.log( e.target.value )
+    console.log(e.target.value)
   }
 
-  
 
-  const fetchJobs = async() => {
-    const queries = window.location.href.split("?")[1]
-    const { data } = await axios.get( `${process.env.BASE_URL_API}/jobs?${queries || ""}` )
-    setJobs( data )
+
+  const fetchJobs = async () => {
+    console.log('filters Final', filters)
+    const { data } = await axios.get(`${process.env.BASE_URL_API}/jobs`, {
+      params: {
+        ...filters
+      }
+    })
+    setJobs(data)
   }
 
-  useEffect( fetchJobs, [] )
+  useEffect(fetchJobs, [])
 
   return (
-    <jobsContext.Provider value={{ jobs, applyFilters: fetchJobs }}>
+    <jobsContext.Provider value={{ jobs, filters, applyFilters: fetchJobs }}>
       <div className="filter-sec">
         <div className="container">
           <div className="row">
@@ -83,7 +90,7 @@ export default function FindJobs () {
 
 }
 
-FindJobs.getLayout = function getLayout ( page ) {
+FindJobs.getLayout = function getLayout(page) {
   return (
     <Layout>
       {page}
