@@ -1,19 +1,17 @@
-import { useRouter } from "next/router"
-import { updateQueryStringParameter } from "../../logics/utils"
-
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
+import { cdl_classes } from "../../enums/jobs/cdl-classes"
 
-export default function Category () {
-  const ctx = useContext( jobContext )
-  const router = useRouter()
-  const categoryFilter = ( e ) => {
-    if ( e.target.checked ) {
-      const a = updateQueryStringParameter( window.location.href, 'category', e.target.value )
-      router.replace( a )
-      ctx.applyFilters()
+export default function Category() {
+
+  const { filters, applyFilters } = useContext(jobContext)
+  const categoryFilter = (e) => {
+    if (e.target.checked) {
+      filters.category = e.target.value
+      applyFilters()
     }
   }
+
   return (
     <>
       <div className="card mt-3">
@@ -30,9 +28,28 @@ export default function Category () {
           <div className="card-body">
             <div className="custom-control custom-checkbox p-0">
               <div className="App">
-                <div className="topping">
-                  <input onChange={categoryFilter} type="checkbox" id="classcdl" name="classcdl" value="414" />Class A CDL(30)
+                <div class="topping ">
+                  <input
+                    onChange={categoryFilter}
+                    type="radio"
+                    name="category"
+                    value="" />
+                  Any
                 </div>
+                {Object.keys(cdl_classes).map((key) => {
+                  return (
+                    <>
+                      <div class="topping pt-2">
+                        <input
+                          onChange={categoryFilter}
+                          type="radio"
+                          name="category"
+                          value={key} />
+                        {cdl_classes[key]}
+                      </div>
+                    </>
+                  )
+                })}
               </div>
             </div>
           </div>

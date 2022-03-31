@@ -3,17 +3,15 @@ import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import { updateQueryStringParameter } from "../../logics/utils"
 
-export default function Search () {
-  const ctx = useContext( jobContext )
-  const router = useRouter()
+export default function Search() {
+  const { filters, applyFilters } = useContext(jobContext)
+
   const searchHandler = e => {
-    if ( e.key === 'Enter' ) {
-      const a = updateQueryStringParameter( window.location.href, 'title', e.target.value )
-      router.replace( a )
-      ctx.applyFilters()
+    if (e.key === 'Enter') {
+      filters.keywords = e.target.value
+      applyFilters()
     }
   }
-
 
   return (
     <>
