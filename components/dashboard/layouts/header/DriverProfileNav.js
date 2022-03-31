@@ -33,31 +33,21 @@ export default function DriverProfileNav(props) {
       <div className="profile">
         <Dropdown isOpen={dropdownOpen} toggle={toggle}>
           <DropdownToggle>
-
             <div style={{ lineHeight: "0px" }}>
-
               <Image
                 src={user1}
                 alt="profile"
                 className="rounded-circle"
                 width="30"
                 height="30"
-
               />
               <span>{props.user.name || "DriverFly User"}.</span>
               <p></p>
             </div>
-
           </DropdownToggle >
           <DropdownMenu>
-           
-            <Link href="#">
-              <DropdownItem>My Referrals</DropdownItem>
-            </Link>
-            <DropdownItem divider />
             <DropdownItem><LogoutButton /></DropdownItem>
           </DropdownMenu>
-
         </Dropdown>
       </div>
     </>
