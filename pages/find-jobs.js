@@ -11,7 +11,10 @@ import jobsContext from "../context/jobContext"
 export default function FindJobs() {
 
   const [jobs, setJobs] = useState([])
-  let filters = {}
+  let filters = {
+    keywords: "",
+    category: "",
+  }
   const router = useRouter()
 
   const searchByLocation = e => {
