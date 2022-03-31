@@ -322,7 +322,7 @@ export default function MyApplication() {
     set_birthDate(data.birthdate)
 
     setIs21(() => {
-      if (moment().diff(birthDate, "years") >= 21) {
+      if (moment().diff(data.birthdate, "years") >= 21) {
         return true
       }
       return false
