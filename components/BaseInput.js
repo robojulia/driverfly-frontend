@@ -9,9 +9,11 @@ function BaseInput ( props ) {
       <input
         onBlur={props.handleBlur}
         type={props.type || 'text'}
+        min={props.min}
         placeholder={props.placeholder}
         value={props.value}
         onChange={props.onChange}
+        onKeyDown={props.onKeyDown}
         name={props.name}
         className="form-control" 
       />
