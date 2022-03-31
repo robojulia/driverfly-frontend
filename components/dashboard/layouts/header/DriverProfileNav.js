@@ -50,9 +50,7 @@ export default function DriverProfileNav(props) {
 
           </DropdownToggle >
           <DropdownMenu>
-            <Link href="/dashboard/driver/profile">
-              <DropdownItem>Profile</DropdownItem>
-            </Link>
+           
             <Link href="#">
               <DropdownItem>My Referrals</DropdownItem>
             </Link>
