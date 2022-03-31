@@ -59,11 +59,11 @@ export default function OfferedJobs() {
                 </Row>
                 <Row className="mt-5">
                     <Col lg="12 ">
-                        <Card>
+                       
                             <CardBody className={JobList.jobtable}>
                                 <div className="table-responsive">
                                     <Table striped>
-                                        <thead>
+                                        <thead className="listing_head">
                                             <tr>
                                                 <th>Job Title</th>
                                                 <th>Date Offered</th>
@@ -76,10 +76,6 @@ export default function OfferedJobs() {
                                                 <th>Schedule</th>
                                                 <th>Equipment</th>
                                                 <th>Truck</th>
-
-                                                <th className={JobList.display}>
-                                                    <span className={JobList.tag}>  </span>
-                                                </th>
 
                                             </tr>
                                         </thead>
@@ -153,7 +149,7 @@ export default function OfferedJobs() {
                                 </div>
                             </CardBody>
 
-                        </Card>
+                        
                     </Col>
                 </Row>
 
@@ -165,20 +161,16 @@ export default function OfferedJobs() {
                 </Row>
                 <Row className="mt-5">
                     <Col lg="12 ">
-                        <Card>
+                       
                             <CardBody className={JobList.jobtable}>
                                 <div className="table-responsive">
                                     <Table striped>
-                                        <thead>
+                                        <thead className="listing_head">
                                             <tr>
                                                 <th>Job Title</th>
                                                 <th>Date Offered</th>
                                                 <th>Company</th>
                                                 <th>Status</th>
-
-                                                <th className={JobList.display}>
-                                                    <span className={JobList.tag}>  </span>
-                                                </th>
 
                                             </tr>
                                         </thead>
@@ -220,7 +212,7 @@ export default function OfferedJobs() {
                                 </div>
                             </CardBody>
 
-                        </Card>
+                       
                     </Col>
                 </Row>
             </div>

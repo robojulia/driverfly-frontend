@@ -147,7 +147,7 @@ export default function Dashboard() {
                             <CardBody className={JobList.jobtable}>
                                 <div className="table-responsive">
                                     <Table striped>
-                                        <thead>
+                                        <thead className="listing_head">
                                             <tr>
                                                 <th>Title</th>
                                                 <th>Date Offered</th>
@@ -159,10 +159,6 @@ export default function Dashboard() {
                                                 <th>Schedule</th>
                                                 <th>Equipment</th>
                                                 <th>Truck</th>
-
-                                                <th className={JobList.display}>
-                                                    <span className={JobList.tag}>  </span>
-                                                </th>
 
                                             </tr>
                                         </thead>
