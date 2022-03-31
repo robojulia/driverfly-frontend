@@ -227,6 +227,15 @@ export default function MyApplication() {
     })
     set_pastEmployers(newArr)
   }
+  const setCompanyAddress = (id, value) => {
+    const newArr = pastEmployers.map(emp => {
+      if (emp.id === id) {
+        return { ...emp, address: value }
+      }
+      return emp
+    })
+    set_pastEmployers(newArr)
+  }
   const setCompanyPhone = (id, value) => {
     const newArr = pastEmployers.map(emp => {
       if (emp.id === id) {
@@ -396,6 +405,7 @@ export default function MyApplication() {
         start_at: moment(emp.start_at).format("YYYY-MM-DD"),
         end_at: moment(emp.end_at).format("YYYY-MM-DD"),
         title: emp.title,
+        address: emp.address,
         phone: emp.phone,
         can_contact: emp.can_contact,
         is_subject_to_fmcsrs: emp.is_subject_to_fmcsrs,
@@ -513,6 +523,7 @@ export default function MyApplication() {
         start_at: emp.start_at,
         end_at: emp.end_at,
         title: emp.title,
+        address: emp.address,
         phone: emp.phone,
         can_contact: emp.can_contact,
         is_subject_to_fmcsrs: emp.is_subject_to_fmcsrs,
@@ -605,6 +616,7 @@ export default function MyApplication() {
       start_at: "",
       end_at: "",
       title: "",
+      address: "",
       phone: "",
       can_contact: false,
       is_subject_to_fmcsrs: false,
@@ -942,7 +954,7 @@ export default function MyApplication() {
                                 {/* <h5 className="my-2">Company Address</h5> */}
                                 <div className="col mt-3">
                                   <label>Company Address:</label>
-                                  <input onChange={(e) => setCompanyTitle(past.id, e.target.value)} value={past.title} type="text" name="compant_address" className="form-control" placeholder=" Company Address:" />
+                                  <input onChange={(e) => setCompanyAddress(past.id, e.target.value)} value={past.address} type="text" name="compant_address" className="form-control" placeholder=" Company Address:" />
                                 </div>
                                 {/* company phone */}
                                 <div className="col mt-3">
