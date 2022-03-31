@@ -71,6 +71,13 @@
 .space {
     height: 100vh;
 }
+.spacer{
+   
+    margin-top: 20px;
+    padding-bottom: 13px;
+    margin-right: 0;
+
+}
 
 .profile button {
     padding: 5px 20px;
@@ -440,3 +447,20 @@ textarea {
 
 }
 
+
+/* JobListing Table*/
+
+.listing_head th{
+padding: 15px;
+}
+ .table > :not(:first-child) {
+     border-top: 0px solid currentColor !important;
+}
+  .table-striped>tbody>tr:nth-child(odd)>td,
+  .table-striped>tbody>tr:nth-child(odd)>th {
+    box-shadow: inset 0 0 0 0 var(--bs-table-accent-bg);
+}
+ .table-striped>tbody>tr:nth-child(even)>td,
+ .table-striped>tbody>tr:nth-child(even)>th {
+   background-color: #cdf3f2;
+}

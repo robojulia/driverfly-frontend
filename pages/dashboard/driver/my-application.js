@@ -71,6 +71,45 @@ export default function MyApplication() {
   // }
   const [equipments, set_equipments] = useState([])
 
+  yup.addMethod(yup.object, "typeUnique", function (errorMessage) {
+    return this.test(`unique`, errorMessage, function () {
+      let valueArr = equipments.map(function (item) { return item.type });
+      let isDuplicate = valueArr.some(function (item, idx) {
+        return valueArr.indexOf(item) != idx
+      });
+      if (isDuplicate) {
+        toast.warning(errorMessage, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
+      }
+      return !isDuplicate;
+    });
+  });
+
+  yup.addMethod(yup.object, "typeNotEmpty", function (errorMessage) {
+    return this.test(`not-empty`, errorMessage, function () {
+      let isEmpty = equipments.some(function (item) { return item.type == "" });
+      if (isEmpty) {
+        toast.warning(errorMessage, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
+      }
+      return !isEmpty;
+    });
+  });
+
   const acc_form = useFormik({
     initialValues: {
       // name: '',
@@ -98,12 +137,15 @@ export default function MyApplication() {
       license_state: yup.string().required("This field is required").nullable(),
       street: yup.string().required("This field is required").nullable(),
       license_type: yup.string().required("This field is required").nullable(),
-      emergency_contact_number: yup.string().required("This field is required").nullable(),
+      emergency_contact_number: yup.string().nullable(),
       city: yup.string().required("This field is required").nullable(),
       years_cdl_experience: yup.number().required("This field is required").nullable().min(0, "Please select 0 or above."),
       zip_code: yup.string().required("This field is required").nullable(),
       state: yup.string().required("This field is required").nullable(),
       emergency_contact_relationship: yup.string().required("This field is required").nullable(),
+      equipments: yup.object()
+        .typeUnique("Equipmets type can not be duplicate")
+        .typeNotEmpty("Equipmets type can not be empty")
     }),
     onSubmit: async (values) => {
       const data = {
@@ -386,7 +428,9 @@ export default function MyApplication() {
 
     set_can_pass_drug_test(data.can_pass_drug_test)
     set_has_past_dui(data.has_past_dui)
-    set_accident_count(data.accident_count)
+    set_accident_count(() => {
+      return data.accident_count ? data.accident_count : 0
+    })
     set_accident_details(data.accident_details)
     set_criminal_history(data.criminal_history)
 
@@ -547,6 +591,13 @@ export default function MyApplication() {
     set_equipments([...equipments, { type: "", years: 0, id: randomId() }])
   }
 
+  const removeEquipment = (id) => {
+    let newEquipments = equipments.filter((value, index, arr) => {
+      return value.id != id
+    })
+    set_equipments(newEquipments)
+  }
+
   const addPastEmployer = () => {
     set_pastEmployers([...pastEmployers, {
       id: randomId(),
@@ -617,7 +668,7 @@ export default function MyApplication() {
                   /> */}
                   <BaseInput
                     className="col-12"
-                    label="Street:"
+                    label="*Street:"
                     placeholder="Street"
                     name="street"
                     value={acc_form.values.street}
@@ -628,7 +679,7 @@ export default function MyApplication() {
                   />
                   <BaseInput
                     className="col-12"
-                    label="City:"
+                    label="*City:"
                     placeholder="City"
                     name="city"
                     value={acc_form.values.city}
@@ -638,7 +689,7 @@ export default function MyApplication() {
                     handleBlur={acc_form.handleBlur}
                   />
                   <div className="col-12 mt-3">
-                    <label>State:</label>
+                    <label>*State:</label>
                     <select class="application_select form-select" name="state" aria-label="Default select example"
                       value={acc_form.values.state}
                       onChange={acc_form.handleChange}
@@ -659,7 +710,7 @@ export default function MyApplication() {
                   <BaseInput
                     className="col-12"
                     label="Zip:"
-                    placeholder="Zip"
+                    placeholder="*Zip"
                     name="zip_code"
                     value={acc_form.values.zip_code}
                     touched={acc_form.touched.zip_code}
@@ -672,7 +723,7 @@ export default function MyApplication() {
                   {/* Drivers License */}
                   <BaseInput
                     className="col-12"
-                    label="Drivers License Number:"
+                    label="*Drivers License Number:"
                     placeholder="Drivers License Number"
                     name="license_number"
                     value={acc_form.values.license_number}
@@ -684,7 +735,7 @@ export default function MyApplication() {
                   <BaseInput
                     className="col-12"
                     label="Expiration Date:"
-                    placeholder="Expiration Date"
+                    placeholder="*Expiration Date"
                     name="license_expiry"
                     type="date"
                     value={acc_form.values.license_expiry}
@@ -695,7 +746,7 @@ export default function MyApplication() {
                   />
                   {/* state issued */}
                   <div className="col-12">
-                    <label>State Issued:</label>
+                    <label>*State Issued:</label>
                     <select class="application_select form-select" name="license_state" aria-label="Default select example"
                       value={acc_form.values.license_state}
                       onChange={acc_form.handleChange}
@@ -715,7 +766,7 @@ export default function MyApplication() {
                   </div>
                   {/* CDL class types */}
                   <div className="col-12 mt-3">
-                    <span className={style.lable}>CDL Class Type:</span>
+                    <span className={style.lable}>*CDL Class Type:</span>
                     <select class="application_select form-select" name="license_type" aria-label="Default select example"
                       value={acc_form.values.cdl_class}
                       onChange={acc_form.handleChange}
@@ -731,7 +782,7 @@ export default function MyApplication() {
                   </div>
                   <BaseInput
                     className="col-12"
-                    label="Years of CDL Experience:"
+                    label="*Years of CDL Experience:"
                     placeholder="Years of CDL Experience"
                     name="years_cdl_experience"
                     type="number"
@@ -754,7 +805,7 @@ export default function MyApplication() {
                   </div>
                   {/* Highest degree */}
                   <div className=" col-12 mt-3 ">
-                    <span className={style.lable}>Highest Degree:</span>
+                    <span className={style.lable}>*Highest Degree:</span>
                     <select class="application_select form-select" name="highest_degree" aria-label="Default select example"
                       value={acc_form.values.highest_degree}
                       onChange={acc_form.handleChange}
@@ -780,7 +831,7 @@ export default function MyApplication() {
                   />
                   <BaseInput
                     className=" col-12"
-                    label="Relationship:"
+                    label="*Relationship:"
                     placeholder="Relationship"
                     name="emergency_contact_relationship"
                     value={acc_form.values.emergency_contact_relationship}
@@ -800,12 +851,19 @@ export default function MyApplication() {
                 <div className="col-md-12">
                   <div className={` mt-3  p-4 ${style.account_container}`}>
                     <span>Equipment Experience</span> <br />
+                    <div>
+                      {
+                        acc_form.errors.equipments &&
+                        <span className="text-danger small">{acc_form.errors.equipments}</span>
+                      }
+
+                    </div>
                     {equipments.map((eq) => {
                       return (
                         <div key={eq.id}>
                           <div className='row px-lg-5'>
                             <BaseInput
-                              className="col-md-6"
+                              className="col-md-5"
                               label="Type :"
                               placeholder="Equipment Type"
                               value={eq.type}
@@ -813,13 +871,16 @@ export default function MyApplication() {
                               name="equipment_type"
                             />
                             <BaseInput
-                              className="col"
+                              className="col-md-5"
                               label="Years Experience:"
                               type="number"
                               onChange={(e) => setEquipmentExperience(eq.id, e.target.value)}
                               value={eq.years}
                               placeholder="Years Experience"
                             />
+                            <div className="col-md-2 mt-5">
+                              <span className="btn btn-yellow" onClick={() => { removeEquipment(eq.id) }}>x Remove</span>
+                            </div>
                           </div>
                         </div>
                       )
