@@ -18,6 +18,32 @@ import { useEffect } from "react";
 import useAuth from "../../../hooks/useAuth";
 import { useState } from "react";
 import axios from "axios";
+import React from "react";
+import { Chart } from "react-google-charts";
+
+
+export const data = [
+    [
+        "Month",
+        "Bolivia",
+        "Ecuador",
+        "Madagascar",
+        "Papua New Guinea",
+        "Rwanda",
+        "Average",
+    ],
+    ["0", 165, 938, 522, 998, 450, 614.6],
+    ["2", 135, 1120, 599, 1268, 288, 682],
+    
+];
+
+export const options = {
+    title: "",
+    vAxis: { title: "" },
+    hAxis: { title: "Applied Hired" },
+    seriesType: "bars",
+    series: { 5: { type: "line" } },
+};
 
 export default function JobListing() {
 
@@ -53,6 +79,9 @@ export default function JobListing() {
         fetchJobs()
     }, []);
 
+
+
+
     return (
         <>
             <div className={JobList.joblisting}>
@@ -86,7 +115,7 @@ export default function JobListing() {
                                         </thead>
                                         <tbody>
                                             {/* {jobs.length > 0 && jobs.map((job, index) => ( */}
-                                                <tr>
+                                            <tr>
                                                 <td>
                                                     {/* {job.title} */}
                                                     Class A CDL – Texas –NE OTR
@@ -317,14 +346,14 @@ export default function JobListing() {
                             <div className={JobList.job__overview__body}>
                                 <p className="p-3">Hi we’re a general freight hauler looking for a dedicated OTR CDL Class A Driver. We offer great pay with flexible dispatch and home time. Reach out to us today if you’re interested in hauling across the country on good loads that pay well.</p>
                                 <div className="space_6"></div>
-                                     <Row className="">
-                                        <Col className="text-end"><input className={JobList.edit__btn}
-                                            type="button"
-                                            value="Edit"></input></Col>
-                                    </Row>
+                                <Row className="">
+                                    <Col className="text-end"><input className={JobList.edit__btn}
+                                        type="button"
+                                        value="Edit"></input></Col>
+                                </Row>
 
                             </div>
-                            
+
                         </Col>
 
                         <Col className="p-0" lg="4">
@@ -432,7 +461,15 @@ export default function JobListing() {
                         <Col className="p-0" lg="2">
                             <div className={JobList.job__overview__header}>
                                 <h3>Historical</h3>
+
                             </div>
+                            <Chart
+                                chartType="ComboChart"
+                                width="100%"
+                                height="350px"
+                                data={data}
+                                options={options}
+                            />
                         </Col>
                         <Col className="p-0" lg="2">
                             <div className={JobList.job__overview__header}>
