@@ -874,6 +874,7 @@ export default function MyApplication() {
                               className="col-md-5"
                               label="Years Experience:"
                               type="number"
+                              min={0}
                               onChange={(e) => setEquipmentExperience(eq.id, e.target.value)}
                               value={eq.years}
                               placeholder="Years Experience"
