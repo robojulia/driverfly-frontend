@@ -428,7 +428,9 @@ export default function MyApplication() {
 
     set_can_pass_drug_test(data.can_pass_drug_test)
     set_has_past_dui(data.has_past_dui)
-    set_accident_count(data.accident_count)
+    set_accident_count(() => {
+      return data.accident_count ? data.accident_count : 0
+    })
     set_accident_details(data.accident_details)
     set_criminal_history(data.criminal_history)
 
