@@ -98,7 +98,7 @@ export default function MyApplication() {
       license_state: yup.string().required("This field is required").nullable(),
       street: yup.string().required("This field is required").nullable(),
       license_type: yup.string().required("This field is required").nullable(),
-      emergency_contact_number: yup.string().required("This field is required").nullable(),
+      emergency_contact_number: yup.string().nullable(),
       city: yup.string().required("This field is required").nullable(),
       years_cdl_experience: yup.number().required("This field is required").nullable().min(0, "Please select 0 or above."),
       zip_code: yup.string().required("This field is required").nullable(),
@@ -617,7 +617,7 @@ export default function MyApplication() {
                   /> */}
                   <BaseInput
                     className="col-12"
-                    label="Street:"
+                    label="*Street:"
                     placeholder="Street"
                     name="street"
                     value={acc_form.values.street}
@@ -628,7 +628,7 @@ export default function MyApplication() {
                   />
                   <BaseInput
                     className="col-12"
-                    label="City:"
+                    label="*City:"
                     placeholder="City"
                     name="city"
                     value={acc_form.values.city}
@@ -638,7 +638,7 @@ export default function MyApplication() {
                     handleBlur={acc_form.handleBlur}
                   />
                   <div className="col-12 mt-3">
-                    <label>State:</label>
+                    <label>*State:</label>
                     <select class="application_select form-select" name="state" aria-label="Default select example"
                       value={acc_form.values.state}
                       onChange={acc_form.handleChange}
@@ -659,7 +659,7 @@ export default function MyApplication() {
                   <BaseInput
                     className="col-12"
                     label="Zip:"
-                    placeholder="Zip"
+                    placeholder="*Zip"
                     name="zip_code"
                     value={acc_form.values.zip_code}
                     touched={acc_form.touched.zip_code}
@@ -672,7 +672,7 @@ export default function MyApplication() {
                   {/* Drivers License */}
                   <BaseInput
                     className="col-12"
-                    label="Drivers License Number:"
+                    label="*Drivers License Number:"
                     placeholder="Drivers License Number"
                     name="license_number"
                     value={acc_form.values.license_number}
@@ -684,7 +684,7 @@ export default function MyApplication() {
                   <BaseInput
                     className="col-12"
                     label="Expiration Date:"
-                    placeholder="Expiration Date"
+                    placeholder="*Expiration Date"
                     name="license_expiry"
                     type="date"
                     value={acc_form.values.license_expiry}
@@ -695,7 +695,7 @@ export default function MyApplication() {
                   />
                   {/* state issued */}
                   <div className="col-12">
-                    <label>State Issued:</label>
+                    <label>*State Issued:</label>
                     <select class="application_select form-select" name="license_state" aria-label="Default select example"
                       value={acc_form.values.license_state}
                       onChange={acc_form.handleChange}
@@ -715,7 +715,7 @@ export default function MyApplication() {
                   </div>
                   {/* CDL class types */}
                   <div className="col-12 mt-3">
-                    <span className={style.lable}>CDL Class Type:</span>
+                    <span className={style.lable}>*CDL Class Type:</span>
                     <select class="application_select form-select" name="license_type" aria-label="Default select example"
                       value={acc_form.values.cdl_class}
                       onChange={acc_form.handleChange}
@@ -731,7 +731,7 @@ export default function MyApplication() {
                   </div>
                   <BaseInput
                     className="col-12"
-                    label="Years of CDL Experience:"
+                    label="*Years of CDL Experience:"
                     placeholder="Years of CDL Experience"
                     name="years_cdl_experience"
                     type="number"
@@ -754,7 +754,7 @@ export default function MyApplication() {
                   </div>
                   {/* Highest degree */}
                   <div className=" col-12 mt-3 ">
-                    <span className={style.lable}>Highest Degree:</span>
+                    <span className={style.lable}>*Highest Degree:</span>
                     <select class="application_select form-select" name="highest_degree" aria-label="Default select example"
                       value={acc_form.values.highest_degree}
                       onChange={acc_form.handleChange}
@@ -780,7 +780,7 @@ export default function MyApplication() {
                   />
                   <BaseInput
                     className=" col-12"
-                    label="Relationship:"
+                    label="*Relationship:"
                     placeholder="Relationship"
                     name="emergency_contact_relationship"
                     value={acc_form.values.emergency_contact_relationship}
