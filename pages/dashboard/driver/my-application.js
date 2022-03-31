@@ -16,6 +16,8 @@ import { ActionMeta, OnChangeValue } from 'react-select'
 import stateList from "../../../utils/stateList"
 import { Accordion } from "react-bootstrap"
 
+import { preventNegative } from "../../../utils/input"
+
 
 
 export default function MyApplication() {
@@ -733,9 +735,11 @@ export default function MyApplication() {
                     placeholder="Years of CDL Experience"
                     name="years_cdl_experience"
                     type="number"
+                    min={0}
                     value={acc_form.values.years_cdl_experience}
                     touched={acc_form.touched.years_cdl_experience}
                     error={acc_form.errors.years_cdl_experience}
+                    onKeyDown={preventNegative}
                     onChange={acc_form.handleChange}
                     handleBlur={acc_form.handleBlur}
                   />
