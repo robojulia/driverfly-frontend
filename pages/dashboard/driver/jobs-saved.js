@@ -63,7 +63,7 @@ export default function JobsAppliedTo() {
                             <CardBody className={JobList.jobtable}>
                                 <div className="table-responsive">
                                     <Table striped>
-                                        <thead>
+                                        <thead className="listing_head">
                                             <tr>
                                                 <th>Job Title</th>
                                                 <th>Date Applied</th>
@@ -77,9 +77,7 @@ export default function JobsAppliedTo() {
                                                 <th>Equipment</th>
                                                 <th>Truck</th>
 
-                                                <th className={JobList.display}>
-                                                    <span className={JobList.tag}>  </span>
-                                                </th>
+                                               
 
                                             </tr>
                                         </thead>
