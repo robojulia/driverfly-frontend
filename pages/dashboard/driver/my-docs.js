@@ -294,7 +294,10 @@ export default function PrestoresDocuments() {
                     <Button className="btn_danger" onClick={() => deleteFile("DRIVER_LICENSE")}>Delete</Button>
                   </>
                 }
-                <input type="file" class="custom-file-input" onChange={(event) => upload(event, "DRIVER_LICENSE")} />
+                <input type="file"
+                  accept="application/pdf"
+                  class="custom-file-input"
+                  onChange={(event) => upload(event, "DRIVER_LICENSE")} />
                 {/* <Link href="#">
                   <Button className="approved"> View Past Records</Button>
                 </Link> */}
@@ -310,7 +313,10 @@ export default function PrestoresDocuments() {
                     <Button className="btn_danger" onClick={() => deleteFile("MEDICAL_CARD")}>Delete</Button>
                   </>
                 }
-                <input type="file" class="custom-file-input" onChange={(event) => upload(event, "MEDICAL_CARD")} />
+                <input type="file"
+                  accept="application/pdf"
+                  class="custom-file-input"
+                  onChange={(event) => upload(event, "MEDICAL_CARD")} />
                 {/* <Link href="#">
                   <Button className="approved"> View Past Records</Button>
                 </Link> */}
@@ -328,7 +334,10 @@ export default function PrestoresDocuments() {
                     <Button className="btn_danger" onClick={() => deleteFile("RESUME")}>Delete</Button>
                   </>
                 }
-                <input type="file" class="custom-file-input" onChange={(event) => upload(event, "RESUME")} />
+                <input type="file"
+                  accept="application/pdf"
+                  class="custom-file-input"
+                  onChange={(event) => upload(event, "RESUME")} />
                 {/* <Link href="#">
                   <Button className="approved"> View Past Records</Button>
                 </Link> */}
@@ -344,7 +353,10 @@ export default function PrestoresDocuments() {
                     <Button className="btn_danger" onClick={() => deleteFile("MVR")}>Delete</Button>
                   </>
                 }
-                <input type="file" class="custom-file-input" onChange={(event) => upload(event, "MVR")} />
+                <input type="file"
+                  accept="application/pdf"
+                  class="custom-file-input"
+                  onChange={(event) => upload(event, "MVR")} />
                 {/* <Link href="#">
                   <Button className="approved"> View Past Records</Button>
                 </Link> */}
