@@ -14,6 +14,7 @@ import axios from 'axios';
 import { jobBenefits, jobGeography, jobPayMethod, jobTeamDriver, jobType } from '../../../utils/jobs';
 import stateList from "../../../utils/stateList";
 
+import { preventNegative } from '../../../utils/input';
 
 
 export default function MyAccount() {
@@ -533,7 +534,7 @@ export default function MyAccount() {
                         </div>
                         <div className="col-12 mt-3">
                             <label>Min Pay (per week):</label>
-                            <input type="number" className="form-control" placeholder="Minimum pay" name="MATCHING.MIN_PAY" onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.MATCHING.MIN_PAY} />
+                            <input type="number" min={1} className="form-control" placeholder="Minimum pay" name="MATCHING.MIN_PAY" onKeyDown={e => preventNegative(e)} onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.MATCHING.MIN_PAY} />
                         </div>
                         <div className="col-12 mt-3">
                             <span className={style.lable}>Pay Method:</span>
