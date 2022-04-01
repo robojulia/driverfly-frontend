@@ -3,6 +3,7 @@ import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import { areas_covered } from "../../enums/jobs/job-fields"
+import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 
 export default function AreasCovered() {
 
@@ -24,26 +25,12 @@ export default function AreasCovered() {
           aria-labelledby="headingNine" data-parent="#accordionExample">
           <div className="card-body">
             <div className="App">
-              <div class="topping ">
-                <input
-                  onChange={handleChange}
-                  type="radio"
-                  name="areas_covered"
-                  value="" /> Any
-              </div>
-              {Object.keys(areas_covered).map((key) => {
-                return (
-                  <>
-                    <div class="topping pt-2">
-                      <input
-                        onChange={handleChange}
-                        type="radio"
-                        name="areas_covered"
-                        value={key} /> {areas_covered[key]}
-                    </div>
-                  </>
-                )
-              })}
+              <EnumFilterByKeyValue
+                withAll={true}
+                enumArray={areas_covered}
+                name="areas_covered"
+                handleChange={handleChange}
+              />
             </div>
           </div>
         </div>

@@ -3,6 +3,7 @@ import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import { delivery_type } from "../../enums/jobs/job-fields"
+import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 
 export default function TypeOfDelivery() {
 
@@ -24,26 +25,12 @@ export default function TypeOfDelivery() {
           data-parent="#accordionExample">
           <div className="card-body">
             <div className="App">
-              <div class="topping ">
-                <input
-                  onChange={handleChange}
-                  type="radio"
-                  name="delivery_type"
-                  value="" /> Any
-              </div>
-              {Object.keys(delivery_type).map((key) => {
-                return (
-                  <>
-                    <div class="topping pt-2">
-                      <input
-                        onChange={handleChange}
-                        type="radio"
-                        name="delivery_type"
-                        value={key} /> {delivery_type[key]}
-                    </div>
-                  </>
-                )
-              })}
+              <EnumFilterByKeyValue
+                withAll={true}
+                enumArray={delivery_type}
+                name="delivery_type"
+                handleChange={handleChange}
+              />
             </div>
           </div>
         </div>

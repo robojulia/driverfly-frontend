@@ -1,6 +1,7 @@
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import { cdl_classes } from "../../enums/jobs/cdl-classes"
+import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 
 export default function Category() {
 
@@ -23,28 +24,12 @@ export default function Category() {
           <div className="card-body">
             <div className="custom-control custom-checkbox p-0">
               <div className="App">
-                <div class="topping ">
-                  <input
-                    onChange={handleChange}
-                    type="radio"
-                    name="category"
-                    value="" />
-                  Any
-                </div>
-                {Object.keys(cdl_classes).map((key) => {
-                  return (
-                    <>
-                      <div class="topping pt-2">
-                        <input
-                          onChange={handleChange}
-                          type="radio"
-                          name="category"
-                          value={key} />
-                        {cdl_classes[key]}
-                      </div>
-                    </>
-                  )
-                })}
+              <EnumFilterByKeyValue
+                withAll={true}
+                enumArray={cdl_classes}
+                name="category"
+                handleChange={handleChange}
+              />
               </div>
             </div>
           </div>

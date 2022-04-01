@@ -3,6 +3,7 @@ import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import { employment_type } from "../../enums/jobs/job-fields"
+import EnumFilterByKey from "../enum-filters/enum-filter-by-key"
 
 export default function EmploymentType() {
 
@@ -24,26 +25,13 @@ export default function EmploymentType() {
           data-parent="#accordionExample">
           <div className="card-body">
             <div className="App">
-              <div class="topping ">
-                <input
-                  onChange={handleChange}
-                  type="radio"
-                  name="employment_type"
-                  value="" /> Any
-              </div>
-              {Object.keys(employment_type).map((key) => {
-                return (
-                  <>
-                    <div class="topping pt-2">
-                      <input
-                        onChange={handleChange}
-                        type="radio"
-                        name="employment_type"
-                        value={employment_type[key]} /> {employment_type[key]}
-                    </div>
-                  </>
-                )
-              })}
+              <EnumFilterByKey
+                withAll={true}
+                enumArray={employment_type}
+                name="employment_type"
+                handleChange={handleChange}
+              />
+
             </div>
           </div>
         </div>
