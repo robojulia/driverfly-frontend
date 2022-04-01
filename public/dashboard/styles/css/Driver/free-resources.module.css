@@ -20,3 +20,20 @@
 .example::-webkit-scrollbar {
     display: none;
 }
+.social_icon{
+    color: blue;
+    margin-top: 10px;
+    width: 15%;
+    display: inline-block;
+}
+.social_icon img{
+    width: 30px !important;
+    vertical-align: middle !important;
+}
+.social_icon span {
+    vertical-align: middle !important;
+    
+}
+.soial_text{
+    margin-left: 20px;
+}
