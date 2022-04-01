@@ -138,7 +138,7 @@ export default function Dashboard() {
             <div className={JobList.joblisting}>
                 <Row className={JobList.link}>
                     <Col sm="6" lg="8">
-                        <h2 className='mt-3'>Job Listings</h2>
+                        <h2 className='mt-3'>Suggested Jobs</h2>
                     </Col>
                 </Row>
                 <Row className="mt-5">
