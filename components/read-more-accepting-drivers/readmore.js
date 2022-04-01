@@ -4,7 +4,6 @@ import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import { accepting_drivers_from } from "../../enums/jobs/job-fields"
-import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 
 const ReadMore = ({ children }) => {
   const text = children
