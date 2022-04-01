@@ -199,15 +199,15 @@ export default function Signup() {
       <div className={SignupStyle.banner}>
         <div className="container">
           <h1>Drivers, have access<br />to over 1,000 jobs for free.</h1>
-          <p>Are you a motor carrier? View our pricing
-            <Link href="/pricing">
-              <a> here</a>
+          <p>Are you a motor carrier? View our packages
+            <Link href="http://go.driverfly.co/motor-carriers">
+              <a> here </a>
             </Link>
-            or
+             or  
             <Link href="/contact">
-              <a> contact us</a>
+              <a>  contact us </a>
             </Link>
-            for an account.</p>
+             for an account.</p>
           <p>If you are already a user, login
             <Link href="/login">
               <a> here.</a>

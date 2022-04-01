@@ -36,12 +36,15 @@ export default function Nav() {
                             data-bs-toggle="dropdown"> Driver Resources</a>
                         <ul className="dropdown-menu">
                             <li>
-
                                 <Link href="/faq">
                                     <a className="dropdown-item">FAQ</a>
                                 </Link>
                             </li>
-                            <li><a className="dropdown-item" href="#"> Get Your CDL </a></li>
+                            <li>
+                                <Link href="/">
+                                    <a className="dropdown-item" href="#"> Get Your CDL </a>
+                                </Link>
+                            </li>
                             <li>
                                 <Link href="/owner-operators">
                                     <a className="dropdown-item"> Owner Operators </a>
@@ -55,12 +58,25 @@ export default function Nav() {
                         <a className="nav-link  dropdown-toggle" href="#"
                             data-bs-toggle="dropdown"> Motor Carrier Solutions</a>
                         <ul className="dropdown-menu">
-                            <li><a className="dropdown-item" >Over Solution </a></li>
-                            <Link href="/pricing">
-                                <a className="dropdown-item">Option & Pricing </a>
-                            </Link>
-                            <li><a className="dropdown-item" href="#"> Request A Quote </a></li>
-                            <li><a className="dropdown-item" href="#"> Free Digital Application </a>
+                            <li>
+                                <Link href="http://go.driverfly.co/">
+                                    <a className="dropdown-item">Over Solution  </a>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/pricing">
+                                    <a className="dropdown-item">Option & Pricing </a>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="http://go.driverfly.co/sign-up">
+                                    <a className="dropdown-item">Request A Quote</a>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="https://digitalhiringapp.com/">
+                                    <a className="dropdown-item">Free Digital Application </a>
+                                </Link>
                             </li>
                             <li>
                                 <Link href="/third-party-resources">
