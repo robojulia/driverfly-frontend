@@ -8,12 +8,10 @@ import jobContext from "../../context/jobContext"
 export default function Range() {
 
     const [value, setValue] = React.useState(50);
-    const { filters, applyFilters } = useContext(jobContext)
-    const keyPressHandler = e => {
-        console.log('e.target.value', e.target.value)
-        filters.location = e.target.value
-        applyFilters()
-    }
+
+    const { state, method } = useContext(jobContext)
+    const { handleChange } = method
+
 
     return (
         <>
@@ -33,7 +31,7 @@ export default function Range() {
                     <div className="card-body">
                         <input
                             onKeyUpCapture={e => setTimeout(() => {
-                                keyPressHandler(e)
+                                handleChange(e)
                             }, 500)}
                             type="text"
                             className="form-control p-4"

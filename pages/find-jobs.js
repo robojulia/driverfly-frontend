@@ -11,7 +11,7 @@ import jobsContext from "../context/jobContext"
 export default function FindJobs() {
 
   const [jobs, setJobs] = useState([])
-  let filters = {
+  const [filters, setFilters] = useState({
     keywords: "",
     category: "",
     location: "",
@@ -27,7 +27,8 @@ export default function FindJobs() {
     pay_structure: "",
     endoresements_type: "",
     mvr_requirements: "",
-  }
+  })
+
   const router = useRouter()
 
   const searchByLocation = e => {
@@ -40,6 +41,14 @@ export default function FindJobs() {
     console.log(e.target.value)
   }
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFilters({
+      ...filters,
+      [name]: value
+    }, fetchJobs())
+  }
 
 
   const fetchJobs = async () => {
@@ -55,7 +64,17 @@ export default function FindJobs() {
   useEffect(fetchJobs, [])
 
   return (
-    <jobsContext.Provider value={{ jobs, filters, applyFilters: fetchJobs }}>
+    <jobsContext.Provider value={{
+      state: {
+        jobs,
+        filters,
+      },
+      method: {
+        handleChange,
+        setFilters,
+        applyFilters: fetchJobs
+      },
+    }}>
       <div className="filter-sec">
         <div className="container">
           <div className="row">

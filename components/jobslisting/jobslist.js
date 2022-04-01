@@ -2,15 +2,15 @@ import Link from 'next/link'
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 
-export default function JobsList () {
-  const { jobs} = useContext( jobContext )
+export default function JobsList() {
 
+  const { state, method } = useContext(jobContext)
+  const { jobs } = state
 
-  
   return (
     <>
       <div className="filter-outer mt-5">
-        {jobs.length > 0 && jobs.map( job => (
+        {jobs.length > 0 && jobs.map(job => (
           <div key={job.id} className="media align-items-center shadow-sm">
             <label className="checkbox-inline" htmlFor="remember">
               <input type="checkbox" name="remember" id="remember" value="1" />
@@ -48,7 +48,7 @@ export default function JobsList () {
             </Link>
 
           </div>
-        ) )}
+        ))}
 
         <ul className="pagination ">
           <li>

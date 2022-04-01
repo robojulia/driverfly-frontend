@@ -4,13 +4,8 @@ import { cdl_classes } from "../../enums/jobs/cdl-classes"
 
 export default function Category() {
 
-  const { filters, applyFilters } = useContext(jobContext)
-  const categoryFilter = (e) => {
-    if (e.target.checked) {
-      filters.category = e.target.value
-      applyFilters()
-    }
-  }
+  const { state, method } = useContext(jobContext)
+  const { handleChange } = method
 
   return (
     <>
@@ -30,7 +25,7 @@ export default function Category() {
               <div className="App">
                 <div class="topping ">
                   <input
-                    onChange={categoryFilter}
+                    onChange={handleChange}
                     type="radio"
                     name="category"
                     value="" />
@@ -41,7 +36,7 @@ export default function Category() {
                     <>
                       <div class="topping pt-2">
                         <input
-                          onChange={categoryFilter}
+                          onChange={handleChange}
                           type="radio"
                           name="category"
                           value={key} />

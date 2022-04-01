@@ -6,11 +6,9 @@ import { job_type } from "../../enums/jobs/job-fields"
 
 export default function JobType() {
 
-  const { filters, applyFilters } = useContext(jobContext)
-  const handleChange = (e) => {
-    filters.job_type = e.target.value
-    applyFilters()
-  }
+  const { state, method } = useContext(jobContext)
+  const { handleChange } = method
+
 
   return (
     <>

@@ -1,8 +1,14 @@
 import { createContext } from "react";
 
 const jobContext = createContext({
-  jobs: [],
-  filters: {},
-  applyFilters: () => {}
+  state: {
+    jobs: [],
+    filters: {},
+  },
+  method: {
+    handleChange: () => { },
+    setFilters: () => { },
+    applyFilters: () => { }
+  },
 })
 export default jobContext
