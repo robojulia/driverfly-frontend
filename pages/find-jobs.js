@@ -96,23 +96,14 @@ export default function FindJobs() {
               </div>
 
               <div className="filter-btn-groups mt-3">
-                <button type="button" className="btn btn-danger  "><i className="fa fa-envelope-o"
-                  aria-hidden="true"></i> Get Jobs
-                  Alerts
-                </button>
-                <button type="button" className="btn btn-danger  "> Mass Job Apply</button>
-                <button type="button" className="btn btn-danger  "><i className="fa fa-wifi"
-                  aria-hidden="true"></i>
-                  RSS Feed
-                </button>
                 <span className="text-secondary w-sm-25">Sort by:
                   <select onChange={sortHandler} className="custom-select shadow-none mt-lg-0 mt-md-3">
                     <option>Default</option>
                     <option value="1">Newest</option>
                     <option value="2">Oldest</option>
                     <option value="3">Random</option>
-                  </select></span>
-
+                  </select>
+                </span>
               </div>
               < JobsList />
 
