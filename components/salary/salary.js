@@ -5,17 +5,16 @@ import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
+import { salary_type } from "../../enums/jobs/job-fields"
 
 
-export default function Salary () {
-  const ctx = useContext( jobContext )
-  const [value, setValue] = useState( 18 )
-  const router = useRouter()
-  function changeHandler ( e ) {
-    const a = updateQueryStringParameter( window.location.href, 'filter-salary-type', e.target.value )
-    router.replace( a )
-    ctx.applyFilters()
-  }
+export default function Salary() {
+
+  const [value, setValue] = useState(18)
+
+  const { state, method } = useContext(jobContext)
+  const { handleChange } = method
+
 
   return (
     <>
@@ -31,28 +30,33 @@ export default function Salary () {
         <div id="collapseFive" className="collapse show"
           aria-labelledby="headingFive" data-parent="#accordionExample">
           <div className="card-body">
-            <div onChange={changeHandler} className="App">
-              <div className="topping pt-2">
-                <input type="radio" id="monthly" name="salry" value="monthly" />Monthly
+            <div className="App">
+              <div class="topping ">
+                <input
+                  onChange={handleChange}
+                  type="radio"
+                  name="salary_type"
+                  value="" /> Any
               </div>
-              <div className="topping pt-2">
-                <input type="radio" id="weekly" name="salry" value="weekly" />Weekly
-              </div>
-              <div className="topping pt-2">
-                <input type="radio" id="daily" name="salry" value="daily" />Daily
-              </div>
-              <div className="topping pt-2">
-                <input type="radio" id="hourly" name="salry" value="hourly" />Hourly
-              </div>
-              <div className="topping pt-2">
-                <input type="radio" id="yearly" name="salry" value="yearly" />Yearly
-              </div>
+              {Object.keys(salary_type).map((key) => {
+                return (
+                  <>
+                    <div class="topping pt-2">
+                      <input
+                        onChange={handleChange}
+                        type="radio"
+                        name="salary_type"
+                        value={key} /> {salary_type[key]}
+                    </div>
+                  </>
+                )
+              })}
             </div>
             <RangeSlider
               value={value}
               min={18}
               max={95000}
-              onChange={e => setValue( e.target.value )}
+              onChange={e => setValue(e.target.value)}
 
               variant='info'
             />
