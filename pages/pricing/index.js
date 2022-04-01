@@ -77,7 +77,12 @@ return (
                 </div>
             </div>
             <div className={Pric.offer}>
-                <h3 className="text-center my-5 text-secondary">Interested in a package? <a className={Pric.contactlink} href="#">Contact us for a quote!</a></h3>
+                <h3 className="text-center my-5 text-secondary">Interested in a package? 
+                <Link href="/contact">
+                <a className={Pric.contactlink} > Contact us for a quote!</a>
+                </Link>
+                 
+                </h3>
                 <h1 className={Pric.whatweoffer}>What We Offer</h1>
             </div>
             <div className="row">
