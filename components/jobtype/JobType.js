@@ -2,15 +2,14 @@ import { useRouter } from "next/router"
 import { updateQueryStringParameter } from "../../logics/utils"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
+import { job_type } from "../../enums/jobs/job-fields"
 
-export default function JobType () {
-  const ctx = useContext( jobContext )
-  const router = useRouter()
+export default function JobType() {
 
-  function handleChange ( e ) {
-    const a = updateQueryStringParameter( window.location.href, 'job_type', e.target.value )
-    router.replace( a )
-    ctx.applyFilters()
+  const { filters, applyFilters } = useContext(jobContext)
+  const handleChange = (e) => {
+    filters.job_type = e.target.value
+    applyFilters()
   }
 
   return (
@@ -28,13 +27,27 @@ export default function JobType () {
           aria-labelledby="headingThree" data-parent="#accordionExample">
           <div className="card-body">
             <div className="custom-control custom-checkbox p-0">
-              <div onChange={handleChange} className="App">
-                <div className="topping">
-                  <input type="radio" id="solo" name="jobtype" value="solor" />Solo(27)
+              <div className="App">
+                <div class="topping ">
+                  <input
+                    onChange={handleChange}
+                    type="radio"
+                    name="job_type"
+                    value="" /> Any
                 </div>
-                <div className="topping pt-2">
-                  <input type="radio" id="teamdrivers" name="jobtype" value="teamdrivers" />Team Drivers(2)
-                </div>
+                {Object.keys(job_type).map((key) => {
+                  return (
+                    <>
+                      <div class="topping pt-2">
+                        <input
+                          onChange={handleChange}
+                          type="radio"
+                          name="job_type"
+                          value={key} /> {job_type[key]}
+                      </div>
+                    </>
+                  )
+                })}
               </div>
             </div>
           </div>
