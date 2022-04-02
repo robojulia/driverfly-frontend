@@ -16,8 +16,11 @@ import stateList from "../../../utils/stateList";
 
 import { preventNegative } from '../../../utils/input';
 
+import { useTranslation } from 'react-i18next';
 
 export default function MyAccount() {
+
+    const { t } = useTranslation();
 
     const { authDriver } = useRedirect();
     authDriver();
@@ -145,8 +148,6 @@ export default function MyAccount() {
                 }
             };
 
-            console.log(preferences);
-
             preferences.forEach(v => {
                 let { category, label, value } = v;
 
@@ -187,12 +188,12 @@ export default function MyAccount() {
     function onContactSubmit(e) {
         e.preventDefault();
         if (!formState.user.name) {
-            toast.error("User name is required");
+            toast.error(t("name_is_required"));
             return;
         }
 
         if (!formState.user.email) {
-            toast.error("User email is required");
+            toast.error(t("email_is_required"));
             return;
         }
 
@@ -343,7 +344,7 @@ export default function MyAccount() {
             //toast.success("Successfully saved your preference");
         })
         .catch(error => {
-            toast.error("Unable to save your preference");
+            toast.error(t("unable_to_save"));
             // preferences[category][label] = value;
             // setFormState(newState);
         });
@@ -352,68 +353,68 @@ export default function MyAccount() {
     return (
         <>
             <ToastContainer />
-            <h2 className='mb-3'>Account Settings</h2>
+            <h2 className='mb-3'>{t("account_settings")}</h2>
             <div className={style.account_container}>
                 <div>
                     <div className='container-fluid'>
                         <form className="modal-body" onSubmit={e => onContactSubmit(e)} >
-                            <h3>Contact Details</h3>
+                            <h3>{t("contact_details")}</h3>
                             <div className="row">
                                 <div className="col-sm-6 mt-3">
-                                    <label>Name</label>
-                                    <input name="name" type="text" className="form-control" placeholder="Name" onChange={e => onUserChange(e)} value={formState.user.name} />
+                                    <label>{t("name")}</label>
+                                    <input name="name" type="text" className="form-control" placeholder={t("name")} onChange={e => onUserChange(e)} value={formState.user.name} />
                                 </div>
                                 <div className="col-sm-6 mt-3">
-                                    <label>Birthdate</label>
-                                    <input name="birthdate" type="date" className="form-control" placeholder="Birthdate" onChange={e => onDriverChange(e)} value={formState.driver.birthdate} />
+                                    <label>{t("birthdate")}</label>
+                                    <input name="birthdate" type="date" className="form-control" placeholder={t("birthdate")} onChange={e => onDriverChange(e)} value={formState.driver.birthdate} />
                                 </div>
                             </div>
                             <div className='row'>
                                 <div className="col-sm-6 mt-3">
-                                    <label>Phone</label>
-                                    <input name="contact_number" type="text" className="form-control" placeholder="Phone" onChange={e => onUserChange(e)} value={formState.user.contact_number} />
+                                    <label>{t("phone")}</label>
+                                    <input name="contact_number" type="text" className="form-control" placeholder={t("phone")} onChange={e => onUserChange(e)} value={formState.user.contact_number} />
                                 </div>
                                 <div className="col-sm-6 mt-3">
-                                    <label>Cell</label>
-                                    <input name="cell_number" type="text" className="form-control" placeholder="Cell" onChange={e => onUserChange(e)} value={formState.user.cell_number} />
-                                </div>
-                            </div>
-                            <div className='row'>
-                                <div className="col-sm-12 mt-3">
-                                    <label>Email</label>
-                                    <input name="email" readOnly={true} type="email" className="form-control" placeholder="E-mail" value={formState.user.email} />
+                                    <label>{t("phone_cell")}</label>
+                                    <input name="cell_number" type="text" className="form-control" placeholder={t("phone_cell")} onChange={e => onUserChange(e)} value={formState.user.cell_number} />
                                 </div>
                             </div>
                             <div className='row'>
                                 <div className="col-sm-12 mt-3">
-                                    <label>Street</label>
-                                    <input type="text" name="street" className="form-control" placeholder="Street" onChange={e => onDriverChange(e)} value={formState.driver.street} />
+                                    <label>{t("email")}</label>
+                                    <input name="email" readOnly={true} type="email" className="form-control" placeholder={t("email")} value={formState.user.email} />
+                                </div>
+                            </div>
+                            <div className='row'>
+                                <div className="col-sm-12 mt-3">
+                                    <label>{t("street")}</label>
+                                    <input type="text" name="street" className="form-control" placeholder={t("street")} onChange={e => onDriverChange(e)} value={formState.driver.street} />
                                 </div>
                             </div>
                             <div className='row'>
                                 <div className="col-5 mt-3">
-                                    <label for="addressCity">City</label>
-                                    <input id="addressCity" type="text" name="city" className="form-control" placeholder="City" onChange={e => onDriverChange(e)} value={formState.driver.city} />
+                                    <label for="addressCity">{t("city")}</label>
+                                    <input id="addressCity" type="text" name="city" className="form-control" placeholder={t("city")} onChange={e => onDriverChange(e)} value={formState.driver.city} />
                                 </div>
                                 <div className="col-4 mt-3">
-                                    <label for="addressState">State</label>
+                                    <label for="addressState">{t("state")}</label>
                                     <select id="addressState" name="state" className="form-control form-select" onChange={e => onDriverChange(e)} value={formState.driver.state}>
-                                        <option value="">Choose State</option>
+                                        <option value="">{t("state")}</option>
                                         {stateList.map(s => (
                                             <option key={s.value} value={s.value}>{s.label}</option>
                                         ))}
                                     </select>
                                 </div>
                                 <div class="col-3 mt-3">
-                                    <label>Zip</label>
-                                    <input type="text" name="zip_code" className="form-control" placeholder="Zip" onChange={e => onDriverChange(e)} value={formState.driver.zip_code} />
+                                    <label>{t("zip_code")}</label>
+                                    <input type="text" name="zip_code" className="form-control" placeholder={t("zip_code")} onChange={e => onDriverChange(e)} value={formState.driver.zip_code} />
                                 </div>
                             </div>
                             <div className='row'>
                                 <div className="col text-end">
                                     <button
                                         type="submit" className={style.update_btn} >
-                                        Update
+                                        {t("update")}
                                     </button>
                                 </div>
                             </div>
@@ -425,93 +426,93 @@ export default function MyAccount() {
                 <div className='row'>
                     <div className="col-sm-6">
                         <div className='row'>
-                            <h3>Communication Preferences:</h3>
+                            <h3>{t("communication_preferences")}:</h3>
                             <div className="col-12 mt-3">
                                 <div class="form-check form-switch">
                                     <input checked={formState.preferences.COMMUNICATION.RECEIVE_DRIVERFLY} name="COMMUNICATION.RECEIVE_DRIVERFLY" class="form-check-input" type="checkbox" role="switch" onClick={( e ) => onPreferenceChange(e)} />
-                                    <label class="form-check-label">Consent to receive text messages from DriverFly &amp; any third parties of DriverFly</label>
+                                    <label class="form-check-label">{t("communication_preferences_receive_driverfly")}</label>
                                 </div>
                             </div>
                             <div className='col-12 mt-3'>
-                                <span className={style.lable}>How should employers contact you:</span>
+                                <span className={style.lable}>{t("communication_preferences_preferred_method")}:</span>
                                 <div class="form-check form-check-inline">
-                                    <label class="form-check-label">Call</label>
+                                    <label class="form-check-label">{t("call")}</label>
                                     <input class="form-check-input" type="checkbox" name="COMMUNICATION.PREFERRED_METHOD" value="CALL" onChange={e => onPreferenceChange(e)} checked={formState.preferences.COMMUNICATION.PREFERRED_METHOD.includes("CALL")} />
                                 </div>
                                 <div class="form-check form-check-inline">
-                                    <label class="form-check-label" >Text</label>
+                                    <label class="form-check-label" >{t("text")}</label>
                                     <input class="form-check-input" type="checkbox" name="COMMUNICATION.PREFERRED_METHOD" value="TEXT" onChange={e => onPreferenceChange(e)} checked={formState.preferences.COMMUNICATION.PREFERRED_METHOD.includes("TEXT")} />
                                 </div>
                             </div>
                             <div className="col-12 mt-3">
-                                <label>Preferred hours:</label>
-                                <input type="text" className="form-control" placeholder="Preferred hours" name="COMMUNICATION.PREFERRED_HOURS" onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.COMMUNICATION.PREFERRED_HOURS} />
+                                <label>{t("preferred_hours")}:</label>
+                                <input type="text" className="form-control" placeholder={t("preferred_hours")} name="COMMUNICATION.PREFERRED_HOURS" onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.COMMUNICATION.PREFERRED_HOURS} />
                             </div>
                             <div className="col-12 mt-3">
                                 <div class="form-check form-switch">
                                     <input checked={formState.preferences.COMMUNICATION.RECEIVE_SUGGESTED_JOBS} name="COMMUNICATION.RECEIVE_SUGGESTED_JOBS" class="form-check-input" type="checkbox" role="switch" onClick={( e ) => onPreferenceChange(e)} />
-                                    <label class="form-check-label">Receive suggested job feeds?</label>
+                                    <label class="form-check-label">{t("receive_suggested_job_feeds")}</label>
                                 </div>
                             </div>
                             <div className="col-12 mt-3">
                                 <div class="form-check form-switch">
                                     <input checked={formState.preferences.COMMUNICATION.RECEIVE_NEWSLETTER} name="COMMUNICATION.RECEIVE_NEWSLETTER" class="form-check-input" type="checkbox" role="switch" onClick={( e ) => onPreferenceChange(e)} />
-                                    <label class="form-check-label">Receive newsletters?</label>
+                                    <label class="form-check-label">{t("receive_newsletters")}</label>
                                 </div>
                             </div>
                         </div>
                         <div className='row mt-3'>
-                            <h3>Sharing Preferences:</h3>
+                            <h3>{t("sharing_preferences")}:</h3>
                             <div className='row'>
                                 <div className='col-12 mt-3'>
-                                    <span className={style.lable}>Share my MVR:</span>
+                                    <span className={style.lable}>{t("share_my_mvr")}:</span>
                                     <select class="form-control form-select" name="SHARING.MVR" onChange={e => onPreferenceChange(e)} value={formState.preferences.SHARING.MVR}>
-                                        <option value="NEVER">Never</option>
-                                        <option value="ALWAYS">Always</option>
-                                        <option value="ASK">Depending on company</option>
+                                        <option value="NEVER">{t("never")}</option>
+                                        <option value="ALWAYS">{t("always")}</option>
+                                        <option value="ASK">{t("depending_on_company")}</option>
                                     </select>
                                 </div>
                                 <div className="col-12 mt-3">
-                                    <span className={style.lable}>Share copy of my Drivers License</span>
+                                    <span className={style.lable}>{t("share_my_drivers_license")}:</span>
                                     <select class="form-control form-select" name="SHARING.DRIVERS_LICENSE" onChange={e => onPreferenceChange(e)} value={formState.preferences.SHARING.DRIVERS_LICENSE}>
-                                        <option value="NEVER">Never</option>
-                                        <option value="ALWAYS">Always</option>
-                                        <option value="ASK">Depending on company</option>
+                                        <option value="NEVER">{t("never")}</option>
+                                        <option value="ALWAYS">{t("always")}</option>
+                                        <option value="ASK">{t("depending_on_company")}</option>
                                     </select>
                                 </div>
                                 <div className="col-12 mt-3">
-                                    <span className={style.lable}>Share copy of my Medical Card:</span>
+                                    <span className={style.lable}>{t("share_my_medical_card")}:</span>
                                     <select class="form-control form-select" name="SHARING.MEDICAL_CARD" onChange={e => onPreferenceChange(e)} value={formState.preferences.SHARING.MEDICAL_CARD}>
-                                        <option value="NEVER">Never</option>
-                                        <option value="ALWAYS">Always</option>
-                                        <option value="ASK">Depending on company</option>
+                                        <option value="NEVER">{t("never")}</option>
+                                        <option value="ALWAYS">{t("always")}</option>
+                                        <option value="ASK">{t("depending_on_company")}</option>
                                     </select>
                                 </div>
                                 <div className="col-12 mt-3">
-                                    <span className={style.lable}>Authorize companies to contact my past employers:</span>
+                                    <span className={style.lable}>{t("authorize_companies_contact_past_employers")}:</span>
                                     <select class="form-control form-select" name="SHARING.CONTACT_PAST_EMPLOYERS" onChange={e => onPreferenceChange(e)} value={formState.preferences.SHARING.CONTACT_PAST_EMPLOYERS}>
-                                        <option value="NEVER">Never</option>
-                                        <option value="ALWAYS">Always</option>
-                                        <option value="ASK">Depending on company</option>
+                                        <option value="NEVER">{t("never")}</option>
+                                        <option value="ALWAYS">{t("always")}</option>
+                                        <option value="ASK">{t("depending_on_company")}</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="col-sm-6">
-                        <h3>Matching Preferences:</h3>
+                        <h3>{t("matching_preferences")}:</h3>
                         <div className="col-12 mt-3">
-                            <span className={style.lable}>Geography:</span>
+                            <span className={style.lable}>{t("geography")}:</span>
                             {jobGeography.map(v => (
                                 <div key={v.key} className="form-check form-check-inline">
-                                    <label className="form-check-label">{v.label}</label>
+                                    <label className="form-check-label">{t(v.label)}</label>
                                     <input className="form-check-input" type="checkbox" value={v.key} name="MATCHING.GEOGRAPHY" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.GEOGRAPHY.includes(v.key)} />
                                 </div>
                             ))}
                         </div>
                         <div className="col-12 mt-3">
-                            <label>Preferred Schedule:</label>
-                            <input type="text" className="form-control" placeholder="Preferred Schedule" name="MATCHING.PREFERRED_SCHEDULE" onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.MATCHING.PREFERRED_SCHEDULE} />
+                            <label>{t("preferred_schedule")}:</label>
+                            <input type="text" className="form-control" placeholder={t("preferred_schedule")} name="MATCHING.PREFERRED_SCHEDULE" onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.MATCHING.PREFERRED_SCHEDULE} />
                         </div>
                         <div className="col-12 mt-3">
                             <span className={style.lable}>Job Type:</span>
@@ -519,7 +520,7 @@ export default function MyAccount() {
                                 {jobType.map(v => (
                                     <div key={v.key} className='col-6'>
                                         <div className="form-check form-check-inline">
-                                            <label className="form-check-label">{v.label}</label>
+                                            <label className="form-check-label">{t(v.label)}</label>
                                             <input className="form-check-input" type="checkbox" value={v.key} name="MATCHING.JOB_TYPE" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.JOB_TYPE.includes(v.key)} />
                                         </div>
                                     </div>
@@ -527,22 +528,22 @@ export default function MyAccount() {
                             </div>
                         </div>
                         <div className="col-12 mt-3">
-                            <span className={style.lable}>Team drivers:</span>
+                            <span className={style.lable}>{t("team_drivers")}:</span>
                             <select class="form-control form-select" name="MATCHING.TEAM_DRIVER" onChange={e => onPreferenceChange(e)} value={formState.preferences.MATCHING.TEAM_DRIVER}>
-                                {jobTeamDriver.map(v => (<option key={v.key} value={v.key}>{v.label}</option>))}
+                                {jobTeamDriver.map(v => (<option key={v.key} value={v.key}>{t(v.label)}</option>))}
                             </select>
                         </div>
                         <div className="col-12 mt-3">
-                            <label>Min Pay (per week):</label>
-                            <input type="number" min={0} className="form-control" placeholder="Minimum pay" name="MATCHING.MIN_PAY" onKeyDown={e => preventNegative(e)} onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.MATCHING.MIN_PAY} />
+                            <label>{t("min_pay_per_week")}:</label>
+                            <input type="number" min={0} className="form-control" placeholder={t("min_pay_per_week")} name="MATCHING.MIN_PAY" onKeyDown={e => preventNegative(e)} onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.MATCHING.MIN_PAY} />
                         </div>
                         <div className="col-12 mt-3">
-                            <span className={style.lable}>Pay Method:</span>
+                            <span className={style.lable}>{t("pay_method")}:</span>
                             <div className="row mt-1">
                                 {jobPayMethod.map(v => (
                                     <div key={v.key} className='col-6'>
                                         <div className="form-check form-check-inline">
-                                            <label className="form-check-label">{v.label}</label>
+                                            <label className="form-check-label">{t(v.label)}</label>
                                             <input className="form-check-input" type="checkbox" value={v.key} name="MATCHING.PAY_METHOD" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.PAY_METHOD.includes(v.key)} />
                                         </div>
                                     </div>
@@ -550,12 +551,12 @@ export default function MyAccount() {
                             </div>
                         </div>
                         <div className="col-12 mt-3">
-                            <span className={style.lable}>Required Benefits:</span>
+                            <span className={style.lable}>{t("required_benefits")}:</span>
                             <div className="row mt-1">
                                 {jobBenefits.map(v => (
                                     <div key={v.key} className='col-6'>
                                         <div className="form-check form-check-inline">
-                                            <label className="form-check-label">{v.label}</label>
+                                            <label className="form-check-label">{t(v.label)}</label>
                                             <input className="form-check-input" type="checkbox" value={v.key} name="MATCHING.BENEFITS" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.BENEFITS.includes(v.key)} />
                                         </div>
                                     </div>

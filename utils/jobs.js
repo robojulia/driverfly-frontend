@@ -2,75 +2,75 @@
 const jobBenefits = [
     {
         key: "SIGN_ON_BONUS",
-        label: "Sign-on Bonus"
+        label: "sign_on_bonus"
     },
     {
         key: "GUARANTEED_BASE_SALARY",
-        label: "Guaranteed Base Salary"
+        label: "guaranteed_base_salary"
     },
     {
         key: "MEDICAL",
-        label: "Medical"
+        label: "medical"
     },
     {
         key: "VISION",
-        label: "Vision"
+        label: "vision"
     },
     {
         key: "DENTAL",
-        label: "Dental"
+        label: "dental"
     },
     {
         key: "RETIREMENT_401K",
-        label: "401k (retirement)"
+        label: "retirement_401k"
     },
     {
         key: "SAFETY_BONUS",
-        label: "Safety bonuses"
+        label: "safety_bonus"
     },
     {
         key: "EXTRA_PAY_MISC",
-        label: "Extra pay for (tarping, overnight, detention, accessorials, extra stops, etc)"
+        label: "extra_pay_misc"
     },
     {
         key: "FUEL_CARD",
-        label: "Fuel cards / discount programs"
+        label: "fuel_card"
     },
     {
         key: "GUARANTEED_BASE_PAY",
-        label: "Gauranteed baseline pay"
+        label: "guaranteed_baseline_pay"
     },
     {
         key: "NEW_EQUIPMENT",
-        label: "New equipment"
+        label: "new_equipment"
     },
     {
         key: "PAID_TRAINING",
-        label: "Pay for training"
+        label: "pay_for_training"
     },
     {
         key: "TOLL_ROAD_PASS",
-        label: "Toll road passes"
+        label: "toll_road_passes"
     },
     {
         key: "EXCLUDE_NY_FL",
-        label: "No traveling to New York or Florida"
+        label: "no_travel_to_ny_fl"
     },
     {
         key: "NO_FORCED_DISPATCH",
-        label: "No forced dispatch"
+        label: "no_forced_dispatch"
     },
     {
         key: "COMPANION_DRIVERS",
-        label: "Companion drivers allowed"
+        label: "companion_drivers_allowed"
     },
     {
         key: "ONBOARD_DEVICES",
-        label: "Onboard devices/subscriptions (ex. Netflix, Rand McNally, etc.)"
+        label: "onboard_devices"
     },
     {
         key: "PETS_ALLOWED",
-        label: "Pets allowed"
+        label: "pets_allowed"
     },
     // {
     //     key: "OTHER",
@@ -81,84 +81,84 @@ const jobBenefits = [
 const jobGeography = [
     {
         key: "OTR",
-        label: "OTR"
+        label: "otr"
     },
     {
         key: "REGIONAL",
-        label: "Regional"
+        label: "regional"
     },
     {
         key: "LOCAL",
-        label: "Local"
+        label: "local"
     },
 ];
 
 const jobType = [
     {
         key: "W2",
-        label: "Salaried (W2)"
+        label: "salaried"
     },
     {
         key: "CONTRACT",
-        label: "Contractor (1099)"
+        label: "contractor"
     },
     {
         key: "OWNER_OPERATOR",
-        label: "Owner-Operator"
+        label: "owner_operator"
     },
     {
         key: "PART_TIME",
-        label: "Part-Time"
+        label: "part_time"
     },
     {
         key: "SEASONAL",
-        label: "Seasonal"
+        label: "seasonal"
     },
     {
         key: "ONE_TIME_GIG",
-        label: "One Time Gig"
+        label: "one_time_gig"
     },
 ];
 
 const jobTeamDriver = [
     {
         key: "HAS_TEAM_DRIVER",
-        label: "Has team drivers"
+        label: "has_team_drivers"
     },
     {
         key: "OPEN_TEAM_DRIVER",
-        label: "Open to team drivers"
+        label: "open_to_team_drivers"
     },
     {
         key: "NO_TEAM_DRIVER",
-        label: "Not open to team drivers"
+        label: "not_open_to_team_drivers"
     },
 ];
 
 const jobPayMethod = [
     {
         key: "RATE_PER_MILE",
-        label: "Rate per mile"
+        label: "rate_per_mile"
     },
     {
         key: "PERCENT_PER_MOVE",
-        label: "Percent per move"
+        label: "percent_per_move"
     },
     {
         key: "HOURLY",
-        label: "Hourly"
+        label: "hourly"
     },
     {
         key: "SET_WEEKLY",
-        label: "Set Weekly"
+        label: "set_weekly"
     },
     {
         key: "SALARY",
-        label: "Salary"
+        label: "salary"
     },
     {
         key: "PERCENT_WEIGHT",
-        label: "Percent per weight"
+        label: "percent_per_weight"
     },
 ];
 
