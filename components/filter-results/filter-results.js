@@ -43,7 +43,7 @@ export default function FilterResults () {
                 < Salary />
                 < PostedDate />
                 < AreasCovered />
-                < FullParty />
+                {/* < FullParty /> */}
                 < EmploymentType />
                 < TypeOfDelivery />
                 < AcceptingDriversFrom />
