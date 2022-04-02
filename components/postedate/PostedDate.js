@@ -6,8 +6,6 @@ import jobContext from "../../context/jobContext"
 import moment from "moment"
 
 export default function DatePosted() {
-  const last24 = moment.utc().subtract(24, "hours").format("YYYY-MM-DD HH:mm:ss:ss")
-  console.log("last24", last24)
 
   const { state, method } = useContext(jobContext)
   const { handleChange } = method
@@ -50,6 +48,9 @@ export default function DatePosted() {
           <div className="card-body">
             <div onChange={changeHandler} className="App">
               <div className="topping pt-2">
+                <input type="radio" id="all" name="date_created" value="" />All
+              </div>
+              <div className="topping pt-2">
                 <input type="radio" id="lasthour" name="date_created" value="lasthour" />Last Hour
               </div>
               <div className="topping pt-2">
@@ -63,9 +64,6 @@ export default function DatePosted() {
               </div>
               <div className="topping pt-2">
                 <input type="radio" id="lastthirty" name="date_created" value="lastthirty" />Last 30 days
-              </div>
-              <div className="topping pt-2">
-                <input type="radio" id="all" name="date_created" value="" />All
               </div>
             </div>
 
