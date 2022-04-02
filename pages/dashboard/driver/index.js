@@ -125,7 +125,7 @@ export default function Dashboard() {
                                 </td>
                                 <td>
                                     <Link href="#">
-                                        <button className={` mt-3 text-white ${style.btn_blue}`}>{t("find_job")}</button>
+                                        <button className={` mt-3 text-white ${style.btn_blue}`}>{t("find_new_job")}</button>
                                     </Link>
                                 </td>
 

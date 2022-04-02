@@ -4,7 +4,7 @@ function BaseInput ( props ) {
   const baseClass = `my-3 ${props.className}`
   return (
     <div className={baseClass}>
-      {props.label && <label>{props.label}</label>}
+      {props.label && <label>{props.label}:</label>}
       <br />
       <input
         onBlur={props.handleBlur}
@@ -14,6 +14,7 @@ function BaseInput ( props ) {
         value={props.value}
         onChange={props.onChange}
         onKeyDown={props.onKeyDown}
+        readOnly={props.readOnly}
         name={props.name}
         className="form-control" 
       />

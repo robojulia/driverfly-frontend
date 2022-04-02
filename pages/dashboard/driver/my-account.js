@@ -33,7 +33,8 @@ export default function MyAccount() {
 
     const [ formState, setFormState ] = useState({
         user: {
-            name: user.name || "",
+            first_name: user.first_name || "",
+            last_name: user.last_name || "",
             contact_number: user.contact_number || "",
             cell_number: user.cell_number || "",
             email: user.email || ""
@@ -187,7 +188,12 @@ export default function MyAccount() {
 
     function onContactSubmit(e) {
         e.preventDefault();
-        if (!formState.user.name) {
+        if (!formState.user.last_name) {
+            toast.error(t("name_is_required"));
+            return;
+        }
+
+        if (!formState.user.first_name) {
             toast.error(t("name_is_required"));
             return;
         }
@@ -200,7 +206,8 @@ export default function MyAccount() {
 
         Promise.all([
             axios.put(`${process.env.BASE_URL_API}/user/${user.id}`, {
-                ...formState.user
+                ...formState.user,
+                name: `${formState.user.first_name} ${formState.user.last_name}`
             }, {
                 headers: {
                     'Authorization': `Bearer ${user.token}`
@@ -235,6 +242,8 @@ export default function MyAccount() {
             const [ newUser, newDriver ] = values;
             setAuth({
                 ...user,
+                first_name: newUser.first_name,
+                last_name: newUser.last_name,
                 name: newUser.name,
                 contact_number: newUser.contact_number,
                 cell_number: newUser.cell_number,
@@ -353,18 +362,22 @@ export default function MyAccount() {
     return (
         <>
             <ToastContainer />
-            <h2 className='mb-3'>{t("account_settings")}</h2>
+            <h2 className='mb-3'>{t("my_account")}</h2>
             <div className={style.account_container}>
                 <div>
                     <div className='container-fluid'>
                         <form className="modal-body" onSubmit={e => onContactSubmit(e)} >
                             <h3>{t("contact_details")}</h3>
                             <div className="row">
-                                <div className="col-sm-6 mt-3">
-                                    <label>{t("name")}</label>
-                                    <input name="name" type="text" className="form-control" placeholder={t("name")} onChange={e => onUserChange(e)} value={formState.user.name} />
+                                <div className="col-sm-4 mt-3">
+                                    <label>{t("first_name")}</label>
+                                    <input name="first_name" type="text" className="form-control" placeholder={t("first_name")} onChange={e => onUserChange(e)} value={formState.user.first_name} />
                                 </div>
-                                <div className="col-sm-6 mt-3">
+                                <div className="col-sm-4 mt-3">
+                                    <label>{t("last_name")}</label>
+                                    <input name="last_name" type="text" className="form-control" placeholder={t("last_name")} onChange={e => onUserChange(e)} value={formState.user.last_name} />
+                                </div>
+                                <div className="col-sm-4 mt-3">
                                     <label>{t("birthdate")}</label>
                                     <input name="birthdate" type="date" className="form-control" placeholder={t("birthdate")} onChange={e => onDriverChange(e)} value={formState.driver.birthdate} />
                                 </div>
