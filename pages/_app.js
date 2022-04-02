@@ -5,6 +5,7 @@ import "../public/css/style.css";
 import "../public/css/responsive.css";
 import "../public/dashboard/styles/css/global.css";
 
+import "../lang/i18nextconfig";
 
 
 import { useEffect } from "react";

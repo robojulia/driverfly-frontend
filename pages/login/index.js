@@ -13,6 +13,8 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import AuthApi from "../api/auth";
 
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 
 export default function Login() {
@@ -65,6 +67,7 @@ export default function Login() {
                     if (data.status == 201) {
                         console.log("handle success data", data.data);
                         console.log(data.data);
+                        i18next.changeLanguage(data.data.user.language);
                         setAuth(data.data.user)
 
                         if (isDriver()) {

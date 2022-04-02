@@ -11,7 +11,11 @@ import axios from "axios";
 import JobList from "../../../public/dashboard/styles/css/JobList.module.css"
 import Link from 'next/link';
 
+import { useTranslation } from "react-i18next";
+
 export default function Dashboard() {
+
+    const { t } = useTranslation();
 
     const { authDriver } = useRedirect();
 
@@ -57,30 +61,30 @@ export default function Dashboard() {
                     <Row className='justify-content-center text-center d-block'>
                         <Col lg={3} md={3} col={12} className={`p-5 mr-3 bg_yellow w-24  ${style.job_info_container}`} >
                             <h2 className="text-white font-weight-bolder">12 </h2>
-                            <h3 className="font-weight-bolder">Applied Jobs</h3>
+                            <h3 className="font-weight-bolder">{t("applied_jobs")}</h3>
                             <Link href="#">
-                                <button className={` mt-3 text-white ${style.btn_blue}`}>View</button>
+                                <button className={` mt-3 text-white ${style.btn_blue}`}>{t("view")}</button>
                             </Link>
                         </Col>
                         <Col lg={3} md={3} col={12} className={`p-5 mr-3 bg_green w-24   ${style.job_info_container}`}>
                             <h2 className={`font-weight-bolder  ${style.text_yellow}`}>4 </h2>
-                            <h3 className="font-weight-bolder">New Offers</h3>
+                            <h3 className="font-weight-bolder">{t("new_offers")}</h3>
                             <Link href="#">
-                                <button className={` mt-3 text-white ${style.btn_blue}`}>View</button>
+                                <button className={` mt-3 text-white ${style.btn_blue}`}>{t("view")}</button>
                             </Link>
                         </Col>
                         <Col lg={3} md={3} col={12} className={`p-5 mr-3 bg_blue w-24   ${style.job_info_container}`} >
                             <h2 className={`font-weight-bolder  ${style.text_yellow}`}>12 </h2>
-                            <h3 className="font-weight-bolder text-white">Saved Jobes</h3>
+                            <h3 className="font-weight-bolder text-white">{t("saved_jobs")}</h3>
                             <Link href="#">
-                                <button className={` mt-3 text-dark ${style.btn_green}`}>View</button>
+                                <button className={` mt-3 text-dark ${style.btn_green}`}>{t("view")}</button>
                             </Link>
                         </Col>
                         <Col lg={3} md={3} col={12} className={`p-5 mr-3 myrtlegreen w-24   ${style.job_info_container}`}>
                             <h2 className="text-white font-weight-bolder">4 </h2>
-                            <h3 className={style.text_yellow}>Past Jobes</h3>
+                            <h3 className={style.text_yellow}>{t("past_jobs")}</h3>
                             <Link href="#">
-                                <button className={` mt-3 text-dark ${style.btn_green}`}>View</button>
+                                <button className={` mt-3 text-dark ${style.btn_green}`}>{t("view")}</button>
                             </Link>
                         </Col>
                     </Row>
@@ -91,15 +95,15 @@ export default function Dashboard() {
             <div className=''>
                 <Row>
                     <Col>
-                        <h2 className='font-weight-bold my-3'>Current Job</h2>
+                        <h2 className='font-weight-bold my-3'>{t("current_job")}</h2>
                     </Col>
                 </Row>
                 <div class="table-responsive">
                     <table class="table table-borderless ">
                         <thead>
                             <tr>
-                                <th scope="col">Job Title</th>
-                                <th scope="col">Company</th>
+                                <th scope="col">{t("job_title")}</th>
+                                <th scope="col">{t("company")}</th>
                                 <th scope="col"></th>
                                 <th scope="col"></th>
                                 <th scope="col"></th>
@@ -111,17 +115,17 @@ export default function Dashboard() {
                                 <td>CR England</td>
                                 <td>
                                     <Link href="#">
-                                        <button className={` mt-3 text-white ${style.btn_blue}`}>Update Status</button>
+                                        <button className={` mt-3 text-white ${style.btn_blue}`}>{t("update_status")}</button>
                                     </Link>
                                 </td>
                                 <td>
                                     <Link href="#">
-                                        <button className={` mt-3 text-white ${style.btn_blue}`}>Transfer Internally</button>
+                                        <button className={` mt-3 text-white ${style.btn_blue}`}>{t("transfer_internally")}</button>
                                     </Link>
                                 </td>
                                 <td>
                                     <Link href="#">
-                                        <button className={` mt-3 text-white ${style.btn_blue}`}>Find Job</button>
+                                        <button className={` mt-3 text-white ${style.btn_blue}`}>{t("find_job")}</button>
                                     </Link>
                                 </td>
 
@@ -138,7 +142,7 @@ export default function Dashboard() {
             <div className={JobList.joblisting}>
                 <Row className={JobList.link}>
                     <Col sm="6" lg="8">
-                        <h2 className='mt-3'>Suggested Jobs</h2>
+                        <h2 className='mt-3'>{t("suggested_jobs")}</h2>
                     </Col>
                 </Row>
                 <Row className="mt-5">
@@ -149,16 +153,16 @@ export default function Dashboard() {
                                     <Table striped>
                                         <thead className="listing_head">
                                             <tr>
-                                                <th>Title</th>
-                                                <th>Date Offered</th>
-                                                <th>Company</th>
-                                                <th>Est. Pay Per Week</th>
-                                                <th>Pay Method</th>
-                                                <th>Geography</th>
-                                                <th>Type</th>
-                                                <th>Schedule</th>
-                                                <th>Equipment</th>
-                                                <th>Truck</th>
+                                                <th>{t("title")}</th>
+                                                <th>{t("date_offered")}</th>
+                                                <th>{t("company")}</th>
+                                                <th>{t("est_pay_per_week")}</th>
+                                                <th>{t("pay_method")}</th>
+                                                <th>{t("geography")}</th>
+                                                <th>{t("type")}</th>
+                                                <th>{t("schedule")}</th>
+                                                <th>{t("equipment")}</th>
+                                                <th>{t("truck")}</th>
 
                                             </tr>
                                         </thead>
@@ -199,7 +203,7 @@ export default function Dashboard() {
                                                         <span>
                                                             Schedule<br></br><br></br>
                                                             <span className={JobList.hired}>
-                                                                Review
+                                                                {t("review")}
                                                             </span>
                                                         </span>
                                                     </td>
@@ -207,7 +211,7 @@ export default function Dashboard() {
                                                         <span>
                                                             Equipment<br></br><br></br>
                                                             <span className={JobList.approved}>
-                                                                Apply
+                                                                {t("apply")}
                                                             </span>
                                                         </span>
                                                     </td>
@@ -216,10 +220,10 @@ export default function Dashboard() {
                                                             Truck<br></br>
                                                         </span><br></br>
                                                         <span className={JobList.hired}>
-                                                            Reject
+                                                            {t("reject")}
                                                         </span>
                                                         <span className={JobList.applied}>
-                                                            Save
+                                                            {t("save")}
                                                         </span>
                                                     </td>
                                                 </tr>
