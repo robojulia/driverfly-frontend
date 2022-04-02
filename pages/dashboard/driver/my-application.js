@@ -22,6 +22,8 @@ import { useTranslation } from "react-i18next"
 
 import { driverDegree, cdlClass } from "../../../utils/driver"
 
+import { EquipmentType } from "../../../enums/drivers/equipment-type";
+
 import BaseApi from "../../api/_baseApi";
 
 export default function MyApplication() {
@@ -30,6 +32,16 @@ export default function MyApplication() {
   const user = authCheck();
 
   const api = new BaseApi();
+
+  const equipmentTypes = Object
+    .keys(EquipmentType)
+    .map(v => {
+      return {
+        value: v,
+        label: EquipmentType[v]
+      };
+    })
+
 
   yup.addMethod(yup.array, "unique", function (message, field, mapper = a => a) {
     return this.test(`unique`, message, function (list) {
@@ -70,8 +82,8 @@ export default function MyApplication() {
       license_type: "",
       years_cdl_experience: null,
       equipment_experience: [],
-      // todo: owner_operator: false,
-      // todo: equipment_owned: [],
+      is_owner_operator: false,
+      equipment_owned: [],
 
       // todo: transmission_type: [],
       // todo: endorsements: [],
@@ -102,12 +114,17 @@ export default function MyApplication() {
       equipment_experience: yup.array(
         yup.object().shape({
           type: yup.string().required(t("this_field_is_required")).nullable(),
+          type_other: yup.string().nullable(),
+          quantity: yup.number().min(1).required(t("this_field_is_required")).nullable(),
+        })
+      ).unique(t("types_must_not_repeat"), "type", t => `${t.type}_${t.type_other}`),
+
+      equipment_experience: yup.array(
+        yup.object().shape({
+          type: yup.string().required(t("this_field_is_required")).nullable(),
           years: yup.string().required(t("this_field_is_required")).nullable(),
         })
       ).unique(t("types_must_not_repeat"), "type", t => t.type),
-      // equipment_experience: yup.object()
-      //   .typeUnique("Equipmets type can not be duplicate")
-      //   .typeNotEmpty(t("this_field_is_required")),
 
       highest_degree: yup.string().nullable(),
       emergency_contact_name: yup.string().nullable(),
@@ -135,8 +152,13 @@ export default function MyApplication() {
         license_type: values.license_type,
         years_cdl_experience: values.years_cdl_experience,
         equipment_experience: values.equipment_experience,
-        // todo: owner_operator: values.owner_operator,
-        // todo: equipment_owned: values.equipment_owned,
+        is_owner_operator: values.is_owner_operator,
+        equipment_owned: values.is_owner_operator ? values.equipment_owned.map(v => {
+          if (!v.type.endsWith("_OTHER")) {
+            v.type_other = null;
+          }
+          return v;
+        }) : [],
   
         // todo: transmission_type: values.transmission_type,
         // todo: endorsements: values.endorsements,
@@ -274,8 +296,6 @@ export default function MyApplication() {
     }
   });
 
-  if (Object.keys(sec_form.errors).length > 0) console.log(sec_form.errors);
-
   useEffect(async () => {
     const { data: driver } = await api.get(`drivers`);
     if (!driver) {
@@ -295,6 +315,8 @@ export default function MyApplication() {
       license_state: driver.license_state,
       license_type: driver.license_type,
       years_cdl_experience: driver.years_cdl_experience,
+      is_owner_operator: driver.is_owner_operator,
+      equipment_owned: driver.equipment_owned || [],
       equipment_experience: driver.equipment_experience,
 
       above_21: driver.birthdate ? moment(new Date()).diff(driver.birthdate, "years") >= 21 : false,
@@ -359,6 +381,27 @@ export default function MyApplication() {
       return;
     }
   }
+
+  const addEquipmentOwned = () => {
+    acc_form.setValues({
+      ...acc_form.values,
+      equipment_owned: [
+        ...acc_form.values.equipment_owned,
+        {
+          type: null, type_other: null, quantity: null
+        }
+      ],
+    });
+  };
+
+  const removeEquipmentOwned = (id) => {
+    acc_form.setValues({
+      ...acc_form.values,
+      equipment_owned: [
+        ...acc_form.values.equipment_owned.filter((v, i) => i != id),
+      ],
+    });
+  };
 
   const addEquipmentExperience = () => {
     acc_form.setValues({
@@ -425,7 +468,7 @@ export default function MyApplication() {
               <div className="row">
                 {/* <h3>{t("basic_details")}</h3> */}
                 {/* Drivers Name */}
-                <div className="col-sm-4">
+                <div className="col-md-4">
                   <BaseInput
                     className="col-12"
                     label={t("first_name")}
@@ -575,7 +618,7 @@ export default function MyApplication() {
                     {acc_form.touched.license_state && acc_form.errors.license_state ? <span className="text-danger small">{acc_form.errors.license_state}</span> : null}
                   </div>
                   {/* CDL class types */}
-                  <div className="col-12 mt-3">
+                  <div className="col-12">
                     <span className={style.lable}>{t("cdl_class_type")}:</span>
                     <select class="application_select form-select" name="license_type"
                       value={acc_form.values.cdl_class}
@@ -604,11 +647,26 @@ export default function MyApplication() {
                     onChange={acc_form.handleChange}
                     handleBlur={acc_form.handleBlur}
                   />
+                  {/* is owner-operator */}
+                  <div className="col mt-4">
+                    <div class="form-check form-switch">
+                      <label class="form-check-label" htmlFor="is_owner_operator">{t("is_owner_operator_question")}</label>
+                      <input
+                        checked={acc_form.values.is_owner_operator}
+                        name="is_owner_operator"
+                        onChange={acc_form.handleChange}
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id="is_owner_operator"
+                        />
+                    </div>
+                  </div>
                 </div>
                 <div className="col-md-4">
                   {/* age limit */}
-                  <div className="col-12 mt-2 mb-34">
-                    <div class="form-check form-switch mt-5">
+                  <div className="col-12 mt-4">
+                    <div class="form-check form-switch">
                       <label class="form-check-label">{t("above_21")}</label>
                       <input class="form-check-input" readOnly type="checkbox" checked={acc_form.values.above_21} role="switch" />
                     </div>
@@ -664,67 +722,158 @@ export default function MyApplication() {
 
 
                 </div>
-
-
               </div>
 
-              <div className='row'>
-                <div className="col-md-12">
-                  <div className={` mt-3  p-4 ${style.account_container}`}>
-                    <span>{t("equipment_experience")}</span> <br />
+                {(
+                  acc_form.values.is_owner_operator &&
+                  <div className='row'>
+                    <div className="col-md-10 offset-md-1 mt-3">
+                    <hr />
+                    <h3>{t("equipment_owned")}</h3> <br />
                     <div>
                       {
-                        acc_form.errors.equipment_experience &&
-                        (typeof acc_form.errors.equipment_experience === "string") &&
-                        <span className="text-danger small">{acc_form.errors.equipment_experience}</span>
+                        acc_form.errors.equipment_owned &&
+                        (typeof acc_form.errors.equipment_owned === "string") &&
+                        <span className="text-danger small">{acc_form.errors.equipment_owned}</span>
                       }
 
                     </div>
-                    {acc_form.values.equipment_experience.map((v, i) => {
+                    {acc_form.values.equipment_owned.map((v, i) => {
                       const getOrNull = (field, type) => {
-                        if (acc_form[field].equipment_experience && acc_form[field].equipment_experience[i]) {
-                          return acc_form[field].equipment_experience[i][type];
+                        if (acc_form[field].equipment_owned && acc_form[field].equipment_owned[i]) {
+                          return acc_form[field].equipment_owned[i][type];
                         }
                       };
 
                       return (
-                        <div key={i}>
-                          <div className='row px-lg-5'>
+                        <div key={i} className='row'>
+                          <div className="col-md-4">
+                            <span className={style.lable}>{t("type")}:</span>
+                            <select class="application_select form-select"
+                                name={`equipment_owned.${i}.type`}
+                                value={v.type}
+                                onChange={acc_form.handleChange}
+                              >
+                              <option value="">{t("type")}</option>
+                              {equipmentTypes.map((v, index) => {
+                                return (
+                                  <option value={v.value} key={index}>{t(v.label)}</option>
+                                )
+                              })}
+                            </select>
+                            {getOrNull("touched", "type") && getOrNull("errors", "type") ? <span className="text-danger small">{getOrNull("errors", "type")}</span> : null}
+                          </div>
+                          {(
+                            v.type?.endsWith("_OTHER") &&
                             <BaseInput
                               className="col-md-5"
-                              label={t("type")}
-                              placeholder={t("type")}
-                              value={v.type}
+                              label={t("details")}
+                              placeholder={t("details")}
+                              value={v.type_other}
                               onChange={acc_form.handleChange}
                               handleBlur={acc_form.handleBlur}
-                              touched={getOrNull("touched", "type")}
-                              error={getOrNull("errors", "type")}
-                              name={`equipment_experience.${i}.type`}
-                            />
-                            <BaseInput
-                              className="col-md-5"
-                              label={t("years_experience")}
-                              placeholder={t("years_experience")}
-                              value={v.years}
-                              type="number"
-                              min={0}
-                              onChange={acc_form.handleChange}
-                              handleBlur={acc_form.handleBlur}
-                              touched={getOrNull("touched", "years")}
-                              error={getOrNull("errors", "years")}
-                              name={`equipment_experience.${i}.years`}
-                            />
-                            <div className="col-md-2 mt-5">
-                              <span className="btn btn-yellow" onClick={() => removeEquipmentExperience(i)}>x {t("remove")}</span>
-                            </div>
+                              touched={getOrNull("touched", "type_other")}
+                              error={getOrNull("errors", "type_other")}
+                              name={`equipment_owned.${i}.type_other`}
+                              />)}
+                          <BaseInput
+                            className="col-md-2"
+                            label={t("quantity")}
+                            placeholder={t("quantity")}
+                            value={v.quantity}
+                            type="number"
+                            min={0}
+                            onChange={acc_form.handleChange}
+                            handleBlur={acc_form.handleBlur}
+                            touched={getOrNull("touched", "quantity")}
+                            error={getOrNull("errors", "quantity")}
+                            name={`equipment_owned.${i}.quantity`}
+                          />
+                          <div className="col-md-1">
+                            <span className="btn btn-yellow mt-4" onClick={() => removeEquipmentOwned(i)}>x</span>
                           </div>
                         </div>
                       )
                     })}
 
-                    <span className="btn btn-approved  mt-3" onClick={addEquipmentExperience}>+ {t("more")}</span>
+                    <span className="btn btn-approved  mt-3" onClick={addEquipmentOwned}>+ {t("more")}</span>
+                  </div>
+                </div>
+
+                )}
+
+              <div className='row'>
+                <div className="col-md-10 offset-md-1 mt-3">
+                  <hr />
+                  <h3>{t("equipment_experience")}</h3> <br />
+                  <div>
+                    {
+                      acc_form.errors.equipment_experience &&
+                      (typeof acc_form.errors.equipment_experience === "string") &&
+                      <span className="text-danger small">{acc_form.errors.equipment_experience}</span>
+                    }
 
                   </div>
+                  {acc_form.values.equipment_experience.map((v, i) => {
+                    const getOrNull = (field, type) => {
+                      if (acc_form[field].equipment_experience && acc_form[field].equipment_experience[i]) {
+                        return acc_form[field].equipment_experience[i][type];
+                      }
+                    };
+
+                    return (
+                      <div key={i}>
+                        <div className='row'>
+                          <div className="col-md-4">
+                            <span className={style.lable}>{t("type")}:</span>
+                            <select class="application_select form-select"
+                                name={`equipment_experience.${i}.type`}
+                                value={v.type}
+                                onChange={acc_form.handleChange}
+                              >
+                              <option value="">{t("type")}</option>
+                              {equipmentTypes.map((v, index) => {
+                                return (
+                                  <option value={v.value} key={index}>{t(v.label)}</option>
+                                )
+                              })}
+                            </select>
+                            {getOrNull("touched", "type") && getOrNull("errors", "type") ? <span className="text-danger small">{getOrNull("errors", "type")}</span> : null}
+                          </div>
+                          {/* <BaseInput
+                            className="col-md-5"
+                            label={t("type")}
+                            placeholder={t("type")}
+                            value={v.type}
+                            onChange={acc_form.handleChange}
+                            handleBlur={acc_form.handleBlur}
+                            touched={getOrNull("touched", "type")}
+                            error={getOrNull("errors", "type")}
+                            name={`equipment_experience.${i}.type`}
+                          /> */}
+                          <BaseInput
+                            className="col-md-5"
+                            label={t("years_experience")}
+                            placeholder={t("years_experience")}
+                            value={v.years}
+                            type="number"
+                            min={0}
+                            onChange={acc_form.handleChange}
+                            handleBlur={acc_form.handleBlur}
+                            touched={getOrNull("touched", "years")}
+                            error={getOrNull("errors", "years")}
+                            name={`equipment_experience.${i}.years`}
+                          />
+                          <div className="col-md-2 mt-4">
+                            <span className="btn btn-yellow" onClick={() => removeEquipmentExperience(i)}>x</span>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+
+                  <span className="btn btn-approved  mt-3" onClick={addEquipmentExperience}>+ {t("more")}</span>
+
                 </div>
               </div>
 

@@ -1,7 +1,7 @@
 import React from 'react'
 
 function BaseInput ( props ) {
-  const baseClass = `my-3 ${props.className}`
+  const baseClass = `${props.className}`
   return (
     <div className={baseClass}>
       {props.label && <label>{props.label}:</label>}
