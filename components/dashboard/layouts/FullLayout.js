@@ -5,8 +5,11 @@ import Header from "./header/Header";
 import Sidebar from "./sidebars/vertical/Driver-Account/Sidebar";
 import Head from "next/head";
 
+import { useTranslation } from "react-i18next";
+
 
 const FullLayout = ({ children }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
   const showMobilemenu = () => {
     setOpen(!open);
@@ -15,7 +18,7 @@ const FullLayout = ({ children }) => {
   return (
     <>
       <Head>
-        <title>Driver-Dashboard</title>
+        <title>{t("driverfly_driver_dashboard")}</title>
         <meta
           name="description"
           content="Ample Admin Next Js Aadmin Dashboard "

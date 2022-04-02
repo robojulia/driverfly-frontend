@@ -23,5 +23,14 @@
 	"truck": "Truck",
 	"type": "Type",
 	"update_status": "Update Status",
-	"view": "View"
+	"view": "View",
+    "driverfly_driver_dashboard": "Driverfly | Driver Dashboard",
+    "dashboard": "Dashboard",
+    "my_account": "My Account",
+    "my_application": "My Application",
+    "my_docs": "My Docs",
+    "jobs_offered": "Jobs Offered",
+    "jobs_applied_to": "Jobs Applied To",
+    "jobs_saved": "Jobs Saved",
+    "free_resources": "Free Resources"
 }
