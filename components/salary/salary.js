@@ -7,6 +7,7 @@ import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import { salary_type } from "../../enums/jobs/job-fields"
 import EnumFilterByKeyValue from '../enum-filters/enum-filter-by-key-value'
+import Slider from 'react-rangeslider'
 
 export default function Salary() {
 
@@ -31,7 +32,7 @@ export default function Salary() {
           aria-labelledby="headingFive" data-parent="#accordionExample">
           <div className="card-body">
             <div className="App">
-            <EnumFilterByKeyValue
+              <EnumFilterByKeyValue
                 withAll={true}
                 enumArray={salary_type}
                 name="salary_type"
@@ -45,6 +46,21 @@ export default function Salary() {
               onChange={e => setValue(e.target.value)}
 
               variant='info'
+            />
+            <Slider
+              min={10}
+              max={50000}
+              step={1}
+              // value={Number}
+              // orientation={String}
+              // reverse={Boolean}
+              // tooltip={Boolean}
+              // labels={Object}
+              // handleLabel={String}
+              // format={Function}
+              // onChangeStart={Function}
+              // onChange={Function}
+              // onChangeComplete={Function}
             />
 
             <div className='row'>

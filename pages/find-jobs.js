@@ -11,6 +11,13 @@ import jobsContext from "../context/jobContext"
 export default function FindJobs() {
 
   const [jobs, setJobs] = useState([])
+  const [pagingMeta, setPagingMeta] = useState({
+    hasNextPage: false,
+    hasPreviousPage: false,
+    page: 0,
+    pageCount: 1,
+  })
+
   const [filters, setFilters] = useState({
     keywords: "",
     category: "",
@@ -27,6 +34,7 @@ export default function FindJobs() {
     pay_structure: "",
     endoresements_type: "",
     mvr_requirements: "",
+    page: 0,
   })
 
   const router = useRouter()
@@ -50,15 +58,16 @@ export default function FindJobs() {
     }, fetchJobs())
   }
 
-
   const fetchJobs = async () => {
     console.log('filters Final', filters)
-    const { data } = await axios.get(`${process.env.BASE_URL_API}/jobs`, {
+    console.log('pagingMeta Final', pagingMeta)
+    const { data, ...meta } = await axios.get(`${process.env.BASE_URL_API}/jobs`, {
       params: {
-        ...filters
+        ...filters,
       }
-    })
+    }).then(res => res.data)
     setJobs(data)
+    setPagingMeta(meta)
   }
 
   useEffect(fetchJobs, [])
@@ -67,10 +76,12 @@ export default function FindJobs() {
     <jobsContext.Provider value={{
       state: {
         jobs,
+        pagingMeta,
         filters,
       },
       method: {
         handleChange,
+        setPagingMeta,
         setFilters,
         applyFilters: fetchJobs
       },
@@ -92,7 +103,12 @@ export default function FindJobs() {
               </form>
 
               <div className="results-count mt-4 ">
-                Showing <span className="first">1</span> – <span className="last">10</span> of 32 results
+                Showing
+                <span className="first">
+                  1
+                </span> 
+                – <span className="last">{jobs.length}</span>
+                of {pagingMeta.itemCount} results
               </div>
 
               <div className="filter-btn-groups mt-3">
