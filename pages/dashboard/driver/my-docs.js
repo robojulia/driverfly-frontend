@@ -11,11 +11,15 @@ import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import FullLayout from "../../../components/dashboard/layouts/FullLayout"
 import useAuth from "../../../hooks/useAuth"
+import useRedirect from '../../../hooks/useRedirect';
 import { useTranslation } from 'react-i18next'
 import { useFormik } from "formik"
 import UserApi from "../../api/user";
 
 export default function PrestoresDocuments() {
+  const { authDriver } = useRedirect();
+  authDriver();
+
   const { t } = useTranslation();
 
   const { authCheck } = useAuth()

@@ -1,4 +1,3 @@
-import LogoutButton from '../../../components/buttons/Logout';
 import FullLayout from "../../../components/dashboard/layouts/FullLayout";
 import { Col, Row, Card, CardBody, Table } from "reactstrap";
 import useRedirect from '../../../hooks/useRedirect';

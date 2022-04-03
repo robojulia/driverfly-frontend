@@ -24,4 +24,10 @@ export default class UserApi extends BaseApi {
 
         return data as DocumentEntity[];
     }
+
+    async putUser(userId, user) {
+        const { data } = await this.put(`user/${userId}`, user);
+
+        return data.user;
+    }
 }

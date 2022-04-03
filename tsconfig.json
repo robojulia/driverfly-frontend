@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "pages/dashboard/_middleware.js", "pages/dashboard/dashboard.js"  ],
+, "pages/dashboard/_middleware.js", "pages/dashboard/dashboard.js", "components/BaseInput.js"  ],
   "exclude": [
     "node_modules"
   ]

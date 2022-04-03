@@ -1,17 +1,15 @@
-import axios from "axios"
 import { useFormik } from "formik"
 import * as yup from "yup"
 import BaseInput from "../../../components/BaseInput"
 import FullLayout from "../../../components/dashboard/layouts/FullLayout"
+import useRedirect from '../../../hooks/useRedirect';
 import useAuth from "../../../hooks/useAuth"
 import style from '../../../public/dashboard/styles/css/Driver/my-account.module.css'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useEffect, useState } from "react"
-import { random } from "lodash"
 import moment from "moment"
 import CreatableSelect from 'react-select/creatable'
-import { ActionMeta, OnChangeValue } from 'react-select'
 
 import stateList from "../../../utils/stateList"
 import { Accordion } from "react-bootstrap"
@@ -27,6 +25,9 @@ import { EquipmentType } from "../../../enums/drivers/equipment-type";
 import BaseApi from "../../api/_baseApi";
 
 export default function MyApplication() {
+  const { authDriver } = useRedirect();
+  authDriver();
+
   const { t } = useTranslation();
   const { authCheck, setAuth } = useAuth();
   const user = authCheck();

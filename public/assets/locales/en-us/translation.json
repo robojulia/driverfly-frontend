@@ -36,7 +36,6 @@
     "free_resources": "Free Resources",
     "name_is_required": "Name is required",
     "email_is_required": "Email is required",
-    "unable_to_save": "Unable to save",
     "contact_details": "Contact Details",
     "name": "Name",
     "birthdate": "Birthdate",
@@ -47,7 +46,7 @@
     "city": "City",
     "state": "State",
     "state_issued": "State Issued",
-    "zip_code": "Zip",
+    "zip_code": "Zip Code",
     "update": "Update",
     "communication_preferences": "Communication Preferences",
     "communication_preferences_receive_driverfly": "Consent to receive text messages from DriverFly & any third parties of DriverFly",
@@ -202,5 +201,7 @@
     "sign_up_for_newsletter": "Sign up for our newsletter",
     "join_our_driverfly_community": "Join our DriverFly Community forum to ask any questions or share any educational or hilarious content.",
     "follow_us_paragraph": "Follow us on social media for engaging content, driving tips, and relevant industry news/regulation changes",
-    "access_your_mvr_paragraph": "If any past employers have pulled your MVR through our system, it should be visible to you in My Docs"
+    "access_your_mvr_paragraph": "If any past employers have pulled your MVR through our system, it should be visible to you in My Docs",
+    "job_type": "Job Type",
+    "delete_account_paragraph": "If you would like to delete your account, please contact our support team at {{email}}"
 }

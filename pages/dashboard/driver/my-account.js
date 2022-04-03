@@ -1,5 +1,3 @@
-import { Container } from 'reactstrap';
-import LogoutButton from '../../../components/buttons/Logout';
 import FullLayout from "../../../components/dashboard/layouts/FullLayout";
 import style from '../../../public/dashboard/styles/css/Driver/my-account.module.css';
 
@@ -9,7 +7,6 @@ import useRedirect from '../../../hooks/useRedirect';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 
 import { jobBenefits, jobGeography, jobPayMethod, jobTeamDriver, jobType } from '../../../utils/jobs';
 import stateList from "../../../utils/stateList";
@@ -17,6 +14,15 @@ import stateList from "../../../utils/stateList";
 import { preventNegative } from '../../../utils/input';
 
 import { useTranslation } from 'react-i18next';
+import { useFormik } from "formik"
+import * as yup from "yup"
+
+import UserApi from "../../api/user";
+import DriverApi from "../../api/driver";
+import BaseInput from "../../../components/forms/BaseInput";
+import BaseSelect from "../../../components/forms/BaseSelect";
+import BaseCheck from "../../../components/forms/BaseCheck";
+import BaseCheckList from "../../../components/forms/BaseCheckList";
 
 export default function MyAccount() {
 
@@ -29,124 +35,131 @@ export default function MyAccount() {
 
     const user = authCheck();
 
-    //const [ isFetching, setIsFetching ] = useState(true);
+    const driverApi = new DriverApi();
+    const userApi = new UserApi();
 
-    const [ formState, setFormState ] = useState({
-        user: {
-            first_name: user.first_name || "",
-            last_name: user.last_name || "",
-            contact_number: user.contact_number || "",
-            cell_number: user.cell_number || "",
-            email: user.email || ""
+    const contactPreferences = [
+        {
+            label: t("never"),
+            value: "NEVER"
         },
-        driver: {
-            birthdate: "",
-            street: "",
-            city: "",
-            state: "",
-            zip_code: ""
+        {
+            label: t("always"),
+            value: "ALWAYS"
         },
-        preferences: {
-            COMMUNICATION: {
-                PREFERRED_METHOD: [ "TEXT", "CALL" ],
-                PREFERRED_HOURS: "",
-                RECEIVE_SUGGESTED_JOBS: true,
-                RECEIVE_NEWSLETTER: true,
-                RECEIVE_DRIVERFLY: true,
+        {
+            label: t("depending_on_company"),
+            value: "ASK"
+        },
+    ];
+
+    const contactForm = useFormik({
+        initialValues: {
+            user: {
+                first_name: user.first_name || "",
+                last_name: user.last_name || "",
+                contact_number: user.contact_number || "",
+                cell_number: user.cell_number || "",
+                email: user.email || ""
             },
-            SHARING: {
-                MVR: "NEVER",
-                DRIVERS_LICENSE: "NEVER",
-                MEDICAL_CARD: "NEVER",
-                CONTACT_PAST_EMPLOYERS: "NEVER",
+            driver: {
+                birthdate: "",
+                street: "",
+                city: "",
+                state: "",
+                zip_code: ""
             },
-            MATCHING: {
-                GEOGRAPHY: jobBenefits.map(v => v.key),
-                PREFERRED_SCHEDULE: "",
-                JOB_TYPE: jobType.map(v => v.key),
-                TEAM_DRIVER: "NO_TEAM_DRIVER",
-                MIN_PAY: "",
-                PAY_METHOD: jobPayMethod.map(v => v.key),
-                BENEFITS: jobBenefits.map(v => v.key)
+            preferences: {
+                COMMUNICATION: {
+                    PREFERRED_METHOD: [ "TEXT", "CALL" ],
+                    PREFERRED_HOURS: "",
+                    RECEIVE_SUGGESTED_JOBS: true,
+                    RECEIVE_NEWSLETTER: true,
+                    RECEIVE_DRIVERFLY: true,
+                },
+                SHARING: {
+                    MVR: "NEVER",
+                    DRIVERS_LICENSE: "NEVER",
+                    MEDICAL_CARD: "NEVER",
+                    CONTACT_PAST_EMPLOYERS: "NEVER",
+                },
+                MATCHING: {
+                    GEOGRAPHY: jobBenefits.map(v => v.key),
+                    PREFERRED_SCHEDULE: "",
+                    JOB_TYPE: jobType.map(v => v.key),
+                    TEAM_DRIVER: "NO_TEAM_DRIVER",
+                    MIN_PAY: "",
+                    PAY_METHOD: jobPayMethod.map(v => v.key),
+                    BENEFITS: jobBenefits.map(v => v.key)
+                }
             }
+        },
+        validationSchema: yup.object({
+            user: yup.object({
+                first_name: yup.string().required(t("this_field_is_required")).nullable(),
+                last_name: yup.string().required(t("this_field_is_required")).nullable(),
+                contact_number: yup.string().nullable(),
+                cell_number: yup.string().nullable(),
+                email: yup.string().required(t("this_field_is_required")).nullable(),
+            }),
+            driver: yup.object({
+                birthdate: yup.string().nullable(),
+                street: yup.string().nullable(),
+                city: yup.string().nullable(),
+                state: yup.string().nullable(),
+                zip_code: yup.string().nullable()
+            }),
+        }),
+        onSubmit: async (values) => {
+            try {
+                const [ newUser, newDriver ] = await Promise.all([
+                    userApi.putUser(user.id, {
+                        ...values.user,
+                        name: `${values.user.first_name} ${values.user.last_name}`
+                    }),
+                    driverApi.postDriver({
+                        ...values.driver,
+                        birthdate: values.driver.birthdate ? new Date(values.driver.birthdate) : null
+                    }),
+                ]);
+        
+                setAuth({
+                    ...user,
+                    first_name: newUser.first_name,
+                    last_name: newUser.last_name,
+                    name: newUser.name,
+                    contact_number: newUser.contact_number,
+                    cell_number: newUser.cell_number,
+                    email: newUser.email
+                });
+                toast.success(t("successfully_saved_information"));
+            }
+            catch (e) {
+                console.error("Unable to save contact information", e);
+                toast.error(t("unable_to_save_information"));
+            }
+
         }
     });
 
-    function onUserChange(e) {
-        const { name, value } = e.target;
-
-        setFormState({
-            ...formState,
-            user: {
-                ...formState.user,
-                [name]: value
-            },
-        })
-    }
-
-    function onDriverChange(e) {
-        const { name, value } = e.target;
-
-        setFormState({
-            ...formState,
-            driver: {
-                ...formState.driver,
-                [name]: value
-            },
-        })
-    }
-
     useEffect(async () => {
-        let source = axios.CancelToken.source();
-
         await Promise.all([
-            axios.get(`${process.env.BASE_URL_API}/drivers/`, {
-                cancelToken: source.token,
-                headers: {
-                    'Authorization': `Bearer ${user.token}`
-                }
-            })
-            .then(response => {
-                const { data: driver } = response;
-                return driver;
-            })
+            driverApi.getDriver("drivers")
             .catch(error => {
                 console.error("unable to fetch driver info", error);
                 throw error;
             }),
-            axios.get(`${process.env.BASE_URL_API}/drivers/preferences`, {
-                cancelToken: source.token,
-                headers: {
-                    'Authorization': `Bearer ${user.token}`
-                }
-            })
-            .then(response => {
-                const { data: preferences } = response;
-                return preferences;
-            })
+            driverApi.getPreferences()
             .catch(error => {
-                console.error("unable to fetch driver info", error);
+                console.error("unable to fetch driver preference info", error);
                 throw error;
             })
         ])
         .then(values => {
             const [ driver, preferences ] = values;
 
-            const newState = {
-                user: {
-                    ...formState.user
-                },
-                driver: {
-                    ...formState.driver,
-                    birthdate: (driver.birthdate || "").split("T")[0],
-                    street: driver.street || "",
-                    city: driver.city || "",
-                    state: driver.state || "",
-                    zip_code: driver.zip_code || ""
-                },
-                preferences: {
-                    ...formState.preferences
-                }
+            const preferencesData = {
+                ...contactForm.values.preferences
             };
 
             preferences.forEach(v => {
@@ -173,98 +186,33 @@ export default function MyAccount() {
                     }
                 }
 
-                if (category in newState.preferences && label in newState.preferences[category])
-                    newState.preferences[category][label] = value;
+                if (category in preferencesData && label in preferencesData[category])
+                    preferencesData[category][label] = value;
             });
 
-            setFormState(newState);
+            contactForm.setValues({
+                ...contactForm.values,
+                driver: {
+                    ...contactForm.values.driver,
+                    birthdate: (driver.birthdate || "").split("T")[0],
+                    street: driver.street || "",
+                    city: driver.city || "",
+                    state: driver.state || "",
+                    zip_code: driver.zip_code || ""
+                },
+                preferences: {
+                    ...preferencesData
+                }
+            });
         });
-
-        return function () {
-            source.cancel("Cancelling server calls");
-        };
-
     }, [ ]);
 
-    function onContactSubmit(e) {
-        e.preventDefault();
-        if (!formState.user.last_name) {
-            toast.error(t("name_is_required"));
-            return;
-        }
+    async function handlePreferenceChange(e) {
+        let { name, value, type, checked } = e.target;
 
-        if (!formState.user.first_name) {
-            toast.error(t("name_is_required"));
-            return;
-        }
+        const [ category, label ] = name.split(".").slice(1);
 
-        if (!formState.user.email) {
-            toast.error(t("email_is_required"));
-            return;
-        }
-
-
-        Promise.all([
-            axios.put(`${process.env.BASE_URL_API}/user/${user.id}`, {
-                ...formState.user,
-                name: `${formState.user.first_name} ${formState.user.last_name}`
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${user.token}`
-                }
-            })
-            .then(response => {
-                const { data: { user } } = response;
-                return user;
-            })
-            .catch(error => {
-                console.error("unable to save user info", error);
-                throw error;
-            }),
-            axios.post(`${process.env.BASE_URL_API}/drivers/`, {
-                ...formState.driver,
-                birthdate: formState.driver.birthdate ? new Date(formState.driver.birthdate) : null
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${user.token}`
-                }
-            })
-            .then(response => {
-                console.log(response.data);
-                const { data: { user } } = response;
-            })
-            .catch(error => {
-                console.error("unable to save driver info", error);
-                throw error;
-            })
-        ])
-        .then(values => {
-            const [ newUser, newDriver ] = values;
-            setAuth({
-                ...user,
-                first_name: newUser.first_name,
-                last_name: newUser.last_name,
-                name: newUser.name,
-                contact_number: newUser.contact_number,
-                cell_number: newUser.cell_number,
-                email: newUser.email
-            });
-            toast.success("Info saved successfully");
-        })
-
-    }
-
-    function onPreferenceChange(e) {
-        let { name, value } = e.target;
-
-        const [ category, label ] = name.split(".");
-
-        const newState = {
-            ...formState,
-        };
-
-        const { preferences } = newState;
-        const currentValue = preferences[category][label];
+        const currentValue = contactForm.values.preferences[category][label];
 
         let newValue = null;
 
@@ -272,7 +220,7 @@ export default function MyAccount() {
 
         if (category === "COMMUNICATION") {
             if (label === "PREFERRED_METHOD") {
-                if (!e.target.checked) {
+                if (!checked) {
                     newValue = currentValue.filter(v => v != value);
                 }
                 else if (!currentValue.includes(value)) {
@@ -286,7 +234,7 @@ export default function MyAccount() {
             else if (label === "RECEIVE_SUGGESTED_JOBS"
             || label === "RECEIVE_NEWSLETTER"
             || label === "RECEIVE_DRIVERFLY") {
-                newValue = e.target.checked;// ? (value === "true") : currentValue;
+                newValue = checked;// ? (value === "true") : currentValue;
 
                 if (newValue === currentValue) return;
                 dbValue = newValue.toString();
@@ -301,7 +249,7 @@ export default function MyAccount() {
                 label === "JOB_TYPE" ||
                 label === "PAY_METHOD" ||
                 label === "BENEFITS") {
-                if (!e.target.checked) {
+                if (!checked) {
                     newValue = currentValue.filter(v => v != value);
                 }
                 else if (!currentValue.includes(value)) {
@@ -323,40 +271,34 @@ export default function MyAccount() {
 
         console.log("new preference value", newValue);
 
-        preferences[category][label] = newValue;
+        if (type != "text" && type != "number")
+            await updateDriverPreferenceAsync(category, label, dbValue);
 
-        if (e.target.type != "text" && e.target.type != "number")
-            updateDriverPreference(category, label, dbValue);
-
-        setFormState(newState);
-
-        //alert(`${name} = ${value}`);
+        contactForm.setFieldValue(name, newValue);
     }
 
-    function onPreferenceBlur(e) {
+    async function handlePreferenceBlur(e) {
         let { name, value } = e.target;
 
-        const [ category, label ] = name.split(".");
+        const [ category, label ] = name.split(".").slice(1);
 
-        updateDriverPreference(category, label, value);
+        await updateDriverPreferenceAsync(category, label, value);
+
+        contactForm.setFieldValue(name, value);
     }
 
-    function updateDriverPreference(category, label, value) {
-        axios.post(`${process.env.BASE_URL_API}/drivers/preferences`, {
-            category, label, value: value === "" ? null : value
-        }, {
-            headers: {
-                'Authorization': `Bearer ${user.token}`
-            }
-        })
-        .then(response => {
-            //toast.success("Successfully saved your preference");
-        })
-        .catch(error => {
-            toast.error(t("unable_to_save"));
-            // preferences[category][label] = value;
-            // setFormState(newState);
-        });
+    async function updateDriverPreferenceAsync(category, label, value) {
+        try {
+            await driverApi.postPreference({
+                category: category,
+                label: label,
+                value: value === "" ? null : value
+            });
+        }
+        catch (e) {
+            console.error("Unable to save driver preferences", e);
+            toast.error(t("unable_to_save_information"));
+        }
     }
   
     return (
@@ -366,62 +308,132 @@ export default function MyAccount() {
             <div className={style.account_container}>
                 <div>
                     <div className='container-fluid'>
-                        <form className="modal-body" onSubmit={e => onContactSubmit(e)} >
+                        <form className="modal-body" onSubmit={contactForm.handleSubmit} >
                             <h3>{t("contact_details")}</h3>
                             <div className="row">
-                                <div className="col-sm-4 mt-3">
-                                    <label>{t("first_name")}</label>
-                                    <input name="first_name" type="text" className="form-control" placeholder={t("first_name")} onChange={e => onUserChange(e)} value={formState.user.first_name} />
-                                </div>
-                                <div className="col-sm-4 mt-3">
-                                    <label>{t("last_name")}</label>
-                                    <input name="last_name" type="text" className="form-control" placeholder={t("last_name")} onChange={e => onUserChange(e)} value={formState.user.last_name} />
-                                </div>
-                                <div className="col-sm-4 mt-3">
-                                    <label>{t("birthdate")}</label>
-                                    <input name="birthdate" type="date" className="form-control" placeholder={t("birthdate")} onChange={e => onDriverChange(e)} value={formState.driver.birthdate} />
-                                </div>
+                                <BaseInput
+                                    className="col-md-4 mt-3"
+                                    label={t("first_name")}
+                                    name="user.first_name"
+                                    placeholder={t("first_name")}
+                                    value={contactForm.values.user.first_name}
+                                    touched={contactForm.touched.user?.first_name}
+                                    error={contactForm.errors.user?.first_name}
+                                    onChange={contactForm.handleChange}
+                                    handleBlur={contactForm.handleBlur}
+                                />
+                                <BaseInput
+                                    className="col-md-4 mt-3"
+                                    label={t("last_name")}
+                                    name="user.last_name"
+                                    placeholder={t("last_name")}
+                                    value={contactForm.values.user.last_name}
+                                    touched={contactForm.touched.user?.last_name}
+                                    error={contactForm.errors.user?.last_name}
+                                    onChange={contactForm.handleChange}
+                                    handleBlur={contactForm.handleBlur}
+                                />
+                                <BaseInput
+                                    className="col-md-4 mt-3"
+                                    label={t("birthdate")}
+                                    name="driver.birthdate"
+                                    placeholder={t("birthdate")}
+                                    type="date"
+                                    value={contactForm.values.driver.birthdate}
+                                    touched={contactForm.touched.driver?.birthdate}
+                                    error={contactForm.errors.driver?.birthdate}
+                                    onChange={contactForm.handleChange}
+                                    handleBlur={contactForm.handleBlur}
+                                />
                             </div>
                             <div className='row'>
-                                <div className="col-sm-6 mt-3">
-                                    <label>{t("phone")}</label>
-                                    <input name="contact_number" type="text" className="form-control" placeholder={t("phone")} onChange={e => onUserChange(e)} value={formState.user.contact_number} />
-                                </div>
-                                <div className="col-sm-6 mt-3">
-                                    <label>{t("phone_cell")}</label>
-                                    <input name="cell_number" type="text" className="form-control" placeholder={t("phone_cell")} onChange={e => onUserChange(e)} value={formState.user.cell_number} />
-                                </div>
+                                <BaseInput
+                                    className="col-md-6 mt-3"
+                                    label={t("phone")}
+                                    name="user.contact_number"
+                                    placeholder={t("phone")}
+                                    type="tel"
+                                    value={contactForm.values.user.contact_number}
+                                    touched={contactForm.touched.user?.contact_number}
+                                    error={contactForm.errors.user?.contact_number}
+                                    onChange={contactForm.handleChange}
+                                    handleBlur={contactForm.handleBlur}
+                                    />
+                                <BaseInput
+                                    className="col-md-6 mt-3"
+                                    label={t("phone_cell")}
+                                    name="user.cell_number"
+                                    placeholder={t("phone_cell")}
+                                    type="tel"
+                                    value={contactForm.values.user.cell_number}
+                                    touched={contactForm.touched.user?.cell_number}
+                                    error={contactForm.errors.user?.cell_number}
+                                    onChange={contactForm.handleChange}
+                                    handleBlur={contactForm.handleBlur}
+                                    />
                             </div>
                             <div className='row'>
-                                <div className="col-sm-12 mt-3">
-                                    <label>{t("email")}</label>
-                                    <input name="email" readOnly={true} type="email" className="form-control" placeholder={t("email")} value={formState.user.email} />
-                                </div>
+                                <BaseInput
+                                    className="col-md-12 mt-3"
+                                    label={t("email")}
+                                    name="user.email"
+                                    placeholder={t("email")}
+                                    type="email"
+                                    readOnly={true}
+                                    value={contactForm.values.user.email}
+                                    touched={contactForm.touched.user?.email}
+                                    error={contactForm.errors.user?.email}
+                                    onChange={contactForm.handleChange}
+                                    handleBlur={contactForm.handleBlur}
+                                    />
                             </div>
                             <div className='row'>
-                                <div className="col-sm-12 mt-3">
-                                    <label>{t("street")}</label>
-                                    <input type="text" name="street" className="form-control" placeholder={t("street")} onChange={e => onDriverChange(e)} value={formState.driver.street} />
-                                </div>
+                                <BaseInput
+                                    className="col-md-12 mt-3"
+                                    label={t("street")}
+                                    name="driver.street"
+                                    placeholder={t("street")}
+                                    value={contactForm.values.driver.street}
+                                    touched={contactForm.touched.driver?.street}
+                                    error={contactForm.errors.driver?.street}
+                                    onChange={contactForm.handleChange}
+                                    handleBlur={contactForm.handleBlur}
+                                    />
                             </div>
                             <div className='row'>
-                                <div className="col-5 mt-3">
-                                    <label for="addressCity">{t("city")}</label>
-                                    <input id="addressCity" type="text" name="city" className="form-control" placeholder={t("city")} onChange={e => onDriverChange(e)} value={formState.driver.city} />
-                                </div>
-                                <div className="col-4 mt-3">
-                                    <label for="addressState">{t("state")}</label>
-                                    <select id="addressState" name="state" className="form-control form-select" onChange={e => onDriverChange(e)} value={formState.driver.state}>
-                                        <option value="">{t("state")}</option>
-                                        {stateList.map(s => (
-                                            <option key={s.value} value={s.value}>{s.label}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div class="col-3 mt-3">
-                                    <label>{t("zip_code")}</label>
-                                    <input type="text" name="zip_code" className="form-control" placeholder={t("zip_code")} onChange={e => onDriverChange(e)} value={formState.driver.zip_code} />
-                                </div>
+                                <BaseInput
+                                    className="col-md-5 mt-3"
+                                    label={t("city")}
+                                    name="driver.city"
+                                    placeholder={t("city")}
+                                    value={contactForm.values.driver.city}
+                                    touched={contactForm.touched.driver?.city}
+                                    error={contactForm.errors.driver?.city}
+                                    onChange={contactForm.handleChange}
+                                    handleBlur={contactForm.handleBlur}
+                                    />
+                                <BaseSelect
+                                    className="col-md-4 mt-3"
+                                    label={t("state")}
+                                    name="driver.state"
+                                    placeholder={t("state")}
+                                    value={contactForm.values.driver.state}
+                                    touched={contactForm.touched.driver?.state}
+                                    error={contactForm.errors.driver?.state}
+                                    onChange={contactForm.handleChange}
+                                    options={stateList}
+                                    />
+                                <BaseInput
+                                    className="col-md-3 mt-3"
+                                    label={t("zip_code")}
+                                    name="driver.zip_code"
+                                    placeholder={t("zip_code")}
+                                    value={contactForm.values.driver.zip_code}
+                                    touched={contactForm.touched.driver?.zip_code}
+                                    error={contactForm.errors.driver?.zip_code}
+                                    onChange={contactForm.handleChange}
+                                    handleBlur={contactForm.handleBlur}
+                                    />
                             </div>
                             <div className='row'>
                                 <div className="col text-end">
@@ -440,152 +452,207 @@ export default function MyAccount() {
                     <div className="col-sm-6">
                         <div className='row'>
                             <h3>{t("communication_preferences")}:</h3>
-                            <div className="col-12 mt-3">
-                                <div class="form-check form-switch">
-                                    <input checked={formState.preferences.COMMUNICATION.RECEIVE_DRIVERFLY} name="COMMUNICATION.RECEIVE_DRIVERFLY" class="form-check-input" type="checkbox" role="switch" onClick={( e ) => onPreferenceChange(e)} />
-                                    <label class="form-check-label">{t("communication_preferences_receive_driverfly")}</label>
-                                </div>
-                            </div>
-                            <div className='col-12 mt-3'>
-                                <span className={style.lable}>{t("communication_preferences_preferred_method")}:</span>
-                                <div class="form-check form-check-inline">
-                                    <label class="form-check-label">{t("call")}</label>
-                                    <input class="form-check-input" type="checkbox" name="COMMUNICATION.PREFERRED_METHOD" value="CALL" onChange={e => onPreferenceChange(e)} checked={formState.preferences.COMMUNICATION.PREFERRED_METHOD.includes("CALL")} />
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <label class="form-check-label" >{t("text")}</label>
-                                    <input class="form-check-input" type="checkbox" name="COMMUNICATION.PREFERRED_METHOD" value="TEXT" onChange={e => onPreferenceChange(e)} checked={formState.preferences.COMMUNICATION.PREFERRED_METHOD.includes("TEXT")} />
-                                </div>
-                            </div>
-                            <div className="col-12 mt-3">
-                                <label>{t("preferred_hours")}:</label>
-                                <input type="text" className="form-control" placeholder={t("preferred_hours")} name="COMMUNICATION.PREFERRED_HOURS" onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.COMMUNICATION.PREFERRED_HOURS} />
-                            </div>
-                            <div className="col-12 mt-3">
-                                <div class="form-check form-switch">
-                                    <input checked={formState.preferences.COMMUNICATION.RECEIVE_SUGGESTED_JOBS} name="COMMUNICATION.RECEIVE_SUGGESTED_JOBS" class="form-check-input" type="checkbox" role="switch" onClick={( e ) => onPreferenceChange(e)} />
-                                    <label class="form-check-label">{t("receive_suggested_job_feeds")}</label>
-                                </div>
-                            </div>
-                            <div className="col-12 mt-3">
-                                <div class="form-check form-switch">
-                                    <input checked={formState.preferences.COMMUNICATION.RECEIVE_NEWSLETTER} name="COMMUNICATION.RECEIVE_NEWSLETTER" class="form-check-input" type="checkbox" role="switch" onClick={( e ) => onPreferenceChange(e)} />
-                                    <label class="form-check-label">{t("receive_newsletters")}</label>
-                                </div>
-                            </div>
+                            <BaseCheck
+                                className="col-md-12 mt-3"
+                                label={t("communication_preferences_receive_driverfly")}
+                                name="preferences.COMMUNICATION.RECEIVE_DRIVERFLY"
+                                checked={contactForm.values.preferences.COMMUNICATION.RECEIVE_DRIVERFLY}
+                                touched={contactForm.touched.preferences?.COMMUNICATION?.RECEIVE_DRIVERFLY}
+                                error={contactForm.errors.preferences?.COMMUNICATION?.RECEIVE_DRIVERFLY}
+                                onChange={handlePreferenceChange}
+                                />
+                            <BaseCheckList
+                                className="col-md-12 mt-3"
+                                label={t("communication_preferences_preferred_method")}
+                                options={[{
+                                    label: t("call"),
+                                    value: "CALL"
+                                }, {
+                                    label: t("text"),
+                                    value: "TEXT"
+                                }]}
+                                value={contactForm.values.preferences.COMMUNICATION.PREFERRED_METHOD}
+                                name="preferences.COMMUNICATION.PREFERRED_METHOD"
+                                touched={contactForm.touched.preferences?.COMMUNICATION?.PREFERRED_METHOD}
+                                error={contactForm.errors.preferences?.COMMUNICATION?.PREFERRED_METHOD}
+                                onChange={handlePreferenceChange}
+                                />
+                            <BaseInput
+                                className="col-md-12 mt-3"
+                                label={t("preferred_hours")}
+                                name="preferences.COMMUNICATION.PREFERRED_HOURS"
+                                placeholder={t("preferred_hours")}
+                                value={contactForm.values.preferences.COMMUNICATION.PREFERRED_HOURS}
+                                touched={contactForm.touched.preferences?.COMMUNICATION?.PREFERRED_HOURS}
+                                error={contactForm.errors.preferences?.COMMUNICATION?.PREFERRED_HOURS}
+                                onChange={handlePreferenceChange}
+                                handleBlur={handlePreferenceBlur}
+                                />
+                            <BaseCheck
+                                className="col-md-12 mt-3"
+                                label={t("receive_suggested_job_feeds")}
+                                name="preferences.COMMUNICATION.RECEIVE_SUGGESTED_JOBS"
+                                checked={contactForm.values.preferences.COMMUNICATION.RECEIVE_SUGGESTED_JOBS}
+                                touched={contactForm.touched.preferences?.COMMUNICATION?.RECEIVE_SUGGESTED_JOBS}
+                                error={contactForm.errors.preferences?.COMMUNICATION?.RECEIVE_SUGGESTED_JOBS}
+                                onChange={handlePreferenceChange}
+                                />
+                            <BaseCheck
+                                className="col-md-12 mt-3"
+                                label={t("receive_newsletters")}
+                                name="preferences.COMMUNICATION.RECEIVE_NEWSLETTER"
+                                checked={contactForm.values.preferences.COMMUNICATION.RECEIVE_NEWSLETTER}
+                                touched={contactForm.touched.preferences?.COMMUNICATION?.RECEIVE_NEWSLETTER}
+                                error={contactForm.errors.preferences?.COMMUNICATION?.RECEIVE_NEWSLETTER}
+                                onChange={handlePreferenceChange}
+                                />
                         </div>
                         <div className='row mt-3'>
                             <h3>{t("sharing_preferences")}:</h3>
                             <div className='row'>
-                                <div className='col-12 mt-3'>
-                                    <span className={style.lable}>{t("share_my_mvr")}:</span>
-                                    <select class="form-control form-select" name="SHARING.MVR" onChange={e => onPreferenceChange(e)} value={formState.preferences.SHARING.MVR}>
-                                        <option value="NEVER">{t("never")}</option>
-                                        <option value="ALWAYS">{t("always")}</option>
-                                        <option value="ASK">{t("depending_on_company")}</option>
-                                    </select>
-                                </div>
-                                <div className="col-12 mt-3">
-                                    <span className={style.lable}>{t("share_my_drivers_license")}:</span>
-                                    <select class="form-control form-select" name="SHARING.DRIVERS_LICENSE" onChange={e => onPreferenceChange(e)} value={formState.preferences.SHARING.DRIVERS_LICENSE}>
-                                        <option value="NEVER">{t("never")}</option>
-                                        <option value="ALWAYS">{t("always")}</option>
-                                        <option value="ASK">{t("depending_on_company")}</option>
-                                    </select>
-                                </div>
-                                <div className="col-12 mt-3">
-                                    <span className={style.lable}>{t("share_my_medical_card")}:</span>
-                                    <select class="form-control form-select" name="SHARING.MEDICAL_CARD" onChange={e => onPreferenceChange(e)} value={formState.preferences.SHARING.MEDICAL_CARD}>
-                                        <option value="NEVER">{t("never")}</option>
-                                        <option value="ALWAYS">{t("always")}</option>
-                                        <option value="ASK">{t("depending_on_company")}</option>
-                                    </select>
-                                </div>
-                                <div className="col-12 mt-3">
-                                    <span className={style.lable}>{t("authorize_companies_contact_past_employers")}:</span>
-                                    <select class="form-control form-select" name="SHARING.CONTACT_PAST_EMPLOYERS" onChange={e => onPreferenceChange(e)} value={formState.preferences.SHARING.CONTACT_PAST_EMPLOYERS}>
-                                        <option value="NEVER">{t("never")}</option>
-                                        <option value="ALWAYS">{t("always")}</option>
-                                        <option value="ASK">{t("depending_on_company")}</option>
-                                    </select>
-                                </div>
+                                <BaseSelect
+                                    className="col-md-12 mt-3"
+                                    label={t("share_my_mvr")}
+                                    name="preferences.SHARING.MVR"
+                                    value={contactForm.values.preferences.SHARING.MVR}
+                                    touched={contactForm.touched.preferences?.SHARING?.MVR}
+                                    error={contactForm.errors.preferences?.SHARING?.MVR}
+                                    onChange={handlePreferenceChange}
+                                    options={contactPreferences}
+                                    />
+                                <BaseSelect
+                                    className="col-md-12 mt-3"
+                                    label={t("share_my_drivers_license")}
+                                    name="preferences.SHARING.DRIVERS_LICENSE"
+                                    value={contactForm.values.preferences.SHARING.DRIVERS_LICENSE}
+                                    touched={contactForm.touched.preferences?.SHARING?.DRIVERS_LICENSE}
+                                    error={contactForm.errors.preferences?.SHARING?.DRIVERS_LICENSE}
+                                    onChange={handlePreferenceChange}
+                                    options={contactPreferences}
+                                    />
+                                <BaseSelect
+                                    className="col-md-12 mt-3"
+                                    label={t("share_my_medical_card")}
+                                    name="preferences.SHARING.MEDICAL_CARD"
+                                    value={contactForm.values.preferences.SHARING.MEDICAL_CARD}
+                                    touched={contactForm.touched.preferences?.SHARING?.MEDICAL_CARD}
+                                    error={contactForm.errors.preferences?.SHARING?.MEDICAL_CARD}
+                                    onChange={handlePreferenceChange}
+                                    options={contactPreferences}
+                                    />
+                                <BaseSelect
+                                    className="col-md-12 mt-3"
+                                    label={t("authorize_companies_contact_past_employers")}
+                                    name="preferences.SHARING.CONTACT_PAST_EMPLOYERS"
+                                    value={contactForm.values.preferences.SHARING.CONTACT_PAST_EMPLOYERS}
+                                    touched={contactForm.touched.preferences?.SHARING?.CONTACT_PAST_EMPLOYERS}
+                                    error={contactForm.errors.preferences?.SHARING?.CONTACT_PAST_EMPLOYERS}
+                                    onChange={handlePreferenceChange}
+                                    options={contactPreferences}
+                                    />
                             </div>
                         </div>
                     </div>
                     <div className="col-sm-6">
                         <h3>{t("matching_preferences")}:</h3>
-                        <div className="col-12 mt-3">
-                            <span className={style.lable}>{t("geography")}:</span>
-                            {jobGeography.map(v => (
-                                <div key={v.key} className="form-check form-check-inline">
-                                    <label className="form-check-label">{t(v.label)}</label>
-                                    <input className="form-check-input" type="checkbox" value={v.key} name="MATCHING.GEOGRAPHY" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.GEOGRAPHY.includes(v.key)} />
-                                </div>
-                            ))}
-                        </div>
-                        <div className="col-12 mt-3">
-                            <label>{t("preferred_schedule")}:</label>
-                            <input type="text" className="form-control" placeholder={t("preferred_schedule")} name="MATCHING.PREFERRED_SCHEDULE" onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.MATCHING.PREFERRED_SCHEDULE} />
-                        </div>
-                        <div className="col-12 mt-3">
-                            <span className={style.lable}>Job Type:</span>
-                            <div className='row mt-1'>
-                                {jobType.map(v => (
-                                    <div key={v.key} className='col-6'>
-                                        <div className="form-check form-check-inline">
-                                            <label className="form-check-label">{t(v.label)}</label>
-                                            <input className="form-check-input" type="checkbox" value={v.key} name="MATCHING.JOB_TYPE" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.JOB_TYPE.includes(v.key)} />
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div className="col-12 mt-3">
-                            <span className={style.lable}>{t("team_drivers")}:</span>
-                            <select class="form-control form-select" name="MATCHING.TEAM_DRIVER" onChange={e => onPreferenceChange(e)} value={formState.preferences.MATCHING.TEAM_DRIVER}>
-                                {jobTeamDriver.map(v => (<option key={v.key} value={v.key}>{t(v.label)}</option>))}
-                            </select>
-                        </div>
-                        <div className="col-12 mt-3">
-                            <label>{t("min_pay_per_week")}:</label>
-                            <input type="number" min={0} className="form-control" placeholder={t("min_pay_per_week")} name="MATCHING.MIN_PAY" onKeyDown={e => preventNegative(e)} onBlur={e => onPreferenceBlur(e)} onChange={e => onPreferenceChange(e)} value={formState.preferences.MATCHING.MIN_PAY} />
-                        </div>
-                        <div className="col-12 mt-3">
-                            <span className={style.lable}>{t("pay_method")}:</span>
-                            <div className="row mt-1">
-                                {jobPayMethod.map(v => (
-                                    <div key={v.key} className='col-6'>
-                                        <div className="form-check form-check-inline">
-                                            <label className="form-check-label">{t(v.label)}</label>
-                                            <input className="form-check-input" type="checkbox" value={v.key} name="MATCHING.PAY_METHOD" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.PAY_METHOD.includes(v.key)} />
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div className="col-12 mt-3">
-                            <span className={style.lable}>{t("required_benefits")}:</span>
-                            <div className="row mt-1">
-                                {jobBenefits.map(v => (
-                                    <div key={v.key} className='col-6'>
-                                        <div className="form-check form-check-inline">
-                                            <label className="form-check-label">{t(v.label)}</label>
-                                            <input className="form-check-input" type="checkbox" value={v.key} name="MATCHING.BENEFITS" onChange={e => onPreferenceChange(e)} checked={formState.preferences.MATCHING.BENEFITS.includes(v.key)} />
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
 
-                    {/* <div className="col-sm-6 mt-3 text-lg-center" style={{ display: "none" }}>
-                        <h2 className='my-4'>Points</h2>
-                        <span>1300</span>
-                        <span className={style.earn_btn}>Earn More</span>
-                    </div> */}
+                        <BaseCheckList
+                            className="col-md-12 mt-3"
+                            label={t("geography")}
+                            options={jobGeography.map(v => ({
+                                label: t(v.label),
+                                value: v.key
+                            }))}
+                            value={contactForm.values.preferences.MATCHING.GEOGRAPHY}
+                            name="preferences.MATCHING.GEOGRAPHY"
+                            touched={contactForm.touched.preferences?.MATCHING?.GEOGRAPHY}
+                            error={contactForm.errors.preferences?.MATCHING?.GEOGRAPHY}
+                            onChange={handlePreferenceChange}
+                            />
+                        <BaseInput
+                            className="col-md-12 mt-3"
+                            label={t("preferred_schedule")}
+                            name="preferences.MATCHING.PREFERRED_SCHEDULE"
+                            placeholder={t("preferred_schedule")}
+                            value={contactForm.values.preferences.MATCHING.PREFERRED_SCHEDULE}
+                            touched={contactForm.touched.preferences?.MATCHING?.PREFERRED_SCHEDULE}
+                            error={contactForm.errors.preferences?.MATCHING?.PREFERRED_SCHEDULE}
+                            onChange={handlePreferenceChange}
+                            handleBlur={handlePreferenceBlur}
+                            />
+                        <BaseCheckList
+                            className="col-md-12 mt-3"
+                            label={t("job_type")}
+                            cols={2}
+                            options={jobType.map(v => ({
+                                label: t(v.label),
+                                value: v.key
+                            }))}
+                            value={contactForm.values.preferences.MATCHING.JOB_TYPE}
+                            name="preferences.MATCHING.JOB_TYPE"
+                            touched={contactForm.touched.preferences?.MATCHING?.JOB_TYPE}
+                            error={contactForm.errors.preferences?.MATCHING?.JOB_TYPE}
+                            onChange={handlePreferenceChange}
+                            />
+                        <BaseSelect
+                            className="col-md-12 mt-3"
+                            label={t("team_drivers")}
+                            name="preferences.MATCHING.TEAM_DRIVER"
+                            value={contactForm.values.preferences.MATCHING.TEAM_DRIVER}
+                            touched={contactForm.touched.preferences?.MATCHING?.TEAM_DRIVER}
+                            error={contactForm.errors.preferences?.MATCHING?.TEAM_DRIVER}
+                            onChange={handlePreferenceChange}
+                            options={jobTeamDriver.map(v => ({
+                                value: v.key,
+                                label: t(v.label)
+                            }))}
+                            />
+                        <BaseInput
+                            className="col-md-12 mt-3"
+                            label={t("min_pay_per_week")}
+                            name="preferences.MATCHING.MIN_PAY"
+                            placeholder={t("min_pay_per_week")}
+                            type="number"
+                            min={0}
+                            value={contactForm.values.preferences.MATCHING.MIN_PAY}
+                            touched={contactForm.touched.preferences?.MATCHING?.MIN_PAY}
+                            error={contactForm.errors.preferences?.MATCHING?.MIN_PAY}
+                            onChange={handlePreferenceChange}
+                            handleBlur={handlePreferenceBlur}
+                            onKeyDown={preventNegative}
+                            />
+                        <BaseCheckList
+                            className="col-md-12 mt-3"
+                            label={t("pay_method")}
+                            cols={2}
+                            options={jobPayMethod.map(v => ({
+                                label: t(v.label),
+                                value: v.key
+                            }))}
+                            value={contactForm.values.preferences.MATCHING.PAY_METHOD}
+                            name="preferences.MATCHING.PAY_METHOD"
+                            touched={contactForm.touched.preferences?.MATCHING?.PAY_METHOD}
+                            error={contactForm.errors.preferences?.MATCHING?.PAY_METHOD}
+                            onChange={handlePreferenceChange}
+                            />
+                        <BaseCheckList
+                            className="col-md-12 mt-3"
+                            label={t("required_benefits")}
+                            cols={2}
+                            options={jobBenefits.map(v => ({
+                                label: t(v.label),
+                                value: v.key
+                            }))}
+                            value={contactForm.values.preferences.MATCHING.BENEFITS}
+                            name="preferences.MATCHING.BENEFITS"
+                            touched={contactForm.touched.preferences?.MATCHING?.BENEFITS}
+                            error={contactForm.errors.preferences?.MATCHING?.BENEFITS}
+                            onChange={handlePreferenceChange}
+                            />
+                    </div>
                 </div>
             </div>
-            <span>If you would like to delete your account, please contact our support team at <a href="mailto:support@driverfly.co">support@driverfly.co</a></span>
+            <span>{t("delete_account_paragraph", { email: "support@driverfly.co"})} </span>
 
         </>
     )
