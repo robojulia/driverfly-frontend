@@ -315,7 +315,7 @@ export default function MyApplication() {
       license_state: driver.license_state,
       license_type: driver.license_type,
       years_cdl_experience: driver.years_cdl_experience,
-      is_owner_operator: driver.is_owner_operator,
+      is_owner_operator: driver.is_owner_operator || false,
       equipment_owned: driver.equipment_owned || [],
       equipment_experience: driver.equipment_experience,
 
