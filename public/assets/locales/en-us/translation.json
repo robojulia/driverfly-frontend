@@ -183,5 +183,12 @@
     "trailer_reefer": "Trailer - Reefer",
     "trailer_twin": "Trailer - Twin Trailer",
     "trailer_utility_bed": "Trailer - Utility Bed",
-    "trailer_other": "Trailer - Other"
+    "trailer_other": "Trailer - Other",
+    "drivers_license": "Drivers License",
+    "medical_card": "Medical Card",
+    "resume": "Resume",
+    "motor_vehicle_record": "Motor Vehicle Record (MVR)",
+    "loading": "Loading",
+    "close": "Close",
+    "delete": "Delete"
 }
