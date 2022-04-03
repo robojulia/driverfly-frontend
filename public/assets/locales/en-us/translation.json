@@ -190,5 +190,17 @@
     "motor_vehicle_record": "Motor Vehicle Record (MVR)",
     "loading": "Loading",
     "close": "Close",
-    "delete": "Delete"
+    "delete": "Delete",
+    "vendor_discounts": "Vendor Discounts",
+    "salary_comparison_tool": "Salary Comparison Tool",
+    "access_your_mvr": "Access Your MVR",
+    "refer_a_friend_program": "Refer A Friend Program",
+    "enter_sweepstakes": "Enter Sweepstakes",
+    "become_your_own_boss": "Become Your Own Boss",
+    "connect_with_our_community": "Connect With Our Community",
+    "follow_us": "Follow us",
+    "sign_up_for_newsletter": "Sign up for our newsletter",
+    "join_our_driverfly_community": "Join our DriverFly Community forum to ask any questions or share any educational or hilarious content.",
+    "follow_us_paragraph": "Follow us on social media for engaging content, driving tips, and relevant industry news/regulation changes",
+    "access_your_mvr_paragraph": "If any past employers have pulled your MVR through our system, it should be visible to you in My Docs"
 }

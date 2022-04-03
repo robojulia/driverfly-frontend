@@ -1,8 +1,5 @@
-import LogoutButton from '../../../components/buttons/Logout';
 import style from '../../../public/dashboard/styles/css/Driver/free-resources.module.css';
 import FullLayout from "../../../components/dashboard/layouts/FullLayout";
-import Router from 'next/router';
-import { useState } from 'react'
 import useRedirect from '../../../hooks/useRedirect';
 import { Container, Row, Col } from 'react-bootstrap';
 import Link from 'next/link';
@@ -11,8 +8,12 @@ import insta from "../../../public/dashboard/assets/images/socialicon/insta.png"
 import linkedin from "../../../public/dashboard/assets/images/socialicon/linkedin.png";
 import Image from "next/image";
 
+import { useTranslation } from 'react-i18next';
+
 
 export default function FreeResources() {
+
+    const { t } = useTranslation();
 
     const { authDriver } = useRedirect();
 
@@ -21,61 +22,70 @@ export default function FreeResources() {
     return (
         <>
             < div className='row'>
-                <h1>Free Resources</h1>
+                <h1>{t("free_resources")}</h1>
             </div>
             <Container fluid>
                 <Row className='mt-5'>
                     <Col className='col-lg-4 col-md-4  col-12 my-lg-0 my-4'>
-                        <h2> <Link href="/resources"><a className={style.link_style}>Vendor Discounts</a></Link> </h2>
+                        <h2> <Link href="/resources"><a className={style.link_style}>{t("vendor_discounts")}</a></Link> </h2>
                     </Col>
                     <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
-                        <h2> <Link href="https://ctrecruiting.com/"><a className={style.link_style}>Salary Comparison Tool</a></Link> </h2>
+                        <h2> <Link href="https://ctrecruiting.com/pay-calculator"><a className={style.link_style}>{t("salary_comparison_tool")}</a></Link> </h2>
                     </Col>
                     <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
-                        <h2> <Link href="/dashboard/driver/my-docs"><a className={style.link_style}>Access Your MVR</a></Link> </h2>
-                        {/* <h3 className=' mt-3'>If any past employers have<br></br> pulled your MVR through our<br></br> system, it should be visible to <br></br> you in
-                            <Link href="/dashboard/driver/my-docs"><a className={style.link}> My Docs</a></Link>
-                        </h3> */}
-                    </Col>
-                </Row>
-                <Row className={style.mt_90}>
-                    <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
-                        <h2> <Link href="#"><a className={style.link_style}>Refer A Friend Program</a></Link> </h2>
-                    </Col>
-                    <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
-                        <h2> <Link href="#"><a className={style.link_style}>Enter Sweepstakes</a></Link> </h2>
-                    </Col>
-                    <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
-                        <h2> <Link href="https://drivergrowth.com/"><a className={style.link_style}>Become Your Own Boss</a></Link> </h2>
+                        <h2> <Link href="/dashboard/driver/my-docs"><a className={style.link_style}>{t("access_your_mvr")}</a></Link> </h2>
+                        <br />
+                        <span className={style.description}>{t("access_your_mvr_paragraph")}</span>
                     </Col>
                 </Row>
                 <Row className={style.mt_90}>
                     <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
-                        <h2> <Link href="#"><a className={style.link_style}>Connect With Our Community</a></Link> </h2>
+                        <h2> <Link href="#"><a className={style.link_style}>{t("refer_a_friend_program")}</a></Link> </h2>
                     </Col>
                     <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
-                        <h2> <Link href="#"><a className={style.link_style}>Follow us</a></Link> </h2>
+                        <h2> <Link href="#"><a className={style.link_style}>{t("enter_sweepstakes")}</a></Link> </h2>
+                    </Col>
+                    <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
+                        <h2> <Link href="https://drivergrowth.com/"><a className={style.link_style}>{t("become_your_own_boss")}</a></Link> </h2>
+                    </Col>
+                </Row>
+                <Row className={style.mt_90}>
+                    <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
+                        <h2> <Link href="#"><a className={style.link_style}>{t("connect_with_our_community")}</a></Link> </h2>
+                        <br />
+                        <span className={style.description}>{t("join_our_driverfly_community")}</span>
+                    </Col>
+                    <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
+                        <h2> <Link href="#"><a className={style.link_style}>{t("follow_us")}</a></Link> </h2>
                         <div className='mt-3'>
+                            <br />
+                            <span className={style.description}>{t("follow_us_paragraph")}</span>
+                            <br />
+                            <br />
                             <Link href="https://www.facebook.com/DriverFlyJobs/">
                                 <a target="_blank">
                                    <div className={style.social_icon}> <Image src={fb} alt="fb" /> </div>
+                                   facebook.com/DriverFlyJobs
                                 </a>
                             </Link>
-                            <Link href="https://www.instagram.com/driver_hiring/?hl=en" >
+                            <br />
+                            <Link href="https://www.instagram.com/driver_hiring" >
                                 <a target="_blank">
-                                   <div className={style.social_icon}> <Image src={insta} alt="fb" /> 
-                                   </div>
+                                   <div className={style.social_icon}> <Image src={insta} alt="ig" /> </div>
+                                   @driver_hiring
                                 </a>
                             </Link>
+                            <br />
                             <Link href="https://www.linkedin.com/company/driverfly/">
                                 <a target="_blank">
-                                   <div className={style.social_icon}> <Image src={linkedin} alt="fb" />  </div>
+                                   <div className={style.social_icon}> <Image src={linkedin} alt="linkedin" />  </div>
+                                   linkedin.com/company/driverfly
                                 </a>
                             </Link>
                         </div>
                     </Col>
                     <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
-                        <h2> <Link href=""><a className={style.link_style}>Sign up for our newsletter</a></Link> </h2>
+                        <h2> <Link href=""><a className={style.link_style}>{t("sign_up_for_newsletter")}</a></Link> </h2>
                     </Col>
                 </Row>
 
