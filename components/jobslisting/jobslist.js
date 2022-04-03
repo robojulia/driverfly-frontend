@@ -16,13 +16,6 @@ export default function JobsList() {
   const previousPageLabel = currentPageLabel - 1
   const nextPageLabel = currentPageLabel + 1
 
-  // const range = (start, end) => {
-  //   let length = end - start + 1;
-  //   return Array.from({ length }, (_, idx) => idx + start);
-  // };
-
-  // console.log("range", range(currentPage - 4, currentPage + 4))
-
   const handlePaging = async (page) => {
     console.log("clicked page", page)
     await setFilters({
@@ -131,6 +124,15 @@ export default function JobsList() {
               <span className="next page-numbers " role="button" >
                 Next
                 <i className="fa fa-long-arrow-right ml-2" aria-hidden="true"></i>
+              </span>
+            </li>
+          }
+
+          {
+            nextPageIndex < pagingMeta.pageCount &&
+            <li onClick={() => { handlePaging(pagingMeta.pageCount - 1) }}>
+              <span className="next page-numbers " role="button" >
+                Last
               </span>
             </li>
           }
