@@ -1,6 +1,6 @@
 import { useFormik } from "formik"
 import * as yup from "yup"
-import BaseInput from "../../../components/BaseInput"
+import BaseInput from "../../../components/forms/BaseInput"
 import FullLayout from "../../../components/dashboard/layouts/FullLayout"
 import useRedirect from '../../../hooks/useRedirect';
 import useAuth from "../../../hooks/useAuth"
