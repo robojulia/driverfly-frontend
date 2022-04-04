@@ -151,7 +151,7 @@
 }
 
 
-/*Applicants scroll bar */
+/*Applicants page  */
 .applicants__section .scrollbar {
     margin-top: 30px;
     float: left;
@@ -177,6 +177,18 @@
 .applicants__section {
     overflow-x: auto;
 }
+.checkbox_position{
+    float: revert !important;
+    margin-left: 20px !important;
+}
+.checkbox_pos{
+    float: revert !important; 
+}
+.form_lable_sty{
+    margin-right: 60px;
+    text-align: left;
+}
+
 
 
 @media screen and (max-width: 992px) {

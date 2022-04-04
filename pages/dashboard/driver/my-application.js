@@ -650,13 +650,13 @@ export default function MyApplication() {
                   />
                   {/* is owner-operator */}
                   <div className="col mt-4">
-                    <div class="form-check form-switch">
-                      <label class="form-check-label" htmlFor="is_owner_operator">{t("is_owner_operator_question")}</label>
+                    <div class="form-check form-switch p-0 p-0">
+                      <label class="form-check-label " htmlFor="is_owner_operator">{t("is_owner_operator_question")}</label>
                       <input
                         checked={acc_form.values.is_owner_operator}
                         name="is_owner_operator"
                         onChange={acc_form.handleChange}
-                        class="form-check-input"
+                        class="form-check-input checkbox_position"
                         type="checkbox"
                         role="switch"
                         id="is_owner_operator"
@@ -667,9 +667,9 @@ export default function MyApplication() {
                 <div className="col-md-4">
                   {/* age limit */}
                   <div className="col-12 mt-4">
-                    <div class="form-check form-switch">
+                    <div class="form-check form-switch p-0 p-0">
                       <label class="form-check-label">{t("above_21")}</label>
-                      <input class="form-check-input" readOnly type="checkbox" checked={acc_form.values.above_21} role="switch" />
+                      <input class="form-check-input checkbox_position" readOnly type="checkbox" checked={acc_form.values.above_21} role="switch" />
                     </div>
                   </div>
                   {/* Highest degree */}
@@ -1032,7 +1032,7 @@ export default function MyApplication() {
 
                                 {/* authorize */}
                                 <div className="col mt-3">
-                                  <div class="form-check form-switch">
+                                  <div class="form-check form-switch p-0">
                                     <label class="form-check-label" htmlFor={`past_employment_authorize${i}`}>{t("authorize_employers_to_contact_company_question")}</label>
                                     <input
                                       class="form-check-input"
@@ -1046,7 +1046,7 @@ export default function MyApplication() {
                                 </div>
                                 {/* FMCSRs */}
                                 <div className="col mt-3">
-                                  <div class="form-check form-switch">
+                                  <div class="form-check form-switch p-0">
                                     <label class="form-check-label" htmlFor={`past_employment_fmcsrs${i}`}>{t("subject_to_fmcsrs_question")}</label>
                                     <input
                                       class="form-check-input"
@@ -1061,7 +1061,7 @@ export default function MyApplication() {
                                 </div>
                                 {/* is_subject_to_drug_tests */}
                                 <div className="col mt-3">
-                                  <div class="form-check form-switch">
+                                  <div class="form-check form-switch p-0">
                                     <label class="form-check-label" htmlFor={`past_employment_drug_tests${i}`}>{t("subject_to_drug_tests_question")}</label>
                                     <input
                                       class="form-check-input"
@@ -1100,13 +1100,13 @@ export default function MyApplication() {
 
                   {/* drug test */}
                   <div className="col mt-3">
-                    <div class="form-check form-switch mb-34">
+                    <div class="form-check form-switch mb-34 p-0">
                       <label class="form-check-label" htmlFor="can_pass_drug_test">{t("can_pass_drug_test")}</label>
                       <input
                         checked={sec_form.values.can_pass_drug_test}
                         name="can_pass_drug_test"
                         onChange={sec_form.handleChange}
-                        class="form-check-input"
+                        class="form-check-input checkbox_position"
                         type="checkbox"
                         role="switch"
                         id="can_pass_drug_test"
@@ -1115,12 +1115,12 @@ export default function MyApplication() {
                   </div>
                   {/* DUI? */}
                   <div className="col mt-3">
-                    <div class="form-check form-switch  mb-34">
+                    <div class="form-check form-switch  mb-34 p-0">
                       <label class="form-check-label" htmlFor="has_past_duis">{t("has_past_duis")}:</label>
                       <input
                         checked={sec_form.values.has_past_dui}
                         onChange={sec_form.handleChange}
-                        class="form-check-input"
+                        class="form-check-input checkbox_position"
                         type="checkbox"
                         role="switch"
                         name="has_past_dui"
@@ -1198,10 +1198,10 @@ export default function MyApplication() {
                   <div className="col mt-85 ">
                     {/* license */}
                     <div className="col mt-3">
-                      <div class="form-check form-switch">
-                        <label class="form-check-label" htmlFor="has_had_license_revoked">{t("has_had_license_revoked")}</label>
+                      <div class="form-check form-switch p-0">
+                        <label class="form-check-label form_lable_sty" htmlFor="has_had_license_revoked">{t("has_had_license_revoked")}</label>
                         <input
-                          class="form-check-input"
+                          class="form-check-input checkbox_pos"
                           type="checkbox"
                           role="switch"
                           id="has_had_license_revoked"
@@ -1229,10 +1229,10 @@ export default function MyApplication() {
                     }
                     {/* violation */}
                     <div className="col mt-34 ">
-                      <div class="form-check form-switch">
-                        <label class="form-check-label" htmlFor="has_has_psp_violations">{t("has_has_psp_violations")}</label>
+                      <div class="form-check form-switch p-0">
+                        <label class="form-check-label form_lable_sty" htmlFor="has_has_psp_violations">{t("has_has_psp_violations")}</label>
                         <input
-                          class="form-check-input"
+                          class="form-check-input checkbox_pos"
                           type="checkbox"
                           role="switch"
                           id="has_has_psp_violations"
@@ -1260,10 +1260,10 @@ export default function MyApplication() {
                     }
                     {/* 5 years tickets */}
                     <div className="col mt-48">
-                      <div class="form-check form-switch">
-                        <label class="form-check-label" htmlFor="has_had_tickets_last_5_years">{t("has_had_tickets_last_5_years")}</label>
+                      <div class="form-check form-switch p-0">
+                        <label class="form-check-label form_lable_sty" htmlFor="has_had_tickets_last_5_years">{t("has_had_tickets_last_5_years")}</label>
                         <input
-                          class="form-check-input"
+                          class="form-check-input checkbox_pos"
                           type="checkbox"
                           role="switch"
                           id="has_had_tickets_last_5_years"
@@ -1292,10 +1292,10 @@ export default function MyApplication() {
 
                     {/* drug test */}
                     <div className="col">
-                      <div class="form-check form-switch  mt-55">
-                        <label class="form-check-label" htmlFor="has_had_positive_drug_test">{t("has_had_positive_drug_test")}</label>
+                      <div class="form-check form-switch p-0  mt-55">
+                        <label class="form-check-label form_lable_sty" htmlFor="has_had_positive_drug_test">{t("has_had_positive_drug_test")}</label>
                         <input
-                          class="form-check-input"
+                          class="form-check-input checkbox_pos"
                           type="checkbox"
                           role="switch"
                           id="has_had_positive_drug_test"
