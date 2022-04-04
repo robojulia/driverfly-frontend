@@ -199,7 +199,7 @@ export default function JobListing() {
                                                         {/* {job.employment_type} */}
                                                         OTR
                                                     </span>
-                                                    <span className={JobList.repost}>
+                                                    <span className={JobList.bg_light_report}>
                                                         Repost
                                                     </span>
                                                 </td>
@@ -296,7 +296,7 @@ export default function JobListing() {
                                                         {/* {job.employment_type} */}
                                                         OTR
                                                     </span>
-                                                    <span className={JobList.repost}>
+                                                    <span className={JobList.bg_light_report}>
                                                         Repost
                                                     </span>
                                                 </td>
