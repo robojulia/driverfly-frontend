@@ -650,7 +650,7 @@ export default function MyApplication() {
                   />
                   {/* is owner-operator */}
                   <div className="col mt-4">
-                    <div class="form-check form-switch p-0 p-0">
+                    <div class="form-check form-switch p-0">
                       <label class="form-check-label " htmlFor="is_owner_operator">{t("is_owner_operator_question")}</label>
                       <input
                         checked={acc_form.values.is_owner_operator}
@@ -667,7 +667,7 @@ export default function MyApplication() {
                 <div className="col-md-4">
                   {/* age limit */}
                   <div className="col-12 mt-4">
-                    <div class="form-check form-switch p-0 p-0">
+                    <div class="form-check form-switch p-0">
                       <label class="form-check-label">{t("above_21")}</label>
                       <input class="form-check-input checkbox_position" readOnly type="checkbox" checked={acc_form.values.above_21} role="switch" />
                     </div>
