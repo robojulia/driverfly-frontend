@@ -28,9 +28,13 @@ export default function FreeResources() {
                 <Row className='mt-5'>
                     <Col className='col-lg-4 col-md-4  col-12 my-lg-0 my-4'>
                         <h2> <Link href="/resources"><a className={style.link_style}>{t("vendor_discounts")}</a></Link> </h2>
+                        <br />
+                        <span className={style.description}>{t("vendor_discounts_paragraph")}</span>
                     </Col>
                     <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
                         <h2> <Link href="https://ctrecruiting.com/pay-calculator"><a className={style.link_style}>{t("salary_comparison_tool")}</a></Link> </h2>
+                        <br />
+                        <span className={style.description}>{t("salary_comparison_tool_paragraph")}</span>
                     </Col>
                     <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
                         <h2> <Link href="/dashboard/driver/my-docs"><a className={style.link_style}>{t("access_your_mvr")}</a></Link> </h2>
@@ -41,12 +45,18 @@ export default function FreeResources() {
                 <Row className={style.mt_90}>
                     <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
                         <h2> <Link href="#"><a className={style.link_style}>{t("refer_a_friend_program")}</a></Link> </h2>
+                        <br />
+                        <span className={style.description}>{t("refer_a_friend_paragraph")}</span>
                     </Col>
                     <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
                         <h2> <Link href="#"><a className={style.link_style}>{t("enter_sweepstakes")}</a></Link> </h2>
+                        <br />
+                        <span className={style.description}>{t("enter_sweepstakes_paragraph")}</span>
                     </Col>
                     <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
                         <h2> <Link href="https://drivergrowth.com/"><a className={style.link_style}>{t("become_your_own_boss")}</a></Link> </h2>
+                        <br />
+                        <span className={style.description}>{t("become_your_own_boss_paragraph")}</span>
                     </Col>
                 </Row>
                 <Row className={style.mt_90}>
@@ -86,6 +96,8 @@ export default function FreeResources() {
                     </Col>
                     <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
                         <h2> <Link href=""><a className={style.link_style}>{t("sign_up_for_newsletter")}</a></Link> </h2>
+                        <br />
+                        <span className={style.description}>{t("sign_up_for_newsletter_paragraph")}</span>
                     </Col>
                 </Row>
 

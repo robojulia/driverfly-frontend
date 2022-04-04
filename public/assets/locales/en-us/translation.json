@@ -203,5 +203,11 @@
     "follow_us_paragraph": "Follow us on social media for engaging content, driving tips, and relevant industry news/regulation changes",
     "access_your_mvr_paragraph": "If any past employers have pulled your MVR through our system, it should be visible to you in My Docs",
     "job_type": "Job Type",
-    "delete_account_paragraph": "If you would like to delete your account, please contact our support team at {{email}}"
+    "delete_account_paragraph": "If you would like to delete your account, please contact our support team at {{email}}",
+    "vendor_discounts_paragraph": "View a list of helpful trucking resources and some discount offer codes here",
+    "salary_comparison_tool_paragraph": "Want to find out how your pay compares to other drivers? Use this tool to get a baseline comparison based on industry standards.",
+    "refer_a_friend_paragraph": "Did you know you could earn money by telling another driver about us? Learn more here.",
+    "enter_sweepstakes_paragraph": "Click here for a chance to win prizes!",
+    "become_your_own_boss_paragraph": "Learn about how you can become the owner of your own trucking company",
+    "sign_up_for_newsletter_paragraph": "Subscribe to the DriverFly Newsletter to get the latest jobs and trucking tips"
 }
