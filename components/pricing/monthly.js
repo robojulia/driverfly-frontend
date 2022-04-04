@@ -15,7 +15,7 @@ export default function MonthlyPricing() {
                             <p className='mb-3'>Save 50 hours of recruiting per hire</p>
                             <p className='mb-3'>Get tens of views per job*</p>
                         </div>
-                        <Link href="/signup">
+                        <Link href="http://go.driverfly.co/motor-carriers">
                             <button type="button" className='btn  w-100 p-3'>Get Started</button>
                         </Link>
                     </div>
@@ -33,7 +33,7 @@ export default function MonthlyPricing() {
                             <p className='mb-3'>Save 25 hours of recruiting per hire</p>
                             <p className='mb-3'>Get hundreds of views per job*</p>
                         </div>
-                        <Link href="/signup">
+                        <Link href="http://go.driverfly.co/motor-carriers">
                             <button type="button" className='btn bg-white w-100 p-3'>Get Started</button>
                         </Link>
                     </div>
@@ -52,7 +52,7 @@ export default function MonthlyPricing() {
                             <p className='mb-3'>Save 50 hours of recruiting per hire</p>
                             <p className='mb-3'>Get thousands of views per job*</p>
                         </div>
-                        <Link href="/signup">
+                        <Link href="http://go.driverfly.co/motor-carriers">
                             <button type="button" className='btn  w-100 p-3'>Get Started</button>
                         </Link>
                         
