@@ -8,16 +8,11 @@ export default function JobsList() {
   const { jobs, pagingMeta, filters } = state
   const { setFilters, applyFilters } = method
 
-  const currentPageIndex = parseInt(pagingMeta.page)
+  const currentPageIndex = parseInt(pagingMeta.currentPage)
   const previousPageIndex = currentPageIndex - 1
   const nextPageIndex = currentPageIndex + 1
 
-  const currentPageLabel = parseInt(pagingMeta.page) + 1
-  const previousPageLabel = currentPageLabel - 1
-  const nextPageLabel = currentPageLabel + 1
-
   const handlePaging = async (page) => {
-    console.log("clicked page", page)
     await setFilters({
       ...filters,
       page: parseInt(page)
@@ -70,9 +65,9 @@ export default function JobsList() {
         <ul className="pagination ">
 
           {
-            currentPageIndex > 0 &&
+            currentPageIndex > 1 &&
             <>
-              <li onClick={() => { handlePaging(0) }}>
+              <li onClick={() => { handlePaging(1) }}>
                 <span className="next page-numbers " role="button" >
                   First
                 </span>
@@ -81,22 +76,10 @@ export default function JobsList() {
           }
 
           {
-            pagingMeta.hasPreviousPage &&
-            <>
-              <li onClick={() => { handlePaging(previousPageIndex) }}>
-                <span className="next page-numbers " role="button" >
-                  <i className="fa fa-long-arrow-left mr-2" aria-hidden="true"></i>
-                  Previous
-                </span>
-              </li>
-            </>
-          }
-
-          {
-            currentPageIndex > 0 &&
+            currentPageIndex > 1 &&
             <li onClick={() => { handlePaging(previousPageIndex) }} >
               <span className="page-numbers " role="button" >
-                {previousPageLabel}
+                {previousPageIndex}
               </span>
             </li>
           }
@@ -104,33 +87,23 @@ export default function JobsList() {
           {
             <li >
               <span className="page-numbers current active" role="button" >
-                {currentPageLabel}
+                {currentPageIndex}
               </span>
             </li>
           }
 
           {
-            currentPageIndex < pagingMeta.pageCount - 1 &&
+            currentPageIndex < pagingMeta.totalPages &&
             <li onClick={() => { handlePaging(nextPageIndex) }} >
               <span className="page-numbers " role="button" value={parseInt(pagingMeta.page) + 1}>
-                {nextPageLabel}
+                {nextPageIndex}
               </span>
             </li>
           }
 
           {
-            pagingMeta.hasNextPage &&
-            <li onClick={() => { handlePaging(nextPageIndex) }}>
-              <span className="next page-numbers " role="button" >
-                Next
-                <i className="fa fa-long-arrow-right ml-2" aria-hidden="true"></i>
-              </span>
-            </li>
-          }
-
-          {
-            nextPageIndex < pagingMeta.pageCount &&
-            <li onClick={() => { handlePaging(pagingMeta.pageCount - 1) }}>
+            nextPageIndex < pagingMeta.totalPages &&
+            <li onClick={() => { handlePaging(pagingMeta.totalPages) }}>
               <span className="next page-numbers " role="button" >
                 Last
               </span>

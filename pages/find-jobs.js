@@ -12,10 +12,11 @@ export default function FindJobs() {
 
   const [jobs, setJobs] = useState([])
   const [pagingMeta, setPagingMeta] = useState({
-    hasNextPage: false,
-    hasPreviousPage: false,
-    page: 0,
-    pageCount: 1,
+    currentPage: 1,
+    itemCount: 0,
+    itemsPerPage: 0,
+    totalItems: 0,
+    totalPages: 1
   })
 
   const [filters, setFilters] = useState({
@@ -34,7 +35,7 @@ export default function FindJobs() {
     pay_structure: "",
     endoresements_type: "",
     mvr_requirements: "",
-    page: 0,
+    page: 1,
   })
 
   const router = useRouter()
@@ -61,12 +62,12 @@ export default function FindJobs() {
   const fetchJobs = async () => {
     console.log('filters Final', filters)
     console.log('pagingMeta Final', pagingMeta)
-    const { data, ...meta } = await axios.get(`${process.env.BASE_URL_API}/jobs`, {
+    const { items, meta } = await axios.get(`${process.env.BASE_URL_API}/jobs`, {
       params: {
         ...filters,
       }
     }).then(res => res.data)
-    setJobs(data)
+    setJobs(items)
     setPagingMeta(meta)
   }
 
@@ -105,10 +106,10 @@ export default function FindJobs() {
               <div className="results-count mt-4 ">
                 Showing
                 <span className="first">
-                  1
-                </span> 
-                – <span className="last">{jobs.length}</span>
-                of {pagingMeta.itemCount} results
+                  {((pagingMeta.currentPage-1) * pagingMeta.itemsPerPage)+1}
+                </span> – <span className="last">
+                  {(((pagingMeta.currentPage-1) * pagingMeta.itemsPerPage)+pagingMeta.itemCount)}
+                  </span> of {pagingMeta.totalItems} results
               </div>
 
               <div className="filter-btn-groups mt-3">
