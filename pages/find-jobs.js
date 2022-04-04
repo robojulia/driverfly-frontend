@@ -36,6 +36,7 @@ export default function FindJobs() {
     endoresements_type: "",
     mvr_requirements: "",
     page: 1,
+    order_by: "ASC",
   })
 
   const router = useRouter()
@@ -46,8 +47,10 @@ export default function FindJobs() {
   }
 
   const sortHandler = e => {
-    e.preventDefault()
-    console.log(e.target.value)
+    setFilters({
+      ...filters,
+      order_by: e.target.value
+    }, fetchJobs())
   }
 
   const handleChange = (e) => {
@@ -104,21 +107,19 @@ export default function FindJobs() {
               </form>
 
               <div className="results-count mt-4 ">
-                Showing
-                <span className="first">
-                  {((pagingMeta.currentPage-1) * pagingMeta.itemsPerPage)+1}
+                Showing <span className="first">
+                  {((pagingMeta.currentPage - 1) * pagingMeta.itemsPerPage) + 1}
                 </span> – <span className="last">
-                  {(((pagingMeta.currentPage-1) * pagingMeta.itemsPerPage)+pagingMeta.itemCount)}
-                  </span> of {pagingMeta.totalItems} results
+                  {(((pagingMeta.currentPage - 1) * pagingMeta.itemsPerPage) + pagingMeta.itemCount)}
+                </span> of {pagingMeta.totalItems} results
               </div>
 
               <div className="filter-btn-groups mt-3">
                 <span className="text-secondary w-sm-25">Sort by:
                   <select onChange={sortHandler} className="custom-select shadow-none mt-lg-0 mt-md-3">
-                    <option>Default</option>
-                    <option value="1">Newest</option>
-                    <option value="2">Oldest</option>
-                    <option value="3">Random</option>
+                    <option value="">Default</option>
+                    <option value="DESC">Newest</option>
+                    <option value="ASC">Oldest</option>
                   </select>
                 </span>
               </div>
