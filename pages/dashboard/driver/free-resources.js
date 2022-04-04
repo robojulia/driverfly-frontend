@@ -27,17 +27,18 @@ export default function FreeResources() {
             <Container fluid>
                 <Row className='mt-5'>
                     <Col className='col-lg-4 col-md-4  col-12 my-lg-0 my-4'>
-                        <h2> <Link href="/resources" target="_blank"><a className={style.link_style}>{t("vendor_discounts")}</a></Link> </h2>
+                        <h2> <Link href="/resources"><a className={style.link_style} target="_blank">{t("vendor_discounts")}</a></Link> </h2>
                         <br />
                         <span className={style.description}>{t("vendor_discounts_paragraph")}</span>
                     </Col>
                     <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
-                        <h2> <Link href="https://ctrecruiting.com/pay-calculator" target="_blank"><a className={style.link_style}>{t("salary_comparison_tool")}</a></Link> </h2>
+                        <h2> <Link href="https://ctrecruiting.com/pay-calculator"><a className={style.link_style} target="_blank">{t("salary_comparison_tool")}</a></Link> </h2>
                         <br />
                         <span className={style.description}>{t("salary_comparison_tool_paragraph")}</span>
                     </Col>
                     <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
-                        <h2> <Link href="/dashboard/driver/my-docs" target="_blank"><a className={style.link_style}>{t("access_your_mvr")}</a></Link> </h2>
+                        {/* intentionally not targetting _blank since this is just a tab change */}
+                        <h2> <Link href="/dashboard/driver/my-docs"><a className={style.link_style}>{t("access_your_mvr")}</a></Link> </h2>
                         <br />
                         <span className={style.description}>{t("access_your_mvr_paragraph")}</span>
                     </Col>
@@ -54,7 +55,7 @@ export default function FreeResources() {
                         <span className={style.description}>{t("enter_sweepstakes_paragraph")}</span>
                     </Col>
                     <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
-                        <h2> <Link href="https://drivergrowth.com/" target="_blank"><a className={style.link_style}>{t("become_your_own_boss")}</a></Link> </h2>
+                        <h2> <Link href="https://drivergrowth.com/"><a className={style.link_style} target="_blank">{t("become_your_own_boss")}</a></Link> </h2>
                         <br />
                         <span className={style.description}>{t("become_your_own_boss_paragraph")}</span>
                     </Col>
@@ -72,21 +73,21 @@ export default function FreeResources() {
                             <span className={style.description}>{t("follow_us_paragraph")}</span>
                             <br />
                             <br />
-                            <Link href="https://www.facebook.com/DriverFlyJobs/" target="_blank">
+                            <Link href="https://www.facebook.com/DriverFlyJobs/">
                                 <a target="_blank">
                                    <div className={style.social_icon}> <Image src={fb} alt="fb" /> </div>
                                    facebook.com/DriverFlyJobs
                                 </a>
                             </Link>
                             <br />
-                            <Link href="https://www.instagram.com/driver_hiring" target="_blank" >
+                            <Link href="https://www.instagram.com/driver_hiring" >
                                 <a target="_blank">
                                    <div className={style.social_icon}> <Image src={insta} alt="ig" /> </div>
                                    @driver_hiring
                                 </a>
                             </Link>
                             <br />
-                            <Link href="https://www.linkedin.com/company/driverfly/" target="_blank">
+                            <Link href="https://www.linkedin.com/company/driverfly/">
                                 <a target="_blank">
                                    <div className={style.social_icon}> <Image src={linkedin} alt="linkedin" />  </div>
                                    linkedin.com/company/driverfly
