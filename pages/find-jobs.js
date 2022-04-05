@@ -7,6 +7,7 @@ import FilterResult from '../components/filter-results/filter-results'
 import JobsList from '../components/jobslisting/jobslist'
 import Layout from "../components/layouts"
 import jobsContext from "../context/jobContext"
+import Location from "../components/location/Location"
 
 export default function FindJobs() {
 
@@ -43,11 +44,6 @@ export default function FindJobs() {
   })
 
   const router = useRouter()
-
-  const searchByLocation = e => {
-    e.preventDefault()
-    console.log(e.target.location.value)
-  }
 
   const sortHandler = e => {
     setFilters({
@@ -96,16 +92,8 @@ export default function FindJobs() {
           <div className="row">
             < FilterResult />
             <div className="col-md-9 outer pl-4 ">
-              {/* <h2>{data}</h2> */}
 
-              <form onSubmit={searchByLocation}>
-                <div className="filter-inner d-flex align-items-baseline pl-lg-3 mt-lg-2 ml-lg-3">
-                  <i className="fa fa-map-marker" aria-hidden="true"></i>
-                  <input name="location" type="text" className="form-control border-0 w-25" placeholder="Location" />
-                  <span className="find-me"></span>
-                  <button type="submit" className="btn btn-danger btn-lg br-0 ">Search</button>
-                </div>
-              </form>
+              {/* <Location /> */}
 
               <div className="results-count mt-4 ">
                 Showing <span className="first">

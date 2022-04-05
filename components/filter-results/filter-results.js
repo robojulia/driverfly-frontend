@@ -18,11 +18,11 @@ import ShowMoreEquipment from '../show-more-equipment/ShowMoreEquipment'
 import SpecialAccommodations from '../special-accommodations/Special-Accommodations'
 import SpecialEndorsementsRequired from '../special-endorsements-required/Special-Endorsements-Required'
 import TypeOfDelivery from '../type-of-delivery/TypeOfDelivery'
+import Range from "../location/Range"
 
 
 
-
-export default function FilterResults () {
+export default function FilterResults() {
 
 
 
@@ -38,7 +38,7 @@ export default function FilterResults () {
             <div className="tab-content">
               <div className="accordion bg-transparent" id="accordionExample">
                 < Category />
-                < Location />
+                < Range />
                 < JobType />
                 < Salary />
                 < PostedDate />
