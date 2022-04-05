@@ -134,13 +134,13 @@ export default function Signup() {
           if (error.response) {
             if (error.response.data.message) {
               setServerValidation(error.response.data.message)
-             
+
             } else if (error.response.data.errors) {
               setColor("red")
               console.log('here')
               console.log(error.response.data.errors.user)
               if (error.response.data.errors.user) {
-              
+
                 toast.warning("Email must be unique.", {
                   position: "top-right",
                   autoClose: 3000,
@@ -166,7 +166,7 @@ export default function Signup() {
                 draggable: true,
                 progress: undefined,
               });
-             
+
               setTimeout(() => {
                 Router.push('/login')
               }, 3000);
@@ -187,7 +187,7 @@ export default function Signup() {
       <Head>
         <title>Signup - DriverFly</title>
       </Head>
-      
+
       <div className="top-links-sec">
         <div className="container">
           <div className="top-links-inner d-flex align-items-center justify-content-between">
@@ -203,11 +203,11 @@ export default function Signup() {
             <Link href="http://go.driverfly.co/motor-carriers">
               <a> here </a>
             </Link>
-             or  
+            or
             <Link href="/contact">
               <a>  contact us </a>
             </Link>
-             for an account.</p>
+            for an account.</p>
           <p>If you are already a user, login
             <Link href="/login">
               <a> here.</a>
@@ -221,7 +221,7 @@ export default function Signup() {
           </div>
           <div className="col-lg-8">
             <div className={SignupStyle.form}>
-            <ToastContainer />
+              <ToastContainer />
               <h2 className="text-center my-5">Create New Account</h2>
               <div className="my-5">
                 <div className="form-group">
@@ -273,9 +273,21 @@ export default function Signup() {
                 }) : <p style={{ fontStyle: "italic", color: color }}>{serverValidation}</p>}
                 <button disabled={signupButtonDisabled}
                   type="submit"
-                  className='btn btn-dark w-100 d-block p-3 my-5'
+                  className='btn btn-dark w-100 d-block p-3 mt-5 mb-4'
                   onClick={signUpHandler}>
                   Register now
+                </button>
+
+                <div className={SignupStyle.lineheader}>
+                  <span>or</span>
+                </div>
+                <button
+                  type="submit"
+                  className='btn btn-dark w-100 d-block p-3 my-3'>
+                  <Link href="/login">
+                    <a className="text-white">  If you are already a user, login here.</a>
+                  </Link>
+
                 </button>
               </div>
             </div>
