@@ -1,4 +1,3 @@
-import LogoutButton from '../../../components/buttons/Logout';
 import FullLayout from "../../../components/dashboard/layouts/FullLayout";
 import { Col, Row, Card, CardBody, Table } from "reactstrap";
 import useRedirect from '../../../hooks/useRedirect';
@@ -125,7 +124,7 @@ export default function Dashboard() {
                                 </td>
                                 <td>
                                     <Link href="#">
-                                        <button className={` mt-3 text-white ${style.btn_blue}`}>{t("find_job")}</button>
+                                        <button className={` mt-3 text-white ${style.btn_blue}`}>{t("find_new_job")}</button>
                                     </Link>
                                 </td>
 

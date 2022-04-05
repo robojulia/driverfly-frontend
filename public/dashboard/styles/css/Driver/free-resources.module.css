@@ -1,3 +1,7 @@
+.description {
+    color: #a5a5a5
+}
+
 .link, .link:hover{
     color: #5dcac4 !important;
     text-decoration:none;

@@ -59,6 +59,13 @@
 .bg_light{
     background-color: #d8d8d8;
 }
+.bg_light_report{
+    background-color: #d8d8d8;
+    margin-left: 10px;
+    padding: 7px 23px;
+    border-radius: 5px;
+    color: #fff;
+}
 .depolybtn{
     background: #1b4454;
 }

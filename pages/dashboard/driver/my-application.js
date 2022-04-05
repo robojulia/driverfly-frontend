@@ -1,631 +1,458 @@
-import axios from "axios"
 import { useFormik } from "formik"
 import * as yup from "yup"
-import BaseInput from "../../../components/BaseInput"
+import BaseInput from "../../../components/forms/BaseInput"
 import FullLayout from "../../../components/dashboard/layouts/FullLayout"
+import useRedirect from '../../../hooks/useRedirect';
 import useAuth from "../../../hooks/useAuth"
 import style from '../../../public/dashboard/styles/css/Driver/my-account.module.css'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useEffect, useState } from "react"
-import { random } from "lodash"
 import moment from "moment"
 import CreatableSelect from 'react-select/creatable'
-import { ActionMeta, OnChangeValue } from 'react-select'
 
 import stateList from "../../../utils/stateList"
 import { Accordion } from "react-bootstrap"
 
 import { preventNegative } from "../../../utils/input"
 
+import { useTranslation } from "react-i18next"
 
+import { driverDegree, cdlClass } from "../../../utils/driver"
+
+import { EquipmentType } from "../../../enums/drivers/equipment-type";
+
+import BaseApi from "../../api/_baseApi";
 
 export default function MyApplication() {
-  const { authCheck } = useAuth()
-  const user = authCheck()
+  const { authDriver } = useRedirect();
+  authDriver();
+
+  const { t } = useTranslation();
+  const { authCheck, setAuth } = useAuth();
+  const user = authCheck();
+
+  const api = new BaseApi();
+
+  const equipmentTypes = Object
+    .keys(EquipmentType)
+    .map(v => {
+      return {
+        value: v,
+        label: EquipmentType[v]
+      };
+    })
 
 
-  const randomId = () => Date.now() + "-" + random(0, 200)
+  yup.addMethod(yup.array, "unique", function (message, field, mapper = a => a) {
+    return this.test(`unique`, message, function (list) {
+      const set = new Set();
+      //debugger;
+      for (let i = 0; i < list.length; i++) {
+        let value = mapper(list[i]);
 
-  const driverDegree = [
-    {
-      label: "High School",
-      value: "HIGH_SCHOOL"
-    },
-    {
-      label: "Bachelor",
-      value: "BACHELOR"
-    },
-    {
-      label: "Master",
-      value: "MASTER"
-    },
-    {
-      label: "Associate",
-      value: "ASSOCIATE"
-    },
-    {
-      label: "Doctoral",
-      value: "DOCTORAL"
-    }
-  ]
-
-  const cdl_classes = [
-    {
-      label: "CDL Class A",
-      value: "CDL_CLASS_A"
-    },
-    {
-      label: "CDL Class B",
-      value: "CDL_CLASS_B"
-    },
-    {
-      label: "CDL Class C",
-      value: "CDL_CLASS_C"
-    }
-  ]
-  // {
-  //   id: Date.now(),
-  //   years: 0,
-  //   type: ""
-  // }
-  const [equipments, set_equipments] = useState([])
-
-  yup.addMethod(yup.object, "typeUnique", function (errorMessage) {
-    return this.test(`unique`, errorMessage, function () {
-      let valueArr = equipments.map(function (item) { return item.type });
-      let isDuplicate = valueArr.some(function (item, idx) {
-        return valueArr.indexOf(item) != idx
-      });
-      if (isDuplicate) {
-        toast.warning(errorMessage, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        })
+        if (set.has(value)) {
+          // debugger;
+          this.createError({
+            path: `${this.path}[${i}].${field}`,
+            message: message
+          });
+          return false;
+        }
+        set.add(value);
       }
-      return !isDuplicate;
-    });
-  });
-
-  yup.addMethod(yup.object, "typeNotEmpty", function (errorMessage) {
-    return this.test(`not-empty`, errorMessage, function () {
-      let isEmpty = equipments.some(function (item) { return item.type == "" });
-      if (isEmpty) {
-        toast.warning(errorMessage, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        })
-      }
-      return !isEmpty;
+      return true;
     });
   });
 
   const acc_form = useFormik({
     initialValues: {
-      // name: '',
-      license_number: '',
-      age_limit: '',
-      // phone: '',
-      license_expiry: '',
-      highest_degree: '',
-      // email: '',
-      license_state: '',
+      first_name: user.first_name,
+      last_name: user.last_name,
+      contact_number: user.contact_number,
+      cell_number: user.cell_number,
+      email: user.email,
       street: '',
-      license_type: '',
-      emergency_contact_number: '',
       city: '',
-      years_cdl_experience: '',
-      // phoneNumber: '',
-      zip_code: '',
       state: '',
+      zip_code: '',
+
+      license_number: '',
+      license_expiry: '',
+      license_state: "",
+      license_type: "",
+      years_cdl_experience: null,
+      equipment_experience: [],
+      is_owner_operator: false,
+      equipment_owned: [],
+
+      // todo: transmission_type: [],
+      // todo: endorsements: [],
+      above_21: false,
+      highest_degree: '',
+      emergency_contact_name: "",
+      emergency_contact_number: '',
       emergency_contact_relationship: '',
+
+      // todo: can_work_in_us: true,
     },
     validationSchema: yup.object({
-      license_number: yup.string().required("This field is required").nullable(),
-      license_expiry: yup.string().required("This field is required").nullable(),
-      highest_degree: yup.string().required("This field is required").nullable(),
-      license_state: yup.string().required("This field is required").nullable(),
-      street: yup.string().required("This field is required").nullable(),
-      license_type: yup.string().required("This field is required").nullable(),
+      first_name: yup.string().required(t("this_field_is_required")).nullable(),
+      last_name: yup.string().required(t("this_field_is_required")).nullable(),
+      contact_number: yup.string().nullable(),
+      cell_number: yup.string().nullable(),
+      email: yup.string().required(t("this_field_is_required")).nullable(),
+      street: yup.string().nullable(),
+      city: yup.string().nullable(),
+      state: yup.string().nullable(),
+      zip_code: yup.string().nullable(),
+
+      license_number: yup.string().nullable(),
+      license_expiry: yup.string().nullable(),
+      license_state: yup.string().nullable(),
+      license_type: yup.string().nullable(),
+      years_cdl_experience: yup.number().nullable().min(0, t("please_select_0_or_above")),
+      equipment_experience: yup.array(
+        yup.object().shape({
+          type: yup.string().required(t("this_field_is_required")).nullable(),
+          type_other: yup.string().nullable(),
+          quantity: yup.number().min(1).required(t("this_field_is_required")).nullable(),
+        })
+      ).unique(t("types_must_not_repeat"), "type", t => `${t.type}_${t.type_other}`),
+
+      equipment_experience: yup.array(
+        yup.object().shape({
+          type: yup.string().required(t("this_field_is_required")).nullable(),
+          years: yup.string().required(t("this_field_is_required")).nullable(),
+        })
+      ).unique(t("types_must_not_repeat"), "type", t => t.type),
+
+      highest_degree: yup.string().nullable(),
+      emergency_contact_name: yup.string().nullable(),
       emergency_contact_number: yup.string().nullable(),
-      city: yup.string().required("This field is required").nullable(),
-      years_cdl_experience: yup.number().required("This field is required").nullable().min(0, "Please select 0 or above."),
-      zip_code: yup.string().required("This field is required").nullable(),
-      state: yup.string().required("This field is required").nullable(),
-      emergency_contact_relationship: yup.string().required("This field is required").nullable(),
-      equipments: yup.object()
-        .typeUnique("Equipmets type can not be duplicate")
-        .typeNotEmpty("Equipmets type can not be empty")
+      emergency_contact_relationship: yup.string().nullable(),
     }),
     onSubmit: async (values) => {
-      const data = {
-        ...values,
-        equipment_experience: equipments.map(eq => ({
-          years: eq.years,
-          type: eq.type
-        })),
-      }
-      try {
-        const resp = await axios.post(`${process.env.BASE_URL_API}/drivers`, data, {
-          headers: {
-            Authorization: `Bearer ${user.token}`
+      const userDto = {
+        first_name: values.first_name,
+        last_name: values.last_name,
+        name: `${values.first_name} ${values.last_name}`,
+        contact_number: values.contact_number,
+        cell_number: values.cell_number,
+        // email: user.email,
+      };
+      const driverDto = {
+        street: values.street,
+        city: values.city,
+        state: values.state,
+        zip_code: values.zip_code,
+  
+        license_number: values.license_number,
+        license_expiry: values.license_expiry,
+        license_state: values.license_state,
+        license_type: values.license_type,
+        years_cdl_experience: values.years_cdl_experience,
+        equipment_experience: values.equipment_experience,
+        is_owner_operator: values.is_owner_operator,
+        equipment_owned: values.is_owner_operator ? values.equipment_owned.map(v => {
+          if (!v.type.endsWith("_OTHER")) {
+            v.type_other = null;
           }
-        })
-        if (resp.status === 201) {
-          toast.success("Uploaded successfully", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          })
-        }
+          return v;
+        }) : [],
+  
+        // todo: transmission_type: values.transmission_type,
+        // todo: endorsements: values.endorsements,
+        highest_degree: values.highest_degree,
+        emergency_contact_name: values.emergency_contact_name,
+        emergency_contact_number: values.emergency_contact_number,
+        emergency_contact_relationship: values.emergency_contact_relationship,
+  
+        // todo: can_work_in_us: values.can_work_in_us,
+  
+      };
+      try {
+        const [ userResp, driverResp ] = await Promise.all([
+          api.put(`user/${user.id}`, userDto),
+          api.post("drivers", driverDto)
+        ]);
+        toast.success(t("successfully_saved_information"));
+
+        setAuth({
+          ...user,
+          first_name: userDto.first_name,
+          last_name: userDto.last_name,
+          name: userDto.name,
+          contact_number: userDto.contact_number,
+          cell_number: userDto.cell_number,
+        });
       } catch (error) {
-        toast.error("Some Error occured", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        })
+        console.error("Unable to save information", error);
+        toast.error(t("unable_to_save_information"));
       }
     }
-  })
+  });
 
-  const [birthDate, set_birthDate] = useState("")
-  const [is21, setIs21] = useState(false)
+  const sec_form = useFormik({
+    initialValues: {
+      employers: [],
+      can_pass_drug_test: true,
+      has_past_dui: false,
+      dui_years: [],
+      criminal_history: null,
+      accident_count: null,
+      accident_details: null,
+      safety_questions: {
+        "LICENSE_REVOKED": {
+          type: "LICENSE_REVOKED",
+          response: false,
+          details: null,
+        },
+        "VIOLATIONS_PSP": {
+          type: "VIOLATIONS_PSP",
+          response: false,
+          details: null,
+        },
+        "TICKETS": {
+          type: "TICKETS",
+          response: false,
+          details: null,
+        },
+        "POSITIVE_DRUG_TEST": {
+          type: "POSITIVE_DRUG_TEST",
+          response: false,
+          details: null,
+        }
+      }
+    },
+    validationSchema: yup.object({
+      employers: yup.array(
+        yup.object().shape({
+          name: yup.string().required(t("this_field_is_required")).nullable(),
+          start_at: yup.date().nullable(),
+          end_at: yup.date().nullable(),
+          title: yup.string().nullable(),
+          address: yup.string().nullable(),
+          street: yup.string().nullable(),
+          city: yup.string().nullable(),
+          state: yup.string().nullable(),
+          zip_code: yup.string().nullable(),
+          phone: yup.string().nullable(),
+          can_contact: yup.boolean().default(false),
+          is_subject_to_fmcsrs: yup.boolean().default(false),
+          is_subject_to_drug_tests: yup.boolean().nullable(false),
+        })
+      ),
+      can_pass_drug_test: yup.boolean(),
+      has_past_dui: yup.boolean(),
+      dui_years: yup.array(
+        yup.number()
+      ).unique("Years cannot repeat"),
+      criminal_history: yup.string().nullable(),
+      accident_count: yup.number().min(0).nullable(),
+      accident_details: yup.string().nullable(),
+      safety_questions: yup.object().shape({
+        LICENSE_REVOKED: yup.object().shape({
+          response: yup.boolean(),
+          details: yup.string().nullable()
+        }),
+        VIOLATIONS_PSP: yup.object().shape({
+          response: yup.boolean(),
+          details: yup.string().nullable()
+        }),
+        TICKETS: yup.object().shape({
+          response: yup.boolean(),
+          details: yup.string().nullable()
+        }),
+        POSITIVE_DRUG_TEST: yup.object().shape({
+          response: yup.boolean(),
+          details: yup.string().nullable()
+        }),
+      })
+    }),
+    onSubmit: async (values) => {
+      // console.log(values);
+      // return;
+      const driverDto = {
+        employers: values.employers,
+        can_pass_drug_test: values.can_pass_drug_test,
+        has_past_dui: values.has_past_dui,
+        dui_years: values.has_past_dui && values.dui_years.length > 0 ? values.dui_years : null,
+        criminal_history: values.criminal_history,
+        accident_count: values.accident_count,
+        accident_details: values.accident_count > 0 ? values.accident_details : null,
+        safety_questions: Object.values(values.safety_questions).map(v => {
+          if (!v.response) v.details = null;
+          return v;
+        })
+      };
+      try {
+        const driverResp = await api.post("drivers", driverDto);
+        toast.success(t("successfully_saved_information"));
+      } catch (error) {
+        console.error("Unable to save information", error);
+        toast.error(t("unable_to_save_information"));
+      }
 
-  const [pastEmployers, set_pastEmployers] = useState([])
-
-  const setCompanyName = (id, value) => {
-    const newArr = pastEmployers.map(emp => {
-      if (emp.id === id) {
-        return { ...emp, name: value }
-      }
-      return emp
-    })
-    set_pastEmployers(newArr)
-  }
-  const setCompanyStartDate = (id, value) => {
-    const newArr = pastEmployers.map(emp => {
-      if (emp.id === id) {
-        return { ...emp, start_at: value }
-      }
-      return emp
-    })
-    set_pastEmployers(newArr)
-  }
-  const setCompanyEndDate = (id, value) => {
-    const newArr = pastEmployers.map(emp => {
-      if (emp.id === id) {
-        return { ...emp, end_at: value }
-      }
-      return emp
-    })
-    set_pastEmployers(newArr)
-  }
-  const setCompanyTitle = (id, value) => {
-    const newArr = pastEmployers.map(emp => {
-      if (emp.id === id) {
-        return { ...emp, title: value }
-      }
-      return emp
-    })
-    set_pastEmployers(newArr)
-  }
-  const setCompanyAddress = (id, value) => {
-    const newArr = pastEmployers.map(emp => {
-      if (emp.id === id) {
-        return { ...emp, address: value }
-      }
-      return emp
-    })
-    set_pastEmployers(newArr)
-  }
-  const setCompanyPhone = (id, value) => {
-    const newArr = pastEmployers.map(emp => {
-      if (emp.id === id) {
-        return { ...emp, phone: value }
-      }
-      return emp
-    })
-    set_pastEmployers(newArr)
-  }
-  const setCompanyCanContact = (id, value) => {
-    const newArr = pastEmployers.map(emp => {
-      if (emp.id === id) {
-        return { ...emp, can_contact: value }
-      }
-      return emp
-    })
-    set_pastEmployers(newArr)
-  }
-  const setCompanyIsSubjectToFmcsrs = (id, value) => {
-    const newArr = pastEmployers.map(emp => {
-      if (emp.id === id) {
-        return { ...emp, is_subject_to_fmcsrs: value }
-      }
-      return emp
-    })
-    set_pastEmployers(newArr)
-  }
-  const setCompanyIsSubjectToDrugTests = (id, value) => {
-    const newArr = pastEmployers.map(emp => {
-      if (emp.id === id) {
-        return { ...emp, is_subject_to_drug_tests: value }
-      }
-      return emp
-    })
-    set_pastEmployers(newArr)
-  }
-  const setCompanyStreet = (id, value) => {
-    const newArr = pastEmployers.map(emp => {
-      if (emp.id === id) {
-        return { ...emp, street: value }
-      }
-      return emp
-    })
-    set_pastEmployers(newArr)
-  }
-  const setCompanyCity = (id, value) => {
-    const newArr = pastEmployers.map(emp => {
-      if (emp.id === id) {
-        return { ...emp, city: value }
-      }
-      return emp
-    })
-    set_pastEmployers(newArr)
-  }
-  const setCompanyState = (id, value) => {
-    const newArr = pastEmployers.map(emp => {
-      if (emp.id === id) {
-        return { ...emp, state: value }
-      }
-      return emp
-    })
-    set_pastEmployers(newArr)
-  }
-  const setCompanyZipCode = (id, value) => {
-    const newArr = pastEmployers.map(emp => {
-      if (emp.id === id) {
-        return { ...emp, zip_code: value }
-      }
-      return emp
-    })
-    set_pastEmployers(newArr)
-  }
-
-  // const [name, setName] = useState( "" )
-  // const [startDate, setStartDate] = useState( "" )
-  // const [endDate, setEndDate] = useState( "" )
-  // const [title, setTitle] = useState( "" )
-  // const [phone, setPhone] = useState( "" )
-  // const [can_contact, set_can_contact] = useState( false )
-  // const [is_subject_to_fmcsrs, set_is_subject_to_fmcsrs] = useState( false )
-  // const [is_subject_to_drug_tests, set_is_subject_to_drug_tests] = useState( false )
-
-  // // company address
-  // const [companyStreet, set_companyStreet] = useState( "" )
-  // const [companyCity, set_companyCity] = useState( "" )
-  // const [companyState, set_companyState] = useState( "" )
-  // const [companyZip, set_companyZip] = useState( "" )
-
-  const [can_pass_drug_test, set_can_pass_drug_test] = useState(false)
-  const [has_past_dui, set_has_past_dui] = useState(false)
-  const [dui_past_years, set_dui_past_years] = useState([])
-  const [dui_input_value, set_dui_input_value] = useState("")
-  const [accident_count, set_accident_count] = useState(0)
-  const [accident_details, set_accident_details] = useState("")
-  const [criminal_history, set_criminal_history] = useState("")
-
-
-  const [revoked, setRevoked] = useState(false)
-  const [revokedDetails, setRevokedDetails] = useState("")
-
-  const [violations, setViolations] = useState(false)
-  const [violationsDetails, setViolationsDetails] = useState("")
-
-  const [tickets, set_tickets] = useState(false)
-  const [ticketsDetails, set_ticketsDetails] = useState("")
-
-  const [drugTest, set_drugTest] = useState(false)
-  const [drugTestDetails, set_drugTestDetails] = useState("")
+    }
+  });
 
   useEffect(async () => {
-    const { data } = await axios.get(`${process.env.BASE_URL_API}/drivers`, {
-      headers: {
-        Authorization: `Bearer ${user.token}`
-      }
-    })
-    if (!data) {
-      toast.error("Data could not fetched", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      })
-      return
+    const { data: driver } = await api.get(`drivers`);
+    if (!driver) {
+      return;
     }
 
-    const equipmentsFetched = data.equipment_experience.map(eq => ({
-      years: eq.years,
-      id: randomId(),
-      type: eq.type
-    }))
-
-    set_birthDate(data.birthdate)
-
-    setIs21(() => {
-      if (moment().diff(data.birthdate, "years") >= 21) {
-        return true
-      }
-      return false
-    })
-
-    set_equipments(equipmentsFetched)
-    console.log(data)
     acc_form.setValues({
-      license_number: data.license_number,
-      license_expiry: moment(data.license_expiry).format("YYYY-MM-DD"),
-      highest_degree: data.highest_degree,
-      license_state: data.license_state,
-      street: data.street,
-      license_type: data.license_type,
-      emergency_contact_number: data.emergency_contact_number,
-      city: data.city,
-      years_cdl_experience: data.years_cdl_experience,
-      zip_code: data.zip_code,
-      state: data.state,
-      equipment_experience: data.equipment_experience,
-      emergency_contact_relationship: data.emergency_contact_relationship,
+      ...acc_form.values,
+
+      street: driver.street,
+      city: driver.city,
+      state: driver.state,
+      zip_code: driver.zip_code,
+
+      license_number: driver.license_number,
+      license_expiry: driver.license_expiry ? moment(driver.license_expiry).format("YYYY-MM-DD") : driver.license_expiry,
+      license_state: driver.license_state,
+      license_type: driver.license_type,
+      years_cdl_experience: driver.years_cdl_experience,
+      is_owner_operator: driver.is_owner_operator || false,
+      equipment_owned: driver.equipment_owned || [],
+      equipment_experience: driver.equipment_experience,
+
+      above_21: driver.birthdate ? moment(new Date()).diff(driver.birthdate, "years") >= 21 : false,
+      highest_degree: driver.highest_degree,
+      emergency_contact_name: driver.emergency_contact_name,
+      emergency_contact_number: driver.emergency_contact_number,
+      emergency_contact_relationship: driver.emergency_contact_relationship,
+    });
+
+    const safety_questions = {};
+    driver.safety_questions.forEach(v => {
+      safety_questions[v.type] = v;
     })
 
-    let pastEmployersFetched = []
-    if (data.employers.length) {
-      pastEmployersFetched = data.employers.map(emp => ({
-        id: randomId(),
-        name: emp.name,
-        start_at: moment(emp.start_at).format("YYYY-MM-DD"),
-        end_at: moment(emp.end_at).format("YYYY-MM-DD"),
-        title: emp.title,
-        address: emp.address,
-        phone: emp.phone,
-        can_contact: emp.can_contact,
-        is_subject_to_fmcsrs: emp.is_subject_to_fmcsrs,
-        is_subject_to_drug_tests: emp.is_subject_to_drug_tests,
-        street: emp.street,
-        city: emp.city,
-        state: emp.state,
-        zip_code: emp.zip_code,
-      }))
-    } else {
-      pastEmployersFetched = [{
-        id: randomId(),
-        name: "",
-        start_at: "",
-        end_at: "",
-        title: "",
-        phone: "",
-        can_contact: false,
-        is_subject_to_fmcsrs: false,
-        is_subject_to_drug_tests: false,
-        street: "",
-        city: "",
-        state: "",
-        zip_code: "",
-      }]
-    }
+    sec_form.setValues({
+      ...sec_form.values,
 
-    // set past employers
-    set_pastEmployers(pastEmployersFetched)
+        employers: (driver.employers ? driver.employers.map(v => ({
+          ...v,
+          start_at: v.start_at ? moment(v.start_at).format("YYYY-MM-DD") : null,
+          end_at: v.end_at ? moment(v.end_at).format("YYYY-MM-DD") : null,
 
-    set_can_pass_drug_test(data.can_pass_drug_test)
-    set_has_past_dui(data.has_past_dui)
-    set_accident_count(() => {
-      return data.accident_count ? data.accident_count : 0
-    })
-    set_accident_details(data.accident_details)
-    set_criminal_history(data.criminal_history)
-
-    if (data.dui_years && data.dui_years.length) {
-      set_dui_past_years(data.dui_years.map(y => createOption(y)))
-    }
-
-    const revokedFetched = data.safety_questions.find(q => q.type === "LICENSE_REVOKED")
-    if (revokedFetched) {
-      setRevoked(revokedFetched.response)
-      setRevokedDetails(revokedFetched.details)
-    }
-    const violationsFetched = data.safety_questions.find(q => q.type === "VIOLATIONS_PSP")
-    if (violationsFetched) {
-      setViolations(violationsFetched.response)
-      setViolationsDetails(violationsFetched.details)
-    }
-    const tickets = data.safety_questions.find(q => q.type === "TICKETS")
-    if (tickets) {
-      set_tickets(tickets.response)
-      set_ticketsDetails(tickets.details)
-    }
-    const drugsFetched = data.safety_questions.find(q => q.type === "POSITIVE_DRUG_TEST")
-    if (drugsFetched) {
-      set_drugTest(drugsFetched.response)
-      set_drugTestDetails(drugsFetched.details)
-    }
-
-
-
-    const safety_details = data.safety_questions[0]
-    if (safety_details) {
-    }
+        })): []),
+        can_pass_drug_test: driver.can_pass_drug_test,
+        has_past_dui: driver.has_past_dui || false,
+        dui_years: driver.dui_years || [],
+        criminal_history: driver.criminal_history,
+        accident_count: driver.accident_count,
+        accident_details: driver.accident_count > 0 ? driver.accident_details : null,
+        safety_questions: {
+          ...sec_form.values.safety_questions,
+          ...safety_questions
+        }
+    });
 
   }, [])
 
+  const [dui_year_current_value, set_dui_year_current_value] = useState("");
 
-  const createOption = (label) => ({
-    label,
-    value: label,
-  })
-
-  const handleKeyDown = (e) => {
-    // e.preventDefault()
-    if (!dui_input_value) return
+  const handleDUIYears = (e) => {
     switch (e.key) {
       case 'Enter':
       case 'Tab':
-        set_dui_input_value("")
-        set_dui_past_years([...dui_past_years, createOption(dui_input_value)])
-        e.preventDefault()
+        sec_form.setValues({
+          ...sec_form.values,
+          dui_years: [
+            ...sec_form.values.dui_years,
+            dui_year_current_value
+          ]
+        });
+        set_dui_year_current_value("");
+        e.preventDefault();
+        return;
+        case "Backspace":
+        case "ArrowLeft":
+        case "ArrowRight":
+          return;
+    }
+
+    if (e.key < "0" || e.key > "9" || dui_year_current_value.length == 4) {
+      e.preventDefault();
+      return;
     }
   }
 
-  const setEquipmentExperience = (id, value) => {
-    const newArr = equipments.map(eq => {
-      if (eq.id === id) {
-        return { ...eq, years: value }
-      }
-      return eq
-    })
-    set_equipments(newArr)
-  }
-
-  const setEquipmentType = (id, value) => {
-    const newArr = equipments.map(eq => {
-      if (eq.id === id) {
-        return { ...eq, type: value }
-      }
-      return eq
-    })
-    set_equipments(newArr)
-  }
-
-  const postSecondForm = async (e) => {
-    e.preventDefault()
-    const employers = pastEmployers.map(emp => {
-      return {
-        name: emp.name,
-        start_at: emp.start_at,
-        end_at: emp.end_at,
-        title: emp.title,
-        address: emp.address,
-        phone: emp.phone,
-        can_contact: emp.can_contact,
-        is_subject_to_fmcsrs: emp.is_subject_to_fmcsrs,
-        is_subject_to_drug_tests: emp.is_subject_to_drug_tests,
-        street: emp.street,
-        city: emp.city,
-        state: emp.state,
-        zip_code: emp.zip_code,
-      }
-    })
-
-
-    const safety_questions = [
-      {
-        type: "LICENSE_REVOKED",
-        details: revokedDetails,
-        response: revoked,
-      },
-      {
-        type: "VIOLATIONS_PSP",
-        details: violationsDetails,
-        response: violations,
-      },
-      {
-        type: "TICKETS",
-        response: tickets,
-        details: ticketsDetails,
-      },
-      {
-        type: "POSITIVE_DRUG_TEST",
-        response: drugTest,
-        details: drugTestDetails,
-      },
-    ]
-    try {
-      const a = {
-        employers,
-        can_pass_drug_test,
-        has_past_dui,
-        dui_years: dui_past_years.map(y => y.value),
-        accident_count,
-        accident_details,
-        criminal_history,
-        safety_questions
-      }
-      const resp = await axios.post(`${process.env.BASE_URL_API}/drivers`, a, {
-        headers: {
-          Authorization: `Bearer ${user.token}`
+  const addEquipmentOwned = () => {
+    acc_form.setValues({
+      ...acc_form.values,
+      equipment_owned: [
+        ...acc_form.values.equipment_owned,
+        {
+          type: null, type_other: null, quantity: null
         }
-      })
-      if (resp.status === 201) {
-        toast.success("Uploaded successfully", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        })
-      }
-    } catch (error) {
-      toast.error("Error occured", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      })
-    }
-  }
+      ],
+    });
+  };
 
-  const addEquipment = () => {
-    set_equipments([...equipments, { type: "", years: 0, id: randomId() }])
-  }
+  const removeEquipmentOwned = (id) => {
+    acc_form.setValues({
+      ...acc_form.values,
+      equipment_owned: [
+        ...acc_form.values.equipment_owned.filter((v, i) => i != id),
+      ],
+    });
+  };
 
-  const removeEquipment = (id) => {
-    let newEquipments = equipments.filter((value, index, arr) => {
-      return value.id != id
-    })
-    set_equipments(newEquipments)
-  }
+  const addEquipmentExperience = () => {
+    acc_form.setValues({
+      ...acc_form.values,
+      equipment_experience: [
+        ...acc_form.values.equipment_experience,
+        {
+          type: null, years: null
+        }
+      ],
+    });
+  };
+
+  const removeEquipmentExperience = (id) => {
+    acc_form.setValues({
+      ...acc_form.values,
+      equipment_experience: [
+        ...acc_form.values.equipment_experience.filter((v, i) => i != id),
+      ],
+    });
+  };
 
   const addPastEmployer = () => {
-    set_pastEmployers([...pastEmployers, {
-      id: randomId(),
-      name: "",
-      start_at: "",
-      end_at: "",
-      title: "",
-      address: "",
-      phone: "",
-      can_contact: false,
-      is_subject_to_fmcsrs: false,
-      is_subject_to_drug_tests: false,
-      street: "",
-      city: "",
-      state: "",
-      zip_code: "",
-    }])
+    sec_form.setValues({
+      ...sec_form.values,
+      employers: [
+        ...sec_form.values.employers,
+        {
+          name: null,
+          start_at: null,
+          end_at: null,
+          title: null,
+          street: null,
+          city: null,
+          state: null,
+          zip_code: null,
+          phone: null,
+          can_contact: false,
+          is_subject_to_fmcsrs: false,
+          is_subject_to_drug_tests: false,
+        }
+      ]
+    })
+  }
+
+  const removePastEmployer = (id) => {
+    sec_form.setValues({
+      ...sec_form.values,
+      employers: sec_form.values.employers.filter((v, i) => i != id)
+    });
   }
 
 
@@ -638,50 +465,67 @@ export default function MyApplication() {
         <div>
           <div className='container-fluid p-0'>
             <form className="modal-body" onSubmit={acc_form.handleSubmit}>
-              <h2>My Application</h2>
+              <h2>{t("my_application")}</h2>
               <div className="row">
+                {/* <h3>{t("basic_details")}</h3> */}
                 {/* Drivers Name */}
                 <div className="col-md-4">
-                  {/* <BaseInput
-                    className="col-12"
-                    label="Name:"
-                    placeholder="Name"
-                    name="driver_name"
-                    value={acc_form.values.driver_name}
-                    touched={acc_form.touched.driver_name}
-                    error={acc_form.errors.driver_name}
-                    onChange={acc_form.handleChange}
-                    handleBlur={acc_form.handleBlur}
-                  /> */}
-                  {/* Number */}
-                  {/* <BaseInput
-                    className="col-12"
-                    label="Number:"
-                    placeholder=" Number"
-                    name="number"
-                    type="text"
-                    value={acc_form.values.number}
-                    touched={acc_form.touched.number}
-                    error={acc_form.errors.number}
-                    onChange={acc_form.handleChange}
-                    handleBlur={acc_form.handleBlur}
-                  /> */}
-                  {/* <BaseInput
-                    className="col-12"
-                    label="Email:"
-                    placeholder="Email"
-                    name="email"
-                    type="email"
-                    value={acc_form.values.email}
-                    touched={acc_form.touched.email}
-                    error={acc_form.errors.email}
-                    onChange={acc_form.handleChange}
-                    handleBlur={acc_form.handleBlur}
-                  /> */}
                   <BaseInput
                     className="col-12"
-                    label="*Street:"
-                    placeholder="Street"
+                    label={t("first_name")}
+                    placeholder={t("first_name")}
+                    name="first_name"
+                    value={acc_form.values.first_name}
+                    touched={acc_form.touched.first_name}
+                    error={acc_form.errors.first_name}
+                    onChange={acc_form.handleChange}
+                    handleBlur={acc_form.handleBlur}
+                  />
+                  <BaseInput
+                    className="col-12"
+                    label={t("last_name")}
+                    placeholder={t("last_name")}
+                    name="last_name"
+                    value={acc_form.values.last_name}
+                    touched={acc_form.touched.last_name}
+                    error={acc_form.errors.last_name}
+                    onChange={acc_form.handleChange}
+                    handleBlur={acc_form.handleBlur}
+                  />
+                  <BaseInput
+                    className="col-12"
+                    label={t("phone")}
+                    placeholder={t("phone")}
+                    name="contact_number"
+                    value={acc_form.values.contact_number}
+                    touched={acc_form.touched.contact_number}
+                    error={acc_form.errors.contact_number}
+                    onChange={acc_form.handleChange}
+                    handleBlur={acc_form.handleBlur}
+                  />
+                  <BaseInput
+                    className="col-12"
+                    label={t("phone_cell")}
+                    placeholder={t("phone_cell")}
+                    name="cell_number"
+                    value={acc_form.values.cell_number}
+                    touched={acc_form.touched.cell_number}
+                    error={acc_form.errors.cell_number}
+                    onChange={acc_form.handleChange}
+                    handleBlur={acc_form.handleBlur}
+                  />
+                  <BaseInput
+                    className="col-12"
+                    label={t("email")}
+                    placeholder={t("email")}
+                    name="email"
+                    readOnly={true}
+                    value={acc_form.values.email}
+                  />
+                  <BaseInput
+                    className="col-12"
+                    label={t("street")}
+                    placeholder={t("street")}
                     name="street"
                     value={acc_form.values.street}
                     touched={acc_form.touched.street}
@@ -691,8 +535,8 @@ export default function MyApplication() {
                   />
                   <BaseInput
                     className="col-12"
-                    label="*City:"
-                    placeholder="City"
+                    label={t("city")}
+                    placeholder={t("city")}
                     name="city"
                     value={acc_form.values.city}
                     touched={acc_form.touched.city}
@@ -700,18 +544,17 @@ export default function MyApplication() {
                     onChange={acc_form.handleChange}
                     handleBlur={acc_form.handleBlur}
                   />
-                  <div className="col-12 mt-3">
-                    <label>*State:</label>
-                    <select class="application_select form-select" name="state" aria-label="Default select example"
+                  <div className="col-12">
+                    <label>{t("state")}:</label>
+                    <select class="application_select form-select" name="state"
                       value={acc_form.values.state}
                       onChange={acc_form.handleChange}
                     >
-                      <option selected value="">State:</option>
+                      <option value="">{t("state")}</option>
                       {stateList.map((state, index) => {
                         return (
                           <option
                             key={index}
-                            selected={acc_form.values.state === state.value}
                             value={state.value}
                           >{state.label}</option>
                         )
@@ -721,8 +564,8 @@ export default function MyApplication() {
                   </div>
                   <BaseInput
                     className="col-12"
-                    label="Zip:"
-                    placeholder="*Zip"
+                    label={t("zip_code")}
+                    placeholder={t("zip_code")}
                     name="zip_code"
                     value={acc_form.values.zip_code}
                     touched={acc_form.touched.zip_code}
@@ -735,8 +578,8 @@ export default function MyApplication() {
                   {/* Drivers License */}
                   <BaseInput
                     className="col-12"
-                    label="*Drivers License Number:"
-                    placeholder="Drivers License Number"
+                    label={t("driver_license_number")}
+                    placeholder={t("driver_license_number")}
                     name="license_number"
                     value={acc_form.values.license_number}
                     touched={acc_form.touched.license_number}
@@ -746,8 +589,8 @@ export default function MyApplication() {
                   />
                   <BaseInput
                     className="col-12"
-                    label="Expiration Date:"
-                    placeholder="*Expiration Date"
+                    label={t("expiration_date")}
+                    placeholder={t("expiration_date")}
                     name="license_expiry"
                     type="date"
                     value={acc_form.values.license_expiry}
@@ -758,17 +601,16 @@ export default function MyApplication() {
                   />
                   {/* state issued */}
                   <div className="col-12">
-                    <label>*State Issued:</label>
-                    <select class="application_select form-select" name="license_state" aria-label="Default select example"
+                    <label>{t("state_issued")}:</label>
+                    <select class="application_select form-select" name="license_state"
                       value={acc_form.values.license_state}
                       onChange={acc_form.handleChange}
                     >
-                      <option selected value="">State Issued:</option>
+                      <option value="">{t("state_issued")}</option>
                       {stateList.map((state, index) => {
                         return (
                           <option
                             key={index}
-                            selected={acc_form.values.license_state === state.value}
                             value={state.value}
                           >{state.label}</option>
                         )
@@ -777,16 +619,16 @@ export default function MyApplication() {
                     {acc_form.touched.license_state && acc_form.errors.license_state ? <span className="text-danger small">{acc_form.errors.license_state}</span> : null}
                   </div>
                   {/* CDL class types */}
-                  <div className="col-12 mt-3">
-                    <span className={style.lable}>*CDL Class Type:</span>
-                    <select class="application_select form-select" name="license_type" aria-label="Default select example"
+                  <div className="col-12">
+                    <span className={style.lable}>{t("cdl_class_type")}:</span>
+                    <select class="application_select form-select" name="license_type"
                       value={acc_form.values.cdl_class}
                       onChange={acc_form.handleChange}
                     >
-                      <option selected value="">CDL Class Type:</option>
-                      {cdl_classes.map((cdl, index) => {
+                      <option value="">{t("cdl_class_type")}</option>
+                      {cdlClass.map((cdl, index) => {
                         return (
-                          <option selected={acc_form.values.license_type === cdl.value} value={cdl.value} key={index}>{cdl.label}</option>
+                          <option value={cdl.value} key={index}>{t(cdl.label)}</option>
                         )
                       })}
                     </select>
@@ -794,8 +636,8 @@ export default function MyApplication() {
                   </div>
                   <BaseInput
                     className="col-12"
-                    label="*Years of CDL Experience:"
-                    placeholder="Years of CDL Experience"
+                    label={t("years_cdl_experience")}
+                    placeholder={t("years_cdl_experience")}
                     name="years_cdl_experience"
                     type="number"
                     min={0}
@@ -806,25 +648,40 @@ export default function MyApplication() {
                     onChange={acc_form.handleChange}
                     handleBlur={acc_form.handleBlur}
                   />
+                  {/* is owner-operator */}
+                  <div className="col mt-4">
+                    <div class="form-check form-switch p-0">
+                      <label class="form-check-label " htmlFor="is_owner_operator">{t("is_owner_operator_question")}</label>
+                      <input
+                        checked={acc_form.values.is_owner_operator}
+                        name="is_owner_operator"
+                        onChange={acc_form.handleChange}
+                        class="form-check-input checkbox_position"
+                        type="checkbox"
+                        role="switch"
+                        id="is_owner_operator"
+                        />
+                    </div>
+                  </div>
                 </div>
                 <div className="col-md-4">
                   {/* age limit */}
-                  <div className="col-lg-4 col-12 mt-2 mb-34">
-                    <div class="form-check form-switch mt-5">
-                      <label class="form-check-label" htmlFor="age_limit">Above 21?</label>
-                      <input class="form-check-input" readOnly type="checkbox" checked={is21} role="switch" id="age_limit" />
+                  <div className="col-12 mt-4">
+                    <div class="form-check form-switch p-0">
+                      <label class="form-check-label">{t("above_21")}</label>
+                      <input class="form-check-input checkbox_position" readOnly type="checkbox" checked={acc_form.values.above_21} role="switch" />
                     </div>
                   </div>
                   {/* Highest degree */}
                   <div className=" col-12 mt-3 ">
-                    <span className={style.lable}>*Highest Degree:</span>
-                    <select class="application_select form-select" name="highest_degree" aria-label="Default select example"
+                    <span className={style.lable}>{t("highest_degree")}:</span>
+                    <select class="application_select form-select" name="highest_degree"
                       value={acc_form.values.highest_degree}
                       onChange={acc_form.handleChange}
                     >
-                      <option selected value="">Highest Degree:</option>
+                      <option value="">{t("highest_degree")}</option>
                       {driverDegree.map((degree, index) => {
-                        return (<option selected={acc_form.values.highest_degree === degree.value} value={degree.value} key={index}>{degree.label}</option>
+                        return (<option value={degree.value} key={index}>{t(degree.label)}</option>
                         )
                       })}
                     </select>
@@ -832,8 +689,19 @@ export default function MyApplication() {
                   </div>
                   <BaseInput
                     className="col-12"
-                    label="Emergency Contact:"
-                    placeholder="Emergency Contact"
+                    label={t("emergency_contact")}
+                    placeholder={t("name")}
+                    name="emergency_contact_name"
+                    value={acc_form.values.emergency_contact_name}
+                    touched={acc_form.touched.emergency_contact_name}
+                    error={acc_form.errors.emergency_contact_name}
+                    onChange={acc_form.handleChange}
+                    handleBlur={acc_form.handleBlur}
+                  />
+                  <BaseInput
+                    className="col-12"
+                    label={t("phone")}
+                    placeholder={t("phone")}
                     name="emergency_contact_number"
                     value={acc_form.values.emergency_contact_number}
                     touched={acc_form.touched.emergency_contact_number}
@@ -843,8 +711,8 @@ export default function MyApplication() {
                   />
                   <BaseInput
                     className=" col-12"
-                    label="*Relationship:"
-                    placeholder="Relationship"
+                    label={t("relationship")}
+                    placeholder={t("relationship")}
                     name="emergency_contact_relationship"
                     value={acc_form.values.emergency_contact_relationship}
                     touched={acc_form.touched.emergency_contact_relationship}
@@ -855,60 +723,165 @@ export default function MyApplication() {
 
 
                 </div>
-
-
               </div>
 
-              <div className='row'>
-                <div className="col-md-12">
-                  <div className={` mt-3  p-4 ${style.account_container}`}>
-                    <span>Equipment Experience</span> <br />
+                {(
+                  acc_form.values.is_owner_operator &&
+                  <div className='row'>
+                    <div className="col-md-10 offset-md-1 mt-3">
+                    <hr />
+                    <h3>{t("equipment_owned")}</h3> <br />
                     <div>
                       {
-                        acc_form.errors.equipments &&
-                        <span className="text-danger small">{acc_form.errors.equipments}</span>
+                        acc_form.errors.equipment_owned &&
+                        (typeof acc_form.errors.equipment_owned === "string") &&
+                        <span className="text-danger small">{acc_form.errors.equipment_owned}</span>
                       }
 
                     </div>
-                    {equipments.map((eq) => {
+                    {acc_form.values.equipment_owned.map((v, i) => {
+                      const getOrNull = (field, type) => {
+                        if (acc_form[field].equipment_owned && acc_form[field].equipment_owned[i]) {
+                          return acc_form[field].equipment_owned[i][type];
+                        }
+                      };
+
                       return (
-                        <div key={eq.id}>
-                          <div className='row px-lg-5'>
+                        <div key={i} className='row'>
+                          <div className="col-md-4">
+                            <span className={style.lable}>{t("type")}:</span>
+                            <select class="application_select form-select"
+                                name={`equipment_owned.${i}.type`}
+                                value={v.type}
+                                onChange={acc_form.handleChange}
+                              >
+                              <option value="">{t("type")}</option>
+                              {equipmentTypes.map((v, index) => {
+                                return (
+                                  <option value={v.value} key={index}>{t(v.label)}</option>
+                                )
+                              })}
+                            </select>
+                            {getOrNull("touched", "type") && getOrNull("errors", "type") ? <span className="text-danger small">{getOrNull("errors", "type")}</span> : null}
+                          </div>
+                          {(
+                            v.type?.endsWith("_OTHER") &&
                             <BaseInput
                               className="col-md-5"
-                              label="Type :"
-                              placeholder="Equipment Type"
-                              value={eq.type}
-                              onChange={(e) => setEquipmentType(eq.id, e.target.value)}
-                              name="equipment_type"
-                            />
-                            <BaseInput
-                              className="col-md-5"
-                              label="Years Experience:"
-                              type="number"
-                              min={0}
-                              onChange={(e) => setEquipmentExperience(eq.id, e.target.value)}
-                              value={eq.years}
-                              placeholder="Years Experience"
-                            />
-                            <div className="col-md-2 mt-5">
-                              <span className="btn btn-yellow" onClick={() => { removeEquipment(eq.id) }}>x Remove</span>
-                            </div>
+                              label={t("details")}
+                              placeholder={t("details")}
+                              value={v.type_other}
+                              onChange={acc_form.handleChange}
+                              handleBlur={acc_form.handleBlur}
+                              touched={getOrNull("touched", "type_other")}
+                              error={getOrNull("errors", "type_other")}
+                              name={`equipment_owned.${i}.type_other`}
+                              />)}
+                          <BaseInput
+                            className="col-md-2"
+                            label={t("quantity")}
+                            placeholder={t("quantity")}
+                            value={v.quantity}
+                            type="number"
+                            min={0}
+                            onChange={acc_form.handleChange}
+                            handleBlur={acc_form.handleBlur}
+                            touched={getOrNull("touched", "quantity")}
+                            error={getOrNull("errors", "quantity")}
+                            name={`equipment_owned.${i}.quantity`}
+                          />
+                          <div className="col-md-1">
+                            <span className="btn btn-yellow mt-4" onClick={() => removeEquipmentOwned(i)}>x</span>
                           </div>
                         </div>
                       )
                     })}
 
-                    <span className="btn btn-approved  mt-3" onClick={addEquipment}>+ more</span>
+                    <span className="btn btn-approved  mt-3" onClick={addEquipmentOwned}>+ {t("more")}</span>
+                  </div>
+                </div>
+
+                )}
+
+              <div className='row'>
+                <div className="col-md-10 offset-md-1 mt-3">
+                  <hr />
+                  <h3>{t("equipment_experience")}</h3> <br />
+                  <div>
+                    {
+                      acc_form.errors.equipment_experience &&
+                      (typeof acc_form.errors.equipment_experience === "string") &&
+                      <span className="text-danger small">{acc_form.errors.equipment_experience}</span>
+                    }
 
                   </div>
+                  {acc_form.values.equipment_experience.map((v, i) => {
+                    const getOrNull = (field, type) => {
+                      if (acc_form[field].equipment_experience && acc_form[field].equipment_experience[i]) {
+                        return acc_form[field].equipment_experience[i][type];
+                      }
+                    };
+
+                    return (
+                      <div key={i}>
+                        <div className='row'>
+                          <div className="col-md-4">
+                            <span className={style.lable}>{t("type")}:</span>
+                            <select class="application_select form-select"
+                                name={`equipment_experience.${i}.type`}
+                                value={v.type}
+                                onChange={acc_form.handleChange}
+                              >
+                              <option value="">{t("type")}</option>
+                              {equipmentTypes.map((v, index) => {
+                                return (
+                                  <option value={v.value} key={index}>{t(v.label)}</option>
+                                )
+                              })}
+                            </select>
+                            {getOrNull("touched", "type") && getOrNull("errors", "type") ? <span className="text-danger small">{getOrNull("errors", "type")}</span> : null}
+                          </div>
+                          {/* <BaseInput
+                            className="col-md-5"
+                            label={t("type")}
+                            placeholder={t("type")}
+                            value={v.type}
+                            onChange={acc_form.handleChange}
+                            handleBlur={acc_form.handleBlur}
+                            touched={getOrNull("touched", "type")}
+                            error={getOrNull("errors", "type")}
+                            name={`equipment_experience.${i}.type`}
+                          /> */}
+                          <BaseInput
+                            className="col-md-5"
+                            label={t("years_experience")}
+                            placeholder={t("years_experience")}
+                            value={v.years}
+                            type="number"
+                            min={0}
+                            onChange={acc_form.handleChange}
+                            handleBlur={acc_form.handleBlur}
+                            touched={getOrNull("touched", "years")}
+                            error={getOrNull("errors", "years")}
+                            name={`equipment_experience.${i}.years`}
+                          />
+                          <div className="col-md-2 mt-4">
+                            <span className="btn btn-yellow" onClick={() => removeEquipmentExperience(i)}>x</span>
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+
+                  <span className="btn btn-approved  mt-3" onClick={addEquipmentExperience}>+ {t("more")}</span>
+
                 </div>
               </div>
 
 
               <div className="col-lg-12 col-12 mt-4 border-0 text-end">
                 <button type="submit" className={`  ${style.update_btn}`} >
-                  Update
+                  {t("update")}
                 </button>
               </div>
 
@@ -920,76 +893,124 @@ export default function MyApplication() {
           <hr />
 
           <div className='container-fluid'>
-            <form onSubmit={postSecondForm}>
+            <form onSubmit={sec_form.handleSubmit}>
               <div className="row">
                 <div className="col-md-4 mt-lg-0 mt-3">
-                  <h2>Past Employment</h2>
+                  <h2>{t("past_employment")}</h2>
                   <Accordion defaultActiveKey="0">
                     {
-                      pastEmployers.map((past, index) => {
-                        return (
-                          <div key={past.id}>
-                            <Accordion.Item eventKey={index}>
-                              <Accordion.Header>{past.name}</Accordion.Header>
+                      sec_form.values.employers.map((v, i) => {
+                        const getOrNull = (field, type) => {
+                          if (sec_form[field].employers && sec_form[field].employers[i]) {
+                            return sec_form[field].employers[i][type];
+                          }
+                        };
+                          return (
+                          <div key={i}>
+                            <Accordion.Item eventKey={i}>
+                              <Accordion.Header>
+                                {v.name}
+
+                                <span className="btn btn-yellow pl-4" onClick={() => removePastEmployer(i)}>x</span>
+                              </Accordion.Header>
                               <Accordion.Body>
                                 {/* Last employer4 */}
-                                <div className="col mt-3">
-                                  <label>Last Employer:</label>
-                                  <input value={past.name} name="last_emp" type="text" className="form-control" placeholder="Last Employer:" onChange={(e) => setCompanyName(past.id, e.target.value)} />
-                                </div>
+                                <BaseInput
+                                  className="col-12"
+                                  label={t("last_employer")}
+                                  placeholder={t("name")}
+                                  value={v.name}
+                                  onChange={sec_form.handleChange}
+                                  handleBlur={sec_form.handleBlur}
+                                  touched={getOrNull("touched", "name")}
+                                  error={getOrNull("errors", "name")}
+                                  name={`employers.${i}.name`}
+                                />
                                 {/* Date employed */}
-                                <div className="col mt-3">
-                                  <label>Date Employed:</label>
+                                <div className="col-12 my-3">
+                                  <label>{t("dates_employed")}:</label>
                                   <div className="d-flex align-items-center">
-                                    <input onChange={(e) => setCompanyStartDate(past.id, e.target.value)} value={past.start_at} name="sta_date" type="date" className="form-control" /> <p className="mx-2">to</p>
-                                    <input onChange={(e) => setCompanyEndDate(past.id, e.target.value)} value={past.end_at} name="sta_date" type="date" className="form-control" />
+                                    <input
+                                      value={v.start_at}
+                                      onChange={sec_form.handleChange}
+                                      onBlur={sec_form.handleBlur}
+                                      name={`employers.${i}.start_at`}
+                                      type="date"
+                                      className="form-control"
+                                      />
+                                    <p className="mx-2">{t("to")}</p>
+                                    <input
+                                      value={v.end_at}
+                                      onChange={sec_form.handleChange}
+                                      onBlur={sec_form.handleBlur}
+                                      name={`employers.${i}.end_at`}
+                                      type="date"
+                                      className="form-control"
+                                      />
                                   </div>
                                 </div>
                                 {/* position title */}
-                                <div className="col mt-3">
-                                  <label>Position Title:</label>
-                                  <input onChange={(e) => setCompanyTitle(past.id, e.target.value)} value={past.title} type="text" name="position_title" className="form-control" placeholder="Position Title:" />
-                                </div>
-                                {/* company address */}
-                                {/* <h5 className="my-2">Company Address</h5> */}
-                                <div className="col mt-3">
-                                  <label>Company Address:</label>
-                                  <input onChange={(e) => setCompanyAddress(past.id, e.target.value)} value={past.address} type="text" name="compant_address" className="form-control" placeholder=" Company Address:" />
-                                </div>
+                                <BaseInput
+                                  className="col-12"
+                                  label={t("title")}
+                                  placeholder={t("title")}
+                                  value={v.title}
+                                  onChange={sec_form.handleChange}
+                                  handleBlur={sec_form.handleBlur}
+                                  touched={getOrNull("touched", "title")}
+                                  error={getOrNull("errors", "title")}
+                                  name={`employers.${i}.title`}
+                                />
                                 {/* company phone */}
-                                <div className="col mt-3">
-                                  <label>Company Phone:</label>
-                                  <input value={past.phone} type="text" name="phone" className="form-control" placeholder="Company Phone:" onChange={(e) => setCompanyPhone(past.id, e.target.value)} />
-                                </div>
-
-
+                                <BaseInput
+                                  className="col-12"
+                                  label={t("phone")}
+                                  placeholder={t("phone")}
+                                  value={v.phone}
+                                  onChange={sec_form.handleChange}
+                                  handleBlur={sec_form.handleBlur}
+                                  touched={getOrNull("touched", "phone")}
+                                  error={getOrNull("errors", "phone")}
+                                  name={`employers.${i}.phone`}
+                                />
                                 {/* company street */}
-                                <div className="col mt-3">
-                                  <label>Street:</label>
-                                  <input type="text" name="companyStreet" className="form-control" placeholder="Company Street:" value={past.street} onChange={(e) => setCompanyStreet(past.id, e.target.value)} />
-                                </div>
+                                <BaseInput
+                                  className="col-12"
+                                  label={t("street")}
+                                  placeholder={t("street")}
+                                  value={v.street}
+                                  onChange={sec_form.handleChange}
+                                  handleBlur={sec_form.handleBlur}
+                                  touched={getOrNull("touched", "street")}
+                                  error={getOrNull("errors", "street")}
+                                  name={`employers.${i}.street`}
+                                />
                                 {/* company city */}
-                                <div className="col mt-3">
-                                  <label>City:</label>
-                                  <input type="text" name="companyCity" className="form-control" placeholder="Company City:" value={past.city} onChange={(e) => setCompanyCity(past.id, e.target.value)} />
-                                </div>
+                                <BaseInput
+                                  className="col-12"
+                                  label={t("city")}
+                                  placeholder={t("city")}
+                                  value={v.city}
+                                  onChange={sec_form.handleChange}
+                                  handleBlur={sec_form.handleBlur}
+                                  touched={getOrNull("touched", "city")}
+                                  error={getOrNull("errors", "city")}
+                                  name={`employers.${i}.city`}
+                                />
                                 {/* company state */}
-                                {/* <div className="col mt-3">
-                          <label>State:</label>
-                          <input type="text" name="companyState" className="form-control" placeholder="Company State:" value={past.state} onChange={( e ) => setCompanyState( past.id, e.target.value )} />
-                        </div> */}
-                                <div className="col mt-3">
-                                  <label>State:</label>
-                                  <select class="application_select form-select" name="state" aria-label="Default select example"
-                                    value={past.state}
-                                    onChange={(e) => setCompanyState(past.id, e.target.value)}
+                                <div className="col-12 my-3">
+                                  <label>{t("state")}:</label>
+                                  <select
+                                    class="application_select form-select"
+                                    name={`employers.${i}.state`}
+                                    onChange={sec_form.handleChange}
+                                    value={v.state}
                                   >
-                                    <option selected value="">State Issued:</option>
+                                    <option value="">{t("state")}</option>
                                     {stateList.map((state, index) => {
                                       return (
                                         <option
                                           key={index}
-                                          selected={past.state === state.value}
                                           value={state.value}
                                         >{state.label}</option>
                                       )
@@ -997,31 +1018,60 @@ export default function MyApplication() {
                                   </select>
                                 </div>
                                 {/* company zip */}
-                                <div className="col mt-3">
-                                  <label>Company Zip:</label>
-                                  <input type="text" name="companyZip" className="form-control" placeholder="Company Zip:" value={past.zip_code} onChange={(e) => setCompanyZipCode(past.id, e.target.value)} />
-                                </div>
+                                <BaseInput
+                                  className="col-12"
+                                  label={t("zip_code")}
+                                  placeholder={t("zip_code")}
+                                  value={v.zip_code}
+                                  onChange={sec_form.handleChange}
+                                  handleBlur={sec_form.handleBlur}
+                                  touched={getOrNull("touched", "zip_code")}
+                                  error={getOrNull("errors", "zip_code")}
+                                  name={`employers.${i}.zip_code`}
+                                />
 
                                 {/* authorize */}
                                 <div className="col mt-3">
-                                  <div class="form-check form-switch">
-                                    <label class="form-check-label" htmlFor="authorize">Do you authorize prospective employers to contact this company?</label>
-                                    {/* onClick={( e ) => set_can_contact( e.target.checked )} */}
-                                    <input class="form-check-input" type="checkbox" role="switch" id="authorize" checked={past.can_contact} onClick={(e) => setCompanyCanContact(past.id, e.target.checked)} />
+                                  <div class="form-check form-switch p-0">
+                                    <label class="form-check-label" htmlFor={`past_employment_authorize${i}`}>{t("authorize_employers_to_contact_company_question")}</label>
+                                    <input
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      role="switch"
+                                      id={`past_employment_authorize${i}`}
+                                      onChange={sec_form.handleChange}
+                                      name={`employers.${i}.can_contact`}
+                                      checked={v.can_contact} />
                                   </div>
                                 </div>
                                 {/* FMCSRs */}
                                 <div className="col mt-3">
-                                  <div class="form-check form-switch">
-                                    <label class="form-check-label" htmlFor="FMCSRs">Were you subject to the FMCSRs?</label>
-                                    <input checked={past.is_subject_to_fmcsrs} class="form-check-input" type="checkbox" role="switch" id="FMCSRs" onClick={(e) => setCompanyIsSubjectToFmcsrs(past.id, e.target.checked)} />
+                                  <div class="form-check form-switch p-0">
+                                    <label class="form-check-label" htmlFor={`past_employment_fmcsrs${i}`}>{t("subject_to_fmcsrs_question")}</label>
+                                    <input
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      role="switch"
+                                      id={`past_employment_fmcsrs${i}`}
+                                      onChange={sec_form.handleChange}
+                                      name={`employers.${i}.is_subject_to_fmcsrs`}
+                                      checked={v.is_subject_to_fmcsrs}
+                                      />
                                   </div>
                                 </div>
                                 {/* is_subject_to_drug_tests */}
                                 <div className="col mt-3">
-                                  <div class="form-check form-switch">
-                                    <label class="form-check-label" htmlFor="is_subject_to_drug_tests">Was your job designated as a safety-sensitive function in any DOT- regulated mode subject to the drug and alcohol testing requirements of 49 CFR Part 40?</label>
-                                    <input checked={past.is_subject_to_drug_tests} class="form-check-input" type="checkbox" role="switch" id="is_subject_to_drug_tests" onClick={(e) => setCompanyIsSubjectToDrugTests(past.id, e.target.checked)} />
+                                  <div class="form-check form-switch p-0">
+                                    <label class="form-check-label" htmlFor={`past_employment_drug_tests${i}`}>{t("subject_to_drug_tests_question")}</label>
+                                    <input
+                                      class="form-check-input"
+                                      type="checkbox"
+                                      role="switch"
+                                      id={`past_employment_drug_tests${i}`}
+                                      onChange={sec_form.handleChange}
+                                      name={`employers.${i}.is_subject_to_drug_tests`}
+                                      checked={v.is_subject_to_drug_tests}
+                                      />
                                   </div>
                                 </div>
                               </Accordion.Body>
@@ -1034,9 +1084,9 @@ export default function MyApplication() {
                   </Accordion>
 
                   {
-                    pastEmployers.length < 3 &&
+                    sec_form.values.employers.length < 3 &&
                     <div className="col mt-3">
-                      <span className="btn btn-yellow" onClick={addPastEmployer}>+{3 - pastEmployers.length} more jobs</span>
+                      <span className="btn btn-yellow" onClick={addPastEmployer}>+{t("more_jobs", { number: 3 - sec_form.values.employers.length})}</span>
                     </div>
 
                   }
@@ -1045,26 +1095,44 @@ export default function MyApplication() {
 
                 {/* Safety column */}
                 <div className="col-md-4 mt-lg-0 mt-3">
-                  <h2>Safety Background</h2>
+                  <h2>{t("safety_background")}</h2>
 
 
                   {/* drug test */}
                   <div className="col mt-3">
-                    <div class="form-check form-switch mb-34 mt-55">
-                      <label class="form-check-label" htmlFor="drug_test">Can I pass a drug test?</label>
-                      <input checked={can_pass_drug_test} onClick={(e) => set_can_pass_drug_test(e.target.checked)} class="form-check-input" type="checkbox" role="switch" id="drug_test" />
+                    <div class="form-check form-switch mb-34 p-0">
+                      <label class="form-check-label" htmlFor="can_pass_drug_test">{t("can_pass_drug_test")}</label>
+                      <input
+                        checked={sec_form.values.can_pass_drug_test}
+                        name="can_pass_drug_test"
+                        onChange={sec_form.handleChange}
+                        class="form-check-input checkbox_position"
+                        type="checkbox"
+                        role="switch"
+                        id="can_pass_drug_test"
+                        />
                     </div>
                   </div>
                   {/* DUI? */}
                   <div className="col mt-3">
-                    <div class="form-check form-switch  mb-34 mt-60">
-                      <label class="form-check-label" htmlFor="DUI">Past DUI’s:</label>
-                      <input checked={has_past_dui} onClick={(e) => set_has_past_dui(e.target.checked)} class="form-check-input" type="checkbox" role="switch" id="DUI" />
+                    <div class="form-check form-switch  mb-34 p-0">
+                      <label class="form-check-label" htmlFor="has_past_duis">{t("has_past_duis")}:</label>
+                      <input
+                        checked={sec_form.values.has_past_dui}
+                        onChange={sec_form.handleChange}
+                        class="form-check-input checkbox_position"
+                        type="checkbox"
+                        role="switch"
+                        name="has_past_dui"
+                        id="has_past_duis"
+                        />
                     </div>
                   </div>
-                  {/* PUI Date */}
-                  <div className="col mt-40">
-                    <label>Year(s) of Past DUI’s:</label>
+                  {/* DUI Date */}
+                  {(
+                    sec_form.values.has_past_dui &&
+                  <div className="col mt-3">
+                    <label>{t("years_of_past_duis")}:</label>
                     <CreatableSelect
 
                       isMulti
@@ -1073,36 +1141,52 @@ export default function MyApplication() {
                       }}
                       isClearable
                       menuIsOpen={false}
-                      placeholder="Year(s) of Past DUI’s:"
-                      inputValue={dui_input_value}
-                      onInputChange={(value) => set_dui_input_value(value)}
-                      onChange={(value) => set_dui_past_years(value)}
-                      onKeyDown={handleKeyDown}
-                      value={dui_past_years}
+                      placeholder={t("years_of_past_duis")}
+                      inputValue={dui_year_current_value}
+                      onInputChange={(value) => set_dui_year_current_value(value)}
+                      onKeyDown={handleDUIYears}
+                      value={sec_form.values.dui_years.map(v => ({ label: v, value: v }))}
 
                     />
-                  </div>
+                  </div>)}
                   {/* criminal history */}
-                  <div className="col mt-3 mt-17">
-                    <label>Criminal History in last 3 years?</label>
-                    <input type="text" name="criminal_history" className="form-control" placeholder="Criminal History in last 3 years?" onChange={(e) => set_criminal_history(e.target.value)} value={criminal_history} />
-                  </div>
+                  <BaseInput
+                    className=" col-12"
+                    label={t("criminal_history_last_3_years")}
+                    placeholder={t("criminal_history_last_3_years")}
+                    name="criminal_history"
+                    value={sec_form.values.criminal_history}
+                    touched={sec_form.touched.criminal_history}
+                    error={sec_form.errors.criminal_history}
+                    onChange={sec_form.handleChange}
+                    handleBlur={sec_form.handleBlur}
+                  />
                   {/* accidents */}
-                  <div className="col mt-3">
-                    <label>Accidents within the last 5 years:</label>
-                    <input type="number" name="academy_year" min={0} className="form-control" placeholder="Accidents within the last 5 years:" onChange={(e) => set_accident_count(e.target.value)} value={accident_count} />
-                  </div>
+                  <BaseInput
+                    className=" col-12"
+                    label={t("accidents_last_5_years")}
+                    placeholder={t("accidents_last_5_years")}
+                    name="accident_count"
+                    type="number"
+                    min={0}
+                    value={sec_form.values.accident_count}
+                    touched={sec_form.touched.accident_count}
+                    error={sec_form.errors.accident_count}
+                    onChange={sec_form.handleChange}
+                    handleBlur={sec_form.handleBlur}
+                    onKeyDown={preventNegative}
+                  />
                   {/* accident details */}
-                  {accident_count != 0 &&
+                  {sec_form.values.accident_count > 0 &&
                     <div className="col mt-3 mt-17">
-                      <label htmlFor="exampleFormControlTextarea1" class="form-label m-0">Accidents details:</label>
+                      <label htmlFor="accident_details" class="form-label m-0">{t("accident_details")}:</label>
                       <textarea
                         class="form-control "
-                        name="accident_detail"
-                        id="exampleFormControlTextarea1"
+                        name="accident_details"
+                        id="accident_details"
                         rows="3"
-                        onChange={(e) => set_accident_details(e.target.value)}
-                        value={accident_details}></textarea>
+                        onChange={sec_form.handleChange}
+                        value={sec_form.values.accident_details}></textarea>
                     </div>
                   }
 
@@ -1114,67 +1198,127 @@ export default function MyApplication() {
                   <div className="col mt-85 ">
                     {/* license */}
                     <div className="col mt-3">
-                      <div class="form-check form-switch">
-                        <label class="form-check-label" htmlFor="licence">Has any of your license, permit or privilege to operate a CMV ever been suspended or revoked? If so, please explain:</label>
-                        <input class="form-check-input" type="checkbox" role="switch" id="licence" checked={revoked} onClick={(e) => setRevoked(e.target.checked)} />
+                      <div class="form-check form-switch p-0">
+                        <label class="form-check-label form_lable_sty" htmlFor="has_had_license_revoked">{t("has_had_license_revoked")}</label>
+                        <input
+                          class="form-check-input checkbox_pos"
+                          type="checkbox"
+                          role="switch"
+                          id="has_had_license_revoked"
+                          checked={sec_form.values.safety_questions.LICENSE_REVOKED.response}
+                          name="safety_questions.LICENSE_REVOKED.response"
+                          onChange={sec_form.handleChange}
+                        />
                       </div>
                     </div>
                     {/* revoked details */}
                     {
-                      revoked && (
+                      sec_form.values.safety_questions.LICENSE_REVOKED.response && (
                         <div className="col mt-3">
-                          <label htmlFor="exampleFormControlTextarea1" class="form-label">Details:</label>
-                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => setRevokedDetails(e.target.value)} value={revokedDetails} />
+                          <label htmlFor="has_had_license_revoked_details" class="form-label">{t("details")}:</label>
+                          <textarea
+                            class="form-control"
+                            id="has_had_license_revoked_details"
+                            rows="3"
+                            onChange={sec_form.handleChange}
+                            value={sec_form.values.safety_questions.LICENSE_REVOKED.details}
+                            name="safety_questions.LICENSE_REVOKED.details"
+                            />
                         </div>
                       )
                     }
                     {/* violation */}
                     <div className="col mt-34 ">
-                      <div class="form-check form-switch">
-                        <label class="form-check-label" htmlFor="violation">Do you have any violation on you PSP from previous three years? If so please explain:</label>
-                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={violations} onClick={(e) => setViolations(e.target.checked)} />
+                      <div class="form-check form-switch p-0">
+                        <label class="form-check-label form_lable_sty" htmlFor="has_has_psp_violations">{t("has_has_psp_violations")}</label>
+                        <input
+                          class="form-check-input checkbox_pos"
+                          type="checkbox"
+                          role="switch"
+                          id="has_has_psp_violations"
+                          checked={sec_form.values.safety_questions.VIOLATIONS_PSP.response}
+                          name="safety_questions.VIOLATIONS_PSP.response"
+                          onChange={sec_form.handleChange}
+                        />
                       </div>
                     </div>
                     {/* violation details */}
                     {
-                      violations && (
+                      sec_form.values.safety_questions.VIOLATIONS_PSP.response && (
                         <div className="col mt-48">
-                          <label htmlFor="exampleFormControlTextarea1" class="form-label">Violation Details:</label>
-                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" onChange={(e) => setViolationsDetails(e.target.value)} value={violationsDetails} />
+                          <label htmlFor="has_has_psp_violations_details" class="form-label">{t("details")}:</label>
+                          <textarea
+                            class="form-control"
+                            id="has_has_psp_violations_details"
+                            rows="3"
+                            onChange={sec_form.handleChange}
+                            value={sec_form.values.safety_questions.VIOLATIONS_PSP.details}
+                            name="safety_questions.VIOLATIONS_PSP.details"
+                            />
                         </div>
                       )
                     }
                     {/* 5 years tickets */}
                     <div className="col mt-48">
-                      <div class="form-check form-switch">
-                        <label class="form-check-label" htmlFor="violation">Have you had any tickets in the previous 5 years?</label>
-                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={tickets} onClick={(e) => set_tickets(e.target.checked)} />
+                      <div class="form-check form-switch p-0">
+                        <label class="form-check-label form_lable_sty" htmlFor="has_had_tickets_last_5_years">{t("has_had_tickets_last_5_years")}</label>
+                        <input
+                          class="form-check-input checkbox_pos"
+                          type="checkbox"
+                          role="switch"
+                          id="has_had_tickets_last_5_years"
+                          checked={sec_form.values.safety_questions.TICKETS.response}
+                          name="safety_questions.TICKETS.response"
+                          onChange={sec_form.handleChange}
+                        />
                       </div>
                     </div>
                     {/* 5 years tickets details*/}
                     {
-                      tickets && (
+                      sec_form.values.safety_questions.TICKETS.response && (
                         <div className="col mt-48">
-                          <label htmlFor="exampleFormControlTextarea1" class="form-label">If so, please explain:</label>
-                          <textarea class="form-control" name="any_tickets" id="exampleFormControlTextarea1" rows="3" onChange={(e) => set_ticketsDetails(e.target.value)} value={ticketsDetails}></textarea>
+                          <label htmlFor="has_had_tickets_last_5_years_details" class="form-label">{t("details")}:</label>
+                          <textarea
+                            class="form-control"
+                            id="has_had_tickets_last_5_years_details"
+                            rows="3"
+                            onChange={sec_form.handleChange}
+                            value={sec_form.values.safety_questions.TICKETS.details}
+                            name="safety_questions.TICKETS.details"
+                            />
                         </div>
                       )
                     }
 
                     {/* drug test */}
                     <div className="col">
-                      <div class="form-check form-switch  mt-55">
-                        <label class="form-check-label" htmlFor="violation">Have you ever refused to be tested or had a positive drug/alcohol test?</label>
-                        <input class="form-check-input" type="checkbox" role="switch" id="violation" checked={drugTest} onClick={(e) => set_drugTest(e.target.checked)} />
+                      <div class="form-check form-switch p-0  mt-55">
+                        <label class="form-check-label form_lable_sty" htmlFor="has_had_positive_drug_test">{t("has_had_positive_drug_test")}</label>
+                        <input
+                          class="form-check-input checkbox_pos"
+                          type="checkbox"
+                          role="switch"
+                          id="has_had_positive_drug_test"
+                          checked={sec_form.values.safety_questions.POSITIVE_DRUG_TEST.response}
+                          name="safety_questions.POSITIVE_DRUG_TEST.response"
+                          onChange={sec_form.handleChange}
+                        />
                       </div>
                     </div>
 
                     {/* drug test details */}
                     {
-                      drugTest && (
-                        <div className="col mt-3">
-                          <label htmlFor="exampleFormControlTextarea1" class="form-label">if so, explain here:</label>
-                          <textarea class="form-control" name="refused" id="exampleFormControlTextarea1" rows="3" onChange={(e) => set_drugTestDetails(e.target.value)} value={drugTestDetails}></textarea>
+                      sec_form.values.safety_questions.POSITIVE_DRUG_TEST.response && (
+                        <div className="col mt-48">
+                          <label htmlFor="has_had_positive_drug_test_details" class="form-label">{t("details")}:</label>
+                          <textarea
+                            class="form-control"
+                            id="has_had_positive_drug_test_details"
+                            rows="3"
+                            onChange={sec_form.handleChange}
+                            value={sec_form.values.safety_questions.POSITIVE_DRUG_TEST.details}
+                            name="safety_questions.POSITIVE_DRUG_TEST.details"
+                            />
                         </div>
                       )
                     }
@@ -1186,7 +1330,7 @@ export default function MyApplication() {
                     <button
                       type="submit" className={`  ${style.update_btn}`} >
 
-                      Update
+                      {t("update")}
                     </button>
                   </div>
                 </div>

@@ -54,6 +54,7 @@
     "react-rangeslider": "^2.2.0",
     "react-redux": "^7.2.6",
     "react-select": "^5.2.2",
+    "react-tabs": "^4.2.0",
     "react-testimonial": "^1.0.0",
     "react-toastify": "^8.2.0",
     "reactstrap": "^9.0.1",
