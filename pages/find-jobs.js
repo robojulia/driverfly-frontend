@@ -53,21 +53,18 @@ export default function FindJobs() {
     setFilters({
       ...filters,
       order_by: e.target.value
-    }, fetchJobs())
+    })
   }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFilters({
       ...filters,
       [name]: value
-    }, fetchJobs())
+    })
   }
 
   const fetchJobs = async () => {
-    console.log('filters Final', filters)
-    console.log('pagingMeta Final', pagingMeta)
     const { items, meta } = await axios.get(`${process.env.BASE_URL_API}/jobs`, {
       params: {
         ...filters,
@@ -77,6 +74,7 @@ export default function FindJobs() {
     setPagingMeta(meta)
   }
 
+  useEffect(fetchJobs, [filters])
   useEffect(fetchJobs, [])
 
   return (
