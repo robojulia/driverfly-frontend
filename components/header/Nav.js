@@ -64,7 +64,7 @@ export default function Nav() {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/pricing">
+                                <Link href="http://go.driverfly.co/motor-carriers">
                                     <a className="dropdown-item">Option & Pricing </a>
                                 </Link>
                             </li>
