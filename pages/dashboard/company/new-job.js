@@ -275,7 +275,7 @@ export default function NewJobs() {
             try {
                 const job = await new JobApi(user.company.id).create(data);
 
-                toast.error(t("successfully_saved_information"));
+                toast.success(t("successfully_saved_information"));
                 setTimeout(
                     () => Router.push("/dashboard/company/job-listing"),
                     3000);
