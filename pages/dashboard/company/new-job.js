@@ -568,6 +568,7 @@ export default function NewJobs() {
         e.preventDefault();
 
         const { name } = e.target;
+
         form.setValues({
             ...form.values,
             vehicles: form.values.vehicles.filter((v, i) => i != name),
@@ -1088,7 +1089,7 @@ export default function NewJobs() {
                                             }}
                                             />
                                         <div className="col-md-2 mt-4">
-                                            <span className="btn btn-yellow" onClick={removeVehicle}>x</span>
+                                            <button className="btn btn-yellow" name={i} onClick={removeVehicle}>x</button>
                                         </div>
                                         {
                                             !!!v.id &&
