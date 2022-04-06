@@ -8,11 +8,11 @@ import { AsyncTypeahead } from 'react-bootstrap-typeahead'; // ES2015
 
 export default function Range() {
 
-    const [value, setValue] = React.useState(50);
-
     const { state, method } = useContext(jobContext)
-    const { handleChange } = method
+    const { filters } = state
+    const { setFilters } = method
 
+    const [range, setRange] = useState(50);
     const [location, setLocation] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [options, setOptions] = useState([]);
@@ -31,10 +31,19 @@ export default function Range() {
     };
 
     const handleTypeheadChange = () => {
-        console.log("location", location)
+        if (location) {
+            setFilters({
+                ...filters,
+                location: {
+                    long: location.geometry.coordinates[0],
+                    lat: location.geometry.coordinates[1],
+                    range
+                }
+            })
+        }
     }
 
-    useEffect(handleTypeheadChange, location)
+    useEffect(handleTypeheadChange, [location, range])
 
     return (
         <>
@@ -58,7 +67,7 @@ export default function Range() {
                             isLoading={isLoading}
                             labelKey="place_name"
                             minLength={1}
-                            onChange={value => setLocation(value)}
+                            onChange={value => setLocation(value[0])}
                             onSearch={handleSearch}
                             options={options}
                             placeholder="Location"
@@ -68,10 +77,11 @@ export default function Range() {
                                 </>
                             )}
                         />
-                        <div className='mt-3 text-info'>Radius: {value} miles</div>
+                        <div className='mt-3 text-info'>Radius: {range} miles</div>
                         <RangeSlider
-                            value={value}
-                            onChange={e => setValue(e.target.value)}
+                            disabled={location ? false : true}
+                            value={range}
+                            onChange={e => setRange(e.target.value)}
                             variant='info'
                         />
                     </div>
