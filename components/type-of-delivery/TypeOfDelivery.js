@@ -2,16 +2,13 @@ import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
-export default function TypeOfDelivery () {
-  const ctx = useContext( jobContext )
-  const router = useRouter()
-  function changeHandler ( e ) {
-    if (e.target.checked) {
-      const a = updateQueryStringParameter( window.location.href, 'delivery_type[]', e.target.value )
-      router.replace( a )
-      ctx.applyFilters()
-    }
-  }
+import { delivery_type } from "../../enums/jobs/job-fields"
+import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
+
+export default function TypeOfDelivery() {
+
+  const { state, method } = useContext(jobContext)
+  const { handleChange } = method
 
   return (
     <>
@@ -27,19 +24,13 @@ export default function TypeOfDelivery () {
         <div id="collapseTypeofDelivery" className="collapse show" aria-labelledby="headingSix"
           data-parent="#accordionExample">
           <div className="card-body">
-            <div onChange={changeHandler} className="App">
-              <div className="topping pt-2">
-                <input type="checkbox" id="touch" name="areas" value="touch" />Touch (1)
-              </div>
-              <div className="topping pt-2">
-                <input type="checkbox" id=">notouch" name="areas" value="no-touch" />No Touch (1)
-              </div>
-              <div className="topping pt-2">
-                <input type="checkbox" id="Drop-and-hook" name="areas" value="drop-and-hook" />Drop-and-hook (6)
-              </div>
-              <div className="topping pt-2">
-                <input type="checkbox" id="Dedicated" name="areas" value="dedicated-lanes" />Dedicated Lanes (1)
-              </div>
+            <div className="App">
+              <EnumFilterByKeyValue
+                withAll={true}
+                enumArray={delivery_type}
+                name="delivery_type"
+                handleChange={handleChange}
+              />
             </div>
           </div>
         </div>

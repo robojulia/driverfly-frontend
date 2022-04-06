@@ -5,16 +5,47 @@ import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
+import { salary_type } from "../../enums/jobs/job-fields"
+import EnumFilterByKeyValue from '../enum-filters/enum-filter-by-key-value'
+import Slider, { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
+export default function Salary() {
 
-export default function Salary () {
-  const ctx = useContext( jobContext )
-  const [value, setValue] = useState( 18 )
-  const router = useRouter()
-  function changeHandler ( e ) {
-    const a = updateQueryStringParameter( window.location.href, 'filter-salary-type', e.target.value )
-    router.replace( a )
-    ctx.applyFilters()
+  const { state, method } = useContext(jobContext)
+  const { handleChange, setFilters, applyFilters } = method
+  const { filters } = state
+
+  const [minValue, maxValue] = [1, 95000]
+
+  const rangeValue = {
+    min: minValue,
+    max: maxValue,
+  }
+
+  const [displayValue, setDisplayValue] = useState({
+    min: minValue,
+    max: maxValue,
+  })
+
+  const handleSliderChange = ([min, max]) => {
+    setDisplayValue({
+      min: min,
+      max: max
+    })
+  }
+
+  const handleAfterSliderChange = ([min, max]) => {
+    setFilters({
+      ...filters,
+      min_salary: min,
+      max_salary: max,
+    }, applyFilters())
+  }
+
+  const handleChangeSalary = async (e) => {
+    await handleAfterSliderChange([displayValue.min, displayValue.max])
+    await handleChange(e)
   }
 
   return (
@@ -31,40 +62,41 @@ export default function Salary () {
         <div id="collapseFive" className="collapse show"
           aria-labelledby="headingFive" data-parent="#accordionExample">
           <div className="card-body">
-            <div onChange={changeHandler} className="App">
-              <div className="topping pt-2">
-                <input type="radio" id="monthly" name="salry" value="monthly" />Monthly
-              </div>
-              <div className="topping pt-2">
-                <input type="radio" id="weekly" name="salry" value="weekly" />Weekly
-              </div>
-              <div className="topping pt-2">
-                <input type="radio" id="daily" name="salry" value="daily" />Daily
-              </div>
-              <div className="topping pt-2">
-                <input type="radio" id="hourly" name="salry" value="hourly" />Hourly
-              </div>
-              <div className="topping pt-2">
-                <input type="radio" id="yearly" name="salry" value="yearly" />Yearly
-              </div>
+            <div className="App">
+              <EnumFilterByKeyValue
+                withAll={true}
+                enumArray={salary_type}
+                name="salary_type"
+                handleChange={handleChangeSalary}
+              />
             </div>
-            <RangeSlider
-              value={value}
-              min={18}
-              max={95000}
-              onChange={e => setValue( e.target.value )}
 
-              variant='info'
-            />
-
-            <div className='row'>
-              <div className='col'>
-                ${value}
-              </div>
-              <div className='col text-right'>
-                95000
-              </div>
-            </div>
+            {
+              filters.salary_type &&
+              <>
+                <Slider
+                  range
+                  min={rangeValue.min}
+                  max={rangeValue.max}
+                  step={1}
+                  onChange={handleSliderChange}
+                  onAfterChange={handleAfterSliderChange}
+                  defaultValue={[displayValue.min, displayValue.max]}
+                  allowCross={false}
+                  pushable
+                  draggableTrack
+                />
+                {/* <Range /> */}
+                <div className='row'>
+                  <div className='col'>
+                    ${displayValue.min}
+                  </div>
+                  <div className='col text-right'>
+                    ${displayValue.max}
+                  </div>
+                </div>
+              </>
+            }
 
 
           </div>
