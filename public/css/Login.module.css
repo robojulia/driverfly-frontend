@@ -37,7 +37,7 @@
 .lineheader{
     text-align: center;
     width: 100%!important;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     position: relative;
     z-index: 1;
 }.lineheader:before {
@@ -50,25 +50,25 @@
     left: 0;
     background: #e6e8ef;
 }
-.facebooklogin{
-    background: #3b5998;
-    width: 50%;
-    float: left;
-    padding-left: 15px;
-    padding-right: 15px;
-    margin-bottom: 80px;
-    padding: 12px;
-    border-radius: 8px;
-    text-align: center;
-}
-.facebooklogin a{
+
+.back_to_signup a{
    color: #fff;
+   display: block;
+   background: #4aa2af;
+   width: 100%;
+   float: left;
+   padding-left: 15px;
+   padding-right: 15px;
+   margin-bottom: 80px;
+   padding: 12px;
+   border-radius: 3px;
+   text-align: center;
 }
-.facebooklogin a:hover{
-    color: #4aa2af;
+.back_to_signup a:hover{
+    color: #fff;
  }
 
-.facebooklogin a:hover{
+.back_to_signup a:hover{
     text-decoration: none;
  }
  

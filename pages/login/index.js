@@ -113,7 +113,7 @@ export default function Login() {
 
     return (
         <>
-          <ToastContainer />
+            <ToastContainer />
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
@@ -165,15 +165,19 @@ export default function Login() {
                             }) : <div className="text-danger">{serverValidation}</div>}
                             <button type="submit" className={login.submit}>Login</button>
                         </form>
-                        <div className={login.sociallogin}>
-                            <div className={login.lineheader}>
-                                <span>or</span>
-                            </div>
-                            <div className={login.innersocial}>
-                                <div className={login.facebooklogin}>
-                                    <a className={login.facebook} href="#"><i className="fa fa-facebook"></i> Facebook</a>
-                                </div>
-                            </div></div>
+
+
+                        
+                        <div className={login.lineheader}>
+                            <span>or</span>
+                        </div>
+
+                        <div className={login.back_to_signup}>
+                            <Link href="/signup">
+                                <a className={login.facebook}> Create an account</a>
+                            </Link>
+
+                        </div>
                     </div>
                     <div className='col-lg-2'></div>
                 </div>
