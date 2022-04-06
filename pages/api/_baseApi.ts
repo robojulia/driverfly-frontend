@@ -45,7 +45,7 @@ export default class BaseApi {
         return axios.put(url, body, config);
     }
 
-    async delete(url, body, config?: AxiosRequestConfig) {
+    async delete(url, body?: any, config?: AxiosRequestConfig) {
         config = this.mergeRequestConfig(config);
         if (body)
             config.data = body;

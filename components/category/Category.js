@@ -1,7 +1,7 @@
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
-import { cdl_classes } from "../../enums/jobs/cdl-classes"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
+import { DriverLicenseType } from "../../enums/drivers/driver-license-type.enum"
 
 export default function Category() {
 
@@ -26,7 +26,7 @@ export default function Category() {
               <div className="App">
               <EnumFilterByKeyValue
                 withAll={true}
-                enumArray={cdl_classes}
+                enumArray={DriverLicenseType}
                 name="category"
                 handleChange={handleChange}
               />

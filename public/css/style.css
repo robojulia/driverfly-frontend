@@ -2187,3 +2187,7 @@ li.link-wrapper>a.active {
     color: white;
     background-color: blue;
 }
+
+.form-range {
+    height: 38px !important;
+}

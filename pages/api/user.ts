@@ -1,6 +1,6 @@
 import BaseApi from "./_baseApi";
 
-import { DocumentEntity } from "../../models/documents/DocumentEntity";
+import { DocumentEntity } from "../../models/documents/document.entity";
 
 export default class UserApi extends BaseApi {
     async getDocuments(): Promise<DocumentEntity[]> {

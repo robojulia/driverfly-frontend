@@ -1,19 +1,16 @@
 import React from 'react'
 
-function BaseInput ( { className, label, handleBlur, type, min, max, placeholder, value, onChange, onKeyDown, readOnly, name, touched, error, } ) {
+function BaseTextArea ( { className, maxLength, label, rows, placeholder, value, onChange, readOnly, name, touched, error, } ) {
   return (
     <div className={className}>
       {label && <label>{label}:</label>}
       <br />
-      <input
-        onBlur={handleBlur}
-        type={type || 'text'}
-        min={min}
-        max={max}
+      <textarea
         placeholder={placeholder}
-        value={value || ""}
+        value={value}
+        rows={rows}
+        maxLength={maxLength}
         onChange={onChange}
-        onKeyDown={onKeyDown}
         readOnly={readOnly}
         name={name}
         className={`form-control ${error ? "is-invalid" : ""}`} 
@@ -23,4 +20,4 @@ function BaseInput ( { className, label, handleBlur, type, min, max, placeholder
   )
 }
 
-export default BaseInput
+export default BaseTextArea

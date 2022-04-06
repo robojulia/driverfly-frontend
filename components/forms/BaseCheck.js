@@ -4,7 +4,7 @@ function BaseCheck ( { className, label, checked, onChange, readOnly, name, touc
   return (
     <div className={className}>
       <div className='form-check form-switch'>
-        {label && <label htmlFor={name} class="form-check-label">{label}</label>}
+        {label && <label htmlFor={name} className="form-check-label">{label}</label>}
         <input
           id={name}
           type="checkbox"
@@ -13,7 +13,7 @@ function BaseCheck ( { className, label, checked, onChange, readOnly, name, touc
           readOnly={readOnly}
           name={name}
           role="switch"
-          className="form-check-input"
+          className={`form-check-input ${error ? "is-invalid" : ""}`} 
         />
 
       </div>
