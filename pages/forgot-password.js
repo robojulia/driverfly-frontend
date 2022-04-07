@@ -35,21 +35,47 @@ export default function Forgot() {
     if (error) {
       setError("")
     }
-    try {
-      let res = await resetPasswordAPI.forgetPassword(formData)
-      console.log("res, res");
-    } catch (error) {
-      // console.error("error", error);
-      toast.error("Something went wrong", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    }
+    await resetPasswordAPI.forgetPassword(formData)
+      .then(res => {
+        if (res.status == 201) {
+          toast.success("Please check your email", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+
+        }
+      }).catch(error => {
+        if (error.response.status == 422) {
+          setError("Password Reset Email Already Sent, Please check your email ")
+          toast.error("Password Reset Email Already Sent, Please check your email", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+
+        } else {
+          setError("Something went wrong")
+          toast.error("Something went wrong", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+
+        }
+      })
   }
 
   return (
