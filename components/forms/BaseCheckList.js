@@ -35,6 +35,7 @@ function ColLayout(options, cols, value, name, labelKey, valueKey, onChange, han
 }
 
 function BaseCheckList ( {
+  required,
   className,
   label,
   options,
@@ -59,7 +60,7 @@ function BaseCheckList ( {
 
   return (
     <div className={className}>
-      {label && <span style={{ marginRight: "20px" }}>{label}:</span>}
+      {label && <span style={{ marginRight: "20px" }}>{label}{required ? "*" : ""}:</span>}
       {cols ?
         ColLayout(options, cols, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error)
         : InlineLayout(options, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error)}

@@ -1,9 +1,9 @@
 import React from 'react'
 
-function BaseRange ( { className, label, handleBlur, min, max, placeholder, value, onChange, readOnly, name, touched, error, } ) {
+function BaseRange ( { required, className, label, handleBlur, min, max, placeholder, value, onChange, readOnly, name, touched, error, } ) {
   return (
     <div className={className}>
-      {label && <label>{label}:</label>}
+      {label && <label>{label}{required ? "*" : ""}:</label>}
       <br />
       <div className='d-flex flex-row'>
         <div className='p-2'>

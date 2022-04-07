@@ -1,9 +1,9 @@
 import React from 'react'
 
-function BaseTextArea ( { className, maxLength, label, rows, placeholder, value, onChange, readOnly, name, touched, error, } ) {
+function BaseTextArea ( { required, className, maxLength, label, rows, placeholder, value, onChange, readOnly, name, touched, error, } ) {
   return (
     <div className={className}>
-      {label && <label>{label}:</label>}
+      {label && <label>{label}{required ? "*" : ""}:</label>}
       <br />
       <textarea
         placeholder={placeholder}

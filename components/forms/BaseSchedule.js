@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { useTranslation } from "react-i18next";
 
-export default function BaseSchedule({ className, label, min, max, value, touched, error }) {
+export default function BaseSchedule({ required, className, label, min, max, value, touched, error }) {
     const { t } = useTranslation();
     const [ state, setState ] = useState({
         days: 0,
@@ -32,7 +32,7 @@ export default function BaseSchedule({ className, label, min, max, value, touche
     console.log(state);
     return (<>
         <div className={className}>
-            {label && <label>{label}:</label>}
+            {label && <label>{label}{required ? "*" : ""}:</label>}
             <div className="btn-group d-flex" role="group">
                 {days.map((v, i) => {
                     const bit = Math.pow(2, i);

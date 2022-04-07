@@ -2,7 +2,7 @@ import React from 'react'
 
 import { useTranslation } from "react-i18next"
 
-function BaseSelect ( { className, enumType, options, valueKey = "value", labelKey = "label", createLabel, label, type, placeholder, value, onChange, handleBlur, readOnly, name, touched, error, } ) {
+function BaseSelect ( { required, className, enumType, options, valueKey = "value", labelKey = "label", createLabel, label, type, placeholder, value, onChange, handleBlur, readOnly, name, touched, error, } ) {
   const { t } = useTranslation();
   if (typeof enumType === "object") {
     options = Object.keys(enumType).map(key => ({
@@ -24,7 +24,7 @@ function BaseSelect ( { className, enumType, options, valueKey = "value", labelK
   }
 return (
     <div className={className}>
-      {label && <label>{label}:</label>}
+      {label && <label>{label}{required ? "*" : ""}:</label>}
       <br />
       <select
         type={type || 'text'}
