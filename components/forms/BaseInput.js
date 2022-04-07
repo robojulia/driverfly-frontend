@@ -1,9 +1,9 @@
 import React from 'react'
 
-function BaseInput ( { className, label, handleBlur, type, min, max, placeholder, value, onChange, onKeyDown, readOnly, name, touched, error, } ) {
+function BaseInput ( { required, className, label, handleBlur, type, min, max, placeholder, value, onChange, onKeyDown, readOnly, name, touched, error, } ) {
   return (
     <div className={className}>
-      {label && <label>{label}:</label>}
+      {label && <label>{label}{required ? "*" : ""}:</label>}
       <br />
       <input
         onBlur={handleBlur}
