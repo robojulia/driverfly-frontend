@@ -1,19 +1,42 @@
 import React from 'react'
 
-function BaseSelect ( { className, options, valueKey = "value", labelKey = "label", label, type, placeholder, value, onChange, readOnly, name, touched, error, } ) {
-  return (
+import { useTranslation } from "react-i18next"
+
+function BaseSelect ( { className, enumType, options, valueKey = "value", labelKey = "label", createLabel, label, type, placeholder, value, onChange, handleBlur, readOnly, name, touched, error, } ) {
+  const { t } = useTranslation();
+  if (typeof enumType === "object") {
+    options = Object.keys(enumType).map(key => ({
+      [valueKey]: key,
+      [labelKey]: enumType[key].toLowerCase()
+    }))
+  }
+  else if (options && options.length > 0 && typeof options[0] !== "object") {
+    options = options.map(v => ({
+      [valueKey]: v,
+      [labelKey]: v
+    }));
+  }
+  else if (createLabel) {
+    options = options.map(v => ({
+      [valueKey]: v[valueKey],
+      [labelKey]: createLabel(v)
+    }));
+  }
+return (
     <div className={className}>
       {label && <label>{label}:</label>}
       <br />
       <select
         type={type || 'text'}
-        value={value}
+        value={value || ""}
         onChange={onChange}
+        onBlur={handleBlur}
         readOnly={readOnly}
         name={name}
-        className="form-select">
+        className={`form-select ${error ? "is-invalid" : ""}`} 
+        >
         {placeholder && <option value="">{placeholder}</option>}
-        {options && options.map((v, i) => (<option key={i} value={v[valueKey]}>{v[labelKey]}</option>))}
+        {options && options.map((v, i) => (<option key={i} value={v[valueKey]}>{t(v[labelKey])}</option>))}
 
       </select>
       {touched && error && (typeof error === "string") ? <span className="text-danger small">{error}</span> : null}

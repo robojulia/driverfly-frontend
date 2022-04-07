@@ -7,338 +7,607 @@ import useRedirect from '../../../hooks/useRedirect';
 import useAuth from '../../../hooks/useAuth';
 import Router from 'next/router';
 import axios from 'axios';
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useRouter } from 'next/router';
 import Link from "next/link";
 import Select from 'react-select'
-import { apply_type } from '../../../enums/jobs/job-fields'
-import { salary_type } from '../../../enums/jobs/job-fields'
-import { job_type } from '../../../enums/jobs/job-fields'
-import { delivery_type } from '../../../enums/jobs/job-fields'
-import { mvr_requirement } from '../../../enums/jobs/job-fields'
-import { areas_covered } from '../../../enums/jobs/job-fields'
-import { accepting_drivers_from } from '../../../enums/jobs/job-fields'
-import { equipment_type } from '../../../enums/jobs/job-fields'
-import { schedule } from '../../../enums/jobs/job-fields'
-import { pay_structure } from '../../../enums/jobs/job-fields'
-import { special_accommodations } from '../../../enums/jobs/job-fields'
-import { special_endorsements_required } from '../../../enums/jobs/job-fields'
 import { useRef, useEffect } from "react";
 
+import RangeSlider from 'react-bootstrap-range-slider';
 
 import { Check } from "react-feather";
 
+import { useTranslation } from "react-i18next";
+import { useFormik, yupToFormErrors } from "formik";
+import * as yup from "yup";
+
+import CompanyApi from "../../api/company";
+
+import BaseInput from "../../../components/forms/BaseInput";
+import BaseSelect from "../../../components/forms/BaseSelect";
+import BaseCheck from "../../../components/forms/BaseCheck";
+import BaseCheckList from "../../../components/forms/BaseCheckList";
+import BaseTextArea from "../../../components/forms/BaseTextArea";
+import BaseRange from "../../../components/forms/BaseRange";
+import stateList from "../../../utils/stateList";
+
+import { preventNegative, positiveInt } from "../../../utils/input";
+
+import { DriverDegree } from "../../../enums/drivers/driver-degree.enum";
+import { DriverLicenseType } from "../../../enums/drivers/driver-license-type.enum";
+import { DriverEndorsement } from "../../../enums/drivers/driver-endorsement.enum";
+import { MvrType } from "../../../enums/drivers/mvr-type.enum"
+import { CriminalHistoryType } from "../../../enums/drivers/criminal-history-type.enum"
+
+import { VehicleType } from "../../../enums/vehicles/vehicle-type.enum";
+import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
+
+import { JobEmploymentType } from "../../../enums/jobs/job-employment-type.enum";
+import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
+import { JobTeamDriver } from "../../../enums/jobs/job-team-driver.enum";
+import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
+import { JobGeography } from "../../../enums/jobs/job-geography.enum";
+import { JobDeliveryType } from "../../../enums/jobs/job-delivery-type.enum";
+import { JobPayMethod } from "../../../enums/jobs/job-pay-method.enum";
+import { JobBenefits } from "../../../enums/jobs/job-benefits.enum";
+
+import * as yupUtil from "../../../utils/yup"
+
+import JobApi from "../../api/job";
 
 export default function NewJobs() {
-
+    // validate that this is a company profile
     const { authCompany } = useRedirect();
-    authCompany()
+    authCompany();
 
-    const editorRef = useRef()
-    const [editorLoaded, setEditorLoaded] = useState(false)
-    const { CKEditor, ClassicEditor } = editorRef.current || {}
-
-    useEffect(() => {
-        editorRef.current = {
-            CKEditor: require('@ckeditor/ckeditor5-react').CKEditor, //Added .CKEditor
-            ClassicEditor: require('@ckeditor/ckeditor5-build-classic'),
-        }
-        setEditorLoaded(true)
-    }, []);
-    const [CKData, setCKData] = useState('');
-
-
-    const router = useRouter();
-
-    const [ApplyType, setApplyType] = useState([])
-    const apply_type_options = []
-    for (const [key, itemVal] of Object.entries(apply_type)) {
-        apply_type_options.push({
-            value: itemVal, label: itemVal
-        })
-    }
-
-    const [SalaryType, setSalaryType] = useState([])
-    const salary_type_options = []
-    for (const [key, itemVal] of Object.entries(salary_type)) {
-        salary_type_options.push({
-            value: itemVal, label: itemVal
-        })
-    }
-
-    const [JobType, setJobType] = useState([])
-    const job_type_options = []
-    for (const [key, itemVal] of Object.entries(job_type)) {
-        job_type_options.push({
-            value: itemVal, label: itemVal
-        })
-    }
-    const [MvrRequirement, setMvrRequirement] = useState([])
-    const mvr_requirement_options = []
-    for (const [key, itemVal] of Object.entries(mvr_requirement)) {
-        mvr_requirement_options.push({
-            value: itemVal, label: itemVal
-        })
-    }
-
-    const { authCheck, setAuth } = useAuth();
+    const { authCheck } = useAuth();
     const user = authCheck();
-    console.log('user', user);
-    const company = {};
-    console.log('company', company);
+
+    // if (!user || !user.company) throw new Error("Unable to determine user or company");
 
 
-    const [color, setColor] = useState('red')
-    const [saveButtonDisabled, setSaveButtonDisabled] = useState(false)
+    const { t } = useTranslation();
 
-    const [inputValues, setInputValue] = useState({
-        title: company.title,
-        description: company.description,
-        location: company.location,
-        expiry_date: company.expiry_dates,
-        application_deadline_date: company.application_deadline_date,
-        email: company.email,
-        min_salary: company.min_salary,
-        max_salary: company.max_salary,
-        featured: company.featured,
-        posted_by: company.posted_by,
+    const form = useFormik({
+        initialValues: {
+            title: null,
+            location: {
+                id: null,
+                street: null,
+                city: null,
+                state: null,
+                zip_code: null,
+            },
+            description: null,
+            description_short: null,
+            drivers_needed: null,
+            expiry_date: null,
+            geography: [],
+            schedule: null,
+            schedule_other: null,
+            employment_type: null,
+            equipment_type: [],
+            equipment_type_other: null,
+            delivery_type: [],
+            team_drivers: null,
+            pay_method: null,
+            min_salary: null,
+            max_salary: null,
+            min_rate: null,
+            max_rate: null,
+            min_hours: null,
+            max_hours: null,
+            min_percent: null,
+            max_percent: null,
+            min_miles: null,
+            max_miles: null,
+            min_weekly_pay: null,
+            max_weekly_pay: null,
+            benefits: [],
+            benefits_other: null,
+            vehicles: [],
+            cdl_class: [],
+            min_years_experience: null,
+            min_degree: null,
+            required_skills: [],
+            required_skills_other: null,
+            required_equipment: [],
+            required_endorsement: [],
+            transmission_type_experience: [],
+            max_applicant_radius: 10,
+            must_pass_drug_test: true,
+            must_have_clean_mvr: true,
+            mvr_requirements: [],
+            accept_sap_graduates: false,
+            must_have_clean_criminal_history: true,
+            criminal_history: [],
+            max_accidents: null,
+            safety_requirements_other: null
+        },
+        validationSchema: yup.object({
+            title: yup.string().required(t("this_field_is_required")).nullable(),
+            location: yup.object({
+                id: yup.number().nullable(),
+                street: yup.string()
+                    .when("id", {
+                        is: v => !!!v,
+                        then: yup.string().required(t("this_field_is_required")).nullable()
+                    }).nullable(),
+                city: yup.string()
+                    .when("id", {
+                        is: v => !!!v,
+                        then: yup.string().required(t("this_field_is_required")).nullable()
+                    }).nullable(),
+                state: yup.string()
+                    .when("id", {
+                        is: v => !!!v,
+                        then: yup.string().required(t("this_field_is_required")).nullable()
+                    }).nullable(),
+                zip_code: yup.string()
+                    .when("id", {
+                        is: v => !!!v,
+                        then: yup.string().required(t("this_field_is_required")).nullable()
+                    }).nullable(),
+            }),
+            description: yup.string().required(t("this_field_is_required")).nullable(),
+            description_short: yup.string().required(t("this_field_is_required")).nullable(),
+            drivers_needed: yup.number().min(0).nullable(),
+            expiry_date: yup.date().nullable(),
+            geography: yup.array(
+                yup.string().enum(JobGeography)
+                ).min(1, t("this_field_is_required")),
+            schedule: yup.string().enum(JobSchedule).required(t("this_field_is_required")).nullable(),
+            schedule_other: yup.string().when("schedule", {
+                is: v => v === JobSchedule.OTHER,
+                then: yup.string().required(t("this_field_is_required")).nullable()
+            }).nullable(),
+            employment_type: yup.string().enum(JobEmploymentType).required(t("this_field_is_required")).nullable(),
+            equipment_type: yup.array(
+                yup.string().enum(JobEquipmentType)
+            ),
+            equipment_type_other: yup.string().when("equipment_type", {
+                is: a => a.includes(JobEquipmentType.OTHER),
+                then: yup.string().required(t("this_field_is_required")).nullable()
+            }).nullable(),
+            delivery_type: yup.array(
+                yup.string().enum(JobDeliveryType)
+            ).min(1, t("this_field_is_required")),
+            team_drivers: yup.string().enum(JobTeamDriver).required(t("this_field_is_required")).nullable(),
+            pay_method: //yup.array(
+                yup.string().enum(JobPayMethod).nullable(),
+            //),
+            min_salary: yup.number().min(0).nullable(),
+            max_salary: yup.number().min(0).nullable(),
+            min_rate: yup.number().min(0).nullable(),
+            max_rate: yup.number().min(0).nullable(),
+            min_hours: yup.number().min(0).nullable(),
+            max_hours: yup.number().min(0).nullable(),
+            min_percent: yup.number().min(0).nullable(),
+            max_percent: yup.number().min(0).nullable(),
+            min_miles: yup.number().min(0).nullable(),
+            max_miles: yup.number().min(0).nullable(),
+            min_weekly_pay: yup.number().min(0).required(t("this_field_is_required")).nullable(),
+            max_weekly_pay: yup.number().min(0).required(t("this_field_is_required")).nullable(),
+            benefits: yup.array(
+                yup.string().enum(JobBenefits)
+            ),
+            benefits_other: yup.string().when("benefits", {
+                is: v => v.includes(JobBenefits.OTHER),
+                then: yup.string().required(t("this_field_is_required")).nullable()
+            }).nullable(),
+            vehicles: yup.array(yup.object({
+                id: yup.number().nullable(),
+                type: yup.string().when("id", {
+                    is: v => !v,
+                    then: yup.string().required(t("this_field_is_required")).enum(VehicleType).nullable()
+                }).nullable(),
+                type_other: yup.string().when(["id", "type"], {
+                    is: (id, type) => !id && type === VehicleType.OTHER,
+                    then: yup.string().required(t("this_field_is_required")).nullable()
+                }).nullable(),
+                trailer_type: yup.string().nullable(),
+                trailer_type_other: yup.string().nullable(),
+                transmission_type: yup.string().nullable(),
+                make: yup.string().when("id", {
+                    is: v => !v,
+                    then: yup.string().required(t("this_field_is_required")).nullable()
+                }).nullable(),
+                model: yup.string().when("id", {
+                    is: v => !v,
+                    then: yup.string().required(t("this_field_is_required")).nullable()
+                }).nullable(),
+                year: yup.number().when("id", {
+                    is: v => !v,
+                    then: yup.number().required(t("this_field_is_required")).min(1900).nullable()
+                }).nullable(),
+                photo: yup.object({
+                    name: yup.string().nullable(),
+                    path: yup.string().nullable()
+                }).nullable(),
+                accessories: yup.array(yup.string()).nullable(),
+                accessory_other: yup.string().nullable()
+            })).nullable(),
+            cdl_class: yup.array(
+                yup
+                    .string()
+                    .enum(DriverLicenseType)
+            ),
+            min_years_experience: yup.number().min(0).nullable(),
+            min_degree: yup.string().enum(DriverDegree).nullable(),
+            required_skills: yup.array(yup.object({
+                type: yup.string().required(t("this_field_is_required")).nullable(),
+                years: yup.number().min(1).required(t("this_field_is_required")).nullable(),
+            })).unique(t("{name}_must_be_unique_in_list", { name: t("type") }), "type", v => v.type),
+            required_skills_other: yup.string().nullable(),
+            required_equipment: yup.array(yup.object({
+                type: yup.string().required(t("this_field_is_required")).nullable(),
+                quantity: yup.number().min(1).required(t("this_field_is_required")).nullable(),
+            })).unique(t("{name}_must_be_unique_in_list", { name: t("type") }), "type", v => v.type),
+            required_endorsement: yup.array(
+                yup.string().enum(DriverEndorsement)
+            ),
+            transmission_type_expereince: yup.array(
+                yup.string().enum(VehicleTransmissionType)
+            ),
+            max_applicant_radius: yup.number().min(1).nullable(),
+            must_pass_drug_test: yup.boolean().default(true),
+            must_have_clean_mvr: yup.boolean().default(true),
+            mvr_requirements: yup.array(yup.object({
+                type: yup.string().enum(MvrType).required(t("this_field_is_required")).nullable(),
+                max_count: yup.number().required(t("this_field_is_required")).nullable(),
+                max_years: yup.number().required(t("this_field_is_required")).nullable(),
+            })).unique(t("{name}_must_be_unique_in_list", { name: t("type") }), "type", v => v.type),
+            accept_sap_graduates: yup.boolean().default(false),
+            must_have_clean_criminal_history: yup.boolean().default(true),
+            criminal_history: yup.array(yup.object({
+                type: yup.string().enum(CriminalHistoryType).required(t("this_field_is_required")).nullable(),
+                max_count: yup.number().required(t("this_field_is_required")).nullable(),
+                max_years: yup.number().required(t("this_field_is_required")).nullable(),
+            })).unique(t("{name}_must_be_unique_in_list", { name: t("type") }), "type", v => v.type),
+            max_accidents: yup.number().min(0).nullable(),
+            safety_requirements_other: yup.string().nullable()
+        }),
+        onSubmit: async (data) => {
+            console.log("Submitting", data);
 
-        urgent_job: company.urgent_job,
-        filled: company.filled,
-        area_covered: company.area_covered,
-        min_rate_per_mile: parseInt(company.min_rate_per_mile) ?? 0,
-        max_rate_per_mile: parseInt(company.max_rate_per_mile) ?? 0,
-        ApplyType: company.ApplyType,
-        areas_covered: company.areas_covered,
+            try {
+                const job = await new JobApi(user.company.id).create(data);
 
-    })
-
-    const [serverValidation, setServerValidation] = useState([])
-
-    const [validation, setValidation] = useState()
-
-
-    const handleChange = (event) => {
-        let { name, value } = event.target
-
-        if (name == "min_rate_per_mile" || name == 'max_rate_per_mile') {
-            value = parseInt(value)
-        }
-
-        setInputValue((preValue) => {
-            return {
-                ...preValue,
-                [name]: value,
+                toast.success(t("successfully_saved_information"));
+                setTimeout(
+                    () => Router.push("/dashboard/company/job-listing"),
+                    3000);
             }
-        })
+            catch (e) {
+                console.error("Unable to save job", e);
+                toast.error(t("unable_to_save_information"));
+            }
+
+        }
+    });
+
+    const [ locations, set_locations ] = useState([]);
+    const [ vehicles, set_vehicles ] = useState([]);
+
+    useEffect(async () => {
+        // initialize with the user's current company
+        const companyApi = new CompanyApi(user.company.id);
+
+        set_locations(await companyApi.locations.get());
+        set_vehicles(await companyApi.vehicles.get());
+
+    }, []);
+
+    /// custom PayMethod logic
+
+    function handlePayMethodUpdate(e) {
+        const { name, value } = e.target;
+        let min_miles = getOrCurrent("min_miles");
+        let max_miles = getOrCurrent("max_miles");
+        let min_percent = getOrCurrent("min_percent");
+        let max_percent = getOrCurrent("max_percent");
+        let min_hours = getOrCurrent("min_hours");
+        let max_hours = getOrCurrent("max_hours");
+        let min_rate = getOrCurrent("min_rate");
+        let max_rate = getOrCurrent("max_rate");
+        let min_salary = getOrCurrent("min_salary");
+        let max_salary = getOrCurrent("max_salary");
+        let min_weekly_pay = getOrCurrent("min_weekly_pay");
+        let max_weekly_pay = getOrCurrent("max_weekly_pay");
+
+        if (form.values.pay_method === JobPayMethod.RATE_PER_MILE)
+        {
+            /**
+                -if rate per mile		
+                    Min Rate Per Mi	
+                    Max Rate Per Mi	
+                    Avg mi per week	
+                    Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+                    Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+             */
+            min_percent = null;
+            max_percent = null;
+            min_hours = null;
+            max_hours = null;
+            min_salary = null;
+            max_salary = null;
+            min_weekly_pay = (min_miles >= 0 && min_rate >= 0 ? (min_miles * min_rate).toFixed(2) : min_weekly_pay);
+            max_weekly_pay = (max_miles >= 0 && max_rate >= 0 ? (max_miles * max_rate).toFixed(2) : max_weekly_pay);
+        }
+        else if (
+            form.values.pay_method === JobPayMethod.PERCENT_PER_MOVE ||
+            form.values.pay_method === JobPayMethod.PERCENT_PER_WEIGHT
+            ) {
+            /*
+            -if % per move		
+                Min % per move	
+                Max % per move	
+                Estimated maximum weekly pay	(manual entry)
+                Estimated minimum weekly pay	(manual entry)
+            -if % weight		
+                Min % per weight	
+                Max % per weight	
+                Estimated maximum weekly pay	(manual entry)
+                Estimated minimum weekly pay	(manual entry)
+            */
+           // noop
+           min_miles = null;
+           max_miles = null;
+           min_percent = null;
+           max_percent = null;
+           min_hours = null;
+           max_hours = null;
+           min_rate = null;
+           max_rate = null;
+           min_salary = null;
+           max_salary = null;
+        }
+        else if (
+            form.values.pay_method === JobPayMethod.HOURLY
+        )
+        {
+            /*
+            -if hourly		
+                Min $ per hr	
+                Max $ per hr	
+                Avg hrs per week	
+                Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+                Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+            */
+            min_miles = null;
+            max_miles = null;
+            min_percent = null;
+            max_percent = null;
+            min_salary = null;
+            max_salary = null;
+            min_weekly_pay = (min_hours >= 0 && min_rate >= 0 ? (min_hours * min_rate).toFixed(2) : min_weekly_pay);
+            max_weekly_pay = (max_hours >= 0 && max_rate >= 0 ? (max_hours * max_rate).toFixed(2) : max_weekly_pay);
+        }
+        else if (form.values.pay_method === JobPayMethod.SET_WEEKLY) {
+            /*
+            -if set weekly		
+                Estimated maximum weekly pay	(manual entry)
+                Estimated minimum weekly pay	(manual entry)
+             */
+            min_miles = null;
+            max_miles = null;
+            min_percent = null;
+            max_percent = null;
+            min_hours = null;
+            max_hours = null;
+            min_rate = null;
+            max_rate = null;
+            min_salary = null;
+            max_salary = null;
+        }
+        else if (form.values.pay_method === JobPayMethod.SALARY) {
+            /*
+            -if salaried		
+                Min annual salary	
+                Max annual salary	
+                Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+                Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+            */
+
+            min_miles = null;
+            max_miles = null;
+            min_percent = null;
+            max_percent = null;
+            min_hours = null;
+            max_hours = null;
+            min_rate = null;
+            max_rate = null;
+            min_weekly_pay = min_salary >= 0 ? (min_salary / 52).toFixed(2) : min_weekly_pay;
+            max_weekly_pay = max_salary >= 0 ? (max_salary / 52).toFixed(2) : min_weekly_pay;
+        }
+        form.setValues({
+            ...form.values,
+            min_miles: min_miles,
+            max_miles: max_miles,
+            min_salary: min_salary,
+            max_salary: max_salary,
+            min_rate: min_rate,
+            max_rate: max_rate,
+            min_hours: min_hours,
+            max_hours: max_hours,
+            min_percent: min_percent,
+            max_percent: max_percent,
+            min_weekly_pay: min_weekly_pay,
+            max_weekly_pay: max_weekly_pay
+        });
+
+        function getOrCurrent(field) {
+            return name === field ? +value : form.values[field];
+        }
     }
 
-    const profileHandler = async (e) => {
+    function addRequiredSkills(e) {
         e.preventDefault();
-        let errors = {}
-        setServerValidation('')
-
-
-        //Title validation
-        if (!inputValues.title) {
-            errors.title = "Title is required"
-        }
-
-        //location validation
-        if (!inputValues.location) {
-            errors.location = "location is required"
-        }
-
-        console.log('CKData.length', CKData)
-        //Description validation
-        inputValues.description = CKData
-        if (!inputValues.description) {
-            errors.description = "Description is required"
-        }
-
-        //expiry date validation
-        if (!inputValues.expiry_date) {
-            errors.expiry_date = "Expiry Date is required"
-        }
-
-        //application_deadline_date validation
-        if (!inputValues.application_deadline_date) {
-            errors.application_deadline_date = "Application Deadline Date is required"
-        }
-
-        //email validation
-        if (!inputValues.email) {
-            errors.email = "Email is required"
-        }
-
-
-        //min_salary validation
-        if (!inputValues.min_salary) {
-            errors.min_salary = "Min Salary is required"
-        }
-
-        //max_salary validation
-        if (!inputValues.max_salary) {
-            errors.max_salary = "Max Salary is required"
-        }
-
-        //posted_by validation
-
-        if (!inputValues.posted_by) {
-            errors.posted_by = "Posted By is required"
-        }
-        //featured validation
-
-        if (!inputValues.featured) {
-            errors.featured = "Featured is required"
-        }
-
-        //Urgent Job validation
-
-        if (!inputValues.urgent_job) {
-            errors.urgent_job = "Urgent Job is required"
-        }
-
-        //Fill Job validation
-
-        if (!inputValues.filled) {
-            errors.filled = "Fill is required"
-        }
-
-        // //area_covered validation
-
-        // if (!inputValues.area_covered) {
-        //     errors.area_covered = "Area Covered is required"
-        // }
-
-        //Max Rate Per Mile ($) validation
-
-        if (!inputValues.max_rate_per_mile) {
-            errors.max_rate_per_mile = "Max Rate Per Mile ($) is required"
-        }
-
-        //Min Rate Per Mile ($) validation
-
-        if (!inputValues.min_rate_per_mile) {
-            errors.min_rate_per_mile = "Min Rate Per Mile ($) is required"
-        }
-        //ApplyType validation
-
-        // if (!inputValues.ApplyType) {
-        //     errors.ApplyType = "ApplyType is required"
-        // }
-
-        // //Areas Covered validation
-
-        // if (!inputValues.areas_covered) {
-        //     errors.areas_covered = " Areas Covered is required"
-        // }
-
-        //Delivery Type validation
-
-        if (!inputValues.delivery_type) {
-            errors.delivery_type = " Delivery Type is required"
-        }
-
-        //schedule validation
-
-        if (!inputValues.schedule) {
-            errors.schedule = " Schedule is required"
-        }
-
-        //accepting_drivers_from validation
-
-        if (!inputValues.accepting_drivers_from) {
-            errors.accepting_drivers_from = " Accepting Drivers From is required"
-        }
-
-        //equipment_type validation
-
-        if (!inputValues.equipment_type) {
-            errors.equipment_type = " Equipment Type is required"
-        }
-
-
-        //Pay Structure validation
-
-        // if (!inputValues.pay_structure) {
-        //     errors.pay_structure = " Pay Structure is required"
-        // }
-
-        // if (!inputValues.confirmPassword) {
-        //   errors.confirmPassword = "Password confirmation is required"
-        // } else if (inputValues.confirmPassword !== inputValues.password) {
-        //   errors.confirmPassword = "Password does not match confirmation password"
-        // }
-
-
-        setValidation(errors)
-        console.log("errors", errors)
-        if (Object.keys(errors).length == 0) {
-
-            setSaveButtonDisabled(true)
-
-            const headers = {
-                'Authorization': `Bearer ${user.token}`,
-                "content-type": "application/json; charset=utf-8"
-            };
-
-            await axios.post(
-                `${process.env.BASE_URL_API}/jobs`,
-
-                { ...inputValues },
-
-                { headers }
-            )
-                .then(data => {
-                    console.log("handle success", data.data)
-                    setValidation({})
-                    setColor("green")
-                    setServerValidation('Updated successfully!')
-                    toast.success("Job Created Successfully! ", {
-                        position: "top-right",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                    });
-                    setApplyType([])
-                    setSalaryType([])
-                    setJobType([])
-                    DeliveryType([])
-                    MvrRequirement([])
-
-                    document.getElementById("myForm").reset();
-
-                    setTimeout(() => {
-                        setServerValidation('')
-                    }, 5000);
-                })
-                .catch(function (error) {
-                    console.log("handle error success", error)
-                    setServerValidation('Something went south')
-                    toast.warning("Something went south ", {
-                        position: "top-right",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                    });
-
-                }).then(function () {
-                    console.log("always executed")
-                    setSaveButtonDisabled(false)
-                })
-        }
-
+        form.setValues({
+            ...form.values,
+            required_skills: [
+                ...form.values.required_skills,
+                {
+                    type: null,
+                    years: null
+                }
+            ],
+        });
     }
 
+    function removeRequiredSkill(e) {
+        e.preventDefault();
+
+        const { name } = e.target;
+        form.setValues({
+            ...form.values,
+            required_skills: form.values.required_skills.filter((v, i) => i != name),
+        });
+    }
+
+    function addRequiredEquipment(e) {
+        e.preventDefault();
+        form.setValues({
+            ...form.values,
+            required_equipment: [
+                ...form.values.required_equipment,
+                {
+                    type: null,
+                    quantity: null
+                }
+            ],
+        });
+    }
+
+    function removeRequiredEquipment(e) {
+        e.preventDefault();
+
+        const { name } = e.target;
+        form.setValues({
+            ...form.values,
+            required_equipment: form.values.required_equipment.filter((v, i) => i != name),
+        });
+    }
+
+    function addMvrRequirement(e) {
+        e.preventDefault();
+        form.setValues({
+            ...form.values,
+            mvr_requirements: [
+                ...form.values.mvr_requirements,
+                {
+                    type: null,
+                    max_count: 0,
+                    max_years: 0
+                }
+            ],
+        });
+    }
+
+    function removeMvrRequirement(e) {
+        e.preventDefault();
+
+        const { name } = e.target;
+        form.setValues({
+            ...form.values,
+            mvr_requirements: form.values.mvr_requirements.filter((v, i) => i != name),
+        });
+    }
+
+    function addCriminalHistoryRequirement(e) {
+        e.preventDefault();
+        form.setValues({
+            ...form.values,
+            criminal_history: [
+                ...form.values.criminal_history,
+                {
+                    type: null,
+                    max_count: 0,
+                    max_years: 0
+                }
+            ],
+        });
+    }
+
+    function removeCriminalHistoryRequirement(e) {
+        e.preventDefault();
+
+        const { name } = e.target;
+        form.setValues({
+            ...form.values,
+            criminal_history: form.values.criminal_history.filter((v, i) => i != name),
+        });
+    }
+
+    function addVehicle(e) {
+        e.preventDefault();
+        form.setValues({
+            ...form.values,
+            vehicles: [
+                ...form.values.vehicles,
+                {
+                    id: null,
+                    type: null,
+                    type_other: null,
+                    trailer_type: null,
+                    trailer_type_other: null,
+                    transmission_type: null,
+                    make: null,
+                    model: null,
+                    year: null,
+                    accessories: [],
+                    accessory_other: null
+                }
+            ],
+        });
+    }
+
+    function removeVehicle(e) {
+        e.preventDefault();
+
+        const { name } = e.target;
+
+        form.setValues({
+            ...form.values,
+            vehicles: form.values.vehicles.filter((v, i) => i != name),
+        });
+    }
+
+    function changeVehicle(e) {
+        e.preventDefault();
+        const { name, value } = e.target;
+
+        const [ veh, idx, id ] = name.split(".");
+
+        form.setValues({
+            ...form.values,
+            vehicles: form.values.vehicles.map((v, i) => {
+                if (i == idx && !!value) {
+                    return {
+                        id: value,
+                        type: null,
+                        type_other: null,
+                        trailer_type: null,
+                        trailer_type_other: null,
+                        transmission_type: null,
+                        make: null,
+                        model: null,
+                        year: null,
+                        accessories: [],
+                        accessory_other: null
+                    };
+                }
+
+                return {
+                    ...v,
+                    id: value
+                };
+
+            })
+        });
+    }
     return (
 
         <>
@@ -347,288 +616,974 @@ export default function NewJobs() {
             <div>
 
                 <Row>
-                    <h1>Add New Jobs</h1>
+                    <h1>{t("new_job")}</h1>
                 </Row>
                 <div className='container-fluid'>
                     <div className="modal-header border-0 add_job__container">
                     </div>
-                    <form className="modal-body" id="myForm" >
+                    <form className="modal-body" onSubmit={form.handleSubmit} >
                         <div className="row">
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Title</label>
-                                <input onChange={(e) => handleChange(e)} name="title" value={inputValues.title} type="text" className="form-control " id="title" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.title}</p>
-                            </div>
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Location</label>
-                                <input onChange={(e) => handleChange(e)} name="location" value={inputValues.location} type="text" className="form-control " id="location" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.location}</p>
-                            </div>
+                            <BaseInput
+                                className="col-md-6"
+                                label={t("title")}
+                                name="title"
+                                placeholder={t("title")}
+                                value={form.values.title}
+                                touched={form.touched.title}
+                                error={form.errors.title}
+                                onChange={form.handleChange}
+                                handleBlur={form.handleBlur}
+                                />
                         </div>
-                        <div className="row">
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Expiry Date</label>
-                                <input onChange={(e) => handleChange(e)} name="expiry_date" value={inputValues.expiry_date} type="date" className="form-control" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.expiry_date}</p>
-                            </div>
-
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Application Deadline Date</label>
-                                <input onChange={(e) => handleChange(e)} name="application_deadline_date" value={inputValues.application_deadline_date} type="date" className="form-control" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.application_deadline_date}</p>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className=" col-lg-6 col-12 mt-3">
-                                <label>Job Apply Type</label>
-                                <Select className="job__select" onChange={(e) => handleChange(e)} value={inputValues.ApplyType} name="ApplyType"
-                                    placeholder="Select your ApplyType..."
-                                    value={ApplyType}
-                                    onChange={(v) => setApplyType(v)}
-                                    isMulti options={apply_type_options} />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.ApplyType}</p>
-
-                            </div>
-
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Job Apply Email</label>
-                                <input onChange={(e) => handleChange(e)} name="email" value={inputValues.email} type="text" className="form-control" placeholder="Email" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.email}</p>
-                            </div>
-                        </div>
-
-                        <div className="row">
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Min. Salary</label>
-                                <input onChange={(e) => handleChange(e)} name="min_salary" value={parseInt(inputValues.min_salary)} type="number" className="form-control" placeholder="Min Salary" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.min_salary}</p>
-                            </div>
-
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Max. Salary</label>
-                                <input onChange={(e) => handleChange(e)} name="max_salary" value={parseInt(inputValues.max_salary)} type="number" className="form-control" placeholder="Max Salary" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.max_salary}</p>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Salary Type</label>
-                                <Select className="job__select"
-                                    placeholder="Select your ApplyType..."
-                                    value={SalaryType}
-                                    onChange={(v) => setSalaryType(v)}
-                                    isMulti options={salary_type_options} />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.salary_type}</p>
-                            </div>
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Posted By</label>
-                                <input onChange={(e) => handleChange(e)} name="posted_by" value={inputValues.posted_by} type="text" className="form-control" placeholder="Posted By" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.posted_by}</p>
-                            </div>
-
-
-                        </div>
-                        <div className="row">
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label className="w-100">Featured</label>
-                                <input onChange={(e) => handleChange(e)} name="featured" value={inputValues.featured} type="checkbox" className="job_check_box" id="featured" value="featured" />
-                                <label className="ml-4" for="featured"> Featured jobs will be sticky during searches, and can be styled differently.</label><br></br>
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.featured}</p>
-
-                            </div>
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label className="w-100">Urgent Job</label>
-                                <input onChange={(e) => handleChange(e)} name="urgent_job" value={inputValues.urgent_job} type="checkbox" className="job_check_box" id="urgent_job" value="urgent job" />
-                                <label className="ml-4" for="urgent_job">  Urgent jobs will be sticky during searches, and can be styled differently.</label><br></br>
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.urgent_job}</p>
-
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label className="w-100">Filled</label>
-                                <input onChange={(e) => handleChange(e)} name="filled" value={inputValues.filled} type="checkbox" className="job_check_box" id="filled" value="filled job" />
-                                <label className="ml-4" for="filled">  Filled listings will no longer accept applications.</label><br></br>
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.filled}</p>
-
-                            </div>
-                        </div>
-
-                        <div className="row">
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label className="w-100">Areas Covered</label>
+                        <div className="row mt-1">
+                            <div className="col-md-4">
+                                <h2>{t("basic_details")}</h2>
+                                <BaseSelect
+                                    className="col-md-12"
+                                    label={t("location")}
+                                    name="location.id"
+                                    placeholder={t("new_location")}
+                                    value={form.values.location.id}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.location?.id}
+                                    error={form.errors.location?.id}
+                                    valueKey="id"
+                                    labelKey="street"
+                                    options={locations}
+                                    />
+                                {(
+                                    !!!form.values.location.id &&
+                                    <>
+                                    <BaseInput
+                                        className="col-md-12"
+                                        label={t("street")}
+                                        name="location.street"
+                                        placeholder={t("street")}
+                                        value={form.values.location.street}
+                                        touched={form.touched.location?.street}
+                                        error={form.errors.location?.street}
+                                        onChange={form.handleChange}
+                                        handleBlur={form.handleBlur}
+                                        />
+                                    <BaseInput
+                                        className="col-md-12"
+                                        label={t("city")}
+                                        name="location.city"
+                                        placeholder={t("city")}
+                                        value={form.values.location.city}
+                                        touched={form.touched.location?.city}
+                                        error={form.errors.location?.city}
+                                        onChange={form.handleChange}
+                                        handleBlur={form.handleBlur}
+                                        />
+                                    <div className="row">
+                                        <BaseSelect
+                                            className="col-md-7"
+                                            label={t("state")}
+                                            name="location.state"
+                                            placeholder={t("state")}
+                                            value={form.values.location.state}
+                                            onChange={form.handleChange}
+                                            handleBlur={form.handleBlur}
+                                            touched={form.touched.location?.state}
+                                            error={form.errors.location?.state}
+                                            valueKey="value"
+                                            labelKey="label"
+                                            options={stateList}
+                                            />
+                                        <BaseInput
+                                            className="col-md-5"
+                                            label={t("zip_code")}
+                                            name="location.zip_code"
+                                            placeholder={t("zip_code")}
+                                            value={form.values.location.zip_code}
+                                            touched={form.touched.location?.zip_code}
+                                            error={form.errors.location?.zip_code}
+                                            onChange={form.handleChange}
+                                            handleBlur={form.handleBlur}
+                                            />
+                                    </div>
+                                    </>
+                                )}
+                                <BaseInput
+                                    className="col-md-12"
+                                    label={t("expiration_date")}
+                                    name="expiry_date"
+                                    placeholder={t("expiration_date")}
+                                    type="date"
+                                    value={form.values.expiry_date}
+                                    touched={form.touched.expiry_date}
+                                    error={form.errors.expiry_date}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    />
+                                <BaseCheckList
+                                    className="col-md-12"
+                                    label={t("geography")}
+                                    name="geography"
+                                    cols={3}
+                                    value={form.values.geography}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.geography}
+                                    error={form.errors.geography}
+                                    valueKey="key"
+                                    labelKey="label"
+                                    enumType={JobGeography}
+                                    />
+                                <BaseSelect
+                                    className="col-md-12"
+                                    label={t("schedule")}
+                                    name="schedule"
+                                    placeholder={t("schedule")}
+                                    value={form.values.schedule}
+                                    touched={form.touched.schedule}
+                                    error={form.errors.schedule}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    enumType={JobSchedule}
+                                    />
                                 {
-                                    areas_covered &&
-                                    Object.entries(areas_covered).map((val) => {
-                                        return (<div ><input type="checkbox" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
-                                    })
-
+                                    form.values.schedule === JobSchedule.OTHER &&
+                                    <BaseInput
+                                    className="col-md-12"
+                                    label={t("other_schedule")}
+                                    name="schedule_other"
+                                    placeholder={t("schedule")}
+                                    value={form.values.schedule_other}
+                                    touched={form.touched.schedule_other}
+                                    error={form.errors.schedule_other}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    />
                                 }
-
-                            </div>
-
-                        </div>
-                        <div className="row">
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Full-time/Part-time</label>
-                                <Select className="job__select"
-                                    placeholder="Select Job Type..."
-                                    value={JobType}
-                                    onChange={(v) => setJobType(v)}
-                                    isMulti options={job_type_options} />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.job_type}</p>
-                            </div>
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Employment Type</label>
-                                <select name="employment_type" id="employment_type" className="w-100 select_pading" >
-                                    <option value="w-2">W-2</option>
-                                    <option value="1999">1999</option>
-                                </select>
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.employment_type}</p>
-                            </div>
-
-
-                        </div>
-                        <div className="row">
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label className="w-100">Type of Delivery</label>
-
+                                <BaseSelect
+                                    className="col-md-12"
+                                    label={t("employment_type")}
+                                    name="employment_type"
+                                    placeholder={t("employment_type")}
+                                    value={form.values.employment_type}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.employment_type}
+                                    error={form.errors.employment_type}
+                                    enumType={JobEmploymentType}
+                                    />
+                                <BaseCheckList
+                                    className="col-md-12"
+                                    label={t("equipment_type")}
+                                    name="equipment_type"
+                                    placeholder={t("equipment_type")}
+                                    cols={2}
+                                    value={form.values.equipment_type}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.equipment_type}
+                                    error={form.errors.equipment_type}
+                                    enumType={JobEquipmentType}
+                                    />
                                 {
-                                    delivery_type &&
-                                    Object.entries(delivery_type).map((val) => {
-                                        return (<div><input onChange={(e) => handleChange(e)} name="delivery_type" value={inputValues.delivery_type} type="checkbox" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
-                                    })
+                                    form.values.equipment_type.includes(JobSchedule.OTHER) &&
+                                    <BaseInput
+                                    className="col-md-12"
+                                    label={t("other_equipment_type")}
+                                    name="equipment_type_other"
+                                    placeholder={t("equipment_type")}
+                                    value={form.values.equipment_type_other}
+                                    touched={form.touched.equipment_type_other}
+                                    error={form.errors.equipment_type_other}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    />
                                 }
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.delivery_type}</p>
+                                <BaseCheckList
+                                    className="col-md-12"
+                                    label={t("delivery_type")}
+                                    name="delivery_type"
+                                    placeholder={t("delivery_type")}
+                                    cols={2}
+                                    value={form.values.delivery_type}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.delivery_type}
+                                    error={form.errors.delivery_type}
+                                    enumType={JobDeliveryType}
+                                    />
+                                <BaseSelect
+                                    className="col-md-12"
+                                    label={t("team_drivers")}
+                                    name="team_drivers"
+                                    placeholder={t("team_drivers")}
+                                    value={form.values.team_drivers}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.team_drivers}
+                                    error={form.errors.team_drivers}
+                                    enumType={JobTeamDriver}
+                                    />
                             </div>
-
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label className="w-100">Schedule</label>
+                            <div className="col-md-4">
+                                <h2>{t("benefits")}</h2>
+                                <BaseSelect
+                                    className="col-md-12"
+                                    label={t("pay_method")}
+                                    name="pay_method"
+                                    placeholder={t("pay_method")}
+                                    value={form.values.pay_method}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.pay_method}
+                                    error={form.errors.pay_method}
+                                    enumType={JobPayMethod}
+                                    />
                                 {
-                                    schedule &&
-                                    Object.entries(schedule).map((val) => {
-                                        return (<div><input onChange={(e) => handleChange(e)} name="schedule" value={inputValues.schedule} type="radio" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
-                                    })
+                                    (form.values.pay_method === JobPayMethod.PERCENT_PER_MOVE ||
+                                    form.values.pay_method === JobPayMethod.PERCENT_PER_WEIGHT) &&
+                                    <div className="row">
+                                        <BaseInput
+                                            className="col-md-6"
+                                            label={t("min_percent")}
+                                            name="min_percent"
+                                            placeholder={t("min_percent")}
+                                            type="number"
+                                            value={form.values.min_percent}
+                                            onKeyDown={positiveInt}
+                                            onChange={handlePayMethodUpdate}
+                                            handleBlur={form.handleBlur}
+                                            touched={form.touched.min_percent}
+                                            error={form.errors.min_percent}
+                                            />
+                                        <BaseInput
+                                            className="col-md-6"
+                                            label={t("max_percent")}
+                                            name="max_percent"
+                                            placeholder={t("max_percent")}
+                                            type="number"
+                                            value={form.values.max_percent}
+                                            onKeyDown={positiveInt}
+                                            onChange={handlePayMethodUpdate}
+                                            handleBlur={form.handleBlur}
+                                            touched={form.touched.max_percent}
+                                            error={form.errors.max_percent}
+                                            />
+                                    </div>
                                 }
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.schedule}</p>
-                            </div>
-                        </div>
-
-                        <div className="row">
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label className="w-100">Accepting Drivers From...</label>
                                 {
-                                    accepting_drivers_from &&
-                                    Object.entries(accepting_drivers_from).map((val) => {
-                                        return (<div><input onChange={(e) => handleChange(e)} name="accepting_drivers_from" value={inputValues.accepting_drivers_from} type="checkbox" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
-                                    })
+                                    form.values.pay_method === JobPayMethod.RATE_PER_MILE &&
+                                    <div className="row">
+                                        <BaseInput
+                                            className="col-md-6"
+                                            label={t("min_miles")}
+                                            name="min_miles"
+                                            placeholder={t("min_miles")}
+                                            type="number"
+                                            value={form.values.min_miles}
+                                            onKeyDown={positiveInt}
+                                            onChange={handlePayMethodUpdate}
+                                            handleBlur={form.handleBlur}
+                                            touched={form.touched.min_miles}
+                                            error={form.errors.min_miles}
+                                            />
+                                        <BaseInput
+                                            className="col-md-6"
+                                            label={t("max_miles")}
+                                            name="max_miles"
+                                            placeholder={t("max_miles")}
+                                            type="number"
+                                            value={form.values.max_miles}
+                                            onKeyDown={positiveInt}
+                                            onChange={handlePayMethodUpdate}
+                                            handleBlur={form.handleBlur}
+                                            touched={form.touched.max_miles}
+                                            error={form.errors.max_miles}
+                                            />
+                                    </div>
                                 }
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.accepting_drivers_from}</p>
-                            </div>
-
-
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label className="w-100">Equipment Type</label>
                                 {
-                                    equipment_type &&
-                                    Object.entries(equipment_type).map((val) => {
-                                        return (<div><input onChange={(e) => handleChange(e)} name="equipment_type" value={inputValues.equipment_type} type="checkbox" value={val[1]} /> <span className="job_check_box"  >{val[1]} </span></div>)
-                                    })
+                                    form.values.pay_method === JobPayMethod.HOURLY &&
+                                    <div className="row">
+                                        <BaseInput
+                                            className="col-md-6"
+                                            label={t("min_hours")}
+                                            name="min_hours"
+                                            placeholder={t("min_hours")}
+                                            value={form.values.min_hours}
+                                            type="number"
+                                            onKeyDown={positiveInt}
+                                            onChange={handlePayMethodUpdate}
+                                            handleBlur={form.handleBlur}
+                                            touched={form.touched.min_hours}
+                                            error={form.errors.min_hours}
+                                            />
+                                        <BaseInput
+                                            className="col-md-6"
+                                            label={t("max_hours")}
+                                            name="max_hours"
+                                            placeholder={t("max_hours")}
+                                            type="number"
+                                            value={form.values.max_hours}
+                                            onKeyDown={positiveInt}
+                                            onChange={handlePayMethodUpdate}
+                                            handleBlur={form.handleBlur}
+                                            touched={form.touched.max_hours}
+                                            error={form.errors.max_hours}
+                                            />
+                                    </div>
                                 }
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.equipment_type}</p>
-                            </div>
-                        </div>
-
-                        <div className="row">
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label className="w-100">Pay Structure</label>
                                 {
-                                    pay_structure &&
-                                    Object.entries(pay_structure).map((val) => {
-                                        return (<div><input onChange={(e) => handleChange(e)} name="pay_structure" value={inputValues.pay_structure} type="checkbox" value={val[1]} /><span className="job_check_box"  >{val[1]} </span></div>)
-                                    })
+                                    (form.values.pay_method === JobPayMethod.RATE_PER_MILE ||
+                                        form.values.pay_method === JobPayMethod.HOURLY) &&
+                                    <div className="row">
+                                        <BaseInput
+                                            className="col-md-6"
+                                            label={t("min_rate")}
+                                            name="min_rate"
+                                            placeholder={t("min_rate")}
+                                            type="number"
+                                            value={form.values.min_rate}
+                                            onKeyDown={preventNegative}
+                                            onChange={handlePayMethodUpdate}
+                                            handleBlur={form.handleBlur}
+                                            touched={form.touched.min_rate}
+                                            error={form.errors.min_rate}
+                                            />
+                                        <BaseInput
+                                            className="col-md-6"
+                                            label={t("max_rate")}
+                                            name="max_rate"
+                                            placeholder={t("max_rate")}
+                                            type="number"
+                                            value={form.values.max_rate}
+                                            onKeyDown={preventNegative}
+                                            onChange={handlePayMethodUpdate}
+                                            handleBlur={form.handleBlur}
+                                            touched={form.touched.max_rate}
+                                            error={form.errors.max_rate}
+                                            />
+                                    </div>
                                 }
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.pay_structure}</p>
+                                {
+                                    (form.values.pay_method === JobPayMethod.SALARY) &&
+                                    <div className="row">
+                                        <BaseInput
+                                            className="col-md-6"
+                                            label={t("min_salary")}
+                                            name="min_salary"
+                                            placeholder={t("min_salary")}
+                                            type="number"
+                                            value={form.values.min_salary}
+                                            onKeyDown={positiveInt}
+                                            onChange={handlePayMethodUpdate}
+                                            handleBlur={form.handleBlur}
+                                            touched={form.touched.min_salary}
+                                            error={form.errors.min_salary}
+                                            />
+                                        <BaseInput
+                                            className="col-md-6"
+                                            label={t("max_salary")}
+                                            name="max_salary"
+                                            placeholder={t("max_salary")}
+                                            type="number"
+                                            value={form.values.max_salary}
+                                            onKeyDown={positiveInt}
+                                            onChange={handlePayMethodUpdate}
+                                            handleBlur={form.handleBlur}
+                                            touched={form.touched.max_salary}
+                                            error={form.errors.max_salary}
+                                            />
+                                    </div>
+                                }
+                                <div className="row">
+                                    <BaseInput
+                                        className="col-md-6"
+                                        label={t("min_weekly")}
+                                        name="min_weekly_pay"
+                                        placeholder={t("min_weekly")}
+                                        type="number"
+                                        value={form.values.min_weekly_pay}
+                                        onKeyDown={preventNegative}
+                                        onChange={form.handleChange}
+                                        handleBlur={form.handleBlur}
+                                        touched={form.touched.min_weekly_pay}
+                                        error={form.errors.min_weekly_pay}
+                                        />
+                                    <BaseInput
+                                        className="col-md-6"
+                                        label={t("max_weekly")}
+                                        name="max_weekly_pay"
+                                        placeholder={t("max_weekly")}
+                                        type="number"
+                                        value={form.values.max_weekly_pay}
+                                        onKeyDown={preventNegative}
+                                        onChange={form.handleChange}
+                                        handleBlur={form.handleBlur}
+                                        touched={form.touched.max_weekly_pay}
+                                        error={form.errors.max_weekly_pay}
+                                        />
+                                </div>
+                                {/* todo: add job pay information */}
+                                <BaseCheckList
+                                    className="col-md-12"
+                                    label={t("benefits")}
+                                    name="benefits"
+                                    placeholder={t("benefits")}
+                                    cols={2}
+                                    value={form.values.benefits}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.benefits}
+                                    error={form.errors.benefits}
+                                    enumType={JobBenefits}
+                                    />
+                                {
+                                    form.values.benefits.includes(JobBenefits.OTHER) &&
+                                    <BaseInput
+                                        className="col-md-12"
+                                        label={t("additional_benefits")}
+                                        name="benefits_other"
+                                        placeholder={t("benefits")}
+                                        value={form.values.benefits_other}
+                                        touched={form.touched.benefits_other}
+                                        error={form.errors.benefits_other}
+                                        onChange={form.handleChange}
+                                        handleBlur={form.handleBlur}
+                                        />
+                                }
+                            </div>
+                            <div className="col-md-4">
+                                <h2>{t("vehicle_info")}</h2>
+                                {form.touched.vehicles && typeof form.errors.vehicles === "string" ? <span className="text-danger small">{form.errors.vehicles}</span> : null}
+                                {form.values.vehicles.map((v, i) => {
+                                    const get = function (part, field) {
+                                        if (part.vehicles && part.vehicles[i])
+                                            return part.vehicles[i][field];
+                                    }
+                                    const basePath = `vehicles.${i}`;
+                                    return (
+                                    <div key={i} className="row">
+                                        <BaseSelect
+                                            className="col-md-10"
+                                            label={`${t("vehicle")} ${i + 1}`}
+                                            name={`${basePath}.id`}
+                                            placeholder={t("new_vehicle")}
+                                            value={v.id}
+                                            onChange={changeVehicle}
+                                            handleBlur={form.handleBlur}
+                                            touched={get(form.touched, "id")}
+                                            error={get(form.errors, "id")}
+                                            options={vehicles}
+                                            valueKey="id"
+                                            createLabel={veh => {
+                                                const { type, type_other, make, model, transmission_type, year } = veh;
+                                                let label = type === VehicleType.OTHER ? type_other : t(type);
+
+                                                if (make) label += ` / ${make}`;
+
+                                                if (model) label += ` / ${model}`;
+
+                                                if (transmission_type) label += ` / ${t(transmission_type)}`;
+
+                                                if (year) label += ` / ${year}`;
+                                                return label; //`${()} / ${veh.make} / ${veh.model} / ${t(veh.transmission_type)} / ${veh.year}`
+                                            }}
+                                            />
+                                        <div className="col-md-2 mt-4">
+                                            <button className="btn btn-yellow" name={i} onClick={removeVehicle}>x</button>
+                                        </div>
+                                        {
+                                            !!!v.id &&
+                                            <>
+                                            <BaseSelect
+                                                className={`col-md-${v.type === VehicleType.OTHER ? 6 : 12}`}
+                                                label={t("type")}
+                                                name={`${basePath}.type`}
+                                                placeholder={t("type")}
+                                                value={v.type}
+                                                onChange={form.handleChange}
+                                                handleBlur={form.handleBlur}
+                                                touched={get(form.touched, "type")}
+                                                error={get(form.errors, "type")}
+                                                enumType={VehicleType}
+                                                />
+                                            {
+                                                v.type === VehicleType.OTHER &&
+                                                <BaseInput
+                                                    className="col-md-6"
+                                                    label={t("other")}
+                                                    name={`${basePath}.type_other`}
+                                                    placeholder={t("type")}
+                                                    value={v.type_other}
+                                                    onChange={form.handleChange}
+                                                    handleBlur={form.handleBlur}
+                                                    touched={get(form.touched, "type")}
+                                                    error={get(form.errors, "type")}
+                                                    />
+                                            }
+                                            <BaseInput
+                                                className="col-md-6"
+                                                label={t("make")}
+                                                name={`${basePath}.make`}
+                                                placeholder={t("make")}
+                                                value={v.make}
+                                                onChange={form.handleChange}
+                                                handleBlur={form.handleBlur}
+                                                touched={get(form.touched, "make")}
+                                                error={get(form.errors, "make")}
+                                                />
+                                            <BaseInput
+                                                className="col-md-6"
+                                                label={t("model")}
+                                                name={`${basePath}.model`}
+                                                placeholder={t("model")}
+                                                value={v.model}
+                                                onChange={form.handleChange}
+                                                handleBlur={form.handleBlur}
+                                                touched={get(form.touched, "model")}
+                                                error={get(form.errors, "model")}
+                                                />
+                                            <BaseSelect
+                                                className={`col-md-6`}
+                                                label={t("transmission")}
+                                                name={`${basePath}.transmission_type`}
+                                                placeholder={t("transmission_type")}
+                                                value={v.transmission_type}
+                                                onChange={form.handleChange}
+                                                handleBlur={form.handleBlur}
+                                                touched={get(form.touched, "transmission_type")}
+                                                error={get(form.errors, "transmission_type")}
+                                                enumType={VehicleTransmissionType}
+                                                />
+                                            <BaseInput
+                                                className="col-md-6"
+                                                label={t("year")}
+                                                name={`${basePath}.year`}
+                                                placeholder={t("year")}
+                                                value={v.year}
+                                                type="number"
+                                                onKeyDown={preventNegative}
+                                                onChange={form.handleChange}
+                                                handleBlur={form.handleBlur}
+                                                touched={get(form.touched, "year")}
+                                                error={get(form.errors, "year")}
+                                                />
+                                            </>
+                                        }
+                                    </div>
+                                )})}
+                                <div className="col-md-6 offset-md-6 text-end mt-2">
+                                    <button className="btn btn-yellow" onClick={addVehicle}>+ {t("more")}</button>
+                                </div>
                             </div>
                         </div>
+                        <hr />
                         <div className="row">
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Minimum Age</label>
-                                <select class="form-select select" aria-label="Default select example">
-                                    <option selected> Select Age</option>
-                                    <option value="18">18</option>
-                                    <option value="19">19</option>
-                                    <option value="20">20</option>
-                                    <option value="18">21</option>
-                                    <option value="19">22</option>
-                                    <option value="20">23</option>
-                                    <option value="18">24</option>
-                                </select>
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.minimum_age}</p>
-                            </div>
-
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Max Rate Per Mile ($)</label>
-                                <input onChange={(e) => handleChange(e)} name="max_rate_per_mile" value={inputValues.max_rate_per_mile} type="number" className="form-control" placeholder="e.g. 0.60" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.max_rate_per_mile}</p>
-                            </div>
-
+                            <BaseTextArea
+                                className="col-md-5 offset-md-1"
+                                label={t("description")}
+                                name="description"
+                                rows="3"
+                                placeholder={t("description")}
+                                value={form.values.description}
+                                touched={form.touched.description}
+                                error={form.errors.description}
+                                onChange={form.handleChange}
+                                handleBlur={form.handleBlur}
+                                />
+                            <BaseTextArea
+                                className="col-md-5"
+                                label={`${t("sms_summary")} (${t("max_100_characters")})`}
+                                name="description_short"
+                                rows="3"
+                                maxLength="100"
+                                placeholder={t("sms_summary")}
+                                value={form.values.description_short}
+                                touched={form.touched.description_short}
+                                error={form.errors.description_short}
+                                onChange={form.handleChange}
+                                handleBlur={form.handleBlur}
+                                />
                         </div>
+                        <hr />
                         <div className="row">
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label>Min Rate Per Mile ($)</label>
-                                <input onChange={(e) => handleChange(e)} name="min_rate_per_mile" value={inputValues.min_rate_per_mile} type="number" className="form-control" placeholder="e.g. 0.50" />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.min_rate_per_mile}</p>
+                            <div className="col-md-12">
+                                <h2>{t("requirements")}</h2>
                             </div>
-
-                            <div className="col-lg-6 col-12 mt-3">
-                                <label className="w-100"> Mvr Requirement</label>
-                                <Select className="job__select"
-                                    placeholder="Select Mvr Requirement"
-                                    value={MvrRequirement}
-                                    onChange={(v) => setMvrRequirement(v)}
-                                    isMulti options={mvr_requirement_options} />
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.MvrRequirement}</p>
-
+                            <div className="col-md-6">
+                                <BaseRange
+                                    className="col-md-12"
+                                    label={t("max_applicant_radius")}
+                                    name="max_applicant_radius"
+                                    min={1}
+                                    max={100}
+                                    value={form.values.max_applicant_radius}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.max_applicant_radius}
+                                    error={form.errors.max_applicant_radius}
+                                    />
+                                <BaseCheckList
+                                    className="col-md-12"
+                                    label={t("cdl_class")}
+                                    name="cdl_class"
+                                    cols={2}
+                                    value={form.values.cdl_class}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.cdl_class}
+                                    error={form.errors.cdl_class}
+                                    enumType={DriverLicenseType}
+                                    />
+                                <BaseInput
+                                    className="col-md-12"
+                                    label={t("min_years_experience")}
+                                    name="min_years_experience"
+                                    placeholder={t("min_years_experience")}
+                                    value={form.values.min_years_experience}
+                                    min="0"
+                                    type="number"
+                                    onKeyDown={preventNegative}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.min_years_experience}
+                                    error={form.errors.min_years_experience}
+                                    />
+                                <BaseSelect
+                                    className="col-md-12"
+                                    label={t("min_degree")}
+                                    name="min_degree"
+                                    placeholder={t("min_degree")}
+                                    value={form.values.min_degree}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.min_degree}
+                                    error={form.errors.min_degree}
+                                    enumType={DriverDegree}
+                                    />
+                                <div className="col-md-12">
+                                    <label>{t("required_skills")}:</label>
+                                    {form.touched.required_skills && typeof form.errors.required_skills === "string" ? <span className="text-danger small">{form.errors.required_skills}</span> : null}
+                                    {form.values.required_skills.map((v, i) => {
+                                        const get = function (part, field) {
+                                            if (part.required_skills && part.required_skills[i])
+                                                return part.required_skills[i][field];
+                                        }
+                                        return (
+                                        <div key={i} className="row">
+                                            <BaseSelect
+                                                className="col-md-5"
+                                                label={t("type")}
+                                                placeholder={t("type")}
+                                                name={`required_skills.${i}.type`}
+                                                value={v.type}
+                                                onChange={form.handleChange}
+                                                handleBlur={form.handleBlur}
+                                                touched={get(form.touched, "type")}
+                                                error={get(form.errors, "type")}
+                                                enumType={JobEquipmentType}
+                                                />
+                                            <BaseInput
+                                                className="col-md-5"
+                                                label={t("years")}
+                                                placeholder={t("years")}
+                                                name={`required_skills.${i}.years`}
+                                                value={v.years}
+                                                min="1"
+                                                type="number"
+                                                onKeyDown={preventNegative}
+                                                onChange={form.handleChange}
+                                                handleBlur={form.handleBlur}
+                                                touched={get(form.touched, "years")}
+                                                error={get(form.errors, "years")}
+                                                />
+                                            <div className="col-md-2 mt-4">
+                                                <button className="btn btn-yellow" name={i} onClick={removeRequiredSkill}>x</button>
+                                            </div>
+                                        </div>);
+                                        })}
+                                        <div className="col-md-6 offset-md-6 text-end mt-2">
+                                            <button className="btn btn-yellow" onClick={addRequiredSkills}>+ {t("more")}</button>
+                                        </div>
+                                </div>
+                                <BaseTextArea
+                                    className="col-md-12"
+                                    label={t("other_required_skills")}
+                                    name="required_skills_other"
+                                    placeholder={t("other_required_skills")}
+                                    value={form.values.required_skills_other}
+                                    rows="1"
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.required_skills_other}
+                                    error={form.errors.required_skills_other}
+                                    />
+                                {
+                                    form.values.employment_type === JobEmploymentType.OWNER_OPERATOR &&
+                                    <div className="col-md-12">
+                                        <label>{t("required_equipment")}:</label>
+                                        {form.touched.required_equipment && typeof form.errors.required_equipment === "string" ? <span className="text-danger small">{form.errors.required_equipment}</span> : null}
+                                        {form.values.required_equipment.map((v, i) => {
+                                            const get = function (part, field) {
+                                                if (part.required_equipment && part.required_equipment[i])
+                                                    return part.required_equipment[i][field];
+                                            }
+                                            return (
+                                            <div key={i} className="row">
+                                                <BaseSelect
+                                                    className="col-md-5"
+                                                    label={t("type")}
+                                                    placeholder={t("type")}
+                                                    name={`required_equipment.${i}.type`}
+                                                    value={v.type}
+                                                    onChange={form.handleChange}
+                                                    handleBlur={form.handleBlur}
+                                                    touched={get(form.touched, "type")}
+                                                    error={get(form.errors, "type")}
+                                                    enumType={JobEquipmentType}
+                                                    />
+                                                <BaseInput
+                                                    className="col-md-5"
+                                                    label={t("quantity")}
+                                                    placeholder={t("quantity")}
+                                                    name={`required_equipment.${i}.quantity`}
+                                                    value={v.quantity}
+                                                    min="1"
+                                                    type="number"
+                                                    onKeyDown={preventNegative}
+                                                    onChange={form.handleChange}
+                                                    handleBlur={form.handleBlur}
+                                                    touched={get(form.touched, "quantity")}
+                                                    error={get(form.errors, "quantity")}
+                                                    />
+                                                <div className="col-md-2 mt-4">
+                                                    <button className="btn btn-yellow" name={i} onClick={removeRequiredEquipment}>x</button>
+                                                </div>
+                                            </div>);
+                                            })}
+                                            <div className="col-md-6 offset-md-6 text-end mt-2">
+                                                <button className="btn btn-yellow" onClick={addRequiredEquipment}>+ {t("more")}</button>
+                                            </div>
+                                    </div>
+                                }
+                                <BaseCheckList
+                                    className="col-md-12"
+                                    label={t("special_endorsements")}
+                                    name="required_endorsement"
+                                    cols={2}
+                                    value={form.values.required_endorsement}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.required_endorsement}
+                                    error={form.errors.required_endorsement}
+                                    enumType={DriverEndorsement}
+                                    />
+                                <BaseCheckList
+                                    className="col-md-12"
+                                    label={t("transmission_type")}
+                                    name="transmission_type_experience"
+                                    cols={2}
+                                    value={form.values.transmission_type_experience}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.transmission_type_experience}
+                                    error={form.errors.transmission_type_experience}
+                                    enumType={VehicleTransmissionType}
+                                    />
+                            </div>
+                            <div className="col-md-6">
+                                <BaseCheck
+                                    className="col-md-12"
+                                    label={t("must_pass_drug_test")}
+                                    name="must_pass_drug_test"
+                                    checked={form.values.must_pass_drug_test}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.must_pass_drug_test}
+                                    error={form.errors.must_pass_drug_test}
+                                    />
+                                <BaseCheck
+                                    className="col-md-12"
+                                    label={t("must_have_clean_mvr")}
+                                    name="must_have_clean_mvr"
+                                    checked={form.values.must_have_clean_mvr}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.must_have_clean_mvr}
+                                    error={form.errors.must_have_clean_mvr}
+                                    />
+                                {
+                                    !form.values.must_have_clean_mvr &&
+                                    <div className="col-md-12">
+                                        <label>{t("mvr_requirements")}:</label>
+                                        {form.touched.mvr_requirements && typeof form.errors.mvr_requirements === "string" ? <span className="text-danger small">{form.errors.mvr_requirements}</span> : null}
+                                        {form.values.mvr_requirements.map((v, i) => {
+                                            const get = function (part, field) {
+                                                if (part.mvr_requirements && part.mvr_requirements[i])
+                                                    return part.mvr_requirements[i][field];
+                                            }
+                                            return (
+                                            <div key={i} className="row">
+                                                <BaseSelect
+                                                    className="col-md-3"
+                                                    label={t("max")}
+                                                    name={`mvr_requirements.${i}.max_count`}
+                                                    value={v.max_count}
+                                                    options={[0, 1, 2, 3, 4, 5]}
+                                                    onKeyDown={preventNegative}
+                                                    onChange={form.handleChange}
+                                                    handleBlur={form.handleBlur}
+                                                    touched={get(form.touched, "max_count")}
+                                                    error={get(form.errors, "max_count")}
+                                                    />
+                                                <BaseSelect
+                                                    className="col-md-4"
+                                                    label={t("type")}
+                                                    placeholder={t("type")}
+                                                    name={`mvr_requirements.${i}.type`}
+                                                    value={v.type}
+                                                    onChange={form.handleChange}
+                                                    handleBlur={form.handleBlur}
+                                                    touched={get(form.touched, "type")}
+                                                    error={get(form.errors, "type")}
+                                                    enumType={MvrType}
+                                                    />
+                                                <BaseSelect
+                                                    className="col-md-3"
+                                                    label={t("within")}
+                                                    placeholder={t("years")}
+                                                    name={`mvr_requirements.${i}.max_years`}
+                                                    value={v.max_years}
+                                                    options={[1, 2, 3, 4, 5]}
+                                                    onKeyDown={preventNegative}
+                                                    onChange={form.handleChange}
+                                                    handleBlur={form.handleBlur}
+                                                    touched={get(form.touched, "max_years")}
+                                                    error={get(form.errors, "max_years")}
+                                                    />
+                                                <div className="col-md-2 mt-4">
+                                                    <button className="btn btn-yellow" name={i} onClick={removeMvrRequirement}>x</button>
+                                                </div>
+                                            </div>);
+                                            })}
+                                            <div className="col-md-6 offset-md-6 text-end mt-2">
+                                                <button className="btn btn-yellow" onClick={addMvrRequirement}>+ {t("more")}</button>
+                                            </div>
+                                    </div>
+                                }
+                                <BaseCheck
+                                    className="col-md-12"
+                                    label={t("accept_sap_graduates")}
+                                    name="accept_sap_graduates"
+                                    value={form.values.accept_sap_graduates}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.accept_sap_graduates}
+                                    error={form.errors.accept_sap_graduates}
+                                    />
+                                <BaseCheck
+                                    className="col-md-12"
+                                    label={t("no_criminal_history")}
+                                    name="must_have_clean_criminal_history"
+                                    checked={form.values.must_have_clean_criminal_history}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.must_have_clean_criminal_history}
+                                    error={form.errors.must_have_clean_criminal_history}
+                                    />
+                                {
+                                    !form.values.must_have_clean_criminal_history &&
+                                    <div className="col-md-12">
+                                        <label>{t("criminal_history")}:</label>
+                                        {form.touched.criminal_history && typeof form.errors.criminal_history === "string" ? <span className="text-danger small">{form.errors.criminal_history}</span> : null}
+                                        {form.values.criminal_history.map((v, i) => {
+                                            const get = function (part, field) {
+                                                if (part.criminal_history && part.criminal_history[i])
+                                                    return part.criminal_history[i][field];
+                                            }
+                                            return (
+                                            <div key={i} className="row">
+                                                <BaseSelect
+                                                    className="col-md-3"
+                                                    label={t("max")}
+                                                    name={`criminal_history.${i}.max_count`}
+                                                    value={v.max_count}
+                                                    options={[0, 1, 2, 3, 4, 5]}
+                                                    onKeyDown={preventNegative}
+                                                    onChange={form.handleChange}
+                                                    handleBlur={form.handleBlur}
+                                                    touched={get(form.touched, "max_count")}
+                                                    error={get(form.errors, "max_count")}
+                                                    />
+                                                <BaseSelect
+                                                    className="col-md-4"
+                                                    label={t("type")}
+                                                    placeholder={t("type")}
+                                                    name={`criminal_history.${i}.type`}
+                                                    value={v.type}
+                                                    onChange={form.handleChange}
+                                                    handleBlur={form.handleBlur}
+                                                    touched={get(form.touched, "type")}
+                                                    error={get(form.errors, "type")}
+                                                    enumType={CriminalHistoryType}
+                                                    />
+                                                <BaseSelect
+                                                    className="col-md-3"
+                                                    label={t("within")}
+                                                    placeholder={t("years")}
+                                                    name={`criminal_history.${i}.max_years`}
+                                                    value={v.max_years}
+                                                    options={[1, 2, 3, 4, 5]}
+                                                    onKeyDown={preventNegative}
+                                                    onChange={form.handleChange}
+                                                    handleBlur={form.handleBlur}
+                                                    touched={get(form.touched, "max_years")}
+                                                    error={get(form.errors, "max_years")}
+                                                    />
+                                                <div className="col-md-2 mt-4">
+                                                    <button className="btn btn-yellow" name={i} onClick={removeCriminalHistoryRequirement}>x</button>
+                                                </div>
+                                            </div>);
+                                            })}
+                                            <div className="col-md-6 offset-md-6 text-end mt-2">
+                                                <button className="btn btn-yellow" onClick={addCriminalHistoryRequirement}>+ {t("more")}</button>
+                                            </div>
+                                    </div>
+                                }
+                                <BaseInput
+                                    className="col-md-12"
+                                    label={t("accidents_last_5_years")}
+                                    placeholder={t("count")}
+                                    name={`max_accidents`}
+                                    value={form.values.max_accidents}
+                                    min="0"
+                                    type="number"
+                                    onKeyDown={preventNegative}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.max_accidents}
+                                    error={form.errors.max_accidents}
+                                    />
+                                <BaseTextArea
+                                    className="col-md-12"
+                                    label={t("other_safety_requirements")}
+                                    name="safety_requirements_other"
+                                    placeholder={t("other_safety_requirements")}
+                                    value={form.values.safety_requirements_other}
+                                    rows="1"
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.safety_requirements_other}
+                                    error={form.errors.safety_requirements_other}
+                                    />
                             </div>
                         </div>
-
-                        <div className="row">
-                            <div className="col-lg-12 col-12 mt-3">
-                                <label>WYS</label>
-                                {editorLoaded ? <CKEditor
-                                    editor={ClassicEditor}
-                                    data={CKData}
-                                    onReady={editor => {
-                                        // You can store the "editor" and use when it is needed.
-                                        // console.log('Editor is ready to use!', editor);
-                                    }}
-                                    onChange={(event, editor) => {
-                                        const data = editor.getData()
-                                        setCKData(data);
-                                    }}
-                                /> : <p>Loading Editor...</p>}
-                                <p style={{ fontStyle: "italic", color: "red" }}>{validation?.description}</p>
-
+                        <div className="col-md-12 border-0 text-end">
+                            <div className="col">
+                                <button type="submit" className={`btn btn-primary`} >
+                                {t("update")}
+                                </button>
                             </div>
                         </div>
-
-                        <div className="border-0 mt-5">
-                            {serverValidation instanceof Array ? serverValidation.map((inValid) => {
-                                return (
-                                    <div style={{ fontStyle: "italic", color: color }}>{inValid}</div>
-                                )
-
-                            }) : <div style={{ fontStyle: "italic", color: color }}>{serverValidation}</div>}
-
-                            <button disabled={saveButtonDisabled}
-                                type="submit"
-                                onClick={profileHandler}
-                                className="btn btn-primary  m-auto p-lg-3 p-5">
-                                Submit
-                            </button>
-                        </div>
-
                     </form>
                 </div>
             </div>

@@ -4,12 +4,17 @@ import jobContext from "../../context/jobContext"
 import { updateQueryStringParameter } from "../../logics/utils"
 
 export default function Search() {
-  const { filters, applyFilters } = useContext(jobContext)
+
+  const { state, method } = useContext(jobContext)
+  const { filters } = state
+  const { setFilters, applyFilters } = method
 
   const searchHandler = e => {
     if (e.key === 'Enter') {
-      filters.keywords = e.target.value
-      applyFilters()
+      setFilters({
+        ...filters,
+        keywords: e.target.value
+      }, applyFilters())
     }
   }
 

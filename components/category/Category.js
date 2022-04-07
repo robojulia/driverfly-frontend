@@ -1,16 +1,12 @@
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
-import { cdl_classes } from "../../enums/jobs/cdl-classes"
+import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
+import { DriverLicenseType } from "../../enums/drivers/driver-license-type.enum"
 
 export default function Category() {
 
-  const { filters, applyFilters } = useContext(jobContext)
-  const categoryFilter = (e) => {
-    if (e.target.checked) {
-      filters.category = e.target.value
-      applyFilters()
-    }
-  }
+  const { state, method } = useContext(jobContext)
+  const { handleChange } = method
 
   return (
     <>
@@ -28,28 +24,12 @@ export default function Category() {
           <div className="card-body">
             <div className="custom-control custom-checkbox p-0">
               <div className="App">
-                <div class="topping ">
-                  <input
-                    onChange={categoryFilter}
-                    type="radio"
-                    name="category"
-                    value="" />
-                  Any
-                </div>
-                {Object.keys(cdl_classes).map((key) => {
-                  return (
-                    <>
-                      <div class="topping pt-2">
-                        <input
-                          onChange={categoryFilter}
-                          type="radio"
-                          name="category"
-                          value={key} />
-                        {cdl_classes[key]}
-                      </div>
-                    </>
-                  )
-                })}
+              <EnumFilterByKeyValue
+                withAll={true}
+                enumArray={DriverLicenseType}
+                name="category"
+                handleChange={handleChange}
+              />
               </div>
             </div>
           </div>

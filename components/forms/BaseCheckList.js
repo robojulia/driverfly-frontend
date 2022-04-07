@@ -1,28 +1,32 @@
 import React from 'react'
 
-function InlineLayout(options, value, name, labelKey, valueKey, onChange, readOnly) {
+import { useTranslation } from "react-i18next"
+
+function InlineLayout(options, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error) {
+  const { t } = useTranslation();
   return (
     <>
     {options.map((v, i) => (
-      <div key={i} className="form-check form-check-inline">
-          <label className="form-check-label">{v[labelKey]}</label>
-          <input className="form-check-input" type="checkbox" readOnly={readOnly} value={v[valueKey]} name={name} onChange={onChange} checked={value.includes(v[valueKey])} />
+      <div key={i} className={`form-check form-check-inline`}>
+          <label className="form-check-label">{t(v[labelKey])}</label>
+          <input className={`form-check-input ${error ? "is-invalid" : ""}`} type="checkbox" readOnly={readOnly} value={v[valueKey]} name={name} onChange={onChange} onBlur={handleBlur} checked={value.includes(v[valueKey])} />
       </div>
     ))}
     </>
   );
 }
 
-function ColLayout(options, cols, value, name, labelKey, valueKey, onChange, readOnly) {
+function ColLayout(options, cols, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error) {
+  const { t } = useTranslation();
   return (
     <div className='row mt-1'>
       {options.map((v, i) => (
         <div
           key={i}
           className={`col-md-${12 / cols}`}>
-          <div className="form-check form-check-inline">
-              <label className="form-check-label">{v[labelKey]}</label>
-              <input className="form-check-input" readOnly={readOnly} type="checkbox" value={v[valueKey]} name={name} onChange={onChange} checked={value.includes(v[valueKey])} />
+          <div className={`form-check form-check-inline`}>
+              <label className="form-check-label">{t(v[labelKey])}</label>
+              <input className={`form-check-input ${error ? "is-invalid" : ""}`} readOnly={readOnly} type="checkbox" value={v[valueKey]} name={name} onChange={onChange} onBlur={handleBlur} checked={value.includes(v[valueKey])} />
           </div>
         </div>
       ))}
@@ -39,17 +43,26 @@ function BaseCheckList ( {
   value,
   cols,
   onChange,
+  handleBlur,
   readOnly,
   name,
   touched,
   error,
+  enumType
 } ) {
+  if (typeof enumType === "object") {
+    options = Object.keys(enumType).map(key => ({
+      [valueKey]: key,
+      [labelKey]: enumType[key].toLowerCase()
+    }))
+  }
+
   return (
     <div className={className}>
       {label && <span style={{ marginRight: "20px" }}>{label}:</span>}
       {cols ?
-        ColLayout(options, cols, value, name, labelKey, valueKey, onChange, readOnly)
-        : InlineLayout(options, value, name, labelKey, valueKey, onChange, readOnly)}
+        ColLayout(options, cols, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error)
+        : InlineLayout(options, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error)}
       {touched && error && (typeof error === "string") ? <span className="text-danger small">{error}</span> : null}
     </div>
   )
