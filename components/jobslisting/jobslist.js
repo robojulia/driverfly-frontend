@@ -62,54 +62,57 @@ export default function JobsList() {
           </div>
         ))}
 
-        <ul className="pagination ">
+        {
+          pagingMeta.totalPages !== 0 &&
 
-          {
-            currentPageIndex > 1 &&
-            <>
-              <li onClick={() => { handlePaging(1) }}>
-                <span className="next page-numbers " role="button" >
-                  First
+          <ul className="pagination ">
+            {
+              currentPageIndex > 1 &&
+              <>
+                <li onClick={() => { handlePaging(1) }}>
+                  <span className="next page-numbers " role="button" >
+                    First
+                  </span>
+                </li>
+              </>
+            }
+
+            {
+              currentPageIndex > 1 &&
+              <li onClick={() => { handlePaging(previousPageIndex) }} >
+                <span className="page-numbers " role="button" >
+                  {previousPageIndex}
                 </span>
               </li>
-            </>
-          }
+            }
 
-          {
-            currentPageIndex > 1 &&
-            <li onClick={() => { handlePaging(previousPageIndex) }} >
-              <span className="page-numbers " role="button" >
-                {previousPageIndex}
-              </span>
-            </li>
-          }
+            {
+              <li >
+                <span className="page-numbers current active" role="button" >
+                  {currentPageIndex}
+                </span>
+              </li>
+            }
 
-          {
-            <li >
-              <span className="page-numbers current active" role="button" >
-                {currentPageIndex}
-              </span>
-            </li>
-          }
+            {
+              currentPageIndex < pagingMeta.totalPages &&
+              <li onClick={() => { handlePaging(nextPageIndex) }} >
+                <span className="page-numbers " role="button" value={parseInt(pagingMeta.page) + 1}>
+                  {nextPageIndex}
+                </span>
+              </li>
+            }
 
-          {
-            currentPageIndex < pagingMeta.totalPages &&
-            <li onClick={() => { handlePaging(nextPageIndex) }} >
-              <span className="page-numbers " role="button" value={parseInt(pagingMeta.page) + 1}>
-                {nextPageIndex}
-              </span>
-            </li>
-          }
-
-          {
-            nextPageIndex < pagingMeta.totalPages &&
-            <li onClick={() => { handlePaging(pagingMeta.totalPages) }}>
-              <span className="next page-numbers " role="button" >
-                Last
-              </span>
-            </li>
-          }
-        </ul>
+            {
+              nextPageIndex < pagingMeta.totalPages &&
+              <li onClick={() => { handlePaging(pagingMeta.totalPages) }}>
+                <span className="next page-numbers " role="button" >
+                  Last
+                </span>
+              </li>
+            }
+          </ul>
+        }
       </div>
 
     </>

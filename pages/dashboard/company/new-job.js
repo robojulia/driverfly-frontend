@@ -33,6 +33,8 @@ import BaseTextArea from "../../../components/forms/BaseTextArea";
 import BaseRange from "../../../components/forms/BaseRange";
 import stateList from "../../../utils/stateList";
 
+import { counts, years } from "../../../utils/jobs";
+
 import { preventNegative, positiveInt } from "../../../utils/input";
 
 import { DriverDegree } from "../../../enums/drivers/driver-degree.enum";
@@ -176,18 +178,48 @@ export default function NewJobs() {
             ).min(1, t("this_field_is_required")),
             team_drivers: yup.string().enum(JobTeamDriver).required(t("this_field_is_required")).nullable(),
             pay_method: //yup.array(
-                yup.string().enum(JobPayMethod).nullable(),
+                yup.string().enum(JobPayMethod).required(t("this_field_is_required")).nullable(),
             //),
-            min_salary: yup.number().min(0).nullable(),
-            max_salary: yup.number().min(0).nullable(),
-            min_rate: yup.number().min(0).nullable(),
-            max_rate: yup.number().min(0).nullable(),
-            min_hours: yup.number().min(0).nullable(),
-            max_hours: yup.number().min(0).nullable(),
-            min_percent: yup.number().min(0).nullable(),
-            max_percent: yup.number().min(0).nullable(),
-            min_miles: yup.number().min(0).nullable(),
-            max_miles: yup.number().min(0).nullable(),
+            min_salary: yup.number().when("pay_method", {
+                is: v => v === JobPayMethod.SALARY,
+                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+            }).nullable(),
+            max_salary: yup.number().when("pay_method", {
+                is: v => v === JobPayMethod.SALARY,
+                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+            }).nullable(),
+            min_rate: yup.number().when("pay_method", {
+                is: v => v === JobPayMethod.RATE_PER_MILE || v === JobPayMethod.HOURLY,
+                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+            }).nullable(),
+            max_rate: yup.number().when("pay_method", {
+                is: v => v === JobPayMethod.RATE_PER_MILE || v === JobPayMethod.HOURLY,
+                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+            }).nullable(),
+            min_hours: yup.number().when("pay_method", {
+                is: v => v === JobPayMethod.HOURLY,
+                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+            }).nullable(),
+            max_hours: yup.number().when("pay_method", {
+                is: v => v === JobPayMethod.HOURLY,
+                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+            }).nullable(),
+            min_percent: yup.number().when("pay_method", {
+                is: v => v === JobPayMethod.PERCENT_PER_MOVE || v === JobPayMethod.PERCENT_PER_WEIGHT,
+                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+            }).nullable(),
+            max_percent: yup.number().when("pay_method", {
+                is: v => v === JobPayMethod.PERCENT_PER_MOVE || v === JobPayMethod.PERCENT_PER_WEIGHT,
+                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+            }).nullable(),
+            min_miles: yup.number().when("pay_method", {
+                is: v => v === JobPayMethod.RATE_PER_MILE,
+                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+            }).nullable(),
+            max_miles: yup.number().when("pay_method", {
+                is: v => v === JobPayMethod.RATE_PER_MILE,
+                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+            }).nullable(),
             min_weekly_pay: yup.number().min(0).required(t("this_field_is_required")).nullable(),
             max_weekly_pay: yup.number().min(0).required(t("this_field_is_required")).nullable(),
             benefits: yup.array(
@@ -500,7 +532,7 @@ export default function NewJobs() {
                 {
                     type: null,
                     max_count: 0,
-                    max_years: 0
+                    max_years: null
                 }
             ],
         });
@@ -525,7 +557,7 @@ export default function NewJobs() {
                 {
                     type: null,
                     max_count: 0,
-                    max_years: 0
+                    max_years: null
                 }
             ],
         });
@@ -626,6 +658,7 @@ export default function NewJobs() {
                             <BaseInput
                                 className="col-md-6"
                                 label={t("title")}
+                                required
                                 name="title"
                                 placeholder={t("title")}
                                 value={form.values.title}
@@ -639,9 +672,10 @@ export default function NewJobs() {
                             <div className="col-md-4">
                                 <h2>{t("basic_details")}</h2>
                                 <BaseSelect
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("location")}
                                     name="location.id"
+                                    required
                                     placeholder={t("new_location")}
                                     value={form.values.location.id}
                                     onChange={form.handleChange}
@@ -656,9 +690,10 @@ export default function NewJobs() {
                                     !!!form.values.location.id &&
                                     <>
                                     <BaseInput
-                                        className="col-md-12"
+                                        className="col-12"
                                         label={t("street")}
                                         name="location.street"
+                                        required
                                         placeholder={t("street")}
                                         value={form.values.location.street}
                                         touched={form.touched.location?.street}
@@ -667,9 +702,10 @@ export default function NewJobs() {
                                         handleBlur={form.handleBlur}
                                         />
                                     <BaseInput
-                                        className="col-md-12"
+                                        className="col-12"
                                         label={t("city")}
                                         name="location.city"
+                                        required
                                         placeholder={t("city")}
                                         value={form.values.location.city}
                                         touched={form.touched.location?.city}
@@ -679,9 +715,10 @@ export default function NewJobs() {
                                         />
                                     <div className="row">
                                         <BaseSelect
-                                            className="col-md-7"
+                                            className="col-7"
                                             label={t("state")}
                                             name="location.state"
+                                            required
                                             placeholder={t("state")}
                                             value={form.values.location.state}
                                             onChange={form.handleChange}
@@ -693,9 +730,10 @@ export default function NewJobs() {
                                             options={stateList}
                                             />
                                         <BaseInput
-                                            className="col-md-5"
+                                            className="col-5"
                                             label={t("zip_code")}
                                             name="location.zip_code"
+                                            required
                                             placeholder={t("zip_code")}
                                             value={form.values.location.zip_code}
                                             touched={form.touched.location?.zip_code}
@@ -707,7 +745,7 @@ export default function NewJobs() {
                                     </>
                                 )}
                                 <BaseInput
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("expiration_date")}
                                     name="expiry_date"
                                     placeholder={t("expiration_date")}
@@ -719,9 +757,10 @@ export default function NewJobs() {
                                     handleBlur={form.handleBlur}
                                     />
                                 <BaseCheckList
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("geography")}
                                     name="geography"
+                                    required
                                     cols={3}
                                     value={form.values.geography}
                                     onChange={form.handleChange}
@@ -732,36 +771,41 @@ export default function NewJobs() {
                                     labelKey="label"
                                     enumType={JobGeography}
                                     />
+                                <div className="row">
+                                    <BaseSelect
+                                        className={`col-${form.values.schedule === JobSchedule.OTHER ? 6 : 12}`}
+                                        label={t("schedule")}
+                                        name="schedule"
+                                        required
+                                        placeholder={t("schedule")}
+                                        value={form.values.schedule}
+                                        touched={form.touched.schedule}
+                                        error={form.errors.schedule}
+                                        onChange={form.handleChange}
+                                        handleBlur={form.handleBlur}
+                                        enumType={JobSchedule}
+                                        />
+                                    {
+                                        form.values.schedule === JobSchedule.OTHER &&
+                                        <BaseInput
+                                        className="col-6"
+                                        label={t("other_schedule")}
+                                        required
+                                        name="schedule_other"
+                                        placeholder={t("schedule")}
+                                        value={form.values.schedule_other}
+                                        touched={form.touched.schedule_other}
+                                        error={form.errors.schedule_other}
+                                        onChange={form.handleChange}
+                                        handleBlur={form.handleBlur}
+                                        />
+                                    }
+                                </div>
                                 <BaseSelect
-                                    className="col-md-12"
-                                    label={t("schedule")}
-                                    name="schedule"
-                                    placeholder={t("schedule")}
-                                    value={form.values.schedule}
-                                    touched={form.touched.schedule}
-                                    error={form.errors.schedule}
-                                    onChange={form.handleChange}
-                                    handleBlur={form.handleBlur}
-                                    enumType={JobSchedule}
-                                    />
-                                {
-                                    form.values.schedule === JobSchedule.OTHER &&
-                                    <BaseInput
-                                    className="col-md-12"
-                                    label={t("other_schedule")}
-                                    name="schedule_other"
-                                    placeholder={t("schedule")}
-                                    value={form.values.schedule_other}
-                                    touched={form.touched.schedule_other}
-                                    error={form.errors.schedule_other}
-                                    onChange={form.handleChange}
-                                    handleBlur={form.handleBlur}
-                                    />
-                                }
-                                <BaseSelect
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("employment_type")}
                                     name="employment_type"
+                                    required
                                     placeholder={t("employment_type")}
                                     value={form.values.employment_type}
                                     onChange={form.handleChange}
@@ -771,7 +815,7 @@ export default function NewJobs() {
                                     enumType={JobEmploymentType}
                                     />
                                 <BaseCheckList
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("equipment_type")}
                                     name="equipment_type"
                                     placeholder={t("equipment_type")}
@@ -786,21 +830,23 @@ export default function NewJobs() {
                                 {
                                     form.values.equipment_type.includes(JobSchedule.OTHER) &&
                                     <BaseInput
-                                    className="col-md-12"
-                                    label={t("other_equipment_type")}
-                                    name="equipment_type_other"
-                                    placeholder={t("equipment_type")}
-                                    value={form.values.equipment_type_other}
-                                    touched={form.touched.equipment_type_other}
-                                    error={form.errors.equipment_type_other}
-                                    onChange={form.handleChange}
-                                    handleBlur={form.handleBlur}
-                                    />
+                                        className="col-12"
+                                        required
+                                        label={t("other_equipment_type")}
+                                        name="equipment_type_other"
+                                        placeholder={t("equipment_type")}
+                                        value={form.values.equipment_type_other}
+                                        touched={form.touched.equipment_type_other}
+                                        error={form.errors.equipment_type_other}
+                                        onChange={form.handleChange}
+                                        handleBlur={form.handleBlur}
+                                        />
                                 }
                                 <BaseCheckList
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("delivery_type")}
                                     name="delivery_type"
+                                    required
                                     placeholder={t("delivery_type")}
                                     cols={2}
                                     value={form.values.delivery_type}
@@ -811,9 +857,10 @@ export default function NewJobs() {
                                     enumType={JobDeliveryType}
                                     />
                                 <BaseSelect
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("team_drivers")}
                                     name="team_drivers"
+                                    required
                                     placeholder={t("team_drivers")}
                                     value={form.values.team_drivers}
                                     onChange={form.handleChange}
@@ -826,9 +873,10 @@ export default function NewJobs() {
                             <div className="col-md-4">
                                 <h2>{t("benefits")}</h2>
                                 <BaseSelect
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("pay_method")}
                                     name="pay_method"
+                                    required
                                     placeholder={t("pay_method")}
                                     value={form.values.pay_method}
                                     onChange={form.handleChange}
@@ -842,9 +890,10 @@ export default function NewJobs() {
                                     form.values.pay_method === JobPayMethod.PERCENT_PER_WEIGHT) &&
                                     <div className="row">
                                         <BaseInput
-                                            className="col-md-6"
+                                            className="col-6"
                                             label={t("min_percent")}
                                             name="min_percent"
+                                            required
                                             placeholder={t("min_percent")}
                                             type="number"
                                             value={form.values.min_percent}
@@ -855,9 +904,10 @@ export default function NewJobs() {
                                             error={form.errors.min_percent}
                                             />
                                         <BaseInput
-                                            className="col-md-6"
+                                            className="col-6"
                                             label={t("max_percent")}
                                             name="max_percent"
+                                            required
                                             placeholder={t("max_percent")}
                                             type="number"
                                             value={form.values.max_percent}
@@ -873,9 +923,10 @@ export default function NewJobs() {
                                     form.values.pay_method === JobPayMethod.RATE_PER_MILE &&
                                     <div className="row">
                                         <BaseInput
-                                            className="col-md-6"
+                                            className="col-6"
                                             label={t("min_miles")}
                                             name="min_miles"
+                                            required
                                             placeholder={t("min_miles")}
                                             type="number"
                                             value={form.values.min_miles}
@@ -886,9 +937,10 @@ export default function NewJobs() {
                                             error={form.errors.min_miles}
                                             />
                                         <BaseInput
-                                            className="col-md-6"
+                                            className="col-6"
                                             label={t("max_miles")}
                                             name="max_miles"
+                                            required
                                             placeholder={t("max_miles")}
                                             type="number"
                                             value={form.values.max_miles}
@@ -904,9 +956,10 @@ export default function NewJobs() {
                                     form.values.pay_method === JobPayMethod.HOURLY &&
                                     <div className="row">
                                         <BaseInput
-                                            className="col-md-6"
+                                            className="col-6"
                                             label={t("min_hours")}
                                             name="min_hours"
+                                            required
                                             placeholder={t("min_hours")}
                                             value={form.values.min_hours}
                                             type="number"
@@ -917,9 +970,10 @@ export default function NewJobs() {
                                             error={form.errors.min_hours}
                                             />
                                         <BaseInput
-                                            className="col-md-6"
+                                            className="col-6"
                                             label={t("max_hours")}
                                             name="max_hours"
+                                            required
                                             placeholder={t("max_hours")}
                                             type="number"
                                             value={form.values.max_hours}
@@ -936,9 +990,10 @@ export default function NewJobs() {
                                         form.values.pay_method === JobPayMethod.HOURLY) &&
                                     <div className="row">
                                         <BaseInput
-                                            className="col-md-6"
+                                            className="col-6"
                                             label={t("min_rate")}
                                             name="min_rate"
+                                            required
                                             placeholder={t("min_rate")}
                                             type="number"
                                             value={form.values.min_rate}
@@ -949,9 +1004,10 @@ export default function NewJobs() {
                                             error={form.errors.min_rate}
                                             />
                                         <BaseInput
-                                            className="col-md-6"
+                                            className="col-6"
                                             label={t("max_rate")}
                                             name="max_rate"
+                                            required
                                             placeholder={t("max_rate")}
                                             type="number"
                                             value={form.values.max_rate}
@@ -967,9 +1023,10 @@ export default function NewJobs() {
                                     (form.values.pay_method === JobPayMethod.SALARY) &&
                                     <div className="row">
                                         <BaseInput
-                                            className="col-md-6"
+                                            className="col-6"
                                             label={t("min_salary")}
                                             name="min_salary"
+                                            required
                                             placeholder={t("min_salary")}
                                             type="number"
                                             value={form.values.min_salary}
@@ -980,7 +1037,7 @@ export default function NewJobs() {
                                             error={form.errors.min_salary}
                                             />
                                         <BaseInput
-                                            className="col-md-6"
+                                            className="col-6"
                                             label={t("max_salary")}
                                             name="max_salary"
                                             placeholder={t("max_salary")}
@@ -996,9 +1053,10 @@ export default function NewJobs() {
                                 }
                                 <div className="row">
                                     <BaseInput
-                                        className="col-md-6"
+                                        className="col-6"
                                         label={t("min_weekly")}
                                         name="min_weekly_pay"
+                                        required
                                         placeholder={t("min_weekly")}
                                         type="number"
                                         value={form.values.min_weekly_pay}
@@ -1009,9 +1067,10 @@ export default function NewJobs() {
                                         error={form.errors.min_weekly_pay}
                                         />
                                     <BaseInput
-                                        className="col-md-6"
+                                        className="col-6"
                                         label={t("max_weekly")}
                                         name="max_weekly_pay"
+                                        required
                                         placeholder={t("max_weekly")}
                                         type="number"
                                         value={form.values.max_weekly_pay}
@@ -1024,7 +1083,7 @@ export default function NewJobs() {
                                 </div>
                                 {/* todo: add job pay information */}
                                 <BaseCheckList
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("benefits")}
                                     name="benefits"
                                     placeholder={t("benefits")}
@@ -1039,9 +1098,10 @@ export default function NewJobs() {
                                 {
                                     form.values.benefits.includes(JobBenefits.OTHER) &&
                                     <BaseInput
-                                        className="col-md-12"
+                                        className="col-12"
                                         label={t("additional_benefits")}
                                         name="benefits_other"
+                                        required
                                         placeholder={t("benefits")}
                                         value={form.values.benefits_other}
                                         touched={form.touched.benefits_other}
@@ -1063,7 +1123,7 @@ export default function NewJobs() {
                                     return (
                                     <div key={i} className="row">
                                         <BaseSelect
-                                            className="col-md-10"
+                                            className="col-10"
                                             label={`${t("vehicle")} ${i + 1}`}
                                             name={`${basePath}.id`}
                                             placeholder={t("new_vehicle")}
@@ -1088,16 +1148,17 @@ export default function NewJobs() {
                                                 return label; //`${()} / ${veh.make} / ${veh.model} / ${t(veh.transmission_type)} / ${veh.year}`
                                             }}
                                             />
-                                        <div className="col-md-2 mt-4">
+                                        <div className="col-2 mt-4">
                                             <button className="btn btn-yellow" name={i} onClick={removeVehicle}>x</button>
                                         </div>
                                         {
                                             !!!v.id &&
                                             <>
                                             <BaseSelect
-                                                className={`col-md-${v.type === VehicleType.OTHER ? 6 : 12}`}
+                                                className={`col-${v.type === VehicleType.OTHER ? 6 : 12}`}
                                                 label={t("type")}
                                                 name={`${basePath}.type`}
+                                                required
                                                 placeholder={t("type")}
                                                 value={v.type}
                                                 onChange={form.handleChange}
@@ -1109,9 +1170,10 @@ export default function NewJobs() {
                                             {
                                                 v.type === VehicleType.OTHER &&
                                                 <BaseInput
-                                                    className="col-md-6"
+                                                    className="col-6"
                                                     label={t("other")}
                                                     name={`${basePath}.type_other`}
+                                                    required
                                                     placeholder={t("type")}
                                                     value={v.type_other}
                                                     onChange={form.handleChange}
@@ -1121,9 +1183,10 @@ export default function NewJobs() {
                                                     />
                                             }
                                             <BaseInput
-                                                className="col-md-6"
+                                                className="col-6"
                                                 label={t("make")}
                                                 name={`${basePath}.make`}
+                                                required
                                                 placeholder={t("make")}
                                                 value={v.make}
                                                 onChange={form.handleChange}
@@ -1132,9 +1195,10 @@ export default function NewJobs() {
                                                 error={get(form.errors, "make")}
                                                 />
                                             <BaseInput
-                                                className="col-md-6"
+                                                className="col-6"
                                                 label={t("model")}
                                                 name={`${basePath}.model`}
+                                                required
                                                 placeholder={t("model")}
                                                 value={v.model}
                                                 onChange={form.handleChange}
@@ -1143,7 +1207,7 @@ export default function NewJobs() {
                                                 error={get(form.errors, "model")}
                                                 />
                                             <BaseSelect
-                                                className={`col-md-6`}
+                                                className={`col-6`}
                                                 label={t("transmission")}
                                                 name={`${basePath}.transmission_type`}
                                                 placeholder={t("transmission_type")}
@@ -1155,9 +1219,10 @@ export default function NewJobs() {
                                                 enumType={VehicleTransmissionType}
                                                 />
                                             <BaseInput
-                                                className="col-md-6"
+                                                className="col-6"
                                                 label={t("year")}
                                                 name={`${basePath}.year`}
+                                                required
                                                 placeholder={t("year")}
                                                 value={v.year}
                                                 type="number"
@@ -1171,7 +1236,7 @@ export default function NewJobs() {
                                         }
                                     </div>
                                 )})}
-                                <div className="col-md-6 offset-md-6 text-end mt-2">
+                                <div className="col-6 offset-6 text-end mt-2">
                                     <button className="btn btn-yellow" onClick={addVehicle}>+ {t("more")}</button>
                                 </div>
                             </div>
@@ -1182,6 +1247,7 @@ export default function NewJobs() {
                                 className="col-md-5 offset-md-1"
                                 label={t("description")}
                                 name="description"
+                                required
                                 rows="3"
                                 placeholder={t("description")}
                                 value={form.values.description}
@@ -1194,6 +1260,7 @@ export default function NewJobs() {
                                 className="col-md-5"
                                 label={`${t("sms_summary")} (${t("max_100_characters")})`}
                                 name="description_short"
+                                required
                                 rows="3"
                                 maxLength="100"
                                 placeholder={t("sms_summary")}
@@ -1206,14 +1273,15 @@ export default function NewJobs() {
                         </div>
                         <hr />
                         <div className="row">
-                            <div className="col-md-12">
+                            <div className="col-12">
                                 <h2>{t("requirements")}</h2>
                             </div>
                             <div className="col-md-6">
                                 <BaseRange
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("max_applicant_radius")}
                                     name="max_applicant_radius"
+                                    required
                                     min={1}
                                     max={100}
                                     value={form.values.max_applicant_radius}
@@ -1223,7 +1291,7 @@ export default function NewJobs() {
                                     error={form.errors.max_applicant_radius}
                                     />
                                 <BaseCheckList
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("cdl_class")}
                                     name="cdl_class"
                                     cols={2}
@@ -1235,7 +1303,7 @@ export default function NewJobs() {
                                     enumType={DriverLicenseType}
                                     />
                                 <BaseInput
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("min_years_experience")}
                                     name="min_years_experience"
                                     placeholder={t("min_years_experience")}
@@ -1249,7 +1317,7 @@ export default function NewJobs() {
                                     error={form.errors.min_years_experience}
                                     />
                                 <BaseSelect
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("min_degree")}
                                     name="min_degree"
                                     placeholder={t("min_degree")}
@@ -1260,7 +1328,7 @@ export default function NewJobs() {
                                     error={form.errors.min_degree}
                                     enumType={DriverDegree}
                                     />
-                                <div className="col-md-12">
+                                <div className="col-12">
                                     <label>{t("required_skills")}:</label>
                                     {form.touched.required_skills && typeof form.errors.required_skills === "string" ? <span className="text-danger small">{form.errors.required_skills}</span> : null}
                                     {form.values.required_skills.map((v, i) => {
@@ -1271,10 +1339,11 @@ export default function NewJobs() {
                                         return (
                                         <div key={i} className="row">
                                             <BaseSelect
-                                                className="col-md-5"
+                                                className="col-5"
                                                 label={t("type")}
                                                 placeholder={t("type")}
                                                 name={`required_skills.${i}.type`}
+                                                required
                                                 value={v.type}
                                                 onChange={form.handleChange}
                                                 handleBlur={form.handleBlur}
@@ -1283,10 +1352,11 @@ export default function NewJobs() {
                                                 enumType={JobEquipmentType}
                                                 />
                                             <BaseInput
-                                                className="col-md-5"
+                                                className="col-5"
                                                 label={t("years")}
                                                 placeholder={t("years")}
                                                 name={`required_skills.${i}.years`}
+                                                required
                                                 value={v.years}
                                                 min="1"
                                                 type="number"
@@ -1296,17 +1366,17 @@ export default function NewJobs() {
                                                 touched={get(form.touched, "years")}
                                                 error={get(form.errors, "years")}
                                                 />
-                                            <div className="col-md-2 mt-4">
+                                            <div className="col-2 mt-4">
                                                 <button className="btn btn-yellow" name={i} onClick={removeRequiredSkill}>x</button>
                                             </div>
                                         </div>);
                                         })}
-                                        <div className="col-md-6 offset-md-6 text-end mt-2">
+                                        <div className="col-6 offset-6 text-end mt-2">
                                             <button className="btn btn-yellow" onClick={addRequiredSkills}>+ {t("more")}</button>
                                         </div>
                                 </div>
                                 <BaseTextArea
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("other_required_skills")}
                                     name="required_skills_other"
                                     placeholder={t("other_required_skills")}
@@ -1319,7 +1389,7 @@ export default function NewJobs() {
                                     />
                                 {
                                     form.values.employment_type === JobEmploymentType.OWNER_OPERATOR &&
-                                    <div className="col-md-12">
+                                    <div className="col-12">
                                         <label>{t("required_equipment")}:</label>
                                         {form.touched.required_equipment && typeof form.errors.required_equipment === "string" ? <span className="text-danger small">{form.errors.required_equipment}</span> : null}
                                         {form.values.required_equipment.map((v, i) => {
@@ -1330,10 +1400,11 @@ export default function NewJobs() {
                                             return (
                                             <div key={i} className="row">
                                                 <BaseSelect
-                                                    className="col-md-5"
+                                                    className="col-5"
                                                     label={t("type")}
                                                     placeholder={t("type")}
                                                     name={`required_equipment.${i}.type`}
+                                                    required
                                                     value={v.type}
                                                     onChange={form.handleChange}
                                                     handleBlur={form.handleBlur}
@@ -1342,10 +1413,11 @@ export default function NewJobs() {
                                                     enumType={JobEquipmentType}
                                                     />
                                                 <BaseInput
-                                                    className="col-md-5"
+                                                    className="col-5"
                                                     label={t("quantity")}
                                                     placeholder={t("quantity")}
                                                     name={`required_equipment.${i}.quantity`}
+                                                    required
                                                     value={v.quantity}
                                                     min="1"
                                                     type="number"
@@ -1355,18 +1427,18 @@ export default function NewJobs() {
                                                     touched={get(form.touched, "quantity")}
                                                     error={get(form.errors, "quantity")}
                                                     />
-                                                <div className="col-md-2 mt-4">
+                                                <div className="col-2 mt-4">
                                                     <button className="btn btn-yellow" name={i} onClick={removeRequiredEquipment}>x</button>
                                                 </div>
                                             </div>);
                                             })}
-                                            <div className="col-md-6 offset-md-6 text-end mt-2">
+                                            <div className="col-6 offset-6 text-end mt-2">
                                                 <button className="btn btn-yellow" onClick={addRequiredEquipment}>+ {t("more")}</button>
                                             </div>
                                     </div>
                                 }
                                 <BaseCheckList
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("special_endorsements")}
                                     name="required_endorsement"
                                     cols={2}
@@ -1378,7 +1450,7 @@ export default function NewJobs() {
                                     enumType={DriverEndorsement}
                                     />
                                 <BaseCheckList
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("transmission_type")}
                                     name="transmission_type_experience"
                                     cols={2}
@@ -1392,7 +1464,7 @@ export default function NewJobs() {
                             </div>
                             <div className="col-md-6">
                                 <BaseCheck
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("must_pass_drug_test")}
                                     name="must_pass_drug_test"
                                     checked={form.values.must_pass_drug_test}
@@ -1402,7 +1474,7 @@ export default function NewJobs() {
                                     error={form.errors.must_pass_drug_test}
                                     />
                                 <BaseCheck
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("must_have_clean_mvr")}
                                     name="must_have_clean_mvr"
                                     checked={form.values.must_have_clean_mvr}
@@ -1413,7 +1485,7 @@ export default function NewJobs() {
                                     />
                                 {
                                     !form.values.must_have_clean_mvr &&
-                                    <div className="col-md-12">
+                                    <div className="col-12">
                                         <label>{t("mvr_requirements")}:</label>
                                         {form.touched.mvr_requirements && typeof form.errors.mvr_requirements === "string" ? <span className="text-danger small">{form.errors.mvr_requirements}</span> : null}
                                         {form.values.mvr_requirements.map((v, i) => {
@@ -1424,11 +1496,12 @@ export default function NewJobs() {
                                             return (
                                             <div key={i} className="row">
                                                 <BaseSelect
-                                                    className="col-md-3"
+                                                    className="col-3"
                                                     label={t("max")}
                                                     name={`mvr_requirements.${i}.max_count`}
+                                                    required
                                                     value={v.max_count}
-                                                    options={[0, 1, 2, 3, 4, 5]}
+                                                    options={counts}
                                                     onKeyDown={preventNegative}
                                                     onChange={form.handleChange}
                                                     handleBlur={form.handleBlur}
@@ -1436,10 +1509,11 @@ export default function NewJobs() {
                                                     error={get(form.errors, "max_count")}
                                                     />
                                                 <BaseSelect
-                                                    className="col-md-4"
+                                                    className="col-4"
                                                     label={t("type")}
                                                     placeholder={t("type")}
                                                     name={`mvr_requirements.${i}.type`}
+                                                    required
                                                     value={v.type}
                                                     onChange={form.handleChange}
                                                     handleBlur={form.handleBlur}
@@ -1448,30 +1522,31 @@ export default function NewJobs() {
                                                     enumType={MvrType}
                                                     />
                                                 <BaseSelect
-                                                    className="col-md-3"
+                                                    className="col-3"
                                                     label={t("within")}
                                                     placeholder={t("years")}
                                                     name={`mvr_requirements.${i}.max_years`}
+                                                    required
                                                     value={v.max_years}
-                                                    options={[1, 2, 3, 4, 5]}
+                                                    options={years}
                                                     onKeyDown={preventNegative}
                                                     onChange={form.handleChange}
                                                     handleBlur={form.handleBlur}
                                                     touched={get(form.touched, "max_years")}
                                                     error={get(form.errors, "max_years")}
                                                     />
-                                                <div className="col-md-2 mt-4">
+                                                <div className="col-2 mt-4">
                                                     <button className="btn btn-yellow" name={i} onClick={removeMvrRequirement}>x</button>
                                                 </div>
                                             </div>);
                                             })}
-                                            <div className="col-md-6 offset-md-6 text-end mt-2">
+                                            <div className="col-6 offset-6 text-end mt-2">
                                                 <button className="btn btn-yellow" onClick={addMvrRequirement}>+ {t("more")}</button>
                                             </div>
                                     </div>
                                 }
                                 <BaseCheck
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("accept_sap_graduates")}
                                     name="accept_sap_graduates"
                                     value={form.values.accept_sap_graduates}
@@ -1481,7 +1556,7 @@ export default function NewJobs() {
                                     error={form.errors.accept_sap_graduates}
                                     />
                                 <BaseCheck
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("no_criminal_history")}
                                     name="must_have_clean_criminal_history"
                                     checked={form.values.must_have_clean_criminal_history}
@@ -1492,7 +1567,7 @@ export default function NewJobs() {
                                     />
                                 {
                                     !form.values.must_have_clean_criminal_history &&
-                                    <div className="col-md-12">
+                                    <div className="col-12">
                                         <label>{t("criminal_history")}:</label>
                                         {form.touched.criminal_history && typeof form.errors.criminal_history === "string" ? <span className="text-danger small">{form.errors.criminal_history}</span> : null}
                                         {form.values.criminal_history.map((v, i) => {
@@ -1503,11 +1578,12 @@ export default function NewJobs() {
                                             return (
                                             <div key={i} className="row">
                                                 <BaseSelect
-                                                    className="col-md-3"
+                                                    className="col-3"
                                                     label={t("max")}
                                                     name={`criminal_history.${i}.max_count`}
+                                                    required
                                                     value={v.max_count}
-                                                    options={[0, 1, 2, 3, 4, 5]}
+                                                    options={counts}
                                                     onKeyDown={preventNegative}
                                                     onChange={form.handleChange}
                                                     handleBlur={form.handleBlur}
@@ -1515,10 +1591,11 @@ export default function NewJobs() {
                                                     error={get(form.errors, "max_count")}
                                                     />
                                                 <BaseSelect
-                                                    className="col-md-4"
+                                                    className="col-4"
                                                     label={t("type")}
                                                     placeholder={t("type")}
                                                     name={`criminal_history.${i}.type`}
+                                                    required
                                                     value={v.type}
                                                     onChange={form.handleChange}
                                                     handleBlur={form.handleBlur}
@@ -1527,30 +1604,31 @@ export default function NewJobs() {
                                                     enumType={CriminalHistoryType}
                                                     />
                                                 <BaseSelect
-                                                    className="col-md-3"
+                                                    className="col-3"
                                                     label={t("within")}
                                                     placeholder={t("years")}
                                                     name={`criminal_history.${i}.max_years`}
+                                                    required
                                                     value={v.max_years}
-                                                    options={[1, 2, 3, 4, 5]}
+                                                    options={years}
                                                     onKeyDown={preventNegative}
                                                     onChange={form.handleChange}
                                                     handleBlur={form.handleBlur}
                                                     touched={get(form.touched, "max_years")}
                                                     error={get(form.errors, "max_years")}
                                                     />
-                                                <div className="col-md-2 mt-4">
+                                                <div className="col-2 mt-4">
                                                     <button className="btn btn-yellow" name={i} onClick={removeCriminalHistoryRequirement}>x</button>
                                                 </div>
                                             </div>);
                                             })}
-                                            <div className="col-md-6 offset-md-6 text-end mt-2">
+                                            <div className="col-6 offset-6 text-end mt-2">
                                                 <button className="btn btn-yellow" onClick={addCriminalHistoryRequirement}>+ {t("more")}</button>
                                             </div>
                                     </div>
                                 }
                                 <BaseInput
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("accidents_last_5_years")}
                                     placeholder={t("count")}
                                     name={`max_accidents`}
@@ -1564,7 +1642,7 @@ export default function NewJobs() {
                                     error={form.errors.max_accidents}
                                     />
                                 <BaseTextArea
-                                    className="col-md-12"
+                                    className="col-12"
                                     label={t("other_safety_requirements")}
                                     name="safety_requirements_other"
                                     placeholder={t("other_safety_requirements")}
@@ -1577,7 +1655,7 @@ export default function NewJobs() {
                                     />
                             </div>
                         </div>
-                        <div className="col-md-12 border-0 text-end">
+                        <div className="col-12 border-0 text-end">
                             <div className="col">
                                 <button type="submit" className={`btn btn-primary`} >
                                 {t("update")}

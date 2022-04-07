@@ -96,11 +96,16 @@ export default function FindJobs() {
               {/* <Location /> */}
 
               <div className="results-count mt-4 ">
-                Showing <span className="first">
-                  {((pagingMeta.currentPage - 1) * pagingMeta.itemsPerPage) + 1}
-                </span> – <span className="last">
-                  {(((pagingMeta.currentPage - 1) * pagingMeta.itemsPerPage) + pagingMeta.itemCount)}
-                </span> of {pagingMeta.totalItems} results
+                Showing {
+                  pagingMeta.itemCount !== 0 &&
+                  <>
+                    <span className="first">
+                      {((pagingMeta.currentPage - 1) * pagingMeta.itemsPerPage) + 1}
+                    </span> – <span className="last">
+                      {(((pagingMeta.currentPage - 1) * pagingMeta.itemsPerPage) + pagingMeta.itemCount)}
+                    </span> of
+                  </>
+                } {pagingMeta.totalItems} results
               </div>
 
               <div className="filter-btn-groups mt-3">

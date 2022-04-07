@@ -1,10 +1,10 @@
 import React from 'react'
 
-function BaseCheck ( { className, label, checked, onChange, readOnly, name, touched, error, } ) {
+function BaseCheck ( { required, className, label, checked, onChange, readOnly, name, touched, error, } ) {
   return (
     <div className={className}>
       <div className='form-check form-switch'>
-        {label && <label htmlFor={name} className="form-check-label">{label}</label>}
+        {label && <label htmlFor={name} className="form-check-label">{label}{required ? "*" : ""}</label>}
         <input
           id={name}
           type="checkbox"
