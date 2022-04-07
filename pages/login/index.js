@@ -155,7 +155,9 @@ export default function Login() {
                                 <label className="form-check-label w-50">
                                     <input className="form-check-input" type="checkbox" /> Keep me signed in
                                 </label>
-                                <a href='#' className={login.pricol}>Lost Your Password?</a>
+                                <Link href="/forgot-password">
+                                    <a className={login.pricol}>Lost Your Password?</a>
+                                </Link>
                             </div>
                             {serverValidation instanceof Array ? serverValidation.map((inValid) => {
                                 return (
@@ -167,7 +169,7 @@ export default function Login() {
                         </form>
 
 
-                        
+
                         <div className={login.lineheader}>
                             <span>or</span>
                         </div>
