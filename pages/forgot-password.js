@@ -5,39 +5,91 @@ import { useState } from "react"
 import Back from '../components/back-to-login/Back-Login'
 import Layout from "../components/layouts"
 import Forgotpassword from '../public/css/Forgot.module.css'
+import ResetPasswordAPI from "./api/reset-account"
+import { ToastContainer, toast } from 'react-toastify'
 
-export default function Forgot () {
+export default function Forgot() {
 
-  const [email, setEmail] = useState( "" )
-  const [error, setError] = useState( "" )
+  const resetPasswordAPI = new ResetPasswordAPI();
+  const [error, setError] = useState("")
+  const [formData, setFormData] = useState({
+    email: '',
+  });
 
-  const submitHandler = async ( e ) => {
+  const submitHandler = async (e) => {
     e.preventDefault()
-    if ( !email ) {
-      setError( "Username or email is required" )
+    if (!formData.email) {
+      setError("Username or email is required")
+      toast.error("Username or email is required", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       return
     }
 
     // validate email
     const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    if ( !emailRegex.test( email ) ) {
-      setError( "Please enter a valid email address" )
+    if (!emailRegex.test(formData.email)) {
+      setError("Please enter a valid email address")
       return
     }
 
 
     // clear error
-    if ( error ) {
-      setError( "" )
+    if (error) {
+      setError("")
     }
-    await axios.post( "http://localhost:4000/api/forgot-password", {
-      email
-    } )
+    await resetPasswordAPI.forgetPassword(formData)
+      .then(res => {
+        if (res.status == 201) {
+          toast.success("Please check your email", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+
+        }
+      }).catch(error => {
+        if (error.response.status == 422) {
+          setError("Password Reset Email Already Sent, Please check your email ")
+          toast.error("Password Reset Email Already Sent, Please check your email", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+
+        } else {
+          setError("Something went wrong")
+          toast.error("Something went wrong", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+
+        }
+      })
   }
 
   return (
     <>
-
+      
 
       <div className="top-links-sec">
         <div className="container">
@@ -49,6 +101,7 @@ export default function Forgot () {
       </div>
       <div className={Forgotpassword.formsec}>
         <div className="container">
+          <ToastContainer />
           <div className='row'>
             <div className='col-lg-2'></div>
             <div className='col-lg-8'>
@@ -57,7 +110,10 @@ export default function Forgot () {
               <p className="mt-2 mb-5 text-center  text-secondary ">Please Enter Username or Email</p>
               <form onSubmit={submitHandler} className={Forgotpassword.mb}>
                 <div className="form-group">
-                  <input value={email} onChange={( e ) => setEmail( e.target.value )} type="text" className="form-control py-4" placeholder="Username or E-mail" id="useremail" />
+                  <input
+                    value={formData.email}
+                    onChange={e => setFormData({ ...formData, email: e.target.value })}
+                    type="text" className="form-control py-4" placeholder="Username or E-mail" id="useremail" />
                   <p style={{ fontStyle: "italic", color: "red" }}>{error}</p>
                 </div>
 
@@ -82,7 +138,7 @@ export default function Forgot () {
     </>
   )
 }
-Forgot.getLayout = function getLayout ( page ) {
+Forgot.getLayout = function getLayout(page) {
   return (
     <Layout>
       {page}
