@@ -20,6 +20,15 @@ export default function Forgot() {
     e.preventDefault()
     if (!formData.email) {
       setError("Username or email is required")
+      toast.error("Username or email is required", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       return
     }
 
@@ -80,7 +89,7 @@ export default function Forgot() {
 
   return (
     <>
-      <ToastContainer />
+      
 
       <div className="top-links-sec">
         <div className="container">
@@ -92,6 +101,7 @@ export default function Forgot() {
       </div>
       <div className={Forgotpassword.formsec}>
         <div className="container">
+          <ToastContainer />
           <div className='row'>
             <div className='col-lg-2'></div>
             <div className='col-lg-8'>
