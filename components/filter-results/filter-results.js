@@ -40,7 +40,7 @@ export default function FilterResults() {
                 < Category />
                 < Range />
                 {/* < JobType /> */}
-                < Salary />
+                {/* < Salary /> */}
                 < PostedDate />
                 < AreasCovered />
                 {/* < FullParty /> */}
