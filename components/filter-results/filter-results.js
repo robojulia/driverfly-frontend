@@ -39,7 +39,7 @@ export default function FilterResults() {
               <div className="accordion bg-transparent" id="accordionExample">
                 < Category />
                 < Range />
-                < JobType />
+                {/* < JobType /> */}
                 < Salary />
                 < PostedDate />
                 < AreasCovered />
