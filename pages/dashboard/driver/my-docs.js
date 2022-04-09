@@ -193,14 +193,23 @@ export default function PrestoresDocuments() {
 
   }
 
-  const viewHandler = (e) => {
+  const viewHandler = async (e) => {
     const { target: { name } } = e;
 
     const file = form.values[name];
 
+    let url;
+    if (file.id) {
+      const entity = await api.getDocumentUrl(file);
+      url = entity.path;
+    }
+    else {
+      url = file.path;
+    }
+
     set_pdfModel({
       name: file.name,
-      url: file.path
+      url: url
     });
   }
 
@@ -244,7 +253,7 @@ export default function PrestoresDocuments() {
               <div className="col-lg-6 col-12 mt-5">
                 <h3>{t("drivers_license")}</h3>
                 {
-                  !!form.values.DRIVER_LICENSE.path &&
+                  !!form.values.DRIVER_LICENSE.name &&
                   <>
                     <Button name="DRIVER_LICENSE" disabled={form.isSubmitting} className="applied" onClick={e => viewHandler(e)}>{t("view")}</Button>
                     <Button name="DRIVER_LICENSE" disabled={form.isSubmitting} className="btn_danger" onClick={e => deleteHandler(e)}>{t("delete")}</Button>
@@ -266,7 +275,7 @@ export default function PrestoresDocuments() {
               <div className="col-lg-6 col-12 mt-5">
                 <h3>{t("medical_card")}</h3>
                 {
-                  !!form.values.MEDICAL_CARD.path &&
+                  !!form.values.MEDICAL_CARD.name &&
                   <>
                     <Button name="MEDICAL_CARD" disabled={form.isSubmitting} className="applied" onClick={e => viewHandler(e)}>{t("view")}</Button>
                     <Button name="MEDICAL_CARD" disabled={form.isSubmitting} className="btn_danger" onClick={e => deleteHandler(e)}>{t("delete")}</Button>
@@ -290,7 +299,7 @@ export default function PrestoresDocuments() {
               <div className="col-lg-6 col-12 mt-5">
                 <h3>{t("resume")}</h3>
                 {
-                  !!form.values.RESUME.path &&
+                  !!form.values.RESUME.name &&
                   <>
                     <Button name="RESUME" disabled={form.isSubmitting} className="applied" onClick={e => viewHandler(e)}>{t("view")}</Button>
                     <Button name="RESUME" disabled={form.isSubmitting} className="btn_danger" onClick={e => deleteHandler(e)}>{t("delete")}</Button>
@@ -312,7 +321,7 @@ export default function PrestoresDocuments() {
               <div className="col-lg-6 col-12 mt-5">
                 <h3>{t("motor_vehicle_record")}</h3>
                 {
-                  !!form.values.MVR.path &&
+                  !!form.values.MVR.name &&
                   <>
                     <Button disabled={form.isSubmitting} name="MVR" className="applied" onClick={e => viewHandler(e)}>{t("view")}</Button>
                     <Button disabled={form.isSubmitting} name="MVR" className="btn_danger" onClick={e => deleteHandler(e)}>{t("delete")}</Button>

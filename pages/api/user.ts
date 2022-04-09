@@ -3,6 +3,11 @@ import BaseApi from "./_baseApi";
 import { DocumentEntity } from "../../models/documents/document.entity";
 
 export default class UserApi extends BaseApi {
+    async getDocumentUrl(d: DocumentEntity): Promise<DocumentEntity> {
+        const { data } = await this.get(`documents/${d.id}`);
+
+        return data;
+    }
     async getDocuments(): Promise<DocumentEntity[]> {
         const { data } = await this.get(`user/uploaded/documents`);
 
@@ -20,7 +25,7 @@ export default class UserApi extends BaseApi {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
-        })
+        });
 
         return data as DocumentEntity[];
     }
