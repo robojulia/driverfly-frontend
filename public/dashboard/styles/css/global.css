@@ -464,9 +464,6 @@ textarea {
     margin: 0px 25px;
 }
 
-.account_tabs {
-    margin-top: 50px;
-}
 
 
 
@@ -482,12 +479,7 @@ textarea {
         width: 100%;
         margin: 2% 1%;
     }
-
-    .account_tabs {
-        margin: 0px;
-    }
-
-    .account_tabs .react-tabs__tab {
+     .account_tabs .react-tabs__tab {
         background-color: #1b4454 !important;
         color: #fff;
         border-radius: 5px;
