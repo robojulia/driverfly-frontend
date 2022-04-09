@@ -1,4 +1,7 @@
+import { useTranslation } from "react-i18next";
+
 export default function EnumFilterByKeyValue(props) {
+    const { t } = useTranslation();
     return (
         <>
             {props.withAll &&
@@ -18,7 +21,7 @@ export default function EnumFilterByKeyValue(props) {
                                 onChange={props.handleChange}
                                 type="radio"
                                 name={props.name}
-                                value={key} /> {props.enumArray[key]}
+                                value={key} /> {props.translate ? t(props.enumArray[key].toLowerCase()) : props.enumArray[key]}
                         </div>
                     </>
                 )
