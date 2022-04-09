@@ -1,26 +1,18 @@
 
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
-import { Checkbox } from 'pretty-checkbox-react';
-import LogoutButton from '../../../components/buttons/Logout';
 import FullLayout from "../../../components/dashboard/layouts/Layout/FullLayout";
 import useRedirect from '../../../hooks/useRedirect';
 import useAuth from '../../../hooks/useAuth';
 import Router from 'next/router';
-import axios from 'axios';
 import React, { useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { useRouter } from 'next/router';
-import Link from "next/link";
-import Select from 'react-select'
 import { useRef, useEffect } from "react";
 
 import RangeSlider from 'react-bootstrap-range-slider';
 
-import { Check } from "react-feather";
-
 import { useTranslation } from "react-i18next";
-import { useFormik, yupToFormErrors } from "formik";
+import { useFormik } from "formik";
 import * as yup from "yup";
 
 import CompanyApi from "../../api/company";
@@ -31,7 +23,12 @@ import BaseCheck from "../../../components/forms/BaseCheck";
 import BaseCheckList from "../../../components/forms/BaseCheckList";
 import BaseTextArea from "../../../components/forms/BaseTextArea";
 import BaseRange from "../../../components/forms/BaseRange";
+import BaseFile from "../../../components/forms/BaseFile";
 import stateList from "../../../utils/stateList";
+import Modal from "react-bootstrap/Modal"
+import Button from "react-bootstrap/Button"
+
+import { getBase64 } from "../../../utils/file";
 
 import { counts, years } from "../../../utils/jobs";
 
@@ -583,14 +580,11 @@ export default function NewJobs() {
                     id: null,
                     type: null,
                     type_other: null,
-                    trailer_type: null,
-                    trailer_type_other: null,
                     transmission_type: null,
                     make: null,
                     model: null,
                     year: null,
-                    accessories: [],
-                    accessory_other: null
+                    photo: null
                 }
             ],
         });
@@ -621,14 +615,11 @@ export default function NewJobs() {
                         id: value,
                         type: null,
                         type_other: null,
-                        trailer_type: null,
-                        trailer_type_other: null,
                         transmission_type: null,
                         make: null,
                         model: null,
                         year: null,
-                        accessories: [],
-                        accessory_other: null
+                        photo: null,
                     };
                 }
 
@@ -640,7 +631,56 @@ export default function NewJobs() {
             })
         });
     }
-    return (
+
+    const [ pdfModel, set_pdfModel ] = useState({
+        name: null,
+        url: null,
+      });
+    
+      /**
+       * 
+       * @param {React.ChangeEvent<HTMLInputElement>} e 
+       */
+    const uploadHandler = async (e) => {
+        const { target: { name, files } } = e;
+    
+        let photo = null;
+        if (files && files[0]) {
+          const file = files[0];
+
+          photo = {
+            visibility: "PUBLIC",
+            name: file.name,
+            mime_type: file.type,
+            path: URL.createObjectURL(file),
+            file_base64: await getBase64(file)
+          };
+        }
+
+        form.setFieldValue(name, photo);
+    
+      }
+    
+      const viewHandler = async (e) => {
+        const { target: { name } } = e;
+    
+        const file = form.getFieldMeta(name).value;
+        console.log(file);
+    
+        let url = file.path;
+    
+        set_pdfModel({
+          name: file.name,
+          url: url
+        });
+      }
+    
+      const hideModelHandler = (e) => {
+        set_pdfModel({
+          name: null, url: null
+        });
+      }
+        return (
 
         <>
 
@@ -1232,6 +1272,19 @@ export default function NewJobs() {
                                                 touched={get(form.touched, "year")}
                                                 error={get(form.errors, "year")}
                                                 />
+                                            <BaseFile
+                                                className="col-6"
+                                                label={t("photo")}
+                                                name={`${basePath}.photo`}
+                                                accept="image/*"
+                                                value={v.photo}
+                                                onChange={uploadHandler}
+                                                onView={viewHandler}
+                                                onDelete={uploadHandler}
+                                                handleBlur={form.handleBlur}
+                                                touched={get(form.touched, "photo")}
+                                                error={get(form.errors, "photo")}
+                                                />
                                             </>
                                         }
                                     </div>
@@ -1666,6 +1719,21 @@ export default function NewJobs() {
                 </div>
             </div>
 
+            <Modal show={!!pdfModel.name} onHide={() => hideModelHandler()}>
+            <Modal.Header>{pdfModel.name}</Modal.Header>
+
+            <Modal.Body>
+            {(
+                pdfModel.name &&
+                    <img src={pdfModel.url} />
+            )}
+            </Modal.Body>
+
+            <Modal.Footer>
+            <Button variant="secondary" onClick={() => hideModelHandler()}>{t("close")}</Button>
+            </Modal.Footer>
+
+        </Modal>
         </>
     )
 };
