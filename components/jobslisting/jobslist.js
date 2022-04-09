@@ -40,7 +40,14 @@ export default function JobsList() {
                   className="fa fa-star" aria-hidden="true"></i> </span></h4>
               <div className="job-date-author">
                 posted {timeSince(job.created_at)} ago
-                by <a href="" className="employer text-theme">Custom Trucker Recruiting</a>
+                {
+                  job.company.name &&
+                  <>
+                    by <span className="employer text-theme " role='button'>
+                      {job.company.name}
+                    </span>
+                  </>
+                }
               </div>
               <div className="job-metas text-secondary text-secondary">
                 <div className="job-location">
