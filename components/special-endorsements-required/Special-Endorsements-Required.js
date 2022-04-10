@@ -2,7 +2,7 @@ import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
-import { special_endorsements_required } from "../../enums/jobs/job-fields"
+import { DriverEndorsement } from "../../enums/drivers/driver-endorsement.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 
 export default function SpecialEndorsementsRequired() {
@@ -26,9 +26,10 @@ export default function SpecialEndorsementsRequired() {
           <div className="card-body">
             <div className="App">
               <EnumFilterByKeyValue
+                translate={true}
                 withAll={true}
-                enumArray={special_endorsements_required}
-                name="special_endorsements_required"
+                enumArray={DriverEndorsement}
+                name="endoresements_type"
                 handleChange={handleChange}
               />
             </div>

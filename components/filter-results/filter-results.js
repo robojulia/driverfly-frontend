@@ -51,7 +51,7 @@ export default function FilterResults() {
                 < Schedule />
                 < PayStructure />
                 {/* < MinimumAge /> */}
-                < SpecialAccommodations />
+                {/* < SpecialAccommodations /> */}
                 < SpecialEndorsementsRequired />
                 < MvrRequirement />
               </div>
