@@ -3,7 +3,8 @@ import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
-import { equipment_type } from "../../enums/jobs/job-fields"
+import { JobEquipmentType } from "../../enums/jobs/job-equipment-type.enum"
+import { useTranslation } from "react-i18next";
 
 const ReadMore = ({ children }) => {
   const text = children
@@ -24,8 +25,9 @@ const ReadMore = ({ children }) => {
 const Content = () => {
   const { state, method } = useContext(jobContext)
   const { handleChange } = method
+  const { t } = useTranslation();
 
-  const enumArray = Object.values(equipment_type)
+  const enumArray = Object.values(JobEquipmentType)
   const totalLength = enumArray.length
   const firstHalf = enumArray.splice(0, 4)
   const secondHalf = enumArray.splice(4, totalLength - 1)
@@ -53,7 +55,7 @@ const Content = () => {
                       onChange={handleChange}
                       type="radio"
                       name="equipment_type"
-                      value={value} /> {value}
+                      value={value} /> {t(value)}
                   </div>
                 </>
               )
@@ -69,7 +71,7 @@ const Content = () => {
                       onChange={handleChange}
                       type="radio"
                       name="equipment_type"
-                      value={value} /> {value}
+                      value={value} /> {t(value)}
                   </div>
                 </>
               )

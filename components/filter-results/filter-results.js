@@ -46,7 +46,7 @@ export default function FilterResults() {
                 {/* < FullParty /> */}
                 < EmploymentType />
                 < TypeOfDelivery />
-                < AcceptingDriversFrom />
+                {/* < AcceptingDriversFrom /> */}
                 < ShowMoreEquipment />
                 < Schedule />
                 < PayStructure />
