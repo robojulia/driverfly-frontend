@@ -2,7 +2,7 @@ import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
-import { pay_structure } from "../../enums/jobs/job-fields"
+import { JobPayMethod } from "../../enums/jobs/job-pay-method.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 
 export default function PayStructure() {
@@ -27,8 +27,9 @@ export default function PayStructure() {
           <div className="card-body">
             <div className="App">
               <EnumFilterByKeyValue
+                translate={true}
                 withAll={true}
-                enumArray={pay_structure}
+                enumArray={JobPayMethod}
                 name="pay_structure"
                 handleChange={handleChange}
               />
