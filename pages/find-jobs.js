@@ -23,24 +23,8 @@ export default function FindJobs() {
   })
 
   const [filters, setFilters] = useState({
-    keywords: "",
-    category: "",
-    location: "",
-    work_type: "",
-    job_type: "",
-    salary_type: "",
     min_salary: 0,
     max_salary: 0,
-    areas_covered: "",
-    employment_type: "",
-    delivery_type: "",
-    drivers_from: "",
-    equipment_type: "",
-    schedule: "",
-    pay_structure: "",
-    pay_structure: "",
-    endoresements_type: "",
-    mvr_requirements: "",
     page: 1,
     order_by: "ASC",
   })
