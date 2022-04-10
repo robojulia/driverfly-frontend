@@ -10,7 +10,9 @@ const useAuth = () => {
     }
 
     const authCheck = () => {
-        return getItem('user') ? JSON.parse(getItem('user')) : false;
+        const json = getItem('user');
+        const user = json ? JSON.parse(json) : false;
+        return user;
     }
 
     const isDriver = () => {
@@ -27,7 +29,7 @@ const useAuth = () => {
 
     const isCompany = () => {
         const user = authCheck();
-        return user && user.roles == 'company'
+        return user && user.company && user.roles == 'company'
     }
 
     const authenticateCompany = () => {
