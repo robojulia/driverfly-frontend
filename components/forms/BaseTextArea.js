@@ -7,7 +7,7 @@ function BaseTextArea ( { required, className, maxLength, label, rows, placehold
       <br />
       <textarea
         placeholder={placeholder}
-        value={value}
+        value={value || ""}
         rows={rows}
         maxLength={maxLength}
         onChange={onChange}

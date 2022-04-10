@@ -64,9 +64,6 @@ export default function NewJobs() {
     const { authCheck } = useAuth();
     const user = authCheck();
 
-    // if (!user || !user.company) throw new Error("Unable to determine user or company");
-
-
     const { t } = useTranslation();
 
     const form = useFormik({
@@ -236,8 +233,6 @@ export default function NewJobs() {
                     is: (id, type) => !id && type === VehicleType.OTHER,
                     then: yup.string().required(t("this_field_is_required")).nullable()
                 }).nullable(),
-                trailer_type: yup.string().nullable(),
-                trailer_type_other: yup.string().nullable(),
                 transmission_type: yup.string().nullable(),
                 make: yup.string().when("id", {
                     is: v => !v,
@@ -254,9 +249,7 @@ export default function NewJobs() {
                 photo: yup.object({
                     name: yup.string().nullable(),
                     path: yup.string().nullable()
-                }).nullable(),
-                accessories: yup.array(yup.string()).nullable(),
-                accessory_other: yup.string().nullable()
+                }).nullable()
             })).nullable(),
             cdl_class: yup.array(
                 yup
@@ -302,6 +295,50 @@ export default function NewJobs() {
             console.log("Submitting", data);
 
             try {
+                // initialize with the user's current company
+                const companyApi = new CompanyApi(user.company.id);
+
+                // create the location (if new)
+                if (!data.location.id) {
+                    // create new location
+                    const location = await companyApi.locations.create(data.location);
+
+                    set_locations([
+                        ...locations,
+                        location
+                    ]);
+
+                    form.setFieldValue("location", {
+                        id: location.id,
+                        street: null,
+                        city: null,
+                        state: null,
+                        zip_code: null,
+                    });
+
+                    data.location = { id: location.id };
+                }
+
+                if (data.vehicles.length > 0) {
+                    for (let i = 0; i < data.vehicles.length; i++) {
+                        let vehicle = data.vehicles[i];
+
+                        if (!vehicle.id) {
+                            vehicle = await companyApi.vehicles.create(vehicle);
+
+                            data.vehicles[i] = { id: vehicle.id };
+
+                            set_vehicles([
+                                ...vehicles,
+                                vehicle
+                            ]);
+                        }
+                    }
+
+                    form.setFieldValue(`vehicles`, data.vehicles);
+                }
+
+                // iterate through vehicles, create new where needed
                 const job = await new JobApi(user.company.id).create(data);
 
                 toast.success(t("successfully_saved_information"));
@@ -346,111 +383,105 @@ export default function NewJobs() {
         let min_weekly_pay = getOrCurrent("min_weekly_pay");
         let max_weekly_pay = getOrCurrent("max_weekly_pay");
 
-        if (form.values.pay_method === JobPayMethod.RATE_PER_MILE)
-        {
-            /**
-                -if rate per mile		
-                    Min Rate Per Mi	
-                    Max Rate Per Mi	
-                    Avg mi per week	
+        switch (form.values.pay_method) {
+            case JobPayMethod.RATE_PER_MILE:
+                /**
+                    -if rate per mile		
+                        Min Rate Per Mi	
+                        Max Rate Per Mi	
+                        Avg mi per week	
+                        Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+                        Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+                */
+                min_percent = null;
+                max_percent = null;
+                min_hours = null;
+                max_hours = null;
+                min_salary = null;
+                max_salary = null;
+                min_weekly_pay = (min_miles >= 0 && min_rate >= 0 ? (min_miles * min_rate).toFixed(2) : min_weekly_pay);
+                max_weekly_pay = (max_miles >= 0 && max_rate >= 0 ? (max_miles * max_rate).toFixed(2) : max_weekly_pay);
+                break;
+            case JobPayMethod.PERCENT_PER_MOVE:
+            case JobPayMethod.PERCENT_PER_WEIGHT:
+                /*
+                -if % per move		
+                    Min % per move	
+                    Max % per move	
+                    Estimated maximum weekly pay	(manual entry)
+                    Estimated minimum weekly pay	(manual entry)
+                -if % weight		
+                    Min % per weight	
+                    Max % per weight	
+                    Estimated maximum weekly pay	(manual entry)
+                    Estimated minimum weekly pay	(manual entry)
+                */
+                // noop
+                min_miles = null;
+                max_miles = null;
+                min_hours = null;
+                max_hours = null;
+                min_rate = null;
+                max_rate = null;
+                min_salary = null;
+                max_salary = null;
+                break;
+            case JobPayMethod.HOURLY:
+                /*
+                -if hourly		
+                    Min $ per hr	
+                    Max $ per hr	
+                    Avg hrs per week	
                     Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
                     Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-             */
-            min_percent = null;
-            max_percent = null;
-            min_hours = null;
-            max_hours = null;
-            min_salary = null;
-            max_salary = null;
-            min_weekly_pay = (min_miles >= 0 && min_rate >= 0 ? (min_miles * min_rate).toFixed(2) : min_weekly_pay);
-            max_weekly_pay = (max_miles >= 0 && max_rate >= 0 ? (max_miles * max_rate).toFixed(2) : max_weekly_pay);
+                */
+                min_miles = null;
+                max_miles = null;
+                min_percent = null;
+                max_percent = null;
+                min_salary = null;
+                max_salary = null;
+                min_weekly_pay = (min_hours >= 0 && min_rate >= 0 ? (min_hours * min_rate).toFixed(2) : min_weekly_pay);
+                max_weekly_pay = (max_hours >= 0 && max_rate >= 0 ? (max_hours * max_rate).toFixed(2) : max_weekly_pay);
+                break;
+            case JobPayMethod.SET_WEEKLY:
+                /*
+                -if set weekly		
+                    Estimated maximum weekly pay	(manual entry)
+                    Estimated minimum weekly pay	(manual entry)
+                */
+                min_miles = null;
+                max_miles = null;
+                min_percent = null;
+                max_percent = null;
+                min_hours = null;
+                max_hours = null;
+                min_rate = null;
+                max_rate = null;
+                min_salary = null;
+                max_salary = null;
+                break;
+            case JobPayMethod.SALARY:
+                /*
+                -if salaried		
+                    Min annual salary	
+                    Max annual salary	
+                    Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+                    Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
+                */
+                min_miles = null;
+                max_miles = null;
+                min_percent = null;
+                max_percent = null;
+                min_hours = null;
+                max_hours = null;
+                min_rate = null;
+                max_rate = null;
+                min_weekly_pay = min_salary >= 0 ? (min_salary / 52).toFixed(2) : min_weekly_pay;
+                max_weekly_pay = max_salary >= 0 ? (max_salary / 52).toFixed(2) : min_weekly_pay;
+                break;
         }
-        else if (
-            form.values.pay_method === JobPayMethod.PERCENT_PER_MOVE ||
-            form.values.pay_method === JobPayMethod.PERCENT_PER_WEIGHT
-            ) {
-            /*
-            -if % per move		
-                Min % per move	
-                Max % per move	
-                Estimated maximum weekly pay	(manual entry)
-                Estimated minimum weekly pay	(manual entry)
-            -if % weight		
-                Min % per weight	
-                Max % per weight	
-                Estimated maximum weekly pay	(manual entry)
-                Estimated minimum weekly pay	(manual entry)
-            */
-           // noop
-           min_miles = null;
-           max_miles = null;
-           min_percent = null;
-           max_percent = null;
-           min_hours = null;
-           max_hours = null;
-           min_rate = null;
-           max_rate = null;
-           min_salary = null;
-           max_salary = null;
-        }
-        else if (
-            form.values.pay_method === JobPayMethod.HOURLY
-        )
-        {
-            /*
-            -if hourly		
-                Min $ per hr	
-                Max $ per hr	
-                Avg hrs per week	
-                Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-                Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-            */
-            min_miles = null;
-            max_miles = null;
-            min_percent = null;
-            max_percent = null;
-            min_salary = null;
-            max_salary = null;
-            min_weekly_pay = (min_hours >= 0 && min_rate >= 0 ? (min_hours * min_rate).toFixed(2) : min_weekly_pay);
-            max_weekly_pay = (max_hours >= 0 && max_rate >= 0 ? (max_hours * max_rate).toFixed(2) : max_weekly_pay);
-        }
-        else if (form.values.pay_method === JobPayMethod.SET_WEEKLY) {
-            /*
-            -if set weekly		
-                Estimated maximum weekly pay	(manual entry)
-                Estimated minimum weekly pay	(manual entry)
-             */
-            min_miles = null;
-            max_miles = null;
-            min_percent = null;
-            max_percent = null;
-            min_hours = null;
-            max_hours = null;
-            min_rate = null;
-            max_rate = null;
-            min_salary = null;
-            max_salary = null;
-        }
-        else if (form.values.pay_method === JobPayMethod.SALARY) {
-            /*
-            -if salaried		
-                Min annual salary	
-                Max annual salary	
-                Estimated maximum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-                Estimated minimum weekly pay	(automatically calculates. Asks user if this looks correct? If not, allows user to modify)
-            */
 
-            min_miles = null;
-            max_miles = null;
-            min_percent = null;
-            max_percent = null;
-            min_hours = null;
-            max_hours = null;
-            min_rate = null;
-            max_rate = null;
-            min_weekly_pay = min_salary >= 0 ? (min_salary / 52).toFixed(2) : min_weekly_pay;
-            max_weekly_pay = max_salary >= 0 ? (max_salary / 52).toFixed(2) : min_weekly_pay;
-        }
         form.setValues({
             ...form.values,
             min_miles: min_miles,
@@ -610,24 +641,28 @@ export default function NewJobs() {
         form.setValues({
             ...form.values,
             vehicles: form.values.vehicles.map((v, i) => {
-                if (i == idx && !!value) {
-                    return {
-                        id: value,
-                        type: null,
-                        type_other: null,
-                        transmission_type: null,
-                        make: null,
-                        model: null,
-                        year: null,
-                        photo: null,
-                    };
+                if (i == idx) {
+                    if (!!value) {
+                        return {
+                            id: value,
+                            type: null,
+                            type_other: null,
+                            transmission_type: null,
+                            make: null,
+                            model: null,
+                            year: null,
+                            photo: null,
+                        };
+                    }
+                    else {
+                        return {
+                            ...v,
+                            id: null,
+                        };
+                    }
                 }
 
-                return {
-                    ...v,
-                    id: value
-                };
-
+                return v;
             })
         });
     }
