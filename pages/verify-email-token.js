@@ -52,7 +52,7 @@ export async function getServerSideProps({ query }) {
   await signupAPI.verifyEmailToken({ emailVerifyToken })
     .then(res => {
       // console.log("res.status", res);
-      if (res.status == 200) {
+      if (res?.status == 200) {
         response = {
           verified: true,
           message: "Account activated Successfully! please proceed to login."
@@ -65,7 +65,7 @@ export async function getServerSideProps({ query }) {
       }
     }).catch(error => {
       // console.log("error.response", error.response.data);
-      if (error.response.status == 422 || error?.response?.data?.errors?.User) {
+      if (error?.response?.status == 422 || error?.response?.data?.errors?.User) {
         response = {
           verified: false,
           message: `${error?.response?.data?.errors?.User || "Something went wrong"}`

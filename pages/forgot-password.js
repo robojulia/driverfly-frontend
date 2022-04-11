@@ -46,7 +46,7 @@ export default function Forgot() {
     }
     await resetPasswordAPI.forgetPassword(formData)
       .then(res => {
-        if (res.status == 201) {
+        if (res?.status == 201) {
           toast.success("Please check your email", {
             position: "top-right",
             autoClose: 3000,
@@ -59,7 +59,7 @@ export default function Forgot() {
 
         }
       }).catch(error => {
-        if (error.response.status == 422) {
+        if (error?.response?.status == 422) {
           setError("Password Reset Email Already Sent, Please check your email ")
           toast.error("Password Reset Email Already Sent, Please check your email", {
             position: "top-right",

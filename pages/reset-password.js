@@ -50,7 +50,7 @@ export default function Forgot() {
       passwordResetToken
     })
       .then(res => {
-        console.log("res.status", res.status);
+        // console.log("res.status", res.status);
         if (res.status == 200) {
           toast.success("Password Reset Successfully", {
             position: "top-right",
@@ -64,8 +64,8 @@ export default function Forgot() {
           router.push("/login")
         }
       }).catch(error => {
-        console.log("error.response", error.response.status);
-        if (error == 422) {
+        // console.log("error.response", error.response.status);
+        if (error?.response?.status == 422) {
           toast.error("User not exist", {
             position: "top-right",
             autoClose: 3000,
