@@ -8,9 +8,11 @@ import RelatedJobs from '../../components/related-jobs/Related-Jobs'
 import SocilShare from '../../components/share-link/ShareLink'
 import timeSince from "../../utils/timeSince"
 import { ToastContainer, toast } from 'react-toastify'
+import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum"
 
-export default function Detail({ data }) {
-  const jobDetail = data
+export default function Detail({ jobDetail }) {
+
+  console.log(jobDetail);
 
   const router = useRouter()
 
@@ -23,26 +25,27 @@ export default function Detail({ data }) {
             <div className="col-md-9">
               <div className="ort-inner">
                 <div className="media align-items-center bg-transparent border-0 p-0">
-                  <a href="#" className="text-dark text-center text-decoration-none"> <img className="d-flex mr-4 truck-img mb-3" src="img/CTR-logo-cartoon.png" alt="" /> View all jobs <i className="fa fa-long-arrow-right pl-1" aria-hidden="true"></i></a>
+                  <a href="#" className="text-dark text-center text-decoration-none">
+                    <img className="d-flex mr-4 truck-img mb-3" src="/driverfly-logo-square.png" alt="" />
+                    View all jobs <i className="fa fa-long-arrow-right pl-1" aria-hidden="true"></i></a>
                   <div className="media-body">
-                    <h6>Solo</h6>
+                    {/* <h6>Solo</h6> */}
                     <h4 className="mt-0">
                       {jobDetail.title}
                       <span className="" data-toggle="tooltip"
                         data-placement="top" title="{jobDetail.title}">
-                        <i className="fa fa-star" aria-hidden="true"></i>
-                      </span>
-                      <span className="urgent">
-                        {jobDetail.work_type}
+                        {/* <i className="fa fa-star" aria-hidden="true"></i> */}
+                      </span> - <span className="">
+                        {JobEmploymentType[jobDetail.employment_type]}
                       </span>
                     </h4>
                     <div className="job-date-author">
                       posted {timeSince(jobDetail.created_at)} ago
-                      by <a href="" className="employer text-theme">{jobDetail.complany_name}</a>
+                      by <span role="button" className="employer text-theme">{jobDetail.company?.name}</span>
                     </div>
                     <div className="job-metas">
                       <div className="job-location d-flex align-items-center">
-                        <p className="pr-4"> <i className="fa fa-map-marker mr-2" aria-hidden="true"></i>{jobDetail.location}</p>
+                        {/* <p className="pr-4"> <i className="fa fa-map-marker mr-2" aria-hidden="true"></i>{jobDetail.location}</p> */}
                         <p><i className="fa fa-usd mr-2" aria-hidden="true"></i>{jobDetail.min_weekely_pay ? jobDetail.min_weekely_pay : 0} - {jobDetail.max_weekely_pay ? jobDetail.max_weekely_pay : 0} per week</p>
                       </div>
                     </div>
@@ -65,12 +68,12 @@ export default function Detail({ data }) {
         <div className="container">
           <div className="row">
             <div className="col-lg-8">
-              < JobDescription job={jobDetail} />
+              {/* < JobDescription job={jobDetail} /> */}
               < SocilShare />
               < RelatedJobs />
             </div>
             <div className="col-lg-4">
-              < JonInformation job={jobDetail} />
+              {/* < JonInformation job={jobDetail} /> */}
             </div>
           </div>
         </div>
@@ -83,7 +86,7 @@ export async function getServerSideProps(context) {
   const id = context.params.id;
   const { data } = await axios.get(`${process.env.BASE_URL_API}/jobs/${context.params.id}`)
 
-  return { props: { data } }
+  return { props: { jobDetail: data } }
 }
 
 Detail.getLayout = function getLayout(page) {
