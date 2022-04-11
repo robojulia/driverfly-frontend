@@ -29,7 +29,7 @@ export default function JobsList() {
               <input type="checkbox" name="remember" id="remember" value="1" />
 
             </label>
-            <img className="d-flex mr-4 truck-img" src="img/CTR-logo-cartoon.png" alt="" />
+            <img className="d-flex mr-4 truck-img" src="driverfly-logo-square.png" alt="" />
             <div className="media-body">
               <span className="urgent">URGENT</span>
               <h6>Solo</h6>
