@@ -41,8 +41,7 @@ export default function JobsList() {
                 </span>
               </h4>
               <div className="job-date-author">
-                posted {timeSince(job.created_at)} ago
-                {
+                posted {timeSince(job.created_at)} ago {
                   job?.company?.name &&
                   <>
                     by <span className="employer text-theme " role='button'>
@@ -53,7 +52,8 @@ export default function JobsList() {
               </div>
               <div className="job-metas text-secondary text-secondary">
                 <div className="job-location">
-                  <i className="fa fa-map-marker" aria-hidden="true"></i>{job.location}
+                  <i className="fa fa-map-marker" aria-hidden="true"></i>
+                  {`${job.location?.street}, ${job.location?.city}, ${job.location?.state},`}
                 </div>
                 <div className="job-location">
                   <i className="fa fa-star-o" aria-hidden="true"></i><strong
