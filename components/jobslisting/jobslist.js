@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
+import timeSince from "../../utils/timeSince"
 
 export default function JobsList() {
 
@@ -38,8 +39,15 @@ export default function JobsList() {
                 title="Tooltip on top"> <i
                   className="fa fa-star" aria-hidden="true"></i> </span></h4>
               <div className="job-date-author">
-                posted 3 days ago
-                by <a href="" className="employer text-theme">Custom Trucker Recruiting</a>
+                posted {timeSince(job.created_at)} ago
+                {
+                  job.company.name &&
+                  <>
+                    by <span className="employer text-theme " role='button'>
+                      {job.company.name}
+                    </span>
+                  </>
+                }
               </div>
               <div className="job-metas text-secondary text-secondary">
                 <div className="job-location">

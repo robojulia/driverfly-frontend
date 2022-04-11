@@ -2,7 +2,7 @@ import { deleteKey, updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
-import { areas_covered } from "../../enums/jobs/job-fields"
+import { JobGeography } from "../../enums/jobs/job-geography.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 
 export default function AreasCovered() {
@@ -26,8 +26,9 @@ export default function AreasCovered() {
           <div className="card-body">
             <div className="App">
               <EnumFilterByKeyValue
+                translate={true}
                 withAll={true}
-                enumArray={areas_covered}
+                enumArray={JobGeography}
                 name="areas_covered"
                 handleChange={handleChange}
               />

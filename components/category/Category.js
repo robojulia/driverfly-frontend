@@ -24,12 +24,13 @@ export default function Category() {
           <div className="card-body">
             <div className="custom-control custom-checkbox p-0">
               <div className="App">
-              <EnumFilterByKeyValue
-                withAll={true}
-                enumArray={DriverLicenseType}
-                name="category"
-                handleChange={handleChange}
-              />
+                <EnumFilterByKeyValue
+                  translate={true}
+                  withAll={true}
+                  enumArray={DriverLicenseType}
+                  name="cdl_class"
+                  handleChange={handleChange}
+                />
               </div>
             </div>
           </div>

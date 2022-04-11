@@ -8,9 +8,11 @@ import JobsList from '../components/jobslisting/jobslist'
 import Layout from "../components/layouts"
 import jobsContext from "../context/jobContext"
 import Location from "../components/location/Location"
+import BaseApi from "./api/_baseApi"
 
 export default function FindJobs() {
 
+  const baseApi = new BaseApi();
   const [jobs, setJobs] = useState([])
   const [pagingMeta, setPagingMeta] = useState({
     currentPage: 1,
@@ -21,24 +23,8 @@ export default function FindJobs() {
   })
 
   const [filters, setFilters] = useState({
-    keywords: "",
-    category: "",
-    location: "",
-    work_type: "",
-    job_type: "",
-    salary_type: "",
     min_salary: 0,
     max_salary: 0,
-    areas_covered: "",
-    employment_type: "",
-    delivery_type: "",
-    drivers_from: "",
-    equipment_type: "",
-    schedule: "",
-    pay_structure: "",
-    pay_structure: "",
-    endoresements_type: "",
-    mvr_requirements: "",
     page: 1,
     order_by: "ASC",
   })
@@ -61,11 +47,12 @@ export default function FindJobs() {
   }
 
   const fetchJobs = async () => {
-    const { items, meta } = await axios.get(`${process.env.BASE_URL_API}/jobs`, {
+    const res = await baseApi.get(`${process.env.BASE_URL_API}/jobs`, {
       params: {
         ...filters,
       }
-    }).then(res => res.data)
+    })
+    let { items, meta } = res.data
     setJobs(items)
     setPagingMeta(meta)
   }

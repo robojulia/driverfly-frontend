@@ -79,6 +79,7 @@ export default function Range() {
                         />
                         <div className='mt-3 text-info'>Radius: {range} miles</div>
                         <RangeSlider
+                            max={500}
                             disabled={location ? false : true}
                             value={range}
                             onChange={e => setRange(e.target.value)}
