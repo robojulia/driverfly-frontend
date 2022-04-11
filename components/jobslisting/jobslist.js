@@ -31,17 +31,19 @@ export default function JobsList() {
             </label>
             <img className="d-flex mr-4 truck-img" src="driverfly-logo-square.png" alt="" />
             <div className="media-body">
-              <span className="urgent">URGENT</span>
-              <h6>Solo</h6>
-              <h4 className="mt-0">{job.title}<span className=""
-                data-toggle="tooltip"
-                data-placement="top"
-                title="Tooltip on top"> <i
-                  className="fa fa-star" aria-hidden="true"></i> </span></h4>
+              <h4 className="mt-0">{job.title}
+                <span
+                  className=""
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Tooltip on top">
+                  <i className="fa fa-star" aria-hidden="true"></i>
+                </span>
+              </h4>
               <div className="job-date-author">
                 posted {timeSince(job.created_at)} ago
                 {
-                  job.company.name &&
+                  job?.company?.name &&
                   <>
                     by <span className="employer text-theme " role='button'>
                       {job.company.name}
