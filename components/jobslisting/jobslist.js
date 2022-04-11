@@ -57,10 +57,7 @@ export default function JobsList() {
                 </div>
                 <div className="job-location">
                   <i className="fa fa-star-o" aria-hidden="true"></i><strong
-                    className="text-secondary">Accepting drivers from
-                    anywhere in Illinois, Indiana, Iowa, Kansas, Michigan, Minnesota,
-                    Missouri, Nebraska, North Dakota, Ohio, South Dakota and
-                    Wisconsin</strong>
+                    className="text-secondary">{job.description_short}</strong>
                 </div>
               </div>
 
