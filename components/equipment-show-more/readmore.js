@@ -55,7 +55,7 @@ const Content = () => {
                       onChange={handleChange}
                       type="radio"
                       name="equipment_type"
-                      value={value} /> {t(value)}
+                      value={value} /> {t(value.toLowerCase())}
                   </div>
                 </>
               )
@@ -71,7 +71,7 @@ const Content = () => {
                       onChange={handleChange}
                       type="radio"
                       name="equipment_type"
-                      value={value} /> {t(value)}
+                      value={value} /> {t(value.toLowerCase())}
                   </div>
                 </>
               )
