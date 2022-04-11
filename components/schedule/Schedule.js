@@ -3,7 +3,7 @@ import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
-import { schedule } from "../../enums/jobs/job-fields"
+import { JobSchedule } from "../../enums/jobs/job-schedule.enum"
 
 export default function Schedule() {
   const { state, method } = useContext(jobContext)
@@ -25,8 +25,9 @@ export default function Schedule() {
           <div className="card-body">
             <div className="App">
               <EnumFilterByKeyValue
+                translate={true}
                 withAll={true}
-                enumArray={schedule}
+                enumArray={JobSchedule}
                 name="schedule"
                 handleChange={handleChange}
               />
