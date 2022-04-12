@@ -77,7 +77,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
               < RelatedJobs jobs={relatedJobs} />
             </div>
             <div className="col-lg-4">
-              < JonInformation job={jobDetail} />
+              {/* < JonInformation job={jobDetail} /> */}
             </div>
           </div>
         </div>
