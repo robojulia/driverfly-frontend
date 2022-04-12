@@ -36,12 +36,12 @@ export default class CompanyApi extends BaseApi {
     }
     vehicles = {
         baseUrl: (companyId?: number) => `${this.baseUrl(companyId)}/vehicles`,
-        get: async (companyId?: number) : Promise<VehicleEntity[]> => {
-            const { data } = await this.get(this.vehicles.baseUrl(companyId));
+        get: async (params?: { withPhoto?: boolean }, companyId?: number) : Promise<VehicleEntity[]> => {
+            const { data } = await this.get(this.vehicles.baseUrl(companyId) + (params && params.withPhoto ? "?withPhoto=true" : ""));
             return data;
         },
-        getById: async (id: number, companyId?: number) : Promise<VehicleEntity> => {
-            const { data } = await this.get(`${this.vehicles.baseUrl(companyId)}/${id}`);
+        getById: async (id: number, params?: { withPhoto?: boolean }, companyId?: number) : Promise<VehicleEntity> => {
+            const { data } = await this.get(`${this.vehicles.baseUrl(companyId)}/${id}` + (params && params.withPhoto ? "?withPhoto=true" : ""));
 
             return data;
         },
