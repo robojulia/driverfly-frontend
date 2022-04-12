@@ -3,10 +3,17 @@ import LogoutButton from '../../../buttons/Logout';
 import { Container } from "reactstrap";
 import Header from "../header/Header";
 import Sidebar from "../sidebars/vertical/Company-Profile/Sidebar";
+import SettingsSidebar from "../sidebars/vertical/Company-Profile/SettingsSidebar";
 import Head from "next/head";
+
+import { useTranslation } from "react-i18next";
+import { useRouter } from "next/router";
 
 
 const FullLayout = ({ children }) => {
+  const { t } = useTranslation();
+
+  const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const showMobilemenu = () => {
     setOpen(!open);
@@ -15,10 +22,10 @@ const FullLayout = ({ children }) => {
   return (
     <>
       <Head>
-        <title>Company-Dashboard</title>
+        <title>{t("DRIVERFLY_COMPANY_DASHBOARD")}</title>
         <meta
           name="description"
-          content="Driverfly Dashboard"
+          content={t("DRIVERFLY_COMPANY_DASHBOARD")}
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -38,6 +45,12 @@ const FullLayout = ({ children }) => {
             >
               <Sidebar showMobilemenu={() => showMobilemenu()} />
             </aside>
+            {
+              router.asPath.startsWith("/dashboard/company/settings") &&
+              <aside className={`sidebarArea ${!open ? "" : "showSidebar"}`}>
+                <SettingsSidebar showMobilemenu={() => showMobilemenu()} />
+              </aside>
+            }
             {/********Content Area**********/}
             <div className="header">
            

@@ -3,9 +3,80 @@ import { Button, Nav, Navbar, Container, NavDropdown, Item, NavItem, Dropdown } 
 import Link from "next/link";
 import { useRouter } from "next/router";
 
+import HomeIcon from '@mui/icons-material/Home';
+import WorkIcon from '@mui/icons-material/Work';
+import PeopleIcon from '@mui/icons-material/People';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import EmailIcon from '@mui/icons-material/Email';
+import ContactPageIcon from '@mui/icons-material/ContactPage';
+import GppGoodIcon from '@mui/icons-material/GppGood';
+import SettingsIcon from '@mui/icons-material/Settings';
+
+import { useTranslation } from "react-i18next";
 
 export default function Sidebar() {
+  const { t } = useTranslation();
+
   const router = useRouter();
+
+  const menu_options = [
+    {
+      pathname: "/dashboard/company",
+      icon: HomeIcon,
+      text: t("dashboard")
+    },
+    {
+      pathname: "/dashboard/company/job-listing",
+      icon: WorkIcon,
+      text: t("JOB_LISTINGS")
+    },
+    {
+      pathname: "/dashboard/company/new-job",
+      // icon: WorkIcon,
+      text: "Add new Jobs"
+    },
+    // {
+    //   pathname: "/dashboard/company/applicants",
+    //   icon: PeopleIcon,
+    //   text: t("APPLICANTS")
+    // },
+    // {
+    //   pathname: "/dashboard/company/driver-applications-and-resume",
+    //   icon: AssignmentIcon,
+    //   text: t("DRIVER_APPLICATION")
+    // },
+    // {
+    //   pathname: "/dashboard/company/sms",
+    //   icon: EmailIcon,
+    //   text: t("MESSAGES")
+    // },
+    // {
+    //   pathname: "/dashboard/company/driver-directory",
+    //   icon: ContactPageIcon,
+    //   text: t("DRIVER_DIRECTORY")
+    // },
+    // {
+    //   pathname: "/dashboard/company/safety-and-complience",
+    //   icon: GppGoodIcon,
+    //   text: t("SAFETY_COMPLIANCE")
+    // },
+    {
+      pathname: "/dashboard/company/settings",
+      icon: SettingsIcon,
+      text: t("SETTINGS"),
+      startsWith: true,
+    },
+    // {
+    //   pathname: "/dashboard/company/company-profile",
+    //   icon: null,
+    //   text: "Company Profile"
+    // },
+    // {
+    //   pathname: "/dashboard/company/admin-approval-jobs",
+    //   icon: null,
+    //   text: "Admin approval for jobs"
+    // }
+  ];
   return (
 
     <div className="side_bar">
@@ -15,40 +86,18 @@ export default function Sidebar() {
           <Navbar.Collapse id="basic-navbar-nav">
            
           <ul className="dashboardsidebar ">
-          <li className={router.pathname == "/dashboard/company" ? "active" : ""}>
-            <Link className="sidenav-bg" href="/dashboard/company">Dashboard</Link>
-          </li>
-          <li className={router.pathname == "/dashboard/company/job-listing" ? "active" : ""}>
-            <Link href="/dashboard/company/job-listing">Job Listings</Link>
-
-          </li>
-          <li className={router.pathname == "/dashboard/company/new-job" ? "active" : ""}>
-            <Link href="/dashboard/company/new-job">Add new Jobs</Link>
-          </li>
-          <li className={router.pathname == "/dashboard/company/applicants" ? "active" : ""}>
-            <Link href="/dashboard/company/applicants">Applicants</Link>
-          </li>
-          <li className={router.pathname == "/dashboard/company/sms" ? "active" : ""}>
-            <Link href="/dashboard/company/sms"> Send SMS</Link>
-          </li>
-          <li className={router.pathname == "/dashboard/company/driver-applications-and-resume" ? "active" : ""}>
-            <Link href="/dashboard/company/driver-applications-and-resume"> Driver applications and resume</Link>
-          </li>
-          <li className={router.pathname == "/dashboard/company/driver-directory" ? "active" : ""}>
-            <Link href="/dashboard/company/driver-directory"> Driver Directory</Link>
-          </li>
-          <li className={router.pathname == "/dashboard/company/safety-and-complience" ? "active" : ""}>
-            <Link href="/dashboard/company/safety-and-complience">Safety and Complience</Link>
-          </li>
-          <li className={router.pathname == "/dashboard/company/company-settings" ? "active" : ""}>
-            <Link href="/dashboard/company/company-settings"> Company Settings</Link>
-          </li>
-          <li className={router.pathname == "/dashboard/company/company-profile" ? "active" : ""}>
-            <Link href="/dashboard/company/company-profile">Company Profile</Link>
-          </li>
-          <li className={router.pathname == "/dashboard/company/admin-approval-jobs" ? "active" : ""}>
-            <Link href="/dashboard/company/admin-approval-jobs">Admin approval for jobs</Link>
-          </li>
+            {
+              menu_options.map((v, i) => (
+              <li key={i} className={(v.startsWith ? router.asPath.startsWith(v.pathname) : router.asPath === v.pathname) ? "active" : ""}>
+                  {
+                    v.icon &&
+                    <span className="float-left">
+                      < v.icon className="icon_left" />
+                    </span>
+                  }
+                <Link href={v.pathname}>{v.text}</Link>
+              </li>))
+            }
         </ul>
            
           </Navbar.Collapse>
