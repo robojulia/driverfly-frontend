@@ -1,15 +1,21 @@
-import { JobGeography } from "../../enums/jobs/job-geography.enum"
 import { useTranslation } from "react-i18next";
+import { JobGeography } from "../../enums/jobs/job-geography.enum"
+import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
+import { JobDeliveryType } from "../../enums/jobs/job-delivery-type.enum";
+import { JobEquipmentType } from "../../enums/jobs/job-equipment-type.enum";
+import { JobSchedule } from "../../enums/jobs/job-schedule.enum";
+import { JobPayMethod } from "../../enums/jobs/job-pay-method.enum";
+import { MvrType } from "../../enums/drivers/mvr-type.enum";
+import timeSince from "../../utils/timeSince";
 
 export default function JonInformation({ job }) {
 
   const { t } = useTranslation();
-  const splitStr = (str, separator, EnumType) => {
+  const enumMap = (str, separator, EnumType) => {
     str = `${str}`
-    console.log(str.split(separator));
     return str.split(separator).map(item => {
       return t(EnumType[item].toLowerCase())
-    })
+    }).join(', ')
   }
 
   return (
@@ -33,14 +39,9 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">Areas Covered</div>
-                <div className="value"> {splitStr(job.geography, ",", JobGeography)}</div>
-              </div>
-            </li>
-            <li>
-              <div className="icon">    </div>
-              <div className="details">
-                <div className="text">Full-time/Part-time</div>
-                {/* <div className="value">{job.job_type}</div> */}
+                <div className="value">
+                  {job.geography && enumMap(job.geography, ",", JobGeography)}
+                </div>
               </div>
             </li>
             <li>
@@ -48,25 +49,17 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">Employment Type</div>
-                {/* <div className="value">{job.employment_type}</div> */}
+                <div className="value">
+                  {job.employment_type && enumMap(job.employment_type, ",", JobEmploymentType)}
+                </div>
               </div>
             </li>
             <li>
               <div className="icon">
-                <i className="fa fa-user-o" aria-hidden="true"></i>
               </div>
               <div className="details">
                 <div className="text">Type of Delivery</div>
-                {/* <div className="value"> {job.delivery_type}</div> */}
-              </div>
-            </li>
-            <li>
-              <div className="icon">
-                <i className="fa fa-user-o" aria-hidden="true"></i>
-              </div>
-              <div className="details">
-                <div className="text">Accepting Drivers From...</div>
-                {/* <div className="value"> {job.drivers_from}</div> */}
+                {job.delivery_type && enumMap(job.delivery_type, ",", JobDeliveryType)}
               </div>
             </li>
             <li>
@@ -74,34 +67,24 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">Equipment Type</div>
-                {/* <div className="value"> {job.equipment_type}</div> */}
+                {job.equipment_type && enumMap(job.equipment_type, ",", JobEquipmentType)}
               </div>
             </li>
             <li>
               <div className="icon">
-                <i className="fa fa-user-o" aria-hidden="true"></i>
+                <i className="fa fa-solid fa-clock" aria-hidden="true"></i>
               </div>
               <div className="details">
                 <div className="text">Schedule</div>
-                {/* <div className="value">{job.schedule}</div> */}
+                {job.schedule && enumMap(job.schedule, ",", JobSchedule)}
               </div>
             </li>
             <li>
               <div className="icon">
-                <i className="fa fa-user-o" aria-hidden="true"></i>
               </div>
               <div className="details">
-                <div className="text">Pay Structure</div>
-                {/* <div className="value"> {job.pay_structure}</div> */}
-              </div>
-            </li>
-            <li>
-              <div className="icon">
-                <i className="fa fa-user-o" aria-hidden="true"></i>
-              </div>
-              <div className="details">
-                <div className="text">Minimum Age</div>
-                {/* <div className="value">{job.min_age}</div> */}
+                <div className="text">Pay Method</div>
+                {job.pay_method && enumMap(job.pay_method, ",", JobPayMethod)}
               </div>
             </li>
 
@@ -110,7 +93,25 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">MVR Requirements</div>
-                {/* <div className="value"> {job.mvr_requirements}</div> */}
+                <ul>
+                  {job.mvr_requirements &&
+                    job.mvr_requirements.map(item => {
+                      return <li>
+                        <div className="row">
+                          <div className="col-md-12">
+                            {t(MvrType[item.type].toLowerCase())}
+                          </div>
+                          <div className="col-md-6">
+                            {`${t("max_count")} ${item.max_count} `}
+                          </div>
+                          <div className="col-md-6">
+                            {`${t("max")} ${t("years")} ${item.max_years} `}
+                          </div>
+                        </div>
+                      </li>
+                    })
+                  }
+                </ul>
               </div>
             </li>
           </ul>
@@ -121,22 +122,22 @@ export default function JonInformation({ job }) {
             <div className="icon text-theme">
               <i className="fa fa-file-archive-o" aria-hidden="true"></i>
             </div>
-            <span className="text"><span className="number">2 weeks</span> ago</span>
+            <span className="text"><span className="number">{ timeSince(job.created_at)}</span> ago</span>
           </div>
 
-          <div className="statistic-item flex-middle">
+          {/* <div className="statistic-item flex-middle">
             <div className="icon text-theme">
               <i className="fa fa-file-archive-o" aria-hidden="true"></i>
             </div>
             <span className="text"><span className="number">143</span> Views</span>
-          </div>
+          </div> */}
 
-          <div className="statistic-item flex-middle">
+          {/* <div className="statistic-item flex-middle">
             <div className="icon text-theme">
               <i className="fa fa-file-archive-o" aria-hidden="true"></i>
             </div>
             <span className="text"><span className="number">2</span> Applicants</span>
-          </div>
+          </div> */}
         </div>
         <button type="button" className="btn btn-danger" data-toggle="modal" data-target="#exampleModal"> Apply Now <i className="fa fa-long-arrow-right pl-1" aria-hidden="true"></i></button>
         <div className="socials-apply clearfix">

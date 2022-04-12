@@ -37,7 +37,7 @@ export default function JobsList() {
                   data-toggle="tooltip"
                   data-placement="top"
                   title="Tooltip on top">
-                  <i className="fa fa-star" aria-hidden="true"></i>
+                  {/* <i className="fa fa-star" aria-hidden="true"></i> */}
                 </span>
               </h4>
               <div className="job-date-author">
@@ -56,8 +56,8 @@ export default function JobsList() {
                   {`${job.location?.street}, ${job.location?.city}, ${job.location?.state},`}
                 </div>
                 <div className="job-location">
-                  <i className="fa fa-star-o" aria-hidden="true"></i><strong
-                    className="text-secondary">{job.description_short}</strong>
+                  {/* <i className="fa fa-star-o" aria-hidden="true"></i> */}
+                  <strong className="text-secondary">{job.description_short}</strong>
                 </div>
               </div>
 

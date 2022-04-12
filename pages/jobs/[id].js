@@ -11,10 +11,9 @@ import { ToastContainer, toast } from 'react-toastify'
 import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum"
 import Link from 'next/link'
 import { useTranslation } from "react-i18next"
+import JobApi from "../api/job"
 
-export default function Detail({ jobDetail }) {
-
-  console.log(jobDetail);
+export default function Detail({ jobDetail, relatedJobs }) {
 
   const router = useRouter()
   const { t } = useTranslation();
@@ -39,11 +38,7 @@ export default function Detail({ jobDetail }) {
                       {jobDetail.title}
                       <span className="" data-toggle="tooltip"
                         data-placement="top" title="{jobDetail.title}">
-                        {/* <i className="fa fa-star" aria-hidden="true"></i> */}
                       </span>
-                      {/* <span className="">
-                        {JobEmploymentType[jobDetail.employment_type]}
-                      </span> */}
                     </h4>
                     <div className="job-date-author">
                       posted {timeSince(jobDetail.created_at)} ago
@@ -79,7 +74,7 @@ export default function Detail({ jobDetail }) {
             <div className="col-lg-8">
               < JobDescription job={jobDetail} />
               < SocilShare />
-              < RelatedJobs />
+              < RelatedJobs jobs={relatedJobs} />
             </div>
             <div className="col-lg-4">
               < JonInformation job={jobDetail} />
@@ -95,7 +90,9 @@ export async function getServerSideProps(context) {
   const id = context.params.id;
   const { data } = await axios.get(`${process.env.BASE_URL_API}/jobs/${context.params.id}`)
 
-  return { props: { jobDetail: data } }
+  const { items } = await new JobApi().fetchAll({ companyId: data.company?.id, take: 3 });
+
+  return { props: { jobDetail: data, relatedJobs: items } }
 }
 
 Detail.getLayout = function getLayout(page) {
