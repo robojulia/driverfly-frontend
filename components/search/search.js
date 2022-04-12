@@ -21,7 +21,7 @@ export default function Search() {
   return (
     <>
       <label className="heading-label my-4">Search Keywords </label>
-      <input onKeyPress={searchHandler} type="text" className="form-control shadow-sm p-4" placeholder="e.g. web design" />
+      <input onKeyPress={searchHandler} type="text" className="form-control shadow-sm p-4" placeholder="e.g. flatbed" />
     </>
   )
 }

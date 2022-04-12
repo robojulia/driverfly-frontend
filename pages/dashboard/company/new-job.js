@@ -560,7 +560,7 @@ export default function NewJobs() {
                 {
                     type: null,
                     max_count: 0,
-                    max_years: null
+                    max_years: 0
                 }
             ],
         });
@@ -585,7 +585,7 @@ export default function NewJobs() {
                 {
                     type: null,
                     max_count: 0,
-                    max_years: null
+                    max_years: 0
                 }
             ],
         });
@@ -715,7 +715,36 @@ export default function NewJobs() {
           name: null, url: null
         });
       }
-        return (
+
+      /**
+       * 
+       * @param {React.ChangeEvent<HTMLSelectElement | HTMLInputElement} e 
+       */
+      const onIntChange = (e) => {
+          let { name, value } = e.target;
+
+          console.log(name, value, typeof value);
+
+          if (typeof value === "string") {
+              value = parseInt(value);
+              console.log("new value:", value, typeof value);
+              if (isNaN(value)) value = null;
+          }
+
+          form.setFieldValue(name, value);
+      }
+
+      const onFloatChange = (e) => {
+        let { name, value } = e.target;
+
+        if (typeof value === "string") {
+            value = parseFloat(value);
+            if (isNaN(value)) value = null;
+        }
+
+        form.setFieldValue(name, value);
+      }
+      return (
 
         <>
 
@@ -829,6 +858,19 @@ export default function NewJobs() {
                                     touched={form.touched.expiry_date}
                                     error={form.errors.expiry_date}
                                     onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    />
+                                <BaseInput
+                                    className="col-12"
+                                    label={t("drivers_needed")}
+                                    name="drivers_needed"
+                                    placeholder={t("drivers_needed")}
+                                    type="number"
+                                    value={form.values.drivers_needed}
+                                    touched={form.touched.drivers_needed}
+                                    error={form.errors.drivers_needed}
+                                    onKeyDown={preventNegative}
+                                    onChange={onIntChange}
                                     handleBlur={form.handleBlur}
                                     />
                                 <BaseCheckList
@@ -1302,7 +1344,7 @@ export default function NewJobs() {
                                                 value={v.year}
                                                 type="number"
                                                 onKeyDown={preventNegative}
-                                                onChange={form.handleChange}
+                                                onChange={onIntChange}
                                                 handleBlur={form.handleBlur}
                                                 touched={get(form.touched, "year")}
                                                 error={get(form.errors, "year")}
@@ -1373,7 +1415,7 @@ export default function NewJobs() {
                                     min={1}
                                     max={100}
                                     value={form.values.max_applicant_radius}
-                                    onChange={form.handleChange}
+                                    onChange={onIntChange}
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.max_applicant_radius}
                                     error={form.errors.max_applicant_radius}
@@ -1399,7 +1441,7 @@ export default function NewJobs() {
                                     min="0"
                                     type="number"
                                     onKeyDown={preventNegative}
-                                    onChange={form.handleChange}
+                                    onChange={onIntChange}
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.min_years_experience}
                                     error={form.errors.min_years_experience}
@@ -1448,8 +1490,8 @@ export default function NewJobs() {
                                                 value={v.years}
                                                 min="1"
                                                 type="number"
-                                                onKeyDown={preventNegative}
-                                                onChange={form.handleChange}
+                                                onKeyDown={positiveInt}
+                                                onChange={onIntChange}
                                                 handleBlur={form.handleBlur}
                                                 touched={get(form.touched, "years")}
                                                 error={get(form.errors, "years")}
@@ -1509,8 +1551,8 @@ export default function NewJobs() {
                                                     value={v.quantity}
                                                     min="1"
                                                     type="number"
-                                                    onKeyDown={preventNegative}
-                                                    onChange={form.handleChange}
+                                                    onKeyDown={positiveInt}
+                                                    onChange={onIntChange}
                                                     handleBlur={form.handleBlur}
                                                     touched={get(form.touched, "quantity")}
                                                     error={get(form.errors, "quantity")}
@@ -1590,8 +1632,8 @@ export default function NewJobs() {
                                                     required
                                                     value={v.max_count}
                                                     options={counts}
-                                                    onKeyDown={preventNegative}
-                                                    onChange={form.handleChange}
+                                                    onKeyDown={positiveInt}
+                                                    onChange={onIntChange}
                                                     handleBlur={form.handleBlur}
                                                     touched={get(form.touched, "max_count")}
                                                     error={get(form.errors, "max_count")}
@@ -1612,13 +1654,12 @@ export default function NewJobs() {
                                                 <BaseSelect
                                                     className="col-3"
                                                     label={t("within")}
-                                                    placeholder={t("years")}
                                                     name={`mvr_requirements.${i}.max_years`}
                                                     required
                                                     value={v.max_years}
                                                     options={years}
-                                                    onKeyDown={preventNegative}
-                                                    onChange={form.handleChange}
+                                                    onKeyDown={positiveInt}
+                                                    onChange={onIntChange}
                                                     handleBlur={form.handleBlur}
                                                     touched={get(form.touched, "max_years")}
                                                     error={get(form.errors, "max_years")}
@@ -1672,8 +1713,8 @@ export default function NewJobs() {
                                                     required
                                                     value={v.max_count}
                                                     options={counts}
-                                                    onKeyDown={preventNegative}
-                                                    onChange={form.handleChange}
+                                                    onKeyDown={positiveInt}
+                                                    onChange={onIntChange}
                                                     handleBlur={form.handleBlur}
                                                     touched={get(form.touched, "max_count")}
                                                     error={get(form.errors, "max_count")}
@@ -1694,13 +1735,12 @@ export default function NewJobs() {
                                                 <BaseSelect
                                                     className="col-3"
                                                     label={t("within")}
-                                                    placeholder={t("years")}
                                                     name={`criminal_history.${i}.max_years`}
                                                     required
                                                     value={v.max_years}
                                                     options={years}
-                                                    onKeyDown={preventNegative}
-                                                    onChange={form.handleChange}
+                                                    onKeyDown={positiveInt}
+                                                    onChange={onIntChange}
                                                     handleBlur={form.handleBlur}
                                                     touched={get(form.touched, "max_years")}
                                                     error={get(form.errors, "max_years")}
@@ -1723,8 +1763,8 @@ export default function NewJobs() {
                                     value={form.values.max_accidents}
                                     min="0"
                                     type="number"
-                                    onKeyDown={preventNegative}
-                                    onChange={form.handleChange}
+                                    onKeyDown={positiveInt}
+                                    onChange={onIntChange}
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.max_accidents}
                                     error={form.errors.max_accidents}
