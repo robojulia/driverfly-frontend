@@ -26,7 +26,7 @@ export default function Range() {
             setIsLoading(false);
 
         } catch (error) {
-            console.error(error);
+            console.error("exception.......", error);
         }
     };
 
