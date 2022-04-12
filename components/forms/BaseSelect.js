@@ -2,12 +2,12 @@ import React from 'react'
 
 import { useTranslation } from "react-i18next"
 
-function BaseSelect ( { required, className, enumType, options, valueKey = "value", labelKey = "label", createLabel, label, type, placeholder, value, onChange, handleBlur, readOnly, name, touched, error, } ) {
+function BaseSelect ( { required, className, enumType, options, valueKey = "value", labelKey = "label", labelPrefix, createLabel, label, type, placeholder, value, onChange, handleBlur, readOnly, name, touched, error, } ) {
   const { t } = useTranslation();
   if (typeof enumType === "object") {
     options = Object.keys(enumType).map(key => ({
       [valueKey]: key,
-      [labelKey]: enumType[key].toLowerCase()
+      [labelKey]: enumType[key]
     }))
   }
   else if (options && options.length > 0 && typeof options[0] !== "object") {
@@ -36,7 +36,7 @@ return (
         className={`form-select ${error ? "is-invalid" : ""}`} 
         >
         {placeholder && <option value="">{placeholder}</option>}
-        {options && options.map((v, i) => (<option key={i} value={v[valueKey]}>{t(v[labelKey])}</option>))}
+        {options && options.map((v, i) => (<option key={i} value={v[valueKey]}>{t(labelPrefix ? `${labelPrefix}.${v[labelKey]}` : v[labelKey])}</option>))}
 
       </select>
       {touched && error && (typeof error === "string") ? <span className="text-danger small">{error}</span> : null}
