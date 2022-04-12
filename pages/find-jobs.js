@@ -14,7 +14,8 @@ import { updateQueryStringParameter } from "../logics/utils"
 
 export default function FindJobs(props) {
 
-  const { params } = props
+  // const { params } = props
+  const params = {}
   const jobApi = new JobApi();
   const [jobs, setJobs] = useState([])
   const [pagingMeta, setPagingMeta] = useState({
@@ -110,13 +111,13 @@ export default function FindJobs(props) {
   )
 }
 
-export async function getServerSideProps(context) {
-  return {
-    props: {
-      params: context.query
-    }
-  }
-}
+// export async function getServerSideProps(context) {
+//   return {
+//     props: {
+//       params: context.query
+//     }
+//   }
+// }
 
 FindJobs.getLayout = function getLayout(page) {
   return (
