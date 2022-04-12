@@ -65,10 +65,23 @@
     "depending_on_company": "Depending on company",
     "authorize_companies_contact_past_employers": "Authorize companies to contact my past employers",
     "matching_preferences": "Matching Preferences",
+    "JobGeography": {
+        "OTR": "OTR",
+        "REGIONAL": "Regional",
+        "LOCAL": "Local"
+    },
     "otr": "OTR",
     "regional": "Regional",
     "local": "Local",
     "preferred_schedule": "Preferred Schedule",
+    "JobEmploymentType": {
+        "SALARIED": "Salaried (W2)",
+        "CONTRACTOR": "Contractor (1099)",
+        "OWNER_OPERATOR": "Owner-Operator",
+        "PART_TIME": "Part-Time",
+        "SEASONAL": "Seasonal",
+        "ONE_TIME_GIG": "One Time Gig"
+    },
     "salaried": "Salaried (W2)",
     "contractor": "Contractor (1099)",
     "owner_operator": "Owner-Operator",
@@ -76,6 +89,11 @@
     "seasonal": "Seasonal",
     "one_time_gig": "One Time Gig",
     "team_drivers": "Team Drivers",
+    "JobTeamDriver": {
+        "HAS_TEAM_DRIVER": "Has team drivers",
+        "OPEN_TEAM_DRIVER": "Open to team drivers",
+        "NO_TEAM_DRIVER": "Not open to team drivers"
+    },
     "has_team_driver": "Has team drivers",
     "open_team_driver": "Open to team drivers",
     "no_team_driver": "Not open to team drivers",
@@ -83,6 +101,14 @@
     "open_to_team_drivers": "Open to team drivers",
     "not_open_to_team_drivers": "Not open to team drivers",
     "min_pay_per_week": "Min Pay (per week)",
+    "JobPayMethod": {
+        "RATE_PER_MILE": "Rate per mile",
+        "PERCENT_PER_MOVE": "Percent per move",
+        "HOURLY": "Hourly",
+        "SET_WEEKLY": "Set Weekly",
+        "SALARY": "Salary",
+        "PERCENT_PER_WEIGHT": "Percent per weight"
+    },
     "rate_per_mile": "Rate per mile",
     "percent_per_move": "Percent per move",
     "hourly": "Hourly",
@@ -90,6 +116,27 @@
     "salary": "Salary",
     "percent_per_weight": "Percent per weight",
     "required_benefits": "Required Benefits",
+    "JobBenefits": {
+        "SIGN_ON_BONUS": "Sign-on bonus",
+        "GUARANTEED_BASE_SALARY": "Guaranteed base salary",
+        "MEDICAL": "Medical",
+        "VISION": "Vision",
+        "DENTAL": "Dental",
+        "RETIREMENT_401K": "401k (retirement)",
+        "SAFETY_BONUS": "Safety bonus",
+        "EXTRA_PAY_MISC": "Extra pay for (tarping, overnight, detention, accessorials, extra stops, etc)",
+        "FUEL_CARD": "Fuel cards / discount programs",
+        "GUARANTEED_BASE_PAY": "Guaranteed baseline pay",
+        "NEW_EQUIPMENT": "New equipment",
+        "PAID_TRAINING": "Pay for training",
+        "TOLL_ROAD_PASS": "Toll road passes",
+        "EXCLUDE_NY_FL": "No traveling to New York or Florida",
+        "NO_FORCED_DISPATCH": "No forced dispatch",
+        "COMPANION_DRIVERS": "Companion drivers allowed",
+        "ONBOARD_DEVICES": "Onboard devices/subscriptions (ex. Netflix, Rand McNally, etc.)",
+        "PETS_ALLOWED": "Pets allowed",
+        "OTHER": "Other"
+    },
     "sign_on_bonus": "Sign-on bonus",
     "guaranteed_base_salary": "Guaranteed base salary",
     "medical": "Medical",
@@ -109,11 +156,23 @@
     "onboard_devices": "Onboard devices/subscriptions (ex. Netflix, Rand McNally, etc.)",
     "pets_allowed": "Pets allowed",
     "other": "Other",
+    "DriverDegree": {
+        "HIGH_SCHOOL": "High school",
+        "BACHELOR": "Bachelor",
+        "MASTER": "Master",
+        "ASSOCIATE": "Associate",
+        "DOCTORAL": "Doctoral"
+    },
     "high_school": "High school",
     "bachelor": "Bachelor",
     "master": "Master",
     "associate": "Associate",
     "doctoral": "Doctoral",
+    "DriverLicenseType": {
+        "CDL_CLASS_A": "CDL Class A",
+        "CDL_CLASS_B": "CDL Class B",
+        "CDL_CLASS_C": "CDL Class C"
+    },
     "cdl_class_a": "CDL Class A",
     "cdl_class_b": "CDL Class B",
     "cdl_class_c": "CDL Class C",
@@ -227,6 +286,15 @@
     "thursday": "Thursday",
     "friday": "Friday",
     "saturday": "Saturday",
+    "JobSchedule": {
+        "MULTIPLE_WEEKS_ON_ROAD": "Multiple weeks on the road",
+        "MOST_WEEKENDS_OFF": "Most weekends off",
+        "WEEKENDS_OFF": "Weekends off",
+        "HOME_EVERY_NIGHT": "Home every night",
+        "HOME_EVERY_OTHER_NIGHT": "Home every other night",
+        "NIGHT_SHIFT": "Night shift",
+        "OTHER": "Other"
+    },
     "multiple_weeks_on_road": "Multiple weeks on the road",
     "most_weekends_off": "Most weekends off",
     "weekends_off": "Weekends off",
@@ -234,11 +302,36 @@
     "home_every_other_night": "Home every other night",
     "night_shift": "Night shift",
     "other_schedule": "Other schedule",
+    "JobDeliveryType": {
+        "NO_TOUCH": "No touch",
+        "TOUCH": "Touch",
+        "LIVE_UNLOADS": "Live unloads",
+        "DROP_HOOK": "Drop & hook"
+    },
     "no_touch": "No touch",
     "touch": "Touch",
     "live_unloads": "Live unloads",
     "drop_hook": "Drop & hook",
     "delivery_type": "Delivery Type",
+    "JobEquipmentType": {
+        "TRACTOR_ONLY": "Tractor only",
+        "TRACTOR_TRAILER": "Tractor trailer",
+        "REEFER": "Reefer",
+        "FLATBED": "Flatbed",
+        "HEAVY_HAUL": "Heavy haul",
+        "HEAVY_TOWING": "Heavy towing",
+        "INTERMODAL": "Intermodal",
+        "AUTO_HAULING": "Auto hauling",
+        "LOGGING": "Logging",
+        "DRY_BULK": "Dry bulk",
+        "HOTSHOT": "Hotshot",
+        "DUMP_TRUCK": "Dump truck",
+        "BOXTRUCK": "Boxtruck",
+        "COURIER_VAN": "Courier van",
+        "SERVICE_TRUCKS": "Service trucks",
+        "DOUBLES": "Doubles",
+        "OTHER": "Other"        
+    },
     "tractor_only": "Tractor only",
     "tractor_trailer": "Tractor trailer",
     "reefer": "Reefer",
@@ -269,6 +362,12 @@
     "other_required_skills": "Other Required Skills",
     "{name}_must_be_unique_in_list": "{{name}} must be unique in list",
     "required_equipment": "Required Equipment",
+    "DriverEndorsement": {
+        "HAZMAT": "Hazmat",
+        "TANKERS": "Tankers",
+        "DOUBLES": "Doubles",
+        "TWIC": "TWIC"
+    },
     "hazmat": "Hazmat",
     "tankers": "Tankers",
     "twic": "TWIC",
@@ -281,6 +380,12 @@
     "must_have_clean_mvr": "Must Have Clean MVR",
     "mvr_requirements": "MVR Requirements",
     "within": "Within",
+    "MvrType": {
+        "DUI": "DUI",
+        "MOVING_VIOLATION_NOT_AT_FAULT": "Moving violations, and not at fault",
+        "INFRACTIONS": "Infractions",
+        "TICKETS": "Tickets"
+    },
     "dui": "DUI",
     "moving_violation_not_at_fault": "Moving violations, and not at fault",
     "infractions": "Infractions",
@@ -321,6 +426,11 @@
     "max_weekly": "Max Weekly",
     "max_count": "Max Count",
     "none": "None",
+    "CriminalHistoryType": {
+        "FELONY": "Felony",
+        "MISDEMEANOR": "Misdemeanor",
+        "INFRACTION": "Infraction"
+    },
     "felony": "Felony",
     "misdemeanor": "Misdemeanor",
     "infraction": "Infraction",
@@ -357,6 +467,10 @@
     "MODEL": "Model",
     "ACCESSORIES": "Accessories",
     "NO_{name}_FOUND": "No {{name}} found",
+    "VehicleTransmissionType": {
+        "MANUAL": "Manual",
+        "AUTOMATIC": "Automatic"
+    },
     "VehicleTrailerType": {
         "REGULAR": "Regular",
         "CAR_CARRIER": "Car Carrier",
@@ -387,5 +501,24 @@
         "TARPS": "Tarps",
         "SAND_BLOWER": "Sand Blower",
         "OTHER": "Other"
-    }
+    },
+    "VehicleType": {
+        "TRACTOR": "Tractor",
+        "BOX_TRUCK_REGULAR": "Box Truck (Regular)",
+        "BOX_TRUCK_REFRIGERATOR": "Box Truck (Refrigerator)",
+        "HOT_SHOT_TRUCK": "Hot Shot Truck",
+        "LIGHT_DUTY_TRUCK": "Light Duty Truck",
+        "STRAIGHT_TRUCK": "Straight Truck",
+        "VAN": "Van",
+        "TOWING_VEHICLE": "Towing Vehicle",
+        "DUMP_TRUCK": "Dump Truck",
+        "OTHER": "Other"
+    },
+    "EDIT_VEHICLE": "Edit Vehicle",
+    "CREATE_VEHICLE": "Create Vehicle",
+    "CREATE": "Create",
+    "OTHER": "Other",
+    "TRAILER_TYPE": "Trailer Type",
+    "NONE": "None",
+    "UPDATE": "Update"
 }

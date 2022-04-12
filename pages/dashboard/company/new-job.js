@@ -886,6 +886,7 @@ export default function NewJobs() {
                                     error={form.errors.geography}
                                     valueKey="key"
                                     labelKey="label"
+                                    labelPrefix="JobGeography"
                                     enumType={JobGeography}
                                     />
                                 <div className="row">
@@ -900,6 +901,7 @@ export default function NewJobs() {
                                         error={form.errors.schedule}
                                         onChange={form.handleChange}
                                         handleBlur={form.handleBlur}
+                                        labelPrefix="JobSchedule"
                                         enumType={JobSchedule}
                                         />
                                     {
@@ -929,6 +931,7 @@ export default function NewJobs() {
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.employment_type}
                                     error={form.errors.employment_type}
+                                    labelPrefix="JobEmploymentType"
                                     enumType={JobEmploymentType}
                                     />
                                 <BaseCheckList
@@ -942,6 +945,7 @@ export default function NewJobs() {
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.equipment_type}
                                     error={form.errors.equipment_type}
+                                    labelPrefix="JobEquipmentType"
                                     enumType={JobEquipmentType}
                                     />
                                 {
@@ -971,6 +975,7 @@ export default function NewJobs() {
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.delivery_type}
                                     error={form.errors.delivery_type}
+                                    labelPrefix="JobDeliveryType"
                                     enumType={JobDeliveryType}
                                     />
                                 <BaseSelect
@@ -984,6 +989,7 @@ export default function NewJobs() {
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.team_drivers}
                                     error={form.errors.team_drivers}
+                                    labelPrefix="JobTeamDriver"
                                     enumType={JobTeamDriver}
                                     />
                             </div>
@@ -1000,6 +1006,7 @@ export default function NewJobs() {
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.pay_method}
                                     error={form.errors.pay_method}
+                                    labelPrefix="JobPayMethod"
                                     enumType={JobPayMethod}
                                     />
                                 {
@@ -1210,6 +1217,7 @@ export default function NewJobs() {
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.benefits}
                                     error={form.errors.benefits}
+                                    labelPrefix="JobBenefits"
                                     enumType={JobBenefits}
                                     />
                                 {
@@ -1282,6 +1290,7 @@ export default function NewJobs() {
                                                 handleBlur={form.handleBlur}
                                                 touched={get(form.touched, "type")}
                                                 error={get(form.errors, "type")}
+                                                labelPrefix="VehicleType"
                                                 enumType={VehicleType}
                                                 />
                                             {
@@ -1295,8 +1304,8 @@ export default function NewJobs() {
                                                     value={v.type_other}
                                                     onChange={form.handleChange}
                                                     handleBlur={form.handleBlur}
-                                                    touched={get(form.touched, "type")}
-                                                    error={get(form.errors, "type")}
+                                                    touched={get(form.touched, "type_other")}
+                                                    error={get(form.errors, "type_other")}
                                                     />
                                             }
                                             <BaseInput
@@ -1430,6 +1439,7 @@ export default function NewJobs() {
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.cdl_class}
                                     error={form.errors.cdl_class}
+                                    labelPrefix="DriverLicenseType"
                                     enumType={DriverLicenseType}
                                     />
                                 <BaseInput
@@ -1456,6 +1466,7 @@ export default function NewJobs() {
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.min_degree}
                                     error={form.errors.min_degree}
+                                    labelPrefix="DriverDegree"
                                     enumType={DriverDegree}
                                     />
                                 <div className="col-12">
@@ -1479,6 +1490,7 @@ export default function NewJobs() {
                                                 handleBlur={form.handleBlur}
                                                 touched={get(form.touched, "type")}
                                                 error={get(form.errors, "type")}
+                                                labelPrefix="JobEquipmentType"
                                                 enumType={JobEquipmentType}
                                                 />
                                             <BaseInput
@@ -1540,6 +1552,7 @@ export default function NewJobs() {
                                                     handleBlur={form.handleBlur}
                                                     touched={get(form.touched, "type")}
                                                     error={get(form.errors, "type")}
+                                                    labelPrefix="JobEquipmentType"
                                                     enumType={JobEquipmentType}
                                                     />
                                                 <BaseInput
@@ -1577,6 +1590,7 @@ export default function NewJobs() {
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.required_endorsement}
                                     error={form.errors.required_endorsement}
+                                    labelPrefix="DriverEndorsement"
                                     enumType={DriverEndorsement}
                                     />
                                 <BaseCheckList
@@ -1589,6 +1603,7 @@ export default function NewJobs() {
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.transmission_type_experience}
                                     error={form.errors.transmission_type_experience}
+                                    labelPrefix="VehicleTransmissionType"
                                     enumType={VehicleTransmissionType}
                                     />
                             </div>
@@ -1649,6 +1664,7 @@ export default function NewJobs() {
                                                     handleBlur={form.handleBlur}
                                                     touched={get(form.touched, "type")}
                                                     error={get(form.errors, "type")}
+                                                    labelPrefix="MvrType"
                                                     enumType={MvrType}
                                                     />
                                                 <BaseSelect
@@ -1730,6 +1746,7 @@ export default function NewJobs() {
                                                     handleBlur={form.handleBlur}
                                                     touched={get(form.touched, "type")}
                                                     error={get(form.errors, "type")}
+                                                    labelPrefix="CriminalHistoryType"
                                                     enumType={CriminalHistoryType}
                                                     />
                                                 <BaseSelect

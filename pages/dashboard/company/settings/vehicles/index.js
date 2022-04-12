@@ -1,8 +1,7 @@
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
 import { Col, Row, Table } from "reactstrap";
 import useAuth from '../../../../../hooks/useAuth';
-import Router from 'next/router';
-import axios from 'axios';
+import { useRouter } from "next/router"
 import { useEffect, useState } from 'react'
 import useRedirect from '../../../../../hooks/useRedirect';
 import { ToastContainer, toast } from 'react-toastify'
@@ -19,6 +18,8 @@ import { VehicleAccessory } from "../../../../../enums/vehicles/vehicle-accessor
 import VehicleEntity from "../../../../../models/company/vehicle.entity";
 
 export default function VehicleList() {
+
+  const router = useRouter();
   const { t } = useTranslation();
 
   const { authCompany } = useRedirect();
@@ -45,11 +46,21 @@ export default function VehicleList() {
    * 
    * @param {React.MouseEvent} e 
    */
+   const onAddClick = (e) => {
+    e.preventDefault();
+
+    router.push(`${router.pathname}/create`);
+  }
+
+  /**
+   * 
+   * @param {React.MouseEvent} e 
+   */
   const onEditClick = (e) => {
     e.preventDefault();
     const { name } =  e.currentTarget;
 
-    alert("trying to edit " + name)
+    router.push(`${router.pathname}/${name}`);
   }
 
   /**
@@ -74,7 +85,14 @@ export default function VehicleList() {
       <div className="container_fluid">
 
         <Row>
-          <h1>{t("VEHICLES")}</h1>
+          <Col xs="10">
+            <h1>{t("VEHICLES")}</h1>
+          </Col>
+          <Col xs="2">
+            <button className="btn btn-primary" onClick={onAddClick}>
+              + {t("CREATE")}
+            </button>
+          </Col>
         </Row>
         <Row className="mt-5">
           <div className="table-responsive">
@@ -106,7 +124,7 @@ export default function VehicleList() {
                           <td>{v.photo && <img className="img-thumbnail" style={{maxWidth: "100px"}} src={v.photo.path} />}</td>
                           <td>{v.type === VehicleType.OTHER ? v.type_other : t(v.type.toLowerCase())}</td>
                           <td>{v.trailer_type === VehicleTrailerType.OTHER ? v.trailer_type_other : (v.trailer_type && t(`VehicleTrailerType.${v.trailer_type}`) || "")}</td>
-                          <td>{t(v.transmission_type)}</td>
+                          <td>{v.transmission_type ? t(`VehicleTransmissionType.` + v.transmission_type) : null}</td>
                           <td>{v.make}</td>
                           <td>{v.model}</td>
                           <td>{v.year}</td>

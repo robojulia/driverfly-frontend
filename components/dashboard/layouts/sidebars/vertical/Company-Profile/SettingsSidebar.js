@@ -26,7 +26,6 @@ export default function SettingsSidebar() {
             startsWith: true
         },
     ];
-    console.log(menu_options);
   return (
 
     <div className="side_bar">
