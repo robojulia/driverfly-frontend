@@ -1,4 +1,16 @@
+import { JobGeography } from "../../enums/jobs/job-geography.enum"
+import { useTranslation } from "react-i18next";
+
 export default function JonInformation({ job }) {
+
+  const { t } = useTranslation();
+  const splitStr = (str, separator, EnumType) => {
+    str = `${str}`
+    console.log(str.split(separator));
+    return str.split(separator).map(item => {
+      return t(EnumType[item].toLowerCase())
+    })
+  }
 
   return (
     <>
@@ -12,7 +24,7 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">Offered Salary</div>
-                <div className="value">$<span className="price-text">{job.min_weekely_pay}</span> - $<span className="price-text">{job.max_weekely_pay}</span> per week</div>
+                <div className="value">$<span className="price-text">{job.min_weekly_pay}</span> - $<span className="price-text">{job.max_weekly_pay}</span> per week</div>
               </div>
             </li>
             <li>
@@ -21,14 +33,14 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">Areas Covered</div>
-                <div className="value"> {job.areas_covered}</div>
+                <div className="value"> {splitStr(job.geography, ",", JobGeography)}</div>
               </div>
             </li>
             <li>
               <div className="icon">    </div>
               <div className="details">
                 <div className="text">Full-time/Part-time</div>
-                <div className="value">{job.job_type}</div>
+                {/* <div className="value">{job.job_type}</div> */}
               </div>
             </li>
             <li>
@@ -36,7 +48,7 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">Employment Type</div>
-                <div className="value">{job.employment_type}</div>
+                {/* <div className="value">{job.employment_type}</div> */}
               </div>
             </li>
             <li>
@@ -45,7 +57,7 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">Type of Delivery</div>
-                <div className="value"> {job.delivery_type}</div>
+                {/* <div className="value"> {job.delivery_type}</div> */}
               </div>
             </li>
             <li>
@@ -54,7 +66,7 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">Accepting Drivers From...</div>
-                <div className="value"> {job.drivers_from}</div>
+                {/* <div className="value"> {job.drivers_from}</div> */}
               </div>
             </li>
             <li>
@@ -62,7 +74,7 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">Equipment Type</div>
-                <div className="value"> {job.equipment_type}</div>
+                {/* <div className="value"> {job.equipment_type}</div> */}
               </div>
             </li>
             <li>
@@ -71,7 +83,7 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">Schedule</div>
-                <div className="value">{job.schedule}</div>
+                {/* <div className="value">{job.schedule}</div> */}
               </div>
             </li>
             <li>
@@ -80,7 +92,7 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">Pay Structure</div>
-                <div className="value"> {job.pay_structure}</div>
+                {/* <div className="value"> {job.pay_structure}</div> */}
               </div>
             </li>
             <li>
@@ -89,7 +101,7 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">Minimum Age</div>
-                <div className="value">{job.min_age}</div>
+                {/* <div className="value">{job.min_age}</div> */}
               </div>
             </li>
 
@@ -98,7 +110,7 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">MVR Requirements</div>
-                <div className="value"> {job.mvr_requirements}</div>
+                {/* <div className="value"> {job.mvr_requirements}</div> */}
               </div>
             </li>
           </ul>
