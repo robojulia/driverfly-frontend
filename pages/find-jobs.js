@@ -9,10 +9,11 @@ import Layout from "../components/layouts"
 import jobsContext from "../context/jobContext"
 import Location from "../components/location/Location"
 import BaseApi from "./api/_baseApi"
+import JobApi from "./api/job"
 
-export default function FindJobs() {
+export default function FindJobs({ params }) {
 
-  const baseApi = new BaseApi();
+  const jobApi = new JobApi();
   const [jobs, setJobs] = useState([])
   const [pagingMeta, setPagingMeta] = useState({
     currentPage: 1,
@@ -27,6 +28,7 @@ export default function FindJobs() {
     max_salary: 0,
     page: 1,
     order_by: "ASC",
+    ...params
   })
 
   const router = useRouter()
@@ -47,12 +49,8 @@ export default function FindJobs() {
   }
 
   const fetchJobs = async () => {
-    const res = await baseApi.get(`${process.env.BASE_URL_API}/jobs`, {
-      params: {
-        ...filters,
-      }
-    })
-    let { items, meta } = res.data
+    console.log("asas", params);
+    const { items, meta } = await jobApi.fetchAll({ ...filters })
     setJobs(items)
     setPagingMeta(meta)
   }
@@ -113,6 +111,12 @@ export default function FindJobs() {
     </jobsContext.Provider>
   )
 
+}
+
+FindJobs.getInitialProps = async (ctx) => {
+  return {
+    params: ctx.query
+  }
 }
 
 FindJobs.getLayout = function getLayout(page) {
