@@ -9,10 +9,13 @@ import Layout from "../components/layouts"
 import jobsContext from "../context/jobContext"
 import Location from "../components/location/Location"
 import BaseApi from "./api/_baseApi"
+import JobApi from "./api/job"
+import { updateQueryStringParameter } from "../logics/utils"
 
-export default function FindJobs() {
+export default function FindJobs(props) {
 
-  const baseApi = new BaseApi();
+  const { params } = props
+  const jobApi = new JobApi();
   const [jobs, setJobs] = useState([])
   const [pagingMeta, setPagingMeta] = useState({
     currentPage: 1,
@@ -23,10 +26,7 @@ export default function FindJobs() {
   })
 
   const [filters, setFilters] = useState({
-    min_salary: 0,
-    max_salary: 0,
-    page: 1,
-    order_by: "ASC",
+    ...params
   })
 
   const router = useRouter()
@@ -47,12 +47,8 @@ export default function FindJobs() {
   }
 
   const fetchJobs = async () => {
-    const res = await baseApi.get(`${process.env.BASE_URL_API}/jobs`, {
-      params: {
-        ...filters,
-      }
-    })
-    let { items, meta } = res.data
+    await router.replace('find-jobs', undefined, { shallow: true });
+    const { items, meta } = await jobApi.fetchAll({ ...filters })
     setJobs(items)
     setPagingMeta(meta)
   }
@@ -112,7 +108,14 @@ export default function FindJobs() {
       </div>
     </jobsContext.Provider>
   )
+}
 
+export async function getServerSideProps(context) {
+  return {
+    props: {
+      params: context.query
+    }
+  }
 }
 
 FindJobs.getLayout = function getLayout(page) {

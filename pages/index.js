@@ -7,15 +7,39 @@ import Companies from '../components/works/companies'
 import HomeSearch from '../components/megasearch/search'
 import Slider from '../components/testominial-slider/Slider'
 import Pric from '../public/css/Pricing.module.css'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TrendingWords from '../components/trending-words/Trending';
+import { useTranslation } from "react-i18next";
+import { DriverLicenseType } from '../enums/drivers/driver-license-type.enum';
+import { JobEmploymentType } from '../enums/jobs/job-employment-type.enum';
+import { useRouter } from 'next/router'
 
 export default function Index() {
+
+    const router = useRouter()
+    const { t } = useTranslation();
 
     const [showRecent, setShowRecent] = useState(true);
     function updateState() {
         setShowRecent(!showRecent);
     }
+
+    const [filters, setFilters] = useState({})
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFilters({
+            ...filters,
+            [name]: value
+        })
+    }
+    const handleSubmit = (e) => {
+        router.push({
+            pathname: 'find-jobs',
+            query: { ...filters },
+        })
+    }
+
     return (
         <>
             <Head>
@@ -30,39 +54,67 @@ export default function Index() {
                                 <h1>Find The Job That Fits Your Life</h1>
                                 <h2>Choose from thousands of CDL and Non-CDL truck driving jobs. Get hired fast. Start Searching.</h2>
                             </div>
-                           
-                            <div className="hero-search">
 
+                            <div className="hero-search">
                                 <div className="input-group w-25">
                                     <div className="input-group-prepend">
                                         <i className="fa fa-search" aria-hidden="true"></i>
                                     </div>
-                                    <input type="text" className="" placeholder="Job Title or Keywords" aria-label="" aria-describedby="basic-addon1" />
+                                    <input
+                                        onChange={handleChange}
+                                        name="keywords"
+                                        type="text"
+                                        className=""
+                                        placeholder="Job Title or Keywords"
+                                        aria-label=""
+                                        aria-describedby="basic-addon1" />
                                 </div>
-                                <form action="">
-                                    <div className="filter-inner d-flex align-items-center pl-3">
-                                        <i className="fa fa-map-marker" aria-hidden="true"></i>
-                                        <input type="text" className="form-control border-0" placeholder="Location" />
-                                        <span className="find-me"></span>
-                                    </div>
-                                </form>
-
-                                <select className=" form-control  form-select custom-sel" aria-label="Default select example" id="exampleFormControlSelect1">
-                                    <option className='selectbg'
-                                    >All Types</option>
-
-                                    <option className='selectbg'>Solo (27)</option>
-                                    <option className='selectbg'>Team Drivers(4)</option>
+                                <div className="filter-inner d-flex align-items-center pl-3">
+                                    <i className="fa fa-map-marker" aria-hidden="true"></i>
+                                    <input
+                                        type="text"
+                                        className="form-control border-0"
+                                        placeholder="Location" />
+                                    <span className="find-me"></span>
+                                </div>
+                                <select
+                                    name='employment_type'
+                                    onChange={handleChange}
+                                    className=" form-control  form-select custom-sel"
+                                    aria-label="Default select example"
+                                    id="exampleFormControlSelect1">
+                                    <option className='selectbg'>All Types</option>
+                                    {Object.keys(JobEmploymentType).map((key) => {
+                                        return (
+                                            <option value={key}>
+                                                {t(JobEmploymentType[key].toLowerCase())}
+                                            </option>
+                                        )
+                                    })}
                                 </select>
-
-                                <select className="form-select custom-sel border-0" aria-label="Default select example" id="exampleFormControlSelect1">
+                                <select
+                                    name='cdl_class'
+                                    onChange={handleChange}
+                                    className="form-select custom-sel border-0"
+                                    aria-label="Default select example"
+                                    id="exampleFormControlSelect1">
                                     <option>All Categories</option>
-                                    <option> Class A CDL(30)</option>
+                                    {Object.keys(DriverLicenseType).map((key) => {
+                                        return (
+                                            <option value={key}>
+                                                {t(DriverLicenseType[key].toLowerCase())}
+                                            </option>
+                                        )
+                                    })}
                                 </select>
                                 <div className="form-group form-group-search m-0">
-                                    <button className="btn-submit btn btn-block btn-theme" type="submit">Search</button>
+                                    <button
+                                        onClick={handleSubmit}
+                                        className="btn-submit btn btn-block btn-theme"
+                                        type="button">Search</button>
                                 </div>
                             </div>
+
                             <TrendingWords />
                         </div>
                     </div>
@@ -84,7 +136,7 @@ export default function Index() {
                         :
                         < Recent />
                 }
-                
+
             </section>
             <section className="driver-sec">
                 <div className="container how-it-work-sec">
