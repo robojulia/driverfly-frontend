@@ -8,11 +8,15 @@ import RelatedJobs from '../../components/related-jobs/Related-Jobs'
 import SocilShare from '../../components/share-link/ShareLink'
 import timeSince from "../../utils/timeSince"
 import { ToastContainer, toast } from 'react-toastify'
+import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum"
+import Link from 'next/link'
+import { useTranslation } from "react-i18next"
+import JobApi from "../api/job"
 
-export default function Detail({ data }) {
-  const jobDetail = data
+export default function Detail({ jobDetail, relatedJobs }) {
 
   const router = useRouter()
+  const { t } = useTranslation();
 
   return (
     <>
@@ -23,27 +27,30 @@ export default function Detail({ data }) {
             <div className="col-md-9">
               <div className="ort-inner">
                 <div className="media align-items-center bg-transparent border-0 p-0">
-                  <a href="#" className="text-dark text-center text-decoration-none"> <img className="d-flex mr-4 truck-img mb-3" src="img/CTR-logo-cartoon.png" alt="" /> View all jobs <i className="fa fa-long-arrow-right pl-1" aria-hidden="true"></i></a>
+                  <Link href="/find-jobs">
+                    <a href="#" className="text-dark text-center text-decoration-none">
+                      <img className="d-flex mr-4 truck-img mb-3" src="/driverfly-logo-square.png" alt="" />
+                      View all jobs <i className="fa fa-long-arrow-right pl-1" aria-hidden="true"></i></a>
+                  </Link>
                   <div className="media-body">
-                    <h6>Solo</h6>
+                    {/* <h6>Solo</h6> */}
                     <h4 className="mt-0">
                       {jobDetail.title}
                       <span className="" data-toggle="tooltip"
                         data-placement="top" title="{jobDetail.title}">
-                        <i className="fa fa-star" aria-hidden="true"></i>
-                      </span>
-                      <span className="urgent">
-                        {jobDetail.work_type}
                       </span>
                     </h4>
                     <div className="job-date-author">
                       posted {timeSince(jobDetail.created_at)} ago
-                      by <a href="" className="employer text-theme">{jobDetail.complany_name}</a>
+                      by <span role="button" className="employer text-theme">{jobDetail.company?.name}</span>
                     </div>
                     <div className="job-metas">
                       <div className="job-location d-flex align-items-center">
-                        <p className="pr-4"> <i className="fa fa-map-marker mr-2" aria-hidden="true"></i>{jobDetail.location}</p>
-                        <p><i className="fa fa-usd mr-2" aria-hidden="true"></i>{jobDetail.min_weekely_pay ? jobDetail.min_weekely_pay : 0} - {jobDetail.max_weekely_pay ? jobDetail.max_weekely_pay : 0} per week</p>
+                        <p className="pr-4">
+                          <i className="fa fa-map-marker mr-2" aria-hidden="true"></i>
+                          {`${jobDetail.location?.street}, ${jobDetail.location?.city}, ${jobDetail.location?.state},`}
+                        </p>
+                        <p><i className="fa fa-usd mr-2" aria-hidden="true"></i>{jobDetail.min_weekly_pay ? jobDetail.max_weekly_pay : 0} - {jobDetail.max_weekely_pay ? jobDetail.max_weekely_pay : 0} per week</p>
                       </div>
                     </div>
                   </div>
@@ -67,7 +74,7 @@ export default function Detail({ data }) {
             <div className="col-lg-8">
               < JobDescription job={jobDetail} />
               < SocilShare />
-              < RelatedJobs />
+              < RelatedJobs jobs={relatedJobs} />
             </div>
             <div className="col-lg-4">
               < JonInformation job={jobDetail} />
@@ -83,7 +90,9 @@ export async function getServerSideProps(context) {
   const id = context.params.id;
   const { data } = await axios.get(`${process.env.BASE_URL_API}/jobs/${context.params.id}`)
 
-  return { props: { data } }
+  const { items } = await new JobApi().fetchAll({ companyId: data.company?.id, take: 3 });
+
+  return { props: { jobDetail: data, relatedJobs: items } }
 }
 
 Detail.getLayout = function getLayout(page) {

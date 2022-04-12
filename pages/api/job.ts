@@ -10,9 +10,13 @@ export default class JobApi extends BaseApi {
         this.companyId = companyId;
     }
     baseCompanyUrl(companyId?: number): string { return `companies/${companyId ?? this.companyId}/jobs` }
-    async create(entity: JobEntity, companyId?: number) : Promise<JobEntity> {
+    async create(entity: JobEntity, companyId?: number): Promise<JobEntity> {
         const { data } = await this.post(this.baseCompanyUrl(companyId), entity);
 
+        return data;
+    }
+    async fetchAll(params) {
+        const { data } = await this.get(`jobs`, {params});
         return data;
     }
 }
