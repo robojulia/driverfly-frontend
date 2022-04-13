@@ -2191,3 +2191,10 @@ li.link-wrapper>a.active {
 .form-range {
     height: 38px !important;
 }
+#accordionExample.accordion>.card {
+    overflow: inherit !important;
+   
+}
+#async-example{
+   
+}
