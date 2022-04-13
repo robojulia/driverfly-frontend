@@ -2198,3 +2198,7 @@ li.link-wrapper>a.active {
 #async-example{
    display: contents !important;
 }
+.rbt a{
+    border-left: 1px solid #ced4da;
+    border-right: 1px solid #ced4da;
+}
