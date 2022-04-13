@@ -24,6 +24,7 @@ const ReadMore = ({ children }) => {
 
 const Content = () => {
   const { state, method } = useContext(jobContext)
+  const { filters } = state
   const { handleChange } = method
   const { t } = useTranslation();
 
@@ -52,6 +53,7 @@ const Content = () => {
                 <>
                   <div class="topping pt-2">
                     <input
+                      checked={filters.equipment_type !== undefined && filters.equipment_type == value}
                       onChange={handleChange}
                       type="radio"
                       name="equipment_type"
@@ -68,6 +70,7 @@ const Content = () => {
                 <>
                   <div class="topping pt-2">
                     <input
+                      checked={filters.equipment_type !== undefined && filters.equipment_type == value}
                       onChange={handleChange}
                       type="radio"
                       name="equipment_type"
