@@ -3,6 +3,7 @@ import useAuth from '../../hooks/useAuth';
 import LoginButton from '../../components/buttons/Login';
 import SignupButton from '../../components/buttons/Signup';
 import LogoutButton from '../../components/buttons/Logout';
+import DashboardButton from "../buttons/DashboardButton";
 
 export default function Nav() {
     const { authCheck } = useAuth();
@@ -90,7 +91,16 @@ export default function Nav() {
                 <ul className="d-flex align-items-center mb-0">
                     <li><a href="#" className="nav-link"> <i className="fa fa-bell-o pt-1"
                         aria-hidden="true"></i></a></li>
-                    {authCheck() ? <LogoutButton className="btn btn-primary mr-4" /> : <><LoginButton className="btn btn-primary mr-4" /> <SignupButton className="btn btn-primary mr-4" /></>}
+                    {authCheck() ?
+                        <>
+                            <DashboardButton className="btn btn-primary mr-4" />
+                            <LogoutButton className="btn btn-primary mr-4" />
+                        </>
+                        :
+                        <>
+                            <LoginButton className="btn btn-primary mr-4" />
+                            <SignupButton className="btn btn-primary mr-4" />
+                        </>}
                 </ul>
             </div>
         </>
