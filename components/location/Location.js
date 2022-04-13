@@ -39,7 +39,7 @@ export default function Location() {
                     <i className="fa fa-map-marker" aria-hidden="true"></i>
                     <AsyncTypeahead
                         className='form-control border-0 w-25'
-                        id="async-example"
+                        id="async-example location"
                         name="location"
                         isLoading={isLoading}
                         labelKey="place_name"
