@@ -34,6 +34,8 @@ import { JobTeamDriver } from "../../../enums/jobs/job-team-driver.enum";
 import { JobPayMethod } from "../../../enums/jobs/job-pay-method.enum";
 import { JobBenefits } from "../../../enums/jobs/job-benefits.enum";
 import { useRouter } from "next/router";
+import { DriverEndorsement } from "../../../enums/drivers/driver-endorsement.enum";
+import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
 
 export const data = [
     [
@@ -85,14 +87,14 @@ export default function JobListing() {
 
     const fetchJobDetails = async (e) => {
         const jobId = e.target.getAttribute('data-item');
-        const companyApi = new CompanyApi(user.company.id);
+        const companyApi = new CompanyApi(user.company?.id);
         let job = await companyApi.jobs.getById(jobId)
         console.log(job);
         setJobVisible(job)
     }
 
     useEffect(async () => {
-        const companyApi = new CompanyApi(user.company.id);
+        const companyApi = new CompanyApi(user.company?.id);
         setJobs(await companyApi.jobs.get());
     }, []);
 
@@ -120,6 +122,7 @@ export default function JobListing() {
                                         <thead className="listing_head">
                                             <tr>
                                                 <th>{t('job_title')}</th>
+                                                <th>{t('location')}</th>
                                                 <th>{t('drivers_needed')}</th>
                                                 <th>{t('expiration_date')}</th>
                                                 <th>{t('geography')}</th>
@@ -137,6 +140,11 @@ export default function JobListing() {
                                                 jobs.map((job, index) => {
                                                     return <tr>
                                                         <td>{job.title} </td>
+                                                        <td>
+                                                            {job.location &&
+                                                                `${job.location.street}, ${job.location.city}, ${job.location.state}, ${job.location.zip_code}, `
+                                                            }
+                                                        </td>
                                                         <td>{job.drivers_needed} </td>
                                                         <td>{job.expiry_date} </td>
                                                         <td>{job.geography && enumMap(job.geography, ",", JobGeography)} </td>
@@ -193,7 +201,7 @@ export default function JobListing() {
                         <Row className="mt-5">
                             <Col lg="12 ">
                                 <Card className="job_listing">
-                                    <h3 className="mb-4">Benefits</h3>
+                                    <h3 className="mb-4">{t('benefits')}</h3>
                                     <CardBody className={JobList.jobtable}>
                                         <div className="table-responsive">
                                             <Table striped>
@@ -377,28 +385,34 @@ export default function JobListing() {
                                             <Table striped className={JobList.req_table}>
                                                 <thead className="listing_head">
                                                     <tr>
-                                                        <th>{t('cdl_class_type')}</th>
-                                                        <th>{t('min_years_experience')}</th>
-                                                        <th>{t('min_degree')}</th>
-                                                        <th>{t('required_skills')}</th>
-                                                        {/* <th>Equipment Requirements (for owner operators)</th>
-                                                        <th>Endorsements</th>
-                                                        <th>Transmission Type Experience:</th>
-                                                        <th>Driver Radius</th>
-                                                        <th>Must Pass Drug Test?</th>
-                                                        <th>MVR Requirements</th>
-                                                        <th>Accepting SAP Graduates?</th>
-                                                        <th>Criminal History in last 3 years?</th>
-                                                        <th>Accidents within the last 5 years:</th> */}
-                                                        {/* <th>Other Safety Requirements:</th> */}
+                                                        <th >{t('max_applicant_radius')}</th>
+                                                        <th >{t('cdl_class_type')}</th>
+                                                        <th >{t('min_years_experience')}</th>
+                                                        <th >{t('min_degree')}</th>
+                                                        <th >{t('required_skills')}</th>
+                                                        <th >{t('special_endorsements')}</th>
+                                                        <th >{t('transmission_type')}</th>
+                                                        <th >{t('must_pass_drug_test')}</th>
+                                                        <th >{t('must_have_clean_mvr')}</th>
+                                                        <th >{t('no_criminal_history')}</th>
+                                                        <th >{t('accidents_last_5_years')}</th>
+                                                        <th >{t('other_safety_requirements')}</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td>{jobVisible.cdl_class && enumMap(jobVisible.cdl_class, ",", DriverLicenseType)}</td>
-                                                        <td>{jobVisible.min_years_experience} </td>
-                                                        <td>{jobVisible.min_degree} </td>
-                                                        <td>{jobVisible.required_skills_other} </td>
+                                                        <td >{jobVisible.max_applicant_radius} </td>
+                                                        <td >{jobVisible.cdl_class && enumMap(jobVisible.cdl_class, ",", DriverLicenseType)}</td>
+                                                        <td >{jobVisible.min_years_experience} </td>
+                                                        <td >{jobVisible.min_degree} </td>
+                                                        <td >{jobVisible.required_skills_other} </td>
+                                                        <td >{jobVisible.required_endorsement && enumMap(jobVisible.required_endorsement, ",", DriverEndorsement)}</td>
+                                                        <td >{jobVisible.transmission_type_experience && enumMap(jobVisible.transmission_type_experience, ",", VehicleTransmissionType)}</td>
+                                                        <td >{jobVisible.must_pass_drug_test ? t("yes") : t('no')} </td>
+                                                        <td >{jobVisible.must_have_clean_mvr ? t("yes") : t('no')} </td>
+                                                        <td >{jobVisible.must_have_clean_criminal_history ? t("yes") : t('no')} </td>
+                                                        <td >{jobVisible.max_accidents} </td>
+                                                        <td >{jobVisible.safety_requirements_other} </td>
                                                     </tr>
                                                 </tbody>
                                             </Table>

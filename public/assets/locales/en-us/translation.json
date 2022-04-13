@@ -552,5 +552,7 @@
         "DRIVER": "Driver",
         "COMPANY": "Company"
     },
-    "IF_YOURE_ALREADY_A_USER_LOGIN_HERE": "If you're already a user, login here"
+    "IF_YOURE_ALREADY_A_USER_LOGIN_HERE": "If you're already a user, login here",
+    "yes":"Yes",
+    "no":"No"
 }
