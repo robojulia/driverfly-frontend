@@ -22,7 +22,15 @@ import React from "react";
 import { Chart } from "react-google-charts";
 import LogoDark from "../../../public/dashboard/assets/images/bg/CTR-logo-cartoon_88.png";
 import Image from "next/image";
-
+import CompanyApi from "../../api/company";
+import { useTranslation } from "react-i18next";
+import { DriverLicenseType } from "../../../enums/drivers/driver-license-type.enum";
+import { JobGeography } from "../../../enums/jobs/job-geography.enum";
+import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
+import { JobEmploymentType } from "../../../enums/jobs/job-employment-type.enum";
+import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
+import { JobDeliveryType } from "../../../enums/jobs/job-delivery-type.enum";
+import { JobTeamDriver } from "../../../enums/jobs/job-team-driver.enum";
 
 export const data = [
     [
@@ -56,30 +64,31 @@ export default function JobListing() {
     const { authCheck } = useAuth();
 
     const user = authCheck();
+    // const companyApi = new CompanyApi(user.company.id);
+    const { t } = useTranslation();
 
     const [jobs, setJobs] = useState([])
 
-    const fetchJobs = () => {
-
-        const headers = {
-            'Authorization': `Bearer ${user.token}`,
-        };
-
-        axios.get(
-            `${process.env.BASE_URL_API}/jobs/`,
-            { headers: headers }
-        )
-            .then(data => {
-                setJobs(data.data)
-            })
-            .catch(function (error) {
-            }).then(function () {
-            })
+    const enumMap = (str, separator, EnumType) => {
+        if (!str) {
+            return
+        }
+        str = `${str}`
+        const arr = str.split(separator)
+        return arr.map(item => {
+            return t(EnumType[item].toLowerCase())
+        }).join(', ')
     }
 
-    useEffect(() => {
-        fetchJobs()
+    useEffect(async () => {
+        const companyApi = new CompanyApi(user.company.id);
+        setJobs(await companyApi.jobs.get());
+        console.log(jobs);
     }, []);
+
+    useEffect(async () => {
+        console.log(jobs);
+    }, [jobs]);
 
 
     return (
@@ -111,138 +120,28 @@ export default function JobListing() {
                                                 <th>Equipment Type:</th>
                                                 <th>Type of Delivery:</th>
                                                 <th>Team Drivers:</th>
-                                                <th>Job Description:</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>
-                                                    Class A CDL – Texas –NE OTR
-                                                </td>
-                                                <td>
-                                                    California
-                                                </td>
-                                                <td>
-                                                    California
-                                                </td>
-                                                <td>
-                                                    54000
-                                                </td>
-                                                <td>
-                                                    Leave
-                                                </td>
-                                                <td>
-                                                    Dec 2, 2022
-
-                                                </td>
-                                                <td>
-                                                    Geography
-                                                </td>
-                                                <td>
-                                                    Schedule
-                                                </td>
-                                                <td>
-                                                    Salaried (W2)
-                                                </td>
-                                                <td>
-                                                    1999
-                                                </td>
-                                                <td>
-                                                    Tractor
-                                                </td>
-                                                <td>
-                                                    Team Drivers
-                                                </td>
-                                                <td>
-                                                    Job Description
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Class A CDL – Texas –NE OTR
-                                                </td>
-                                                <td>
-                                                    California
-                                                </td>
-                                                <td>
-                                                    California
-                                                </td>
-                                                <td>
-                                                    54000
-                                                </td>
-                                                <td>
-                                                    Leave
-                                                </td>
-                                                <td>
-                                                    Dec 2, 2022
-
-                                                </td>
-                                                <td>
-                                                    Geography
-                                                </td>
-                                                <td>
-                                                    Schedule
-                                                </td>
-                                                <td>
-                                                    Salaried (W2)
-                                                </td>
-                                                <td>
-                                                    1999
-                                                </td>
-                                                <td>
-                                                    Tractor
-                                                </td>
-                                                <td>
-                                                    Team Drivers
-                                                </td>
-                                                <td>
-                                                    Job Description
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Class A CDL – Texas –NE OTR
-                                                </td>
-                                                <td>
-                                                    California
-                                                </td>
-                                                <td>
-                                                    California
-                                                </td>
-                                                <td>
-                                                    54000
-                                                </td>
-                                                <td>
-                                                    Leave
-                                                </td>
-                                                <td>
-                                                    Dec 2, 2022
-
-                                                </td>
-                                                <td>
-                                                    Geography
-                                                </td>
-                                                <td>
-                                                    Schedule
-                                                </td>
-                                                <td>
-                                                    Salaried (W2)
-                                                </td>
-                                                <td>
-                                                    1999
-                                                </td>
-                                                <td>
-                                                    Tractor
-                                                </td>
-                                                <td>
-                                                    Team Drivers
-                                                </td>
-                                                <td>
-                                                    Job Description
-                                                </td>
-                                            </tr>
-
-
+                                            {
+                                                jobs &&
+                                                jobs.map(job => {
+                                                    return <tr>
+                                                        <td>{job.title} </td>
+                                                        <td>{job.location?.city} </td>
+                                                        <td>{job.location?.state} </td>
+                                                        <td>{job.location?.zip_code} </td>
+                                                        <td>{job.drivers_needed} </td>
+                                                        <td>{job.expiry_date} </td>
+                                                        <td>{job.geography.length && enumMap(job.geography, ",", JobGeography)} </td>
+                                                        <td>{job.schedule && enumMap(job.schedule, ",", JobSchedule)}</td>
+                                                        <td>{job.employment_type && enumMap(job.employment_type, ",", JobEmploymentType)}</td>
+                                                        <td>{job.equipment_type && enumMap(job.equipment_type, ",", JobEquipmentType)}</td>
+                                                        <td>{job.delivery_type && enumMap(job.delivery_type, ",", JobDeliveryType)}</td>
+                                                        <td>{job.team_drivers && enumMap(job.team_drivers, ",", JobTeamDriver)}</td>
+                                                    </tr>
+                                                })
+                                            }
                                         </tbody>
                                     </Table>
                                 </div>
@@ -570,7 +469,7 @@ export default function JobListing() {
                                                 {/* <td>No prior convictions within 10 years.</td> */}
                                             </tr>
                                             <tr>
-                                            <td> Class A</td>
+                                                <td> Class A</td>
                                                 <td>2</td>
                                                 <td>N/A </td>
                                                 <td> Flatbed  <span className={JobList.td__sty}>2</span></td>
@@ -587,7 +486,7 @@ export default function JobListing() {
                                                 {/* <td>No prior convictions within 10 years.</td> */}
                                             </tr>
                                             <tr>
-                                            <td> Class A</td>
+                                                <td> Class A</td>
                                                 <td>2</td>
                                                 <td>N/A </td>
                                                 <td> Flatbed  <span className={JobList.td__sty}>2</span></td>
