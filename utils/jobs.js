@@ -2,75 +2,75 @@
 const jobBenefits = [
     {
         key: "SIGN_ON_BONUS",
-        label: "sign_on_bonus"
+        label: "Sign on bonus"
     },
     {
         key: "GUARANTEED_BASE_SALARY",
-        label: "guaranteed_base_salary"
+        label: "Guaranteed base salary"
     },
     {
         key: "MEDICAL",
-        label: "medical"
+        label: "Medical"
     },
     {
         key: "VISION",
-        label: "vision"
+        label: "Vision"
     },
     {
         key: "DENTAL",
-        label: "dental"
+        label: "Dental"
     },
     {
         key: "RETIREMENT_401K",
-        label: "retirement_401k"
+        label: "Retirement 401k"
     },
     {
         key: "SAFETY_BONUS",
-        label: "safety_bonus"
+        label: "Safety bonus"
     },
     {
         key: "EXTRA_PAY_MISC",
-        label: "extra_pay_misc"
+        label: "Extra pay misc"
     },
     {
         key: "FUEL_CARD",
-        label: "fuel_card"
+        label: "Fuel card"
     },
     {
         key: "GUARANTEED_BASE_PAY",
-        label: "guaranteed_baseline_pay"
+        label: "Guaranteed baseline pay"
     },
     {
         key: "NEW_EQUIPMENT",
-        label: "new_equipment"
+        label: "New equipment"
     },
     {
         key: "PAID_TRAINING",
-        label: "pay_for_training"
+        label: "Pay for training"
     },
     {
         key: "TOLL_ROAD_PASS",
-        label: "toll_road_passes"
+        label: "Toll road passes"
     },
     {
         key: "EXCLUDE_NY_FL",
-        label: "no_travel_to_ny_fl"
+        label: "No travel to ny fl"
     },
     {
         key: "NO_FORCED_DISPATCH",
-        label: "no_forced_dispatch"
+        label: "No forced dispatch"
     },
     {
         key: "COMPANION_DRIVERS",
-        label: "companion_drivers_allowed"
+        label: "Companion drivers allowed"
     },
     {
         key: "ONBOARD_DEVICES",
-        label: "onboard_devices"
+        label: "Onboard devices"
     },
     {
         key: "PETS_ALLOWED",
-        label: "pets_allowed"
+        label: "Pets allowed"
     },
     // {
     //     key: "OTHER",
@@ -81,91 +81,91 @@ const jobBenefits = [
 const jobGeography = [
     {
         key: "OTR",
-        label: "otr"
+        label: "Otr"
     },
     {
         key: "REGIONAL",
-        label: "regional"
+        label: "Regional"
     },
     {
         key: "LOCAL",
-        label: "local"
+        label: "Local"
     },
 ];
 
 const jobType = [
     {
         key: "W2",
-        label: "salaried"
+        label: "Salaried"
     },
     {
         key: "CONTRACT",
-        label: "contractor"
+        label: "Contractor"
     },
     {
         key: "OWNER_OPERATOR",
-        label: "owner_operator"
+        label: "Owner operator"
     },
     {
         key: "PART_TIME",
-        label: "part_time"
+        label: "Part time"
     },
     {
         key: "SEASONAL",
-        label: "seasonal"
+        label: "Seasonal"
     },
     {
         key: "ONE_TIME_GIG",
-        label: "one_time_gig"
+        label: "One time gig"
     },
 ];
 
 const jobTeamDriver = [
     {
         key: "HAS_TEAM_DRIVER",
-        label: "has_team_drivers"
+        label: "Has team drivers"
     },
     {
         key: "OPEN_TEAM_DRIVER",
-        label: "open_to_team_drivers"
+        label: "Open to team drivers"
     },
     {
         key: "NO_TEAM_DRIVER",
-        label: "not_open_to_team_drivers"
+        label: "Not open to team drivers"
     },
 ];
 
 const jobPayMethod = [
     {
         key: "RATE_PER_MILE",
-        label: "rate_per_mile"
+        label: "Rate per mile"
     },
     {
         key: "PERCENT_PER_MOVE",
-        label: "percent_per_move"
+        label: "Percent per move"
     },
     {
         key: "HOURLY",
-        label: "hourly"
+        label: "Hourly"
     },
     {
         key: "SET_WEEKLY",
-        label: "set_weekly"
+        label: "Set weekly"
     },
     {
         key: "SALARY",
-        label: "salary"
+        label: "Salary"
     },
     {
         key: "PERCENT_WEIGHT",
-        label: "percent_per_weight"
+        label: "Percent per weight"
     },
 ];
 
 const counts = [
     {
         value: 0,
-        label: "none"
+        label: "None"
     },
     {
         value: 1,
@@ -192,7 +192,7 @@ const counts = [
 const years = [
     {
         value: 0,
-        label: "ever"
+        label: "Ever"
     },
     {
         value: 1,
