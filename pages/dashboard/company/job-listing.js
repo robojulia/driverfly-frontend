@@ -33,6 +33,7 @@ import { JobDeliveryType } from "../../../enums/jobs/job-delivery-type.enum";
 import { JobTeamDriver } from "../../../enums/jobs/job-team-driver.enum";
 import { JobPayMethod } from "../../../enums/jobs/job-pay-method.enum";
 import { JobBenefits } from "../../../enums/jobs/job-benefits.enum";
+import { useRouter } from "next/router";
 
 export const data = [
     [
@@ -68,7 +69,7 @@ export default function JobListing() {
     const user = authCheck();
     // const companyApi = new CompanyApi(user.company.id);
     const { t } = useTranslation();
-
+    const router = useRouter()
     const [jobs, setJobs] = useState([])
     const [jobVisible, setJobVisible] = useState(false)
 
@@ -97,9 +98,10 @@ export default function JobListing() {
     }, []);
 
     useEffect(async () => {
+        router.push("/dashboard/company/job-listing#jobDetailSection")
         // console.log(jobs);
         // console.log(jobVisible);
-    }, [jobs, jobVisible]);
+    }, [jobVisible]);
 
     return (
         <>
@@ -191,7 +193,7 @@ export default function JobListing() {
 
             {jobVisible &&
                 <>
-                    <div className={JobList.joblisting}>
+                    <div className={JobList.joblisting} id="jobDetailSection">
                         <Row className="mt-5">
                             <Col lg="12 ">
                                 <Card className="job_listing">
