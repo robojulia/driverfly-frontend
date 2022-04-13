@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 
 import EmojiTransportationIcon from '@mui/icons-material/EmojiTransportation';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import MyLocationIcon from '@mui/icons-material/MyLocation';
 
 import { useTranslation } from "react-i18next";
 
@@ -25,7 +26,13 @@ export default function SettingsSidebar() {
             text: t("VEHICLES"),
             startsWith: true
         },
-    ];
+        {
+          pathname: "/dashboard/company/settings/locations",
+          icon: MyLocationIcon,
+          text: t("LOCATIONS"),
+          startsWith: true
+      },
+  ];
   return (
 
     <div className="side_bar">
