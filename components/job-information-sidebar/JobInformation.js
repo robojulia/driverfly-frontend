@@ -11,9 +11,14 @@ import timeSince from "../../utils/timeSince";
 export default function JonInformation({ job }) {
 
   const { t } = useTranslation();
+
   const enumMap = (str, separator, EnumType) => {
+    if (!str) {
+      return
+    }
     str = `${str}`
-    return str.split(separator).map(item => {
+    const arr = str.split(separator)
+    return arr.map(item => {
       return t(EnumType[item].toLowerCase())
     }).join(', ')
   }
@@ -122,7 +127,7 @@ export default function JonInformation({ job }) {
             <div className="icon text-theme">
               <i className="fa fa-file-archive-o" aria-hidden="true"></i>
             </div>
-            <span className="text"><span className="number">{ timeSince(job.created_at)}</span> ago</span>
+            <span className="text"><span className="number">{timeSince(job.created_at)}</span> ago</span>
           </div>
 
           {/* <div className="statistic-item flex-middle">

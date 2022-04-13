@@ -40,6 +40,12 @@ export default function Index() {
         })
     }
 
+    const searchHandler = e => {
+        if (e.key === 'Enter') {
+            handleSubmit()
+        }
+    }
+
     return (
         <>
             <Head>
@@ -61,6 +67,7 @@ export default function Index() {
                                         <i className="fa fa-search" aria-hidden="true"></i>
                                     </div>
                                     <input
+                                        onKeyPress={searchHandler}
                                         onChange={handleChange}
                                         name="keywords"
                                         type="text"
@@ -69,14 +76,14 @@ export default function Index() {
                                         aria-label=""
                                         aria-describedby="basic-addon1" />
                                 </div>
-                                <div className="filter-inner d-flex align-items-center pl-3">
+                                {/* <div className="filter-inner d-flex align-items-center pl-3">
                                     <i className="fa fa-map-marker" aria-hidden="true"></i>
                                     <input
                                         type="text"
                                         className="form-control border-0"
                                         placeholder="Location" />
                                     <span className="find-me"></span>
-                                </div>
+                                </div> */}
                                 <select
                                     name='employment_type'
                                     onChange={handleChange}

@@ -54,6 +54,7 @@ export default function JobsList() {
                 <div className="job-location">
                   <i className="fa fa-map-marker" aria-hidden="true"></i>
                   {`${job.location?.street}, ${job.location?.city}, ${job.location?.state},`}
+                  <i className="fa fa-usd mr-1 ml-4" aria-hidden="true"></i>{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} per week
                 </div>
                 <div className="job-location">
                   {/* <i className="fa fa-star-o" aria-hidden="true"></i> */}
@@ -62,7 +63,7 @@ export default function JobsList() {
               </div>
 
             </div>
-            <Link href="/jobs/1">
+            <Link href={`/jobs/${job.id}`}>
               <button type="button" className="btn btn-outline-danger">Browse Job</button>
             </Link>
 
