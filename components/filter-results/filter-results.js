@@ -30,7 +30,7 @@ export default function FilterResults() {
 
   return (
     <>
-      <div className="col">
+      <div className="col col-lg-3 col-md-3 filter_container">
         <h5 className='font-weight-normal'>Filter Results</h5>
         <form >
           < Search />
