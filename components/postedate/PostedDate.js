@@ -36,7 +36,7 @@ export default function DatePosted() {
     <>
       <div className="card">
         <div className="card-header" id="headingSix">
-          <h4 className="clearfix mb-0">
+          <h4 className="clearfix mb-0 mt-5">
             <a className="btn-3 btn-link" data-toggle="collapse"
               data-target="#collapseSix" aria-expanded="true"
               aria-controls="collapseSix">Date Posted <i
