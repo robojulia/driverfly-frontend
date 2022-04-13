@@ -50,7 +50,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
                           <i className="fa fa-map-marker mr-2" aria-hidden="true"></i>
                           {`${jobDetail.location?.street}, ${jobDetail.location?.city}, ${jobDetail.location?.state},`}
                         </p>
-                        <p><i className="fa fa-usd mr-2" aria-hidden="true"></i>{jobDetail.min_weekly_pay ? jobDetail.max_weekly_pay : 0} - {jobDetail.max_weekely_pay ? jobDetail.max_weekely_pay : 0} per week</p>
+                        <p><i className="fa fa-usd mr-2" aria-hidden="true"></i>{jobDetail.min_weekly_pay ? jobDetail.min_weekly_pay : 0} - {jobDetail.max_weekly_pay ? jobDetail.max_weekly_pay : 0} per week</p>
                       </div>
                     </div>
                   </div>
@@ -77,7 +77,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
               < RelatedJobs jobs={relatedJobs} />
             </div>
             <div className="col-lg-4">
-              {/* < JonInformation job={jobDetail} /> */}
+              < JonInformation job={jobDetail} />
             </div>
           </div>
         </div>

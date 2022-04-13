@@ -14,7 +14,7 @@ const ReadMore = ({ children }) => {
   }
   return (
     <p className="text">
-      {isReadMore ? text.slice(1) : text}
+      {isReadMore ? text.slice(0, 1) : text}
       <span onClick={toggleReadMore} className="read-or-hide">
         {isReadMore ? "Show More +" : " Show less -"}
       </span>
@@ -47,7 +47,7 @@ const Content = () => {
         <ReadMore>
 
           <div className="App">
-            {secondHalf.map((value) => {
+            {firstHalf.map((value) => {
               return (
                 <>
                   <div class="topping pt-2">
@@ -63,7 +63,7 @@ const Content = () => {
           </div>
 
           <div className="App">
-            {firstHalf.map((value) => {
+            {secondHalf.map((value) => {
               return (
                 <>
                   <div class="topping pt-2">

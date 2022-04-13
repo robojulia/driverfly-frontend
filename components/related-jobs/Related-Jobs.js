@@ -35,7 +35,7 @@ export default function RelatedJobs({ jobs }) {
                                             </div>
 
                                         </div>
-                                        <Link href="/jobs/1">
+                                        <Link href={`/jobs/${job.id}`}>
                                             <button type="button" className="btn btn-primary btn-sm">Browse Job</button>
                                         </Link>
 
