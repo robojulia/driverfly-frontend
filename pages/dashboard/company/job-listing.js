@@ -194,6 +194,9 @@ export default function JobListing() {
             {jobVisible &&
                 <>
                     <div className={JobList.joblisting} id="jobDetailSection">
+                        <Row className={JobList.link}>
+                            <Col sm="6" lg="8"> <h2>{jobVisible.title}</h2></Col>
+                        </Row>
                         <Row className="mt-5">
                             <Col lg="12 ">
                                 <Card className="job_listing">
