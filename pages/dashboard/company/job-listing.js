@@ -36,6 +36,7 @@ import { JobBenefits } from "../../../enums/jobs/job-benefits.enum";
 import { useRouter } from "next/router";
 import { DriverEndorsement } from "../../../enums/drivers/driver-endorsement.enum";
 import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
+import { VehicleAccessory } from "../../../enums/vehicles/vehicle-accessory.enum";
 
 export const data = [
     [
@@ -74,14 +75,14 @@ export default function JobListing() {
     const [jobs, setJobs] = useState([])
     const [jobVisible, setJobVisible] = useState(false)
 
-    const enumMap = (str, separator, EnumType) => {
+    const enumMap = (str, separator, EnumType, toLowerCase) => {
         if (!str) {
             return
         }
         str = `${str}`
         const arr = str.split(separator)
         return arr.map(item => {
-            return t(EnumType[item].toLowerCase())
+            return toLowerCase ? t(EnumType[item].toLowerCase()) : t(EnumType[item])
         }).join(', ')
     }
 
@@ -147,12 +148,12 @@ export default function JobListing() {
                                                         </td>
                                                         <td>{job.drivers_needed} </td>
                                                         <td>{job.expiry_date} </td>
-                                                        <td>{job.geography && enumMap(job.geography, ",", JobGeography)} </td>
-                                                        <td>{job.schedule && enumMap(job.schedule, ",", JobSchedule)}</td>
-                                                        <td>{job.employment_type && enumMap(job.employment_type, ",", JobEmploymentType)}</td>
-                                                        <td>{job.equipment_type && enumMap(job.equipment_type, ",", JobEquipmentType)}</td>
-                                                        <td>{job.delivery_type && enumMap(job.delivery_type, ",", JobDeliveryType)}</td>
-                                                        <td>{job.team_drivers && enumMap(job.team_drivers, ",", JobTeamDriver)}</td>
+                                                        <td>{job.geography && enumMap(job.geography, ",", JobGeography, true)} </td>
+                                                        <td>{job.schedule && enumMap(job.schedule, ",", JobSchedule, true)}</td>
+                                                        <td>{job.employment_type && enumMap(job.employment_type, ",", JobEmploymentType, true)}</td>
+                                                        <td>{job.equipment_type && enumMap(job.equipment_type, ",", JobEquipmentType, true)}</td>
+                                                        <td>{job.delivery_type && enumMap(job.delivery_type, ",", JobDeliveryType, true)}</td>
+                                                        <td>{job.team_drivers && enumMap(job.team_drivers, ",", JobTeamDriver, true)}</td>
                                                         <td>
                                                             <span
                                                                 role="button"
@@ -215,10 +216,10 @@ export default function JobListing() {
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td>{jobVisible.pay_method && enumMap(jobVisible.pay_method, ",", JobPayMethod)} </td>
+                                                        <td>{jobVisible.pay_method && enumMap(jobVisible.pay_method, ",", JobPayMethod, true)} </td>
                                                         <td>{jobVisible.min_weekly_pay} </td>
                                                         <td>{jobVisible.max_weekly_pay} </td>
-                                                        <td>{jobVisible.benefits && enumMap(jobVisible.benefits, ",", JobBenefits)} </td>
+                                                        <td>{jobVisible.benefits && enumMap(jobVisible.benefits, ",", JobBenefits, true)} </td>
                                                     </tr>
                                                 </tbody>
                                             </Table>
@@ -230,149 +231,51 @@ export default function JobListing() {
                         </Row>
                     </div>
 
-                    {/* <div className={JobList.joblisting}>
+                    <div className={JobList.joblisting}>
                         <Row className="mt-5">
                             <Col lg="12 ">
                                 <Card className="job_listing">
-                                    <h3 className="mb-4">Vehicle Info</h3>
+                                    <h3 className="mb-4">{t('vehicle_info')}</h3>
                                     <CardBody className={JobList.jobtable}>
                                         <div className="table-responsive">
                                             <Table striped>
                                                 <thead className="listing_head">
                                                     <tr>
-                                                        <th>Vehicle 1</th>
-                                                        <th></th>
-                                                        <th></th>
-                                                        <th></th>
-                                                        <th></th>
-                                                        <th>Vehicle 2</th>
+                                                        <th>{t('make')}</th>
+                                                        <th>{t('model')}</th>
+                                                        <th>{t('year')}</th>
+                                                        <th>{t('type')}</th>
+                                                        <th>{t('trailer_type')}</th>
+                                                        <th>{t('transmission_type')}</th>
+                                                        <th>{t('accessories')}</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            Kenworth
-                                                        </td>
-                                                        <td>
-                                                            Manual
-                                                        </td>
-                                                        <td>
-                                                            Sleeper
-
-                                                        </td>
-                                                        <td>
-                                                            2019
-                                                        </td>
-                                                        <td className={JobList.img}>
-                                                            <Image src={LogoDark} alt="logo" />
-                                                        </td>
-                                                        <td>
-                                                            Kenworth
-                                                        </td>
-                                                        <td>
-                                                            Automatic
-                                                        </td>
-                                                        <td>
-                                                            Day Cab
-                                                        </td>
-                                                        <td>
-                                                            2018
-                                                        </td>
-                                                        <td className={JobList.img}>
-                                                            <Image src={LogoDark} alt="logo" />
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            Kenworth
-                                                        </td>
-                                                        <td>
-                                                            Manual
-                                                        </td>
-                                                        <td>
-                                                            Sleeper
-
-                                                        </td>
-                                                        <td>
-                                                            2019
-                                                        </td>
-                                                        <td className={JobList.img}>
-                                                            <Image src={LogoDark} alt="logo" />
-                                                        </td>
-                                                        <td>
-                                                            Kenworth
-                                                        </td>
-                                                        <td>
-                                                            Automatic
-                                                        </td>
-                                                        <td>
-                                                            Day Cab
-                                                        </td>
-                                                        <td>
-                                                            2018
-                                                        </td>
-                                                        <td className={JobList.img}>
-                                                            <Image src={LogoDark} alt="logo" />
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            Kenworth
-                                                        </td>
-                                                        <td>
-                                                            Manual
-                                                        </td>
-                                                        <td>
-                                                            Sleeper
-
-                                                        </td>
-                                                        <td>
-                                                            2019
-                                                        </td>
-                                                        <td className={JobList.img}>
-                                                            <Image src={LogoDark} alt="logo" />
-                                                        </td>
-                                                        <td>
-                                                            Kenworth
-                                                        </td>
-                                                        <td>
-                                                            Automatic
-                                                        </td>
-                                                        <td>
-                                                            Day Cab
-                                                        </td>
-                                                        <td>
-                                                            2018
-                                                        </td>
-                                                        <td className={JobList.img}>
-                                                            <Image src={LogoDark} alt="logo" />
-                                                        </td>
-                                                    </tr>
+                                                    {jobVisible.vehicles &&
+                                                        jobVisible.vehicles.map(item => {
+                                                            return <tr>
+                                                                <td>{item.make}</td>
+                                                                <td>{item.model}</td>
+                                                                <td>{item.year}</td>
+                                                                <td>{item.type}</td>
+                                                                <td>{item.trailer_type}</td>
+                                                                <td>{item.transmission_type}</td>
+                                                                <td >{item.accessories && enumMap(item.accessories, ",", VehicleAccessory, false)}</td>
+                                                                {/* <td className={JobList.img}>
+                                                                    <Image src={LogoDark} alt="logo" />
+                                                                </td> */}
+                                                            </tr>
+                                                        })
+                                                    }
                                                 </tbody>
                                             </Table>
                                         </div>
-                                        <Row className="py-4">
-                                            <Col sm="6" lg="9">
-                                                <nav aria-label="Page navigation example p-0">
-                                                    <ul className="pagination p-0">
-                                                        <li className="page-item"><a className="page-link" href="#">Page 1</a></li>
-                                                    </ul>
-                                                </nav>
-                                            </Col>
-                                            <Col sm="6" lg="3" className="mt-4 text-center" >
-                                                <Link href="/dashboard/company/new-job">
-                                                    <a className={JobList.repost}>
-                                                        + New Job
-                                                    </a>
-                                                </Link>
-                                            </Col>
-                                        </Row>
                                     </CardBody>
 
                                 </Card>
                             </Col>
                         </Row>
-                    </div> */}
+                    </div>
 
 
                     <div className={JobList.joblisting}>
@@ -402,12 +305,12 @@ export default function JobListing() {
                                                 <tbody>
                                                     <tr>
                                                         <td >{jobVisible.max_applicant_radius} </td>
-                                                        <td >{jobVisible.cdl_class && enumMap(jobVisible.cdl_class, ",", DriverLicenseType)}</td>
+                                                        <td >{jobVisible.cdl_class && enumMap(jobVisible.cdl_class, ",", DriverLicenseType, true)}</td>
                                                         <td >{jobVisible.min_years_experience} </td>
                                                         <td >{jobVisible.min_degree} </td>
                                                         <td >{jobVisible.required_skills_other} </td>
-                                                        <td >{jobVisible.required_endorsement && enumMap(jobVisible.required_endorsement, ",", DriverEndorsement)}</td>
-                                                        <td >{jobVisible.transmission_type_experience && enumMap(jobVisible.transmission_type_experience, ",", VehicleTransmissionType)}</td>
+                                                        <td >{jobVisible.required_endorsement && enumMap(jobVisible.required_endorsement, ",", DriverEndorsement, true)}</td>
+                                                        <td >{jobVisible.transmission_type_experience && enumMap(jobVisible.transmission_type_experience, ",", VehicleTransmissionType, true)}</td>
                                                         <td >{jobVisible.must_pass_drug_test ? t("yes") : t('no')} </td>
                                                         <td >{jobVisible.must_have_clean_mvr ? t("yes") : t('no')} </td>
                                                         <td >{jobVisible.must_have_clean_criminal_history ? t("yes") : t('no')} </td>

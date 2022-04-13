@@ -468,6 +468,7 @@
     "YEAR": "Year",
     "MODEL": "Model",
     "ACCESSORIES": "Accessories",
+    "accessories": "Accessories",
     "NO_{name}_FOUND": "No {{name}} found",
     "VehicleTransmissionType": {
         "MANUAL": "Manual",
@@ -521,6 +522,7 @@
     "CREATE": "Create",
     "OTHER": "Other",
     "TRAILER_TYPE": "Trailer Type",
+    "trailer_type": "Trailer Type",
     "NONE": "None",
     "UPDATE": "Update",
     "LOCATIONS": "Locations",
