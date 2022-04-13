@@ -520,5 +520,14 @@
     "OTHER": "Other",
     "TRAILER_TYPE": "Trailer Type",
     "NONE": "None",
-    "UPDATE": "Update"
+    "UPDATE": "Update",
+    "LOCATIONS": "Locations",
+    "STREET": "Street",
+    "CITY": "City",
+    "STATE": "State",
+    "ZIP_CODE": "Zip Code",
+    "EDIT_LOCATION": "Edit Location",
+    "CREATE_LOCATION": "Create Location",
+    "UNABLE_TO_FIND_{name}": "Unable to find {{name}}",
+    "LOCATION": "Location"
 }

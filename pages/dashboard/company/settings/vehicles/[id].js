@@ -42,6 +42,8 @@ export default function Vehicle() {
 
     let { id } = router.query;
 
+    const backPath = "/dashboard/company/settings/vehicles";
+
     if (isNaN(parseInt(id))) id = null; // create mode
 
     const { t } = useTranslation();
@@ -125,7 +127,7 @@ export default function Vehicle() {
                 toast.success(t("successfully_saved_information"));
                 setTimeout(
                     () => {
-                        router.push("/dashboard/company/settings/vehicles");
+                        router.push(backPath);
     
                     },
                     3000);
@@ -142,6 +144,17 @@ export default function Vehicle() {
             const api = new CompanyApi(user.company.id);
 
             const vehicle = await api.vehicles.getById(id);
+
+            if (!vehicle) {
+                toast.error(t("UNABLE_TO_FIND_{name}", { name: t("VEHICLE") }));
+                setTimeout(
+                    () => {
+                        router.push(backPath);
+    
+                    },
+                    3000);
+                return;
+            }
 
             form.setValues({
                 type: vehicle.type,
@@ -219,7 +232,7 @@ export default function Vehicle() {
 
       const handleBack = (e) => {
           e.preventDefault();
-          router.push("/dashboard/company/settings/vehicles");
+          router.push(backPath);
 
       }
 
@@ -231,7 +244,7 @@ export default function Vehicle() {
           {t(id ? "EDIT_VEHICLE" : "CREATE_VEHICLE")}
         </h2>
       <div className="container_fluid">
-          <form className="model-body" onSubmit={form.handleSubmit}>
+          <form className="model-body mt-4" onSubmit={form.handleSubmit}>
               <Row>
                 <BaseSelect
                     className={`col-sm-${form.values.type === VehicleType.OTHER ? 3 : 6}`}
@@ -387,7 +400,8 @@ export default function Vehicle() {
                         handleBlur={form.handleBlur}
                         />
                 }
-
+              </Row>
+              <Row className="mt-2">
                     <div className="col-12 border-0 text-end">
                         <div className="col">
                             <button type="submit" className={`btn btn-primary`} >
