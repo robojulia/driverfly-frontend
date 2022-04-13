@@ -2196,5 +2196,5 @@ li.link-wrapper>a.active {
    
 }
 #async-example{
-   
+   display: contents !important;
 }
