@@ -1,12 +1,12 @@
+import { LoginDto } from "../../models/auth/login.dto";
+import { SignUpDto } from "../../models/auth/sign-up.dto";
 import BaseApi from "./_baseApi";
-
-export class LoginDto {
-    email: string;
-    password: string;
-}
 
 export default class AuthApi extends BaseApi {
     async login(dto: LoginDto) {
-        return this.post("auth/login", dto);
+        return await this.post("auth/login", dto);
+    }
+    async signUp(dto: SignUpDto) {
+        await this.post("auth/sign-up", dto);
     }
 }

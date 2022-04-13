@@ -529,5 +529,26 @@
     "EDIT_LOCATION": "Edit Location",
     "CREATE_LOCATION": "Create Location",
     "UNABLE_TO_FIND_{name}": "Unable to find {{name}}",
-    "LOCATION": "Location"
+    "LOCATION": "Location",
+    "EMAIL_ALREADY_EXISTS": "Email already exists",
+    "COMPANY_NAME_ALREADY_EXISTS": "Company name already exists",
+    "CREATE_NEW_ACCOUNT": "Create New Account",
+    "SIGN_UP": "Sign Up",
+    "DRIVERFLY_SIGN_UP": "Driverfly | Sign Up",
+    "PASSWORDS_DO_NOT_MATCH": "Passwords do not match",
+    "COMPANY_NAME": "Company Name",
+    "REGISTER_NOW": "Register Now",
+    "YOU_ACCEPT_OUR_TOS": "You accept our Terms and Conditions and Privacy Policy",
+    "ROLE": "Role",
+    "FIRST_NAME": "First Name",
+    "LAST_NAME": "Last Name",
+    "EMAIL": "Email",
+    "PHONE": "Phone",
+    "PASSWORD": "Password",
+    "CONFIRM_PASSWORD": "Confirm Password",
+    "SignUpRole": {
+        "DRIVER": "Driver",
+        "COMPANY": "Company"
+    },
+    "IF_YOURE_ALREADY_A_USER_LOGIN_HERE": "If you're already a user, login here"
 }
