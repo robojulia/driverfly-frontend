@@ -67,7 +67,6 @@ export default function JobListing() {
     const { authCheck } = useAuth();
 
     const user = authCheck();
-    // const companyApi = new CompanyApi(user.company.id);
     const { t } = useTranslation();
     const router = useRouter()
     const [jobs, setJobs] = useState([])
@@ -108,31 +107,28 @@ export default function JobListing() {
             <div className={JobList.joblisting}>
 
                 <Row className={JobList.link}>
-                    <Col sm="6" lg="8"> <h2>Job Listings</h2></Col>
+                    <Col sm="6" lg="8"> <h2>{t('JOB_LISTINGS')}</h2></Col>
 
                 </Row>
                 <Row className="mt-5">
                     <Col lg="12 ">
                         <Card className="job_listing">
-                            <h3 className="mb-4">Basic</h3>
+                            <h3 className="mb-4">{t('basic')}</h3>
                             <CardBody className={JobList.jobtable}>
                                 <div className="table-responsive">
                                     <Table striped>
                                         <thead className="listing_head">
                                             <tr>
-                                                <th>Job Title</th>
-                                                {/* <th>City</th>
-                                                <th>State</th>
-                                                <th>Zip</th> */}
-                                                <th># of drivers needed:</th>
-                                                <th>Job Expiration Date:</th>
-                                                <th>Geography:</th>
-                                                <th>Schedule:</th>
-                                                <th>Employment Type:</th>
-                                                <th>Equipment Type:</th>
-                                                <th>Type of Delivery:</th>
-                                                <th>Team Drivers:</th>
-                                                <th>Actions</th>
+                                                <th>{t('job_title')}</th>
+                                                <th>{t('drivers_needed')}</th>
+                                                <th>{t('expiration_date')}</th>
+                                                <th>{t('geography')}</th>
+                                                <th>{t('schedule')}</th>
+                                                <th>{t('employment_type')}</th>
+                                                <th>{t('equipment_type')}</th>
+                                                <th>{t('delivery_type')}</th>
+                                                <th>{t('team_drivers')}</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -141,12 +137,9 @@ export default function JobListing() {
                                                 jobs.map((job, index) => {
                                                     return <tr>
                                                         <td>{job.title} </td>
-                                                        {/* <td>{job.location?.city} </td>
-                                                        <td>{job.location?.state} </td>
-                                                        <td>{job.location?.zip_code} </td> */}
                                                         <td>{job.drivers_needed} </td>
                                                         <td>{job.expiry_date} </td>
-                                                        <td>{job.geography.length && enumMap(job.geography, ",", JobGeography)} </td>
+                                                        <td>{job.geography && enumMap(job.geography, ",", JobGeography)} </td>
                                                         <td>{job.schedule && enumMap(job.schedule, ",", JobSchedule)}</td>
                                                         <td>{job.employment_type && enumMap(job.employment_type, ",", JobEmploymentType)}</td>
                                                         <td>{job.equipment_type && enumMap(job.equipment_type, ",", JobEquipmentType)}</td>
@@ -156,8 +149,8 @@ export default function JobListing() {
                                                             <span
                                                                 role="button"
                                                                 key={index} data-item={job.id} onClick={fetchJobDetails}
-                                                            >
-                                                                View Details
+                                                                className="btn btn-link text-muted">
+                                                                {t('view')}
                                                             </span>
                                                         </td>
                                                     </tr>
@@ -177,7 +170,7 @@ export default function JobListing() {
                                     <Col sm="6" lg="3" className="mt-4 text-center" >
                                         <Link href="/dashboard/company/new-job">
                                             <a className={JobList.repost}>
-                                                + New Job
+                                                + {t('new_job')}
                                             </a>
                                         </Link>
                                     </Col>
@@ -206,10 +199,10 @@ export default function JobListing() {
                                             <Table striped>
                                                 <thead className="listing_head">
                                                     <tr>
-                                                        <th>Pay Method</th>
-                                                        <th>Max Weekly Pay</th>
-                                                        <th>Min Weekly Pay</th>
-                                                        <th>Benefits</th>
+                                                        <th>{t('pay_method')}</th>
+                                                        <th>{t('min_pay_per_week')}</th>
+                                                        <th>{t('max_pay_per_week')}</th>
+                                                        <th>{t('benefits')}</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -217,7 +210,7 @@ export default function JobListing() {
                                                         <td>{jobVisible.pay_method && enumMap(jobVisible.pay_method, ",", JobPayMethod)} </td>
                                                         <td>{jobVisible.min_weekly_pay} </td>
                                                         <td>{jobVisible.max_weekly_pay} </td>
-                                                        <td>{jobVisible.benefits.length && enumMap(jobVisible.benefits, ",", JobBenefits)} </td>
+                                                        <td>{jobVisible.benefits && enumMap(jobVisible.benefits, ",", JobBenefits)} </td>
                                                     </tr>
                                                 </tbody>
                                             </Table>
@@ -378,16 +371,16 @@ export default function JobListing() {
                         <Row className="mt-5">
                             <Col lg="12 ">
                                 <Card className="job_listing">
-                                    <h3 className="mb-4">Requirements</h3>
+                                    <h3 className="mb-4">{t('requirements')}</h3>
                                     <CardBody className={JobList.jobtable}>
                                         <div className="table-responsive">
                                             <Table striped className={JobList.req_table}>
                                                 <thead className="listing_head">
                                                     <tr>
-                                                        <th>CDL Class</th>
-                                                        <th>Minimum Years of Experience</th>
-                                                        <th>Minimum Degree</th>
-                                                        <th>Required Skills</th>
+                                                        <th>{t('cdl_class_type')}</th>
+                                                        <th>{t('min_years_experience')}</th>
+                                                        <th>{t('min_degree')}</th>
+                                                        <th>{t('required_skills')}</th>
                                                         {/* <th>Equipment Requirements (for owner operators)</th>
                                                         <th>Endorsements</th>
                                                         <th>Transmission Type Experience:</th>
@@ -580,421 +573,6 @@ export default function JobListing() {
         </>
     )
 
-    // return (
-    //     <>
-    //         <div className={JobList.joblisting}>
-
-    //             <Row className={JobList.link}>
-    //                 <Col sm="6" lg="8"> <h2>Job Listings</h2></Col>
-
-    //             </Row>
-    //             <Row className="mt-5">
-    //                 <Col lg="12 ">
-    //                     <Card className="job_listing">
-    //                         <CardBody className={JobList.jobtable}>
-    //                             <div className="table-responsive">
-    //                                 <Table striped>
-    //                                     <thead className="listing_head">
-    //                                         <tr>
-    //                                             <th>File Name</th>
-    //                                             <th>Post Date</th>
-    //                                             <th>Expiration Date</th>
-    //                                             <th>Status</th>
-    //                                             <th>Applied</th>
-    //                                             <th>Approved</th>
-    //                                             <th>Hired</th>
-    //                                             <th>Tags</th>
-    //                                             <th>Platforms deployed on</th>
-    //                                             {/* <th className={JobList.display}>
-    //                                                 <span className={JobList.tag}>  </span>
-    //                                             </th> */}
-
-    //                                         </tr>
-    //                                     </thead>
-    //                                     <tbody>
-    //                                         {/* {jobs.length > 0 && jobs.map((job, index) => ( */}
-    //                                         <tr>
-    //                                             <td>
-    //                                                 {/* {job.title} */}
-    //                                                 Class A CDL – Texas –NE OTR
-    //                                             </td>
-    //                                             <td>
-    //                                                 {/* {new Date(job.created_at).toDateString()} */}
-    //                                                 November 12, 2021
-    //                                             </td>
-    //                                             <td>
-    //                                                 Dec 12, 2021
-    //                                             </td>
-    //                                             <td>
-    //                                                 Expired
-    //                                             </td>
-    //                                             <td>
-    //                                                 <span className={JobList.applied}>
-    //                                                     6
-    //                                                 </span>
-    //                                             </td>
-    //                                             <td>
-    //                                                 <span className={JobList.approved}>
-    //                                                     4
-    //                                                 </span>
-    //                                             </td>
-    //                                             <td>
-    //                                                 <span className={JobList.hired}>
-    //                                                     1
-    //                                                 </span>
-    //                                             </td>
-    //                                             <td>
-    //                                                 <span className={JobList.tags}>
-    //                                                     {/* {job.employment_type} */}
-    //                                                     1099
-    //                                                 </span>
-    //                                                 <span className={JobList.repost}>
-    //                                                     Repost
-    //                                                 </span>
-    //                                             </td>
-    //                                             <td>
-    //                                                 <span className={JobList.bg_light}>
-    //                                                     DriverFly Job Board
-    //                                                 </span>
-    //                                                 <span className={JobList.bg_light}>
-    //                                                     Facebook
-    //                                                 </span>
-    //                                             </td>
-
-    //                                         </tr>
-    //                                         <tr>
-    //                                             <td>
-    //                                                 {/* {job.title} */}
-    //                                                 Class A CDL – Texas –NE OTR
-    //                                             </td>
-    //                                             <td>
-    //                                                 {/* {new Date(job.created_at).toDateString()} */}
-    //                                                 November 12, 2021
-    //                                             </td>
-    //                                             <td>
-    //                                                 Dec 12, 2021
-    //                                             </td>
-    //                                             <td>
-    //                                                 Expired
-    //                                             </td>
-    //                                             <td>
-    //                                                 <span className={JobList.applied}>
-    //                                                     6
-    //                                                 </span>
-    //                                             </td>
-    //                                             <td>
-    //                                                 <span className={JobList.approved}>
-    //                                                     4
-    //                                                 </span>
-    //                                             </td>
-    //                                             <td>
-    //                                                 <span className={JobList.hired}>
-    //                                                     1
-    //                                                 </span>
-    //                                             </td>
-    //                                             <td>
-    //                                                 <span className={JobList.tags}>
-    //                                                     {/* {job.employment_type} */}
-    //                                                     OTR
-    //                                                 </span>
-    //                                                 <span className={JobList.bg_light_report}>
-    //                                                     Repost
-    //                                                 </span>
-    //                                             </td>
-    //                                             <td>
-    //                                                 <span className={JobList.hired}>
-    //                                                     DriverFly Job Board
-    //                                                 </span>
-    //                                                 <span className={JobList.hired}>
-    //                                                     Facebook
-    //                                                 </span>
-    //                                             </td>
-    //                                         </tr>
-    //                                         <tr>
-    //                                             <td>
-    //                                                 {/* {job.title} */}
-    //                                                 Class A CDL – Texas –NE OTR
-    //                                             </td>
-    //                                             <td>
-    //                                                 {/* {new Date(job.created_at).toDateString()} */}
-    //                                                 November 12, 2021
-    //                                             </td>
-    //                                             <td>
-    //                                                 Dec 12, 2021
-    //                                             </td>
-    //                                             <td>
-    //                                                 Expired
-    //                                             </td>
-    //                                             <td>
-    //                                                 <span className={JobList.applied}>
-    //                                                     6
-    //                                                 </span>
-    //                                             </td>
-    //                                             <td>
-    //                                                 <span className={JobList.approved}>
-    //                                                     4
-    //                                                 </span>
-    //                                             </td>
-    //                                             <td>
-    //                                                 <span className={JobList.hired}>
-    //                                                     1
-    //                                                 </span>
-    //                                             </td>
-    //                                             <td>
-    //                                                 <span className={JobList.tags}>
-    //                                                     {/* {job.employment_type} */}
-    //                                                     1099
-    //                                                 </span>
-    //                                                 <span className={JobList.repost}>
-    //                                                     Repost
-    //                                                 </span>
-    //                                             </td>
-    //                                             <td>
-    //                                                 <span className={JobList.bg_light}>
-    //                                                     DriverFly Job Board
-    //                                                 </span>
-    //                                                 <span className={JobList.bg_light}>
-    //                                                     Facebook
-    //                                                 </span>
-    //                                             </td>
-
-    //                                         </tr>
-    //                                         <tr>
-    //                                             <td>
-    //                                                 {/* {job.title} */}
-    //                                                 Class A CDL – Texas –NE OTR
-    //                                             </td>
-    //                                             <td>
-    //                                                 {/* {new Date(job.created_at).toDateString()} */}
-    //                                                 November 12, 2021
-    //                                             </td>
-    //                                             <td>
-    //                                                 Dec 12, 2021
-    //                                             </td>
-    //                                             <td>
-    //                                                 Expired
-    //                                             </td>
-    //                                             <td>
-    //                                                 <span className={JobList.applied}>
-    //                                                     6
-    //                                                 </span>
-    //                                             </td>
-    //                                             <td>
-    //                                                 <span className={JobList.approved}>
-    //                                                     4
-    //                                                 </span>
-    //                                             </td>
-    //                                             <td>
-    //                                                 <span className={JobList.hired}>
-    //                                                     1
-    //                                                 </span>
-    //                                             </td>
-    //                                             <td>
-    //                                                 <span className={JobList.tags}>
-    //                                                     {/* {job.employment_type} */}
-    //                                                     OTR
-    //                                                 </span>
-    //                                                 <span className={JobList.bg_light_report}>
-    //                                                     Repost
-    //                                                 </span>
-    //                                             </td>
-    //                                             <td>
-    //                                                 <span className={JobList.hired}>
-    //                                                     DriverFly Job Board
-    //                                                 </span>
-    //                                                 <span className={JobList.hired}>
-    //                                                     Facebook
-    //                                                 </span>
-    //                                             </td>
-    //                                         </tr>
-    //                                         {/* ))} */}
-
-
-    //                                     </tbody>
-    //                                 </Table>
-    //                             </div>
-    //                             <Row className="py-4">
-    //                                 <Col sm="6" lg="9">
-    //                                     <nav aria-label="Page navigation example p-0">
-    //                                         <ul className="pagination p-0">
-    //                                             <li className="page-item"><a className="page-link" href="#">Page 1</a></li>
-    //                                         </ul>
-    //                                     </nav>
-    //                                 </Col>
-    //                                 <Col sm="6" lg="3" className="mt-4 text-center" >
-    //                                     <Link href="/dashboard/company/new-job">
-    //                                         <a className={JobList.repost}>
-    //                                             + New Job
-    //                                         </a>
-    //                                     </Link>
-    //                                 </Col>
-    //                             </Row>
-    //                         </CardBody>
-
-    //                     </Card>
-    //                 </Col>
-    //             </Row>
-    //             <div className={JobList.job__overview}>
-    //                 <Row>
-
-    //                     <Col className="p-0" lg="2">
-    //                         <div className={JobList.job__overview__header}>
-    //                             <h3>Job Summary</h3>
-    //                         </div>
-    //                         <div className={JobList.job__overview__body}>
-    //                             <p className="p-3">Hi we’re a general freight hauler looking for a dedicated OTR CDL Class A Driver. We offer great pay with flexible dispatch and home time. Reach out to us today if you’re interested in hauling across the country on good loads that pay well.</p>
-    //                             <div className="space_6"></div>
-    //                             <Row className="">
-    //                                 <Col className="text-end"><input className={JobList.edit__btn}
-    //                                     type="button"
-    //                                     value="Edit"></input></Col>
-    //                             </Row>
-
-    //                         </div>
-
-    //                     </Col>
-
-    //                     <Col className="p-0" lg="4">
-    //                         <div className={JobList.job__overview__detail}>
-    //                             <div className={JobList.job__overview__header}>
-    //                                 <h3>Detail</h3>
-    //                             </div>
-    //                             <div className={JobList.job__body}>
-    //                                 <Row className="p-3">
-    //                                     <Col >
-    //                                         <p>CD Type Position</p>
-    //                                     </Col>
-    //                                     <Col>
-    //                                         <p>Class A</p>
-    //                                     </Col>
-    //                                     <Col>
-    //                                         <p>MVR:</p>
-
-    //                                     </Col>
-    //                                     <Col>
-    //                                         <p>Clean MVR:</p>
-
-    //                                     </Col>
-
-    //                                 </Row>
-    //                             </div>
-    //                             <div className={JobList.job__body}>
-    //                                 <Row className="p-3">
-    //                                     <Col>
-
-    //                                         <p>:</p>
-    //                                     </Col>
-    //                                     <Col>
-    //                                         <p>Solo</p>
-    //                                     </Col>
-    //                                     <Col>
-    //                                         <p>State(s):</p>
-
-    //                                     </Col>
-    //                                     <Col>
-    //                                         <p>Georgia</p>
-
-    //                                     </Col>
-    //                                 </Row>
-    //                             </div>
-    //                             <div className={JobList.job__body}>
-    //                                 <Row className="p-3">
-    //                                     <Col>
-
-    //                                         <p>Statis</p>
-    //                                     </Col>
-    //                                     <Col>
-    //                                         <p>Solo</p>
-    //                                     </Col>
-    //                                     <Col>
-    //                                         <p>State(s):</p>
-
-    //                                     </Col>
-    //                                     <Col>
-    //                                         <p>Georgia</p>
-
-    //                                     </Col>
-    //                                 </Row>
-    //                             </div>
-    //                             <div className={JobList.job__body}>
-    //                                 <Row className="p-3">
-    //                                     <Col>
-
-    //                                         <p>Geography</p>
-    //                                     </Col>
-    //                                     <Col>
-    //                                         <p>Solo</p>
-    //                                     </Col>
-    //                                     <Col>
-    //                                         <p>State(s):</p>
-
-    //                                     </Col>
-    //                                     <Col>
-    //                                         <p>Georgia</p>
-
-    //                                     </Col>
-    //                                 </Row>
-    //                                 <Row className="spacer">
-    //                                     <Col className="text-end"><input className={JobList.edit__btn}
-    //                                         type="button"
-    //                                         value="Edit"></input></Col>
-    //                                 </Row>
-
-    //                             </div>
-    //                         </div>
-    //                     </Col>
-
-    //                     <Col className="p-0" lg="2">
-    //                         <div className={JobList.job__overview__header}>
-    //                             <h3 >Total Hires</h3>
-    //                         </div>
-    //                         <div className={JobList.job__overview__body}>
-    //                             <p className="p-3">Days active:  12</p>
-    //                             <p className="p-3">Days active:  12</p>
-    //                             <p className="p-3">Days active:  12</p>
-    //                             <p className="p-3">Days active:  12</p>
-    //                             <div className="space_35"></div>
-    //                         </div>
-    //                     </Col>
-    //                     <Col className="p-0" lg="2">
-    //                         <div className={JobList.job__overview__header}>
-    //                             <h3>Historical</h3>
-
-    //                         </div>
-    //                         <Chart
-    //                             chartType="ComboChart"
-    //                             width="100%"
-    //                             height="350px"
-    //                             data={data}
-    //                             options={options}
-    //                         />
-    //                     </Col>
-    //                     <Col className="p-0" lg="2">
-    //                         <div className={JobList.job__overview__header}>
-    //                             <h3>Analyze Performance</h3>
-    //                         </div>
-    //                         <div className={JobList.status_job__body}>
-    //                             <Col sm="6" lg="2">
-    //                                 <input className={JobList.status__btn}
-    //                                     type="button"
-    //                                     value="View Stats "></input>
-    //                             </Col>
-    //                         </div>
-    //                     </Col>
-
-    //                 </Row>
-    //                 <Row>
-    //                     <Col className="text-center mt-5">
-    //                         <input className={JobList.status__btn}
-    //                             type="button"
-    //                             value="View Public Posting
-    //                             "></input>
-    //                     </Col>
-    //                 </Row>
-    //             </div>
-    //         </div>
-    //     </>
-    // )
 };
 
 JobListing.getLayout = function getLayout(page) {
