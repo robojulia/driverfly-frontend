@@ -477,6 +477,19 @@ textarea {
 }
 
 
+.account_tabs .react-tabs__tab-list {
+    background: #fff;
+    position: fixed;
+    width: 100%;
+    top: 10%;
+    padding: 30px 0px 0px 0px;
+    margin-bottom: 30px;
+}
+
+
+.account_tabs .react-tabs__tab-panel--selected {
+        margin-top: 100px;
+    }
 
 
 
