@@ -38,7 +38,7 @@ export default function CompanyProfileNav({ user }) {
         // },
         {}, // divider
         {
-            href: "/dashboard/company/settings",
+            href: "/dashboard/company/settings/profile",
             label: t("MY_PROFILE")
         },
     ];
