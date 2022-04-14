@@ -1,4 +1,5 @@
 {
+
     "applied_jobs": "Applied Jobs",
     "apply": "Apply",
     "company": "Company",
@@ -565,5 +566,18 @@
     "INTEGRATIONS": "Integrations",
     "BILLING_AND_SUBSCRIPTIONS": "Billing & Subscriptions",
     "MY_REFERRALS": "My Referrals",
-    "MY_PROFILE": "My Profile"
+    "MY_PROFILE": "My Profile",
+    "HOME": "Home",
+    "ABOUT_US": "About Us",
+    "FIND_A_Job": "Find A Job",
+    "DRIVER_RESOURCES": "Driver Resources",
+    "FAQ": "FAQ",
+    "GET_YOUR_CDL": "Get Your CDL",
+    "OWNER_OPERATORS": " Owner Operators ",
+    "MOTOR_CARRIER_SOLUTIONS":" Motor Carrier Solutions",
+    "OUR_SOLUTION":"Our Solution",
+    "OPTIOS_&_PRICING":"Option & Pricing",
+    "REQUESR_AQUOTE":"Request A Quote",
+    "FREE_DIGITAL_APPLICATION":"Free Digital Application",
+    "THIRD_PARTY_RESOURCES":" Third Party Resources"
 }
