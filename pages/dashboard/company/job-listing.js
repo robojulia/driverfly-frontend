@@ -113,7 +113,7 @@ export default function JobListing() {
                                                             }
                                                         </td>
                                                         <td>{job.drivers_needed} </td>
-                                                        <td>{job.expiry_date} </td>
+                                                        <td>{job.expiry_date && new Date(job.expiry_date).toDateString()} </td>
                                                         <td><ShowEnumFromString str={job.geography} enumArray={JobGeography} /></td>
                                                         <td><ShowEnumFromString str={job.schedule} enumArray={JobSchedule} /></td>
                                                         <td><ShowEnumFromString str={job.employment_type} enumArray={JobEmploymentType} /></td>
