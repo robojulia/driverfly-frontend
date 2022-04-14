@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import CompanyApi from "../../../../api/company";
+import LocationApi from "../../../../api/location";
 import LocationEntity from "../../../../../models/company/location.entity";
 
 export default function LocationList() {
@@ -30,11 +30,9 @@ export default function LocationList() {
   const [ locations, setLocations ] = useState([]);
 
   useEffect(async () => {
-    const api = new CompanyApi(user.company.id);
+    const api = new LocationApi();
 
-    const v = await api.locations.get();
-
-    console.log(v);
+    const v = await api.list();
 
     setLocations(v);
   }, []);
@@ -68,9 +66,9 @@ export default function LocationList() {
     e.preventDefault();
     const { name } =  e.currentTarget;
 
-    const api = new CompanyApi(user.company.id);
+    const api = new LocationApi();
 
-    await api.locations.remove(name);
+    await api.remove(name);
 
     setLocations(locations.filter(v => v.id != name));
   }

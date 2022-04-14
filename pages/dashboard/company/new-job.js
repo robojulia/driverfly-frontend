@@ -16,6 +16,8 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 
 import CompanyApi from "../../api/company";
+import LocationApi from "../../api/location";
+import VehicleApi from "../../api/vehicle";
 
 import BaseInput from "../../../components/forms/BaseInput";
 import BaseSelect from "../../../components/forms/BaseSelect";
@@ -301,7 +303,8 @@ export default function NewJobs() {
                 // create the location (if new)
                 if (!data.location.id) {
                     // create new location
-                    const location = await companyApi.locations.create(data.location);
+                    const locationApi = new LocationApi();
+                    const location = await locationApi.create(data.location);
 
                     set_locations([
                         ...locations,
@@ -320,11 +323,12 @@ export default function NewJobs() {
                 }
 
                 if (data.vehicles.length > 0) {
+                    const vehicleApi = new VehicleApi();
                     for (let i = 0; i < data.vehicles.length; i++) {
                         let vehicle = data.vehicles[i];
 
                         if (!vehicle.id) {
-                            vehicle = await companyApi.vehicles.create(vehicle);
+                            vehicle = await vehicleApi.create(vehicle);
 
                             data.vehicles[i] = { id: vehicle.id };
 
@@ -358,11 +362,14 @@ export default function NewJobs() {
     const [ vehicles, set_vehicles ] = useState([]);
 
     useEffect(async () => {
-        // initialize with the user's current company
-        const companyApi = new CompanyApi(user.company.id);
-
-        set_locations(await companyApi.locations.get());
-        set_vehicles(await companyApi.vehicles.get());
+        {
+            const locationApi = new LocationApi();
+            set_locations(await locationApi.list());
+        }
+        {
+            const vehicleApi = new VehicleApi();
+            set_vehicles(await vehicleApi.list());
+        }
 
     }, []);
 

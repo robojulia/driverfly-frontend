@@ -67,7 +67,6 @@ export default function JobListing() {
     const { authCheck } = useAuth();
 
     const user = authCheck();
-    // const companyApi = new CompanyApi(user.company.id);
     const { t } = useTranslation();
     const router = useRouter()
     const [jobs, setJobs] = useState([])
