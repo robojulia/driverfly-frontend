@@ -21,7 +21,7 @@ export default function DashboardButton(props) {
                 onClick={handleRedirect}
                 type="button"
                 className={props.className}>
-                Dashbaord
+                Dashboard
             </button>
         </>
     )
