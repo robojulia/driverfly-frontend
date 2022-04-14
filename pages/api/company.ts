@@ -1,5 +1,4 @@
-import { LocationEntity } from "../../models/company/location.entity";
-import VehicleEntity from "../../models/company/vehicle.entity";
+import { CompanyEntity } from "../../models/company/company.entity";
 import BaseApi from "./_baseApi";
 import { JobEntity } from "../../models/job/job.entity";
 
@@ -10,6 +9,19 @@ export default class CompanyApi extends BaseApi {
         this.companyId = companyId;
     }
     baseUrl(companyId?: number): string { return `companies/${companyId ?? this.companyId}` }
+    async getById(): Promise<CompanyEntity> {
+        const { data } = await super.get("companies");
+
+        return data;
+    }
+    async update(dto: CompanyEntity) : Promise<CompanyEntity> {
+        const { data } = await this.put("companies", dto);
+
+        return data;
+    }
+    async remove() : Promise<void> {
+        await this.delete("companies");
+    }
     jobs = {
         baseUrl: (companyId?: number) => `${this.baseUrl(companyId)}/jobs`,
         get: async (companyId?: number): Promise<JobEntity[]> => {

@@ -550,5 +550,13 @@
         "DRIVER": "Driver",
         "COMPANY": "Company"
     },
-    "IF_YOURE_ALREADY_A_USER_LOGIN_HERE": "If you're already a user, login here"
+    "COMPANY": "Company",
+    "IF_YOURE_ALREADY_A_USER_LOGIN_HERE": "If you're already a user, login here",
+    "ABOUT": "About",
+    "NAME": "Name",
+    "COMPANY_SETTINGS": "Company Settings",
+    "INTEGRATIONS": "Integrations",
+    "BILLING_AND_SUBSCRIPTIONS": "Billing & Subscriptions",
+    "MY_REFERRALS": "My Referrals",
+    "MY_PROFILE": "My Profile"
 }

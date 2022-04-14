@@ -86,7 +86,7 @@ export default function VehicleList() {
 
         <Row>
           <Col xs="10">
-            <h1>{t("VEHICLES")}</h1>
+            <h2>{t("VEHICLES")}</h2>
           </Col>
           <Col xs="2">
             <button className="btn btn-primary" onClick={onAddClick}>

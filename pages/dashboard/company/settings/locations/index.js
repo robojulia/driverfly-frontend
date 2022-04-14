@@ -81,7 +81,7 @@ export default function LocationList() {
 
         <Row>
           <Col xs="10">
-            <h1>{t("LOCATIONS")}</h1>
+            <h2>{t("LOCATIONS")}</h2>
           </Col>
           <Col xs="2">
             <button className="btn btn-primary" onClick={onAddClick}>
