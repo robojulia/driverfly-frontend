@@ -37,29 +37,9 @@ import { useRouter } from "next/router";
 import { DriverEndorsement } from "../../../enums/drivers/driver-endorsement.enum";
 import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
 import { VehicleAccessory } from "../../../enums/vehicles/vehicle-accessory.enum";
-
-export const data = [
-    [
-        "Month",
-        "Bolivia",
-        "Ecuador",
-        "Madagascar",
-        "Papua New Guinea",
-        "Rwanda",
-        "Average",
-    ],
-    ["0", 165, 938, 522, 998, 450, 614.6],
-    ["2", 135, 1120, 599, 1268, 288, 682],
-
-];
-
-export const options = {
-    title: "",
-    vAxis: { title: "" },
-    hAxis: { title: "Applied Hired" },
-    seriesType: "bars",
-    series: { 5: { type: "line" } },
-};
+import ShowEnumFromString from "../../../components/enum-filters/show-enum-from-string";
+import { VehicleType } from "../../../enums/vehicles/vehicle-type.enum";
+import { VehicleTrailerType } from "../../../enums/vehicles/vehicle-trailer-type.enum";
 
 export default function JobListing() {
 
@@ -75,23 +55,12 @@ export default function JobListing() {
     const [jobs, setJobs] = useState([])
     const [jobVisible, setJobVisible] = useState(false)
 
-    const enumMap = (str, separator, EnumType, toLowerCase) => {
-        if (!str) {
-            return
-        }
-        str = `${str}`
-        const arr = str.split(separator)
-        return arr.map(item => {
-            return toLowerCase ? t(EnumType[item].toLowerCase()) : t(EnumType[item])
-        }).join(', ')
-    }
-
     const fetchJobDetails = async (e) => {
         const jobId = e.target.getAttribute('data-item');
-        const companyApi = new CompanyApi(user.company?.id);
-        let job = await companyApi.jobs.getById(jobId)
-        console.log(job);
-        setJobVisible(job)
+        if (jobId) {
+            const companyApi = new CompanyApi(user.company?.id);
+            setJobVisible(await companyApi.jobs.getById(jobId))
+        }
     }
 
     useEffect(async () => {
@@ -100,9 +69,7 @@ export default function JobListing() {
     }, []);
 
     useEffect(async () => {
-        router.push("/dashboard/company/job-listing#jobDetailSection")
-        // console.log(jobs);
-        // console.log(jobVisible);
+        router.push("/dashboard/company/job-listing#jobDetail")
     }, [jobVisible]);
 
     return (
@@ -111,7 +78,6 @@ export default function JobListing() {
 
                 <Row className={JobList.link}>
                     <Col sm="6" lg="8"> <h2>{t('JOB_LISTINGS')}</h2></Col>
-
                 </Row>
                 <Row className="mt-5">
                     <Col lg="12 ">
@@ -148,12 +114,12 @@ export default function JobListing() {
                                                         </td>
                                                         <td>{job.drivers_needed} </td>
                                                         <td>{job.expiry_date} </td>
-                                                        <td>{job.geography && enumMap(job.geography, ",", JobGeography, true)} </td>
-                                                        <td>{job.schedule && enumMap(job.schedule, ",", JobSchedule, true)}</td>
-                                                        <td>{job.employment_type && enumMap(job.employment_type, ",", JobEmploymentType, true)}</td>
-                                                        <td>{job.equipment_type && enumMap(job.equipment_type, ",", JobEquipmentType, true)}</td>
-                                                        <td>{job.delivery_type && enumMap(job.delivery_type, ",", JobDeliveryType, true)}</td>
-                                                        <td>{job.team_drivers && enumMap(job.team_drivers, ",", JobTeamDriver, true)}</td>
+                                                        <td><ShowEnumFromString str={job.geography} enumArray={JobGeography} /></td>
+                                                        <td><ShowEnumFromString str={job.schedule} enumArray={JobSchedule} /></td>
+                                                        <td><ShowEnumFromString str={job.employment_type} enumArray={JobEmploymentType} /></td>
+                                                        <td><ShowEnumFromString str={job.equipment_type} enumArray={JobEquipmentType} /></td>
+                                                        <td><ShowEnumFromString str={job.delivery_type} enumArray={JobDeliveryType} /></td>
+                                                        <td><ShowEnumFromString str={job.team_drivers} enumArray={JobTeamDriver} /></td>
                                                         <td>
                                                             <span
                                                                 role="button"
@@ -195,7 +161,7 @@ export default function JobListing() {
 
             {jobVisible &&
                 <>
-                    <div className={JobList.joblisting} id="jobDetailSection">
+                    <div className={JobList.joblisting} id="jobDetail">
                         <Row className={JobList.link}>
                             <Col sm="6" lg="8"> <h2>{jobVisible.title}</h2></Col>
                         </Row>
@@ -216,10 +182,10 @@ export default function JobListing() {
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td>{jobVisible.pay_method && enumMap(jobVisible.pay_method, ",", JobPayMethod, true)} </td>
+                                                        <td><ShowEnumFromString str={jobVisible.pay_method} enumArray={JobPayMethod} /></td>
                                                         <td>{jobVisible.min_weekly_pay} </td>
                                                         <td>{jobVisible.max_weekly_pay} </td>
-                                                        <td>{jobVisible.benefits && enumMap(jobVisible.benefits, ",", JobBenefits, true)} </td>
+                                                        <td><ShowEnumFromString str={jobVisible.benefits} enumArray={JobBenefits} /></td>
                                                     </tr>
                                                 </tbody>
                                             </Table>
@@ -257,10 +223,10 @@ export default function JobListing() {
                                                                 <td>{item.make}</td>
                                                                 <td>{item.model}</td>
                                                                 <td>{item.year}</td>
-                                                                <td>{item.type}</td>
-                                                                <td>{item.trailer_type}</td>
-                                                                <td>{item.transmission_type}</td>
-                                                                <td >{item.accessories && enumMap(item.accessories, ",", VehicleAccessory, false)}</td>
+                                                                <td><ShowEnumFromString str={item.type} enumArray={VehicleType} labelPrefix="VehicleType" skipLowerCase={true} /></td>
+                                                                <td><ShowEnumFromString str={item.trailer_type} enumArray={VehicleTrailerType} labelPrefix="VehicleTrailerType" skipLowerCase={true} /></td>
+                                                                <td><ShowEnumFromString str={item.transmission_type} enumArray={VehicleTransmissionType} labelPrefix="VehicleTransmissionType" skipLowerCase={true} /></td>
+                                                                <td><ShowEnumFromString str={item.accessories} enumArray={VehicleAccessory} labelPrefix="VehicleAccessory" skipLowerCase={true} /></td>
                                                                 {/* <td className={JobList.img}>
                                                                     <Image src={LogoDark} alt="logo" />
                                                                 </td> */}
@@ -305,12 +271,15 @@ export default function JobListing() {
                                                 <tbody>
                                                     <tr>
                                                         <td >{jobVisible.max_applicant_radius} </td>
-                                                        <td >{jobVisible.cdl_class && enumMap(jobVisible.cdl_class, ",", DriverLicenseType, true)}</td>
+                                                        <td><ShowEnumFromString str={jobVisible.cdl_class} enumArray={DriverLicenseType} /></td>
+                                                        {/* <td >{jobVisible.cdl_class && enumMap(jobVisible.cdl_class, ",", DriverLicenseType, true)}</td> */}
                                                         <td >{jobVisible.min_years_experience} </td>
                                                         <td >{jobVisible.min_degree} </td>
                                                         <td >{jobVisible.required_skills_other} </td>
-                                                        <td >{jobVisible.required_endorsement && enumMap(jobVisible.required_endorsement, ",", DriverEndorsement, true)}</td>
-                                                        <td >{jobVisible.transmission_type_experience && enumMap(jobVisible.transmission_type_experience, ",", VehicleTransmissionType, true)}</td>
+                                                        <td><ShowEnumFromString str={jobVisible.required_endorsement} enumArray={DriverEndorsement} /></td>
+                                                        {/* <td >{jobVisible.required_endorsement && enumMap(jobVisible.required_endorsement, ",", DriverEndorsement, true)}</td> */}
+                                                        <td><ShowEnumFromString str={jobVisible.transmission_type_experience} enumArray={VehicleTransmissionType} /></td>
+                                                        {/* <td >{jobVisible.transmission_type_experience && enumMap(jobVisible.transmission_type_experience, ",", VehicleTransmissionType, true)}</td> */}
                                                         <td >{jobVisible.must_pass_drug_test ? t("yes") : t('no')} </td>
                                                         <td >{jobVisible.must_have_clean_mvr ? t("yes") : t('no')} </td>
                                                         <td >{jobVisible.must_have_clean_criminal_history ? t("yes") : t('no')} </td>
