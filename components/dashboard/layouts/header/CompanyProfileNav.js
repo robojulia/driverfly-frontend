@@ -1,32 +1,47 @@
 import {
-    Navbar,
-    Collapse,
-    Nav,
-    NavItem,
-    NavbarBrand,
-    UncontrolledDropdown,
     DropdownToggle,
     DropdownMenu,
     DropdownItem,
     Dropdown,
-    Button,
 } from "reactstrap";
 import React from "react";
 import Link from "next/link";
-import Logo from "../logo/Logo";
 import Image from "next/image";
 import LogoutButton from '../../../buttons/Logout';
-import useAuth from "../../../../hooks/useAuth";
-import { useRouter } from "next/router"
 import user1 from "../../../../public/dashboard/assets/images/users/user1.jpg";
 
+import { useTranslation } from "react-i18next";
 
-export default function CompanyProfileNav(props) {
+export default function CompanyProfileNav({ user }) {
+    const { t } = useTranslation();
 
     const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
     const toggle = () => setDropdownOpen((prevState) => !prevState);
 
+    const menu_options = [
+        {
+            href: "/dashboard/company/settings",
+            label: t("COMPANY_SETTINGS")
+        },
+        // {
+        //     href: "/dashboard/company/settings",
+        //     label: t("INTEGRATIONS")
+        // },
+        // {
+        //     href: "/dashboard/company/settings",
+        //     label: t("BILLING_AND_SUBSCRIPTIONS")
+        // },
+        // {
+        //     href: "/dashboard/company/settings",
+        //     label: t("MY_REFERRALS")
+        // },
+        {}, // divider
+        {
+            href: "/dashboard/company/settings/profile",
+            label: t("MY_PROFILE")
+        },
+    ];
 
     return (
         <>
@@ -44,31 +59,29 @@ export default function CompanyProfileNav(props) {
                                 height="30"
 
                             />
-                            <span>{props.user.name || "DriverFly User"}.</span>
-                            <p></p>
+                            <span>
+                                {user.company?.name || "Driverfly Company"}
+                            .</span>
+                            <br />
+                            <span style={{ paddingLeft: "35px"}}>
+                                {user.name || "DriverFly User"}
+                            .</span>
                         </div>
 
                     </DropdownToggle >
                     <DropdownMenu>
-                        <Link href="/dashboard/company/company-settings">
-                            <DropdownItem >Company Settings</DropdownItem>
-                        </Link>
-                        <Link href="#">
-                            <DropdownItem>Integrations</DropdownItem>
-                        </Link>
-                        <Link href="#">
-                            <DropdownItem>Billing & Subscriptions</DropdownItem>
-                        </Link>
-                        <Link href="/dashboard/company/company-profile">
-                            <DropdownItem>Company Profile</DropdownItem>
-                        </Link>
-                        <Link href="#">
-                            <DropdownItem>My Referrals</DropdownItem>
-                        </Link>
+                        {menu_options.map((v, i) => {
+                            if (!v.label) return <DropdownItem key={i} divider />
+
+                            return (
+                                <Link key={i} href={v.href || "#"}>
+                                    <DropdownItem>{v.label}</DropdownItem>
+                                </Link>
+                            );
+                        })}
                         <DropdownItem divider />
                         <DropdownItem><LogoutButton /></DropdownItem>
                     </DropdownMenu>
-
                 </Dropdown>
             </div>
         </>

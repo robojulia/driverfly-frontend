@@ -12,7 +12,7 @@ import Button from "react-bootstrap/Button"
 
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
-import CompanyApi from "../../../../api/company";
+import VehicleApi from "../../../../api/vehicle";
 import DocumentApi from "../../../../api/document";
 import { VehicleType } from "../../../../../enums/vehicles/vehicle-type.enum";
 import { VehicleTrailerType } from "../../../../../enums/vehicles/vehicle-trailer-type.enum";
@@ -112,17 +112,17 @@ export default function Vehicle() {
                     file_base64: values.photo.file_base64
                 } : null
             };
-            if (dto.photo && !dto.photo.file_base64 && !values.photo.id)
+            if (values.photo && !values.photo.file_base64 && values.photo.id)
                 delete dto.photo;
 
-            const api = new CompanyApi(user.company.id);
+            const api = new VehicleApi();
 
             try {
                 if (id) {
-                    await api.vehicles.update(id, dto);
+                    await api.update(id, dto);
                 }
                 else {
-                    await api.vehicles.create(dto);
+                    await api.create(dto);
                 }
                 toast.success(t("successfully_saved_information"));
                 setTimeout(
@@ -141,9 +141,9 @@ export default function Vehicle() {
 
     useEffect(async () => {
         if (id) {
-            const api = new CompanyApi(user.company.id);
+            const api = new VehicleApi();
 
-            const vehicle = await api.vehicles.getById(id);
+            const vehicle = await api.getById(id);
 
             if (!vehicle) {
                 toast.error(t("UNABLE_TO_FIND_{name}", { name: t("VEHICLE") }));

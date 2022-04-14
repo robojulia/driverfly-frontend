@@ -1,5 +1,6 @@
 import BaseApi from "./_baseApi";
 
+import { UserEntity } from "../../models/user/user.entity";
 import { DocumentEntity } from "../../models/documents/document.entity";
 
 export default class UserApi extends BaseApi {
@@ -28,6 +29,12 @@ export default class UserApi extends BaseApi {
         });
 
         return data as DocumentEntity[];
+    }
+
+    async update(id: number, user: UserEntity) : Promise<UserEntity> {
+        const { data } = await this.put(`user/${id}`, user);
+
+        return data.user;
     }
 
     async putUser(userId, user) {

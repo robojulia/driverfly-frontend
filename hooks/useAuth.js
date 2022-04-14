@@ -1,15 +1,26 @@
 import useStorage from './useStorage';
 import Router from 'next/router'
 
+import { UserEntity, UserRole } from "../models/user/user.entity";
+
 const useAuth = () => {
 
     const { getItem, setItem, removeItem } = useStorage();
 
+    /**
+     * 
+     * @param {UserEntity} user 
+     * @returns 
+     */
     const setAuth = (user) => {
         return setItem('user', JSON.stringify(user));
     }
 
-    const authCheck = () => {
+    /**
+     * 
+     * @returns {UserEntity}
+     */
+     const authCheck = () => {
         const json = getItem('user');
         const user = json ? JSON.parse(json) : false;
         return user;
@@ -17,7 +28,7 @@ const useAuth = () => {
 
     const isDriver = () => {
         const user = authCheck();
-        return user && user.roles == 'driver'
+        return user && user.roles === UserRole.DRIVER
     }
 
     const authenticateDriver = () => {
@@ -29,7 +40,7 @@ const useAuth = () => {
 
     const isCompany = () => {
         const user = authCheck();
-        return user && user.company && user.roles == 'company'
+        return !!(user && user.company);
     }
 
     const authenticateCompany = () => {
