@@ -437,6 +437,7 @@
     "misdemeanor": "Misdemeanor",
     "infraction": "Infraction",
     "LOGIN": "Login",
+    "LOGOUT": "Logout",
     "DON'T_HAVE_AN_ACCOUNT_MAKE_ONE": "Don't have an account? Make one",
     "HERE": " here!",
     "QUICK_LOGIN": "Quick Login",
