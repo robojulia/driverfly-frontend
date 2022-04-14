@@ -2,7 +2,7 @@
 const jobBenefits = [
     {
         key: "SIGN_ON_BONUS",
-        label: "Sign on bonus"
+        label: "Sign-on bonus"
     },
     {
         key: "GUARANTEED_BASE_SALARY",
@@ -22,7 +22,7 @@ const jobBenefits = [
     },
     {
         key: "RETIREMENT_401K",
-        label: "Retirement 401k"
+        label: "401k (retirement)"
     },
     {
         key: "SAFETY_BONUS",
@@ -30,11 +30,11 @@ const jobBenefits = [
     },
     {
         key: "EXTRA_PAY_MISC",
-        label: "Extra pay misc"
+        label: "Extra pay for (tarping, overnight, detention, accessorials, extra stops, etc)"
     },
     {
         key: "FUEL_CARD",
-        label: "Fuel card"
+        label: "Fuel cards / discount programs"
     },
     {
         key: "GUARANTEED_BASE_PAY",
@@ -54,7 +54,7 @@ const jobBenefits = [
     },
     {
         key: "EXCLUDE_NY_FL",
-        label: "No travel to ny fl"
+        label: "No traveling to New York or Florida"
     },
     {
         key: "NO_FORCED_DISPATCH",
@@ -66,22 +66,22 @@ const jobBenefits = [
     },
     {
         key: "ONBOARD_DEVICES",
-        label: "Onboard devices"
+        label: "Onboard devices/subscriptions (ex. Netflix, Rand McNally, etc.)"
     },
     {
         key: "PETS_ALLOWED",
         label: "Pets allowed"
     },
-    // {
-    //     key: "OTHER",
-    //     label: "Other"
-    // },
+    {
+        key: "OTHER",
+        label: "Other"
+    },
 ];
 
 const jobGeography = [
     {
         key: "OTR",
-        label: "Otr"
+        label: "OTR"
     },
     {
         key: "REGIONAL",
