@@ -493,7 +493,9 @@ textarea {
         margin-top: 100px;
     }
 
-
+.profile .dropdown-menu.show {
+    z-index: 99999;
+}
 
 /* Responsive */
 @media screen and (max-width: 768px) {
