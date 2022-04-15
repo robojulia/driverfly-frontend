@@ -155,7 +155,7 @@ export default function NewJobs() {
             expiry_date: yup.date().nullable(),
             geography: yup.array(
                 yup.string().enum(JobGeography)
-                ).min(1, t("this_field_is_required")),
+            ).min(1, t("this_field_is_required")),
             schedule: yup.string().enum(JobSchedule).required(t("this_field_is_required")).nullable(),
             schedule_other: yup.string().when("schedule", {
                 is: v => v === JobSchedule.OTHER,
@@ -294,6 +294,8 @@ export default function NewJobs() {
             safety_requirements_other: yup.string().nullable()
         }),
         onSubmit: async (data) => {
+            data.min_weekly_pay = parseFloat(data.min_weekly_pay)
+            data.max_weekly_pay = parseFloat(data.max_weekly_pay)
             console.log("Submitting", data);
 
             try {
@@ -358,8 +360,8 @@ export default function NewJobs() {
         }
     });
 
-    const [ locations, set_locations ] = useState([]);
-    const [ vehicles, set_vehicles ] = useState([]);
+    const [locations, set_locations] = useState([]);
+    const [vehicles, set_vehicles] = useState([]);
 
     useEffect(async () => {
         {
@@ -643,7 +645,7 @@ export default function NewJobs() {
         e.preventDefault();
         const { name, value } = e.target;
 
-        const [ veh, idx, id ] = name.split(".");
+        const [veh, idx, id] = name.split(".");
 
         form.setValues({
             ...form.values,
@@ -674,74 +676,74 @@ export default function NewJobs() {
         });
     }
 
-    const [ pdfModel, set_pdfModel ] = useState({
+    const [pdfModel, set_pdfModel] = useState({
         name: null,
         url: null,
-      });
-    
-      /**
-       * 
-       * @param {React.ChangeEvent<HTMLInputElement>} e 
-       */
+    });
+
+    /**
+     * 
+     * @param {React.ChangeEvent<HTMLInputElement>} e 
+     */
     const uploadHandler = async (e) => {
         const { target: { name, files } } = e;
-    
+
         let photo = null;
         if (files && files[0]) {
-          const file = files[0];
+            const file = files[0];
 
-          photo = {
-            visibility: "PUBLIC",
-            name: file.name,
-            mime_type: file.type,
-            path: URL.createObjectURL(file),
-            file_base64: await getBase64(file)
-          };
+            photo = {
+                visibility: "PUBLIC",
+                name: file.name,
+                mime_type: file.type,
+                path: URL.createObjectURL(file),
+                file_base64: await getBase64(file)
+            };
         }
 
         form.setFieldValue(name, photo);
-    
-      }
-    
-      const viewHandler = async (e) => {
+
+    }
+
+    const viewHandler = async (e) => {
         const { target: { name } } = e;
-    
+
         const file = form.getFieldMeta(name).value;
         console.log(file);
-    
+
         let url = file.path;
-    
+
         set_pdfModel({
-          name: file.name,
-          url: url
+            name: file.name,
+            url: url
         });
-      }
-    
-      const hideModelHandler = (e) => {
+    }
+
+    const hideModelHandler = (e) => {
         set_pdfModel({
-          name: null, url: null
+            name: null, url: null
         });
-      }
+    }
 
-      /**
-       * 
-       * @param {React.ChangeEvent<HTMLSelectElement | HTMLInputElement} e 
-       */
-      const onIntChange = (e) => {
-          let { name, value } = e.target;
+    /**
+     * 
+     * @param {React.ChangeEvent<HTMLSelectElement | HTMLInputElement} e 
+     */
+    const onIntChange = (e) => {
+        let { name, value } = e.target;
 
-          console.log(name, value, typeof value);
+        console.log(name, value, typeof value);
 
-          if (typeof value === "string") {
-              value = parseInt(value);
-              console.log("new value:", value, typeof value);
-              if (isNaN(value)) value = null;
-          }
+        if (typeof value === "string") {
+            value = parseInt(value);
+            console.log("new value:", value, typeof value);
+            if (isNaN(value)) value = null;
+        }
 
-          form.setFieldValue(name, value);
-      }
+        form.setFieldValue(name, value);
+    }
 
-      const onFloatChange = (e) => {
+    const onFloatChange = (e) => {
         let { name, value } = e.target;
 
         if (typeof value === "string") {
@@ -750,8 +752,8 @@ export default function NewJobs() {
         }
 
         form.setFieldValue(name, value);
-      }
-      return (
+    }
+    return (
 
         <>
 
@@ -777,7 +779,7 @@ export default function NewJobs() {
                                 error={form.errors.title}
                                 onChange={form.handleChange}
                                 handleBlur={form.handleBlur}
-                                />
+                            />
                         </div>
                         <div className="row mt-1">
                             <div className="col-md-4">
@@ -796,63 +798,63 @@ export default function NewJobs() {
                                     valueKey="id"
                                     labelKey="street"
                                     options={locations}
-                                    />
+                                />
                                 {(
                                     !!!form.values.location.id &&
                                     <>
-                                    <BaseInput
-                                        className="col-12"
-                                        label={t("street")}
-                                        name="location.street"
-                                        required
-                                        placeholder={t("street")}
-                                        value={form.values.location.street}
-                                        touched={form.touched.location?.street}
-                                        error={form.errors.location?.street}
-                                        onChange={form.handleChange}
-                                        handleBlur={form.handleBlur}
-                                        />
-                                    <BaseInput
-                                        className="col-12"
-                                        label={t("city")}
-                                        name="location.city"
-                                        required
-                                        placeholder={t("city")}
-                                        value={form.values.location.city}
-                                        touched={form.touched.location?.city}
-                                        error={form.errors.location?.city}
-                                        onChange={form.handleChange}
-                                        handleBlur={form.handleBlur}
-                                        />
-                                    <div className="row">
-                                        <BaseSelect
-                                            className="col-7"
-                                            label={t("state")}
-                                            name="location.state"
-                                            required
-                                            placeholder={t("state")}
-                                            value={form.values.location.state}
-                                            onChange={form.handleChange}
-                                            handleBlur={form.handleBlur}
-                                            touched={form.touched.location?.state}
-                                            error={form.errors.location?.state}
-                                            valueKey="value"
-                                            labelKey="label"
-                                            options={stateList}
-                                            />
                                         <BaseInput
-                                            className="col-5"
-                                            label={t("zip_code")}
-                                            name="location.zip_code"
+                                            className="col-12"
+                                            label={t("street")}
+                                            name="location.street"
                                             required
-                                            placeholder={t("zip_code")}
-                                            value={form.values.location.zip_code}
-                                            touched={form.touched.location?.zip_code}
-                                            error={form.errors.location?.zip_code}
+                                            placeholder={t("street")}
+                                            value={form.values.location.street}
+                                            touched={form.touched.location?.street}
+                                            error={form.errors.location?.street}
                                             onChange={form.handleChange}
                                             handleBlur={form.handleBlur}
+                                        />
+                                        <BaseInput
+                                            className="col-12"
+                                            label={t("city")}
+                                            name="location.city"
+                                            required
+                                            placeholder={t("city")}
+                                            value={form.values.location.city}
+                                            touched={form.touched.location?.city}
+                                            error={form.errors.location?.city}
+                                            onChange={form.handleChange}
+                                            handleBlur={form.handleBlur}
+                                        />
+                                        <div className="row">
+                                            <BaseSelect
+                                                className="col-7"
+                                                label={t("state")}
+                                                name="location.state"
+                                                required
+                                                placeholder={t("state")}
+                                                value={form.values.location.state}
+                                                onChange={form.handleChange}
+                                                handleBlur={form.handleBlur}
+                                                touched={form.touched.location?.state}
+                                                error={form.errors.location?.state}
+                                                valueKey="value"
+                                                labelKey="label"
+                                                options={stateList}
                                             />
-                                    </div>
+                                            <BaseInput
+                                                className="col-5"
+                                                label={t("zip_code")}
+                                                name="location.zip_code"
+                                                required
+                                                placeholder={t("zip_code")}
+                                                value={form.values.location.zip_code}
+                                                touched={form.touched.location?.zip_code}
+                                                error={form.errors.location?.zip_code}
+                                                onChange={form.handleChange}
+                                                handleBlur={form.handleBlur}
+                                            />
+                                        </div>
                                     </>
                                 )}
                                 <BaseInput
@@ -866,7 +868,7 @@ export default function NewJobs() {
                                     error={form.errors.expiry_date}
                                     onChange={form.handleChange}
                                     handleBlur={form.handleBlur}
-                                    />
+                                />
                                 <BaseInput
                                     className="col-12"
                                     label={t("drivers_needed")}
@@ -879,7 +881,7 @@ export default function NewJobs() {
                                     onKeyDown={preventNegative}
                                     onChange={onIntChange}
                                     handleBlur={form.handleBlur}
-                                    />
+                                />
                                 <BaseCheckList
                                     className="col-12"
                                     label={t("geography")}
@@ -895,7 +897,7 @@ export default function NewJobs() {
                                     labelKey="label"
                                     labelPrefix="JobGeography"
                                     enumType={JobGeography}
-                                    />
+                                />
                                 <div className="row">
                                     <BaseSelect
                                         className={`col-${form.values.schedule === JobSchedule.OTHER ? 6 : 12}`}
@@ -910,20 +912,20 @@ export default function NewJobs() {
                                         handleBlur={form.handleBlur}
                                         labelPrefix="JobSchedule"
                                         enumType={JobSchedule}
-                                        />
+                                    />
                                     {
                                         form.values.schedule === JobSchedule.OTHER &&
                                         <BaseInput
-                                        className="col-6"
-                                        label={t("other_schedule")}
-                                        required
-                                        name="schedule_other"
-                                        placeholder={t("schedule")}
-                                        value={form.values.schedule_other}
-                                        touched={form.touched.schedule_other}
-                                        error={form.errors.schedule_other}
-                                        onChange={form.handleChange}
-                                        handleBlur={form.handleBlur}
+                                            className="col-6"
+                                            label={t("other_schedule")}
+                                            required
+                                            name="schedule_other"
+                                            placeholder={t("schedule")}
+                                            value={form.values.schedule_other}
+                                            touched={form.touched.schedule_other}
+                                            error={form.errors.schedule_other}
+                                            onChange={form.handleChange}
+                                            handleBlur={form.handleBlur}
                                         />
                                     }
                                 </div>
@@ -940,7 +942,7 @@ export default function NewJobs() {
                                     error={form.errors.employment_type}
                                     labelPrefix="JobEmploymentType"
                                     enumType={JobEmploymentType}
-                                    />
+                                />
                                 <BaseCheckList
                                     className="col-12"
                                     label={t("equipment_type")}
@@ -954,7 +956,7 @@ export default function NewJobs() {
                                     error={form.errors.equipment_type}
                                     labelPrefix="JobEquipmentType"
                                     enumType={JobEquipmentType}
-                                    />
+                                />
                                 {
                                     form.values.equipment_type.includes(JobSchedule.OTHER) &&
                                     <BaseInput
@@ -968,7 +970,7 @@ export default function NewJobs() {
                                         error={form.errors.equipment_type_other}
                                         onChange={form.handleChange}
                                         handleBlur={form.handleBlur}
-                                        />
+                                    />
                                 }
                                 <BaseCheckList
                                     className="col-12"
@@ -984,7 +986,7 @@ export default function NewJobs() {
                                     error={form.errors.delivery_type}
                                     labelPrefix="JobDeliveryType"
                                     enumType={JobDeliveryType}
-                                    />
+                                />
                                 <BaseSelect
                                     className="col-12"
                                     label={t("team_drivers")}
@@ -998,7 +1000,7 @@ export default function NewJobs() {
                                     error={form.errors.team_drivers}
                                     labelPrefix="JobTeamDriver"
                                     enumType={JobTeamDriver}
-                                    />
+                                />
                             </div>
                             <div className="col-md-4">
                                 <h2>{t("benefits")}</h2>
@@ -1015,10 +1017,10 @@ export default function NewJobs() {
                                     error={form.errors.pay_method}
                                     labelPrefix="JobPayMethod"
                                     enumType={JobPayMethod}
-                                    />
+                                />
                                 {
                                     (form.values.pay_method === JobPayMethod.PERCENT_PER_MOVE ||
-                                    form.values.pay_method === JobPayMethod.PERCENT_PER_WEIGHT) &&
+                                        form.values.pay_method === JobPayMethod.PERCENT_PER_WEIGHT) &&
                                     <div className="row">
                                         <BaseInput
                                             className="col-6"
@@ -1033,7 +1035,7 @@ export default function NewJobs() {
                                             handleBlur={form.handleBlur}
                                             touched={form.touched.min_percent}
                                             error={form.errors.min_percent}
-                                            />
+                                        />
                                         <BaseInput
                                             className="col-6"
                                             label={t("max_percent")}
@@ -1047,7 +1049,7 @@ export default function NewJobs() {
                                             handleBlur={form.handleBlur}
                                             touched={form.touched.max_percent}
                                             error={form.errors.max_percent}
-                                            />
+                                        />
                                     </div>
                                 }
                                 {
@@ -1066,7 +1068,7 @@ export default function NewJobs() {
                                             handleBlur={form.handleBlur}
                                             touched={form.touched.min_miles}
                                             error={form.errors.min_miles}
-                                            />
+                                        />
                                         <BaseInput
                                             className="col-6"
                                             label={t("max_miles")}
@@ -1080,7 +1082,7 @@ export default function NewJobs() {
                                             handleBlur={form.handleBlur}
                                             touched={form.touched.max_miles}
                                             error={form.errors.max_miles}
-                                            />
+                                        />
                                     </div>
                                 }
                                 {
@@ -1099,7 +1101,7 @@ export default function NewJobs() {
                                             handleBlur={form.handleBlur}
                                             touched={form.touched.min_hours}
                                             error={form.errors.min_hours}
-                                            />
+                                        />
                                         <BaseInput
                                             className="col-6"
                                             label={t("max_hours")}
@@ -1113,7 +1115,7 @@ export default function NewJobs() {
                                             handleBlur={form.handleBlur}
                                             touched={form.touched.max_hours}
                                             error={form.errors.max_hours}
-                                            />
+                                        />
                                     </div>
                                 }
                                 {
@@ -1133,7 +1135,7 @@ export default function NewJobs() {
                                             handleBlur={form.handleBlur}
                                             touched={form.touched.min_rate}
                                             error={form.errors.min_rate}
-                                            />
+                                        />
                                         <BaseInput
                                             className="col-6"
                                             label={t("max_rate")}
@@ -1147,7 +1149,7 @@ export default function NewJobs() {
                                             handleBlur={form.handleBlur}
                                             touched={form.touched.max_rate}
                                             error={form.errors.max_rate}
-                                            />
+                                        />
                                     </div>
                                 }
                                 {
@@ -1166,7 +1168,7 @@ export default function NewJobs() {
                                             handleBlur={form.handleBlur}
                                             touched={form.touched.min_salary}
                                             error={form.errors.min_salary}
-                                            />
+                                        />
                                         <BaseInput
                                             className="col-6"
                                             label={t("max_salary")}
@@ -1179,7 +1181,7 @@ export default function NewJobs() {
                                             handleBlur={form.handleBlur}
                                             touched={form.touched.max_salary}
                                             error={form.errors.max_salary}
-                                            />
+                                        />
                                     </div>
                                 }
                                 <div className="row">
@@ -1196,7 +1198,7 @@ export default function NewJobs() {
                                         handleBlur={form.handleBlur}
                                         touched={form.touched.min_weekly_pay}
                                         error={form.errors.min_weekly_pay}
-                                        />
+                                    />
                                     <BaseInput
                                         className="col-6"
                                         label={t("max_weekly")}
@@ -1210,7 +1212,7 @@ export default function NewJobs() {
                                         handleBlur={form.handleBlur}
                                         touched={form.touched.max_weekly_pay}
                                         error={form.errors.max_weekly_pay}
-                                        />
+                                    />
                                 </div>
                                 {/* todo: add job pay information */}
                                 <BaseCheckList
@@ -1226,7 +1228,7 @@ export default function NewJobs() {
                                     error={form.errors.benefits}
                                     labelPrefix="JobBenefits"
                                     enumType={JobBenefits}
-                                    />
+                                />
                                 {
                                     form.values.benefits.includes(JobBenefits.OTHER) &&
                                     <BaseInput
@@ -1240,7 +1242,7 @@ export default function NewJobs() {
                                         error={form.errors.benefits_other}
                                         onChange={form.handleChange}
                                         handleBlur={form.handleBlur}
-                                        />
+                                    />
                                 }
                             </div>
                             <div className="col-md-4">
@@ -1253,135 +1255,136 @@ export default function NewJobs() {
                                     }
                                     const basePath = `vehicles.${i}`;
                                     return (
-                                    <div key={i} className="row">
-                                        <BaseSelect
-                                            className="col-10"
-                                            label={`${t("vehicle")} ${i + 1}`}
-                                            name={`${basePath}.id`}
-                                            placeholder={t("new_vehicle")}
-                                            value={v.id}
-                                            onChange={changeVehicle}
-                                            handleBlur={form.handleBlur}
-                                            touched={get(form.touched, "id")}
-                                            error={get(form.errors, "id")}
-                                            options={vehicles}
-                                            valueKey="id"
-                                            createLabel={veh => {
-                                                const { type, type_other, make, model, transmission_type, year } = veh;
-                                                let label = type === VehicleType.OTHER ? type_other : t(type);
+                                        <div key={i} className="row">
+                                            <BaseSelect
+                                                className="col-10"
+                                                label={`${t("vehicle")} ${i + 1}`}
+                                                name={`${basePath}.id`}
+                                                placeholder={t("new_vehicle")}
+                                                value={v.id}
+                                                onChange={changeVehicle}
+                                                handleBlur={form.handleBlur}
+                                                touched={get(form.touched, "id")}
+                                                error={get(form.errors, "id")}
+                                                options={vehicles}
+                                                valueKey="id"
+                                                createLabel={veh => {
+                                                    const { type, type_other, make, model, transmission_type, year } = veh;
+                                                    let label = type === VehicleType.OTHER ? type_other : t(type);
 
-                                                if (make) label += ` / ${make}`;
+                                                    if (make) label += ` / ${make}`;
 
-                                                if (model) label += ` / ${model}`;
+                                                    if (model) label += ` / ${model}`;
 
-                                                if (transmission_type) label += ` / ${t(transmission_type)}`;
+                                                    if (transmission_type) label += ` / ${t(transmission_type)}`;
 
-                                                if (year) label += ` / ${year}`;
-                                                return label; //`${()} / ${veh.make} / ${veh.model} / ${t(veh.transmission_type)} / ${veh.year}`
-                                            }}
+                                                    if (year) label += ` / ${year}`;
+                                                    return label; //`${()} / ${veh.make} / ${veh.model} / ${t(veh.transmission_type)} / ${veh.year}`
+                                                }}
                                             />
-                                        <div className="col-2 mt-4">
-                                            <button className="btn btn-yellow" name={i} onClick={removeVehicle}>x</button>
-                                        </div>
-                                        {
-                                            !!!v.id &&
-                                            <>
-                                            <BaseSelect
-                                                className={`col-${v.type === VehicleType.OTHER ? 6 : 12}`}
-                                                label={t("type")}
-                                                name={`${basePath}.type`}
-                                                required
-                                                placeholder={t("type")}
-                                                value={v.type}
-                                                onChange={form.handleChange}
-                                                handleBlur={form.handleBlur}
-                                                touched={get(form.touched, "type")}
-                                                error={get(form.errors, "type")}
-                                                labelPrefix="VehicleType"
-                                                enumType={VehicleType}
-                                                />
+                                            <div className="col-2 mt-4">
+                                                <button className="btn btn-yellow" name={i} onClick={removeVehicle}>x</button>
+                                            </div>
                                             {
-                                                v.type === VehicleType.OTHER &&
-                                                <BaseInput
-                                                    className="col-6"
-                                                    label={t("other")}
-                                                    name={`${basePath}.type_other`}
-                                                    required
-                                                    placeholder={t("type")}
-                                                    value={v.type_other}
-                                                    onChange={form.handleChange}
-                                                    handleBlur={form.handleBlur}
-                                                    touched={get(form.touched, "type_other")}
-                                                    error={get(form.errors, "type_other")}
+                                                !!!v.id &&
+                                                <>
+                                                    <BaseSelect
+                                                        className={`col-${v.type === VehicleType.OTHER ? 6 : 12}`}
+                                                        label={t("type")}
+                                                        name={`${basePath}.type`}
+                                                        required
+                                                        placeholder={t("type")}
+                                                        value={v.type}
+                                                        onChange={form.handleChange}
+                                                        handleBlur={form.handleBlur}
+                                                        touched={get(form.touched, "type")}
+                                                        error={get(form.errors, "type")}
+                                                        labelPrefix="VehicleType"
+                                                        enumType={VehicleType}
                                                     />
+                                                    {
+                                                        v.type === VehicleType.OTHER &&
+                                                        <BaseInput
+                                                            className="col-6"
+                                                            label={t("other")}
+                                                            name={`${basePath}.type_other`}
+                                                            required
+                                                            placeholder={t("type")}
+                                                            value={v.type_other}
+                                                            onChange={form.handleChange}
+                                                            handleBlur={form.handleBlur}
+                                                            touched={get(form.touched, "type_other")}
+                                                            error={get(form.errors, "type_other")}
+                                                        />
+                                                    }
+                                                    <BaseInput
+                                                        className="col-6"
+                                                        label={t("make")}
+                                                        name={`${basePath}.make`}
+                                                        required
+                                                        placeholder={t("make")}
+                                                        value={v.make}
+                                                        onChange={form.handleChange}
+                                                        handleBlur={form.handleBlur}
+                                                        touched={get(form.touched, "make")}
+                                                        error={get(form.errors, "make")}
+                                                    />
+                                                    <BaseInput
+                                                        className="col-6"
+                                                        label={t("model")}
+                                                        name={`${basePath}.model`}
+                                                        required
+                                                        placeholder={t("model")}
+                                                        value={v.model}
+                                                        onChange={form.handleChange}
+                                                        handleBlur={form.handleBlur}
+                                                        touched={get(form.touched, "model")}
+                                                        error={get(form.errors, "model")}
+                                                    />
+                                                    <BaseSelect
+                                                        className={`col-6`}
+                                                        label={t("transmission")}
+                                                        name={`${basePath}.transmission_type`}
+                                                        placeholder={t("transmission_type")}
+                                                        value={v.transmission_type}
+                                                        onChange={form.handleChange}
+                                                        handleBlur={form.handleBlur}
+                                                        touched={get(form.touched, "transmission_type")}
+                                                        error={get(form.errors, "transmission_type")}
+                                                        enumType={VehicleTransmissionType}
+                                                    />
+                                                    <BaseInput
+                                                        className="col-6"
+                                                        label={t("year")}
+                                                        name={`${basePath}.year`}
+                                                        required
+                                                        placeholder={t("year")}
+                                                        value={v.year}
+                                                        type="number"
+                                                        onKeyDown={preventNegative}
+                                                        onChange={onIntChange}
+                                                        handleBlur={form.handleBlur}
+                                                        touched={get(form.touched, "year")}
+                                                        error={get(form.errors, "year")}
+                                                    />
+                                                    <BaseFile
+                                                        className="col-6"
+                                                        label={t("photo")}
+                                                        name={`${basePath}.photo`}
+                                                        accept="image/*"
+                                                        value={v.photo}
+                                                        onChange={uploadHandler}
+                                                        onView={viewHandler}
+                                                        onDelete={uploadHandler}
+                                                        handleBlur={form.handleBlur}
+                                                        touched={get(form.touched, "photo")}
+                                                        error={get(form.errors, "photo")}
+                                                    />
+                                                </>
                                             }
-                                            <BaseInput
-                                                className="col-6"
-                                                label={t("make")}
-                                                name={`${basePath}.make`}
-                                                required
-                                                placeholder={t("make")}
-                                                value={v.make}
-                                                onChange={form.handleChange}
-                                                handleBlur={form.handleBlur}
-                                                touched={get(form.touched, "make")}
-                                                error={get(form.errors, "make")}
-                                                />
-                                            <BaseInput
-                                                className="col-6"
-                                                label={t("model")}
-                                                name={`${basePath}.model`}
-                                                required
-                                                placeholder={t("model")}
-                                                value={v.model}
-                                                onChange={form.handleChange}
-                                                handleBlur={form.handleBlur}
-                                                touched={get(form.touched, "model")}
-                                                error={get(form.errors, "model")}
-                                                />
-                                            <BaseSelect
-                                                className={`col-6`}
-                                                label={t("transmission")}
-                                                name={`${basePath}.transmission_type`}
-                                                placeholder={t("transmission_type")}
-                                                value={v.transmission_type}
-                                                onChange={form.handleChange}
-                                                handleBlur={form.handleBlur}
-                                                touched={get(form.touched, "transmission_type")}
-                                                error={get(form.errors, "transmission_type")}
-                                                enumType={VehicleTransmissionType}
-                                                />
-                                            <BaseInput
-                                                className="col-6"
-                                                label={t("year")}
-                                                name={`${basePath}.year`}
-                                                required
-                                                placeholder={t("year")}
-                                                value={v.year}
-                                                type="number"
-                                                onKeyDown={preventNegative}
-                                                onChange={onIntChange}
-                                                handleBlur={form.handleBlur}
-                                                touched={get(form.touched, "year")}
-                                                error={get(form.errors, "year")}
-                                                />
-                                            <BaseFile
-                                                className="col-6"
-                                                label={t("photo")}
-                                                name={`${basePath}.photo`}
-                                                accept="image/*"
-                                                value={v.photo}
-                                                onChange={uploadHandler}
-                                                onView={viewHandler}
-                                                onDelete={uploadHandler}
-                                                handleBlur={form.handleBlur}
-                                                touched={get(form.touched, "photo")}
-                                                error={get(form.errors, "photo")}
-                                                />
-                                            </>
-                                        }
-                                    </div>
-                                )})}
+                                        </div>
+                                    )
+                                })}
                                 <div className="col-6 offset-6 text-end mt-2">
                                     <button className="btn btn-yellow" onClick={addVehicle}>+ {t("more")}</button>
                                 </div>
@@ -1401,7 +1404,7 @@ export default function NewJobs() {
                                 error={form.errors.description}
                                 onChange={form.handleChange}
                                 handleBlur={form.handleBlur}
-                                />
+                            />
                             <BaseTextArea
                                 className="col-md-5"
                                 label={`${t("sms_summary")} (${t("max_100_characters")})`}
@@ -1415,7 +1418,7 @@ export default function NewJobs() {
                                 error={form.errors.description_short}
                                 onChange={form.handleChange}
                                 handleBlur={form.handleBlur}
-                                />
+                            />
                         </div>
                         <hr />
                         <div className="row">
@@ -1435,7 +1438,7 @@ export default function NewJobs() {
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.max_applicant_radius}
                                     error={form.errors.max_applicant_radius}
-                                    />
+                                />
                                 <BaseCheckList
                                     className="col-12"
                                     label={t("cdl_class")}
@@ -1448,7 +1451,7 @@ export default function NewJobs() {
                                     error={form.errors.cdl_class}
                                     labelPrefix="DriverLicenseType"
                                     enumType={DriverLicenseType}
-                                    />
+                                />
                                 <BaseInput
                                     className="col-12"
                                     label={t("min_years_experience")}
@@ -1462,7 +1465,7 @@ export default function NewJobs() {
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.min_years_experience}
                                     error={form.errors.min_years_experience}
-                                    />
+                                />
                                 <BaseSelect
                                     className="col-12"
                                     label={t("min_degree")}
@@ -1475,7 +1478,7 @@ export default function NewJobs() {
                                     error={form.errors.min_degree}
                                     labelPrefix="DriverDegree"
                                     enumType={DriverDegree}
-                                    />
+                                />
                                 <div className="col-12">
                                     <label>{t("required_skills")}:</label>
                                     {form.touched.required_skills && typeof form.errors.required_skills === "string" ? <span className="text-danger small">{form.errors.required_skills}</span> : null}
@@ -1485,44 +1488,44 @@ export default function NewJobs() {
                                                 return part.required_skills[i][field];
                                         }
                                         return (
-                                        <div key={i} className="row">
-                                            <BaseSelect
-                                                className="col-5"
-                                                label={t("type")}
-                                                placeholder={t("type")}
-                                                name={`required_skills.${i}.type`}
-                                                required
-                                                value={v.type}
-                                                onChange={form.handleChange}
-                                                handleBlur={form.handleBlur}
-                                                touched={get(form.touched, "type")}
-                                                error={get(form.errors, "type")}
-                                                labelPrefix="JobEquipmentType"
-                                                enumType={JobEquipmentType}
+                                            <div key={i} className="row">
+                                                <BaseSelect
+                                                    className="col-5"
+                                                    label={t("type")}
+                                                    placeholder={t("type")}
+                                                    name={`required_skills.${i}.type`}
+                                                    required
+                                                    value={v.type}
+                                                    onChange={form.handleChange}
+                                                    handleBlur={form.handleBlur}
+                                                    touched={get(form.touched, "type")}
+                                                    error={get(form.errors, "type")}
+                                                    labelPrefix="JobEquipmentType"
+                                                    enumType={JobEquipmentType}
                                                 />
-                                            <BaseInput
-                                                className="col-5"
-                                                label={t("years")}
-                                                placeholder={t("years")}
-                                                name={`required_skills.${i}.years`}
-                                                required
-                                                value={v.years}
-                                                min="1"
-                                                type="number"
-                                                onKeyDown={positiveInt}
-                                                onChange={onIntChange}
-                                                handleBlur={form.handleBlur}
-                                                touched={get(form.touched, "years")}
-                                                error={get(form.errors, "years")}
+                                                <BaseInput
+                                                    className="col-5"
+                                                    label={t("years")}
+                                                    placeholder={t("years")}
+                                                    name={`required_skills.${i}.years`}
+                                                    required
+                                                    value={v.years}
+                                                    min="1"
+                                                    type="number"
+                                                    onKeyDown={positiveInt}
+                                                    onChange={onIntChange}
+                                                    handleBlur={form.handleBlur}
+                                                    touched={get(form.touched, "years")}
+                                                    error={get(form.errors, "years")}
                                                 />
-                                            <div className="col-2 mt-4">
-                                                <button className="btn btn-yellow" name={i} onClick={removeRequiredSkill}>x</button>
-                                            </div>
-                                        </div>);
-                                        })}
-                                        <div className="col-6 offset-6 text-end mt-2">
-                                            <button className="btn btn-yellow" onClick={addRequiredSkills}>+ {t("more")}</button>
-                                        </div>
+                                                <div className="col-2 mt-4">
+                                                    <button className="btn btn-yellow" name={i} onClick={removeRequiredSkill}>x</button>
+                                                </div>
+                                            </div>);
+                                    })}
+                                    <div className="col-6 offset-6 text-end mt-2">
+                                        <button className="btn btn-yellow" onClick={addRequiredSkills}>+ {t("more")}</button>
+                                    </div>
                                 </div>
                                 <BaseTextArea
                                     className="col-12"
@@ -1535,7 +1538,7 @@ export default function NewJobs() {
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.required_skills_other}
                                     error={form.errors.required_skills_other}
-                                    />
+                                />
                                 {
                                     form.values.employment_type === JobEmploymentType.OWNER_OPERATOR &&
                                     <div className="col-12">
@@ -1547,44 +1550,44 @@ export default function NewJobs() {
                                                     return part.required_equipment[i][field];
                                             }
                                             return (
-                                            <div key={i} className="row">
-                                                <BaseSelect
-                                                    className="col-5"
-                                                    label={t("type")}
-                                                    placeholder={t("type")}
-                                                    name={`required_equipment.${i}.type`}
-                                                    required
-                                                    value={v.type}
-                                                    onChange={form.handleChange}
-                                                    handleBlur={form.handleBlur}
-                                                    touched={get(form.touched, "type")}
-                                                    error={get(form.errors, "type")}
-                                                    labelPrefix="JobEquipmentType"
-                                                    enumType={JobEquipmentType}
+                                                <div key={i} className="row">
+                                                    <BaseSelect
+                                                        className="col-5"
+                                                        label={t("type")}
+                                                        placeholder={t("type")}
+                                                        name={`required_equipment.${i}.type`}
+                                                        required
+                                                        value={v.type}
+                                                        onChange={form.handleChange}
+                                                        handleBlur={form.handleBlur}
+                                                        touched={get(form.touched, "type")}
+                                                        error={get(form.errors, "type")}
+                                                        labelPrefix="JobEquipmentType"
+                                                        enumType={JobEquipmentType}
                                                     />
-                                                <BaseInput
-                                                    className="col-5"
-                                                    label={t("quantity")}
-                                                    placeholder={t("quantity")}
-                                                    name={`required_equipment.${i}.quantity`}
-                                                    required
-                                                    value={v.quantity}
-                                                    min="1"
-                                                    type="number"
-                                                    onKeyDown={positiveInt}
-                                                    onChange={onIntChange}
-                                                    handleBlur={form.handleBlur}
-                                                    touched={get(form.touched, "quantity")}
-                                                    error={get(form.errors, "quantity")}
+                                                    <BaseInput
+                                                        className="col-5"
+                                                        label={t("quantity")}
+                                                        placeholder={t("quantity")}
+                                                        name={`required_equipment.${i}.quantity`}
+                                                        required
+                                                        value={v.quantity}
+                                                        min="1"
+                                                        type="number"
+                                                        onKeyDown={positiveInt}
+                                                        onChange={onIntChange}
+                                                        handleBlur={form.handleBlur}
+                                                        touched={get(form.touched, "quantity")}
+                                                        error={get(form.errors, "quantity")}
                                                     />
-                                                <div className="col-2 mt-4">
-                                                    <button className="btn btn-yellow" name={i} onClick={removeRequiredEquipment}>x</button>
-                                                </div>
-                                            </div>);
-                                            })}
-                                            <div className="col-6 offset-6 text-end mt-2">
-                                                <button className="btn btn-yellow" onClick={addRequiredEquipment}>+ {t("more")}</button>
-                                            </div>
+                                                    <div className="col-2 mt-4">
+                                                        <button className="btn btn-yellow" name={i} onClick={removeRequiredEquipment}>x</button>
+                                                    </div>
+                                                </div>);
+                                        })}
+                                        <div className="col-6 offset-6 text-end mt-2">
+                                            <button className="btn btn-yellow" onClick={addRequiredEquipment}>+ {t("more")}</button>
+                                        </div>
                                     </div>
                                 }
                                 <BaseCheckList
@@ -1599,7 +1602,7 @@ export default function NewJobs() {
                                     error={form.errors.required_endorsement}
                                     labelPrefix="DriverEndorsement"
                                     enumType={DriverEndorsement}
-                                    />
+                                />
                                 <BaseCheckList
                                     className="col-12"
                                     label={t("transmission_type")}
@@ -1612,7 +1615,7 @@ export default function NewJobs() {
                                     error={form.errors.transmission_type_experience}
                                     labelPrefix="VehicleTransmissionType"
                                     enumType={VehicleTransmissionType}
-                                    />
+                                />
                             </div>
                             <div className="col-md-6">
                                 <BaseCheck
@@ -1624,7 +1627,7 @@ export default function NewJobs() {
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.must_pass_drug_test}
                                     error={form.errors.must_pass_drug_test}
-                                    />
+                                />
                                 <BaseCheck
                                     className="col-12"
                                     label={t("must_have_clean_mvr")}
@@ -1634,7 +1637,7 @@ export default function NewJobs() {
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.must_have_clean_mvr}
                                     error={form.errors.must_have_clean_mvr}
-                                    />
+                                />
                                 {
                                     !form.values.must_have_clean_mvr &&
                                     <div className="col-12">
@@ -1646,55 +1649,55 @@ export default function NewJobs() {
                                                     return part.mvr_requirements[i][field];
                                             }
                                             return (
-                                            <div key={i} className="row">
-                                                <BaseSelect
-                                                    className="col-3"
-                                                    label={t("max")}
-                                                    name={`mvr_requirements.${i}.max_count`}
-                                                    required
-                                                    value={v.max_count}
-                                                    options={counts}
-                                                    onKeyDown={positiveInt}
-                                                    onChange={onIntChange}
-                                                    handleBlur={form.handleBlur}
-                                                    touched={get(form.touched, "max_count")}
-                                                    error={get(form.errors, "max_count")}
+                                                <div key={i} className="row">
+                                                    <BaseSelect
+                                                        className="col-3"
+                                                        label={t("max")}
+                                                        name={`mvr_requirements.${i}.max_count`}
+                                                        required
+                                                        value={v.max_count}
+                                                        options={counts}
+                                                        onKeyDown={positiveInt}
+                                                        onChange={onIntChange}
+                                                        handleBlur={form.handleBlur}
+                                                        touched={get(form.touched, "max_count")}
+                                                        error={get(form.errors, "max_count")}
                                                     />
-                                                <BaseSelect
-                                                    className="col-4"
-                                                    label={t("type")}
-                                                    placeholder={t("type")}
-                                                    name={`mvr_requirements.${i}.type`}
-                                                    required
-                                                    value={v.type}
-                                                    onChange={form.handleChange}
-                                                    handleBlur={form.handleBlur}
-                                                    touched={get(form.touched, "type")}
-                                                    error={get(form.errors, "type")}
-                                                    labelPrefix="MvrType"
-                                                    enumType={MvrType}
+                                                    <BaseSelect
+                                                        className="col-4"
+                                                        label={t("type")}
+                                                        placeholder={t("type")}
+                                                        name={`mvr_requirements.${i}.type`}
+                                                        required
+                                                        value={v.type}
+                                                        onChange={form.handleChange}
+                                                        handleBlur={form.handleBlur}
+                                                        touched={get(form.touched, "type")}
+                                                        error={get(form.errors, "type")}
+                                                        labelPrefix="MvrType"
+                                                        enumType={MvrType}
                                                     />
-                                                <BaseSelect
-                                                    className="col-3"
-                                                    label={t("within")}
-                                                    name={`mvr_requirements.${i}.max_years`}
-                                                    required
-                                                    value={v.max_years}
-                                                    options={years}
-                                                    onKeyDown={positiveInt}
-                                                    onChange={onIntChange}
-                                                    handleBlur={form.handleBlur}
-                                                    touched={get(form.touched, "max_years")}
-                                                    error={get(form.errors, "max_years")}
+                                                    <BaseSelect
+                                                        className="col-3"
+                                                        label={t("within")}
+                                                        name={`mvr_requirements.${i}.max_years`}
+                                                        required
+                                                        value={v.max_years}
+                                                        options={years}
+                                                        onKeyDown={positiveInt}
+                                                        onChange={onIntChange}
+                                                        handleBlur={form.handleBlur}
+                                                        touched={get(form.touched, "max_years")}
+                                                        error={get(form.errors, "max_years")}
                                                     />
-                                                <div className="col-2 mt-4">
-                                                    <button className="btn btn-yellow" name={i} onClick={removeMvrRequirement}>x</button>
-                                                </div>
-                                            </div>);
-                                            })}
-                                            <div className="col-6 offset-6 text-end mt-2">
-                                                <button className="btn btn-yellow" onClick={addMvrRequirement}>+ {t("more")}</button>
-                                            </div>
+                                                    <div className="col-2 mt-4">
+                                                        <button className="btn btn-yellow" name={i} onClick={removeMvrRequirement}>x</button>
+                                                    </div>
+                                                </div>);
+                                        })}
+                                        <div className="col-6 offset-6 text-end mt-2">
+                                            <button className="btn btn-yellow" onClick={addMvrRequirement}>+ {t("more")}</button>
+                                        </div>
                                     </div>
                                 }
                                 <BaseCheck
@@ -1706,7 +1709,7 @@ export default function NewJobs() {
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.accept_sap_graduates}
                                     error={form.errors.accept_sap_graduates}
-                                    />
+                                />
                                 <BaseCheck
                                     className="col-12"
                                     label={t("no_criminal_history")}
@@ -1716,7 +1719,7 @@ export default function NewJobs() {
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.must_have_clean_criminal_history}
                                     error={form.errors.must_have_clean_criminal_history}
-                                    />
+                                />
                                 {
                                     !form.values.must_have_clean_criminal_history &&
                                     <div className="col-12">
@@ -1728,55 +1731,55 @@ export default function NewJobs() {
                                                     return part.criminal_history[i][field];
                                             }
                                             return (
-                                            <div key={i} className="row">
-                                                <BaseSelect
-                                                    className="col-3"
-                                                    label={t("max")}
-                                                    name={`criminal_history.${i}.max_count`}
-                                                    required
-                                                    value={v.max_count}
-                                                    options={counts}
-                                                    onKeyDown={positiveInt}
-                                                    onChange={onIntChange}
-                                                    handleBlur={form.handleBlur}
-                                                    touched={get(form.touched, "max_count")}
-                                                    error={get(form.errors, "max_count")}
+                                                <div key={i} className="row">
+                                                    <BaseSelect
+                                                        className="col-3"
+                                                        label={t("max")}
+                                                        name={`criminal_history.${i}.max_count`}
+                                                        required
+                                                        value={v.max_count}
+                                                        options={counts}
+                                                        onKeyDown={positiveInt}
+                                                        onChange={onIntChange}
+                                                        handleBlur={form.handleBlur}
+                                                        touched={get(form.touched, "max_count")}
+                                                        error={get(form.errors, "max_count")}
                                                     />
-                                                <BaseSelect
-                                                    className="col-4"
-                                                    label={t("type")}
-                                                    placeholder={t("type")}
-                                                    name={`criminal_history.${i}.type`}
-                                                    required
-                                                    value={v.type}
-                                                    onChange={form.handleChange}
-                                                    handleBlur={form.handleBlur}
-                                                    touched={get(form.touched, "type")}
-                                                    error={get(form.errors, "type")}
-                                                    labelPrefix="CriminalHistoryType"
-                                                    enumType={CriminalHistoryType}
+                                                    <BaseSelect
+                                                        className="col-4"
+                                                        label={t("type")}
+                                                        placeholder={t("type")}
+                                                        name={`criminal_history.${i}.type`}
+                                                        required
+                                                        value={v.type}
+                                                        onChange={form.handleChange}
+                                                        handleBlur={form.handleBlur}
+                                                        touched={get(form.touched, "type")}
+                                                        error={get(form.errors, "type")}
+                                                        labelPrefix="CriminalHistoryType"
+                                                        enumType={CriminalHistoryType}
                                                     />
-                                                <BaseSelect
-                                                    className="col-3"
-                                                    label={t("within")}
-                                                    name={`criminal_history.${i}.max_years`}
-                                                    required
-                                                    value={v.max_years}
-                                                    options={years}
-                                                    onKeyDown={positiveInt}
-                                                    onChange={onIntChange}
-                                                    handleBlur={form.handleBlur}
-                                                    touched={get(form.touched, "max_years")}
-                                                    error={get(form.errors, "max_years")}
+                                                    <BaseSelect
+                                                        className="col-3"
+                                                        label={t("within")}
+                                                        name={`criminal_history.${i}.max_years`}
+                                                        required
+                                                        value={v.max_years}
+                                                        options={years}
+                                                        onKeyDown={positiveInt}
+                                                        onChange={onIntChange}
+                                                        handleBlur={form.handleBlur}
+                                                        touched={get(form.touched, "max_years")}
+                                                        error={get(form.errors, "max_years")}
                                                     />
-                                                <div className="col-2 mt-4">
-                                                    <button className="btn btn-yellow" name={i} onClick={removeCriminalHistoryRequirement}>x</button>
-                                                </div>
-                                            </div>);
-                                            })}
-                                            <div className="col-6 offset-6 text-end mt-2">
-                                                <button className="btn btn-yellow" onClick={addCriminalHistoryRequirement}>+ {t("more")}</button>
-                                            </div>
+                                                    <div className="col-2 mt-4">
+                                                        <button className="btn btn-yellow" name={i} onClick={removeCriminalHistoryRequirement}>x</button>
+                                                    </div>
+                                                </div>);
+                                        })}
+                                        <div className="col-6 offset-6 text-end mt-2">
+                                            <button className="btn btn-yellow" onClick={addCriminalHistoryRequirement}>+ {t("more")}</button>
+                                        </div>
                                     </div>
                                 }
                                 <BaseInput
@@ -1792,7 +1795,7 @@ export default function NewJobs() {
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.max_accidents}
                                     error={form.errors.max_accidents}
-                                    />
+                                />
                                 <BaseTextArea
                                     className="col-12"
                                     label={t("other_safety_requirements")}
@@ -1804,13 +1807,13 @@ export default function NewJobs() {
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.safety_requirements_other}
                                     error={form.errors.safety_requirements_other}
-                                    />
+                                />
                             </div>
                         </div>
                         <div className="col-12 border-0 text-end">
                             <div className="col">
                                 <button type="submit" className={`btn btn-primary`} >
-                                {t("update")}
+                                    {t("update")}
                                 </button>
                             </div>
                         </div>
@@ -1819,20 +1822,20 @@ export default function NewJobs() {
             </div>
 
             <Modal show={!!pdfModel.name} onHide={() => hideModelHandler()}>
-            <Modal.Header>{pdfModel.name}</Modal.Header>
+                <Modal.Header>{pdfModel.name}</Modal.Header>
 
-            <Modal.Body>
-            {(
-                pdfModel.name &&
-                    <img src={pdfModel.url} />
-            )}
-            </Modal.Body>
+                <Modal.Body>
+                    {(
+                        pdfModel.name &&
+                        <img src={pdfModel.url} />
+                    )}
+                </Modal.Body>
 
-            <Modal.Footer>
-            <Button variant="secondary" onClick={() => hideModelHandler()}>{t("close")}</Button>
-            </Modal.Footer>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => hideModelHandler()}>{t("close")}</Button>
+                </Modal.Footer>
 
-        </Modal>
+            </Modal>
         </>
     )
 };
