@@ -52,9 +52,16 @@ export default function JobsList() {
               </div>
               <div className="job-metas text-secondary text-secondary">
                 <div className="job-location">
-                  <i className="fa fa-map-marker" aria-hidden="true"></i>
-                  {`${job.location?.street}, ${job.location?.city}, ${job.location?.state},`}
-                  <i className="fa fa-usd mr-1 ml-4" aria-hidden="true"></i>{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} per week
+                  {
+                    job.location &&
+                    <>
+                      <i className="fa fa-map-marker" aria-hidden="true"></i>
+                      <span className='mr-4'>
+                        {`${job.location?.street}, ${job.location?.city}, ${job.location?.state},`}
+                      </span>
+                    </>
+                  }
+                  <i className="fa fa-usd mr-1 " aria-hidden="true"></i>{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} per week
                 </div>
                 <div className="job-location">
                   {/* <i className="fa fa-star-o" aria-hidden="true"></i> */}

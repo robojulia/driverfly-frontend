@@ -46,11 +46,14 @@ export default function Detail({ jobDetail, relatedJobs }) {
                     </div>
                     <div className="job-metas">
                       <div className="job-location d-flex align-items-center">
-                        <p className="pr-4">
-                          <i className="fa fa-map-marker mr-2" aria-hidden="true"></i>
-                          {`${jobDetail.location?.street}, ${jobDetail.location?.city}, ${jobDetail.location?.state},`}
-                        </p>
-                        <p><i className="fa fa-usd mr-2" aria-hidden="true"></i>{jobDetail.min_weekly_pay ? jobDetail.min_weekly_pay : 0} - {jobDetail.max_weekly_pay ? jobDetail.max_weekly_pay : 0} per week</p>
+                        {
+                          jobDetail.location &&
+                          <p className="pr-4">
+                            <i className="fa fa-map-marker mr-2" aria-hidden="true"></i>
+                            {`${jobDetail.location?.street}, ${jobDetail.location?.city}, ${jobDetail.location?.state},`}
+                          </p>
+                        }
+                        <p><i className="fa fa-usd mr-1" aria-hidden="true"></i>{jobDetail.min_weekly_pay ? jobDetail.min_weekly_pay : 0} - {jobDetail.max_weekly_pay ? jobDetail.max_weekly_pay : 0} per week</p>
                       </div>
                     </div>
                   </div>
