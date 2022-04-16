@@ -49,7 +49,7 @@ export default function FindJobs(props) {
 
   const fetchJobs = async () => {
     await router.replace('find-jobs', undefined, { shallow: true });
-    const { items, meta } = await jobApi.fetchAll({ ...filters })
+    const { items, meta } = await jobApi.search({ ...filters })
     setJobs(items)
     setPagingMeta(meta)
   }

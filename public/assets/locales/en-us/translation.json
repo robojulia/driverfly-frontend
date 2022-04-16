@@ -580,5 +580,8 @@
     "OPTIOS_&_PRICING":"Option & Pricing",
     "REQUESR_AQUOTE":"Request A Quote",
     "FREE_DIGITAL_APPLICATION":"Free Digital Application",
-    "THIRD_PARTY_RESOURCES":" Third Party Resources"
+    "THIRD_PARTY_RESOURCES":" Third Party Resources",
+    "EDIT_JOB": "Edit Job",
+    "CREATE_JOB": "Create Job",
+    "JOBS": "Jobs"
 }

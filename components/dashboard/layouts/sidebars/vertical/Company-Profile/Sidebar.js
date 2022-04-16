@@ -27,14 +27,10 @@ export default function Sidebar() {
       text: t("dashboard")
     },
     {
-      pathname: "/dashboard/company/job-listing",
+      pathname: "/dashboard/company/jobs",
       icon: WorkIcon,
-      text: t("JOB_LISTINGS")
-    },
-    {
-      pathname: "/dashboard/company/new-job",
-      icon: AddCircleOutlineIcon,
-      text: t('add_new_job')
+      text: t("JOB_LISTINGS"),
+      startsWith: true
     },
     // {
     //   pathname: "/dashboard/company/applicants",

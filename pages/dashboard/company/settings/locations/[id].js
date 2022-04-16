@@ -88,7 +88,7 @@ export default function Location() {
 
     useEffect(async () => {
         if (id) {
-            const api = new LocationApi(user.company.id);
+            const api = new LocationApi();
 
             const location = await api.getById(id);
 

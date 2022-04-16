@@ -1,64 +1,75 @@
 
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
-import FullLayout from "../../../components/dashboard/layouts/Layout/FullLayout";
-import useRedirect from '../../../hooks/useRedirect';
-import useAuth from '../../../hooks/useAuth';
+import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
+import useRedirect from '../../../../hooks/useRedirect';
+import useAuth from '../../../../hooks/useAuth';
 import Router from 'next/router';
 import React, { useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useRef, useEffect } from "react";
 
-import RangeSlider from 'react-bootstrap-range-slider';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
 import * as yup from "yup";
 
-import CompanyApi from "../../api/company";
-import LocationApi from "../../api/location";
-import VehicleApi from "../../api/vehicle";
+import CompanyApi from "../../../api/company";
+import LocationApi from "../../../api/location";
+import VehicleApi from "../../../api/vehicle";
 
-import BaseInput from "../../../components/forms/BaseInput";
-import BaseSelect from "../../../components/forms/BaseSelect";
-import BaseCheck from "../../../components/forms/BaseCheck";
-import BaseCheckList from "../../../components/forms/BaseCheckList";
-import BaseTextArea from "../../../components/forms/BaseTextArea";
-import BaseRange from "../../../components/forms/BaseRange";
-import BaseFile from "../../../components/forms/BaseFile";
-import stateList from "../../../utils/stateList";
+import BaseInput from "../../../../components/forms/BaseInput";
+import BaseSelect from "../../../../components/forms/BaseSelect";
+import BaseCheck from "../../../../components/forms/BaseCheck";
+import BaseCheckList from "../../../../components/forms/BaseCheckList";
+import BaseTextArea from "../../../../components/forms/BaseTextArea";
+import BaseRange from "../../../../components/forms/BaseRange";
+import BaseFile from "../../../../components/forms/BaseFile";
+import stateList from "../../../../utils/stateList";
 import Modal from "react-bootstrap/Modal"
 import Button from "react-bootstrap/Button"
 
-import { getBase64 } from "../../../utils/file";
+import { useRouter } from "next/router"
 
-import { counts, years } from "../../../utils/jobs";
 
-import { preventNegative, positiveInt } from "../../../utils/input";
+import { getBase64 } from "../../../../utils/file";
 
-import { DriverDegree } from "../../../enums/drivers/driver-degree.enum";
-import { DriverLicenseType } from "../../../enums/drivers/driver-license-type.enum";
-import { DriverEndorsement } from "../../../enums/drivers/driver-endorsement.enum";
-import { MvrType } from "../../../enums/drivers/mvr-type.enum"
-import { CriminalHistoryType } from "../../../enums/drivers/criminal-history-type.enum"
+import { counts, years } from "../../../../utils/jobs";
 
-import { VehicleType } from "../../../enums/vehicles/vehicle-type.enum";
-import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
+import { preventNegative, positiveInt } from "../../../../utils/input";
 
-import { JobEmploymentType } from "../../../enums/jobs/job-employment-type.enum";
-import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
-import { JobTeamDriver } from "../../../enums/jobs/job-team-driver.enum";
-import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
-import { JobGeography } from "../../../enums/jobs/job-geography.enum";
-import { JobDeliveryType } from "../../../enums/jobs/job-delivery-type.enum";
-import { JobPayMethod } from "../../../enums/jobs/job-pay-method.enum";
-import { JobBenefits } from "../../../enums/jobs/job-benefits.enum";
+import { DriverDegree } from "../../../../enums/drivers/driver-degree.enum";
+import { DriverLicenseType } from "../../../../enums/drivers/driver-license-type.enum";
+import { DriverEndorsement } from "../../../../enums/drivers/driver-endorsement.enum";
+import { MvrType } from "../../../../enums/drivers/mvr-type.enum"
+import { CriminalHistoryType } from "../../../../enums/drivers/criminal-history-type.enum"
 
-import * as yupUtil from "../../../utils/yup"
+import { VehicleType } from "../../../../enums/vehicles/vehicle-type.enum";
+import { VehicleTransmissionType } from "../../../../enums/vehicles/vehicle-transmission-type.enum";
 
-import JobApi from "../../api/job";
+import { JobEmploymentType } from "../../../../enums/jobs/job-employment-type.enum";
+import { JobEquipmentType } from "../../../../enums/jobs/job-equipment-type.enum";
+import { JobTeamDriver } from "../../../../enums/jobs/job-team-driver.enum";
+import { JobSchedule } from "../../../../enums/jobs/job-schedule.enum";
+import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
+import { JobDeliveryType } from "../../../../enums/jobs/job-delivery-type.enum";
+import { JobPayMethod } from "../../../../enums/jobs/job-pay-method.enum";
+import { JobBenefits } from "../../../../enums/jobs/job-benefits.enum";
 
-export default function NewJobs() {
+import "../../../../utils/yup"
+
+import JobApi from "../../../api/job";
+
+export default function Job() {
+    const router = useRouter();
+
+    let { id } = router.query;
+
+    const backPath = "/dashboard/company/jobs";
+
+    if (isNaN(parseInt(id))) id = null; // create mode
+
     // validate that this is a company profile
     const { authCompany } = useRedirect();
     authCompany();
@@ -296,12 +307,8 @@ export default function NewJobs() {
         onSubmit: async (data) => {
             data.min_weekly_pay = parseFloat(data.min_weekly_pay)
             data.max_weekly_pay = parseFloat(data.max_weekly_pay)
-            console.log("Submitting", data);
 
             try {
-                // initialize with the user's current company
-                const companyApi = new CompanyApi(user.company.id);
-
                 // create the location (if new)
                 if (!data.location.id) {
                     // create new location
@@ -345,12 +352,20 @@ export default function NewJobs() {
                 }
 
                 // iterate through vehicles, create new where needed
-                const job = await new JobApi(user.company.id).create(data);
+                const jobApi = await new JobApi();
+
+                let job = null;
+                if (id) {
+                    job = await jobApi.update(id, data);
+                }
+                else {
+                    job = await jobApi.create(data);
+                }
 
                 toast.success(t("successfully_saved_information"));
                 setTimeout(
-                    () => Router.push("/dashboard/company/job-listing"),
-                    3000);
+                    () => Router.push(backPath),
+                    2000);
             }
             catch (e) {
                 console.error("Unable to save job", e);
@@ -364,6 +379,77 @@ export default function NewJobs() {
     const [vehicles, set_vehicles] = useState([]);
 
     useEffect(async () => {
+        if (id) {
+            const jobApi = new JobApi();
+
+            const job = await jobApi.getById(id);
+            console.log(job);
+
+            form.setValues({
+                title: job.title,
+                location: {
+                    id: job.location?.id,
+                    street: null,
+                    city: null,
+                    state: null,
+                    zip_code: null,
+                },
+                description: job.description,
+                description_short: job.description_short,
+                drivers_needed: job.drivers_needed,
+                expiry_date: (job.expiry_date || "").split("T")[0] || null,
+                geography: job.geography || [],
+                schedule: job.schedule,
+                schedule_other: job.schedule_other,
+                employment_type: job.employment_type,
+                equipment_type: job.equipment_type || [],
+                equipment_type_other: job.equipment_type_other,
+                delivery_type: job.delivery_type || [],
+                team_drivers: job.team_drivers,
+                pay_method: job.pay_method,
+                min_salary: job.min_salary,
+                max_salary: job.max_salary,
+                min_rate: job.min_rate,
+                max_rate: job.max_rate,
+                min_hours: job.min_hours,
+                max_hours: job.max_hours,
+                min_percent: job.min_percent,
+                max_percent: job.max_percent,
+                min_miles: job.min_miles,
+                max_miles: job.max_miles,
+                min_weekly_pay: job.min_weekly_pay,
+                max_weekly_pay: job.max_weekly_pay,
+                benefits: job.benefits || [],
+                benefits_other: job.benefits_other,
+                vehicles: job.vehicles?.map(v => ({
+                    id: v.id,
+                    type: null,
+                    type_other: null,
+                    transmission_type: null,
+                    make: null,
+                    model: null,
+                    year: null,
+                    photo: null
+                })) || [],
+                cdl_class: job.cdl_class || [],
+                min_years_experience: job.min_years_experience,
+                min_degree: job.min_degree,
+                required_skills: job.required_skills || [],
+                required_skills_other: job.required_skills_other,
+                required_equipment: job.required_equipment || [],
+                required_endorsement: job.required_endorsement || [],
+                transmission_type_experience: job.transmission_type_experience || [],
+                max_applicant_radius: job.max_applicant_radius,
+                must_pass_drug_test: job.must_pass_drug_test,
+                must_have_clean_mvr: job.must_have_clean_mvr,
+                mvr_requirements: job.mvr_requirements || [],
+                accept_sap_graduates: job.accept_sap_graduates,
+                must_have_clean_criminal_history: job.must_have_clean_criminal_history,
+                criminal_history: job.criminal_history || [],
+                max_accidents: job.max_accidents,
+                safety_requirements_other: job.safety_requirements_other
+            });
+        }
         {
             const locationApi = new LocationApi();
             set_locations(await locationApi.list());
@@ -373,7 +459,7 @@ export default function NewJobs() {
             set_vehicles(await vehicleApi.list());
         }
 
-    }, []);
+    }, [ id ]);
 
     /// custom PayMethod logic
 
@@ -753,16 +839,22 @@ export default function NewJobs() {
 
         form.setFieldValue(name, value);
     }
+
+    const handleBack = (e) => {
+        e.preventDefault();
+        router.push(backPath);
+
+    }
     return (
 
         <>
 
             <ToastContainer />
             <div>
-
-                <Row>
-                    <h1>{t("new_job")}</h1>
-                </Row>
+                <h2>
+                    <span style={{cursor: "pointer"}} onClick={handleBack}><ArrowBackIosNewIcon /></span>
+                    {t(id ? "EDIT_JOB" : "CREATE_JOB")}
+                </h2>
                 <div className='container-fluid'>
                     <div className="modal-header border-0 add_job__container">
                     </div>
@@ -783,7 +875,7 @@ export default function NewJobs() {
                         </div>
                         <div className="row mt-1">
                             <div className="col-md-4">
-                                <h2>{t("basic_details")}</h2>
+                                <h3>{t("basic_details")}</h3>
                                 <BaseSelect
                                     className="col-12"
                                     label={t("location")}
@@ -1003,7 +1095,7 @@ export default function NewJobs() {
                                 />
                             </div>
                             <div className="col-md-4">
-                                <h2>{t("benefits")}</h2>
+                                <h3>{t("benefits")}</h3>
                                 <BaseSelect
                                     className="col-12"
                                     label={t("pay_method")}
@@ -1246,7 +1338,7 @@ export default function NewJobs() {
                                 }
                             </div>
                             <div className="col-md-4">
-                                <h2>{t("vehicle_info")}</h2>
+                                <h3>{t("vehicle_info")}</h3>
                                 {form.touched.vehicles && typeof form.errors.vehicles === "string" ? <span className="text-danger small">{form.errors.vehicles}</span> : null}
                                 {form.values.vehicles.map((v, i) => {
                                     const get = function (part, field) {
@@ -1423,7 +1515,7 @@ export default function NewJobs() {
                         <hr />
                         <div className="row">
                             <div className="col-12">
-                                <h2>{t("requirements")}</h2>
+                                <h3>{t("requirements")}</h3>
                             </div>
                             <div className="col-md-6">
                                 <BaseRange
@@ -1840,7 +1932,7 @@ export default function NewJobs() {
     )
 };
 
-NewJobs.getLayout = function getLayout(page) {
+Job.getLayout = function getLayout(page) {
     return (
         <FullLayout>
             {page}
