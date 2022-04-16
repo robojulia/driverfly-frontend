@@ -2,21 +2,26 @@ import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayo
 import { Col, Row } from "reactstrap";
 import useAuth from '../../../../hooks/useAuth';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import useRedirect from '../../../../hooks/useRedirect';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import Modal from "react-bootstrap/Modal"
+import Button from "react-bootstrap/Button"
 
 import { useFormik } from "formik";
 import * as yup from "yup";
 import "../../../../utils/yup";
 
+import BaseFile from "../../../../components/forms/BaseFile";
 import BaseInput from "../../../../components/forms/BaseInput";
 import BaseTextArea from "../../../../components/forms/BaseTextArea";
 
 import { useTranslation } from "react-i18next";
 
 import CompanyApi from "../../../api/company";
+import DocumentApi from "../../../api/document";
+import { getBase64 } from "../../../../utils/file";
 
 export default function Settings() {
   const { t } = useTranslation();
@@ -33,17 +38,28 @@ export default function Settings() {
   const form = useFormik({
     initialValues: {
       name: null,
-      about: null
+      about: null,
+      photo: null,
     },
     validationSchema: yup.object({
       name: yup.string().required(t("this_field_is_required")).nullable(),
-      about: yup.string().nullable()
+      about: yup.string().nullable(),
+      photo: yup.object({}).nullable(),
     }),
     onSubmit: async (values) => {
       const dto = {
         name: values.name,
-        about: values.about
+        about: values.about,
+        photo: values.photo?.file_base64 ? {
+          visibility: values.photo.visibility,
+          name: values.photo.name,
+          mime_type: values.photo.mime_type,
+          file_base64: values.photo.file_base64
+        } : null
       };
+      if (values.photo && !values.photo.file_base64 && values.photo.id)
+        delete dto.photo;
+
       const api = new CompanyApi();
 
       try {
@@ -53,7 +69,8 @@ export default function Settings() {
           company: {
             ...user.company,
             name: company.name,
-            about: company.about
+            about: company.about,
+            photo: company.photo
           }
         });
         toast.success(t("successfully_saved_information"));
@@ -76,9 +93,66 @@ export default function Settings() {
 
     form.setValues({
       name: company.name,
-      about: company.about
+      about: company.about,
+      photo: company.photo
     });
   }, []);
+
+    /**
+     * 
+     * @param {React.ChangeEvent<HTMLInputElement>} e 
+     */
+     const uploadHandler = async (e) => {
+      e.preventDefault();
+      const { target: { name, files } } = e;
+  
+      let photo = null;
+
+      if (files && files[0]) {
+        const file = files[0];
+
+        photo = {
+          visibility: "PUBLIC",
+          name: file.name,
+          mime_type: file.type,
+          path: URL.createObjectURL(file),
+          file_base64: await getBase64(file)
+        };
+      }
+
+      form.setFieldValue(name, photo);
+  }
+  const [ pdfModel, set_pdfModel ] = useState({
+      name: null,
+      url: null,
+    });
+
+  const viewHandler = async (e) => {
+      e.preventDefault();
+      const { target: { name } } = e;
+  
+      const file = form.getFieldMeta(name).value;
+      console.log(file);
+  
+      let url = file.path;
+
+      if (file.id) {
+          const api = new DocumentApi();
+          const document = await api.getSignedUrl(file.id);
+          url = document.path;
+      }
+  
+      set_pdfModel({
+        name: file.name,
+        url: url
+      });
+    }
+  
+    const hideModelHandler = (e) => {
+      set_pdfModel({
+        name: null, url: null
+      });
+    }
 
   return (
     <>
@@ -117,6 +191,19 @@ export default function Settings() {
                 onChange={form.handleChange}
                 handleBlur={form.handleBlur}
                 />
+              <BaseFile
+                  className="col-12"
+                  label={t("photo")}
+                  name={`photo`}
+                  accept="image/*"
+                  value={form.values.photo}
+                  onChange={uploadHandler}
+                  onView={viewHandler}
+                  onDelete={uploadHandler}
+                  handleBlur={form.handleBlur}
+                  touched={form.touched.photo}
+                  error={form.errors.photo}
+                  />
             </Row>
             <Row className="mt-2">
                 <div className="col-12 border-0 text-end">
@@ -131,6 +218,21 @@ export default function Settings() {
           </form>
         </div>
       </div>
+      <Modal show={!!pdfModel.name} onHide={() => hideModelHandler()}>
+        <Modal.Header>{pdfModel.name}</Modal.Header>
+
+        <Modal.Body>
+        {(
+            pdfModel.name &&
+                <img className="img-thumbnail" src={pdfModel.url} />
+        )}
+        </Modal.Body>
+
+        <Modal.Footer>
+            <Button variant="secondary" onClick={() => hideModelHandler()}>{t("close")}</Button>
+        </Modal.Footer>
+
+      </Modal>
     </>
   )
 };

@@ -185,6 +185,7 @@ export default function Vehicle() {
         const { target: { name, files } } = e;
     
         let photo = null;
+
         if (files && files[0]) {
           const file = files[0];
 
@@ -203,8 +204,9 @@ export default function Vehicle() {
         name: null,
         url: null,
       });
-      const viewHandler = async (e) => {
-          e.preventDefault();
+
+    const viewHandler = async (e) => {
+        e.preventDefault();
         const { target: { name } } = e;
     
         const file = form.getFieldMeta(name).value;

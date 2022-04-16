@@ -32,6 +32,7 @@ function BaseFile ( { required, className, label, handleBlur, accept, uploadPlac
           onChange={onChange}
           readOnly={readOnly}
           name={name}
+          value=""
           style={{ display: "none" }}
         />
       {
