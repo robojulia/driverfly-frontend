@@ -1030,7 +1030,7 @@ export default function NewJobs() {
                                             placeholder={t("min_percent")}
                                             type="number"
                                             value={form.values.min_percent}
-                                            onKeyDown={positiveInt}
+                                            onKeyDown={preventNegative}
                                             onChange={handlePayMethodUpdate}
                                             handleBlur={form.handleBlur}
                                             touched={form.touched.min_percent}
@@ -1044,7 +1044,7 @@ export default function NewJobs() {
                                             placeholder={t("max_percent")}
                                             type="number"
                                             value={form.values.max_percent}
-                                            onKeyDown={positiveInt}
+                                            onKeyDown={preventNegative}
                                             onChange={handlePayMethodUpdate}
                                             handleBlur={form.handleBlur}
                                             touched={form.touched.max_percent}
