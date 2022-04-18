@@ -14,7 +14,7 @@ import { updateQueryStringParameter } from "../logics/utils"
 
 export default function FindJobs(props) {
 
-  const { params } = props
+  let { params } = props
   // const params = {}
   const jobApi = new JobApi();
   const [jobs, setJobs] = useState([])
@@ -47,15 +47,57 @@ export default function FindJobs(props) {
     })
   }
 
+  const setNativeValue = (element, value) => {
+    if (!element) {
+      return
+    }
+    const valueSetter = Object.getOwnPropertyDescriptor(element, 'value').set;
+    const prototype = Object.getPrototypeOf(element);
+    const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, 'value').set;
+
+    if (valueSetter && valueSetter !== prototypeValueSetter) {
+      prototypeValueSetter.call(element, value);
+    } else {
+      valueSetter.call(element, value);
+    }
+  }
+
+  const setFiltersForQuery = () => {
+    Object.keys(params).map(key => {
+      let inputs = document.getElementsByName(key);
+      if (inputs[0].tagName.toLowerCase() !== "input") {
+        return
+      }
+      if (inputs[0].type.toLowerCase() === "text") {
+        setNativeValue(inputs[0], params[key]);
+      }
+      if (inputs[0].type.toLowerCase() === "radio") {
+        inputs.forEach(input => {
+          if (input.value === params[key]) {
+            input.checked = true;
+          }
+        })
+      }
+    })
+    params = {}
+  }
+
   const fetchJobs = async () => {
-    await router.replace('find-jobs', undefined, { shallow: true });
     const { items, meta } = await jobApi.search({ ...filters })
     setJobs(items)
     setPagingMeta(meta)
   }
 
   useEffect(fetchJobs, [filters])
-  useEffect(fetchJobs, [])
+  useEffect(async () => {
+    try {
+      await setFiltersForQuery()
+      await router.replace('find-jobs', undefined, { shallow: true });
+      await fetchJobs()
+    } catch (e) {
+      // console.error('exception is here: ', e);
+    }
+  }, [])
 
   return (
     <jobsContext.Provider value={{
@@ -74,9 +116,9 @@ export default function FindJobs(props) {
       <div className="filter-sec">
         <div className="container">
           <div className="row">
-          <div className="col-12 col-lg-3 lg-mt-0 mt-5">
-                        < FilterResult />
-                        </div>
+            <div className="col-12 col-lg-3 lg-mt-0 mt-5">
+              < FilterResult />
+            </div>
             <div className="col-md-9 outer pl-4 ">
 
               {/* <Location /> */}
