@@ -74,7 +74,9 @@ export default function FindJobs(props) {
       <div className="filter-sec">
         <div className="container">
           <div className="row">
-            < FilterResult />
+          <div className="col-12 col-lg-3 lg-mt-0 mt-5">
+                        < FilterResult />
+                        </div>
             <div className="col-md-9 outer pl-4 ">
 
               {/* <Location /> */}
