@@ -25,10 +25,9 @@ export default function JobsList() {
       <div className="filter-outer mt-5">
         {jobs.length > 0 && jobs.map(job => (
           <div key={job.id} className="media align-items-center shadow-sm">
-            <label className="checkbox-inline" htmlFor="remember">
+            {/* <label className="checkbox-inline" htmlFor="remember">
               <input type="checkbox" name="remember" id="remember" value="1" />
-
-            </label>
+            </label> */}
             <img className="d-flex mr-4 truck-img" src="driverfly-logo-square.png" alt="" />
             <div className="media-body">
               <h4 className="mt-0">{job.title}
