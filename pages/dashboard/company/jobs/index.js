@@ -124,7 +124,7 @@ export default function JobListing() {
                                                 jobs.map((job, index) => {
                                                     return <tr>
                                                         <td>{job.title} </td>
-                                                        <td>
+                                                        <td title="asasdasd">
                                                             {job.location &&
                                                                 <>
                                                                     {job.location.street ? `${job.location.street}` : 'NO Street'}
@@ -136,12 +136,12 @@ export default function JobListing() {
                                                         </td>
                                                         <td>{job.drivers_needed} </td>
                                                         <td>{job.expiry_date && new Date(job.expiry_date).toDateString()} </td>
-                                                        <td><ShowEnumFromString str={job.geography} enumArray={JobGeography} /></td>
-                                                        <td><ShowEnumFromString str={job.schedule} enumArray={JobSchedule} /></td>
-                                                        <td><ShowEnumFromString str={job.employment_type} enumArray={JobEmploymentType} /></td>
-                                                        <td><ShowEnumFromString str={job.equipment_type} enumArray={JobEquipmentType} /></td>
-                                                        <td><ShowEnumFromString str={job.delivery_type} enumArray={JobDeliveryType} /></td>
-                                                        <td><ShowEnumFromString str={job.team_drivers} enumArray={JobTeamDriver} /></td>
+                                                        <td><ShowEnumFromString popover={true} str={job.geography} enumArray={JobGeography} /></td>
+                                                        <td><ShowEnumFromString popover={true} str={job.schedule} enumArray={JobSchedule} /></td>
+                                                        <td><ShowEnumFromString popover={true} str={job.employment_type} enumArray={JobEmploymentType} /></td>
+                                                        <td><ShowEnumFromString popover={true} str={job.equipment_type} enumArray={JobEquipmentType} /></td>
+                                                        <td><ShowEnumFromString popover={true} str={job.delivery_type} enumArray={JobDeliveryType} /></td>
+                                                        <td><ShowEnumFromString popover={true} str={job.team_drivers} enumArray={JobTeamDriver} /></td>
                                                         <td className="text-nowrap">
                                                             <button name={job.id} className="btn" onClick={onEditClick}>
                                                                 <EditIcon />
