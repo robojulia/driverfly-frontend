@@ -686,12 +686,22 @@ export default function MyAccount() {
                             error={contactForm.errors.preferences?.MATCHING?.BENEFITS}
                             onChange={handlePreferenceChange}
                         />
-                        <BaseCheck
-                            checked={haveOtherBenefits}
-                            className="col-md-12 mt-3"
-                            label={t("other_benefits")}
-                            onChange={toggleOtherBenefitSwitch}
-                        />
+                        <div className='row mt-1'>
+                            <div
+                                className={`col-md-6`}>
+                                <div className={`form-check form-check-inline`}>
+                                    <label className="form-check-label">
+                                        {t("other_benefits")}
+                                    </label>
+                                    <input
+                                        type="checkbox"
+                                        className={`form-check-input `}
+                                        onChange={toggleOtherBenefitSwitch}
+                                        checked={haveOtherBenefits}
+                                    />
+                                </div>
+                            </div>
+                        </div>
                         {
                             haveOtherBenefits &&
                             <>
