@@ -55,13 +55,18 @@ export default function JobsList() {
                     job.location &&
                     <>
                       <p><i className="fa fa-map-marker" aria-hidden="true"></i>
-                      <span className='mr-4'>
-                        {`${job.location?.street}, ${job.location?.city}, ${job.location?.state},`}
-                      </span></p>
+                        <span className='mr-4'>
+                          <>
+                            {job.location.street ? `${job.location.street}` : 'NO Street'}
+                            {job.location.city ? `, ${job.location.city}` : ', NO City'}
+                            {job.location.state ? `, ${job.location.state}` : ', NO State'}
+                            {job.location.zip_code ? `, ${job.location.zip_code}` : ', NO ZIP'}
+                          </>
+                        </span></p>
                     </>
                   }
                   <p>
-                  <i className="fa fa-usd mr-1 " aria-hidden="true"></i>{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} per week </p>
+                    <i className="fa fa-usd mr-1 " aria-hidden="true"></i>{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} per week </p>
                 </div>
                 <div className="job-location">
                   {/* <i className="fa fa-star-o" aria-hidden="true"></i> */}
