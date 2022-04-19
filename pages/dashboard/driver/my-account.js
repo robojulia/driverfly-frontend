@@ -41,6 +41,8 @@ export default function MyAccount() {
     const driverApi = new DriverApi();
     const userApi = new UserApi();
 
+    const [haveOtherBenefits, setHaveOtherBenefits] = useState()
+
     const contactPreferences = [
         {
             label: t("never"),
@@ -89,6 +91,7 @@ export default function MyAccount() {
                 MATCHING: {
                     GEOGRAPHY: jobBenefits.map(v => v.key),
                     PREFERRED_SCHEDULE: "",
+                    OTHER_BENEFITS: "",
                     JOB_TYPE: jobType.map(v => v.key),
                     TEAM_DRIVER: "NO_TEAM_DRIVER",
                     MIN_PAY: "",
@@ -186,6 +189,8 @@ export default function MyAccount() {
                             label === "PAY_METHOD" ||
                             label === "BENEFITS") {
                             value = value ? value.split(",") : [];
+                        } else if (label === "OTHER_BENEFITS" && value !== "") {
+                            setHaveOtherBenefits(true)
                         }
                     }
 
@@ -288,6 +293,7 @@ export default function MyAccount() {
         await updateDriverPreferenceAsync(category, label, value);
 
         contactForm.setFieldValue(name, value);
+        toast.success(t("successfully_saved_information"));
     }
 
     async function updateDriverPreferenceAsync(category, label, value) {
@@ -304,6 +310,18 @@ export default function MyAccount() {
         }
     }
 
+    const toggleOtherBenefitSwitch = () => {
+        setHaveOtherBenefits(prevCheck => !prevCheck)
+    }
+
+    useEffect(async () => {
+        if (haveOtherBenefits === false) {
+            await updateDriverPreferenceAsync("MATCHING", "OTHER_BENEFITS", null);
+            contactForm.setFieldValue("preferences.MATCHING.OTHER_BENEFITS", "");
+            toast.success(t("successfully_saved_information"));
+        }
+    }, [haveOtherBenefits])
+
     return (
         <>
             <ToastContainer />
@@ -316,266 +334,266 @@ export default function MyAccount() {
                 </TabList>
 
                 <TabPanel>
-                <h2 className='mb-5 mt-5'>{t("my_account")}</h2>
-            <div className={style.account_container}>
-                <div>
-                    <div className='container-fluid'>
-                        <form className="modal-body" onSubmit={contactForm.handleSubmit} >
-                            <h3>{t("contact_details")}</h3>
-                            <div className="row">
-                                <BaseInput
-                                    className="col-md-4 mt-3"
-                                    label={t("first_name")}
-                                    name="user.first_name"
-                                    placeholder={t("first_name")}
-                                    value={contactForm.values.user.first_name}
-                                    touched={contactForm.touched.user?.first_name}
-                                    error={contactForm.errors.user?.first_name}
-                                    onChange={contactForm.handleChange}
-                                    handleBlur={contactForm.handleBlur}
-                                />
-                                <BaseInput
-                                    className="col-md-4 mt-3"
-                                    label={t("last_name")}
-                                    name="user.last_name"
-                                    placeholder={t("last_name")}
-                                    value={contactForm.values.user.last_name}
-                                    touched={contactForm.touched.user?.last_name}
-                                    error={contactForm.errors.user?.last_name}
-                                    onChange={contactForm.handleChange}
-                                    handleBlur={contactForm.handleBlur}
-                                />
-                                <BaseInput
-                                    className="col-md-4 mt-3"
-                                    label={t("birthdate")}
-                                    name="driver.birthdate"
-                                    placeholder={t("birthdate")}
-                                    type="date"
-                                    value={contactForm.values.driver.birthdate}
-                                    touched={contactForm.touched.driver?.birthdate}
-                                    error={contactForm.errors.driver?.birthdate}
-                                    onChange={contactForm.handleChange}
-                                    handleBlur={contactForm.handleBlur}
-                                />
+                    <h2 className='mb-5 mt-5'>{t("my_account")}</h2>
+                    <div className={style.account_container}>
+                        <div>
+                            <div className='container-fluid'>
+                                <form className="modal-body" onSubmit={contactForm.handleSubmit} >
+                                    <h3>{t("contact_details")}</h3>
+                                    <div className="row">
+                                        <BaseInput
+                                            className="col-md-4 mt-3"
+                                            label={t("first_name")}
+                                            name="user.first_name"
+                                            placeholder={t("first_name")}
+                                            value={contactForm.values.user.first_name}
+                                            touched={contactForm.touched.user?.first_name}
+                                            error={contactForm.errors.user?.first_name}
+                                            onChange={contactForm.handleChange}
+                                            handleBlur={contactForm.handleBlur}
+                                        />
+                                        <BaseInput
+                                            className="col-md-4 mt-3"
+                                            label={t("last_name")}
+                                            name="user.last_name"
+                                            placeholder={t("last_name")}
+                                            value={contactForm.values.user.last_name}
+                                            touched={contactForm.touched.user?.last_name}
+                                            error={contactForm.errors.user?.last_name}
+                                            onChange={contactForm.handleChange}
+                                            handleBlur={contactForm.handleBlur}
+                                        />
+                                        <BaseInput
+                                            className="col-md-4 mt-3"
+                                            label={t("birthdate")}
+                                            name="driver.birthdate"
+                                            placeholder={t("birthdate")}
+                                            type="date"
+                                            value={contactForm.values.driver.birthdate}
+                                            touched={contactForm.touched.driver?.birthdate}
+                                            error={contactForm.errors.driver?.birthdate}
+                                            onChange={contactForm.handleChange}
+                                            handleBlur={contactForm.handleBlur}
+                                        />
+                                    </div>
+                                    <div className='row'>
+                                        <BaseInput
+                                            className="col-md-6 mt-3"
+                                            label={t("phone")}
+                                            name="user.contact_number"
+                                            placeholder={t("phone")}
+                                            type="tel"
+                                            value={contactForm.values.user.contact_number}
+                                            touched={contactForm.touched.user?.contact_number}
+                                            error={contactForm.errors.user?.contact_number}
+                                            onChange={contactForm.handleChange}
+                                            handleBlur={contactForm.handleBlur}
+                                        />
+                                        <BaseInput
+                                            className="col-md-6 mt-3"
+                                            label={t("phone_cell")}
+                                            name="user.cell_number"
+                                            placeholder={t("phone_cell")}
+                                            type="tel"
+                                            value={contactForm.values.user.cell_number}
+                                            touched={contactForm.touched.user?.cell_number}
+                                            error={contactForm.errors.user?.cell_number}
+                                            onChange={contactForm.handleChange}
+                                            handleBlur={contactForm.handleBlur}
+                                        />
+                                    </div>
+                                    <div className='row'>
+                                        <BaseInput
+                                            className="col-md-12 mt-3"
+                                            label={t("email")}
+                                            name="user.email"
+                                            placeholder={t("email")}
+                                            type="email"
+                                            readOnly={true}
+                                            value={contactForm.values.user.email}
+                                            touched={contactForm.touched.user?.email}
+                                            error={contactForm.errors.user?.email}
+                                            onChange={contactForm.handleChange}
+                                            handleBlur={contactForm.handleBlur}
+                                        />
+                                    </div>
+                                    <div className='row'>
+                                        <BaseInput
+                                            className="col-md-12 mt-3"
+                                            label={t("street")}
+                                            name="driver.street"
+                                            placeholder={t("street")}
+                                            value={contactForm.values.driver.street}
+                                            touched={contactForm.touched.driver?.street}
+                                            error={contactForm.errors.driver?.street}
+                                            onChange={contactForm.handleChange}
+                                            handleBlur={contactForm.handleBlur}
+                                        />
+                                    </div>
+                                    <div className='row'>
+                                        <BaseInput
+                                            className="col-md-5 mt-3"
+                                            label={t("city")}
+                                            name="driver.city"
+                                            placeholder={t("city")}
+                                            value={contactForm.values.driver.city}
+                                            touched={contactForm.touched.driver?.city}
+                                            error={contactForm.errors.driver?.city}
+                                            onChange={contactForm.handleChange}
+                                            handleBlur={contactForm.handleBlur}
+                                        />
+                                        <BaseSelect
+                                            className="col-md-4 mt-3"
+                                            label={t("state")}
+                                            name="driver.state"
+                                            placeholder={t("state")}
+                                            value={contactForm.values.driver.state}
+                                            touched={contactForm.touched.driver?.state}
+                                            error={contactForm.errors.driver?.state}
+                                            onChange={contactForm.handleChange}
+                                            options={stateList}
+                                        />
+                                        <BaseInput
+                                            className="col-md-3 mt-3"
+                                            label={t("zip_code")}
+                                            name="driver.zip_code"
+                                            placeholder={t("zip_code")}
+                                            value={contactForm.values.driver.zip_code}
+                                            touched={contactForm.touched.driver?.zip_code}
+                                            error={contactForm.errors.driver?.zip_code}
+                                            onChange={contactForm.handleChange}
+                                            handleBlur={contactForm.handleBlur}
+                                        />
+                                    </div>
+                                    <div className='row'>
+                                        <div className="col text-end">
+                                            <button
+                                                type="submit" className={style.update_btn} >
+                                                {t("update")}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                            <div className='row'>
-                                <BaseInput
-                                    className="col-md-6 mt-3"
-                                    label={t("phone")}
-                                    name="user.contact_number"
-                                    placeholder={t("phone")}
-                                    type="tel"
-                                    value={contactForm.values.user.contact_number}
-                                    touched={contactForm.touched.user?.contact_number}
-                                    error={contactForm.errors.user?.contact_number}
-                                    onChange={contactForm.handleChange}
-                                    handleBlur={contactForm.handleBlur}
-                                />
-                                <BaseInput
-                                    className="col-md-6 mt-3"
-                                    label={t("phone_cell")}
-                                    name="user.cell_number"
-                                    placeholder={t("phone_cell")}
-                                    type="tel"
-                                    value={contactForm.values.user.cell_number}
-                                    touched={contactForm.touched.user?.cell_number}
-                                    error={contactForm.errors.user?.cell_number}
-                                    onChange={contactForm.handleChange}
-                                    handleBlur={contactForm.handleBlur}
-                                />
-                            </div>
-                            <div className='row'>
-                                <BaseInput
-                                    className="col-md-12 mt-3"
-                                    label={t("email")}
-                                    name="user.email"
-                                    placeholder={t("email")}
-                                    type="email"
-                                    readOnly={true}
-                                    value={contactForm.values.user.email}
-                                    touched={contactForm.touched.user?.email}
-                                    error={contactForm.errors.user?.email}
-                                    onChange={contactForm.handleChange}
-                                    handleBlur={contactForm.handleBlur}
-                                />
-                            </div>
-                            <div className='row'>
-                                <BaseInput
-                                    className="col-md-12 mt-3"
-                                    label={t("street")}
-                                    name="driver.street"
-                                    placeholder={t("street")}
-                                    value={contactForm.values.driver.street}
-                                    touched={contactForm.touched.driver?.street}
-                                    error={contactForm.errors.driver?.street}
-                                    onChange={contactForm.handleChange}
-                                    handleBlur={contactForm.handleBlur}
-                                />
-                            </div>
-                            <div className='row'>
-                                <BaseInput
-                                    className="col-md-5 mt-3"
-                                    label={t("city")}
-                                    name="driver.city"
-                                    placeholder={t("city")}
-                                    value={contactForm.values.driver.city}
-                                    touched={contactForm.touched.driver?.city}
-                                    error={contactForm.errors.driver?.city}
-                                    onChange={contactForm.handleChange}
-                                    handleBlur={contactForm.handleBlur}
-                                />
-                                <BaseSelect
-                                    className="col-md-4 mt-3"
-                                    label={t("state")}
-                                    name="driver.state"
-                                    placeholder={t("state")}
-                                    value={contactForm.values.driver.state}
-                                    touched={contactForm.touched.driver?.state}
-                                    error={contactForm.errors.driver?.state}
-                                    onChange={contactForm.handleChange}
-                                    options={stateList}
-                                />
-                                <BaseInput
-                                    className="col-md-3 mt-3"
-                                    label={t("zip_code")}
-                                    name="driver.zip_code"
-                                    placeholder={t("zip_code")}
-                                    value={contactForm.values.driver.zip_code}
-                                    touched={contactForm.touched.driver?.zip_code}
-                                    error={contactForm.errors.driver?.zip_code}
-                                    onChange={contactForm.handleChange}
-                                    handleBlur={contactForm.handleBlur}
-                                />
-                            </div>
-                            <div className='row'>
-                                <div className="col text-end">
-                                    <button
-                                        type="submit" className={style.update_btn} >
-                                        {t("update")}
-                                    </button>
+                        </div>
+                    </div>
+                </TabPanel>
+                <TabPanel>
+                    <h2 className='mb-3 mt-5'>{t("communication_preferences")}</h2>
+                    <div className={style.info}>
+                        <div className='row'>
+                            <div className="col-sm-12">
+                                <div className='row'>
+
+                                    <BaseCheck
+                                        className="col-md-12 mt-3"
+                                        label={t("communication_preferences_receive_driverfly")}
+                                        name="preferences.COMMUNICATION.RECEIVE_DRIVERFLY"
+                                        checked={contactForm.values.preferences.COMMUNICATION.RECEIVE_DRIVERFLY}
+                                        touched={contactForm.touched.preferences?.COMMUNICATION?.RECEIVE_DRIVERFLY}
+                                        error={contactForm.errors.preferences?.COMMUNICATION?.RECEIVE_DRIVERFLY}
+                                        onChange={handlePreferenceChange}
+                                    />
+                                    <BaseCheckList
+                                        className="col-md-12 mt-3"
+                                        label={t("communication_preferences_preferred_method")}
+                                        options={[{
+                                            label: t("call"),
+                                            value: "CALL"
+                                        }, {
+                                            label: t("text"),
+                                            value: "TEXT"
+                                        }]}
+                                        value={contactForm.values.preferences.COMMUNICATION.PREFERRED_METHOD}
+                                        name="preferences.COMMUNICATION.PREFERRED_METHOD"
+                                        touched={contactForm.touched.preferences?.COMMUNICATION?.PREFERRED_METHOD}
+                                        error={contactForm.errors.preferences?.COMMUNICATION?.PREFERRED_METHOD}
+                                        onChange={handlePreferenceChange}
+                                    />
+                                    <BaseInput
+                                        className="col-md-12 mt-3"
+                                        label={t("preferred_hours")}
+                                        name="preferences.COMMUNICATION.PREFERRED_HOURS"
+                                        placeholder={t("preferred_hours")}
+                                        value={contactForm.values.preferences.COMMUNICATION.PREFERRED_HOURS}
+                                        touched={contactForm.touched.preferences?.COMMUNICATION?.PREFERRED_HOURS}
+                                        error={contactForm.errors.preferences?.COMMUNICATION?.PREFERRED_HOURS}
+                                        onChange={handlePreferenceChange}
+                                        handleBlur={handlePreferenceBlur}
+                                    />
+                                    <BaseCheck
+                                        className="col-md-12 mt-3"
+                                        label={t("receive_suggested_job_feeds")}
+                                        name="preferences.COMMUNICATION.RECEIVE_SUGGESTED_JOBS"
+                                        checked={contactForm.values.preferences.COMMUNICATION.RECEIVE_SUGGESTED_JOBS}
+                                        touched={contactForm.touched.preferences?.COMMUNICATION?.RECEIVE_SUGGESTED_JOBS}
+                                        error={contactForm.errors.preferences?.COMMUNICATION?.RECEIVE_SUGGESTED_JOBS}
+                                        onChange={handlePreferenceChange}
+                                    />
+                                    <BaseCheck
+                                        className="col-md-12 mt-3"
+                                        label={t("receive_newsletters")}
+                                        name="preferences.COMMUNICATION.RECEIVE_NEWSLETTER"
+                                        checked={contactForm.values.preferences.COMMUNICATION.RECEIVE_NEWSLETTER}
+                                        touched={contactForm.touched.preferences?.COMMUNICATION?.RECEIVE_NEWSLETTER}
+                                        error={contactForm.errors.preferences?.COMMUNICATION?.RECEIVE_NEWSLETTER}
+                                        onChange={handlePreferenceChange}
+                                    />
+                                </div>
+                                <div className='row mt-3'>
+                                    <h3>{t("sharing_preferences")}:</h3>
+                                    <div className='row'>
+                                        <BaseSelect
+                                            className="col-md-12 mt-3"
+                                            label={t("share_my_mvr")}
+                                            name="preferences.SHARING.MVR"
+                                            value={contactForm.values.preferences.SHARING.MVR}
+                                            touched={contactForm.touched.preferences?.SHARING?.MVR}
+                                            error={contactForm.errors.preferences?.SHARING?.MVR}
+                                            onChange={handlePreferenceChange}
+                                            options={contactPreferences}
+                                        />
+                                        <BaseSelect
+                                            className="col-md-12 mt-3"
+                                            label={t("share_my_drivers_license")}
+                                            name="preferences.SHARING.DRIVERS_LICENSE"
+                                            value={contactForm.values.preferences.SHARING.DRIVERS_LICENSE}
+                                            touched={contactForm.touched.preferences?.SHARING?.DRIVERS_LICENSE}
+                                            error={contactForm.errors.preferences?.SHARING?.DRIVERS_LICENSE}
+                                            onChange={handlePreferenceChange}
+                                            options={contactPreferences}
+                                        />
+                                        <BaseSelect
+                                            className="col-md-12 mt-3"
+                                            label={t("share_my_medical_card")}
+                                            name="preferences.SHARING.MEDICAL_CARD"
+                                            value={contactForm.values.preferences.SHARING.MEDICAL_CARD}
+                                            touched={contactForm.touched.preferences?.SHARING?.MEDICAL_CARD}
+                                            error={contactForm.errors.preferences?.SHARING?.MEDICAL_CARD}
+                                            onChange={handlePreferenceChange}
+                                            options={contactPreferences}
+                                        />
+                                        <BaseSelect
+                                            className="col-md-12 mt-3"
+                                            label={t("authorize_companies_contact_past_employers")}
+                                            name="preferences.SHARING.CONTACT_PAST_EMPLOYERS"
+                                            value={contactForm.values.preferences.SHARING.CONTACT_PAST_EMPLOYERS}
+                                            touched={contactForm.touched.preferences?.SHARING?.CONTACT_PAST_EMPLOYERS}
+                                            error={contactForm.errors.preferences?.SHARING?.CONTACT_PAST_EMPLOYERS}
+                                            onChange={handlePreferenceChange}
+                                            options={contactPreferences}
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                        </form>
+
+                        </div>
                     </div>
-                </div>
-            </div>
                 </TabPanel>
                 <TabPanel>
-                <h2 className='mb-3 mt-5'>{t("communication_preferences")}</h2>
-                <div className={style.info}>
-                <div className='row'>
+                    <h2 className='mb-5 mt-5'>{t("matching_preferences")}</h2>
                     <div className="col-sm-12">
-                        <div className='row'>
-                            
-                            <BaseCheck
-                                className="col-md-12 mt-3"
-                                label={t("communication_preferences_receive_driverfly")}
-                                name="preferences.COMMUNICATION.RECEIVE_DRIVERFLY"
-                                checked={contactForm.values.preferences.COMMUNICATION.RECEIVE_DRIVERFLY}
-                                touched={contactForm.touched.preferences?.COMMUNICATION?.RECEIVE_DRIVERFLY}
-                                error={contactForm.errors.preferences?.COMMUNICATION?.RECEIVE_DRIVERFLY}
-                                onChange={handlePreferenceChange}
-                            />
-                            <BaseCheckList
-                                className="col-md-12 mt-3"
-                                label={t("communication_preferences_preferred_method")}
-                                options={[{
-                                    label: t("call"),
-                                    value: "CALL"
-                                }, {
-                                    label: t("text"),
-                                    value: "TEXT"
-                                }]}
-                                value={contactForm.values.preferences.COMMUNICATION.PREFERRED_METHOD}
-                                name="preferences.COMMUNICATION.PREFERRED_METHOD"
-                                touched={contactForm.touched.preferences?.COMMUNICATION?.PREFERRED_METHOD}
-                                error={contactForm.errors.preferences?.COMMUNICATION?.PREFERRED_METHOD}
-                                onChange={handlePreferenceChange}
-                            />
-                            <BaseInput
-                                className="col-md-12 mt-3"
-                                label={t("preferred_hours")}
-                                name="preferences.COMMUNICATION.PREFERRED_HOURS"
-                                placeholder={t("preferred_hours")}
-                                value={contactForm.values.preferences.COMMUNICATION.PREFERRED_HOURS}
-                                touched={contactForm.touched.preferences?.COMMUNICATION?.PREFERRED_HOURS}
-                                error={contactForm.errors.preferences?.COMMUNICATION?.PREFERRED_HOURS}
-                                onChange={handlePreferenceChange}
-                                handleBlur={handlePreferenceBlur}
-                            />
-                            <BaseCheck
-                                className="col-md-12 mt-3"
-                                label={t("receive_suggested_job_feeds")}
-                                name="preferences.COMMUNICATION.RECEIVE_SUGGESTED_JOBS"
-                                checked={contactForm.values.preferences.COMMUNICATION.RECEIVE_SUGGESTED_JOBS}
-                                touched={contactForm.touched.preferences?.COMMUNICATION?.RECEIVE_SUGGESTED_JOBS}
-                                error={contactForm.errors.preferences?.COMMUNICATION?.RECEIVE_SUGGESTED_JOBS}
-                                onChange={handlePreferenceChange}
-                            />
-                            <BaseCheck
-                                className="col-md-12 mt-3"
-                                label={t("receive_newsletters")}
-                                name="preferences.COMMUNICATION.RECEIVE_NEWSLETTER"
-                                checked={contactForm.values.preferences.COMMUNICATION.RECEIVE_NEWSLETTER}
-                                touched={contactForm.touched.preferences?.COMMUNICATION?.RECEIVE_NEWSLETTER}
-                                error={contactForm.errors.preferences?.COMMUNICATION?.RECEIVE_NEWSLETTER}
-                                onChange={handlePreferenceChange}
-                            />
-                        </div>
-                        <div className='row mt-3'>
-                            <h3>{t("sharing_preferences")}:</h3>
-                            <div className='row'>
-                                <BaseSelect
-                                    className="col-md-12 mt-3"
-                                    label={t("share_my_mvr")}
-                                    name="preferences.SHARING.MVR"
-                                    value={contactForm.values.preferences.SHARING.MVR}
-                                    touched={contactForm.touched.preferences?.SHARING?.MVR}
-                                    error={contactForm.errors.preferences?.SHARING?.MVR}
-                                    onChange={handlePreferenceChange}
-                                    options={contactPreferences}
-                                />
-                                <BaseSelect
-                                    className="col-md-12 mt-3"
-                                    label={t("share_my_drivers_license")}
-                                    name="preferences.SHARING.DRIVERS_LICENSE"
-                                    value={contactForm.values.preferences.SHARING.DRIVERS_LICENSE}
-                                    touched={contactForm.touched.preferences?.SHARING?.DRIVERS_LICENSE}
-                                    error={contactForm.errors.preferences?.SHARING?.DRIVERS_LICENSE}
-                                    onChange={handlePreferenceChange}
-                                    options={contactPreferences}
-                                />
-                                <BaseSelect
-                                    className="col-md-12 mt-3"
-                                    label={t("share_my_medical_card")}
-                                    name="preferences.SHARING.MEDICAL_CARD"
-                                    value={contactForm.values.preferences.SHARING.MEDICAL_CARD}
-                                    touched={contactForm.touched.preferences?.SHARING?.MEDICAL_CARD}
-                                    error={contactForm.errors.preferences?.SHARING?.MEDICAL_CARD}
-                                    onChange={handlePreferenceChange}
-                                    options={contactPreferences}
-                                />
-                                <BaseSelect
-                                    className="col-md-12 mt-3"
-                                    label={t("authorize_companies_contact_past_employers")}
-                                    name="preferences.SHARING.CONTACT_PAST_EMPLOYERS"
-                                    value={contactForm.values.preferences.SHARING.CONTACT_PAST_EMPLOYERS}
-                                    touched={contactForm.touched.preferences?.SHARING?.CONTACT_PAST_EMPLOYERS}
-                                    error={contactForm.errors.preferences?.SHARING?.CONTACT_PAST_EMPLOYERS}
-                                    onChange={handlePreferenceChange}
-                                    options={contactPreferences}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                   
-                </div>
-            </div>
-                </TabPanel>
-                <TabPanel>
-                <h2 className='mb-5 mt-5'>{t("matching_preferences")}</h2>
-                <div className="col-sm-12">
-                     <BaseCheckList
+                        <BaseCheckList
                             className="col-md-12 mt-3"
                             label={t("geography")}
                             options={jobGeography.map(v => ({
@@ -668,6 +686,28 @@ export default function MyAccount() {
                             error={contactForm.errors.preferences?.MATCHING?.BENEFITS}
                             onChange={handlePreferenceChange}
                         />
+                        <BaseCheck
+                            checked={haveOtherBenefits}
+                            className="col-md-12 mt-3"
+                            label={t("other_benefits")}
+                            onChange={toggleOtherBenefitSwitch}
+                        />
+                        {
+                            haveOtherBenefits &&
+                            <>
+                                <BaseInput
+                                    className="col-md-12"
+                                    name="preferences.MATCHING.OTHER_BENEFITS"
+                                    placeholder={t("other_benefits")}
+                                    value={contactForm.values.preferences?.MATCHING?.OTHER_BENEFITS}
+                                    touched={contactForm.touched.preferences?.MATCHING?.OTHER_BENEFITS}
+                                    error={contactForm.errors.preferences?.MATCHING?.OTHER_BENEFITS}
+                                    onChange={handlePreferenceChange}
+                                    handleBlur={handlePreferenceBlur}
+                                />
+                            </>
+
+                        }
                     </div>
                 </TabPanel>
             </Tabs>

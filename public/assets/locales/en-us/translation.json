@@ -118,6 +118,7 @@
     "salary": "Salary",
     "percent_per_weight": "Percent per weight",
     "required_benefits": "Required Benefits",
+    "other_benefits": "Other Benefits",
     "JobBenefits": {
         "SIGN_ON_BONUS": "Sign-on bonus",
         "GUARANTEED_BASE_SALARY": "Guaranteed base salary",

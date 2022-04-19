@@ -72,10 +72,6 @@ const jobBenefits = [
         key: "PETS_ALLOWED",
         label: "Pets allowed"
     },
-    {
-        key: "OTHER",
-        label: "Other"
-    },
 ];
 
 const jobGeography = [
