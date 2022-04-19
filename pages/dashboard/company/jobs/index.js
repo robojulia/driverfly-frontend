@@ -39,41 +39,41 @@ export default function JobListing() {
         setJobs(v);
     }, []);
 
-  /**
-   * 
-   * @param {React.MouseEvent} e 
-   */
-   const onAddClick = (e) => {
-    e.preventDefault();
+    /**
+     * 
+     * @param {React.MouseEvent} e 
+     */
+    const onAddClick = (e) => {
+        e.preventDefault();
 
-    router.push(`${router.pathname}/create`);
-  }
+        router.push(`${router.pathname}/create`);
+    }
 
-  /**
-   * 
-   * @param {React.MouseEvent} e 
-   */
-   const onEditClick = (e) => {
-    e.preventDefault();
-    const { name } =  e.currentTarget;
+    /**
+     * 
+     * @param {React.MouseEvent} e 
+     */
+    const onEditClick = (e) => {
+        e.preventDefault();
+        const { name } = e.currentTarget;
 
-    router.push(`${router.pathname}/${name}`);
-  }
+        router.push(`${router.pathname}/${name}`);
+    }
 
-  /**
-   * 
-   * @param {React.MouseEvent} e 
-   */
-   const onDeleteClick = async (e) => {
-    e.preventDefault();
-    const { name } =  e.currentTarget;
+    /**
+     * 
+     * @param {React.MouseEvent} e 
+     */
+    const onDeleteClick = async (e) => {
+        e.preventDefault();
+        const { name } = e.currentTarget;
 
-    const api = new JobApi();
+        const api = new JobApi();
 
-    await api.remove(name);
+        await api.remove(name);
 
-    setJobs(jobs.filter(v => v.id != name));
-  }
+        setJobs(jobs.filter(v => v.id != name));
+    }
 
     return (
         <>
@@ -85,7 +85,7 @@ export default function JobListing() {
                     </Col>
                     <Col xs="2">
                         <button className="btn btn-primary" onClick={onAddClick}>
-                        + {t("CREATE")}
+                            + {t("CREATE")}
                         </button>
                     </Col>
                 </Row>
@@ -124,19 +124,24 @@ export default function JobListing() {
                                                 jobs.map((job, index) => {
                                                     return <tr>
                                                         <td>{job.title} </td>
-                                                        <td>
+                                                        <td title="asasdasd">
                                                             {job.location &&
-                                                                `${job.location.street}, ${job.location.city}, ${job.location.state}, ${job.location.zip_code}, `
+                                                                <>
+                                                                    {job.location.street ? `${job.location.street}` : 'NO Street'}
+                                                                    {job.location.city ? `, ${job.location.city}` : ', NO City'}
+                                                                    {job.location.state ? `, ${job.location.state}` : ', NO State'}
+                                                                    {job.location.zip_code ? `, ${job.location.zip_code}` : ', NO ZIP'}
+                                                                </>
                                                             }
                                                         </td>
                                                         <td>{job.drivers_needed} </td>
                                                         <td>{job.expiry_date && new Date(job.expiry_date).toDateString()} </td>
-                                                        <td><ShowEnumFromString str={job.geography} enumArray={JobGeography} /></td>
-                                                        <td><ShowEnumFromString str={job.schedule} enumArray={JobSchedule} /></td>
-                                                        <td><ShowEnumFromString str={job.employment_type} enumArray={JobEmploymentType} /></td>
-                                                        <td><ShowEnumFromString str={job.equipment_type} enumArray={JobEquipmentType} /></td>
-                                                        <td><ShowEnumFromString str={job.delivery_type} enumArray={JobDeliveryType} /></td>
-                                                        <td><ShowEnumFromString str={job.team_drivers} enumArray={JobTeamDriver} /></td>
+                                                        <td><ShowEnumFromString popover={true} str={job.geography} enumArray={JobGeography} /></td>
+                                                        <td><ShowEnumFromString popover={true} str={job.schedule} enumArray={JobSchedule} /></td>
+                                                        <td><ShowEnumFromString popover={true} str={job.employment_type} enumArray={JobEmploymentType} /></td>
+                                                        <td><ShowEnumFromString popover={true} str={job.equipment_type} enumArray={JobEquipmentType} /></td>
+                                                        <td><ShowEnumFromString popover={true} str={job.delivery_type} enumArray={JobDeliveryType} /></td>
+                                                        <td><ShowEnumFromString popover={true} str={job.team_drivers} enumArray={JobTeamDriver} /></td>
                                                         <td className="text-nowrap">
                                                             <button name={job.id} className="btn" onClick={onEditClick}>
                                                                 <EditIcon />
