@@ -50,7 +50,9 @@ export default function Detail({ jobDetail, relatedJobs }) {
                           jobDetail.location &&
                           <p className="pr-4">
                             <i className="fa fa-map-marker mr-2" aria-hidden="true"></i>
-                            {`${jobDetail.location?.street}, ${jobDetail.location?.city}, ${jobDetail.location?.state},`}
+                            <>
+                              {jobDetail.location.street || 'NO Street'}, {jobDetail.location.city || ', NO City'}, {jobDetail.location.state || ', NO State'}, {jobDetail.location.zip_code || ', NO ZIP'},
+                            </>
                           </p>
                         }
                         <p><i className="fa fa-usd mr-1" aria-hidden="true"></i>{jobDetail.min_weekly_pay ? jobDetail.min_weekly_pay : 0} - {jobDetail.max_weekly_pay ? jobDetail.max_weekly_pay : 0} {t('per week')}</p>
