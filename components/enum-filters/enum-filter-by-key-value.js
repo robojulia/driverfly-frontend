@@ -5,7 +5,7 @@ export default function EnumFilterByKeyValue(props) {
     return (
         <>
             {props.withAll &&
-                <div class="topping ">
+                <div className="topping ">
                     <input
                         onChange={props.handleChange}
                         type="radio"
@@ -15,15 +15,13 @@ export default function EnumFilterByKeyValue(props) {
             }
             {Object.keys(props.enumArray).map((key) => {
                 return (
-                    <>
-                        <div class="topping pt-2">
-                            <input
-                                onChange={props.handleChange}
-                                type="radio"
-                                name={props.name}
-                                value={key} /> {props.translate ? t(props.enumArray[key].toLowerCase()) : props.enumArray[key]}
-                        </div>
-                    </>
+                    <div key={key} className="topping pt-2">
+                        <input
+                            onChange={props.handleChange}
+                            type="radio"
+                            name={props.name}
+                            value={key} /> {props.translate ? t(props.enumArray[key].toLowerCase()) : props.enumArray[key]}
+                    </div>
                 )
             })}
         </>
