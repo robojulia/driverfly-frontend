@@ -3,6 +3,7 @@ import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import timeSince from "../../utils/timeSince"
 import { useTranslation } from "react-i18next"
+import CompanyPhoto from '../jobs/company-photo'
 
 export default function JobsList() {
 
@@ -30,7 +31,7 @@ export default function JobsList() {
             {/* <label className="checkbox-inline" htmlFor="remember">
               <input type="checkbox" name="remember" id="remember" value="1" />
             </label> */}
-            <img className="d-flex mr-4 truck-img" src="driverfly-logo-square.png" alt="" />
+            <CompanyPhoto className="d-flex mr-4 truck-img" company={job.company} />
             <div className="media-body">
               <h4 className="mt-0">{job.title}
                 <span

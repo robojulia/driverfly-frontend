@@ -12,6 +12,7 @@ import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum"
 import Link from 'next/link'
 import { useTranslation } from "react-i18next"
 import JobApi from "../api/job"
+import CompanyPhoto from "../../components/jobs/company-photo"
 
 export default function Detail({ jobDetail, relatedJobs }) {
 
@@ -27,11 +28,14 @@ export default function Detail({ jobDetail, relatedJobs }) {
             <div className="col-md-9">
               <div className="ort-inner">
                 <div className="media align-items-center bg-transparent border-0 p-0">
-                  <Link href="/find-jobs">
-                    <a href="#" className="text-dark text-center text-decoration-none">
-                      <img className="d-flex mr-4 truck-img mb-3" src="/driverfly-logo-square.png" alt="" />
-                      {t('view_all_jobs')} <i className="fa fa-long-arrow-right pl-1" aria-hidden="true"></i></a>
-                  </Link>
+                  <span className="text-dark text-center text-decoration-none">
+                    <CompanyPhoto className="d-flex mr-4 truck-img mb-3" company={jobDetail.company} />
+                    <Link href="/find-jobs">
+                      <a>
+                        {t('view_all_jobs')} <i className="fa fa-long-arrow-right pl-1" aria-hidden="true"></i>
+                      </a>
+                    </Link>
+                  </span>
                   <div className="media-body">
                     {/* <h6>Solo</h6> */}
                     <h4 className="mt-0">

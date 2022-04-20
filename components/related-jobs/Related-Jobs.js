@@ -1,6 +1,7 @@
 import timeSince from "../../utils/timeSince"
 import Link from "next/link"
 import { useTranslation } from "react-i18next"
+import CompanyPhoto from "../jobs/company-photo";
 
 export default function RelatedJobs({ jobs }) {
     const { t } = useTranslation();
@@ -15,7 +16,7 @@ export default function RelatedJobs({ jobs }) {
                             jobs &&
                             jobs.map((job, index) => {
                                 return <div key={index} className="media align-items-center ">
-                                    <img className="d-flex mr-4 truck-img" src="/driverfly-logo-square.png" alt="" />
+                                    <CompanyPhoto className="d-flex mr-4 truck-img" company={job.company} />
                                     <div className="media-body">
                                         <h4 className="mt-0">
                                             {job.title}<span className="d-block mt-2" data-toggle="tooltip"
