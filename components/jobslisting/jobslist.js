@@ -2,12 +2,14 @@ import Link from 'next/link'
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import timeSince from "../../utils/timeSince"
+import { useTranslation } from "react-i18next"
 
 export default function JobsList() {
 
   const { state, method } = useContext(jobContext)
   const { jobs, pagingMeta, filters } = state
   const { setFilters, applyFilters } = method
+  const { t } = useTranslation();
 
   const currentPageIndex = parseInt(pagingMeta.currentPage)
   const previousPageIndex = currentPageIndex - 1
@@ -57,10 +59,7 @@ export default function JobsList() {
                       <p><i className="fa fa-map-marker" aria-hidden="true"></i>
                         <span className='mr-4'>
                           <>
-                            {job.location.street ? `${job.location.street}` : 'NO Street'}
-                            {job.location.city ? `, ${job.location.city}` : ', NO City'}
-                            {job.location.state ? `, ${job.location.state}` : ', NO State'}
-                            {job.location.zip_code ? `, ${job.location.zip_code}` : ', NO ZIP'}
+                            {job.location.street || t('no_street')}, {job.location.city || t('no_city')}, {job.location.state || t('no_state')}, {job.location.zip_code || t('no_zip')}
                           </>
                         </span></p>
                     </>
@@ -76,7 +75,7 @@ export default function JobsList() {
 
             </div>
             <Link href={`/jobs/${job.id}`}>
-              <button type="button" className="btn btn-outline-danger">Browse Job</button>
+              <button type="button" className="btn btn-outline-danger">{t('browse_job')}</button>
             </Link>
 
           </div>
