@@ -9,6 +9,7 @@ export default function DatePosted() {
 
   const { state, method } = useContext(jobContext)
   const { handleChange } = method
+  const { filters } = state
 
   function changeHandler(e) {
     if (e.target.value == "lasthour") {
@@ -48,7 +49,12 @@ export default function DatePosted() {
           <div className="card-body">
             <div onChange={changeHandler} className="App">
               <div className="topping pt-2">
-                <input type="radio" id="all" name="date_created" value="" />All
+                <input
+                  checked={(!filters.date_created) || (filters.date_created == "")}
+                  type="radio"
+                  id="all"
+                  name="date_created"
+                  value="" />All
               </div>
               <div className="topping pt-2">
                 <input type="radio" id="lasthour" name="date_created" value="lasthour" />Last Hour
