@@ -39,6 +39,7 @@ const Content = () => {
         <div className="App">
           <div className="topping pt-2">
             <input
+              checked={(!filters.equipment_type) || (filters.equipment_type == "")}
               onChange={handleChange}
               type="radio"
               name="equipment_type"
@@ -49,30 +50,30 @@ const Content = () => {
 
           <div className="App">
             {firstHalf.map((value, index) => {
-              <div key={index} className="topping pt-2">
-                <input
-                  checked={filters.equipment_type !== undefined && filters.equipment_type == value}
-                  onChange={handleChange}
-                  type="radio"
-                  name="equipment_type"
-                  value={value} /> {t(value.toLowerCase())}
-              </div>
+              return (
+                <div key={index} className="topping pt-2">
+                  <input
+                    checked={filters.equipment_type !== undefined && filters.equipment_type == value}
+                    onChange={handleChange}
+                    type="radio"
+                    name="equipment_type"
+                    value={value} /> {t(value.toLowerCase())}
+                </div>
+              )
             })}
           </div>
 
           <div className="App">
             {secondHalf.map((value, index) => {
               return (
-                <>
-                  <div key={index} className="topping pt-2">
-                    <input
-                      checked={filters.equipment_type !== undefined && filters.equipment_type == value}
-                      onChange={handleChange}
-                      type="radio"
-                      name="equipment_type"
-                      value={value} /> {t(value.toLowerCase())}
-                  </div>
-                </>
+                <div key={index} className="topping pt-2">
+                  <input
+                    checked={filters.equipment_type !== undefined && filters.equipment_type == value}
+                    onChange={handleChange}
+                    type="radio"
+                    name="equipment_type"
+                    value={value} /> {t(value.toLowerCase())}
+                </div>
               )
             })}
           </div>
