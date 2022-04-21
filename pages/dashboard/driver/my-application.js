@@ -1,6 +1,7 @@
 import { useFormik } from "formik"
 import * as yup from "yup"
 import BaseInput from "../../../components/forms/BaseInput"
+import BaseSelect from "../../../components/forms/BaseSelect";
 import FullLayout from "../../../components/dashboard/layouts/FullLayout"
 import useRedirect from '../../../hooks/useRedirect';
 import useAuth from "../../../hooks/useAuth"
@@ -18,9 +19,11 @@ import { preventNegative } from "../../../utils/input"
 
 import { useTranslation } from "react-i18next"
 
-import { driverDegree, cdlClass } from "../../../utils/driver"
+import { DriverDegree } from "../../../enums/drivers/driver-degree.enum";
+import { DriverLicenseType } from "../../../enums/drivers/driver-license-type.enum";
+import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
 
-import { EquipmentType } from "../../../enums/drivers/equipment-type";
+import "../../../utils/yup";
 
 import BaseApi from "../../api/_baseApi";
 
@@ -33,37 +36,6 @@ export default function MyApplication() {
   const user = authCheck();
 
   const api = new BaseApi();
-
-  const equipmentTypes = Object
-    .keys(EquipmentType)
-    .map(v => {
-      return {
-        value: v,
-        label: EquipmentType[v]
-      };
-    })
-
-
-  yup.addMethod(yup.array, "unique", function (message, field, mapper = a => a) {
-    return this.test(`unique`, message, function (list) {
-      const set = new Set();
-      //debugger;
-      for (let i = 0; i < list.length; i++) {
-        let value = mapper(list[i]);
-
-        if (set.has(value)) {
-          // debugger;
-          this.createError({
-            path: `${this.path}[${i}].${field}`,
-            message: message
-          });
-          return false;
-        }
-        set.add(value);
-      }
-      return true;
-    });
-  });
 
   const acc_form = useFormik({
     initialValues: {
@@ -115,17 +87,24 @@ export default function MyApplication() {
       equipment_experience: yup.array(
         yup.object().shape({
           type: yup.string().required(t("this_field_is_required")).nullable(),
-          type_other: yup.string().nullable(),
+          type_other: yup.string().when("type", {
+            is: JobEquipmentType.OTHER,
+            then: yup.string().required(t("this_field_is_required")).nullable()
+          }).nullable(),
           quantity: yup.number().min(1).required(t("this_field_is_required")).nullable(),
         })
-      ).unique(t("types_must_not_repeat"), "type", t => `${t.type}_${t.type_other}`),
+      ).unique(t("types_must_not_repeat"), "type", t => t.type === JobEquipmentType.OTHER ? `${t.type}_${t.type_other?.toLowerCase()}` : t.type),
 
       equipment_experience: yup.array(
         yup.object().shape({
           type: yup.string().required(t("this_field_is_required")).nullable(),
+          type_other: yup.string().when("type", {
+            is: JobEquipmentType.OTHER,
+            then: yup.string().required(t("this_field_is_required")).nullable()
+          }).nullable(),
           years: yup.string().required(t("this_field_is_required")).nullable(),
         })
-      ).unique(t("types_must_not_repeat"), "type", t => t.type),
+      ).unique(t("types_must_not_repeat"), "type", t => t.type === JobEquipmentType.OTHER ? `${t.type}_${t.type_other?.toLowerCase()}` : t.type),
 
       highest_degree: yup.string().nullable(),
       emergency_contact_name: yup.string().nullable(),
@@ -152,10 +131,15 @@ export default function MyApplication() {
         license_state: values.license_state,
         license_type: values.license_type,
         years_cdl_experience: values.years_cdl_experience,
-        equipment_experience: values.equipment_experience,
+        equipment_experience: values.equipment_experience?.map(v => {
+          if (v.type !== JobEquipmentType.OTHER) {
+            v.type_other = null;
+          }
+          return v;
+        }),
         is_owner_operator: values.is_owner_operator,
         equipment_owned: values.is_owner_operator ? values.equipment_owned.map(v => {
-          if (!v.type.endsWith("_OTHER")) {
+          if (v.type !== JobEquipmentType.OTHER) {
             v.type_other = null;
           }
           return v;
@@ -410,7 +394,7 @@ export default function MyApplication() {
       equipment_experience: [
         ...acc_form.values.equipment_experience,
         {
-          type: null, years: null
+          type: null, type_other: null, quantity: null
         }
       ],
     });
@@ -544,24 +528,18 @@ export default function MyApplication() {
                     onChange={acc_form.handleChange}
                     handleBlur={acc_form.handleBlur}
                   />
-                  <div className="col-12">
-                    <label>{t("state")}:</label>
-                    <select class="application_select form-select" name="state"
-                      value={acc_form.values.state}
-                      onChange={acc_form.handleChange}
-                    >
-                      <option value="">{t("state")}</option>
-                      {stateList.map((state, index) => {
-                        return (
-                          <option
-                            key={index}
-                            value={state.value}
-                          >{state.label}</option>
-                        )
-                      })}
-                    </select>
-                    {acc_form.touched.state && acc_form.errors.state ? <span className="text-danger small">{acc_form.errors.state}</span> : null}
-                  </div>
+                  <BaseSelect
+                    className="col-12"
+                    label={t("state")}
+                    placeholder={t("state")}
+                    name="state"
+                    value={acc_form.values.state}
+                    touched={acc_form.touched.state}
+                    error={acc_form.errors.state}
+                    options={stateList}
+                    onChange={acc_form.handleChange}
+                    handleBlur={acc_form.handleBlur}
+                  />
                   <BaseInput
                     className="col-12"
                     label={t("zip_code")}
@@ -600,40 +578,32 @@ export default function MyApplication() {
                     handleBlur={acc_form.handleBlur}
                   />
                   {/* state issued */}
-                  <div className="col-12">
-                    <label>{t("state_issued")}:</label>
-                    <select class="application_select form-select" name="license_state"
-                      value={acc_form.values.license_state}
-                      onChange={acc_form.handleChange}
-                    >
-                      <option value="">{t("state_issued")}</option>
-                      {stateList.map((state, index) => {
-                        return (
-                          <option
-                            key={index}
-                            value={state.value}
-                          >{state.label}</option>
-                        )
-                      })}
-                    </select>
-                    {acc_form.touched.license_state && acc_form.errors.license_state ? <span className="text-danger small">{acc_form.errors.license_state}</span> : null}
-                  </div>
+                  <BaseSelect
+                    className="col-12"
+                    label={t("state_issued")}
+                    placeholder={t("state_issued")}
+                    name="license_state"
+                    value={acc_form.values.license_state}
+                    touched={acc_form.touched.license_state}
+                    error={acc_form.errors.license_state}
+                    options={stateList}
+                    onChange={acc_form.handleChange}
+                    handleBlur={acc_form.handleBlur}
+                  />
                   {/* CDL class types */}
-                  <div className="col-12">
-                    <span className={style.lable}>{t("cdl_class_type")}:</span>
-                    <select class="application_select form-select" name="license_type"
-                      value={acc_form.values.cdl_class}
-                      onChange={acc_form.handleChange}
-                    >
-                      <option value="">{t("cdl_class_type")}</option>
-                      {cdlClass.map((cdl, index) => {
-                        return (
-                          <option value={cdl.value} key={index}>{t(cdl.label)}</option>
-                        )
-                      })}
-                    </select>
-                    {acc_form.touched.license_type && acc_form.errors.license_type ? <span className="text-danger small">{acc_form.errors.license_type}</span> : null}
-                  </div>
+                  <BaseSelect
+                    className="col-12"
+                    label={t("cdl_class_type")}
+                    placeholder={t("cdl_class_type")}
+                    name="license_type"
+                    value={acc_form.values.license_type}
+                    touched={acc_form.touched.license_type}
+                    error={acc_form.errors.license_type}
+                    enumType={DriverLicenseType}
+                    labelPrefix="DriverLicenseType"
+                    onChange={acc_form.handleChange}
+                    handleBlur={acc_form.handleBlur}
+                  />
                   <BaseInput
                     className="col-12"
                     label={t("years_cdl_experience")}
@@ -673,20 +643,19 @@ export default function MyApplication() {
                     </div>
                   </div>
                   {/* Highest degree */}
-                  <div className=" col-12 mt-3 ">
-                    <span className={style.lable}>{t("highest_degree")}:</span>
-                    <select class="application_select form-select" name="highest_degree"
-                      value={acc_form.values.highest_degree}
-                      onChange={acc_form.handleChange}
-                    >
-                      <option value="">{t("highest_degree")}</option>
-                      {driverDegree.map((degree, index) => {
-                        return (<option value={degree.value} key={index}>{t(degree.label)}</option>
-                        )
-                      })}
-                    </select>
-                    {acc_form.touched.highest_degree && acc_form.errors.highest_degree ? <span className="text-danger small">{acc_form.errors.highest_degree}</span> : null}
-                  </div>
+                  <BaseSelect
+                    className="col-12"
+                    label={t("highest_degree")}
+                    placeholder={t("highest_degree")}
+                    name="highest_degree"
+                    value={acc_form.values.highest_degree}
+                    touched={acc_form.touched.highest_degree}
+                    error={acc_form.errors.highest_degree}
+                    enumType={DriverDegree}
+                    labelPrefix="DriverDegree"
+                    onChange={acc_form.handleChange}
+                    handleBlur={acc_form.handleBlur}
+                  />
                   <BaseInput
                     className="col-12"
                     label={t("emergency_contact")}
@@ -731,14 +700,6 @@ export default function MyApplication() {
                     <div className="col-md-10 offset-md-1 mt-3">
                     <hr />
                     <h3>{t("equipment_owned")}</h3> <br />
-                    <div>
-                      {
-                        acc_form.errors.equipment_owned &&
-                        (typeof acc_form.errors.equipment_owned === "string") &&
-                        <span className="text-danger small">{acc_form.errors.equipment_owned}</span>
-                      }
-
-                    </div>
                     {acc_form.values.equipment_owned.map((v, i) => {
                       const getOrNull = (field, type) => {
                         if (acc_form[field].equipment_owned && acc_form[field].equipment_owned[i]) {
@@ -748,28 +709,25 @@ export default function MyApplication() {
 
                       return (
                         <div key={i} className='row'>
-                          <div className="col-md-4">
-                            <span className={style.lable}>{t("type")}:</span>
-                            <select class="application_select form-select"
-                                name={`equipment_owned.${i}.type`}
-                                value={v.type}
-                                onChange={acc_form.handleChange}
-                              >
-                              <option value="">{t("type")}</option>
-                              {equipmentTypes.map((v, index) => {
-                                return (
-                                  <option value={v.value} key={index}>{t(v.label)}</option>
-                                )
-                              })}
-                            </select>
-                            {getOrNull("touched", "type") && getOrNull("errors", "type") ? <span className="text-danger small">{getOrNull("errors", "type")}</span> : null}
-                          </div>
+                          <BaseSelect
+                            className={`col-${v.type === JobEquipmentType.OTHER ? 4 : 8}`}
+                            label={t("type")}
+                            placeholder={t("type")}
+                            name={`equipment_owned.${i}.type`}
+                            value={v.type}
+                            touched={getOrNull("touched", "type")}
+                            error={getOrNull("errors", "type")}
+                            enumType={JobEquipmentType}
+                            labelPrefix="JobEquipmentType"
+                            onChange={acc_form.handleChange}
+                            handleBlur={acc_form.handleBlur}
+                          />
                           {(
-                            v.type?.endsWith("_OTHER") &&
+                            v.type === JobEquipmentType.OTHER &&
                             <BaseInput
-                              className="col-md-5"
-                              label={t("details")}
-                              placeholder={t("details")}
+                              className="col-4"
+                              label={t("OTHER")}
+                              placeholder={t("OTHER")}
                               value={v.type_other}
                               onChange={acc_form.handleChange}
                               handleBlur={acc_form.handleBlur}
@@ -778,7 +736,7 @@ export default function MyApplication() {
                               name={`equipment_owned.${i}.type_other`}
                               />)}
                           <BaseInput
-                            className="col-md-2"
+                            className="col-3"
                             label={t("quantity")}
                             placeholder={t("quantity")}
                             value={v.quantity}
@@ -790,7 +748,7 @@ export default function MyApplication() {
                             error={getOrNull("errors", "quantity")}
                             name={`equipment_owned.${i}.quantity`}
                           />
-                          <div className="col-md-1">
+                          <div className="col-1">
                             <span className="btn btn-yellow mt-4" onClick={() => removeEquipmentOwned(i)}>x</span>
                           </div>
                         </div>
@@ -807,14 +765,6 @@ export default function MyApplication() {
                 <div className="col-md-10 offset-md-1 mt-3">
                   <hr />
                   <h3>{t("equipment_experience")}</h3> <br />
-                  <div>
-                    {
-                      acc_form.errors.equipment_experience &&
-                      (typeof acc_form.errors.equipment_experience === "string") &&
-                      <span className="text-danger small">{acc_form.errors.equipment_experience}</span>
-                    }
-
-                  </div>
                   {acc_form.values.equipment_experience.map((v, i) => {
                     const getOrNull = (field, type) => {
                       if (acc_form[field].equipment_experience && acc_form[field].equipment_experience[i]) {
@@ -825,35 +775,34 @@ export default function MyApplication() {
                     return (
                       <div key={i}>
                         <div className='row'>
-                          <div className="col-md-4">
-                            <span className={style.lable}>{t("type")}:</span>
-                            <select class="application_select form-select"
-                                name={`equipment_experience.${i}.type`}
-                                value={v.type}
-                                onChange={acc_form.handleChange}
-                              >
-                              <option value="">{t("type")}</option>
-                              {equipmentTypes.map((v, index) => {
-                                return (
-                                  <option value={v.value} key={index}>{t(v.label)}</option>
-                                )
-                              })}
-                            </select>
-                            {getOrNull("touched", "type") && getOrNull("errors", "type") ? <span className="text-danger small">{getOrNull("errors", "type")}</span> : null}
-                          </div>
-                          {/* <BaseInput
-                            className="col-md-5"
+                          <BaseSelect
+                            className={`col-${v.type === JobEquipmentType.OTHER ? 4 : 8}`}
                             label={t("type")}
                             placeholder={t("type")}
+                            name={`equipment_experience.${i}.type`}
                             value={v.type}
-                            onChange={acc_form.handleChange}
-                            handleBlur={acc_form.handleBlur}
                             touched={getOrNull("touched", "type")}
                             error={getOrNull("errors", "type")}
-                            name={`equipment_experience.${i}.type`}
-                          /> */}
+                            enumType={JobEquipmentType}
+                            labelPrefix="JobEquipmentType"
+                            onChange={acc_form.handleChange}
+                            handleBlur={acc_form.handleBlur}
+                          />
+                          {(
+                            v.type === JobEquipmentType.OTHER &&
+                            <BaseInput
+                              className="col-4"
+                              label={t("OTHER")}
+                              placeholder={t("OTHER")}
+                              value={v.type_other}
+                              onChange={acc_form.handleChange}
+                              handleBlur={acc_form.handleBlur}
+                              touched={getOrNull("touched", "type_other")}
+                              error={getOrNull("errors", "type_other")}
+                              name={`equipment_experience.${i}.type_other`}
+                              />)}
                           <BaseInput
-                            className="col-md-5"
+                            className="col-3"
                             label={t("years_experience")}
                             placeholder={t("years_experience")}
                             value={v.years}
@@ -865,7 +814,7 @@ export default function MyApplication() {
                             error={getOrNull("errors", "years")}
                             name={`equipment_experience.${i}.years`}
                           />
-                          <div className="col-md-2 mt-4">
+                          <div className="col-1 mt-4">
                             <span className="btn btn-yellow" onClick={() => removeEquipmentExperience(i)}>x</span>
                           </div>
                         </div>

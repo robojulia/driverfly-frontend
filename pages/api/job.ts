@@ -4,19 +4,36 @@ import { JobEntity } from "../../models/job/job.entity";
 import BaseApi from "./_baseApi";
 
 export default class JobApi extends BaseApi {
-    companyId: number = null;
-    constructor(companyId: number) {
+    baseUrl: string = "jobs";
+    constructor() {
         super();
-        this.companyId = companyId;
     }
-    baseCompanyUrl(companyId?: number): string { return `companies/${companyId ?? this.companyId}/jobs` }
-    async create(entity: JobEntity, companyId?: number): Promise<JobEntity> {
-        const { data } = await this.post(this.baseCompanyUrl(companyId), entity);
+    async create(entity: JobEntity): Promise<JobEntity> {
+        const { data } = await this.post(this.baseUrl, entity);
 
         return data;
     }
-    async fetchAll(params) {
-        const { data } = await this.get(`jobs`, {params});
+    async update (id: number, entity: JobEntity): Promise<JobEntity> {
+        const { data } = await this.put(`${this.baseUrl}/${id}`, entity);
+
+        return data;
+    }
+    async getById(id: number): Promise<JobEntity> {
+        const { data } = await this.get(`${this.baseUrl}/${id}`);
+
+        return data;
+    }
+    async remove (id: number): Promise<void> {
+        await this.delete(`${this.baseUrl}/${id}`);
+    }
+
+    async list(): Promise<JobEntity[]> {
+        const { data } = await this.get(this.baseUrl);
+        return data;
+    }
+
+    async search(params) {
+        const { data } = await this.get(`${this.baseUrl}/search`, {params});
         return data;
     }
 }

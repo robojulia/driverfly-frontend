@@ -2,12 +2,15 @@ import Link from 'next/link'
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import timeSince from "../../utils/timeSince"
+import { useTranslation } from "react-i18next"
+import CompanyPhoto from '../jobs/company-photo'
 
 export default function JobsList() {
 
   const { state, method } = useContext(jobContext)
   const { jobs, pagingMeta, filters } = state
   const { setFilters, applyFilters } = method
+  const { t } = useTranslation();
 
   const currentPageIndex = parseInt(pagingMeta.currentPage)
   const previousPageIndex = currentPageIndex - 1
@@ -25,11 +28,10 @@ export default function JobsList() {
       <div className="filter-outer mt-5">
         {jobs.length > 0 && jobs.map(job => (
           <div key={job.id} className="media align-items-center shadow-sm">
-            <label className="checkbox-inline" htmlFor="remember">
+            {/* <label className="checkbox-inline" htmlFor="remember">
               <input type="checkbox" name="remember" id="remember" value="1" />
-
-            </label>
-            <img className="d-flex mr-4 truck-img" src="driverfly-logo-square.png" alt="" />
+            </label> */}
+            <CompanyPhoto className="d-flex mr-4 truck-img" company={job.company} />
             <div className="media-body">
               <h4 className="mt-0">{job.title}
                 <span
@@ -41,20 +43,33 @@ export default function JobsList() {
                 </span>
               </h4>
               <div className="job-date-author">
-                posted {timeSince(job.created_at)} ago {
+                {
+                  job.created_at &&
+                  <>
+                    {t('posted')} {timeSince(job.created_at)} {t('ago')}
+                  </>
+                } {
                   job?.company?.name &&
                   <>
-                    by <span className="employer text-theme " role='button'>
-                      {job.company.name}
-                    </span>
+                    {t('by')} <span role="button" className="employer text-theme">{job.company?.name}</span>
                   </>
                 }
               </div>
               <div className="job-metas text-secondary text-secondary">
                 <div className="job-location">
-                  <i className="fa fa-map-marker" aria-hidden="true"></i>
-                  {`${job.location?.street}, ${job.location?.city}, ${job.location?.state},`}
-                  <i className="fa fa-usd mr-1 ml-4" aria-hidden="true"></i>{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} per week
+                  {
+                    job.location &&
+                    <>
+                      <p><i className="fa fa-map-marker" aria-hidden="true"></i>
+                        <span className='mr-4'>
+                          <>
+                            {job.location.street || t('no_street')}, {job.location.city || t('no_city')}, {job.location.state || t('no_state')}, {job.location.zip_code || t('no_zip')}
+                          </>
+                        </span></p>
+                    </>
+                  }
+                  <p>
+                    <i className="fa fa-usd mr-1 " aria-hidden="true"></i>{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} per week </p>
                 </div>
                 <div className="job-location">
                   {/* <i className="fa fa-star-o" aria-hidden="true"></i> */}
@@ -64,7 +79,7 @@ export default function JobsList() {
 
             </div>
             <Link href={`/jobs/${job.id}`}>
-              <button type="button" className="btn btn-outline-danger">Browse Job</button>
+              <button type="button" className="btn btn-outline-danger">{t('browse_job')}</button>
             </Link>
 
           </div>

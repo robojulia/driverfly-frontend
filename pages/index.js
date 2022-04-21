@@ -138,11 +138,11 @@ export default function Index() {
                             Recent Jobs </a>
                     </li>
                 </ul>
-                {
+                {/* {
                     showRecent ? < Featured />
                         :
                         < Recent />
-                }
+                } */}
 
             </section>
             <section className="driver-sec">

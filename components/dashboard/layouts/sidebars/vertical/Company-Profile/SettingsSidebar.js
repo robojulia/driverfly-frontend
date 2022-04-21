@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import EmojiTransportationIcon from '@mui/icons-material/EmojiTransportation';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
+import PersonIcon from '@mui/icons-material/Person';
 
 import { useTranslation } from "react-i18next";
 
@@ -15,22 +16,27 @@ export default function SettingsSidebar() {
   const router = useRouter();
 
   const menu_options = [
-        {
-            pathname: "/dashboard/company/settings",
-            icon: EmojiTransportationIcon,
-            text: t("company")
-        },
-        {
-            pathname: "/dashboard/company/settings/vehicles",
-            icon: LocalShippingIcon,
-            text: t("VEHICLES"),
-            startsWith: true
-        },
-        {
-          pathname: "/dashboard/company/settings/locations",
-          icon: MyLocationIcon,
-          text: t("LOCATIONS"),
+      {
+          pathname: "/dashboard/company/settings",
+          icon: EmojiTransportationIcon,
+          text: t("company")
+      },
+      {
+          pathname: "/dashboard/company/settings/vehicles",
+          icon: LocalShippingIcon,
+          text: t("VEHICLES"),
           startsWith: true
+      },
+      {
+        pathname: "/dashboard/company/settings/locations",
+        icon: MyLocationIcon,
+        text: t("LOCATIONS"),
+        startsWith: true
+      },
+      {
+        pathname: "/dashboard/company/settings/profile",
+        icon: PersonIcon,
+        text: t("MY_PROFILE"),
       },
   ];
   return (

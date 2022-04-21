@@ -1,8 +1,10 @@
 import useAuth from '../../hooks/useAuth';
 import Router from 'next/router'
+import { useTranslation } from "react-i18next";
+
 
 export default function DashboardButton(props) {
-
+    const { t } = useTranslation();
     const { isDriver, isCompany } = useAuth();
 
     const handleRedirect = () => {
@@ -21,7 +23,7 @@ export default function DashboardButton(props) {
                 onClick={handleRedirect}
                 type="button"
                 className={props.className}>
-                Dashbaord
+                {t("dashboard")}
             </button>
         </>
     )

@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
-import CompanyApi from "../../../../api/company";
+import LocationApi from "../../../../api/location";
 import { useRouter } from "next/router"
 
 import { useFormik } from "formik"
@@ -62,14 +62,14 @@ export default function Location() {
                 zip_code: values.zip_code
             };
 
-            const api = new CompanyApi(user.company.id);
+            const api = new LocationApi();
 
             try {
                 if (id) {
-                    await api.locations.update(id, dto);
+                    await api.update(id, dto);
                 }
                 else {
-                    await api.locations.create(dto);
+                    await api.create(dto);
                 }
                 toast.success(t("successfully_saved_information"));
                 setTimeout(
@@ -88,9 +88,9 @@ export default function Location() {
 
     useEffect(async () => {
         if (id) {
-            const api = new CompanyApi(user.company.id);
+            const api = new LocationApi();
 
-            const location = await api.locations.getById(id);
+            const location = await api.getById(id);
 
             if (!location) {
                 toast.error(t("UNABLE_TO_FIND_{name}", { name: t("LOCATION") }));

@@ -41,7 +41,8 @@ export default function DriverProfileNav(props) {
                 width="30"
                 height="30"
               />
-              <span>{props.user.name || "DriverFly User"}.</span>
+              <span>{props.user.first_name}  {props.user.last_name}</span>
+              {/* <span>{props.user.name || "DriverFly User"}.</span> */}
               <p></p>
             </div>
           </DropdownToggle >

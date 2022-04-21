@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from "@mui/icons-material/Delete";
 
-import CompanyApi from "../../../../api/company";
+import VehicleApi from "../../../../api/vehicle";
 import { VehicleType } from "../../../../../enums/vehicles/vehicle-type.enum";
 import { VehicleTrailerType } from "../../../../../enums/vehicles/vehicle-trailer-type.enum";
 import { VehicleAccessory } from "../../../../../enums/vehicles/vehicle-accessory.enum";
@@ -33,9 +33,9 @@ export default function VehicleList() {
   const [ vehicles, setVehicles ] = useState([]);
 
   useEffect(async () => {
-    const api = new CompanyApi(user.company.id);
+    const api = new VehicleApi();
 
-    const v = await api.vehicles.get({ withPhoto: true });
+    const v = await api.list({ withPhoto: true });
 
     console.log(v);
 
@@ -71,9 +71,9 @@ export default function VehicleList() {
     e.preventDefault();
     const { name } =  e.currentTarget;
 
-    const api = new CompanyApi(user.company.id);
+    const api = new VehicleApi();
 
-    await api.vehicles.remove(name);
+    await api.remove(name);
 
     setVehicles(vehicles.filter(v => v.id != name));
   }
@@ -86,7 +86,7 @@ export default function VehicleList() {
 
         <Row>
           <Col xs="10">
-            <h1>{t("VEHICLES")}</h1>
+            <h2>{t("VEHICLES")}</h2>
           </Col>
           <Col xs="2">
             <button className="btn btn-primary" onClick={onAddClick}>

@@ -7,21 +7,11 @@ import { JobSchedule } from "../../enums/jobs/job-schedule.enum";
 import { JobPayMethod } from "../../enums/jobs/job-pay-method.enum";
 import { MvrType } from "../../enums/drivers/mvr-type.enum";
 import timeSince from "../../utils/timeSince";
+import ShowEnumFromString from "../../components/enum-filters/show-enum-from-string"
 
 export default function JonInformation({ job }) {
 
   const { t } = useTranslation();
-
-  const enumMap = (str, separator, EnumType) => {
-    if (!str) {
-      return
-    }
-    str = `${str}`
-    const arr = str.split(separator)
-    return arr.map(item => {
-      return t(EnumType[item].toLowerCase())
-    }).join(', ')
-  }
 
   return (
     <>
@@ -45,7 +35,7 @@ export default function JonInformation({ job }) {
               <div className="details">
                 <div className="text">Areas Covered</div>
                 <div className="value">
-                  {job.geography && enumMap(job.geography, ",", JobGeography)}
+                  <ShowEnumFromString str={job.geography} enumArray={JobGeography} />
                 </div>
               </div>
             </li>
@@ -55,7 +45,7 @@ export default function JonInformation({ job }) {
               <div className="details">
                 <div className="text">Employment Type</div>
                 <div className="value">
-                  {job.employment_type && enumMap(job.employment_type, ",", JobEmploymentType)}
+                  <ShowEnumFromString str={job.employment_type} enumArray={JobEmploymentType} />
                 </div>
               </div>
             </li>
@@ -64,7 +54,7 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">Type of Delivery</div>
-                {job.delivery_type && enumMap(job.delivery_type, ",", JobDeliveryType)}
+                <ShowEnumFromString str={job.delivery_type} enumArray={JobDeliveryType} />
               </div>
             </li>
             <li>
@@ -72,7 +62,7 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">Equipment Type</div>
-                {job.equipment_type && enumMap(job.equipment_type, ",", JobEquipmentType)}
+                <ShowEnumFromString str={job.equipment_type} enumArray={JobEquipmentType} />
               </div>
             </li>
             <li>
@@ -81,7 +71,7 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">Schedule</div>
-                {job.schedule && enumMap(job.schedule, ",", JobSchedule)}
+                <ShowEnumFromString str={job.schedule} enumArray={JobSchedule} />
               </div>
             </li>
             <li>
@@ -89,7 +79,7 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">Pay Method</div>
-                {job.pay_method && enumMap(job.pay_method, ",", JobPayMethod)}
+                <ShowEnumFromString str={job.pay_method} enumArray={JobPayMethod} />
               </div>
             </li>
 

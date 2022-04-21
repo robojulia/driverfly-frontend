@@ -11,6 +11,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import ContactPageIcon from '@mui/icons-material/ContactPage';
 import GppGoodIcon from '@mui/icons-material/GppGood';
 import SettingsIcon from '@mui/icons-material/Settings';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 import { useTranslation } from "react-i18next";
 
@@ -26,14 +27,10 @@ export default function Sidebar() {
       text: t("dashboard")
     },
     {
-      pathname: "/dashboard/company/job-listing",
+      pathname: "/dashboard/company/jobs",
       icon: WorkIcon,
-      text: t("JOB_LISTINGS")
-    },
-    {
-      pathname: "/dashboard/company/new-job",
-      // icon: WorkIcon,
-      text: "Add new Jobs"
+      text: t("JOB_LISTINGS"),
+      startsWith: true
     },
     // {
     //   pathname: "/dashboard/company/applicants",
@@ -84,22 +81,22 @@ export default function Sidebar() {
         <Container className="p-0">
           <Navbar.Toggle aria-controls="basic-navbar-nav " />
           <Navbar.Collapse id="basic-navbar-nav">
-           
-          <ul className="dashboardsidebar ">
-            {
-              menu_options.map((v, i) => (
-              <li key={i} className={(v.startsWith ? router.asPath.startsWith(v.pathname) : router.asPath === v.pathname) ? "active" : ""}>
-                  {
-                    v.icon &&
-                    <span className="float-left">
-                      < v.icon className="icon_left" />
-                    </span>
-                  }
-                <Link href={v.pathname}>{v.text}</Link>
-              </li>))
-            }
-        </ul>
-           
+
+            <ul className="dashboardsidebar ">
+              {
+                menu_options.map((v, i) => (
+                  <li key={i} className={(v.startsWith ? router.asPath.startsWith(v.pathname) : router.asPath === v.pathname) ? "active" : ""}>
+                    {
+                      v.icon &&
+                      <span className="float-left">
+                        < v.icon className="icon_left" />
+                      </span>
+                    }
+                    <Link href={v.pathname}>{v.text}</Link>
+                  </li>))
+              }
+            </ul>
+
           </Navbar.Collapse>
         </Container>
       </Navbar>
