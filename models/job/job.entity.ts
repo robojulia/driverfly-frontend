@@ -24,7 +24,7 @@ export interface JobEntity {
   description_short?: string;
   drivers_needed?: number;
   expiry_date?: Date;
-  geography?: JobGeography[];
+  geography?: JobGeography;
   schedule?: JobSchedule;
   schedule_other?: string;
   employment_type?: JobEmploymentType;

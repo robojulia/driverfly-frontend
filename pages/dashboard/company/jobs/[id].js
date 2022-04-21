@@ -93,7 +93,8 @@ export default function Job() {
             description_short: null,
             drivers_needed: null,
             expiry_date: null,
-            geography: [],
+            geography: JobGeography.LOCAL,
+            max_applicant_radius: 100,
             schedule: null,
             schedule_other: null,
             employment_type: null,
@@ -125,7 +126,6 @@ export default function Job() {
             required_equipment: [],
             required_endorsement: [],
             transmission_type_experience: [],
-            max_applicant_radius: 10,
             must_pass_drug_test: true,
             must_have_clean_mvr: true,
             mvr_requirements: [],
@@ -164,9 +164,8 @@ export default function Job() {
             description_short: yup.string().required(t("this_field_is_required")).nullable(),
             drivers_needed: yup.number().min(0).nullable(),
             expiry_date: yup.date().nullable(),
-            geography: yup.array(
-                yup.string().enum(JobGeography)
-            ).min(1, t("this_field_is_required")),
+            geography: yup.string().enum(JobGeography).required(t("this_field_is_required")).nullable(),
+            max_applicant_radius: yup.number().min(1).nullable(),
             schedule: yup.string().enum(JobSchedule).required(t("this_field_is_required")).nullable(),
             schedule_other: yup.string().when("schedule", {
                 is: v => v === JobSchedule.OTHER,
@@ -286,7 +285,6 @@ export default function Job() {
             transmission_type_expereince: yup.array(
                 yup.string().enum(VehicleTransmissionType)
             ),
-            max_applicant_radius: yup.number().min(1).nullable(),
             must_pass_drug_test: yup.boolean().default(true),
             must_have_clean_mvr: yup.boolean().default(true),
             mvr_requirements: yup.array(yup.object({
@@ -398,7 +396,7 @@ export default function Job() {
                 description_short: job.description_short,
                 drivers_needed: job.drivers_needed,
                 expiry_date: (job.expiry_date || "").split("T")[0] || null,
-                geography: job.geography || [],
+                geography: job.geography || JobGeography.LOCAL,
                 schedule: job.schedule,
                 schedule_other: job.schedule_other,
                 employment_type: job.employment_type,
@@ -845,6 +843,27 @@ export default function Job() {
         router.push(backPath);
 
     }
+
+    const maxRadius = {
+        [JobGeography.LOCAL]: 100,
+        [JobGeography.REGIONAL]: 500,
+        [JobGeography.OTR]: 3000
+    };
+
+    /**
+     * 
+     * @param {React.ChangeEvent<HTMLSelectElement>} e 
+     */
+    const onGeographyChange = (e) => {
+        const { name, value } = e.target;
+
+        form.setValues({
+            ...form.values,
+            geography: value,
+            max_applicant_radius: maxRadius[value]
+        })
+
+    }
     return (
 
         <>
@@ -974,21 +993,31 @@ export default function Job() {
                                     onChange={onIntChange}
                                     handleBlur={form.handleBlur}
                                 />
-                                <BaseCheckList
+                                <BaseSelect
                                     className="col-12"
                                     label={t("geography")}
                                     name="geography"
                                     required
-                                    cols={3}
                                     value={form.values.geography}
-                                    onChange={form.handleChange}
-                                    handleBlur={form.handleBlur}
                                     touched={form.touched.geography}
                                     error={form.errors.geography}
-                                    valueKey="key"
-                                    labelKey="label"
+                                    onChange={onGeographyChange}
+                                    handleBlur={form.handleBlur}
                                     labelPrefix="JobGeography"
                                     enumType={JobGeography}
+                                    />
+                                <BaseRange
+                                    className="col-12"
+                                    label={t("max_applicant_radius")}
+                                    name="max_applicant_radius"
+                                    required
+                                    min={1}
+                                    max={maxRadius[form.values.geography]}
+                                    value={form.values.max_applicant_radius}
+                                    onChange={onIntChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.max_applicant_radius}
+                                    error={form.errors.max_applicant_radius}
                                 />
                                 <div className="row">
                                     <BaseSelect
@@ -1518,19 +1547,6 @@ export default function Job() {
                                 <h3>{t("requirements")}</h3>
                             </div>
                             <div className="col-md-6">
-                                <BaseRange
-                                    className="col-12"
-                                    label={t("max_applicant_radius")}
-                                    name="max_applicant_radius"
-                                    required
-                                    min={1}
-                                    max={100}
-                                    value={form.values.max_applicant_radius}
-                                    onChange={onIntChange}
-                                    handleBlur={form.handleBlur}
-                                    touched={form.touched.max_applicant_radius}
-                                    error={form.errors.max_applicant_radius}
-                                />
                                 <BaseCheckList
                                     className="col-12"
                                     label={t("cdl_class")}
