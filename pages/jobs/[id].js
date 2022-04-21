@@ -45,8 +45,17 @@ export default function Detail({ jobDetail, relatedJobs }) {
                       </span>
                     </h4>
                     <div className="job-date-author">
-                      {t('posted')} {timeSince(jobDetail.created_at)} {t('ago')}
-                      {t('by')} <span role="button" className="employer text-theme">{jobDetail.company?.name}</span>
+                      {
+                        jobDetail.created_at &&
+                        <>
+                          {t('posted')} {timeSince(jobDetail.created_at)} {t('ago')}
+                        </>
+                      } {
+                        jobDetail?.company?.name &&
+                        <>
+                          {t('by')} <span role="button" className="employer text-theme">{jobDetail.company?.name}</span>
+                        </>
+                      }
                     </div>
                     <div className="job-metas">
                       <div className="job-location d-flex align-items-center">
