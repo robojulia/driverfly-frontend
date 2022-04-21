@@ -43,12 +43,15 @@ export default function JobsList() {
                 </span>
               </h4>
               <div className="job-date-author">
-                posted {timeSince(job.created_at)} ago {
+                {
+                  job.created_at &&
+                  <>
+                    {t('posted')} {timeSince(job.created_at)} {t('ago')}
+                  </>
+                } {
                   job?.company?.name &&
                   <>
-                    by <span className="employer text-theme " role='button'>
-                      {job.company.name}
-                    </span>
+                    {t('by')} <span role="button" className="employer text-theme">{job.company?.name}</span>
                   </>
                 }
               </div>
