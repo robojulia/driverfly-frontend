@@ -23,10 +23,17 @@ export default function RelatedJobs({ jobs }) {
                                                 data-placement="top" title="Tooltip on top">
                                             </span></h4>
                                         <div className="job-date-author">
-                                            {t('posted')} {timeSince(job.created_at)} {t('ago')}
-                                            {t('by')} <a href="" className="employer text-theme">
-                                                {job.company?.name}
-                                            </a>
+                                            {
+                                                job.created_at &&
+                                                <>
+                                                    {t('posted')} {timeSince(job.created_at)} {t('ago')}
+                                                </>
+                                            } {
+                                                job?.company?.name &&
+                                                <>
+                                                    {t('by')} <span role="button" className="employer text-theme">{job.company?.name}</span>
+                                                </>
+                                            }
                                         </div>
                                         <div className="job-metas">
                                             <div className="job-location d-flex align-items-center">
