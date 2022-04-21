@@ -52,4 +52,41 @@ export default class BaseApi {
 
         return axios.delete(url, config);
     }
+
+    buildUrl(url: string, params?: any): string {
+        return `${url}${this.buildQueryString(params)}`;
+    }
+
+    buildQueryString(params: any): string {
+        let qs = "";
+
+        const seperator = "&";
+
+        if (params) {
+            qs = Object
+                .entries(params)
+                .map((v) => {
+                    let [ key, value ] = v;
+                    switch (typeof value) {
+                        case "undefined": value = null;
+                        case "object":
+                            if (value instanceof Date) {
+                                value = value.toISOString();
+                            }
+                            else if (value instanceof Array) {
+                                return value.map(v => `${key}[]=${encodeURIComponent(v as string)}`).join(seperator);
+                            }
+                            else {
+                                throw new Error("Object is unsupported by this parser");
+                            }
+                            break;
+                    }
+
+                    return `${key}=${encodeURIComponent(value as string)}`;
+                }).join(seperator);
+        }
+
+        return qs ? "?" + qs : qs;
+
+    }
 }
