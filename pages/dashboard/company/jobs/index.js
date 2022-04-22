@@ -9,6 +9,9 @@ import React from "react";
 
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from "@mui/icons-material/Delete";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import PreviewIcon from '@mui/icons-material/Preview';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import JobApi from "../../../api/job";
 import { useTranslation } from "react-i18next";
@@ -20,6 +23,9 @@ import { JobDeliveryType } from "../../../../enums/jobs/job-delivery-type.enum";
 import { JobTeamDriver } from "../../../../enums/jobs/job-team-driver.enum";
 import { useRouter } from "next/router";
 import ShowEnumFromString from "../../../../components/enum-filters/show-enum-from-string";
+import ListActions from "../../../../components/list-actions/ListActions";
+
+import { buildAddress } from "../../../../utils/common";
 
 export default function JobListing() {
 
@@ -51,28 +57,38 @@ export default function JobListing() {
 
     /**
      * 
-     * @param {React.MouseEvent} e 
+     * @param {number} id
      */
-    const onEditClick = (e) => {
-        e.preventDefault();
-        const { name } = e.currentTarget;
-
-        router.push(`${router.pathname}/${name}`);
+     const onPreviewClick = (id) => {
+        router.push(`/jobs/${id}`);
     }
 
     /**
      * 
-     * @param {React.MouseEvent} e 
+     * @param {number} id
      */
-    const onDeleteClick = async (e) => {
-        e.preventDefault();
-        const { name } = e.currentTarget;
+     const onViewApplicantsClick = (id) => {
+        router.push(`/dashboard/company/applicants?jobId=${id}`);
+    }
 
+    /**
+     * 
+     * @param {number} id
+     */
+    const onEditClick = (id) => {
+        router.push(`${router.pathname}/${id}`);
+    }
+
+    /**
+     * 
+     * @param {number} id
+     */
+    const onDeleteClick = async (id) => {
         const api = new JobApi();
 
-        await api.remove(name);
+        await api.remove(id);
 
-        setJobs(jobs.filter(v => v.id != name));
+        setJobs(jobs.filter(v => v.id != id));
     }
 
     return (
@@ -122,17 +138,10 @@ export default function JobListing() {
                                             {
                                                 jobs &&
                                                 jobs.map((job, index) => {
-                                                    return <tr>
+                                                    return <tr key={index}>
                                                         <td>{job.title} </td>
-                                                        <td title="asasdasd">
-                                                            {job.location &&
-                                                                <>
-                                                                    {job.location.street ? `${job.location.street}` : 'NO Street'}
-                                                                    {job.location.city ? `, ${job.location.city}` : ', NO City'}
-                                                                    {job.location.state ? `, ${job.location.state}` : ', NO State'}
-                                                                    {job.location.zip_code ? `, ${job.location.zip_code}` : ', NO ZIP'}
-                                                                </>
-                                                            }
+                                                        <td>
+                                                            {buildAddress(job.location || {})}
                                                         </td>
                                                         <td>{job.drivers_needed} </td>
                                                         <td>{job.expiry_date && new Date(job.expiry_date).toDateString()} </td>
@@ -143,12 +152,26 @@ export default function JobListing() {
                                                         <td><ShowEnumFromString popover={true} str={job.delivery_type} enumArray={JobDeliveryType} /></td>
                                                         <td><ShowEnumFromString popover={true} str={job.team_drivers} enumArray={JobTeamDriver} /></td>
                                                         <td className="text-nowrap">
-                                                            <button name={job.id} className="btn" onClick={onEditClick}>
-                                                                <EditIcon />
-                                                            </button>
-                                                            <button name={job.id} className="btn" onClick={onDeleteClick}>
-                                                                <DeleteIcon />
-                                                            </button>
+                                                            <ListActions
+                                                                options={[
+                                                                    {
+                                                                        onClick: e => onViewApplicantsClick(job.id),
+                                                                        label: (<><VisibilityIcon /> {t("VIEW_{name}", { name: t("APPLICANTS") })}</>)
+                                                                    },
+                                                                    {
+                                                                        onClick: e => onPreviewClick(job.id),
+                                                                        label: (<><PreviewIcon /> {t("VIEW_{name}", { name: t("POST") })}</>)
+                                                                    },
+                                                                    {
+                                                                        onClick: e => onEditClick(job.id),
+                                                                        label: (<><EditIcon /> {t("EDIT")}</>)
+                                                                    },
+                                                                    {
+                                                                        onClick: e => onDeleteClick(job.id),
+                                                                        label: (<><DeleteIcon /> {t("DELETE")}</>)
+                                                                    },
+                                                                ]}
+                                                                />
                                                         </td>
                                                     </tr>
                                                 })

@@ -496,7 +496,10 @@ textarea {
 .profile .dropdown-menu.show {
     z-index: 99999;
 }
-
+.react-tabs__tab-panel{
+    height: 700px;
+    overflow-x: auto;
+}
 /* Responsive */
 @media screen and (max-width: 768px) {
     .logo_container {
