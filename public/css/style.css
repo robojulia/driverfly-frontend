@@ -2206,3 +2206,11 @@ li.link-wrapper>a.active {
 .filter_container .rbt a:last-child {
     border-bottom: 1px solid #ced4da;
   }
+
+.ort-general a{
+      color: #000 !important;
+  }
+  .ort-general p{
+   margin: 0px;
+   color: #6a6a87;
+}
