@@ -622,6 +622,7 @@
     },
     "CHANGE_STATUS": "Change status",
     "VIEW_{name}": "View {{name}}",
+    "VIEW": "View",
     "POST": "Post",
     "EDIT": "Edit",
     "DELETE": "Delete",
@@ -632,5 +633,13 @@
     "USER_NOT_FOUND": "User with the email specified was not found.",
     "RESET_PASSWORD_EMAIL_SENT_RECENTLY": "A password reset email was recently sent, please check your email or try again after 15 minutes",
     "BACK_TO_LOGIN": "Back To Login",
-    "UNABLE_TO_SEND_PASSWORD_RESET_EMAIL": "Unable to send password reset email"
+    "UNABLE_TO_SEND_PASSWORD_RESET_EMAIL": "Unable to send password reset email",
+    "APPLICANT": "Applicant",
+    "GO_BACK": "Go Back",
+    "STATE_AND_ZIP": "State & Zip",
+    "UNKNOWN": "Unknown",
+    "ENDORSEMENTS": "Endorsements",
+    "AUTHORIZED_TO_WORK_IN_THE_US": "Authorized to work in the US",
+    "WORK_HISTORY": "Work History",
+    "SAFETY_BACKGROUND": "Safety Background"
 }

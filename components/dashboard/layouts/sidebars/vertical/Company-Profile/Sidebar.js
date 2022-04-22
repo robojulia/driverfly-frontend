@@ -35,7 +35,8 @@ export default function Sidebar() {
     {
       pathname: "/dashboard/company/applicants",
       icon: PeopleIcon,
-      text: t("APPLICANTS")
+      text: t("APPLICANTS"),
+      startsWith: true
     },
     // {
     //   pathname: "/dashboard/company/driver-applications-and-resume",

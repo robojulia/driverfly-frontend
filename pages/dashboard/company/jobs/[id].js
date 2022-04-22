@@ -15,7 +15,6 @@ import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
 import * as yup from "yup";
 
-import CompanyApi from "../../../api/company";
 import LocationApi from "../../../api/location";
 import VehicleApi from "../../../api/vehicle";
 
