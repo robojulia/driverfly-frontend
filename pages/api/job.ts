@@ -13,7 +13,7 @@ export default class JobApi extends BaseApi {
 
         return data;
     }
-    async update (id: number, entity: JobEntity): Promise<JobEntity> {
+    async update(id: number, entity: JobEntity): Promise<JobEntity> {
         const { data } = await this.put(`${this.baseUrl}/${id}`, entity);
 
         return data;
@@ -23,7 +23,7 @@ export default class JobApi extends BaseApi {
 
         return data;
     }
-    async remove (id: number): Promise<void> {
+    async remove(id: number): Promise<void> {
         await this.delete(`${this.baseUrl}/${id}`);
     }
 
@@ -33,7 +33,12 @@ export default class JobApi extends BaseApi {
     }
 
     async search(params) {
-        const { data } = await this.get(`${this.baseUrl}/search`, {params});
+        const { data } = await this.get(`${this.baseUrl}/search`, { params });
+        return data;
+    }
+
+    async apply(id: number, body) {
+        const { data } = await this.post(`${this.baseUrl}/apply/${id}`, body);
         return data;
     }
 }
