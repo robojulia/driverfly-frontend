@@ -21,7 +21,7 @@ export default function JobApply({ job }) {
 
   const { authCheck } = useAuth();
   const user = authCheck()
-  console.log("user", user);
+  // console.log("user", user);
   const router = useRouter()
   const { t } = useTranslation();
   const jobApi = new JobApi();
@@ -41,6 +41,22 @@ export default function JobApply({ job }) {
       createAccount: false,
       password: null,
       confirmPassword: null,
+      DRIVER_LICENSE: {
+        type: "DRIVER_LICENSE",
+        file: null,
+      },
+      MEDICAL_CARD: {
+        type: "MEDICAL_CARD",
+        file: null,
+      },
+      RESUME: {
+        type: "RESUME",
+        file: null,
+      },
+      MVR: {
+        type: "MVR",
+        file: null,
+      },
     },
     validationSchema: yup.object({
       first_name: yup.string().required(t("{name}_field_is_required", { name: t('first_name') })).nullable(),
@@ -68,6 +84,103 @@ export default function JobApply({ job }) {
           }
         }).nullable(),
       }).nullable(),
+
+      DRIVER_LICENSE: yup.object({
+        file: yup.mixed()
+          .test({
+            test: (value, context) => {
+              if (!value) {
+                return context.createError({
+                  path: context.path,
+                  message: t("{name}_field_is_required", { name: t('drivers_license') })
+                })
+              }
+              if (!(["application/pdf"].includes(value.type))) {
+                return context.createError({
+                  path: context.path,
+                  message: t("{name}_file_must_be_{file}", {
+                    name: t('drivers_license'),
+                    file: t('pdf'),
+                  })
+                });
+              }
+              return true
+            }
+          }),
+      }),
+
+      MEDICAL_CARD: yup.object({
+        file: yup.mixed()
+          .test({
+            test: (value, context) => {
+              if (!value) {
+                return context.createError({
+                  path: context.path,
+                  message: t("{name}_field_is_required", { name: t('medical_card') })
+                })
+              }
+              if (!(["application/pdf"].includes(value.type))) {
+                return context.createError({
+                  path: context.path,
+                  message: t("{name}_file_must_be_{file}", {
+                    name: t('medical_card'),
+                    file: t('pdf'),
+                  })
+                });
+              }
+              return true
+            }
+          }),
+      }),
+
+      RESUME: yup.object({
+        file: yup.mixed()
+          .test({
+            test: (value, context) => {
+              if (!value) {
+                return context.createError({
+                  path: context.path,
+                  message: t("{name}_field_is_required", { name: t('resume') })
+                })
+              }
+              if (!(["application/pdf"].includes(value.type))) {
+                return context.createError({
+                  path: context.path,
+                  message: t("{name}_file_must_be_{file}", {
+                    name: t('resume'),
+                    file: t('pdf'),
+                  })
+                });
+              }
+              return true
+            }
+          }),
+      }),
+
+      MVR: yup.object({
+        file: yup.mixed()
+          .test({
+            test: (value, context) => {
+              if (!value) {
+                return context.createError({
+                  path: context.path,
+                  message: t("{name}_field_is_required", { name: t('motor_vehicle_record') })
+                })
+              }
+              if (!(["application/pdf"].includes(value.type))) {
+                return context.createError({
+                  path: context.path,
+                  message: t("{name}_file_must_be_{file}", {
+                    name: t('motor_vehicle_record'),
+                    file: t('pdf'),
+                  })
+                });
+              }
+              return true
+            }
+          }),
+      }),
+
     }),
     onSubmit: async (values) => {
       const userDto = {
@@ -83,23 +196,42 @@ export default function JobApply({ job }) {
         password: values.password,
       };
 
-      // const formData = new FormData()
-      // formData.set('first_name', values.first_name)
-      // formData.set('last_name', values.last_name)
-      // formData.set('email', user.email || values.email)
-      // formData.set('phone', values.contact_number)
-      // formData.set('qualifications', values.qualifications)
-      // formData.set('violations_count', parseInt(values.voilations))
-      // formData.set('years_cdl_experience', parseInt(values.cdl_experience))
-      // formData.set('drug_test', values.drug_test)
-      // formData.set('createAccount', values.createAccount)
-      // formData.set('password', values.password)
+      const formData = new FormData()
+      formData.set('first_name', values.first_name)
+      formData.set('last_name', values.last_name)
+      formData.set('email', user.email || values.email)
+      formData.set('phone', values.contact_number)
+      formData.set('qualifications', values.qualifications)
+      formData.set('violations_count', parseInt(values.voilations))
+      formData.set('years_cdl_experience', parseInt(values.cdl_experience))
+      formData.set('drug_test', values.drug_test)
+      formData.set('createAccount', values.createAccount)
+      formData.set('password', values.password)
+      Object.values(values).forEach(v => {
+        if (v && v.file) {
+          console.log("v", v);
+          switch (v.type) {
+            case "DRIVER_LICENSE":
+              formData.append('commercial_driving_license', v.file);
+              break;
+            case "MEDICAL_CARD":
+              formData.append('medical_card', v.file);
+              break;
+            case "RESUME":
+              formData.append('resume', v.file);
+              break;
+            case "MVR":
+              formData.append('mvr_record', v.file);
+              break;
+          }
+        }
+      });
 
-      // formData.append("resume", resume)
-      // formData.append("commercial_driving_license", commercial_driving_license)
-      // formData.append("medical_card", medical_card)
-
-
+      // await baseApi.post(`jobs/${job.id}/apply`, formData, {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data'
+      //   }
+      // })
       await jobApi.applyForJob(job.id, userDto)
         .then(data => {
           if (data.status == 201) {
@@ -130,35 +262,22 @@ export default function JobApply({ job }) {
     closeButton[0].click()
   }
 
-  const [resume, setResume] = useState(null)
-  const [commercial_driving_license, setCommercial_driving_license] = useState(null)
-  const [medical_card, setMedical_card] = useState(null)
+  const handleFileChange = (e) => {
+    const { target: { name, files } } = e;
 
-  const handleChange = e => {
-    const { name, value } = e.target
-    setInputValues(preValue => {
-      return {
-        ...preValue,
-        [name]: value
-      }
-    })
-  }
+    if (files && files[0]) {
+      const file = files[0];
+      // console.log("file", file);
 
-  function Upload(event) {
-    if (event.target.files && event.target.files[0]) {
-      const t = event.target.name
-      const file = event.target.files[0]
-      if (t == "cv") {
-        setResume(file)
-        console.log(file)
-      }
-      if (t == "card") {
-        setMedical_card(file)
-      }
-      if (t == "license") {
-        setCommercial_driving_license(file)
-      }
+      apply_form.setValues({
+        ...apply_form.values,
+        [name]: {
+          ...apply_form.values[name],
+          file: file,
+        }
+      });
     }
+
   }
 
   return (
@@ -243,25 +362,58 @@ export default function JobApply({ job }) {
                   />
                 </Row>
                 {/* Files Start */}
-                {/* <Row>
-                  <div className="col-lg-6 col-12 mt-3 mt-3">
-                    <label>Upload your CV</label>
-                    <input onChange={Upload} name="cv" type="file" className="form-control mt-lg-4 mt-0" />
-                    <p style={{ fontStyle: "italic", color: "red" }}>{validation?.resume}</p>
-                  </div>
-                  <div className="col-lg-6 col-12 mt-3 mt-3">
-                    <label>Upload your Commercial Driver’s License</label>
-                    <input onChange={Upload} name="license" type="file" className="form-control" />
-                    <p style={{ fontStyle: "italic", color: "red" }}>{validation?.commercial_driving_license}</p>
-                  </div>
+                <Row>
+                  <BaseInput
+                    type="file"
+                    accept="application/pdf"
+                    className="col-lg-6 col-12 mt-3 mt-3"
+                    label={t("drivers_license")}
+                    placeholder={t("drivers_license")}
+                    name="DRIVER_LICENSE"
+                    value={apply_form.values?.DRIVER_LICENSE?.file}
+                    touched={apply_form.touched.DRIVER_LICENSE?.file}
+                    error={apply_form.errors?.DRIVER_LICENSE?.file}
+                    onChange={handleFileChange}
+                  />
+                  <BaseInput
+                    type="file"
+                    accept="application/pdf"
+                    className="col-lg-6 col-12 mt-3 mt-3"
+                    label={t("medical_card")}
+                    placeholder={t("medical_card")}
+                    name="MEDICAL_CARD"
+                    value={apply_form.values.MEDICAL_CARD?.file}
+                    touched={apply_form.touched.MEDICAL_CARD?.file}
+                    error={apply_form.errors?.MEDICAL_CARD?.file}
+                    onChange={handleFileChange}
+                  />
                 </Row>
                 <Row>
-                  <div className="col-lg-6 col-12 mt-3 mt-3">
-                    <label>Upload your Medical card</label>
-                    <input onChange={Upload} name="card" type="file" className="form-control mt-lg-4 mt-0" />
-                    <p style={{ fontStyle: "italic", color: "red" }}>{validation?.medical_card}</p>
-                  </div>
-                </Row> */}
+                  <BaseInput
+                    type="file"
+                    accept="application/pdf"
+                    className="col-lg-6 col-12 mt-3 mt-3"
+                    label={t("resume")}
+                    placeholder={t("resume")}
+                    name="RESUME"
+                    value={apply_form.values?.RESUME?.file}
+                    touched={apply_form.touched.RESUME?.file}
+                    error={apply_form.errors?.RESUME?.file}
+                    onChange={handleFileChange}
+                  />
+                  <BaseInput
+                    type="file"
+                    accept="application/pdf"
+                    className="col-lg-6 col-12 mt-3 mt-3"
+                    label={t("motor_vehicle_record")}
+                    placeholder={t("motor_vehicle_record")}
+                    name="MVR"
+                    value={apply_form.values.MVR?.file}
+                    touched={apply_form.touched.MVR?.file}
+                    error={apply_form.errors?.MVR?.file}
+                    onChange={handleFileChange}
+                  />
+                </Row>
                 {/* Files End */}
                 <Row>
                   <BaseInput
