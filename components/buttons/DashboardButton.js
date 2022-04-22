@@ -9,9 +9,9 @@ export default function DashboardButton(props) {
 
     const handleRedirect = () => {
         if (isCompany()) {
-            Router.push('dashboard/company')
+            Router.push('/dashboard/company')
         } else if (isDriver()) {
-            Router.push('dashboard/driver')
+            Router.push('/dashboard/driver')
         } else {
             Router.push('/')
         }

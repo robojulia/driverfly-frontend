@@ -9,8 +9,11 @@ import useRedirect from '../../../../hooks/useRedirect';
 
 import { useTranslation } from 'react-i18next';
 
+import VisibilityIcon from '@mui/icons-material/Visibility';
+
+
 import ApplicantApi from "../../../api/applicant";
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum';
 import { ApplicantStatus } from '../../../../enums/applicants/ApplicantStatus.enum';
@@ -133,6 +136,16 @@ export default function Applicants() {
         router.replace(router.asPath);
     }
 
+    /**
+     * 
+     * @param {React.MouseEvent<HTMLButtonElement>} e 
+     */
+    const onViewClick = (e) => {
+        const { name } = e.target;
+
+        router.push(`${router.pathname}/${name}`);
+    }
+
     return (
         <>
 
@@ -180,7 +193,7 @@ export default function Applicants() {
                                                                 <th className='text-center'>{t("STATUS")}</th>
                                                                 <th className='text-center'>{t("MEETS_BASIC_QUALIFICATIONS")}</th>
                                                                 <th>{t("REASONS_IF_NO")}</th>
-                                                                <th>{/** Change status */}</th>
+                                                                <th colSpan={2}>{/** Change status */}</th>
                                                             </tr>
                                                             {applicant.jobs.map((a, jobI) => (
                                                             <tr key={jobI}>
@@ -198,7 +211,12 @@ export default function Applicants() {
                                                                         <option>{t("CHANGE_STATUS")}</option>
                                                                         {statuses.map((v, i) => (<option key={i} value={v.key}>{v.label}</option>))}
                                                                     </select>
-
+                                                                </td>
+                                                                <td>
+                                                                    <button className='btn' name={a.id} onClick={onViewClick}>
+                                                                        <VisibilityIcon />
+                                                                        {t("VIEW")}
+                                                                    </button>
                                                                 </td>
                                                             </tr>
                                                             ))}
