@@ -208,6 +208,8 @@
     "voilations_in_last_3_years": "Number of moving violations in the last 3 years",
     "this_field_is_required": "This field is required",
     "{name}_field_is_required": "{{name}} is required",
+    "{name}_file_must_be_{file}": "{{name}} must be of type {{file}}",
+    "pdf": "PDF",
     "please_select_0_or_above": "Please select 0 or above",
     "successfully_saved_information": "Successfully saved your information",
     "unable_to_save_information": "Unable to save your information",

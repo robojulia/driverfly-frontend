@@ -1,11 +1,12 @@
 import React from 'react'
 
-function BaseInput ( { required, className, label, handleBlur, type, min, max, placeholder, value, onChange, onKeyDown, readOnly, name, touched, error, } ) {
+function BaseInput({ accept, required, className, label, handleBlur, type, min, max, placeholder, value, onChange, onKeyDown, readOnly, name, touched, error, }) {
   return (
     <div className={className}>
       {label && <label>{label}{required ? "*" : ""}:</label>}
       <br />
       <input
+        accept={type == "file" ? accept : null}
         onBlur={handleBlur}
         type={type || 'text'}
         min={min}
@@ -16,7 +17,7 @@ function BaseInput ( { required, className, label, handleBlur, type, min, max, p
         onKeyDown={onKeyDown}
         readOnly={readOnly}
         name={name}
-        className={`form-control ${error ? "is-invalid" : ""}`} 
+        className={`form-control ${error ? "is-invalid" : ""}`}
       />
       {touched && error && (typeof error === "string") ? <span className="text-danger small">{error}</span> : null}
     </div>
