@@ -37,8 +37,8 @@ export default class JobApi extends BaseApi {
         return data;
     }
 
-    async apply(id: number, body) {
-        const { data } = await this.post(`${this.baseUrl}/apply/${id}`, body);
+    async applyForJob(id: number, body) {
+        const data = await this.post(`${this.baseUrl}/${id}/apply`, body);
         return data;
     }
 }
