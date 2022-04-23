@@ -645,6 +645,7 @@
     },
     "CHANGE_STATUS": "Change status",
     "VIEW_{name}": "View {{name}}",
+    "VIEW_BY_{name}": "View By {{name}}",
     "VIEW": "View",
     "POST": "Post",
     "EDIT": "Edit",
@@ -664,5 +665,7 @@
     "ENDORSEMENTS": "Endorsements",
     "AUTHORIZED_TO_WORK_IN_THE_US": "Authorized to work in the US",
     "WORK_HISTORY": "Work History",
-    "SAFETY_BACKGROUND": "Safety Background"
+    "SAFETY_BACKGROUND": "Safety Background",
+    "WEEKLY_RANGE": "Weekly Range",
+    "GEOGRAPHY": "Geography"
 }

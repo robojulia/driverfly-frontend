@@ -65,6 +65,7 @@ export default class BaseApi {
         if (params) {
             qs = Object
                 .entries(params)
+                .filter(([ key, value ]) => value != null)
                 .map((v) => {
                     let [ key, value ] = v;
                     switch (typeof value) {
