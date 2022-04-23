@@ -146,7 +146,7 @@ export default function ViewDetails(props) {
 
         return (<>
             <TableRow>
-                <TableCell className="text-nowrap">{t(value.label)}</TableCell>
+                <TableCell>{t(value.label)}</TableCell>
                 <TableCell>{resolveText(value)}</TableCell>
             </TableRow>
         </>);

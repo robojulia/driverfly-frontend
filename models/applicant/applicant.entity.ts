@@ -5,6 +5,8 @@ import { DocumentEntity } from '../documents/document.entity';
 import { ApplicantExperienceEntity } from './applicant-experience.entity';
 import { DriverLicenseType } from '../../enums/drivers/driver-license-type.enum';
 import { ApplicantEquipmentEntity } from './applicant-equipment.entity';
+import { DriverDegree } from '../../enums/drivers/driver-degree.enum';
+import { ApplicantEmployerEntity } from './applicant-employer.entity';
 
 export interface ApplicantEntity {
   id?: number;
@@ -17,6 +19,7 @@ export interface ApplicantEntity {
   last_name?: string;
   phone?: string;
   email?: string;
+  birthdate?: string;
   street?: string;
   city?: string;
   state?: string;
@@ -29,10 +32,28 @@ export interface ApplicantEntity {
   license_state?: string;
   license_type?: DriverLicenseType;
   years_cdl_experience?: number;
-  violations_count?: number;
   can_pass_drug_test?: boolean;
-  experiences?: ApplicantExperienceEntity[]
-  equipment?: ApplicantEquipmentEntity[]
+  is_owner_operator?: boolean;
+  highest_degree?: DriverDegree;
+  emergency_contact_name?: string;
+  emergency_contact_number?: string;
+  emergency_contact_relationship?: string;
+  has_past_dui?: boolean;
+  dui_years?: string[];
+  criminal_history?: string;
+  accident_count?: number;
+  accident_details?: string;
+  license_revoked?: boolean;
+  license_revoked_details?: string;
+  psp_violations?: boolean;
+  psp_violations_details?: string;
+  tickets?: boolean;
+  tickets_details?: string;
+  positive_drug_test?: boolean;
+  positive_drug_test_details?: string;
+  equipment_experience?: ApplicantExperienceEntity[];
+  equipment_owned?: ApplicantEquipmentEntity[];
+  employers?: ApplicantEmployerEntity[];
   created_at?: string;
   last_updated_at?: string;
 }

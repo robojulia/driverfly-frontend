@@ -2,6 +2,7 @@ import { useFormik } from "formik"
 import * as yup from "yup"
 import BaseInput from "../../../components/forms/BaseInput"
 import BaseSelect from "../../../components/forms/BaseSelect";
+import BaseCheck from "../../../components/forms/BaseCheck";
 import FullLayout from "../../../components/dashboard/layouts/FullLayout"
 import useRedirect from '../../../hooks/useRedirect';
 import useAuth from "../../../hooks/useAuth"
@@ -66,7 +67,7 @@ export default function MyApplication() {
       emergency_contact_number: '',
       emergency_contact_relationship: '',
 
-      // todo: can_work_in_us: true,
+      authorized_to_work_in_us: false,
     },
     validationSchema: yup.object({
       first_name: yup.string().required(t("this_field_is_required")).nullable(),
@@ -152,8 +153,7 @@ export default function MyApplication() {
         emergency_contact_number: values.emergency_contact_number,
         emergency_contact_relationship: values.emergency_contact_relationship,
   
-        // todo: can_work_in_us: values.can_work_in_us,
-  
+        authorized_to_work_in_us: values.authorized_to_work_in_us,  
       };
       try {
         const [ userResp, driverResp ] = await Promise.all([
@@ -309,6 +309,7 @@ export default function MyApplication() {
       emergency_contact_name: driver.emergency_contact_name,
       emergency_contact_number: driver.emergency_contact_number,
       emergency_contact_relationship: driver.emergency_contact_relationship,
+      authorized_to_work_in_us: driver.authorized_to_work_in_us || false,
     });
 
     const safety_questions = {};
@@ -689,6 +690,16 @@ export default function MyApplication() {
                     onChange={acc_form.handleChange}
                     handleBlur={acc_form.handleBlur}
                   />
+                  <BaseCheck
+                    className="col-12"
+                    label={t("AUTHORIZED_TO_WORK_IN_THE_US")}
+                    name="authorized_to_work_in_us"
+                    value={acc_form.values.authorized_to_work_in_us}
+                    touched={acc_form.touched.authorized_to_work_in_us}
+                    error={acc_form.errors.authorized_to_work_in_us}
+                    onChange={acc_form.handleChange}
+                    handleBlur={acc_form.handleBlur}
+                    />
 
 
                 </div>

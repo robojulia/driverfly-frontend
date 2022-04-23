@@ -178,7 +178,7 @@ export default function Applicants() {
             applicant.qualification_fail_reason.push(t("YEARS_OF_CDL_EXPERIENCE_TOO_LOW"));
         }
 
-        if (applicant.violations_count > 0) {
+        if (applicant.accident_count > 0) {
             if (job.must_have_clean_mvr) {
                 applicant.meets_basic_qualifications = false;
                 applicant.qualification_fail_reason.push(t("DOES_NOT_HAVE_CLEAN_MVR"));
@@ -194,7 +194,7 @@ export default function Applicants() {
                     return c;
                 });
 
-                if (mvr && mvr.max_count > applicant.violations_count) {
+                if (mvr && mvr.max_count > applicant.accident_count) {
                     applicant.meets_basic_qualifications = false;
                     applicant.qualification_fail_reason.push(t("VIOLATION_COUNT_GREATER_THAN_MAX"));
                 }

@@ -39,6 +39,7 @@ export interface DriverEntity {
     emergency_contact_name?: string;
     emergency_contact_number?: string;
     emergency_contact_relationship?: string;
+    authorized_to_work_in_us?: boolean;
     employers: DriverEmploymentEntity[];
     can_pass_drug_test?: boolean;
     has_past_dui?: boolean;
