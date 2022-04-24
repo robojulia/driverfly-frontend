@@ -15,15 +15,17 @@ import { JobCriminalEntity } from "./job-criminal.entity";
 import { JobEquipmentEntity } from "./job-equipment.entity";
 import { JobMvrEntity } from './job-mvr.entity';
 import { JobSkillEntity } from './job-skill.entity';
+import { CompanyEntity } from '../company/company.entity';
 
 export interface JobEntity {
   id?: number,
   location: LocationEntity;
+  company: CompanyEntity;
   title: string;
   description: string;
   description_short?: string;
   drivers_needed?: number;
-  expiry_date?: Date;
+  expiry_date?: string | Date;
   geography?: JobGeography;
   schedule?: JobSchedule;
   schedule_other?: string;
@@ -65,4 +67,5 @@ export interface JobEntity {
   criminal_history?: JobCriminalEntity[];
   max_accidents?: number;
   safety_requirements_other?: string;
+  created_at?: string | Date;
 }

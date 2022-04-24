@@ -14,6 +14,8 @@ import { useTranslation } from "react-i18next"
 import JobApi from "../api/job"
 import CompanyPhoto from "../../components/jobs/company-photo"
 
+import StructuredData from "../../components/seo/StructuredData"
+
 export default function Detail({ jobDetail, relatedJobs }) {
 
   const router = useRouter()
@@ -22,6 +24,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
   return (
     <>
       <ToastContainer />
+      <StructuredData type="JobPosting" data={StructuredData.JobPosting(jobDetail, t)} />
       <section className="top-links-sec ort-general">
         <div className="container">
           <div className="row">

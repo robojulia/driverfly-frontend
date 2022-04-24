@@ -39,17 +39,20 @@ export default function Settings() {
     initialValues: {
       name: null,
       about: null,
+      website: null,
       photo: null,
     },
     validationSchema: yup.object({
       name: yup.string().required(t("this_field_is_required")).nullable(),
       about: yup.string().nullable(),
+      website: yup.string().url(t("MUST_BE_A_VALID_URL")).nullable(),
       photo: yup.object({}).nullable(),
     }),
     onSubmit: async (values) => {
       const dto = {
         name: values.name,
         about: values.about,
+        website: values.website,
         photo: values.photo?.file_base64 ? {
           visibility: values.photo.visibility,
           name: values.photo.name,
@@ -94,6 +97,7 @@ export default function Settings() {
     form.setValues({
       name: company.name,
       about: company.about,
+      website: company.website,
       photo: company.photo
     });
   }, []);
@@ -176,6 +180,17 @@ export default function Settings() {
                 value={form.values.name}
                 touched={form.touched.name}
                 error={form.errors.name}
+                onChange={form.handleChange}
+                handleBlur={form.handleBlur}
+                />
+              <BaseInput
+                className="col-12"
+                label={t("WEBSITE")}
+                name={`website`}
+                placeholder="http://www.example.com"
+                value={form.values.website}
+                touched={form.touched.website}
+                error={form.errors.website}
                 onChange={form.handleChange}
                 handleBlur={form.handleBlur}
                 />
