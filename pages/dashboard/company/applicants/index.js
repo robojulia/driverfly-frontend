@@ -244,7 +244,7 @@ export default function Applicants() {
      * @param {React.MouseEvent<HTMLButtonElement>} e 
      */
     const onViewClick = (e) => {
-        const { name } = e.target;
+        const { name } = e.currentTarget;
 
         router.push(`${router.pathname}/${name}`);
     }

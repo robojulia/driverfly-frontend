@@ -13,6 +13,7 @@ export interface DocumentEntity {
     type: string;
     documentable_id: number;
     documentable_type: string;
+    created_at: string;
     // user: UserEntity;
   }
   

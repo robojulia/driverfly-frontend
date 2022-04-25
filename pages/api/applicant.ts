@@ -1,4 +1,5 @@
 import { ApplicantStatus } from "../../enums/applicants/ApplicantStatus.enum";
+import { ApplicantNoteEntity } from "../../models/applicant/applicant-note.entity";
 import { ApplicantEntity } from "../../models/applicant/applicant.entity";
 import BaseApi from "./_baseApi";
 
@@ -39,6 +40,11 @@ export default class ApplicantApi extends BaseApi {
         },
         updateStatus: async (id: number, status: ApplicantStatus) : Promise<ApplicantEntity> => {
             const { data } = await this.put(this.buildUrl(this.company.baseUrl + `/${id}/status`), { status });
+
+            return data;
+        },
+        createNote: async (id: number, dto: { text: string }) : Promise<ApplicantNoteEntity> => {
+            const { data } = await this.post(this.buildUrl(this.company.baseUrl) + `/${id}/note`, dto);
 
             return data;
         }

@@ -7,6 +7,7 @@ import { DriverLicenseType } from '../../enums/drivers/driver-license-type.enum'
 import { ApplicantEquipmentEntity } from './applicant-equipment.entity';
 import { DriverDegree } from '../../enums/drivers/driver-degree.enum';
 import { ApplicantEmployerEntity } from './applicant-employer.entity';
+import { ApplicantNoteEntity } from './applicant-note.entity';
 
 export interface ApplicantEntity {
   id?: number;
@@ -54,6 +55,8 @@ export interface ApplicantEntity {
   equipment_experience?: ApplicantExperienceEntity[];
   equipment_owned?: ApplicantEquipmentEntity[];
   employers?: ApplicantEmployerEntity[];
+  notes?: ApplicantNoteEntity[];
+  other_applications?: ApplicantEntity[];
   created_at?: string;
   last_updated_at?: string;
 }
