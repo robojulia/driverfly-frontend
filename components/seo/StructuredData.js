@@ -174,8 +174,8 @@ postgraduate degree
             });
         });
 
-        if (data.educationalRequirements.length == 0) delete data.educationRequirements;
-        else if (data.educationRequirements.length == 1)
+        if (data.educationalRequirements?.length == 0) delete data.educationRequirements;
+        else if (data.educationRequirements?.length == 1)
             data.educationRequirements = data.educationRequirements[0];
     }
 
