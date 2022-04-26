@@ -10,7 +10,7 @@ import Modal from "react-bootstrap/Modal"
 import Button from "react-bootstrap/Button"
 
 
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import {ArrowLeft} from 'react-bootstrap-icons';
 
 import VehicleApi from "../../../../api/vehicle";
 import DocumentApi from "../../../../api/document";
@@ -242,7 +242,7 @@ export default function Vehicle() {
     <>
       <ToastContainer />
       <h2>
-        <span style={{cursor: "pointer"}} onClick={handleBack}><ArrowBackIosNewIcon /></span>
+        <span style={{cursor: "pointer"}} onClick={handleBack}><ArrowLeft /></span>
           {t(id ? "EDIT_VEHICLE" : "CREATE_VEHICLE")}
         </h2>
       <div className="container_fluid">
