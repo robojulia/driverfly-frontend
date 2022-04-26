@@ -2,12 +2,6 @@
 import { Button, Nav, Navbar, Container, NavDropdown, Item, NavItem, Dropdown } from "react-bootstrap";
 import Link from "next/link";
 import { useRouter } from "next/router";
-
-import EmojiTransportationIcon from '@mui/icons-material/EmojiTransportation';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import MyLocationIcon from '@mui/icons-material/MyLocation';
-import PersonIcon from '@mui/icons-material/Person';
-
 import { Building, CardImage, PersonFill, GearFill} from 'react-bootstrap-icons';
 
 
