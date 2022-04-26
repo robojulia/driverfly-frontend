@@ -2,16 +2,8 @@
 import { Button, Nav, Navbar, Container, NavDropdown, Item, NavItem, Dropdown } from "react-bootstrap";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { HouseFill, BagFill,  GearFill,  FileEarmarkFill, FileEarmarkMedicalFill,} from 'react-bootstrap-icons';
 
-import HomeIcon from '@mui/icons-material/Home';
-import WorkIcon from '@mui/icons-material/Work';
-import PeopleIcon from '@mui/icons-material/People';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import EmailIcon from '@mui/icons-material/Email';
-import ContactPageIcon from '@mui/icons-material/ContactPage';
-import GppGoodIcon from '@mui/icons-material/GppGood';
-import SettingsIcon from '@mui/icons-material/Settings';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 import { useTranslation } from "react-i18next";
 
@@ -23,18 +15,18 @@ export default function Sidebar() {
   const menu_options = [
     {
       pathname: "/dashboard/company",
-      icon: HomeIcon,
+      icon: HouseFill,
       text: t("dashboard")
     },
     {
       pathname: "/dashboard/company/jobs",
-      icon: WorkIcon,
+      icon: BagFill,
       text: t("JOB_LISTINGS"),
       startsWith: true
     },
     {
       pathname: "/dashboard/company/applicants",
-      icon: PeopleIcon,
+      icon: FileEarmarkFill,
       text: t("APPLICANTS"),
       startsWith: true
     },
@@ -60,7 +52,7 @@ export default function Sidebar() {
     // },
     {
       pathname: "/dashboard/company/settings",
-      icon: SettingsIcon,
+      icon: GearFill,
       text: t("SETTINGS"),
       startsWith: true,
     },

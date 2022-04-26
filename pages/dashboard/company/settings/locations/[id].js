@@ -7,8 +7,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useTranslation } from "react-i18next";
 
-
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import {ArrowLeft} from 'react-bootstrap-icons';
 
 import LocationApi from "../../../../api/location";
 import { useRouter } from "next/router"
@@ -122,7 +121,7 @@ export default function Location() {
     <>
       <ToastContainer />
       <h2>
-        <span style={{cursor: "pointer"}} onClick={handleBack}><ArrowBackIosNewIcon /></span>
+        <span style={{cursor: "pointer"}} onClick={handleBack}><ArrowLeft /></span>
           {t(id ? "EDIT_LOCATION" : "CREATE_LOCATION")}
         </h2>
       <div className="container_fluid">
