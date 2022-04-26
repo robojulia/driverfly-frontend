@@ -2,7 +2,7 @@
 import { Button, Nav, Navbar, Container, NavDropdown, Item, NavItem, Dropdown } from "react-bootstrap";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Building, CardImage, PersonFill, GearFill} from 'react-bootstrap-icons';
+import { Building, CardImage, PersonFill, GeoAltFill} from 'react-bootstrap-icons';
 
 
 import { useTranslation } from "react-i18next";
@@ -26,7 +26,7 @@ export default function SettingsSidebar() {
       },
       {
         pathname: "/dashboard/company/settings/locations",
-        icon: GearFill,
+        icon: GeoAltFill,
         text: t("LOCATIONS"),
         startsWith: true
       },
