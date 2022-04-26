@@ -8,6 +8,9 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import PersonIcon from '@mui/icons-material/Person';
 
+import { Building, CardImage, PersonFill, GearFill} from 'react-bootstrap-icons';
+
+
 import { useTranslation } from "react-i18next";
 
 export default function SettingsSidebar() {
@@ -18,24 +21,24 @@ export default function SettingsSidebar() {
   const menu_options = [
       {
           pathname: "/dashboard/company/settings",
-          icon: EmojiTransportationIcon,
+          icon: Building,
           text: t("company")
       },
       {
           pathname: "/dashboard/company/settings/vehicles",
-          icon: LocalShippingIcon,
+          icon: CardImage,
           text: t("VEHICLES"),
           startsWith: true
       },
       {
         pathname: "/dashboard/company/settings/locations",
-        icon: MyLocationIcon,
+        icon: GearFill,
         text: t("LOCATIONS"),
         startsWith: true
       },
       {
         pathname: "/dashboard/company/settings/profile",
-        icon: PersonIcon,
+        icon: PersonFill,
         text: t("MY_PROFILE"),
       },
   ];

@@ -8,8 +8,9 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useTranslation } from "react-i18next";
 
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from "@mui/icons-material/Delete";
+
+import {PenFill, TrashFill} from 'react-bootstrap-icons';
+
 
 import LocationApi from "../../../../api/location";
 import LocationEntity from "../../../../../models/company/location.entity";
@@ -118,10 +119,10 @@ export default function LocationList() {
                           <td>{v.zip_code}</td>
                           <td>
                             <button name={v.id} className="btn" onClick={onEditClick}>
-                              <EditIcon />
+                              <PenFill />
                             </button>
                             <button name={v.id} className="btn" onClick={onDeleteClick}>
-                              <DeleteIcon />
+                              <TrashFill />
                             </button>
                           </td>
                         </tr>

@@ -7,10 +7,8 @@ import { useEffect } from "react";
 import { useState } from "react";
 import React from "react";
 
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from "@mui/icons-material/Delete";
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import PreviewIcon from '@mui/icons-material/Preview';
+import {PenFill, TrashFill, Eye, EyeFill} from 'react-bootstrap-icons';
+
 
 import JobApi from "../../../api/job";
 import { useTranslation } from "react-i18next";
@@ -155,19 +153,19 @@ export default function JobListing() {
                                                                 options={[
                                                                     {
                                                                         onClick: e => onViewApplicantsClick(job.id),
-                                                                        label: (<><VisibilityIcon /> {t("VIEW_{name}", { name: t("APPLICANTS") })}</>)
+                                                                        label: (<><EyeFill /> {t("VIEW_{name}", { name: t("APPLICANTS") })}</>)
                                                                     },
                                                                     {
                                                                         onClick: e => onPreviewClick(job.id),
-                                                                        label: (<><PreviewIcon /> {t("VIEW_{name}", { name: t("POST") })}</>)
+                                                                        label: (<><Eye /> {t("VIEW_{name}", { name: t("POST") })}</>)
                                                                     },
                                                                     {
                                                                         onClick: e => onEditClick(job.id),
-                                                                        label: (<><EditIcon /> {t("EDIT")}</>)
+                                                                        label: (<><PenFill /> {t("EDIT")}</>)
                                                                     },
                                                                     {
                                                                         onClick: e => onDeleteClick(job.id),
-                                                                        label: (<><DeleteIcon /> {t("DELETE")}</>)
+                                                                        label: (<><TrashFill /> {t("DELETE")}</>)
                                                                     },
                                                                 ]}
                                                                 />
