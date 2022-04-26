@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from "next/router"
 import axios from "axios"
 import useAuth from '../hooks/useAuth'
@@ -15,6 +15,8 @@ import { preventNegative } from "../utils/input"
 import BaseCheck from './forms/BaseCheck'
 import Link from 'next/link'
 import { Row } from 'react-bootstrap'
+import { DriverDegree } from '../enums/drivers/driver-degree.enum'
+import { getBase64 } from '../utils/file'
 
 
 export default function JobApply({ job }) {
@@ -34,38 +36,32 @@ export default function JobApply({ job }) {
       last_name: user.last_name ?? "",
       contact_number: user.contact_number ?? "",
       email: user.email ?? "",
-      qualifications: user.qualification ?? "",
-      voilations: user.voilations ?? "",
-      cdl_experience: user.cdl_experience ?? "",
-      drug_test: user.drug_test ?? false,
+      highest_degree: "",
+      voilations: 0,
+      cdl_experience: 0,
+      drug_test: false,
+
+      /* //To Do - Either will be able to create new account or not
       createAccount: false,
       password: null,
       confirmPassword: null,
-      DRIVER_LICENSE: {
-        type: "DRIVER_LICENSE",
-        file: null,
-      },
-      MEDICAL_CARD: {
-        type: "MEDICAL_CARD",
-        file: null,
-      },
-      RESUME: {
-        type: "RESUME",
-        file: null,
-      },
-      MVR: {
-        type: "MVR",
-        file: null,
-      },
+      */
+
+      DRIVER_LICENSE: null,
+      MEDICAL_CARD: null,
+      RESUME: null,
+      MVR: null,
     },
     validationSchema: yup.object({
       first_name: yup.string().required(t("{name}_field_is_required", { name: t('first_name') })).nullable(),
       last_name: yup.string().required(t("{name}_field_is_required", { name: t('last_name') })).nullable(),
       contact_number: yup.string().required(t("{name}_field_is_required", { name: t('contact_number') })).nullable(),
       email: yup.string().required(t("{name}_field_is_required", { name: t('email') })).nullable(),
-      qualifications: yup.string().required(t("{name}_field_is_required", { name: t('qualifications') })).nullable(),
+      highest_degree: yup.string().required(t("{name}_field_is_required", { name: t('highest_degree') })).nullable(),
       voilations: yup.string().required(t("{name}_field_is_required", { name: t('voilations') })).nullable(),
       cdl_experience: yup.string().required(t("{name}_field_is_required", { name: t('cdl_experience') })).nullable(),
+
+      /* //To Do - Either will be able to create new account or not
       password: yup.string().when("createAccount", {
         is: true,
         then: yup.string().required(t("{name}_field_is_required", { name: t('cdl_experience') })).nullable()
@@ -84,102 +80,12 @@ export default function JobApply({ job }) {
           }
         }).nullable(),
       }).nullable(),
+      */
 
-      DRIVER_LICENSE: yup.object({
-        file: yup.mixed()
-          .test({
-            test: (value, context) => {
-              if (!value) {
-                return context.createError({
-                  path: context.path,
-                  message: t("{name}_field_is_required", { name: t('drivers_license') })
-                })
-              }
-              if (!(["application/pdf"].includes(value.type))) {
-                return context.createError({
-                  path: context.path,
-                  message: t("{name}_file_must_be_{file}", {
-                    name: t('drivers_license'),
-                    file: t('pdf'),
-                  })
-                });
-              }
-              return true
-            }
-          }),
-      }),
-
-      MEDICAL_CARD: yup.object({
-        file: yup.mixed()
-          .test({
-            test: (value, context) => {
-              if (!value) {
-                return context.createError({
-                  path: context.path,
-                  message: t("{name}_field_is_required", { name: t('medical_card') })
-                })
-              }
-              if (!(["application/pdf"].includes(value.type))) {
-                return context.createError({
-                  path: context.path,
-                  message: t("{name}_file_must_be_{file}", {
-                    name: t('medical_card'),
-                    file: t('pdf'),
-                  })
-                });
-              }
-              return true
-            }
-          }),
-      }),
-
-      RESUME: yup.object({
-        file: yup.mixed()
-          .test({
-            test: (value, context) => {
-              if (!value) {
-                return context.createError({
-                  path: context.path,
-                  message: t("{name}_field_is_required", { name: t('resume') })
-                })
-              }
-              if (!(["application/pdf"].includes(value.type))) {
-                return context.createError({
-                  path: context.path,
-                  message: t("{name}_file_must_be_{file}", {
-                    name: t('resume'),
-                    file: t('pdf'),
-                  })
-                });
-              }
-              return true
-            }
-          }),
-      }),
-
-      MVR: yup.object({
-        file: yup.mixed()
-          .test({
-            test: (value, context) => {
-              if (!value) {
-                return context.createError({
-                  path: context.path,
-                  message: t("{name}_field_is_required", { name: t('motor_vehicle_record') })
-                })
-              }
-              if (!(["application/pdf"].includes(value.type))) {
-                return context.createError({
-                  path: context.path,
-                  message: t("{name}_file_must_be_{file}", {
-                    name: t('motor_vehicle_record'),
-                    file: t('pdf'),
-                  })
-                });
-              }
-              return true
-            }
-          }),
-      }),
+      DRIVER_LICENSE: yup.object({}).nullable(),
+      MEDICAL_CARD: yup.object({}).nullable(),
+      RESUME: yup.object({}).nullable(),
+      MVR: yup.object({}).nullable(),
 
     }),
     onSubmit: async (values) => {
@@ -188,50 +94,41 @@ export default function JobApply({ job }) {
         last_name: values.last_name,
         email: user.email || values.email,
         phone: values.contact_number,
-        qualifications: values.qualifications,
-        violations_count: parseInt(values.voilations),
+        highest_degree: values.highest_degree,
+        accident_count: parseInt(values.voilations),
         years_cdl_experience: parseInt(values.cdl_experience),
-        drug_test: values.drug_test,
-        createAccount: values.createAccount,
-        password: values.password,
+        can_pass_drug_test: values.drug_test,
+
+
+        drivers_license: values.DRIVER_LICENSE?.file_base64 ? {
+          visibility: values.DRIVER_LICENSE.visibility,
+          name: values.DRIVER_LICENSE.name,
+          mime_type: values.DRIVER_LICENSE.mime_type,
+          file_base64: values.DRIVER_LICENSE.file_base64
+        } : null,
+
+        medical_card: values.MEDICAL_CARD?.file_base64 ? {
+          visibility: values.MEDICAL_CARD.visibility,
+          name: values.MEDICAL_CARD.name,
+          mime_type: values.MEDICAL_CARD.mime_type,
+          file_base64: values.MEDICAL_CARD.file_base64
+        } : null,
+
+        resume: values.RESUME?.file_base64 ? {
+          visibility: values.RESUME.visibility,
+          name: values.RESUME.name,
+          mime_type: values.RESUME.mime_type,
+          file_base64: values.RESUME.file_base64
+        } : null,
+
+        mvr: values.MVR?.file_base64 ? {
+          visibility: values.MVR.visibility,
+          name: values.MVR.name,
+          mime_type: values.MVR.mime_type,
+          file_base64: values.MVR.file_base64
+        } : null,
       };
 
-      const formData = new FormData()
-      formData.set('first_name', values.first_name)
-      formData.set('last_name', values.last_name)
-      formData.set('email', user.email || values.email)
-      formData.set('phone', values.contact_number)
-      formData.set('qualifications', values.qualifications)
-      formData.set('violations_count', parseInt(values.voilations))
-      formData.set('years_cdl_experience', parseInt(values.cdl_experience))
-      formData.set('drug_test', values.drug_test)
-      formData.set('createAccount', values.createAccount)
-      formData.set('password', values.password)
-      Object.values(values).forEach(v => {
-        if (v && v.file) {
-          console.log("v", v);
-          switch (v.type) {
-            case "DRIVER_LICENSE":
-              formData.append('commercial_driving_license', v.file);
-              break;
-            case "MEDICAL_CARD":
-              formData.append('medical_card', v.file);
-              break;
-            case "RESUME":
-              formData.append('resume', v.file);
-              break;
-            case "MVR":
-              formData.append('mvr_record', v.file);
-              break;
-          }
-        }
-      });
-
-      // await baseApi.post(`jobs/${job.id}/apply`, formData, {
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data'
-      //   }
-      // })
       await jobApi.applyForJob(job.id, userDto)
         .then(data => {
           if (data.status == 201) {
@@ -240,6 +137,7 @@ export default function JobApply({ job }) {
           }
         })
         .catch(function (error) {
+          closeModal()
           // console.log("error?.response", error?.response);
           if (error?.response?.data?.job == "INVALID_JOB_SPECIFIED") {
             toast.error(t('INVALID_JOB_SPECIFIED'))
@@ -249,10 +147,14 @@ export default function JobApply({ job }) {
             toast.error(t('USER_INACTIVE'))
           } else if (error?.response?.data?.email == "ALREADY_APPLIED") {
             toast.error(t('ALREADY_APPLIED'))
+          } else if (error?.response?.data?.resume == "UNRECOGNIZED_DOCUMENT_TYPE" ||
+            error?.response?.data?.drivers_license == "UNRECOGNIZED_DOCUMENT_TYPE" ||
+            error?.response?.data?.medical_card == "UNRECOGNIZED_DOCUMENT_TYPE" ||
+            error?.response?.data?.mvr == "UNRECOGNIZED_DOCUMENT_TYPE") {
+            toast.error(t('UNRECOGNIZED_DOCUMENT_TYPE'))
           } else {
             toast.error(t('ERROR_MESSAGE_DEFAULT'))
           }
-          closeModal()
         })
     }
   });
@@ -262,23 +164,45 @@ export default function JobApply({ job }) {
     closeButton[0].click()
   }
 
-  const handleFileChange = (e) => {
-    const { target: { name, files } } = e;
-
+  const handleFileChange = async (e) => {
+    const { target: { name, files } } = e
     if (files && files[0]) {
-      const file = files[0];
-      // console.log("file", file);
-
-      apply_form.setValues({
-        ...apply_form.values,
-        [name]: {
-          ...apply_form.values[name],
-          file: file,
-        }
-      });
+      const file = files[0]
+      Promise
+        .resolve(getBase64(file))
+        .then(file_base64 => ({
+          visibility: "PUBLIC",
+          name: file.name,
+          mime_type: file.type,
+          path: URL.createObjectURL(file),
+          file_base64: file_base64
+        })).then((pdfFile) => {
+          apply_form.setFieldValue(name, pdfFile)
+        })
     }
-
   }
+
+  const updateDriverData = async () => {
+    await baseApi.get(`drivers`)
+      .then(({ data: driver }) => {
+        if (driver) {
+          apply_form.setValues({
+            ...apply_form.values,
+            cdl_experience: driver.years_cdl_experience || 0,
+            highest_degree: driver.highest_degree || "",
+            drug_test: driver.can_pass_drug_test || false,
+            voilations: driver.accident_count || 0,
+          });
+        }
+      })
+      .catch(e => {
+        // console.log(e.response)
+      })
+  }
+
+  useEffect(async () => {
+    updateDriverData()
+  }, [])
 
   return (
     <>
@@ -347,16 +271,16 @@ export default function JobApply({ job }) {
                   />
                 </Row>
                 <Row>
-                  <BaseTextArea
-                    className="col-12 mt-3"
-                    label={t("qualifications")}
-                    name="qualifications"
-                    // required
-                    rows="3"
-                    placeholder={t("qualifications")}
-                    value={apply_form.values.qualifications}
-                    touched={apply_form.touched.qualifications}
-                    error={apply_form.errors.qualifications}
+                  <BaseSelect
+                    className="col-12"
+                    label={t("highest_degree")}
+                    placeholder={t("highest_degree")}
+                    name="highest_degree"
+                    value={apply_form.values.highest_degree}
+                    touched={apply_form.touched.highest_degree}
+                    error={apply_form.errors.highest_degree}
+                    enumType={DriverDegree}
+                    labelPrefix="DriverDegree"
                     onChange={apply_form.handleChange}
                     handleBlur={apply_form.handleBlur}
                   />
@@ -370,9 +294,6 @@ export default function JobApply({ job }) {
                     label={t("drivers_license")}
                     placeholder={t("drivers_license")}
                     name="DRIVER_LICENSE"
-                    value={apply_form.values?.DRIVER_LICENSE?.file}
-                    touched={apply_form.touched.DRIVER_LICENSE?.file}
-                    error={apply_form.errors?.DRIVER_LICENSE?.file}
                     onChange={handleFileChange}
                   />
                   <BaseInput
@@ -382,9 +303,6 @@ export default function JobApply({ job }) {
                     label={t("medical_card")}
                     placeholder={t("medical_card")}
                     name="MEDICAL_CARD"
-                    value={apply_form.values.MEDICAL_CARD?.file}
-                    touched={apply_form.touched.MEDICAL_CARD?.file}
-                    error={apply_form.errors?.MEDICAL_CARD?.file}
                     onChange={handleFileChange}
                   />
                 </Row>
@@ -396,9 +314,6 @@ export default function JobApply({ job }) {
                     label={t("resume")}
                     placeholder={t("resume")}
                     name="RESUME"
-                    value={apply_form.values?.RESUME?.file}
-                    touched={apply_form.touched.RESUME?.file}
-                    error={apply_form.errors?.RESUME?.file}
                     onChange={handleFileChange}
                   />
                   <BaseInput
@@ -408,13 +323,11 @@ export default function JobApply({ job }) {
                     label={t("motor_vehicle_record")}
                     placeholder={t("motor_vehicle_record")}
                     name="MVR"
-                    value={apply_form.values.MVR?.file}
-                    touched={apply_form.touched.MVR?.file}
-                    error={apply_form.errors?.MVR?.file}
                     onChange={handleFileChange}
                   />
                 </Row>
                 {/* Files End */}
+
                 <Row>
                   <BaseInput
                     className="col-lg-6 col-12 mt-3"
@@ -445,6 +358,7 @@ export default function JobApply({ job }) {
                     handleBlur={apply_form.handleBlur}
                   />
                 </Row>
+
                 <Row>
                   <BaseCheck
                     className="col-12 mt-4"
@@ -457,6 +371,8 @@ export default function JobApply({ job }) {
                     error={apply_form.errors.drug_test}
                   />
                 </Row>
+
+                {/* //To Do - Either will be able to create new account or not
                 {
                   !user &&
                   <>
@@ -505,6 +421,8 @@ export default function JobApply({ job }) {
                     </Row>
                   </>
                 }
+                 */}
+
                 <Row>
                   <div className=" col-12">
                     <p className='mx-3 mt-5'>{t('i_accept_{terms_and_condition}', { terms_and_condition: t('terms_and_condition') })}</p>

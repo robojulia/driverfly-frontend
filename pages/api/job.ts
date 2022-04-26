@@ -1,7 +1,9 @@
+import { DriverLicenseType } from "../../enums/drivers/driver-license-type.enum";
 import { LocationEntity } from "../../models/company/location.entity";
 import VehicleEntity from "../../models/company/vehicle.entity";
 import { JobEntity } from "../../models/job/job.entity";
 import BaseApi from "./_baseApi";
+import { ApplyJobDto } from "../../models/job/apply-job.dto"
 
 export default class JobApi extends BaseApi {
     baseUrl: string = "jobs";
@@ -37,8 +39,7 @@ export default class JobApi extends BaseApi {
         return data;
     }
 
-    async applyForJob(id: number, body) {
-        const data = await this.post(`${this.baseUrl}/${id}/apply`, body);
-        return data;
+    async applyForJob(id: number, body: ApplyJobDto) {
+        return await this.post(`${this.baseUrl}/${id}/apply`, body)
     }
 }
