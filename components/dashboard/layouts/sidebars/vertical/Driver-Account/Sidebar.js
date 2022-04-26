@@ -3,18 +3,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React from 'react';
 import { ArrowRight } from 'react-bootstrap-icons';
-import HomeIcon from '@mui/icons-material/Home';
-import PersonIcon from '@mui/icons-material/Person';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import DocumentScannerIcon from '@mui/icons-material/DocumentScanner';
-import WorkIcon from '@mui/icons-material/Work';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import WorkHistoryIcon from '@mui/icons-material/WorkHistory';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import StarIcon from '@mui/icons-material/Star';
-import SearchIcon from '@mui/icons-material/Search';
-
-
 import { HouseFill, BagFill, PersonFill, FileEarmarkFill, FileEarmarkMedicalFill, CheckSquareFill, StarFill, Search} from 'react-bootstrap-icons';
 
 
