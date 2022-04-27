@@ -1,5 +1,4 @@
-import ArrowBackIosNew from "@mui/icons-material/ArrowBackIosNew";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { ArrowLeft,ArrowsExpand} from 'react-bootstrap-icons';
 import { toast, ToastContainer } from "react-toastify";
 
 import { useRouter } from "next/router";
@@ -27,7 +26,8 @@ import ViewTable from "../../../../components/viewDetails/viewTable";
 import ViewPdf from "../../../../components/viewDetails/viewPdf";
 import ViewCard from "../../../../components/viewDetails/viewCard";
 import { useTranslation } from "react-i18next";
-import AddIcon from '@mui/icons-material/Add';
+import { Plus} from 'react-bootstrap-icons';
+
 import { useFormik } from "formik";
 import * as yup from "yup";
 import "../../../../utils/yup";
@@ -116,7 +116,7 @@ export default function Applicant() {
             <div>
                 <h2>
                     <span style={{cursor: "pointer"}} onClick={router.back}>
-                         <ArrowBackIosNew />
+                         <ArrowLeft />
                          {t("GO_BACK")}
                     </span>
                 </h2>
@@ -195,7 +195,7 @@ export default function Applicant() {
                                         defaultExpanded={i === 0}
                                         >
                                         <AccordionSummary
-                                            expandIcon={<ExpandMoreIcon />}
+                                            expandIcon={<ArrowsExpand />}
                                         >
                                             {e.name || t("UNKNOWN")}
                                         </AccordionSummary>
@@ -339,7 +339,7 @@ export default function Applicant() {
                                         notes: "NOTES",
                                         user: "USER",
                                         date: "DATE",
-                                        add: <a href="#" onClick={addNoteClick}><AddIcon /></a>
+                                        add: <a href="#" onClick={addNoteClick}><Plus /></a>
                                     }}
                                     items={applicant?.notes?.map(v => ({
                                         notes: v.text,
