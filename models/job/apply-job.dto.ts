@@ -46,8 +46,7 @@ export interface ApplyJobDto {
 
     /**
      * @IsOptional
+     * @IsArray
      */
-     documents?: ApplicantDocumentDto;
-
-
+    documents?: ApplicantDocumentDto;
 }
