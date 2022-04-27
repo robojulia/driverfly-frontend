@@ -8,14 +8,15 @@ import { ApplicantEquipmentEntity } from './applicant-equipment.entity';
 import { DriverDegree } from '../../enums/drivers/driver-degree.enum';
 import { ApplicantEmployerEntity } from './applicant-employer.entity';
 import { ApplicantNoteEntity } from './applicant-note.entity';
+import { ApplicantType } from '../../enums/applicants/applicant-type.enum';
+import { ApplicantJobEntity } from './applicant-job.entity';
 
 export interface ApplicantEntity {
   id?: number;
   version?: number;
   user?: UserEntity;
   company?: CompanyEntity;
-  job?: JobEntity;
-  status?: string;
+  type?: ApplicantType;
   first_name?: string;
   last_name?: string;
   phone?: string;
@@ -25,9 +26,6 @@ export interface ApplicantEntity {
   city?: string;
   state?: string;
   zip_code?: string;
-  resume?: DocumentEntity;
-  drivers_license?: DocumentEntity;
-  medical_card?: DocumentEntity;
   license_number?: string;
   license_expiry?: string;
   license_state?: string;
@@ -55,8 +53,9 @@ export interface ApplicantEntity {
   equipment_experience?: ApplicantExperienceEntity[];
   equipment_owned?: ApplicantEquipmentEntity[];
   employers?: ApplicantEmployerEntity[];
+  jobs?: ApplicantJobEntity[];
   notes?: ApplicantNoteEntity[];
-  other_applications?: ApplicantEntity[];
+  documents?: DocumentEntity[];
   created_at?: string;
   last_updated_at?: string;
 }

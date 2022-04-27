@@ -1,5 +1,4 @@
-import ArrowBackIosNew from "@mui/icons-material/ArrowBackIosNew";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { ArrowLeft,ArrowsExpand} from 'react-bootstrap-icons';
 import { toast, ToastContainer } from "react-toastify";
 
 import { useRouter } from "next/router";
@@ -20,14 +19,15 @@ import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 
 import { calculateAge, dateRange } from "../../../../utils/date";
 import { buildAddress } from "../../../../utils/common";
-import { ApplicantStatus } from "../../../../enums/applicants/ApplicantStatus.enum";
+import { ApplicantStatus } from "../../../../enums/applicants/applicant-status.enum";
 
 import ShowEnumFromString from "../../../../components/enum-filters/show-enum-from-string";
 import ViewTable from "../../../../components/viewDetails/viewTable";
 import ViewPdf from "../../../../components/viewDetails/viewPdf";
 import ViewCard from "../../../../components/viewDetails/viewCard";
 import { useTranslation } from "react-i18next";
-import AddIcon from '@mui/icons-material/Add';
+import { Plus} from 'react-bootstrap-icons';
+
 import { useFormik } from "formik";
 import * as yup from "yup";
 import "../../../../utils/yup";
@@ -52,7 +52,7 @@ export default function Applicant() {
         if (id) {
             const api = new ApplicantApi();
 
-            const data = await api.company.getById(id);
+            const data = await api.getById(id);
 
             if (!data) {
                 toast.error(t("UNABLE_TO_FIND_{name}", { name: t("APPLICANT") }));
@@ -88,7 +88,7 @@ export default function Applicant() {
         onSubmit: async (values) => {
             const api = new ApplicantApi();
 
-            const note = await api.company.createNote(applicant.id, { text: values.text });
+            const note = await api.notes.create(applicant.id, { text: values.text });
 
             addNoteForm.setValues({
                 text: null
@@ -116,7 +116,7 @@ export default function Applicant() {
             <div>
                 <h2>
                     <span style={{cursor: "pointer"}} onClick={router.back}>
-                         <ArrowBackIosNew />
+                         <ArrowLeft />
                          {t("GO_BACK")}
                     </span>
                 </h2>
@@ -195,7 +195,7 @@ export default function Applicant() {
                                         defaultExpanded={i === 0}
                                         >
                                         <AccordionSummary
-                                            expandIcon={<ExpandMoreIcon />}
+                                            expandIcon={<ArrowsExpand />}
                                         >
                                             {e.name || t("UNKNOWN")}
                                         </AccordionSummary>
@@ -286,10 +286,10 @@ export default function Applicant() {
                                         status: "STATUS",
                                         date_applied: "DATE_APPLIED"
                                     }}
-                                    items={applicant?.other_applications?.map(a => ({
-                                        title: <Link href={`/jobs/${a.job.id}`}><a>{a.job.title}</a></Link>,
-                                        status: <ShowEnumFromString skipLowerCase popover={true} str={a.status} labelPrefix="ApplicantStatus" enumArray={ApplicantStatus} />,
-                                        date_applied: new Date(a.created_at).toDateString()
+                                    items={applicant?.jobs?.map(aJob => ({
+                                        title: <Link href={`/jobs/${aJob.job.id}`}><a>{aJob.job.title}</a></Link>,
+                                        status: <ShowEnumFromString skipLowerCase popover={true} str={aJob.status} labelPrefix="ApplicantStatus" enumArray={ApplicantStatus} />,
+                                        date_applied: new Date(aJob.created_at).toDateString()
                                     }))}
                                 />
                             </ViewCard>
@@ -318,16 +318,11 @@ export default function Applicant() {
                                         document: "DOCUMENT",
                                         date_added: "DATE_ADDED"
                                     }}
-                                    items={["resume", "drivers_license", "medical_card"]
-                                        .map((v, i) => {
-                                            const document = applicant && applicant[v];
-                                            if (document)
-                                                return {
-                                                    document: <a onClick={() => viewDocumentClick(document.id, v.toUpperCase())} href="#">{t(v.toUpperCase())}</a>,
-                                                    date_added: new Date(document.created_at).toDateString()
-                                                };
-                                        })
-                                        .filter(v => !!v)}
+                                    items={
+                                        applicant?.documents?.map(document => ({
+                                            document: <a onClick={() => viewDocumentClick(document.id, v.toUpperCase())} href="#">{t(v.toUpperCase())}</a>,
+                                            date_added: new Date(document.created_at).toDateString()
+                                        }))}
                                     />
                             </ViewCard>
                         </Col>
@@ -339,7 +334,7 @@ export default function Applicant() {
                                         notes: "NOTES",
                                         user: "USER",
                                         date: "DATE",
-                                        add: <a href="#" onClick={addNoteClick}><AddIcon /></a>
+                                        add: <a href="#" onClick={addNoteClick}><Plus /></a>
                                     }}
                                     items={applicant?.notes?.map(v => ({
                                         notes: v.text,

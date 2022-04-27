@@ -52,7 +52,6 @@
     display: block;
     color: #5dcac4;
     margin-left: 10px;
-    margin-top: 5px;
     font-weight: 500;
 }
 
@@ -389,7 +388,7 @@ textarea {
     float: left;
     color: #5dcac4;
     margin-right: 20px;
-    height: 30px;
+    height: 25px;
     width: 30px;
 }
 
