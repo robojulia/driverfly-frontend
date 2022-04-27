@@ -3,16 +3,16 @@ import DocumentApi from "../../pages/api/document";
 
 export default function CompanyPhoto(props) {
 
-    const [url, setUrl] = useState("/driverfly-logo-square.png")
+    const [photo, setPhoto] = useState("/driverfly-logo-square.png")
+    // console.log("props.company", props.company);
 
     useEffect(async () => {
         const api = new DocumentApi();
-        if (false) {
-        // if (props.company?.photo?.[0]?.id) {
-            await api.getSignedUrl(props.company?.photo?.[0]?.id)
-                .then(document => {
-                    console.log("url", document.path);
-                    setUrl(document.path || "/driverfly-logo-square.png")
+        if (props.company) {
+            await api.getCompanyPhoto(props.company.id)
+                .then(base64 => {
+                    // console.log("base64", base64);
+                    setPhoto(base64 || "/driverfly-logo-square.png")
                 }).catch(error => {
                     console.error("error", error);
                 })
@@ -22,7 +22,7 @@ export default function CompanyPhoto(props) {
     return <>
         <img
             className={props.className}
-            src={url}
+            src={photo}
             alt="Company Image" />
     </>
 }
