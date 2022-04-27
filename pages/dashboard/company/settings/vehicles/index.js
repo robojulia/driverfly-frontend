@@ -8,8 +8,8 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useTranslation } from "react-i18next";
 
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from "@mui/icons-material/Delete";
+import {PenFill, TrashFill} from 'react-bootstrap-icons';
+
 
 import VehicleApi from "../../../../api/vehicle";
 import { VehicleType } from "../../../../../enums/vehicles/vehicle-type.enum";
@@ -135,10 +135,10 @@ export default function VehicleList() {
                           </td>
                           <td>
                             <button name={v.id} className="btn" onClick={onEditClick}>
-                              <EditIcon />
+                              <PenFill />
                             </button>
                             <button name={v.id} className="btn" onClick={onDeleteClick}>
-                              <DeleteIcon />
+                              <TrashFill />
                             </button>
                           </td>
                         </tr>

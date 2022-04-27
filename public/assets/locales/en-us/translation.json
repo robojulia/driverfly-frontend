@@ -208,6 +208,7 @@
     "{name}_field_is_required": "{{name}} is required",
     "{name}_file_must_be_{file}": "{{name}} must be of type {{file}}",
     "pdf": "PDF",
+    "UNRECOGNIZED_DOCUMENT_TYPE": "UNRECOGNIZED DOCUMENT TYPE",
     "please_select_0_or_above": "Please select 0 or above",
     "successfully_saved_information": "Successfully saved your information",
     "unable_to_save_information": "Unable to save your information",

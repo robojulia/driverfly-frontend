@@ -2,11 +2,8 @@
 import { Button, Nav, Navbar, Container, NavDropdown, Item, NavItem, Dropdown } from "react-bootstrap";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { Building, CardImage, PersonFill, GeoAltFill} from 'react-bootstrap-icons';
 
-import EmojiTransportationIcon from '@mui/icons-material/EmojiTransportation';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import MyLocationIcon from '@mui/icons-material/MyLocation';
-import PersonIcon from '@mui/icons-material/Person';
 
 import { useTranslation } from "react-i18next";
 
@@ -18,24 +15,24 @@ export default function SettingsSidebar() {
   const menu_options = [
       {
           pathname: "/dashboard/company/settings",
-          icon: EmojiTransportationIcon,
+          icon: Building,
           text: t("company")
       },
       {
           pathname: "/dashboard/company/settings/vehicles",
-          icon: LocalShippingIcon,
+          icon: CardImage,
           text: t("VEHICLES"),
           startsWith: true
       },
       {
         pathname: "/dashboard/company/settings/locations",
-        icon: MyLocationIcon,
+        icon: GeoAltFill,
         text: t("LOCATIONS"),
         startsWith: true
       },
       {
         pathname: "/dashboard/company/settings/profile",
-        icon: PersonIcon,
+        icon: PersonFill,
         text: t("MY_PROFILE"),
       },
   ];

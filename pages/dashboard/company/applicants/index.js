@@ -1,17 +1,13 @@
-import LogoutButton from '../../../../components/buttons/Logout';
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
-import download from "../../../../public/dashboard/assets/images/download/download.png";
 import Applicant from "../../../../public/dashboard/styles/css/Applicants.module.css"
-import Link from 'next/link';
-import Image from 'next/image';
 import useRedirect from '../../../../hooks/useRedirect';
 
 import { useTranslation } from 'react-i18next';
 
-import VisibilityIcon from '@mui/icons-material/Visibility';
-
 import { FormGroup, FormControlLabel, Switch } from '@mui/material';
+import { EyeFill} from 'react-bootstrap-icons';
+
 
 
 import ApplicantApi from "../../../api/applicant";
@@ -370,7 +366,7 @@ function renderApplicantView(props) {
                     <td>{applicant.email}</td>
                     <td>
                         <button className='btn' name={applicant.id} onClick={onViewClick}>
-                            <VisibilityIcon />
+                            <EyeFill />
                             {t("VIEW")}
                         </button>
                     </td>
@@ -489,7 +485,7 @@ function renderApplicantView(props) {
                                 </td>
                                 <td>
                                     <button className='btn' name={applicant.id} onClick={onViewClick}>
-                                        <VisibilityIcon />
+                                        <EyeFill />
                                         {t("VIEW")}
                                     </button>
                                 </td>
