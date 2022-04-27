@@ -1,4 +1,5 @@
-import { ApplicantStatus } from "../../enums/applicants/ApplicantStatus.enum";
+import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
+import { ApplicantJobEntity } from "../../models/applicant/applicant-job.entity";
 import { ApplicantNoteEntity } from "../../models/applicant/applicant-note.entity";
 import { ApplicantEntity } from "../../models/applicant/applicant.entity";
 import BaseApi from "./_baseApi";
@@ -8,45 +9,38 @@ export default class ApplicantApi extends BaseApi {
     constructor() {
         super();
     }
-    user = {
-        baseUrl:`${this.baseUrl}/user`,
-        list: async (params: { jobId: number }) : Promise<ApplicantEntity[]> => {
-            const { data } = await this.get(this.buildUrl(this.user.baseUrl, params));
 
-            return data;
-        },
-        getById: async (id: number) : Promise<ApplicantEntity> => {
-            const { data } = await this.get(this.buildUrl(this.user.baseUrl + `/${id}`));
+    async list(params: { jobId: number }) : Promise<ApplicantEntity[]> {
+        const { data } = await this.get(this.buildUrl(this.baseUrl + "/list", params));
 
-            return data;
-        },
-        withdraw: async (id: number) : Promise<ApplicantEntity> => {
-            const { data } = await this.put(this.buildUrl(this.user.baseUrl + `/${id}/status`), { status: ApplicantStatus.WITHDRAWN });
+        return data;
+    }
+    async getById(id: number) : Promise<ApplicantEntity> {
+        const { data } = await this.get(this.buildUrl(this.baseUrl + `/${id}`));
+
+        return data;
+    }
+
+    notes = {
+        baseUrl: (applicantId: number) => `${this.baseUrl}/${applicantId}/notes`,
+        create: async (applicantId: number, dto: ApplicantNoteEntity) : Promise<ApplicantNoteEntity> => {
+            const { data } = await this.post(this.notes.baseUrl(applicantId), dto);
 
             return data;
         }
     }
-    company = {
-        baseUrl:`${this.baseUrl}/company`,
-        list: async (params: { jobId: number }) : Promise<ApplicantEntity[]> => {
-            const { data } = await this.get(this.buildUrl(this.company.baseUrl, params));
+
+    jobs = {
+        baseUrl: (applicantId: number) => `${this.baseUrl}/${applicantId}/jobs`,
+        list: async (applicantId: number) => {
+            const { data } = await this.get(this.jobs.baseUrl(applicantId));
 
             return data;
         },
-        getById: async (id: number) : Promise<ApplicantEntity> => {
-            const { data } = await this.get(this.buildUrl(this.company.baseUrl + `/${id}`));
+        update: async (applicantId: number, jobId: number, dto: ApplicantJobEntity) : Promise<ApplicantEntity> => {
+            const { data } = await this.put(this.jobs.baseUrl(applicantId) + `/${jobId}`, dto);
 
             return data;
         },
-        updateStatus: async (id: number, status: ApplicantStatus) : Promise<ApplicantEntity> => {
-            const { data } = await this.put(this.buildUrl(this.company.baseUrl + `/${id}/status`), { status });
-
-            return data;
-        },
-        createNote: async (id: number, dto: { text: string }) : Promise<ApplicantNoteEntity> => {
-            const { data } = await this.post(this.buildUrl(this.company.baseUrl) + `/${id}/note`, dto);
-
-            return data;
-        }
     }
 }

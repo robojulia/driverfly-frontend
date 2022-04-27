@@ -18,7 +18,7 @@ import ApplicantApi from "../../../api/applicant";
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum';
-import { ApplicantStatus } from '../../../../enums/applicants/ApplicantStatus.enum';
+import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
 
 import { JobEntity } from '../../../../models/job/job.entity';
 import { UserEntity } from '../../../../models/user/user.entity';
@@ -80,11 +80,39 @@ export default function Applicants() {
         label: t(`ApplicantStatus.${k}`)
     }));
 
+    /**
+     * 
+     * @param {ApplicantEntity} applicant 
+     * @returns 
+     */
+    const convertApplicant = (applicant) => ({
+        id: applicant.id,
+        first_name: applicant.first_name,
+        last_name: applicant.last_name,
+        name: `${applicant.first_name} ${applicant.last_name}`.trim(),
+        phone: applicant.phone,
+        email: applicant.email,
+    });
+
+    /**
+     * 
+     * @param {ApplicantJobEntity} aJob 
+     */
+    const convertJob = (aJob) => ({
+        id: aJob.job.id,
+        job: aJob.job,
+        title: aJob.job.title,
+        location: `${aJob.job.location.city}, ${aJob.job.location.state}`,
+        geography: aJob.job.geography,
+        employment_type: aJob.job.employment_type,
+        weekly_range: `${numbers.toCurrency(aJob.job.min_weekly_pay)} - ${numbers.toCurrency(aJob.job.max_weekly_pay)}`,
+    });
+
     useEffect(async () => {
         if (!viewMode) return;
         const api = new ApplicantApi();
 
-        const data = await api.company.list({
+        const data = await api.list({
             jobId: jobId
         });
 
@@ -97,27 +125,24 @@ export default function Applicants() {
         if (viewMode === ViewMode.job) {
             // job view mode flips consolodation
             data.forEach(applicant => {
-                /**
-                 * @type {ConsolodatedJob}
-                 */
-                let consolodatedJob = applicantMap[applicant.job.id];
 
-                if (!consolodatedJob) {
-                    consolodatedJob = applicantMap[applicant.job.id] = {
-                        job: applicant.job,
-                        title: applicant.job.title,
-                        location: `${applicant.job.location.city}, ${applicant.job.location.state}`,
-                        geography: applicant.job.geography,
-                        employment_type: applicant.job.employment_type,
-                        weekly_range: `${numbers.toCurrency(applicant.job.min_weekly_pay)} - ${numbers.toCurrency(applicant.job.max_weekly_pay)}`,
-                        applicants: []
-                    };
-                    consolodatedJob.sort = consolodatedJob.title;
-                }
+                applicant.jobs.forEach(aJob => {
+                    let consolodatedJob = applicantMap[aJob.job.id];
 
-                evaluateJobRequirements(applicant);
-                        
-                consolodatedJob.applicants.push(applicant);
+                    if (!consolodatedJob) {
+                        consolodatedJob = applicantMap[aJob.job.id] = {
+                            ...convertJob(aJob),
+                            applicants: []
+                        };
+                        consolodatedJob.sort = consolodatedJob.title;
+                    }
+                    consolodatedJob.applicants.push({
+                        ...convertApplicant(applicant),
+                        created_at: aJob.created_at,
+                        status: aJob.status,
+                        ...evaluateJobRequirements(applicant, aJob.job)
+                    });
+                });
             });
         }
         else {
@@ -126,25 +151,19 @@ export default function Applicants() {
                 /**
                  * @type {ConsolodatedApplicant}
                  */
-                let consolodatedApplicant = applicantMap[applicant.user.id];
+                let consolodatedApplicant = applicantMap[applicant.id] = {
+                    ...convertApplicant(applicant),
+                    jobs: applicant.jobs.map(aJob => {
+                        return {
+                            ...convertJob(aJob),
+                            created_at: aJob.created_at,
+                            status: aJob.status,
+                            ...evaluateJobRequirements(applicant, aJob.job)
+                        };
+                    })
+                };
 
-                if (!consolodatedApplicant) {
-                    consolodatedApplicant = applicantMap[applicant.user.id] = {
-                        user: applicant.user,
-                        first_name: applicant.user.first_name || applicant.first_name,
-                        last_name: applicant.user.last_name || applicant.last_name,
-                        name: `${applicant.user.first_name || applicant.first_name} ${applicant.user.last_name || applicant.last_name}`.trim(),
-                        phone: applicant.user.contact_number || applicant.phone,
-                        email: applicant.user.email || applicant.email,
-                        jobs: []
-                    };
-
-                    consolodatedApplicant.sort = consolodatedApplicant.name;
-                }
-
-                evaluateJobRequirements(applicant);
-                        
-                consolodatedApplicant.jobs.push(applicant);
+                consolodatedApplicant.sort = consolodatedApplicant.name;
             });
         }
 
@@ -166,22 +185,24 @@ export default function Applicants() {
     /**
      * 
      * @param {ApplicantEntity} applicant 
+     * @param {JobEntity} job 
      */
-    function evaluateJobRequirements(applicant) {
+    function evaluateJobRequirements(applicant, job) {
         // calculate if applicant meets basic qualifications:
-        applicant.meets_basic_qualifications = true;
-        applicant.qualification_fail_reason = [];
+        const results = {
+            meets_basic_qualifications: true,
+            qualification_fail_reason: []
+        };
 
-        const { job } = applicant;
         if (applicant.years_cdl_experience < job.min_years_experience) {
-            applicant.meets_basic_qualifications = false;
-            applicant.qualification_fail_reason.push(t("YEARS_OF_CDL_EXPERIENCE_TOO_LOW"));
+            results.meets_basic_qualifications = false;
+            results.qualification_fail_reason.push(t("YEARS_OF_CDL_EXPERIENCE_TOO_LOW"));
         }
 
         if (applicant.accident_count > 0) {
             if (job.must_have_clean_mvr) {
-                applicant.meets_basic_qualifications = false;
-                applicant.qualification_fail_reason.push(t("DOES_NOT_HAVE_CLEAN_MVR"));
+                results.meets_basic_qualifications = false;
+                results.qualification_fail_reason.push(t("DOES_NOT_HAVE_CLEAN_MVR"));
             }
             else {
                 // complicated check around max violations
@@ -195,15 +216,15 @@ export default function Applicants() {
                 });
 
                 if (mvr && mvr.max_count > applicant.accident_count) {
-                    applicant.meets_basic_qualifications = false;
-                    applicant.qualification_fail_reason.push(t("VIOLATION_COUNT_GREATER_THAN_MAX"));
+                    results.meets_basic_qualifications = false;
+                    results.qualification_fail_reason.push(t("VIOLATION_COUNT_GREATER_THAN_MAX"));
                 }
             }
         }
 
         if (!applicant.can_pass_drug_test && job.must_pass_drug_test) {
-            applicant.meets_basic_qualifications = false;
-            applicant.qualification_fail_reason.push(t("CANNOT_PASS_DRUG_TEST"));
+            results.meets_basic_qualifications = false;
+            results.qualification_fail_reason.push(t("CANNOT_PASS_DRUG_TEST"));
         }
 
         job.required_skills.forEach(skill => {
@@ -212,31 +233,33 @@ export default function Applicants() {
                 const experience = applicant.experiences.find(v => v.type === skill.type);
 
                 if (!experience) {
-                    applicant.meets_basic_qualifications = false;
-                    applicant.qualification_fail_reason.push(t("DOES_NOT_HAVE_{name}_EXPERIENCE", { name: t(`JobEquipmentType.${skill.type}`)}));
+                    results.meets_basic_qualifications = false;
+                    results.qualification_fail_reason.push(t("DOES_NOT_HAVE_{name}_EXPERIENCE", { name: t(`JobEquipmentType.${skill.type}`)}));
                 }
                 else if ( experience.years < skill.years) {
-                    applicant.meets_basic_qualifications = false;
-                    applicant.qualification_fail_reason.push(t("YEARS_OF_{name}_EXPERIENCE_TOO_LOW", { name: t(`JobEquipmentType.${skill.type}`)}));
+                    results.meets_basic_qualifications = false;
+                    results.qualification_fail_reason.push(t("YEARS_OF_{name}_EXPERIENCE_TOO_LOW", { name: t(`JobEquipmentType.${skill.type}`)}));
                 }
             }
         });
+
+        return results;
     }
 
     /**
-     * 
-     * @param {React.ChangeEvent<HTMLSelectElement>} e 
+     * @param {React.ChangeEvent<HTMLSelectElement>} e
+     * @param {number} applicantId
+     * @param {number} jobId
      */
-    const changeStatus = async (e) => {
-        const { name } = e.target;
-
+    const changeStatus = async (e, applicantId, jobId) => {
         const value = e.target.options[e.target.selectedIndex].value;
+        if (value) {
+            const api = new ApplicantApi();
 
-        const api = new ApplicantApi();
+            await api.jobs.update(applicantId, jobId, { status: value });
 
-        await api.company.updateStatus(name, value);
-
-        router.replace(router.asPath);
+            await router.reload();
+        }
     }
 
     /**
@@ -311,7 +334,7 @@ Applicants.getLayout = function getLayout(page) {
  * 
  * @param {object} props 
  * @param {ConsolodatedApplicant[]} props.applicants
- * @param {(e: React.ChangeEvent<HTMLSelectElement>) => Promise<void>} props.changeStatus
+ * @param {(e: React.ChangeEvent<HTMLSelectElement>, applicantId: number, jobId: number) => Promise<void>} props.changeStatus
  * @param {(e: React.MouseEvent<HTMLButtonElement>) => void} props.onViewClick
  * @param {(name: string, params: object) => string} props.t
  * @param {{key: string, value: string}[]} props.statuses
@@ -327,13 +350,14 @@ function renderApplicantView(props) {
                 <th>{t("NAME")}</th>
                 <th>{t("PHONE")}</th>
                 <th>{t("EMAIL")}</th>
+                <th>{/* ACTIONS */}</th>
             </tr>
         </thead>
 
         <tbody>
             {!applicants?.length &&
                 <tr>
-                    <td colSpan={3}>
+                    <td colSpan={4}>
                         {t("NO_{name}_FOUND", { name: t("APPLICANTS") })}
                     </td>
                 </tr>
@@ -344,6 +368,12 @@ function renderApplicantView(props) {
                     <td>{applicant.name}</td>
                     <td>{applicant.phone}</td>
                     <td>{applicant.email}</td>
+                    <td>
+                        <button className='btn' name={applicant.id} onClick={onViewClick}>
+                            <VisibilityIcon />
+                            {t("VIEW")}
+                        </button>
+                    </td>
                 </tr>
                 <tr>
                     <td colSpan={5}>
@@ -354,11 +384,11 @@ function renderApplicantView(props) {
                                 <th className='text-center'>{t("STATUS")}</th>
                                 <th className='text-center'>{t("MEETS_BASIC_QUALIFICATIONS")}</th>
                                 <th>{t("REASONS_IF_NO")}</th>
-                                <th colSpan={2}>{/** Change status */}</th>
+                                <th>{/** Change status */}</th>
                             </tr>
                             {applicant.jobs?.map((a, jobI) => (
                             <tr key={jobI}>
-                                <td>{a.job.title}</td>
+                                <td>{a.title}</td>
                                 <td>{new Date(a.created_at).toDateString()}</td>
                                 <td className='text-center'>{t(`ApplicantStatus.${a.status}`)}</td>
                                 <td className='text-center'>
@@ -368,16 +398,10 @@ function renderApplicantView(props) {
                                     {a.qualification_fail_reason.join("<br />")}
                                 </td>
                                 <td>
-                                    <select className={`form-select`} name={a.id} onChange={changeStatus} value="">
+                                    <select className={`form-select`} name={a.id} onChange={e => changeStatus(e, applicant.id, a.id)} value="">
                                         <option>{t("CHANGE_STATUS")}</option>
                                         {statuses.map((v, i) => (<option key={i} value={v.key}>{v.label}</option>))}
                                     </select>
-                                </td>
-                                <td>
-                                    <button className='btn' name={a.id} onClick={onViewClick}>
-                                        <VisibilityIcon />
-                                        {t("VIEW")}
-                                    </button>
                                 </td>
                             </tr>
                             ))}
@@ -397,7 +421,7 @@ function renderApplicantView(props) {
  * 
  * @param {object} props 
  * @param {ConsolodatedJob[]} props.jobs
- * @param {(e: React.ChangeEvent<HTMLSelectElement>) => Promise<void>} props.changeStatus
+ * @param {(e: React.ChangeEvent<HTMLSelectElement>, applicantId: number, jobId: number) => Promise<void>} props.changeStatus
  * @param {(e: React.MouseEvent<HTMLButtonElement>) => void} props.onViewClick
  * @param {(name: string, params: object) => string} props.t
  * @param {{key: string, value: string}[]} props.statuses
@@ -446,25 +470,25 @@ function renderApplicantView(props) {
                                 <th>{t("REASONS_IF_NO")}</th>
                                 <th colSpan={2}>{/** Change status */}</th>
                             </tr>
-                            {job.applicants?.map((a, applicantI) => (
-                            <tr key={applicantI}>
-                                <td>{a.first_name} {a.last_name}</td>
-                                <td>{new Date(a.created_at).toDateString()}</td>
-                                <td className='text-center'>{t(`ApplicantStatus.${a.status}`)}</td>
+                            {job.applicants?.map((applicant) => (
+                            <tr key={applicant.id}>
+                                <td>{applicant.first_name} {applicant.last_name}</td>
+                                <td>{new Date(applicant.created_at).toDateString()}</td>
+                                <td className='text-center'>{t(`ApplicantStatus.${applicant.status}`)}</td>
                                 <td className='text-center'>
-                                    {t(a.meets_basic_qualifications ? "YES" : "NO")}
+                                    {t(applicant.meets_basic_qualifications ? "YES" : "NO")}
                                 </td>
                                 <td>
-                                    {a.qualification_fail_reason.join("<br />")}
+                                    {applicant.qualification_fail_reason.join("<br />")}
                                 </td>
                                 <td>
-                                    <select className={`form-select`} name={a.id} onChange={changeStatus} value="">
+                                    <select className={`form-select`} onChange={e => changeStatus(e, applicant.id, job.id)} value="">
                                         <option>{t("CHANGE_STATUS")}</option>
                                         {statuses.map((v, i) => (<option key={i} value={v.key}>{v.label}</option>))}
                                     </select>
                                 </td>
                                 <td>
-                                    <button className='btn' name={a.id} onClick={onViewClick}>
+                                    <button className='btn' name={applicant.id} onClick={onViewClick}>
                                         <VisibilityIcon />
                                         {t("VIEW")}
                                     </button>
