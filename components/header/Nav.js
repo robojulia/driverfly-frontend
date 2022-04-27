@@ -57,8 +57,11 @@ export default function Nav() {
                         </ul>
                     </li>
                     <li className="nav-item dropdown">
-                        <a className="nav-link  dropdown-toggle" href="http://go.driverfly.co/motor-carriers"
-                            data-bs-toggle="">{t("MOTOR_CARRIER_SOLUTIONS")} </a>
+                        {/* <a className="nav-link  dropdown-toggle" href="http://go.driverfly.co/motor-carriers"
+                            data-bs-toggle="">{t("MOTOR_CARRIER_SOLUTIONS")} </a> */}
+                        <a className="nav-link  dropdown-toggle" href="#"
+                            data-bs-toggle="dropdown">{t("MOTOR_CARRIER_SOLUTIONS")}</a>
+
                         <ul className="dropdown-menu">
                             <li>
                                 <Link href="http://go.driverfly.co/">
