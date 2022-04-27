@@ -9,9 +9,9 @@ import useRedirect from '../../../../hooks/useRedirect';
 
 import { useTranslation } from 'react-i18next';
 
-import VisibilityIcon from '@mui/icons-material/Visibility';
-
 import { FormGroup, FormControlLabel, Switch } from '@mui/material';
+import { EyeFill} from 'react-bootstrap-icons';
+
 
 
 import ApplicantApi from "../../../api/applicant";
@@ -375,7 +375,7 @@ function renderApplicantView(props) {
                                 </td>
                                 <td>
                                     <button className='btn' name={a.id} onClick={onViewClick}>
-                                        <VisibilityIcon />
+                                        <EyeFill />
                                         {t("VIEW")}
                                     </button>
                                 </td>
@@ -465,7 +465,7 @@ function renderApplicantView(props) {
                                 </td>
                                 <td>
                                     <button className='btn' name={a.id} onClick={onViewClick}>
-                                        <VisibilityIcon />
+                                        <EyeFill />
                                         {t("VIEW")}
                                     </button>
                                 </td>

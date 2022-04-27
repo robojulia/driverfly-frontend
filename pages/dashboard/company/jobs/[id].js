@@ -8,8 +8,8 @@ import React, { useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useRef, useEffect } from "react";
+import { ArrowLeft} from 'react-bootstrap-icons';
 
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
@@ -870,7 +870,7 @@ export default function Job() {
             <ToastContainer />
             <div>
                 <h2>
-                    <span style={{cursor: "pointer"}} onClick={handleBack}><ArrowBackIosNewIcon /></span>
+                    <span style={{cursor: "pointer"}} onClick={handleBack}><ArrowLeft /></span>
                     {t(id ? "EDIT_JOB" : "CREATE_JOB")}
                 </h2>
                 <div className='container-fluid'>
