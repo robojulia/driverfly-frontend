@@ -9,4 +9,10 @@ export default class DocumentApi extends BaseApi {
 
         return data;
     }
+
+    async getCompanyPhoto(id: number): Promise<DocumentEntity> {
+        const { data } = await this.get(`documents/company/${id}/photo`);
+
+        return data;
+    }
 }
