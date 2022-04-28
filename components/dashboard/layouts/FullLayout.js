@@ -1,11 +1,12 @@
 import React from "react";
-import LogoutButton from '../../buttons/Logout';
 import { Container } from "reactstrap";
 import Header from "./header/Header";
-import Sidebar from "./sidebars/vertical/Driver-Account/Sidebar";
+import Sidebar from "./sidebars/Sidebar";
 import Head from "next/head";
 
 import { useTranslation } from "react-i18next";
+import { ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, FileEarmarkMedicalFill, CheckSquareFill, StarFill, GearFill} from 'react-bootstrap-icons';
+
 
 
 const FullLayout = ({ children }) => {
@@ -14,6 +15,60 @@ const FullLayout = ({ children }) => {
   const showMobilemenu = () => {
     setOpen(!open);
   };
+
+  const menuItems = [
+    {
+        pathname: "/dashboard/driver",
+        icon: HouseFill,
+        text: "dashboard"
+    },
+    {
+        pathname: "/dashboard/driver/my-account",
+        icon: PersonFill,
+        text: "my_account",
+    },
+    {
+      pathname: "/dashboard/driver/my-application",
+      icon: FileEarmarkFill,
+      text: "my_application"
+    },
+    {
+      pathname: "/dashboard/driver/my-docs",
+      icon: FileEarmarkMedicalFill,
+      text: "my_docs"
+    },
+    {
+      pathname: "/dashboard/driver/jobs-offered",
+      icon: BagFill,
+      text: "jobs_offered"
+    },
+    {
+      pathname: "/dashboard/driver/jobs-applied-to",
+      icon: CheckSquareFill,
+      text: "jobs_applied_to"
+    },
+    {
+      pathname: "/dashboard/driver/jobs-saved",
+      icon: ClockHistory,
+      text: "jobs_saved"
+    },
+    {
+      pathname: "/dashboard/driver/free-resources",
+      icon: StarFill,
+      text: "free_resources"
+    },
+    {
+      icon: GearFill,
+      text: "SETTINGS",
+      items: [
+        {
+          pathname: "/dashboard/driver/settings/profile",
+          icon: PersonFill,
+          text: "my_account",
+        }
+      ],
+    },
+  ];
 
   return (
     <>
@@ -35,12 +90,13 @@ const FullLayout = ({ children }) => {
         < div className="dashboardsidebar">
           <div className="pageWrapper d-md-block d-lg-flex">
             {/******** Sidebar **********/}
-            <aside
+            <Sidebar open={open} items={menuItems} />
+            {/* <aside
               className={`sidebarArea ${!open ? "" : "showSidebar"
                 }`}
             >
               <Sidebar showMobilemenu={() => showMobilemenu()} />
-            </aside>
+            </aside> */}
             {/********Content Area**********/}
             <div className="header">
            
