@@ -70,15 +70,15 @@ export default function Login() {
                     if (data.status == 201) {
                         console.log("handle success data", data.data);
                         console.log(data.data);
-                        data.data.user.language = "es-mx";
+                        // data.data.user.language = "es-mx";
                         setAuth(data.data.user)
 
                         if (isDriver()) {
-                            Router.push('/dashboard/driver')
+                            Router.push('/dashboard/driver');//, undefined, { locale: data.data.user.language })
                         }
 
                         if (isCompany()) {
-                            Router.push('/dashboard/company')
+                            Router.push('/dashboard/company');//, undefined, { locale: data.data.user.language })
                         }
 
                         // Router.push('/')

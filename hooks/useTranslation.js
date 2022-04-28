@@ -24,7 +24,6 @@ export function useTranslation (ns) {
         if (i18n?.locales.some(v => v === user.language))
             locale = user.language;
     }
-    
 
     /**
      * 
