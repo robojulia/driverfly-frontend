@@ -10,6 +10,7 @@ import jobsContext from "../context/jobContext"
 import Location from "../components/location/Location"
 import BaseApi from "./api/_baseApi"
 import JobApi from "./api/job"
+import DriverApi from "./api/driver";
 import { updateQueryStringParameter } from "../logics/utils"
 
 export default function FindJobs(props) {
@@ -17,6 +18,9 @@ export default function FindJobs(props) {
   let { params } = props
   // const params = {}
   const jobApi = new JobApi();
+  const baseApi = new BaseApi();
+  const driverApi = new DriverApi();
+
   const [jobs, setJobs] = useState([])
   const [pagingMeta, setPagingMeta] = useState({
     currentPage: 1,
@@ -41,9 +45,13 @@ export default function FindJobs(props) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    setFiltersByKeyValue(name, value)
+  }
+
+  const setFiltersByKeyValue = (key, value) => {
     setFilters({
       ...filters,
-      [name]: value
+      [key]: value
     })
   }
 
@@ -62,7 +70,37 @@ export default function FindJobs(props) {
     }
   }
 
-  const setFiltersForQuery = () => {
+  const setFiltersForQuery = async () => {
+    if (params.jobs_for_driver) {
+      await Promise.all([
+        driverApi.getDriver("drivers")
+          .catch(error => {
+            console.error("unable to fetch driver info", error);
+            throw error;
+          }),
+        driverApi.getPreferences()
+          .catch(error => {
+            console.error("unable to fetch driver preference info", error);
+            throw error;
+          })
+      ])
+        .then(values => {
+          const [driver, preferences] = values;
+          // console.log("preferences", preferences.find(item => (item.category == "MATCHING" && item.label == "TEAM_DRIVER")));
+          console.log("driver", driver)
+          console.log("preferences", preferences)
+
+          if (driver.license_type) {
+            document.getElementsByName("cdl_class").forEach(input => {
+              if (input.type.toLowerCase() === "radio" && input.value === driver.license_type) {
+                input.checked = true;
+                setFiltersByKeyValue("cdl_class", driver.license_type)
+              }
+            })
+          }
+
+        })
+    }
     Object.keys(params).map(key => {
       let inputs = document.getElementsByName(key);
       if (inputs[0].tagName.toLowerCase() !== "input") {
@@ -91,8 +129,9 @@ export default function FindJobs(props) {
   useEffect(fetchJobs, [filters])
   useEffect(async () => {
     try {
+      console.log("params", params);
       await setFiltersForQuery()
-      await router.replace('find-jobs', undefined, { shallow: true });
+      // await router.replace('find-jobs', undefined, { shallow: true });
       await fetchJobs()
     } catch (e) {
       // console.error('exception is here: ', e);
