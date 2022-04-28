@@ -17,6 +17,7 @@ import Link from 'next/link'
 import { Row } from 'react-bootstrap'
 import { DriverDegree } from '../enums/drivers/driver-degree.enum'
 import { getBase64 } from '../utils/file'
+import { JobApplicantDocumentType } from '../enums/application/job-application-document-type.enum'
 
 
 export default function JobApply({ job }) {
@@ -89,6 +90,17 @@ export default function JobApply({ job }) {
 
     }),
     onSubmit: async (values) => {
+      const documents = Object.values(JobApplicantDocumentType).map(t => {
+        if (values[t]?.file_base64) {
+          return ({
+            type: t,
+            name: values[t].name,
+            mime_type: values[t].mime_type,
+            file_base64: values[t].file_base64
+          })
+        }
+      }).filter(v => v)
+
       const userDto = {
         first_name: values.first_name,
         last_name: values.last_name,
@@ -99,35 +111,8 @@ export default function JobApply({ job }) {
         years_cdl_experience: parseInt(values.cdl_experience),
         can_pass_drug_test: values.drug_test,
 
-
-        drivers_license: values.DRIVER_LICENSE?.file_base64 ? {
-          visibility: values.DRIVER_LICENSE.visibility,
-          name: values.DRIVER_LICENSE.name,
-          mime_type: values.DRIVER_LICENSE.mime_type,
-          file_base64: values.DRIVER_LICENSE.file_base64
-        } : null,
-
-        medical_card: values.MEDICAL_CARD?.file_base64 ? {
-          visibility: values.MEDICAL_CARD.visibility,
-          name: values.MEDICAL_CARD.name,
-          mime_type: values.MEDICAL_CARD.mime_type,
-          file_base64: values.MEDICAL_CARD.file_base64
-        } : null,
-
-        resume: values.RESUME?.file_base64 ? {
-          visibility: values.RESUME.visibility,
-          name: values.RESUME.name,
-          mime_type: values.RESUME.mime_type,
-          file_base64: values.RESUME.file_base64
-        } : null,
-
-        mvr: values.MVR?.file_base64 ? {
-          visibility: values.MVR.visibility,
-          name: values.MVR.name,
-          mime_type: values.MVR.mime_type,
-          file_base64: values.MVR.file_base64
-        } : null,
-      };
+        documents: documents,
+      }
 
       await jobApi.applyForJob(job.id, userDto)
         .then(data => {
@@ -171,7 +156,6 @@ export default function JobApply({ job }) {
       Promise
         .resolve(getBase64(file))
         .then(file_base64 => ({
-          visibility: "PUBLIC",
           name: file.name,
           mime_type: file.type,
           path: URL.createObjectURL(file),

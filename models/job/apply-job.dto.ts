@@ -1,4 +1,5 @@
 import { DriverDegree } from "../../enums/drivers/driver-degree.enum";
+import { ApplicantDocumentDto } from "./application-document.dto";
 
 export interface ApplyJobDto {
 
@@ -45,17 +46,7 @@ export interface ApplyJobDto {
 
     /**
      * @IsOptional
+     * @IsArray
      */
-    resume?: File;
-
-    /**
-     * @IsOptional
-     */
-    drivers_license?: File;
-
-    /**
-     * @IsOptional
-     */
-    medical_card?: File;
-
+    documents?: ApplicantDocumentDto;
 }
