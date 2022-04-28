@@ -41,7 +41,7 @@ StructuredData.JobPosting = (job, t) => {
         identifier: {
             "@type": "PropertyValue",
             name: "JobEntity",
-            value: job.id.toString(),
+            value: job?.id?.toString(),
         },
         datePosted: job.created_at,
         directApply: true,
