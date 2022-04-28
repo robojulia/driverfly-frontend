@@ -704,7 +704,7 @@
     "ONE_OR_MORE_ERRORS_WERE_FOUND_ON_INPUT_FILE": "One or more errors were found on the input file, please correct them and re-upload",
     "yup": {
         "type": {
-            "date": "date",
+            "date": "date, it must be in the format MM/dd/yyyy (eg. 01/12/2014)",
             "number": "number"
         },
         "string": {

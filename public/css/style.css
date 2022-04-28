@@ -228,9 +228,18 @@ ul.dropdown-menu {
     background: #1D4354 !important;
     border-color: #1D4354;
     border: 1px solid #1D4354;
+    /*
+    2022-04-28  kom     Remove override of bootstrap default padding
+                        - All buttons requiring this padding should implement a newly created class (eg .btn-primary_padded) with the below settings
+    */
+    /* padding: 15px 30px !important;
+    border-radius: 3px; */
+    border-color: #0062cc00 !important;
+}
+
+.btn.btn-primary_padded {
     padding: 15px 30px !important;
     border-radius: 3px;
-    border-color: #0062cc00 !important;
 }
 
 .nav-link i.fa.fa-bell-o {
@@ -321,12 +330,24 @@ li:hover ul {
     color: #2da2af;
 }
 
-.btn.btn-danger {
+/*
+2022-04-28  kom     Remove override of bootstrap default padding
+                    - All buttons requiring this padding should implement a newly created class (eg .btn-danger_padded) with the below settings
+*/
+/* .btn.btn-danger {
+    background: #2da2af;
+    border-color: #2da2af;
+    font-size: 16px;
+    padding: 20px 40px;
+} */
+
+.btn.btn-danger_padded {
     background: #2da2af;
     border-color: #2da2af;
     font-size: 16px;
     padding: 20px 40px;
 }
+
 
 .find-me:before {
     content: "\f192";

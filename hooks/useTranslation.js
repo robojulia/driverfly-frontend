@@ -76,7 +76,7 @@ export function useTranslation (ns = null) {
     }
 
     useEffect(async () => {
-        const json = await fetchTranslations(locale, ns);
+        let json = await fetchTranslations(locale, ns);
 
         if (!json) {
             json = await fetchTranslations("en-us", ns);

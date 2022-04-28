@@ -113,6 +113,7 @@ export default function Import() {
     }
 
     const canImport = form.isValue && !form.isSubmitting && form.values.length > 0;
+    const canClear = form.values.length > 0 && !form.isSubmitting;
 
 
     return (<>
@@ -128,8 +129,8 @@ export default function Import() {
                         <button type="button" onClick={onDownloadClick} className="btn-sm btn-info pl-3">{t("DOWNLOAD_TEMPLATE")}</button>
                     </div>
                     <div style={{float: "right" }}>
-                        <button type="button" disabled={!canImport} onClick={form.submitForm} className={`btn-sm btn-primary ${!canImport ? "disabled": ""}`}>{t("IMPORT")}</button>
-                        <button type="button" onClick={onClearClick} className="btn-sm btn-danger">{t("CLEAR")}</button>
+                        <button type="button" disabled={!canClear} onClick={onClearClick} className="btn btn-md btn-danger">{t("CLEAR")}</button>
+                        <button type="button" disabled={!canImport} onClick={form.submitForm} className={`btn btn-md btn-primary`}>{t("IMPORT")}</button>
                     </div>
                 </Col>
             </Row>
