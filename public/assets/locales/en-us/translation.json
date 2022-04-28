@@ -696,5 +696,57 @@
     "DATE": "Date",
     "ADD_{name}": "Add {{name}}",
     "NOTE": "Note",
-    "SAVE": "Save"
+    "SAVE": "Save",
+    "IMPORT_APPLICANTS": "Import Applicants",
+    "UPLOAD_YOUR_FILE": "Upload your file",
+    "DOWNLOAD_TEMPLATE": "Download Template",
+    "ONLY_DISPLAY_ERRORS": "Only display errors",
+    "ONE_OR_MORE_ERRORS_WERE_FOUND_ON_INPUT_FILE": "One or more errors were found on the input file, please correct them and re-upload",
+    "yup": {
+        "type": {
+            "date": "date",
+            "number": "number"
+        },
+        "string": {
+            "length": "Text must be {{length}} characters",
+            "min": "Text must be at least {{min}} characters",
+            "max": "Text must be no more than {{max}} characters",
+            "matches": "Value is invalid",
+            "email": "Not valid email (must be in the format example@somewhere.com)",
+            "url": "Not a valid url (make sure your url starts with http:// or https:// and ends in .com, .org, .co etc)",
+            "uuid": "Not a valid UUID",
+            "trim": "Cannot have leading or trailing spaces",
+            "lowercase": "Must be lowercase",
+            "uppercase": "Must be uppercase"
+        },
+        "number": {
+            "min": "Value must be greater than or equal to {{min}}",
+            "max": "Value must be less than or equal to {{max}}",
+            "lessThan": "Value must be greater than {{more}}",
+            "greaterThan": "Value must be less than {{more}}",
+            "positive": "Value must be more than {{more}}",
+            "negative": "Value must be less than {{less}}",
+            "integer": "Value must be a whole number"
+        },
+        "date": {
+            "min": "Value must be greater than or equal to {{min}}",
+            "max": "Value must be less than or equal to {{max}}"
+        },
+        "object": {
+            "noUnknown": "Field must exist"
+        },
+        "array": {
+            "length": "Must have {{length}} items",
+            "min": "Must have at least {{min}} items",
+            "max": "Must have no more than {{max}} items"
+        },
+        "boolean": {
+            "isValue": "Field must be checked"
+        },
+        "required": "This field is required",
+        "oneOf": "Value must be one of {{values}}",
+        "notOneOf": "Value cannot be one of {{values}}",
+        "notType": "Not a valid {{type}}",
+        "defined": "Field must exist"
+    }
 }

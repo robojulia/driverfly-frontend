@@ -10,7 +10,7 @@ import { i18n } from "../next.config";
  * @param {string} ns the namespace to use (defaults to common)
  * @returns 
  */
-export function useTranslation (ns) {
+export function useTranslation (ns = null) {
     let { locale } = useRouter();
 
     if (!ns) ns = "translation";

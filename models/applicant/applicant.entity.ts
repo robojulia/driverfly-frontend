@@ -61,10 +61,10 @@ export class ApplicantEntity {
 
   static yupSchema() {
     return yup.object({
-        first_name: yup.string().nullable(),
-        last_name: yup.string().nullable(),
+        first_name: yup.string().required().nullable(),
+        last_name: yup.string().required().nullable(),
         phone: yup.string().nullable(),
-        email: yup.string().nullable(),
+        email: yup.string().email().required().nullable(),
         birthdate: yup.date().nullable(),
         street: yup.string().nullable(),
         city: yup.string().nullable(),
@@ -74,7 +74,7 @@ export class ApplicantEntity {
         license_expiry: yup.date().nullable(),
         license_state: yup.string().nullable(),
         license_type: yup.string().nullable(),
-        years_cdl_experience: yup.string().nullable(),
+        years_cdl_experience: yup.number().min(0).nullable(),
         can_pass_drug_test: yup.bool().nullable(),
         is_owner_operator: yup.bool().nullable(),
         highest_degree: yup.string().nullable(),
@@ -84,7 +84,7 @@ export class ApplicantEntity {
         has_past_dui: yup.bool().nullable(),
         dui_years: yup.array(yup.string()).nullable(),
         criminal_history: yup.string().nullable(),
-        accident_count: yup.number().nullable(),
+        accident_count: yup.number().min(0).nullable(),
         accident_details: yup.string().nullable(),
         license_revoked: yup.bool().nullable(),
         license_revoked_details: yup.string().nullable(),

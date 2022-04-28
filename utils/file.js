@@ -12,6 +12,41 @@ async function getBase64(file) {
   });
 }
 
+/**
+ * 
+ * @param {Blob} file 
+ * @param {{ onProgress: (progress) => void }} options 
+ * @returns {any[]}
+ */
+async function readCSV(file, options) {
+  return await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = (e) => {
+        options?.onProgress(0);
+
+        const worker = new Worker("/js/workers/parseCSV.js");
+        worker.postMessage(reader.result);
+
+        worker.onmessage = (evt) => {
+            const { type, data } = evt.data;
+            switch (type) {
+                case "progress":
+                    options?.onProgress(data);
+                    break;
+                case "complete":
+                    resolve(data);
+                    break;
+            }
+        }
+        worker.onerror = error => reject(error);
+    }
+
+      // reader.onprogress = (ev) => ev.
+      reader.onerror = error => reject(error);
+  });
+}
+
 function parseCSV(str) {
   var arr = [];
   var quote = false;  // 'true' means we're inside a quoted field
@@ -49,6 +84,7 @@ function parseCSV(str) {
 }
 
 export {
+    readCSV,
     getBase64,
     parseCSV
 };
