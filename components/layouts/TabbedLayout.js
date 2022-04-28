@@ -2,7 +2,7 @@ import { ReactChild } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../hooks/useTranslation";
 
 /**
  * @typedef TabbedLayoutProps

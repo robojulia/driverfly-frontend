@@ -3,7 +3,7 @@ import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import Applicant from "../../../../public/dashboard/styles/css/Applicants.module.css"
 import useRedirect from '../../../../hooks/useRedirect';
 
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "../../../../hooks/useTranslation";
 
 import { FormGroup, FormControlLabel, Switch } from '@mui/material';
 import { EyeFill} from 'react-bootstrap-icons';
@@ -25,6 +25,7 @@ import ShowEnumFromString from "../../../../components/enum-filters/show-enum-fr
 import * as numbers from "../../../../utils/number";
 import { JobGeography } from '../../../../enums/jobs/job-geography.enum';
 import { JobEmploymentType } from '../../../../enums/jobs/job-employment-type.enum';
+import { Button } from "react-bootstrap";
 
 const ViewMode = {
     job: "job",
@@ -54,9 +55,14 @@ const ViewMode = {
  * @property {any} sort
  * @property {ApplicantEntity[]} applicants
 */
+// export const getStaticProps = async ({ locale }) => ({
+//     props: {
+//       ...await serverSideTranslations(locale, ['common']),
+//     },
+//   });
 
-
-export default function Applicants() {
+export default function Applicants(props) {
+    console.log(props);
     const { t } = useTranslation();
 
     const router = useRouter();
@@ -293,7 +299,20 @@ export default function Applicants() {
                 </Row>
                 <div className='applicants__section mt-4'>
                     <Row>
-                        <Col lg="12" className='force-overflow p-0  '>
+                        <Col xs="4">
+
+                        </Col>
+                        <Col xs="4">
+
+                        </Col>
+                        <Col xs="4">
+                            <button className="btn-sm btn-primary" style={{ float: "right" }} onClick={() => router.push("/dashboard/company/applicants/import")}>
+                                + {t("IMPORT_APPLICANTS")}
+                            </button>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col className='force-overflow p-0  '>
                             <Card>
                                 <CardBody className={Applicant.applicanttable}>
                                     <FormGroup style={{ float: "right" }}>

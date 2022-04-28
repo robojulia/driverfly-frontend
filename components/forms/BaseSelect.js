@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { useTranslation } from "react-i18next"
+import { useTranslation } from "../../hooks/useTranslation"
 
 function BaseSelect ( { required, className, enumType, options, valueKey = "value", labelKey = "label", labelPrefix, createLabel, label, type, placeholder, value, onChange, handleBlur, readOnly, name, touched, error, } ) {
   const { t } = useTranslation();

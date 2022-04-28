@@ -20,7 +20,7 @@ import BaseCheck from "../components/forms/BaseCheck";
 
 import AuthApi from "./api/auth";
 
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../hooks/useTranslation";
 import { SignUpRole } from "../enums/auth/sign-up-role.enum"
 import { Row } from "reactstrap"
 

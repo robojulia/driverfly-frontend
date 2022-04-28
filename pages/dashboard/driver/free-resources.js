@@ -8,7 +8,7 @@ import insta from "../../../public/dashboard/assets/images/socialicon/insta.png"
 import linkedin from "../../../public/dashboard/assets/images/socialicon/linkedin.png";
 import Image from "next/image";
 
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '../../../hooks/useTranslation';
 
 
 export default function FreeResources() {

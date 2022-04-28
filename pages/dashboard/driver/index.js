@@ -10,7 +10,7 @@ import axios from "axios";
 import JobList from "../../../public/dashboard/styles/css/JobList.module.css"
 import Link from 'next/link';
 
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../../hooks/useTranslation";
 
 export default function Dashboard() {
 

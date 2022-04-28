@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { useTranslation } from "react-i18next"
+import { useTranslation } from "../../hooks/useTranslation"
 
 function InlineLayout(options, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix) {
   const { t } = useTranslation();

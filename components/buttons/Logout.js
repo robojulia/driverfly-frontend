@@ -1,6 +1,6 @@
 import useAuth from '../../hooks/useAuth';
 import Router from 'next/router'
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../hooks/useTranslation";
 
 
 export default function Logout(props) {

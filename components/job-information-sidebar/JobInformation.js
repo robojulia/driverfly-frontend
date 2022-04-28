@@ -1,4 +1,4 @@
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../hooks/useTranslation";
 import { JobGeography } from "../../enums/jobs/job-geography.enum"
 import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
 import { JobDeliveryType } from "../../enums/jobs/job-delivery-type.enum";

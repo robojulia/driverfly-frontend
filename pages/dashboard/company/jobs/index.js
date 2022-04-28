@@ -11,7 +11,7 @@ import {PenFill, TrashFill, Eye, EyeFill} from 'react-bootstrap-icons';
 
 
 import JobApi from "../../../api/job";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../../../hooks/useTranslation";
 import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
 import { JobSchedule } from "../../../../enums/jobs/job-schedule.enum";
 import { JobEmploymentType } from "../../../../enums/jobs/job-employment-type.enum";

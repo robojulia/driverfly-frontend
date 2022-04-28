@@ -1,5 +1,5 @@
 import { OverlayTrigger, Popover, Tooltip } from "react-bootstrap";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../hooks/useTranslation";
 
 export default function ShowEnumFromString(props) {
     const { t } = useTranslation();

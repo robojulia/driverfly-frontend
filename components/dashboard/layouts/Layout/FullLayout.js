@@ -6,7 +6,7 @@ import Sidebar from "../sidebars/vertical/Company-Profile/Sidebar";
 import SettingsSidebar from "../sidebars/vertical/Company-Profile/SettingsSidebar";
 import Head from "next/head";
 
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../../../hooks/useTranslation";
 import { useRouter } from "next/router";
 
 

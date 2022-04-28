@@ -4,7 +4,7 @@ import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import { JobEquipmentType } from "../../enums/jobs/job-equipment-type.enum"
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../hooks/useTranslation";
 
 const ReadMore = ({ children }) => {
   const text = children

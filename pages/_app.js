@@ -5,17 +5,22 @@ import "../public/css/style.css";
 import "../public/css/responsive.css";
 import "../public/dashboard/styles/css/global.css";
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import "../lang/i18nextconfig";
+// import "../lang/i18nextconfig";
 // import { appWithTranslation } from 'next-i18next';
+// import { i18n } from 'next-i18next'
+import { useRouter } from "next/router";
 
 import { useEffect } from "react";
 
 function MyApp({ Component, pageProps }) {
+  const { locale } = useRouter()
 
   const getLayout = Component.getLayout || ((page) => page)
 
   useEffect(async () => {
     import("bootstrap/dist/js/bootstrap");
+    console.log("CURRENT LOCALE", locale);
+    // i18n.addResourceBundle(locale, 'common');
     // await i18n.init();
 
   }, []);

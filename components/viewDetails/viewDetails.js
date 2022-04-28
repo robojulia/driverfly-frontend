@@ -1,6 +1,6 @@
 import { TableCell, Table, TableRow, TableHead, TableContainer } from "@mui/material";
 
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../hooks/useTranslation";
 
 /**
  * @typedef ViewDetailProps

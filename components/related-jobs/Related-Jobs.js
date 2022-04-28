@@ -1,6 +1,6 @@
 import timeSince from "../../utils/timeSince"
 import Link from "next/link"
-import { useTranslation } from "react-i18next"
+import { useTranslation } from "../../hooks/useTranslation"
 import CompanyPhoto from "../jobs/company-photo";
 
 export default function RelatedJobs({ jobs }) {

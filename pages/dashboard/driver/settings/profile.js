@@ -17,7 +17,7 @@ import BaseFile from "../../../../components/forms/BaseFile";
 import BaseInput from "../../../../components/forms/BaseInput";
 import BaseTextArea from "../../../../components/forms/BaseTextArea";
 
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../../../hooks/useTranslation";
 
 import UserApi from "../../../api/user";
 import ApplicantApi from "../../../api/applicant";

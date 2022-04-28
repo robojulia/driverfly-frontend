@@ -4,7 +4,7 @@ import LoginButton from '../../components/buttons/Login';
 import SignupButton from '../../components/buttons/Signup';
 import LogoutButton from '../../components/buttons/Logout';
 import DashboardButton from "../buttons/DashboardButton";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../hooks/useTranslation";
 
 export default function Nav() {
     const { authCheck } = useAuth();

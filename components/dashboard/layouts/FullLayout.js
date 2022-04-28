@@ -4,7 +4,7 @@ import Header from "./header/Header";
 import Sidebar from "./sidebars/Sidebar";
 import Head from "next/head";
 
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../../hooks/useTranslation";
 import { ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, FileEarmarkMedicalFill, CheckSquareFill, StarFill, GearFill} from 'react-bootstrap-icons';
 
 
@@ -57,17 +57,17 @@ const FullLayout = ({ children }) => {
       icon: StarFill,
       text: "free_resources"
     },
-    {
-      icon: GearFill,
-      text: "SETTINGS",
-      items: [
-        {
-          pathname: "/dashboard/driver/settings/profile",
-          icon: PersonFill,
-          text: "my_account",
-        }
-      ],
-    },
+    // {
+    //   icon: GearFill,
+    //   text: "SETTINGS",
+    //   items: [
+    //     {
+    //       pathname: "/dashboard/driver/settings/profile",
+    //       icon: PersonFill,
+    //       text: "my_account",
+    //     }
+    //   ],
+    // },
   ];
 
   return (

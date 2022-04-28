@@ -2,7 +2,7 @@ import { Navbar, Container } from "react-bootstrap";
 
 import { Icon } from "react-bootstrap-icons";
 import { useRouter } from "next/router";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../../../hooks/useTranslation";
 import Link from "next/link";
 import { useMediaQuery } from "react-responsive";
 /**

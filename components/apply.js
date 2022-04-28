@@ -5,7 +5,7 @@ import useAuth from '../hooks/useAuth'
 import { ToastContainer, toast } from 'react-toastify'
 import { useFormik } from "formik"
 import * as yup from "yup"
-import { Trans, useTranslation } from "react-i18next"
+import { Trans, useTranslation } from "../hooks/useTranslation"
 import BaseApi from '../pages/api/_baseApi'
 import JobApi from '../pages/api/job'
 import BaseInput from './forms/BaseInput'

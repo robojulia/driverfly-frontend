@@ -1,6 +1,5 @@
 import { UserEntity } from '../user/user.entity';
 import { CompanyEntity } from '../company/company.entity';
-import { JobEntity } from '../job/job.entity';
 import { DocumentEntity } from '../documents/document.entity';
 import { ApplicantExperienceEntity } from './applicant-experience.entity';
 import { DriverLicenseType } from '../../enums/drivers/driver-license-type.enum';
@@ -10,8 +9,9 @@ import { ApplicantEmployerEntity } from './applicant-employer.entity';
 import { ApplicantNoteEntity } from './applicant-note.entity';
 import { ApplicantType } from '../../enums/applicants/applicant-type.enum';
 import { ApplicantJobEntity } from './applicant-job.entity';
+import * as yup from "yup";
 
-export interface ApplicantEntity {
+export class ApplicantEntity {
   id?: number;
   version?: number;
   user?: UserEntity;
@@ -58,4 +58,42 @@ export interface ApplicantEntity {
   documents?: DocumentEntity[];
   created_at?: string;
   last_updated_at?: string;
+
+  static yupSchema() {
+    return yup.object({
+        first_name: yup.string().nullable(),
+        last_name: yup.string().nullable(),
+        phone: yup.string().nullable(),
+        email: yup.string().nullable(),
+        birthdate: yup.date().nullable(),
+        street: yup.string().nullable(),
+        city: yup.string().nullable(),
+        state: yup.string().nullable(),
+        zip_code: yup.string().nullable(),
+        license_number: yup.string().nullable(),
+        license_expiry: yup.date().nullable(),
+        license_state: yup.string().nullable(),
+        license_type: yup.string().nullable(),
+        years_cdl_experience: yup.string().nullable(),
+        can_pass_drug_test: yup.bool().nullable(),
+        is_owner_operator: yup.bool().nullable(),
+        highest_degree: yup.string().nullable(),
+        emergency_contact_name: yup.string().nullable(),
+        emergency_contact_number: yup.string().nullable(),
+        emergency_contact_relationship: yup.string().nullable(),
+        has_past_dui: yup.bool().nullable(),
+        dui_years: yup.array(yup.string()).nullable(),
+        criminal_history: yup.string().nullable(),
+        accident_count: yup.number().nullable(),
+        accident_details: yup.string().nullable(),
+        license_revoked: yup.bool().nullable(),
+        license_revoked_details: yup.string().nullable(),
+        psp_violations: yup.bool().nullable(),
+        psp_violations_details: yup.string().nullable(),
+        tickets: yup.bool().nullable(),
+        tickets_details: yup.string().nullable(),
+        positive_drug_test: yup.bool().nullable(),
+        positive_drug_test_details: yup.string().nullable(),
+    });
+  }
 }

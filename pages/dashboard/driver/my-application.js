@@ -18,7 +18,7 @@ import { Accordion } from "react-bootstrap"
 
 import { preventNegative } from "../../../utils/input"
 
-import { useTranslation } from "react-i18next"
+import { useTranslation } from "../../../hooks/useTranslation"
 
 import { DriverDegree } from "../../../enums/drivers/driver-degree.enum";
 import { DriverLicenseType } from "../../../enums/drivers/driver-license-type.enum";

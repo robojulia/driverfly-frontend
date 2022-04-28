@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../hooks/useTranslation";
 
 export default function BaseSchedule({ required, className, label, min, max, value, touched, error }) {
     const { t } = useTranslation();
