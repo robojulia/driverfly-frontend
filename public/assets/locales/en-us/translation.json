@@ -748,5 +748,11 @@
         "notOneOf": "Value cannot be one of {{values}}",
         "notType": "Not a valid {{type}}",
         "defined": "Field must exist"
-    }
+    },
+    "PLEASE_UPLOAD_A_FILE_WITH_AT_LEAST_ONE_ROW": "Please upload a file with at least one row in it",
+    "{name}_ALREADY_EXISTS": "{{name}} already exists and will be merged",
+    "{name}_ALREADY_EXISTS_NO_MERGE": "{{name}} may be a user of DriverFly who has previously applied to a job with your company.",
+    "UNABLE_TO_SAVE": "Unable to save",
+    "CLEAR": "Clear",
+    "IMPORT": "Import"
 }

@@ -86,6 +86,9 @@ export function useTranslation (ns = null) {
 
     }, [ locale, ns ]);
 
+    // quick check to see if we've loaded translations
+    t.ready = Object.keys(translations).length > 0;
+
     return { t };
 };
 

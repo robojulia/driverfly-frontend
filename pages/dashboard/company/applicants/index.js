@@ -55,14 +55,8 @@ const ViewMode = {
  * @property {any} sort
  * @property {ApplicantEntity[]} applicants
 */
-// export const getStaticProps = async ({ locale }) => ({
-//     props: {
-//       ...await serverSideTranslations(locale, ['common']),
-//     },
-//   });
 
 export default function Applicants(props) {
-    console.log(props);
     const { t } = useTranslation();
 
     const router = useRouter();
@@ -111,6 +105,7 @@ export default function Applicants(props) {
     });
 
     useEffect(async () => {
+        if (!t.ready) return;
         if (!viewMode) return;
         const api = new ApplicantApi();
 
@@ -182,7 +177,7 @@ export default function Applicants(props) {
 
         setApplicants(applicants);
 
-    }, [ viewMode, jobId ]);
+    }, [ viewMode, jobId, t.ready ]);
 
     /**
      * 

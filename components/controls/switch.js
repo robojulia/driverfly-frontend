@@ -32,7 +32,7 @@ export default function Switch(props) {
                 role="switch"
                 className={`form-check-input`} 
             />
-            {label && <label htmlFor={name} className="form-check-label">{t(label)}{required ? "*" : ""}</label>}
+            {label && <label htmlFor={name} className="form-check-label" style={{ marginLeft: "4px" }}>{t(label)}{required ? "*" : ""}</label>}
         </div>
     );
 
