@@ -5,7 +5,7 @@ import Sidebar from "./sidebars/Sidebar";
 import Head from "next/head";
 
 import { useTranslation } from "../../../hooks/useTranslation";
-import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, FileEarmarkMedicalFill, CheckSquareFill, StarFill, GearFill } from 'react-bootstrap-icons';
+import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, FileEarmarkMedicalFill, CheckSquareFill, GiftFill, GearFill } from 'react-bootstrap-icons';
 
 
 
@@ -59,7 +59,7 @@ const FullLayout = ({ children }) => {
     },
     {
       pathname: "/dashboard/driver/free-resources",
-      icon: StarFill,
+      icon: GiftFill,
       text: "free_resources"
     },
     // {
