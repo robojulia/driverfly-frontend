@@ -81,7 +81,7 @@
     "always": "Always",
     "depending_on_company": "Depending on company",
     "authorize_companies_contact_past_employers": "Authorize companies to contact my past employers",
-    "matching_preferences": "Matching Preferences",
+    "matching_preferences": "Preferred Job Type",
     "JobGeography": {
         "OTR": "OTR",
         "REGIONAL": "Regional",
