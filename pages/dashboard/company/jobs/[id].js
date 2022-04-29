@@ -8,7 +8,7 @@ import React, { useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useRef, useEffect } from "react";
-import { ArrowLeft} from 'react-bootstrap-icons';
+import { ArrowLeft } from 'react-bootstrap-icons';
 
 
 import { useTranslation } from "../../../../hooks/useTranslation";
@@ -267,7 +267,7 @@ export default function Job() {
                     .string()
                     .enum(DriverLicenseType)
             ),
-            min_years_experience: yup.number().min(0).nullable(),
+            min_years_experience: yup.number().required().min(0).nullable(),
             min_degree: yup.string().enum(DriverDegree).nullable(),
             required_skills: yup.array(yup.object({
                 type: yup.string().required(t("this_field_is_required")).nullable(),
@@ -456,7 +456,7 @@ export default function Job() {
             set_vehicles(await vehicleApi.list());
         }
 
-    }, [ id ]);
+    }, [id]);
 
     /// custom PayMethod logic
 
@@ -870,7 +870,7 @@ export default function Job() {
             <ToastContainer />
             <div>
                 <h2>
-                    <span style={{cursor: "pointer"}} onClick={handleBack}><ArrowLeft /></span>
+                    <span style={{ cursor: "pointer" }} onClick={handleBack}><ArrowLeft /></span>
                     {t(id ? "EDIT_JOB" : "CREATE_JOB")}
                 </h2>
                 <div className='container-fluid'>
@@ -1004,7 +1004,7 @@ export default function Job() {
                                     handleBlur={form.handleBlur}
                                     labelPrefix="JobGeography"
                                     enumType={JobGeography}
-                                    />
+                                />
                                 <BaseRange
                                     className="col-12"
                                     label={t("max_applicant_radius")}
