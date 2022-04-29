@@ -59,8 +59,8 @@ export default function JobApply({ job }) {
       contact_number: yup.string().required(t("{name}_field_is_required", { name: t('contact_number') })).nullable(),
       email: yup.string().required(t("{name}_field_is_required", { name: t('email') })).nullable(),
       highest_degree: yup.string().required(t("{name}_field_is_required", { name: t('highest_degree') })).nullable(),
-      voilations: yup.string().required(t("{name}_field_is_required", { name: t('voilations') })).nullable(),
-      cdl_experience: yup.string().required(t("{name}_field_is_required", { name: t('cdl_experience') })).nullable(),
+      voilations: yup.number().min(0).nullable(),
+      cdl_experience: yup.number().min(0).nullable(),
 
       /* //To Do - Either will be able to create new account or not
       password: yup.string().when("createAccount", {
