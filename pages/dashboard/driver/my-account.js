@@ -79,7 +79,7 @@ export default function MyAccount() {
             },
             preferences: {
                 COMMUNICATION: {
-                    PREFERRED_METHOD: ["TEXT", "CALL"],
+                    PREFERRED_METHOD: ["TEXT", "CALL", "EMAIL"],
                     PREFERRED_HOURS: "",
                     RECEIVE_SUGGESTED_JOBS: true,
                     RECEIVE_NEWSLETTER: true,
@@ -496,6 +496,9 @@ export default function MyAccount() {
                                         }, {
                                             label: t("text"),
                                             value: "TEXT"
+                                        }, {
+                                            label: t("email"),
+                                            value: "EMAIL"
                                         }]}
                                         value={contactForm.values.preferences.COMMUNICATION.PREFERRED_METHOD}
                                         name="preferences.COMMUNICATION.PREFERRED_METHOD"
