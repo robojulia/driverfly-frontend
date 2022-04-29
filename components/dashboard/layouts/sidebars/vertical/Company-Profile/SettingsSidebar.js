@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { Building, CardImage, PersonFill, GeoAltFill} from 'react-bootstrap-icons';
 
 
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../../../../../hooks/useTranslation";
 
 export default function SettingsSidebar() {
   const { t } = useTranslation();

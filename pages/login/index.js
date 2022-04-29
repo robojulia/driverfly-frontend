@@ -1,7 +1,7 @@
 import useAuth from '../../hooks/useAuth';
 import Router from 'next/router'
 import axios from 'axios';
-import { withRouter } from 'next/router'
+import { useRouter } from 'next/router'
 
 import { useState } from 'react';
 import Layout from "../../components/layouts";
@@ -13,12 +13,12 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import AuthApi from "../api/auth";
 
-import { useTranslation } from "react-i18next";
-// import { useTranslation } from 'next-i18next';
-import i18next from "i18next";
+import { useTranslation } from "../../hooks/useTranslation";
 
 
 export default function Login() {
+
+    const router = useRouter();
 
     const { t } = useTranslation();
 
@@ -70,15 +70,15 @@ export default function Login() {
                     if (data.status == 201) {
                         console.log("handle success data", data.data);
                         console.log(data.data);
-                        i18next.changeLanguage(data.data.user.language);
+                        // data.data.user.language = "es-mx";
                         setAuth(data.data.user)
 
                         if (isDriver()) {
-                            Router.push('/dashboard/driver')
+                            Router.push('/dashboard/driver');//, undefined, { locale: data.data.user.language })
                         }
 
                         if (isCompany()) {
-                            Router.push('/dashboard/company')
+                            Router.push('/dashboard/company');//, undefined, { locale: data.data.user.language })
                         }
 
                         // Router.push('/')

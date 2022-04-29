@@ -1,4 +1,4 @@
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../hooks/useTranslation";
 import { Card } from "react-bootstrap";
 import { CardBody, CardHeader } from "reactstrap";
 

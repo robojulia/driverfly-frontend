@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import timeSince from "../../utils/timeSince"
-import { useTranslation } from "react-i18next"
+import { useTranslation } from "../../hooks/useTranslation"
 import CompanyPhoto from '../jobs/company-photo'
 
 export default function JobsList() {

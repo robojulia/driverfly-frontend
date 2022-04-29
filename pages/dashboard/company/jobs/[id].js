@@ -11,7 +11,7 @@ import { useRef, useEffect } from "react";
 import { ArrowLeft} from 'react-bootstrap-icons';
 
 
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../../../hooks/useTranslation";
 import { useFormik } from "formik";
 import * as yup from "yup";
 

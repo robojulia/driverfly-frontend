@@ -3,8 +3,7 @@ import React from 'react'
 function BaseInput({ accept, required, className, label, handleBlur, type, min, max, placeholder, value, onChange, onKeyDown, readOnly, name, touched, error, }) {
   return (
     <div className={className}>
-      {label && <label>{label}{required ? "*" : ""}:</label>}
-      <br />
+      {label && <><label>{label}{required ? "*" : ""}:</label><br /></>}
       <input
         accept={type == "file" ? accept : null}
         onBlur={handleBlur}

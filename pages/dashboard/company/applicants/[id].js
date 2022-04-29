@@ -25,7 +25,7 @@ import ShowEnumFromString from "../../../../components/enum-filters/show-enum-fr
 import ViewTable from "../../../../components/viewDetails/viewTable";
 import ViewPdf from "../../../../components/viewDetails/viewPdf";
 import ViewCard from "../../../../components/viewDetails/viewCard";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../../../hooks/useTranslation";
 import { Plus} from 'react-bootstrap-icons';
 
 import { useFormik } from "formik";

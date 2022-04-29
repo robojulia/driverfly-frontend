@@ -1,5 +1,5 @@
 import ViewTableStyle from "../../public/components/styles/css/ViewTable.module.css"
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../hooks/useTranslation";
 import { Table } from "react-bootstrap";
 
 /**

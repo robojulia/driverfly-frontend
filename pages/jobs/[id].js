@@ -10,7 +10,7 @@ import timeSince from "../../utils/timeSince"
 import { ToastContainer, toast } from 'react-toastify'
 import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum"
 import Link from 'next/link'
-import { useTranslation } from "react-i18next"
+import { useTranslation } from "../../hooks/useTranslation"
 import JobApi from "../api/job"
 import CompanyPhoto from "../../components/jobs/company-photo"
 

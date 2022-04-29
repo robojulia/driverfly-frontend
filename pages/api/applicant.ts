@@ -11,12 +11,24 @@ export default class ApplicantApi extends BaseApi {
     }
 
     async upsertByUserId(dto: ApplicantEntity) : Promise<ApplicantEntity> {
+        const { data } = await this.patch(this.baseUrl, dto);
+
+        return data;
+    }
+
+    async create(dto: ApplicantEntity) : Promise<ApplicantEntity> {
         const { data } = await this.post(this.baseUrl, dto);
 
         return data;
     }
 
-    async list(params: { jobId: number }) : Promise<ApplicantEntity[]> {
+    async update(id: number, dto: ApplicantEntity) : Promise<ApplicantEntity> {
+        const { data } = await this.post(this.baseUrl + "/" + id, dto);
+
+        return data;
+    }
+
+    async list(params: { jobId?: number, email?: string }) : Promise<ApplicantEntity[]> {
         const { data } = await this.get(this.buildUrl(this.baseUrl + "/list", params));
 
         return data;

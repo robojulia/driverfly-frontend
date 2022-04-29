@@ -13,12 +13,13 @@ import stateList from "../../../utils/stateList";
 
 import { preventNegative } from '../../../utils/input';
 
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from '../../../hooks/useTranslation';
 import { useFormik } from "formik"
 import * as yup from "yup"
 
 import UserApi from "../../api/user";
 import DriverApi from "../../api/driver";
+import ApplicantApi from "../../api/applicant";
 import BaseInput from "../../../components/forms/BaseInput";
 import BaseSelect from "../../../components/forms/BaseSelect";
 import BaseCheck from "../../../components/forms/BaseCheck";
@@ -40,6 +41,7 @@ export default function MyAccount() {
     const user = authCheck();
 
     const driverApi = new DriverApi();
+    const applicantApi = new ApplicantApi();
     const userApi = new UserApi();
 
     const [haveOtherBenefits, setHaveOtherBenefits] = useState()
@@ -124,7 +126,7 @@ export default function MyAccount() {
                         ...values.user,
                         name: `${values.user.first_name} ${values.user.last_name}`
                     }),
-                    driverApi.postDriver({
+                    applicantApi.upsertByUserId({
                         ...values.driver,
                         birthdate: values.driver.birthdate ? new Date(values.driver.birthdate) : null
                     }),

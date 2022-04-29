@@ -10,7 +10,7 @@ import Image from "next/image";
 import LogoutButton from '../../../buttons/Logout';
 import user1 from "../../../../public/dashboard/assets/images/users/user1.jpg";
 
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../../../hooks/useTranslation";
 
 export default function CompanyProfileNav({ user }) {
     const { t } = useTranslation();

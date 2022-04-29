@@ -6,7 +6,7 @@ import Forgotpassword from '../public/css/Forgot.module.css'
 import AuthApi from "./api/auth";
 import { ToastContainer, toast } from 'react-toastify'
 
-import { useTranslation } from "react-i18next"
+import { useTranslation } from "../hooks/useTranslation"
 import { useFormik } from "formik";
 import * as yup from "yup";
 

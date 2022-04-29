@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import useRedirect from '../../../../../hooks/useRedirect';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "../../../../../hooks/useTranslation";
 
 import {PenFill, TrashFill} from 'react-bootstrap-icons';
 
