@@ -5,7 +5,7 @@ import Sidebar from "./sidebars/Sidebar";
 import Head from "next/head";
 
 import { useTranslation } from "../../../hooks/useTranslation";
-import { ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, FileEarmarkMedicalFill, CheckSquareFill, StarFill, GearFill} from 'react-bootstrap-icons';
+import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, FileEarmarkMedicalFill, CheckSquareFill, StarFill, GearFill } from 'react-bootstrap-icons';
 
 
 
@@ -18,14 +18,14 @@ const FullLayout = ({ children }) => {
 
   const menuItems = [
     {
-        pathname: "/dashboard/driver",
-        icon: HouseFill,
-        text: "dashboard"
+      pathname: "/dashboard/driver",
+      icon: HouseFill,
+      text: "dashboard"
     },
     {
-        pathname: "/dashboard/driver/my-account",
-        icon: PersonFill,
-        text: "my_account",
+      pathname: "/dashboard/driver/my-account",
+      icon: PersonFill,
+      text: "my_account",
     },
     {
       pathname: "/dashboard/driver/my-application",
@@ -36,6 +36,11 @@ const FullLayout = ({ children }) => {
       pathname: "/dashboard/driver/my-docs",
       icon: FileEarmarkMedicalFill,
       text: "my_docs"
+    },
+    {
+      pathname: "/find-jobs",
+      icon: Search,
+      text: "find_new_job"
     },
     {
       pathname: "/dashboard/driver/jobs-offered",
@@ -81,11 +86,11 @@ const FullLayout = ({ children }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="header">
-            <div className="contentArea ">
-              {/********header**********/}
-              <Header showMobmenu={() => showMobilemenu()} />
-            </div>
-            </div>
+        <div className="contentArea ">
+          {/********header**********/}
+          <Header showMobmenu={() => showMobilemenu()} />
+        </div>
+      </div>
       <main className="maincontainer">
         < div className="dashboardsidebar">
           <div className="pageWrapper d-md-block d-lg-flex">
@@ -99,16 +104,16 @@ const FullLayout = ({ children }) => {
             </aside> */}
             {/********Content Area**********/}
             <div className="header">
-           
+
 
               {/********Middle Content**********/}
               <Container className="p-4 wrapper" fluid>
                 <div>{children}</div>
               </Container>
             </div>
-            </div>
           </div>
-       
+        </div>
+
       </main>
     </>
   );
