@@ -5,7 +5,7 @@ import Sidebar from "./sidebars/Sidebar";
 import Head from "next/head";
 
 import { useTranslation } from "../../../hooks/useTranslation";
-import { ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, FileEarmarkMedicalFill, CheckSquareFill, StarFill, GearFill } from 'react-bootstrap-icons';
+import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, FileEarmarkMedicalFill, CheckSquareFill, StarFill, GearFill } from 'react-bootstrap-icons';
 
 
 
@@ -38,7 +38,7 @@ const FullLayout = ({ children }) => {
       text: "my_docs"
     },
     {
-      pathname: "/find-jobs?jobs_for_driver=true",
+      pathname: "/find-jobs",
       icon: Search,
       text: "find_new_job"
     },

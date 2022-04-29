@@ -34,25 +34,23 @@ export default function FindJobs(props) {
     ...params
   })
 
-  const router = useRouter()
-
-  const sortHandler = e => {
-    setFilters({
-      ...filters,
-      order_by: e.target.value
-    })
-  }
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFiltersByKeyValue(name, value)
-  }
-
   const setFiltersByKeyValue = (key, value) => {
     setFilters({
       ...filters,
       [key]: value
     })
+  }
+
+  const router = useRouter()
+
+  const sortHandler = e => {
+    const { name, value } = e.target;
+    setFiltersByKeyValue("order_by", value)
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFiltersByKeyValue(name, value)
   }
 
   const setNativeValue = (element, value) => {
@@ -71,36 +69,38 @@ export default function FindJobs(props) {
   }
 
   const setFiltersForQuery = async () => {
-    if (params.jobs_for_driver) {
-      await Promise.all([
-        driverApi.getDriver("drivers")
-          .catch(error => {
-            console.error("unable to fetch driver info", error);
-            throw error;
-          }),
-        driverApi.getPreferences()
-          .catch(error => {
-            console.error("unable to fetch driver preference info", error);
-            throw error;
-          })
-      ])
-        .then(values => {
-          const [driver, preferences] = values;
-          // console.log("preferences", preferences.find(item => (item.category == "MATCHING" && item.label == "TEAM_DRIVER")));
-          console.log("driver", driver)
-          console.log("preferences", preferences)
+    // To DO - If user come from driver dashboard
+    // if (params.jobs_for_driver) {
+    //   await Promise.all([
+    //     driverApi.getDriver("drivers")
+    //       .catch(error => {
+    //         console.error("unable to fetch driver info", error);
+    //         throw error;
+    //       }),
+    //     driverApi.getPreferences()
+    //       .catch(error => {
+    //         console.error("unable to fetch driver preference info", error);
+    //         throw error;
+    //       })
+    //   ])
+    //     .then(values => {
+    //       const [driver, preferences] = values;
+    //       // console.log("preferences", preferences.find(item => (item.category == "MATCHING" && item.label == "TEAM_DRIVER")));
+    //       console.log("driver", driver)
+    //       console.log("preferences", preferences)
 
-          if (driver.license_type) {
-            document.getElementsByName("cdl_class").forEach(input => {
-              if (input.type.toLowerCase() === "radio" && input.value === driver.license_type) {
-                input.checked = true;
-                setFiltersByKeyValue("cdl_class", driver.license_type)
-              }
-            })
-          }
+    //       if (driver.license_type) {
+    //         document.getElementsByName("cdl_class").forEach(input => {
+    //           if (input.type.toLowerCase() === "radio" && input.value === driver.license_type) {
+    //             input.checked = true;
+    //             setFiltersByKeyValue("cdl_class", driver.license_type)
+    //           }
+    //         })
+    //       }
 
-        })
-    }
+    //     })
+    // }
+
     Object.keys(params).map(key => {
       let inputs = document.getElementsByName(key);
       if (inputs[0].tagName.toLowerCase() !== "input") {
@@ -129,12 +129,12 @@ export default function FindJobs(props) {
   useEffect(fetchJobs, [filters])
   useEffect(async () => {
     try {
-      console.log("params", params);
       await setFiltersForQuery()
-      // await router.replace('find-jobs', undefined, { shallow: true });
+      await router.replace('find-jobs', undefined, { shallow: true });
       await fetchJobs()
     } catch (e) {
       // console.error('exception is here: ', e);
+      throw e
     }
   }, [])
 
