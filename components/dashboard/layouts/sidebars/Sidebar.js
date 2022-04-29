@@ -31,9 +31,9 @@ export default function Sidebar(props) {
 
     const { t } = useTranslation();
 
-    const current = props.items.find(v => IsSelected(v, router.asPath));
+    let current = props.items.find(v => IsSelected(v, router.asPath));
 
-    if (!current) throw new Error("Path not properly mapped");
+    if (!current) current = props.items[0];
 
     return (<>
         <aside
