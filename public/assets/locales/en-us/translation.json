@@ -647,6 +647,8 @@
     },
     "CHANGE_STATUS": "Change status",
     "VIEW_{name}": "View {{name}}",
+    "EDIT_{name}": "Edit {{name}}",
+    "CREATE_{name}": "Create {{name}}",
     "VIEW_BY_{name}": "View By {{name}}",
     "VIEW": "View",
     "POST": "Post",
@@ -742,7 +744,8 @@
         "array": {
             "length": "Must have {{length}} items",
             "min": "Must have at least {{min}} items",
-            "max": "Must have no more than {{max}} items"
+            "max": "Must have no more than {{max}} items",
+            "unique": "Field must be unique in the list"
         },
         "boolean": {
             "isValue": "Field must be checked"
@@ -758,5 +761,24 @@
     "{name}_ALREADY_EXISTS_NO_MERGE": "{{name}} may be a user of DriverFly who has previously applied to a job with your company.",
     "UNABLE_TO_SAVE": "Unable to save",
     "CLEAR": "Clear",
-    "IMPORT": "Import"
+    "IMPORT": "Import",
+    "BASIC_DETAILS": "Basic Details",
+    "QUANTITY": "Quantity",
+    "OWNER_OPERATOR": "Owner Operator",
+    "TRANSMISSION_EXPERIENCE": "Transmission Experience",
+    "BIRTHDATE": "Birthdate",
+    "HIGHEST_DEGREE": "Highest Degree",
+    "EMERGENCY_CONTACT": "Emergency contact",
+    "FULL_NAME": "Full Name",
+    "RELATIONSHIP": "Relationship",
+    "NEW_EMPLOYER": "New Employer",
+    "THROUGH_OPTIONAL": "Through (optional)",
+    "REMOVE": "Remove",
+    "ApplicantDocumentType": {
+        "RESUME": "Resume",
+        "DRIVER_LICENSE": "Drivers License",
+        "MEDICAL_CARD": "Medical Card",
+        "MVR": "Motor Vehicle Record (MVR)"
+    },
+    "YEARS": "Years"
 }

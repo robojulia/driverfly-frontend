@@ -5,15 +5,21 @@ import { useEffect, useState } from 'react';
 
 import useAuth from "./useAuth";
 import { i18n } from "../next.config";
+
+import translations_EN_US from "../public/assets/locales/en-us/translation.json";
 /**
  * 
  * @param {string} ns the namespace to use (defaults to common)
  * @returns 
  */
 export function useTranslation (ns = null) {
+    const locales = {
+        "en": translations_EN_US,
+        "en-us": translations_EN_US,
+    };
     let { locale } = useRouter();
 
-    if (!ns) ns = "translation";
+    // if (!ns) ns = "translation";
 
     const [ translations, setTranslations ] = useState({});
 
@@ -32,6 +38,8 @@ export function useTranslation (ns = null) {
      * @param {{ translateProps: string }} options
      */
     const t = (name, props, options) => {
+        if (!name) return;
+        
         /**
          * @type {string}
          */
@@ -75,11 +83,17 @@ export function useTranslation (ns = null) {
 
     }
 
-    useEffect(async () => {
-        let json = await fetchTranslations(locale, ns);
+    useEffect(() => {
+        
+        let json = locales[locale];// await fetchTranslations(locale, ns);
 
         if (!json) {
-            json = await fetchTranslations("en-us", ns);
+            json = locales['en-us'];
+            // json = await fetchTranslations("en-us", ns);
+        }
+
+        if (ns) {
+            json = json[ns];
         }
 
         setTranslations(json);

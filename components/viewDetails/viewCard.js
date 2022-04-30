@@ -14,12 +14,15 @@ import { CardBody, CardHeader } from "reactstrap";
 export default function ViewCard(props) {
     const { t } = useTranslation();
 
-    const { title, children } = props;
+    const { title, actions, children } = props;
 
     return (
-        <Card>
-            {title && <CardHeader>{t(title)}</CardHeader>}
-            <CardBody>{children}</CardBody>
+        <Card >
+            {(title || actions) && <CardHeader>
+                {title && <div style={{float: "left"}}>{t(title)}</div>}
+                {actions && <div style={{float: "right"}}>{actions}</div>}
+            </CardHeader>}
+            {children && <CardBody>{children}</CardBody>}
         </Card>
     );
 
