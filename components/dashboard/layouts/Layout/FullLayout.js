@@ -1,25 +1,95 @@
 import React from "react";
-import LogoutButton from '../../../buttons/Logout';
 import { Container } from "reactstrap";
 import Header from "../header/Header";
-import Sidebar from "../sidebars/vertical/Company-Profile/Sidebar";
-import SettingsSidebar from "../sidebars/vertical/Company-Profile/SettingsSidebar";
+import Sidebar from "../sidebars/Sidebar";
 import Head from "next/head";
 
 import { useTranslation } from "../../../../hooks/useTranslation";
-import { useRouter } from "next/router";
+import { Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, CheckSquareFill, GiftFill, GearFill } from 'react-bootstrap-icons';
 
-
+// company layout
 const FullLayout = ({ children }) => {
   const { t } = useTranslation();
 
-  const router = useRouter();
   const [open, setOpen] = React.useState(false);
   const showMobilemenu = () => {
     setOpen(!open);
   };
 
-  return (
+  const menuItems = [
+    {
+      pathname: "/dashboard/company",
+      icon: HouseFill,
+      text: "dashboard"
+    },
+    {
+      pathname: "/dashboard/company/jobs",
+      icon: BagFill,
+      text: "JOB_LISTINGS",
+      startsWith: true
+    },
+    {
+      pathname: "/dashboard/company/applicants",
+      icon: FileEarmarkFill,
+      text: "APPLICANTS",
+      startsWith: true
+    },
+    // {
+    //   pathname: "/dashboard/company/driver-applications-and-resume",
+    //   icon: AssignmentIcon,
+    //   text: t("DRIVER_APPLICATION")
+    // },
+    // {
+    //   pathname: "/dashboard/company/sms",
+    //   icon: EmailIcon,
+    //   text: t("MESSAGES")
+    // },
+    // {
+    //   pathname: "/dashboard/company/driver-directory",
+    //   icon: ContactPageIcon,
+    //   text: t("DRIVER_DIRECTORY")
+    // },
+    // {
+    //   pathname: "/dashboard/company/safety-and-complience",
+    //   icon: GppGoodIcon,
+    //   text: t("SAFETY_COMPLIANCE")
+    // },
+    {
+      pathname: "/dashboard/company/settings",
+      icon: GearFill,
+      text: "SETTINGS",
+      items: [
+        {
+            pathname: "/dashboard/company/settings",
+            icon: Building,
+            text: "company"
+        },
+        {
+            pathname: "/dashboard/company/settings/vehicles",
+            icon: CardImage,
+            text: "VEHICLES"
+        },
+        {
+          pathname: "/dashboard/company/settings/locations",
+          icon: GeoAltFill,
+          text: "LOCATIONS"
+        },
+        {
+          pathname: "/dashboard/company/settings/profile",
+          icon: PersonFill,
+          text: "MY_PROFILE",
+        },
+      ],
+    },
+    // {
+    //   pathname: "/dashboard/company/admin-approval-jobs",
+    //   icon: null,
+    //   text: "Admin approval for jobs"
+    // }
+  ];
+
+
+return (
     <>
       <Head>
         <title>{t("DRIVERFLY_COMPANY_DASHBOARD")}</title>
@@ -39,18 +109,7 @@ const FullLayout = ({ children }) => {
         < div className="dashboardsidebar">
           <div className="pageWrapper d-md-block d-lg-flex">
             {/******** Sidebar **********/}
-            <aside
-              className={`sidebarArea ${!open ? "" : "showSidebar"
-                }`}
-            >
-              <Sidebar showMobilemenu={() => showMobilemenu()} />
-            </aside>
-            {
-              router.asPath.startsWith("/dashboard/company/settings") &&
-              <aside className={`sidebarArea ${!open ? "" : "showSidebar"}`}>
-                <SettingsSidebar showMobilemenu={() => showMobilemenu()} />
-              </aside>
-            }
+            <Sidebar open={open} items={menuItems} />
             {/********Content Area**********/}
             <div className="header">
            

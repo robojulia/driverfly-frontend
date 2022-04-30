@@ -10,6 +10,11 @@ import { ApplicantNoteEntity } from './applicant-note.entity';
 import { ApplicantType } from '../../enums/applicants/applicant-type.enum';
 import { ApplicantJobEntity } from './applicant-job.entity';
 import * as yup from "yup";
+import * as yupUtils from "../../utils/yup";
+import { JobEquipmentType } from '../../enums/jobs/job-equipment-type.enum';
+import { VehicleTransmissionType } from '../../enums/vehicles/vehicle-transmission-type.enum';
+import { DriverEndorsement } from '../../enums/drivers/driver-endorsement.enum';
+import { ApplicantDocumentType } from '../../enums/applicants/applicant-document-type.enum';
 
 export class ApplicantEntity {
   id?: number;
@@ -33,7 +38,10 @@ export class ApplicantEntity {
   years_cdl_experience?: number;
   can_pass_drug_test?: boolean;
   is_owner_operator?: boolean;
+  transmission_type?: VehicleTransmissionType[];
+  endorsements?: DriverEndorsement[];
   highest_degree?: DriverDegree;
+  authorized_to_work_in_us?: boolean;
   emergency_contact_name?: string;
   emergency_contact_number?: string;
   emergency_contact_relationship?: string;
@@ -77,12 +85,24 @@ export class ApplicantEntity {
         years_cdl_experience: yup.number().min(0).nullable(),
         can_pass_drug_test: yup.bool().nullable(),
         is_owner_operator: yup.bool().nullable(),
-        highest_degree: yup.string().nullable(),
+        transmission_type: yup.array(
+          (yup.string() as any).enum(VehicleTransmissionType)
+        ),
+        endorsements: yup.array(
+          (yup.string() as any).enum(DriverEndorsement)
+        ),
+        highest_degree: (yup.string() as any).enum(DriverDegree).nullable(),
+        authorized_to_work_in_us: yup.bool().nullable(),
         emergency_contact_name: yup.string().nullable(),
         emergency_contact_number: yup.string().nullable(),
         emergency_contact_relationship: yup.string().nullable(),
         has_past_dui: yup.bool().nullable(),
-        dui_years: yup.array(yup.string()).nullable(),
+        dui_years: yup.array(
+          yup
+            .number()
+            .min(new Date().getFullYear() - 5)
+            .max(new Date().getFullYear())
+        ),
         criminal_history: yup.string().nullable(),
         accident_count: yup.number().min(0).nullable(),
         accident_details: yup.string().nullable(),
@@ -94,6 +114,21 @@ export class ApplicantEntity {
         tickets_details: yup.string().nullable(),
         positive_drug_test: yup.bool().nullable(),
         positive_drug_test_details: yup.string().nullable(),
+        equipment_experience: (yup.array(
+          ApplicantExperienceEntity.yupSchema()
+        ) as any).unique("type", { mapper: ApplicantExperienceEntity.key }),
+        equipment_owned: (yup.array(
+          ApplicantEquipmentEntity.yupSchema()
+        ) as any).unique("type", { mapper: ApplicantEquipmentEntity.key }),
+        employers: yup.array(
+          ApplicantEmployerEntity.yupSchema()
+        ),
+        documents: (yup.array(
+          DocumentEntity.yupSchema(ApplicantDocumentType)
+        ) as any).unique("type"),
+        jobs: (yup.array(
+          ApplicantJobEntity.yupSchema()
+        ) as any).unique("job.id")
     });
   }
 }

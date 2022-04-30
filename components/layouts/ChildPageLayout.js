@@ -1,5 +1,7 @@
 import { useRouter } from "next/router";
-import { Container, ToastContainer } from "react-bootstrap";
+import { Container } from "react-bootstrap";
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { ChevronLeft } from "react-bootstrap-icons";
 import useLastPage from "../../hooks/useLastPage";
 import { useTranslation } from "../../hooks/useTranslation";
@@ -33,6 +35,7 @@ export default function ChildPageLayout({ title, backPath, children }) {
 
     return (
         <>
+            <ToastContainer />
             <h2>
                 <span style={{cursor: "pointer"}} onClick={handleBack}><ChevronLeft /></span>
                 {t(title || "GO_BACK")}

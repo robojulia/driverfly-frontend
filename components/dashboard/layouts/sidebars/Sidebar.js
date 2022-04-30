@@ -31,7 +31,7 @@ export default function Sidebar(props) {
 
     const { t } = useTranslation();
 
-    let current = props.items.find(v => IsSelected(v, router.asPath));
+    let current = findLast(props.items, v => IsSelected(v, router.asPath));
 
     if (!current) current = props.items[0];
 
@@ -39,10 +39,10 @@ export default function Sidebar(props) {
         <aside
             className={`sidebarArea ${!props.open ? "" : "showSidebar"}`}>
             <SidebarArea>
-                {props.items.map(v => (<SidebarLink isMobile={isMobile} item={v} t={t} currentPath={router.asPath} />))}
+                {props.items.map((v, i) => (<SidebarLink key={i} isMobile={isMobile} item={v} t={t} currentPath={router.asPath} />))}
             </SidebarArea>
         </aside>
-        {!isMobile && current.items?.length > 0 &&
+        {!isMobile && current?.items?.length > 0 &&
         <Sidebar open={props.open} items={current.items} />
         }
     </>);
@@ -71,12 +71,25 @@ function IsSelected(item, currentPath) {
     if ("isSelected" in item) return item.isSelected;
 
     if (item.items) {
-        return item.isSelected = item.items.some(v => IsSelected(v, currentPath));
+        return item.isSelected = !!findLast(item.items, v => IsSelected(v, currentPath));
     }
 
     if (item.startsWith) return item.isSelected = currentPath.startsWith(item.pathname);
 
     return item.isSelected = currentPath == item.pathname;
+}
+
+/**
+ * 
+ * @param {any[]} arr 
+ * @param {(value, index: number) => boolean} predicate 
+ */
+function findLast(arr, predicate) {
+    for (let i = arr.length - 1; i > -1; i--) {
+        let value = arr[i];
+
+        if (predicate(value, i)) return value;
+    }
 }
 
 /**
@@ -112,7 +125,7 @@ function SidebarLink(props) {
         </Link>
         {isMobile && items &&
             <ul>
-                {items.map(v => (<SidebarLink isMobile={isMobile} item={v} t={t} currentPath={currentPath} />))}
+                {items.map((v, i) => (<SidebarLink key={i} isMobile={isMobile} item={v} t={t} currentPath={currentPath} />))}
             </ul>
         }
     </li>);

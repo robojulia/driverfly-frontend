@@ -36,21 +36,21 @@ export default function Profile() {
 
   const form = useFormik({
     initialValues: {
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email,
-      contact_number: user.contact_number,
-      cell_number: user.cell_number,
-      timezone: user.timezone,
-      language: user.language,
+      first_name: null,
+      last_name: null,
+      email: null,
+      contact_number: null,
+      cell_number: null,
+      timezone: null,
+      language: null,
     },
     validationSchema: yup.object({
-      first_name: yup.string().required(translations.required).nullable(),
-      last_name: yup.string().required(translations.required).nullable(),
-      contact_number: yup.string().required(translations.required).nullable(),
-      cell_number: yup.string().required(translations.required).nullable(),
-      timezone: yup.string().required(translations.required).nullable(),
-      language: yup.string().required(translations.required).nullable(),
+      first_name: yup.string().required().nullable(),
+      last_name: yup.string().required().nullable(),
+      contact_number: yup.string().required().nullable(),
+      cell_number: yup.string().required().nullable(),
+      timezone: yup.string().required().nullable(),
+      language: yup.string().required().nullable(),
     }),
     onSubmit: async (values) => {
       const dto = {
@@ -95,13 +95,25 @@ export default function Profile() {
     }
   });
 
+  useEffect(() => {
+    form.setValues({
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+      contact_number: user.contact_number,
+      cell_number: user.cell_number,
+      timezone: user.timezone,
+      language: user.language,
+    });
+  }, []);
+
   return (
     <>
       <ToastContainer />
       <div>
 
         <Row>
-          <h2>{t("PROFILE")}</h2>
+          <h2>{t("MY_ACCOUNT")}</h2>
         </Row>
         <div className='container-fluid'>
           <div className="modal-header border-0">

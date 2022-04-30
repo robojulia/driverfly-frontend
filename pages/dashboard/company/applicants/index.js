@@ -385,7 +385,9 @@ function renderApplicantView(props) {
                         </button>
                     </td>
                 </tr>
-                <tr>
+                {
+                    applicant.jobs?.length > 0 &&
+                    <tr>
                     <td colSpan={5}>
                         <Table bordered striped>
                             <tr>
@@ -418,6 +420,7 @@ function renderApplicantView(props) {
                         </Table>
                     </td>
                 </tr>
+                }
                 </>
             ))}
         </tbody>
