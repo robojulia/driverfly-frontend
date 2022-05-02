@@ -27,16 +27,16 @@ const FullLayout = ({ children }) => {
       icon: PersonFill,
       text: "my_account",
     },
-    {
-      pathname: "/dashboard/driver/my-application",
-      icon: FileEarmarkFill,
-      text: "my_application"
-    },
-    {
-      pathname: "/dashboard/driver/my-docs",
-      icon: FileEarmarkMedicalFill,
-      text: "my_docs"
-    },
+    // {
+    //   pathname: "/dashboard/driver/my-application",
+    //   icon: FileEarmarkFill,
+    //   text: "my_application"
+    // },
+    // {
+    //   pathname: "/dashboard/driver/my-docs",
+    //   icon: FileEarmarkMedicalFill,
+    //   text: "my_docs"
+    // },
     {
       pathname: "/find-jobs",
       icon: Search,
@@ -62,17 +62,22 @@ const FullLayout = ({ children }) => {
       icon: GiftFill,
       text: "free_resources"
     },
-    // {
-    //   icon: GearFill,
-    //   text: "SETTINGS",
-    //   items: [
-    //     {
-    //       pathname: "/dashboard/driver/settings/profile",
-    //       icon: PersonFill,
-    //       text: "my_account",
-    //     }
-    //   ],
-    // },
+    {
+      icon: GearFill,
+      text: "SETTINGS",
+      items: [
+        {
+          pathname: "/dashboard/driver/settings",
+          icon: PersonFill,
+          text: "MY_ACCOUNT",
+        },
+        {
+          pathname: "/dashboard/driver/settings/applicant",
+          icon: FileEarmarkFill,
+          text: "my_application",
+        },
+      ],
+    },
   ];
 
   return (
