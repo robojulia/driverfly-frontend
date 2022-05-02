@@ -38,14 +38,14 @@ export function useTranslation (ns = null) {
      * @param {{ translateProps: string }} options
      */
     const t = (name, props, options) => {
-        if (!name) return;
+        if (name == null) return;
         
         /**
          * @type {string}
          */
         let translatedText = null;
 
-        const parts = name.split(".");
+        const parts = `${name}`.split(".");
         let translationObj = translations;
         parts.forEach(p => {
             if (translationObj) translationObj = translationObj[p];

@@ -2,7 +2,7 @@ import React from 'react'
 
 import { useTranslation } from "../../hooks/useTranslation"
 
-function BaseSelect ( { formik, required, className, enumType, options, valueKey = "value", labelKey = "label", labelPrefix, createLabel, label, type, placeholder, value, onChange, handleBlur, readOnly, name, touched, error, } ) {
+function BaseSelect ( { formik, required, className, enumType, options, valueKey = "value", labelKey = "label", labelPrefix, createLabel, label, placeholder, value, onChange, handleBlur, readOnly, name, touched, error, } ) {
   const { t } = useTranslation();
 
   if (formik) {
@@ -45,7 +45,6 @@ return (
         <br />
       </>}
       <select
-        type={type || 'text'}
         value={value || ""}
         onChange={onChange}
         onBlur={handleBlur}
