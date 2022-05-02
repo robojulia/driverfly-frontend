@@ -40,11 +40,6 @@ export default class ApplicantApi extends BaseApi {
 
         return data;
     }
-    async upsertByUserId(dto: ApplicantEntity) : Promise<ApplicantEntity> {
-        const { data } = await this.post(this.baseUrl, dto);
-
-        return data;
-    }
 
     documents = {
         baseUrl: (applicantId: number) => `${this.baseUrl}/${applicantId}/documents`,
