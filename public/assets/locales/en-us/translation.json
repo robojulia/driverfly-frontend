@@ -780,5 +780,7 @@
         "MEDICAL_CARD": "Medical Card",
         "MVR": "Motor Vehicle Record (MVR)"
     },
-    "YEARS": "Years"
+    "YEARS": "Years",
+    "MY_ACCOUNT": "My Account",
+    "APPLICANT_INFO_DESCRIPTION": "This is the information which will be submitted to a company when you apply to a job"
 }

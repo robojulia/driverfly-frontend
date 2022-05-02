@@ -11,12 +11,6 @@ export default class ApplicantApi extends BaseApi {
         super();
     }
 
-    async upsertByUserId(dto: ApplicantEntity) : Promise<ApplicantEntity> {
-        const { data } = await this.patch(this.baseUrl, dto);
-
-        return data;
-    }
-
     async create(dto: ApplicantEntity) : Promise<ApplicantEntity> {
         const { data } = await this.post(this.baseUrl, dto);
 
@@ -36,6 +30,18 @@ export default class ApplicantApi extends BaseApi {
     }
     async getById(id: number) : Promise<ApplicantEntity> {
         const { data } = await this.get(this.buildUrl(this.baseUrl + `/${id}`));
+
+        return data;
+    }
+
+    // user specific actions
+    async getByUserId() : Promise<ApplicantEntity> {
+        const { data } = await this.get(this.baseUrl);
+
+        return data;
+    }
+    async upsertByUserId(dto: ApplicantEntity) : Promise<ApplicantEntity> {
+        const { data } = await this.post(this.baseUrl, dto);
 
         return data;
     }

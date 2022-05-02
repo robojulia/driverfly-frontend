@@ -10,8 +10,6 @@ import { ApplicantNoteEntity } from './applicant-note.entity';
 import { ApplicantType } from '../../enums/applicants/applicant-type.enum';
 import { ApplicantJobEntity } from './applicant-job.entity';
 import * as yup from "yup";
-import * as yupUtils from "../../utils/yup";
-import { JobEquipmentType } from '../../enums/jobs/job-equipment-type.enum';
 import { VehicleTransmissionType } from '../../enums/vehicles/vehicle-transmission-type.enum';
 import { DriverEndorsement } from '../../enums/drivers/driver-endorsement.enum';
 import { ApplicantDocumentType } from '../../enums/applicants/applicant-document-type.enum';
@@ -36,34 +34,34 @@ export class ApplicantEntity {
   license_state?: string;
   license_type?: DriverLicenseType;
   years_cdl_experience?: number;
-  can_pass_drug_test?: boolean;
-  is_owner_operator?: boolean;
-  transmission_type?: VehicleTransmissionType[];
-  endorsements?: DriverEndorsement[];
+  can_pass_drug_test?: boolean = false;
+  is_owner_operator?: boolean = false;
+  transmission_type?: VehicleTransmissionType[] = [];
+  endorsements?: DriverEndorsement[] = [];
   highest_degree?: DriverDegree;
-  authorized_to_work_in_us?: boolean;
+  authorized_to_work_in_us?: boolean = false;
   emergency_contact_name?: string;
   emergency_contact_number?: string;
   emergency_contact_relationship?: string;
-  has_past_dui?: boolean;
-  dui_years?: string[];
+  has_past_dui?: boolean = false;
+  dui_years?: string[] = [];
   criminal_history?: string;
   accident_count?: number;
   accident_details?: string;
-  license_revoked?: boolean;
+  license_revoked?: boolean = false;
   license_revoked_details?: string;
-  psp_violations?: boolean;
+  psp_violations?: boolean = false;
   psp_violations_details?: string;
-  tickets?: boolean;
+  tickets?: boolean = false;
   tickets_details?: string;
-  positive_drug_test?: boolean;
+  positive_drug_test?: boolean = false;
   positive_drug_test_details?: string;
-  equipment_experience?: ApplicantExperienceEntity[];
-  equipment_owned?: ApplicantEquipmentEntity[];
-  employers?: ApplicantEmployerEntity[];
-  jobs?: ApplicantJobEntity[];
-  notes?: ApplicantNoteEntity[];
-  documents?: DocumentEntity[];
+  equipment_experience?: ApplicantExperienceEntity[] = [];
+  equipment_owned?: ApplicantEquipmentEntity[] = [];
+  employers?: ApplicantEmployerEntity[] = [];
+  jobs?: ApplicantJobEntity[] = [];
+  notes?: ApplicantNoteEntity[] = [];
+  documents?: DocumentEntity[] = [];
   created_at?: string;
   last_updated_at?: string;
 
@@ -87,10 +85,10 @@ export class ApplicantEntity {
         is_owner_operator: yup.bool().nullable(),
         transmission_type: yup.array(
           (yup.string() as any).enum(VehicleTransmissionType)
-        ),
+        ).nullable(),
         endorsements: yup.array(
           (yup.string() as any).enum(DriverEndorsement)
-        ),
+        ).nullable(),
         highest_degree: (yup.string() as any).enum(DriverDegree).nullable(),
         authorized_to_work_in_us: yup.bool().nullable(),
         emergency_contact_name: yup.string().nullable(),
@@ -102,7 +100,7 @@ export class ApplicantEntity {
             .number()
             .min(new Date().getFullYear() - 5)
             .max(new Date().getFullYear())
-        ),
+        ).nullable(),
         criminal_history: yup.string().nullable(),
         accident_count: yup.number().min(0).nullable(),
         accident_details: yup.string().nullable(),

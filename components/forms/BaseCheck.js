@@ -19,6 +19,26 @@ function BaseCheck ( { prefixLabel, formik, required, className, label, checked,
     handleBlur = handleBlur || formik.handleBlur;
   }
 
+  /**
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} e 
+   */
+  const onChangeWrapper = (e) => {
+    const { checked } = e.target;
+
+    if (onChange) {
+      onChange({
+        ...e,
+        target: {
+          ...e.target,
+          name: name,
+          value: checked
+        }
+      });
+    }
+    
+  };
+
   return (
     <div className={className}>
       <div className='form-switch'>
@@ -26,7 +46,7 @@ function BaseCheck ( { prefixLabel, formik, required, className, label, checked,
           id={name}
           type="checkbox"
           checked={checked}
-          onChange={onChange}
+          onChange={onChangeWrapper}
           readOnly={readOnly}
           name={name}
           role="switch"

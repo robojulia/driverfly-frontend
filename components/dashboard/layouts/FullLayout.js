@@ -62,17 +62,22 @@ const FullLayout = ({ children }) => {
       icon: GiftFill,
       text: "free_resources"
     },
-    // {
-    //   icon: GearFill,
-    //   text: "SETTINGS",
-    //   items: [
-    //     {
-    //       pathname: "/dashboard/driver/settings/profile",
-    //       icon: PersonFill,
-    //       text: "my_account",
-    //     }
-    //   ],
-    // },
+    {
+      icon: GearFill,
+      text: "SETTINGS",
+      items: [
+        {
+          pathname: "/dashboard/driver/settings",
+          icon: PersonFill,
+          text: "MY_ACCOUNT",
+        },
+        {
+          pathname: "/dashboard/driver/settings/applicant",
+          icon: FileEarmarkFill,
+          text: "my_application",
+        },
+      ],
+    },
   ];
 
   return (
