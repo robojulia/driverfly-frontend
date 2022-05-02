@@ -25,7 +25,7 @@ import ShowEnumFromString from "../../../../components/enum-filters/show-enum-fr
 import * as numbers from "../../../../utils/number";
 import { JobGeography } from '../../../../enums/jobs/job-geography.enum';
 import { JobEmploymentType } from '../../../../enums/jobs/job-employment-type.enum';
-import { Button } from "react-bootstrap";
+import { Button, ButtonGroup } from "react-bootstrap";
 
 const ViewMode = {
     job: "job",
@@ -301,9 +301,14 @@ export default function Applicants(props) {
 
                         </Col>
                         <Col xs="4">
-                            <button className="btn-sm btn-primary" style={{ float: "right" }} onClick={() => router.push("/dashboard/company/applicants/import")}>
-                                + {t("IMPORT_APPLICANTS")}
-                            </button>
+                            <ButtonGroup size="sm" style={{ float: "right" }}>
+                                <button className="btn btn-primary" onClick={() => router.push("/dashboard/company/applicants/create")}>
+                                    + {t("ADD_{name}", { name: "APPLICANT" }, { translateProps: true })}
+                                </button>
+                                <button className="btn btn-secondary" onClick={() => router.push("/dashboard/company/applicants/import")}>
+                                    + {t("IMPORT_APPLICANTS")}
+                                </button>
+                            </ButtonGroup>
                         </Col>
                     </Row>
                     <Row>
