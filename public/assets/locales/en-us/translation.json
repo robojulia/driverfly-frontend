@@ -365,6 +365,10 @@
         "COURIER_VAN": "Courier van",
         "SERVICE_TRUCKS": "Service trucks",
         "DOUBLES": "Doubles",
+        "DRY_VAN": "Dry van",
+        "LUMBER_TRUCK": "Lumber truck",
+        "MIX_CONCRETE_TRUCK": "Mix Concrete Truck",
+        "POWER_EQUIPMENT": "Power equipment",
         "OTHER": "Other"
     },
     "tractor_only": "Tractor only",
