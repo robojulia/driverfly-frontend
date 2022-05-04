@@ -673,7 +673,7 @@ export default function Applicant() {
                             }
                                 <BaseCheck
                                     className="col-12 mt-2"
-                                    label="has_has_psp_violations"
+                                    label="has_had_psp_violations"
                                     name="psp_violations"
                                     formik={form}
                                     />

@@ -334,7 +334,7 @@ function View(props) {
                                     show: !!applicant.license_revoked,
                                     text: applicant.license_revoked_details
                                 },
-                                has_has_psp_violations: applicant.psp_violations,
+                                has_had_psp_violations: applicant.psp_violations,
                                 violations_details: {
                                     label: "details",
                                     show: !!applicant.psp_violations,
@@ -1133,7 +1133,7 @@ function View(props) {
                             }
                                 <BaseCheck
                                     className="col-12 mt-2"
-                                    label="has_has_psp_violations"
+                                    label="has_had_psp_violations"
                                     name="psp_violations"
                                     formik={form}
                                     />
