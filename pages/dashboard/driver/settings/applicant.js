@@ -523,7 +523,7 @@ export default function Applicant() {
                                         />
                                     <BaseInput
                                         className="col-6"
-                                        name={`employers[${i}].city`}
+                                        name={`employers[${i}].zip_code`}
                                         label="ZIP_CODE"
                                         placeholder="ZIP_CODE"
                                         formik={form}
