@@ -677,155 +677,16 @@ function View(props) {
                                 />
                             <BaseCheck
                                 className="col-12 mt-2"
-                                label="AUTHORIZED_TO_WORK_IN_THE_US"
-                                name="authorized_to_work_in_us"
-                                formik={form}
-                                />
-                            <Col xs="12">
-                                <ViewCard
-                                    title="equipment_experience"
-                                    actions={<Button size='sm' onClick={() => form.setValues({
-                                        ...form.values,
-                                        equipment_experience: [
-                                            ...(form.values.equipment_experience || []),
-                                            new ApplicantExperienceEntity()
-                                        ]
-                                    })}><PlusCircle /> {t("ADD")}</Button>}
-                                    >
-                                    {
-                                        form.values.equipment_experience?.length > 0 &&
-
-                                        <Table striped>
-                                            <thead>
-                                                <tr>
-                                                    <th colSpan={2}>{t("TYPE")}</th>
-                                                    <th colSpan={2}>{t("YEARS")}</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {form.values
-                                                    .equipment_experience
-                                                    .map((entity, i) => (
-                                                        <tr key={i}>
-                                                            <td colSpan={entity.type === JobEquipmentType.OTHER ? 1 : 2}>
-                                                                <BaseSelect
-                                                                    name={`equipment_experience[${i}].type`}
-                                                                    placeholder="TYPE"
-                                                                    labelPrefix="JobEquipmentType"
-                                                                    enumType={JobEquipmentType}
-                                                                    formik={form}
-                                                                    />
-                                                            </td>
-                                                            {
-                                                                entity.type === JobEquipmentType.OTHER &&
-                                                                <td>
-                                                                    <BaseInput
-                                                                        name={`equipment_experience[${i}].type_other`}
-                                                                        placeholder="TYPE"
-                                                                        formik={form}
-                                                                        />
-                                                                </td>
-                                                            }
-                                                            <td className='w-25'>
-                                                                <BaseInput
-                                                                    name={`equipment_experience[${i}].years`}
-                                                                    placeholder="YEARS"
-                                                                    type="int"
-                                                                    min="1"
-                                                                    formik={form}
-                                                                    />
-                                                            </td>
-                                                            <td>
-                                                            <a href="#" onClick={() => form.setValues({
-                                                                ...form.values,
-                                                                equipment_experience: form.values.equipment_experience.filter((v, idx) => i != idx)
-                                                            })}><DashCircle color="red" /></a>
-                                                            </td>
-
-                                                        </tr>
-                                                    ))}
-                                            </tbody>
-                                        </Table>
-                                    }
-                                </ViewCard>
-                            </Col>
-                            <BaseCheck
-                                className="col-12 mt-2"
                                 label="OWNER_OPERATOR"
                                 name="is_owner_operator"
                                 formik={form}
                                 />
-                            {
-                                form.values.is_owner_operator &&
-                                <Col xs="12">
-                                    <ViewCard
-                                        title="equipment_owned"
-                                        actions={<Button size='sm' onClick={() => form.setValues({
-                                            ...form.values,
-                                            equipment_owned: [
-                                                ...form.values.equipment_owned,
-                                                new ApplicantEquipmentEntity()
-                                            ]
-                                        })}><PlusCircle /> {t("ADD")}</Button>}
-                                        >
-                                        {
-                                            form.values.equipment_owned.length > 0 &&
-
-                                            <Table striped>
-                                                <thead>
-                                                    <tr>
-                                                        <th colSpan={2}>{t("TYPE")}</th>
-                                                        <th colSpan={2}>{t("QUANTITY")}</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {form.values
-                                                        .equipment_owned
-                                                        .map((entity, i) => (
-                                                            <tr key={i}>
-                                                                <td colSpan={entity.type === JobEquipmentType.OTHER ? 1 : 2}>
-                                                                    <BaseSelect
-                                                                        name={`equipment_owned[${i}].type`}
-                                                                        placeholder="TYPE"
-                                                                        labelPrefix="JobEquipmentType"
-                                                                        enumType={JobEquipmentType}
-                                                                        formik={form}
-                                                                        />
-                                                                </td>
-                                                                {
-                                                                    entity.type === JobEquipmentType.OTHER &&
-                                                                    <td>
-                                                                        <BaseInput
-                                                                            name={`equipment_owned[${i}].type_other`}
-                                                                            placeholder="TYPE"
-                                                                            formik={form}
-                                                                            />
-                                                                    </td>
-                                                                }
-                                                                <td>
-                                                                    <BaseInput
-                                                                        name={`equipment_owned[${i}].quantity`}
-                                                                        placeholder="QUANTITY"
-                                                                        type="int"
-                                                                        min="1"
-                                                                        formik={form}
-                                                                        />
-                                                                </td>
-                                                                <td>
-                                                                <a href="#" onClick={() => form.setValues({
-                                                                    ...form.values,
-                                                                    equipment_owned: form.values.equipment_owned.filter((v, idx) => i != idx)
-                                                                })}><DashCircle color="red" /></a>
-                                                                </td>
-
-                                                            </tr>
-                                                        ))}
-                                                </tbody>
-                                            </Table>
-                                        }
-                                    </ViewCard>
-                                </Col>
-                            }
+                            <BaseCheck
+                                className="col-12 mt-2"
+                                label="AUTHORIZED_TO_WORK_IN_THE_US"
+                                name="authorized_to_work_in_us"
+                                formik={form}
+                                />
                         </Col>
                         <Col md="4" className="px-2">
                             <BaseCheckList
@@ -883,6 +744,156 @@ function View(props) {
                                 </ViewCard>
                             </Col>
                         </Col>
+                    </Row>
+                    <Row>
+                        <Col md="6">
+                            <Col xs="12">
+                                <ViewCard
+                                    title="equipment_experience"
+                                    actions={<Button size='sm' onClick={() => form.setValues({
+                                        ...form.values,
+                                        equipment_experience: [
+                                            ...(form.values.equipment_experience || []),
+                                            new ApplicantExperienceEntity()
+                                        ]
+                                    })}><PlusCircle /> {t("ADD")}</Button>}
+                                    >
+                                    {
+                                        form.values.equipment_experience?.length > 0 &&
+                                        <>
+                                        <Row className='d-sm-none d-md-flex'>
+                                            <Col><strong>{t("TYPE")}</strong></Col>
+                                            <Col><strong>{t("YEARS")}</strong></Col>
+                                        </Row>
+                                        {form.values
+                                            .equipment_experience
+                                            .map((entity, i) => (
+                                                <Row key={i}>
+                                                    <Col xs="12" className='d-sm-flex d-md-none'>
+                                                        <Col><strong>{t("TYPE")}</strong></Col>
+                                                        <Col><strong>{t("YEARS")}</strong></Col>
+                                                    </Col>
+                                                    <Col xs="6">
+                                                        <BaseSelect
+                                                            name={`equipment_experience[${i}].type`}
+                                                            placeholder="TYPE"
+                                                            labelPrefix="JobEquipmentType"
+                                                            enumType={JobEquipmentType}
+                                                            formik={form}
+                                                            />
+                                                    </Col>
+                                                    <Col xs="5">
+                                                        <BaseInput
+                                                            name={`equipment_experience[${i}].years`}
+                                                            placeholder="YEARS"
+                                                            type="int"
+                                                            min="1"
+                                                            formik={form}
+                                                            />
+                                                    </Col>
+                                                    {
+                                                        entity.type === JobEquipmentType.OTHER &&
+                                                        <Col xs="11">
+                                                            <BaseInput
+                                                                name={`equipment_experience[${i}].type_other`}
+                                                                placeholder="TYPE"
+                                                                formik={form}
+                                                                />
+                                                        </Col>
+                                                    }
+                                                    <Col xs="1">
+                                                        <a href="#" onClick={() => form.setValues({
+                                                            ...form.values,
+                                                            equipment_experience: form.values.equipment_experience.filter((v, idx) => i != idx)
+                                                        })}><DashCircle color="red" /></a>
+                                                    </Col>
+                                                    <Col xs="12">
+                                                        <hr />
+                                                    </Col>
+
+                                                </Row>
+                                            ))}
+                                        </>
+                                    }
+                                </ViewCard>
+                            </Col>
+                        </Col>
+                        <Col md="6">
+                            {
+                                form.values.is_owner_operator &&
+                                <Col xs="12">
+                                    <ViewCard
+                                        title="equipment_owned"
+                                        actions={<Button size='sm' onClick={() => form.setValues({
+                                            ...form.values,
+                                            equipment_owned: [
+                                                ...form.values.equipment_owned,
+                                                new ApplicantEquipmentEntity()
+                                            ]
+                                        })}><PlusCircle /> {t("ADD")}</Button>}
+                                        >
+                                        {
+                                            form.values.equipment_owned.length > 0 &&
+                                            <>
+                                            <Row className='d-sm-none d-md-flex'>
+                                                <Col><strong>{t("TYPE")}</strong></Col>
+                                                <Col><strong>{t("QUANTITY")}</strong></Col>
+                                            </Row>
+                                            {form.values
+                                                .equipment_owned
+                                                .map((entity, i) => (
+                                                    <Row key={i}>
+                                                        <Col xs="12" className='d-sm-flex d-md-none'>
+                                                            <Col><strong>{t("TYPE")}</strong></Col>
+                                                            <Col><strong>{t("QUANTITY")}</strong></Col>
+                                                        </Col>
+                                                        <Col xs="6">
+                                                            <BaseSelect
+                                                                name={`equipment_owned[${i}].type`}
+                                                                placeholder="TYPE"
+                                                                labelPrefix="JobEquipmentType"
+                                                                enumType={JobEquipmentType}
+                                                                formik={form}
+                                                                />
+                                                        </Col>
+                                                        <Col xs="5">
+                                                            <BaseInput
+                                                                name={`equipment_owned[${i}].quantity`}
+                                                                placeholder="QUANTITY"
+                                                                type="int"
+                                                                min="1"
+                                                                formik={form}
+                                                                />
+                                                        </Col>
+                                                        {
+                                                            entity.type === JobEquipmentType.OTHER &&
+                                                            <Col xs="11">
+                                                                <BaseInput
+                                                                    name={`equipment_owned[${i}].type_other`}
+                                                                    placeholder="TYPE"
+                                                                    formik={form}
+                                                                    />
+                                                            </Col>
+                                                        }
+                                                        <Col xs="1">
+                                                            <a href="#" onClick={() => form.setValues({
+                                                                ...form.values,
+                                                                equipment_owned: form.values.equipment_owned.filter((v, idx) => i != idx)
+                                                            })}><DashCircle color="red" /></a>
+                                                        </Col>
+                                                        <Col xs="12">
+                                                            <hr />
+                                                        </Col>
+
+                                                    </Row>
+                                                ))}
+                                            </>
+                                        }
+                                    </ViewCard>
+                                </Col>
+                            }
+                        </Col>
+
                     </Row>
                 </ViewCard>
             </Col>
