@@ -229,25 +229,10 @@ function View(props) {
                                 state_issued: applicant.license_state,
                                 cdl_class_type: applicant.license_type ? t(`DriverLicenseType.${applicant.license_type}`) : null,
                                 years_cdl_experience: applicant.years_cdl_experience,
-                                AUTHORIZED_TO_WORK_IN_THE_US: applicant.authorized_to_work_in_us,
-                                equipment_experience: {
-                                    default: t("NONE"),
-                                    items: applicant.equipment_experience?.map(v => ({
-                                        type: v.type == JobEquipmentType.OTHER ? v.type_other : t(`JobEquipmentType.${v.type}`),
-                                        years: v.years
-                                    }))
-                                },
                                 owner_operator: { text: applicant.is_owner_operator, default: t("UNKNOWN") },
-                                equipment_owned: {
-                                    show: applicant.is_owner_operator || false,
-                                    default: t("NONE"),
-                                    items: applicant.equipment_owned?.map(v => ({
-                                        type: v.type == JobEquipmentType.OTHER ? v.type_other : t(`JobEquipmentType.${v.type}`),
-                                        quantity: v.quantity
-                                    }))
-                                }
+                                AUTHORIZED_TO_WORK_IN_THE_US: applicant.authorized_to_work_in_us,
                             }}
-                                />
+                        />
                     </Col>
                     <Col md="4" className="px-2">
                         <ViewDetails
@@ -262,6 +247,39 @@ function View(props) {
                                 relationship: applicant.emergency_contact_relationship,
                             }}
                         />
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md="6">
+                        <ViewDetails
+                            default={t("NONE")}
+                            obj={{
+                                equipment_experience: {
+                                    items: applicant.equipment_experience?.map(v => ({
+                                        type: v.type == JobEquipmentType.OTHER ? v.type_other : t(`JobEquipmentType.${v.type}`),
+                                        years: v.years
+                                    }))
+                                },
+                            }}
+                            />
+                    </Col>
+                    <Col md="6">
+                        {
+                            applicant.is_owner_operator &&
+                            <ViewDetails
+                            default={t("NONE")}
+                            obj={{
+                                equipment_owned: {
+                                    show: applicant.is_owner_operator || false,
+                                    items: applicant.equipment_owned?.map(v => ({
+                                        type: v.type == JobEquipmentType.OTHER ? v.type_other : t(`JobEquipmentType.${v.type}`),
+                                        quantity: v.quantity
+                                    }))
+                                }
+                            }}
+                            />
+                        }
+
                     </Col>
                 </Row>
             </ViewCard>
