@@ -212,6 +212,12 @@ export default function Applicant() {
                                 placeholder="years_cdl_experience"
                                 formik={form}
                                 />
+                            <BaseCheck
+                                className="col-12 mt-2"
+                                label="AUTHORIZED_TO_WORK_IN_THE_US"
+                                name="authorized_to_work_in_us"
+                                formik={form}
+                                />
                             <Col xs="12">
                                 <ViewCard
                                     title="equipment_experience"
@@ -387,12 +393,6 @@ export default function Applicant() {
                                 formik={form}
                                 labelPrefix="DriverDegree"
                                 enumType={DriverDegree}
-                                />
-                            <BaseCheck
-                                className="col-12 mt-2"
-                                label="AUTHORIZED_TO_WORK_IN_THE_US"
-                                name="authorized_to_work_in_us"
-                                formik={form}
                                 />
                             <Col xs="12" className='mt-2'>
                                 <ViewCard title="EMERGENCY_CONTACT">

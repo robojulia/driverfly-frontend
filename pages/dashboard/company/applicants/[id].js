@@ -229,6 +229,7 @@ function View(props) {
                                 state_issued: applicant.license_state,
                                 cdl_class_type: applicant.license_type ? t(`DriverLicenseType.${applicant.license_type}`) : null,
                                 years_cdl_experience: applicant.years_cdl_experience,
+                                AUTHORIZED_TO_WORK_IN_THE_US: applicant.authorized_to_work_in_us,
                                 equipment_experience: {
                                     default: t("NONE"),
                                     items: applicant.equipment_experience?.map(v => ({
@@ -259,7 +260,6 @@ function View(props) {
                                 emergency_contact: applicant.emergency_contact_name,
                                 phone: applicant.emergency_contact_number,
                                 relationship: applicant.emergency_contact_relationship,
-                                AUTHORIZED_TO_WORK_IN_THE_US: applicant.authorized_to_work_in_us
                             }}
                         />
                     </Col>
@@ -675,6 +675,12 @@ function View(props) {
                                 placeholder="years_cdl_experience"
                                 formik={form}
                                 />
+                            <BaseCheck
+                                className="col-12 mt-2"
+                                label="AUTHORIZED_TO_WORK_IN_THE_US"
+                                name="authorized_to_work_in_us"
+                                formik={form}
+                                />
                             <Col xs="12">
                                 <ViewCard
                                     title="equipment_experience"
@@ -848,12 +854,6 @@ function View(props) {
                                 formik={form}
                                 labelPrefix="DriverDegree"
                                 enumType={DriverDegree}
-                                />
-                            <BaseCheck
-                                className="col-12 mt-2"
-                                label="AUTHORIZED_TO_WORK_IN_THE_US"
-                                name="authorized_to_work_in_us"
-                                formik={form}
                                 />
                             <Col xs="12" className='mt-2'>
                                 <ViewCard title="EMERGENCY_CONTACT">
