@@ -45,7 +45,7 @@ export default function Login() {
         e.preventDefault();
 
         if (validateForm()) {
-
+            console.log(`${process.env.BASE_URL_API}/auth/login`)
             await axios.post(`${process.env.BASE_URL_API}/auth/login`, formData)
                 .then(data => {
 
