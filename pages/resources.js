@@ -79,6 +79,12 @@ export default function Resources()
             for_companies: true
         },
         {
+            type: "ATS",
+            for_drivers: false,
+            for_oo: true,
+            for_companies: true
+        },
+        {
             type: "Job Board",
             for_drivers: true,
             for_oo: true,
@@ -96,6 +102,24 @@ export default function Resources()
             for_oo: false,
             for_companies: true
         },
+        {
+            type: "Digital Brokerage",
+            for_drivers: false,
+            for_oo: false,
+            for_companies: true
+        },
+        {
+            type: "Route Optimization",
+            for_drivers: false,
+            for_oo: true,
+            for_companies: true
+        },
+        {
+            type: "News Publication",
+            for_drivers: true,
+            for_oo: true,
+            for_companies: true
+        }
     ]
 
     const resources = [
@@ -283,6 +307,51 @@ export default function Resources()
                 this data to run safer, more sustainable, higher-performing operations.`,
             for_drivers: false,
             for_oo: false,
+            for_companies: true
+        },
+        {
+            company: "Transfix",
+            type: "Digital Brokerage",
+            link: "https://transfix.io/?utm_source=driverfly",
+            description:
+                `With dedicated experts and advanced technology, we drive modern supply chain
+                performance at scale.`,
+            for_drivers: false,
+            for_oo: false,
+            for_companies: true
+        },
+        {
+            company: "True North",
+            type: "Route Optimization",
+            link: "https://www.truenorthfleet.com/?utm_source=driverfly",
+            description:
+                `Join a new kind of owner-operator fleet. Be part of a team -- not just a number.
+                TrueNorth is the kind of fleet that works for you, not the other way around.`,
+            for_drivers: false,
+            for_oo: true,
+            for_companies: true
+        },
+        {
+            company: "Emerge",
+            type: "Digital Brokerage",
+            link: "https://emergemarket.com/?utm_source=driverfly",
+            description:
+                `The Emerge Digital Freight Marketplace provides access to benchmarked rates and
+                thousands of trusted partners to maximize cost-savings. Grow your network while
+                leveraging your current connections for spot and contract freight.`,
+            for_drivers: false,
+            for_oo: false,
+            for_companies: true
+        },
+        {
+            company: "Freightwaves",
+            type: "News Publication",
+            link: "https://www.freightwaves.com/?utm_source=driverfly",
+            description:
+                `FreightWaves provides benchmarking, analytics, monitor and forecasting of the $9.6T 
+                global logistics industry.`,
+            for_drivers: true,
+            for_oo: true,
             for_companies: true
         }
     ];
