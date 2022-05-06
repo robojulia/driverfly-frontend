@@ -11,8 +11,13 @@ import LogoutButton from '../../../buttons/Logout';
 import user1 from "../../../../public/dashboard/assets/images/users/user1.jpg";
 
 import { useTranslation } from "../../../../hooks/useTranslation";
+import useAuth from "../../../../hooks/useAuth";
 
 export default function CompanyProfileNav({ user }) {
+    const { authenticateCompany } = useAuth();
+
+    authenticateCompany();
+
     const { t } = useTranslation();
 
     const [dropdownOpen, setDropdownOpen] = React.useState(false);
