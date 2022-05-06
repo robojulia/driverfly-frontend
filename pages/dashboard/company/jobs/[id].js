@@ -1143,6 +1143,7 @@ export default function Job() {
                                         form.values.pay_method === JobPayMethod.PERCENT_PER_WEIGHT) &&
                                     <div className="row">
                                         <BaseInput
+                                            step={0.1}
                                             className="col-6"
                                             label={t("min_percent")}
                                             name="min_percent"
@@ -1157,6 +1158,7 @@ export default function Job() {
                                             error={form.errors.min_percent}
                                         />
                                         <BaseInput
+                                            step={0.1}
                                             className="col-6"
                                             label={t("max_percent")}
                                             name="max_percent"
@@ -1176,6 +1178,7 @@ export default function Job() {
                                     form.values.pay_method === JobPayMethod.RATE_PER_MILE &&
                                     <div className="row">
                                         <BaseInput
+                                            step={0.1}
                                             className="col-6"
                                             label={t("min_miles")}
                                             name="min_miles"
@@ -1190,6 +1193,7 @@ export default function Job() {
                                             error={form.errors.min_miles}
                                         />
                                         <BaseInput
+                                            step={0.1}
                                             className="col-6"
                                             label={t("max_miles")}
                                             name="max_miles"
@@ -1209,6 +1213,7 @@ export default function Job() {
                                     form.values.pay_method === JobPayMethod.HOURLY &&
                                     <div className="row">
                                         <BaseInput
+                                            step={0.1}
                                             className="col-6"
                                             label={t("min_hours")}
                                             name="min_hours"
@@ -1223,6 +1228,7 @@ export default function Job() {
                                             error={form.errors.min_hours}
                                         />
                                         <BaseInput
+                                            step={0.1}
                                             className="col-6"
                                             label={t("max_hours")}
                                             name="max_hours"
@@ -1243,6 +1249,7 @@ export default function Job() {
                                         form.values.pay_method === JobPayMethod.HOURLY) &&
                                     <div className="row">
                                         <BaseInput
+                                            step={0.1}
                                             className="col-6"
                                             label={t("min_rate")}
                                             name="min_rate"
@@ -1257,6 +1264,7 @@ export default function Job() {
                                             error={form.errors.min_rate}
                                         />
                                         <BaseInput
+                                            step={0.1}
                                             className="col-6"
                                             label={t("max_rate")}
                                             name="max_rate"
@@ -1276,6 +1284,7 @@ export default function Job() {
                                     (form.values.pay_method === JobPayMethod.SALARY) &&
                                     <div className="row">
                                         <BaseInput
+                                            step={0.1}
                                             className="col-6"
                                             label={t("min_salary")}
                                             name="min_salary"
@@ -1290,6 +1299,7 @@ export default function Job() {
                                             error={form.errors.min_salary}
                                         />
                                         <BaseInput
+                                            step={0.1}
                                             className="col-6"
                                             label={t("max_salary")}
                                             name="max_salary"
@@ -1306,6 +1316,7 @@ export default function Job() {
                                 }
                                 <div className="row">
                                     <BaseInput
+                                        step={0.1}
                                         className="col-6"
                                         label={t("min_weekly")}
                                         name="min_weekly_pay"
@@ -1320,6 +1331,7 @@ export default function Job() {
                                         error={form.errors.min_weekly_pay}
                                     />
                                     <BaseInput
+                                        step={0.1}
                                         className="col-6"
                                         label={t("max_weekly")}
                                         name="max_weekly_pay"
