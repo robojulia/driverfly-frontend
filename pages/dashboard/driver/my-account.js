@@ -92,7 +92,7 @@ export default function MyAccount() {
                     CONTACT_PAST_EMPLOYERS: "NEVER",
                 },
                 MATCHING: {
-                    GEOGRAPHY: jobBenefits.map(v => v.key),
+                    GEOGRAPHY: jobGeography.map(v => v.key),
                     PREFERRED_SCHEDULE: "",
                     OTHER_BENEFITS: "",
                     JOB_TYPE: jobType.map(v => v.key),
