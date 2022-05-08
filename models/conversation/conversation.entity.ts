@@ -7,6 +7,25 @@ import { Status } from "../../enums/status.enum";
 import { ChattableType } from "../../enums/conversation/chattable-type.enum";
 
 import * as yup from "yup";
+import "../../utils/yup";
+
+export class CreateConversationDto {
+    name: string;
+    chattable_type?: ChattableType;
+    chattable_id?: number;
+    chattable_key: string;
+    message: string;
+
+    static yupSchema() {
+        return yup.object({
+            chattable_type: (yup.string() as any).enum(ChattableType).required().nullable(),
+            chattable_id: yup.number().required().nullable(),
+            chattable_key: yup.string().required().nullable(),
+            name: yup.string().required().nullable(),
+            message: yup.string().max(250).required().nullable(),
+        });
+    }
+}
 
 export class ConversationEntity {
     id?: number;
@@ -17,6 +36,8 @@ export class ConversationEntity {
     chattable_key: string;
     status: Status;
     name: string;
+    unread: number;
+    lastMessage: ConversationMessageEntity;
     messages?: ConversationMessageEntity[];
 
     static yupSchema() {
@@ -27,4 +48,7 @@ export class ConversationEntity {
             name: yup.string().required().nullable()
         });
     }
+
+    static CreateDto = CreateConversationDto
+
 }
