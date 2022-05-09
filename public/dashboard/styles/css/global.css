@@ -452,7 +452,8 @@ textarea {
 /* JobListing Table*/
 
 .listing_head th {
-    padding: 15px;
+    padding: 15px 15px 15px 0px;
+    width: 24%;
 }
 
 .table> :not(:first-child) {
