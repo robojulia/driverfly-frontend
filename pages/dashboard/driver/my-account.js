@@ -628,7 +628,7 @@ export default function MyAccount() {
                         />
                         <BaseSelect
                             className="col-md-12 mt-3"
-                            label={t("preferred_team_drivers")}
+                            label={t("team_drivers")}
                             name="preferences.MATCHING.TEAM_DRIVER"
                             value={contactForm.values.preferences.MATCHING.TEAM_DRIVER}
                             touched={contactForm.touched.preferences?.MATCHING?.TEAM_DRIVER}
@@ -669,7 +669,7 @@ export default function MyAccount() {
                         />
                         <BaseCheckList
                             className="col-md-12 mt-3"
-                            label={t("preferred_required_benefits")}
+                            label={t("preferred_benefits")}
                             cols={2}
                             options={jobBenefits.map(v => ({
                                 label: t(v.label),

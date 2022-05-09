@@ -105,7 +105,7 @@
     "part_time": "Part-Time",
     "seasonal": "Seasonal",
     "one_time_gig": "One Time Gig",
-    "preferred_team_drivers": "Preferred Team Drivers",
+    "team_drivers": "Team Drivers",
     "JobTeamDriver": {
         "HAS_TEAM_DRIVER": "Has team drivers",
         "OPEN_TEAM_DRIVER": "Open to team drivers",
@@ -135,7 +135,7 @@
     "set_weekly": "Set Weekly",
     "salary": "Salary",
     "percent_per_weight": "Percent per weight",
-    "preferred_required_benefits": "Preferred Required Benefits",
+    "preferred_benefits": "Preferred Benefits",
     "other_benefits": "Other Benefits",
     "JobBenefits": {
         "SIGN_ON_BONUS": "Sign-on bonus",
