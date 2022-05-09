@@ -1,4 +1,4 @@
-/* @import url('http://fonts.cdnfonts.com/css/arial'); */
+@import url('http://fonts.cdnfonts.com/css/arial');
 
 html,
 body,
@@ -2234,4 +2234,29 @@ li.link-wrapper>a.active {
   .ort-general p{
    margin: 0px;
    color: #6a6a87;
+}
+
+
+ .overflow_cls tbody tr td{
+    width: 23.1%;
+} 
+
+.overflow_cls thead {
+    width: 100%;
+    margin-bottom: 20px;
+}
+.overflow_cls tbody {
+    height: 750px;
+    display: table-caption;
+    width: 100%;
+    overflow: auto;
+}
+.location_table__hed th{
+    width: 22.5%;
+}
+.vehicles_table__hed  th{
+    width: 10%;
+}
+.vehicles_container tbody tr td {
+    width: 11% !important;
 }

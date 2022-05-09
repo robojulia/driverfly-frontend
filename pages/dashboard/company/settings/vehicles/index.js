@@ -94,10 +94,11 @@ export default function VehicleList() {
             </button>
           </Col>
         </Row>
-        <Row className="mt-5">
+
+        <Row className="mt-5 overflow_cls vehicles_container">
           <div className="table-responsive">
               <Table striped>
-                  <thead className="listing_head">
+                  <thead className="listing_heads vehicles_table__hed">
                       <tr>
                         <th>{t("PHOTO")}</th>
                         <th>{t("TYPE")}</th>
@@ -110,7 +111,7 @@ export default function VehicleList() {
                         <th>{/* ACTIONS */}</th>
                       </tr>
                   </thead>
-                  <tbody>
+                  <tbody className="mt-3">
                       {!vehicles || !vehicles.length &&
                         <tr>
                           <td colSpan={9}>

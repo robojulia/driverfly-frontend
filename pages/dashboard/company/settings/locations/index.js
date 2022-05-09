@@ -90,10 +90,11 @@ export default function LocationList() {
             </button>
           </Col>
         </Row>
-        <Row className="mt-5">
+   
+        <Row className="mt-5 overflow_cls ">
           <div className="table-responsive">
               <Table striped>
-                  <thead className="listing_head">
+              <thead className="listing_heads location_table__hed ">
                       <tr>
                         <th>{t("STREET")}</th>
                         <th>{t("CITY")}</th>
@@ -101,8 +102,8 @@ export default function LocationList() {
                         <th>{t("ZIP_CODE")}</th>
                         <th>{/* ACTIONS */}</th>
                       </tr>
-                  </thead>
-                  <tbody>
+                </thead>
+                  <tbody className="mt-3">
                       {!locations || !locations.length &&
                         <tr>
                           <td colSpan={9}>
@@ -117,7 +118,7 @@ export default function LocationList() {
                           <td>{v.city}</td>
                           <td>{v.state}</td>
                           <td>{v.zip_code}</td>
-                          <td>
+                          <td className="">
                             <button name={v.id} className="btn" onClick={onEditClick}>
                               <PenFill />
                             </button>
