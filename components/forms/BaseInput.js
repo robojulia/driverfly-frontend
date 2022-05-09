@@ -23,12 +23,12 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
     type = "number";
     step = 1;
     onKeyDown = onKeyDown ||
-    /**
-     * @param {React.KeyboardEvent<HTMLInputElement} e
-     */
-    function (e) {
-      if (e.key === ".") e.preventDefault();
-    };
+      /**
+       * @param {React.KeyboardEvent<HTMLInputElement} e
+       */
+      function (e) {
+        if (e.key === ".") e.preventDefault();
+      };
   }
   return (
     <div className={className}>
