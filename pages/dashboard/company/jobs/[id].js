@@ -304,6 +304,12 @@ export default function Job() {
         onSubmit: async (data) => {
             data.min_weekly_pay = parseFloat(data.min_weekly_pay)
             data.max_weekly_pay = parseFloat(data.max_weekly_pay)
+            data.min_rate = parseFloat(data.min_rate)
+            data.max_rate = parseFloat(data.max_rate)
+            data.min_miles = parseFloat(data.min_miles)
+            data.max_miles = parseFloat(data.max_miles)
+            data.min_salary = parseFloat(data.min_salary)
+            data.max_salary = parseFloat(data.max_salary)
 
             try {
                 // create the location (if new)
