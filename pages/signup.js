@@ -16,7 +16,7 @@ import "../utils/yup";
 import BaseInput from "../components/forms/BaseInput";
 import BaseSelect from "../components/forms/BaseSelect";
 import BaseCheck from "../components/forms/BaseCheck";
-import PhoneInput from "../components/forms/PhoneInput";
+import BaseInputPhone from "../components/forms/BaseInputPhone";
 
 
 
@@ -250,7 +250,7 @@ export default function Signup() {
                   /> */}
 
 
-                  <PhoneInput
+                  <BaseInputPhone
                     className="col-12 mt-1"
                     label={t("PHONE")}
                     name="phone"
@@ -259,9 +259,9 @@ export default function Signup() {
                     value={form.values.phone}
                     touched={form.touched.phone}
                     error={form.errors.phone}
-                    onChange={form.handleChange}
-                    handleBlur={form.handleBlur}
-                    
+                    onChange={(value, country, e, formattedValue) => { form.setFieldValue('phone', formattedValue) }}
+                    handleBlur={(event, data) => { form.setFieldValue('phone', event.target.value) }}
+                    onKeyDown={(event) => { form.setFieldValue('phone', event.target.value) }}
                   />
 
                   <BaseInput
