@@ -17,7 +17,7 @@ export default function When(props) {
 
     const days = Math.floor(diff / 86400000);
     if (days > 1) {
-        return date.toISOString();
+        return date.toLocaleString();
     }
     else if (days === 1) {
         return t("YESTERDAY");

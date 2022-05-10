@@ -60,7 +60,7 @@ export default function MessageList() {
      * 
      * @param {ConversationEntity} c 
      */
-     const getConversationName = (c) => user.id === c.user?.id ? c.name : c.user?.name;
+     const getConversationName = (c) => user.id === c.user?.id ? c.chattable_name : c.user?.name;
 
      const onCreateClick = (e) => {
          setConversation(new ConversationEntity());
@@ -91,10 +91,9 @@ export default function MessageList() {
             return applicants.map(v => ({
                 text: `${v.first_name} ${v.last_name}`,
                 value: {
-                    chattable_type: v.user ? ChattableType.USER : ChattableType.APPLICANT,
-                    chattable_id: v.user?.id || v.id,
-                    chattable_key: `${v.phone}`,
-                    name: `${v.first_name} ${v.last_name}`
+                    chattable_type: ChattableType.APPLICANT,
+                    chattable_id: v.id,
+                    chattable_name: `${v.first_name} ${v.last_name}`
                 }
             }));
         }
@@ -121,10 +120,9 @@ export default function MessageList() {
          });
          form.setValues({
              ...form.values,
-             name: c.name,
-             chattable_id: c.chattable_id,
              chattable_type: c.chattable_type,
-             chattable_key: c.chattable_key,
+             chattable_id: c.chattable_id,
+             chattable_name: c.chattable_name,
              message: null
          }, false);
      }
@@ -145,10 +143,9 @@ export default function MessageList() {
         }
         form.setValues({
             ...form.values,
-            name: value?.name,
-            chattable_id: value?.chattable_id,
             chattable_type: value?.chattable_type,
-            chattable_key: value?.chattable_key,
+            chattable_id: value?.chattable_id,
+            chattable_name: value?.chattable_name,
         });
     }
 
@@ -199,8 +196,7 @@ export default function MessageList() {
                         ...conversations,
                         {
                             ...convo,
-                            lastMessage: convo.messages[0],
-                            messages: []
+                            lastMessage: convo.messages[0]
                         }
                     ])
     
@@ -319,7 +315,7 @@ function Conversation(props) {
      return (
         <div className="d-flex justify-content-between text-start">
             <div className="pt-1">
-                <p className="fw-bold mb-0">{user.id === conversation.user?.id ? conversation.name : conversation.user?.name}</p>
+                <p className="fw-bold mb-0">{user.id === conversation.user?.id ? conversation.chattable_name : conversation.user?.name}</p>
                 {
                     conversation.lastMessage &&
                     <p title={conversation.lastMessage.text} className="small text-muted text-truncate" style={{ width: "200px"}}>{conversation.lastMessage.text}</p>
@@ -331,7 +327,10 @@ function Conversation(props) {
                     <p className="small text-muted mb-1"><When date={conversation.lastMessage.created_at} /></p>
                 }
                 {
-                    conversation.unread > 0 &&
+                    conversation.lastMessage && conversation.unread > 0 && (
+                        user.id === conversation.user?.id && conversation.lastMessage.direction === "in" ||
+                        user.id !== conversation.user?.id && conversation.lastMessage.direction === "out"
+                    ) &&
                     <span className="badge bg-danger float-end">{conversation.unread}</span>
                 }
             </div>
@@ -352,7 +351,7 @@ function Conversation(props) {
 function Message(props) {
     const { conversation, message, user, showHeader, t } = props;
 
-    const from = message.direction === "out" ? conversation.user.name : conversation.name;
+    const from = message.direction === "out" ? conversation.user.name : conversation.chattable_name;
 
     const direction = (user.id === conversation.user.id && message.direction === "out"
     || user.id !== conversation.user.id && message.direction === "in"
