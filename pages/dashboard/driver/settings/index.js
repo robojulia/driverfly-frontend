@@ -36,10 +36,6 @@ export default function Profile() {
   const { authCheck, setAuth } = useAuth();
   const user = authCheck();
 
-  const translations = {
-    required: t("this_field_is_required")
-  };
-
   const [ applicant, setApplicant ] = useState(APPLICANT_PROTO);
 
   const form = useFormik({

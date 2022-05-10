@@ -92,7 +92,7 @@ export default function MyAccount() {
                     CONTACT_PAST_EMPLOYERS: "NEVER",
                 },
                 MATCHING: {
-                    GEOGRAPHY: jobBenefits.map(v => v.key),
+                    GEOGRAPHY: jobGeography.map(v => v.key),
                     PREFERRED_SCHEDULE: "",
                     OTHER_BENEFITS: "",
                     JOB_TYPE: jobType.map(v => v.key),
@@ -590,7 +590,7 @@ export default function MyAccount() {
                     <div className="col-sm-12">
                         <BaseCheckList
                             className="col-md-12 mt-3"
-                            label={t("geography")}
+                            label={t("preferred_geography")}
                             options={jobGeography.map(v => ({
                                 label: t(v.label),
                                 value: v.key
@@ -614,7 +614,7 @@ export default function MyAccount() {
                         />
                         <BaseCheckList
                             className="col-md-12 mt-3"
-                            label={t("job_type")}
+                            label={t("preferred_job_type")}
                             cols={2}
                             options={jobType.map(v => ({
                                 label: t(v.label),
@@ -641,9 +641,9 @@ export default function MyAccount() {
                         />
                         <BaseInput
                             className="col-md-12 mt-3"
-                            label={t("min_pay_per_week")}
+                            label={t("preferred_min_pay_per_week")}
                             name="preferences.MATCHING.MIN_PAY"
-                            placeholder={t("min_pay_per_week")}
+                            placeholder={t("preferred_min_pay_per_week")}
                             type="number"
                             min={0}
                             value={contactForm.values.preferences.MATCHING.MIN_PAY}
@@ -655,7 +655,7 @@ export default function MyAccount() {
                         />
                         <BaseCheckList
                             className="col-md-12 mt-3"
-                            label={t("pay_method")}
+                            label={t("preferred_pay_method")}
                             cols={2}
                             options={jobPayMethod.map(v => ({
                                 label: t(v.label),
@@ -669,7 +669,7 @@ export default function MyAccount() {
                         />
                         <BaseCheckList
                             className="col-md-12 mt-3"
-                            label={t("required_benefits")}
+                            label={t("preferred_benefits")}
                             cols={2}
                             options={jobBenefits.map(v => ({
                                 label: t(v.label),

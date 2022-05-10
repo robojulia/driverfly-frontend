@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from '../../hooks/useTranslation';
 
-function BaseInput({ formik, accept, required, className, label, handleBlur, type, min, max, step, placeholder, value, onChange, onKeyDown, readOnly, name, touched, error, }) {
+function PhoneInput({ formik, accept, required, className, label, handleBlur, type, min, max, step, placeholder, value, onChange, onKeyDown, readOnly, name, touched, error,phone }) {
   const { t } = useTranslation();
 
   if (formik) {
@@ -20,7 +20,7 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
   }
 
   if (type === "int" || type === "integer") {
-    type = "number";
+    type = "tel";
     step = 1;
     onKeyDown = onKeyDown ||
       /**
@@ -34,9 +34,9 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
     <div className={className}>
       {label && <><label>{t(label)}{required ? "*" : ""}:</label><br /></>}
       <input
-        accept={type == "file" ? accept : null}
+        accept={type == "tel" ? accept : null}
         onBlur={handleBlur}
-        type={type || 'text'}
+        type={type || 'tel'}
         min={min}
         max={max}
         step={step}
@@ -45,7 +45,7 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
         onChange={onChange}
         onKeyDown={onKeyDown}
         readOnly={readOnly}
-        name={name}
+        name={phone}
         className={`form-control ${error ? "is-invalid" : ""}`}
       />
       {touched && error && (typeof error === "string") ? <span className="text-danger small">{error}</span> : null}
@@ -53,4 +53,4 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
   )
 }
 
-export default BaseInput
+export default PhoneInput
