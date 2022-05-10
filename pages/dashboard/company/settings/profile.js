@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 import useRedirect from '../../../../hooks/useRedirect';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import BaseInputPhone from "../../../../components/forms/BaseInputPhone";
 
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -109,7 +110,7 @@ export default function Profile() {
                 error={form.errors.first_name}
                 onChange={form.handleChange}
                 handleBlur={form.handleBlur}
-                />
+              />
               <BaseInput
                 className="col-6 mt-1"
                 label={t("LAST_NAME")}
@@ -121,8 +122,22 @@ export default function Profile() {
                 error={form.errors.last_name}
                 onChange={form.handleChange}
                 handleBlur={form.handleBlur}
-                />
-              <BaseInput
+              />
+
+              <BaseInputPhone
+                className="col-6 mt-1"
+                label={t("phone")}
+                name="user.contact_number"
+                type="tel"
+                placeholder={t("phone")}
+                value={form.values.contact_number}
+                touched={form.touched.contact_number}
+                error={form.errors.contact_number}
+                onChange={(value, country, e, formattedValue) => { form.setFieldValue('contact_number', formattedValue) }}
+                handleBlur={(event, data) => { form.setFieldValue('contact_number', event.target.value) }}
+                onKeyDown={(event) => { form.setFieldValue('contact_number', event.target.value) }}
+              />
+              {/* <BaseInput
                 className="col-6 mt-1"
                 label={t("phone")}
                 name={`contact_number`}
@@ -133,8 +148,8 @@ export default function Profile() {
                 error={form.errors.contact_number}
                 onChange={form.handleChange}
                 handleBlur={form.handleBlur}
-                />
-              <BaseInput
+              /> */}
+              {/* <BaseInput
                 className="col-6 mt-1"
                 label={t("phone_cell")}
                 name={`cell_number`}
@@ -145,7 +160,21 @@ export default function Profile() {
                 error={form.errors.cell_number}
                 onChange={form.handleChange}
                 handleBlur={form.handleBlur}
-                />
+              /> */}
+
+              <BaseInputPhone
+                className="col-6 mt-1"
+                label={t("phone_cell")}
+                name={`cell_number`}
+                type="tel"
+                placeholder={t("phone_cell")}
+                value={form.values.cell_number}
+                touched={form.touched.cell_number}
+                error={form.errors.cell_number}
+                onChange={(value, country, e, formattedValue) => { form.setFieldValue('cell_number', formattedValue) }}
+                handleBlur={(event, data) => { form.setFieldValue('cell_number', event.target.value) }}
+                onKeyDown={(event) => { form.setFieldValue('cell_number', event.target.value) }}
+              />
               <BaseInput
                 className="col-12 mt-1"
                 label={t("EMAIL")}
@@ -157,16 +186,16 @@ export default function Profile() {
                 error={form.errors.email}
                 onChange={form.handleChange}
                 handleBlur={form.handleBlur}
-                />
+              />
             </Row>
             <Row className="mt-2">
-                <div className="col-12 border-0 text-end">
-                    <div className="col">
-                        <button type="submit" className={`btn btn-primary`} >
-                        {t("UPDATE")}
-                        </button>
-                    </div>
+              <div className="col-12 border-0 text-end">
+                <div className="col">
+                  <button type="submit" className={`btn btn-primary`} >
+                    {t("UPDATE")}
+                  </button>
                 </div>
+              </div>
             </Row>
 
           </form>
