@@ -1,7 +1,11 @@
 import React from 'react'
 import { useTranslation } from '../../hooks/useTranslation';
 
-function PhoneInput({ formik, accept, required, className, label, handleBlur, type, min, max, step, placeholder, value, onChange, onKeyDown, readOnly, name, touched, error,phone }) {
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css'
+import es from 'react-phone-input-2/lang/es.json'
+
+function Phone({ formik, accept, required, className, label, handleBlur, type, min, max, step, placeholder, value, onChange, onKeyDown, readOnly, name, touched, error, }) {
   const { t } = useTranslation();
 
   if (formik) {
@@ -20,7 +24,7 @@ function PhoneInput({ formik, accept, required, className, label, handleBlur, ty
   }
 
   if (type === "int" || type === "integer") {
-    type = "tel";
+    type = "number";
     step = 1;
     onKeyDown = onKeyDown ||
       /**
@@ -32,11 +36,29 @@ function PhoneInput({ formik, accept, required, className, label, handleBlur, ty
   }
   return (
     <div className={className}>
+      <label>{value}</label>
+      {console.log(value)}
+      {console.log(error)}
       {label && <><label>{t(label)}{required ? "*" : ""}:</label><br /></>}
-      <input
-        accept={type == "tel" ? accept : null}
+
+
+      <PhoneInput
+        country={'us'}
+        placeholder={t(placeholder)}
+        value={value || ""}
+        onChange={onChange}
+        name={name}
+        className={` ${error ? "is-invalid" : ""}`}
+        onKeyDown={onKeyDown}
         onBlur={handleBlur}
-        type={type || 'tel'}
+        readOnly={readOnly}
+      />
+
+
+      {/* <input
+        accept={type == "file" ? accept : null}
+        onBlur={handleBlur}
+        type={type || 'text'}
         min={min}
         max={max}
         step={step}
@@ -45,12 +67,12 @@ function PhoneInput({ formik, accept, required, className, label, handleBlur, ty
         onChange={onChange}
         onKeyDown={onKeyDown}
         readOnly={readOnly}
-        name={phone}
+        name={name}
         className={`form-control ${error ? "is-invalid" : ""}`}
-      />
-      {touched && error && (typeof error === "string") ? <span className="text-danger small">{error}</span> : null}
+      /> */}
+      { error && (typeof error === "string") ? <span className="text-danger small">{error}</span> : null}
     </div>
   )
 }
 
-export default PhoneInput
+export default Phone
