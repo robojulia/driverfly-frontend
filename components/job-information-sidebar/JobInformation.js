@@ -90,8 +90,8 @@ export default function JonInformation({ job }) {
                 <div className="text">MVR Requirements</div>
                 <ul>
                   {job.mvr_requirements &&
-                    job.mvr_requirements.map(item => {
-                      return <li>
+                    job.mvr_requirements.map((item, index) => {
+                      return <li key={index}>
                         <div className="row">
                           <div className="col-md-12">
                             {t(MvrType[item.type].toLowerCase())}

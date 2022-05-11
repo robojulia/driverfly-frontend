@@ -91,9 +91,9 @@ export default function Index() {
                                     aria-label="Default select example"
                                     id="exampleFormControlSelect1">
                                     <option className='selectbg'>All Types</option>
-                                    {Object.keys(JobEmploymentType).map((key) => {
+                                    {Object.keys(JobEmploymentType).map((key, index) => {
                                         return (
-                                            <option value={key}>
+                                            <option key={index} value={key}>
                                                 {t(JobEmploymentType[key].toLowerCase())}
                                             </option>
                                         )
