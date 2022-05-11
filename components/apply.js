@@ -19,10 +19,10 @@ import { Col, Row } from 'react-bootstrap'
 import { DriverDegree } from '../enums/drivers/driver-degree.enum'
 import { getBase64 } from '../utils/file'
 import { JobApplicantDocumentType } from '../enums/application/job-application-document-type.enum'
-import { SpecialZoomLevel, Viewer, Worker } from '@react-pdf-viewer/core'
-import '@react-pdf-viewer/core/lib/styles/index.css'
-import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout'
-import '@react-pdf-viewer/default-layout/lib/styles/index.css'
+// import { SpecialZoomLevel, Viewer, Worker } from '@react-pdf-viewer/core'
+// import '@react-pdf-viewer/core/lib/styles/index.css'
+// import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout'
+// import '@react-pdf-viewer/default-layout/lib/styles/index.css'
 import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
 import Spinner from 'react-bootstrap/Spinner'
@@ -553,7 +553,8 @@ export default function JobApply({ job }) {
           </div>
         </div>
       </div>
-      <Modal show={!!pdfModel.name} onHide={() => hideModelHandler()}>
+
+      {/* <Modal show={!!pdfModel.name} onHide={() => hideModelHandler()}>
         <Modal.Header>
           {pdfModel.name}
           <Button variant="secondary" onClick={() => hideModelHandler()}>{t("close")}</Button>
@@ -583,7 +584,7 @@ export default function JobApply({ job }) {
           <Button variant="secondary" onClick={() => hideModelHandler()}>{t("close")}</Button>
         </Modal.Footer>
 
-      </Modal>
+      </Modal> */}
 
     </>
   )
