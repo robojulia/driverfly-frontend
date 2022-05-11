@@ -219,35 +219,35 @@ export default function JobApply({ job }) {
       })
   }
 
-  // const viewHandler = async (e) => {
-  //   const name = e.target.getAttribute("data-name")
-  //   const file = apply_form.values[name]
-  //   if (!file || !file.id) {
-  //     toast.error(t('no_file_found'))
-  //     return
-  //   }
-  //   let url;
-  //   if (file.id) {
-  //     const entity = await userApi.getDocumentUrl(file);
-  //     url = entity.path;
-  //   }
-  //   else {
-  //     url = file.path;
-  //   }
-  //   if (!url) {
-  //     return
-  //   }
-  //   set_pdfModel({
-  //     name: file.name,
-  //     url: url
-  //   })
-  // }
+  const viewHandler = async (e) => {
+    const name = e.target.getAttribute("data-name")
+    const file = apply_form.values[name]
+    if (!file || !file.id) {
+      toast.error(t('no_file_found'))
+      return
+    }
+    let url;
+    if (file.id) {
+      const entity = await userApi.getDocumentUrl(file);
+      url = entity.path;
+    }
+    else {
+      url = file.path;
+    }
+    if (!url) {
+      return
+    }
+    set_pdfModel({
+      name: file.name,
+      url: url
+    })
+  }
 
-  // const hideModelHandler = (e) => {
-  //   set_pdfModel({
-  //     name: null, url: null
-  //   });
-  // }
+  const hideModelHandler = (e) => {
+    set_pdfModel({
+      name: null, url: null
+    });
+  }
 
   useEffect(async () => {
     updateDriverData()
@@ -568,13 +568,11 @@ export default function JobApply({ job }) {
                 border: '1px solid rgba(0, 0, 0, 0.3)',
                 height: '800px',
               }}>
-                {/* <<Viewer fileUrl={"http://localhost:4000/"+myUser.medical_card} />np */}
                 <Viewer defaultScale={SpecialZoomLevel.PageWidth} plugins={[defaultLayoutPluginInstance]} renderLoader={() => (
                   <Spinner animation="border" role="status">
                     <span className="visually-hidden">{t("loading")}...</span>
                   </Spinner>
                 )} fileUrl={pdfModel.url} />
-                {/* )} fileUrl="/resume.pdf" /> */}
               </div>
             </Worker>
           )}
