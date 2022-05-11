@@ -219,35 +219,35 @@ export default function JobApply({ job }) {
       })
   }
 
-  const viewHandler = async (e) => {
-    const name = e.target.getAttribute("data-name")
-    const file = apply_form.values[name]
-    if (!file || !file.id) {
-      toast.error(t('no_file_found'))
-      return
-    }
-    let url;
-    if (file.id) {
-      const entity = await userApi.getDocumentUrl(file);
-      url = entity.path;
-    }
-    else {
-      url = file.path;
-    }
-    if (!url) {
-      return
-    }
-    set_pdfModel({
-      name: file.name,
-      url: url
-    })
-  }
+  // const viewHandler = async (e) => {
+  //   const name = e.target.getAttribute("data-name")
+  //   const file = apply_form.values[name]
+  //   if (!file || !file.id) {
+  //     toast.error(t('no_file_found'))
+  //     return
+  //   }
+  //   let url;
+  //   if (file.id) {
+  //     const entity = await userApi.getDocumentUrl(file);
+  //     url = entity.path;
+  //   }
+  //   else {
+  //     url = file.path;
+  //   }
+  //   if (!url) {
+  //     return
+  //   }
+  //   set_pdfModel({
+  //     name: file.name,
+  //     url: url
+  //   })
+  // }
 
-  const hideModelHandler = (e) => {
-    set_pdfModel({
-      name: null, url: null
-    });
-  }
+  // const hideModelHandler = (e) => {
+  //   set_pdfModel({
+  //     name: null, url: null
+  //   });
+  // }
 
   useEffect(async () => {
     updateDriverData()
