@@ -5,6 +5,10 @@ import "../public/css/style.css";
 import "../public/css/responsive.css";
 import "../public/dashboard/styles/css/global.css";
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import "../public/bootstrap/css/bootstrap.min.css";
+
+
+
 // import "../lang/i18nextconfig";
 // import { appWithTranslation } from 'next-i18next';
 // import { i18n } from 'next-i18next'

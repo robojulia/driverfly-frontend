@@ -568,7 +568,7 @@ export default function MyAccount() {
                                             onChange={handlePreferenceChange}
                                         />
                                     </div>
-                                    <div className='row mt-3'>
+                                    <div className='row mt-3 pl-2'>
                                         <h3>{t("sharing_preferences")}:</h3>
                                         <div className='row'>
                                             <BaseSelect
@@ -619,9 +619,9 @@ export default function MyAccount() {
                         </div>
                     </>,
                     matching_preferences: <>
-                        <div className="col-sm-12">
+                        <div className="col-sm-12 p-0">
                             <BaseCheckList
-                                className="col-md-12 mt-3"
+                                className="col-md-12 mt-3 p-0"
                                 label={t("preferred_geography")}
                                 options={jobGeography.map(v => ({
                                     label: t(v.label),
@@ -634,7 +634,7 @@ export default function MyAccount() {
                                 onChange={handlePreferenceChange}
                             />
                             <BaseInput
-                                className="col-md-12 mt-3"
+                                className="col-md-12 mt-3 p-0"
                                 label={t("preferred_schedule")}
                                 name="preferences.MATCHING.PREFERRED_SCHEDULE"
                                 placeholder={t("preferred_schedule")}
@@ -645,7 +645,7 @@ export default function MyAccount() {
                                 handleBlur={handlePreferenceBlur}
                             />
                             <BaseCheckList
-                                className="col-md-12 mt-3"
+                                className="col-md-12 mt-3 p-0"
                                 label={t("preferred_job_type")}
                                 cols={2}
                                 options={jobType.map(v => ({
@@ -659,7 +659,7 @@ export default function MyAccount() {
                                 onChange={handlePreferenceChange}
                             />
                             <BaseSelect
-                                className="col-md-12 mt-3"
+                                className="col-md-12 mt-3 p-0"
                                 label={t("team_drivers")}
                                 name="preferences.MATCHING.TEAM_DRIVER"
                                 value={contactForm.values.preferences.MATCHING.TEAM_DRIVER}
@@ -672,7 +672,7 @@ export default function MyAccount() {
                                 }))}
                             />
                             <BaseInput
-                                className="col-md-12 mt-3"
+                                className="col-md-12 mt-3 p-0"
                                 label={t("preferred_min_pay_per_week")}
                                 name="preferences.MATCHING.MIN_PAY"
                                 placeholder={t("preferred_min_pay_per_week")}
@@ -686,7 +686,7 @@ export default function MyAccount() {
                                 onKeyDown={preventNegative}
                             />
                             <BaseCheckList
-                                className="col-md-12 mt-3"
+                                className="col-md-12 mt-3 p-0"
                                 label={t("preferred_pay_method")}
                                 cols={2}
                                 options={jobPayMethod.map(v => ({
@@ -700,7 +700,7 @@ export default function MyAccount() {
                                 onChange={handlePreferenceChange}
                             />
                             <BaseCheckList
-                                className="col-md-12 mt-3"
+                                className="col-md-12 mt-3 p-0"
                                 label={t("preferred_benefits")}
                                 cols={2}
                                 options={jobBenefits.map(v => ({

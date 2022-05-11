@@ -6,7 +6,7 @@ function InlineLayout(t, options, value, name, labelKey, valueKey, onChange, han
   return (
     <>
     {options.map((v, i) => (
-      <div key={i} className={`form-check form-check-inline`}>
+      <div key={i} className={`form-check form-check-inline flex-row-reverse`}>
           <label className="form-check-label">{t((labelPrefix ? labelPrefix + "." : "") +  v[labelKey])}</label>
           <input className={`form-check-input ${error ? "is-invalid" : ""}`} type="checkbox" readOnly={readOnly} value={v[valueKey]} name={name} onChange={onChange} onBlur={handleBlur} checked={value.includes(v[valueKey])} />
       </div>
@@ -22,7 +22,7 @@ function ColLayout(t, options, cols, value, name, labelKey, valueKey, onChange, 
         <div
           key={i}
           className={`col-md-${12 / cols}`}>
-          <div className={`form-check form-check-inline`}>
+          <div className={`form-check form-check-inline flex-row-reverse`}>
               <label className="form-check-label">{t((labelPrefix ? labelPrefix + "." : "") +  v[labelKey])}</label>
               <input className={`form-check-input ${error ? "is-invalid" : ""}`} readOnly={readOnly} type="checkbox" value={v[valueKey]} name={name} onChange={onChange} onBlur={handleBlur} checked={value.includes(v[valueKey])} />
           </div>
