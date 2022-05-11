@@ -260,7 +260,7 @@ export default function JobApply({ job }) {
   return (
     <>
 
-      <div className="modal fade p-0" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div className="modal fade p-0" id="exampleModal"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <form onSubmit={apply_form.handleSubmit}>
@@ -359,18 +359,6 @@ export default function JobApply({ job }) {
                       name={JobApplicantDocumentType.DRIVER_LICENSE}
                       onChange={handleFileChange}
                     />
-                    {
-                      user &&
-                      apply_form.values[JobApplicantDocumentType.DRIVER_LICENSE + "_old"] &&
-                      <span className='col-12'>
-                        {/* {console.log("aasasasas", apply_form.values[JobApplicantDocumentType.DRIVER_LICENSE + "_old"])} */}
-                        <ViewFileButton
-                          data_name={JobApplicantDocumentType.DRIVER_LICENSE + "_old"}
-                          onClick={viewHandler}
-                          label={t("VIEW_{name}", { name: t('OLD_DOCUMENT') })}
-                          className='btn btn-link' />
-                      </span>
-                    }
                   </Col>
                   <Col lg={6}>
                     <BaseInput
@@ -381,17 +369,6 @@ export default function JobApply({ job }) {
                       name={JobApplicantDocumentType.MEDICAL_CARD}
                       onChange={handleFileChange}
                     />
-                    {
-                      user &&
-                      apply_form.values[JobApplicantDocumentType.MEDICAL_CARD + "_old"] &&
-                      <span className='col-12'>
-                        <ViewFileButton
-                          data_name={JobApplicantDocumentType.MEDICAL_CARD + "_old"}
-                          onClick={viewHandler}
-                          label={t("VIEW_{name}", { name: t('OLD_DOCUMENT') })}
-                          className='btn btn-link' />
-                      </span>
-                    }
                   </Col>
                 </Row>
                 <Row>
@@ -404,17 +381,6 @@ export default function JobApply({ job }) {
                       name={JobApplicantDocumentType.RESUME}
                       onChange={handleFileChange}
                     />
-                    {
-                      user &&
-                      apply_form.values[JobApplicantDocumentType.RESUME + "_old"] &&
-                      <span className='col-12'>
-                        <ViewFileButton
-                          data_name={JobApplicantDocumentType.RESUME + "_old"}
-                          onClick={viewHandler}
-                          label={t("VIEW_{name}", { name: t('OLD_DOCUMENT') })}
-                          className='btn btn-link' />
-                      </span>
-                    }
                   </Col>
                   <Col lg={6}>
                     <BaseInput
@@ -425,17 +391,6 @@ export default function JobApply({ job }) {
                       name={JobApplicantDocumentType.MVR}
                       onChange={handleFileChange}
                     />
-                    {
-                      user &&
-                      apply_form.values[JobApplicantDocumentType.MVR + "_old"] &&
-                      <span className='col-12'>
-                        <ViewFileButton
-                          data_name={JobApplicantDocumentType.MVR + "_old"}
-                          onClick={viewHandler}
-                          label={t("VIEW_{name}", { name: t('OLD_DOCUMENT') })}
-                          className='btn btn-link' />
-                      </span>
-                    }
                   </Col>
                 </Row>
                 {/* Files End */}
