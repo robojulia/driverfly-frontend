@@ -50,7 +50,7 @@ export default function DatePosted() {
             <div onChange={changeHandler} className="App">
               <div className="topping pt-2">
                 <input
-                  checked={(!filters.date_created) || (filters.date_created == "")}
+                  defaultChecked={(!filters.date_created) || (filters.date_created == "")}
                   type="radio"
                   id="all"
                   name="date_created"

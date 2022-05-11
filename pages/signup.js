@@ -16,6 +16,8 @@ import "../utils/yup";
 import BaseInput from "../components/forms/BaseInput";
 import BaseSelect from "../components/forms/BaseSelect";
 import BaseCheck from "../components/forms/BaseCheck";
+import BaseInputPhone from "../components/forms/BaseInputPhone";
+
 
 
 import AuthApi from "./api/auth";
@@ -23,6 +25,8 @@ import AuthApi from "./api/auth";
 import { useTranslation } from "../hooks/useTranslation";
 import { SignUpRole } from "../enums/auth/sign-up-role.enum"
 import { Row } from "reactstrap"
+
+
 
 
 export default function Signup() {
@@ -65,7 +69,7 @@ export default function Signup() {
         test: (value, context) => {
           const password = context.resolve(yup.ref("password"));
           if (value === password) return true;
-          
+
           return context.createError({
             path: context.path,
             message: translations.passwordsDoNotMatch
@@ -107,7 +111,7 @@ export default function Signup() {
         switch (status) {
           case 409:
             Object.entries(data).forEach((err) => {
-              const [ key, value ] = err;
+              const [key, value] = err;
               console.error(key, value);
               form.setFieldTouched(key, true, false);
               form.setFieldError(key, t(value));
@@ -179,7 +183,7 @@ export default function Signup() {
                     error={form.errors.role}
                     labelPrefix="SignUpRole"
                     enumType={SignUpRole}
-                    />
+                  />
                   {
                     form.values.role === SignUpRole.COMPANY &&
                     <BaseInput
@@ -193,7 +197,7 @@ export default function Signup() {
                       error={form.errors.name}
                       onChange={form.handleChange}
                       handleBlur={form.handleBlur}
-                      />
+                    />
                   }
                   <BaseInput
                     className="col-6 mt-1"
@@ -206,7 +210,7 @@ export default function Signup() {
                     error={form.errors.first_name}
                     onChange={form.handleChange}
                     handleBlur={form.handleBlur}
-                    />
+                  />
                   <BaseInput
                     className="col-6 mt-1"
                     label={t("LAST_NAME")}
@@ -218,7 +222,7 @@ export default function Signup() {
                     error={form.errors.last_name}
                     onChange={form.handleChange}
                     handleBlur={form.handleBlur}
-                    />
+                  />
                   <BaseInput
                     className="col-12 mt-1"
                     label={t("EMAIL")}
@@ -230,8 +234,8 @@ export default function Signup() {
                     error={form.errors.email}
                     onChange={form.handleChange}
                     handleBlur={form.handleBlur}
-                    />
-                  <BaseInput
+                  />
+                  {/* <BaseInput
                     className="col-12 mt-1"
                     label={t("PHONE")}
                     name="phone"
@@ -242,7 +246,24 @@ export default function Signup() {
                     error={form.errors.phone}
                     onChange={form.handleChange}
                     handleBlur={form.handleBlur}
-                    />
+
+                  /> */}
+
+
+                  <BaseInputPhone
+                    className="col-12 mt-1"
+                    label={t("PHONE")}
+                    name="phone"
+                    type="tel"
+                    placeholder={t("PHONE")}
+                    value={form.values.phone}
+                    touched={form.touched.phone}
+                    error={form.errors.phone}
+                    onChange={(value, country, e, formattedValue) => { form.setFieldValue('phone', formattedValue) }}
+                    handleBlur={(event, data) => { form.setFieldValue('phone', event.target.value) }}
+                    onKeyDown={(event) => { form.setFieldValue('phone', event.target.value) }}
+                  />
+
                   <BaseInput
                     className="col-6 mt-1"
                     label={t("PASSWORD")}
@@ -255,7 +276,7 @@ export default function Signup() {
                     error={form.errors.password}
                     onChange={form.handleChange}
                     handleBlur={form.handleBlur}
-                    />
+                  />
                   <BaseInput
                     className="col-6 mt-1"
                     label={t("CONFIRM_PASSWORD")}
@@ -268,7 +289,7 @@ export default function Signup() {
                     error={form.errors.confirmPassword}
                     onChange={form.handleChange}
                     handleBlur={form.handleBlur}
-                    />
+                  />
                   <BaseCheck
                     className="col-12 mt-2"
                     label={t("YOU_ACCEPT_OUR_TOS")}
@@ -278,7 +299,7 @@ export default function Signup() {
                     handleBlur={form.handleBlur}
                     touched={form.touched.accept_tos}
                     error={form.errors.accept_tos}
-                    />
+                  />
                 </Row>
                 <button disabled={form.isSubmitting}
                   type="submit"
