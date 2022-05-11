@@ -14,6 +14,7 @@ import { useTranslation } from "../../hooks/useTranslation"
 import JobApi from "../api/job"
 import CompanyPhoto from "../../components/jobs/company-photo"
 
+import StructuredData from "../../components/seo/StructuredData"
 
 export default function Detail({ jobDetail, relatedJobs }) {
 
@@ -23,6 +24,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
   return (
     <>
       <ToastContainer />
+      {/* <StructuredData type="JobPosting" data={StructuredData.JobPosting(jobDetail, t)} /> */}
       <section className="top-links-sec ort-general">
         <div className="container">
           <div className="row">
