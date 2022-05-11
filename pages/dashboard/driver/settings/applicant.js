@@ -1,0 +1,853 @@
+import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
+import BaseInputPhone from "../../../../components/forms/BaseInputPhone";
+
+import { ApplicantEntity } from "../../../../models/applicant/applicant.entity"
+import { ApplicantEmployerEntity } from "../../../../models/applicant/applicant-employer.entity";
+import { ApplicantEquipmentEntity } from "../../../../models/applicant/applicant-equipment.entity";
+import { ApplicantExperienceEntity } from "../../../../models/applicant/applicant-experience.entity";
+import { DocumentEntity } from "../../../../models/documents/document.entity";
+
+import { DriverLicenseType } from "../../../../enums/drivers/driver-license-type.enum";
+import { VehicleTransmissionType } from "../../../../enums/vehicles/vehicle-transmission-type.enum";
+import { DriverEndorsement } from "../../../../enums/drivers/driver-endorsement.enum";
+import { DriverDegree } from "../../../../enums/drivers/driver-degree.enum";
+import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-document-type.enum";
+import { JobEquipmentType } from "../../../../enums/jobs/job-equipment-type.enum";
+
+import ApplicantApi from "../../../api/applicant";
+
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+
+import { Row, Col, Button, Table, Alert } from "react-bootstrap";
+import { PlusCircle, ChevronUp, XCircle, DashCircle } from "react-bootstrap-icons";
+import ViewCard from "../../../../components/viewDetails/viewCard";
+import BaseInput from "../../../../components/forms/BaseInput";
+import BaseSelect from "../../../../components/forms/BaseSelect";
+import StateSelect from "../../../../components/forms/StateSelect";
+import BaseCheck from "../../../../components/forms/BaseCheck";
+import BaseCheckList from "../../../../components/forms/BaseCheckList";
+import FileInput from "../../../../components/forms/FileInput";
+import BaseTextArea from "../../../../components/forms/BaseTextArea";
+
+import { useTranslation } from "../../../../hooks/useTranslation";
+
+import { useFormik } from "formik";
+import { useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'
+
+export default function Applicant() {
+    const { t } = useTranslation();
+    const api = new ApplicantApi();
+
+    const form = useFormik({
+        initialValues: new ApplicantEntity(),
+        // initialValues: applicant,
+        validationSchema: ApplicantEntity.yupSchema(),
+        onSubmit: async (values) => {
+            if ("jobs" in values)
+                delete values.jobs;
+
+            try {
+                if (values.id) {
+                    values = await api.update(values.id, values);
+                }
+                else {
+                    values = await api.create(values);
+                }
+
+                toast.success(t("successfully_saved_information"));
+
+                // router.push(`/dashboard/driver/settings/applicant`);
+            } catch (e) {
+                console.error("Unable to save applicant info", e);
+                toast.error(t("unable_to_save_information"));
+            }
+        }
+    });
+
+    useEffect(async () => {
+        const applicant = await api.getByUserId();
+
+        form.setValues({
+            ...form.values,
+            ...applicant,
+        });
+    }, []);
+
+    return (<>
+        <ToastContainer />
+        <form onSubmit={form.handleSubmit}>
+            <Row>
+                <Col>
+                    <Alert variant="info">
+                        {t("APPLICANT_INFO_DESCRIPTION")}
+                    </Alert>
+                </Col>
+                <Col xs="3">
+                    <div style={{ float: "right" }}>
+                        <Button type="submit">{t("SAVE")}</Button>
+                    </div>
+                </Col>
+            </Row>
+            <Row className="mt-2">
+                <Col>
+                    <ViewCard title="BASIC_DETAILS">
+                        <Row>
+                            <Col md="4" className="px-2">
+                                <BaseInput
+                                    className="col-12"
+                                    label="FIRST_NAME"
+                                    required
+                                    readOnly
+                                    name="first_name"
+                                    placeholder="FIRST_NAME"
+                                    formik={form}
+                                />
+                                <BaseInput
+                                    className="col-12"
+                                    label="LAST_NAME"
+                                    required
+                                    readOnly
+                                    name="last_name"
+                                    placeholder="LAST_NAME"
+                                    formik={form}
+                                />
+                                <BaseInput
+                                    className="col-12"
+                                    label="BIRTHDATE"
+                                    type="date"
+                                    name="birthdate"
+                                    placeholder="MM/DD/YYYY"
+                                    formik={form}
+                                />
+
+                                <BaseInputPhone
+                                    className="col-12"
+                                    label="PHONE"
+                                    type="tel"
+                                    name="phone"
+                                    readOnly
+                                    placeholder={t("PHONE")}
+                                    value={form.values.phone}
+                                    touched={form.touched.phone}
+                                    error={form.errors.phone}
+                                    onChange={(value, country, e, formattedValue) => { form.setFieldValue('phone', formattedValue) }}
+                                    handleBlur={(event, data) => { form.setFieldValue('phone', event.target.value) }}
+                                    onKeyDown={(event) => { form.setFieldValue('phone', event.target.value) }}
+                                />
+                                {/* <BaseInput
+                                    className="col-12"
+                                    label="PHONE"
+                                    type="tel"
+                                    name="phone"
+                                    readOnly
+                                    placeholder="PHONE"
+                                    formik={form}
+                                /> */}
+                                <BaseInput
+                                    className="col-12"
+                                    label="EMAIL"
+                                    required
+                                    readOnly
+                                    type="email"
+                                    name="email"
+                                    placeholder="EMAIL"
+                                    formik={form}
+                                />
+                                <BaseInput
+                                    className="col-12"
+                                    label="STREET"
+                                    name="street"
+                                    placeholder="STREET"
+                                    formik={form}
+                                />
+                                <BaseInput
+                                    className="col-12"
+                                    label="CITY"
+                                    name="city"
+                                    placeholder="CITY"
+                                    formik={form}
+                                />
+                                <Row>
+                                    <StateSelect
+                                        className="col-6"
+                                        label="STATE"
+                                        name="state"
+                                        placeholder="STATE"
+                                        formik={form}
+                                    />
+                                    <BaseInput
+                                        className="col-6"
+                                        label="ZIP_CODE"
+                                        name="zip_code"
+                                        placeholder="ZIP_CODE"
+                                        formik={form}
+                                    />
+                                </Row>
+                            </Col>
+                            <Col md="4" className="px-2">
+                                <BaseInput
+                                    className="col-12"
+                                    label="driver_license_number"
+                                    name="license_number"
+                                    placeholder="driver_license_number"
+                                    formik={form}
+                                />
+                                <BaseInput
+                                    className="col-12"
+                                    label="expiration_date"
+                                    name="license_expiry"
+                                    type="date"
+                                    placeholder="expiration_date"
+                                    formik={form}
+                                />
+                                <Row>
+                                    <StateSelect
+                                        className="col-6"
+                                        label="state_issued"
+                                        name="license_state"
+                                        placeholder="state_issued"
+                                        formik={form}
+                                    />
+                                    <BaseSelect
+                                        className="col-6"
+                                        label="cdl_class"
+                                        name="license_type"
+                                        placeholder="cdl_class"
+                                        labelPrefix="DriverLicenseType"
+                                        enumType={DriverLicenseType}
+                                        formik={form}
+                                    />
+                                </Row>
+                                <BaseInput
+                                    className="col-12"
+                                    label="years_cdl_experience"
+                                    name="years_cdl_experience"
+                                    type="number"
+                                    placeholder="years_cdl_experience"
+                                    formik={form}
+                                />
+                                <BaseCheck
+                                    className="col-12 mt-2"
+                                    label="OWNER_OPERATOR"
+                                    name="is_owner_operator"
+                                    formik={form}
+                                />
+                                <BaseCheck
+                                    className="col-12 mt-2"
+                                    label="AUTHORIZED_TO_WORK_IN_THE_US"
+                                    name="authorized_to_work_in_us"
+                                    formik={form}
+                                />
+                            </Col>
+                            <Col md="4" className="px-2">
+                                <BaseCheckList
+                                    className="col-12"
+                                    label="TRANSMISSION_EXPERIENCE"
+                                    name="transmission_type"
+                                    labelPrefix="VehicleTransmissionType"
+                                    enumType={VehicleTransmissionType}
+                                    formik={form}
+                                    cols="2"
+                                />
+                                <BaseCheckList
+                                    className="col-12"
+                                    label="ENDORSEMENTS"
+                                    name="endorsements"
+                                    labelPrefix="DriverEndorsement"
+                                    enumType={DriverEndorsement}
+                                    formik={form}
+                                    cols="2"
+                                />
+                                <BaseSelect
+                                    className="col-12"
+                                    label="HIGHEST_DEGREE"
+                                    name="highest_degree"
+                                    placeholder="HIGHEST_DEGREE"
+                                    formik={form}
+                                    labelPrefix="DriverDegree"
+                                    enumType={DriverDegree}
+                                />
+                                <Col xs="12" className='mt-2'>
+                                    <ViewCard title="EMERGENCY_CONTACT">
+                                        <BaseInput
+                                            className="col-12"
+                                            name={`emergency_contact_name`}
+                                            label="NAME"
+                                            placeholder="FULL_NAME"
+                                            formik={form}
+                                        />
+
+
+                                        <BaseInputPhone
+                                            className="col-12"
+                                            name={`emergency_contact_number`}
+                                            label="PHONE"
+                                            type="tel"
+                                            placeholder="PHONE"
+                                            value={form.values.emergency_contact_number}
+                                            touched={form.touched.emergency_contact_number}
+                                            error={form.errors.emergency_contact_number}
+                                            onChange={(value, country, e, formattedValue) => { form.setFieldValue('emergency_contact_number', formattedValue) }}
+                                            handleBlur={(event, data) => { form.setFieldValue('emergency_contact_number', event.target.value) }}
+                                            onKeyDown={(event) => { form.setFieldValue('emergency_contact_number', event.target.value) }}
+                                        />
+                                        {/* <BaseInput
+                                            className="col-12"
+                                            name={`emergency_contact_number`}
+                                            label="PHONE"
+                                            type="tel"
+                                            placeholder="PHONE"
+                                            formik={form}
+                                        /> */}
+                                        <BaseInput
+                                            className="col-12"
+                                            name={`emergency_contact_relationship`}
+                                            label="RELATIONSHIP"
+                                            placeholder="RELATIONSHIP"
+                                            formik={form}
+                                        />
+
+                                    </ViewCard>
+                                </Col>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md="6">
+                                <Col xs="12">
+                                    <ViewCard
+                                        title="equipment_experience"
+                                        actions={<Button size='sm' onClick={() => form.setValues({
+                                            ...form.values,
+                                            equipment_experience: [
+                                                ...(form.values.equipment_experience || []),
+                                                new ApplicantExperienceEntity()
+                                            ]
+                                        })}><PlusCircle /> {t("ADD")}</Button>}
+                                    >
+                                        {
+                                            form.values.equipment_experience?.length > 0 &&
+                                            <>
+                                                <Row className='d-sm-none d-md-flex'>
+                                                    <Col><strong>{t("TYPE")}</strong></Col>
+                                                    <Col><strong>{t("YEARS")}</strong></Col>
+                                                </Row>
+                                                {form.values
+                                                    .equipment_experience
+                                                    .map((entity, i) => (
+                                                        <Row key={i}>
+                                                            <Col xs="12" className='d-sm-flex d-md-none'>
+                                                                <Col><strong>{t("TYPE")}</strong></Col>
+                                                                <Col><strong>{t("YEARS")}</strong></Col>
+                                                            </Col>
+                                                            <Col xs="6">
+                                                                <BaseSelect
+                                                                    name={`equipment_experience[${i}].type`}
+                                                                    placeholder="TYPE"
+                                                                    labelPrefix="JobEquipmentType"
+                                                                    enumType={JobEquipmentType}
+                                                                    formik={form}
+                                                                />
+                                                            </Col>
+                                                            <Col xs="5">
+                                                                <BaseInput
+                                                                    name={`equipment_experience[${i}].years`}
+                                                                    placeholder="YEARS"
+                                                                    type="int"
+                                                                    min="1"
+                                                                    formik={form}
+                                                                />
+                                                            </Col>
+                                                            {
+                                                                entity.type === JobEquipmentType.OTHER &&
+                                                                <Col xs="11">
+                                                                    <BaseInput
+                                                                        name={`equipment_experience[${i}].type_other`}
+                                                                        placeholder="TYPE"
+                                                                        formik={form}
+                                                                    />
+                                                                </Col>
+                                                            }
+                                                            <Col xs="1">
+                                                                <a href="#" onClick={() => form.setValues({
+                                                                    ...form.values,
+                                                                    equipment_experience: form.values.equipment_experience.filter((v, idx) => i != idx)
+                                                                })}><DashCircle color="red" /></a>
+                                                            </Col>
+                                                            <Col xs="12">
+                                                                <hr />
+                                                            </Col>
+
+                                                        </Row>
+                                                    ))}
+                                            </>
+                                        }
+                                    </ViewCard>
+                                </Col>
+                            </Col>
+                            <Col md="6">
+                                {
+                                    form.values.is_owner_operator &&
+                                    <Col xs="12">
+                                        <ViewCard
+                                            title="equipment_owned"
+                                            actions={<Button size='sm' onClick={() => form.setValues({
+                                                ...form.values,
+                                                equipment_owned: [
+                                                    ...form.values.equipment_owned,
+                                                    new ApplicantEquipmentEntity()
+                                                ]
+                                            })}><PlusCircle /> {t("ADD")}</Button>}
+                                        >
+                                            {
+                                                form.values.equipment_owned.length > 0 &&
+                                                <>
+                                                    <Row className='d-sm-none d-md-flex'>
+                                                        <Col><strong>{t("TYPE")}</strong></Col>
+                                                        <Col><strong>{t("QUANTITY")}</strong></Col>
+                                                    </Row>
+                                                    {form.values
+                                                        .equipment_owned
+                                                        .map((entity, i) => (
+                                                            <Row key={i}>
+                                                                <Col xs="12" className='d-sm-flex d-md-none'>
+                                                                    <Col><strong>{t("TYPE")}</strong></Col>
+                                                                    <Col><strong>{t("QUANTITY")}</strong></Col>
+                                                                </Col>
+                                                                <Col xs="6">
+                                                                    <BaseSelect
+                                                                        name={`equipment_owned[${i}].type`}
+                                                                        placeholder="TYPE"
+                                                                        labelPrefix="JobEquipmentType"
+                                                                        enumType={JobEquipmentType}
+                                                                        formik={form}
+                                                                    />
+                                                                </Col>
+                                                                <Col xs="5">
+                                                                    <BaseInput
+                                                                        name={`equipment_owned[${i}].quantity`}
+                                                                        placeholder="QUANTITY"
+                                                                        type="int"
+                                                                        min="1"
+                                                                        formik={form}
+                                                                    />
+                                                                </Col>
+                                                                {
+                                                                    entity.type === JobEquipmentType.OTHER &&
+                                                                    <Col xs="11">
+                                                                        <BaseInput
+                                                                            name={`equipment_owned[${i}].type_other`}
+                                                                            placeholder="TYPE"
+                                                                            formik={form}
+                                                                        />
+                                                                    </Col>
+                                                                }
+                                                                <Col xs="1">
+                                                                    <a href="#" onClick={() => form.setValues({
+                                                                        ...form.values,
+                                                                        equipment_owned: form.values.equipment_owned.filter((v, idx) => i != idx)
+                                                                    })}><DashCircle color="red" /></a>
+                                                                </Col>
+                                                                <Col xs="12">
+                                                                    <hr />
+                                                                </Col>
+
+                                                            </Row>
+                                                        ))}
+                                                </>
+                                            }
+                                        </ViewCard>
+                                    </Col>
+                                }
+                            </Col>
+
+                        </Row>
+                    </ViewCard>
+                </Col>
+            </Row>
+            <Row>
+                <Col md="4">
+                    <ViewCard
+                        title="WORK_HISTORY"
+                        actions={<Button size='sm' onClick={() => form.setValues({
+                            ...form.values,
+                            employers: [
+                                ...(form.values.employers || []),
+                                new ApplicantEmployerEntity()
+                            ]
+                        })}><PlusCircle /> {t("ADD")}</Button>}
+                    >
+                        {!form.values.employers?.length &&
+                            t("NONE")
+                        }
+                        {form.values.employers?.map((e, i) => {
+
+                            const meta = form.getFieldMeta(`employers[${i}]`);
+
+                            const hasError = Object.keys(e || {}).some(v => form.getFieldMeta(`employers[${i}].${v}`).error);
+                            return (
+                                <Accordion
+                                    key={i}
+                                    defaultExpanded={i === 0 || !meta.touched || hasError}
+                                    expanded={hasError || undefined}
+                                >
+                                    <AccordionSummary
+                                        expandIcon={<ChevronUp />}
+                                    >
+                                        <Button
+                                            type="button"
+                                            size="sm"
+                                            variant="danger"
+                                            onClick={v => form.setValues({
+                                                ...form.values,
+                                                employers: form.values.employers.filter((v, idx) => idx !== i),
+                                            })}
+                                        >
+                                            <XCircle /> {t("REMOVE")}
+                                        </Button>
+                                        <span style={{ marginLeft: "10px" }} >{e.name || t("NEW_EMPLOYER")}</span>
+
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <Row>
+                                            <BaseInput
+                                                className="col-12"
+                                                name={`employers[${i}].name`}
+                                                label="NAME"
+                                                required
+                                                placeholder="COMPANY_NAME"
+                                                formik={form}
+                                            />
+                                            <BaseInput
+                                                className="col-6"
+                                                name={`employers[${i}].start_at`}
+                                                label="DATES_EMPLOYED"
+                                                type="date"
+                                                formik={form}
+                                            />
+                                            <BaseInput
+                                                className="col-6"
+                                                name={`employers[${i}].end_at`}
+                                                label="THROUGH_OPTIONAL"
+                                                type="date"
+                                                formik={form}
+                                            />
+                                            <BaseInput
+                                                className="col-12"
+                                                name={`employers[${i}].title`}
+                                                label="TITLE"
+                                                placeholder="TITLE"
+                                                formik={form}
+                                            />
+                                            <BaseInput
+                                                className="col-12"
+                                                name={`employers[${i}].street`}
+                                                label="STREET"
+                                                placeholder="STREET"
+                                                formik={form}
+                                            />
+                                            <BaseInput
+                                                className="col-12"
+                                                name={`employers[${i}].city`}
+                                                label="CITY"
+                                                placeholder="CITY"
+                                                formik={form}
+                                            />
+                                            <StateSelect
+                                                className="col-6"
+                                                name={`employers[${i}].state`}
+                                                label="STATE"
+                                                placeholder="STATE"
+                                                formik={form}
+                                            />
+                                            <BaseInput
+                                                className="col-6"
+                                                name={`employers[${i}].zip_code`}
+                                                label="ZIP_CODE"
+                                                placeholder="ZIP_CODE"
+                                                formik={form}
+                                            />
+
+                                            <BaseInputPhone
+                                                className="col-12"
+                                                name={`employers[${i}].phone`}
+                                                label="PHONE"
+                                                type="tel"
+                                                placeholder="PHONE"
+                                                value={form.values.employers[i].phone}
+                                               
+                                                onChange={(value, country, e, formattedValue) => { form.setFieldValue('`employers[${i}].phone`', formattedValue) }}
+                                                handleBlur={(event, data) => { form.setFieldValue('`employers[${i}].phone`', event.target.value) }}
+                                                onKeyDown={(event) => { form.setFieldValue('`employers[${i}].phone`', event.target.value) }}
+                                            />
+                                            {/* <BaseInput
+                                                className="col-12"
+                                                name={`employers[${i}].phone`}
+                                                label="PHONE"
+                                                type="tel"
+                                                placeholder="PHONE"
+                                                formik={form}
+                                            /> */}
+                                            <BaseCheck
+                                                className="col-12 mt-2"
+                                                name={`employers[${i}].can_contact`}
+                                                label="MAY_CONTACT_COMPANY"
+                                                formik={form}
+                                            />
+                                            <BaseCheck
+                                                className="col-12 mt-2"
+                                                name={`employers[${i}].is_subject_to_fmcsrs`}
+                                                label="SUBJECT_TO_FMCSRS"
+                                                formik={form}
+                                            />
+                                            <BaseCheck
+                                                className="col-12 mt-2"
+                                                name={`employers[${i}].is_subject_to_drug_tests`}
+                                                label="JOB_DESIGNATED_AS_SATEFY_SENSITIVE"
+                                                formik={form}
+                                            />
+                                        </Row>
+                                    </AccordionDetails>
+                                </Accordion>
+                            )
+                        })}
+                    </ViewCard>
+                </Col>
+                <Col md="8">
+                    <ViewCard title="SAFETY_BACKGROUND">
+                        <Row>
+                            <Col md="6">
+                                <BaseCheck
+                                    className="col-12 mt-2"
+                                    label="CAN_PASS_DRUG_TEST"
+                                    name="can_pass_drug_test"
+                                    formik={form}
+                                />
+                                <BaseCheck
+                                    className="col-12 mt-2"
+                                    label="HAS_DUIS"
+                                    name="has_past_dui"
+                                    formik={form}
+                                />
+                                {
+                                    form.values.has_past_dui &&
+                                    <Col xs="12" className='mt-2'>
+                                        <ViewCard
+                                            title="PAST_DUIS"
+                                            actions={<Button size='sm' onClick={() => form.setValues({
+                                                ...form.values,
+                                                dui_years: [
+                                                    ...(form.values.dui_years || []),
+                                                    ""
+                                                ]
+                                            })}><PlusCircle /> {t("ADD")}</Button>}
+                                        >
+                                            {
+                                                form.values.dui_years?.length > 0 &&
+
+                                                <Table striped>
+                                                    <thead>
+                                                        <tr>
+                                                            <th colSpan={2}>{t("YEAR")}</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {form.values
+                                                            .dui_years
+                                                            .map((entity, i) => (
+                                                                <tr key={i}>
+                                                                    <td className='w-100'>
+                                                                        <BaseInput
+                                                                            name={`dui_years[${i}]`}
+                                                                            placeholder="YEAR"
+                                                                            type="int"
+                                                                            required
+                                                                            value={entity}
+                                                                            min={new Date().getFullYear() - 5}
+                                                                            max={new Date().getFullYear()}
+                                                                            formik={form}
+                                                                        />
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="#" onClick={() => form.setValues({
+                                                                            ...form.values,
+                                                                            dui_years: form.values.dui_years.filter((v, idx) => i != idx)
+                                                                        })}><DashCircle color="red" /></a>
+                                                                    </td>
+
+                                                                </tr>
+                                                            ))}
+                                                    </tbody>
+                                                </Table>
+                                            }
+                                        </ViewCard>
+                                    </Col>
+                                }
+                                <BaseTextArea
+                                    className="col-12 mt-2"
+                                    label="criminal_history_last_3_years"
+                                    name="criminal_history"
+                                    formik={form}
+                                />
+                                <BaseInput
+                                    className="col-12 mt-2"
+                                    label="accidents_last_5_years"
+                                    name="accident_count"
+                                    type="int"
+                                    min="0"
+                                    formik={form}
+                                />
+                                {
+                                    form.values.accident_count > 0 &&
+                                    <BaseTextArea
+                                        className="col-12 mt-2"
+                                        label="accident_details"
+                                        name="accident_details"
+                                        formik={form}
+                                    />
+                                }
+                            </Col>
+                            <Col md="6">
+                                <Row>
+                                    <BaseCheck
+                                        className="col-12 mt-2"
+                                        label="has_had_license_revoked"
+                                        name="license_revoked"
+                                        formik={form}
+                                    />
+                                    {
+                                        form.values.license_revoked &&
+                                        <BaseTextArea
+                                            className="col-12 mt-2"
+                                            label="details"
+                                            name="license_revoked_details"
+                                            formik={form}
+                                        />
+                                    }
+                                    <BaseCheck
+                                        className="col-12 mt-2"
+                                        label="has_had_psp_violations"
+                                        name="psp_violations"
+                                        formik={form}
+                                    />
+                                    {
+                                        form.values.psp_violations &&
+                                        <BaseTextArea
+                                            className="col-12 mt-2"
+                                            label="details"
+                                            name="violations_details"
+                                            formik={form}
+                                        />
+                                    }
+                                    <BaseCheck
+                                        className="col-12 mt-2"
+                                        label="has_had_tickets_last_5_years"
+                                        name="tickets"
+                                        formik={form}
+                                    />
+                                    {
+                                        form.values.tickets &&
+                                        <BaseTextArea
+                                            className="col-12 mt-2"
+                                            label="details"
+                                            name="tickets_details"
+                                            formik={form}
+                                        />
+                                    }
+                                    <BaseCheck
+                                        className="col-12 mt-2"
+                                        label="has_had_positive_drug_test"
+                                        name="positive_drug_test"
+                                        formik={form}
+                                    />
+                                    {
+                                        form.values.positive_drug_test &&
+                                        <BaseTextArea
+                                            className="col-12 mt-2"
+                                            label="details"
+                                            name="positive_drug_test_details"
+                                            formik={form}
+                                        />
+                                    }
+                                </Row>
+                            </Col>
+                        </Row>
+                    </ViewCard>
+                </Col>
+            </Row>
+            <Row>
+                <Col md="5">
+                    <ViewCard
+                        title="UPLOADED_DOCUMENTS"
+                        actions={<Button size='sm'
+                            disabled={form.values.documents?.length === Object.keys(ApplicantDocumentType).length}
+                            onClick={() => form.setValues({
+                                ...form.values,
+                                documents: [
+                                    ...(form.values.documents || []),
+                                    new DocumentEntity()
+                                ]
+                            })}><PlusCircle /> {t("ADD")}</Button>}
+                    >
+                        {!form.values.documents?.length &&
+                            t("NONE")
+                        }
+                        {
+                            form.values.documents?.length > 0 &&
+
+                            <Table striped>
+                                <thead>
+                                    <tr>
+                                        <th>{t("TYPE")}</th>
+                                        <th>{t("DOCUMENT")}</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {form.values
+                                        .documents
+                                        .map((entity, i) => (
+                                            <tr key={i}>
+                                                <td>
+                                                    <BaseSelect
+                                                        name={`documents[${i}].type`}
+                                                        required
+                                                        placeholder="TYPE"
+                                                        labelPrefix="ApplicantDocumentType"
+                                                        enumType={ApplicantDocumentType}
+                                                        formik={form}
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <FileInput
+                                                        name={`documents[${i}]`}
+                                                        required
+                                                        accept="application/pdf"
+                                                        formik={form}
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <a href="#" onClick={() => form.setValues({
+                                                        ...form.values,
+                                                        documents: form.values.documents.filter((v, idx) => i != idx)
+                                                    })}><DashCircle color="red" /></a>
+                                                </td>
+
+                                            </tr>
+                                        ))}
+                                </tbody>
+                            </Table>
+                        }
+                    </ViewCard>
+                </Col>
+            </Row>
+        </form>
+    </>);
+}
+
+Applicant.getLayout = function (page) {
+    return (
+        <FullLayout>{page}</FullLayout>
+    );
+};

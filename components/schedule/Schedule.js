@@ -2,15 +2,12 @@ import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
+import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
+import { JobSchedule } from "../../enums/jobs/job-schedule.enum"
 
-export default function Schedule () {
-const router = useRouter()
-const ctx = useContext( jobContext )
-function changeHandler ( e ) {
-  const a = updateQueryStringParameter( window.location.href, 'schedule', e.target.value )
-  router.replace( a )
-  ctx.applyFilters()
-}
+export default function Schedule() {
+  const { state, method } = useContext(jobContext)
+  const { handleChange } = method
 
   return (
     <>
@@ -26,19 +23,14 @@ function changeHandler ( e ) {
         <div id="collapseSchedule" className="collapse show" aria-labelledby="headingSix"
           data-parent="#accordionExample">
           <div className="card-body">
-          <div onChange={changeHandler} className="App">
-              <div className="topping pt-2">
-                <input type="radio" id="multipleweeks" name="areas" value="multipleweeks" />Multiple weeks on the road (6)
-              </div>
-              <div className="topping pt-2">
-                <input type="radio" id="mostweekends" name="areas" value="mostweekends" />Most weekends off (2)
-              </div>
-              <div className="topping pt-2">
-                <input type="radio" id="Weekendsoff" name="areas" value="weekendsoff" />Weekends off (7)
-              </div>
-              <div className="topping pt-2">
-                <input type="radio" id="Other" name="areas" value="other" />Other (12)
-              </div>
+            <div className="App">
+              <EnumFilterByKeyValue
+                translate={true}
+                withAll={true}
+                enumArray={JobSchedule}
+                name="schedule"
+                handleChange={handleChange}
+              />
             </div>
           </div>
         </div>

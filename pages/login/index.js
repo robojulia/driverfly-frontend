@@ -1,20 +1,35 @@
 import useAuth from '../../hooks/useAuth';
 import Router from 'next/router'
 import axios from 'axios';
-import { withRouter } from 'next/router'
+import { useRouter } from 'next/router'
 
 import { useState } from 'react';
 import Layout from "../../components/layouts";
 import login from '../../public/css/Login.module.css'
 import Link from 'next/link';
 import Breadcrumbs from 'nextjs-breadcrumbs';
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
+import AuthApi from "../api/auth";
+
+import { useTranslation } from "../../hooks/useTranslation";
+
 
 export default function Login() {
 
-    const { authCheck, setAuth } = useAuth();
+    const router = useRouter();
 
-    if (authCheck()) {
-        Router.push('/dashboard')
+    const { t } = useTranslation();
+
+    const { authCheck, isDriver, isCompany, setAuth } = useAuth();
+
+    if (isDriver()) {
+        Router.push('/dashboard/driver')
+    }
+
+    if (isCompany()) {
+        Router.push('/dashboard/company')
     }
 
     const [formData, setFormData] = useState({
@@ -45,18 +60,31 @@ export default function Login() {
         e.preventDefault();
 
         if (validateForm()) {
-            console.log(`${process.env.BASE_URL_API}/auth/login`)
-            await axios.post(`${process.env.BASE_URL_API}/auth/login`, formData)
+            const api = new AuthApi();
+
+            //await axios.post(`${process.env.BASE_URL_API}/auth/login`, formData)
+            await api.login(formData)
                 .then(data => {
 
                     // console.log("handle success", data);
                     if (data.status == 201) {
                         console.log("handle success data", data.data);
+                        console.log(data.data);
+                        // data.data.user.language = "es-mx";
                         setAuth(data.data.user)
 
-                        Router.push('/dashboard')
+                        if (isDriver()) {
+                            Router.push('/dashboard/driver');//, undefined, { locale: data.data.user.language })
+                        }
+
+                        if (isCompany()) {
+                            Router.push('/dashboard/company');//, undefined, { locale: data.data.user.language })
+                        }
+
+                        // Router.push('/')
                     } else {
                         console.log('not 201')
+                        setServerValidation("Something went south");
                     }
                 })
                 .catch(function (error) {
@@ -64,9 +92,19 @@ export default function Login() {
 
                     if (error?.response?.data?.errors?.user) {
                         setServerValidation(error.response.data.errors.user);
-                    }else{
+                    } else {
                         setServerValidation("Invalid Credentials");
+                        toast.warning("Invalid Credentials", {
+                            position: "top-right",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                        });
                     }
+
                 })
                 .then(function () {
                     // always executed
@@ -78,22 +116,23 @@ export default function Login() {
 
     return (
         <>
+            <ToastContainer />
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
-                        <h2>Login</h2>
+                        <h2>{t("LOGIN")}</h2>
                         <Breadcrumbs />
                     </div>
                 </div>
             </div>
             <div className="container mb-5 p-lg-2 p-0">
-                <p className=" mt-5 text-secondary  p-lg-0 p-2">Don't have an account? Make one
+                <p className=" mt-5 text-secondary  p-lg-0 p-2">{t("DON'T_HAVE_AN_ACCOUNT_MAKE_ONE")}
                     <Link href="/signup">
-                        <a className={login.link}> here!</a>
+                        <a className={login.link}>{t("HERE")}</a>
                     </Link>
                 </p>
-                <h2 className='text-center mt-5'>Quick Login</h2>
-                <p className="mt-3  text-center">Login Your Account</p>
+                <h2 className='text-center mt-5'>{t("QUICK_LOGIN")}</h2>
+                <p className="mt-3  text-center">{t("LOGIN_YOUR_ACCOUNT")}</p>
             </div>
             <div className="container">
                 <div className='row'>
@@ -106,20 +145,22 @@ export default function Login() {
                                 <input type="email"
                                     onChange={e => setFormData({ ...formData, email: e.target.value })}
                                     className="form-control"
-                                    placeholder="Username or email" id="email" />
+                                    placeholder={t('USER_NAME_OR_EAMIL')} id="email" />
                                 <div className="text-danger">{validation?.email}</div>
                             </div>
                             <div className="form-group">
                                 <input type="password"
                                     onChange={e => setFormData({ ...formData, password: e.target.value })}
-                                    className="form-control" placeholder="Enter password" id="pwd" />
+                                    className="form-control" placeholder={t("ENTER_PASSWORD")} id="pwd" />
                                 <div className="text-danger">{validation?.password}</div>
                             </div>
                             <div className="form-group form-check">
                                 <label className="form-check-label w-50">
-                                    <input className="form-check-input" type="checkbox" /> Keep me signed in
+                                    <input className="form-check-input" type="checkbox" /> {t("KEEP_ME_SIGNED_IN")}
                                 </label>
-                                <a href='#' className={login.pricol}>Lost Your Password?</a>
+                                <Link href="/forgot-password">
+                                    <a className={login.pricol}>{t("LOST_YOUR_PASSWORD")}</a>
+                                </Link>
                             </div>
                             {serverValidation instanceof Array ? serverValidation.map((inValid) => {
                                 return (
@@ -127,17 +168,21 @@ export default function Login() {
                                 )
 
                             }) : <div className="text-danger">{serverValidation}</div>}
-                            <button type="submit" className={login.submit}>Login</button>
+                            <button type="submit" className={login.submit}>{t("LOGIN")}</button>
                         </form>
-                        <div className={login.sociallogin}>
-                            <div className={login.lineheader}>
-                                <span>or</span>
-                            </div>
-                            <div className={login.innersocial}>
-                                <div className={login.facebooklogin}>
-                                    <a className={login.facebook} href="#"><i className="fa fa-facebook"></i> Facebook</a>
-                                </div>
-                            </div></div>
+
+
+
+                        <div className={login.lineheader}>
+                            <span>{t("OR")}</span>
+                        </div>
+
+                        <div className={login.back_to_signup}>
+                            <Link href="/signup">
+                                <a className={login.facebook}>{t("CREATE_AN_ACCOUNT")}</a>
+                            </Link>
+
+                        </div>
                     </div>
                     <div className='col-lg-2'></div>
                 </div>

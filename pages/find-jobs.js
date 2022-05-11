@@ -7,70 +7,182 @@ import FilterResult from '../components/filter-results/filter-results'
 import JobsList from '../components/jobslisting/jobslist'
 import Layout from "../components/layouts"
 import jobsContext from "../context/jobContext"
+import Location from "../components/location/Location"
+import BaseApi from "./api/_baseApi"
+import JobApi from "./api/job"
+import DriverApi from "./api/driver";
+import { updateQueryStringParameter } from "../logics/utils"
 
-export default function FindJobs () {
-  const [jobs, setJobs] = useState( [] )
-  const router = useRouter()
-  const searchByLocation = e => {
-    e.preventDefault()
-    console.log( e.target.location.value )
+export default function FindJobs(props) {
+
+  let { params } = props
+  // const params = {}
+  const jobApi = new JobApi();
+  const baseApi = new BaseApi();
+  const driverApi = new DriverApi();
+
+  const [jobs, setJobs] = useState([])
+  const [pagingMeta, setPagingMeta] = useState({
+    currentPage: 1,
+    itemCount: 0,
+    itemsPerPage: 0,
+    totalItems: 0,
+    totalPages: 1
+  })
+
+  const [filters, setFilters] = useState({
+    ...params
+  })
+
+  const setFiltersByKeyValue = (key, value) => {
+    setFilters({
+      ...filters,
+      [key]: value
+    })
   }
+
+  const router = useRouter()
 
   const sortHandler = e => {
-    e.preventDefault()
-    console.log( e.target.value )
+    const { name, value } = e.target;
+    setFiltersByKeyValue("order_by", value)
   }
 
-  
-
-  const fetchJobs = async() => {
-    const queries = window.location.href.split("?")[1]
-    const { data } = await axios.get( `${process.env.BASE_URL_API}/jobs?${queries || ""}` )
-    setJobs( data )
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFiltersByKeyValue(name, value)
   }
 
-  useEffect( fetchJobs, [] )
+  const setNativeValue = (element, value) => {
+    if (!element) {
+      return
+    }
+    const valueSetter = Object.getOwnPropertyDescriptor(element, 'value').set;
+    const prototype = Object.getPrototypeOf(element);
+    const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, 'value').set;
+
+    if (valueSetter && valueSetter !== prototypeValueSetter) {
+      prototypeValueSetter.call(element, value);
+    } else {
+      valueSetter.call(element, value);
+    }
+  }
+
+  const setFiltersForQuery = async () => {
+    // To DO - If user come from driver dashboard
+    // if (params.jobs_for_driver) {
+    //   await Promise.all([
+    //     driverApi.getDriver("drivers")
+    //       .catch(error => {
+    //         console.error("unable to fetch driver info", error);
+    //         throw error;
+    //       }),
+    //     driverApi.getPreferences()
+    //       .catch(error => {
+    //         console.error("unable to fetch driver preference info", error);
+    //         throw error;
+    //       })
+    //   ])
+    //     .then(values => {
+    //       const [driver, preferences] = values;
+    //       // console.log("preferences", preferences.find(item => (item.category == "MATCHING" && item.label == "TEAM_DRIVER")));
+    //       console.log("driver", driver)
+    //       console.log("preferences", preferences)
+
+    //       if (driver.license_type) {
+    //         document.getElementsByName("cdl_class").forEach(input => {
+    //           if (input.type.toLowerCase() === "radio" && input.value === driver.license_type) {
+    //             input.checked = true;
+    //             setFiltersByKeyValue("cdl_class", driver.license_type)
+    //           }
+    //         })
+    //       }
+
+    //     })
+    // }
+
+    Object.keys(params).map(key => {
+      let inputs = document.getElementsByName(key);
+      if (inputs[0].tagName.toLowerCase() !== "input") {
+        return
+      }
+      if (inputs[0].type.toLowerCase() === "text") {
+        setNativeValue(inputs[0], params[key]);
+      }
+      if (inputs[0].type.toLowerCase() === "radio") {
+        inputs.forEach(input => {
+          if (input.value === params[key]) {
+            input.checked = true;
+          }
+        })
+      }
+    })
+    params = {}
+  }
+
+  const fetchJobs = async () => {
+    const { items, meta } = await jobApi.search({ ...filters })
+    setJobs(items)
+    setPagingMeta(meta)
+  }
+
+  useEffect(fetchJobs, [filters])
+  useEffect(async () => {
+    try {
+      await setFiltersForQuery()
+      await router.replace('find-jobs', undefined, { shallow: true });
+      await fetchJobs()
+    } catch (e) {
+      // console.error('exception is here: ', e);
+      throw e
+    }
+  }, [])
 
   return (
-    <jobsContext.Provider value={{ jobs, applyFilters: fetchJobs }}>
+    <jobsContext.Provider value={{
+      state: {
+        jobs,
+        pagingMeta,
+        filters,
+      },
+      method: {
+        handleChange,
+        setPagingMeta,
+        setFilters,
+        applyFilters: fetchJobs
+      },
+    }}>
       <div className="filter-sec">
         <div className="container">
           <div className="row">
-            < FilterResult />
+            <div className="col-12 col-lg-3 lg-mt-0 mt-5">
+              < FilterResult />
+            </div>
             <div className="col-md-9 outer pl-4 ">
-              {/* <h2>{data}</h2> */}
 
-              <form onSubmit={searchByLocation}>
-                <div className="filter-inner d-flex align-items-baseline pl-lg-3 mt-lg-2 ml-lg-3">
-                  <i className="fa fa-map-marker" aria-hidden="true"></i>
-                  <input name="location" type="text" className="form-control border-0 w-25" placeholder="Location" />
-                  <span className="find-me"></span>
-                  <button type="submit" className="btn btn-danger btn-lg br-0 ">Search</button>
-                </div>
-              </form>
+              {/* <Location /> */}
 
               <div className="results-count mt-4 ">
-                Showing <span className="first">1</span> – <span className="last">10</span> of 32 results
+                Showing {
+                  pagingMeta.itemCount !== 0 &&
+                  <>
+                    <span className="first">
+                      {((pagingMeta.currentPage - 1) * pagingMeta.itemsPerPage) + 1}
+                    </span> – <span className="last">
+                      {(((pagingMeta.currentPage - 1) * pagingMeta.itemsPerPage) + pagingMeta.itemCount)}
+                    </span> of
+                  </>
+                } {pagingMeta.totalItems} results
               </div>
 
               <div className="filter-btn-groups mt-3">
-                <button type="button" className="btn btn-danger  "><i className="fa fa-envelope-o"
-                  aria-hidden="true"></i> Get Jobs
-                  Alerts
-                </button>
-                <button type="button" className="btn btn-danger  "> Mass Job Apply</button>
-                <button type="button" className="btn btn-danger  "><i className="fa fa-wifi"
-                  aria-hidden="true"></i>
-                  RSS Feed
-                </button>
                 <span className="text-secondary w-sm-25">Sort by:
                   <select onChange={sortHandler} className="custom-select shadow-none mt-lg-0 mt-md-3">
-                    <option>Default</option>
-                    <option value="1">Newest</option>
-                    <option value="2">Oldest</option>
-                    <option value="3">Random</option>
-                  </select></span>
-
+                    <option value="">Default</option>
+                    <option value="DESC">Newest</option>
+                    <option value="ASC">Oldest</option>
+                  </select>
+                </span>
               </div>
               < JobsList />
 
@@ -80,10 +192,17 @@ export default function FindJobs () {
       </div>
     </jobsContext.Provider>
   )
-
 }
 
-FindJobs.getLayout = function getLayout ( page ) {
+export async function getServerSideProps(context) {
+  return {
+    props: {
+      params: context.query
+    }
+  }
+}
+
+FindJobs.getLayout = function getLayout(page) {
   return (
     <Layout>
       {page}

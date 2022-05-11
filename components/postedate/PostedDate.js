@@ -3,14 +3,36 @@ import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
-export default function DatePosted () {
-  const ctx = useContext( jobContext )
-  const router = useRouter()
-  function changeHandler ( e ) {
-    const a = updateQueryStringParameter( window.location.href, 'filter-date-posted', e.target.value )
-    router.replace( a )
-    ctx.applyFilters()
+import moment from "moment"
+
+export default function DatePosted() {
+
+  const { state, method } = useContext(jobContext)
+  const { handleChange } = method
+  const { filters } = state
+
+  function changeHandler(e) {
+    if (e.target.value == "lasthour") {
+      e.target.value = moment.utc().subtract(1, "hours").format("YYYY-MM-DD HH:mm:ss")
+    }
+    else if (e.target.value == "lasttwentyfour") {
+      e.target.value = moment.utc().subtract(24, "hours").format("YYYY-MM-DD HH:mm:ss")
+    }
+    else if (e.target.value == "lastseven") {
+      e.target.value = moment.utc().subtract(7, "days").format("YYYY-MM-DD HH:mm:ss")
+    }
+    else if (e.target.value == "lastfourteen") {
+      e.target.value = moment.utc().subtract(14, "days").format("YYYY-MM-DD HH:mm:ss")
+    }
+    else if (e.target.value == "lastthirty") {
+      e.target.value = moment.utc().subtract(30, "days").format("YYYY-MM-DD HH:mm:ss")
+    }
+    else {
+      e.target.value = ""
+    }
+    handleChange(e)
   }
+
   return (
     <>
       <div className="card">
@@ -27,22 +49,27 @@ export default function DatePosted () {
           <div className="card-body">
             <div onChange={changeHandler} className="App">
               <div className="topping pt-2">
-                <input type="radio" id="lasthour" name="topping" value="lasthour" />Last Hour
+                <input
+                  defaultChecked={(!filters.date_created) || (filters.date_created == "")}
+                  type="radio"
+                  id="all"
+                  name="date_created"
+                  value="" />All
               </div>
               <div className="topping pt-2">
-                <input type="radio" id="lasttwentyfour" name="topping" value="lasttwentyfour" />Last 24 Hour
+                <input type="radio" id="lasthour" name="date_created" value="lasthour" />Last Hour
               </div>
               <div className="topping pt-2">
-                <input type="radio" id="lastseven" name="topping" value="lastseven" />Last 7 days
+                <input type="radio" id="lasttwentyfour" name="date_created" value="lasttwentyfour" />Last 24 Hour
               </div>
               <div className="topping pt-2">
-                <input type="radio" id="lastfourteen" name="topping" value="lastfourteen" /> Last 14 days
+                <input type="radio" id="lastseven" name="date_created" value="lastseven" />Last 7 days
               </div>
               <div className="topping pt-2">
-                <input type="radio" id="lastthirty" name="topping" value="lastthirty" />Last 30 days
+                <input type="radio" id="lastfourteen" name="date_created" value="lastfourteen" /> Last 14 days
               </div>
               <div className="topping pt-2">
-                <input type="radio" id="all" name="topping" value="all" />All
+                <input type="radio" id="lastthirty" name="date_created" value="lastthirty" />Last 30 days
               </div>
             </div>
 

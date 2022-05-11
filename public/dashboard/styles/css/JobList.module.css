@@ -13,11 +13,10 @@
  .jobtable{
     background-color: #f2f2f2;
     border-radius: 15px;
-    margin-top: 10px;
-    padding: 15px 0px;
+    padding: 0px 0px !important;
 }
 .jobtable td{
-    padding: 15px;
+    padding: 25px 15px;
 }
 
 .jobtable tbody {
@@ -32,10 +31,11 @@
 .jobtable .hired {
     background-color: #1b4454 ;
 }
-.jobtable .depolybtn, .jobtable .hired, .jobtable .approved,.jobtable .applied , .jobtable .repost{
+.jobtable .bg_light,.jobtable .depolybtn, .jobtable .hired, .jobtable .approved,.jobtable .applied , .jobtable .repost{
     padding: 7px 23px;
     border-radius: 5px;
     color: #fff;
+    margin-right: 3px;
 }
 
 .jobtable .tags {
@@ -55,6 +55,16 @@
     padding: 10px 30px ;
     color: #fff;
     border-radius: 5px;
+}
+.bg_light{
+    background-color: #d8d8d8;
+}
+.bg_light_report{
+    background-color: #d8d8d8;
+    margin-left: 10px;
+    padding: 7px 23px;
+    border-radius: 5px;
+    color: #fff;
 }
 .depolybtn{
     background: #1b4454;
@@ -92,4 +102,13 @@
 }
 .status_job__body{
     padding: 20px;
+}
+
+.img span{
+    max-width: 32% !important;
+    top: 20px;
+    min-height: 50px;
+}
+.td__sty{
+    margin-left: 15px;
 }

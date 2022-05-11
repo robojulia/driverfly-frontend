@@ -1,0 +1,65 @@
+import React from 'react'
+
+import { useTranslation } from "../../hooks/useTranslation"
+
+function BaseSelect ( { formik, required, className, enumType, options, valueKey = "value", labelKey = "label", labelPrefix, createLabel, label, placeholder, value, onChange, handleBlur, readOnly, name, touched, error, } ) {
+  const { t } = useTranslation();
+
+  if (formik) {
+    /**
+     * @type {import('formik').FieldMetaProps}
+     */
+    const meta = formik.getFieldMeta(name);
+
+    if (meta) {
+      value = meta.value;
+      touched = meta.touched;
+      error = meta.error;
+    }
+    onChange = onChange || formik.handleChange
+    handleBlur = handleBlur || formik.handleBlur;
+  }
+
+  if (typeof enumType === "object") {
+    options = Object.keys(enumType).map(key => ({
+      [valueKey]: key,
+      [labelKey]: enumType[key]
+    }))
+  }
+  else if (options && options.length > 0 && typeof options[0] !== "object") {
+    options = options.map(v => ({
+      [valueKey]: v,
+      [labelKey]: v
+    }));
+  }
+  else if (createLabel) {
+    options = options.map(v => ({
+      [valueKey]: v[valueKey],
+      [labelKey]: createLabel(v)
+    }));
+  }
+return (
+    <div className={className}>
+      {label && <>
+        <label>{t(label)}{required ? "*" : ""}:</label>
+        <br />
+      </>}
+      <select
+        value={value || ""}
+        onChange={onChange}
+        onBlur={handleBlur}
+        readOnly={readOnly}
+        name={name}
+        className={`form-select ${error ? "is-invalid" : ""}`} 
+        >
+        {placeholder && <option value="">{t(placeholder)}</option>}
+        {options && options.map((v, i) => (<option key={i} value={v[valueKey]}>{t(labelPrefix ? `${labelPrefix}.${v[labelKey]}` : v[labelKey])}</option>))}
+
+      </select>
+      {touched && error && (typeof error === "string") ? <span className="text-danger small">{t(error)}</span> : null}
+    </div>
+  )
+}
+
+export default BaseSelect
+

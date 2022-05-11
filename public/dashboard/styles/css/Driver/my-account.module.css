@@ -1,0 +1,29 @@
+.account_container {
+    background-color: #cdf3f2;
+    border-radius: 25px;
+}
+
+.update_btn {
+    background: #5cc8c4 !important;
+    border-color: #5cc8c4;
+    border: 1px solid #5cc8c4;
+    padding: 12px 50px !important;
+    border-radius: 3px;
+    border-color: #5cc8c4 !important;
+    color: #fff;
+    margin-top: 15px;
+}
+.info{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.lable{
+    margin-right: 20px;
+}
+.earn_btn{
+    background-color: #f4be18;
+    padding: 7px 13px;
+    border-radius: 5px;
+    color: #fff;
+    margin-left: 20px;
+}

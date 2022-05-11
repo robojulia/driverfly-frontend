@@ -1,19 +1,13 @@
-import { useRouter } from "next/router"
-import { updateQueryStringParameter } from "../../logics/utils"
-
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
+import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
+import { DriverLicenseType } from "../../enums/drivers/driver-license-type.enum"
 
-export default function Category () {
-  const ctx = useContext( jobContext )
-  const router = useRouter()
-  const categoryFilter = ( e ) => {
-    if ( e.target.checked ) {
-      const a = updateQueryStringParameter( window.location.href, 'category', e.target.value )
-      router.replace( a )
-      ctx.applyFilters()
-    }
-  }
+export default function Category() {
+
+  const { state, method } = useContext(jobContext)
+  const { handleChange } = method
+
   return (
     <>
       <div className="card mt-3">
@@ -30,9 +24,13 @@ export default function Category () {
           <div className="card-body">
             <div className="custom-control custom-checkbox p-0">
               <div className="App">
-                <div className="topping">
-                  <input onChange={categoryFilter} type="checkbox" id="classcdl" name="classcdl" value="414" />Class A CDL(30)
-                </div>
+                <EnumFilterByKeyValue
+                  translate={true}
+                  withAll={true}
+                  enumArray={DriverLicenseType}
+                  name="cdl_class"
+                  handleChange={handleChange}
+                />
               </div>
             </div>
           </div>

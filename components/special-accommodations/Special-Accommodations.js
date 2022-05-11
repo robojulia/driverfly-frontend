@@ -2,16 +2,14 @@ import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
-export default function SpecialAccommodations () {
-  const ctx = useContext( jobContext )
-  const router = useRouter()
-  function changeHandler ( e ) {
-    if (e.target.checked) {
-      const a = updateQueryStringParameter( window.location.href, 'filter-accommodation-type[]', e.target.value )
-      router.replace( a )
-      ctx.applyFilters()
-    }
-  }
+import { special_accommodations } from "../../enums/jobs/job-fields"
+import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
+
+export default function SpecialAccommodations() {
+
+  const { state, method } = useContext(jobContext)
+  const { handleChange } = method
+
   return (
     <>
       <div className="card">
@@ -25,14 +23,15 @@ export default function SpecialAccommodations () {
         </div>
         <div id="collapsefivety" className="collapse show"
           aria-labelledby="headingfivety" data-parent="#accordionExample">
-          <div onChange={changeHandler} className="card-body">
-            <div className="topping pt-2 ">
-              <input type="checkbox" id="candidatesfelonies" name="topping" value="candidatesfelonies" />Open to candidates with past felonies (6)
+          <div className="card-body">
+            <div className="App">
+              <EnumFilterByKeyValue
+                withAll={true}
+                enumArray={special_accommodations}
+                name="special_accommodations"
+                handleChange={handleChange}
+              />
             </div>
-            <div className="topping pt-2 ">
-              <input type="checkbox" id="candidatesmisdemeanors" name="topping" value="candidatesmisdemeanors" />Open to candidates with past misdemeanors (6)
-            </div>
-
           </div>
         </div>
       </div>

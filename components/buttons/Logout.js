@@ -1,8 +1,10 @@
 import useAuth from '../../hooks/useAuth';
 import Router from 'next/router'
+import { useTranslation } from "../../hooks/useTranslation";
+
 
 export default function Logout(props) {
-
+    const { t } = useTranslation();
     const { removeAuth } = useAuth();
 
     const handleLogoutClick = () => {
@@ -16,7 +18,7 @@ export default function Logout(props) {
                 onClick={handleLogoutClick}
                 type="button"
                 className={props.className}>
-                Logout
+                 {t("LOGOUT")}
             </button>
         </>
     )

@@ -15,7 +15,7 @@ export function middleware(req: NextRequest, ev: NextFetchEvent) {
   // }
 
   // return NextResponse.redirect(`${process.env.FRONTEND_BASE_URL}/login`)
-  // return NextResponse.next()
+  return NextResponse.next()
 
 
 

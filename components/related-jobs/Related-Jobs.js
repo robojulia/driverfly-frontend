@@ -1,93 +1,70 @@
-export default function RelatedJobs() {
+import timeSince from "../../utils/timeSince"
+import Link from "next/link"
+import { useTranslation } from "../../hooks/useTranslation"
+import CompanyPhoto from "../jobs/company-photo";
+
+export default function RelatedJobs({ jobs }) {
+    const { t } = useTranslation();
 
     return (
         <>
             <div className="related-job-sec">
-                <h3>Related Jobs</h3>
+                <h3>{t('related_jobs')}</h3>
                 <div className="row mt-3">
                     <div className="col-md-12">
-                        <div className="media align-items-center ">
-                            <label className="checkbox-inline" for="remember">
-                                <input type="checkbox" name="remember" id="remember" value="1" />
+                        {
+                            jobs &&
+                            jobs.map((job, index) => {
+                                return <div key={index} className="media align-items-center ">
+                                    <CompanyPhoto className="d-flex mr-4 truck-img" company={job.company} />
+                                    <div className="media-body">
+                                        <h4 className="mt-0">
+                                            {job.title}<span className="d-block mt-2" data-toggle="tooltip"
+                                                data-placement="top" title="Tooltip on top">
+                                            </span></h4>
+                                        <div className="job-date-author">
+                                            {
+                                                job.created_at &&
+                                                <>
+                                                    {t('posted')} {timeSince(job.created_at)} {t('ago')}
+                                                </>
+                                            } {
+                                                job?.company?.name &&
+                                                <>
+                                                    {t('by')} <span role="button" className="employer text-theme">{job.company?.name}</span>
+                                                </>
+                                            }
+                                        </div>
+                                        <div className="job-metas">
+                                            <div className="job-location d-flex align-items-center">
+                                                {
+                                                    job.location &&
+                                                    <p className="pr-4">
+                                                        <i className="fa fa-map-marker mr-2" aria-hidden="true"></i>
+                                                        <>
+                                                            {job.location.street || t('no_street')}, {job.location.city || t('no_city')}, {job.location.state || t('no_state')}, {job.location.zip_code || t('no_zip')}
+                                                        </>
+                                                    </p>
+                                                }
+                                            </div>
+                                            <p><i className="fa fa-usd mr-1" aria-hidden="true"></i>{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} {t('per week')}</p>
+                                        </div>
+                                        <div className="job-metas">
+                                            <div className="job-location">
+                                                <i className="fa fa-star-o" aria-hidden="true"></i><strong>
+                                                    {job.description_short}
+                                                </strong>
+                                            </div>
+                                        </div>
 
-                            </label>
-                            <img className="d-flex mr-4 truck-img" src="img/CTR-logo-cartoon.png" alt="" />
-                            <div className="media-body">
-                                <span className="urgent">URGENT</span>
-                                <h6>Solo</h6>
-                                <h4 className="mt-0">CDL-A Regional/OTR – No Touch Freight, Live Load/Unload<span className="d-block mt-2" data-toggle="tooltip"
-                                    data-placement="top" title="Tooltip on top"> <i className="fa fa-star" aria-hidden="true"></i> </span></h4>
-                                <div className="job-date-author">
-                                    posted 3 days ago
-                                    by <a href="" className="employer text-theme">Custom Trucker Recruiting</a>
-                                </div>
-                                <div className="job-metas">
-                                    <div className="job-location">
-                                        <i className="fa fa-star-o" aria-hidden="true"></i><strong>Accepting drivers from anywhere in the Illinois, Indiana, Michigan and Ohio</strong>
                                     </div>
+                                    <Link href={`/jobs/${job.id}`}>
+                                        <button type="button" className="btn btn-primary btn-sm">{t('browse_job')}</button>
+                                    </Link>
+
                                 </div>
-
-                            </div>
-                            <button type="button" className="btn btn-outline-danger"><i className="fa fa-star-o m-0" aria-hidden="true"></i></button>
-
-                        </div>
-
-                        <div className="media align-items-center shadow-sm">
-                            <label className="checkbox-inline" for="remember">
-                                <input type="checkbox" name="remember" id="remember" value="1" />
-
-                            </label>
-                            <img className="d-flex mr-4 truck-img" src="img/CTR-logo-cartoon.png" alt="" />
-                            <div className="media-body">
-                                <span className="urgent">URGENT</span>
-                                <h6>Solo</h6>
-                                <h4 className="mt-0">Class A CDL OTR Truck Drivers (W-2)<span className="" data-toggle="tooltip"
-                                    data-placement="top" title="Tooltip on top"> <i className="fa fa-star" aria-hidden="true"></i> </span></h4>
-                                <div className="job-date-author">
-                                    posted 3 days ago
-                                    by <a href="" className="employer text-theme">Custom Trucker Recruiting</a>
-                                </div>
-                                <div className="job-metas">
-                                    <div className="job-location">
-                                        <i className="fa fa-map-marker mr-2" aria-hidden="true"></i>Burnsville, MN
-                                    </div>
-                                    <div className="job-location">
-                                        <i className="fa fa-star-o" aria-hidden="true"></i><strong>Accepting drivers from anywhere in Illinois, Indiana, Iowa, Kansas, Michigan, Minnesota, Missouri, Nebraska, North Dakota, Ohio, South Dakota and Wisconsin</strong>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <button type="button" className="btn btn-outline-danger"><i className="fa fa-star-o m-0" aria-hidden="true"></i></button>
-
-                        </div>
-                        <div className="media align-items-center shadow-sm">
-                            <label className="checkbox-inline" for="remember">
-                                <input type="checkbox" name="remember" id="remember" value="1" />
-
-                            </label>
-                            <img className="d-flex mr-4 truck-img" src="img/ACWNCW-logo_PNG.jpg" alt="" />
-                            <div className="media-body">
-                                <span className="urgent">URGENT</span>
-                                <h6>Solo</h6>
-                                <h4 className="mt-0">CDL-A Home Daily – Roll Off Container Trucks<span className="" data-toggle="tooltip"
-                                    data-placement="top" title="Tooltip on top"> <i className="fa fa-star" aria-hidden="true"></i> </span></h4>
-                                <div className="job-date-author">
-                                    posted 3 days ago
-                                    by <a href="" className="employer text-theme">National Concrete Washout</a>
-                                </div>
-                                <div className="job-metas">
-                                    <div className="job-location">
-                                        <i className="fa fa-map-marker mr-2" aria-hidden="true"></i>Bloomington, CA and Fort Worth, TX
-                                    </div>
-                                    <div className="job-location">
-                                        <i className="fa fa-star-o" aria-hidden="true"></i><strong>Accepting drivers from anywhere in the CaliforniaTexas</strong>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <button type="button" className="btn btn-outline-danger"><i className="fa fa-star-o m-0" aria-hidden="true"></i></button>
-
-                        </div>
+                            })
+                        }
                     </div>
                 </div>
             </div>

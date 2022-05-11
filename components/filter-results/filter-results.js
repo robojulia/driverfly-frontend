@@ -18,11 +18,11 @@ import ShowMoreEquipment from '../show-more-equipment/ShowMoreEquipment'
 import SpecialAccommodations from '../special-accommodations/Special-Accommodations'
 import SpecialEndorsementsRequired from '../special-endorsements-required/Special-Endorsements-Required'
 import TypeOfDelivery from '../type-of-delivery/TypeOfDelivery'
+import Range from "../location/Range"
 
 
 
-
-export default function FilterResults () {
+export default function FilterResults() {
 
 
 
@@ -30,7 +30,7 @@ export default function FilterResults () {
 
   return (
     <>
-      <div className="col">
+      <div className="filter_container">
         <h5 className='font-weight-normal'>Filter Results</h5>
         <form >
           < Search />
@@ -38,20 +38,20 @@ export default function FilterResults () {
             <div className="tab-content">
               <div className="accordion bg-transparent" id="accordionExample">
                 < Category />
-                < Location />
-                < JobType />
-                < Salary />
+                < Range />
+                {/* < JobType /> */}
+                {/* < Salary /> */}
                 < PostedDate />
                 < AreasCovered />
-                < FullParty />
+                {/* < FullParty /> */}
                 < EmploymentType />
                 < TypeOfDelivery />
-                < AcceptingDriversFrom />
+                {/* < AcceptingDriversFrom /> */}
                 < ShowMoreEquipment />
                 < Schedule />
                 < PayStructure />
-                < MinimumAge />
-                < SpecialAccommodations />
+                {/* < MinimumAge /> */}
+                {/* < SpecialAccommodations /> */}
                 < SpecialEndorsementsRequired />
                 < MvrRequirement />
               </div>

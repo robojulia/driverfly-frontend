@@ -2,16 +2,13 @@ import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
-export default function MvrRequirement () {
-  const ctx = useContext( jobContext )
-  const router = useRouter()
-  function changeHandler ( e ) {
-    if (e.target.checked) {
-      const a = updateQueryStringParameter( window.location.href, 'mvr_requirements[]', e.target.value )
-      router.replace( a )
-      ctx.applyFilters()
-    }
-  }
+import { MvrType } from "../../enums/drivers/mvr-type.enum"
+import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
+
+export default function MvrRequirement() {
+
+  const { state, method } = useContext(jobContext)
+  const { handleChange } = method
 
   return (
     <>
@@ -26,17 +23,16 @@ export default function MvrRequirement () {
         </div>
         <div id="collapsesedventy" className="collapse show"
           aria-labelledby="headingseventy" data-parent="#accordionExample">
-          <div onChange={changeHandler} className="card-body">
-            <div className="topping pt-2 ">
-              <input type="checkbox" id="clearmvr" name="topping" value="clearmvr" />Clean MVR Only (19)
+          <div className="card-body">
+            <div className="App">
+              <EnumFilterByKeyValue
+                translate={true}
+                withAll={true}
+                enumArray={MvrType}
+                name="mvr_requirements"
+                handleChange={handleChange}
+              />
             </div>
-            <div className="topping pt-2 ">
-              <input type="checkbox" id="moving" name="topping" value="moving" />Moving Violation Okay (2)
-            </div>
-            <div className="topping pt-2 ">
-              <input type="checkbox" id="fault" name="topping" value="fault" />Non "At Fault" Accident Okay (8)
-            </div>
-
           </div>
         </div>
       </div>

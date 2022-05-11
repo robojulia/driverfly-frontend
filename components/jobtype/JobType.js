@@ -2,16 +2,14 @@ import { useRouter } from "next/router"
 import { updateQueryStringParameter } from "../../logics/utils"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
+import { job_type } from "../../enums/jobs/job-fields"
+import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 
-export default function JobType () {
-  const ctx = useContext( jobContext )
-  const router = useRouter()
+export default function JobType() {
 
-  function handleChange ( e ) {
-    const a = updateQueryStringParameter( window.location.href, 'job_type', e.target.value )
-    router.replace( a )
-    ctx.applyFilters()
-  }
+  const { state, method } = useContext(jobContext)
+  const { handleChange } = method
+
 
   return (
     <>
@@ -28,13 +26,13 @@ export default function JobType () {
           aria-labelledby="headingThree" data-parent="#accordionExample">
           <div className="card-body">
             <div className="custom-control custom-checkbox p-0">
-              <div onChange={handleChange} className="App">
-                <div className="topping">
-                  <input type="radio" id="solo" name="jobtype" value="solor" />Solo(27)
-                </div>
-                <div className="topping pt-2">
-                  <input type="radio" id="teamdrivers" name="jobtype" value="teamdrivers" />Team Drivers(2)
-                </div>
+              <div className="App">
+                <EnumFilterByKeyValue
+                  withAll={true}
+                  enumArray={job_type}
+                  name="job_type"
+                  handleChange={handleChange}
+                />
               </div>
             </div>
           </div>

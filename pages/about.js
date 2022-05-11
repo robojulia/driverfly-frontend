@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Layout from "../components/layouts";
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
-
+import Slider from '../components/testominial-slider/Slider'
 
 export default function About()
 {
@@ -135,7 +135,8 @@ export default function About()
             <div className="testimonial-sec about-testominial">
                 <div className="container">
                     <h2 className="text-center">What Drivers Say About Us</h2>
-                    <div className="row owl-carousel owl-theme d-block">
+                    < Slider />
+                    {/* <div className="row owl-carousel owl-theme d-block">
 
                                 <div className="item">
                                     <div className="box">
@@ -179,7 +180,7 @@ export default function About()
                             </div>
 
 
-                    </div>
+                    </div> */}
                        <div className="row mt-5">
                            <div className="col-md-12">
                                <div className="partners">
