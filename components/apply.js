@@ -568,13 +568,11 @@ export default function JobApply({ job }) {
                 border: '1px solid rgba(0, 0, 0, 0.3)',
                 height: '800px',
               }}>
-                {/* <<Viewer fileUrl={"http://localhost:4000/"+myUser.medical_card} />np */}
                 <Viewer defaultScale={SpecialZoomLevel.PageWidth} plugins={[defaultLayoutPluginInstance]} renderLoader={() => (
                   <Spinner animation="border" role="status">
                     <span className="visually-hidden">{t("loading")}...</span>
                   </Spinner>
                 )} fileUrl={pdfModel.url} />
-                {/* )} fileUrl="/resume.pdf" /> */}
               </div>
             </Worker>
           )}
