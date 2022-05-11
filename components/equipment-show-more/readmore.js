@@ -13,12 +13,12 @@ const ReadMore = ({ children }) => {
     setIsReadMore(!isReadMore)
   }
   return (
-    <p className="text">
+    <div className="text">
       {isReadMore ? text.slice(0, 1) : text}
       <span onClick={toggleReadMore} className="read-or-hide">
         {isReadMore ? "Show More +" : " Show less -"}
       </span>
-    </p>
+    </div>
   )
 }
 
@@ -39,7 +39,7 @@ const Content = () => {
         <div className="App">
           <div className="topping pt-2">
             <input
-              checked={(!filters.equipment_type) || (filters.equipment_type == "")}
+              defaultChecked={(!filters.equipment_type) || (filters.equipment_type == "")}
               onChange={handleChange}
               type="radio"
               name="equipment_type"
@@ -53,7 +53,7 @@ const Content = () => {
               return (
                 <div key={index} className="topping pt-2">
                   <input
-                    checked={filters.equipment_type !== undefined && filters.equipment_type == value}
+                    defaultChecked={filters.equipment_type !== undefined && filters.equipment_type == value}
                     onChange={handleChange}
                     type="radio"
                     name="equipment_type"
@@ -68,7 +68,7 @@ const Content = () => {
               return (
                 <div key={index} className="topping pt-2">
                   <input
-                    checked={filters.equipment_type !== undefined && filters.equipment_type == value}
+                    defaultChecked={filters.equipment_type !== undefined && filters.equipment_type == value}
                     onChange={handleChange}
                     type="radio"
                     name="equipment_type"

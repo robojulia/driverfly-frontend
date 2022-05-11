@@ -8,6 +8,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Modal from "react-bootstrap/Modal"
 import Button from "react-bootstrap/Button"
+import BaseInputPhone from "../../../../components/forms/BaseInputPhone";
 
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -127,73 +128,102 @@ export default function Profile() {
           <form className="modal-body" onSubmit={form.handleSubmit} >
             <Row>
               <BaseInput
-                  className="col-6"
-                  label={t("first_name")}
-                  name="first_name"
-                  placeholder={t("first_name")}
-                  value={form.values.first_name}
-                  touched={form.touched.first_name}
-                  error={form.errors.first_name}
-                  onChange={form.handleChange}
-                  handleBlur={form.handleBlur}
-                />
+                className="col-6"
+                label={t("first_name")}
+                name="first_name"
+                placeholder={t("first_name")}
+                value={form.values.first_name}
+                touched={form.touched.first_name}
+                error={form.errors.first_name}
+                onChange={form.handleChange}
+                handleBlur={form.handleBlur}
+              />
               <BaseInput
-                  className="col-6"
-                  label={t("last_name")}
-                  name="last_name"
-                  placeholder={t("last_name")}
-                  value={form.values.last_name}
-                  touched={form.touched.last_name}
-                  error={form.errors.last_name}
-                  onChange={form.handleChange}
-                  handleBlur={form.handleBlur}
-                />
+                className="col-6"
+                label={t("last_name")}
+                name="last_name"
+                placeholder={t("last_name")}
+                value={form.values.last_name}
+                touched={form.touched.last_name}
+                error={form.errors.last_name}
+                onChange={form.handleChange}
+                handleBlur={form.handleBlur}
+              />
+
+              <BaseInputPhone
+                className="col-6"
+                label={t("phone")}
+                name="contact_number"
+                placeholder={t("phone")}
+                type="tel"
+                value={form.values.contact_number}
+                touched={form.touched.contact_number}
+                error={form.errors.contact_number}
+                onChange={(value, country, e, formattedValue) => { form.setFieldValue('contact_number', formattedValue) }}
+                handleBlur={(event, data) => { form.setFieldValue('contact_number', event.target.value) }}
+                onKeyDown={(event) => { form.setFieldValue('contact_number', event.target.value) }}
+              />
+              {/* <BaseInput
+                className="col-6"
+                label={t("phone")}
+                name="contact_number"
+                placeholder={t("phone")}
+                type="tel"
+                value={form.values.contact_number}
+                touched={form.touched.contact_number}
+                error={form.errors.contact_number}
+                onChange={form.handleChange}
+                handleBlur={form.handleBlur}
+              /> */}
+              {/* <BaseInput
+                className="col-6"
+                label={t("phone_cell")}
+                name="cell_number"
+                placeholder={t("phone_cell")}
+                type="tel"
+                value={form.values.cell_number}
+                touched={form.touched.cell_number}
+                error={form.errors.cell_number}
+                onChange={form.handleChange}
+                handleBlur={form.handleBlur}
+              /> */}
+
+
+              <BaseInputPhone
+               className="col-6"
+               label={t("phone_cell")}
+               name="cell_number"
+               placeholder={t("phone_cell")}
+               type="tel"
+                value={form.values.cell_number}
+                touched={form.touched.cell_number}
+                error={form.errors.cell_number}
+                onChange={(value, country, e, formattedValue) => { form.setFieldValue('cell_number', formattedValue) }}
+                handleBlur={(event, data) => { form.setFieldValue('cell_number', event.target.value) }}
+                onKeyDown={(event) => { form.setFieldValue('cell_number', event.target.value) }}
+              />
               <BaseInput
-                  className="col-6"
-                  label={t("phone")}
-                  name="contact_number"
-                  placeholder={t("phone")}
-                  type="tel"
-                  value={form.values.contact_number}
-                  touched={form.touched.contact_number}
-                  error={form.errors.contact_number}
-                  onChange={form.handleChange}
-                  handleBlur={form.handleBlur}
-                />
-              <BaseInput
-                  className="col-6"
-                  label={t("phone_cell")}
-                  name="cell_number"
-                  placeholder={t("phone_cell")}
-                  type="tel"
-                  value={form.values.cell_number}
-                  touched={form.touched.cell_number}
-                  error={form.errors.cell_number}
-                  onChange={form.handleChange}
-                  handleBlur={form.handleBlur}
-                />
-              <BaseInput
-                  className="col-12"
-                  label={t("email")}
-                  name="email"
-                  placeholder={t("email")}
-                  type="email"
-                  readOnly={true}
-                  value={form.values.email}
-                  touched={form.touched.email}
-                  error={form.errors.email}
-                  onChange={form.handleChange}
-                  handleBlur={form.handleBlur}
-                />
+                className="col-12"
+                label={t("email")}
+                name="email"
+                placeholder={t("email")}
+                type="email"
+                readOnly={true}
+                value={form.values.email}
+                touched={form.touched.email}
+                error={form.errors.email}
+                onChange={form.handleChange}
+                handleBlur={form.handleBlur}
+              />
             </Row>
             <Row className="mt-2">
-                <div className="col-12 border-0 text-end">
-                    <div className="col">
-                        <button type="submit" className={`btn btn-primary`} >
-                        {t("UPDATE")}
-                        </button>
-                    </div>
+              <div className="col-12 border-0 text-end">
+                <div className="col">
+                  <button type="submit" className={`btn btn-primary`} >
+                    {t("UPDATE")}
+                  </button>
                 </div>
+              </div>
             </Row>
 
           </form>
