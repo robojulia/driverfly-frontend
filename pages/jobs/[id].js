@@ -83,7 +83,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
                 <button type="button" className="btn btn-danger" data-toggle="modal" data-target="#exampleModal"> {t('apply_now')} <i className="fa fa-long-arrow-right pl-1" aria-hidden="true"></i></button>
                 <button type="button" className="btn btn-danger"> <i className="fa fa-star-o" aria-hidden="true"></i> {t('shortlist')} </button>
               </div>
-              <JobApply job={jobDetail} />
+              {/* <JobApply job={jobDetail} /> */}
             </div>
           </div>
         </div>
