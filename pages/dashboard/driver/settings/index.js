@@ -31,10 +31,6 @@ export default function Profile() {
   const { authCheck, setAuth } = useAuth();
   const user = authCheck();
 
-  const translations = {
-    required: t("this_field_is_required")
-  };
-
   const form = useFormik({
     initialValues: {
       first_name: null,
@@ -67,12 +63,24 @@ export default function Profile() {
       const applicantApi = new ApplicantApi();
 
       try {
-        const applicant = await applicantApi.upsertByUserId({
-          first_name: values.first_name,
-          last_name: values.last_name,
-          email: values.email,
-          phone: values.contact_number,
-        });
+        let applicant = await applicantApi.getByUserId();
+
+        if (applicant) {
+          applicant = await applicantApi.update(applicant.id, {
+            first_name: values.first_name,
+            last_name: values.last_name,
+            email: values.email,
+            phone: values.contact_number,
+          });
+        }
+        else {
+          applicant = await applicantApi.create({
+            first_name: values.first_name,
+            last_name: values.last_name,
+            email: values.email,
+            phone: values.contact_number,
+          });
+        }
         const savedUser = await userApi.update(user.id, dto);
         setAuth({
           ...user,

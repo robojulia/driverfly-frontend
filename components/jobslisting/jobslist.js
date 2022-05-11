@@ -121,7 +121,7 @@ export default function JobsList() {
             {
               currentPageIndex < pagingMeta.totalPages &&
               <li onClick={() => { handlePaging(nextPageIndex) }} >
-                <span className="page-numbers " role="button" value={parseInt(pagingMeta.page) + 1}>
+                <span className="page-numbers " role="button" >
                   {nextPageIndex}
                 </span>
               </li>
