@@ -260,7 +260,7 @@ export default function JobApply({ job }) {
   return (
     <>
 
-      <div className="modal fade p-0" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div className="modal fade p-0" id="exampleModal"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="modal-dialog" role="document">
           <div className="modal-content">
             <form onSubmit={apply_form.handleSubmit}>
