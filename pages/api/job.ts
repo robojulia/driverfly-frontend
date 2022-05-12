@@ -4,6 +4,7 @@ import VehicleEntity from "../../models/company/vehicle.entity";
 import { JobEntity } from "../../models/job/job.entity";
 import BaseApi from "./_baseApi";
 import { ApplyJobDto } from "../../models/job/apply-job.dto"
+import { ApplicantEntity } from "../../models/applicant/applicant.entity";
 
 export default class JobApi extends BaseApi {
     baseUrl: string = "jobs";
@@ -39,7 +40,9 @@ export default class JobApi extends BaseApi {
         return data;
     }
 
-    async applyForJob(id: number, body: ApplyJobDto) {
-        return await this.post(`${this.baseUrl}/${id}/apply`, body)
+    async apply(jobId: number, body: ApplicantEntity) : Promise<ApplicantEntity> {
+        const { data } = await this.post(`${this.baseUrl}/${jobId}/apply`, body);
+
+        return data;
     }
 }

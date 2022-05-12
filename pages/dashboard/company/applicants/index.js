@@ -98,7 +98,7 @@ export default function Applicants(props) {
         id: aJob.job.id,
         job: aJob.job,
         title: aJob.job.title,
-        location: `${aJob.job.location.city}, ${aJob.job.location.state}`,
+        location: `${aJob.job.location?.city}, ${aJob.job.location?.state}`,
         geography: aJob.job.geography,
         employment_type: aJob.job.employment_type,
         weekly_range: `${numbers.toCurrency(aJob.job.min_weekly_pay)} - ${numbers.toCurrency(aJob.job.max_weekly_pay)}`,

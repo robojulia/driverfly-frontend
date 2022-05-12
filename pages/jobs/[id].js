@@ -15,6 +15,8 @@ import JobApi from "../api/job"
 import CompanyPhoto from "../../components/jobs/company-photo"
 
 import StructuredData from "../../components/seo/StructuredData"
+import { ArrowRight } from "react-bootstrap-icons"
+import { buildAddress } from "../../utils/common"
 
 export default function Detail({ jobDetail, relatedJobs }) {
 
@@ -35,7 +37,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
                     <CompanyPhoto className="d-flex mr-4 truck-img mb-3" company={jobDetail.company} />
                     <Link href="/find-jobs">
                       <a>
-                        {t('view_all_jobs')} <i className="fa fa-long-arrow-right pl-1" aria-hidden="true"></i>
+                        {t('view_all_jobs')} <ArrowRight className="pl-1" />
                       </a>
                     </Link>
                   </span>
@@ -44,7 +46,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
                     <h4 className="mt-0">
                       {jobDetail.title}
                       <span className="" data-toggle="tooltip"
-                        data-placement="top" title="{jobDetail.title}">
+                        data-placement="top" title={jobDetail.title}>
                       </span>
                     </h4>
                     <div className="job-date-author">
@@ -66,9 +68,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
                           jobDetail.location &&
                           <p className="pr-4">
                             <i className="fa fa-map-marker mr-2" aria-hidden="true"></i>
-                            <>
-                              {jobDetail.location.street || t('no_street')}, {jobDetail.location.city || t('no_city')}, {jobDetail.location.state || t('no_state')}, {jobDetail.location.zip_code || t('no_zip')}
-                            </>
+                            {buildAddress(jobDetail.location)}
                           </p>
                         }
                       </div>
@@ -79,11 +79,11 @@ export default function Detail({ jobDetail, relatedJobs }) {
               </div>
             </div>
             <div className="col-md-3">
-              <div className="ort-btn mt-lg-4 mt-0">
+              {/* <div className="ort-btn mt-lg-4 mt-0">
                 <button type="button" className="btn btn-danger" data-toggle="modal" data-target="#exampleModal"> {t('apply_now')} <i className="fa fa-long-arrow-right pl-1" aria-hidden="true"></i></button>
                 <button type="button" className="btn btn-danger"> <i className="fa fa-star-o" aria-hidden="true"></i> {t('shortlist')} </button>
-              </div>
-              {/* <JobApply job={jobDetail} /> */}
+              </div> */}
+              <JobApply job={jobDetail} />
             </div>
           </div>
         </div>

@@ -786,5 +786,11 @@
     },
     "YEARS": "Years",
     "MY_ACCOUNT": "My Account",
-    "APPLICANT_INFO_DESCRIPTION": "This is the information which will be submitted to a company when you apply to a job"
+    "APPLICANT_INFO_DESCRIPTION": "This is the information which will be submitted to a company when you apply to a job",
+    "CANCEL": "Cancel",
+    "ApplicantJobService": {
+        "APPLICANT_ALREADY_APPLIED": "You have already applied to this job",
+        "JOB_NOT_FOUND": "Unable to find job",
+        "APPLICANT_NOT_FOUND": "Unable to find applicant"
+    }
 }
