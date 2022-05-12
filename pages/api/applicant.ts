@@ -2,18 +2,13 @@ import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
 import { ApplicantJobEntity } from "../../models/applicant/applicant-job.entity";
 import { ApplicantNoteEntity } from "../../models/applicant/applicant-note.entity";
 import { ApplicantEntity } from "../../models/applicant/applicant.entity";
+import { DocumentEntity } from "../../models/documents/document.entity";
 import BaseApi from "./_baseApi";
 
 export default class ApplicantApi extends BaseApi {
     baseUrl: string = "applicants";
     constructor() {
         super();
-    }
-
-    async upsertByUserId(dto: ApplicantEntity) : Promise<ApplicantEntity> {
-        const { data } = await this.patch(this.baseUrl, dto);
-
-        return data;
     }
 
     async create(dto: ApplicantEntity) : Promise<ApplicantEntity> {
@@ -23,7 +18,7 @@ export default class ApplicantApi extends BaseApi {
     }
 
     async update(id: number, dto: ApplicantEntity) : Promise<ApplicantEntity> {
-        const { data } = await this.post(this.baseUrl + "/" + id, dto);
+        const { data } = await this.put(this.baseUrl + "/" + id, dto);
 
         return data;
     }
@@ -39,6 +34,22 @@ export default class ApplicantApi extends BaseApi {
         return data;
     }
 
+    // user specific actions
+    async getByUserId() : Promise<ApplicantEntity> {
+        const { data } = await this.get(this.baseUrl);
+
+        return data;
+    }
+
+    documents = {
+        baseUrl: (applicantId: number) => `${this.baseUrl}/${applicantId}/documents`,
+        create: async (applicantId: number, dto: DocumentEntity) : Promise<DocumentEntity> => {
+            const { data } = await this.post(this.documents.baseUrl(applicantId), dto);
+
+            return data;
+        }
+    }
+
     notes = {
         baseUrl: (applicantId: number) => `${this.baseUrl}/${applicantId}/notes`,
         create: async (applicantId: number, dto: ApplicantNoteEntity) : Promise<ApplicantNoteEntity> => {
@@ -52,6 +63,14 @@ export default class ApplicantApi extends BaseApi {
         baseUrl: (applicantId: number) => `${this.baseUrl}/${applicantId}/jobs`,
         list: async (applicantId: number) => {
             const { data } = await this.get(this.jobs.baseUrl(applicantId));
+
+            return data;
+        },
+        remove: async (applicantId: number, jobId: number) => {
+            await this.delete(this.jobs.baseUrl(applicantId) + `/${jobId}`);
+        },
+        create: async (applicantId: number, jobId: number, dto: ApplicantJobEntity) : Promise<ApplicantEntity> => {
+            const { data } = await this.post(this.jobs.baseUrl(applicantId) + `/${jobId}`, dto);
 
             return data;
         },

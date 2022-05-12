@@ -1,30 +1,30 @@
-import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
+import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
 import { Col, Row } from "reactstrap";
 import useAuth from '../../../../hooks/useAuth';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react'
+import { useEffect, useImperativeHandle, useState } from 'react'
 import useRedirect from '../../../../hooks/useRedirect';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import Modal from "react-bootstrap/Modal"
+import Button from "react-bootstrap/Button"
 import BaseInputPhone from "../../../../components/forms/BaseInputPhone";
 
 import { useFormik } from "formik";
 import * as yup from "yup";
 import "../../../../utils/yup";
 
+import BaseFile from "../../../../components/forms/BaseFile";
 import BaseInput from "../../../../components/forms/BaseInput";
 import BaseTextArea from "../../../../components/forms/BaseTextArea";
 
 import { useTranslation } from "../../../../hooks/useTranslation";
 
 import UserApi from "../../../api/user";
+import ApplicantApi from "../../../api/applicant";
 
 export default function Profile() {
   const { t } = useTranslation();
-
-  const { authCompany } = useRedirect();
-
-  authCompany();
 
   const router = useRouter();
 
@@ -33,45 +33,63 @@ export default function Profile() {
 
   const form = useFormik({
     initialValues: {
-      email: user.email,
-      password: null,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      enabled_notifications: user.enabled_notifications || false,
-      theme_color: user.theme_color || false,
-      swipe_actions: user.swipe_actions || false,
-      timezone: user.timezone,
-      language: user.language,
-      contact_number: user.contact_number,
-      cell_number: user.cell_number
+      first_name: null,
+      last_name: null,
+      email: null,
+      contact_number: null,
+      cell_number: null,
+      timezone: null,
+      language: null,
     },
     validationSchema: yup.object({
-      email: yup.string().required(t("this_field_is_required")).nullable(),
-      password: yup.string().nullable(),
-      first_name: yup.string().required(t("this_field_is_required")).nullable(),
-      last_name: yup.string().required(t("this_field_is_required")).nullable(),
-      contact_number: yup.string().nullable(),
-      cell_number: yup.string().nullable(),
+      first_name: yup.string().required().nullable(),
+      last_name: yup.string().required().nullable(),
+      contact_number: yup.string().required().nullable(),
+      cell_number: yup.string().required().nullable(),
+      timezone: yup.string().required().nullable(),
+      language: yup.string().required().nullable(),
     }),
     onSubmit: async (values) => {
       const dto = {
         first_name: values.first_name,
         last_name: values.last_name,
-        name: `${values.first_name} ${values.last_name}`,
         contact_number: values.contact_number,
-        cell_number: values.cell_number
+        cell_number: values.cell_number,
+        timezone: values.timezone,
+        language: values.language,
       };
-      const api = new UserApi();
+
+      const userApi = new UserApi();
+      const applicantApi = new ApplicantApi();
 
       try {
-        const updatedUser = await api.update(user.id, dto);
+        let applicant = await applicantApi.getByUserId();
+
+        if (applicant) {
+          applicant = await applicantApi.update(applicant.id, {
+            first_name: values.first_name,
+            last_name: values.last_name,
+            email: values.email,
+            phone: values.contact_number,
+          });
+        }
+        else {
+          applicant = await applicantApi.create({
+            first_name: values.first_name,
+            last_name: values.last_name,
+            email: values.email,
+            phone: values.contact_number,
+          });
+        }
+        const savedUser = await userApi.update(user.id, dto);
         setAuth({
           ...user,
-          first_name: updatedUser.first_name,
-          last_name: updatedUser.last_name,
-          name: updatedUser.name,
-          contact_number: updatedUser.contact_number,
-          cell_number: updatedUser.cell_number
+          first_name: savedUser.first_name,
+          last_name: savedUser.last_name,
+          contact_number: savedUser.contact_number,
+          cell_number: savedUser.cell_number,
+          timezone: savedUser.timezone,
+          language: savedUser.language,
         });
         toast.success(t("successfully_saved_information"));
         setTimeout(() => {
@@ -79,12 +97,24 @@ export default function Profile() {
         }, 2000);
       }
       catch (e) {
-        console.error("Unable to save company", e);
+        console.error("Unable to save user", e);
         toast.error(t("unable_to_save_information"));
       }
 
     }
   });
+
+  useEffect(() => {
+    form.setValues({
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+      contact_number: user.contact_number,
+      cell_number: user.cell_number,
+      timezone: user.timezone,
+      language: user.language,
+    });
+  }, []);
 
   return (
     <>
@@ -92,7 +122,7 @@ export default function Profile() {
       <div>
 
         <Row>
-          <h2>{t("MY_PROFILE")}</h2>
+          <h2>{t("MY_ACCOUNT")}</h2>
         </Row>
         <div className='container-fluid'>
           <div className="modal-header border-0">
@@ -100,11 +130,10 @@ export default function Profile() {
           <form className="modal-body" onSubmit={form.handleSubmit} >
             <Row>
               <BaseInput
-                className="col-6 mt-1"
-                label={t("FIRST_NAME")}
-                name={`first_name`}
-                required
-                placeholder={t("FIRST_NAME")}
+                className="col-6"
+                label={t("first_name")}
+                name="first_name"
+                placeholder={t("first_name")}
                 value={form.values.first_name}
                 touched={form.touched.first_name}
                 error={form.errors.first_name}
@@ -112,11 +141,10 @@ export default function Profile() {
                 handleBlur={form.handleBlur}
               />
               <BaseInput
-                className="col-6 mt-1"
-                label={t("LAST_NAME")}
-                name={`last_name`}
-                required
-                placeholder={t("LAST_NAME")}
+                className="col-6"
+                label={t("last_name")}
+                name="last_name"
+                placeholder={t("last_name")}
                 value={form.values.last_name}
                 touched={form.touched.last_name}
                 error={form.errors.last_name}
@@ -125,11 +153,11 @@ export default function Profile() {
               />
 
               <BaseInputPhone
-                className="col-6 mt-1"
+                className="col-6"
                 label={t("phone")}
-                name="user.contact_number"
-                type="tel"
+                name="contact_number"
                 placeholder={t("phone")}
+                type="tel"
                 value={form.values.contact_number}
                 touched={form.touched.contact_number}
                 error={form.errors.contact_number}
@@ -138,11 +166,11 @@ export default function Profile() {
                 onKeyDown={(event) => { form.setFieldValue('contact_number', event.target.value) }}
               />
               {/* <BaseInput
-                className="col-6 mt-1"
+                className="col-6"
                 label={t("phone")}
-                name={`contact_number`}
-                type="tel"
+                name="contact_number"
                 placeholder={t("phone")}
+                type="tel"
                 value={form.values.contact_number}
                 touched={form.touched.contact_number}
                 error={form.errors.contact_number}
@@ -150,11 +178,11 @@ export default function Profile() {
                 handleBlur={form.handleBlur}
               /> */}
               {/* <BaseInput
-                className="col-6 mt-1"
+                className="col-6"
                 label={t("phone_cell")}
-                name={`cell_number`}
-                type="tel"
+                name="cell_number"
                 placeholder={t("phone_cell")}
+                type="tel"
                 value={form.values.cell_number}
                 touched={form.touched.cell_number}
                 error={form.errors.cell_number}
@@ -162,12 +190,13 @@ export default function Profile() {
                 handleBlur={form.handleBlur}
               /> */}
 
+
               <BaseInputPhone
-                className="col-6 mt-1"
-                label={t("phone_cell")}
-                name={`cell_number`}
-                type="tel"
-                placeholder={t("phone_cell")}
+               className="col-6"
+               label={t("phone_cell")}
+               name="cell_number"
+               placeholder={t("phone_cell")}
+               type="tel"
                 value={form.values.cell_number}
                 touched={form.touched.cell_number}
                 error={form.errors.cell_number}
@@ -176,11 +205,12 @@ export default function Profile() {
                 onKeyDown={(event) => { form.setFieldValue('cell_number', event.target.value) }}
               />
               <BaseInput
-                className="col-12 mt-1"
-                label={t("EMAIL")}
-                name={`email`}
-                readOnly
-                placeholder={t("EMAIL")}
+                className="col-12"
+                label={t("email")}
+                name="email"
+                placeholder={t("email")}
+                type="email"
+                readOnly={true}
                 value={form.values.email}
                 touched={form.touched.email}
                 error={form.errors.email}

@@ -1190,12 +1190,12 @@ export default function MyApplication() {
                     {/* violation */}
                     <div className="col mt-34 ">
                       <div class="form-check form-switch p-0">
-                        <label class="form-check-label form_lable_sty" htmlFor="has_has_psp_violations">{t("has_has_psp_violations")}</label>
+                        <label class="form-check-label form_lable_sty" htmlFor="has_had_psp_violations">{t("has_had_psp_violations")}</label>
                         <input
                           class="form-check-input checkbox_pos"
                           type="checkbox"
                           role="switch"
-                          id="has_has_psp_violations"
+                          id="has_had_psp_violations"
                           checked={sec_form.values.safety_questions.VIOLATIONS_PSP.response}
                           name="safety_questions.VIOLATIONS_PSP.response"
                           onChange={sec_form.handleChange}
@@ -1206,10 +1206,10 @@ export default function MyApplication() {
                     {
                       sec_form.values.safety_questions.VIOLATIONS_PSP.response && (
                         <div className="col mt-48">
-                          <label htmlFor="has_has_psp_violations_details" class="form-label">{t("details")}:</label>
+                          <label htmlFor="has_had_psp_violations_details" class="form-label">{t("details")}:</label>
                           <textarea
                             class="form-control"
-                            id="has_has_psp_violations_details"
+                            id="has_had_psp_violations_details"
                             rows="3"
                             onChange={sec_form.handleChange}
                             value={sec_form.values.safety_questions.VIOLATIONS_PSP.details}

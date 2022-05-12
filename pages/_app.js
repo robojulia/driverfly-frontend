@@ -29,6 +29,7 @@ function MyApp({ Component, pageProps }) {
       notOneOf: (ctx) => t("yup.notOneOf", { values: ctx.values.join(',') }),
       notType: (ctx) => t("yup.notType", { type: `yup.type.${ctx.type}` }, { translateProps: true }),
       notType: (ctx) => t("yup.defined"),
+      default: (ctx) => t("yup.default"),
     },
     string: {
       length: (ctx) => t("yup.string.length", { min: ctx.length }),
@@ -41,6 +42,7 @@ function MyApp({ Component, pageProps }) {
       trim: (ctx) => t("yup.string.trim"),
       lowercase: (ctx) => t("yup.string.lowercase"),
       uppercase: (ctx) => t("yup.string.uppercase"),
+      unique: (ctx) => t("yup.string.unique", { field: ctx.field })
     },
     number: {
       min: (ctx) => t("yup.number.min", { min: ctx.min }),
@@ -62,6 +64,7 @@ function MyApp({ Component, pageProps }) {
       length: (ctx) => t("yup.array.length", { min: ctx.length }),
       min: (ctx) => t("yup.array.min", { min: ctx.min }),
       max: (ctx) => t("yup.array.max", { max: ctx.max }),
+      unique: (ctx) => t("yup.array.unique", { field: ctx.field })
     },
     boolean: {
       isValue: (ctx) => t("yup.boolean.isValue"),

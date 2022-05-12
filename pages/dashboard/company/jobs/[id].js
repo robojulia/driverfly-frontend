@@ -135,127 +135,147 @@ export default function Job() {
             safety_requirements_other: null
         },
         validationSchema: yup.object({
-            title: yup.string().required(t("this_field_is_required")).nullable(),
+            title: yup.string().required().max(100).nullable(),
             location: yup.object({
                 id: yup.number().nullable(),
                 street: yup.string()
                     .when("id", {
                         is: v => !!!v,
-                        then: yup.string().required(t("this_field_is_required")).nullable()
+                        then: yup.string().required().nullable()
                     }).nullable(),
                 city: yup.string()
                     .when("id", {
                         is: v => !!!v,
-                        then: yup.string().required(t("this_field_is_required")).nullable()
+                        then: yup.string().required().nullable()
                     }).nullable(),
                 state: yup.string()
                     .when("id", {
                         is: v => !!!v,
-                        then: yup.string().required(t("this_field_is_required")).nullable()
+                        then: yup.string().required().nullable()
                     }).nullable(),
                 zip_code: yup.string()
                     .when("id", {
                         is: v => !!!v,
-                        then: yup.string().required(t("this_field_is_required")).nullable()
+                        then: yup.string().required().nullable()
                     }).nullable(),
             }),
-            description: yup.string().required(t("this_field_is_required")).nullable(),
-            description_short: yup.string().required(t("this_field_is_required")).nullable(),
+            description: yup.string().required(t("this_field_is_required")).nullable()
+                .test(
+                    'len',
+                    t('{name}_must_not_be_greater_than_{length}_characters', { name: t('description'), length: 250 }),
+                    val => {
+                        if (val) {
+                            return (val.length <= 250)
+                        }
+                        return true
+                    }
+                ),
+            description_short: yup.string().required(t("this_field_is_required")).nullable()
+                .test(
+                    'len',
+                    t('{name}_must_not_be_greater_than_{length}_characters', { name: t('description'), length: 250 }),
+                    val => {
+                        if (val) {
+                            return (val.length <= 250)
+                        }
+                        return true
+                    }
+                ),
             drivers_needed: yup.number().min(0).nullable(),
             expiry_date: yup.date().nullable(),
-            geography: yup.string().enum(JobGeography).required(t("this_field_is_required")).nullable(),
+            geography: yup.string().enum(JobGeography).required().nullable(),
             max_applicant_radius: yup.number().min(1).nullable(),
-            schedule: yup.string().enum(JobSchedule).required(t("this_field_is_required")).nullable(),
+            schedule: yup.string().enum(JobSchedule).required().nullable(),
             schedule_other: yup.string().when("schedule", {
                 is: v => v === JobSchedule.OTHER,
-                then: yup.string().required(t("this_field_is_required")).nullable()
+                then: yup.string().required().nullable()
             }).nullable(),
-            employment_type: yup.string().enum(JobEmploymentType).required(t("this_field_is_required")).nullable(),
+            employment_type: yup.string().enum(JobEmploymentType).required().nullable(),
             equipment_type: yup.array(
                 yup.string().enum(JobEquipmentType)
             ),
             equipment_type_other: yup.string().when("equipment_type", {
                 is: a => a.includes(JobEquipmentType.OTHER),
-                then: yup.string().required(t("this_field_is_required")).nullable()
+                then: yup.string().required().nullable()
             }).nullable(),
             delivery_type: yup.array(
                 yup.string().enum(JobDeliveryType)
-            ).min(1, t("this_field_is_required")),
-            team_drivers: yup.string().enum(JobTeamDriver).required(t("this_field_is_required")).nullable(),
+            ).min(1,),
+            team_drivers: yup.string().enum(JobTeamDriver).required().nullable(),
             pay_method: //yup.array(
-                yup.string().enum(JobPayMethod).required(t("this_field_is_required")).nullable(),
+                yup.string().enum(JobPayMethod).required().nullable(),
             //),
             min_salary: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.SALARY,
-                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+                then: yup.number().min(0).required().nullable()
             }).nullable(),
             max_salary: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.SALARY,
-                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+                then: yup.number().min(0).required().nullable()
             }).nullable(),
             min_rate: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.RATE_PER_MILE || v === JobPayMethod.HOURLY,
-                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+                then: yup.number().min(0).required().nullable()
             }).nullable(),
             max_rate: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.RATE_PER_MILE || v === JobPayMethod.HOURLY,
-                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+                then: yup.number().min(0).required().nullable()
             }).nullable(),
             min_hours: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.HOURLY,
-                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+                then: yup.number().min(0).required().nullable()
             }).nullable(),
             max_hours: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.HOURLY,
-                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+                then: yup.number().min(0).required().nullable()
             }).nullable(),
             min_percent: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.PERCENT_PER_MOVE || v === JobPayMethod.PERCENT_PER_WEIGHT,
-                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+                then: yup.number().min(0).required().nullable()
             }).nullable(),
             max_percent: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.PERCENT_PER_MOVE || v === JobPayMethod.PERCENT_PER_WEIGHT,
-                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+                then: yup.number().min(0).required().nullable()
             }).nullable(),
             min_miles: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.RATE_PER_MILE,
-                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+                then: yup.number().min(0).required().nullable()
             }).nullable(),
             max_miles: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.RATE_PER_MILE,
-                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+                then: yup.number().min(0).required().nullable()
             }).nullable(),
-            min_weekly_pay: yup.number().min(0).required(t("this_field_is_required")).nullable(),
-            max_weekly_pay: yup.number().min(0).required(t("this_field_is_required")).nullable(),
+            min_weekly_pay: yup.number().min(0).required().nullable(),
+            max_weekly_pay: yup.number().min(0).required().nullable(),
             benefits: yup.array(
                 yup.string().enum(JobBenefits)
             ),
             benefits_other: yup.string().when("benefits", {
                 is: v => v.includes(JobBenefits.OTHER),
-                then: yup.string().required(t("this_field_is_required")).nullable()
+                then: yup.string().required().nullable()
             }).nullable(),
             vehicles: yup.array(yup.object({
                 id: yup.number().nullable(),
                 type: yup.string().when("id", {
                     is: v => !v,
-                    then: yup.string().required(t("this_field_is_required")).enum(VehicleType).nullable()
+                    then: yup.string().required().enum(VehicleType).nullable()
                 }).nullable(),
                 type_other: yup.string().when(["id", "type"], {
                     is: (id, type) => !id && type === VehicleType.OTHER,
-                    then: yup.string().required(t("this_field_is_required")).nullable()
+                    then: yup.string().required().nullable()
                 }).nullable(),
                 transmission_type: yup.string().nullable(),
                 make: yup.string().when("id", {
                     is: v => !v,
-                    then: yup.string().required(t("this_field_is_required")).nullable()
+                    then: yup.string().required().nullable()
                 }).nullable(),
                 model: yup.string().when("id", {
                     is: v => !v,
-                    then: yup.string().required(t("this_field_is_required")).nullable()
+                    then: yup.string().required().nullable()
                 }).nullable(),
                 year: yup.number().when("id", {
                     is: v => !v,
-                    then: yup.number().required(t("this_field_is_required")).min(1900).nullable()
+                    then: yup.number().required().min(1900).nullable()
                 }).nullable(),
                 photo: yup.object({
                     name: yup.string().nullable(),
@@ -270,13 +290,23 @@ export default function Job() {
             min_years_experience: yup.number().required().min(0).nullable(),
             min_degree: yup.string().enum(DriverDegree).nullable(),
             required_skills: yup.array(yup.object({
-                type: yup.string().required(t("this_field_is_required")).nullable(),
-                years: yup.number().min(1).required(t("this_field_is_required")).nullable(),
+                type: yup.string().required().nullable(),
+                years: yup.number().min(1).required().nullable(),
             })).unique(t("{name}_must_be_unique_in_list", { name: t("type") }), "type", v => v.type),
-            required_skills_other: yup.string().nullable(),
+            required_skills_other: yup.string().nullable()
+                .test(
+                    'len',
+                    t('{name}_must_not_be_greater_than_{length}_characters', { name: t('other_required_skills'), length: 250 }),
+                    val => {
+                        if (val) {
+                            return (val.length <= 250)
+                        }
+                        return true
+                    }
+                ),
             required_equipment: yup.array(yup.object({
-                type: yup.string().required(t("this_field_is_required")).nullable(),
-                quantity: yup.number().min(1).required(t("this_field_is_required")).nullable(),
+                type: yup.string().required().nullable(),
+                quantity: yup.number().min(1).required().nullable(),
             })).unique(t("{name}_must_be_unique_in_list", { name: t("type") }), "type", v => v.type),
             required_endorsement: yup.array(
                 yup.string().enum(DriverEndorsement)
@@ -287,23 +317,39 @@ export default function Job() {
             must_pass_drug_test: yup.boolean().default(true),
             must_have_clean_mvr: yup.boolean().default(true),
             mvr_requirements: yup.array(yup.object({
-                type: yup.string().enum(MvrType).required(t("this_field_is_required")).nullable(),
-                max_count: yup.number().required(t("this_field_is_required")).nullable(),
-                max_years: yup.number().required(t("this_field_is_required")).nullable(),
+                type: yup.string().enum(MvrType).required().nullable(),
+                max_count: yup.number().required().nullable(),
+                max_years: yup.number().required().nullable(),
             })).unique(t("{name}_must_be_unique_in_list", { name: t("type") }), "type", v => v.type),
             accept_sap_graduates: yup.boolean().default(false),
             must_have_clean_criminal_history: yup.boolean().default(true),
             criminal_history: yup.array(yup.object({
-                type: yup.string().enum(CriminalHistoryType).required(t("this_field_is_required")).nullable(),
-                max_count: yup.number().required(t("this_field_is_required")).nullable(),
-                max_years: yup.number().required(t("this_field_is_required")).nullable(),
+                type: yup.string().enum(CriminalHistoryType).required().nullable(),
+                max_count: yup.number().required().nullable(),
+                max_years: yup.number().required().nullable(),
             })).unique(t("{name}_must_be_unique_in_list", { name: t("type") }), "type", v => v.type),
             max_accidents: yup.number().min(0).nullable(),
             safety_requirements_other: yup.string().nullable()
+                .test(
+                    'len',
+                    t('{name}_must_not_be_greater_than_{length}_characters', { name: t('other_safety_requirements'), length: 250 }),
+                    val => {
+                        if (val) {
+                            return (val.length <= 250)
+                        }
+                        return true
+                    }
+                ),
         }),
         onSubmit: async (data) => {
             data.min_weekly_pay = parseFloat(data.min_weekly_pay)
             data.max_weekly_pay = parseFloat(data.max_weekly_pay)
+            data.min_rate = parseFloat(data.min_rate)
+            data.max_rate = parseFloat(data.max_rate)
+            data.min_miles = parseFloat(data.min_miles)
+            data.max_miles = parseFloat(data.max_miles)
+            data.min_salary = parseFloat(data.min_salary)
+            data.max_salary = parseFloat(data.max_salary)
 
             try {
                 // create the location (if new)
@@ -1143,6 +1189,7 @@ export default function Job() {
                                         form.values.pay_method === JobPayMethod.PERCENT_PER_WEIGHT) &&
                                     <div className="row">
                                         <BaseInput
+                                            step={0.1}
                                             className="col-6"
                                             label={t("min_percent")}
                                             name="min_percent"
@@ -1157,6 +1204,7 @@ export default function Job() {
                                             error={form.errors.min_percent}
                                         />
                                         <BaseInput
+                                            step={0.1}
                                             className="col-6"
                                             label={t("max_percent")}
                                             name="max_percent"
@@ -1176,6 +1224,7 @@ export default function Job() {
                                     form.values.pay_method === JobPayMethod.RATE_PER_MILE &&
                                     <div className="row">
                                         <BaseInput
+                                            step={0.1}
                                             className="col-6"
                                             label={t("min_miles")}
                                             name="min_miles"
@@ -1190,6 +1239,7 @@ export default function Job() {
                                             error={form.errors.min_miles}
                                         />
                                         <BaseInput
+                                            step={0.1}
                                             className="col-6"
                                             label={t("max_miles")}
                                             name="max_miles"
@@ -1209,6 +1259,7 @@ export default function Job() {
                                     form.values.pay_method === JobPayMethod.HOURLY &&
                                     <div className="row">
                                         <BaseInput
+                                            step={0.1}
                                             className="col-6"
                                             label={t("min_hours")}
                                             name="min_hours"
@@ -1223,6 +1274,7 @@ export default function Job() {
                                             error={form.errors.min_hours}
                                         />
                                         <BaseInput
+                                            step={0.1}
                                             className="col-6"
                                             label={t("max_hours")}
                                             name="max_hours"
@@ -1243,6 +1295,7 @@ export default function Job() {
                                         form.values.pay_method === JobPayMethod.HOURLY) &&
                                     <div className="row">
                                         <BaseInput
+                                            step={0.1}
                                             className="col-6"
                                             label={t("min_rate")}
                                             name="min_rate"
@@ -1257,6 +1310,7 @@ export default function Job() {
                                             error={form.errors.min_rate}
                                         />
                                         <BaseInput
+                                            step={0.1}
                                             className="col-6"
                                             label={t("max_rate")}
                                             name="max_rate"
@@ -1276,6 +1330,7 @@ export default function Job() {
                                     (form.values.pay_method === JobPayMethod.SALARY) &&
                                     <div className="row">
                                         <BaseInput
+                                            step={0.1}
                                             className="col-6"
                                             label={t("min_salary")}
                                             name="min_salary"
@@ -1290,6 +1345,7 @@ export default function Job() {
                                             error={form.errors.min_salary}
                                         />
                                         <BaseInput
+                                            step={0.1}
                                             className="col-6"
                                             label={t("max_salary")}
                                             name="max_salary"
@@ -1306,6 +1362,7 @@ export default function Job() {
                                 }
                                 <div className="row">
                                     <BaseInput
+                                        step={0.1}
                                         className="col-6"
                                         label={t("min_weekly")}
                                         name="min_weekly_pay"
@@ -1320,6 +1377,7 @@ export default function Job() {
                                         error={form.errors.min_weekly_pay}
                                     />
                                     <BaseInput
+                                        step={0.1}
                                         className="col-6"
                                         label={t("max_weekly")}
                                         name="max_weekly_pay"

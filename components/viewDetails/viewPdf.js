@@ -1,7 +1,8 @@
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Spinner } from "react-bootstrap";
 import { SpecialZoomLevel, Viewer, Worker } from '@react-pdf-viewer/core'
 import '@react-pdf-viewer/core/lib/styles/index.css'
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout'
+import '@react-pdf-viewer/default-layout/lib/styles/index.css'
 
 import ViewModal from "./viewModal";
 
@@ -26,9 +27,9 @@ export default function ViewPdf(props) {
     const { name, url, onCloseClick } = props;
 
     return (
-        <ViewModal show={!!name} title={name} onCloseClick={onCloseClick}>
+        <ViewModal show={!!url} title={name} onCloseClick={onCloseClick}>
             {(
-                name &&
+                url &&
                 <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.13.216/build/pdf.worker.min.js">
                 <div style={{
                 border: '1px solid rgba(0, 0, 0, 0.3)',

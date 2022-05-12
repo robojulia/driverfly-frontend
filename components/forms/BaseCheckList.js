@@ -2,8 +2,7 @@ import React from 'react'
 
 import { useTranslation } from "../../hooks/useTranslation"
 
-function InlineLayout(options, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix) {
-  const { t } = useTranslation();
+function InlineLayout(t, options, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix) {
   return (
     <>
     {options.map((v, i) => (
@@ -16,8 +15,7 @@ function InlineLayout(options, value, name, labelKey, valueKey, onChange, handle
   );
 }
 
-function ColLayout(options, cols, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix) {
-  const { t } = useTranslation();
+function ColLayout(t, options, cols, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix) {
   return (
     <div className='row mt-1'>
       {options.map((v, i) => (
@@ -35,6 +33,7 @@ function ColLayout(options, cols, value, name, labelKey, valueKey, onChange, han
 }
 
 function BaseCheckList ( {
+  formik,
   required,
   className,
   label,
@@ -52,6 +51,23 @@ function BaseCheckList ( {
   error,
   enumType
 } ) {
+  const { t } = useTranslation();
+
+  if (formik) {
+    /**
+     * @type {import('formik').FieldMetaProps}
+     */
+    const meta = formik.getFieldMeta(name);
+
+    if (meta) {
+      value = meta.value;
+      touched = meta.touched;
+      error = meta.error;
+    }
+    onChange = onChange || formik.handleChange
+    handleBlur = handleBlur || formik.handleBlur;
+  }
+
   if (typeof enumType === "object") {
     options = Object.keys(enumType).map(key => ({
       [valueKey]: key,
@@ -59,12 +75,14 @@ function BaseCheckList ( {
     }))
   }
 
+  if (!value) value = [];
+
   return (
     <div className={className}>
-      {label && <span style={{ marginRight: "20px" }}>{label}{required ? "*" : ""}:</span>}
+      {label && <span style={{ marginRight: "20px" }}>{t(label)}{required ? "*" : ""}:</span>}
       {cols ?
-        ColLayout(options, cols, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix)
-        : InlineLayout(options, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix)}
+        ColLayout(t, options, cols, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix)
+        : InlineLayout(t, options, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix)}
       {touched && error && (typeof error === "string") ? <span className="text-danger small">{error}</span> : null}
     </div>
   )

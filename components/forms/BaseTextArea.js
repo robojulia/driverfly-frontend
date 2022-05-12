@@ -1,22 +1,39 @@
 import React from 'react'
+import { useTranslation } from '../../hooks/useTranslation';
 
-function BaseTextArea({ required, className, maxLength, label, rows, placeholder, value, onChange, readOnly, name, touched, error, }) {
+function BaseTextArea({ formik, required, className, maxLength, label, rows, placeholder, value, onChange, handleBlur, readOnly, name, touched, error, }) {
+  const { t } = useTranslation();
+
+  if (formik) {
+    /**
+     * @type {import('formik').FieldMetaProps}
+     */
+    const meta = formik.getFieldMeta(name);
+
+    if (meta) {
+      value = meta.value;
+      touched = meta.touched;
+      error = meta.error;
+    }
+    onChange = onChange || formik.handleChange
+    handleBlur = handleBlur || formik.handleBlur;
+  }
+
   return (
     <div className={className}>
-      {label && <label>{label}{required ? "*" : ""}:</label>}
+      {label && <label>{t(label)}{required ? "*" : ""}:</label>}
       <br />
       <textarea
         placeholder={placeholder}
-        // value={value || ""}
+        value={value || ""}
         rows={rows}
         maxLength={maxLength}
         onChange={onChange}
+        onBlur={handleBlur}
         readOnly={readOnly}
         name={name}
         className={`form-control ${error ? "is-invalid" : ""}`}
-      >
-        {value || ""}
-      </textarea>
+       />
       {touched && error && (typeof error === "string") ? <span className="text-danger small">{error}</span> : null}
     </div>
   )

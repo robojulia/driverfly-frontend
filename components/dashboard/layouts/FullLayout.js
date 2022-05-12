@@ -5,10 +5,10 @@ import Sidebar from "./sidebars/Sidebar";
 import Head from "next/head";
 
 import { useTranslation } from "../../../hooks/useTranslation";
-import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, FileEarmarkMedicalFill, CheckSquareFill, StarFill, GearFill } from 'react-bootstrap-icons';
+import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, FileEarmarkMedicalFill, CheckSquareFill, GiftFill, GearFill } from 'react-bootstrap-icons';
 
 
-
+// driver layout
 const FullLayout = ({ children }) => {
   const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
@@ -27,16 +27,16 @@ const FullLayout = ({ children }) => {
       icon: PersonFill,
       text: "my_account",
     },
-    {
-      pathname: "/dashboard/driver/my-application",
-      icon: FileEarmarkFill,
-      text: "my_application"
-    },
-    {
-      pathname: "/dashboard/driver/my-docs",
-      icon: FileEarmarkMedicalFill,
-      text: "my_docs"
-    },
+    // {
+    //   pathname: "/dashboard/driver/my-application",
+    //   icon: FileEarmarkFill,
+    //   text: "my_application"
+    // },
+    // {
+    //   pathname: "/dashboard/driver/my-docs",
+    //   icon: FileEarmarkMedicalFill,
+    //   text: "my_docs"
+    // },
     {
       pathname: "/find-jobs",
       icon: Search,
@@ -59,20 +59,25 @@ const FullLayout = ({ children }) => {
     },
     {
       pathname: "/dashboard/driver/free-resources",
-      icon: StarFill,
+      icon: GiftFill,
       text: "free_resources"
     },
-    // {
-    //   icon: GearFill,
-    //   text: "SETTINGS",
-    //   items: [
-    //     {
-    //       pathname: "/dashboard/driver/settings/profile",
-    //       icon: PersonFill,
-    //       text: "my_account",
-    //     }
-    //   ],
-    // },
+    {
+      icon: GearFill,
+      text: "SETTINGS",
+      items: [
+        {
+          pathname: "/dashboard/driver/settings",
+          icon: PersonFill,
+          text: "MY_ACCOUNT",
+        },
+        {
+          pathname: "/dashboard/driver/settings/applicant",
+          icon: FileEarmarkFill,
+          text: "my_application",
+        },
+      ],
+    },
   ];
 
   return (

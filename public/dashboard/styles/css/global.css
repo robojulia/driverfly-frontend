@@ -452,7 +452,11 @@ textarea {
 /* JobListing Table*/
 
 .listing_head th {
-    padding: 15px;
+    padding: 15px 15px 15px 15px;
+}
+.location_table__hed th{
+    padding: 15px 15px 15px 0px;
+    width: 22.5%;
 }
 
 .table> :not(:first-child) {
@@ -498,6 +502,11 @@ textarea {
 .react-tabs__tab-panel{
     height: 700px;
     overflow-x: auto;
+}
+
+.react-tel-input .form-control {
+    height: 37px !important;
+    width: 100% !important; 
 }
 /* Responsive */
 @media screen and (max-width: 768px) {

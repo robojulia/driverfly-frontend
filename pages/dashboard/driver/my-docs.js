@@ -15,7 +15,7 @@ import useRedirect from '../../../hooks/useRedirect';
 import { useTranslation } from '../../../hooks/useTranslation'
 import { useFormik } from "formik"
 import UserApi from "../../api/user";
-
+import { JobDocumentType } from "../../../enums/jobs/job-document-type.enum"
 export default function PrestoresDocuments() {
   const { authDriver } = useRedirect();
   authDriver();
@@ -31,41 +31,41 @@ export default function PrestoresDocuments() {
 
   const form = useFormik({
     initialValues: {
-      DRIVER_LICENSE: {
+      [JobDocumentType.DRIVER_LICENSE]: {
         id: null,
         documentable_id: null,
         documentable_type: null,
-        type: "DRIVER_LICENSE",
+        type: JobDocumentType.DRIVER_LICENSE,
         name: null,
         path: null,
         description: null,
         file: null,
       },
-      MEDICAL_CARD: {
+      [JobDocumentType.MEDICAL_CARD]: {
         id: null,
         documentable_id: null,
         documentable_type: null,
-        type: "MEDICAL_CARD",
+        type: JobDocumentType.MEDICAL_CARD,
         name: null,
         path: null,
         description: null,
         file: null,
       },
-      RESUME: {
+      [JobDocumentType.RESUME]: {
         id: null,
         documentable_id: null,
         documentable_type: null,
-        type: "RESUME",
+        type: JobDocumentType.RESUME,
         name: null,
         path: null,
         description: null,
         file: null,
       },
-      MVR: {
+      [JobDocumentType.MVR]: {
         id: null,
         documentable_id: null,
         documentable_type: null,
-        type: "MVR",
+        type: JobDocumentType.MVR,
         name: null,
         path: null,
         description: null,
@@ -80,26 +80,26 @@ export default function PrestoresDocuments() {
 
       Object.values(values).forEach(v => {
         // delete action
-        if (v.id && !v.path) {
+        if (v.id && !v.name) {
           actions.push(
             api
               .deleteDocument(v.type)
-            );
+          );
           v.id = null;
         }
         // upsert action
         else if (v.file) {
           switch (v.type) {
-            case "DRIVER_LICENSE":
+            case JobDocumentType.DRIVER_LICENSE:
               formData.append('commercial_driving_license', v.file);
               break;
-            case "MEDICAL_CARD":
+            case JobDocumentType.MEDICAL_CARD:
               formData.append('medical_card', v.file);
               break;
-            case "RESUME":
+            case JobDocumentType.RESUME:
               formData.append('resume', v.file);
               break;
-            case "MVR":
+            case JobDocumentType.MVR:
               formData.append('mvr_record', v.file);
               break;
           }
@@ -107,6 +107,10 @@ export default function PrestoresDocuments() {
           hasFormData = true;
         }
       });
+
+      // for (var key of formData.entries()) {
+      //   console.log(key[0] + ', ' + key[1]);
+      // }
 
       if (hasFormData) {
         actions.push(
@@ -169,7 +173,7 @@ export default function PrestoresDocuments() {
     });
   }, []);
 
-  const [ pdfModel, set_pdfModel ] = useState({
+  const [pdfModel, set_pdfModel] = useState({
     name: null,
     url: null,
   });
@@ -253,10 +257,11 @@ export default function PrestoresDocuments() {
               <div className="col-lg-6 col-12 mt-5">
                 <h3>{t("drivers_license")}</h3>
                 {
-                  !!form.values.DRIVER_LICENSE.name &&
+                  form.values.DRIVER_LICENSE.id &&
+                  form.values.DRIVER_LICENSE.name &&
                   <>
-                    <Button name="DRIVER_LICENSE" disabled={form.isSubmitting} className="applied" onClick={e => viewHandler(e)}>{t("view")}</Button>
-                    <Button name="DRIVER_LICENSE" disabled={form.isSubmitting} className="btn_danger" onClick={e => deleteHandler(e)}>{t("delete")}</Button>
+                    <Button name={[JobDocumentType.DRIVER_LICENSE]} disabled={form.isSubmitting} className="applied" onClick={e => viewHandler(e)}>{t("view")}</Button>
+                    <Button name={[JobDocumentType.DRIVER_LICENSE]} disabled={form.isSubmitting} className="btn_danger" onClick={e => deleteHandler(e)}>{t("delete")}</Button>
                   </>
                 }
                 <input
@@ -264,33 +269,28 @@ export default function PrestoresDocuments() {
                   type="file"
                   accept="application/pdf"
                   class="custom-file-input"
-                  name="DRIVER_LICENSE"
+                  name={[JobDocumentType.DRIVER_LICENSE]}
                   onChange={e => uploadHandler(e)} />
-                {/* <Link href="#">
-                  <Button className="approved"> View Past Records</Button>
-                </Link> */}
               </div>
 
               {/* Medical Card */}
               <div className="col-lg-6 col-12 mt-5">
                 <h3>{t("medical_card")}</h3>
                 {
-                  !!form.values.MEDICAL_CARD.name &&
+                  form.values.MEDICAL_CARD.id &&
+                  form.values.MEDICAL_CARD.name &&
                   <>
-                    <Button name="MEDICAL_CARD" disabled={form.isSubmitting} className="applied" onClick={e => viewHandler(e)}>{t("view")}</Button>
-                    <Button name="MEDICAL_CARD" disabled={form.isSubmitting} className="btn_danger" onClick={e => deleteHandler(e)}>{t("delete")}</Button>
+                    <Button name={[JobDocumentType.MEDICAL_CARD]} disabled={form.isSubmitting} className="applied" onClick={e => viewHandler(e)}>{t("view")}</Button>
+                    <Button name={[JobDocumentType.MEDICAL_CARD]} disabled={form.isSubmitting} className="btn_danger" onClick={e => deleteHandler(e)}>{t("delete")}</Button>
                   </>
                 }
                 <input
                   disabled={form.isSubmitting}
-                  name="MEDICAL_CARD"
                   type="file"
                   accept="application/pdf"
                   class="custom-file-input"
+                  name={[JobDocumentType.MEDICAL_CARD]}
                   onChange={e => uploadHandler(e)} />
-                {/* <Link href="#">
-                  <Button className="approved"> View Past Records</Button>
-                </Link> */}
               </div>
             </div>
 
@@ -299,44 +299,40 @@ export default function PrestoresDocuments() {
               <div className="col-lg-6 col-12 mt-5">
                 <h3>{t("resume")}</h3>
                 {
-                  !!form.values.RESUME.name &&
+                  form.values.RESUME.id &&
+                  form.values.RESUME.name &&
                   <>
-                    <Button name="RESUME" disabled={form.isSubmitting} className="applied" onClick={e => viewHandler(e)}>{t("view")}</Button>
-                    <Button name="RESUME" disabled={form.isSubmitting} className="btn_danger" onClick={e => deleteHandler(e)}>{t("delete")}</Button>
+                    <Button name={[JobDocumentType.RESUME]} disabled={form.isSubmitting} className="applied" onClick={e => viewHandler(e)}>{t("view")}</Button>
+                    <Button name={[JobDocumentType.RESUME]} disabled={form.isSubmitting} className="btn_danger" onClick={e => deleteHandler(e)}>{t("delete")}</Button>
                   </>
                 }
                 <input
                   disabled={form.isSubmitting}
-                  name="RESUME"
                   type="file"
                   accept="application/pdf"
                   class="custom-file-input"
+                  name={[JobDocumentType.RESUME]}
                   onChange={e => uploadHandler(e)} />
-                {/* <Link href="#">
-                  <Button className="approved"> View Past Records</Button>
-                </Link> */}
               </div>
 
               {/* MVR */}
               <div className="col-lg-6 col-12 mt-5">
                 <h3>{t("motor_vehicle_record")}</h3>
                 {
-                  !!form.values.MVR.name &&
+                  form.values.MVR.id &&
+                  form.values.MVR.name &&
                   <>
-                    <Button disabled={form.isSubmitting} name="MVR" className="applied" onClick={e => viewHandler(e)}>{t("view")}</Button>
-                    <Button disabled={form.isSubmitting} name="MVR" className="btn_danger" onClick={e => deleteHandler(e)}>{t("delete")}</Button>
+                    <Button name={[JobDocumentType.MVR]} disabled={form.isSubmitting} className="applied" onClick={e => viewHandler(e)}>{t("view")}</Button>
+                    <Button name={[JobDocumentType.MVR]} disabled={form.isSubmitting} className="btn_danger" onClick={e => deleteHandler(e)}>{t("delete")}</Button>
                   </>
                 }
                 <input
                   disabled={form.isSubmitting}
-                  name="MVR"
                   type="file"
                   accept="application/pdf"
                   class="custom-file-input"
+                  name={[JobDocumentType.MVR]}
                   onChange={e => uploadHandler(e)} />
-                {/* <Link href="#">
-                  <Button className="approved"> View Past Records</Button>
-                </Link> */}
               </div>
 
               <div className='col-md-12 mt-5'>
@@ -360,19 +356,19 @@ export default function PrestoresDocuments() {
           {(
             pdfModel.name &&
             <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.13.216/build/pdf.worker.min.js">
-            <div style={{
-              border: '1px solid rgba(0, 0, 0, 0.3)',
-              height: '800px',
-            }}>
-              {/* <<Viewer fileUrl={"http://localhost:4000/"+myUser.medical_card} />np */}
-              <Viewer defaultScale={SpecialZoomLevel.PageWidth} plugins={[defaultLayoutPluginInstance]} renderLoader={() => (
-                <Spinner animation="border" role="status">
-                  <span className="visually-hidden">{t("loading")}...</span>
-                </Spinner>
-              )} fileUrl={pdfModel.url} />
-              {/* )} fileUrl="/resume.pdf" /> */}
-            </div>
-          </Worker>
+              <div style={{
+                border: '1px solid rgba(0, 0, 0, 0.3)',
+                height: '800px',
+              }}>
+                {/* <<Viewer fileUrl={"http://localhost:4000/"+myUser.medical_card} />np */}
+                <Viewer defaultScale={SpecialZoomLevel.PageWidth} plugins={[defaultLayoutPluginInstance]} renderLoader={() => (
+                  <Spinner animation="border" role="status">
+                    <span className="visually-hidden">{t("loading")}...</span>
+                  </Spinner>
+                )} fileUrl={pdfModel.url} />
+                {/* )} fileUrl="/resume.pdf" /> */}
+              </div>
+            </Worker>
           )}
         </Modal.Body>
 
