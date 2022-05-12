@@ -25,6 +25,18 @@ export class CreateConversationDto {
     }
 }
 
+export class UpdateConversationDto {
+    chattable_name?: string;
+    message: string;
+
+    static yupSchema() {
+        return yup.object({
+            chattable_name: yup.string().required().nullable(),
+            message: yup.string().max(250).required().nullable(),
+        });
+    }
+}
+
 export class ConversationEntity {
     id?: number;
     company: CompanyEntity;
@@ -46,5 +58,6 @@ export class ConversationEntity {
     }
 
     static CreateDto = CreateConversationDto
+    static UpdateDto = UpdateConversationDto
 
 }

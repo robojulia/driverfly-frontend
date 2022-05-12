@@ -170,36 +170,36 @@ export default function MessageList() {
              const api = new ConversationApi();
 
              let convo = {
-                 ...conversation
+                 ...conversation,
+                 messages: [
+                     ...conversation.messages || []
+                 ]
              };
              try {
-                if (convo.id) {
-                    convo.messages = [
-                        ...conversation.messages || [],
-                        await api.messages.create(convo.id, {
-                            text: dto.message
-                        })
-                    ];
-                    
-                    setConversations(conversations.map(v => (
-                        v.id === convo.id ? {
-                            ...convo,
-                            lastMessage: convo.messages.at(-1),
-                            messages: [],
-                        } : v
-                    )));
-                }
-                else {
-                    convo = await api.create(dto);
+                 if (!conversation.id) {
+                     convo = await api.create({
+                         chattable_type: dto.chattable_type,
+                         chattable_name: dto.chattable_name,
+                         chattable_id: dto.chattable_id,
+                     });
 
+                     convo.messages = await api.messages.list(convo.id);
+                 }
+
+                 convo.lastMessage = await api.messages.create(convo.id, {
+                     text: dto.message
+                 });
+                 convo.messages.push(convo.lastMessage);
+
+                 if (conversation.id) {
+                    setConversations(conversations.map(v => (
+                        v.id === convo.id ? convo : v
+                    )));
+                 } else {
                     setConversations([
                         ...conversations,
-                        {
-                            ...convo,
-                            lastMessage: convo.messages[0]
-                        }
-                    ])
-    
+                        convo
+                    ]);
                 }
 
                 setConversation(convo);
