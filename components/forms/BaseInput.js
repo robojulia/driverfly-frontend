@@ -11,7 +11,7 @@ function BaseInput({ accept, required, className, label, handleBlur, type, min, 
         min={min}
         max={max}
         placeholder={placeholder}
-        value={value || (type == "number" ? 0 : "")}
+        value={value || (type == "number" ? 0 : "") }
         onChange={onChange}
         onKeyDown={onKeyDown}
         readOnly={readOnly}
