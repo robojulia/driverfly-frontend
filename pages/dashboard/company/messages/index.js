@@ -217,6 +217,10 @@ export default function MessageList() {
          }
      });
 
+     const lastMessage = React.createRef();
+     useEffect(() => lastMessage.current?.scrollIntoView({ behavior: "smooth" }), [lastMessage])
+
+
     return (
         <>
         <ToastContainer />
@@ -269,7 +273,7 @@ export default function MessageList() {
                             <ul className="list-unstyled" style={{ overflowY: "auto", height: "50vh" }}>
                                 {
                                     conversation?.messages?.map((m, i, a) => (
-                                        <Message key={i} conversation={conversation} message={m} user={user} t={t} showHeader={m.direction !== a[i - 1]?.direction} />
+                                        <Message key={i} conversation={conversation} message={m} user={user} t={t} showHeader={m.direction !== a[i - 1]?.direction} lastMessageRef={i == conversation.messages.length - 1 ? lastMessage : null} />
                                     ))
                                 }
                             </ul>
@@ -347,9 +351,10 @@ function Conversation(props) {
  * @param {import("../../../../models/user/user.entity").UserEntity} props.user
  * @param {boolean} props.showHeader
  * @param {(string) => (string)} props.t
+ * @param {React.Ref} props.lastMessageRef
  */
 function Message(props) {
-    const { conversation, message, user, showHeader, t } = props;
+    const { conversation, message, user, showHeader, t, lastMessageRef } = props;
 
     const from = message.direction === "out" ? conversation.user.name : conversation.chattable_name;
 
@@ -358,7 +363,7 @@ function Message(props) {
      ) ? "out" : "in";
 
     return (
-    <li className="d-flex justify-content-between p-0">
+    <li ref={lastMessageRef} className="d-flex justify-content-between p-0">
         <Card className="w-100 m-0">
             {showHeader &&
                 <Card.Header className={`d-flex justify-content-${direction === "out" ? "end" : "start"} p-3`}>
