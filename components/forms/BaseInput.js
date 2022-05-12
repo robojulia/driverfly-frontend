@@ -41,7 +41,7 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
         max={max}
         step={step}
         placeholder={t(placeholder)}
-        value={value || ""}
+        value={value || (type == "number" ? 0 : "")}
         onChange={onChange}
         onKeyDown={onKeyDown}
         readOnly={readOnly}
