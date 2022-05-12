@@ -135,127 +135,127 @@ export default function Job() {
             safety_requirements_other: null
         },
         validationSchema: yup.object({
-            title: yup.string().required(t("this_field_is_required")).nullable(),
+            title: yup.string().required().max(100).nullable(),
             location: yup.object({
                 id: yup.number().nullable(),
                 street: yup.string()
                     .when("id", {
                         is: v => !!!v,
-                        then: yup.string().required(t("this_field_is_required")).nullable()
+                        then: yup.string().required().nullable()
                     }).nullable(),
                 city: yup.string()
                     .when("id", {
                         is: v => !!!v,
-                        then: yup.string().required(t("this_field_is_required")).nullable()
+                        then: yup.string().required().nullable()
                     }).nullable(),
                 state: yup.string()
                     .when("id", {
                         is: v => !!!v,
-                        then: yup.string().required(t("this_field_is_required")).nullable()
+                        then: yup.string().required().nullable()
                     }).nullable(),
                 zip_code: yup.string()
                     .when("id", {
                         is: v => !!!v,
-                        then: yup.string().required(t("this_field_is_required")).nullable()
+                        then: yup.string().required().nullable()
                     }).nullable(),
             }),
-            description: yup.string().required(t("this_field_is_required")).nullable(),
-            description_short: yup.string().required(t("this_field_is_required")).nullable(),
+            description: yup.string().required().max(255).nullable(),
+            description_short: yup.string().required().max(255).nullable(),
             drivers_needed: yup.number().min(0).nullable(),
             expiry_date: yup.date().nullable(),
-            geography: yup.string().enum(JobGeography).required(t("this_field_is_required")).nullable(),
+            geography: yup.string().enum(JobGeography).required().nullable(),
             max_applicant_radius: yup.number().min(1).nullable(),
-            schedule: yup.string().enum(JobSchedule).required(t("this_field_is_required")).nullable(),
+            schedule: yup.string().enum(JobSchedule).required().nullable(),
             schedule_other: yup.string().when("schedule", {
                 is: v => v === JobSchedule.OTHER,
-                then: yup.string().required(t("this_field_is_required")).nullable()
+                then: yup.string().required().nullable()
             }).nullable(),
-            employment_type: yup.string().enum(JobEmploymentType).required(t("this_field_is_required")).nullable(),
+            employment_type: yup.string().enum(JobEmploymentType).required().nullable(),
             equipment_type: yup.array(
                 yup.string().enum(JobEquipmentType)
             ),
             equipment_type_other: yup.string().when("equipment_type", {
                 is: a => a.includes(JobEquipmentType.OTHER),
-                then: yup.string().required(t("this_field_is_required")).nullable()
+                then: yup.string().required().nullable()
             }).nullable(),
             delivery_type: yup.array(
                 yup.string().enum(JobDeliveryType)
-            ).min(1, t("this_field_is_required")),
-            team_drivers: yup.string().enum(JobTeamDriver).required(t("this_field_is_required")).nullable(),
+            ).min(1, ),
+            team_drivers: yup.string().enum(JobTeamDriver).required().nullable(),
             pay_method: //yup.array(
-                yup.string().enum(JobPayMethod).required(t("this_field_is_required")).nullable(),
+                yup.string().enum(JobPayMethod).required().nullable(),
             //),
             min_salary: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.SALARY,
-                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+                then: yup.number().min(0).required().nullable()
             }).nullable(),
             max_salary: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.SALARY,
-                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+                then: yup.number().min(0).required().nullable()
             }).nullable(),
             min_rate: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.RATE_PER_MILE || v === JobPayMethod.HOURLY,
-                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+                then: yup.number().min(0).required().nullable()
             }).nullable(),
             max_rate: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.RATE_PER_MILE || v === JobPayMethod.HOURLY,
-                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+                then: yup.number().min(0).required().nullable()
             }).nullable(),
             min_hours: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.HOURLY,
-                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+                then: yup.number().min(0).required().nullable()
             }).nullable(),
             max_hours: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.HOURLY,
-                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+                then: yup.number().min(0).required().nullable()
             }).nullable(),
             min_percent: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.PERCENT_PER_MOVE || v === JobPayMethod.PERCENT_PER_WEIGHT,
-                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+                then: yup.number().min(0).required().nullable()
             }).nullable(),
             max_percent: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.PERCENT_PER_MOVE || v === JobPayMethod.PERCENT_PER_WEIGHT,
-                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+                then: yup.number().min(0).required().nullable()
             }).nullable(),
             min_miles: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.RATE_PER_MILE,
-                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+                then: yup.number().min(0).required().nullable()
             }).nullable(),
             max_miles: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.RATE_PER_MILE,
-                then: yup.number().min(0).required(t("this_field_is_required")).nullable()
+                then: yup.number().min(0).required().nullable()
             }).nullable(),
-            min_weekly_pay: yup.number().min(0).required(t("this_field_is_required")).nullable(),
-            max_weekly_pay: yup.number().min(0).required(t("this_field_is_required")).nullable(),
+            min_weekly_pay: yup.number().min(0).required().nullable(),
+            max_weekly_pay: yup.number().min(0).required().nullable(),
             benefits: yup.array(
                 yup.string().enum(JobBenefits)
             ),
             benefits_other: yup.string().when("benefits", {
                 is: v => v.includes(JobBenefits.OTHER),
-                then: yup.string().required(t("this_field_is_required")).nullable()
+                then: yup.string().required().nullable()
             }).nullable(),
             vehicles: yup.array(yup.object({
                 id: yup.number().nullable(),
                 type: yup.string().when("id", {
                     is: v => !v,
-                    then: yup.string().required(t("this_field_is_required")).enum(VehicleType).nullable()
+                    then: yup.string().required().enum(VehicleType).nullable()
                 }).nullable(),
                 type_other: yup.string().when(["id", "type"], {
                     is: (id, type) => !id && type === VehicleType.OTHER,
-                    then: yup.string().required(t("this_field_is_required")).nullable()
+                    then: yup.string().required().nullable()
                 }).nullable(),
                 transmission_type: yup.string().nullable(),
                 make: yup.string().when("id", {
                     is: v => !v,
-                    then: yup.string().required(t("this_field_is_required")).nullable()
+                    then: yup.string().required().nullable()
                 }).nullable(),
                 model: yup.string().when("id", {
                     is: v => !v,
-                    then: yup.string().required(t("this_field_is_required")).nullable()
+                    then: yup.string().required().nullable()
                 }).nullable(),
                 year: yup.number().when("id", {
                     is: v => !v,
-                    then: yup.number().required(t("this_field_is_required")).min(1900).nullable()
+                    then: yup.number().required().min(1900).nullable()
                 }).nullable(),
                 photo: yup.object({
                     name: yup.string().nullable(),
@@ -270,13 +270,13 @@ export default function Job() {
             min_years_experience: yup.number().required().min(0).nullable(),
             min_degree: yup.string().enum(DriverDegree).nullable(),
             required_skills: yup.array(yup.object({
-                type: yup.string().required(t("this_field_is_required")).nullable(),
-                years: yup.number().min(1).required(t("this_field_is_required")).nullable(),
+                type: yup.string().required().nullable(),
+                years: yup.number().min(1).required().nullable(),
             })).unique(t("{name}_must_be_unique_in_list", { name: t("type") }), "type", v => v.type),
             required_skills_other: yup.string().nullable(),
             required_equipment: yup.array(yup.object({
-                type: yup.string().required(t("this_field_is_required")).nullable(),
-                quantity: yup.number().min(1).required(t("this_field_is_required")).nullable(),
+                type: yup.string().required().nullable(),
+                quantity: yup.number().min(1).required().nullable(),
             })).unique(t("{name}_must_be_unique_in_list", { name: t("type") }), "type", v => v.type),
             required_endorsement: yup.array(
                 yup.string().enum(DriverEndorsement)
@@ -287,16 +287,16 @@ export default function Job() {
             must_pass_drug_test: yup.boolean().default(true),
             must_have_clean_mvr: yup.boolean().default(true),
             mvr_requirements: yup.array(yup.object({
-                type: yup.string().enum(MvrType).required(t("this_field_is_required")).nullable(),
-                max_count: yup.number().required(t("this_field_is_required")).nullable(),
-                max_years: yup.number().required(t("this_field_is_required")).nullable(),
+                type: yup.string().enum(MvrType).required().nullable(),
+                max_count: yup.number().required().nullable(),
+                max_years: yup.number().required().nullable(),
             })).unique(t("{name}_must_be_unique_in_list", { name: t("type") }), "type", v => v.type),
             accept_sap_graduates: yup.boolean().default(false),
             must_have_clean_criminal_history: yup.boolean().default(true),
             criminal_history: yup.array(yup.object({
-                type: yup.string().enum(CriminalHistoryType).required(t("this_field_is_required")).nullable(),
-                max_count: yup.number().required(t("this_field_is_required")).nullable(),
-                max_years: yup.number().required(t("this_field_is_required")).nullable(),
+                type: yup.string().enum(CriminalHistoryType).required().nullable(),
+                max_count: yup.number().required().nullable(),
+                max_years: yup.number().required().nullable(),
             })).unique(t("{name}_must_be_unique_in_list", { name: t("type") }), "type", v => v.type),
             max_accidents: yup.number().min(0).nullable(),
             safety_requirements_other: yup.string().nullable()
@@ -901,7 +901,7 @@ export default function Job() {
                             <div className="col-md-4">
                                 <h3>{t("basic_details")}</h3>
                                 <BaseSelect
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("location")}
                                     name="location.id"
                                     required
@@ -919,7 +919,7 @@ export default function Job() {
                                     !!!form.values.location.id &&
                                     <>
                                         <BaseInput
-                                            className="col-12"
+                                            className="col-12 p-0"
                                             label={t("street")}
                                             name="location.street"
                                             required
@@ -931,7 +931,7 @@ export default function Job() {
                                             handleBlur={form.handleBlur}
                                         />
                                         <BaseInput
-                                            className="col-12"
+                                            className="col-12 p-0"
                                             label={t("city")}
                                             name="location.city"
                                             required
@@ -974,7 +974,7 @@ export default function Job() {
                                     </>
                                 )}
                                 <BaseInput
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("expiration_date")}
                                     name="expiry_date"
                                     placeholder={t("expiration_date")}
@@ -986,7 +986,7 @@ export default function Job() {
                                     handleBlur={form.handleBlur}
                                 />
                                 <BaseInput
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("drivers_needed")}
                                     name="drivers_needed"
                                     placeholder={t("drivers_needed")}
@@ -999,7 +999,7 @@ export default function Job() {
                                     handleBlur={form.handleBlur}
                                 />
                                 <BaseSelect
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("geography")}
                                     name="geography"
                                     required
@@ -1012,7 +1012,7 @@ export default function Job() {
                                     enumType={JobGeography}
                                 />
                                 <BaseRange
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("max_applicant_radius")}
                                     name="max_applicant_radius"
                                     required
@@ -1056,7 +1056,7 @@ export default function Job() {
                                     }
                                 </div>
                                 <BaseSelect
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("employment_type")}
                                     name="employment_type"
                                     required
@@ -1070,7 +1070,7 @@ export default function Job() {
                                     enumType={JobEmploymentType}
                                 />
                                 <BaseCheckList
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("equipment_type")}
                                     name="equipment_type"
                                     placeholder={t("equipment_type")}
@@ -1086,7 +1086,7 @@ export default function Job() {
                                 {
                                     form.values.equipment_type.includes(JobSchedule.OTHER) &&
                                     <BaseInput
-                                        className="col-12"
+                                        className="col-12 p-0"
                                         required
                                         label={t("other_equipment_type")}
                                         name="equipment_type_other"
@@ -1099,7 +1099,7 @@ export default function Job() {
                                     />
                                 }
                                 <BaseCheckList
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("delivery_type")}
                                     name="delivery_type"
                                     required
@@ -1114,7 +1114,7 @@ export default function Job() {
                                     enumType={JobDeliveryType}
                                 />
                                 <BaseSelect
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("team_drivers")}
                                     name="team_drivers"
                                     required
@@ -1131,7 +1131,7 @@ export default function Job() {
                             <div className="col-md-4">
                                 <h3>{t("benefits")}</h3>
                                 <BaseSelect
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("pay_method")}
                                     name="pay_method"
                                     required
@@ -1354,7 +1354,7 @@ export default function Job() {
                                 </div>
                                 {/* todo: add job pay information */}
                                 <BaseCheckList
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("benefits")}
                                     name="benefits"
                                     placeholder={t("benefits")}
@@ -1370,7 +1370,7 @@ export default function Job() {
                                 {
                                     form.values.benefits.includes(JobBenefits.OTHER) &&
                                     <BaseInput
-                                        className="col-12"
+                                        className="col-12 p-0"
                                         label={t("additional_benefits")}
                                         name="benefits_other"
                                         required
@@ -1560,12 +1560,12 @@ export default function Job() {
                         </div>
                         <hr />
                         <div className="row">
-                            <div className="col-12">
+                            <div className="col-12 p-0">
                                 <h3>{t("requirements")}</h3>
                             </div>
                             <div className="col-md-6">
                                 <BaseCheckList
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("cdl_class")}
                                     name="cdl_class"
                                     cols={2}
@@ -1578,7 +1578,7 @@ export default function Job() {
                                     enumType={DriverLicenseType}
                                 />
                                 <BaseInput
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("min_years_experience")}
                                     name="min_years_experience"
                                     placeholder={t("min_years_experience")}
@@ -1592,7 +1592,7 @@ export default function Job() {
                                     error={form.errors.min_years_experience}
                                 />
                                 <BaseSelect
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("min_degree")}
                                     name="min_degree"
                                     placeholder={t("min_degree")}
@@ -1604,7 +1604,7 @@ export default function Job() {
                                     labelPrefix="DriverDegree"
                                     enumType={DriverDegree}
                                 />
-                                <div className="col-12">
+                                <div className="col-12 p-0">
                                     <label>{t("required_skills")}:</label>
                                     {form.touched.required_skills && typeof form.errors.required_skills === "string" ? <span className="text-danger small">{form.errors.required_skills}</span> : null}
                                     {form.values.required_skills.map((v, i) => {
@@ -1653,7 +1653,7 @@ export default function Job() {
                                     </div>
                                 </div>
                                 <BaseTextArea
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("other_required_skills")}
                                     name="required_skills_other"
                                     placeholder={t("other_required_skills")}
@@ -1666,7 +1666,7 @@ export default function Job() {
                                 />
                                 {
                                     form.values.employment_type === JobEmploymentType.OWNER_OPERATOR &&
-                                    <div className="col-12">
+                                    <div className="col-12 p-0">
                                         <label>{t("required_equipment")}:</label>
                                         {form.touched.required_equipment && typeof form.errors.required_equipment === "string" ? <span className="text-danger small">{form.errors.required_equipment}</span> : null}
                                         {form.values.required_equipment.map((v, i) => {
@@ -1716,7 +1716,7 @@ export default function Job() {
                                     </div>
                                 }
                                 <BaseCheckList
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("special_endorsements")}
                                     name="required_endorsement"
                                     cols={2}
@@ -1729,7 +1729,7 @@ export default function Job() {
                                     enumType={DriverEndorsement}
                                 />
                                 <BaseCheckList
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("transmission_type")}
                                     name="transmission_type_experience"
                                     cols={2}
@@ -1744,7 +1744,7 @@ export default function Job() {
                             </div>
                             <div className="col-md-6">
                                 <BaseCheck
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("must_pass_drug_test")}
                                     name="must_pass_drug_test"
                                     checked={form.values.must_pass_drug_test}
@@ -1754,7 +1754,7 @@ export default function Job() {
                                     error={form.errors.must_pass_drug_test}
                                 />
                                 <BaseCheck
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("must_have_clean_mvr")}
                                     name="must_have_clean_mvr"
                                     checked={form.values.must_have_clean_mvr}
@@ -1765,7 +1765,7 @@ export default function Job() {
                                 />
                                 {
                                     !form.values.must_have_clean_mvr &&
-                                    <div className="col-12">
+                                    <div className="col-12 p-0">
                                         <label>{t("mvr_requirements")}:</label>
                                         {form.touched.mvr_requirements && typeof form.errors.mvr_requirements === "string" ? <span className="text-danger small">{form.errors.mvr_requirements}</span> : null}
                                         {form.values.mvr_requirements.map((v, i) => {
@@ -1826,7 +1826,7 @@ export default function Job() {
                                     </div>
                                 }
                                 <BaseCheck
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("accept_sap_graduates")}
                                     name="accept_sap_graduates"
                                     value={form.values.accept_sap_graduates}
@@ -1836,7 +1836,7 @@ export default function Job() {
                                     error={form.errors.accept_sap_graduates}
                                 />
                                 <BaseCheck
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("no_criminal_history")}
                                     name="must_have_clean_criminal_history"
                                     checked={form.values.must_have_clean_criminal_history}
@@ -1847,7 +1847,7 @@ export default function Job() {
                                 />
                                 {
                                     !form.values.must_have_clean_criminal_history &&
-                                    <div className="col-12">
+                                    <div className="col-12 p-0">
                                         <label>{t("criminal_history")}:</label>
                                         {form.touched.criminal_history && typeof form.errors.criminal_history === "string" ? <span className="text-danger small">{form.errors.criminal_history}</span> : null}
                                         {form.values.criminal_history.map((v, i) => {
@@ -1908,7 +1908,7 @@ export default function Job() {
                                     </div>
                                 }
                                 <BaseInput
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("accidents_last_5_years")}
                                     placeholder={t("count")}
                                     name={`max_accidents`}
@@ -1922,7 +1922,7 @@ export default function Job() {
                                     error={form.errors.max_accidents}
                                 />
                                 <BaseTextArea
-                                    className="col-12"
+                                    className="col-12 p-0"
                                     label={t("other_safety_requirements")}
                                     name="safety_requirements_other"
                                     placeholder={t("other_safety_requirements")}
@@ -1935,7 +1935,7 @@ export default function Job() {
                                 />
                             </div>
                         </div>
-                        <div className="col-12 border-0 text-end">
+                        <div className="col-12 p-0 border-0 text-end">
                             <div className="col">
                                 <button type="submit" className={`btn btn-primary`} >
                                     {t("update")}

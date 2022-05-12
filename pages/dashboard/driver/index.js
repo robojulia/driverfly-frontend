@@ -114,17 +114,17 @@ export default function Dashboard() {
                                 <td>CR England</td>
                                 <td>
                                     <Link href="#">
-                                        <button className={` mt-3 text-white ${style.btn_blue}`}>{t("update_status")}</button>
+                                        <button className={`text-white ${style.btn_blue}`}>{t("update_status")}</button>
                                     </Link>
                                 </td>
                                 <td>
                                     <Link href="#">
-                                        <button className={` mt-3 text-white ${style.btn_blue}`}>{t("transfer_internally")}</button>
+                                        <button className={`text-white ${style.btn_blue}`}>{t("transfer_internally")}</button>
                                     </Link>
                                 </td>
                                 <td>
                                     <Link href="#">
-                                        <button className={` mt-3 text-white ${style.btn_blue}`}>{t("find_new_job")}</button>
+                                        <button className={`text-white ${style.btn_blue}`}>{t("find_new_job")}</button>
                                     </Link>
                                 </td>
 
@@ -146,7 +146,7 @@ export default function Dashboard() {
                 </Row>
                 <Row className="mt-5">
                     <Col lg="12 ">
-                        <Card>
+                        <Card className="border-0">
                             <CardBody className={JobList.jobtable}>
                                 <div className="table-responsive">
                                     <Table striped>

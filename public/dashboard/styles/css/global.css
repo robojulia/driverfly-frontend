@@ -259,6 +259,7 @@
 
 .side_bar .bg-light {
     background-color: transparent !important;
+    padding: 0.5rem 0;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -301,9 +302,11 @@
 
 .w-24 {
 
-    width: 23%;
+    width: 22% !important;
     display: inline-block;
+    margin: 2% 1%;
 }
+
 
 
 textarea {
@@ -455,8 +458,10 @@ textarea {
     padding: 15px 15px 15px 15px;
 }
 .location_table__hed th{
-    padding: 15px 15px 15px 0px;
     width: 22.5%;
+    border-top: 0px solid #dee2e6 !important;
+    border-bottom: 1px solid #dee2e6 !important;
+
 }
 
 .table> :not(:first-child) {
@@ -514,11 +519,7 @@ textarea {
         width: 35%;
     }
 
-    .w-24 {
-
-        width: 100%;
-        margin: 2% 1%;
-    }
+    
      .account_tabs .react-tabs__tab {
         background-color: #1b4454 !important;
         color: #fff;
@@ -573,4 +574,16 @@ textarea {
         top: 0;
     }
     
+}
+.table thead th {
+    border-bottom: 0px solid #dee2e6 !important;
+}
+.table td, .table th {
+    border-top: 0px solid #dee2e6 !important;
+}
+.table {
+    margin: 0rem;
+}
+.job_listing{
+    border: solid 0px !important;
 }

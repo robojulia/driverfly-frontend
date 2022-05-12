@@ -4,6 +4,8 @@ import jobContext from "../../context/jobContext"
 import timeSince from "../../utils/timeSince"
 import { useTranslation } from "../../hooks/useTranslation"
 import CompanyPhoto from '../jobs/company-photo'
+import { GeoAltFill, CurrencyDollar } from 'react-bootstrap-icons';
+
 
 export default function JobsList() {
 
@@ -28,9 +30,7 @@ export default function JobsList() {
       <div className="filter-outer mt-5">
         {jobs.length > 0 && jobs.map(job => (
           <div key={job.id} className="media align-items-center shadow-sm">
-            {/* <label className="checkbox-inline" htmlFor="remember">
-              <input type="checkbox" name="remember" id="remember" value="1" />
-            </label> */}
+           
             <CompanyPhoto className="d-flex mr-4 truck-img" company={job.company} />
             <div className="media-body">
               <h4 className="mt-0">{job.title}
@@ -39,7 +39,7 @@ export default function JobsList() {
                   data-toggle="tooltip"
                   data-placement="top"
                   title="Tooltip on top">
-                  {/* <i className="fa fa-star" aria-hidden="true"></i> */}
+                 
                 </span>
               </h4>
               <div className="job-date-author">
@@ -60,7 +60,8 @@ export default function JobsList() {
                   {
                     job.location &&
                     <>
-                      <p><i className="fa fa-map-marker" aria-hidden="true"></i>
+                      <p>
+                     < GeoAltFill className='mr-1' />
                         <span className='mr-4'>
                           <>
                             {job.location.street || t('no_street')}, {job.location.city || t('no_city')}, {job.location.state || t('no_state')}, {job.location.zip_code || t('no_zip')}
@@ -69,10 +70,10 @@ export default function JobsList() {
                     </>
                   }
                   <p>
-                    <i className="fa fa-usd mr-1 " aria-hidden="true"></i>{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} per week </p>
+                   < CurrencyDollar className='mr-1' />{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} per week </p>
                 </div>
                 <div className="job-location">
-                  {/* <i className="fa fa-star-o" aria-hidden="true"></i> */}
+                
                   <strong className="text-secondary">{job.description_short}</strong>
                 </div>
               </div>
@@ -120,7 +121,7 @@ export default function JobsList() {
             {
               currentPageIndex < pagingMeta.totalPages &&
               <li onClick={() => { handlePaging(nextPageIndex) }} >
-                <span className="page-numbers " role="button" value={parseInt(pagingMeta.page) + 1}>
+                <span className="page-numbers " role="button" >
                   {nextPageIndex}
                 </span>
               </li>

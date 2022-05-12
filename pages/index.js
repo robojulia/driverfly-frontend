@@ -13,6 +13,8 @@ import { useTranslation } from "../hooks/useTranslation";
 import { DriverLicenseType } from '../enums/drivers/driver-license-type.enum';
 import { JobEmploymentType } from '../enums/jobs/job-employment-type.enum';
 import { useRouter } from 'next/router'
+import { Search } from 'react-bootstrap-icons';
+
 
 export default function Index() {
 
@@ -64,7 +66,8 @@ export default function Index() {
                             <div className="hero-search">
                                 <div className="input-group w-25">
                                     <div className="input-group-prepend">
-                                        <i className="fa fa-search" aria-hidden="true"></i>
+                                        {/* <i className="fa fa-search" aria-hidden="true"></i> */}
+                                        < Search  className='home_search'/>
                                     </div>
                                     <input
                                         onKeyPress={searchHandler}
@@ -91,9 +94,9 @@ export default function Index() {
                                     aria-label="Default select example"
                                     id="exampleFormControlSelect1">
                                     <option className='selectbg'>All Types</option>
-                                    {Object.keys(JobEmploymentType).map((key) => {
+                                    {Object.keys(JobEmploymentType).map((key, index) => {
                                         return (
-                                            <option value={key}>
+                                            <option key={index} value={key}>
                                                 {t(JobEmploymentType[key].toLowerCase())}
                                             </option>
                                         )
@@ -106,9 +109,9 @@ export default function Index() {
                                     aria-label="Default select example"
                                     id="exampleFormControlSelect1">
                                     <option>All Categories</option>
-                                    {Object.keys(DriverLicenseType).map((key) => {
+                                    {Object.keys(DriverLicenseType).map((key, index) => {
                                         return (
-                                            <option value={key}>
+                                            <option key={index} value={key}>
                                                 {t(DriverLicenseType[key].toLowerCase())}
                                             </option>
                                         )
