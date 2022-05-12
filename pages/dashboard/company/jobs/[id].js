@@ -159,8 +159,28 @@ export default function Job() {
                         then: yup.string().required().nullable()
                     }).nullable(),
             }),
-            description: yup.string().required().max(255).nullable(),
-            description_short: yup.string().required().max(255).nullable(),
+            description: yup.string().required(t("this_field_is_required")).nullable()
+                .test(
+                    'len',
+                    t('{name}_must_not_be_greater_than_{length}_characters', { name: t('description'), length: 250 }),
+                    val => {
+                        if (val) {
+                            return (val.length <= 250)
+                        }
+                        return true
+                    }
+                ),
+            description_short: yup.string().required(t("this_field_is_required")).nullable()
+                .test(
+                    'len',
+                    t('{name}_must_not_be_greater_than_{length}_characters', { name: t('description'), length: 250 }),
+                    val => {
+                        if (val) {
+                            return (val.length <= 250)
+                        }
+                        return true
+                    }
+                ),
             drivers_needed: yup.number().min(0).nullable(),
             expiry_date: yup.date().nullable(),
             geography: yup.string().enum(JobGeography).required().nullable(),
@@ -180,7 +200,7 @@ export default function Job() {
             }).nullable(),
             delivery_type: yup.array(
                 yup.string().enum(JobDeliveryType)
-            ).min(1, ),
+            ).min(1,),
             team_drivers: yup.string().enum(JobTeamDriver).required().nullable(),
             pay_method: //yup.array(
                 yup.string().enum(JobPayMethod).required().nullable(),
@@ -273,7 +293,17 @@ export default function Job() {
                 type: yup.string().required().nullable(),
                 years: yup.number().min(1).required().nullable(),
             })).unique(t("{name}_must_be_unique_in_list", { name: t("type") }), "type", v => v.type),
-            required_skills_other: yup.string().nullable(),
+            required_skills_other: yup.string().nullable()
+                .test(
+                    'len',
+                    t('{name}_must_not_be_greater_than_{length}_characters', { name: t('other_required_skills'), length: 250 }),
+                    val => {
+                        if (val) {
+                            return (val.length <= 250)
+                        }
+                        return true
+                    }
+                ),
             required_equipment: yup.array(yup.object({
                 type: yup.string().required().nullable(),
                 quantity: yup.number().min(1).required().nullable(),
@@ -300,6 +330,16 @@ export default function Job() {
             })).unique(t("{name}_must_be_unique_in_list", { name: t("type") }), "type", v => v.type),
             max_accidents: yup.number().min(0).nullable(),
             safety_requirements_other: yup.string().nullable()
+                .test(
+                    'len',
+                    t('{name}_must_not_be_greater_than_{length}_characters', { name: t('other_safety_requirements'), length: 250 }),
+                    val => {
+                        if (val) {
+                            return (val.length <= 250)
+                        }
+                        return true
+                    }
+                ),
         }),
         onSubmit: async (data) => {
             data.min_weekly_pay = parseFloat(data.min_weekly_pay)
