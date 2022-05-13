@@ -16,7 +16,7 @@ import CompanyPhoto from "../../components/jobs/company-photo"
 import jobDetailContext from "../../context/jobDetailContext"
 import StructuredData from "../../components/seo/StructuredData"
 import { useState } from "react"
-import { ArrowRight, CurrencyDollar } from 'react-bootstrap-icons';
+import { ArrowRight, CurrencyDollar, GeoAltFill, Star} from 'react-bootstrap-icons';
 
 export default function Detail({ jobDetail, relatedJobs }) {
 
@@ -81,7 +81,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
                           {
                             jobDetail.location &&
                             <p className="pr-4">
-                              <i className="fa fa-map-marker mr-2" aria-hidden="true"></i>
+                              < GeoAltFill  className="mr-1"/>
                               <>
                                 {jobDetail.location.street || t('no_street')}, {jobDetail.location.city || t('no_city')}, {jobDetail.location.state || t('no_state')}, {jobDetail.location.zip_code || t('no_zip')}
                               </>
@@ -100,7 +100,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
                     {t('apply_now')}
                     <ArrowRight />
                   </button>
-                  <button type="button" className="btn btn-danger"> <i className="fa fa-star-o" aria-hidden="true"></i> {t('shortlist')} </button>
+                  <button type="button" className="btn btn-danger"> < Star /> {t('shortlist')} </button>
                 </div>
                 <JobApply job={jobDetail} />
               </div>
