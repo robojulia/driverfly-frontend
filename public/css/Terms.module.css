@@ -1,0 +1,7 @@
+.terms {
+    margin-left: 3em
+}
+
+.terms li {
+    display: list-item;
+}
