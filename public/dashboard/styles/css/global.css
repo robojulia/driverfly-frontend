@@ -587,3 +587,15 @@ textarea {
 .job_listing{
     border: solid 0px !important;
 }
+.keep_sign_in_check{
+    padding: 0 !important;
+}
+.header-sec ul li svg{
+    width: 25px;
+    height: 30px;
+    color: #4aa2af;
+}
+.faq_search svg{ 
+ color: #6a6a6a;
+ font-size: 18px;
+}

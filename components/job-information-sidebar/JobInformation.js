@@ -10,7 +10,7 @@ import timeSince from "../../utils/timeSince";
 import ShowEnumFromString from "../../components/enum-filters/show-enum-from-string"
 import { useContext } from "react"
 import jobDetailContext from "../../context/jobDetailContext";
-import { ArrowRight, CurrencyDollar } from 'react-bootstrap-icons';
+import { ArrowRight, CurrencyDollar, GeoAltFill,FileEarmarkZip, Facebook } from 'react-bootstrap-icons';
 
 export default function JonInformation({ job }) {
 
@@ -26,7 +26,7 @@ export default function JonInformation({ job }) {
           <ul className="list">
             <li>
               <div className="icon">
-                <i className="fa fa-usd" aria-hidden="true"></i>
+                < CurrencyDollar />
               </div>
               <div className="details">
                 <div className="text">{t('offered_salary')}</div>
@@ -35,7 +35,7 @@ export default function JonInformation({ job }) {
             </li>
             <li>
               <div className="icon">
-                <i className="fa fa-map-marker" aria-hidden="true"></i>
+                < GeoAltFill />
               </div>
               <div className="details">
                 <div className="text">{t('areas_covered')}</div>
@@ -120,24 +120,11 @@ export default function JonInformation({ job }) {
         <div className="job-detail-statistic">
           <div className="statistic-item flex-middle">
             <div className="icon text-theme">
-              <i className="fa fa-file-archive-o" aria-hidden="true"></i>
+              < FileEarmarkZip />
             </div>
             <span className="text"><span className="number">{timeSince(job.created_at)}</span> {t('ago')}</span>
           </div>
 
-          {/* <div className="statistic-item flex-middle">
-            <div className="icon text-theme">
-              <i className="fa fa-file-archive-o" aria-hidden="true"></i>
-            </div>
-            <span className="text"><span className="number">143</span> Views</span>
-          </div> */}
-
-          {/* <div className="statistic-item flex-middle">
-            <div className="icon text-theme">
-              <i className="fa fa-file-archive-o" aria-hidden="true"></i>
-            </div>
-            <span className="text"><span className="number">2</span> Applicants</span>
-          </div> */}
         </div>
         <button type="button" className="btn btn-danger" onClick={handleShowApplyModal}>
           {t('apply_now')}
@@ -147,7 +134,7 @@ export default function JonInformation({ job }) {
           <div className="title">{t('apply_with')}</div>
           <div className="inner">
             <div className="facebook-apply-btn-wrapper">
-              <a className="facebook-apply-btn" href="#" data-job_id="5363"><i className="fa fa-facebook"></i> Facebook</a>
+              <a className="facebook-apply-btn" href="#" data-job_id="5363"><Facebook /> Facebook</a>
             </div>
           </div>
         </div>

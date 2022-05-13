@@ -1059,8 +1059,17 @@ input[type='range']:nth-child(1)::-webkit-slider-thumb {
     font-weight: 400;
     background-color: #fff0;
 }
+.how-it-work-sec svg{
+    color: #4aa2af;
+    font-size: 60px;
+   
+}
 
-i.fa.fa-file-archive-o,
+.about_work svg{
+    margin: 0 auto;
+}
+
+/* i.fa.fa-file-archive-o,
 i.fa.fa-filter,
 i.fa.fa-paper-plane,
 i.fa.fa-bell-o,
@@ -1071,7 +1080,16 @@ i.fa.fa-file-audio-o {
     content: "\f131";
     color: #4aa2af;
 }
-
+i.fa.fa-file-archive-o,
+i.fa.fa-filter,
+i.fa.fa-paper-plane,
+i.fa.fa-bell-o,
+i.fa.fa-trophy,
+i.fa.fa-hand-peace-o,
+i.fa.fa-pencil,
+i.fa.fa-file-audio-o {
+    font-size: 60px;
+} */
 .how-it-work-sec .card,
 .driver-sec .card {
     text-align: center;
@@ -1083,7 +1101,7 @@ i.fa.fa-file-audio-o {
 }
 
 .card:hover h5,
-.card:hover i {
+.card:hover svg {
     color: white !important;
 }
 
@@ -1092,16 +1110,7 @@ i.fa.fa-file-audio-o {
     color: white !important;
 }
 
-i.fa.fa-file-archive-o,
-i.fa.fa-filter,
-i.fa.fa-paper-plane,
-i.fa.fa-bell-o,
-i.fa.fa-trophy,
-i.fa.fa-hand-peace-o,
-i.fa.fa-pencil,
-i.fa.fa-file-audio-o {
-    font-size: 60px;
-}
+
 
 .who-we-serve-sec {
     background: #F0F0F0;
@@ -1220,7 +1229,7 @@ img.who-we-img.img-fluid {
     right: 0;
 }
 
-.Slider_box i.fa.fa-quote-left {
+.Slider_box svg {
     color: #2da2af !important;
     font-size: 55px;
     position: absolute;
@@ -1229,14 +1238,14 @@ img.who-we-img.img-fluid {
     z-index: -1;
 }
 
-.Slider_box i.fa.fa-quote-left {
+/* .Slider_box i.fa.fa-quote-left {
     color: #2da2af !important;
     font-size: 55px;
     position: absolute;
     top: -33px;
     left: 35px;
     z-index: -1;
-}
+} */
 
 .Slider_box h3 {
     margin-top: 40px;
@@ -1673,7 +1682,7 @@ img.who-we-img.img-fluid {
     color: #2da2af;
 }
 
-.icon i.fa.fa-usd {
+.icon svg {
     color: #2da2af;
     font-size: 28px;
 }
@@ -1755,11 +1764,7 @@ img.who-we-img.img-fluid {
     font-size: 16px;
 }
 
-.share-links i.fa.fa-facebook,
-i.fa.fa-twitter,
-i.fa.fa-linkedin,
-i.fa.fa-pinterest-p,
-i.fa.fa-plus {
+.share-links  svg {
     color: #2EC8C4;
     margin-left: 0px;
     transition: all 0.4s ease-in-out 0s;
@@ -1769,13 +1774,10 @@ i.fa.fa-plus {
     font-size: 17px;
     width: 40px;
     height: 40px;
+    cursor: pointer;
 }
 
-.share-links i.fa.fa-facebook:hover,
-i.fa.fa-twitter:hover,
-i.fa.fa-linkedin:hover,
-i.fa.fa-pinterest-p:hover,
-i.fa.fa-plus:hover {
+.share-links:hover svg {
     color: #2EC8C4;
     background: #fff;
 }
