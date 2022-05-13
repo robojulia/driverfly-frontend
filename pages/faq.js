@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Breadcrumbs from 'nextjs-breadcrumbs';
 import Layout from "../components/layouts";
+import { Search } from 'react-bootstrap-icons';
 
 export default function FAQ() {
     return (
@@ -22,9 +23,12 @@ export default function FAQ() {
                         <div className="col-sm-12 col-lg-6">
                             <div className="faq-inner pl-3">
                                 <form action="#" method="#">
-                                    <div className="input-group shadow-sm">
+                                    <div className="input-group shadow-sm faq_search">
                                         <input type="text" placeholder="Search" name="s" className="form-control border-0  p-4 " />
-                                        <span className="input-group-btn"> <button type="submit" className="btn btn-sm btn-search"><i className="fa fa-search" aria-hidden="true"></i></button> </span>
+                                        <span className="input-group-btn"> <button type="submit" className="btn btn-sm btn-search">
+                                            {/* <i className="fa fa-search" aria-hidden="true"></i> */}
+                                            < Search />
+                                            </button> </span>
                                         <input type="hidden" name="post_type" value="post" className="post_type p-4" />
                                     </div>
                                 </form>

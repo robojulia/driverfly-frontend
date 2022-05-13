@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Facebook, Twitter, Instagram } from 'react-bootstrap-icons';
+
 export default function FollowUs
 
     () {
@@ -9,13 +11,17 @@ justify-content-md-end justify-content-center  ">
                 <div className="footer-social-icons">
                     <h6>Follow Us</h6>
                     <div className="social">
-                        <i className="fa fa-facebook" aria-hidden="true"></i>
+                        {/* <i className="fa fa-facebook" aria-hidden="true"></i> */}
+                        < Facebook />
                     </div>
                     <div className="social">
-                        <i className="fa fa-twitter" aria-hidden="true"></i>
+                        {/* <i className="fa fa-twitter" aria-hidden="true"></i> */}
+                        < Twitter />
                     </div>
                     <div className="social">
-                        <i className="fa fa-instagram" aria-hidden="true"></i>
+                        {/* <i className="fa fa-instagram" aria-hidden="true"></i>
+                         */}
+                         < Instagram />
                     </div>
                 </div>
 

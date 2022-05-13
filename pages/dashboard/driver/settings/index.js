@@ -124,10 +124,10 @@ export default function Profile() {
         <Row>
           <h2>{t("MY_ACCOUNT")}</h2>
         </Row>
-        <div className='container-fluid'>
+        <div className='container-fluid p-0'>
           <div className="modal-header border-0">
           </div>
-          <form className="modal-body" onSubmit={form.handleSubmit} >
+          <form className="modal-body p-0" onSubmit={form.handleSubmit} >
             <Row>
               <BaseInput
                 className="col-6"

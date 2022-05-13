@@ -5,6 +5,7 @@ import SignupButton from '../../components/buttons/Signup';
 import LogoutButton from '../../components/buttons/Logout';
 import DashboardButton from "../buttons/DashboardButton";
 import { useTranslation } from "../../hooks/useTranslation";
+import { Bell} from 'react-bootstrap-icons';
 
 export default function Nav() {
     const { authCheck } = useAuth();
@@ -93,8 +94,7 @@ export default function Nav() {
 
                 </ul>
                 <ul className="d-flex align-items-center mb-0">
-                    <li><a href="#" className="nav-link"> <i className="fa fa-bell-o pt-1"
-                        aria-hidden="true"></i></a></li>
+                    <li><a href="#" className="nav-link"> < Bell /></a></li>
                     {authCheck() ?
                         <>
                             <DashboardButton className="btn btn-primary mr-4" />
