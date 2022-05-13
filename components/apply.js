@@ -25,8 +25,11 @@ import { JobApplicantDocumentType } from '../enums/application/job-application-d
 // import '@react-pdf-viewer/default-layout/lib/styles/index.css'
 import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
+import Form from "react-bootstrap/Form"
 import Spinner from 'react-bootstrap/Spinner'
 import ViewFileButton from './buttons/ViewFileButton'
+import { useContext } from "react"
+import jobDetailContext from '../context/jobDetailContext'
 
 export default function JobApply({ job }) {
 
@@ -35,11 +38,16 @@ export default function JobApply({ job }) {
   // console.log("user", user);
   const router = useRouter()
   const { t } = useTranslation();
+
   const jobApi = new JobApi();
   const baseApi = new BaseApi();
   const userApi = new UserApi();
 
-  const defaultLayoutPluginInstance = defaultLayoutPlugin()
+  const { state, method } = useContext(jobDetailContext)
+  const { showApplyModal } = state
+  const { handleCloseApplyModal, handleShowApplyModal } = method
+
+  // const defaultLayoutPluginInstance = defaultLayoutPlugin()
   const [pdfModel, set_pdfModel] = useState({
     name: null,
     url: null,
@@ -137,12 +145,12 @@ export default function JobApply({ job }) {
       await jobApi.applyForJob(job.id, userDto)
         .then(data => {
           if (data.status == 201) {
-            closeModal()
+            handleCloseApplyModal()
             toast.success(t('job_applied_success_message'))
           }
         })
         .catch(function (error) {
-          closeModal()
+          handleCloseApplyModal()
           // console.log("error?.response", error?.response);
           if (error?.response?.data?.job == "INVALID_JOB_SPECIFIED") {
             toast.error(t('INVALID_JOB_SPECIFIED'))
@@ -163,8 +171,6 @@ export default function JobApply({ job }) {
         })
     }
   });
-
-  const closeModal = () => { document.getElementsByClassName('close')[0].click() }
 
   const handleFileChange = async (e) => {
     const { target: { name, files } } = e
@@ -259,107 +265,101 @@ export default function JobApply({ job }) {
 
   return (
     <>
-
-      <div className="modal fade p-0" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div className="modal-dialog" role="document">
-          <div className="modal-content">
-            <form onSubmit={apply_form.handleSubmit}>
-              <div className="modal-header border-0">
-                <h4 className="modal-title font-weight-normal px-3 pt-3" id="exampleModalLabel">
-                  {t('apply_for_this_job')}
-                </h4>
-                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div className='modal-body px-5'>
-                <Row>
-                  <Col lg={6}>
-                    <BaseInput
-                      className=" col-12 mt-3"
-                      label={t("first_name")}
-                      placeholder={t("first_name")}
-                      name="first_name"
-                      value={apply_form.values.first_name}
-                      touched={apply_form.touched.first_name}
-                      error={apply_form.errors.first_name}
-                      onChange={apply_form.handleChange}
-                      handleBlur={apply_form.handleBlur}
-                    />
-                  </Col>
-                  <Col lg={6}>
-                    <BaseInput
-                      className=" col-12 mt-3"
-                      label={t("last_name")}
-                      placeholder={t("last_name")}
-                      name="last_name"
-                      value={apply_form.values.last_name}
-                      touched={apply_form.touched.last_name}
-                      error={apply_form.errors.last_name}
-                      onChange={apply_form.handleChange}
-                      handleBlur={apply_form.handleBlur}
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col lg={6}>
-                    <BaseInput
-                      readOnly={user?.email ? true : false}
-                      type="email"
-                      className=" col-12 mt-3"
-                      label={t("email")}
-                      placeholder={t("email")}
-                      name="email"
-                      value={apply_form.values.email}
-                      touched={apply_form.touched.email}
-                      error={apply_form.errors.email}
-                      onChange={apply_form.handleChange}
-                      handleBlur={apply_form.handleBlur}
-                    />
-                  </Col>
-                  <Col lg={6}>
-                    <BaseInput
-                      className=" col-12 mt-3"
-                      label={t("contact_number")}
-                      placeholder={t("contact_number")}
-                      name="contact_number"
-                      value={apply_form.values.contact_number}
-                      touched={apply_form.touched.contact_number}
-                      error={apply_form.errors.contact_number}
-                      onChange={apply_form.handleChange}
-                      handleBlur={apply_form.handleBlur}
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col lg={12}>
-                    <BaseSelect
-                      className="col-12 mt-3"
-                      label={t("highest_degree")}
-                      placeholder={t("highest_degree")}
-                      name="highest_degree"
-                      value={apply_form.values.highest_degree}
-                      touched={apply_form.touched.highest_degree}
-                      error={apply_form.errors.highest_degree}
-                      enumType={DriverDegree}
-                      labelPrefix="DriverDegree"
-                      onChange={apply_form.handleChange}
-                      handleBlur={apply_form.handleBlur}
-                    />
-                  </Col>
-                </Row>
-                {/* Files Start */}
-                <Row>
-                  <Col lg={6}>
-                    <BaseInput
-                      type="file"
-                      accept="application/pdf"
-                      className="col-12 mt-3"
-                      label={t(JobApplicantDocumentType.DRIVER_LICENSE)}
-                      name={JobApplicantDocumentType.DRIVER_LICENSE}
-                      onChange={handleFileChange}
-                    />
-                    {/* {
+      <Modal contentClassName='px-5 py-3' show={showApplyModal} onHide={handleCloseApplyModal}>
+        <form onSubmit={apply_form.handleSubmit}>
+          <Modal.Header>
+            <Modal.Title>
+              {t('apply_for_this_job')}
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Row>
+              <Col lg={6}>
+                <BaseInput
+                  className=" col-12 mt-3"
+                  label={t("first_name")}
+                  placeholder={t("first_name")}
+                  name="first_name"
+                  value={apply_form.values.first_name}
+                  touched={apply_form.touched.first_name}
+                  error={apply_form.errors.first_name}
+                  onChange={apply_form.handleChange}
+                  handleBlur={apply_form.handleBlur}
+                />
+              </Col>
+              <Col lg={6}>
+                <BaseInput
+                  className=" col-12 mt-3"
+                  label={t("last_name")}
+                  placeholder={t("last_name")}
+                  name="last_name"
+                  value={apply_form.values.last_name}
+                  touched={apply_form.touched.last_name}
+                  error={apply_form.errors.last_name}
+                  onChange={apply_form.handleChange}
+                  handleBlur={apply_form.handleBlur}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={6}>
+                <BaseInput
+                  readOnly={user?.email ? true : false}
+                  type="email"
+                  className=" col-12 mt-3"
+                  label={t("email")}
+                  placeholder={t("email")}
+                  name="email"
+                  value={apply_form.values.email}
+                  touched={apply_form.touched.email}
+                  error={apply_form.errors.email}
+                  onChange={apply_form.handleChange}
+                  handleBlur={apply_form.handleBlur}
+                />
+              </Col>
+              <Col lg={6}>
+                <BaseInput
+                  className=" col-12 mt-3"
+                  label={t("contact_number")}
+                  placeholder={t("contact_number")}
+                  name="contact_number"
+                  value={apply_form.values.contact_number}
+                  touched={apply_form.touched.contact_number}
+                  error={apply_form.errors.contact_number}
+                  onChange={apply_form.handleChange}
+                  handleBlur={apply_form.handleBlur}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={12}>
+                <BaseSelect
+                  className="col-12 mt-3"
+                  label={t("highest_degree")}
+                  placeholder={t("highest_degree")}
+                  name="highest_degree"
+                  value={apply_form.values.highest_degree}
+                  touched={apply_form.touched.highest_degree}
+                  error={apply_form.errors.highest_degree}
+                  enumType={DriverDegree}
+                  labelPrefix="DriverDegree"
+                  onChange={apply_form.handleChange}
+                  handleBlur={apply_form.handleBlur}
+                />
+              </Col>
+            </Row>
+            {/* Files Start */}
+            <Row>
+              <Col lg={6}>
+                <BaseInput
+                  type="file"
+                  accept="application/pdf"
+                  className="col-12 mt-3"
+                  label={t(JobApplicantDocumentType.DRIVER_LICENSE)}
+                  name={JobApplicantDocumentType.DRIVER_LICENSE}
+                  onChange={handleFileChange}
+                />
+                {/* {
                       user &&
                       apply_form.values[JobApplicantDocumentType.DRIVER_LICENSE + "_old"] &&
                       <span className='col-12'>
@@ -370,17 +370,17 @@ export default function JobApply({ job }) {
                           className='btn btn-link' />
                       </span>
                     } */}
-                  </Col>
-                  <Col lg={6}>
-                    <BaseInput
-                      type="file"
-                      accept="application/pdf"
-                      className=" col-12 mt-3 mt-3"
-                      label={t(JobApplicantDocumentType.MEDICAL_CARD)}
-                      name={JobApplicantDocumentType.MEDICAL_CARD}
-                      onChange={handleFileChange}
-                    />
-                    {/* {
+              </Col>
+              <Col lg={6}>
+                <BaseInput
+                  type="file"
+                  accept="application/pdf"
+                  className=" col-12 mt-3 mt-3"
+                  label={t(JobApplicantDocumentType.MEDICAL_CARD)}
+                  name={JobApplicantDocumentType.MEDICAL_CARD}
+                  onChange={handleFileChange}
+                />
+                {/* {
                       user &&
                       apply_form.values[JobApplicantDocumentType.MEDICAL_CARD + "_old"] &&
                       <span className='col-12'>
@@ -391,19 +391,19 @@ export default function JobApply({ job }) {
                           className='btn btn-link' />
                       </span>
                     } */}
-                  </Col>
-                </Row>
-                <Row>
-                  <Col lg={6}>
-                    <BaseInput
-                      type="file"
-                      accept="application/pdf"
-                      className=" col-12 mt-3 mt-3"
-                      label={t(JobApplicantDocumentType.RESUME)}
-                      name={JobApplicantDocumentType.RESUME}
-                      onChange={handleFileChange}
-                    />
-                    {/* {
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={6}>
+                <BaseInput
+                  type="file"
+                  accept="application/pdf"
+                  className=" col-12 mt-3 mt-3"
+                  label={t(JobApplicantDocumentType.RESUME)}
+                  name={JobApplicantDocumentType.RESUME}
+                  onChange={handleFileChange}
+                />
+                {/* {
                       user &&
                       apply_form.values[JobApplicantDocumentType.RESUME + "_old"] &&
                       <span className='col-12'>
@@ -414,17 +414,17 @@ export default function JobApply({ job }) {
                           className='btn btn-link' />
                       </span>
                     } */}
-                  </Col>
-                  <Col lg={6}>
-                    <BaseInput
-                      type="file"
-                      accept="application/pdf"
-                      className=" col-12 mt-3 mt-3"
-                      label={t(JobApplicantDocumentType.MVR)}
-                      name={JobApplicantDocumentType.MVR}
-                      onChange={handleFileChange}
-                    />
-                    {/* {
+              </Col>
+              <Col lg={6}>
+                <BaseInput
+                  type="file"
+                  accept="application/pdf"
+                  className=" col-12 mt-3 mt-3"
+                  label={t(JobApplicantDocumentType.MVR)}
+                  name={JobApplicantDocumentType.MVR}
+                  onChange={handleFileChange}
+                />
+                {/* {
                       user &&
                       apply_form.values[JobApplicantDocumentType.MVR + "_old"] &&
                       <span className='col-12'>
@@ -435,61 +435,58 @@ export default function JobApply({ job }) {
                           className='btn btn-link' />
                       </span>
                     } */}
-                  </Col>
-                </Row>
-                {/* Files End */}
-
-                <Row>
-                  <Col lg={6}>
-                    <BaseInput
-                      className=" col-12 mt-3"
-                      label={t("years_cdl_driving_experience")}
-                      placeholder={t("years_cdl_driving_experience")}
-                      name="cdl_experience"
-                      type="number"
-                      min={0}
-                      value={apply_form.values.cdl_experience}
-                      touched={apply_form.touched.cdl_experience}
-                      error={apply_form.errors.cdl_experience}
-                      onKeyDown={preventNegative}
-                      onChange={apply_form.handleChange}
-                      handleBlur={apply_form.handleBlur}
-                    />
-                  </Col>
-                  <Col lg={6}>
-                    <BaseInput
-                      className=" col-12 mt-3"
-                      label={t("voilations_in_last_3_years")}
-                      placeholder={t("voilations_in_last_3_years")}
-                      name="voilations"
-                      type="number"
-                      min={0}
-                      value={apply_form.values.voilations}
-                      touched={apply_form.touched.voilations}
-                      error={apply_form.errors.voilations}
-                      onKeyDown={preventNegative}
-                      onChange={apply_form.handleChange}
-                      handleBlur={apply_form.handleBlur}
-                    />
-                  </Col>
-                </Row>
-
-                <Row>
-                  <Col lg={6}>
-                    <BaseCheck
-                      className="col-12 mt-4"
-                      label={t("can_pass_drug_and_alcohol_test")}
-                      name="drug_test"
-                      checked={apply_form.values.drug_test}
-                      onChange={apply_form.handleChange}
-                      handleBlur={apply_form.handleBlur}
-                      touched={apply_form.touched.drug_test}
-                      error={apply_form.errors.drug_test}
-                    />
-                  </Col>
-                </Row>
-
-                {/* //To Do - Either will be able to create new account or not
+              </Col>
+            </Row>
+            {/* Files End */}
+            <Row>
+              <Col lg={6}>
+                <BaseInput
+                  className=" col-12 mt-3"
+                  label={t("years_cdl_driving_experience")}
+                  placeholder={t("years_cdl_driving_experience")}
+                  name="cdl_experience"
+                  type="number"
+                  min={0}
+                  value={apply_form.values.cdl_experience}
+                  touched={apply_form.touched.cdl_experience}
+                  error={apply_form.errors.cdl_experience}
+                  onKeyDown={preventNegative}
+                  onChange={apply_form.handleChange}
+                  handleBlur={apply_form.handleBlur}
+                />
+              </Col>
+              <Col lg={6}>
+                <BaseInput
+                  className=" col-12 mt-3"
+                  label={t("voilations_in_last_3_years")}
+                  placeholder={t("voilations_in_last_3_years")}
+                  name="voilations"
+                  type="number"
+                  min={0}
+                  value={apply_form.values.voilations}
+                  touched={apply_form.touched.voilations}
+                  error={apply_form.errors.voilations}
+                  onKeyDown={preventNegative}
+                  onChange={apply_form.handleChange}
+                  handleBlur={apply_form.handleBlur}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={6}>
+                <BaseCheck
+                  className="col-12 mt-4"
+                  label={t("can_pass_drug_and_alcohol_test")}
+                  name="drug_test"
+                  checked={apply_form.values.drug_test}
+                  onChange={apply_form.handleChange}
+                  handleBlur={apply_form.handleBlur}
+                  touched={apply_form.touched.drug_test}
+                  error={apply_form.errors.drug_test}
+                />
+              </Col>
+            </Row>
+            {/* //To Do - Either will be able to create new account or not
                 {
                   !user &&
                   <>
@@ -539,20 +536,19 @@ export default function JobApply({ job }) {
                   </>
                 }
                  */}
-
-                <Row>
-                  <div className=" col-12">
-                    <p className='mx-3 mt-5'>{t('i_accept_{terms_and_condition}', { terms_and_condition: t('terms_and_condition') })}</p>
-                  </div>
-                </Row>
+            <Row>
+              <div className=" col-12">
+                <p className='mx-3 mt-5'>{t('i_accept_{terms_and_condition}', { terms_and_condition: t('terms_and_condition') })}</p>
               </div>
-              <div className="modal-footer mb-3">
-                <button type="submit" className="btn btn-primary w-100 p-lg-3 p-5">{t('submit')}</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+            </Row>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button type="submit" className='btn btn-primary w-100 p-lg-3 p-5'>
+              {t('submit')}
+            </Button>
+          </Modal.Footer>
+        </form>
+      </Modal>
 
       {/* <Modal show={!!pdfModel.name} onHide={() => hideModelHandler()}>
         <Modal.Header>
