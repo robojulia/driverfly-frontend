@@ -405,7 +405,7 @@ export default function Vehicle() {
               </Row>
               <Row className="mt-2">
                     <div className="col-12 border-0 text-end">
-                        <div className="col">
+                        <div className="col p-0">
                             <button type="submit" className={`btn btn-primary`} >
                             {t(id ? "UPDATE" : "CREATE")}
                             </button>

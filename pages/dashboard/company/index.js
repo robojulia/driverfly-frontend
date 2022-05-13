@@ -16,7 +16,7 @@ export default function Dashboard() {
             <div>
                 {/***Top Cards***/}
                 <Row>
-                    <h1>Company Profile Dashboard</h1>
+                    <h2>Company Profile Dashboard</h2>
                 </Row>
 
             </div>

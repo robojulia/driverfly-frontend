@@ -12,6 +12,7 @@ function BaseInputPhone({ required, className, label, handleBlur, placeholder, v
     <div className={className}>
       {label && <><label>{t(label)}{required ? "*" : ""}:</label><br /></>}
       <PhoneInput
+        onlyCountries={['us']}
         isValid={error ? false : true}
         inputProps={{
           name: { name },
