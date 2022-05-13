@@ -30,6 +30,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import ViewFileButton from './buttons/ViewFileButton'
 import { useContext } from "react"
 import jobDetailContext from '../context/jobDetailContext'
+import BaseInputPhone from "../components/forms/BaseInputPhone";
 
 export default function JobApply({ job }) {
 
@@ -318,6 +319,21 @@ export default function JobApply({ job }) {
                 />
               </Col>
               <Col lg={6}>
+                <BaseInputPhone
+                  className=" col-12 mt-3"
+                  label={t("contact_number")}
+                  placeholder={t("contact_number")}
+                  name="contact_number"
+                  type="tel"
+                  value={apply_form.values.contact_number}
+                  touched={apply_form.touched.contact_number}
+                  error={apply_form.errors.contact_number}
+                  onChange={(value, country, e, formattedValue) => { apply_form.setFieldValue('contact_number', formattedValue) }}
+                  handleBlur={(event, data) => { apply_form.setFieldValue('contact_number', event.target.value) }}
+                  onKeyDown={(event) => { apply_form.setFieldValue('contact_number', event.target.value) }}
+                />
+              </Col>
+              {/* <Col lg={6}>
                 <BaseInput
                   className=" col-12 mt-3"
                   label={t("contact_number")}
@@ -329,7 +345,7 @@ export default function JobApply({ job }) {
                   onChange={apply_form.handleChange}
                   handleBlur={apply_form.handleBlur}
                 />
-              </Col>
+              </Col> */}
             </Row>
             <Row>
               <Col lg={12}>
