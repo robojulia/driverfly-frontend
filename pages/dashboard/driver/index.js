@@ -112,16 +112,22 @@ export default function Dashboard() {
             <div className=''>
                 <Row>
                     <Col>
-                        <h2 className='font-weight-bold my-3'>{t("current_job")}</h2>
+                        {/* <h2 className='font-weight-bold my-3'>{t("current_job")}</h2> */}
                     </Col>
                 </Row>
                 <div className="table-responsive">
                     <table className="table table-borderless ">
                         <thead>
                             <tr>
-                                <th scope="col">{t("job_title")}</th>
-                                <th scope="col">{t("company")}</th>
-                                <th scope="col"></th>
+                                <th scope="col">
+                                    {t("cdl_class_type")}
+                                </th>
+                                <th scope="col">
+                                    {t("years_cdl_experience")}
+                                </th>
+                                <th scope="col">
+                                    {t("driver_license_number")}
+                                </th>
                                 <th scope="col"></th>
                                 <th scope="col"></th>
                             </tr>
@@ -131,15 +137,18 @@ export default function Dashboard() {
                                 <td>
                                     {t(`DriverLicenseType.${driver.license_type}`)}
                                 </td>
-                                <td>CR England</td>
                                 <td>
+                                    {driver.years_cdl_experience || 0}
+                                </td>
+                                <td>
+                                    {driver.license_number || "N/A"}
+                                </td>
+                                <td className="p-0">
                                     <Link href="/dashboard/driver/my-account">
                                         <button className={`text-white ${style.btn_blue}`}>{t("update_status")}</button>
                                     </Link>
                                 </td>
-                                <td>
-                                </td>
-                                <td>
+                                <td className="p-0">
                                     <Link href="/find-jobs">
                                         <button className={`text-white ${style.btn_blue}`}>{t("find_new_job")}</button>
                                     </Link>
