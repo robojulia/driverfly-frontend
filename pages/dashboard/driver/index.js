@@ -14,6 +14,7 @@ import { useTranslation } from "../../../hooks/useTranslation";
 import DashboardApi from "../../api/dashboard"
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
 import BaseApi from "../../api/_baseApi";
+import ApplicantApi from "../../api/applicant";
 
 export default function Dashboard() {
 
@@ -57,8 +58,9 @@ export default function Dashboard() {
 
     useEffect(async () => {
         getDashboardData()
-        const { data: driver } = await baseApi.get(`drivers`);
-        setDriver(driver)
+        const api = new ApplicantApi();
+        const applicant = await api.getByUserId();
+        setDriver(applicant);
     }, []);
 
     return (
@@ -129,7 +131,7 @@ export default function Dashboard() {
                         <tbody>
                             <tr>
                                 <td>
-                                    {t(`DriverLicenseType.${driver.license_type}`)}
+                                    {/* {t(`DriverLicenseType.${driver.license_type}`)} */}
                                 </td>
                                 <td>CR England</td>
                                 <td>

@@ -2,7 +2,7 @@ import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
-import { DriverEndorsement } from "../../enums/drivers/driver-endorsement.enum"
+import { DriverEndorsement } from "../../enums/users/driver-endorsement.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 
 export default function SpecialEndorsementsRequired() {

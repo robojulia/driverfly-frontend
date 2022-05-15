@@ -1,4 +1,4 @@
-import { DriverDegree } from "../../enums/drivers/driver-degree.enum";
+import { EducationLevel } from "../../enums/users/education-level.enum";
 import { ApplicantDocumentDto } from "./application-document.dto";
 
 export interface ApplyJobDto {
@@ -35,7 +35,7 @@ export interface ApplyJobDto {
 
     /**
      * @IsOptional
-     * @enum {DriverDegree}
+     * @enum {EducationLevel}
      */
     highest_degree?: string;
 
