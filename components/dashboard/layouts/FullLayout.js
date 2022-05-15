@@ -5,7 +5,7 @@ import Sidebar from "./sidebars/Sidebar";
 import Head from "next/head";
 
 import { useTranslation } from "../../../hooks/useTranslation";
-import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, FileEarmarkMedicalFill, CheckSquareFill, GiftFill, GearFill } from 'react-bootstrap-icons';
+import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, BellFill, SearchHeartFill, CheckSquareFill, GiftFill, GearFill, ShareFill } from 'react-bootstrap-icons';
 
 
 // driver layout
@@ -75,6 +75,21 @@ const FullLayout = ({ children }) => {
           pathname: "/dashboard/driver/settings/applicant",
           icon: FileEarmarkFill,
           text: "my_application",
+        },
+        {
+          pathname: "/dashboard/driver/settings/communication",
+          icon: BellFill,
+          text: "COMMUNICATION",
+        },
+        {
+          pathname: "/dashboard/driver/settings/sharing",
+          icon: ShareFill,
+          text: "SHARING",
+        },
+        {
+          pathname: "/dashboard/driver/settings/matching",
+          icon: SearchHeartFill,
+          text: "JOB_MATCHING",
         },
       ],
     },
