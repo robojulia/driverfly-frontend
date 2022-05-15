@@ -184,7 +184,7 @@
     "onboard_devices": "Onboard devices/subscriptions (ex. Netflix, Rand McNally, etc.)",
     "pets_allowed": "Pets allowed",
     "other": "Other",
-    "DriverDegree": {
+    "EducationLevel": {
         "HIGH_SCHOOL": "High school",
         "BACHELOR": "Bachelor",
         "MASTER": "Master",
@@ -808,5 +808,6 @@
         "ASK": "Depending on company"
     },
     "SHARING": "Sharing",
-    "SHARE_PAST_EMPLOYMENT": "Share past employers?"
+    "SHARE_PAST_EMPLOYMENT": "Share past employers?",
+    "PREFERRED_EMPLOYMENT_TYPE": "Preferred employment type"
 }

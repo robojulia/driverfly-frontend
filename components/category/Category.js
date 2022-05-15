@@ -1,7 +1,7 @@
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
-import { DriverLicenseType } from "../../enums/drivers/driver-license-type.enum"
+import { DriverLicenseType } from "../../enums/users/driver-license-type.enum"
 
 export default function Category() {
 

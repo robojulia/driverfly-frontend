@@ -1,6 +1,6 @@
-import { DriverEndorsement } from '../../enums/drivers/driver-endorsement.enum';
-import { DriverDegree } from '../../enums/drivers/driver-degree.enum';
-import { DriverLicenseType } from '../../enums/drivers/driver-license-type.enum';
+import { DriverEndorsement } from '../../enums/users/driver-endorsement.enum';
+import { EducationLevel } from '../../enums/users/education-level.enum';
+import { DriverLicenseType } from '../../enums/users/driver-license-type.enum';
 import { JobBenefits } from '../../enums/jobs/job-benefits.enum';
 import { JobDeliveryType } from '../../enums/jobs/job-delivery-type.enum';
 import { JobEquipmentType } from '../../enums/jobs/job-equipment-type.enum';
@@ -52,7 +52,7 @@ export interface JobEntity {
   vehicles?: VehicleEntity[];
   cdl_class?: DriverLicenseType[];
   min_years_experience?: number;
-  min_degree?: DriverDegree;
+  min_degree?: EducationLevel;
   required_skills?: JobSkillEntity[];
   required_skills_other?: string;
   required_equipment?: JobEquipmentEntity[];

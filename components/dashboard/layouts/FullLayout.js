@@ -23,21 +23,6 @@ const FullLayout = ({ children }) => {
       text: "dashboard"
     },
     {
-      pathname: "/dashboard/driver/my-account",
-      icon: PersonFill,
-      text: "my_account",
-    },
-    // {
-    //   pathname: "/dashboard/driver/my-application",
-    //   icon: FileEarmarkFill,
-    //   text: "my_application"
-    // },
-    // {
-    //   pathname: "/dashboard/driver/my-docs",
-    //   icon: FileEarmarkMedicalFill,
-    //   text: "my_docs"
-    // },
-    {
       pathname: "/find-jobs",
       icon: Search,
       text: "find_new_job"

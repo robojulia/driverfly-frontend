@@ -1,4 +1,4 @@
-import { DriverLicenseType } from "../../enums/drivers/driver-license-type.enum";
+import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
 import { LocationEntity } from "../../models/company/location.entity";
 import VehicleEntity from "../../models/company/vehicle.entity";
 import { JobEntity } from "../../models/job/job.entity";

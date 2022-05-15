@@ -69,10 +69,8 @@ export default function Sharing() {
                         .entries(values)
                         .map(async ([key, preference]) => {
                             if (preference.value) {
-                                if (preference.value !== form.initialValues[key].value) {
-                                    if (preference.id) preference = await api.preferences.update(user.id, preference.id, preference);
-                                    else preference = await api.preferences.create(user.id, preference);
-                                }
+                                if (preference.id) preference = await api.preferences.update(user.id, preference.id, preference);
+                                else preference = await api.preferences.create(user.id, preference);
                             }
                             else if (preference.id) {
                                 await api.preferences.remove(user.id, preference.id);
