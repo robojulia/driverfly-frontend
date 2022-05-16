@@ -38,11 +38,11 @@ import { counts, years } from "../../../../utils/jobs";
 
 import { preventNegative, positiveInt } from "../../../../utils/input";
 
-import { DriverDegree } from "../../../../enums/drivers/driver-degree.enum";
-import { DriverLicenseType } from "../../../../enums/drivers/driver-license-type.enum";
-import { DriverEndorsement } from "../../../../enums/drivers/driver-endorsement.enum";
-import { MvrType } from "../../../../enums/drivers/mvr-type.enum"
-import { CriminalHistoryType } from "../../../../enums/drivers/criminal-history-type.enum"
+import { EducationLevel } from "../../../../enums/users/education-level.enum";
+import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
+import { DriverEndorsement } from "../../../../enums/users/driver-endorsement.enum";
+import { MvrType } from "../../../../enums/users/mvr-type.enum"
+import { CriminalHistoryType } from "../../../../enums/users/criminal-history-type.enum"
 
 import { VehicleType } from "../../../../enums/vehicles/vehicle-type.enum";
 import { VehicleTransmissionType } from "../../../../enums/vehicles/vehicle-transmission-type.enum";
@@ -288,7 +288,7 @@ export default function Job() {
                     .enum(DriverLicenseType)
             ),
             min_years_experience: yup.number().required().min(0).nullable(),
-            min_degree: yup.string().enum(DriverDegree).nullable(),
+            min_degree: yup.string().enum(EducationLevel).nullable(),
             required_skills: yup.array(yup.object({
                 type: yup.string().required().nullable(),
                 years: yup.number().min(1).required().nullable(),
@@ -1641,8 +1641,8 @@ export default function Job() {
                                     handleBlur={form.handleBlur}
                                     touched={form.touched.min_degree}
                                     error={form.errors.min_degree}
-                                    labelPrefix="DriverDegree"
-                                    enumType={DriverDegree}
+                                    labelPrefix="EducationLevel"
+                                    enumType={EducationLevel}
                                 />
                                 <div className="col-12 p-0">
                                     <label>{t("required_skills")}:</label>

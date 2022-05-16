@@ -5,7 +5,7 @@ import { JobDeliveryType } from "../../enums/jobs/job-delivery-type.enum";
 import { JobEquipmentType } from "../../enums/jobs/job-equipment-type.enum";
 import { JobSchedule } from "../../enums/jobs/job-schedule.enum";
 import { JobPayMethod } from "../../enums/jobs/job-pay-method.enum";
-import { MvrType } from "../../enums/drivers/mvr-type.enum";
+import { MvrType } from "../../enums/users/mvr-type.enum";
 import timeSince from "../../utils/timeSince";
 import ShowEnumFromString from "../../components/enum-filters/show-enum-from-string"
 import { useContext } from "react"

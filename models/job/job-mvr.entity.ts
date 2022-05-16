@@ -1,4 +1,4 @@
-import { MvrType } from '../../enums/drivers/mvr-type.enum';
+import { MvrType } from '../../enums/users/mvr-type.enum';
 
 export interface JobMvrEntity {
   type?: MvrType;

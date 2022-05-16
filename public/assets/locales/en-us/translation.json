@@ -184,7 +184,7 @@
     "onboard_devices": "Onboard devices/subscriptions (ex. Netflix, Rand McNally, etc.)",
     "pets_allowed": "Pets allowed",
     "other": "Other",
-    "DriverDegree": {
+    "EducationLevel": {
         "HIGH_SCHOOL": "High school",
         "BACHELOR": "Bachelor",
         "MASTER": "Master",
@@ -794,5 +794,20 @@
     },
     "YEARS": "Years",
     "MY_ACCOUNT": "My Account",
-    "APPLICANT_INFO_DESCRIPTION": "This is the information which will be submitted to a company when you apply to a job"
+    "APPLICANT_INFO_DESCRIPTION": "This is the information which will be submitted to a company when you apply to a job",
+    "COMMUNICATION": "Communication",
+    "JOB_MATCHING": "Job Matching",
+    "CommunicationMethod": {
+        "TEXT": "Text",
+        "CALL": "Call",
+        "EMAIL": "Email"
+    },
+    "SharePreference": {
+        "NEVER": "Never",
+        "ALWAYS": "Always",
+        "ASK": "Depending on company"
+    },
+    "SHARING": "Sharing",
+    "SHARE_PAST_EMPLOYMENT": "Share past employers?",
+    "PREFERRED_EMPLOYMENT_TYPE": "Preferred employment type"
 }

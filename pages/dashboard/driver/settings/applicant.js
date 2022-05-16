@@ -7,10 +7,10 @@ import { ApplicantEquipmentEntity } from "../../../../models/applicant/applicant
 import { ApplicantExperienceEntity } from "../../../../models/applicant/applicant-experience.entity";
 import { DocumentEntity } from "../../../../models/documents/document.entity";
 
-import { DriverLicenseType } from "../../../../enums/drivers/driver-license-type.enum";
+import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
 import { VehicleTransmissionType } from "../../../../enums/vehicles/vehicle-transmission-type.enum";
-import { DriverEndorsement } from "../../../../enums/drivers/driver-endorsement.enum";
-import { DriverDegree } from "../../../../enums/drivers/driver-degree.enum";
+import { DriverEndorsement } from "../../../../enums/users/driver-endorsement.enum";
+import { EducationLevel } from "../../../../enums/users/education-level.enum";
 import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-document-type.enum";
 import { JobEquipmentType } from "../../../../enums/jobs/job-equipment-type.enum";
 
@@ -266,8 +266,8 @@ export default function Applicant() {
                                     name="highest_degree"
                                     placeholder="HIGHEST_DEGREE"
                                     formik={form}
-                                    labelPrefix="DriverDegree"
-                                    enumType={DriverDegree}
+                                    labelPrefix="EducationLevel"
+                                    enumType={EducationLevel}
                                 />
                                 <Col xs="12" className='mt-2'>
                                     <ViewCard title="EMERGENCY_CONTACT">

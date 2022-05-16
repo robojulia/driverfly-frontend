@@ -1,0 +1,9 @@
+export enum UserPreferenceMatchingLabel {
+    GEOGRAPHY = "GEOGRAPHY",
+    SCHEDULE = "SCHEDULE",
+    EMPLOYMENT_TYPE = "EMPLOYMENT_TYPE",
+    TEAM_DRIVERS = "TEAM_DRIVERS",
+    MIN_PAY = "MIN_PAY",
+    PAY_METHOD = "PAY_METHOD",
+    BENEFITS = "BENEFITS"
+}

@@ -2,16 +2,16 @@ import { UserEntity } from '../user/user.entity';
 import { CompanyEntity } from '../company/company.entity';
 import { DocumentEntity } from '../documents/document.entity';
 import { ApplicantExperienceEntity } from './applicant-experience.entity';
-import { DriverLicenseType } from '../../enums/drivers/driver-license-type.enum';
+import { DriverLicenseType } from '../../enums/users/driver-license-type.enum';
 import { ApplicantEquipmentEntity } from './applicant-equipment.entity';
-import { DriverDegree } from '../../enums/drivers/driver-degree.enum';
+import { EducationLevel } from '../../enums/users/education-level.enum';
 import { ApplicantEmployerEntity } from './applicant-employer.entity';
 import { ApplicantNoteEntity } from './applicant-note.entity';
 import { ApplicantType } from '../../enums/applicants/applicant-type.enum';
 import { ApplicantJobEntity } from './applicant-job.entity';
 import * as yup from "yup";
 import { VehicleTransmissionType } from '../../enums/vehicles/vehicle-transmission-type.enum';
-import { DriverEndorsement } from '../../enums/drivers/driver-endorsement.enum';
+import { DriverEndorsement } from '../../enums/users/driver-endorsement.enum';
 import { ApplicantDocumentType } from '../../enums/applicants/applicant-document-type.enum';
 
 export class ApplicantEntity {
@@ -38,7 +38,7 @@ export class ApplicantEntity {
   is_owner_operator?: boolean = false;
   transmission_type?: VehicleTransmissionType[] = [];
   endorsements?: DriverEndorsement[] = [];
-  highest_degree?: DriverDegree;
+  highest_degree?: EducationLevel;
   authorized_to_work_in_us?: boolean = false;
   emergency_contact_name?: string;
   emergency_contact_number?: string;
@@ -89,7 +89,7 @@ export class ApplicantEntity {
         endorsements: yup.array(
           (yup.string() as any).enum(DriverEndorsement)
         ).nullable(),
-        highest_degree: (yup.string() as any).enum(DriverDegree).nullable(),
+        highest_degree: (yup.string() as any).enum(EducationLevel).nullable(),
         authorized_to_work_in_us: yup.bool().nullable(),
         emergency_contact_name: yup.string().nullable(),
         emergency_contact_number: yup.string().nullable(),
