@@ -4,6 +4,7 @@ import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import { DriverEndorsement } from "../../enums/users/driver-endorsement.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
+import { ChevronDown } from "react-bootstrap-icons"
 
 export default function SpecialEndorsementsRequired() {
 
@@ -17,8 +18,7 @@ export default function SpecialEndorsementsRequired() {
           <h4 className="clearfix mb-0">
             <a className="btn-3 btn-link" data-toggle="collapse"
               data-target="#collapsesixty" aria-expanded="true"
-              aria-controls="collapsesixty">Special Endorsements Required<i
-                className="fa fa-angle-down"></i></a>
+              aria-controls="collapsesixty">Special Endorsements Required <ChevronDown/></a>
           </h4>
         </div>
         <div id="collapsesixty" className="collapse show"

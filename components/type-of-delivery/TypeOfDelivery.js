@@ -4,6 +4,8 @@ import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import { JobDeliveryType } from "../../enums/jobs/job-delivery-type.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
+import { ChevronDown } from "react-bootstrap-icons"
+
 
 export default function TypeOfDelivery() {
 
@@ -17,8 +19,7 @@ export default function TypeOfDelivery() {
           <h4 className="clearfix mb-0">
             <a className="btn-3 btn-link" data-toggle="collapse"
               data-target="#collapseTypeofDelivery" aria-expanded="true"
-              aria-controls="collapseTypeofDelivery">Type of Delivery <i
-                className="fa fa-angle-down"></i></a>
+              aria-controls="collapseTypeofDelivery">Type of Delivery < ChevronDown/></a>
           </h4>
         </div>
         <div id="collapseTypeofDelivery" className="collapse show" aria-labelledby="headingSix"

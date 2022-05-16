@@ -68,7 +68,6 @@ export default function About()
                         </div>
                         <div className="col-md-4">
                             <div className="card">
-                                {/* <i className="fa fa-paper-plane" aria-hidden="true"></i> */}
                                 < CheckSquare />
                                 <div className="card-body px-0">
                                     <h5 className="card-title">Save & Apply</h5>
@@ -140,51 +139,6 @@ export default function About()
                 <div className="container">
                     <h2 className="text-center">What Drivers Say About Us</h2>
                     < Slider />
-                    {/* <div className="row owl-carousel owl-theme d-block">
-
-                                <div className="item">
-                                    <div className="box">
-                                        <i className="fa fa-quote-left" aria-hidden="true"></i>
-                                        <img src="img/Robert-Driver.jpg" alt="" className="" />
-                                        <h3>Robert Richards</h3>
-                                        <span className="job text-theme">Tanker Hauler</span>
-                                        <div className="description">Thanks guys you're awesome. Got a job and got moving in less than a week.</div>
-                                    </div>
-                                </div>
-
-
-                            <div className="item">
-                                <div className="box">
-                                    <i className="fa fa-quote-left" aria-hidden="true"></i>
-                                    <img src="img/Lydia-Driver2.jpg" alt="" className="" />
-                                    <h3>Lydia Wright</h3>
-                                    <span className="job text-theme">Team Driver - OTR</span>
-                                    <div className="description">This site is amazing. I found my team driver through here as well as my first job out of CDL School.</div>
-                                </div>
-                            </div>
-
-
-                            <div className="item">
-                                <div className="box">
-                                    <i className="fa fa-quote-left" aria-hidden="true"></i>
-                                    <h3>Bill Townson</h3>
-                                    <span className="job text-theme">OTR Driver</span>
-                                    <div className="description">This is the best job-board I've used so far. It was easy to use and I was able to get a job in just days. Love that it's specific to the trucking industry.</div>
-                                </div>
-                            </div>
-
-
-                            <div className="item">
-                                <div className="box">
-                                    <i className="fa fa-quote-left" aria-hidden="true"></i>
-                                    <h3>Jose Miguel</h3>
-                                    <span className="job text-theme">CDL Driver</span>
-                                    <div className="description">you guys rock thanks for answering my questions</div>
-                                </div>
-                            </div>
-
-
-                    </div> */}
                        <div className="row mt-5">
                            <div className="col-md-12">
                                <div className="partners">

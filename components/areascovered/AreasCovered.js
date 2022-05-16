@@ -4,6 +4,7 @@ import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import { JobGeography } from "../../enums/jobs/job-geography.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
+import { ChevronDown } from "react-bootstrap-icons"
 
 export default function AreasCovered() {
 
@@ -17,8 +18,7 @@ export default function AreasCovered() {
           <h4 className="clearfix mb-0">
             <a className="btn-3 btn-link" data-toggle="collapse"
               data-target="#collapseNine" aria-expanded="true"
-              aria-controls="collapseNine">Areas Covered<i
-                className="fa fa-angle-down"></i></a>
+              aria-controls="collapseNine">Areas Covered <ChevronDown /> </a>
           </h4>
         </div>
         <div id="collapseNine" className="collapse show"
