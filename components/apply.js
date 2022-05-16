@@ -341,7 +341,7 @@ export default function JobApply({ job }) {
                   name="contact_number"
                   value={apply_form.values.contact_number}
                   touched={apply_form.touched.contact_number}
-                  error={apply_form.errors.contact_number}
+                  error={ .errors.contact_number}
                   onChange={apply_form.handleChange}
                   handleBlur={apply_form.handleBlur}
                 />
