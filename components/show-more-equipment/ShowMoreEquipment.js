@@ -1,3 +1,4 @@
+import { ChevronDown } from 'react-bootstrap-icons'
 import Read from '../equipment-show-more/readmore'
 export default function ShowMoreEquipment () {
   return (
@@ -8,8 +9,7 @@ export default function ShowMoreEquipment () {
           <h4 className="clearfix mb-0">
             <a className="btn-3 btn-link" data-toggle="collapse"
               data-target="#collapseseemore" aria-expanded="true"
-              aria-controls="collapseseemore">Equipment Type<i
-                className="fa fa-angle-down"></i></a>
+              aria-controls="collapseseemore">Equipment Type< ChevronDown /></a>
           </h4>
         </div>
         <div id="collapseseemore" className="collapse show"

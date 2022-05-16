@@ -5,6 +5,8 @@ import jobContext from "../../context/jobContext"
 import { employment_type } from "../../enums/jobs/job-fields"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
+import { ChevronDown } from "react-bootstrap-icons"
+
 
 export default function EmploymentType() {
 
@@ -18,8 +20,7 @@ export default function EmploymentType() {
           <h4 className="clearfix mb-0">
             <a className="btn-3 btn-link" data-toggle="collapse"
               data-target="#collapseEmployment" aria-expanded="true"
-              aria-controls="collapseEmployment">Employment Type <i
-                className="fa fa-angle-down"></i></a>
+              aria-controls="collapseEmployment">Employment Type <ChevronDown /></a>
           </h4>
         </div>
         <div id="collapseEmployment" className="collapse show" aria-labelledby="headingSix"

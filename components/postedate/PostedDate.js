@@ -4,6 +4,7 @@ import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import moment from "moment"
+import { ChevronDown } from "react-bootstrap-icons"
 
 export default function DatePosted() {
 
@@ -40,8 +41,7 @@ export default function DatePosted() {
           <h4 className="clearfix mb-0">
             <a className="btn-3 btn-link" data-toggle="collapse"
               data-target="#collapseSix" aria-expanded="true"
-              aria-controls="collapseSix">Date Posted <i
-                className="fa fa-angle-down"></i></a>
+              aria-controls="collapseSix">Date Posted < ChevronDown /></a>
           </h4>
         </div>
         <div id="collapseSix" className="collapse show" aria-labelledby="headingSix"

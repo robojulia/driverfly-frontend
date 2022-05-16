@@ -4,6 +4,7 @@ import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import { JobPayMethod } from "../../enums/jobs/job-pay-method.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
+import { ChevronDown } from "react-bootstrap-icons"
 
 export default function PayStructure() {
 
@@ -18,8 +19,7 @@ export default function PayStructure() {
           <h4 className="clearfix mb-0">
             <a className="btn-3 btn-link" data-toggle="collapse"
               data-target="#collapseFour" aria-expanded="true"
-              aria-controls="collapseFour">Pay Structure <i
-                className="fa fa-angle-down"></i></a>
+              aria-controls="collapseFour">Pay Structure <ChevronDown /></a>
           </h4>
         </div>
         <div id="collapseFour" className="collapse show"

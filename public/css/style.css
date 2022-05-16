@@ -310,8 +310,14 @@ li:hover ul {
     color: #1a1a1a !important;
 }
 
-.tab-content i.fa.fa-angle-down {
-    color: #cbcbcb;
+.tab-content svg {
+    color: #000000;
+    font-size: 15px;
+    margin-top: 10px;
+    
+}
+.tab-content:hover svg {
+    fill: #000000;
     
 }
 .fa-angle-down:before {

@@ -4,6 +4,7 @@ import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import { MvrType } from "../../enums/users/mvr-type.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
+import { ChevronDown } from "react-bootstrap-icons"
 
 export default function MvrRequirement() {
 
@@ -17,8 +18,7 @@ export default function MvrRequirement() {
           <h4 className="clearfix mb-0">
             <a className="btn-3 btn-link" data-toggle="collapse"
               data-target="#collapsesedventy" aria-expanded="true"
-              aria-controls="collapsesedventy">MVR Requirements<i
-                className="fa fa-angle-down"></i></a>
+              aria-controls="collapsesedventy">MVR Requirements < ChevronDown /></a>
           </h4>
         </div>
         <div id="collapsesedventy" className="collapse show"

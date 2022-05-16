@@ -4,6 +4,8 @@ import RangeSlider from 'react-bootstrap-range-slider';
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import { AsyncTypeahead } from 'react-bootstrap-typeahead'; // ES2015
+import { ChevronDown} from 'react-bootstrap-icons'
+
 
 
 export default function Range() {
@@ -54,7 +56,7 @@ export default function Range() {
                             data-target="#collapseTwo" aria-expanded="true"
                             aria-controls="collapseTwo">
                             Location
-                            <i className="fa fa-angle-down"></i>
+                           < ChevronDown />
                         </a>
                     </h4>
                 </div>

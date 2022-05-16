@@ -26,7 +26,6 @@ export default function FAQ() {
                                     <div className="input-group shadow-sm faq_search">
                                         <input type="text" placeholder="Search" name="s" className="form-control border-0  p-4 " />
                                         <span className="input-group-btn"> <button type="submit" className="btn btn-sm btn-search">
-                                            {/* <i className="fa fa-search" aria-hidden="true"></i> */}
                                             < Search />
                                             </button> </span>
                                         <input type="hidden" name="post_type" value="post" className="post_type p-4" />

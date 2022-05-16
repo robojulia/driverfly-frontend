@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import Head from "next/head";
 import Layout from "../components/layouts";
 import resource from '../public/css/Resources.module.css'
+import Breadcrumbs from 'nextjs-breadcrumbs';
+
 
 export default function Resources()
 {
@@ -398,15 +400,11 @@ export default function Resources()
             <Head>
                 <title>Trucking Industry Resources</title>
             </Head>
-
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
                         <h2>Trucking Industry Resources</h2>
-                        <ul className="d-flex">
-                            <li><a href="index.html" className="nav-link text-dark px-0">Home <i className="fa fa-caret-right px-2" aria-hidden="true"></i></a></li>
-                            <li><a href="#" className="nav-link text-dark px-0">Trucking Industry Resources</a></li>
-                        </ul>
+                        < Breadcrumbs />
                     </div>
                 </div>
             </div>
