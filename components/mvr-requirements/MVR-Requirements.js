@@ -2,7 +2,7 @@ import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
-import { MvrType } from "../../enums/drivers/mvr-type.enum"
+import { MvrType } from "../../enums/users/mvr-type.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 
 export default function MvrRequirement() {

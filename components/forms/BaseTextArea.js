@@ -21,10 +21,9 @@ function BaseTextArea({ formik, required, className, maxLength, label, rows, pla
 
   return (
     <div className={className}>
-      {label && <label>{t(label)}{required ? "*" : ""}:</label>}
-      <br />
+      {label && <><label>{t(label)}{required ? "*" : ""}:</label><br /></>}
       <textarea
-        placeholder={placeholder}
+        placeholder={t(placeholder)}
         value={value || ""}
         rows={rows}
         maxLength={maxLength}

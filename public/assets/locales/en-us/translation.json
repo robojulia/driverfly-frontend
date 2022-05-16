@@ -2,6 +2,7 @@
     "applied_jobs": "Applied Jobs",
     "apply": "Apply",
     "apply_now": "Apply Now",
+    "apply_with": "OR apply with",
     "apply_for_this_job": "Apply for this job",
     "job_applied_success_message": "Your application has been submitted successfully",
     "job_applied_failure_message": "Your application can not be submitted",
@@ -19,8 +20,13 @@
     "find_new_job": "Find New Job",
     "preferred_geography": "Preferred Geography",
     "job_title": "Job Title",
+    "job_information": "Job Information",
+    "job_description": "Job Description",
+    "offered_salary": "Offered Salary",
+    "areas_covered": "Areas Covered",
     "new_offers": "New Offers",
     "past_jobs": "Past Jobs",
+    "pay_method": "Pay Method",
     "preferred_pay_method": "Preferred Pay Method",
     "reject": "Reject",
     "review": "Review",
@@ -177,7 +183,7 @@
     "onboard_devices": "Onboard devices/subscriptions (ex. Netflix, Rand McNally, etc.)",
     "pets_allowed": "Pets allowed",
     "other": "Other",
-    "DriverDegree": {
+    "EducationLevel": {
         "HIGH_SCHOOL": "High school",
         "BACHELOR": "Bachelor",
         "MASTER": "Master",
@@ -207,6 +213,7 @@
     "voilations_in_last_3_years": "Number of moving violations in the last 3 years",
     "this_field_is_required": "This field is required",
     "{name}_field_is_required": "{{name}} is required",
+    "{name}_must_not_be_greater_than_{length}_characters": "{{name}} must not be greater than {{length}} characters",
     "{name}_file_must_be_{file}": "{{name}} must be of type {{file}}",
     "pdf": "PDF",
     "UNRECOGNIZED_DOCUMENT_TYPE": "UNRECOGNIZED DOCUMENT TYPE",
@@ -792,5 +799,32 @@
         "APPLICANT_ALREADY_APPLIED": "You have already applied to this job",
         "JOB_NOT_FOUND": "Unable to find job",
         "APPLICANT_NOT_FOUND": "Unable to find applicant"
-    }
+    },
+    "{hours}_HOURS_AGO": "{{hours}} hrs ago",
+    "{minutes}_MINUTES_AGO": "{{minutes}} mins ago",
+    "{seconds}_SECONDS_AGO": "{{seconds}} secs ago",
+    "YESTERDAY": "Yesterday",
+    "CREATE_NEW_MESSAGE": "Create New Message",
+    "START_TYPING_TO_SEE_OPTIONS": "Start typing to see options",
+    "TYPE_AT_LEAST_{num}_CHARACTERS_TO_SEE_OPTIONS": "Type at least {{num}} characters to see options",
+    "NO_MATCHING_RESULTS": "No matching results",
+    "CONVERSATIONS": "Conversations",
+    "MESSAGE": "Message",
+    "SEND": "Send",
+    "JUST_NOW": "Just now",
+    "COMMUNICATION": "Communication",
+    "JOB_MATCHING": "Job Matching",
+    "CommunicationMethod": {
+        "TEXT": "Text",
+        "CALL": "Call",
+        "EMAIL": "Email"
+    },
+    "SharePreference": {
+        "NEVER": "Never",
+        "ALWAYS": "Always",
+        "ASK": "Depending on company"
+    },
+    "SHARING": "Sharing",
+    "SHARE_PAST_EMPLOYMENT": "Share past employers?",
+    "PREFERRED_EMPLOYMENT_TYPE": "Preferred employment type"
 }

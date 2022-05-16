@@ -166,10 +166,10 @@ export default function Settings() {
         <Row>
           <h2>{t("COMPANY")}</h2>
         </Row>
-        <div className='container-fluid'>
+        <div className='container-fluid p-0'>
           <div className="modal-header border-0">
           </div>
-          <form className="modal-body" onSubmit={form.handleSubmit} >
+          <form className="modal-body p-0" onSubmit={form.handleSubmit} >
             <Row>
               <BaseInput
                 className="col-12"
@@ -221,7 +221,7 @@ export default function Settings() {
                   />
             </Row>
             <Row className="mt-2">
-                <div className="col-12 border-0 text-end">
+                <div className="col-12 border-0 text-right">
                     <div className="col">
                         <button type="submit" className={`btn btn-primary`} >
                         {t("UPDATE")}

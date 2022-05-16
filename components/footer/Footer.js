@@ -7,6 +7,7 @@ import QuickLinks from "./Quick-Links";
 import Logo from "./Logo";
 import CopyRight from "./Copy-Right";
 
+
 export default function Footer() {
     return (
         <>

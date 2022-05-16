@@ -1,4 +1,4 @@
-import { CriminalHistoryType } from '../../enums/drivers/criminal-history-type.enum';
+import { CriminalHistoryType } from '../../enums/users/criminal-history-type.enum';
 
 export interface JobCriminalEntity {
   type?: CriminalHistoryType;

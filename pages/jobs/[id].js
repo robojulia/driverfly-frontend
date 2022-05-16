@@ -1,4 +1,5 @@
 import { useRouter } from "next/router"
+import { useState } from "react"
 import axios from "axios"
 import JobApply from "../../components/apply"
 import JobDescription from '../../components/job-description/JobDescription'
@@ -13,15 +14,19 @@ import Link from 'next/link'
 import { useTranslation } from "../../hooks/useTranslation"
 import JobApi from "../api/job"
 import CompanyPhoto from "../../components/jobs/company-photo"
-
+import jobDetailContext from "../../context/jobDetailContext"
 import StructuredData from "../../components/seo/StructuredData"
-import { ArrowRight } from "react-bootstrap-icons"
+import { ArrowRight, GeoAltFill, CurrencyDollar } from "react-bootstrap-icons"
 import { buildAddress } from "../../utils/common"
 
 export default function Detail({ jobDetail, relatedJobs }) {
 
   const router = useRouter()
   const { t } = useTranslation();
+
+  const [showApplyModal, setShowApplyModal] = useState(false);
+  const handleCloseApplyModal = () => setShowApplyModal(false);
+  const handleShowApplyModal = () => setShowApplyModal(true);
 
   return (
     <>
@@ -72,7 +77,20 @@ export default function Detail({ jobDetail, relatedJobs }) {
                           </p>
                         }
                       </div>
-                      <p><i className="fa fa-usd mr-1" aria-hidden="true"></i>{jobDetail.min_weekly_pay ? jobDetail.min_weekly_pay : 0} - {jobDetail.max_weekly_pay ? jobDetail.max_weekly_pay : 0} {t('per week')}</p>
+                      <div className="job-metas">
+                        <div className="job-location d-flex align-items-center">
+                          {
+                            jobDetail.location &&
+                            <p className="pr-4">
+                              < GeoAltFill  className="mr-1"/>
+                              <>
+                                {jobDetail.location.street || t('no_street')}, {jobDetail.location.city || t('no_city')}, {jobDetail.location.state || t('no_state')}, {jobDetail.location.zip_code || t('no_zip')}
+                              </>
+                            </p>
+                          }
+                        </div>
+                        <p><CurrencyDollar />{jobDetail.min_weekly_pay ? jobDetail.min_weekly_pay : 0} - {jobDetail.max_weekly_pay ? jobDetail.max_weekly_pay : 0} {t('per week')}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -87,22 +105,22 @@ export default function Detail({ jobDetail, relatedJobs }) {
             </div>
           </div>
         </div>
-      </section>
 
-      <div className="job-deatails-sec">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-8">
-              < JobDescription job={jobDetail} />
-              < SocilShare />
-              < RelatedJobs jobs={relatedJobs} />
-            </div>
-            <div className="col-lg-4">
-              < JonInformation job={jobDetail} />
+        <div className="job-deatails-sec">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-8">
+                < JobDescription job={jobDetail} />
+                < SocilShare />
+                < RelatedJobs jobs={relatedJobs} />
+              </div>
+              <div className="col-lg-4">
+                < JonInformation job={jobDetail} />
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </>
   )
 }

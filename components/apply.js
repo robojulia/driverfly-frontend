@@ -10,7 +10,7 @@ import FileInput from "./forms/FileInput";
 import { preventNegative } from "../utils/input"
 import BaseCheck from './forms/BaseCheck'
 import { Col, Row, Table } from 'react-bootstrap'
-import { DriverDegree } from '../enums/drivers/driver-degree.enum'
+import { EducationLevel } from '../enums/users/education-level.enum'
 import Button from "react-bootstrap/Button"
 
 import { ApplicantEntity } from '../models/applicant/applicant.entity'
@@ -28,6 +28,7 @@ export default function JobApply({ job }) {
   const { authCheck } = useAuth();
   const user = authCheck()
   const { t } = useTranslation();
+
   const jobApi = new JobApi();
 
   const apply_form = useFormik({
@@ -143,8 +144,8 @@ export default function JobApply({ job }) {
                 label="highest_degree"
                 placeholder="highest_degree"
                 name="highest_degree"
-                enumType={DriverDegree}
-                labelPrefix="DriverDegree"
+                enumType={EducationLevel}
+                labelPrefix="EducationLevel"
                 formik={apply_form}
               />
           </Row>
