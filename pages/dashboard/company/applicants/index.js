@@ -289,9 +289,9 @@ export default function Applicants(props) {
 
             <div>
                 {/***Top Cards***/}
-                <Row>
+                <Col>
                     <h2>{t("APPLICANTS")}</h2>
-                </Row>
+                </Col>
                 <div className='applicants__section mt-4'>
                     <Row>
                         <Col xs="4">

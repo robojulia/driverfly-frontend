@@ -84,15 +84,15 @@ export default function LocationList() {
           <Col xs="10">
             <h2>{t("LOCATIONS")}</h2>
           </Col>
-          <Col xs="2">
+          <Col xs="2" className="text-right">
             <button className="btn btn-primary" onClick={onAddClick}>
               + {t("CREATE")}
             </button>
           </Col>
         </Row>
    
-        <Row className="mt-5 overflow_cls ">
-          <div className="table-responsive">
+        <Row className="mt-2 overflow_cls ">
+          <div className="table-responsive p-0">
               <Table striped>
               <thead className="listing_heads location_table__hed ">
                       <tr>
@@ -103,7 +103,7 @@ export default function LocationList() {
                         <th>{/* ACTIONS */}</th>
                       </tr>
                 </thead>
-                  <tbody className="mt-3">
+                  <tbody >
                       {!locations || !locations.length &&
                         <tr>
                           <td colSpan={9}>

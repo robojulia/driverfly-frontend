@@ -96,7 +96,7 @@ export default function JobListing() {
                     <Col xs="10">
                         <h2>{t("JOBS")}</h2>
                     </Col>
-                    <Col xs="2">
+                    <Col xs="2" className="text-right">
                         <button className="btn btn-primary" onClick={onAddClick}>
                             + {t("CREATE")}
                         </button>

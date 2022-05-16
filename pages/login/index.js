@@ -156,7 +156,7 @@ export default function Login() {
                             </div>
                             <div className="form-group form-check">
                                 <label className="form-check-label w-50">
-                                    <input className="form-check-input" type="checkbox" /> {t("KEEP_ME_SIGNED_IN")}
+                                    <input className="form-check-input keep_sign_in_check" type="checkbox" /> {t("KEEP_ME_SIGNED_IN")}
                                 </label>
                                 <Link href="/forgot-password">
                                     <a className={login.pricol}>{t("LOST_YOUR_PASSWORD")}</a>

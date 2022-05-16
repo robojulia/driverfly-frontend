@@ -10,9 +10,11 @@ import Pric from '../public/css/Pricing.module.css'
 import React, { useState, useEffect } from 'react';
 import TrendingWords from '../components/trending-words/Trending';
 import { useTranslation } from "../hooks/useTranslation";
-import { DriverLicenseType } from '../enums/drivers/driver-license-type.enum';
+import { DriverLicenseType } from '../enums/users/driver-license-type.enum';
 import { JobEmploymentType } from '../enums/jobs/job-employment-type.enum';
 import { useRouter } from 'next/router'
+import { Search } from 'react-bootstrap-icons';
+
 
 export default function Index() {
 
@@ -64,7 +66,8 @@ export default function Index() {
                             <div className="hero-search">
                                 <div className="input-group w-25">
                                     <div className="input-group-prepend">
-                                        <i className="fa fa-search" aria-hidden="true"></i>
+                                        {/* <i className="fa fa-search" aria-hidden="true"></i> */}
+                                        < Search  className='home_search'/>
                                     </div>
                                     <input
                                         onKeyPress={searchHandler}

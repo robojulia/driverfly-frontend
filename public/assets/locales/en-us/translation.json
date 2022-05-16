@@ -184,7 +184,7 @@
     "onboard_devices": "Onboard devices/subscriptions (ex. Netflix, Rand McNally, etc.)",
     "pets_allowed": "Pets allowed",
     "other": "Other",
-    "DriverDegree": {
+    "EducationLevel": {
         "HIGH_SCHOOL": "High school",
         "BACHELOR": "Bachelor",
         "MASTER": "Master",
@@ -806,5 +806,20 @@
     "CONVERSATIONS": "Conversations",
     "MESSAGE": "Message",
     "SEND": "Send",
-    "JUST_NOW": "Just now"
+    "JUST_NOW": "Just now",
+    "COMMUNICATION": "Communication",
+    "JOB_MATCHING": "Job Matching",
+    "CommunicationMethod": {
+        "TEXT": "Text",
+        "CALL": "Call",
+        "EMAIL": "Email"
+    },
+    "SharePreference": {
+        "NEVER": "Never",
+        "ALWAYS": "Always",
+        "ASK": "Depending on company"
+    },
+    "SHARING": "Sharing",
+    "SHARE_PAST_EMPLOYMENT": "Share past employers?",
+    "PREFERRED_EMPLOYMENT_TYPE": "Preferred employment type"
 }

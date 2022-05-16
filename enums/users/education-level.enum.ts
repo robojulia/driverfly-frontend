@@ -1,4 +1,4 @@
-export enum DriverDegree {
+export enum EducationLevel {
     HIGH_SCHOOL = 'HIGH_SCHOOL',
     ASSOCIATE = 'ASSOCIATE',
     BACHELOR = 'BACHELOR',

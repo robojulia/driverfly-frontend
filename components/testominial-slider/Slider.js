@@ -1,4 +1,6 @@
 import React from 'react';
+import {Quote} from 'react-bootstrap-icons';
+
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
 
@@ -18,7 +20,7 @@ export default class extends React.Component {
                     <Slide index={0}>
                         <div className="Slider_item">
                             <div className="Slider_box">
-                                <i className="fa fa-quote-left" aria-hidden="true"></i>
+                                 <Quote />
                                 <img src="img/Robert-Driver.jpg" alt="" className="" />
                                 <h3>Robert Richards</h3>
                                 <span className="job text-theme">Tanker Hauler</span>
@@ -28,7 +30,7 @@ export default class extends React.Component {
                     </Slide>
                     <Slide index={1}> <div className="Slider_item">
                         <div className="Slider_box">
-                            <i className="fa fa-quote-left" aria-hidden="true"></i>
+                             <Quote />
                             <img src="img/Robert-Driver.jpg" alt="" className="" />
                             <h3>Tanker Hauler</h3>
                             <span className="job text-theme">ffffffffRobert Richards </span>
@@ -39,7 +41,7 @@ export default class extends React.Component {
                     <Slide index={2}>
                         <div className="Slider_item">
                             <div className="Slider_box">
-                                <i className="fa fa-quote-left" aria-hidden="true"></i>
+                                 <Quote />
                                 <img src="img/Robert-Driver.jpg" alt="" className="" />
                                 <h3>Robert Richards</h3>
                                 <span className="job text-theme">Tanker Hauler</span>
@@ -51,7 +53,7 @@ export default class extends React.Component {
                     <Slide index={3}>
                         <div className="Slider_item">
                             <div className="Slider_box">
-                                <i className="fa fa-quote-left" aria-hidden="true"></i>
+                                 <Quote />
                                 <img src="img/Robert-Driver.jpg" alt="" className="" />
                                 <h3>Robert Richards</h3>
                                 <span className="job text-theme">Tanker Hauler</span>
@@ -63,7 +65,7 @@ export default class extends React.Component {
                     <Slide index={4}>
                         <div className="Slider_item">
                             <div className="Slider_box">
-                                <i className="fa fa-quote-left" aria-hidden="true"></i>
+                                 <Quote />
                                 <img src="img/Robert-Driver.jpg" alt="" className="" />
                                 <h3>Robert Richards</h3>
                                 <span className="job text-theme">Tanker Hauler</span>

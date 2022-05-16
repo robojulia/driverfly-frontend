@@ -82,21 +82,21 @@ export default function VehicleList() {
   return (
     <>
       <ToastContainer />
-      <div className="container_fluid">
+      <div className="container_fluid ">
 
         <Row>
           <Col xs="10">
             <h2>{t("VEHICLES")}</h2>
           </Col>
-          <Col xs="2">
+          <Col xs="2" className="text-right">
             <button className="btn btn-primary" onClick={onAddClick}>
               + {t("CREATE")}
             </button>
           </Col>
         </Row>
 
-        <Row className="mt-5 overflow_cls vehicles_container">
-          <div className="table-responsive">
+        <Row className="mt-2 overflow_cls vehicles_container">
+          <div className="table-responsive p-0">
               <Table striped>
                   <thead className="listing_heads vehicles_table__hed">
                       <tr>
@@ -111,7 +111,7 @@ export default function VehicleList() {
                         <th>{/* ACTIONS */}</th>
                       </tr>
                   </thead>
-                  <tbody className="mt-3">
+                  <tbody >
                       {!vehicles || !vehicles.length &&
                         <tr>
                           <td colSpan={9}>

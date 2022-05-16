@@ -94,10 +94,10 @@ export default function Profile() {
         <Row>
           <h2>{t("MY_PROFILE")}</h2>
         </Row>
-        <div className='container-fluid'>
+        <div className='container-fluid p-0'>
           <div className="modal-header border-0">
           </div>
-          <form className="modal-body" onSubmit={form.handleSubmit} >
+          <form className="modal-body p-0" onSubmit={form.handleSubmit} >
             <Row>
               <BaseInput
                 className="col-6 mt-1"
@@ -190,7 +190,7 @@ export default function Profile() {
             </Row>
             <Row className="mt-2">
               <div className="col-12 border-0 text-end">
-                <div className="col">
+                <div className="col p-0">
                   <button type="submit" className={`btn btn-primary`} >
                     {t("UPDATE")}
                   </button>
