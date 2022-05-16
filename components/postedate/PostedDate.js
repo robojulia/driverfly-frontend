@@ -4,7 +4,7 @@ import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import moment from "moment"
-import { ChevronDown } from "react-bootstrap-icons"
+import { Accordion } from 'react-bootstrap';
 
 export default function DatePosted() {
 
@@ -36,7 +36,39 @@ export default function DatePosted() {
 
   return (
     <>
-      <div className="card">
+      <Accordion defaultActiveKey="0">
+        <Accordion.Item eventKey="0">
+          <Accordion.Header> <span className="btn-3 btn-link">Date Posted</span></Accordion.Header>
+          <Accordion.Body>
+            <div onChange={changeHandler} className="App">
+              <div className="topping pt-2">
+                <input
+                  defaultChecked={(!filters.date_created) || (filters.date_created == "")}
+                  type="radio"
+                  id="all"
+                  name="date_created"
+                  value="" />All
+              </div>
+              <div className="topping pt-2">
+                <input type="radio" id="lasthour" name="date_created" value="lasthour" />Last Hour
+              </div>
+              <div className="topping pt-2">
+                <input type="radio" id="lasttwentyfour" name="date_created" value="lasttwentyfour" />Last 24 Hour
+              </div>
+              <div className="topping pt-2">
+                <input type="radio" id="lastseven" name="date_created" value="lastseven" />Last 7 days
+              </div>
+              <div className="topping pt-2">
+                <input type="radio" id="lastfourteen" name="date_created" value="lastfourteen" /> Last 14 days
+              </div>
+              <div className="topping pt-2">
+                <input type="radio" id="lastthirty" name="date_created" value="lastthirty" />Last 30 days
+              </div>
+            </div>
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+      {/* <div className="card">
         <div className="card-header" id="headingSix">
           <h4 className="clearfix mb-0">
             <a className="btn-3 btn-link" data-toggle="collapse"
@@ -75,7 +107,7 @@ export default function DatePosted() {
 
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   )
 }

@@ -4,7 +4,7 @@ import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import { JobGeography } from "../../enums/jobs/job-geography.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
-import { ChevronDown } from "react-bootstrap-icons"
+import { Accordion } from 'react-bootstrap';
 
 export default function AreasCovered() {
 
@@ -13,7 +13,21 @@ export default function AreasCovered() {
 
   return (
     <>
-      <div className="card">
+      <Accordion defaultActiveKey="0">
+        <Accordion.Item eventKey="0">
+        <Accordion.Header> <span className="btn-3 btn-link">Areas Covered</span> </Accordion.Header>
+          <Accordion.Body>
+          <EnumFilterByKeyValue
+                translate={true}
+                withAll={true}
+                enumArray={JobGeography}
+                name="areas_covered"
+                handleChange={handleChange}
+              />
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+      {/* <div className="card">
         <div className="card-header" id="headingNine">
           <h4 className="clearfix mb-0">
             <a className="btn-3 btn-link" data-toggle="collapse"
@@ -35,7 +49,7 @@ export default function AreasCovered() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   )
 }

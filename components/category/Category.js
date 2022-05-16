@@ -2,7 +2,8 @@ import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 import { DriverLicenseType } from "../../enums/users/driver-license-type.enum"
-import { ChevronDown} from 'react-bootstrap-icons'
+import { ChevronDown } from 'react-bootstrap-icons'
+import { Accordion } from 'react-bootstrap';
 
 
 export default function Category() {
@@ -12,7 +13,27 @@ export default function Category() {
 
   return (
     <>
-      <div className="card mt-3">
+
+      <Accordion defaultActiveKey="0">
+        <Accordion.Item eventKey="0">
+          <Accordion.Header> <span className="btn-3 btn-link">Category</span></Accordion.Header>
+
+          <Accordion.Body>
+            <div className="custom-control custom-checkbox p-0">
+              <div className="App">
+                <EnumFilterByKeyValue
+                  translate={true}
+                  withAll={true}
+                  enumArray={DriverLicenseType}
+                  name="cdl_class"
+                  handleChange={handleChange}
+                />
+              </div>
+            </div>
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+      {/* <div className="card mt-3">
         <div className="card-header" id="headingOne">
           <h4 className="clearfix mb-0">
             <a className="btn-3 btn-link" data-toggle="collapse"
@@ -36,7 +57,7 @@ export default function Category() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   )
 }

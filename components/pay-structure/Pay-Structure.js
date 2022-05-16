@@ -4,7 +4,7 @@ import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import { JobPayMethod } from "../../enums/jobs/job-pay-method.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
-import { ChevronDown } from "react-bootstrap-icons"
+import { Accordion } from 'react-bootstrap';
 
 export default function PayStructure() {
 
@@ -14,7 +14,21 @@ export default function PayStructure() {
   return (
 
     <>
-      <div className="card">
+        <Accordion defaultActiveKey="0">
+        <Accordion.Item eventKey="0">
+          <Accordion.Header> <span className="btn-3 btn-link"> Pay Structure</span> </Accordion.Header>
+          <Accordion.Body>
+          <EnumFilterByKeyValue
+                translate={true}
+                withAll={true}
+                enumArray={JobPayMethod}
+                name="pay_structure"
+                handleChange={handleChange}
+              />
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+      {/* <div className="card">
         <div className="card-header" id="headingFour">
           <h4 className="clearfix mb-0">
             <a className="btn-3 btn-link" data-toggle="collapse"
@@ -36,7 +50,7 @@ export default function PayStructure() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   )
 }

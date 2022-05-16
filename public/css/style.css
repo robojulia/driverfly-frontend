@@ -263,14 +263,29 @@ li:hover ul {
     font-size: 20px;
 }
 
+.tab-content .accordion-button:not(.collapsed) {
+    color: #000;
+    background-color:transparent ; 
+    box-shadow: inset 0 0px 0 rgb(0 0 0 / 13%); 
+    padding: 15px 0px;
+}
+.tab-content .accordion-button:active {
+    color: #000 !important;
+}
 .tab-content .card-header {
     padding: 0px 0px 0px;
     margin-bottom: 0;
     background-color: transparent;
     border-bottom: none;
 }
-
-.tab-content .card {
+.tab-content .accordion-item:last-of-type .accordion-button.collapsed {
+    
+    padding: 15px 0;
+}
+.tab-content .accordion-body {
+    padding: 0; 
+}
+.tab-content .accordion-item {
     border: none;
 }
 
@@ -302,9 +317,13 @@ li:hover ul {
 .faq-outer .btn-link{
     color: #6a6a6a;
     text-decoration: none;
+    font-weight: 800;
 }
 .faq-outer .btn-link:hover{
     color: #5cc7c3 !important;
+}
+.faq-outer .accordion-button:not(.collapsed){
+    background-color: #e7f1ff00;
 }
 .tab-content .card-header:hover i {
     color: #1a1a1a !important;
