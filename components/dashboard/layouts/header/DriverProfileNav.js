@@ -11,7 +11,7 @@ import {
   Dropdown,
   Button,
 } from "reactstrap";
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import Logo from "../logo/Logo";
 import Image from "next/image";
@@ -22,6 +22,10 @@ import user1 from "../../../../public/dashboard/assets/images/users/user1.jpg";
 
 
 export default function DriverProfileNav(props) {
+
+  const { isDriver } = useAuth();
+
+  const router = useRouter();
 
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
