@@ -126,7 +126,7 @@ export default function JonInformation({ job }) {
           </div>
 
         </div>
-        <button type="button" className="btn btn-danger" onClick={handleShowApplyModal}>
+        <button type="button" className="btn btn-danger btn-danger_padded " onClick={handleShowApplyModal}>
           {t('apply_now')}
           <ArrowRight />
         </button>

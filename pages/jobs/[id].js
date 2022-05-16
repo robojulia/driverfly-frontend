@@ -96,7 +96,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
               </div>
               <div className="col-md-3">
                 <div className="ort-btn mt-lg-4 mt-0">
-                  <button type="button" className="btn btn-danger" onClick={handleShowApplyModal}>
+                  <button type="button" className="btn btn-danger btn-danger_padded " onClick={handleShowApplyModal}>
                     {t('apply_now')}
                     <ArrowRight />
                   </button>
