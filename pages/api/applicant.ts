@@ -1,3 +1,4 @@
+import { AxiosRequestConfig } from "axios";
 import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
 import { ApplicantJobEntity } from "../../models/applicant/applicant-job.entity";
 import { ApplicantNoteEntity } from "../../models/applicant/applicant-note.entity";
@@ -5,7 +6,7 @@ import { ApplicantEntity } from "../../models/applicant/applicant.entity";
 import { DocumentEntity } from "../../models/documents/document.entity";
 import BaseApi from "./_baseApi";
 
-export default class ApplicantApi extends BaseApi {
+class ApplicantApi extends BaseApi {
     baseUrl: string = "applicants";
     constructor() {
         super();
@@ -19,6 +20,12 @@ export default class ApplicantApi extends BaseApi {
 
     async update(id: number, dto: ApplicantEntity) : Promise<ApplicantEntity> {
         const { data } = await this.put(this.baseUrl + "/" + id, dto);
+
+        return data;
+    }
+
+    async search(params: ApplicantEntity, config?: AxiosRequestConfig) : Promise<ApplicantEntity[]> {
+        const { data } = await this.get(this.buildUrl(this.baseUrl + "/search", params), config);
 
         return data;
     }
@@ -80,4 +87,9 @@ export default class ApplicantApi extends BaseApi {
             return data;
         },
     }
+}
+
+export default ApplicantApi;
+export {
+    ApplicantApi
 }

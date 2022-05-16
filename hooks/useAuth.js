@@ -28,6 +28,7 @@ const useAuth = () => {
 
     const isDriver = () => {
         const user = authCheck();
+        console.log("isDriver", user);
         return user && user.roles === UserRole.DRIVER
     }
 
