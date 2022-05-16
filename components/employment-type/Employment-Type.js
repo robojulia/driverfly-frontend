@@ -5,8 +5,7 @@ import jobContext from "../../context/jobContext"
 import { employment_type } from "../../enums/jobs/job-fields"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
-import { ChevronDown } from "react-bootstrap-icons"
-
+import { Accordion } from 'react-bootstrap';
 
 export default function EmploymentType() {
 
@@ -15,7 +14,22 @@ export default function EmploymentType() {
 
   return (
     <>
-      <div className="card">
+     <Accordion defaultActiveKey="0">
+        <Accordion.Item eventKey="0">
+          <Accordion.Header> <span className="btn-3 btn-link">Employment Type</span> </Accordion.Header>
+
+          <Accordion.Body>
+          <EnumFilterByKeyValue
+                translate={true}
+                withAll={true}
+                enumArray={JobEmploymentType}
+                name="employment_type"
+                handleChange={handleChange}
+              />
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+      {/* <div className="card">
         <div className="card-header" id="headingSix">
           <h4 className="clearfix mb-0">
             <a className="btn-3 btn-link" data-toggle="collapse"
@@ -38,7 +52,7 @@ export default function EmploymentType() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   )
 }

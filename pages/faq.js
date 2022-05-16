@@ -2,6 +2,8 @@ import Link from 'next/link';
 import Breadcrumbs from 'nextjs-breadcrumbs';
 import Layout from "../components/layouts";
 import { Search } from 'react-bootstrap-icons';
+import { Accordion } from 'react-bootstrap';
+
 
 export default function FAQ() {
     return (
@@ -27,7 +29,7 @@ export default function FAQ() {
                                         <input type="text" placeholder="Search" name="s" className="form-control border-0  p-4 " />
                                         <span className="input-group-btn"> <button type="submit" className="btn btn-sm btn-search">
                                             < Search />
-                                            </button> </span>
+                                        </button> </span>
                                         <input type="hidden" name="post_type" value="post" className="post_type p-4" />
                                     </div>
                                 </form>
@@ -51,10 +53,55 @@ export default function FAQ() {
                                 </div>
                             </div>
                         </div>
+               
                         <div className="col-sm-12 col-lg-6">
                             <div className="faq-outer">
                                 <h2 className="mt-0 pb-3 font-weight-normal">Frequently Asked Questions</h2>
-                                <div className="accordion mt-4" id="accordionExample">
+                                <Accordion defaultActiveKey="0">
+                            <Accordion.Item eventKey="0">
+                                <Accordion.Header> <span className="btn-link"> I can’t remember my user id and/or password, can you reset it?</span></Accordion.Header>
+                                <Accordion.Body>
+                                    <p>If you’ve lost both your password and username, reach out to customer care at support@driverhiringusa.com and enter subject line “Lost Username”.</p>
+                                </Accordion.Body>
+                            </Accordion.Item>
+                            <Accordion.Item eventKey="1">
+                                <Accordion.Header> <span className="btn-link"> I am having trouble with the online process, is there an alternative method to apply?</span></Accordion.Header>
+                                <Accordion.Body>
+                                    <p>Yes, you can simply apply for a job without logging in by clicking the facebook icon below (if you have a facebook profile) or by clicking apply without registration.</p>
+                                </Accordion.Body>
+                            </Accordion.Item>
+                            <Accordion.Item eventKey="2">
+                                <Accordion.Header> <span className="btn-link">  Do your services cost money for drivers?</span></Accordion.Header>
+                                <Accordion.Body>
+                                <p>No. Our services are absolutely free for drivers looking to find jobs. Moreover, by registering in our system, you can become eligible to work with a dedicated recruiter who will work to get you the best pay and home time possible.</p>
+                                </Accordion.Body>
+                            </Accordion.Item>
+                            <Accordion.Item eventKey="3">
+                                <Accordion.Header> <span className="btn-link"> What benefits does DriverFly offer?</span></Accordion.Header>
+                                <Accordion.Body>
+                                <p>For CDL Drivers, it’s a tool that allows you to get placed fast and with a quality company who invests in their drivers. You can also sign up to receive job alerts and stay informed on the latest news and discounts we have across the US.</p>
+                                <p>For companies looking to hire, DriverFly offers a HUGE pool of drivers for you to reach with your job offerings as well as a streamlined approach to tracking and managing your drivers through the hiring funnel.</p>                                </Accordion.Body>
+                            </Accordion.Item>
+                            <Accordion.Item eventKey="4">
+                                <Accordion.Header> <span className="btn-link"> How can I find out who is the hiring manager or lead recruiter on this posting?</span></Accordion.Header>
+                                <Accordion.Body>
+                                <p>Email them 🙂 </p>
+                                </Accordion.Body>
+                            </Accordion.Item><Accordion.Item eventKey="5">
+                                <Accordion.Header> <span className="btn-link"> I have several accounts, can they be purged or deleted?</span></Accordion.Header>
+                                <Accordion.Body>
+                                <p>Track your results on the local or global market , depending on your needs. You can track everything in the most popular search engines – Google, Bing, Yahoo and Yandex. Improve your search performance and increase traffic with our turn-key. </p>
+                               </Accordion.Body>
+                            </Accordion.Item><Accordion.Item eventKey="6">
+                                <Accordion.Header> <span className="btn-link"> When can I expect to hear back from the hiring department?</span></Accordion.Header>
+                                <Accordion.Body>
+                                <p>Expected response rates are around 8 hours on average. However, many of our candidates are known to reply within just a few hours from the time of application, depending on when the driver applies. </p>
+
+                               </Accordion.Body>
+                            </Accordion.Item>
+
+                        </Accordion>
+                                {/* <div className="accordion mt-4" id="accordionExample">
                                     <div className="card">
                                         <div className="card-header" id="headingOne">
                                             <h2 className="clearfix mb-0">
@@ -142,7 +189,7 @@ export default function FAQ() {
                                     </div>
 
 
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>

@@ -4,7 +4,7 @@ import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 import { JobSchedule } from "../../enums/jobs/job-schedule.enum"
-import { ChevronDown } from "react-bootstrap-icons"
+import { Accordion } from 'react-bootstrap';
 
 export default function Schedule() {
   const { state, method } = useContext(jobContext)
@@ -12,12 +12,26 @@ export default function Schedule() {
 
   return (
     <>
-      <div className="card">
+      <Accordion defaultActiveKey="0">
+        <Accordion.Item eventKey="0">
+          <Accordion.Header> <span className="btn-3 btn-link"> Schedule</span> </Accordion.Header>
+          <Accordion.Body>
+            <EnumFilterByKeyValue
+              translate={true}
+              withAll={true}
+              enumArray={JobSchedule}
+              name="schedule"
+              handleChange={handleChange}
+            />
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+      {/* <div className="card">
         <div className="card-header" id="headingSix">
           <h4 className="clearfix mb-0">
             <a className="btn-3 btn-link" data-toggle="collapse"
               data-target="#collapseSchedule" aria-expanded="true"
-              aria-controls="collapseSchedule">Schedule < ChevronDown/></a>
+              aria-controls="collapseSchedule">Schedule < ChevronDown /></a>
           </h4>
         </div>
         <div id="collapseSchedule" className="collapse show" aria-labelledby="headingSix"
@@ -34,7 +48,7 @@ export default function Schedule() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
 
     </>

@@ -4,7 +4,7 @@ import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import { MvrType } from "../../enums/users/mvr-type.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
-import { ChevronDown } from "react-bootstrap-icons"
+import { Accordion } from 'react-bootstrap';
 
 export default function MvrRequirement() {
 
@@ -13,7 +13,21 @@ export default function MvrRequirement() {
 
   return (
     <>
-      <div className="card">
+      <Accordion defaultActiveKey="0">
+        <Accordion.Item eventKey="0">
+          <Accordion.Header> <span className="btn-3 btn-link"> MVR Requirements</span> </Accordion.Header>
+          <Accordion.Body>
+          <EnumFilterByKeyValue
+                translate={true}
+                withAll={true}
+                enumArray={MvrType}
+                name="mvr_requirements"
+                handleChange={handleChange}
+              />
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+      {/* <div className="card">
         <div className="card-header" id="headingseventy">
           <h4 className="clearfix mb-0">
             <a className="btn-3 btn-link" data-toggle="collapse"
@@ -35,7 +49,7 @@ export default function MvrRequirement() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   )
 }
