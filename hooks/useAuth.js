@@ -20,7 +20,7 @@ const useAuth = () => {
      * 
      * @returns {UserEntity}
      */
-     const authCheck = () => {
+    const authCheck = () => {
         const json = getItem('user');
         const user = json ? JSON.parse(json) : false;
         return user;
@@ -28,7 +28,7 @@ const useAuth = () => {
 
     const isDriver = () => {
         const user = authCheck();
-        console.log("isDriver", user);
+        console.log("isDriver", user.roles);
         return user && user.roles === UserRole.DRIVER
     }
 
