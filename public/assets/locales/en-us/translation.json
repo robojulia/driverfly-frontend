@@ -589,6 +589,8 @@
     "INVALID_JOB_SPECIFIED": "Job doest not exist.",
     "ALREADY_APPLIED": "You have already applied to this job",
     "USER_ALREADY_EXISTS": "The user is not logged in but already has an account based on the email address (user must log in)",
+    "LOGIN_SUCCESSFULL": "Login successfully! ",
+    "INVALID_CREDENTIALS": "Credentials invalid",
     "USER_INVALID": "User account invalid",
     "USER_INACTIVE": "User account inactive",
     "EMAIL_ALREADY_EXISTS": "Email already exists",
