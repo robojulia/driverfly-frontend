@@ -577,6 +577,7 @@
     "NONE": "None",
     "UPDATE": "Update",
     "LOCATIONS": "Locations",
+    "TERMINALS": "Terminals",
     "STREET": "Street",
     "CITY": "City",
     "STATE": "State",
