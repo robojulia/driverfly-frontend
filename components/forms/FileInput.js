@@ -151,7 +151,7 @@ export default function FileInput({ formik, accept, required, className, label, 
             {accept === "application/pdf" &&
                 <ViewPdf name={value.name} url={viewDoc} onCloseClick={close} />}
             {accept.startsWith("image/") &&
-                <ViewModal show={!!viewDoc} name={value.name} onCloseClick={close}>
+                <ViewModal show={!!viewDoc} name={value?.name} onCloseClick={close}>
                     <img className="img-thumbnail" src={viewDoc} />
                 </ViewModal>}
         </>);
