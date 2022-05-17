@@ -5,51 +5,25 @@ import jobContext from "../../context/jobContext"
 import { JobGeography } from "../../enums/jobs/job-geography.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 import { Accordion } from 'react-bootstrap';
+import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
+import { useTranslation } from "../../hooks/useTranslation";
 
 export default function AreasCovered() {
-
+  const { t } = useTranslation();
   const { state, method } = useContext(jobContext)
   const { handleChange } = method
 
   return (
     <>
-      <Accordion defaultActiveKey="0">
-        <Accordion.Item eventKey="0">
-        <Accordion.Header> <span className="btn-3 btn-link">Areas Covered</span> </Accordion.Header>
-          <Accordion.Body>
-          <EnumFilterByKeyValue
-                translate={true}
-                withAll={true}
-                enumArray={JobGeography}
-                name="areas_covered"
-                handleChange={handleChange}
-              />
-          </Accordion.Body>
-        </Accordion.Item>
-      </Accordion>
-      {/* <div className="card">
-        <div className="card-header" id="headingNine">
-          <h4 className="clearfix mb-0">
-            <a className="btn-3 btn-link" data-toggle="collapse"
-              data-target="#collapseNine" aria-expanded="true"
-              aria-controls="collapseNine">Areas Covered <ChevronDown /> </a>
-          </h4>
-        </div>
-        <div id="collapseNine" className="collapse show"
-          aria-labelledby="headingNine" data-parent="#accordionExample">
-          <div className="card-body">
-            <div className="App">
-              <EnumFilterByKeyValue
-                translate={true}
-                withAll={true}
-                enumArray={JobGeography}
-                name="areas_covered"
-                handleChange={handleChange}
-              />
-            </div>
-          </div>
-        </div>
-      </div> */}
+      <FindJobFilterAccordion header={t("areas_covered")}>
+        <EnumFilterByKeyValue
+          translate={true}
+          withAll={true}
+          enumArray={JobGeography}
+          name="areas_covered"
+          handleChange={handleChange}
+        />
+      </FindJobFilterAccordion>
     </>
   )
 }

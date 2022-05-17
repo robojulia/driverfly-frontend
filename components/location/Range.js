@@ -6,11 +6,12 @@ import jobContext from "../../context/jobContext"
 import { AsyncTypeahead } from 'react-bootstrap-typeahead'; // ES2015
 import { ChevronDown } from 'react-bootstrap-icons'
 import { Accordion } from 'react-bootstrap';
-
+import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
+import { useTranslation } from "../../hooks/useTranslation";
 
 
 export default function Range() {
-
+    const { t } = useTranslation();
     const { state, method } = useContext(jobContext)
     const { filters } = state
     const { setFilters } = method
@@ -50,90 +51,36 @@ export default function Range() {
 
     return (
         <>
-            <Accordion defaultActiveKey="0">
-                <Accordion.Item eventKey="0">
-                    <Accordion.Header> <span className="btn-3 btn-link">Location</span></Accordion.Header>
-
-                    <Accordion.Body>
-                        <AsyncTypeahead
-                            id="async-example"
-                            name="location"
-                            isLoading={isLoading}
-                            labelKey="place_name"
-                            minLength={1}
-                            onChange={value => setLocation(value[0])}
-                            onSearch={handleSearch}
-                            options={options}
-                            placeholder="Location"
-                            renderMenuItemChildren={(option, props) => (
-                                <>
-                                    <span className='text-dark'>{option.place_name}</span>
-                                </>
-                            )}
+            <FindJobFilterAccordion header={t("location")}>
+                <AsyncTypeahead
+                    id="async-example"
+                    name="location"
+                    isLoading={isLoading}
+                    labelKey="place_name"
+                    minLength={1}
+                    onChange={value => setLocation(value[0])}
+                    onSearch={handleSearch}
+                    options={options}
+                    placeholder="Location"
+                    renderMenuItemChildren={(option, props) => (
+                        <>
+                            <span className='text-dark'>{option.place_name}</span>
+                        </>
+                    )}
+                />
+                {
+                    location &&
+                    <>
+                        <div className='mt-3 text-info'>Radius: {range} miles</div>
+                        <RangeSlider
+                            max={500}
+                            value={range}
+                            onChange={e => setRange(e.target.value)}
+                            variant='info'
                         />
-                        {
-                            location &&
-                            <>
-                                <div className='mt-3 text-info'>Radius: {range} miles</div>
-                                <RangeSlider
-                                    max={500}
-                                    value={range}
-                                    onChange={e => setRange(e.target.value)}
-                                    variant='info'
-                                />
-                            </>
-                        }
-                    </Accordion.Body>
-                </Accordion.Item>
-            </Accordion>
-            {/* <div className="card">
-                <div className="card-header" id="headingTwo">
-                    <h4 className="clearfix mb-0">
-                        <a className="btn-3 btn-link" data-toggle="collapse"
-                            data-target="#collapseTwo" aria-expanded="true"
-                            aria-controls="collapseTwo">
-                            Location
-                            < ChevronDown />
-                        </a>
-                    </h4>
-                </div>
-                <div id="collapseTwo" className="collapse show "
-                    aria-labelledby="headingTwo" data-parent="#accordionExample">
-                    <div className="card-body">
-                        <AsyncTypeahead
-                            id="async-example"
-                            name="location"
-                            isLoading={isLoading}
-                            labelKey="place_name"
-                            minLength={1}
-                            onChange={value => setLocation(value[0])}
-                            onSearch={handleSearch}
-                            options={options}
-                            placeholder="Location"
-                            renderMenuItemChildren={(option, props) => (
-                                <>
-                                    <span className='text-dark'>{option.place_name}</span>
-                                </>
-                            )}
-                        />
-                        {
-                            location &&
-                            <>
-                                <div className='mt-3 text-info'>Radius: {range} miles</div>
-                                <RangeSlider
-                                    max={500}
-                                    value={range}
-                                    onChange={e => setRange(e.target.value)}
-                                    variant='info'
-                                />
-                            </>
-                        }
-                    </div>
-
-                </div>
-            </div> */}
-
-
+                    </>
+                }
+            </FindJobFilterAccordion>
         </>
     )
 }

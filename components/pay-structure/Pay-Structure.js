@@ -5,52 +5,27 @@ import jobContext from "../../context/jobContext"
 import { JobPayMethod } from "../../enums/jobs/job-pay-method.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 import { Accordion } from 'react-bootstrap';
+import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
+import { useTranslation } from "../../hooks/useTranslation";
 
 export default function PayStructure() {
-
+  const { t } = useTranslation();
   const { state, method } = useContext(jobContext)
   const { handleChange } = method
 
   return (
 
     <>
-        <Accordion defaultActiveKey="0">
-        <Accordion.Item eventKey="0">
-          <Accordion.Header> <span className="btn-3 btn-link"> Pay Structure</span> </Accordion.Header>
-          <Accordion.Body>
-          <EnumFilterByKeyValue
-                translate={true}
-                withAll={true}
-                enumArray={JobPayMethod}
-                name="pay_structure"
-                handleChange={handleChange}
-              />
-          </Accordion.Body>
-        </Accordion.Item>
-      </Accordion>
-      {/* <div className="card">
-        <div className="card-header" id="headingFour">
-          <h4 className="clearfix mb-0">
-            <a className="btn-3 btn-link" data-toggle="collapse"
-              data-target="#collapseFour" aria-expanded="true"
-              aria-controls="collapseFour">Pay Structure <ChevronDown /></a>
-          </h4>
-        </div>
-        <div id="collapseFour" className="collapse show"
-          aria-labelledby="headingFour" data-parent="#accordionExample">
-          <div className="card-body">
-            <div className="App">
-              <EnumFilterByKeyValue
-                translate={true}
-                withAll={true}
-                enumArray={JobPayMethod}
-                name="pay_structure"
-                handleChange={handleChange}
-              />
-            </div>
-          </div>
-        </div>
-      </div> */}
+
+      <FindJobFilterAccordion header={t("pay_structure")}>
+        <EnumFilterByKeyValue
+          translate={true}
+          withAll={true}
+          enumArray={JobPayMethod}
+          name="pay_structure"
+          handleChange={handleChange}
+        />
+      </FindJobFilterAccordion>
     </>
   )
 }
