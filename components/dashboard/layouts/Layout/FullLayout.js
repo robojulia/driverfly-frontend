@@ -40,26 +40,7 @@ const FullLayout = ({ children }) => {
       text: "MESSAGES",
       startsWith: true
     },
-    // {
-    //   pathname: "/dashboard/company/driver-applications-and-resume",
-    //   icon: AssignmentIcon,
-    //   text: t("DRIVER_APPLICATION")
-    // },
-    // {
-    //   pathname: "/dashboard/company/sms",
-    //   icon: EmailIcon,
-    //   text: t("MESSAGES")
-    // },
-    // {
-    //   pathname: "/dashboard/company/driver-directory",
-    //   icon: ContactPageIcon,
-    //   text: t("DRIVER_DIRECTORY")
-    // },
-    // {
-    //   pathname: "/dashboard/company/safety-and-complience",
-    //   icon: GppGoodIcon,
-    //   text: t("SAFETY_COMPLIANCE")
-    // },
+  
     {
       pathname: "/dashboard/company/settings",
       icon: GearFill,
@@ -87,11 +68,7 @@ const FullLayout = ({ children }) => {
         },
       ],
     },
-    // {
-    //   pathname: "/dashboard/company/admin-approval-jobs",
-    //   icon: null,
-    //   text: "Admin approval for jobs"
-    // }
+  
   ];
 
 
