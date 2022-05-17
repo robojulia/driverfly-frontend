@@ -78,7 +78,7 @@ const FullLayout = ({ children }) => {
         {
           pathname: "/dashboard/company/settings/locations",
           icon: GeoAltFill,
-          text: "LOCATIONS"
+          text: "TERMINALS"
         },
         {
           pathname: "/dashboard/company/settings/profile",
