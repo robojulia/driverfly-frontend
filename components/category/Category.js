@@ -4,60 +4,31 @@ import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 import { DriverLicenseType } from "../../enums/users/driver-license-type.enum"
 import { ChevronDown } from 'react-bootstrap-icons'
 import { Accordion } from 'react-bootstrap';
+import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
+import { useTranslation } from "../../hooks/useTranslation";
 
 
 export default function Category() {
-
+  const { t } = useTranslation();
   const { state, method } = useContext(jobContext)
   const { handleChange } = method
 
   return (
     <>
-
-      <Accordion defaultActiveKey="0">
-        <Accordion.Item eventKey="0">
-          <Accordion.Header> <span className="btn-3 btn-link">Category</span></Accordion.Header>
-
-          <Accordion.Body>
-            <div className="custom-control custom-checkbox p-0">
-              <div className="App">
-                <EnumFilterByKeyValue
-                  translate={true}
-                  withAll={true}
-                  enumArray={DriverLicenseType}
-                  name="cdl_class"
-                  handleChange={handleChange}
-                />
-              </div>
-            </div>
-          </Accordion.Body>
-        </Accordion.Item>
-      </Accordion>
-      {/* <div className="card mt-3">
-        <div className="card-header" id="headingOne">
-          <h4 className="clearfix mb-0">
-            <a className="btn-3 btn-link" data-toggle="collapse"
-              data-target="#collapseOne" aria-expanded="true"
-              aria-controls="collapseOne">Category< ChevronDown /></a>
-          </h4>
-        </div>
-        <div id="collapseOne" className="collapse show" aria-labelledby="headingOne"
-          data-parent="#accordionExample">
-          <div className="card-body">
-            <div className="custom-control custom-checkbox p-0">
-              <div className="App">
-                <EnumFilterByKeyValue
-                  translate={true}
-                  withAll={true}
-                  enumArray={DriverLicenseType}
-                  name="cdl_class"
-                  handleChange={handleChange}
-                />
-              </div>
-            </div>
+      <FindJobFilterAccordion header= {t("CATEGORY")}>
+        <div className="custom-control custom-checkbox p-0">
+          <div className="App">
+            <EnumFilterByKeyValue
+              translate={true}
+              withAll={true}
+              enumArray={DriverLicenseType}
+              name="cdl_class"
+              handleChange={handleChange}
+            />
           </div>
         </div>
-      </div> */}
+      </FindJobFilterAccordion>
+
     </>
   )
 }

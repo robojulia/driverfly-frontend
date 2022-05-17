@@ -322,6 +322,7 @@
     "add_new_job": "Add New Job",
     "new_job": "New Job",
     "employment_type": "Employment Type",
+    "TYPE_OF_DELIVERY": "Type of Delivery",
     "sunday": "Sunday",
     "monday": "Monday",
     "tuesday": "Tuesday",
@@ -397,6 +398,7 @@
     "doubles": "Doubles",
     "equipment_type": "Equipment Type",
     "other_equipment_type": "Other Equipment Type",
+    "equipment_type": "Equipment Type",
     "additional_benefits": "Additional Benefits",
     "description": "Description",
     "sms_summary": "SMS Summary",
@@ -409,6 +411,7 @@
     "other_required_skills": "Other Required Skills",
     "{name}_must_be_unique_in_list": "{{name}} must be unique in list",
     "required_equipment": "Required Equipment",
+    "pay_structure": "Pay Structure",
     "DriverEndorsement": {
         "HAZMAT": "Hazmat",
         "TANKERS": "Tankers",
@@ -419,6 +422,7 @@
     "tankers": "Tankers",
     "twic": "TWIC",
     "special_endorsements": "Special Endorsements",
+    "special_endorsements_required": "Special Endorsements Required",
     "manual": "Manual",
     "automatic": "Automatic",
     "transmission_type": "Transmission Type",
@@ -720,6 +724,8 @@
     "DOWNLOAD_TEMPLATE": "Download Template",
     "ONLY_DISPLAY_ERRORS": "Only display errors",
     "ONE_OR_MORE_ERRORS_WERE_FOUND_ON_INPUT_FILE": "One or more errors were found on the input file, please correct them and re-upload",
+    "CATEGORY": "Category",
+    "POST_DATE": "Post Date",
     "yup": {
         "type": {
             "date": "date, it must be in the format MM/dd/yyyy (eg. 01/12/2014)",

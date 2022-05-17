@@ -5,51 +5,25 @@ import jobContext from "../../context/jobContext"
 import { MvrType } from "../../enums/users/mvr-type.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 import { Accordion } from 'react-bootstrap';
+import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
+import { useTranslation } from "../../hooks/useTranslation";
 
 export default function MvrRequirement() {
-
+  const { t } = useTranslation();
   const { state, method } = useContext(jobContext)
   const { handleChange } = method
 
   return (
     <>
-      <Accordion defaultActiveKey="0">
-        <Accordion.Item eventKey="0">
-          <Accordion.Header> <span className="btn-3 btn-link"> MVR Requirements</span> </Accordion.Header>
-          <Accordion.Body>
-          <EnumFilterByKeyValue
-                translate={true}
-                withAll={true}
-                enumArray={MvrType}
-                name="mvr_requirements"
-                handleChange={handleChange}
-              />
-          </Accordion.Body>
-        </Accordion.Item>
-      </Accordion>
-      {/* <div className="card">
-        <div className="card-header" id="headingseventy">
-          <h4 className="clearfix mb-0">
-            <a className="btn-3 btn-link" data-toggle="collapse"
-              data-target="#collapsesedventy" aria-expanded="true"
-              aria-controls="collapsesedventy">MVR Requirements < ChevronDown /></a>
-          </h4>
-        </div>
-        <div id="collapsesedventy" className="collapse show"
-          aria-labelledby="headingseventy" data-parent="#accordionExample">
-          <div className="card-body">
-            <div className="App">
-              <EnumFilterByKeyValue
-                translate={true}
-                withAll={true}
-                enumArray={MvrType}
-                name="mvr_requirements"
-                handleChange={handleChange}
-              />
-            </div>
-          </div>
-        </div>
-      </div> */}
+      <FindJobFilterAccordion header={t("mvr_requirements")}>
+        <EnumFilterByKeyValue
+          translate={true}
+          withAll={true}
+          enumArray={MvrType}
+          name="mvr_requirements"
+          handleChange={handleChange}
+        />
+      </FindJobFilterAccordion>
     </>
   )
 }
