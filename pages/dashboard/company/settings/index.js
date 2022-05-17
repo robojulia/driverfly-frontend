@@ -16,7 +16,6 @@ import BaseTextArea from "../../../../components/forms/BaseTextArea";
 import { useTranslation } from "../../../../hooks/useTranslation";
 
 import CompanyApi from "../../../api/company";
-import DocumentApi from "../../../api/document";
 
 import FileInput from "../../../../components/forms/FileInput";
 import { CompanyEntity } from "../../../../models/company/company.entity";
@@ -34,20 +33,13 @@ export default function Settings() {
   const user = authCheck();
 
   const form = useFormik({
-    initialValues: new CompanyEntity,
+    initialValues: new CompanyEntity(),
     validationSchema: CompanyEntity.yupSchema(),
     onSubmit: async (values) => {
-      const dto = {
-        name: values.name,
-        about: values.about,
-        website: values.website,
-        photo: values.photo
-      };
-
       const api = new CompanyApi();
 
       try {
-        const company = await api.update(dto);
+        const company = await api.update(values);
         setAuth({
           ...user,
           company: {
@@ -72,43 +64,12 @@ export default function Settings() {
 
   useEffect(async () => {
     const api = new CompanyApi();
-    const documentApi = new DocumentApi();
 
     const company = await api.getById();
 
-    form.setValues({
-      name: company.name,
-      about: company.about,
-      website: company.website,
-      photo: company.photo
-    });
+    form.setValues(company);
 
   }, []);
-
-      /**
-     * 
-     * @param {React.ChangeEvent<HTMLInputElement>} e 
-     */
-       const uploadHandler = async (e) => {
-        e.preventDefault();
-        const { target: { name, files } } = e;
-    
-        let photo = null;
-  
-        if (files && files[0]) {
-          const file = files[0];
-  
-          photo = {
-            visibility: "PUBLIC",
-            name: file.name,
-            mime_type: file.type,
-            path: URL.createObjectURL(file),
-            file_base64: await getBase64(file)
-          };
-        }
-  
-        form.setFieldValue(name, photo);
-    }
 
   return (
     <>
@@ -152,7 +113,7 @@ export default function Settings() {
                 />
               <FileInput
                 className="col-12"
-                label={t("photo")}
+                label={`photo`}
                 name={`photo`}
                 accept="image/*"
                 formik={form}
