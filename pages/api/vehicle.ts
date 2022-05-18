@@ -1,4 +1,4 @@
-import VehicleEntity from "../../models/company/vehicle.entity";
+import { VehicleEntity } from "../../models/company/vehicle.entity";
 import BaseApi from "./_baseApi";
 
 export default class VehicleApi extends BaseApi {

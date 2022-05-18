@@ -2,6 +2,7 @@ import * as yup from "yup";
 import { DocumentVisibility } from "../../enums/documents/document-visibility.enum";
 
 export enum DocumentType {
+    PHOTO = 'PHOTO',
     RESUME = 'RESUME',
     MVR = 'MVR',
     DRIVER_LICENSE = 'DRIVER_LICENSE',
