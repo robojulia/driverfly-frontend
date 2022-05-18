@@ -10,7 +10,7 @@ import Pric from '../public/css/Pricing.module.css'
 import React, { useState, useEffect } from 'react';
 import TrendingWords from '../components/trending-words/Trending';
 import { useTranslation } from "../hooks/useTranslation";
-import { DriverLicenseType } from '../enums/drivers/driver-license-type.enum';
+import { DriverLicenseType } from '../enums/users/driver-license-type.enum';
 import { JobEmploymentType } from '../enums/jobs/job-employment-type.enum';
 import { useRouter } from 'next/router'
 import { Search } from 'react-bootstrap-icons';

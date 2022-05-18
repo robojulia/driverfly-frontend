@@ -27,7 +27,20 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
        * @param {React.KeyboardEvent<HTMLInputElement} e
        */
       function (e) {
+        // prevent negative if the min value is set to 0
+        if (min != null && parseInt(min) >= 0 && e.key === "-") e.preventDefault();
+
         if (e.key === ".") e.preventDefault();
+      };
+  }
+  else if (type === "number") {
+    onKeyDown = onKeyDown ||
+      /**
+       * @param {React.KeyboardEvent<HTMLInputElement} e
+       */
+      function (e) {
+        // prevent negative if the min value is set to 0
+        if (min != null && parseInt(min) >= 0 && e.key === "-") e.preventDefault();
       };
   }
   return (

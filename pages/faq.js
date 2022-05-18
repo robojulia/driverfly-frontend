@@ -2,6 +2,8 @@ import Link from 'next/link';
 import Breadcrumbs from 'nextjs-breadcrumbs';
 import Layout from "../components/layouts";
 import { Search } from 'react-bootstrap-icons';
+import { Accordion } from 'react-bootstrap';
+
 
 export default function FAQ() {
     return (

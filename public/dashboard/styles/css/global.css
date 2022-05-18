@@ -599,3 +599,7 @@ textarea {
  color: #6a6a6a;
  font-size: 18px;
 }
+.accordion-button:not(.collapsed)::after {
+    background-image: url("../../../img/arrowdown.svg");
+
+}

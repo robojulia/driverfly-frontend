@@ -165,6 +165,13 @@
         "PETS_ALLOWED": "Pets allowed",
         "OTHER": "Other"
     },
+    "JobPayFrequency": {
+        "PRE_LOAD":"Per Load",
+        "BIWEEKLY":"Biweekly",
+        "WEEKLY":"Weekly",
+        "BIMONTHLY":"Bimonthly",
+        "MONTHLY": "Monthly"
+    },
     "sign_on_bonus": "Sign-on bonus",
     "guaranteed_base_salary": "Guaranteed base salary",
     "medical": "Medical",
@@ -184,7 +191,7 @@
     "onboard_devices": "Onboard devices/subscriptions (ex. Netflix, Rand McNally, etc.)",
     "pets_allowed": "Pets allowed",
     "other": "Other",
-    "DriverDegree": {
+    "EducationLevel": {
         "HIGH_SCHOOL": "High school",
         "BACHELOR": "Bachelor",
         "MASTER": "Master",
@@ -322,6 +329,7 @@
     "add_new_job": "Add New Job",
     "new_job": "New Job",
     "employment_type": "Employment Type",
+    "TYPE_OF_DELIVERY": "Type of Delivery",
     "sunday": "Sunday",
     "monday": "Monday",
     "tuesday": "Tuesday",
@@ -397,6 +405,7 @@
     "doubles": "Doubles",
     "equipment_type": "Equipment Type",
     "other_equipment_type": "Other Equipment Type",
+    "equipment_type": "Equipment Type",
     "additional_benefits": "Additional Benefits",
     "description": "Description",
     "sms_summary": "SMS Summary",
@@ -409,6 +418,7 @@
     "other_required_skills": "Other Required Skills",
     "{name}_must_be_unique_in_list": "{{name}} must be unique in list",
     "required_equipment": "Required Equipment",
+    "pay_structure": "Pay Structure",
     "DriverEndorsement": {
         "HAZMAT": "Hazmat",
         "TANKERS": "Tankers",
@@ -419,6 +429,7 @@
     "tankers": "Tankers",
     "twic": "TWIC",
     "special_endorsements": "Special Endorsements",
+    "special_endorsements_required": "Special Endorsements Required",
     "manual": "Manual",
     "automatic": "Automatic",
     "transmission_type": "Transmission Type",
@@ -573,6 +584,7 @@
     "NONE": "None",
     "UPDATE": "Update",
     "LOCATIONS": "Locations",
+    "TERMINALS": "Terminals",
     "STREET": "Street",
     "CITY": "City",
     "STATE": "State",
@@ -585,6 +597,8 @@
     "INVALID_JOB_SPECIFIED": "Job doest not exist.",
     "ALREADY_APPLIED": "You have already applied to this job",
     "USER_ALREADY_EXISTS": "The user is not logged in but already has an account based on the email address (user must log in)",
+    "LOGIN_SUCCESSFULL": "Login successfully! ",
+    "INVALID_CREDENTIALS": "Credentials invalid",
     "USER_INVALID": "User account invalid",
     "USER_INACTIVE": "User account inactive",
     "EMAIL_ALREADY_EXISTS": "Email already exists",
@@ -720,6 +734,9 @@
     "DOWNLOAD_TEMPLATE": "Download Template",
     "ONLY_DISPLAY_ERRORS": "Only display errors",
     "ONE_OR_MORE_ERRORS_WERE_FOUND_ON_INPUT_FILE": "One or more errors were found on the input file, please correct them and re-upload",
+    "CATEGORY": "Category",
+    "POST_DATE": "Post Date",
+    "pay_frequency":"Pay Frequency",
     "yup": {
         "type": {
             "date": "date, it must be in the format MM/dd/yyyy (eg. 01/12/2014)",
@@ -794,5 +811,33 @@
     },
     "YEARS": "Years",
     "MY_ACCOUNT": "My Account",
-    "APPLICANT_INFO_DESCRIPTION": "This is the information which will be submitted to a company when you apply to a job"
+    "APPLICANT_INFO_DESCRIPTION": "This is the information which will be submitted to a company when you apply to a job",
+    "{hours}_HOURS_AGO": "{{hours}} hrs ago",
+    "{minutes}_MINUTES_AGO": "{{minutes}} mins ago",
+    "{seconds}_SECONDS_AGO": "{{seconds}} secs ago",
+    "YESTERDAY": "Yesterday",
+    "CREATE_NEW_MESSAGE": "Create New Message",
+    "START_TYPING_TO_SEE_OPTIONS": "Start typing to see options",
+    "TYPE_AT_LEAST_{num}_CHARACTERS_TO_SEE_OPTIONS": "Type at least {{num}} characters to see options",
+    "NO_MATCHING_RESULTS": "No matching results",
+    "CONVERSATIONS": "Conversations",
+    "MESSAGE": "Message",
+    "SEND": "Send",
+    "JUST_NOW": "Just now",
+    "COMMUNICATION": "Communication",
+    "JOB_MATCHING": "Job Matching",
+    "CommunicationMethod": {
+        "TEXT": "Text",
+        "CALL": "Call",
+        "EMAIL": "Email"
+    },
+    "SharePreference": {
+        "NEVER": "Never",
+        "ALWAYS": "Always",
+        "ASK": "Depending on company",
+        "PHYSICAL": "Physical"
+    },
+    "SHARING": "Sharing",
+    "SHARE_PAST_EMPLOYMENT": "Share past employers?",
+    "PREFERRED_EMPLOYMENT_TYPE": "Preferred employment type"
 }

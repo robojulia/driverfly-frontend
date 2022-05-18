@@ -4,38 +4,27 @@ import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import { JobDeliveryType } from "../../enums/jobs/job-delivery-type.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
+import { Accordion } from 'react-bootstrap';
+import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
+import { useTranslation } from "../../hooks/useTranslation";
 
 export default function TypeOfDelivery() {
-
+  const { t } = useTranslation();
   const { state, method } = useContext(jobContext)
   const { handleChange } = method
 
   return (
     <>
-      <div className="card">
-        <div className="card-header" id="headingSix">
-          <h4 className="clearfix mb-0">
-            <a className="btn-3 btn-link" data-toggle="collapse"
-              data-target="#collapseTypeofDelivery" aria-expanded="true"
-              aria-controls="collapseTypeofDelivery">Type of Delivery <i
-                className="fa fa-angle-down"></i></a>
-          </h4>
-        </div>
-        <div id="collapseTypeofDelivery" className="collapse show" aria-labelledby="headingSix"
-          data-parent="#accordionExample">
-          <div className="card-body">
-            <div className="App">
-              <EnumFilterByKeyValue
-                translate={true}
-                withAll={true}
-                enumArray={JobDeliveryType}
-                name="delivery_type"
-                handleChange={handleChange}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+
+      <FindJobFilterAccordion header={t("TYPE_OF_DELIVERY")}>
+        <EnumFilterByKeyValue
+          translate={true}
+          withAll={true}
+          enumArray={JobDeliveryType}
+          name="delivery_type"
+          handleChange={handleChange}
+        />
+      </FindJobFilterAccordion>
     </>
   )
 }

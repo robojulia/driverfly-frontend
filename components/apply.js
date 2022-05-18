@@ -16,7 +16,7 @@ import { preventNegative } from "../utils/input"
 import BaseCheck from './forms/BaseCheck'
 import Link from 'next/link'
 import { Col, Row } from 'react-bootstrap'
-import { DriverDegree } from '../enums/drivers/driver-degree.enum'
+import { EducationLevel } from '../enums/users/education-level.enum'
 import { getBase64 } from '../utils/file'
 import { JobApplicantDocumentType } from '../enums/application/job-application-document-type.enum'
 // import { SpecialZoomLevel, Viewer, Worker } from '@react-pdf-viewer/core'
@@ -191,39 +191,39 @@ export default function JobApply({ job }) {
   }
 
   const updateDriverData = async () => {
-    await baseApi.get(`drivers`)
-      .then(async ({ data: driver }) => {
-        if (driver) {
-          apply_form.setValues({
-            ...apply_form.values,
-            cdl_experience: driver.years_cdl_experience || 0,
-            highest_degree: driver.highest_degree || "",
-            drug_test: driver.can_pass_drug_test || false,
-            voilations: driver.accident_count || 0,
-          })
-          await userApi.getDocuments()
-            .then(data => {
-              data.forEach(v => {
-                if (v.type in apply_form.values) {
-                  apply_form.setFieldValue([v.type + "_old"], {
-                    ...v,
-                    file: null,
-                  })
-                }
-                else {
-                  console.warn(`Unknown document type detected: ${v.type}`);
-                }
-              })
-            })
-            // .then(() => { console.log("apply_form.values", apply_form.values) })
-            .catch(e => {
-              // console.log(e.response)
-            })
-        }
-      })
-      .catch(e => {
-        // console.log(e.response)
-      })
+    // await baseApi.get(`drivers`)
+    //   .then(async ({ data: driver }) => {
+    //     if (driver) {
+    //       apply_form.setValues({
+    //         ...apply_form.values,
+    //         cdl_experience: driver.years_cdl_experience || 0,
+    //         highest_degree: driver.highest_degree || "",
+    //         drug_test: driver.can_pass_drug_test || false,
+    //         voilations: driver.accident_count || 0,
+    //       })
+    //       await userApi.getDocuments()
+    //         .then(data => {
+    //           data.forEach(v => {
+    //             if (v.type in apply_form.values) {
+    //               apply_form.setFieldValue([v.type + "_old"], {
+    //                 ...v,
+    //                 file: null,
+    //               })
+    //             }
+    //             else {
+    //               console.warn(`Unknown document type detected: ${v.type}`);
+    //             }
+    //           })
+    //         })
+    //         // .then(() => { console.log("apply_form.values", apply_form.values) })
+    //         .catch(e => {
+    //           // console.log(e.response)
+    //         })
+    //     }
+    //   })
+    //   .catch(e => {
+    //     // console.log(e.response)
+    //   })
   }
 
   const viewHandler = async (e) => {
@@ -341,7 +341,7 @@ export default function JobApply({ job }) {
                   name="contact_number"
                   value={apply_form.values.contact_number}
                   touched={apply_form.touched.contact_number}
-                  error={apply_form.errors.contact_number}
+                  error={ .errors.contact_number}
                   onChange={apply_form.handleChange}
                   handleBlur={apply_form.handleBlur}
                 />
@@ -357,8 +357,8 @@ export default function JobApply({ job }) {
                   value={apply_form.values.highest_degree}
                   touched={apply_form.touched.highest_degree}
                   error={apply_form.errors.highest_degree}
-                  enumType={DriverDegree}
-                  labelPrefix="DriverDegree"
+                  enumType={EducationLevel}
+                  labelPrefix="EducationLevel"
                   onChange={apply_form.handleChange}
                   handleBlur={apply_form.handleBlur}
                 />

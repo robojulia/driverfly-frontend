@@ -10,7 +10,6 @@ import jobsContext from "../context/jobContext"
 import Location from "../components/location/Location"
 import BaseApi from "./api/_baseApi"
 import JobApi from "./api/job"
-import DriverApi from "./api/driver";
 import { updateQueryStringParameter } from "../logics/utils"
 
 export default function FindJobs(props) {
@@ -19,7 +18,6 @@ export default function FindJobs(props) {
   // const params = {}
   const jobApi = new JobApi();
   const baseApi = new BaseApi();
-  const driverApi = new DriverApi();
 
   const [jobs, setJobs] = useState([])
   const [pagingMeta, setPagingMeta] = useState({
