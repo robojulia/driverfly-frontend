@@ -176,7 +176,6 @@ export default function Job() {
                     zip_code: null,
                 },
                 description: job.description,
-                pay_frequency: job.pay_frequency,
                 description_short: job.description_short,
                 drivers_needed: job.drivers_needed,
                 expiry_date: (job.expiry_date || "").split("T")[0] || null,
@@ -229,7 +228,9 @@ export default function Job() {
                 must_have_clean_criminal_history: job.must_have_clean_criminal_history,
                 criminal_history: job.criminal_history || [],
                 max_accidents: job.max_accidents,
-                safety_requirements_other: job.safety_requirements_other
+                safety_requirements_other: job.safety_requirements_other,
+                pay_frequency: job.pay_frequency,
+
             });
         }
         {
