@@ -1,13 +1,13 @@
 import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
 import { useContext } from "react"
-import jobContext from "../../context/jobContext"
+import schoolContext from "../../context/schoolContext"
 import { SchoolPrivateEnrollment } from "../../enums/schools/school-private-enrollment.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 
 export default function PrivateEnrollment() {
 
-  const { state, method } = useContext(jobContext)
+  const { state, method } = useContext(schoolContext)
   const { handleChange } = method
 
   return (
@@ -30,7 +30,7 @@ export default function PrivateEnrollment() {
                 translate={true}
                 withAll={true}
                 enumArray={SchoolPrivateEnrollment}
-                name="pay_structure"
+                name="private_enrollment"
                 handleChange={handleChange}
               />
             </div>

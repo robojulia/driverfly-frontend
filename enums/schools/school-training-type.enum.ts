@@ -10,12 +10,3 @@ export enum SchoolTrainingType {
     // hazardous materials
     HAZMAT = 'HAZARDOUS_MATERIALS'
   }
-
- export enum SchoolTrainingSubtype {
-     // theory
-     THEORY = 'THEORY',
-     // behind the wheel range
-     RANGE = 'RANGE',
-     // behind the wheel road
-     ROAD = 'ROAD'
- }

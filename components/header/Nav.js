@@ -43,7 +43,7 @@ export default function Nav() {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/">
+                                <Link href="/find-schools">
                                     <a className="dropdown-item" href="#">{t("GET_YOUR_CDL")} </a>
                                 </Link>
                             </li>

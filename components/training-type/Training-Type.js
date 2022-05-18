@@ -1,13 +1,13 @@
 import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
 import { useContext } from "react"
-import jobContext from "../../context/jobContext"
+import schoolContext from "../../context/schoolContext"
 import { SchoolTrainingType } from "../../enums/schools/school-training-type.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 
 export default function TrainingType() {
 
-  const { state, method } = useContext(jobContext)
+  const { state, method } = useContext(schoolContext)
   const { handleChange } = method
 
   return (
@@ -30,7 +30,7 @@ export default function TrainingType() {
                 translate={true}
                 withAll={true}
                 enumArray={SchoolTrainingType}
-                name="pay_structure"
+                name="training_type"
                 handleChange={handleChange}
               />
             </div>
