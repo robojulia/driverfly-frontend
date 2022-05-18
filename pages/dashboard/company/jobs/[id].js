@@ -55,6 +55,8 @@ import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
 import { JobDeliveryType } from "../../../../enums/jobs/job-delivery-type.enum";
 import { JobPayMethod } from "../../../../enums/jobs/job-pay-method.enum";
 import { JobBenefits } from "../../../../enums/jobs/job-benefits.enum";
+import { JobPayFrequency } from "../../../../enums/jobs/job-pay-frequency.enum";
+
 
 import "../../../../utils/yup"
 
@@ -350,7 +352,6 @@ export default function Job() {
             data.max_miles = parseFloat(data.max_miles)
             data.min_salary = parseFloat(data.min_salary)
             data.max_salary = parseFloat(data.max_salary)
-
             try {
                 // create the location (if new)
                 if (!data.location.id) {
@@ -406,9 +407,9 @@ export default function Job() {
                 }
 
                 toast.success(t("successfully_saved_information"));
-                setTimeout(
-                    () => Router.push(backPath),
-                    2000);
+                // setTimeout(
+                //     () => Router.push(backPath),
+                //     2000);
             }
             catch (e) {
                 console.error("Unable to save job", e);
@@ -438,6 +439,7 @@ export default function Job() {
                     zip_code: null,
                 },
                 description: job.description,
+                pay_frequency: job.pay_frequency,
                 description_short: job.description_short,
                 drivers_needed: job.drivers_needed,
                 expiry_date: (job.expiry_date || "").split("T")[0] || null,
@@ -1406,6 +1408,20 @@ export default function Job() {
                                     error={form.errors.benefits}
                                     labelPrefix="JobBenefits"
                                     enumType={JobBenefits}
+                                />
+                                <BaseSelect
+                                    className="col-12 p-0"
+                                    label={t("pay_frequency")}
+                                    name="pay_frequency"
+                                    placeholder={t("pay_frequency")}
+                                    cols={2}
+                                    value={form.values.pay_frequency}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.pay_frequency}
+                                    error={form.errors.pay_frequency}
+                                    labelPrefix= "JobPayFrequency"
+                                    enumType={JobPayFrequency}
                                 />
                                 {
                                     form.values.benefits.includes(JobBenefits.OTHER) &&
