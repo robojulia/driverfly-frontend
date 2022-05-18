@@ -18,7 +18,7 @@ import { VehicleType } from "../../../../../enums/vehicles/vehicle-type.enum";
 import { VehicleTrailerType } from "../../../../../enums/vehicles/vehicle-trailer-type.enum";
 import { VehicleAccessory } from "../../../../../enums/vehicles/vehicle-accessory.enum";
 import { VehicleTransmissionType } from "../../../../../enums/vehicles/vehicle-transmission-type.enum";
-import VehicleEntity from "../../../../../models/company/vehicle.entity";
+import { VehicleEntity } from "../../../../../models/company/vehicle.entity";
 import { useRouter } from "next/router"
 
 import { useFormik } from "formik"

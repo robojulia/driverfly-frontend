@@ -165,6 +165,13 @@
         "PETS_ALLOWED": "Pets allowed",
         "OTHER": "Other"
     },
+    "JobPayFrequency": {
+        "PRE_LOAD":"Per Load",
+        "BIWEEKLY":"Biweekly",
+        "WEEKLY":"Weekly",
+        "BIMONTHLY":"Bimonthly",
+        "MONTHLY": "Monthly"
+    },
     "sign_on_bonus": "Sign-on bonus",
     "guaranteed_base_salary": "Guaranteed base salary",
     "medical": "Medical",
@@ -577,6 +584,7 @@
     "NONE": "None",
     "UPDATE": "Update",
     "LOCATIONS": "Locations",
+    "TERMINALS": "Terminals",
     "STREET": "Street",
     "CITY": "City",
     "STATE": "State",
@@ -728,6 +736,7 @@
     "ONE_OR_MORE_ERRORS_WERE_FOUND_ON_INPUT_FILE": "One or more errors were found on the input file, please correct them and re-upload",
     "CATEGORY": "Category",
     "POST_DATE": "Post Date",
+    "pay_frequency":"Pay Frequency",
     "yup": {
         "type": {
             "date": "date, it must be in the format MM/dd/yyyy (eg. 01/12/2014)",
@@ -825,7 +834,8 @@
     "SharePreference": {
         "NEVER": "Never",
         "ALWAYS": "Always",
-        "ASK": "Depending on company"
+        "ASK": "Depending on company",
+        "PHYSICAL": "Physical"
     },
     "SHARING": "Sharing",
     "SHARE_PAST_EMPLOYMENT": "Share past employers?",
