@@ -47,6 +47,8 @@ import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
 import { JobDeliveryType } from "../../../../enums/jobs/job-delivery-type.enum";
 import { JobPayMethod } from "../../../../enums/jobs/job-pay-method.enum";
 import { JobBenefits } from "../../../../enums/jobs/job-benefits.enum";
+import { JobPayFrequency } from "../../../../enums/jobs/job-pay-frequency.enum";
+
 
 import ChildPageLayout from "../../../../components/layouts/ChildPageLayout";
 
@@ -87,7 +89,6 @@ export default function Job() {
             data.max_miles = parseFloat(data.max_miles)
             data.min_salary = parseFloat(data.min_salary)
             data.max_salary = parseFloat(data.max_salary)
-
             try {
                 // create the location (if new)
                 if (!data.location.id) {
@@ -143,9 +144,9 @@ export default function Job() {
                 }
 
                 toast.success(t("successfully_saved_information"));
-                setTimeout(
-                    () => Router.push(backPath),
-                    2000);
+                // setTimeout(
+                //     () => Router.push(backPath),
+                //     2000);
             }
             catch (e) {
                 console.error("Unable to save job", e);
@@ -175,6 +176,7 @@ export default function Job() {
                     zip_code: null,
                 },
                 description: job.description,
+                pay_frequency: job.pay_frequency,
                 description_short: job.description_short,
                 drivers_needed: job.drivers_needed,
                 expiry_date: (job.expiry_date || "").split("T")[0] || null,
@@ -589,617 +591,568 @@ export default function Job() {
     return (
 
         <>
-        <ChildPageLayout
-            title={id ? "EDIT_JOB" : "CREATE_JOB"}
-            backPath={backPath}
+            <ChildPageLayout
+                title={id ? "EDIT_JOB" : "CREATE_JOB"}
+                backPath={backPath}
             >
-            <form onSubmit={form.handleSubmit} >
-                <div className="row">
-                    <BaseInput
-                        className="col-md-6"
-                        label="title"
-                        required
-                        name="title"
-                        placeholder="title"
-                        formik={form}
-                    />
-                </div>
-                <div className="row mt-1">
-                    <div className="col-md-4">
-                        <h3>{t("basic_details")}</h3>
-                        <BaseSelect
-                            className="col-12"
-                            label="location"
-                            name="location.id"
-                            required
-                            placeholder="new_location"
-                            formik={form}
-                            valueKey="id"
-                            labelKey="street"
-                            options={locations}
-                        />
-                        {(
-                            !!!form.values.location?.id &&
-                            <>
-                                <BaseInput
-                                    className="col-12"
-                                    label="street"
-                                    name="location.street"
-                                    required
-                                    placeholder="street"
-                                    formik={form}
-                                />
-                                <BaseInput
-                                    className="col-12"
-                                    label="city"
-                                    name="location.city"
-                                    required
-                                    placeholder="city"
-                                    formik={form}
-                                />
-                                <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
-                                    <StateSelect
-                                        className="col-7"
-                                        label="state"
-                                        name="location.state"
-                                        required
-                                        placeholder="state"
-                                        formik={form}
-                                        />
-                                    <BaseInput
-                                        className="col-5"
-                                        label="zip_code"
-                                        name="location.zip_code"
-                                        required
-                                        placeholder="zip_code"
-                                        formik={form}
-                                        />
-                                </Row>
-                            </>
-                        )}
+                <form onSubmit={form.handleSubmit} >
+                    <div className="row">
                         <BaseInput
-                            className="col-12"
-                            label="expiration_date"
-                            name="expiry_date"
-                            placeholder="expiration_date"
-                            type="date"
-                            formik={form}
-                            />
-                        <BaseInput
-                            className="col-12"
-                            label="drivers_needed"
-                            name="drivers_needed"
-                            placeholder="drivers_needed"
-                            type="int"
-                            min="0"
-                            formik={form}
-                            />
-                        <BaseSelect
-                            className="col-12"
-                            label="GEOGRAPHY"
-                            name="geography"
+                            className="col-md-6"
+                            label="title"
                             required
-                            formik={form}
-                            onChange={onGeographyChange}
-                            labelPrefix="JobGeography"
-                            enumType={JobGeography}
-                        />
-                        <BaseRange
-                            className="col-12"
-                            label="max_applicant_radius"
-                            name="max_applicant_radius"
-                            required
-                            min={1}
-                            max={maxRadius[form.values.geography]}
+                            name="title"
+                            placeholder="title"
                             formik={form}
                         />
-                        <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
+                    </div>
+                    <div className="row mt-1">
+                        <div className="col-md-4">
+                            <h3>{t("basic_details")}</h3>
                             <BaseSelect
-                                className={`col-${form.values.schedule === JobSchedule.OTHER ? 6 : 12}`}
-                                label="schedule"
-                                name="schedule"
-                                required
-                                placeholder="schedule"
-                                labelPrefix="JobSchedule"
-                                enumType={JobSchedule}
-                                formik={form}
-                                />
-                            {
-                                form.values.schedule === JobSchedule.OTHER &&
-                                <BaseInput
-                                    className="col-6"
-                                    label="other_schedule"
-                                    required
-                                    name="schedule_other"
-                                    placeholder="schedule"
-                                    formik={form}
-                                    />
-                            }
-                        </Row>
-                        <BaseSelect
-                            className="col-12"
-                            label="employment_type"
-                            name="employment_type"
-                            required
-                            placeholder="employment_type"
-                            labelPrefix="JobEmploymentType"
-                            enumType={JobEmploymentType}
-                            formik={form}
-                            />
-                        <BaseCheckList
-                            className="col-12"
-                            label="equipment_type"
-                            name="equipment_type"
-                            placeholder="equipment_type"
-                            cols={2}
-                            labelPrefix="JobEquipmentType"
-                            enumType={JobEquipmentType}
-                            formik={form}
-                        />
-                        {
-                            form.values.equipment_type.includes(JobSchedule.OTHER) &&
-                            <BaseInput
                                 className="col-12"
+                                label="location"
+                                name="location.id"
                                 required
-                                label="other_equipment_type"
-                                name="equipment_type_other"
-                                placeholder="equipment_type"
+                                placeholder="new_location"
                                 formik={form}
-                                />
-                        }
-                        <BaseCheckList
-                            className="col-12"
-                            label="delivery_type"
-                            name="delivery_type"
-                            required
-                            placeholder="delivery_type"
-                            cols={2}
-                            labelPrefix="JobDeliveryType"
-                            enumType={JobDeliveryType}
-                            formik={form}
-                        />
-                        <BaseSelect
-                            className="col-12"
-                            label="team_drivers"
-                            name="team_drivers"
-                            required
-                            placeholder="team_drivers"
-                            labelPrefix="JobTeamDriver"
-                            enumType={JobTeamDriver}
-                            formik={form}
-                        />
-                    </div>
-                    <div className="col-md-4">
-                        <h3>{t("benefits")}</h3>
-                        <BaseSelect
-                            className="col-12"
-                            label="pay_method"
-                            name="pay_method"
-                            required
-                            placeholder="pay_method"
-                            labelPrefix="JobPayMethod"
-                            enumType={JobPayMethod}
-                            formik={form}
-                        />
-                        {
-                            (form.values.pay_method === JobPayMethod.PERCENT_PER_MOVE ||
-                                form.values.pay_method === JobPayMethod.PERCENT_PER_WEIGHT) &&
-                            <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
-                                <BaseInput
-                                    step={0.1}
-                                    min={0}
-                                    className="col-6"
-                                    label="min_percent"
-                                    name="min_percent"
-                                    required
-                                    placeholder="min_percent"
-                                    type="number"
-                                    onChange={handlePayMethodUpdate}
-                                    formik={form}
-                                    />
-                                <BaseInput
-                                    step={0.1}
-                                    min={0}
-                                    className="col-6"
-                                    label="max_percent"
-                                    name="max_percent"
-                                    required
-                                    placeholder="max_percent"
-                                    type="number"
-                                    onChange={handlePayMethodUpdate}
-                                    formik={form}
-                                />
-                            </Row>
-                        }
-                        {
-                            form.values.pay_method === JobPayMethod.RATE_PER_MILE &&
-                            <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
-                                <BaseInput
-                                    step={0.1}
-                                    min={0}
-                                    className="col-6"
-                                    label="min_miles"
-                                    name="min_miles"
-                                    required
-                                    placeholder="min_miles"
-                                    type="number"
-                                    onChange={handlePayMethodUpdate}
-                                    formik={form}
-                                />
-                                <BaseInput
-                                    step={0.1}
-                                    min={0}
-                                    className="col-6"
-                                    label="max_miles"
-                                    name="max_miles"
-                                    required
-                                    placeholder="max_miles"
-                                    type="number"
-                                    onChange={handlePayMethodUpdate}
-                                    formik={form}
-                                />
-                            </Row>
-                        }
-                        {
-                            form.values.pay_method === JobPayMethod.HOURLY &&
-                            <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
-                                <BaseInput
-                                    step={0.1}
-                                    min={0}
-                                    className="col-6"
-                                    label="min_hours"
-                                    name="min_hours"
-                                    required
-                                    placeholder="min_hours"
-                                    type="number"
-                                    onChange={handlePayMethodUpdate}
-                                    formik={form}
-                                />
-                                <BaseInput
-                                    step={0.1}
-                                    min={0}
-                                    className="col-6"
-                                    label="max_hours"
-                                    name="max_hours"
-                                    required
-                                    placeholder="max_hours"
-                                    type="number"
-                                    onChange={handlePayMethodUpdate}
-                                    formik={form}
-                                />
-                            </Row>
-                        }
-                        {
-                            (form.values.pay_method === JobPayMethod.RATE_PER_MILE ||
-                                form.values.pay_method === JobPayMethod.HOURLY) &&
-                            <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
-                                <BaseInput
-                                    step={0.1}
-                                    min={0}
-                                    className="col-6"
-                                    label="min_rate"
-                                    name="min_rate"
-                                    required
-                                    placeholder="min_rate"
-                                    type="number"
-                                    onChange={handlePayMethodUpdate}
-                                    formik={form}
-                                />
-                                <BaseInput
-                                    step={0.1}
-                                    min={0}
-                                    className="col-6"
-                                    label="max_rate"
-                                    name="max_rate"
-                                    required
-                                    placeholder="max_rate"
-                                    type="number"
-                                    onChange={handlePayMethodUpdate}
-                                    formik={form}
-                                />
-                            </Row>
-                        }
-                        {
-                            (form.values.pay_method === JobPayMethod.SALARY) &&
-                            <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
-                                <BaseInput
-                                    step={0.1}
-                                    min={0}
-                                    className="col-6"
-                                    label="min_salary"
-                                    name="min_salary"
-                                    required
-                                    placeholder="min_salary"
-                                    type="number"
-                                    onChange={handlePayMethodUpdate}
-                                    formik={form}
-                                />
-                                <BaseInput
-                                    step={0.1}
-                                    min={0}
-                                    className="col-6"
-                                    label="max_salary"
-                                    name="max_salary"
-                                    placeholder="max_salary"
-                                    type="number"
-                                    onChange={handlePayMethodUpdate}
-                                    formik={form}
-                                />
-                            </Row>
-                        }
-                        <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
-                            <BaseInput
-                                step={0.1}
-                                min={0}
-                                className="col-6"
-                                label="min_weekly"
-                                name="min_weekly_pay"
-                                required
-                                placeholder="min_weekly"
-                                type="number"
-                                formik={form}
-                                />
-                            <BaseInput
-                                step={0.1}
-                                min={0}
-                                className="col-6"
-                                label="max_weekly"
-                                name="max_weekly_pay"
-                                required
-                                placeholder="max_weekly"
-                                type="number"
-                                formik={form}
-                                />
-                        </Row>
-                        {/* todo: add job pay information */}
-                        <BaseCheckList
-                            className="col-12"
-                            label="benefits"
-                            name="benefits"
-                            placeholder="benefits"
-                            cols={2}
-                            labelPrefix="JobBenefits"
-                            enumType={JobBenefits}
-                            formik={form}
+                                valueKey="id"
+                                labelKey="street"
+                                options={locations}
                             />
-                        {
-                            form.values.benefits.includes(JobBenefits.OTHER) &&
-                            <BaseInput
-                                className="col-12"
-                                label="additional_benefits"
-                                name="benefits_other"
-                                required
-                                placeholder="benefits"
-                                formik={form}
-                                />
-                        }
-                    </div>
-                    <div className="col-md-4">
-                        <h3>{t("vehicle_info")}</h3>
-                        {form.touched.vehicles && typeof form.errors.vehicles === "string" ? <span className="text-danger small">{form.errors.vehicles}</span> : null}
-                        {form.values.vehicles.map((v, i) => {
-                            const basePath = `vehicles.${i}`;
-                            return (
-                                <Row key={i}>
-                                    <BaseSelect
-                                        className="col-10"
-                                        label={`${t("vehicle")} ${i + 1}`}
-                                        name={`${basePath}.id`}
-                                        placeholder="new_vehicle"
-                                        onChange={changeVehicle}
-                                        options={vehicles}
-                                        valueKey="id"
-                                        createLabel={veh => {
-                                            const { type, type_other, make, model, transmission_type, year } = veh;
-                                            let label = type === VehicleType.OTHER ? type_other : t(type);
-
-                                            if (make) label += ` / ${make}`;
-
-                                            if (model) label += ` / ${model}`;
-
-                                            if (transmission_type) label += ` / ${t(transmission_type)}`;
-
-                                            if (year) label += ` / ${year}`;
-                                            return label; //`${()} / ${veh.make} / ${veh.model} / ${t(veh.transmission_type)} / ${veh.year}`
-                                        }}
+                            {(
+                                !!!form.values.location?.id &&
+                                <>
+                                    <BaseInput
+                                        className="col-12"
+                                        label="street"
+                                        name="location.street"
+                                        required
+                                        placeholder="street"
                                         formik={form}
+                                    />
+                                    <BaseInput
+                                        className="col-12"
+                                        label="city"
+                                        name="location.city"
+                                        required
+                                        placeholder="city"
+                                        formik={form}
+                                    />
+                                    <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
+                                        <StateSelect
+                                            className="col-7"
+                                            label="state"
+                                            name="location.state"
+                                            required
+                                            placeholder="state"
+                                            formik={form}
                                         />
-                                    <div className="col-2 mt-4">
-                                        <button className="btn btn-yellow" name={i} onClick={removeVehicle}>x</button>
-                                    </div>
-                                    {
-                                        !!!v.id &&
-                                        <>
-                                            <BaseSelect
-                                                className={`col-${v.type === VehicleType.OTHER ? 6 : 12}`}
-                                                label="type"
-                                                name={`${basePath}.type`}
-                                                required
-                                                placeholder="type"
-                                                labelPrefix="VehicleType"
-                                                enumType={VehicleType}
-                                                formik={form}
-                                                />
-                                            {
-                                                v.type === VehicleType.OTHER &&
-                                                <BaseInput
-                                                    className="col-6"
-                                                    label="other"
-                                                    name={`${basePath}.type_other`}
-                                                    required
-                                                    placeholder="type"
-                                                    formik={form}
-                                                    />
-                                            }
-                                            <BaseInput
-                                                className="col-6"
-                                                label="make"
-                                                name={`${basePath}.make`}
-                                                required
-                                                placeholder="make"
-                                                formik={form}
-                                                />
-                                            <BaseInput
-                                                className="col-6"
-                                                label="model"
-                                                name={`${basePath}.model`}
-                                                required
-                                                placeholder="model"
-                                                formik={form}
-                                                />
-                                            <BaseSelect
-                                                className="col-6"
-                                                label="transmission"
-                                                name={`${basePath}.transmission_type`}
-                                                placeholder="transmission_type"
-                                                labelPrefix="VehicleTransmissionType"
-                                                enumType={VehicleTransmissionType}
-                                                formik={form}
-                                                />
-                                            <BaseInput
-                                                className="col-6"
-                                                label="year"
-                                                name={`${basePath}.year`}
-                                                required
-                                                placeholder="year"
-                                                type="int"
-                                                min={0}
-                                                formik={form}
-                                                />
-                                            <FileInput
-                                                className="col-12"
-                                                label="photo"
-                                                name={`${basePath}.photo`}
-                                                accept="image/*"
-                                                documentType={DocumentType.PHOTO}
-                                                formik={form}
-                                                />
-                                        </>
-                                    }
-                                </Row>
-                            )
-                        })}
-                        <div className="col-6 offset-6 text-end mt-2">
-                            <button className="btn btn-yellow" onClick={addVehicle}>+ {t("more")}</button>
+                                        <BaseInput
+                                            className="col-5"
+                                            label="zip_code"
+                                            name="location.zip_code"
+                                            required
+                                            placeholder="zip_code"
+                                            formik={form}
+                                        />
+                                    </Row>
+                                </>
+                            )}
+                            <BaseInput
+                                className="col-12"
+                                label="expiration_date"
+                                name="expiry_date"
+                                placeholder="expiration_date"
+                                type="date"
+                                formik={form}
+                            />
+                            <BaseInput
+                                className="col-12"
+                                label="drivers_needed"
+                                name="drivers_needed"
+                                placeholder="drivers_needed"
+                                type="int"
+                                min="0"
+                                formik={form}
+                            />
+                            <BaseSelect
+                                className="col-12"
+                                label="GEOGRAPHY"
+                                name="geography"
+                                required
+                                formik={form}
+                                onChange={onGeographyChange}
+                                labelPrefix="JobGeography"
+                                enumType={JobGeography}
+                            />
+                            <BaseRange
+                                className="col-12"
+                                label="max_applicant_radius"
+                                name="max_applicant_radius"
+                                required
+                                min={1}
+                                max={maxRadius[form.values.geography]}
+                                formik={form}
+                            />
+                            <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
+                                <BaseSelect
+                                    className={`col-${form.values.schedule === JobSchedule.OTHER ? 6 : 12}`}
+                                    label="schedule"
+                                    name="schedule"
+                                    required
+                                    placeholder="schedule"
+                                    labelPrefix="JobSchedule"
+                                    enumType={JobSchedule}
+                                    formik={form}
+                                />
+                                {
+                                    form.values.schedule === JobSchedule.OTHER &&
+                                    <BaseInput
+                                        className="col-6"
+                                        label="other_schedule"
+                                        required
+                                        name="schedule_other"
+                                        placeholder="schedule"
+                                        formik={form}
+                                    />
+                                }
+                            </Row>
+                            <BaseSelect
+                                className="col-12"
+                                label="employment_type"
+                                name="employment_type"
+                                required
+                                placeholder="employment_type"
+                                labelPrefix="JobEmploymentType"
+                                enumType={JobEmploymentType}
+                                formik={form}
+                            />
+                            <BaseCheckList
+                                className="col-12"
+                                label="equipment_type"
+                                name="equipment_type"
+                                placeholder="equipment_type"
+                                cols={2}
+                                labelPrefix="JobEquipmentType"
+                                enumType={JobEquipmentType}
+                                formik={form}
+                            />
+                            {
+                                form.values.equipment_type.includes(JobSchedule.OTHER) &&
+                                <BaseInput
+                                    className="col-12"
+                                    required
+                                    label="other_equipment_type"
+                                    name="equipment_type_other"
+                                    placeholder="equipment_type"
+                                    formik={form}
+                                />
+                            }
+                            <BaseCheckList
+                                className="col-12"
+                                label="delivery_type"
+                                name="delivery_type"
+                                required
+                                placeholder="delivery_type"
+                                cols={2}
+                                labelPrefix="JobDeliveryType"
+                                enumType={JobDeliveryType}
+                                formik={form}
+                            />
+                            <BaseSelect
+                                className="col-12"
+                                label="team_drivers"
+                                name="team_drivers"
+                                required
+                                placeholder="team_drivers"
+                                labelPrefix="JobTeamDriver"
+                                enumType={JobTeamDriver}
+                                formik={form}
+                            />
                         </div>
-                    </div>
-                </div>
-                <hr />
-                <div className="row">
-                    <BaseTextArea
-                        className="col-md-5 offset-md-1"
-                        label="description"
-                        name="description"
-                        required
-                        rows="3"
-                        maxLength={250}
-                        placeholder="description"
-                        formik={form}
-                        />
-                    <BaseTextArea
-                        className="col-md-5"
-                        label={`${t("sms_summary")} (${t("max_100_characters")})`}
-                        name="description_short"
-                        required
-                        rows="3"
-                        maxLength="100"
-                        placeholder="sms_summary"
-                        formik={form}
-                        />
-                </div>
-                <hr />
-                <div className="row">
-                    <div className="col-12">
-                        <h3>{t("requirements")}</h3>
-                    </div>
-                    <div className="col-md-6">
-                        <BaseCheckList
-                            className="col-12"
-                            label="cdl_class"
-                            name="cdl_class"
-                            cols={2}
-                            labelPrefix="DriverLicenseType"
-                            enumType={DriverLicenseType}
-                            formik={form}
+                        <div className="col-md-4">
+                            <h3>{t("benefits")}</h3>
+                            <BaseSelect
+                                className="col-12"
+                                label="pay_method"
+                                name="pay_method"
+                                required
+                                placeholder="pay_method"
+                                labelPrefix="JobPayMethod"
+                                enumType={JobPayMethod}
+                                formik={form}
                             />
-                        <BaseInput
-                            className="col-12"
-                            label="min_years_experience"
-                            name="min_years_experience"
-                            placeholder="min_years_experience"
-                            min="0"
-                            type="int"
-                            formik={form}
+                            {
+                                (form.values.pay_method === JobPayMethod.PERCENT_PER_MOVE ||
+                                    form.values.pay_method === JobPayMethod.PERCENT_PER_WEIGHT) &&
+                                <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
+                                    <BaseInput
+                                        step={0.1}
+                                        min={0}
+                                        className="col-6"
+                                        label="min_percent"
+                                        name="min_percent"
+                                        required
+                                        placeholder="min_percent"
+                                        type="number"
+                                        onChange={handlePayMethodUpdate}
+                                        formik={form}
+                                    />
+                                    <BaseInput
+                                        step={0.1}
+                                        min={0}
+                                        className="col-6"
+                                        label="max_percent"
+                                        name="max_percent"
+                                        required
+                                        placeholder="max_percent"
+                                        type="number"
+                                        onChange={handlePayMethodUpdate}
+                                        formik={form}
+                                    />
+                                </Row>
+                            }
+                            {
+                                form.values.pay_method === JobPayMethod.RATE_PER_MILE &&
+                                <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
+                                    <BaseInput
+                                        step={0.1}
+                                        min={0}
+                                        className="col-6"
+                                        label="min_miles"
+                                        name="min_miles"
+                                        required
+                                        placeholder="min_miles"
+                                        type="number"
+                                        onChange={handlePayMethodUpdate}
+                                        formik={form}
+                                    />
+                                    <BaseInput
+                                        step={0.1}
+                                        min={0}
+                                        className="col-6"
+                                        label="max_miles"
+                                        name="max_miles"
+                                        required
+                                        placeholder="max_miles"
+                                        type="number"
+                                        onChange={handlePayMethodUpdate}
+                                        formik={form}
+                                    />
+                                </Row>
+                            }
+                            {
+                                form.values.pay_method === JobPayMethod.HOURLY &&
+                                <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
+                                    <BaseInput
+                                        step={0.1}
+                                        min={0}
+                                        className="col-6"
+                                        label="min_hours"
+                                        name="min_hours"
+                                        required
+                                        placeholder="min_hours"
+                                        type="number"
+                                        onChange={handlePayMethodUpdate}
+                                        formik={form}
+                                    />
+                                    <BaseInput
+                                        step={0.1}
+                                        min={0}
+                                        className="col-6"
+                                        label="max_hours"
+                                        name="max_hours"
+                                        required
+                                        placeholder="max_hours"
+                                        type="number"
+                                        onChange={handlePayMethodUpdate}
+                                        formik={form}
+                                    />
+                                </Row>
+                            }
+                            {
+                                (form.values.pay_method === JobPayMethod.RATE_PER_MILE ||
+                                    form.values.pay_method === JobPayMethod.HOURLY) &&
+                                <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
+                                    <BaseInput
+                                        step={0.1}
+                                        min={0}
+                                        className="col-6"
+                                        label="min_rate"
+                                        name="min_rate"
+                                        required
+                                        placeholder="min_rate"
+                                        type="number"
+                                        onChange={handlePayMethodUpdate}
+                                        formik={form}
+                                    />
+                                    <BaseInput
+                                        step={0.1}
+                                        min={0}
+                                        className="col-6"
+                                        label="max_rate"
+                                        name="max_rate"
+                                        required
+                                        placeholder="max_rate"
+                                        type="number"
+                                        onChange={handlePayMethodUpdate}
+                                        formik={form}
+                                    />
+                                </Row>
+                            }
+                            {
+                                (form.values.pay_method === JobPayMethod.SALARY) &&
+                                <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
+                                    <BaseInput
+                                        step={0.1}
+                                        min={0}
+                                        className="col-6"
+                                        label="min_salary"
+                                        name="min_salary"
+                                        required
+                                        placeholder="min_salary"
+                                        type="number"
+                                        onChange={handlePayMethodUpdate}
+                                        formik={form}
+                                    />
+                                    <BaseInput
+                                        step={0.1}
+                                        min={0}
+                                        className="col-6"
+                                        label="max_salary"
+                                        name="max_salary"
+                                        placeholder="max_salary"
+                                        type="number"
+                                        onChange={handlePayMethodUpdate}
+                                        formik={form}
+                                    />
+                                </Row>
+                            }
+                            <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
+                                <BaseInput
+                                    step={0.1}
+                                    min={0}
+                                    className="col-6"
+                                    label="min_weekly"
+                                    name="min_weekly_pay"
+                                    required
+                                    placeholder="min_weekly"
+                                    type="number"
+                                    formik={form}
+                                />
+                                <BaseInput
+                                    step={0.1}
+                                    min={0}
+                                    className="col-6"
+                                    label="max_weekly"
+                                    name="max_weekly_pay"
+                                    required
+                                    placeholder="max_weekly"
+                                    type="number"
+                                    formik={form}
+                                />
+                            </Row>
+                            {/* todo: add job pay information */}
+                            <BaseCheckList
+                                className="col-12"
+                                label="benefits"
+                                name="benefits"
+                                placeholder="benefits"
+                                cols={2}
+                                labelPrefix="JobBenefits"
+                                enumType={JobBenefits}
+                                formik={form}
                             />
-                        <BaseSelect
-                            className="col-12"
-                            label="min_degree"
-                            name="min_degree"
-                            placeholder="min_degree"
-                            labelPrefix="EducationLevel"
-                            enumType={EducationLevel}
-                            formik={form}
-                            />
-                        <div className="col-12">
-                            <label>{t("required_skills")}:</label>
-                            {form.touched.required_skills && typeof form.errors.required_skills === "string" ? <span className="text-danger small">{form.errors.required_skills}</span> : null}
-                            {form.values.required_skills.map((v, i) => {
+                            {
+                                form.values.benefits.includes(JobBenefits.OTHER) &&
+                                <BaseInput
+                                    className="col-12"
+                                    label="additional_benefits"
+                                    name="benefits_other"
+                                    required
+                                    placeholder="benefits"
+                                    formik={form}
+                                />
+                            }
+                        </div>
+                        <div className="col-md-4">
+                            <h3>{t("vehicle_info")}</h3>
+                            {form.touched.vehicles && typeof form.errors.vehicles === "string" ? <span className="text-danger small">{form.errors.vehicles}</span> : null}
+                            {form.values.vehicles.map((v, i) => {
+                                const basePath = `vehicles.${i}`;
                                 return (
                                     <Row key={i}>
                                         <BaseSelect
-                                            className="col-5"
-                                            label="type"
-                                            placeholder="type"
-                                            name={`required_skills.${i}.type`}
-                                            required
-                                            labelPrefix="JobEquipmentType"
-                                            enumType={JobEquipmentType}
+                                            className="col-10"
+                                            label={`${t("vehicle")} ${i + 1}`}
+                                            name={`${basePath}.id`}
+                                            placeholder="new_vehicle"
+                                            onChange={changeVehicle}
+                                            options={vehicles}
+                                            valueKey="id"
+                                            createLabel={veh => {
+                                                const { type, type_other, make, model, transmission_type, year } = veh;
+                                                let label = type === VehicleType.OTHER ? type_other : t(type);
+
+                                                if (make) label += ` / ${make}`;
+
+                                                if (model) label += ` / ${model}`;
+
+                                                if (transmission_type) label += ` / ${t(transmission_type)}`;
+
+                                                if (year) label += ` / ${year}`;
+                                                return label; //`${()} / ${veh.make} / ${veh.model} / ${t(veh.transmission_type)} / ${veh.year}`
+                                            }}
                                             formik={form}
-                                            />
-                                        <BaseInput
-                                            className="col-5"
-                                            label="years"
-                                            placeholder="years"
-                                            name={`required_skills.${i}.years`}
-                                            required
-                                            min="1"
-                                            type="int"
-                                            formik={form}
-                                            />
+                                        />
                                         <div className="col-2 mt-4">
-                                            <button className="btn btn-yellow" name={i} onClick={removeRequiredSkill}>x</button>
+                                            <button className="btn btn-yellow" name={i} onClick={removeVehicle}>x</button>
                                         </div>
-                                    </Row>);
+                                        {
+                                            !!!v.id &&
+                                            <>
+                                                <BaseSelect
+                                                    className={`col-${v.type === VehicleType.OTHER ? 6 : 12}`}
+                                                    label="type"
+                                                    name={`${basePath}.type`}
+                                                    required
+                                                    placeholder="type"
+                                                    labelPrefix="VehicleType"
+                                                    enumType={VehicleType}
+                                                    formik={form}
+                                                />
+                                                {
+                                                    v.type === VehicleType.OTHER &&
+                                                    <BaseInput
+                                                        className="col-6"
+                                                        label="other"
+                                                        name={`${basePath}.type_other`}
+                                                        required
+                                                        placeholder="type"
+                                                        formik={form}
+                                                    />
+                                                }
+                                                <BaseInput
+                                                    className="col-6"
+                                                    label="make"
+                                                    name={`${basePath}.make`}
+                                                    required
+                                                    placeholder="make"
+                                                    formik={form}
+                                                />
+                                                <BaseInput
+                                                    className="col-6"
+                                                    label="model"
+                                                    name={`${basePath}.model`}
+                                                    required
+                                                    placeholder="model"
+                                                    formik={form}
+                                                />
+                                                <BaseSelect
+                                                    className="col-6"
+                                                    label="transmission"
+                                                    name={`${basePath}.transmission_type`}
+                                                    placeholder="transmission_type"
+                                                    labelPrefix="VehicleTransmissionType"
+                                                    enumType={VehicleTransmissionType}
+                                                    formik={form}
+                                                />
+                                                <BaseInput
+                                                    className="col-6"
+                                                    label="year"
+                                                    name={`${basePath}.year`}
+                                                    required
+                                                    placeholder="year"
+                                                    type="int"
+                                                    min={0}
+                                                    formik={form}
+                                                />
+                                                <FileInput
+                                                    className="col-12"
+                                                    label="photo"
+                                                    name={`${basePath}.photo`}
+                                                    accept="image/*"
+                                                    documentType={DocumentType.PHOTO}
+                                                    formik={form}
+                                                />
+                                            </>
+                                        }
+                                    </Row>
+                                )
                             })}
                             <div className="col-6 offset-6 text-end mt-2">
-                                <button className="btn btn-yellow" onClick={addRequiredSkills}>+ {t("more")}</button>
+                                <button className="btn btn-yellow" onClick={addVehicle}>+ {t("more")}</button>
                             </div>
                         </div>
+                    </div>
+                    <hr />
+                    <div className="row">
                         <BaseTextArea
-                            className="col-12"
-                            label="other_required_skills"
-                            name="required_skills_other"
-                            placeholder="other_required_skills"
-                            rows="1"
+                            className="col-md-5 offset-md-1"
+                            label="description"
+                            name="description"
+                            required
+                            rows="3"
+                            maxLength={250}
+                            placeholder="description"
                             formik={form}
+                        />
+                        <BaseTextArea
+                            className="col-md-5"
+                            label={`${t("sms_summary")} (${t("max_100_characters")})`}
+                            name="description_short"
+                            required
+                            rows="3"
+                            maxLength="100"
+                            placeholder="sms_summary"
+                            formik={form}
+                        />
+                    </div>
+                    <hr />
+                    <div className="row">
+                        <div className="col-12">
+                            <h3>{t("requirements")}</h3>
+                        </div>
+                        <div className="col-md-6">
+                            <BaseCheckList
+                                className="col-12"
+                                label="cdl_class"
+                                name="cdl_class"
+                                cols={2}
+                                labelPrefix="DriverLicenseType"
+                                enumType={DriverLicenseType}
+                                formik={form}
                             />
-                        {
-                            form.values.employment_type === JobEmploymentType.OWNER_OPERATOR &&
+                            <BaseInput
+                                className="col-12"
+                                label="min_years_experience"
+                                name="min_years_experience"
+                                placeholder="min_years_experience"
+                                min="0"
+                                type="int"
+                                formik={form}
+                            />
+                            <BaseSelect
+                                className="col-12"
+                                label="min_degree"
+                                name="min_degree"
+                                placeholder="min_degree"
+                                labelPrefix="EducationLevel"
+                                enumType={EducationLevel}
+                                formik={form}
+                            />
                             <div className="col-12">
-                                <label>{t("required_equipment")}:</label>
-                                {form.touched.required_equipment && typeof form.errors.required_equipment === "string" ? <span className="text-danger small">{form.errors.required_equipment}</span> : null}
-                                {form.values.required_equipment.map((v, i) => {
-                                    const get = function (part, field) {
-                                        if (part.required_equipment && part.required_equipment[i])
-                                            return part.required_equipment[i][field];
-                                    }
+                                <label>{t("required_skills")}:</label>
+                                {form.touched.required_skills && typeof form.errors.required_skills === "string" ? <span className="text-danger small">{form.errors.required_skills}</span> : null}
+                                {form.values.required_skills.map((v, i) => {
                                     return (
                                         <Row key={i}>
                                             <BaseSelect
                                                 className="col-5"
                                                 label="type"
                                                 placeholder="type"
-                                                name={`required_equipment.${i}.type`}
+                                                name={`required_skills.${i}.type`}
                                                 required
                                                 labelPrefix="JobEquipmentType"
                                                 enumType={JobEquipmentType}
@@ -1207,191 +1160,255 @@ export default function Job() {
                                             />
                                             <BaseInput
                                                 className="col-5"
-                                                label="quantity"
-                                                placeholder="quantity"
-                                                name={`required_equipment.${i}.quantity`}
+                                                label="years"
+                                                placeholder="years"
+                                                name={`required_skills.${i}.years`}
                                                 required
                                                 min="1"
                                                 type="int"
                                                 formik={form}
                                             />
                                             <div className="col-2 mt-4">
-                                                <button className="btn btn-yellow" name={i} onClick={removeRequiredEquipment}>x</button>
+                                                <button className="btn btn-yellow" name={i} onClick={removeRequiredSkill}>x</button>
                                             </div>
                                         </Row>);
                                 })}
                                 <div className="col-6 offset-6 text-end mt-2">
-                                    <button className="btn btn-yellow" onClick={addRequiredEquipment}>+ {t("more")}</button>
+                                    <button className="btn btn-yellow" onClick={addRequiredSkills}>+ {t("more")}</button>
                                 </div>
                             </div>
-                        }
-                        <BaseCheckList
-                            className="col-12"
-                            label="special_endorsements"
-                            name="required_endorsement"
+                            <BaseTextArea
+                                className="col-12"
+                                label="other_required_skills"
+                                name="required_skills_other"
+                                placeholder="other_required_skills"
+                                rows="1"
+                                formik={form}
+                            />
+                            {
+                                form.values.employment_type === JobEmploymentType.OWNER_OPERATOR &&
+                                <div className="col-12">
+                                    <label>{t("required_equipment")}:</label>
+                                    {form.touched.required_equipment && typeof form.errors.required_equipment === "string" ? <span className="text-danger small">{form.errors.required_equipment}</span> : null}
+                                    {form.values.required_equipment.map((v, i) => {
+                                        const get = function (part, field) {
+                                            if (part.required_equipment && part.required_equipment[i])
+                                                return part.required_equipment[i][field];
+                                        }
+                                        return (
+                                            <Row key={i}>
+                                                <BaseSelect
+                                                    className="col-5"
+                                                    label="type"
+                                                    placeholder="type"
+                                                    name={`required_equipment.${i}.type`}
+                                                    required
+                                                    labelPrefix="JobEquipmentType"
+                                                    enumType={JobEquipmentType}
+                                                    formik={form}
+                                                />
+                                                <BaseInput
+                                                    className="col-5"
+                                                    label="quantity"
+                                                    placeholder="quantity"
+                                                    name={`required_equipment.${i}.quantity`}
+                                                    required
+                                                    min="1"
+                                                    type="int"
+                                                    formik={form}
+                                                />
+                                                <div className="col-2 mt-4">
+                                                    <button className="btn btn-yellow" name={i} onClick={removeRequiredEquipment}>x</button>
+                                                </div>
+                                            </Row>);
+                                    })}
+                                    <div className="col-6 offset-6 text-end mt-2">
+                                        <button className="btn btn-yellow" onClick={addRequiredEquipment}>+ {t("more")}</button>
+                                    </div>
+                                </div>
+                            }
+                            <BaseCheckList
+                                className="col-12"
+                                label="special_endorsements"
+                                name="required_endorsement"
+                                cols={2}
+                                labelPrefix="DriverEndorsement"
+                                enumType={DriverEndorsement}
+                                formik={form}
+                            />
+                            <BaseCheckList
+                                className="col-12"
+                                label="transmission_type"
+                                name="transmission_type_experience"
+                                cols={2}
+                                labelPrefix="VehicleTransmissionType"
+                                enumType={VehicleTransmissionType}
+                                formik={form}
+                            />
+                        </div>
+                        
+                        <div className="col-md-6">
+                        <BaseSelect
+                            className="col-12 mb-2"
+                            label={t("pay_frequency")}
+                            name="pay_frequency"
+                            placeholder={t("pay_frequency")}
                             cols={2}
-                            labelPrefix="DriverEndorsement"
-                            enumType={DriverEndorsement}
-                            formik={form}
+                            value={form.values.pay_frequency}
+                            onChange={form.handleChange}
+                            handleBlur={form.handleBlur}
+                            touched={form.touched.pay_frequency}
+                            error={form.errors.pay_frequency}
+                            labelPrefix="JobPayFrequency"
+                            enumType={JobPayFrequency}
+                        />
+                            <BaseCheck
+                                className="col-12"
+                                label="must_pass_drug_test"
+                                name="must_pass_drug_test"
+                                formik={form}
                             />
-                        <BaseCheckList
-                            className="col-12"
-                            label="transmission_type"
-                            name="transmission_type_experience"
-                            cols={2}
-                            labelPrefix="VehicleTransmissionType"
-                            enumType={VehicleTransmissionType}
-                            formik={form}
+                            <BaseCheck
+                                className="col-12"
+                                label="must_have_clean_mvr"
+                                name="must_have_clean_mvr"
+                                formik={form}
                             />
-                    </div>
-                    <div className="col-md-6">
-                        <BaseCheck
-                            className="col-12"
-                            label="must_pass_drug_test"
-                            name="must_pass_drug_test"
-                            formik={form}
-                            />
-                        <BaseCheck
-                            className="col-12"
-                            label="must_have_clean_mvr"
-                            name="must_have_clean_mvr"
-                            formik={form}
-                            />
-                        {
-                            !form.values.must_have_clean_mvr &&
-                            <div className="col-12">
-                                <label>{t("mvr_requirements")}:</label>
-                                {form.touched.mvr_requirements && typeof form.errors.mvr_requirements === "string" ? <span className="text-danger small">{form.errors.mvr_requirements}</span> : null}
-                                {form.values.mvr_requirements.map((v, i) => {
-                                    return (
-                                        <div key={i} className="row">
-                                            <BaseSelect
-                                                className="col-3"
-                                                label="max"
-                                                name={`mvr_requirements.${i}.max_count`}
-                                                required
-                                                value={v.max_count}
-                                                options={counts}
-                                                formik={form}
-                                            />
-                                            <BaseSelect
-                                                className="col-4"
-                                                label="type"
-                                                placeholder="type"
-                                                name={`mvr_requirements.${i}.type`}
-                                                required
-                                                labelPrefix="MvrType"
-                                                enumType={MvrType}
-                                                formik={form}
-                                            />
-                                            <BaseSelect
-                                                className="col-3"
-                                                label="within"
-                                                name={`mvr_requirements.${i}.max_years`}
-                                                required
-                                                value={v.max_years}
-                                                options={years}
-                                                formik={form}
-                                            />
-                                            <div className="col-2 mt-4">
-                                                <button className="btn btn-yellow" name={i} onClick={removeMvrRequirement}>x</button>
-                                            </div>
-                                        </div>);
-                                })}
-                                <div className="col-6 offset-6 text-end mt-2">
-                                    <button className="btn btn-yellow" onClick={addMvrRequirement}>+ {t("more")}</button>
+                            {
+                                !form.values.must_have_clean_mvr &&
+                                <div className="col-12">
+                                    <label>{t("mvr_requirements")}:</label>
+                                    {form.touched.mvr_requirements && typeof form.errors.mvr_requirements === "string" ? <span className="text-danger small">{form.errors.mvr_requirements}</span> : null}
+                                    {form.values.mvr_requirements.map((v, i) => {
+                                        return (
+                                            <div key={i} className="row">
+                                                <BaseSelect
+                                                    className="col-3"
+                                                    label="max"
+                                                    name={`mvr_requirements.${i}.max_count`}
+                                                    required
+                                                    value={v.max_count}
+                                                    options={counts}
+                                                    formik={form}
+                                                />
+                                                <BaseSelect
+                                                    className="col-4"
+                                                    label="type"
+                                                    placeholder="type"
+                                                    name={`mvr_requirements.${i}.type`}
+                                                    required
+                                                    labelPrefix="MvrType"
+                                                    enumType={MvrType}
+                                                    formik={form}
+                                                />
+                                                <BaseSelect
+                                                    className="col-3"
+                                                    label="within"
+                                                    name={`mvr_requirements.${i}.max_years`}
+                                                    required
+                                                    value={v.max_years}
+                                                    options={years}
+                                                    formik={form}
+                                                />
+                                                <div className="col-2 mt-4">
+                                                    <button className="btn btn-yellow" name={i} onClick={removeMvrRequirement}>x</button>
+                                                </div>
+                                            </div>);
+                                    })}
+                                    <div className="col-6 offset-6 text-end mt-2">
+                                        <button className="btn btn-yellow" onClick={addMvrRequirement}>+ {t("more")}</button>
+                                    </div>
                                 </div>
-                            </div>
-                        }
-                        <BaseCheck
-                            className="col-12"
-                            label="accept_sap_graduates"
-                            name="accept_sap_graduates"
-                            formik={form}
+                            }
+                            <BaseCheck
+                                className="col-12"
+                                label="accept_sap_graduates"
+                                name="accept_sap_graduates"
+                                formik={form}
                             />
-                        <BaseCheck
-                            className="col-12"
-                            label="no_criminal_history"
-                            name="must_have_clean_criminal_history"
-                            formik={form}
+                            <BaseCheck
+                                className="col-12"
+                                label="no_criminal_history"
+                                name="must_have_clean_criminal_history"
+                                formik={form}
                             />
-                        {
-                            !form.values.must_have_clean_criminal_history &&
-                            <div className="col-12">
-                                <label>{t("criminal_history")}:</label>
-                                {form.touched.criminal_history && typeof form.errors.criminal_history === "string" ? <span className="text-danger small">{form.errors.criminal_history}</span> : null}
-                                {form.values.criminal_history.map((v, i) => {
-                                    const get = function (part, field) {
-                                        if (part.criminal_history && part.criminal_history[i])
-                                            return part.criminal_history[i][field];
-                                    }
-                                    return (
-                                        <div key={i} className="row">
-                                            <BaseSelect
-                                                className="col-3"
-                                                label="max"
-                                                name={`criminal_history.${i}.max_count`}
-                                                required
-                                                options={counts}
-                                                formik={form}
-                                            />
-                                            <BaseSelect
-                                                className="col-4"
-                                                label="type"
-                                                placeholder="type"
-                                                name={`criminal_history.${i}.type`}
-                                                required
-                                                labelPrefix="CriminalHistoryType"
-                                                enumType={CriminalHistoryType}
-                                                formik={form}
-                                            />
-                                            <BaseSelect
-                                                className="col-3"
-                                                label="within"
-                                                name={`criminal_history.${i}.max_years`}
-                                                required
-                                                options={years}
-                                                formik={form}
-                                            />
-                                            <div className="col-2 mt-4">
-                                                <button className="btn btn-yellow" name={i} onClick={removeCriminalHistoryRequirement}>x</button>
-                                            </div>
-                                        </div>);
-                                })}
-                                <div className="col-6 offset-6 text-end mt-2">
-                                    <button className="btn btn-yellow" onClick={addCriminalHistoryRequirement}>+ {t("more")}</button>
+                            {
+                                !form.values.must_have_clean_criminal_history &&
+                                <div className="col-12">
+                                    <label>{t("criminal_history")}:</label>
+                                    {form.touched.criminal_history && typeof form.errors.criminal_history === "string" ? <span className="text-danger small">{form.errors.criminal_history}</span> : null}
+                                    {form.values.criminal_history.map((v, i) => {
+                                        const get = function (part, field) {
+                                            if (part.criminal_history && part.criminal_history[i])
+                                                return part.criminal_history[i][field];
+                                        }
+                                        return (
+                                            <div key={i} className="row">
+                                                <BaseSelect
+                                                    className="col-3"
+                                                    label="max"
+                                                    name={`criminal_history.${i}.max_count`}
+                                                    required
+                                                    options={counts}
+                                                    formik={form}
+                                                />
+                                                <BaseSelect
+                                                    className="col-4"
+                                                    label="type"
+                                                    placeholder="type"
+                                                    name={`criminal_history.${i}.type`}
+                                                    required
+                                                    labelPrefix="CriminalHistoryType"
+                                                    enumType={CriminalHistoryType}
+                                                    formik={form}
+                                                />
+                                                <BaseSelect
+                                                    className="col-3"
+                                                    label="within"
+                                                    name={`criminal_history.${i}.max_years`}
+                                                    required
+                                                    options={years}
+                                                    formik={form}
+                                                />
+                                                <div className="col-2 mt-4">
+                                                    <button className="btn btn-yellow" name={i} onClick={removeCriminalHistoryRequirement}>x</button>
+                                                </div>
+                                            </div>);
+                                    })}
+                                    <div className="col-6 offset-6 text-end mt-2">
+                                        <button className="btn btn-yellow" onClick={addCriminalHistoryRequirement}>+ {t("more")}</button>
+                                    </div>
                                 </div>
-                            </div>
-                        }
-                        <BaseInput
-                            className="col-12"
-                            label="accidents_last_5_years"
-                            placeholder="count"
-                            name="max_accidents"
-                            min="0"
-                            type="int"
-                            formik={form}
+                            }
+                            <BaseInput
+                                className="col-12"
+                                label="accidents_last_5_years"
+                                placeholder="count"
+                                name="max_accidents"
+                                min="0"
+                                type="int"
+                                formik={form}
                             />
-                        <BaseTextArea
-                            className="col-12"
-                            label="other_safety_requirements"
-                            name="safety_requirements_other"
-                            placeholder="other_safety_requirements"
-                            rows="1"
-                            formik={form}
+                            <BaseTextArea
+                                className="col-12"
+                                label="other_safety_requirements"
+                                name="safety_requirements_other"
+                                placeholder="other_safety_requirements"
+                                rows="1"
+                                formik={form}
                             />
+                        </div>
                     </div>
-                </div>
-                <div className="col-12 border-0 text-end">
-                    <div className="col">
-                        <button type="submit" className={`btn btn-primary`} >
-                            {t("update")}
-                        </button>
+                    <div className="col-12 border-0 text-end">
+                        <div className="col">
+                            <button type="submit" className={`btn btn-primary`} >
+                                {t("update")}
+                            </button>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
 
-        </ChildPageLayout>
+            </ChildPageLayout>
         </>
     )
 };
