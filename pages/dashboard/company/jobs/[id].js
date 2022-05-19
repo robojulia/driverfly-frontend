@@ -649,7 +649,7 @@ export default function Job() {
                                         form.values.pay_method === JobPayMethod.PERCENT_PER_WEIGHT) &&
                                     <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                         <BaseInput
-                                            step={0.1}
+                                            step={0.01}
                                             min={0}
                                             className="col-6"
                                             label="min_percent"
@@ -661,7 +661,7 @@ export default function Job() {
                                             formik={form}
                                         />
                                         <BaseInput
-                                            step={0.1}
+                                            step={0.01}
                                             min={0}
                                             className="col-6"
                                             label="max_percent"
@@ -678,7 +678,7 @@ export default function Job() {
                                     form.values.pay_method === JobPayMethod.RATE_PER_MILE &&
                                     <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                         <BaseInput
-                                            step={0.1}
+                                            step={0.01}
                                             min={0}
                                             className="col-6"
                                             label="min_miles"
@@ -690,7 +690,7 @@ export default function Job() {
                                             formik={form}
                                         />
                                         <BaseInput
-                                            step={0.1}
+                                            step={0.01}
                                             min={0}
                                             className="col-6"
                                             label="max_miles"
@@ -707,7 +707,7 @@ export default function Job() {
                                     form.values.pay_method === JobPayMethod.HOURLY &&
                                     <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                         <BaseInput
-                                            step={0.1}
+                                            step={0.01}
                                             min={0}
                                             className="col-6"
                                             label="min_hours"
@@ -719,7 +719,7 @@ export default function Job() {
                                             formik={form}
                                         />
                                         <BaseInput
-                                            step={0.1}
+                                            step={0.01}
                                             min={0}
                                             className="col-6"
                                             label="max_hours"
@@ -737,7 +737,7 @@ export default function Job() {
                                         form.values.pay_method === JobPayMethod.HOURLY) &&
                                     <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                         <BaseInput
-                                            step={0.1}
+                                            step={0.01}
                                             min={0}
                                             className="col-6"
                                             label="min_rate"
@@ -749,7 +749,7 @@ export default function Job() {
                                             formik={form}
                                         />
                                         <BaseInput
-                                            step={0.1}
+                                            step={0.01}
                                             min={0}
                                             className="col-6"
                                             label="max_rate"
@@ -766,7 +766,7 @@ export default function Job() {
                                     (form.values.pay_method === JobPayMethod.SALARY) &&
                                     <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                         <BaseInput
-                                            step={0.1}
+                                            step={0.01}
                                             min={0}
                                             className="col-6"
                                             label="min_salary"
@@ -778,7 +778,7 @@ export default function Job() {
                                             formik={form}
                                         />
                                         <BaseInput
-                                            step={0.1}
+                                            step={0.01}
                                             min={0}
                                             className="col-6"
                                             label="max_salary"
@@ -792,7 +792,7 @@ export default function Job() {
                                 }
                                 <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                     <BaseInput
-                                        step={0.1}
+                                        step={0.01}
                                         min={0}
                                         className="col-6"
                                         label="min_weekly"
@@ -803,7 +803,7 @@ export default function Job() {
                                         formik={form}
                                     />
                                     <BaseInput
-                                        step={0.1}
+                                        step={0.01}
                                         min={0}
                                         className="col-6"
                                         label="max_weekly"
