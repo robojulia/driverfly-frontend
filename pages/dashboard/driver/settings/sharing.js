@@ -115,59 +115,66 @@ export default function Sharing() {
 
 
     return (<>
-    <PageLayout title="SHARING">
-        <form onSubmit={form.handleSubmit}>
-            <Row>
-                <BaseSelect
-                    className="col-6 mt-3"
-                    label="share_my_mvr"
-                    name="mvr.value"
-                    formik={form}
-                    labelPrefix="SharePreference"
-                    enumType={SharePreference}
+        <PageLayout title="SHARING">
+            <form onSubmit={form.handleSubmit}>
+                <Row>
+                    <BaseSelect
+                        className="col-6 mt-3"
+                        label="share_my_mvr"
+                        name="mvr.value"
+                        formik={form}
+                        labelPrefix="SharePreference"
+                        enumType={SharePreference}
                     />
-                <BaseSelect
-                    className="col-6 mt-3"
-                    label="share_my_drivers_license"
-                    name="drivers_license.value"
-                    formik={form}
-                    labelPrefix="SharePreference"
-                    enumType={SharePreference}
+                    <BaseSelect
+                        className="col-6 mt-3"
+                        label="share_my_drivers_license"
+                        name="drivers_license.value"
+                        formik={form}
+                        labelPrefix="SharePreference"
+                        enumType={SharePreference}
                     />
-                <BaseSelect
-                    className="col-6 mt-3"
-                    label="share_my_medical_card"
-                    name="medical_card.value"
-                    formik={form}
-                    labelPrefix="SharePreference"
-                    enumType={SharePreference}
+                    <BaseSelect
+                        className="col-6 mt-3"
+                        label="share_my_medical_card"
+                        name="medical_card.value"
+                        formik={form}
+                        labelPrefix="SharePreference"
+                        enumType={SharePreference}
                     />
-                <BaseSelect
-                    className="col-6 mt-3"
-                    label="SHARE_PAST_EMPLOYMENT"
-                    name="employment_history.value"
-                    formik={form}
-                    labelPrefix="SharePreference"
-                    enumType={SharePreference}
+                    <BaseSelect
+                        className="col-6 mt-3"
+                        label="SHARE_PAST_EMPLOYMENT"
+                        name="employment_history.value"
+                        formik={form}
+                        labelPrefix="SharePreference"
+                        enumType={SharePreference}
                     />
-            </Row>
-            <Row className="mt-2">
-                <Col className="text-end">
-                    <Button type="submit" variant="primary" disabled={form.isSubmitting || !form.isValid || !form.dirty}>
-                        {t("UPDATE")}
-                    </Button>
-                </Col>
-            </Row>
-        </form>
-    </PageLayout>
+                    <BaseSelect
+                        className="col-6 mt-3"
+                        label="SHARE_MY_PHYSICALS"
+                        name="physical.value"
+                        formik={form}
+                        labelPrefix="SharePreference"
+                        enumType={SharePreference}
+                    />
+                </Row>
+                <Row className="mt-2">
+                    <Col className="text-end">
+                        <Button type="submit" variant="primary" disabled={form.isSubmitting || !form.isValid || !form.dirty}>
+                            {t("UPDATE")}
+                        </Button>
+                    </Col>
+                </Row>
+            </form>
+        </PageLayout>
     </>);
 }
 
 Sharing.getLayout = function getLayout(page) {
     return (
-      <FullLayout>
-        {page}
-      </FullLayout>
+        <FullLayout>
+            {page}
+        </FullLayout>
     )
-  }
-  
+}

@@ -16,13 +16,16 @@ export default function ShowEnumFromString(props) {
     const arr = str.split(separator)
 
     const templateString = arr.map(item => {
-        const enumValue = !(props.enumArray[item]) ? '' : (skipLowerCase ? props.enumArray[item] : props.enumArray[item].toLowerCase())
+        const enumValue = !(props.enumArray[item]) ? '' : (skipLowerCase ? props.enumArray[item] : props.enumArray[item])
         return skipTranslate ? enumValue : t((props.labelPrefix ? props.labelPrefix + "." : "") + enumValue)
     }).join(', ')
 
     const popover = (
         <Popover id="popover-basic">
-            {/* <Popover.Header as="h3">Popover right</Popover.Header> */}
+            {
+                props.popover_header &&
+                <Popover.Header as="h3">{props.popover_header}</Popover.Header>
+            }
             <Popover.Body>
                 {templateString}
             </Popover.Body>

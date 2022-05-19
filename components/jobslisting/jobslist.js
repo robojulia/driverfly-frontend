@@ -70,7 +70,7 @@ export default function JobsList() {
                     </>
                   }
                   <p>
-                   < CurrencyDollar className='mr-1' />{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} per week </p>
+                   < CurrencyDollar className='mr-1' />{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} {t("per_week")} </p>
                 </div>
                 <div className="job-location">
                 

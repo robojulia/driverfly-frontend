@@ -21,10 +21,11 @@ import * as yup from "yup";
 import "../../utils/yup";
 
 import { VehicleTransmissionType } from '../../enums/vehicles/vehicle-transmission-type.enum';
+import { BasicEntity } from '../BasicEntity.entity';
 
 export class JobEntity {
   id?: number;
-  location: LocationEntity = null;
+  location: LocationEntity = new LocationEntity();
   company: CompanyEntity = null;
   title: string;
   description: string;
@@ -77,7 +78,7 @@ export class JobEntity {
   static yupSchema() {
     return yup.object({
       title: yup.string().required().max(100).nullable(),
-      location: LocationEntity.existingOrNewYupSchema(),
+      location: BasicEntity.yupSchema(),
       description: yup.string().max(250).required().nullable(),
       description_short: yup.string().max(250).required().nullable(),
       drivers_needed: yup.number().min(0).nullable(),
@@ -163,9 +164,9 @@ export class JobEntity {
           is: v => v.includes(JobBenefits.OTHER),
           then: yup.string().required().nullable()
       }).nullable(),
-      vehicles: yup.array(
-        VehicleEntity.existingOrCreateYupSchema()
-      ).nullable(),
+      vehicles: (yup.array(
+        BasicEntity.yupSchema()
+      ) as any).unique("id").nullable(),
       cdl_class: yup.array(
           (yup.string() as any)
               .enum(DriverLicenseType)

@@ -26,8 +26,8 @@ export default function Dashboard() {
     const { authCheck } = useAuth();
 
     const user = authCheck();
-    const baseApi = new BaseApi();
     const dashboardApi = new DashboardApi();
+    const applicantApi = new ApplicantApi();
 
     const [stats, setStats] = useState({
         [ApplicantStatus.APPLIED]: 0,
@@ -58,9 +58,8 @@ export default function Dashboard() {
 
     useEffect(async () => {
         getDashboardData()
-        const api = new ApplicantApi();
-        const applicant = await api.getByUserId();
-        setDriver(applicant);
+        const driver = await applicantApi.getByUserId();
+        setDriver(driver);
     }, []);
 
     return (
@@ -137,7 +136,7 @@ export default function Dashboard() {
                         <tbody>
                             <tr>
                                 <td>
-                                    {/* {t(`DriverLicenseType.${driver.license_type}`)} */}
+                                    {t(`DriverLicenseType.${driver.license_type}`)}
                                 </td>
                                 <td>
                                     {driver.years_cdl_experience || 0}
@@ -146,7 +145,7 @@ export default function Dashboard() {
                                     {driver.license_number || "N/A"}
                                 </td>
                                 <td className="p-0">
-                                    <Link href="/dashboard/driver/my-account">
+                                    <Link href="/dashboard/driver/settings/applicant">
                                         <button className={`text-white ${style.btn_blue}`}>{t("update_status")}</button>
                                     </Link>
                                 </td>
