@@ -1,0 +1,15 @@
+.form_combobox_item {
+    color: black !important;
+    /* border-bottom: 1px black solid; */
+}
+
+.form_combobox_item:hover {
+    background-color: #f2f2f2;
+    color: black !important;
+}
+
+.form_combobox_item em {
+    color: #5dcac4;
+    font-weight: bold;
+    padding: 0px 2px 2px 0px;
+}

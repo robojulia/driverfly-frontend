@@ -5,7 +5,7 @@ import Sidebar from "../sidebars/Sidebar";
 import Head from "next/head";
 
 import { useTranslation } from "../../../../hooks/useTranslation";
-import { Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, CheckSquareFill, GiftFill, GearFill } from 'react-bootstrap-icons';
+import { Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, CheckSquareFill, GiftFill, GearFill, EnvelopeFill } from 'react-bootstrap-icons';
 
 // company layout
 const FullLayout = ({ children }) => {
@@ -34,26 +34,13 @@ const FullLayout = ({ children }) => {
       text: "APPLICANTS",
       startsWith: true
     },
-    // {
-    //   pathname: "/dashboard/company/driver-applications-and-resume",
-    //   icon: AssignmentIcon,
-    //   text: t("DRIVER_APPLICATION")
-    // },
-    // {
-    //   pathname: "/dashboard/company/sms",
-    //   icon: EmailIcon,
-    //   text: t("MESSAGES")
-    // },
-    // {
-    //   pathname: "/dashboard/company/driver-directory",
-    //   icon: ContactPageIcon,
-    //   text: t("DRIVER_DIRECTORY")
-    // },
-    // {
-    //   pathname: "/dashboard/company/safety-and-complience",
-    //   icon: GppGoodIcon,
-    //   text: t("SAFETY_COMPLIANCE")
-    // },
+    {
+      pathname: "/dashboard/company/messages",
+      icon: EnvelopeFill,
+      text: "MESSAGES",
+      startsWith: true
+    },
+  
     {
       pathname: "/dashboard/company/settings",
       icon: GearFill,
@@ -72,7 +59,7 @@ const FullLayout = ({ children }) => {
         {
           pathname: "/dashboard/company/settings/locations",
           icon: GeoAltFill,
-          text: "LOCATIONS"
+          text: "TERMINALS"
         },
         {
           pathname: "/dashboard/company/settings/profile",
@@ -81,11 +68,7 @@ const FullLayout = ({ children }) => {
         },
       ],
     },
-    // {
-    //   pathname: "/dashboard/company/admin-approval-jobs",
-    //   icon: null,
-    //   text: "Admin approval for jobs"
-    // }
+  
   ];
 
 

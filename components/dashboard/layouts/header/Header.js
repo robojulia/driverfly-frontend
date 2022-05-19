@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect }  from "react";
 import Link from "next/link";
 import Logo from "../logo/Logo";
 import Image from "next/image";
@@ -23,13 +23,22 @@ import LogoWhite from "../../../../public/dashboard/assets/images/logos/amplelog
 import user1 from "../../../../public/dashboard/assets/images/users/user1.jpg";
 import DriverProfileNav from "./DriverProfileNav";
 import CompanyProfileNav from "./CompanyProfileNav";
+import { useRouter } from "next/router";
 
 const Header = ({ showMobmenu }) => {
 
   const { authCheck, isDriver, isCompany, setAuth } = useAuth();
 
+  const router = useRouter();
+
   const user = authCheck();
 
+
+  useEffect(async () => {
+    if (!user)
+      await router.push('/');
+
+  }, [ user ]);
 
   const [isOpen, setIsOpen] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);

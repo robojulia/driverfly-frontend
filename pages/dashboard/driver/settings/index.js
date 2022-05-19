@@ -22,6 +22,12 @@ import { useTranslation } from "../../../../hooks/useTranslation";
 
 import UserApi from "../../../api/user";
 import ApplicantApi from "../../../api/applicant";
+import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
+
+/**
+ * @type {ApplicantEntity}
+ */
+const APPLICANT_PROTO = null;
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -30,6 +36,8 @@ export default function Profile() {
 
   const { authCheck, setAuth } = useAuth();
   const user = authCheck();
+
+  const [ applicant, setApplicant ] = useState(APPLICANT_PROTO);
 
   const form = useFormik({
     initialValues: {
@@ -46,8 +54,8 @@ export default function Profile() {
       last_name: yup.string().required().nullable(),
       contact_number: yup.string().required().nullable(),
       cell_number: yup.string().required().nullable(),
-      timezone: yup.string().required().nullable(),
-      language: yup.string().required().nullable(),
+      timezone: yup.string().required().nullable().optional(),
+      language: yup.string().required().nullable().optional(),
     }),
     onSubmit: async (values) => {
       const dto = {
@@ -63,24 +71,12 @@ export default function Profile() {
       const applicantApi = new ApplicantApi();
 
       try {
-        let applicant = await applicantApi.getByUserId();
-
-        if (applicant) {
-          applicant = await applicantApi.update(applicant.id, {
-            first_name: values.first_name,
-            last_name: values.last_name,
-            email: values.email,
-            phone: values.contact_number,
-          });
-        }
-        else {
-          applicant = await applicantApi.create({
-            first_name: values.first_name,
-            last_name: values.last_name,
-            email: values.email,
-            phone: values.contact_number,
-          });
-        }
+        await applicantApi.update(applicant.id, {
+          first_name: values.first_name,
+          last_name: values.last_name,
+          email: values.email,
+          phone: values.contact_number,
+        });
         const savedUser = await userApi.update(user.id, dto);
         setAuth({
           ...user,
@@ -92,9 +88,7 @@ export default function Profile() {
           language: savedUser.language,
         });
         toast.success(t("successfully_saved_information"));
-        setTimeout(() => {
-          router.reload();
-        }, 2000);
+        setTimeout(router.reload, 2000);
       }
       catch (e) {
         console.error("Unable to save user", e);
@@ -104,7 +98,11 @@ export default function Profile() {
     }
   });
 
-  useEffect(() => {
+  useEffect(async () => {
+    const applicant = await new ApplicantApi().getByUserId();
+
+    setApplicant(applicant);
+
     form.setValues({
       first_name: user.first_name,
       last_name: user.last_name,
@@ -114,7 +112,7 @@ export default function Profile() {
       timezone: user.timezone,
       language: user.language,
     });
-  }, []);
+  }, [ ]);
 
   return (
     <>

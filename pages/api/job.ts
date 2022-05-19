@@ -1,6 +1,6 @@
 import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
 import { LocationEntity } from "../../models/company/location.entity";
-import VehicleEntity from "../../models/company/vehicle.entity";
+import { VehicleEntity } from "../../models/company/vehicle.entity";
 import { JobEntity } from "../../models/job/job.entity";
 import BaseApi from "./_baseApi";
 import { ApplyJobDto } from "../../models/job/apply-job.dto"

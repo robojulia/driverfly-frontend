@@ -1,10 +1,13 @@
 import axios from "axios"
+import { ArrowLeftRight } from "react-bootstrap-icons"
 import JobApply from "../components/apply"
 import JobDescription from '../components/job-description/JobDescription'
 import JonInformation from '../components/job-information-sidebar/JobInformation'
 import Layout from "../components/layouts"
 import RelatedJobs from '../components/related-jobs/Related-Jobs'
 import SocilShare from '../components/share-link/ShareLink'
+import { ArrowRight } from 'react-bootstrap-icons';
+
 
 export default function Apply ( { data } ) {
   // console.log(data);
@@ -18,11 +21,11 @@ export default function Apply ( { data } ) {
             <div className="col-md-9">
               <div className="ort-inner">
                 <div className="media align-items-center bg-transparent border-0 p-0">
-                  <a href="#" className="text-dark text-center text-decoration-none"> <img className="d-flex mr-4 truck-img mb-3" src="img/CTR-logo-cartoon.png" alt="" /> View all jobs <i className="fa fa-long-arrow-right pl-1" aria-hidden="true"></i></a>
+                  <a href="#" className="text-dark text-center text-decoration-none"> <img className="d-flex mr-4 truck-img mb-3" src="img/CTR-logo-cartoon.png" alt="" /> View all jobs <ArrowRight/></a>
                   <div className="media-body">
                     <h6>Solo</h6>
                     <h4 className="mt-0">{jobDetail.title} <span className="" data-toggle="tooltip"
-                      data-placement="top" title="Tooltip on top"> <i className="fa fa-star" aria-hidden="true"></i> </span> <span className="urgent">{jobDetail.work_type}</span></h4>
+                      data-placement="top" title="Tooltip on top"> <ArrowRight /> </span> <span className="urgent">{jobDetail.work_type}</span></h4>
                     <div className="job-date-author">
                       posted 3 days ago
                       by <a href="" className="employer text-theme">{jobDetail.complany_name}</a>

@@ -2,6 +2,9 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Layout from "../components/layouts";
 import ReCAPTCHA from "react-google-recaptcha";
+import Breadcrumbs from 'nextjs-breadcrumbs';
+import { ArrowLeft, ArrowRight, Newspaper, PersonBadgeFill, QuestionCircle } from 'react-bootstrap-icons';
+
 
 
 export default function Contact() {
@@ -20,10 +23,7 @@ export default function Contact() {
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
                         <h2>Contact</h2>
-                        <ul className="d-flex">
-                            <li><a href="index.html" className="nav-link text-dark px-0">Home <i className="fa fa-caret-right px-2" aria-hidden="true"></i></a></li>
-                            <li><a href="#" className="nav-link text-dark px-0">Contact</a></li>
-                        </ul>
+                        < Breadcrumbs />
                     </div>
                 </div>
             </div>
@@ -67,7 +67,7 @@ export default function Contact() {
                                     onChange={onChange}
                                 />
                                 <div className="form-group">
-                                    <button type="submit" className="btn btn-danger float-right py-3 px-5 mb-4">Submit <i className="fa fa-long-arrow-right ml-2" aria-hidden="true"></i> </button>
+                                    <button type="submit" className="btn btn-danger float-right py-3 px-5 mb-4">Submit <ArrowRight /> </button>
                                 </div>
                             </form>
                         </div>
@@ -75,13 +75,14 @@ export default function Contact() {
                     <div className="row mt-5 pt-4 contact-icon">
                         <div className="col-md-4">
                             <div className="contact-icon-inner">
-                                <i className="fa fa-address-card-o" aria-hidden="true"></i>
+                                < PersonBadgeFill />
+
                             </div>
                             <h3 className="title text-center  my-4"><Link href="https://driverhiringusa.com/register"><a className='text-black'>Want to join us?</a></Link></h3>
                         </div>
                         <div className="col-md-4">
                             <div className="contact-icon-inner">
-                                <i className="fa fa-newspaper-o" aria-hidden="true"></i>
+                              <Newspaper />
 
 
 
@@ -91,7 +92,7 @@ export default function Contact() {
                         </div>
                         <div className="col-md-4">
                             <div className="contact-icon-inner">
-                                <i className="fa fa-question-circle-o" aria-hidden="true"></i>
+                              <QuestionCircle />
                             </div>
                             <h3 className="title text-center  my-4"><Link href="https://driverhiringusa.com/faq"><a className='text-black'>Have questions?</a></Link></h3>
                         </div>
