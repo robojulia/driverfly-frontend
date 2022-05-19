@@ -23,6 +23,7 @@ import ShowEnumFromString from "../../../../components/enum-filters/show-enum-fr
 import ListActions from "../../../../components/list-actions/ListActions";
 
 import { buildAddress } from "../../../../utils/common";
+import ViewDataTable from "../../../../components/viewDetails/viewDataTable";
 
 export default function JobListing() {
 
@@ -104,90 +105,66 @@ export default function JobListing() {
                 </Row>
                 <Row className="mt-5">
                     <Col lg="12 ">
-                        <Card className="job_listing">
-                            <CardBody className={JobList.jobtable}>
-                                <div className="table-responsive">
-                                    <Table striped>
-                                        <thead className="listing_head">
-                                            <tr>
-                                                <th>{t('job_title')}</th>
-                                                <th>{t('location')}</th>
-                                                <th>{t('drivers_needed')}</th>
-                                                <th>{t('expiration_date')}</th>
-                                                <th>{t('geography')}</th>
-                                                <th>{t('schedule')}</th>
-                                                <th>{t('employment_type')}</th>
-                                                <th>{t('equipment_type')}</th>
-                                                <th>{t('delivery_type')}</th>
-                                                <th>{t('team_drivers')}</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {!jobs || !jobs.length &&
-                                                <tr>
-                                                    <td colSpan={11}>
-                                                        {t("NO_{name}_FOUND", { name: t("JOBS") })}
-
-                                                    </td>
-                                                </tr>
-                                            }
-                                            {
-                                                jobs &&
-                                                jobs.map((job, index) => {
-                                                    return <tr key={index}>
-                                                        <td>{job.title} </td>
-                                                        <td>
-                                                            {buildAddress(job.location || {})}
-                                                        </td>
-                                                        <td>{job.drivers_needed} </td>
-                                                        <td>{job.expiry_date && new Date(job.expiry_date).toDateString()} </td>
-                                                        <td><ShowEnumFromString popover={true} str={job.geography} enumArray={JobGeography} /></td>
-                                                        <td><ShowEnumFromString popover={true} str={job.schedule} enumArray={JobSchedule} /></td>
-                                                        <td><ShowEnumFromString popover={true} str={job.employment_type} enumArray={JobEmploymentType} /></td>
-                                                        <td><ShowEnumFromString popover={true} str={job.equipment_type} enumArray={JobEquipmentType} /></td>
-                                                        <td><ShowEnumFromString popover={true} str={job.delivery_type} enumArray={JobDeliveryType} /></td>
-                                                        <td><ShowEnumFromString popover={true} str={job.team_drivers} enumArray={JobTeamDriver} /></td>
-                                                        <td className="text-nowrap">
-                                                            <ListActions
-                                                                options={[
-                                                                    {
-                                                                        onClick: e => onViewApplicantsClick(job.id),
-                                                                        label: (<><EyeFill /> {t("VIEW_{name}", { name: t("APPLICANTS") })}</>)
-                                                                    },
-                                                                    {
-                                                                        onClick: e => onPreviewClick(job.id),
-                                                                        label: (<><Eye /> {t("VIEW_{name}", { name: t("POST") })}</>)
-                                                                    },
-                                                                    {
-                                                                        onClick: e => onEditClick(job.id),
-                                                                        label: (<><PenFill /> {t("EDIT")}</>)
-                                                                    },
-                                                                    {
-                                                                        onClick: e => onDeleteClick(job.id),
-                                                                        label: (<><TrashFill /> {t("DELETE")}</>)
-                                                                    },
-                                                                ]}
-                                                                />
-                                                        </td>
-                                                    </tr>
-                                                })
-                                            }
-                                        </tbody>
-                                    </Table>
-                                </div>
-                                <Row className="py-4">
-                                    <Col sm="6" lg="9">
-                                        <nav aria-label="Page navigation example p-0">
-                                            <ul className="pagination p-0">
-                                                {/* <li className="page-item"><a className="page-link" href="#">Page 1</a></li> */}
-                                            </ul>
-                                        </nav>
-                                    </Col>
-                                </Row>
-                            </CardBody>
-
-                        </Card>
+                        <ViewDataTable
+                            columns={[
+                                {
+                                    name: "job_title",
+                                    selector: j => j.title,
+                                    hidable: false
+                                },
+                                {
+                                    name: "location",
+                                    selector: j => buildAddress(j.location || {})
+                                },
+                                {
+                                    name: "drivers_needed",
+                                    selector: j => j.drivers_needed
+                                },
+                                {
+                                    name: "expiration_date",
+                                    selector: j => j.expiry_date ? new Date(j.expiry_date).toDateString() : null
+                                },
+                                {
+                                    name: "GEOGRAPHY",
+                                    selector: j => j.geography ? t("JobGeography." + j.geography) : null
+                                },
+                                {
+                                    name: "schedule",
+                                    selector: j => j.schedule ? t("JobSchedule." + j.schedule) : null
+                                },
+                                {
+                                    name: "employment_type",
+                                    selector: j => j.employment_type ? t("JobEmploymentType." + j.employment_type) : null
+                                },
+                                {
+                                    name: "delivery_type",
+                                    selector: j => j.delivery_type ? t("JobDeliveryType." + j.delivery_type) : null
+                                },
+                                {
+                                    name: "team_drivers",
+                                    selector: j => j.team_drivers ? t("JobTeamDriver." + j.team_drivers) : null
+                                },
+                            ]}
+                            actions={j => ([
+                                {
+                                    onClick: e => onViewApplicantsClick(j.id),
+                                    label: (<><EyeFill /> {t("VIEW_{name}", { name: "APPLICANTS" }, { translateProps: true })}</>)
+                                },
+                                {
+                                    onClick: e => onPreviewClick(j.id),
+                                    label: (<><Eye /> {t("VIEW_{name}", { name: t("POST") })}</>)
+                                },
+                                {
+                                    onClick: e => onEditClick(j.id),
+                                    label: (<><PenFill /> {t("EDIT")}</>)
+                                },
+                                {
+                                    onClick: e => onDeleteClick(j.id),
+                                    label: (<><TrashFill /> {t("DELETE")}</>)
+                                },
+                            ])}
+                            items={jobs}
+                            />
                     </Col>
                 </Row>
             </div>
