@@ -1,6 +1,7 @@
 import { DocumentEntity } from "../documents/document.entity";
 
 import * as yup from "yup";
+// import * as yup from "../../utils/yup";
 import { VehicleType } from "../../enums/vehicles/vehicle-type.enum";
 import { VehicleTrailerType } from "../../enums/vehicles/vehicle-trailer-type.enum";
 import { VehicleAccessory } from "../../enums/vehicles/vehicle-accessory.enum";

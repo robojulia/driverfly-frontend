@@ -48,8 +48,9 @@ return (
       formik={formik}
       touched={touched}
       error={error}
+      prepend={prepend}
+      append={append}
       >
-      {prepend}
       <select
         value={value || ""}
         onChange={onChange}
@@ -61,7 +62,6 @@ return (
         {placeholder && <option value="">{t(placeholder)}</option>}
         {options && options.map((v, i) => (<option key={i} value={v[valueKey]}>{t(labelPrefix ? `${labelPrefix}.${v[labelKey]}` : v[labelKey])}</option>))}
       </select>
-      {append}
     </BaseControl>
   )
 }

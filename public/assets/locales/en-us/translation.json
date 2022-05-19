@@ -98,6 +98,7 @@
     "local": "Local",
     "preferred_schedule": "Preferred Schedule",
     "JobEmploymentType": {
+        "W2": "Salaried (W2)",
         "SALARIED": "Salaried (W2)",
         "CONTRACTOR": "Contractor (1099)",
         "OWNER_OPERATOR": "Owner-Operator",
@@ -841,5 +842,7 @@
     "SELECT_VEHICLE": "Select Vehicle",
     "ADD": "Add",
     "SELECT_LOCATION": "Select Location",
-    "SHARE_MY_PHYSICALS": "Share my Physicals"
+    "SHARE_MY_PHYSICALS": "Share my Physicals",
+    "SEARCH": "Search",
+    "NOT_HIDABLE": "Not Hidable"
 }

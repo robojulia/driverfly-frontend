@@ -80,3 +80,13 @@ unique.addTest = function (field, options, message) {
 
 yup.addMethod(yup.array, "unique", unique.addTest);
 
+// export default {
+//   object: yup.object,
+//   string: yup.string,
+//   number: yup.number,
+
+//   entity: (schema) => yup.mixed().when({
+//     is: v => !!v,
+//     then: schema
+//   })
+// };

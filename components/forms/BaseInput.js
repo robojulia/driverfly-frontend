@@ -1,7 +1,8 @@
 import React from 'react'
 import { useTranslation } from '../../hooks/useTranslation';
+import BaseControl from './BaseControl';
 
-function BaseInput({ formik, accept, required, className, label, handleBlur, type, min, max, step, placeholder, value, onChange, onKeyDown, readOnly, name, touched, error, }) {
+function BaseInput({ formik, accept, required, className, label, handleBlur, type, min, max, step, placeholder, value, onChange, onKeyDown, readOnly, name, touched, error, append, prepend }) {
   const { t } = useTranslation();
 
   if (formik) {
@@ -44,8 +45,17 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
       };
   }
   return (
-    <div className={className}>
-      {label && <><label>{t(label)}{required ? "*" : ""}:</label><br /></>}
+    <BaseControl
+      className={className}
+      name={name}
+      label={label}
+      required={required}
+      formik={formik}
+      touched={touched}
+      error={error}
+      prepend={prepend}
+      append={append}
+      >
       <input
         accept={type == "file" ? accept : null}
         onBlur={handleBlur}
@@ -61,8 +71,7 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
         name={name}
         className={`form-control ${error ? "is-invalid" : ""}`}
       />
-      {touched && error && (typeof error === "string") ? <span className="text-danger small">{error}</span> : null}
-    </div>
+    </BaseControl>
   )
 }
 

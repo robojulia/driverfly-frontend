@@ -3,7 +3,7 @@ import { InputGroup } from 'react-bootstrap';
 
 import { useTranslation } from "../../hooks/useTranslation"
 
-function BaseControl ( { formik, required, className, label, children, touched, error, name } ) {
+function BaseControl ( { formik, required, className, label, children, touched, error, name, prepend, append } ) {
   const { t } = useTranslation();
 
   if (formik) {
@@ -25,7 +25,9 @@ return (
         <br />
       </>}
       <InputGroup className="flex-nowrap">
+        {prepend}
         {children}
+        {append}
       </InputGroup>
       {touched && error && (typeof error === "string") ? <span className="text-danger small">{t(error)}</span> : null}
     </div>
