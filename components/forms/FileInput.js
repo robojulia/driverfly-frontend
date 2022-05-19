@@ -22,7 +22,7 @@ export default function FileInput({ documentType, formik, accept, required, clas
             file_base64: formik.getFieldMeta(`${name}.file_base64`)
         };
 
-        if (meta.value) {
+        if (meta) {
           value = meta.value;
           touched = meta.touched;
           error = metas.name?.error || metas.mime_type?.error || metas.file_base64?.error || meta.error;
