@@ -12,7 +12,7 @@ export class CompanyEntity {
       name: yup.string().required().nullable(),
       about: yup.string().nullable(),
       website: yup.string().url().nullable(),
-      photo: yup.object({}).nullable(),
+      photo: DocumentEntity.yupSchema().nullable(),
     });
   }
 }
