@@ -25,7 +25,7 @@ import { BasicEntity } from '../BasicEntity.entity';
 
 export class JobEntity {
   id?: number;
-  location: LocationEntity = null;
+  location: LocationEntity = new LocationEntity();
   company: CompanyEntity = null;
   title: string;
   description: string;
@@ -78,7 +78,7 @@ export class JobEntity {
   static yupSchema() {
     return yup.object({
       title: yup.string().required().max(100).nullable(),
-      location: LocationEntity.existingOrNewYupSchema(),
+      location: BasicEntity.yupSchema(),
       description: yup.string().max(250).required().nullable(),
       description_short: yup.string().max(250).required().nullable(),
       drivers_needed: yup.number().min(0).nullable(),

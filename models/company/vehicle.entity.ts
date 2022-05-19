@@ -51,32 +51,4 @@ export class VehicleEntity {
             }).nullable(),
         });
     }
-
-    static existingOrCreateYupSchema() {
-        return yup.object({
-            id: yup.number().nullable(),
-            type: yup.string().when("id", {
-                is: v => !v,
-                then: (yup.string() as any).enum(VehicleType).required().nullable()
-            }).nullable(),
-            type_other: yup.string().when(["id", "type"], {
-                is: (id, type) => !id && type === VehicleType.OTHER,
-                then: yup.string().required().nullable()
-            }).nullable(),
-            transmission_type: yup.string().nullable(),
-            make: yup.string().when("id", {
-                is: v => !v,
-                then: yup.string().required().nullable()
-            }).nullable(),
-            model: yup.string().when("id", {
-                is: v => !v,
-                then: yup.string().required().nullable()
-            }).nullable(),
-            year: yup.number().when("id", {
-                is: v => !v,
-                then: yup.number().required().min(1900).nullable()
-            }).nullable(),
-            photo: DocumentEntity.yupSchema().nullable()
-        });
-    }
 }
