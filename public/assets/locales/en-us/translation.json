@@ -834,10 +834,11 @@
     "SharePreference": {
         "NEVER": "Never",
         "ALWAYS": "Always",
-        "ASK": "Depending on company",
-        "PHYSICAL": "Physical"
+        "ASK": "Depending on company"
     },
     "SHARING": "Sharing",
     "SHARE_PAST_EMPLOYMENT": "Share past employers?",
-    "PREFERRED_EMPLOYMENT_TYPE": "Preferred employment type"
+    "PREFERRED_EMPLOYMENT_TYPE": "Preferred employment type",
+    "SHARE_MY_PHYSICALS": "Share my Physicals"
+    
 }
