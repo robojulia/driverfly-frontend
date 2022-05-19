@@ -493,7 +493,7 @@ export default function Job() {
                         </div>
                     </div>
                     <Row className="mt-1">
-                        <Col md="4">
+                        <Col lg="6" xl="4">
                             <ViewCard
                                 title="basic_details"
                                 >
@@ -630,7 +630,7 @@ export default function Job() {
                                 />
                             </ViewCard>
                         </Col>
-                        <Col md="4">
+                        <Col lg="6" xl="4">
                             <ViewCard
                                 title="benefits"
                                 >
@@ -838,7 +838,7 @@ export default function Job() {
                                 }
                             </ViewCard>
                         </Col>
-                        <Col md="4">
+                        <Col lg="12" xl="4">
                             <ViewCard
                                 title="vehicle_info"
                                 actions={
@@ -883,7 +883,7 @@ export default function Job() {
                                                 </>}
                                             append={<>
                                             <Button variant="outline-secondary" onClick={() => setCreateVehicle(i)}><PlusCircle /> {t("CREATE")}</Button>
-                                            <Button variant="outline-danger" onClick={() => form.setFieldValue("vehicles", form.values.vehicles.filter((v, idx) => i != idx))}><DashCircle color="red" /></Button>
+                                            <Button variant="outline-danger" onClick={() => form.setFieldValue("vehicles", form.values.vehicles.filter((v, idx) => i != idx))}><DashCircle /></Button>
                                             </>}
                                             />
                                     </Row>))
@@ -893,7 +893,7 @@ export default function Job() {
                         </Col>
                     </Row>
                     <hr />
-                    <div className="row">
+                    <Row>
                         <BaseTextArea
                             className="col-md-5 offset-md-1"
                             label="description"
@@ -914,7 +914,7 @@ export default function Job() {
                             placeholder="sms_summary"
                             formik={form}
                         />
-                    </div>
+                    </Row>
                     <hr />
                     <div className="row">
                         <ViewCard

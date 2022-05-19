@@ -24,7 +24,7 @@ return (
         <label>{t(label)}{required ? "*" : ""}:</label>
         <br />
       </>}
-      <InputGroup>
+      <InputGroup className="flex-nowrap">
         {children}
       </InputGroup>
       {touched && error && (typeof error === "string") ? <span className="text-danger small">{t(error)}</span> : null}
