@@ -19,6 +19,7 @@ import CompanyApi from "../../../api/company";
 
 import FileInput from "../../../../components/forms/FileInput";
 import { CompanyEntity } from "../../../../models/company/company.entity";
+import { DocumentType } from "../../../../models/documents/document.entity";
 
 export default function Settings() {
   const { t } = useTranslation();
@@ -105,17 +106,14 @@ export default function Settings() {
                 name={`about`}
                 rows={3}
                 placeholder={t("ABOUT")}
-                value={form.values.about}
-                touched={form.touched.about}
-                error={form.errors.about}
-                onChange={form.handleChange}
-                handleBlur={form.handleBlur}
+                formik={form}
                 />
               <FileInput
                 className="col-12"
                 label={`photo`}
                 name={`photo`}
                 accept="image/*"
+                documentType={DocumentType.PHOTO}
                 formik={form}
               />
             </Row>
