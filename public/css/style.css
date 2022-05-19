@@ -489,7 +489,8 @@ li:hover ul {
 .btn.btn-outline-danger {
     color: #2da2af;
     border-color: #2da2af;
-    padding: 12px 26px;
+    /* KN: please implement these in a different class name */
+    /* padding: 12px 26px; */
 }
 
 .btn.btn-outline-danger:hover {
@@ -1743,10 +1744,11 @@ img.who-we-img.img-fluid {
     margin-right: 15px;
 }
 
-.sidebar .btn.btn-danger {
+    /* kn: please implement this in another class name */
+/* .sidebar .btn.btn-danger {
     padding: 15px 40px;
     width: 100%;
-}
+} */
 
 .socials-apply .title {
     text-align: center;

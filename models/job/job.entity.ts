@@ -21,6 +21,7 @@ import * as yup from "yup";
 import "../../utils/yup";
 
 import { VehicleTransmissionType } from '../../enums/vehicles/vehicle-transmission-type.enum';
+import { BasicEntity } from '../BasicEntity.entity';
 
 export class JobEntity {
   id?: number;
@@ -163,9 +164,9 @@ export class JobEntity {
           is: v => v.includes(JobBenefits.OTHER),
           then: yup.string().required().nullable()
       }).nullable(),
-      vehicles: yup.array(
-        VehicleEntity.existingOrCreateYupSchema()
-      ).nullable(),
+      vehicles: (yup.array(
+        BasicEntity.yupSchema()
+      ) as any).unique("id").nullable(),
       cdl_class: yup.array(
           (yup.string() as any)
               .enum(DriverLicenseType)

@@ -1,8 +1,9 @@
 import React from 'react'
 
 import { useTranslation } from "../../hooks/useTranslation"
+import BaseControl from './BaseControl';
 
-function BaseSelect ( { formik, required, className, enumType, options, valueKey = "value", labelKey = "label", labelPrefix, createLabel, label, placeholder, value, onChange, handleBlur, readOnly, name, touched, error, } ) {
+function BaseSelect ( { append, prepend, formik, required, className, enumType, options, valueKey = "value", labelKey = "label", labelPrefix, createLabel, label, placeholder, value, onChange, handleBlur, readOnly, name, touched, error, } ) {
   const { t } = useTranslation();
 
   if (formik) {
@@ -39,11 +40,16 @@ function BaseSelect ( { formik, required, className, enumType, options, valueKey
     }));
   }
 return (
-    <div className={className}>
-      {label && <>
-        <label>{t(label)}{required ? "*" : ""}:</label>
-        <br />
-      </>}
+    <BaseControl
+      className={className}
+      name={name}
+      label={label}
+      required={required}
+      formik={formik}
+      touched={touched}
+      error={error}
+      >
+      {prepend}
       <select
         value={value || ""}
         onChange={onChange}
@@ -54,10 +60,9 @@ return (
         >
         {placeholder && <option value="">{t(placeholder)}</option>}
         {options && options.map((v, i) => (<option key={i} value={v[valueKey]}>{t(labelPrefix ? `${labelPrefix}.${v[labelKey]}` : v[labelKey])}</option>))}
-
       </select>
-      {touched && error && (typeof error === "string") ? <span className="text-danger small">{t(error)}</span> : null}
-    </div>
+      {append}
+    </BaseControl>
   )
 }
 

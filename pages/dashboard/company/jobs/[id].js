@@ -1,12 +1,12 @@
 
-import { Row } from "reactstrap";
+import { Row, Button, Col, ButtonGroup, InputGroup } from "react-bootstrap";
+import { PlusCircle, DashCircle } from "react-bootstrap-icons";
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
 import useRedirect from '../../../../hooks/useRedirect';
 import useAuth from '../../../../hooks/useAuth';
 import Router from 'next/router';
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 import { useEffect } from "react";
 
 import { useTranslation } from "../../../../hooks/useTranslation";
@@ -24,9 +24,6 @@ import BaseRange from "../../../../components/forms/BaseRange";
 import FileInput from "../../../../components/forms/FileInput";
 
 import { useRouter } from "next/router"
-
-
-import { getBase64 } from "../../../../utils/file";
 
 import { counts, years } from "../../../../utils/jobs";
 
@@ -58,6 +55,10 @@ import JobApi from "../../../api/job";
 import { JobEntity } from "../../../../models/job/job.entity";
 import StateSelect from "../../../../components/forms/StateSelect";
 import { DocumentType } from "../../../../models/documents/document.entity";
+import ViewModal from "../../../../components/viewDetails/viewModal";
+import { VehicleForm } from "../../../../components/forms/company/VehicleForm";
+import ViewCard from "../../../../components/viewDetails/viewCard";
+import { VehicleEntity } from "../../../../models/company/vehicle.entity";
 
 export default function Job() {
     const router = useRouter();
@@ -479,96 +480,6 @@ export default function Job() {
         });
     }
 
-    function addVehicle(e) {
-        e.preventDefault();
-        form.setValues({
-            ...form.values,
-            vehicles: [
-                ...form.values.vehicles,
-                {
-                    id: null,
-                    type: null,
-                    type_other: null,
-                    transmission_type: null,
-                    make: null,
-                    model: null,
-                    year: null,
-                    photo: null
-                }
-            ],
-        });
-    }
-
-    function removeVehicle(e) {
-        e.preventDefault();
-
-        const { name } = e.target;
-
-        form.setValues({
-            ...form.values,
-            vehicles: form.values.vehicles.filter((v, i) => i != name),
-        });
-    }
-
-    function changeVehicle(e) {
-        e.preventDefault();
-        const { name, value } = e.target;
-
-        const [veh, idx, id] = name.split(".");
-
-        form.setValues({
-            ...form.values,
-            vehicles: form.values.vehicles.map((v, i) => {
-                if (i == idx) {
-                    if (!!value) {
-                        return {
-                            id: value,
-                            type: null,
-                            type_other: null,
-                            transmission_type: null,
-                            make: null,
-                            model: null,
-                            year: null,
-                            photo: null,
-                        };
-                    }
-                    else {
-                        return {
-                            ...v,
-                            id: null,
-                        };
-                    }
-                }
-
-                return v;
-            })
-        });
-    }
-
-    /**
-     * 
-     * @param {React.ChangeEvent<HTMLInputElement>} e 
-     */
-    const uploadHandler = async (e) => {
-        const { target: { name, files } } = e;
-
-        let photo = null;
-        if (files && files[0]) {
-            const file = files[0];
-
-            photo = {
-                visibility: "PUBLIC",
-                name: file.name,
-                mime_type: file.type,
-                path: URL.createObjectURL(file),
-                file_base64: await getBase64(file)
-            };
-        }
-
-        form.setFieldValue(name, photo);
-
-    }
-
     const maxRadius = {
         [JobGeography.LOCAL]: 100,
         [JobGeography.REGIONAL]: 1000,
@@ -589,6 +500,18 @@ export default function Job() {
         })
 
     }
+
+    const [ createVehicle, setCreateVehicle ] = useState(false);
+
+    const onVehicleAdded = (vehicle) => {
+        form.setFieldValue(`vehicles.${createVehicle}.id`, vehicle.id);
+        set_vehicles([
+            ...vehicles,
+            vehicle
+        ]);
+        setCreateVehicle(false);
+    }
+
     return (
 
         <>
@@ -978,18 +901,29 @@ export default function Job() {
                             }
                         </div>
                         <div className="col-md-4">
-                            <h3>{t("vehicle_info")}</h3>
-                            {form.touched.vehicles && typeof form.errors.vehicles === "string" ? <span className="text-danger small">{form.errors.vehicles}</span> : null}
-                            {form.values.vehicles.map((v, i) => {
-                                const basePath = `vehicles.${i}`;
-                                return (
-                                    <Row key={i}>
+                            <ViewCard
+                                title="vehicle_info"
+                                actions={
+                                    (
+                                        <Button
+                                        variant="primary"
+                                        size="sm"
+                                        onClick={() => form.setFieldValue("vehicles", [
+                                        ...(form.values.vehicles || []),
+                                        new VehicleEntity()
+                                    ])}>
+                                        <PlusCircle /> {t("ADD")}
+                                    </Button>
+                                )}
+                                >
+                                {
+                                    form.values.vehicles?.length > 0 && 
+                                    form.values.vehicles.map((v, i) => (
+                                    <Row key={i} className="mt-1">
                                         <BaseSelect
-                                            className="col-10"
-                                            label={`${t("vehicle")} ${i + 1}`}
-                                            name={`${basePath}.id`}
-                                            placeholder="new_vehicle"
-                                            onChange={changeVehicle}
+                                            className="col-12"
+                                            name={`vehicles.${i}.id`}
+                                            placeholder="SELECT_VEHICLE"
                                             options={vehicles}
                                             valueKey="id"
                                             createLabel={veh => {
@@ -1006,85 +940,18 @@ export default function Job() {
                                                 return label; //`${()} / ${veh.make} / ${veh.model} / ${t(veh.transmission_type)} / ${veh.year}`
                                             }}
                                             formik={form}
-                                        />
-                                        <div className="col-2 mt-4">
-                                            <button className="btn btn-yellow" name={i} onClick={removeVehicle}>x</button>
-                                        </div>
-                                        {
-                                            !!!v.id &&
-                                            <>
-                                                <BaseSelect
-                                                    className={`col-${v.type === VehicleType.OTHER ? 6 : 12}`}
-                                                    label="type"
-                                                    name={`${basePath}.type`}
-                                                    required
-                                                    placeholder="type"
-                                                    labelPrefix="VehicleType"
-                                                    enumType={VehicleType}
-                                                    formik={form}
-                                                />
-                                                {
-                                                    v.type === VehicleType.OTHER &&
-                                                    <BaseInput
-                                                        className="col-6"
-                                                        label="other"
-                                                        name={`${basePath}.type_other`}
-                                                        required
-                                                        placeholder="type"
-                                                        formik={form}
-                                                    />
-                                                }
-                                                <BaseInput
-                                                    className="col-6"
-                                                    label="make"
-                                                    name={`${basePath}.make`}
-                                                    required
-                                                    placeholder="make"
-                                                    formik={form}
-                                                />
-                                                <BaseInput
-                                                    className="col-6"
-                                                    label="model"
-                                                    name={`${basePath}.model`}
-                                                    required
-                                                    placeholder="model"
-                                                    formik={form}
-                                                />
-                                                <BaseSelect
-                                                    className="col-6"
-                                                    label="transmission"
-                                                    name={`${basePath}.transmission_type`}
-                                                    placeholder="transmission_type"
-                                                    labelPrefix="VehicleTransmissionType"
-                                                    enumType={VehicleTransmissionType}
-                                                    formik={form}
-                                                />
-                                                <BaseInput
-                                                    className="col-6"
-                                                    label="year"
-                                                    name={`${basePath}.year`}
-                                                    required
-                                                    placeholder="year"
-                                                    type="int"
-                                                    min={0}
-                                                    formik={form}
-                                                />
-                                                <FileInput
-                                                    className="col-12"
-                                                    label="photo"
-                                                    name={`${basePath}.photo`}
-                                                    accept="image/*"
-                                                    documentType={DocumentType.PHOTO}
-                                                    formik={form}
-                                                />
-                                            </>
-                                        }
-                                    </Row>
-                                )
-                            })}
-                            <div className="col-6 offset-6 text-end mt-2">
-                                <button className="btn btn-yellow" onClick={addVehicle}>+ {t("more")}</button>
-                            </div>
+                                            prepend={<>
+                                                <InputGroup.Text>{i + 1}</InputGroup.Text>
+                                                </>}
+                                            append={<>
+                                            <Button variant="outline-secondary" onClick={() => setCreateVehicle(i)}><PlusCircle /> {t("CREATE")}</Button>
+                                            <Button variant="outline-danger" onClick={() => form.setFieldValue("vehicles", form.values.vehicles.filter((v, idx) => i != idx))}><DashCircle color="red" /></Button>
+                                            </>}
+                                            />
+                                    </Row>))
+                                }
+
+                            </ViewCard>
                         </div>
                     </div>
                     <hr />
@@ -1410,6 +1277,15 @@ export default function Job() {
                 </form>
 
             </ChildPageLayout>
+            <ViewModal
+                title="CREATE_VEHICLE"
+                show={typeof createVehicle === "number"}
+                onCloseClick={() => setCreateVehicle(false)}
+                >
+                <VehicleForm
+                    onSaveComplete={onVehicleAdded}
+                />
+            </ViewModal>
         </>
     )
 };

@@ -839,5 +839,7 @@
     },
     "SHARING": "Sharing",
     "SHARE_PAST_EMPLOYMENT": "Share past employers?",
-    "PREFERRED_EMPLOYMENT_TYPE": "Preferred employment type"
+    "PREFERRED_EMPLOYMENT_TYPE": "Preferred employment type",
+    "SELECT_VEHICLE": "Select Vehicle",
+    "ADD": "Add"
 }
