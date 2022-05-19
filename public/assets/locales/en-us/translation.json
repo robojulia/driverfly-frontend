@@ -28,7 +28,6 @@
     "past_jobs": "Past Jobs",
     "pay_method": "Pay Method",
     "preferred_pay_method": "Preferred Pay Method",
-    "pay_method": "Pay Method",
     "reject": "Reject",
     "review": "Review",
     "save": "Save",
@@ -166,10 +165,10 @@
         "OTHER": "Other"
     },
     "JobPayFrequency": {
-        "PRE_LOAD":"Per Load",
-        "BIWEEKLY":"Biweekly",
-        "WEEKLY":"Weekly",
-        "BIMONTHLY":"Bimonthly",
+        "PRE_LOAD": "Per Load",
+        "BIWEEKLY": "Biweekly",
+        "WEEKLY": "Weekly",
+        "BIMONTHLY": "Bimonthly",
         "MONTHLY": "Monthly"
     },
     "sign_on_bonus": "Sign-on bonus",
@@ -213,6 +212,7 @@
     "cdl_class_c": "CDL Class C",
     "cdl_class": "CDL Class",
     "cdl_class_type": "CDL Class Type",
+    "LICENSE_TYPE": "License Type",
     "first_name": "First Name",
     "last_name": "Last Name",
     "contact_number": "Contact Number",
@@ -405,7 +405,6 @@
     "doubles": "Doubles",
     "equipment_type": "Equipment Type",
     "other_equipment_type": "Other Equipment Type",
-    "equipment_type": "Equipment Type",
     "additional_benefits": "Additional Benefits",
     "description": "Description",
     "sms_summary": "SMS Summary",
@@ -736,7 +735,7 @@
     "ONE_OR_MORE_ERRORS_WERE_FOUND_ON_INPUT_FILE": "One or more errors were found on the input file, please correct them and re-upload",
     "CATEGORY": "Category",
     "POST_DATE": "Post Date",
-    "pay_frequency":"Pay Frequency",
+    "pay_frequency": "Pay Frequency",
     "yup": {
         "type": {
             "date": "date, it must be in the format MM/dd/yyyy (eg. 01/12/2014)",
@@ -834,13 +833,13 @@
     "SharePreference": {
         "NEVER": "Never",
         "ALWAYS": "Always",
-        "ASK": "Depending on company",
-        "PHYSICAL": "Physical"
+        "ASK": "Depending on company"
     },
     "SHARING": "Sharing",
     "SHARE_PAST_EMPLOYMENT": "Share past employers?",
     "PREFERRED_EMPLOYMENT_TYPE": "Preferred employment type",
     "SELECT_VEHICLE": "Select Vehicle",
     "ADD": "Add",
-    "SELECT_LOCATION": "Select Location"
+    "SELECT_LOCATION": "Select Location",
+    "SHARE_MY_PHYSICALS": "Share my Physicals"
 }
