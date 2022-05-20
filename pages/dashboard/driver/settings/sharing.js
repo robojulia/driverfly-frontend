@@ -53,12 +53,19 @@ export default function Sharing() {
                 label: UserPreferenceSharingLabel.EMPLOYMENT_HISTORY,
                 value: SharePreference.NEVER,
             },
+            physical: {
+                ...new UserPreferenceEntity(),
+                category: UserPreferenceCategory.SHARING,
+                label: UserPreferenceSharingLabel.PHYSICAL,
+                value: SharePreference.NEVER,
+            },
         },
         validationSchema: yup.object({
             mvr: UserPreferenceEntity.yupSchema(),
             drivers_license: UserPreferenceEntity.yupSchema(),
             medical_card: UserPreferenceEntity.yupSchema(),
             employment_history: UserPreferenceEntity.yupSchema(),
+            physical: UserPreferenceEntity.yupSchema(),
         }),
         onSubmit: async values => {
             const api = new UserApi();
