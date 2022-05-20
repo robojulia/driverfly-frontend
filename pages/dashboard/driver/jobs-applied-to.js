@@ -20,11 +20,9 @@ import { DriverLicenseType } from '../../../enums/users/driver-license-type.enum
 export default function JobsAppliedTo() {
 
     const { authDriver } = useRedirect();
-
     authDriver()
-    const { authCheck } = useAuth();
-
     const { t } = useTranslation();
+    const { authCheck } = useAuth();
     const user = authCheck();
     const applicantApi = new ApplicantApi();
 
@@ -74,7 +72,7 @@ export default function JobsAppliedTo() {
                                         <tr>
                                             <th>{t('job_title')}</th>
                                             <th>{t('company')}</th>
-                                            <th>{t('DATE_APPLIED')}</th>
+                                            <th>{t('DATE_{name}', { name: t('ApplicantStatus.APPLIED') })}</th>
                                             <th>{t('LICENSE_TYPE')}</th>
                                             <th>{t('est_pay_per_week')}</th>
                                             <th>{t('pay_method')}</th>
@@ -99,7 +97,7 @@ export default function JobsAppliedTo() {
                                                     {application.company.name}
                                                 </td>
                                                 <td>
-                                                    {new Date(application.created_at).toDateString()}
+                                                    {application.created_at && (new Date(application.last_updated_at).toUTCString())}
                                                 </td>
                                                 <td>
                                                     {
@@ -110,7 +108,6 @@ export default function JobsAppliedTo() {
                                                             str={application.job.cdl_class}
                                                             enumArray={DriverLicenseType} />
                                                     }
-                                                    {/* {t(`ApplicantStatus.${application.status}`)} */}
                                                 </td>
                                                 <td>
                                                     <p>
