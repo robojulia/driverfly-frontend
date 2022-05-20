@@ -40,7 +40,7 @@ export default function TipsBlog() {
                         down all your contacts in one place will make reaching out to employers so much easier.</p>
                         <p>Lastly, make <Link href='https://ctrecruiting.com/apply-now'><a > Custom Trucker Recruiting</a></Link> and <Link href='/'><a > DriverFly</a></Link> your
                         best friend! We’ll match you with jobs that fit both your likings and skill level and get you hired fast.</p>
-                        <p>You can find and apply for jobs yourself with Driver Hiring or receive a personal concierge through Custom Trucker Recruiting. You can even receive even
+                        <p>You can find and apply for jobs yourself with DriverFly or receive a personal concierge through Custom Trucker Recruiting. You can even receive even
                         more support as a VIP member. Check if you qualify and get started on your path to finding your dream job!</p>
                         < SocilShare />
                     </div>

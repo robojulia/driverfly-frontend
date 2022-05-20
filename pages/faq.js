@@ -27,7 +27,7 @@ export default function FAQ() {
                         </div>
                         <div id="collapseOne" className="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
                             <div className="card-body">
-                                <p>If you’ve lost both your password and username, reach out to customer care at support@driverhiringusa.com and enter subject line “Lost Username”.</p>
+                                <p>If you’ve lost both your password and username, reach out to customer care at support@driverfly.co and enter subject line “Lost Username”.</p>
                             </div>
                         </div>
                     </div>

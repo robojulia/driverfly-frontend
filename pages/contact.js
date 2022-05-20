@@ -78,7 +78,7 @@ export default function Contact() {
                                 < PersonBadgeFill />
 
                             </div>
-                            <h3 className="title text-center  my-4"><Link href="https://driverhiringusa.com/register"><a className='text-black'>Want to join us?</a></Link></h3>
+                            <h3 className="title text-center  my-4"><Link href="/signup"><a className='text-black'>Want to join us?</a></Link></h3>
                         </div>
                         <div className="col-md-4">
                             <div className="contact-icon-inner">
@@ -87,14 +87,14 @@ export default function Contact() {
 
 
                             </div>
-                            <h3 className="title text-center  my-4"><Link href="https://driverhiringusa.com/blog"><a className='text-black'>Read our latest news</a></Link></h3>
+                            <h3 className="title text-center  my-4"><Link href="/blog"><a className='text-black'>Read our latest news</a></Link></h3>
 
                         </div>
                         <div className="col-md-4">
                             <div className="contact-icon-inner">
                               <QuestionCircle />
                             </div>
-                            <h3 className="title text-center  my-4"><Link href="https://driverhiringusa.com/faq"><a className='text-black'>Have questions?</a></Link></h3>
+                            <h3 className="title text-center  my-4"><Link href="/faq"><a className='text-black'>Have questions?</a></Link></h3>
                         </div>
                     </div>
                 </div>
