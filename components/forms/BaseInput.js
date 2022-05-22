@@ -44,6 +44,21 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
         if (min != null && parseInt(min) >= 0 && e.key === "-") e.preventDefault();
       };
   }
+
+  if (type === "number") {
+    let currentOnChange = onChange;
+
+    /**
+     * @param {React.ChangeEvent<HTMLInputElement>} e
+     */
+    onChange = (e) => {
+      const { value } = e.target;
+
+      if (value && value.startsWith(".")) e.target.value = `0${value}`;
+
+      if (currentOnChange) currentOnChange(e);
+    }
+  }
   return (
     <BaseControl
       className={className}
@@ -64,7 +79,7 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
         max={max}
         step={step}
         placeholder={t(placeholder)}
-        value={value || (type == "number" ? 0 : "")}
+        value={value == null ? "" : value}
         onChange={onChange}
         onKeyDown={onKeyDown}
         readOnly={readOnly}
