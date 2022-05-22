@@ -8,7 +8,7 @@ import { getBase64 } from "../../utils/file";
 import ViewModal from '../viewDetails/viewModal';
 import ViewPdf from '../viewDetails/viewPdf';
 
-export default function FileInput({ formik, accept, required, className, label, handleBlur, placeholder, value, onChange, readOnly, name, touched, error, }) {
+export default function FileInput({ documentType, formik, accept, required, className, label, handleBlur, placeholder, value, onChange, readOnly, name, touched, error, }) {
     const { t } = useTranslation();
     if (formik) {
         /**
@@ -25,10 +25,17 @@ export default function FileInput({ formik, accept, required, className, label, 
         if (meta) {
           value = meta.value;
           touched = meta.touched;
-          error = meta.error || metas.name?.error || metas.mime_type?.error || metas.file_base64?.error;
+          error = metas.name?.error || metas.mime_type?.error || metas.file_base64?.error || meta.error;
         }
         onChange = onChange || formik.handleChange
         handleBlur = handleBlur || formik.handleBlur;
+    }
+
+    function onChangeProxy(e) {
+        if (onChange)
+            onChange(e);
+        if (handleBlur)
+            handleBlur(e);
     }
 
     /**
@@ -52,6 +59,7 @@ export default function FileInput({ formik, accept, required, className, label, 
                 const { files: [ file ] } = e.target;
                 newValue = {
                     ...(value || {}),
+                    type: documentType || value?.type,
                     name: file?.name,
                     mime_type: file?.type,
                     path: file ? URL.createObjectURL(file) : null,
@@ -60,7 +68,7 @@ export default function FileInput({ formik, accept, required, className, label, 
                 break;
         }
 
-        onChange({
+        onChangeProxy({
             ...e,
             target: {
                 ...e.target,
@@ -74,7 +82,8 @@ export default function FileInput({ formik, accept, required, className, label, 
     function clear(e) {
         if (!onChange) return;
 
-        const newValue = {
+        // in the situation where we control the type, we assume everything else is hidden.
+        const newValue = documentType ? null : {
             ...(value || {}),
             name: null,
             mime_type: null,
@@ -82,7 +91,7 @@ export default function FileInput({ formik, accept, required, className, label, 
             file_base64: null
         };
 
-        onChange({
+        onChangeProxy({
             ...e,
             target: {
                 ...e.target,
@@ -96,14 +105,13 @@ export default function FileInput({ formik, accept, required, className, label, 
 
     async function view(e) {
         console.log(value);
-        if (value?.path) {
-            setViewDoc(value.path);
-        }
-        else if (value?.id) {
+        if (value?.id) {
             const api = new DocumentApi();
             const document = await api.getSignedUrl(value.id);
             console.log(document);
             setViewDoc(document.path);
+        } else if (value?.path) {
+            setViewDoc(value.path);
         }
     }
 
@@ -146,12 +154,12 @@ export default function FileInput({ formik, accept, required, className, label, 
                         </div>
                     }
                 </InputGroup>
-                {touched && error && (typeof error === "string") ? <span className="text-danger small">{t(error)}</span> : null}
+                {touched && error ? <span className="text-danger small">{typeof error === "string" ? t(error) : JSON.stringify(error)}</span> : null}
             </div>
             {accept === "application/pdf" &&
-                <ViewPdf name={value.name} url={viewDoc} onCloseClick={close} />}
+                <ViewPdf name={value?.name} url={viewDoc} onCloseClick={close} />}
             {accept.startsWith("image/") &&
-                <ViewModal show={!!viewDoc} name={value.name} onCloseClick={close}>
+                <ViewModal show={!!viewDoc} name={value?.name} onCloseClick={close}>
                     <img className="img-thumbnail" src={viewDoc} />
                 </ViewModal>}
         </>);

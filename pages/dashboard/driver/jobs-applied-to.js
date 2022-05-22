@@ -10,31 +10,33 @@ import { useState } from "react";
 import axios from "axios";
 import JobList from "../../../public/dashboard/styles/css/JobList.module.css"
 import Link from 'next/link';
+import ApplicantApi from '../../api/applicant';
+import { ApplicantStatus } from '../../../enums/applicants/applicant-status.enum';
+import { useTranslation } from "../../../hooks/useTranslation";
+import { CurrencyDollar } from 'react-bootstrap-icons';
+import ShowEnumFromString from '../../../components/enum-filters/show-enum-from-string';
+import { DriverLicenseType } from '../../../enums/users/driver-license-type.enum';
 
 export default function JobsAppliedTo() {
 
     const { authDriver } = useRedirect();
-
     authDriver()
+    const { t } = useTranslation();
     const { authCheck } = useAuth();
-
     const user = authCheck();
+    const applicantApi = new ApplicantApi();
 
-    const [jobs, setJobs] = useState([])
+    const [applicantJobs, setApplicantJobs] = useState([])
 
     const fetchJobs = () => {
 
-        const headers = {
-            'Authorization': `Bearer ${user.token}`,
-        };
-
-        axios.get(
-            `${process.env.BASE_URL_API}/jobs/`,
-            { headers: headers }
-        )
+        applicantApi.getApplicantJobsByStatus({
+            application_status: ApplicantStatus.APPLIED
+        })
             .then(data => {
+                console.log("data", data);
 
-                setJobs(data.data)
+                setApplicantJobs(data)
             })
             .catch(function (error) {
 
@@ -47,6 +49,9 @@ export default function JobsAppliedTo() {
         fetchJobs()
     }, []);
 
+    // useEffect(() => {
+    //     console.log("applicantJobs", applicantJobs)
+    // }, [applicantJobs]);
 
     return (
         <>
@@ -54,101 +59,74 @@ export default function JobsAppliedTo() {
             <div className={JobList.joblisting}>
                 <Row className={JobList.link}>
                     <Col sm="6" lg="8">
-                        <h2 className='mt-3'>Jobs Applied To</h2>
+                        <h2 className='mt-3'>{t('applied_jobs')}</h2>
                     </Col>
                 </Row>
                 <Row className="mt-5">
                     <Col lg="12 ">
-                      
-                            <CardBody className={JobList.jobtable}>
-                                <div className="table-responsive">
-                                    <Table striped>
-                                        <thead className="listing_head">
+
+                        <CardBody className={JobList.jobtable}>
+                            <div className="table-responsive">
+                                <Table striped>
+                                    <thead className="listing_head">
+                                        <tr>
+                                            <th>{t('job_title')}</th>
+                                            <th>{t('company')}</th>
+                                            <th>{t('DATE_{name}', { name: t('ApplicantStatus.APPLIED') })}</th>
+                                            <th>{t('LICENSE_TYPE')}</th>
+                                            <th>{t('est_pay_per_week')}</th>
+                                            <th>{t('pay_method')}</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {!applicantJobs || !applicantJobs.length &&
                                             <tr>
-                                                <th>Job Title</th>
-                                                <th>Date Applied</th>
-                                                <th>Status</th>
-                                                <th>Company</th>
-                                                <th>Est. Pay Per Week</th>
-                                                <th>Pay Method</th>
-                                                <th>Geography</th>
-                                                <th>Type</th>
-                                                <th>Schedule</th>
-                                                <th>Equipment</th>
-                                                <th>Truck</th>
-
+                                                <td colSpan={11}>
+                                                    {t("NO_{name}_FOUND", { name: t("JOBS") })}
+                                                </td>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            {jobs.length > 0 && jobs.map((job, index) => (
+                                        }
 
-                                                <tr>
-                                                    <td>
-                                                        {job.title}
-                                                    </td>
-                                                    <td>
-                                                        {new Date(job.created_at).toDateString()}
-                                                    </td>
-                                                    <td>
-                                                        Pending Interview
-                                                    </td>
-                                                    <td>
-                                                        Company
-                                                    </td>
-                                                    <td>
-                                                        <span>
-                                                            $1,250 - $2,000
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <span >
-                                                            Rate Per Mi
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <span >
-                                                            OTR
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <span>
-                                                            type
-                                                        </span>
-                                                    </td>
-                                                    <td>
-
-                                                        Schedule
-                                                        
-                                                    </td>
-                                                    <td>
-                                                        Equipment
-                                                        <Link href="#">
-                                                            <button className={` mt-3 text-white ${JobList.hired}`}>View More</button>
-                                                        </Link>
-                                                        
-                                                     </td>
-                                                    <td>
-                                                        <td>
-                                                         Truck
-                                                         <Link href="#">
-                                                            <button className={` mt-3 text-white ${JobList.approved}`}>Contact Company</button>
-                                                        </Link>
-                                                     </td>
+                                        {applicantJobs && applicantJobs.map((application, index) => (
+                                            <tr key={index}>
+                                                <td>
+                                                    {application.job.title}
+                                                </td>
+                                                <td>
+                                                    {application.company.name}
+                                                </td>
+                                                <td>
+                                                    {application.created_at && (new Date(application.last_updated_at).toUTCString())}
+                                                </td>
+                                                <td>
+                                                    {
+                                                        <ShowEnumFromString
+                                                            popover_header={t('LICENSE_TYPE')}
+                                                            labelPrefix="DriverLicenseType"
+                                                            popover={true}
+                                                            str={application.job.cdl_class}
+                                                            enumArray={DriverLicenseType} />
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <p>
+                                                        < CurrencyDollar className='mr-1' />{application.job.min_weekly_pay ? application.job.min_weekly_pay : 0} - {application.job.max_weekly_pay ? application.job.max_weekly_pay : 0} per week
+                                                    </p>
+                                                </td>
+                                                <td>
+                                                    {
+                                                        (application.job.pay_method && t(`JobPayMethod.${application.job.pay_method}`))
+                                                    }
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </Table>
+                            </div>
+                        </CardBody>
 
 
-
-
-                                                    </td>
-                                                </tr>
-                                            ))}
-
-
-                                        </tbody>
-                                    </Table>
-                                </div>
-                            </CardBody>
-
-                       
                     </Col>
                 </Row>
             </div>

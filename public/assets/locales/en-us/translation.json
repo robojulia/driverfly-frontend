@@ -98,6 +98,7 @@
     "local": "Local",
     "preferred_schedule": "Preferred Schedule",
     "JobEmploymentType": {
+        "W2": "Salaried (W2)",
         "SALARIED": "Salaried (W2)",
         "CONTRACTOR": "Contractor (1099)",
         "OWNER_OPERATOR": "Owner-Operator",
@@ -164,6 +165,13 @@
         "PETS_ALLOWED": "Pets allowed",
         "OTHER": "Other"
     },
+    "JobPayFrequency": {
+        "PRE_LOAD": "Per Load",
+        "BIWEEKLY": "Biweekly",
+        "WEEKLY": "Weekly",
+        "BIMONTHLY": "Bimonthly",
+        "MONTHLY": "Monthly"
+    },
     "sign_on_bonus": "Sign-on bonus",
     "guaranteed_base_salary": "Guaranteed base salary",
     "medical": "Medical",
@@ -205,6 +213,7 @@
     "cdl_class_c": "CDL Class C",
     "cdl_class": "CDL Class",
     "cdl_class_type": "CDL Class Type",
+    "LICENSE_TYPE": "License Type",
     "first_name": "First Name",
     "last_name": "Last Name",
     "contact_number": "Contact Number",
@@ -321,6 +330,7 @@
     "add_new_job": "Add New Job",
     "new_job": "New Job",
     "employment_type": "Employment Type",
+    "TYPE_OF_DELIVERY": "Type of Delivery",
     "sunday": "Sunday",
     "monday": "Monday",
     "tuesday": "Tuesday",
@@ -408,6 +418,7 @@
     "other_required_skills": "Other Required Skills",
     "{name}_must_be_unique_in_list": "{{name}} must be unique in list",
     "required_equipment": "Required Equipment",
+    "pay_structure": "Pay Structure",
     "DriverEndorsement": {
         "HAZMAT": "Hazmat",
         "TANKERS": "Tankers",
@@ -418,6 +429,7 @@
     "tankers": "Tankers",
     "twic": "TWIC",
     "special_endorsements": "Special Endorsements",
+    "special_endorsements_required": "Special Endorsements Required",
     "manual": "Manual",
     "automatic": "Automatic",
     "transmission_type": "Transmission Type",
@@ -572,6 +584,7 @@
     "NONE": "None",
     "UPDATE": "Update",
     "LOCATIONS": "Locations",
+    "TERMINALS": "Terminals",
     "STREET": "Street",
     "CITY": "City",
     "STATE": "State",
@@ -584,6 +597,8 @@
     "INVALID_JOB_SPECIFIED": "Job doest not exist.",
     "ALREADY_APPLIED": "You have already applied to this job",
     "USER_ALREADY_EXISTS": "The user is not logged in but already has an account based on the email address (user must log in)",
+    "LOGIN_SUCCESSFULL": "Login successfully! ",
+    "INVALID_CREDENTIALS": "Credentials invalid",
     "USER_INVALID": "User account invalid",
     "USER_INACTIVE": "User account inactive",
     "EMAIL_ALREADY_EXISTS": "Email already exists",
@@ -634,7 +649,9 @@
     "CREATE_JOB": "Create Job",
     "JOBS": "Jobs",
     "JOB": "Job",
+    "DATE_{name}": "Date {{name}}",
     "DATE_APPLIED": "Date Applied",
+    "DATE_HIRED": "Date Hired",
     "STATUS": "Status",
     "MEETS_BASIC_QUALIFICATIONS": "Meets Basic Qualifications?",
     "REASONS_IF_NO": "Reason(s) (if no)",
@@ -719,6 +736,9 @@
     "DOWNLOAD_TEMPLATE": "Download Template",
     "ONLY_DISPLAY_ERRORS": "Only display errors",
     "ONE_OR_MORE_ERRORS_WERE_FOUND_ON_INPUT_FILE": "One or more errors were found on the input file, please correct them and re-upload",
+    "CATEGORY": "Category",
+    "POST_DATE": "Post Date",
+    "pay_frequency": "Pay Frequency",
     "yup": {
         "type": {
             "date": "date, it must be in the format MM/dd/yyyy (eg. 01/12/2014)",
@@ -826,5 +846,11 @@
     },
     "SHARING": "Sharing",
     "SHARE_PAST_EMPLOYMENT": "Share past employers?",
-    "PREFERRED_EMPLOYMENT_TYPE": "Preferred employment type"
+    "PREFERRED_EMPLOYMENT_TYPE": "Preferred employment type",
+    "SELECT_VEHICLE": "Select Vehicle",
+    "ADD": "Add",
+    "SELECT_LOCATION": "Select Location",
+    "SHARE_MY_PHYSICALS": "Share my Physicals",
+    "SEARCH": "Search",
+    "NOT_HIDABLE": "Not Hidable"
 }

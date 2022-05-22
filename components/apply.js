@@ -22,6 +22,7 @@ import ViewCard from './viewDetails/viewCard'
 import { ApplicantDocumentType } from '../enums/applicants/applicant-document-type.enum'
 import { DocumentEntity } from '../models/documents/document.entity'
 import { PlusCircle, DashCircle } from 'react-bootstrap-icons'
+import BaseInputPhone from './forms/BaseInputPhone'
 
 export default function JobApply({ job }) {
 
@@ -130,7 +131,7 @@ export default function JobApply({ job }) {
               name="email"
               formik={apply_form}
             />
-            <BaseInput
+            <BaseInputPhone
               className=" col-6 mt-3"
               label="contact_number"
               placeholder="contact_number"
@@ -190,6 +191,7 @@ export default function JobApply({ job }) {
                                                 placeholder="TYPE"
                                                 labelPrefix="ApplicantDocumentType"
                                                 enumType={ApplicantDocumentType}
+                                                readOnly={!!entity.id && !entity.file_base64}
                                                 formik={apply_form}
                                             />
                                         </td>
@@ -227,7 +229,6 @@ export default function JobApply({ job }) {
                 type="int"
                 min={0}
                 formik={apply_form}
-                onKeyDown={preventNegative}
               />
             <BaseInput
               className=" col-6 mt-3"
@@ -237,7 +238,6 @@ export default function JobApply({ job }) {
               type="int"
               min={0}
               formik={apply_form}
-              onKeyDown={preventNegative}
               />
           </Row>
 

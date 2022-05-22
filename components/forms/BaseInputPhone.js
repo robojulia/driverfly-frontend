@@ -3,17 +3,42 @@ import { useTranslation } from '../../hooks/useTranslation';
 
 import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
-import es from 'react-phone-input-2/lang/es.json'
+import BaseControl from './BaseControl';
 
-function BaseInputPhone({ required, className, label, handleBlur, placeholder, value, onChange, onKeyDown, name, error, }) {
+
+function BaseInputPhone({ formik, required, className, label, handleBlur, placeholder, value, onChange, onKeyDown, name, error, touched, append, prepend }) {
   const { t } = useTranslation();
 
+  if (formik) {
+    /**
+     * @type {import('formik').FieldMetaProps}
+     */
+    const meta = formik.getFieldMeta(name);
+
+    if (meta) {
+      value = meta.value;
+      touched = meta.touched;
+      error = meta.error;
+    }
+    onChange = onChange || function (value, country, e, formattedValue) { formik.setFieldValue(name, formattedValue) };
+    handleBlur = handleBlur || function (e, data) { formik.setFieldValue(name, e.target.value) };
+  }
+
   return (
-    <div className={className}>
-      {label && <><label>{t(label)}{required ? "*" : ""}:</label><br /></>}
+    <BaseControl
+      className={className}
+      name={name}
+      label={label}
+      required={required}
+      formik={formik}
+      touched={touched}
+      error={error}
+      prepend={prepend}
+      append={append}
+      >
       <PhoneInput
         onlyCountries={['us']}
-        isValid={error ? false : true}
+        isValid={!error}
         inputProps={{
           name: { name },
         }}
@@ -25,8 +50,7 @@ function BaseInputPhone({ required, className, label, handleBlur, placeholder, v
         onKeyDown={onKeyDown}
         onBlur={handleBlur}
       />
-      {error && (typeof error === "string") ? <span className="text-danger small">{error}</span> : null}
-    </div>
+    </BaseControl>
   )
 }
 

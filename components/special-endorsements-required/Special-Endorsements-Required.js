@@ -4,38 +4,26 @@ import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import { DriverEndorsement } from "../../enums/users/driver-endorsement.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
+import { Accordion } from 'react-bootstrap';
+import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
+import { useTranslation } from "../../hooks/useTranslation";
 
 export default function SpecialEndorsementsRequired() {
-
+  const { t } = useTranslation();
   const { state, method } = useContext(jobContext)
   const { handleChange } = method
 
   return (
     <>
-      <div className="card">
-        <div className="card-header" id="headingsixty">
-          <h4 className="clearfix mb-0">
-            <a className="btn-3 btn-link" data-toggle="collapse"
-              data-target="#collapsesixty" aria-expanded="true"
-              aria-controls="collapsesixty">Special Endorsements Required<i
-                className="fa fa-angle-down"></i></a>
-          </h4>
-        </div>
-        <div id="collapsesixty" className="collapse show"
-          aria-labelledby="headingsixty" data-parent="#accordionExample">
-          <div className="card-body">
-            <div className="App">
-              <EnumFilterByKeyValue
-                translate={true}
-                withAll={true}
-                enumArray={DriverEndorsement}
-                name="endoresements_type"
-                handleChange={handleChange}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+      <FindJobFilterAccordion header={t("special_endorsements_required")}>
+        <EnumFilterByKeyValue
+          translate={true}
+          withAll={true}
+          enumArray={DriverEndorsement}
+          name="endoresements_type"
+          handleChange={handleChange}
+        />
+      </FindJobFilterAccordion>
     </>
   )
 }

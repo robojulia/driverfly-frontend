@@ -1,6 +1,5 @@
 import { useRouter } from "next/router"
 import { useState } from "react"
-import axios from "axios"
 import JobApply from "../../components/apply"
 import JobDescription from '../../components/job-description/JobDescription'
 import JonInformation from '../../components/job-information-sidebar/JobInformation'
@@ -21,17 +20,12 @@ import { buildAddress } from "../../utils/common"
 
 export default function Detail({ jobDetail, relatedJobs }) {
 
-  const router = useRouter()
   const { t } = useTranslation();
-
-  const [showApplyModal, setShowApplyModal] = useState(false);
-  const handleCloseApplyModal = () => setShowApplyModal(false);
-  const handleShowApplyModal = () => setShowApplyModal(true);
 
   return (
     <>
       <ToastContainer />
-      {/* <StructuredData type="JobPosting" data={StructuredData.JobPosting(jobDetail, t)} /> */}
+      <StructuredData type="JobPosting" data={StructuredData.JobPosting(jobDetail, t)} />
       <section className="top-links-sec ort-general">
         <div className="container">
           <div className="row">
