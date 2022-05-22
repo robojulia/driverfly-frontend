@@ -39,7 +39,8 @@ function BaseSelect ( { append, prepend, formik, required, className, enumType, 
       [labelKey]: createLabel(v)
     }));
   }
-return (
+
+  return (
     <BaseControl
       className={className}
       name={name}
@@ -55,7 +56,7 @@ return (
         value={value || ""}
         onChange={onChange}
         onBlur={handleBlur}
-        readOnly={readOnly}
+        disabled={readOnly}
         name={name}
         className={`form-select ${error ? "is-invalid" : ""}`} 
         >

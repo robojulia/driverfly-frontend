@@ -1,5 +1,5 @@
 import { useRouter } from "next/router"
-import axios from "axios"
+import { useState } from "react"
 import JobApply from "../../components/apply"
 import JobDescription from '../../components/job-description/JobDescription'
 import JonInformation from '../../components/job-information-sidebar/JobInformation'
@@ -15,65 +15,60 @@ import JobApi from "../api/job"
 import CompanyPhoto from "../../components/jobs/company-photo"
 import jobDetailContext from "../../context/jobDetailContext"
 import StructuredData from "../../components/seo/StructuredData"
-import { useState } from "react"
-import { ArrowRight, CurrencyDollar, GeoAltFill, Star} from 'react-bootstrap-icons';
+import { ArrowRight, GeoAltFill, CurrencyDollar } from "react-bootstrap-icons"
+import { buildAddress } from "../../utils/common"
 
 export default function Detail({ jobDetail, relatedJobs }) {
 
-  const router = useRouter()
   const { t } = useTranslation();
-
-  const [showApplyModal, setShowApplyModal] = useState(false);
-  const handleCloseApplyModal = () => setShowApplyModal(false);
-  const handleShowApplyModal = () => setShowApplyModal(true);
 
   return (
     <>
       <ToastContainer />
-      <jobDetailContext.Provider value={{
-        state: {
-          showApplyModal,
-        },
-        method: {
-          handleCloseApplyModal,
-          handleShowApplyModal,
-        },
-      }}>
-
-        {/* <StructuredData type="JobPosting" data={StructuredData.JobPosting(jobDetail, t)} /> */}
-        <section className="top-links-sec ort-general">
-          <div className="container">
-            <div className="row">
-              <div className="col-md-9">
-                <div className="ort-inner">
-                  <div className="media align-items-center bg-transparent border-0 p-0">
-                    <span className="text-dark text-center text-decoration-none">
-                      <CompanyPhoto className="d-flex mr-4 truck-img mb-3" company={jobDetail.company} />
-                      <Link href="/find-jobs">
-                        <a>
-                          {t('view_all_jobs')} <ArrowRight />
-                        </a>
-                      </Link>
-                    </span>
-                    <div className="media-body">
-                      {/* <h6>Solo</h6> */}
-                      <h4 className="mt-0">
-                        {jobDetail.title}
-                        <span className="" data-toggle="tooltip"
-                          data-placement="top" title="{jobDetail.title}">
-                        </span>
-                      </h4>
-                      <div className="job-date-author">
+      <StructuredData type="JobPosting" data={StructuredData.JobPosting(jobDetail, t)} />
+      <section className="top-links-sec ort-general">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-9">
+              <div className="ort-inner">
+                <div className="media align-items-center bg-transparent border-0 p-0">
+                  <span className="text-dark text-center text-decoration-none">
+                    <CompanyPhoto className="d-flex mr-4 truck-img mb-3" company={jobDetail.company} />
+                    <Link href="/find-jobs">
+                      <a>
+                        {t('view_all_jobs')} <ArrowRight className="pl-1" />
+                      </a>
+                    </Link>
+                  </span>
+                  <div className="media-body">
+                    {/* <h6>Solo</h6> */}
+                    <h4 className="mt-0">
+                      {jobDetail.title}
+                      <span className="" data-toggle="tooltip"
+                        data-placement="top" title={jobDetail.title}>
+                      </span>
+                    </h4>
+                    <div className="job-date-author">
+                      {
+                        jobDetail.created_at &&
+                        <>
+                          {t('posted')} {timeSince(jobDetail.created_at)} {t('ago')}
+                        </>
+                      } {
+                        jobDetail?.company?.name &&
+                        <>
+                          {t('by')} <span role="button" className="employer text-theme">{jobDetail.company?.name}</span>
+                        </>
+                      }
+                    </div>
+                    <div className="job-metas">
+                      <div className="job-location d-flex align-items-center">
                         {
-                          jobDetail.created_at &&
-                          <>
-                            {t('posted')} {timeSince(jobDetail.created_at)} {t('ago')}
-                          </>
-                        } {
-                          jobDetail?.company?.name &&
-                          <>
-                            {t('by')} <span role="button" className="employer text-theme">{jobDetail.company?.name}</span>
-                          </>
+                          jobDetail.location &&
+                          <p className="pr-4">
+                            <i className="fa fa-map-marker mr-2" aria-hidden="true"></i>
+                            {buildAddress(jobDetail.location)}
+                          </p>
                         }
                       </div>
                       <div className="job-metas">
@@ -94,19 +89,16 @@ export default function Detail({ jobDetail, relatedJobs }) {
                   </div>
                 </div>
               </div>
-              <div className="col-md-3">
-                <div className="ort-btn mt-lg-4 mt-0">
-                  <button type="button" className="btn btn-danger btn-danger_padded " onClick={handleShowApplyModal}>
-                    {t('apply_now')}
-                    <ArrowRight />
-                  </button>
-                  <button type="button" className="btn btn-danger"> < Star /> {t('shortlist')} </button>
-                </div>
-                <JobApply job={jobDetail} />
-              </div>
+            </div>
+            <div className="col-md-3">
+              {/* <div className="ort-btn mt-lg-4 mt-0">
+                <button type="button" className="btn btn-danger" data-toggle="modal" data-target="#exampleModal"> {t('apply_now')} <i className="fa fa-long-arrow-right pl-1" aria-hidden="true"></i></button>
+                <button type="button" className="btn btn-danger"> <i className="fa fa-star-o" aria-hidden="true"></i> {t('shortlist')} </button>
+              </div> */}
+              <JobApply job={jobDetail} />
             </div>
           </div>
-        </section>
+        </div>
 
         <div className="job-deatails-sec">
           <div className="container">
@@ -122,7 +114,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
             </div>
           </div>
         </div>
-      </jobDetailContext.Provider>
+      </section>
     </>
   )
 }

@@ -105,14 +105,13 @@ export default function FileInput({ documentType, formik, accept, required, clas
 
     async function view(e) {
         console.log(value);
-        if (value?.path) {
-            setViewDoc(value.path);
-        }
-        else if (value?.id) {
+        if (value?.id) {
             const api = new DocumentApi();
             const document = await api.getSignedUrl(value.id);
             console.log(document);
             setViewDoc(document.path);
+        } else if (value?.path) {
+            setViewDoc(value.path);
         }
     }
 
