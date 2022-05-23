@@ -455,7 +455,7 @@ export default function Job() {
 
     }
 
-    const [ createVehicle, setCreateVehicle ] = useState(false);
+    const [createVehicle, setCreateVehicle] = useState(false);
 
     const onVehicleAdded = (vehicle) => {
         form.setFieldValue(`vehicles.${createVehicle}.id`, vehicle.id);
@@ -466,7 +466,7 @@ export default function Job() {
         setCreateVehicle(false);
     }
 
-    const [ createLocation, setCreateLocation ] = useState(false);
+    const [createLocation, setCreateLocation] = useState(false);
 
     const onLocationAdded = (location) => {
         form.setFieldValue(`location.id`, location.id);
@@ -496,7 +496,7 @@ export default function Job() {
                         <Col lg="6" xl="4">
                             <ViewCard
                                 title="basic_details"
-                                >
+                            >
                                 <BaseInput
                                     className="col-12"
                                     label="title"
@@ -504,7 +504,7 @@ export default function Job() {
                                     name="title"
                                     placeholder="title"
                                     formik={form}
-                                    />
+                                />
                                 <BaseSelect
                                     className="col-12"
                                     label="location"
@@ -516,7 +516,7 @@ export default function Job() {
                                     labelKey="street"
                                     options={locations}
                                     append={<Button variant="outline-secondary" onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
-                                    />
+                                />
                                 <BaseInput
                                     className="col-12"
                                     label="expiration_date"
@@ -633,7 +633,21 @@ export default function Job() {
                         <Col lg="6" xl="4">
                             <ViewCard
                                 title="benefits"
-                                >
+                            >
+                                <BaseSelect
+                                    className="col-12 mb-2"
+                                    label={t("pay_frequency")}
+                                    name="pay_frequency"
+                                    placeholder={t("pay_frequency")}
+                                    cols={2}
+                                    value={form.values.pay_frequency}
+                                    onChange={form.handleChange}
+                                    handleBlur={form.handleBlur}
+                                    touched={form.touched.pay_frequency}
+                                    error={form.errors.pay_frequency}
+                                    labelPrefix="JobPayFrequency"
+                                    enumType={JobPayFrequency}
+                                />
                                 <BaseSelect
                                     className="col-12"
                                     label="pay_method"
@@ -844,49 +858,49 @@ export default function Job() {
                                 actions={
                                     (
                                         <Button
-                                        variant="primary"
-                                        size="sm"
-                                        onClick={() => form.setFieldValue("vehicles", [
-                                        ...(form.values.vehicles || []),
-                                        new VehicleEntity()
-                                    ])}>
-                                        <PlusCircle /> {t("ADD")}
-                                    </Button>
-                                )}
-                                >
+                                            variant="primary"
+                                            size="sm"
+                                            onClick={() => form.setFieldValue("vehicles", [
+                                                ...(form.values.vehicles || []),
+                                                new VehicleEntity()
+                                            ])}>
+                                            <PlusCircle /> {t("ADD")}
+                                        </Button>
+                                    )}
+                            >
                                 {
-                                    form.values.vehicles?.length > 0 && 
+                                    form.values.vehicles?.length > 0 &&
                                     form.values.vehicles.map((v, i) => (
-                                    <Row key={i} className="mt-1">
-                                        <BaseSelect
-                                            className="col-12"
-                                            name={`vehicles.${i}.id`}
-                                            placeholder="SELECT_VEHICLE"
-                                            options={vehicles}
-                                            valueKey="id"
-                                            createLabel={veh => {
-                                                const { type, type_other, make, model, transmission_type, year } = veh;
-                                                let label = type === VehicleType.OTHER ? type_other : t(type);
+                                        <Row key={i} className="mt-1">
+                                            <BaseSelect
+                                                className="col-12"
+                                                name={`vehicles.${i}.id`}
+                                                placeholder="SELECT_VEHICLE"
+                                                options={vehicles}
+                                                valueKey="id"
+                                                createLabel={veh => {
+                                                    const { type, type_other, make, model, transmission_type, year } = veh;
+                                                    let label = type === VehicleType.OTHER ? type_other : t(type);
 
-                                                if (make) label += ` / ${make}`;
+                                                    if (make) label += ` / ${make}`;
 
-                                                if (model) label += ` / ${model}`;
+                                                    if (model) label += ` / ${model}`;
 
-                                                if (transmission_type) label += ` / ${t(transmission_type)}`;
+                                                    if (transmission_type) label += ` / ${t(transmission_type)}`;
 
-                                                if (year) label += ` / ${year}`;
-                                                return label; //`${()} / ${veh.make} / ${veh.model} / ${t(veh.transmission_type)} / ${veh.year}`
-                                            }}
-                                            formik={form}
-                                            prepend={<>
-                                                <InputGroup.Text>{i + 1}</InputGroup.Text>
+                                                    if (year) label += ` / ${year}`;
+                                                    return label; //`${()} / ${veh.make} / ${veh.model} / ${t(veh.transmission_type)} / ${veh.year}`
+                                                }}
+                                                formik={form}
+                                                prepend={<>
+                                                    <InputGroup.Text>{i + 1}</InputGroup.Text>
                                                 </>}
-                                            append={<>
-                                            <Button variant="outline-secondary" onClick={() => setCreateVehicle(i)}><PlusCircle /> {t("CREATE")}</Button>
-                                            <Button variant="outline-danger" onClick={() => form.setFieldValue("vehicles", form.values.vehicles.filter((v, idx) => i != idx))}><DashCircle /></Button>
-                                            </>}
+                                                append={<>
+                                                    <Button variant="outline-secondary" onClick={() => setCreateVehicle(i)}><PlusCircle /> {t("CREATE")}</Button>
+                                                    <Button variant="outline-danger" onClick={() => form.setFieldValue("vehicles", form.values.vehicles.filter((v, idx) => i != idx))}><DashCircle /></Button>
+                                                </>}
                                             />
-                                    </Row>))
+                                        </Row>))
                                 }
 
                             </ViewCard>
@@ -919,96 +933,47 @@ export default function Job() {
                     <div className="row">
                         <ViewCard
                             title="requirements"
-                            >
+                        >
                             <Row>
-                            <div className="col-md-6">
-                                <BaseCheckList
-                                    className="col-12"
-                                    label="cdl_class"
-                                    name="cdl_class"
-                                    cols={2}
-                                    labelPrefix="DriverLicenseType"
-                                    enumType={DriverLicenseType}
-                                    formik={form}
-                                />
-                                <BaseInput
-                                    className="col-12"
-                                    label="min_years_experience"
-                                    name="min_years_experience"
-                                    placeholder="min_years_experience"
-                                    min="0"
-                                    type="int"
-                                    formik={form}
-                                />
-                                <BaseSelect
-                                    className="col-12"
-                                    label="min_degree"
-                                    name="min_degree"
-                                    placeholder="min_degree"
-                                    labelPrefix="EducationLevel"
-                                    enumType={EducationLevel}
-                                    formik={form}
-                                />
-                                <div className="col-12">
-                                    <label>{t("required_skills")}:</label>
-                                    {form.touched.required_skills && typeof form.errors.required_skills === "string" ? <span className="text-danger small">{form.errors.required_skills}</span> : null}
-                                    {form.values.required_skills.map((v, i) => {
-                                        return (
-                                            <Row key={i}>
-                                                <BaseSelect
-                                                    className="col-5"
-                                                    label="type"
-                                                    placeholder="type"
-                                                    name={`required_skills.${i}.type`}
-                                                    required
-                                                    labelPrefix="JobEquipmentType"
-                                                    enumType={JobEquipmentType}
-                                                    formik={form}
-                                                />
-                                                <BaseInput
-                                                    className="col-5"
-                                                    label="years"
-                                                    placeholder="years"
-                                                    name={`required_skills.${i}.years`}
-                                                    required
-                                                    min="1"
-                                                    type="int"
-                                                    formik={form}
-                                                />
-                                                <div className="col-2 mt-4">
-                                                    <button className="btn btn-yellow" name={i} onClick={removeRequiredSkill}>x</button>
-                                                </div>
-                                            </Row>);
-                                    })}
-                                    <div className="col-6 offset-6 text-end mt-2">
-                                        <button className="btn btn-yellow" onClick={addRequiredSkills}>+ {t("more")}</button>
-                                    </div>
-                                </div>
-                                <BaseTextArea
-                                    className="col-12"
-                                    label="other_required_skills"
-                                    name="required_skills_other"
-                                    placeholder="other_required_skills"
-                                    rows="1"
-                                    formik={form}
-                                />
-                                {
-                                    form.values.employment_type === JobEmploymentType.OWNER_OPERATOR &&
+                                <div className="col-md-6">
+                                    <BaseCheckList
+                                        className="col-12"
+                                        label="cdl_class"
+                                        name="cdl_class"
+                                        cols={2}
+                                        labelPrefix="DriverLicenseType"
+                                        enumType={DriverLicenseType}
+                                        formik={form}
+                                    />
+                                    <BaseInput
+                                        className="col-12"
+                                        label="min_years_experience"
+                                        name="min_years_experience"
+                                        placeholder="min_years_experience"
+                                        min="0"
+                                        type="int"
+                                        formik={form}
+                                    />
+                                    <BaseSelect
+                                        className="col-12"
+                                        label="min_degree"
+                                        name="min_degree"
+                                        placeholder="min_degree"
+                                        labelPrefix="EducationLevel"
+                                        enumType={EducationLevel}
+                                        formik={form}
+                                    />
                                     <div className="col-12">
-                                        <label>{t("required_equipment")}:</label>
-                                        {form.touched.required_equipment && typeof form.errors.required_equipment === "string" ? <span className="text-danger small">{form.errors.required_equipment}</span> : null}
-                                        {form.values.required_equipment.map((v, i) => {
-                                            const get = function (part, field) {
-                                                if (part.required_equipment && part.required_equipment[i])
-                                                    return part.required_equipment[i][field];
-                                            }
+                                        <label>{t("required_skills")}:</label>
+                                        {form.touched.required_skills && typeof form.errors.required_skills === "string" ? <span className="text-danger small">{form.errors.required_skills}</span> : null}
+                                        {form.values.required_skills.map((v, i) => {
                                             return (
                                                 <Row key={i}>
                                                     <BaseSelect
                                                         className="col-5"
                                                         label="type"
                                                         placeholder="type"
-                                                        name={`required_equipment.${i}.type`}
+                                                        name={`required_skills.${i}.type`}
                                                         required
                                                         labelPrefix="JobEquipmentType"
                                                         enumType={JobEquipmentType}
@@ -1016,195 +981,231 @@ export default function Job() {
                                                     />
                                                     <BaseInput
                                                         className="col-5"
-                                                        label="quantity"
-                                                        placeholder="quantity"
-                                                        name={`required_equipment.${i}.quantity`}
+                                                        label="years"
+                                                        placeholder="years"
+                                                        name={`required_skills.${i}.years`}
                                                         required
                                                         min="1"
                                                         type="int"
                                                         formik={form}
                                                     />
                                                     <div className="col-2 mt-4">
-                                                        <button className="btn btn-yellow" name={i} onClick={removeRequiredEquipment}>x</button>
+                                                        <button className="btn btn-yellow" name={i} onClick={removeRequiredSkill}>x</button>
                                                     </div>
                                                 </Row>);
                                         })}
                                         <div className="col-6 offset-6 text-end mt-2">
-                                            <button className="btn btn-yellow" onClick={addRequiredEquipment}>+ {t("more")}</button>
+                                            <button className="btn btn-yellow" onClick={addRequiredSkills}>+ {t("more")}</button>
                                         </div>
                                     </div>
-                                }
-                                <BaseCheckList
-                                    className="col-12"
-                                    label="special_endorsements"
-                                    name="required_endorsement"
-                                    cols={2}
-                                    labelPrefix="DriverEndorsement"
-                                    enumType={DriverEndorsement}
-                                    formik={form}
-                                />
-                                <BaseCheckList
-                                    className="col-12"
-                                    label="transmission_type"
-                                    name="transmission_type_experience"
-                                    cols={2}
-                                    labelPrefix="VehicleTransmissionType"
-                                    enumType={VehicleTransmissionType}
-                                    formik={form}
-                                />
-                            </div>
-                            
-                            <div className="col-md-6">
-                            <BaseSelect
-                                className="col-12 mb-2"
-                                label={t("pay_frequency")}
-                                name="pay_frequency"
-                                placeholder={t("pay_frequency")}
-                                cols={2}
-                                value={form.values.pay_frequency}
-                                onChange={form.handleChange}
-                                handleBlur={form.handleBlur}
-                                touched={form.touched.pay_frequency}
-                                error={form.errors.pay_frequency}
-                                labelPrefix="JobPayFrequency"
-                                enumType={JobPayFrequency}
-                            />
-                                <BaseCheck
-                                    className="col-12"
-                                    label="must_pass_drug_test"
-                                    name="must_pass_drug_test"
-                                    formik={form}
-                                />
-                                <BaseCheck
-                                    className="col-12"
-                                    label="must_have_clean_mvr"
-                                    name="must_have_clean_mvr"
-                                    formik={form}
-                                />
-                                {
-                                    !form.values.must_have_clean_mvr &&
-                                    <div className="col-12">
-                                        <label>{t("mvr_requirements")}:</label>
-                                        {form.touched.mvr_requirements && typeof form.errors.mvr_requirements === "string" ? <span className="text-danger small">{form.errors.mvr_requirements}</span> : null}
-                                        {form.values.mvr_requirements.map((v, i) => {
-                                            return (
-                                                <div key={i} className="row">
-                                                    <BaseSelect
-                                                        className="col-3"
-                                                        label="max"
-                                                        name={`mvr_requirements.${i}.max_count`}
-                                                        required
-                                                        value={v.max_count}
-                                                        options={counts}
-                                                        formik={form}
-                                                    />
-                                                    <BaseSelect
-                                                        className="col-4"
-                                                        label="type"
-                                                        placeholder="type"
-                                                        name={`mvr_requirements.${i}.type`}
-                                                        required
-                                                        labelPrefix="MvrType"
-                                                        enumType={MvrType}
-                                                        formik={form}
-                                                    />
-                                                    <BaseSelect
-                                                        className="col-3"
-                                                        label="within"
-                                                        name={`mvr_requirements.${i}.max_years`}
-                                                        required
-                                                        value={v.max_years}
-                                                        options={years}
-                                                        formik={form}
-                                                    />
-                                                    <div className="col-2 mt-4">
-                                                        <button className="btn btn-yellow" name={i} onClick={removeMvrRequirement}>x</button>
-                                                    </div>
-                                                </div>);
-                                        })}
-                                        <div className="col-6 offset-6 text-end mt-2">
-                                            <button className="btn btn-yellow" onClick={addMvrRequirement}>+ {t("more")}</button>
+                                    <BaseTextArea
+                                        className="col-12"
+                                        label="other_required_skills"
+                                        name="required_skills_other"
+                                        placeholder="other_required_skills"
+                                        rows="1"
+                                        formik={form}
+                                    />
+                                    {
+                                        form.values.employment_type === JobEmploymentType.OWNER_OPERATOR &&
+                                        <div className="col-12">
+                                            <label>{t("required_equipment")}:</label>
+                                            {form.touched.required_equipment && typeof form.errors.required_equipment === "string" ? <span className="text-danger small">{form.errors.required_equipment}</span> : null}
+                                            {form.values.required_equipment.map((v, i) => {
+                                                const get = function (part, field) {
+                                                    if (part.required_equipment && part.required_equipment[i])
+                                                        return part.required_equipment[i][field];
+                                                }
+                                                return (
+                                                    <Row key={i}>
+                                                        <BaseSelect
+                                                            className="col-5"
+                                                            label="type"
+                                                            placeholder="type"
+                                                            name={`required_equipment.${i}.type`}
+                                                            required
+                                                            labelPrefix="JobEquipmentType"
+                                                            enumType={JobEquipmentType}
+                                                            formik={form}
+                                                        />
+                                                        <BaseInput
+                                                            className="col-5"
+                                                            label="quantity"
+                                                            placeholder="quantity"
+                                                            name={`required_equipment.${i}.quantity`}
+                                                            required
+                                                            min="1"
+                                                            type="int"
+                                                            formik={form}
+                                                        />
+                                                        <div className="col-2 mt-4">
+                                                            <button className="btn btn-yellow" name={i} onClick={removeRequiredEquipment}>x</button>
+                                                        </div>
+                                                    </Row>);
+                                            })}
+                                            <div className="col-6 offset-6 text-end mt-2">
+                                                <button className="btn btn-yellow" onClick={addRequiredEquipment}>+ {t("more")}</button>
+                                            </div>
                                         </div>
-                                    </div>
-                                }
-                                <BaseCheck
-                                    className="col-12"
-                                    label="accept_sap_graduates"
-                                    name="accept_sap_graduates"
-                                    formik={form}
-                                />
-                                <BaseCheck
-                                    className="col-12"
-                                    label="no_criminal_history"
-                                    name="must_have_clean_criminal_history"
-                                    formik={form}
-                                />
-                                {
-                                    !form.values.must_have_clean_criminal_history &&
-                                    <div className="col-12">
-                                        <label>{t("criminal_history")}:</label>
-                                        {form.touched.criminal_history && typeof form.errors.criminal_history === "string" ? <span className="text-danger small">{form.errors.criminal_history}</span> : null}
-                                        {form.values.criminal_history.map((v, i) => {
-                                            const get = function (part, field) {
-                                                if (part.criminal_history && part.criminal_history[i])
-                                                    return part.criminal_history[i][field];
-                                            }
-                                            return (
-                                                <div key={i} className="row">
-                                                    <BaseSelect
-                                                        className="col-3"
-                                                        label="max"
-                                                        name={`criminal_history.${i}.max_count`}
-                                                        required
-                                                        options={counts}
-                                                        formik={form}
-                                                    />
-                                                    <BaseSelect
-                                                        className="col-4"
-                                                        label="type"
-                                                        placeholder="type"
-                                                        name={`criminal_history.${i}.type`}
-                                                        required
-                                                        labelPrefix="CriminalHistoryType"
-                                                        enumType={CriminalHistoryType}
-                                                        formik={form}
-                                                    />
-                                                    <BaseSelect
-                                                        className="col-3"
-                                                        label="within"
-                                                        name={`criminal_history.${i}.max_years`}
-                                                        required
-                                                        options={years}
-                                                        formik={form}
-                                                    />
-                                                    <div className="col-2 mt-4">
-                                                        <button className="btn btn-yellow" name={i} onClick={removeCriminalHistoryRequirement}>x</button>
-                                                    </div>
-                                                </div>);
-                                        })}
-                                        <div className="col-6 offset-6 text-end mt-2">
-                                            <button className="btn btn-yellow" onClick={addCriminalHistoryRequirement}>+ {t("more")}</button>
+                                    }
+                                    <BaseCheckList
+                                        className="col-12"
+                                        label="special_endorsements"
+                                        name="required_endorsement"
+                                        cols={2}
+                                        labelPrefix="DriverEndorsement"
+                                        enumType={DriverEndorsement}
+                                        formik={form}
+                                    />
+                                    <BaseCheckList
+                                        className="col-12"
+                                        label="transmission_type"
+                                        name="transmission_type_experience"
+                                        cols={2}
+                                        labelPrefix="VehicleTransmissionType"
+                                        enumType={VehicleTransmissionType}
+                                        formik={form}
+                                    />
+                                </div>
+
+                                <div className="col-md-6">
+
+                                    <BaseCheck
+                                        className="col-12"
+                                        label="must_pass_drug_test"
+                                        name="must_pass_drug_test"
+                                        formik={form}
+                                    />
+                                    <BaseCheck
+                                        className="col-12"
+                                        label="must_have_clean_mvr"
+                                        name="must_have_clean_mvr"
+                                        formik={form}
+                                    />
+                                    {
+                                        !form.values.must_have_clean_mvr &&
+                                        <div className="col-12">
+                                            <label>{t("mvr_requirements")}:</label>
+                                            {form.touched.mvr_requirements && typeof form.errors.mvr_requirements === "string" ? <span className="text-danger small">{form.errors.mvr_requirements}</span> : null}
+                                            {form.values.mvr_requirements.map((v, i) => {
+                                                return (
+                                                    <div key={i} className="row">
+                                                        <BaseSelect
+                                                            className="col-3"
+                                                            label="max"
+                                                            name={`mvr_requirements.${i}.max_count`}
+                                                            required
+                                                            value={v.max_count}
+                                                            options={counts}
+                                                            formik={form}
+                                                        />
+                                                        <BaseSelect
+                                                            className="col-4"
+                                                            label="type"
+                                                            placeholder="type"
+                                                            name={`mvr_requirements.${i}.type`}
+                                                            required
+                                                            labelPrefix="MvrType"
+                                                            enumType={MvrType}
+                                                            formik={form}
+                                                        />
+                                                        <BaseSelect
+                                                            className="col-3"
+                                                            label="within"
+                                                            name={`mvr_requirements.${i}.max_years`}
+                                                            required
+                                                            value={v.max_years}
+                                                            options={years}
+                                                            formik={form}
+                                                        />
+                                                        <div className="col-2 mt-4">
+                                                            <button className="btn btn-yellow" name={i} onClick={removeMvrRequirement}>x</button>
+                                                        </div>
+                                                    </div>);
+                                            })}
+                                            <div className="col-6 offset-6 text-end mt-2">
+                                                <button className="btn btn-yellow" onClick={addMvrRequirement}>+ {t("more")}</button>
+                                            </div>
                                         </div>
-                                    </div>
-                                }
-                                <BaseInput
-                                    className="col-12"
-                                    label="accidents_last_5_years"
-                                    placeholder="count"
-                                    name="max_accidents"
-                                    min="0"
-                                    type="int"
-                                    formik={form}
-                                />
-                                <BaseTextArea
-                                    className="col-12"
-                                    label="other_safety_requirements"
-                                    name="safety_requirements_other"
-                                    placeholder="other_safety_requirements"
-                                    rows="1"
-                                    formik={form}
-                                />
-                            </div>
+                                    }
+                                    <BaseCheck
+                                        className="col-12"
+                                        label="accept_sap_graduates"
+                                        name="accept_sap_graduates"
+                                        formik={form}
+                                    />
+                                    <BaseCheck
+                                        className="col-12"
+                                        label="no_criminal_history"
+                                        name="must_have_clean_criminal_history"
+                                        formik={form}
+                                    />
+                                    {
+                                        !form.values.must_have_clean_criminal_history &&
+                                        <div className="col-12">
+                                            <label>{t("criminal_history")}:</label>
+                                            {form.touched.criminal_history && typeof form.errors.criminal_history === "string" ? <span className="text-danger small">{form.errors.criminal_history}</span> : null}
+                                            {form.values.criminal_history.map((v, i) => {
+                                                const get = function (part, field) {
+                                                    if (part.criminal_history && part.criminal_history[i])
+                                                        return part.criminal_history[i][field];
+                                                }
+                                                return (
+                                                    <div key={i} className="row">
+                                                        <BaseSelect
+                                                            className="col-3"
+                                                            label="max"
+                                                            name={`criminal_history.${i}.max_count`}
+                                                            required
+                                                            options={counts}
+                                                            formik={form}
+                                                        />
+                                                        <BaseSelect
+                                                            className="col-4"
+                                                            label="type"
+                                                            placeholder="type"
+                                                            name={`criminal_history.${i}.type`}
+                                                            required
+                                                            labelPrefix="CriminalHistoryType"
+                                                            enumType={CriminalHistoryType}
+                                                            formik={form}
+                                                        />
+                                                        <BaseSelect
+                                                            className="col-3"
+                                                            label="within"
+                                                            name={`criminal_history.${i}.max_years`}
+                                                            required
+                                                            options={years}
+                                                            formik={form}
+                                                        />
+                                                        <div className="col-2 mt-4">
+                                                            <button className="btn btn-yellow" name={i} onClick={removeCriminalHistoryRequirement}>x</button>
+                                                        </div>
+                                                    </div>);
+                                            })}
+                                            <div className="col-6 offset-6 text-end mt-2">
+                                                <button className="btn btn-yellow" onClick={addCriminalHistoryRequirement}>+ {t("more")}</button>
+                                            </div>
+                                        </div>
+                                    }
+                                    <BaseInput
+                                        className="col-12"
+                                        label="accidents_last_5_years"
+                                        placeholder="count"
+                                        name="max_accidents"
+                                        min="0"
+                                        type="int"
+                                        formik={form}
+                                    />
+                                    <BaseTextArea
+                                        className="col-12"
+                                        label="other_safety_requirements"
+                                        name="safety_requirements_other"
+                                        placeholder="other_safety_requirements"
+                                        rows="1"
+                                        formik={form}
+                                    />
+                                </div>
                             </Row>
                         </ViewCard>
                     </div>
@@ -1215,7 +1216,7 @@ export default function Job() {
                 title="CREATE_VEHICLE"
                 show={typeof createVehicle === "number"}
                 onCloseClick={() => setCreateVehicle(false)}
-                >
+            >
                 <VehicleForm
                     onSaveComplete={onVehicleAdded}
                 />
@@ -1224,7 +1225,7 @@ export default function Job() {
                 title="CREATE_LOCATION"
                 show={createLocation}
                 onCloseClick={() => setCreateLocation(false)}
-                >
+            >
                 <LocationForm
                     onSaveComplete={onLocationAdded}
                 />
