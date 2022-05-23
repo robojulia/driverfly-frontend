@@ -1,7 +1,8 @@
 import React from 'react'
 import { useTranslation } from '../../hooks/useTranslation';
+import BaseControl from './BaseControl';
 
-function BaseInput({ formik, accept, required, className, label, handleBlur, type, min, max, step, placeholder, value, onChange, onKeyDown, readOnly, name, touched, error, }) {
+function BaseInput({ formik, accept, required, className, label, handleBlur, type, min, max, step, placeholder, value, onChange, onKeyDown, readOnly, name, touched, error, append, prepend }) {
   const { t } = useTranslation();
 
   if (formik) {
@@ -43,9 +44,33 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
         if (min != null && parseInt(min) >= 0 && e.key === "-") e.preventDefault();
       };
   }
+
+  if (type === "number") {
+    let currentOnChange = onChange;
+
+    /**
+     * @param {React.ChangeEvent<HTMLInputElement>} e
+     */
+    onChange = (e) => {
+      const { value } = e.target;
+
+      if (value && value.startsWith(".")) e.target.value = `0${value}`;
+
+      if (currentOnChange) currentOnChange(e);
+    }
+  }
   return (
-    <div className={className}>
-      {label && <><label>{t(label)}{required ? "*" : ""}:</label><br /></>}
+    <BaseControl
+      className={className}
+      name={name}
+      label={label}
+      required={required}
+      formik={formik}
+      touched={touched}
+      error={error}
+      prepend={prepend}
+      append={append}
+      >
       <input
         accept={type == "file" ? accept : null}
         onBlur={handleBlur}
@@ -54,15 +79,14 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
         max={max}
         step={step}
         placeholder={t(placeholder)}
-        value={value || (type == "number" ? 0 : "")}
+        value={value == null ? "" : value}
         onChange={onChange}
         onKeyDown={onKeyDown}
         readOnly={readOnly}
         name={name}
         className={`form-control ${error ? "is-invalid" : ""}`}
       />
-      {touched && error && (typeof error === "string") ? <span className="text-danger small">{error}</span> : null}
-    </div>
+    </BaseControl>
   )
 }
 

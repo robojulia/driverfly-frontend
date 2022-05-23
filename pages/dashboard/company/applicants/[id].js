@@ -1293,6 +1293,7 @@ function Edit(props) {
                                                         placeholder="TYPE"
                                                         labelPrefix="ApplicantDocumentType"
                                                         enumType={ApplicantDocumentType}
+                                                        readOnly={!!entity.id && !entity.file_base64}
                                                         formik={form}
                                                     />
                                                 </td>

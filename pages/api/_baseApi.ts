@@ -11,6 +11,8 @@ export default class BaseApi {
         const { authCheck } = useAuth();
         const user = authCheck();
 
+        console.log("BaseApi: ", user);
+
         if (user) {
             if (!config.headers)
                 config.headers = {};

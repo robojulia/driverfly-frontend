@@ -10,7 +10,7 @@ export default class CompanyApi extends BaseApi {
     }
     baseUrl(companyId?: number): string { return `companies/${companyId ?? this.companyId}` }
     async getById(): Promise<CompanyEntity> {
-        const { data } = await super.get("companies");
+        const { data } = await this.get("companies");
 
         return data;
     }

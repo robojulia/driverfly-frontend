@@ -1,13 +1,17 @@
 import { useTranslation } from "../../hooks/useTranslation";
 import { useState, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
+import { X, XLg } from "react-bootstrap-icons";
 
 /**
  * @typedef ViewModalProps
  * @property {boolean} show
  * @property {string} title
+ * @property {string|JSX.Element|JSX.Element[]} header
+ * @property {string|JSX.Element|JSX.Element[]} footer
+ * @property {string} closeText
  * @property {() => void} onCloseClick
- * @property {any} children
+ * @property {JSX.Element|JSX.Element[]} children
  */
 
 /**
@@ -29,13 +33,27 @@ export default function ViewModal(props) {
 
     return (
     <Modal show={show} onHide={props.onCloseClick ?? hideModelHandler}>
-        {props.title && <Modal.Header>{typeof props.title === "string" ? t(props.title) : props.title}</Modal.Header>}
+        <Modal.Header className="justify-content-between">
+            {
+                props.title &&
+                <h4 className="modal-title font-weight-normal">
+                    {typeof props.title === "string" ? t(props.title) : props.title}
+                </h4>
+            }
+            {props.header}
+            <Button variant="secondary" onClick={props.onCloseClick ?? hideModelHandler}>
+                <XLg /> {t(props.closeText || "CLOSE")}
+            </Button>
+        </Modal.Header>
 
         <Modal.Body>{props.children}</Modal.Body>
 
-        <Modal.Footer>
-            <Button variant="secondary" onClick={props.onCloseClick ?? hideModelHandler}>{t("CLOSE")}</Button>
-        </Modal.Footer>
+        {
+            props.footer &&
+            <Modal.Footer>
+                {props.footer}
+            </Modal.Footer>
+        }
 
     </Modal>
 );
