@@ -16,6 +16,10 @@ import { useTranslation } from "../../../hooks/useTranslation";
 import { CurrencyDollar } from 'react-bootstrap-icons';
 import ShowEnumFromString from '../../../components/enum-filters/show-enum-from-string';
 import { DriverLicenseType } from '../../../enums/users/driver-license-type.enum';
+import ViewDataTable from '../../../components/viewDetails/viewDataTable';
+import { buildAddress } from '../../../utils/common';
+import OverlyPopover from '../../../components/popover/overly-popover';
+import { JobDeliveryType } from '../../../enums/jobs/job-delivery-type.enum';
 
 export default function JobsAppliedTo() {
 
@@ -64,69 +68,85 @@ export default function JobsAppliedTo() {
                 </Row>
                 <Row className="mt-5">
                     <Col lg="12 ">
-
-                        <CardBody className={JobList.jobtable}>
-                            <div className="table-responsive">
-                                <Table striped>
-                                    <thead className="listing_head">
-                                        <tr>
-                                            <th>{t('job_title')}</th>
-                                            <th>{t('company')}</th>
-                                            <th>{t('DATE_{name}', { name: t('ApplicantStatus.APPLIED') })}</th>
-                                            <th>{t('LICENSE_TYPE')}</th>
-                                            <th>{t('est_pay_per_week')}</th>
-                                            <th>{t('pay_method')}</th>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {!applicantJobs || !applicantJobs.length &&
-                                            <tr>
-                                                <td colSpan={11}>
-                                                    {t("NO_{name}_FOUND", { name: t("JOBS") })}
-                                                </td>
-                                            </tr>
-                                        }
-
-                                        {applicantJobs && applicantJobs.map((application, index) => (
-                                            <tr key={index}>
-                                                <td>
-                                                    {application.job.title}
-                                                </td>
-                                                <td>
-                                                    {application.company.name}
-                                                </td>
-                                                <td>
-                                                    {application.created_at && (new Date(application.last_updated_at).toUTCString())}
-                                                </td>
-                                                <td>
-                                                    {
-                                                        <ShowEnumFromString
-                                                            popover_header={t('LICENSE_TYPE')}
-                                                            labelPrefix="DriverLicenseType"
-                                                            popover={true}
-                                                            str={application.job.cdl_class}
-                                                            enumArray={DriverLicenseType} />
-                                                    }
-                                                </td>
-                                                <td>
-                                                    <p>
-                                                        < CurrencyDollar className='mr-1' />{application.job.min_weekly_pay ? application.job.min_weekly_pay : 0} - {application.job.max_weekly_pay ? application.job.max_weekly_pay : 0} per week
-                                                    </p>
-                                                </td>
-                                                <td>
-                                                    {
-                                                        (application.job.pay_method && t(`JobPayMethod.${application.job.pay_method}`))
-                                                    }
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </Table>
-                            </div>
-                        </CardBody>
-
-
+                        <ViewDataTable
+                            columns={[
+                                {
+                                    name: "job_title",
+                                    selector: applicant =>
+                                        (<OverlyPopover skipTranslate={true} header={t('job_title')} str={applicant.job.title} />),
+                                    hidable: false
+                                },
+                                {
+                                    name: "company",
+                                    selector: applicant => applicant.company?.name || null
+                                },
+                                {
+                                    name: "location",
+                                    selector: applicant =>
+                                        (<OverlyPopover skipTranslate={true} header={t('location')} str={buildAddress(applicant.job.location || {})} />)
+                                },
+                                {
+                                    name: "drivers_needed",
+                                    selector: applicant => applicant.job.drivers_needed
+                                },
+                                {
+                                    name: "est_pay_per_week",
+                                    selector: applicant =>
+                                        (<OverlyPopover skipTranslate={true} header={t('est_pay_per_week')} str={`${applicant.job.min_weekly_pay ? applicant.job.min_weekly_pay : 0} - ${applicant.job.max_weekly_pay ? applicant.job.max_weekly_pay : 0} ${t('per_week')}`} icon={< CurrencyDollar className='mr-1' />} />)
+                                },
+                                {
+                                    name: "LICENSE_TYPE",
+                                    selector: applicant =>
+                                    (<ShowEnumFromString
+                                        popover_header={t('LICENSE_TYPE')}
+                                        labelPrefix="DriverLicenseType"
+                                        popover={true}
+                                        str={applicant.job.cdl_class}
+                                        enumArray={DriverLicenseType} />)
+                                },
+                                {
+                                    name: "DATE_APPLIED",
+                                    selector: applicant =>
+                                        applicant.created_at ?
+                                            (<OverlyPopover skipTranslate={true} header={t('DATE_APPLIED')} str={new Date(applicant.created_at).toDateString()} />)
+                                            : null
+                                },
+                                {
+                                    name: "expiration_date",
+                                    selector: applicant =>
+                                        applicant.job.expiry_date ?
+                                            (<OverlyPopover skipTranslate={true} header={t('expiration_date')} str={new Date(applicant.job.expiry_date).toDateString()} />)
+                                            : null
+                                },
+                                {
+                                    name: "schedule",
+                                    selector: applicant =>
+                                        (<OverlyPopover labelPrefix="JobSchedule" skipTranslate={false} header={t('schedule')} str={applicant.job.schedule} />),
+                                },
+                                {
+                                    name: "employment_type",
+                                    selector: applicant =>
+                                        (<OverlyPopover labelPrefix="JobEmploymentType" skipTranslate={false} header={t('employment_type')} str={applicant.job.employment_type} />),
+                                },
+                                {
+                                    name: "delivery_type",
+                                    selector: applicant =>
+                                    (<ShowEnumFromString
+                                        popover_header={t('delivery_type')}
+                                        labelPrefix="JobDeliveryType"
+                                        popover={true}
+                                        str={applicant.job.delivery_type}
+                                        enumArray={JobDeliveryType} />
+                                    )
+                                },
+                                {
+                                    name: "team_drivers",
+                                    selector: applicant =>
+                                        (<OverlyPopover labelPrefix="JobTeamDriver" skipTranslate={false} header={t('team_drivers')} str={applicant.job.team_drivers} />),
+                                },
+                            ]}
+                            items={applicantJobs}
+                        />
                     </Col>
                 </Row>
             </div>
