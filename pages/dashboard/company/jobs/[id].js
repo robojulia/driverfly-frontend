@@ -774,6 +774,21 @@ export default function Job() {
                         </div>
                         <div className="col-md-4">
                             <h3>{t("benefits")}</h3>
+
+                            <BaseSelect
+                                className="col-12 mb-2"
+                                label={t("pay_frequency")}
+                                name="pay_frequency"
+                                placeholder={t("pay_frequency")}
+                                cols={2}
+                                value={form.values.pay_frequency}
+                                onChange={form.handleChange}
+                                handleBlur={form.handleBlur}
+                                touched={form.touched.pay_frequency}
+                                error={form.errors.pay_frequency}
+                                labelPrefix="JobPayFrequency"
+                                enumType={JobPayFrequency}
+                            />
                             <BaseSelect
                                 className="col-12"
                                 label="pay_method"
@@ -1247,22 +1262,9 @@ export default function Job() {
                                 formik={form}
                             />
                         </div>
-                        
+
                         <div className="col-md-6">
-                        <BaseSelect
-                            className="col-12 mb-2"
-                            label={t("pay_frequency")}
-                            name="pay_frequency"
-                            placeholder={t("pay_frequency")}
-                            cols={2}
-                            value={form.values.pay_frequency}
-                            onChange={form.handleChange}
-                            handleBlur={form.handleBlur}
-                            touched={form.touched.pay_frequency}
-                            error={form.errors.pay_frequency}
-                            labelPrefix="JobPayFrequency"
-                            enumType={JobPayFrequency}
-                        />
+
                             <BaseCheck
                                 className="col-12"
                                 label="must_pass_drug_test"
