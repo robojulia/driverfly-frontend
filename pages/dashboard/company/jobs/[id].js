@@ -638,7 +638,7 @@ export default function Job() {
                                     className="col-12 mb-2"
                                     label={t("pay_frequency")}
                                     name="pay_frequency"
-                                    placeholder={t("pay_frequency")}
+                                    // placeholder={t("pay_frequency")}
                                     cols={2}
                                     value={form.values.pay_frequency}
                                     onChange={form.handleChange}
