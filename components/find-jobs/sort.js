@@ -19,7 +19,7 @@ export default function Sort(props) {
                 {t('SORT_BY')}:
                 <select
                     name="order_by"
-                    className={props.inputClassName || "custom-select shadow-none mt-lg-0 mt-md-3"}
+                    className={props.inputClassName || "custom-select shadow-none mt-2"}
                     onChange={sortHandler}>
                     <option value="">{t('SORT_DEFAULT')}</option>
                     <option value="DESC">{t('SORT_NEWEST')}</option>

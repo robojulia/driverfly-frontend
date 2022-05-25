@@ -96,15 +96,15 @@ export default function FindJobs() {
                     </Col>
                     <Col md="3">
                         <div className="filter-btn-groups">
-                            <Sort inputClassName="custom-select shadow-none mt-lg-0 mt-md-3" labelClassName="text-secondary w-sm-25" />
+                            <Sort inputClassName="custom-select shadow-none mt-2" labelClassName="text-secondary w-sm-25" />
                         </div>
                     </Col>
                     <Col md="3">
-                        <Button variant="primary" onClick={handleShowFilters} className="me-2 ">
+                        <Button variant="primary" onClick={handleShowFilters} className="mt-39">
                             <Filter /> {t('FILTERS')}
                         </Button>
                     </Col>
-                    <Offcanvas show={showFilters} onHide={handleCloseFilters} placement="end">
+                    <Offcanvas show={showFilters} onHide={handleCloseFilters} placement="end" className="tab-content">
                         <Offcanvas.Header closeButton>
                             <Offcanvas.Title className="px-3">
                                 {t('FILTER_RESULT')}

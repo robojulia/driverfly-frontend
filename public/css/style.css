@@ -584,7 +584,7 @@ span.urgent {
 }
 
 .page-numbers.current.active {
-    background: #2da2af;
+    background: #2da2af !important;
     color: white;
 }
 
