@@ -6,7 +6,6 @@ import { useTranslation } from '../../../../hooks/useTranslation';
 import JobApi from '../../../api/job';
 import { useEffect, useState } from 'react';
 import jobsContext from "../../../../context/jobContext"
-import JobsList from '../../../../components/jobslisting/jobslist';
 import Search from "../../../../components/search/search";
 import { Filter } from "react-bootstrap-icons";
 import Sort from "../../../../components/find-jobs/sort";
@@ -21,6 +20,7 @@ import PayStructure from "../../../../components/pay-structure/Pay-Structure";
 import SpecialEndorsementsRequired from "../../../../components/special-endorsements-required/Special-Endorsements-Required";
 import MvrRequirement from "../../../../components/mvr-requirements/MVR-Requirements";
 import PostedDate from '../../../../components/postedate/PostedDate'
+import JobsList from "../../../../components/find-jobs/job-list";
 
 export default function FindJobs() {
 
@@ -130,16 +130,16 @@ export default function FindJobs() {
                 <Row className='mt-5'>
                     <Col className='col-12 my-lg-0 my-4'>
                         <div className="results-count mt-4 ">
-                            Showing {
+                            {t('SHOWING')} {
                                 pagingMeta.itemCount !== 0 &&
                                 <>
                                     <span className="first">
                                         {((pagingMeta.currentPage - 1) * pagingMeta.itemsPerPage) + 1}
                                     </span> – <span className="last">
                                         {(((pagingMeta.currentPage - 1) * pagingMeta.itemsPerPage) + pagingMeta.itemCount)}
-                                    </span> of
+                                    </span> {t('OF')}
                                 </>
-                            } {pagingMeta.totalItems} results
+                            } {pagingMeta.totalItems} {t('RESULT')}
                         </div>
                         < JobsList />
                     </Col>

@@ -578,14 +578,16 @@ span.urgent {
 }
 
 .page-numbers:hover {
-    background: #2da2af;
+    /* background: #2da2af; */
+    background: #357694 !important;
     transition: all 0.3s;
     text-decoration: none;
+    color: white !important;
 }
 
 .page-numbers.current.active {
-    background: #2da2af !important;
-    color: white;
+    background: #1D4354 !important;
+    color: white !important;
 }
 
 input[type='range'] {

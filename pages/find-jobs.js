@@ -11,6 +11,7 @@ import Location from "../components/location/Location"
 import BaseApi from "./api/_baseApi"
 import JobApi from "./api/job"
 import { updateQueryStringParameter } from "../logics/utils"
+import Sort from "../components/find-jobs/sort"
 
 export default function FindJobs(props) {
 
@@ -147,6 +148,7 @@ export default function FindJobs(props) {
         handleChange,
         setPagingMeta,
         setFilters,
+        setFiltersByKeyValue,
         applyFilters: fetchJobs
       },
     }}>
@@ -174,13 +176,7 @@ export default function FindJobs(props) {
               </div>
 
               <div className="filter-btn-groups mt-3">
-                <span className="text-secondary w-sm-25">Sort by:
-                  <select onChange={sortHandler} className="custom-select shadow-none mt-lg-0 mt-md-3">
-                    <option value="">Default</option>
-                    <option value="DESC">Newest</option>
-                    <option value="ASC">Oldest</option>
-                  </select>
-                </span>
+                <Sort />
               </div>
               < JobsList />
 

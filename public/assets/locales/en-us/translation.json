@@ -853,6 +853,9 @@
     "SHARE_MY_PHYSICALS": "Share my Physicals",
     "SEARCH": "Search",
     "FILTERS": "Filters",
+    "SHOWING": "Showing",
+    "OF": "Of",
+    "RESULT": "Results",
     "FILTER_RESULT": "Filter Results",
     "SEARCH_KEYWORD": "Search Keywords",
     "KEYWORD_PLACEHOLDER": "e.g. flatbed",
@@ -860,5 +863,7 @@
     "SORT_DEFAULT": "Default",
     "SORT_NEWEST": "Newest",
     "SORT_OLDEST": "Oldest",
+    "FIRST_PAGE": "First",
+    "LAST_PAGE": "Last",
     "NOT_HIDABLE": "Not Hidable"
 }
