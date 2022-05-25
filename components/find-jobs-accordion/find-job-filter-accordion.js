@@ -7,7 +7,7 @@ export default function FindJobFilterAccordion(props) {
   return (
     <>
 
-      <Accordion defaultActiveKey="0">
+      <Accordion defaultActiveKey="1">
         <Accordion.Item eventKey="0">
           <Accordion.Header> <span className="btn-3 btn-link">{props.header}</span></Accordion.Header>
           <Accordion.Body>

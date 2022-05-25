@@ -1,13 +1,15 @@
 import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
+import { useTranslation } from "../../hooks/useTranslation"
 import { updateQueryStringParameter } from "../../logics/utils"
 
-export default function Search() {
+export default function Search(props) {
 
   const { state, method } = useContext(jobContext)
   const { filters } = state
   const { setFilters, applyFilters } = method
+  const { t } = useTranslation();
 
   const searchHandler = e => {
     if (e.key === 'Enter') {
@@ -20,8 +22,8 @@ export default function Search() {
 
   return (
     <>
-      <label className="heading-label my-4">Search Keywords </label>
-      <input name="keywords" onKeyPress={searchHandler} type="text" className="form-control shadow-sm p-4" placeholder="e.g. flatbed" />
+      <label className={props.labelClassName || "heading-label my-4"}>{props.label || t('SEARCH_KEYWORD')} </label>
+      <input name="keywords" onKeyPress={searchHandler} type="text" className={props.inputClassName || "form-control shadow-sm p-4"} placeholder={t("KEYWORD_PLACEHOLDER")} />
     </>
   )
 }

@@ -852,5 +852,13 @@
     "SELECT_LOCATION": "Select Location",
     "SHARE_MY_PHYSICALS": "Share my Physicals",
     "SEARCH": "Search",
+    "FILTERS": "Filters",
+    "FILTER_RESULT": "Filter Results",
+    "SEARCH_KEYWORD": "Search Keywords",
+    "KEYWORD_PLACEHOLDER": "e.g. flatbed",
+    "SORT_BY": "Sort By",
+    "SORT_DEFAULT": "Default",
+    "SORT_NEWEST": "Newest",
+    "SORT_OLDEST": "Oldest",
     "NOT_HIDABLE": "Not Hidable"
 }
