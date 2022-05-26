@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useTranslation } from "../../../../hooks/useTranslation";
 import Link from "next/link";
 import { useMediaQuery } from "react-responsive";
+import useAuth from "../../../../hooks/useAuth";
 /**
  * @typedef SidebarProps
  * @property {boolean} open indicates if the sidebar is open or not
@@ -18,6 +19,7 @@ import { useMediaQuery } from "react-responsive";
  * @property {Icon} icon
  * @property {string} text 
  * @property {boolean} startsWith
+ * @property {string | string[]} permissions
  */
 
 /**
@@ -106,9 +108,15 @@ function findLast(arr, predicate) {
  */
 function SidebarLink(props) {
     let { isMobile, t, currentPath } = props;
-    let { pathname, items, icon, text } = props.item;
+    let { pathname, items, icon, text, permissions } = props.item;
 
     if (!pathname && items) pathname = items[0]?.pathname;
+
+    const { hasPermission } = useAuth();
+
+    if (permissions && !Array.isArray(permissions)) permissions = [permissions];
+
+    if (permissions && !hasPermission(...permissions)) return null;
 
     return (
     <li className={IsSelected(props.item, currentPath) ? "active" : ""}>

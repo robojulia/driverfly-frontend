@@ -1,12 +1,5 @@
 import { CompanyEntity } from '../company/company.entity';
-
-export enum UserRole {
-    ADMIN = 'admin',
-    USER = 'user',
-    DEV = 'dev',
-    DRIVER = 'driver',
-    COMPANY = 'company',
-}
+import { RoleEntity } from '../roles/role.enttiy';
 
 export interface UserEntity {
     id?: number;
@@ -15,7 +8,7 @@ export interface UserEntity {
     first_name?: string;
     last_name?: string;
     enabled_notifications?: boolean;
-    roles?: UserRole;
+    roles?: RoleEntity[];
     theme_color?: boolean;
     swipe_actions?: boolean;
     timezone?: string;

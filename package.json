@@ -29,6 +29,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "multi-range-slider-react": "^1.0.7",
+    "netlify": "^11.0.1",
     "next": "^12.1.0",
     "nextjs-breadcrumbs": "^1.1.9",
     "pdfjs-dist": "^2.13.216",
