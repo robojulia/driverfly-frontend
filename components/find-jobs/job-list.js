@@ -67,7 +67,7 @@ export default function JobsList() {
                             </div>
 
                         </div>
-                        <Link href={`/jobs/${job.id}`}>
+                        <Link href={`/dashboard/driver/find-jobs/${job.id}`}>
                             <button type="button" className="btn btn-outline-danger">{t('browse_job')}</button>
                         </Link>
 
