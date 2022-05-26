@@ -33,21 +33,57 @@ export default function Sidebar(props) {
 
     const { t } = useTranslation();
 
-    let current = findLast(props.items, v => IsSelected(v, router.asPath));
+    const { hasPermission } = useAuth();
 
-    if (!current) current = props.items[0];
+    const items = filterItems(props.items, hasPermission);
+
+    let current = findLast(items, v => IsSelected(v, router.asPath));
+
+    if (!current) current = items[0];
 
     return (<>
         <aside
             className={`sidebarArea ${!props.open ? "" : "showSidebar"}`}>
             <SidebarArea>
-                {props.items.map((v, i) => (<SidebarLink key={i} isMobile={isMobile} item={v} t={t} currentPath={router.asPath} />))}
+                {items.map((v, i) => (<SidebarLink key={i} isMobile={isMobile} item={v} t={t} currentPath={router.asPath} />))}
             </SidebarArea>
         </aside>
         {!isMobile && current?.items?.length > 0 &&
         <Sidebar open={props.open} items={current.items} />
         }
     </>);
+}
+
+/**
+ * 
+ * @param {SidebarItem[]} items 
+ * @param {(string[]) => boolean} hasPermission 
+ * @returns {SidebarItem[]}
+ */
+function filterItems(items, hasPermission) {
+
+    return items.map(i => {
+        let { permissions, items } = i;
+
+        if (items) {
+            items = filterItems(items, hasPermission);
+            if (!items) return null;
+
+            return {
+                ...i,
+                items: items
+            };
+        }
+
+        if (permissions) {
+            if (!Array.isArray(permissions)) permissions = [permissions];
+
+            if (!hasPermission(...permissions)) return null;
+        }
+
+        return i;
+    }).filter(v => !!v);
+
 }
 
 function SidebarArea({ children }) {
@@ -111,12 +147,6 @@ function SidebarLink(props) {
     let { pathname, items, icon, text, permissions } = props.item;
 
     if (!pathname && items) pathname = items[0]?.pathname;
-
-    const { hasPermission } = useAuth();
-
-    if (permissions && !Array.isArray(permissions)) permissions = [permissions];
-
-    if (permissions && !hasPermission(...permissions)) return null;
 
     return (
     <li className={IsSelected(props.item, currentPath) ? "active" : ""}>
