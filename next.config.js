@@ -1,12 +1,7 @@
 module.exports = {
-  target: "serverless",
-  future: { webpack5: true },
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-      config.resolve.alias.canvas = false
-      config.resolve.alias.encoding = false
-      return config
-  },
-  reactStrictMode: true,
+  
+  swcMinify: false, // it should be false by default 
+  reactStrictMode: false,
   reloadOnPrerender: true,
   env: {
     BASE_URL: process.env.BASE_URL,
