@@ -852,5 +852,15 @@
     "SELECT_LOCATION": "Select Location",
     "SHARE_MY_PHYSICALS": "Share my Physicals",
     "SEARCH": "Search",
-    "NOT_HIDABLE": "Not Hidable"
+    "NOT_HIDABLE": "Not Hidable",
+    "SELECT_{name}": "Select {{name}}",
+    "Forms": {
+        "SAVED": "saved",
+        "CREATED": "created",
+        "UPDATED": "updated",
+        "DELETED": "deleted",
+        "SUCCESS_{action}_{name}": "Successfully {{action}} {{name}}",
+        "FAIL_{action}_{name}": "Failed {{action}} {{name}}"
+    },
+    "VEHICLE": "Vehicle"
 }

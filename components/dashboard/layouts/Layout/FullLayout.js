@@ -26,12 +26,14 @@ const FullLayout = ({ children }) => {
       pathname: "/dashboard/company/jobs",
       icon: BagFill,
       text: "JOB_LISTINGS",
+      permissions: "CanViewJob",
       startsWith: true
     },
     {
       pathname: "/dashboard/company/applicants",
       icon: FileEarmarkFill,
       text: "APPLICANTS",
+      permissions: "CanViewApplicant",
       startsWith: true
     },
     {
@@ -49,22 +51,25 @@ const FullLayout = ({ children }) => {
         {
             pathname: "/dashboard/company/settings",
             icon: Building,
-            text: "company"
-        },
+            text: "company",
+            permissions: "CanViewCompany",
+          },
         {
             pathname: "/dashboard/company/settings/vehicles",
             icon: CardImage,
-            text: "VEHICLES"
+            text: "VEHICLES",
+            permissions: "CanViewVehicle",
         },
         {
-          pathname: "/dashboard/company/settings/locations",
-          icon: GeoAltFill,
-          text: "TERMINALS"
+            pathname: "/dashboard/company/settings/locations",
+            icon: GeoAltFill,
+            text: "TERMINALS",
+            permissions: "CanViewLocation",
         },
         {
-          pathname: "/dashboard/company/settings/profile",
-          icon: PersonFill,
-          text: "MY_PROFILE",
+            pathname: "/dashboard/company/settings/profile",
+            icon: PersonFill,
+            text: "MY_PROFILE",
         },
       ],
     },

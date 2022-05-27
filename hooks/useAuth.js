@@ -13,7 +13,27 @@ const useAuth = () => {
      * @returns 
      */
     const setAuth = (user) => {
+        if (user.roles) {
+            const permissions = new Set();
+
+            user.roles.forEach(r => {
+                r.permissions.forEach(p => permissions.add(p));
+            });
+
+            user.permissions = Array.from(permissions);
+        }
         return setItem('user', JSON.stringify(user));
+    }
+
+    const hasPermission = (...permissions) => {
+        console.log("PermissionCheck: ", permissions);
+
+        const user = authCheck();
+
+        const currentPermissions = new Set(user.permissions || []);
+
+        return user.permissions && permissions.some(p => currentPermissions.has(p));
+        
     }
 
     /**
@@ -28,8 +48,7 @@ const useAuth = () => {
 
     const isDriver = () => {
         const user = authCheck();
-        console.log("isDriver", user.roles);
-        return user && user.roles === UserRole.DRIVER
+        return !!(user && !user.company)
     }
 
     const authenticateDriver = () => {
@@ -63,6 +82,7 @@ const useAuth = () => {
         isCompany,
         authenticateCompany,
         removeAuth,
+        hasPermission,
     };
 };
 
