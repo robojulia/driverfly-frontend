@@ -33,7 +33,7 @@ export default class extends React.Component {
                              <Quote />
                             <img src="img/Robert-Driver.jpg" alt="" className="" />
                             <h3>Tanker Hauler</h3>
-                            <span className="job text-theme">ffffffffRobert Richards </span>
+                            <span className="job text-theme">Robert Richards </span>
                             <div className="description">Browse profiles, reviews, and proposals then interview top driver <br />candidates.</div>
                         </div>
                     </div>
