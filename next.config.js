@@ -1,6 +1,6 @@
 module.exports = {
-  // reactStrictMode: true,
-  // reloadOnPrerender: true,
+  reactStrictMode: true,
+  reloadOnPrerender: true,
   env: {
     BASE_URL: process.env.BASE_URL,
     BASE_URL_API: process.env.BASE_URL_API,
