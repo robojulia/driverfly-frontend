@@ -880,7 +880,7 @@ export default function Job() {
                                                 valueKey="id"
                                                 createLabel={veh => {
                                                     const { type, type_other, make, model, transmission_type, year } = veh;
-                                                    let label = type === VehicleType.OTHER ? type_other : t(type);
+                                                    let label = type === VehicleType.OTHER ? type_other : t("VehicleType." + type);
 
                                                     if (make) label += ` / ${make}`;
 
