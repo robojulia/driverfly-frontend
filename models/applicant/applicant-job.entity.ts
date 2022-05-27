@@ -6,12 +6,12 @@ import { ApplicantEntity } from './applicant.entity';
 import * as yup from "yup";
 
 export class ApplicantJobEntity {
-  id: number;
+  id?: number;
   version?: number;
   applicant?: ApplicantEntity;
   user?: UserEntity;
   company?: CompanyEntity;
-  job: JobEntity;
+  job?: JobEntity;
   status?: ApplicantStatus;
   created_at?: string;
   last_updated_at?: string;
