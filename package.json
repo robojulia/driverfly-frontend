@@ -32,7 +32,7 @@
     "multi-range-slider-react": "^1.0.7",
     "next": "^12.1.6",
     "nextjs-breadcrumbs": "^1.1.9",
-    "pdfjs-dist": "^2.5.207",
+    "pdfjs-dist": "^2.0.943",
     "pretty-checkbox": "^3.0.3",
     "pretty-checkbox-react": "^3.2.0",
     "prop-types": "^15.8.0",
