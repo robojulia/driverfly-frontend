@@ -860,5 +860,6 @@
         "SUCCESS_{action}_{name}": "Successfully {{action}} {{name}}",
         "FAIL_{action}_{name}": "Failed {{action}} {{name}}"
     },
-    "VEHICLE": "Vehicle"
+    "VEHICLE": "Vehicle",
+    "{number}_CHARACTERS_REMAINING": "{{number}} characters remaining"
 }

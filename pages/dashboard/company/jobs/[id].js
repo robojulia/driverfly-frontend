@@ -909,7 +909,7 @@ export default function Job() {
                     <hr />
                     <Row>
                         <BaseTextArea
-                            className="col-md-5 offset-md-1"
+                            className="col-md-10 offset-md-1"
                             label="description"
                             name="description"
                             required
@@ -918,7 +918,7 @@ export default function Job() {
                             placeholder="description"
                             formik={form}
                         />
-                        <BaseTextArea
+                        {/* <BaseTextArea
                             className="col-md-5"
                             label={`${t("sms_summary")} (${t("max_100_characters")})`}
                             name="description_short"
@@ -927,7 +927,7 @@ export default function Job() {
                             maxLength="100"
                             placeholder="sms_summary"
                             formik={form}
-                        />
+                        /> */}
                     </Row>
                     <hr />
                     <div className="row">
