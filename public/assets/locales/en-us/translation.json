@@ -738,7 +738,7 @@
     "ONE_OR_MORE_ERRORS_WERE_FOUND_ON_INPUT_FILE": "One or more errors were found on the input file, please correct them and re-upload",
     "CATEGORY": "Category",
     "POST_DATE": "Post Date",
-    "pay_frequency": "Pay Frequency",
+    "PAY_FREQUENCY": "Pay Frequency",
     "yup": {
         "type": {
             "date": "date, it must be in the format MM/dd/yyyy (eg. 01/12/2014)",
@@ -847,9 +847,7 @@
     "SHARING": "Sharing",
     "SHARE_PAST_EMPLOYMENT": "Share past employers?",
     "PREFERRED_EMPLOYMENT_TYPE": "Preferred employment type",
-    "SELECT_VEHICLE": "Select Vehicle",
     "ADD": "Add",
-    "SELECT_LOCATION": "Select Location",
     "SHARE_MY_PHYSICALS": "Share my Physicals",
     "SEARCH": "Search",
     "NOT_HIDABLE": "Not Hidable",

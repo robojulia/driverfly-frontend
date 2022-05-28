@@ -70,7 +70,7 @@ export default function Job() {
     const { authCompany } = useRedirect();
     authCompany();
 
-    const { authCheck } = useAuth();
+    const { authCheck, hasPermission } = useAuth();
     const user = authCheck();
 
     const { t } = useTranslation();
@@ -87,8 +87,6 @@ export default function Job() {
             data.max_miles = parseFloat(data.max_miles)
             data.min_salary = parseFloat(data.min_salary)
             data.max_salary = parseFloat(data.max_salary)
-
-            console.log(data);
             try {
                 const jobApi = await new JobApi();
 
@@ -512,12 +510,12 @@ export default function Job() {
                                     label="location"
                                     name="location.id"
                                     required
-                                    placeholder="SELECT_LOCATION"
+                                    placeholder="LOCATION"
                                     formik={form}
                                     valueKey="id"
                                     labelKey="street"
                                     options={locations}
-                                    append={<Button variant="outline-secondary" onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
+                                    append={<Button variant="outline-secondary" disabled={!hasPermission("CanCreateLocation")} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
                                 />
                                 <BaseInput
                                     className="col-12"
@@ -638,9 +636,9 @@ export default function Job() {
                             >
                                 <BaseSelect
                                     className="col-12 mb-2"
-                                    label={t("pay_frequency")}
+                                    label="PAY_FREQUENCY"
                                     name="pay_frequency"
-                                    // placeholder={t("pay_frequency")}
+                                    placeholder="PAY_FREQUENCY"
                                     cols={2}
                                     value={form.values.pay_frequency}
                                     onChange={form.handleChange}
@@ -877,7 +875,7 @@ export default function Job() {
                                             <BaseSelect
                                                 className="col-12"
                                                 name={`vehicles.${i}.id`}
-                                                placeholder="SELECT_VEHICLE"
+                                                placeholder="VEHICLE"
                                                 options={vehicles}
                                                 valueKey="id"
                                                 createLabel={veh => {
@@ -898,7 +896,7 @@ export default function Job() {
                                                     <InputGroup.Text>{i + 1}</InputGroup.Text>
                                                 </>}
                                                 append={<>
-                                                    <Button variant="outline-secondary" onClick={() => setCreateVehicle(i)}><PlusCircle /> {t("CREATE")}</Button>
+                                                    <Button variant="outline-secondary" disabled={!hasPermission("CanCreateVehicle")} onClick={() => setCreateVehicle(i)}><PlusCircle /> {t("CREATE")}</Button>
                                                     <Button variant="outline-danger" onClick={() => form.setFieldValue("vehicles", form.values.vehicles.filter((v, idx) => i != idx))}><DashCircle /></Button>
                                                 </>}
                                             />
