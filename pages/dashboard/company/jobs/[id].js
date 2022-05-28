@@ -134,7 +134,7 @@ export default function Job() {
                 description_short: job.description_short,
                 drivers_needed: job.drivers_needed,
                 expiry_date: (job.expiry_date || "").split("T")[0] || null,
-                geography: job.geography || JobGeography.LOCAL,
+                geography: job.geography,
                 schedule: job.schedule,
                 schedule_other: job.schedule_other,
                 employment_type: job.employment_type,
@@ -537,6 +537,7 @@ export default function Job() {
                                 <BaseSelect
                                     className="col-12"
                                     label="GEOGRAPHY"
+                                    placeholder="GEOGRAPHY"
                                     name="geography"
                                     required
                                     formik={form}
@@ -544,15 +545,19 @@ export default function Job() {
                                     labelPrefix="JobGeography"
                                     enumType={JobGeography}
                                 />
-                                <BaseRange
-                                    className="col-12"
-                                    label="max_applicant_radius"
-                                    name="max_applicant_radius"
-                                    required
-                                    min={1}
-                                    max={maxRadius[form.values.geography]}
-                                    formik={form}
-                                />
+                                {
+                                    form.values.geography &&
+                                    <BaseRange
+                                        className="col-12"
+                                        label="max_applicant_radius"
+                                        name="max_applicant_radius"
+                                        valueSuffix="mi"
+                                        required
+                                        min={1}
+                                        max={maxRadius[form.values.geography]}
+                                        formik={form}
+                                    />
+                                }
                                 <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                     <BaseSelect
                                         className={`col-${form.values.schedule === JobSchedule.OTHER ? 6 : 12}`}
@@ -611,7 +616,6 @@ export default function Job() {
                                     className="col-12"
                                     label="delivery_type"
                                     name="delivery_type"
-                                    required
                                     placeholder="delivery_type"
                                     cols={2}
                                     labelPrefix="JobDeliveryType"
@@ -914,7 +918,7 @@ export default function Job() {
                             name="description"
                             required
                             rows="3"
-                            maxLength={250}
+                            maxLength={800}
                             placeholder="description"
                             formik={form}
                         />

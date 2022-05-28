@@ -81,7 +81,7 @@ export class JobEntity {
         return yup.object({
             title: yup.string().required().max(100).nullable(),
             location: BasicEntity.yupSchema(),
-            description: yup.string().max(250).required().nullable(),
+            description: yup.string().max(800).required().nullable(),
             description_short: yup.string().max(250).required().nullable(),
             drivers_needed: yup.number().min(0).nullable(),
             expiry_date: yup.date().nullable(),
@@ -112,7 +112,7 @@ export class JobEntity {
             }).nullable(),
             delivery_type: yup.array(
                 (yup.string() as any).enum(JobDeliveryType)
-            ).min(1,),
+            ),
             team_drivers: (yup.string() as any).enum(JobTeamDriver).required().nullable(),
             pay_method: //yup.array(
                 (yup.string() as any).enum(JobPayMethod).required().nullable(),

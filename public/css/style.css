@@ -588,7 +588,14 @@ span.urgent {
     color: white;
 }
 
-input[type='range'] {
+input[type='range']::-webkit-slider-runnable-track {
+    background: #2EC8C4;
+}
+input[type='range']::-webkit-slider-thumb {
+    border-color: #2EC8C4;
+}
+/* KN: do not override base controls, create custom class if these are needed for specific controls and implement */
+/* input[type='range'] {
     width: 210px;
     height: 30px;
     overflow: hidden;
@@ -626,7 +633,7 @@ input[type='range']::-webkit-slider-thumb {
 
 input[type='range']:nth-child(1)::-webkit-slider-thumb {
     z-index: 2;
-}
+} */
 
 .rangeslider {
     position: relative !important;
