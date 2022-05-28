@@ -98,14 +98,14 @@ export default function Job() {
                     job = await jobApi.create(data);
                 }
 
-                toast.success(t("successfully_saved_information"));
-                // setTimeout(
-                //     () => Router.push(backPath),
-                //     2000);
+                toast.success(t("Forms.SUCCESS_{action}_{name}", { action: !!id ? "Forms.UPDATED" : "Forms.CREATED", name: "JOB" }, { translateProps: true }));
+                setTimeout(
+                    () => router.push(backPath),
+                    2000);
             }
             catch (e) {
                 console.error("Unable to save job", e);
-                toast.error(t("unable_to_save_information"));
+                toast.error(t("Forms.FAIL_{action}_{name}", { action: !!id ? "Forms.UPDATED" : "Forms.CREATED", name: "JOB" }, { translateProps: true }));
             }
 
         }
