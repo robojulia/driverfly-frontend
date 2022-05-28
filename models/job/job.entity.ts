@@ -173,7 +173,7 @@ export class JobEntity {
                 (yup.string() as any)
                     .enum(DriverLicenseType)
             ),
-            min_years_experience: yup.number().required().min(0).nullable(),
+            min_years_experience: yup.number().min(0).nullable(),
             min_degree: (yup.string() as any).enum(EducationLevel).nullable(),
             required_skills: (yup.array(
                 JobSkillEntity.yupSchema()

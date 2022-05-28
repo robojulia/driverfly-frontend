@@ -87,6 +87,8 @@ export default function Job() {
             data.max_miles = parseFloat(data.max_miles)
             data.min_salary = parseFloat(data.min_salary)
             data.max_salary = parseFloat(data.max_salary)
+
+            console.log(data);
             try {
                 const jobApi = await new JobApi();
 
