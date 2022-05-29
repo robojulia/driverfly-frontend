@@ -810,7 +810,8 @@
         "RESUME": "Resume",
         "DRIVER_LICENSE": "Drivers License",
         "MEDICAL_CARD": "Medical Card",
-        "MVR": "Motor Vehicle Record (MVR)"
+        "MVR": "Motor Vehicle Record (MVR)",
+        "PHYSICAL": "Physical"
     },
     "YEARS": "Years",
     "MY_ACCOUNT": "My Account",
