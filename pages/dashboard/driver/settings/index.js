@@ -1,29 +1,29 @@
-import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
 import { Col, Row } from "reactstrap";
-import useAuth from '../../../../hooks/useAuth';
 import { useRouter } from 'next/router';
-import { useEffect, useImperativeHandle, useState } from 'react'
-import useRedirect from '../../../../hooks/useRedirect';
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import Modal from "react-bootstrap/Modal"
-import Button from "react-bootstrap/Button"
-import BaseInputPhone from "../../../../components/forms/BaseInputPhone";
-
+import { useEffect, useState } from 'react'
 import { useFormik } from "formik";
-import * as yup from "yup";
-import "../../../../utils/yup";
 
-import BaseFile from "../../../../components/forms/BaseFile";
-import BaseInput from "../../../../components/forms/BaseInput";
-import BaseTextArea from "../../../../components/forms/BaseTextArea";
+// layouts
+import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
+import PageLayout from "../../../../components/layouts/PageLayout";
 
+// hooks
+import useAuth from '../../../../hooks/useAuth';
 import { useTranslation } from "../../../../hooks/useTranslation";
 
+// inputs
+import BaseInputPhone from "../../../../components/forms/BaseInputPhone";
+import BaseInput from "../../../../components/forms/BaseInput";
+
+// api
 import UserApi from "../../../api/user";
 import ApplicantApi from "../../../api/applicant";
-import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 
+// entities
+import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
+import { UserEntity } from "../../../../models/user/user.entity";
+
+import * as toast from "../../../../utils/toast";
 /**
  * @type {ApplicantEntity}
  */
@@ -35,71 +35,42 @@ export default function Profile() {
   const router = useRouter();
 
   const { authCheck, setAuth } = useAuth();
+
   const user = authCheck();
 
   const [ applicant, setApplicant ] = useState(APPLICANT_PROTO);
 
   const form = useFormik({
-    initialValues: {
-      first_name: null,
-      last_name: null,
-      email: null,
-      contact_number: null,
-      cell_number: null,
-      timezone: null,
-      language: null,
-    },
-    validationSchema: yup.object({
-      first_name: yup.string().required().nullable(),
-      last_name: yup.string().required().nullable(),
-      contact_number: yup.string().required().nullable(),
-      cell_number: yup.string().required().nullable(),
-      timezone: yup.string().required().nullable().optional(),
-      language: yup.string().required().nullable().optional(),
-    }),
+    initialValues: new UserEntity(),
+    validationSchema: UserEntity.yupSchema(),
     onSubmit: async (values) => {
-      const dto = {
-        first_name: values.first_name,
-        last_name: values.last_name,
-        contact_number: values.contact_number,
-        cell_number: values.cell_number,
-        timezone: values.timezone,
-        language: values.language,
-      };
-
       const userApi = new UserApi();
       const applicantApi = new ApplicantApi();
 
       try {
-        await applicantApi.update(applicant.id, {
+        await applicantApi.me.update({
           first_name: values.first_name,
           last_name: values.last_name,
           email: values.email,
           phone: values.contact_number,
         });
-        const savedUser = await userApi.update(user.id, dto);
+        const savedUser = await userApi.me.update(values);
         setAuth({
           ...user,
-          first_name: savedUser.first_name,
-          last_name: savedUser.last_name,
-          contact_number: savedUser.contact_number,
-          cell_number: savedUser.cell_number,
-          timezone: savedUser.timezone,
-          language: savedUser.language,
+          ...savedUser,
         });
-        toast.success(t("successfully_saved_information"));
+        toast.formSuccess(t, "update", "USER");
         setTimeout(router.reload, 2000);
       }
       catch (e) {
         console.error("Unable to save user", e);
-        toast.error(t("unable_to_save_information"));
+        toast.formFailed(t, "update", "USER");
       }
-
     }
   });
 
   useEffect(async () => {
-    const applicant = await new ApplicantApi().getByUserId();
+    const applicant = await new ApplicantApi().me.get();
 
     setApplicant(applicant);
 
@@ -115,121 +86,63 @@ export default function Profile() {
   }, [ ]);
 
   return (
-    <>
-      <ToastContainer />
-      <div>
-
+    <PageLayout title="MY_ACCOUNT">
+      <form onSubmit={form.handleSubmit} >
         <Row>
-          <h2>{t("MY_ACCOUNT")}</h2>
+          <BaseInput
+            className="col-6"
+            label="first_name"
+            name="first_name"
+            placeholder="first_name"
+            required
+            formik={form}
+          />
+          <BaseInput
+            className="col-6"
+            label="last_name"
+            name="last_name"
+            placeholder="last_name"
+            required
+            formik={form}
+          />
+
+          <BaseInputPhone
+            className="col-6"
+            label="phone"
+            name="contact_number"
+            placeholder="phone"
+            required
+            formik={form}
+          />
+          <BaseInputPhone
+            className="col-6"
+            label="phone_cell"
+            name="cell_number"
+            placeholder="phone_cell"
+            formik={form}
+          />
+          <BaseInput
+            className="col-12"
+            label="email"
+            name="email"
+            placeholder="email"
+            type="email"
+            readOnly
+            required
+            formik={form}
+          />
         </Row>
-        <div className='container-fluid p-0'>
-          <div className="modal-header border-0">
+        <Row className="mt-2">
+          <div className="col-12 border-0 text-end">
+            <div className="col">
+              <button type="submit" className={`btn btn-primary`} >
+                {t("UPDATE")}
+              </button>
+            </div>
           </div>
-          <form className="modal-body p-0" onSubmit={form.handleSubmit} >
-            <Row>
-              <BaseInput
-                className="col-6"
-                label={t("first_name")}
-                name="first_name"
-                placeholder={t("first_name")}
-                value={form.values.first_name}
-                touched={form.touched.first_name}
-                error={form.errors.first_name}
-                onChange={form.handleChange}
-                handleBlur={form.handleBlur}
-              />
-              <BaseInput
-                className="col-6"
-                label={t("last_name")}
-                name="last_name"
-                placeholder={t("last_name")}
-                value={form.values.last_name}
-                touched={form.touched.last_name}
-                error={form.errors.last_name}
-                onChange={form.handleChange}
-                handleBlur={form.handleBlur}
-              />
-
-              <BaseInputPhone
-                className="col-6"
-                label={t("phone")}
-                name="contact_number"
-                placeholder={t("phone")}
-                type="tel"
-                value={form.values.contact_number}
-                touched={form.touched.contact_number}
-                error={form.errors.contact_number}
-                onChange={(value, country, e, formattedValue) => { form.setFieldValue('contact_number', formattedValue) }}
-                handleBlur={(event, data) => { form.setFieldValue('contact_number', event.target.value) }}
-                onKeyDown={(event) => { form.setFieldValue('contact_number', event.target.value) }}
-              />
-              {/* <BaseInput
-                className="col-6"
-                label={t("phone")}
-                name="contact_number"
-                placeholder={t("phone")}
-                type="tel"
-                value={form.values.contact_number}
-                touched={form.touched.contact_number}
-                error={form.errors.contact_number}
-                onChange={form.handleChange}
-                handleBlur={form.handleBlur}
-              /> */}
-              {/* <BaseInput
-                className="col-6"
-                label={t("phone_cell")}
-                name="cell_number"
-                placeholder={t("phone_cell")}
-                type="tel"
-                value={form.values.cell_number}
-                touched={form.touched.cell_number}
-                error={form.errors.cell_number}
-                onChange={form.handleChange}
-                handleBlur={form.handleBlur}
-              /> */}
-
-
-              <BaseInputPhone
-               className="col-6"
-               label={t("phone_cell")}
-               name="cell_number"
-               placeholder={t("phone_cell")}
-               type="tel"
-                value={form.values.cell_number}
-                touched={form.touched.cell_number}
-                error={form.errors.cell_number}
-                onChange={(value, country, e, formattedValue) => { form.setFieldValue('cell_number', formattedValue) }}
-                handleBlur={(event, data) => { form.setFieldValue('cell_number', event.target.value) }}
-                onKeyDown={(event) => { form.setFieldValue('cell_number', event.target.value) }}
-              />
-              <BaseInput
-                className="col-12"
-                label={t("email")}
-                name="email"
-                placeholder={t("email")}
-                type="email"
-                readOnly={true}
-                value={form.values.email}
-                touched={form.touched.email}
-                error={form.errors.email}
-                onChange={form.handleChange}
-                handleBlur={form.handleBlur}
-              />
-            </Row>
-            <Row className="mt-2">
-              <div className="col-12 border-0 text-end">
-                <div className="col">
-                  <button type="submit" className={`btn btn-primary`} >
-                    {t("UPDATE")}
-                  </button>
-                </div>
-              </div>
-            </Row>
-
-          </form>
-        </div>
-      </div>
-    </>
+        </Row>
+      </form>
+    </PageLayout>
   )
 };
 

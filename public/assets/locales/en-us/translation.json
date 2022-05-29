@@ -859,11 +859,19 @@
         "CREATED": "created",
         "UPDATED": "updated",
         "DELETED": "deleted",
+        "SAVE": "save",
+        "CREATE": "create",
+        "UPDATE": "update",
+        "DELETE": "delete",
         "SUCCESS_{action}_{name}": "Successfully {{action}} {{name}}",
-        "FAIL_{action}_{name}": "Failed {{action}} {{name}}"
+        "FAIL_{action}_{name}": "Failed to {{action}} {{name}}"
     },
     "VEHICLE": "Vehicle",
     "{number}_CHARACTERS_REMAINING": "{{number}} characters remaining",
     "GOVERNED_SPEED": "Governed speed",
-    "MAX_SPEED": "Max speed"
+    "MAX_SPEED": "Max speed",
+    "HttpStatus": {
+        "404": "The requested resource was not found",
+        "401": "The user is not authorized to perform the requested action"
+    }
 }

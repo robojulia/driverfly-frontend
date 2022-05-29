@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container } from "reactstrap";
 import Header from "./header/Header";
 import Sidebar from "./sidebars/Sidebar";
@@ -6,15 +6,23 @@ import Head from "next/head";
 
 import { useTranslation } from "../../../hooks/useTranslation";
 import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, BellFill, SearchHeartFill, CheckSquareFill, GiftFill, GearFill, ShareFill } from 'react-bootstrap-icons';
+import useAuth from "../../../hooks/useAuth";
 
 
 // driver layout
 const FullLayout = ({ children }) => {
   const { t } = useTranslation();
-  const [open, setOpen] = React.useState(false);
-  const showMobilemenu = () => {
-    setOpen(!open);
-  };
+
+  const { user } = useAuth();
+
+  useEffect(() => {
+    console.log("FullLayout: USER", user);
+
+  }, [ user ]);
+
+  // const { isDriver } = useAuth();
+
+  // isDriver();
 
   const menuItems = [
     {
@@ -93,20 +101,14 @@ const FullLayout = ({ children }) => {
       <div className="header">
         <div className="contentArea ">
           {/********header**********/}
-          <Header showMobmenu={() => showMobilemenu()} />
+          <Header />
         </div>
       </div>
       <main className="maincontainer">
         < div className="dashboardsidebar">
           <div className="pageWrapper d-md-block d-lg-flex">
             {/******** Sidebar **********/}
-            <Sidebar open={open} items={menuItems} />
-            {/* <aside
-              className={`sidebarArea ${!open ? "" : "showSidebar"
-                }`}
-            >
-              <Sidebar showMobilemenu={() => showMobilemenu()} />
-            </aside> */}
+            <Sidebar items={menuItems} />
             {/********Content Area**********/}
             <div className="header">
 

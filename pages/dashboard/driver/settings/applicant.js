@@ -49,12 +49,7 @@ export default function Applicant() {
                 delete values.jobs;
 
             try {
-                if (values.id) {
-                    values = await api.update(values.id, values);
-                }
-                else {
-                    values = await api.create(values);
-                }
+                values = await api.me.update(values);
 
                 toast.success(t("successfully_saved_information"));
 
@@ -67,7 +62,7 @@ export default function Applicant() {
     });
 
     useEffect(async () => {
-        const applicant = await api.getByUserId();
+        const applicant = await api.me.get();
 
         form.setValues({
             ...form.values,
