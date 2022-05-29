@@ -24,10 +24,6 @@ import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import { UserEntity } from "../../../../models/user/user.entity";
 
 import * as toast from "../../../../utils/toast";
-/**
- * @type {ApplicantEntity}
- */
-const APPLICANT_PROTO = null;
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -37,8 +33,6 @@ export default function Profile() {
   const { authCheck, setAuth } = useAuth();
 
   const user = authCheck();
-
-  const [ applicant, setApplicant ] = useState(APPLICANT_PROTO);
 
   const form = useFormik({
     initialValues: new UserEntity(),
@@ -70,10 +64,6 @@ export default function Profile() {
   });
 
   useEffect(async () => {
-    const applicant = await new ApplicantApi().me.get();
-
-    setApplicant(applicant);
-
     form.setValues({
       first_name: user.first_name,
       last_name: user.last_name,
