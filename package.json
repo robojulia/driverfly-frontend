@@ -19,9 +19,6 @@
     "@mui/material": "^5.5.2",
     "@mui/styled-engine-sc": "^5.5.2",
     "@popperjs/core": "^2.11.2",
-    "@react-pdf-viewer/core": "3.0.0",
-    "@react-pdf-viewer/default-layout": "3.0.0",
-    "pdfjs-dist": "^2.12.313",
 
     "@reduxjs/toolkit": "^1.7.1",
     "axios": "^0.21.1",
