@@ -5,108 +5,106 @@ import SignupButton from '../../components/buttons/Signup';
 import LogoutButton from '../../components/buttons/Logout';
 import DashboardButton from "../buttons/DashboardButton";
 import { useTranslation } from "../../hooks/useTranslation";
-import { Bell} from 'react-bootstrap-icons';
+import { Bell, List } from 'react-bootstrap-icons';
+import React from "react";
+import { Nav, Navbar, NavDropdown } from "react-bootstrap";
 
-export default function Nav() {
+import "bootstrap/dist/css/bootstrap.min.css";
+
+
+
+export default function MyNav() {
     const { authCheck } = useAuth();
     const { t } = useTranslation();
     return (
         <>
-            <button className="navbar-toggler" type="button" data-toggle="collapse"
-                data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <i className="fa fa-bars" aria-hidden="true"></i>
-            </button>
-            <div className="collapse navbar-collapse justify-content-between" id="navbarNav">
-                <ul className="navbar-nav">
-                    <li className="nav-item">
-                        <Link href="/">
-                            <a className="nav-link active">{t("HOME")}</a>
-                        </Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link href="/about">
-                            <a className="nav-link">{t("ABOUT_US")}</a>
-                        </Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link href="/find-jobs">
-                            <a className="nav-link">{t("FIND_A_Job")}</a>
-                        </Link>
-                    </li>
-                    <li className="nav-item dropdown">
-                        <a className="nav-link  dropdown-toggle" href="#"
-                            data-bs-toggle="dropdown"> {t("DRIVER_RESOURCES")}</a>
-                        <ul className="dropdown-menu">
-                            <li>
+            <Navbar collapseOnSelect expand="lg" variant="dark">
+                <Navbar.Brand>
+
+                </Navbar.Brand>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                <Navbar.Collapse id="responsive-navbar-nav">
+                    <Nav className="mr-auto">
+                        <Nav.Link className="nav-item ml-30">
+                            <Link href="/">
+                                <div>{t("HOME")}</div>
+                            </Link>
+                        </Nav.Link>
+                        <Nav.Link className="nav-item ml-30">
+                            <Link href="/about">
+                                <div>{t("ABOUT_US")}</div>
+                            </Link>
+                        </Nav.Link>
+                        <Nav.Link className="nav-item ml-30">
+                            <Link href="/find-jobs">
+                                <div>{t("FIND_A_Job")}</div>
+                            </Link>
+                        </Nav.Link >
+                        <NavDropdown title="Driver Resources" id="collasible-nav-dropdown" >
+                            <NavDropdown.Item>
                                 <Link href="/faq">
-                                    <a className="dropdown-item">{t("FAQ")}</a>
+                                    <div className="dropdown-item">{t("FAQ")}</div>
                                 </Link>
-                            </li>
-                            <li>
+                            </NavDropdown.Item>
+                            <NavDropdown.Item >
                                 <Link href="/">
-                                    <a className="dropdown-item" href="#">{t("GET_YOUR_CDL")} </a>
+                                    <div className="dropdown-item" href="#">{t("GET_YOUR_CDL")} </div>
                                 </Link>
-                            </li>
-                            <li>
+                            </NavDropdown.Item>
+                            <NavDropdown.Item >
                                 <Link href="/owner-operators">
-                                    <a className="dropdown-item"> {t("OWNER_OPERATORS")} </a>
+                                    <div className="dropdown-item"> {t("OWNER_OPERATORS")} </div>
                                 </Link>
-
-                            </li>
-
-                        </ul>
-                    </li>
-                    <li className="nav-item dropdown">
-                        {/* <a className="nav-link  dropdown-toggle" href="http://go.driverfly.co/motor-carriers"
-                            data-bs-toggle="">{t("MOTOR_CARRIER_SOLUTIONS")} </a> */}
-                        <a className="nav-link  dropdown-toggle" href="#"
-                            data-bs-toggle="dropdown">{t("MOTOR_CARRIER_SOLUTIONS")}</a>
-
-                        <ul className="dropdown-menu">
-                            <li>
+                            </NavDropdown.Item>
+                        </NavDropdown>
+                        <NavDropdown title="Motor Carrier Solutions" id="collasible-nav-dropdown" >
+                            <NavDropdown.Item>
                                 <Link href="http://go.driverfly.co/">
-                                    <a className="dropdown-item">{t("OUR_SOLUTION")}  </a>
+                                    <div className="dropdown-item">{t("OUR_SOLUTION")}  </div>
                                 </Link>
-                            </li>
-                            <li>
+                            </NavDropdown.Item>
+                            <NavDropdown.Item >
                                 <Link href="http://go.driverfly.co/motor-carriers">
-                                    <a className="dropdown-item">{t("OPTIOS_&_PRICING")} </a>
+                                    <div className="dropdown-item">{t("OPTIOS_&_PRICING")} </div>
                                 </Link>
-                            </li>
-                            <li>
+                            </NavDropdown.Item>
+                            <NavDropdown.Item >
                                 <Link href="http://go.driverfly.co/sign-up">
-                                    <a className="dropdown-item">{t("REQUESR_AQUOTE")} </a>
+                                    <div className="dropdown-item">{t("REQUESR_AQUOTE")} </div>
                                 </Link>
-                            </li>
-                            <li>
-                                <Link href="https://digitalhiringapp.com/">
-                                    <a className="dropdown-item">{t("FREE_DIGITAL_APPLICATION")} </a>
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/third-party-resources">
-                                    <a className="dropdown-item" href="#"> {t("THIRD_PARTY_RESOURCES")} </a>
-                                </Link>
-                            </li>
-                        </ul>
-                    </li>
+                            </NavDropdown.Item>
 
-                </ul>
-                <ul className="d-flex align-items-center mb-0">
-                    <li><a href="#" className="nav-link"> < Bell /></a></li>
-                    {authCheck() ?
-                        <>
-                            <DashboardButton className="btn btn-primary mr-4" />
-                            <LogoutButton className="btn btn-primary mr-4" />
-                        </>
-                        :
-                        <>
-                            <LoginButton className="btn btn-primary mr-4" />
-                            <SignupButton className="btn btn-primary mr-4" />
-                        </>}
-                </ul>
-            </div>
+                            <NavDropdown.Item >
+                                <Link href="https://digitalhiringapp.com/">
+                                    <div className="dropdown-item">{t("FREE_DIGITAL_APPLICATION")} </div>
+                                </Link>
+                            </NavDropdown.Item>
+                            <NavDropdown.Item >
+                                <Link href="/third-party-resources">
+                                    <div className="dropdown-item" href="#"> {t("THIRD_PARTY_RESOURCES")} </div>
+                                </Link>
+                            </NavDropdown.Item>
+                        </NavDropdown>
+                    </Nav>
+                    <ul className="d-flex align-items-center mb-0">
+                        <li><a href="#" className="nav-link"> < Bell /></a></li>
+                        {authCheck() ?
+                            <>
+                                <DashboardButton className="btn btn-primary mr-4" />
+                                <LogoutButton className="btn btn-primary mr-4" />
+                            </>
+                            :
+                            <>
+                                <LoginButton className="btn btn-primary mr-4" />
+                                <SignupButton className="btn btn-primary mr-4" />
+                            </>}
+                    </ul>
+                </Navbar.Collapse>
+
+            </Navbar>
+            
+
+
         </>
     )
 }
