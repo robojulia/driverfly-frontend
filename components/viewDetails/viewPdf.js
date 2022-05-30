@@ -22,7 +22,7 @@ import { useTranslation } from "../../hooks/useTranslation";
  */
 export default function ViewPdf(props) {
     const { t } = useTranslation();
-    const defaultLayoutPluginInstance = defaultLayoutPlugin()
+    // const defaultLayoutPluginInstance = defaultLayoutPlugin()
 
     const { name, url, onCloseClick } = props;
 
