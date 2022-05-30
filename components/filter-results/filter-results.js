@@ -19,19 +19,18 @@ import SpecialAccommodations from '../special-accommodations/Special-Accommodati
 import SpecialEndorsementsRequired from '../special-endorsements-required/Special-Endorsements-Required'
 import TypeOfDelivery from '../type-of-delivery/TypeOfDelivery'
 import Range from "../location/Range"
+import { useTranslation } from '../../hooks/useTranslation'
 
 
 
 export default function FilterResults() {
 
-
-
-
+  const { t } = useTranslation();
 
   return (
     <>
       <div className="filter_container">
-        <h5 className='font-weight-normal'>Filter Results</h5>
+        <h5 className='font-weight-normal'>{t('FILTER_RESULT')}</h5>
         <form >
           < Search />
           <div className="bs-example">

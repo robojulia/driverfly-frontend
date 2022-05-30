@@ -43,12 +43,12 @@ export function LocationForm(props) {
                 else {
                     location = await api.create(dto);
                 }
-                toast.success(t("successfully_saved_information"));
+                toast.success(t("Forms.SUCCESS_{action}_{name}", { action: !!id ? "Forms.UPDATED" : "Forms.CREATED", name: "LOCATION" }, { translateProps: true }));
                 if (onSaveComplete) onSaveComplete(location);
             }
             catch (e) {
                 console.error("Unable to save entity", e);
-                toast.error(t("unable_to_save_information"));
+                toast.error(t("Forms.FAIL_{action}_{name}", { action: !!id ? "Forms.UPDATED" : "Forms.CREATED", name: "LOCATION" }, { translateProps: true }));
                 if (onSaveError) onSaveError(e);
             }
         },

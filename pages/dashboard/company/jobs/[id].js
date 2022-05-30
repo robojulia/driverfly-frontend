@@ -70,7 +70,7 @@ export default function Job() {
     const { authCompany } = useRedirect();
     authCompany();
 
-    const { authCheck } = useAuth();
+    const { authCheck, hasPermission } = useAuth();
     const user = authCheck();
 
     const { t } = useTranslation();
@@ -98,14 +98,14 @@ export default function Job() {
                     job = await jobApi.create(data);
                 }
 
-                toast.success(t("successfully_saved_information"));
-                // setTimeout(
-                //     () => Router.push(backPath),
-                //     2000);
+                toast.success(t("Forms.SUCCESS_{action}_{name}", { action: !!id ? "Forms.UPDATED" : "Forms.CREATED", name: "JOB" }, { translateProps: true }));
+                setTimeout(
+                    () => router.push(backPath),
+                    2000);
             }
             catch (e) {
                 console.error("Unable to save job", e);
-                toast.error(t("unable_to_save_information"));
+                toast.error(t("Forms.FAIL_{action}_{name}", { action: !!id ? "Forms.UPDATED" : "Forms.CREATED", name: "JOB" }, { translateProps: true }));
             }
 
         }
@@ -134,7 +134,7 @@ export default function Job() {
                 description_short: job.description_short,
                 drivers_needed: job.drivers_needed,
                 expiry_date: (job.expiry_date || "").split("T")[0] || null,
-                geography: job.geography || JobGeography.LOCAL,
+                geography: job.geography,
                 schedule: job.schedule,
                 schedule_other: job.schedule_other,
                 employment_type: job.employment_type,
@@ -510,12 +510,12 @@ export default function Job() {
                                     label="location"
                                     name="location.id"
                                     required
-                                    placeholder="SELECT_LOCATION"
+                                    placeholder="LOCATION"
                                     formik={form}
                                     valueKey="id"
                                     labelKey="street"
                                     options={locations}
-                                    append={<Button variant="outline-secondary" onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
+                                    append={<Button variant="outline-secondary" disabled={!hasPermission("CanCreateLocation")} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
                                 />
                                 <BaseInput
                                     className="col-12"
@@ -537,6 +537,7 @@ export default function Job() {
                                 <BaseSelect
                                     className="col-12"
                                     label="GEOGRAPHY"
+                                    placeholder="GEOGRAPHY"
                                     name="geography"
                                     required
                                     formik={form}
@@ -544,15 +545,19 @@ export default function Job() {
                                     labelPrefix="JobGeography"
                                     enumType={JobGeography}
                                 />
-                                <BaseRange
-                                    className="col-12"
-                                    label="max_applicant_radius"
-                                    name="max_applicant_radius"
-                                    required
-                                    min={1}
-                                    max={maxRadius[form.values.geography]}
-                                    formik={form}
-                                />
+                                {
+                                    form.values.geography &&
+                                    <BaseRange
+                                        className="col-12"
+                                        label="max_applicant_radius"
+                                        name="max_applicant_radius"
+                                        valueSuffix="mi"
+                                        required
+                                        min={1}
+                                        max={maxRadius[form.values.geography]}
+                                        formik={form}
+                                    />
+                                }
                                 <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                     <BaseSelect
                                         className={`col-${form.values.schedule === JobSchedule.OTHER ? 6 : 12}`}
@@ -611,7 +616,6 @@ export default function Job() {
                                     className="col-12"
                                     label="delivery_type"
                                     name="delivery_type"
-                                    required
                                     placeholder="delivery_type"
                                     cols={2}
                                     labelPrefix="JobDeliveryType"
@@ -636,9 +640,9 @@ export default function Job() {
                             >
                                 <BaseSelect
                                     className="col-12 mb-2"
-                                    label={t("pay_frequency")}
+                                    label="PAY_FREQUENCY"
                                     name="pay_frequency"
-                                    // placeholder={t("pay_frequency")}
+                                    placeholder="PAY_FREQUENCY"
                                     cols={2}
                                     value={form.values.pay_frequency}
                                     onChange={form.handleChange}
@@ -875,12 +879,12 @@ export default function Job() {
                                             <BaseSelect
                                                 className="col-12"
                                                 name={`vehicles.${i}.id`}
-                                                placeholder="SELECT_VEHICLE"
+                                                placeholder="VEHICLE"
                                                 options={vehicles}
                                                 valueKey="id"
                                                 createLabel={veh => {
                                                     const { type, type_other, make, model, transmission_type, year } = veh;
-                                                    let label = type === VehicleType.OTHER ? type_other : t(type);
+                                                    let label = type === VehicleType.OTHER ? type_other : t("VehicleType." + type);
 
                                                     if (make) label += ` / ${make}`;
 
@@ -896,7 +900,7 @@ export default function Job() {
                                                     <InputGroup.Text>{i + 1}</InputGroup.Text>
                                                 </>}
                                                 append={<>
-                                                    <Button variant="outline-secondary" onClick={() => setCreateVehicle(i)}><PlusCircle /> {t("CREATE")}</Button>
+                                                    <Button variant="outline-secondary" disabled={!hasPermission("CanCreateVehicle")} onClick={() => setCreateVehicle(i)}><PlusCircle /> {t("CREATE")}</Button>
                                                     <Button variant="outline-danger" onClick={() => form.setFieldValue("vehicles", form.values.vehicles.filter((v, idx) => i != idx))}><DashCircle /></Button>
                                                 </>}
                                             />
@@ -909,16 +913,16 @@ export default function Job() {
                     <hr />
                     <Row>
                         <BaseTextArea
-                            className="col-md-5 offset-md-1"
+                            className="col-md-10 offset-md-1"
                             label="description"
                             name="description"
                             required
                             rows="3"
-                            maxLength={250}
+                            maxLength={800}
                             placeholder="description"
                             formik={form}
                         />
-                        <BaseTextArea
+                        {/* <BaseTextArea
                             className="col-md-5"
                             label={`${t("sms_summary")} (${t("max_100_characters")})`}
                             name="description_short"
@@ -927,7 +931,7 @@ export default function Job() {
                             maxLength="100"
                             placeholder="sms_summary"
                             formik={form}
-                        />
+                        /> */}
                     </Row>
                     <hr />
                     <div className="row">
