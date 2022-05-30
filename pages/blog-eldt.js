@@ -5,7 +5,7 @@ import SocilShare from '../components/share-link/ShareLink';
 import JonInformation from '../components/job-information-sidebar/JobInformation';
 import JobDescription from '../components/job-description/JobDescription';
 import BlogSidebar from '../components/blog-sidebar/Blog-Sidebar';
-import Breadcrumbs from 'nextjs-breadcrumbs';
+// import Breadcrumbs from 'nextjs-breadcrumbs';
 import Tags from '../components/tags/Tags';
 
 export default function EldtBlog() {
@@ -15,7 +15,7 @@ export default function EldtBlog() {
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
                         <h2>The DriverFly On The Wall Blog</h2>
-                       <Breadcrumbs />
+                       {/* <Breadcrumbs /> */}
                     </div>
                 </div>
             </div>

@@ -4,7 +4,7 @@ import Pric from '../../public/css/Pricing.module.css'
 import MonthlyPricing from '../../components/pricing/monthly'
 import YearlyPricing from '../../components/pricing/yearly'
 import React,{useState} from 'react';
-import Breadcrumbs from 'nextjs-breadcrumbs';
+// import Breadcrumbs from 'nextjs-breadcrumbs';
 export default function Pricing() {
 
 const [showMonthly, setShowMonthly] = useState(true);
@@ -23,7 +23,7 @@ return (
    <div className="container p-0">
         <div className="top-links-inner d-flex align-items-center justify-content-between">
             <h2>Pricing</h2>
-            < Breadcrumbs />
+            {/* < Breadcrumbs /> */}
         </div>
     </div>
 </div>
