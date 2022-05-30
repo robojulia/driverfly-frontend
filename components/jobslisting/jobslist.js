@@ -5,6 +5,7 @@ import timeSince from "../../utils/timeSince"
 import { useTranslation } from "../../hooks/useTranslation"
 import CompanyPhoto from '../jobs/company-photo'
 import { GeoAltFill, CurrencyDollar } from 'react-bootstrap-icons';
+import { buildAddress } from '../../utils/common'
 
 
 export default function JobsList() {
@@ -30,7 +31,7 @@ export default function JobsList() {
       <div className="filter-outer mt-5">
         {jobs.length > 0 && jobs.map(job => (
           <div key={job.id} className="media align-items-center shadow-sm">
-           
+
             <CompanyPhoto className="d-flex mr-4 truck-img" company={job.company} />
             <div className="media-body">
               <h4 className="mt-0">{job.title}
@@ -39,7 +40,7 @@ export default function JobsList() {
                   data-toggle="tooltip"
                   data-placement="top"
                   title="Tooltip on top">
-                 
+
                 </span>
               </h4>
               <div className="job-date-author">
@@ -61,19 +62,17 @@ export default function JobsList() {
                     job.location &&
                     <>
                       <p>
-                     < GeoAltFill className='mr-1' />
+                        < GeoAltFill className='mr-1' />
                         <span className='mr-4'>
-                          <>
-                            {job.location.street || t('no_street')}, {job.location.city || t('no_city')}, {job.location.state || t('no_state')}, {job.location.zip_code || t('no_zip')}
-                          </>
+                          {buildAddress(job.location || {})}
                         </span></p>
                     </>
                   }
                   <p>
-                   < CurrencyDollar className='mr-1' />{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} {t("per_week")} </p>
+                    < CurrencyDollar className='mr-1' />{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} {t("per_week")} </p>
                 </div>
                 <div className="job-location">
-                
+
                   <strong className="text-secondary">{job.description_short}</strong>
                 </div>
               </div>
@@ -95,7 +94,7 @@ export default function JobsList() {
               <>
                 <li onClick={() => { handlePaging(1) }}>
                   <span className="next page-numbers " role="button" >
-                    First
+                    {t('FIRST_PAGE')}
                   </span>
                 </li>
               </>
@@ -128,10 +127,10 @@ export default function JobsList() {
             }
 
             {
-              nextPageIndex < pagingMeta.totalPages &&
+              currentPageIndex < pagingMeta.totalPages &&
               <li onClick={() => { handlePaging(pagingMeta.totalPages) }}>
                 <span className="next page-numbers " role="button" >
-                  Last
+                  {t('LAST_PAGE')}
                 </span>
               </li>
             }

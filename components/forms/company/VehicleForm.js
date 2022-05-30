@@ -4,7 +4,7 @@ import { VehicleEntity } from "../../../models/company/vehicle.entity";
 import VehicleApi from "../../../pages/api/vehicle";
 import { toast } from 'react-toastify'
 import { useEffect } from "react";
-import { Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 
 import { VehicleType } from "../../../enums/vehicles/vehicle-type.enum";
 import { VehicleTrailerType } from "../../../enums/vehicles/vehicle-trailer-type.enum";
@@ -15,6 +15,7 @@ import { DocumentType } from "../../../models/documents/document.entity";
 
 import BaseSelect from "../BaseSelect";
 import BaseCheckList from "../BaseCheckList";
+import BaseCheck from "../BaseCheck";
 import BaseInput from "../BaseInput";
 import FileInput from "../FileInput";
 import BaseTextArea from "../BaseTextArea";
@@ -52,12 +53,12 @@ export function VehicleForm(props) {
                 else {
                     vehicle = await api.create(dto);
                 }
-                toast.success(t("successfully_saved_information"));
+                toast.success(t("Forms.SUCCESS_{action}_{name}", { action: !!id ? "Forms.UPDATED" : "Forms.CREATED", name: "VEHICLE" }, { translateProps: true }));
                 if (onSaveComplete) onSaveComplete(vehicle);
             }
             catch (e) {
                 console.error("Unable to save entity", e);
-                toast.error(t("unable_to_save_information"));
+                toast.error(t("Forms.FAIL_{action}_{name}", { action: !!id ? "Forms.UPDATED" : "Forms.CREATED", name: "VEHICLE" }, { translateProps: true }));
                 if (onSaveError) onSaveError(e);
             }
         },
@@ -114,7 +115,7 @@ export function VehicleForm(props) {
                     className={`col-${form.values.trailer_type === VehicleTrailerType.OTHER ? 3 : 6}`}
                     label="TRAILER_TYPE"
                     name="trailer_type"
-                    placeholder="NONE"
+                    placeholder="TRAILER_TYPE"
                     enumType={VehicleTrailerType}
                     labelPrefix="VehicleTrailerType"
                     formik={form}
@@ -131,7 +132,7 @@ export function VehicleForm(props) {
                         />
                 }
             </Row>
-            <Row>
+            <Row className="mt-2">
                 <BaseSelect
                     className="col-3"
                     name="transmission_type"
@@ -167,7 +168,7 @@ export function VehicleForm(props) {
                     formik={form}
                     />
             </Row>
-            <Row>
+            <Row className="mt-2">
                 <FileInput
                     className="col-4"
                     label="photo"
@@ -185,10 +186,10 @@ export function VehicleForm(props) {
                     enumType={VehicleAccessory}
                     formik={form}
                     />
-            {
+                {
                 form.values.accessories.includes(VehicleAccessory.OTHER) &&
                 <BaseTextArea
-                    className="col-sm-4"
+                    className="col-4"
                     label="OTHER"
                     name="accessory_other"
                     required
@@ -196,7 +197,27 @@ export function VehicleForm(props) {
                     placeholder="ACCESSORIES"
                     formik={form}
                     />
-            }
+                }
+                <Col xs="4">
+                    <BaseCheck
+                        className="col-12"
+                        label="GOVERNED_SPEED"
+                        name="is_governed"
+                        formik={form}
+                    />
+                    {
+                        form.values.is_governed &&
+                        <BaseInput
+                            className="col-12 mt-2"
+                            label="MAX_SPEED"
+                            name="max_speed"
+                            type="int"
+                            placeholder="MAX_SPEED"
+                            formik={form}
+                        />
+                    }
+
+                </Col>
             </Row>
         </EntityForm>
     );

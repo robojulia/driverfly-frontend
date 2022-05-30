@@ -10,6 +10,7 @@ const jobContext = createContext({
     handleChange: () => { },
     handlePaging: () => { },
     setFilters: () => { },
+    setFiltersByKeyValue: () => { },
     applyFilters: () => { }
   },
 })

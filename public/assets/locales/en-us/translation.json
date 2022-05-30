@@ -163,6 +163,7 @@
         "COMPANION_DRIVERS": "Companion drivers allowed",
         "ONBOARD_DEVICES": "Onboard devices/subscriptions (ex. Netflix, Rand McNally, etc.)",
         "PETS_ALLOWED": "Pets allowed",
+        "RIDER_POLICY": "Rider policy",
         "OTHER": "Other"
     },
     "JobPayFrequency": {
@@ -543,7 +544,7 @@
         "LOGGING": "Logging",
         "LOWBOY": "Lowboy",
         "MIXER": "Mixer",
-        "PNEUMATIC_TANKER": "PNEUMATIC_TANKER",
+        "PNEUMATIC_TANKER": "Pneumatic Tanker",
         "REEFER": "Reefer",
         "TANKER": "Tanker",
         "TWIN": "Twin",
@@ -738,7 +739,7 @@
     "ONE_OR_MORE_ERRORS_WERE_FOUND_ON_INPUT_FILE": "One or more errors were found on the input file, please correct them and re-upload",
     "CATEGORY": "Category",
     "POST_DATE": "Post Date",
-    "pay_frequency": "Pay Frequency",
+    "PAY_FREQUENCY": "Pay Frequency",
     "yup": {
         "type": {
             "date": "date, it must be in the format MM/dd/yyyy (eg. 01/12/2014)",
@@ -809,7 +810,8 @@
         "RESUME": "Resume",
         "DRIVER_LICENSE": "Drivers License",
         "MEDICAL_CARD": "Medical Card",
-        "MVR": "Motor Vehicle Record (MVR)"
+        "MVR": "Motor Vehicle Record (MVR)",
+        "PHYSICAL": "Physical"
     },
     "YEARS": "Years",
     "MY_ACCOUNT": "My Account",
@@ -847,10 +849,34 @@
     "SHARING": "Sharing",
     "SHARE_PAST_EMPLOYMENT": "Share past employers?",
     "PREFERRED_EMPLOYMENT_TYPE": "Preferred employment type",
-    "SELECT_VEHICLE": "Select Vehicle",
     "ADD": "Add",
-    "SELECT_LOCATION": "Select Location",
     "SHARE_MY_PHYSICALS": "Share my Physicals",
     "SEARCH": "Search",
-    "NOT_HIDABLE": "Not Hidable"
+    "FILTERS": "Filters",
+    "SHOWING": "Showing",
+    "OF": "Of",
+    "RESULT": "Results",
+    "FILTER_RESULT": "Filter Results",
+    "SEARCH_KEYWORD": "Search Keywords",
+    "KEYWORD_PLACEHOLDER": "e.g. flatbed",
+    "SORT_BY": "Sort By",
+    "SORT_DEFAULT": "Default",
+    "SORT_NEWEST": "Newest",
+    "SORT_OLDEST": "Oldest",
+    "FIRST_PAGE": "First",
+    "LAST_PAGE": "Last",
+    "NOT_HIDABLE": "Not Hidable",
+    "SELECT_{name}": "Select {{name}}",
+    "Forms": {
+        "SAVED": "saved",
+        "CREATED": "created",
+        "UPDATED": "updated",
+        "DELETED": "deleted",
+        "SUCCESS_{action}_{name}": "Successfully {{action}} {{name}}",
+        "FAIL_{action}_{name}": "Failed {{action}} {{name}}"
+    },
+    "VEHICLE": "Vehicle",
+    "{number}_CHARACTERS_REMAINING": "{{number}} characters remaining",
+    "GOVERNED_SPEED": "Governed speed",
+    "MAX_SPEED": "Max speed"
 }
