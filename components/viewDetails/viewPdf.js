@@ -30,7 +30,7 @@ export default function ViewPdf(props) {
         <ViewModal show={!!url} title={name} onCloseClick={onCloseClick}>
             {(
                 url &&
-                <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.8.335/legacy/build/pdf.worker.js">
+                <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.13.216/build/pdf.worker.min.js">
                 <div style={{
                 border: '1px solid rgba(0, 0, 0, 0.3)',
                 height: '800px',
