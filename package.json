@@ -8,6 +8,7 @@
     "lint": "eslint ./ --ext js,jsx,ts,tsx"
   },
   "dependencies": {
+    "@babel/runtime": "^7.18.3",
     "@ckeditor/ckeditor5-build-classic": "^33.0.0",
     "@ckeditor/ckeditor5-react": "^4.0.0",
     "@emotion/react": "^11.8.2",
