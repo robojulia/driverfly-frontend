@@ -60,7 +60,7 @@ function BaseSelect ( { append, prepend, formik, required, className, enumType, 
         name={name}
         className={`form-select ${error ? "is-invalid" : ""}`} 
         >
-        {placeholder && <option value="">{t(placeholder)}</option>}
+        {placeholder && <option value="">{t("SELECT_{name}", { name: placeholder }, { translateProps: true })}</option>}
         {options && options.map((v, i) => (<option key={i} value={v[valueKey]}>{t(labelPrefix ? `${labelPrefix}.${v[labelKey]}` : v[labelKey])}</option>))}
       </select>
     </BaseControl>

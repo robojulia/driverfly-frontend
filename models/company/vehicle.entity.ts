@@ -20,6 +20,8 @@ export class VehicleEntity {
     photo?: DocumentEntity = null;
     accessories?: string[] = [];
     accessory_other?: string;
+    is_governed?: boolean = false;
+    max_speed?: number;
     created_at: string | Date;
     last_updated_at?: string | Date;
 
@@ -37,8 +39,8 @@ export class VehicleEntity {
             }).nullable(),
             transmission_type: yup.string().nullable(),
             make: yup.string().required().nullable(),
-            model: yup.string().required().nullable(),
-            year: yup.number().required().min(1900).nullable(),
+            model: yup.string().nullable(),
+            year: yup.number().min(1900).nullable(),
             photo: yup.mixed().when({
                 is: v => !!v,
                 then: DocumentEntity.yupSchema()
@@ -50,6 +52,8 @@ export class VehicleEntity {
                 is: v => v?.includes(VehicleAccessory.OTHER),
                 then: yup.string().required().nullable(),
             }).nullable(),
+            is_governed: yup.boolean().required().nullable(),
+            max_speed: yup.number().min(0).nullable()
         });
     }
 }

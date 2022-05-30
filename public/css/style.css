@@ -578,17 +578,26 @@ span.urgent {
 }
 
 .page-numbers:hover {
-    background: #2da2af;
+    /* background: #2da2af; */
+    background: #357694 !important;
     transition: all 0.3s;
     text-decoration: none;
+    color: white !important;
 }
 
 .page-numbers.current.active {
-    background: #2da2af;
-    color: white;
+    background: #1D4354 !important;
+    color: white !important;
 }
 
-input[type='range'] {
+input[type='range']::-webkit-slider-runnable-track {
+    background: #2EC8C4;
+}
+input[type='range']::-webkit-slider-thumb {
+    border-color: #2EC8C4;
+}
+/* KN: do not override base controls, create custom class if these are needed for specific controls and implement */
+/* input[type='range'] {
     width: 210px;
     height: 30px;
     overflow: hidden;
@@ -626,7 +635,7 @@ input[type='range']::-webkit-slider-thumb {
 
 input[type='range']:nth-child(1)::-webkit-slider-thumb {
     z-index: 2;
-}
+} */
 
 .rangeslider {
     position: relative !important;
@@ -1331,7 +1340,7 @@ img.who-we-img.img-fluid {
 }
 
 .hero-sec {
-    background: linear-gradient(to bottom, #7a7a7a 0%, rgb(0 123 255 / 25%) 100%), url(../img/truck-on-windy-road-hero-min.jpg);
+    background: linear-gradient(to bottom, #7a7a7a 0%, rgb(0 123 255 / 25%) 100%), url(/_next/static/media/truck-on-windy-road-hero-min.940b2d4b.jpg);
     background-color: #9f9b9b91;
     background-position: center;
     background-repeat: no-repeat;
