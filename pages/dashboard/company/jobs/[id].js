@@ -436,7 +436,7 @@ export default function Job() {
 
     const maxRadius = {
         [JobGeography.LOCAL]: 100,
-        [JobGeography.REGIONAL]: 1000,
+        [JobGeography.REGIONAL]: 1500,
         [JobGeography.OTR]: 3000
     };
 
@@ -523,6 +523,7 @@ export default function Job() {
                                     name="expiry_date"
                                     placeholder="expiration_date"
                                     type="date"
+                                    min={new Date().toISOString().split("T")[0]}
                                     formik={form}
                                 />
                                 <BaseInput
