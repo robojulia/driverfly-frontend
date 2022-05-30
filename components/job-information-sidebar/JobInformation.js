@@ -10,7 +10,7 @@ import timeSince from "../../utils/timeSince";
 import ShowEnumFromString from "../../components/enum-filters/show-enum-from-string"
 import { useContext } from "react"
 import jobDetailContext from "../../context/jobDetailContext";
-import { ArrowRight, CurrencyDollar, GeoAltFill,FileEarmarkZip, Facebook } from 'react-bootstrap-icons';
+import { ArrowRight, CurrencyDollar, GeoAltFill, FileEarmarkZip, Facebook } from 'react-bootstrap-icons';
 
 export default function JonInformation({ job }) {
 
@@ -40,7 +40,7 @@ export default function JonInformation({ job }) {
               <div className="details">
                 <div className="text">{t('areas_covered')}</div>
                 <div className="value">
-                  <ShowEnumFromString str={job.geography} enumArray={JobGeography} />
+                  <ShowEnumFromString labelPrefix='JobGeography' str={job.geography} enumArray={JobGeography} />
                 </div>
               </div>
             </li>
@@ -50,7 +50,7 @@ export default function JonInformation({ job }) {
               <div className="details">
                 <div className="text">{t('employment_type')}</div>
                 <div className="value">
-                  <ShowEnumFromString str={job.employment_type} enumArray={JobEmploymentType} />
+                  <ShowEnumFromString labelPrefix="JobEmploymentType" str={job.employment_type} enumArray={JobEmploymentType} />
                 </div>
               </div>
             </li>
@@ -59,7 +59,7 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">{t('delivery_type')}</div>
-                <ShowEnumFromString str={job.delivery_type} enumArray={JobDeliveryType} />
+                <ShowEnumFromString labelPrefix="JobDeliveryType" str={job.delivery_type} enumArray={JobDeliveryType} />
               </div>
             </li>
             <li>
@@ -67,7 +67,7 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">{t('equipment_type')}</div>
-                <ShowEnumFromString str={job.equipment_type} enumArray={JobEquipmentType} />
+                <ShowEnumFromString labelPrefix="JobEquipmentType" str={job.equipment_type} enumArray={JobEquipmentType} />
               </div>
             </li>
             <li>
@@ -76,7 +76,7 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">{t('schedule')}</div>
-                <ShowEnumFromString str={job.schedule} enumArray={JobSchedule} />
+                <ShowEnumFromString labelPrefix="JobSchedule" str={job.schedule} enumArray={JobSchedule} />
               </div>
             </li>
             <li>
@@ -84,7 +84,7 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">{t('pay_method')}</div>
-                <ShowEnumFromString str={job.pay_method} enumArray={JobPayMethod} />
+                <ShowEnumFromString labelPrefix="JobPayMethod" str={job.pay_method} enumArray={JobPayMethod} />
               </div>
             </li>
 
@@ -126,10 +126,10 @@ export default function JonInformation({ job }) {
           </div>
 
         </div>
-        <button type="button" className="btn btn-danger btn-danger_padded " onClick={handleShowApplyModal}>
+        {/* <button type="button" className="btn btn-danger btn-danger_padded " onClick={handleShowApplyModal}>
           {t('apply_now')}
           <ArrowRight />
-        </button>
+        </button> */}
         <div className="socials-apply clearfix">
           <div className="title">{t('apply_with')}</div>
           <div className="inner">
