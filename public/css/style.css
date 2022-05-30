@@ -1044,7 +1044,7 @@ input[type='range']:nth-child(1)::-webkit-slider-thumb {
 
 /************************************** ABOUT-SEC *********************************/
 .about-sec {
-    background-image: url("../img/iphone-6-mockup-featuring-a-construction-worker-driving-a-truck-a4073-3.png");
+    background-image: url("/img/iphone-6-mockup-featuring-a-construction-worker-driving-a-truck-a4073-3.png");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
