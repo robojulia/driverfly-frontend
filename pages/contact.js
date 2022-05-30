@@ -2,7 +2,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Layout from "../components/layouts";
 import ReCAPTCHA from "react-google-recaptcha";
-import Breadcrumbs from 'nextjs-breadcrumbs';
+// import Breadcrumbs from 'nextjs-breadcrumbs';
 import { ArrowLeft, ArrowRight, Newspaper, PersonBadgeFill, QuestionCircle } from 'react-bootstrap-icons';
 
 
