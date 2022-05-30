@@ -1,7 +1,7 @@
 import axios from "axios"
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import Breadcrumbs from 'nextjs-breadcrumbs'
+// import Breadcrumbs from 'nextjs-breadcrumbs'
 import { useEffect, useState } from "react"
 import Back from '../components/back-to-login/Back-Login'
 import Layout from "../components/layouts"
@@ -18,7 +18,7 @@ export default function VerifyEmailToken(props) {
         <div className="container">
           <div className="top-links-inner d-flex align-items-center justify-content-between">
             <h2>Verifying Email Token</h2>
-            < Breadcrumbs />
+            {/* < Breadcrumbs /> */}
           </div>
         </div>
       </div>

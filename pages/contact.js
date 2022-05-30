@@ -23,7 +23,7 @@ export default function Contact() {
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
                         <h2>Contact</h2>
-                        < Breadcrumbs />
+                        {/* < Breadcrumbs /> */}
                     </div>
                 </div>
             </div>

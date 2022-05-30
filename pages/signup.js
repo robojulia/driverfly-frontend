@@ -1,6 +1,6 @@
 import Head from "next/head"
 import Link from "next/link"
-import Breadcrumbs from "nextjs-breadcrumbs"
+// import Breadcrumbs from "nextjs-breadcrumbs"
 import { useState } from 'react'
 import Layout from "../components/layouts"
 import SignupStyle from "../public/css/signup.module.css"
@@ -137,7 +137,7 @@ export default function Signup() {
         <div className="container">
           <div className="top-links-inner d-flex align-items-center justify-content-between">
             <h2>{t("SIGN_UP")}</h2>
-            <Breadcrumbs />
+            {/* <Breadcrumbs /> */}
           </div>
         </div>
       </div>
