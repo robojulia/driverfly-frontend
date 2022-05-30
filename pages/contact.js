@@ -2,7 +2,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Layout from "../components/layouts";
 import ReCAPTCHA from "react-google-recaptcha";
-import Breadcrumbs from 'nextjs-breadcrumbs';
+// import Breadcrumbs from 'nextjs-breadcrumbs';
 import { ArrowLeft, ArrowRight, Newspaper, PersonBadgeFill, QuestionCircle } from 'react-bootstrap-icons';
 
 
@@ -23,7 +23,7 @@ export default function Contact() {
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
                         <h2>Contact</h2>
-                        < Breadcrumbs />
+                        {/* < Breadcrumbs /> */}
                     </div>
                 </div>
             </div>

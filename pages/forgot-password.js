@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import Breadcrumbs from 'nextjs-breadcrumbs'
+// import Breadcrumbs from 'nextjs-breadcrumbs'
 import Back from '../components/back-to-login/Back-Login'
 import Layout from "../components/layouts"
 import Forgotpassword from '../public/css/Forgot.module.css'
@@ -57,7 +57,7 @@ export default function Forgot() {
         <div className="container">
           <div className="top-links-inner d-flex align-items-center justify-content-between">
             <h2>{t("FORGOT_PASSWORD")}</h2>
-            < Breadcrumbs />
+            {/* < Breadcrumbs /> */}
           </div>
         </div>
       </div>
