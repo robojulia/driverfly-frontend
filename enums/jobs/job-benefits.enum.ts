@@ -35,6 +35,8 @@ export enum JobBenefits {
     ONBOARD_DEVICES = 'ONBOARD_DEVICES',
     // Pets allowed
     PETS_ALLOWED = 'PETS_ALLOWED',
+    // Rider policy
+    RIDER_POLICY = "RIDER_POLICY",
     // Other
     OTHER = "OTHER",
   }

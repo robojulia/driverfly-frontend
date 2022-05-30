@@ -16,7 +16,7 @@ export class ApplicantEmployerEntity {
     can_contact: boolean = false;
     is_subject_to_fmcsrs: boolean = false;
     is_subject_to_drug_tests: boolean = false;
-    created_at: string;
+    created_at?: string;
     last_updated_at?: string;
 
     static yupSchema() {
