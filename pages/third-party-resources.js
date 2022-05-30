@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import Breadcrumbs from 'nextjs-breadcrumbs';
+// import Breadcrumbs from 'nextjs-breadcrumbs';
 import Layout from "../components/layouts";
 import resource from '../public/css/ThirdPartyResources.module.css'
 
@@ -399,7 +399,7 @@ export default function ThirdPartyResources()
                <div className="container">
                   <div className="top-links-inner d-flex align-items-center justify-content-between">
                      <h2>Third Party Resources</h2>
-                      < Breadcrumbs />
+                      {/* < Breadcrumbs /> */}
                   </div>
                </div>
             </div>
