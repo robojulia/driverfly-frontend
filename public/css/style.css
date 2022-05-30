@@ -175,11 +175,18 @@ h2 {
 .header-sec {
     background: #060606F7;
     min-height: 186px;
+    position: relative;
+}
+.header-sec .navbar{
+    width: 80%;
+    display: inline-block;
+    text-align: end;
 }
 
 .logo {
     width: 228px;
     border-right: solid 1px;
+    display: inline-block;
 }
 
 .logo img {
@@ -194,7 +201,10 @@ h2 {
     transition: all 1s;
 }
 
-.nav-item {
+.ml-30 {
+    margin-left:30px;
+} 
+ .nav-item {
     padding: 0px 0px 0px 30px;
 }
 
@@ -205,12 +215,18 @@ h2 {
     padding: 20px 10px;
 }
 
-ul.dropdown-menu {
-    background: #171717;
-    padding: 12px 20px;
-    left: 9px;
-    border-radius: 0px;
-    transition: all 0.3s;
+.nav-link:hover a{
+    border-bottom: #000;
+}
+.dropdown-menu {
+    background: #171717 !important;
+    padding: 12px 20px  !important;
+    left: 9px  !important;
+    border-radius: 0px  !important;
+    transition: all 0.3s  !important;
+}
+.dropdown-item:focus, .dropdown-item:hover {
+    background-color: #e9ecef00 !important;
 }
 
 .dropdown-item {
@@ -1837,8 +1853,29 @@ img.who-we-img.img-fluid {
     }
 
 }
-
+@media screen and (max-width:992px) {
+    .logo {
+        width: 50% !important;
+        vertical-align: top;
+    }
+    .header-sec .navbar {
+        width: 50%;
+        position:static;
+        margin-top: 20px;
+    }
+    .header-sec .navbar-collapse {
+        width: 100%;
+        text-align: left;
+        left: 0px;
+        top: 140px;
+        background: rgb(0, 0, 0);
+        position: absolute;
+        padding: 25px 0px;
+        z-index: 999999;
+    }
+}
 @media screen and (max-width:768px) {
+
     img {
         width: 100% !important;
     }
@@ -2116,6 +2153,12 @@ img.who-we-img.img-fluid {
 
     .header-sec {
         min-height: 100px !important;
+      
+    }
+    .header-sec  .navbar-collapse{
+      
+        top: 101px;
+
     }
 
     .logo img {
@@ -2130,10 +2173,18 @@ img.who-we-img.img-fluid {
 
 }
 
-
+@media screen and (max-width:1070px) {
+   
+    .ml-30 {
+        margin-left:0px;
+    }
+}
 @media screen and (max-width:991px) {
     .slide___3-Nqo {
         padding: 7%;
+    }
+    .ml-30 {
+        margin-left:30px;
     }
 }
 
@@ -2170,9 +2221,7 @@ img.who-we-img.img-fluid {
         padding: 7px 10px;
     }
 
-    .nav-item {
-        padding: 0px 0px 0px 10px;
-    }
+ 
 
     .nav-link {
         font-size: 15px;
