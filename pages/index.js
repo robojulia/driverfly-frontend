@@ -4,6 +4,7 @@ import Featured from "../components/jobs/Featured";
 import Recent from "../components/jobs/Recent";
 import Drivers from "../components/works/drivers";
 import Companies from "../components/works/companies";
+import CompaniesSlider from '../components/featured-companies-slider/CompaniesSlider'
 import HomeSearch from "../components/megasearch/search";
 import Slider from "../components/testominial-slider/Slider";
 import Pric from "../public/css/Pricing.module.css";
@@ -13,8 +14,8 @@ import { useTranslation } from "../hooks/useTranslation";
 import { DriverLicenseType } from "../enums/users/driver-license-type.enum";
 import { JobEmploymentType } from "../enums/jobs/job-employment-type.enum";
 import { useRouter } from "next/router";
-import { Search } from "react-bootstrap-icons";
-
+import { Arrow90degDown, Search } from "react-bootstrap-icons";
+import NewsletterSingup from "../components/newsletter-signup/NewsletterSingup";
 export default function Index() {
   const router = useRouter();
   const { t } = useTranslation();
@@ -65,9 +66,8 @@ export default function Index() {
               </div>
 
               <div className="hero-search">
-                <div className="input-group w-25">
+                <div className="input-group">
                   <div className="input-group-prepend">
-                    {/* <i className="fa fa-search" aria-hidden="true"></i> */}
                     <Search className="home_search" />
                   </div>
                   <input
@@ -92,7 +92,7 @@ export default function Index() {
                 <select
                   name="employment_type"
                   onChange={handleChange}
-                  className=" form-control  form-select custom-sel"
+                  className="form-select custom-sel"
                   aria-label="Default select example"
                   id="exampleFormControlSelect1"
                 >
@@ -104,11 +104,12 @@ export default function Index() {
                       </option>
                     );
                   })}
+                  <Arrow90degDown />
                 </select>
                 <select
                   name="cdl_class"
                   onChange={handleChange}
-                  className="form-select custom-sel border-0"
+                  className="form-select custom-sel "
                   aria-label="Default select example"
                   id="exampleFormControlSelect1"
                 >
@@ -123,7 +124,7 @@ export default function Index() {
                 </select>
                 <div className="form-group form-group-search m-0">
                   <button
-                    className="btn-submit btn btn-block btn-theme"
+                    className="btn-submit btn btn-block btn-theme hvr-shrink"
                     type="button"
                   >
                     Search
@@ -137,21 +138,19 @@ export default function Index() {
         </div>
       </section>
       <section className="hire-driver-bg">
-        <div className="container d-flex">
-          <div className="opacity-overly">
-            <div className="hire-driver-item hire-driver-left d-flex flex-column justify-content-around">
-              <h1>Hire A Driver</h1>
-              <p>
-                Get exposed to qualified drivers throughout the United States.{" "}
-              </p>
-              <div>
-                <button className="theme-bg-btn" type="button">
-                  post a job
-                </button>
-              </div>
+        <div className="container d-flex justify-content-center hire-driver-section
+       ">
+          <div className="hire-driver-item hire-driver-left d-flex flex-column justify-content-around">
+            <h1>Hire A Driver</h1>
+            <p>
+              Get exposed to qualified drivers throughout the United States.{" "}
+            </p>
+            <div>
+              <button className="theme-bg-btn" type="button">
+                post a job
+              </button>
             </div>
           </div>
-
           <div className="hire-driver-item hire-driver-right d-flex flex-column justify-content-around">
             <h1>Find A job</h1>
             <p>
@@ -203,11 +202,14 @@ export default function Index() {
             </a>
           </li>
         </ul>
-        {/* {
-                    showRecent ? < Featured />
-                        :
-                        < Recent />
-                } */}
+        {
+          showRecent ? < Featured />
+            :
+            < Recent />
+        }
+      </section>
+      <section className="container">
+        <CompaniesSlider />
       </section>
       <section className="driver-sec">
         <div className="container how-it-work-sec">
@@ -220,7 +222,7 @@ export default function Index() {
           <div className="container text-center">
             <h1>POST A RESUME & GET FEATURED</h1>
             <p>
-            Create your free account in just minutes to be featured in front of hundreds of motor carriers.
+              Create your free account in just minutes to be featured in front of hundreds of motor carriers.
             </p>
             <button className="theme-bg-btn ">Create an Account</button>
           </div>
@@ -236,15 +238,21 @@ export default function Index() {
           </div>
         </div>
       </div>
+      <section className="news-letter-signup-sec">
+        <div className="container">
+          <NewsletterSingup />
+        </div>
+
+      </section>
     </>
   );
 }
 
 Index.getLayout = function getLayout(page) {
-    return (
-        <Layout>
-            {page}
-        </Layout>
-    )
+  return (
+    <Layout>
+      {page}
+    </Layout>
+  )
 
 };

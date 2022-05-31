@@ -21,26 +21,26 @@ export default function Nav() {
                 <ul className="navbar-nav">
                     <li className="nav-item">
                         <Link href="/">
-                            <a className="nav-link active">{t("HOME")}</a>
+                            <a className="nav-link active hvr-underline-from-left">{t("HOME")}</a>
                         </Link>
                     </li>
                     <li className="nav-item">
                         <Link href="/about">
-                            <a className="nav-link">{t("ABOUT_US")}</a>
+                            <a className="nav-link hvr-underline-from-left">{t("ABOUT_US")}</a>
                         </Link>
                     </li>
                     <li className="nav-item">
                         <Link href="/find-jobs">
-                            <a className="nav-link">{t("FIND_A_Job")}</a>
+                            <a className="nav-link hvr-underline-from-left">{t("FIND_A_Job")}</a>
                         </Link>
                     </li>
                     <li className="nav-item dropdown">
-                        <a className="nav-link  dropdown-toggle" href="#"
+                        <a className="nav-link  dropdown-toggle hvr-underline-from-left" href="#"
                             data-bs-toggle="dropdown"> {t("DRIVER_RESOURCES")}</a>
                         <ul className="dropdown-menu">
                             <li>
                                 <Link href="/faq">
-                                    <a className="dropdown-item">{t("FAQ")}</a>
+                                    <a className="dropdown-item ">{t("FAQ")}</a>
                                 </Link>
                             </li>
                             <li>
@@ -60,7 +60,7 @@ export default function Nav() {
                     <li className="nav-item dropdown">
                         {/* <a className="nav-link  dropdown-toggle" href="http://go.driverfly.co/motor-carriers"
                             data-bs-toggle="">{t("MOTOR_CARRIER_SOLUTIONS")} </a> */}
-                        <a className="nav-link  dropdown-toggle" href="#"
+                        <a className="nav-link  dropdown-toggle hvr-underline-from-left" href="#"
                             data-bs-toggle="dropdown">{t("MOTOR_CARRIER_SOLUTIONS")}</a>
 
                         <ul className="dropdown-menu">
