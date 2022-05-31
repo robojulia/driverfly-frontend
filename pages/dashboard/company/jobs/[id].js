@@ -71,6 +71,7 @@ export default function Job() {
     authCompany();
 
     const { authCheck, hasPermission } = useAuth();
+
     const user = authCheck();
 
     const { t } = useTranslation();
@@ -79,6 +80,7 @@ export default function Job() {
         initialValues: new JobEntity(),
         validationSchema: JobEntity.yupSchema(),
         onSubmit: async (data) => {
+
             data.min_weekly_pay = parseFloat(data.min_weekly_pay)
             data.max_weekly_pay = parseFloat(data.max_weekly_pay)
             data.min_rate = parseFloat(data.min_rate)
