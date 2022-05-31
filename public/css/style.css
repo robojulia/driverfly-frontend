@@ -218,7 +218,7 @@ h2 {
 .nav-link:hover a{
     border-bottom: #000;
 }
-.dropdown-menu {
+.header-sec .dropdown-menu {
     background: #171717 !important;
     padding: 12px 20px  !important;
     left: 9px  !important;
