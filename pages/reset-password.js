@@ -1,7 +1,7 @@
 import axios from "axios"
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-// import Breadcrumbs from 'nextjs-breadcrumbs'
+import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 import { useState } from "react"
 import Back from '../components/back-to-login/Back-Login'
 import Layout from "../components/layouts"
@@ -102,7 +102,7 @@ export default function Forgot() {
         <div className="container">
           <div className="top-links-inner d-flex align-items-center justify-content-between">
             <h2>Reset Password</h2>
-            {/* < Breadcrumbs /> */}
+            < Breadcrumb />
           </div>
         </div>
       </div>

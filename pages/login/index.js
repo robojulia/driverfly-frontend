@@ -7,7 +7,7 @@ import { useState } from 'react';
 import Layout from "../../components/layouts";
 import login from '../../public/css/Login.module.css'
 import Link from 'next/link';
-// import Breadcrumbs from 'nextjs-breadcrumbs';
+import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -136,7 +136,7 @@ export default function Login() {
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
                         <h2>{t("LOGIN")}</h2>
-                        {/* <Breadcrumbs /> */}
+                        <Breadcrumb />
                     </div>
                 </div>
             </div>

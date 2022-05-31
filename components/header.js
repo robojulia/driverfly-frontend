@@ -83,7 +83,7 @@ export default function Header() {
 
                                 </ul>
                                 <ul className="d-flex align-items-center mb-0">
-                                    <li><a href="#" className="nav-link"> <i className="fa fa-bell-o pt-1"
+                                    <li><a href="" className="nav-link"> <i className="fa fa-bell-o pt-1"
                                         aria-hidden="true"></i></a></li>
                                     {authCheck() ? <LogoutButton /> : <><LoginButton /> <SignupButton /></>}
                                 </ul>

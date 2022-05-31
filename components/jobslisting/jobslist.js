@@ -6,6 +6,7 @@ import { useTranslation } from "../../hooks/useTranslation"
 import CompanyPhoto from '../jobs/company-photo'
 import { GeoAltFill, CurrencyDollar } from 'react-bootstrap-icons';
 import { buildAddress } from '../../utils/common'
+import Pagination from '../find-jobs/pagination'
 
 
 export default function JobsList() {
@@ -85,57 +86,13 @@ export default function JobsList() {
           </div>
         ))}
 
-        {
-          pagingMeta.totalPages !== 0 &&
+        <Pagination />
 
-          <ul className="pagination ">
-            {
-              currentPageIndex > 1 &&
-              <>
-                <li onClick={() => { handlePaging(1) }}>
-                  <span className="next page-numbers " role="button" >
-                    {t('FIRST_PAGE')}
-                  </span>
-                </li>
-              </>
-            }
-
-            {
-              currentPageIndex > 1 &&
-              <li onClick={() => { handlePaging(previousPageIndex) }} >
-                <span className="page-numbers " role="button" >
-                  {previousPageIndex}
-                </span>
-              </li>
-            }
-
-            {
-              <li >
-                <span className="page-numbers current active" role="button" >
-                  {currentPageIndex}
-                </span>
-              </li>
-            }
-
-            {
-              currentPageIndex < pagingMeta.totalPages &&
-              <li onClick={() => { handlePaging(nextPageIndex) }} >
-                <span className="page-numbers " role="button" >
-                  {nextPageIndex}
-                </span>
-              </li>
-            }
-
-            {
-              currentPageIndex < pagingMeta.totalPages &&
-              <li onClick={() => { handlePaging(pagingMeta.totalPages) }}>
-                <span className="next page-numbers " role="button" >
-                  {t('LAST_PAGE')}
-                </span>
-              </li>
-            }
-          </ul>
-        }
+        <div className="jumbotron mt-4">
+          <p className="lead">
+            {t('CANT_FIND_WHAT_YOU_WANT')}
+          </p>
+        </div>
       </div>
 
     </>

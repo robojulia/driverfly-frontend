@@ -1,5 +1,7 @@
 @import url('http://fonts.cdnfonts.com/css/arial');
-
+@import url('https://fonts.googleapis.com/css2?family=Akronim&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+@import '../css/hover-min.css';
 html,
 body,
 div,
@@ -90,7 +92,15 @@ li {
     list-style: none;
     vertical-align: baseline;
     box-sizing: border-box;
-    /*font-family: 'Arial', sans-serif;*/
+    font-family: 'Arial, Helvetica, sans-serif', sans-serif;
+}
+
+.general-headings {
+    text-align: center;
+    font-size: 40px;
+    margin-bottom: 45px;
+    font-weight: 400;
+    background-color: #fff0;
 }
 
 button:focus,
@@ -175,11 +185,18 @@ h2 {
 .header-sec {
     background: #060606F7;
     min-height: 186px;
+    position: relative;
+}
+.header-sec .navbar{
+    width: 80%;
+    display: inline-block;
+    text-align: end;
 }
 
 .logo {
     width: 228px;
     border-right: solid 1px;
+    display: inline-block;
 }
 
 .logo img {
@@ -189,12 +206,12 @@ h2 {
     border-right: solid 0px;
 }
 
-.navbar-nav .nav-link:hover {
-    border-bottom: 1px solid white;
-    transition: all 1s;
-}
 
-.nav-item {
+
+.ml-30 {
+    margin-left:30px;
+} 
+ .nav-item {
     padding: 0px 0px 0px 30px;
 }
 
@@ -205,12 +222,18 @@ h2 {
     padding: 20px 10px;
 }
 
-ul.dropdown-menu {
-    background: #171717;
-    padding: 12px 20px;
-    left: 9px;
-    border-radius: 0px;
-    transition: all 0.3s;
+.nav-link:hover a{
+    border-bottom: #000;
+}
+.header-sec .dropdown-menu {
+    background: #171717 !important;
+    padding: 12px 20px  !important;
+    left: 9px  !important;
+    border-radius: 0px  !important;
+    transition: all 0.3s  !important;
+}
+.dropdown-item:focus, .dropdown-item:hover {
+    background-color: #e9ecef00 !important;
 }
 
 .dropdown-item {
@@ -265,26 +288,31 @@ li:hover ul {
 
 .tab-content .accordion-button:not(.collapsed) {
     color: #000;
-    background-color:transparent ; 
-    box-shadow: inset 0 0px 0 rgb(0 0 0 / 13%); 
+    background-color: transparent;
+    box-shadow: inset 0 0px 0 rgb(0 0 0 / 13%);
     padding: 15px 0px;
 }
+
 .tab-content .accordion-button:active {
     color: #000 !important;
 }
+
 .tab-content .card-header {
     padding: 0px 0px 0px;
     margin-bottom: 0;
     background-color: transparent;
     border-bottom: none;
 }
+
 .tab-content .accordion-item:last-of-type .accordion-button.collapsed {
-    
+
     padding: 15px 0;
 }
+
 .tab-content .accordion-body {
-    padding: 0; 
+    padding: 0;
 }
+
 .tab-content .accordion-item {
     border: none;
 }
@@ -308,23 +336,29 @@ li:hover ul {
     color: #000;
     text-decoration: none !important;
 }
+
 .btn-link:hover {
     color: #000 !important;
 }
+
 .btn-link::before {
-   vertical-align: sub !important;
+    vertical-align: sub !important;
 }
-.faq-outer .btn-link{
+
+.faq-outer .btn-link {
     color: #6a6a6a;
     text-decoration: none;
     font-weight: 800;
 }
-.faq-outer .btn-link:hover{
+
+.faq-outer .btn-link:hover {
     color: #5cc7c3 !important;
 }
-.faq-outer .accordion-button:not(.collapsed){
+
+.faq-outer .accordion-button:not(.collapsed) {
     background-color: #e7f1ff00;
 }
+
 .tab-content .card-header:hover i {
     color: #1a1a1a !important;
 }
@@ -333,15 +367,18 @@ li:hover ul {
     color: #000000;
     font-size: 15px;
     margin-top: 10px;
-    
+
 }
+
 .tab-content:hover svg {
     fill: #000000;
-    
+
 }
+
 .fa-angle-down:before {
     vertical-align: sub;
 }
+
 .tab-content i.fa.fa-angle-up {
     color: #cbcbcb;
 }
@@ -593,9 +630,11 @@ span.urgent {
 input[type='range']::-webkit-slider-runnable-track {
     background: #2EC8C4;
 }
+
 input[type='range']::-webkit-slider-thumb {
     border-color: #2EC8C4;
 }
+
 /* KN: do not override base controls, create custom class if these are needed for specific controls and implement */
 /* input[type='range'] {
     width: 210px;
@@ -863,7 +902,7 @@ input[type='range']:nth-child(1)::-webkit-slider-thumb {
 
 }
 
-.top-links-sec nav li:first-child:after {
+/* .top-links-sec nav li:first-child:after {
     content: ">";
     font-family: FontAwesome;
     font-style: normal;
@@ -872,6 +911,9 @@ input[type='range']:nth-child(1)::-webkit-slider-thumb {
     margin-left: 5px;
     color: #6a6a6a;
     margin: 0px 10px;
+} */
+.top-links-sec ol li .current_page{
+    color: #000;
 }
 
 .top-links-sec ol {
@@ -1044,7 +1086,7 @@ input[type='range']:nth-child(1)::-webkit-slider-thumb {
 
 /************************************** ABOUT-SEC *********************************/
 .about-sec {
-    background-image: url("../img/iphone-6-mockup-featuring-a-construction-worker-driving-a-truck-a4073-3.png");
+    background-image: url("/img/iphone-6-mockup-featuring-a-construction-worker-driving-a-truck-a4073-3.png");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -1094,13 +1136,14 @@ input[type='range']:nth-child(1)::-webkit-slider-thumb {
     font-weight: 400;
     background-color: #fff0;
 }
-.how-it-work-sec svg{
+
+.how-it-work-sec svg {
     color: #4aa2af;
     font-size: 60px;
-   
+
 }
 
-.about_work svg{
+.about_work svg {
     margin: 0 auto;
 }
 
@@ -1273,14 +1316,7 @@ img.who-we-img.img-fluid {
     z-index: -1;
 }
 
-/* .Slider_box i.fa.fa-quote-left {
-    color: #2da2af !important;
-    font-size: 55px;
-    position: absolute;
-    top: -33px;
-    left: 35px;
-    z-index: -1;
-} */
+
 
 .Slider_box h3 {
     margin-top: 40px;
@@ -1340,7 +1376,7 @@ img.who-we-img.img-fluid {
 }
 
 .hero-sec {
-    background: linear-gradient(to bottom, #7a7a7a 0%, rgb(0 123 255 / 25%) 100%), url(/img/truck-on-windy-road-hero-min.jpg);
+    background: linear-gradient(to bottom, #7a7a7a 0%, rgb(0 123 255 / 25%) 100%), url(../img/truck-on-windy-road-hero-min.jpg);
     background-color: #9f9b9b91;
     background-position: center;
     background-repeat: no-repeat;
@@ -1356,6 +1392,7 @@ img.who-we-img.img-fluid {
     font-size: 60px;
     line-height: 60px;
     font-weight: 400;
+    letter-spacing: 2.5px;
 }
 
 .hero-inner h2 {
@@ -1367,7 +1404,7 @@ img.who-we-img.img-fluid {
 
 .trending-keywords a,
 .trending-keywords li {
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .trending-keywords li {
@@ -1398,8 +1435,17 @@ img.who-we-img.img-fluid {
     padding: 0px 0px 0px 10px;
     border-radius: 5px;
     margin: 30px 0px;
+    justify-content: space-between;
+}
+.hero-search .btn-submit {
+    background-color: #2EC8C4;
+    color: rgb(255, 255, 255);
 }
 
+.hero-search .btn-submit:hover {
+    background-color: #1D4354;
+    color: rgb(255, 255, 255);
+}
 .hero-search .input-group input {
     height: auto;
     padding: 15px;
@@ -1432,19 +1478,19 @@ img.who-we-img.img-fluid {
 }
 
 .custom-sel {
-    width: 21% !important;
+    width: 25% !important;
     height: 70px !important;
     border-radius: 0px !important;
     box-shadow: none !important;
     color: #6a6a6a !important;
-    background: transparent !important;
-
     padding: 0 15px !important;
+    border: 0 !important;
+    border-left: 1px solid #ccc !important;
 }
 
 .form-group-search {
-    padding: 10px !important;
-    min-width: 160px;
+    width: 20%;
+    padding: 0 10px 0px 0px !important;
 }
 
 .btn-submit {
@@ -1519,8 +1565,7 @@ img.who-we-img.img-fluid {
 
 /************************** DRIVER-SEC **********************/
 .driver-sec {
-    background-color: transparent;
-    background-image: linear-gradient(180deg, #DEEFEE 0%, #61D2D3 100%);
+    background-color: #fafafa;
 }
 
 .driver-sec .card {
@@ -1536,16 +1581,6 @@ img.who-we-img.img-fluid {
     color: #262626;
     font-weight: 400 !important;
     font-size: 18px;
-}
-
-.hero-search .btn-submit {
-    background-color: #2EC8C4;
-    color: rgb(255, 255, 255);
-}
-
-.hero-search .btn-submit:hover {
-    background-color: #1D4354;
-    color: rgb(255, 255, 255);
 }
 
 .Slider_owl-prev {
@@ -1753,7 +1788,7 @@ img.who-we-img.img-fluid {
     margin-right: 15px;
 }
 
-    /* kn: please implement this in another class name */
+/* kn: please implement this in another class name */
 /* .sidebar .btn.btn-danger {
     padding: 15px 40px;
     width: 100%;
@@ -1800,7 +1835,7 @@ img.who-we-img.img-fluid {
     font-size: 16px;
 }
 
-.share-links  svg {
+.share-links svg {
     color: #2EC8C4;
     margin-left: 0px;
     transition: all 0.4s ease-in-out 0s;
@@ -1837,8 +1872,29 @@ img.who-we-img.img-fluid {
     }
 
 }
-
+@media screen and (max-width:992px) {
+    .logo {
+        width: 50% !important;
+        vertical-align: top;
+    }
+    .header-sec .navbar {
+        width: 50%;
+        position:static;
+        margin-top: 20px;
+    }
+    .header-sec .navbar-collapse {
+        width: 100%;
+        text-align: left;
+        left: 0px;
+        top: 140px;
+        background: rgb(0, 0, 0);
+        position: absolute;
+        padding: 25px 0px;
+        z-index: 999999;
+    }
+}
 @media screen and (max-width:768px) {
+
     img {
         width: 100% !important;
     }
@@ -2116,6 +2172,12 @@ img.who-we-img.img-fluid {
 
     .header-sec {
         min-height: 100px !important;
+      
+    }
+    .header-sec  .navbar-collapse{
+      
+        top: 101px;
+
     }
 
     .logo img {
@@ -2130,10 +2192,18 @@ img.who-we-img.img-fluid {
 
 }
 
-
+@media screen and (max-width:1070px) {
+   
+    .ml-30 {
+        margin-left:0px;
+    }
+}
 @media screen and (max-width:991px) {
     .slide___3-Nqo {
         padding: 7%;
+    }
+    .ml-30 {
+        margin-left:30px;
     }
 }
 
@@ -2170,9 +2240,7 @@ img.who-we-img.img-fluid {
         padding: 7px 10px;
     }
 
-    .nav-item {
-        padding: 0px 0px 0px 10px;
-    }
+ 
 
     .nav-link {
         font-size: 15px;
@@ -2267,39 +2335,45 @@ li.link-wrapper>a.active {
 .form-range {
     height: 38px !important;
 }
+
 .filter_container #accordionExample.accordion>.card {
     overflow: auto !important;
-   
+
 }
-.filter_container #async-example{
-   display: contents !important;
+
+.filter_container #async-example {
+    display: contents !important;
 }
-.filter_container .rbt a{
+
+.filter_container .rbt a {
     border-left: 1px solid #ced4da;
     border-right: 1px solid #ced4da;
     padding: .25rem 0.5rem;
 }
+
 .filter_container .rbt a:last-child {
     border-bottom: 1px solid #ced4da;
-  }
+}
 
-.ort-general a{
-      color: #000 !important;
-  }
-  .ort-general p{
-   margin: 0px;
-   color: #6a6a87;
+.ort-general a {
+    color: #000 !important;
+}
+
+.ort-general p {
+    margin: 0px;
+    color: #6a6a87;
 }
 
 
- .overflow_cls tbody tr td{
+.overflow_cls tbody tr td {
     width: 23%;
-} 
+}
 
 .overflow_cls thead {
     width: 100%;
     margin-bottom: 20px;
 }
+
 .overflow_cls tbody {
     height: 750px;
     display: table-caption;
@@ -2307,18 +2381,227 @@ li.link-wrapper>a.active {
     overflow: auto;
     margin: 0 auto;
 }
-.location_table__hed th{
+
+.location_table__hed th {
     width: 22.5%;
 }
-.vehicles_table__hed  th{
+
+.vehicles_table__hed th {
     width: 10%;
     border-top: 0px solid #dee2e6 !important;
     border-bottom: 1px solid #dee2e6 !important;
 }
+
 .vehicles_container tbody tr td {
     width: 11% !important;
 }
 
-.home_search{
+.home_search {
     color: #C5C5C5;
+}
+
+/* new css code */
+.hire-driver-bg {
+    background: #D1DDDD;
+    padding: 50px 0px;
+}
+
+.hire-driver-item {
+    width: 50%;
+    padding: 30px;
+    height: 300px;
+    line-height: 1;
+    transition: background 0.3s, border-radius 0.3s, opacity 0.3s;
+}
+
+.hire-driver-item:hover {
+    opacity: 0.8;
+}
+
+.hire-driver-left {
+    position: relative;
+    height: 300px;
+}
+
+.hire-driver-left::before {
+    background:  linear-gradient(to bottom, #1D4354 0%, rgb(0 123 255 / 25%) 100%), url("../img/black-man-truck-driver-near-his-truck-parked-in-a-FD6XPWU.jpeg");
+    content: "";
+    background-size: cover;
+    position: absolute;
+    background-position: center center;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+}
+
+.hire-driver-right {
+    background-color: transparent;
+    background-image: linear-gradient(180deg, #2EC8C4 0%, #1D4354 100%);
+    opacity: 1;
+    position: relative;
+}
+
+.hire-driver-item h1 {
+    color: #fff;
+    font-size: 42px;
+    font-weight: 500;
+    position: relative;
+}
+
+.hire-driver-item p {
+    color: #fff;
+    font-size: 23px;
+    line-height: 30px;
+    position: relative;
+}
+
+.opacity-overly {
+    background-color: #1D4354;
+}
+
+.owner-operator-bg {
+    position: relative;
+    height: 400px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.owner-operator-bg::before {
+    content: "";
+    background-image: url('../img/driver-getting.jpg');
+    background-size: cover;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    opacity: 0.5;
+}
+
+.owner-operator-title {
+    color: #2EC8C4;
+    font-family: "Akronim", Sans-serif;
+    font-size: 50px;
+    font-weight: 500;
+    position: relative;
+}
+
+.owner-operatot-text {
+    color: #FFFFFF;
+    font-size: 23px;
+    position: relative;
+}
+
+.white-bg-btn {
+    font-size: 16px;
+    font-weight: bold;
+    fill: #1D4354;
+    color: #1D4354;
+    background-color: #FFFFFF;
+    border-radius: 0px 0px 0px 0px;
+    padding: 15px 40px 15px 40px;
+    position: relative;
+    transition: all ease-in-out 0.4s;
+}
+
+.white-bg-btn:hover {
+    color: #2EC8C4;
+}
+
+.theme-bg-btn {
+    font-size: 16px;
+    font-weight: bold;
+    fill: #fff;
+    color: #fff;
+    background-color: #2EC8C4;
+    border-radius: 0px 0px 0px 0px;
+    padding: 15px 40px 15px 40px;
+    position: relative;
+    transition: all ease-in-out 0.4s;
+}
+
+.theme-bg-btn:hover {
+    background-color: #1D4354;
+}
+
+.get-feature-section {
+    position: relative;
+    height: 400px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.get-feature-section::before {
+    content: "";
+    background-image: url('../img/husband-and-wife-driving-team-checking-their-itine-RW6LREM.jpeg');
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    opacity: 0.45;
+    background-attachment: fixed;
+}
+
+.get-feature-section h1 {
+    color: #FFFFFF;
+    font-size: 40px;
+    text-transform: uppercase;
+    position: relative;
+}
+
+.get-feature-section p {
+    color: #FFFFFF;
+    font-size: 18px;
+    position: relative;
+}
+.news-letter-signup-sec{
+    height: 350px;
+    background-color: #17161A;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+.news-letter-signup-sec p{
+font-size: 16px;
+line-height: 30px;
+text-align: center;
+}
+/* muli crousal styling */
+.react-multi-carousel-dot button {
+    border-color: #2EC8C4 !important;
+    width: 15px !important;
+    height: 15px !important;
+}
+
+.react-multi-carousel-item {
+    margin-bottom: 20px !important;
+}
+
+.featured-companies {
+    border: none !important;
+    transition: all ease-in-out 0.5s;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.featured-companies:hover {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.my_job_listing .sc-jqUVSM:hover  {
+    background:#1b4454;
+    color: #ffffff;
+}
+.my_job_listing .sc-jqUVSM:active  {
+    background:#1b4454;
+    color: #ffffff;
 }

@@ -14,14 +14,14 @@ import Range from "../../../../components/location/Range";
 import AreasCovered from "../../../../components/areascovered/AreasCovered";
 import EmploymentType from "../../../../components/employment-type/Employment-Type";
 import TypeOfDelivery from "../../../../components/type-of-delivery/TypeOfDelivery";
-import ShowMoreEquipment from "../../../../components/show-more-equipment/ShowMoreEquipment";
+import Equipment from "../../../../components/equipment/Equipment";
 import Schedule from "../../../../components/schedule/Schedule";
 import PayStructure from "../../../../components/pay-structure/Pay-Structure";
 import SpecialEndorsementsRequired from "../../../../components/special-endorsements-required/Special-Endorsements-Required";
 import MvrRequirement from "../../../../components/mvr-requirements/MVR-Requirements";
 import PostedDate from '../../../../components/postedate/PostedDate'
 import JobsList from "../../../../components/find-jobs/job-list";
-
+import ResultCount from "../../../../components/find-jobs/result-count"
 export default function FindJobs() {
 
     const { t } = useTranslation();
@@ -118,7 +118,7 @@ export default function FindJobs() {
                                 < AreasCovered />
                                 < EmploymentType />
                                 < TypeOfDelivery />
-                                < ShowMoreEquipment />
+                                < Equipment />
                                 < Schedule />
                                 < PayStructure />
                                 < SpecialEndorsementsRequired />
@@ -129,18 +129,7 @@ export default function FindJobs() {
                 </Row>
                 <Row className='mt-5'>
                     <Col className='col-12 my-lg-0 my-4'>
-                        <div className="results-count mt-4 ">
-                            {t('SHOWING')} {
-                                pagingMeta.itemCount !== 0 &&
-                                <>
-                                    <span className="first">
-                                        {((pagingMeta.currentPage - 1) * pagingMeta.itemsPerPage) + 1}
-                                    </span> – <span className="last">
-                                        {(((pagingMeta.currentPage - 1) * pagingMeta.itemsPerPage) + pagingMeta.itemCount)}
-                                    </span> {t('OF')}
-                                </>
-                            } {pagingMeta.totalItems} {t('RESULT')}
-                        </div>
+                        <ResultCount />
                         < JobsList />
                     </Col>
                 </Row>

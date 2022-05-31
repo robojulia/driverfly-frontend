@@ -1,12 +1,9 @@
-import { updateQueryStringParameter } from "../../logics/utils"
-import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import { JobDeliveryType } from "../../enums/jobs/job-delivery-type.enum"
-import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
-import { Accordion } from 'react-bootstrap';
 import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
 import { useTranslation } from "../../hooks/useTranslation";
+import ViewMoreRadioFilter from "../find-jobs/filters/view-more-radio-filter"
 
 export default function TypeOfDelivery() {
   const { t } = useTranslation();
@@ -17,13 +14,11 @@ export default function TypeOfDelivery() {
     <>
 
       <FindJobFilterAccordion header={t("TYPE_OF_DELIVERY")}>
-        <EnumFilterByKeyValue
-          translate={true}
-          withAll={true}
-          enumArray={JobDeliveryType}
-          name="delivery_type"
+        <ViewMoreRadioFilter
           handleChange={handleChange}
-        />
+          name="delivery_type"
+          labelPrefix="JobDeliveryType"
+          enums={JobDeliveryType} />
       </FindJobFilterAccordion>
     </>
   )
