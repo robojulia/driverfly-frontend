@@ -1,4 +1,3 @@
-import axios from "axios"
 import 'bootstrap/dist/css/bootstrap.css'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from "react"
@@ -121,7 +120,17 @@ export default function FindJobs(props) {
   }
 
   const fetchJobs = async () => {
+
+    navigator.geolocation.getCurrentPosition(function(position) {
+      setFiltersByKeyValue("location", {
+        "lat": position.coords.latitude,
+        "long": position.coords.longitude,
+        "range": 1500
+      });
+    });
+
     const { items, meta } = await jobApi.search({ ...filters })
+    console.log({ items, meta, filters });
     setJobs(items)
     setPagingMeta(meta)
   }
