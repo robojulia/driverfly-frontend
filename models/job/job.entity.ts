@@ -92,7 +92,7 @@ export class JobEntity {
                     then: yup.number().max(100)
                 }).when("geography", {
                     is: JobGeography.REGIONAL,
-                    then: yup.number().max(1000)
+                    then: yup.number().max(1500)
                 }).when("geography", {
                     is: JobGeography.OTR,
                     then: yup.number().max(3000)
