@@ -1,5 +1,5 @@
 import React from 'react';
-import {Quote} from 'react-bootstrap-icons';
+import { ArrowLeft, ArrowRight, Quote } from 'react-bootstrap-icons';
 
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
@@ -12,25 +12,26 @@ export default class extends React.Component {
                 naturalSlideHeight={125}
                 totalSlides={5}
                 isPlaying
-                touchEnabled	
-                dragEnabled	
+                touchEnabled
+                dragEnabled
                 infinite
             >
                 <Slider className='Slider__container'>
                     <Slide index={0}>
-                        <div className="Slider_item">
-                            <div className="Slider_box">
-                                 <Quote />
-                                <img src="img/Robert-Driver.jpg" alt="" className="" />
-                                <h3>Robert Richards</h3>
-                                <span className="job text-theme">Tanker Hauler</span>
-                                <div className="description">Thanks guys you're awesome. Got a job and got moving in less than <br /> a week.</div>
+                        
+                            <div className="Slider_item">
+                                <div className="Slider_box">
+                                    <Quote />
+                                    <img src="img/Robert-Driver.jpg" alt="" className="" />
+                                    <h3>Robert Richards</h3>
+                                    <span className="job text-theme">Tanker Hauler</span>
+                                    <div className="description">Thanks guys you're awesome. Got a job and got moving in less than <br /> a week.</div>
+                                </div>
                             </div>
-                        </div>
                     </Slide>
                     <Slide index={1}> <div className="Slider_item">
                         <div className="Slider_box">
-                             <Quote />
+                            <Quote />
                             <img src="img/Robert-Driver.jpg" alt="" className="" />
                             <h3>Tanker Hauler</h3>
                             <span className="job text-theme">Robert Richards </span>
@@ -41,7 +42,7 @@ export default class extends React.Component {
                     <Slide index={2}>
                         <div className="Slider_item">
                             <div className="Slider_box">
-                                 <Quote />
+                                <Quote />
                                 <img src="img/Robert-Driver.jpg" alt="" className="" />
                                 <h3>Robert Richards</h3>
                                 <span className="job text-theme">Tanker Hauler</span>
@@ -49,11 +50,11 @@ export default class extends React.Component {
                             </div>
                         </div>
                     </Slide>
-                    
+
                     <Slide index={3}>
                         <div className="Slider_item">
                             <div className="Slider_box">
-                                 <Quote />
+                                <Quote />
                                 <img src="img/Robert-Driver.jpg" alt="" className="" />
                                 <h3>Robert Richards</h3>
                                 <span className="job text-theme">Tanker Hauler</span>
@@ -61,11 +62,11 @@ export default class extends React.Component {
                             </div>
                         </div>
                     </Slide>
-                    
+
                     <Slide index={4}>
                         <div className="Slider_item">
                             <div className="Slider_box">
-                                 <Quote />
+                                <Quote />
                                 <img src="img/Robert-Driver.jpg" alt="" className="" />
                                 <h3>Robert Richards</h3>
                                 <span className="job text-theme">Tanker Hauler</span>
@@ -73,12 +74,13 @@ export default class extends React.Component {
                             </div>
                         </div>
                     </Slide>
-                    
-                    
+
+
                 </Slider>
-                <ButtonBack className='Slider_owl-prev'>Back</ButtonBack>
-                <ButtonNext className='Slider_owl-next'>Next</ButtonNext>
+                <ButtonBack className='Slider_owl-prev'><ArrowLeft /></ButtonBack>
+                <ButtonNext className='Slider_owl-next'><ArrowRight /></ButtonNext>
             </CarouselProvider>
+
         );
     }
 }

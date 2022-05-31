@@ -1,0 +1,8 @@
+@media (max-width:991px){
+    .hire-driver-item {
+        width: 100% !important;
+    }
+    .hire-driver-section{
+        flex-direction: column !important;
+    }
+}
