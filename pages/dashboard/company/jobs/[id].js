@@ -515,7 +515,7 @@ export default function Job() {
                                     valueKey="id"
                                     labelKey="street"
                                     options={locations}
-                                    append={<Button variant="outline-secondary" disabled={!hasPermission("CanCreateLocation")} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
+                                    append={<Button variant="outline-secondary create_btn" disabled={!hasPermission("CanCreateLocation")} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
                                 />
                                 <BaseInput
                                     className="col-12"
@@ -901,8 +901,8 @@ export default function Job() {
                                                     <InputGroup.Text>{i + 1}</InputGroup.Text>
                                                 </>}
                                                 append={<>
-                                                    <Button variant="outline-secondary" disabled={!hasPermission("CanCreateVehicle")} onClick={() => setCreateVehicle(i)}><PlusCircle /> {t("CREATE")}</Button>
-                                                    <Button variant="outline-danger" onClick={() => form.setFieldValue("vehicles", form.values.vehicles.filter((v, idx) => i != idx))}><DashCircle /></Button>
+                                                    <Button variant="outline-secondary create_btn" disabled={!hasPermission("CanCreateVehicle")} onClick={() => setCreateVehicle(i)}><PlusCircle /> {t("CREATE")}</Button>
+                                                    <Button variant="outline-danger close_btn" onClick={() => form.setFieldValue("vehicles", form.values.vehicles.filter((v, idx) => i != idx))}><DashCircle /></Button>
                                                 </>}
                                             />
                                         </Row>))
