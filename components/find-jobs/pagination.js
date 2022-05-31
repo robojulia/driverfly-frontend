@@ -6,7 +6,7 @@ import { useTranslation } from "../../hooks/useTranslation"
 export default function Pagination() {
 
     const { state, method } = useContext(jobContext)
-    const { jobs, pagingMeta, filters } = state
+    const { pagingMeta, filters } = state
     const { setFilters, applyFilters } = method
     const { t } = useTranslation();
 
