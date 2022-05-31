@@ -879,7 +879,7 @@ input[type='range']:nth-child(1)::-webkit-slider-thumb {
 
 }
 
-.top-links-sec nav li:first-child:after {
+/* .top-links-sec nav li:first-child:after {
     content: ">";
     font-family: FontAwesome;
     font-style: normal;
@@ -888,6 +888,9 @@ input[type='range']:nth-child(1)::-webkit-slider-thumb {
     margin-left: 5px;
     color: #6a6a6a;
     margin: 0px 10px;
+} */
+.top-links-sec ol li .current_page{
+    color: #000;
 }
 
 .top-links-sec ol {

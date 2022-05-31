@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Layout from "../components/layouts";
 import FilterResult from '../components/filter-results/filter-results'
 import Owneroperator from '../public/css/Owneroperator.module.css'
-// import Breadcrumbs from 'nextjs-breadcrumbs';
+import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 import { useRouter } from 'next/router'
 
 export default function Owneroperators() {
@@ -22,7 +22,7 @@ export default function Owneroperators() {
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
                         <h2>Owner Operators</h2>
-                        {/* < Breadcrumbs /> */}
+                        < Breadcrumb />
                     </div>
                 </div>
             </div>

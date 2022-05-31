@@ -1,5 +1,5 @@
 import Link from 'next/link';
-// import Breadcrumbs from 'nextjs-breadcrumbs';
+import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 import Layout from "../components/layouts";
 
 export default function TermsAndPolicies() {
@@ -9,7 +9,7 @@ export default function TermsAndPolicies() {
               <div className="container">
                   <div className="top-links-inner d-flex align-items-center justify-content-between">
                       <h2>Terms And Policies</h2>
-                      {/* < Breadcrumbs /> */}
+                      < Breadcrumb />
                     </div>
                 </div>
             </div>
