@@ -51,7 +51,7 @@ export default function Range() {
 
     return (
         <>
-            <FindJobFilterAccordion header={t("location")}>
+            <FindJobFilterAccordion header={t("LOCATION")}>
                 <AsyncTypeahead
                     id="async-example"
                     name="location"
@@ -71,7 +71,7 @@ export default function Range() {
                 {
                     location &&
                     <>
-                        <div className='mt-3 text-info'>Radius: {range} miles</div>
+                        <div className='mt-3 text-info'>{t('RADIUS')}: {range} {t('MILES')}</div>
                         <RangeSlider
                             max={500}
                             value={range}

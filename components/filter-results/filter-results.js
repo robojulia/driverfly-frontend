@@ -14,7 +14,7 @@ import PostedDate from '../postedate/PostedDate'
 import Salary from '../salary/salary'
 import Schedule from '../schedule/Schedule'
 import Search from '../search/search'
-import ShowMoreEquipment from '../show-more-equipment/ShowMoreEquipment'
+import Equipment from '../equipment/Equipment'
 import SpecialAccommodations from '../special-accommodations/Special-Accommodations'
 import SpecialEndorsementsRequired from '../special-endorsements-required/Special-Endorsements-Required'
 import TypeOfDelivery from '../type-of-delivery/TypeOfDelivery'
@@ -38,19 +38,13 @@ export default function FilterResults() {
               <div className="accordion bg-transparent" id="accordionExample">
                 < Category />
                 < Range />
-                {/* < JobType /> */}
-                {/* < Salary /> */}
                 < PostedDate />
                 < AreasCovered />
-                {/* < FullParty /> */}
                 < EmploymentType />
                 < TypeOfDelivery />
-                {/* < AcceptingDriversFrom /> */}
-                < ShowMoreEquipment />
+                < Equipment />
                 < Schedule />
                 < PayStructure />
-                {/* < MinimumAge /> */}
-                {/* < SpecialAccommodations /> */}
                 < SpecialEndorsementsRequired />
                 < MvrRequirement />
               </div>

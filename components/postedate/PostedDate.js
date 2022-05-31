@@ -1,34 +1,30 @@
-
-import { updateQueryStringParameter } from "../../logics/utils"
-import { useRouter } from "next/router"
 import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import moment from "moment"
-import { Accordion } from 'react-bootstrap';
 import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
 import { useTranslation } from "../../hooks/useTranslation";
-
+import { JobDatePosted } from "../../enums/jobs/job-date-posted.enum"
+import ViewMoreRadioFilter from "../find-jobs/filters/view-more-radio-filter";
 
 export default function DatePosted() {
   const { t } = useTranslation();
   const { state, method } = useContext(jobContext)
   const { handleChange } = method
-  const { filters } = state
 
   function changeHandler(e) {
-    if (e.target.value == "lasthour") {
+    if (e.target.value == JobDatePosted.LAST_HOUR) {
       e.target.value = moment.utc().subtract(1, "hours").format("YYYY-MM-DD HH:mm:ss")
     }
-    else if (e.target.value == "lasttwentyfour") {
+    else if (e.target.value == JobDatePosted.LAST_24_HOURS) {
       e.target.value = moment.utc().subtract(24, "hours").format("YYYY-MM-DD HH:mm:ss")
     }
-    else if (e.target.value == "lastseven") {
+    else if (e.target.value == JobDatePosted.LAST_7_DAYS) {
       e.target.value = moment.utc().subtract(7, "days").format("YYYY-MM-DD HH:mm:ss")
     }
-    else if (e.target.value == "lastfourteen") {
+    else if (e.target.value == JobDatePosted.LAST_14_DAYS) {
       e.target.value = moment.utc().subtract(14, "days").format("YYYY-MM-DD HH:mm:ss")
     }
-    else if (e.target.value == "lastthirty") {
+    else if (e.target.value == JobDatePosted.LAST_30_DAYS) {
       e.target.value = moment.utc().subtract(30, "days").format("YYYY-MM-DD HH:mm:ss")
     }
     else {
@@ -39,33 +35,12 @@ export default function DatePosted() {
 
   return (
     <>
-
       <FindJobFilterAccordion header={t("POST_DATE")}>
-        <div onChange={changeHandler} className="App">
-          <div className="topping pt-2">
-            <input
-              defaultChecked={(!filters.date_created) || (filters.date_created == "")}
-              type="radio"
-              id="all"
-              name="date_created"
-              value="" />All
-          </div>
-          <div className="topping pt-2">
-            <input type="radio" id="lasthour" name="date_created" value="lasthour" />Last Hour
-          </div>
-          <div className="topping pt-2">
-            <input type="radio" id="lasttwentyfour" name="date_created" value="lasttwentyfour" />Last 24 Hour
-          </div>
-          <div className="topping pt-2">
-            <input type="radio" id="lastseven" name="date_created" value="lastseven" />Last 7 days
-          </div>
-          <div className="topping pt-2">
-            <input type="radio" id="lastfourteen" name="date_created" value="lastfourteen" /> Last 14 days
-          </div>
-          <div className="topping pt-2">
-            <input type="radio" id="lastthirty" name="date_created" value="lastthirty" />Last 30 days
-          </div>
-        </div>
+        <ViewMoreRadioFilter
+          handleChange={changeHandler}
+          name="date_created"
+          labelPrefix="JobDatePosted"
+          enums={JobDatePosted} />
       </FindJobFilterAccordion>
     </>
   )

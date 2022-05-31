@@ -66,8 +66,7 @@ export default function Index() {
                             <div className="hero-search">
                                 <div className="input-group w-25">
                                     <div className="input-group-prepend">
-                                        {/* <i className="fa fa-search" aria-hidden="true"></i> */}
-                                        < Search  className='home_search'/>
+                                        < Search className='home_search' />
                                     </div>
                                     <input
                                         onKeyPress={searchHandler}
@@ -79,25 +78,17 @@ export default function Index() {
                                         aria-label=""
                                         aria-describedby="basic-addon1" />
                                 </div>
-                                {/* <div className="filter-inner d-flex align-items-center pl-3">
-                                    <i className="fa fa-map-marker" aria-hidden="true"></i>
-                                    <input
-                                        type="text"
-                                        className="form-control border-0"
-                                        placeholder="Location" />
-                                    <span className="find-me"></span>
-                                </div> */}
                                 <select
                                     name='employment_type'
                                     onChange={handleChange}
                                     className=" form-control  form-select custom-sel"
                                     aria-label="Default select example"
                                     id="exampleFormControlSelect1">
-                                    <option className='selectbg'>All Types</option>
-                                    {Object.keys(JobEmploymentType).map((key, index) => {
+                                    <option className='selectbg'>{t('ALL_TYPES')}</option>
+                                    {Object.values(JobEmploymentType).map((value, index) => {
                                         return (
-                                            <option key={index} value={key}>
-                                                {t(JobEmploymentType[key].toLowerCase())}
+                                            <option key={index} value={value}>
+                                                {t("JobEmploymentType." + value)}
                                             </option>
                                         )
                                     })}
@@ -108,11 +99,11 @@ export default function Index() {
                                     className="form-select custom-sel border-0"
                                     aria-label="Default select example"
                                     id="exampleFormControlSelect1">
-                                    <option>All Categories</option>
-                                    {Object.keys(DriverLicenseType).map((key, index) => {
+                                    <option>{t('ALL_CATEGORIES')}</option>
+                                    {Object.values(DriverLicenseType).map((value, index) => {
                                         return (
-                                            <option key={index} value={key}>
-                                                {t(DriverLicenseType[key].toLowerCase())}
+                                            <option key={index} value={value}>
+                                                {t("DriverLicenseType." + value)}
                                             </option>
                                         )
                                     })}
@@ -121,7 +112,7 @@ export default function Index() {
                                     <button
                                         onClick={handleSubmit}
                                         className="btn-submit btn btn-block btn-theme"
-                                        type="button">Search</button>
+                                        type="button">{t('SEARCH')}</button>
                                 </div>
                             </div>
 
