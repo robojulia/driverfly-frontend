@@ -75,6 +75,11 @@ export default function JobsList() {
                 ))}
 
                 <Pagination />
+                <div className="jumbotron my-4">
+                    <p className="lead">
+                        {t('CANT_FIND_WHAT_YOU_WANT')}
+                    </p>
+                </div>
             </div>
 
         </>

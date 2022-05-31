@@ -11,10 +11,10 @@ export default function Header() {
             <header>
                 <div className="header-sec">
                     <div className="container-fluid">
-                        <nav className="navbar navbar-expand-lg navbar p-0">
+                        {/* <nav className="navbar navbar-expand-lg navbar p-0"> */}
                             <Logo />
                             <Nav />
-                        </nav>
+                        {/* </nav> */}
 
                     </div>
                 </div>

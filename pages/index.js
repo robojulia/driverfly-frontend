@@ -81,14 +81,6 @@ export default function Index() {
                     aria-describedby="basic-addon1"
                   />
                 </div>
-                {/* <div className="filter-inner d-flex align-items-center pl-3">
-                                    <i className="fa fa-map-marker" aria-hidden="true"></i>
-                                    <input
-                                        type="text"
-                                        className="form-control border-0"
-                                        placeholder="Location" />
-                                    <span className="find-me"></span>
-                                </div> */}
                 <select
                   name="employment_type"
                   onChange={handleChange}
@@ -104,7 +96,6 @@ export default function Index() {
                       </option>
                     );
                   })}
-                  <Arrow90degDown />
                 </select>
                 <select
                   name="cdl_class"
@@ -131,7 +122,6 @@ export default function Index() {
                   </button>
                 </div>
               </div>
-
               <TrendingWords />
             </div>
           </div>
