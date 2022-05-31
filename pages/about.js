@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Layout from "../components/layouts";
-// import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
+import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 import Slider from '../components/testominial-slider/Slider';
 import { FileEarmarkZip, Funnel, CheckSquare, Bell, Trophy, HandIndexThumb} from 'react-bootstrap-icons';
 
@@ -17,7 +17,7 @@ export default function About()
                 <div className="container p-0">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
                         <h2>About</h2>
-                       {/* < Breadcrumb/> */}
+                       < Breadcrumb/>
                     </div>
                 </div>
             </div>
