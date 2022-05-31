@@ -22,6 +22,13 @@ export default function FindSchools(props) {
     const schoolApi = new SchoolApi();
 
     const [schools, setSchools] = useState([]);
+    const [pagingMeta, setPagingMeta] = useState({
+        currentPage: 1,
+        itemCount: 0,
+        itemsPerPage: 0,
+        totalItems: 0,
+        totalPages: 1
+    })
     const [filters, setFilters] = useState({
         ...params
     })
@@ -82,7 +89,7 @@ export default function FindSchools(props) {
     const fetchSchools = async () => {
         const { items, meta } = await schoolApi.search({ ...filters })
         setSchools(items)
-        console.log(items);
+        setPagingMeta(meta)
     }
 
     useEffect(fetchSchools, [filters])
@@ -101,10 +108,12 @@ export default function FindSchools(props) {
         <schoolContext.Provider value={{
             state: {
                 schools,
+                pagingMeta,
                 filters
             },
             method: {
                 handleChange,
+                setPagingMeta,
                 setFilters,
                 applyFilters: fetchSchools
             },
