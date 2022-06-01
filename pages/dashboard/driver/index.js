@@ -68,17 +68,14 @@ export default function Dashboard() {
             <div className="job_info_container">
 
                 <Container fluid className='pt-5'>
-                    <Row className='justify-content-center text-center d-block'>
-                        <Col lg={3} md={3} col={12} className={`p-5 mr-3 bg_yellow w-24  ${style.job_info_container}`} >
+                    <Row className='justify-content-center text-center d-flex'>
+                        <div className={` py-5 bg_yellow w-23  ${style.job_info_container}`} >
                             <h2 className="text-white font-weight-bolder">
                                 {stats[ApplicantStatus.APPLIED] || "0"}
                             </h2>
                             <h3 className="font-weight-bolder">{t("ApplicantStatus.APPLIED")}</h3>
-                            {/* <Link href="#">
-                                <button className={` mt-3 text-white ${style.btn_blue}`}>{t("view")}</button>
-                            </Link> */}
-                        </Col>
-                        <Col lg={3} md={3} col={12} className={`p-5 mr-3 bg_green w-24   ${style.job_info_container}`}>
+                        </div>
+                        <div className={` py-5 bg_green w-23   ${style.job_info_container}`}>
                             <h2 className={`font-weight-bolder  ${style.text_yellow}`}>
                                 {stats[ApplicantStatus.SHORTLISTED] || "0"}
                             </h2>
@@ -86,8 +83,8 @@ export default function Dashboard() {
                             {/* <Link href="#">
                                 <button className={` mt-3 text-white ${style.btn_blue}`}>{t("view")}</button>
                             </Link> */}
-                        </Col>
-                        <Col lg={3} md={3} col={12} className={`p-5 mr-3 bg_blue w-24   ${style.job_info_container}`} >
+                        </div>
+                        <div className={` py-5 bg_blue w-23   ${style.job_info_container}`} >
                             <h2 className={`font-weight-bolder  ${style.text_yellow}`}>
                                 {stats[ApplicantStatus.HIRED] || "0"}
                             </h2>
@@ -95,8 +92,8 @@ export default function Dashboard() {
                             {/* <Link href="#">
                                 <button className={` mt-3 text-dark ${style.btn_green}`}>{t("view")}</button>
                             </Link> */}
-                        </Col>
-                        <Col lg={3} md={3} col={12} className={`p-5 mr-3 myrtlegreen w-24   ${style.job_info_container}`}>
+                        </div>
+                        <div className={` py-5 myrtlegreen w-23   ${style.job_info_container}`}>
                             <h2 className="text-white font-weight-bolder">
                                 {stats[ApplicantStatus.REJECTED] || "0"}
                             </h2>
@@ -104,7 +101,7 @@ export default function Dashboard() {
                             {/* <Link href="#">
                                 <button className={` mt-3 text-dark ${style.btn_green}`}>{t("view")}</button>
                             </Link> */}
-                        </Col>
+                        </div>
                     </Row>
                 </Container>
 
@@ -112,15 +109,15 @@ export default function Dashboard() {
 
             <div className=''>
                 <Row>
-                    <Col>
+                    <div>
                         {/* <h2 className='font-weight-bold my-3'>{t("current_job")}</h2> */}
-                    </Col>
+                    </div>
                 </Row>
                 <div className="table-responsive">
                     <table className="table table-borderless ">
                         <thead>
                             <tr>
-                                <th scope="col">
+                                <th scope="col w-100">
                                     {t("cdl_class_type")}
                                 </th>
                                 <th scope="col">
