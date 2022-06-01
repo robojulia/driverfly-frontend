@@ -958,7 +958,7 @@ export default function Job() {
                                         name="min_years_experience"
                                         placeholder="min_years_experience"
                                         min="0"
-                                        type="int"
+                                        type="number"
                                         formik={form}
                                     />
                                     <BaseSelect
