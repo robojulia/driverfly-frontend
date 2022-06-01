@@ -51,6 +51,7 @@ export default function Index() {
     <>
       <Head>
         <title>Home - DriverFly</title>
+        <link rel="icon" href="/img/DriverFly-Official-Favicon.png" />
       </Head>
 
       <section className="hero-sec">
