@@ -356,6 +356,8 @@
     "night_shift": "Night shift",
     "other_schedule": "Other schedule",
     "JobDeliveryType": {
+        "LTL": "LTL",
+        "FINAL_MILE": "Final Mile",
         "NO_TOUCH": "No touch",
         "TOUCH": "Touch",
         "LIVE_UNLOADS": "Live unloads",
