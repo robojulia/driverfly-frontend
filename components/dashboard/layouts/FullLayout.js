@@ -88,7 +88,7 @@ const FullLayout = ({ children }) => {
           name="description"
           content="Ample Admin Next Js Aadmin Dashboard "
         />
-        <link rel="icon" href="/favicon.ico" />
+         <link rel="icon" href="/img/DriverFly-Official-Favicon.png" />
       </Head>
       <div className="header">
         <div className="contentArea ">
