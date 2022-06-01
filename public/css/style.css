@@ -1154,7 +1154,7 @@ img.who-we-img.img-fluid {
     font-size: 18px !important;
     position: absolute;
     right: 0;
-    top: 45%;
+    top: 40%;
 
 }
 
@@ -1176,11 +1176,29 @@ img.who-we-img.img-fluid {
     margin: 100px 10px 20px;
     box-shadow: 1px 1px 4px 0 rgb(0 0 0 / 9%);
 }
+.Slider-container-bg::before{
+    content: '';
+    background: #fff;
+    height: 200px;
+    width: 80%;
+    display: inline-block;
+    position: absolute;
+    top: 128px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    bottom: 0;
+    box-shadow: 1px 1px 4px 0 rgb(0 0 0 / 9%);
+    border-radius: 4px;
+}
 
 .Slider_box {
     background: white;
     position: relative;
     text-align: center;
+    width: 70%;
+    border-radius: 4px;
     padding: 45px 45px 30px;
     margin: 100px 10px 20px;
     box-shadow: 1px 1px 4px 0 rgb(0 0 0 / 9%);
@@ -1198,11 +1216,12 @@ img.who-we-img.img-fluid {
 
 .Slider_box svg {
     color: #2da2af !important;
-    font-size: 55px;
+    font-size: 100px;
     position: absolute;
-    top: -33px;
+    top: -51px;
     left: 35px;
     z-index: -1;
+    font-weight: bold;
 }
 
 
@@ -1480,7 +1499,7 @@ img.who-we-img.img-fluid {
     font-size: 18px !important;
     position: absolute;
     left: 0;
-    top: 45%;
+    top: 40%;
 }
 
 .Slider_owl-prev:hover,
