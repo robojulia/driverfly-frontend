@@ -1,18 +1,13 @@
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 import React, { useEffect, useState } from 'react';
 import RangeSlider from 'react-bootstrap-range-slider';
-import { useContext } from "react"
-import jobContext from "../../context/jobContext"
 import { AsyncTypeahead } from 'react-bootstrap-typeahead'; // ES2015
-import { ChevronDown } from 'react-bootstrap-icons'
-import { Accordion } from 'react-bootstrap';
-import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
-import { useTranslation } from "../../hooks/useTranslation";
+import FindJobFilterAccordion from '../../find-jobs-accordion/find-job-filter-accordion';
 
 
-export default function Range() {
-    const { t } = useTranslation();
-    const { state, method } = useContext(jobContext)
+export default function Range(props) {
+
+    const { t, state, method } = props
     const { filters } = state
     const { setFilters } = method
 
