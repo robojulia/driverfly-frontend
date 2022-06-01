@@ -61,7 +61,7 @@ export default function Filters() {
                             < EmploymentType t={t} state={state} method={method} />
                             < TypeOfDelivery t={t} state={state} method={method} />
                             < Equipment t={t} state={state} method={method} />
-                            <TransmissionType t={t} state={state} method={method} />
+                            < TransmissionType t={t} state={state} method={method} />
                             < Schedule t={t} state={state} method={method} />
                             < PayStructure t={t} state={state} method={method} />
                             < SpecialEndorsementsRequired t={t} state={state} method={method} />
