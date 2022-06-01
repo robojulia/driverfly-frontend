@@ -22,6 +22,7 @@ export default function Category() {
               translate={true}
               withAll={true}
               enumArray={DriverLicenseType}
+              labelPrefix="DriverLicenseType"
               name="cdl_class"
               handleChange={handleChange}
             />

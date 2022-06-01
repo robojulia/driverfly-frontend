@@ -1,4 +1,3 @@
-import axios from "axios"
 import 'bootstrap/dist/css/bootstrap.css'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from "react"
@@ -12,6 +11,7 @@ import BaseApi from "./api/_baseApi"
 import JobApi from "./api/job"
 import { updateQueryStringParameter } from "../logics/utils"
 import Sort from "../components/find-jobs/sort"
+import ResultCount from "../components/find-jobs/result-count"
 
 export default function FindJobs(props) {
 
@@ -120,7 +120,17 @@ export default function FindJobs(props) {
   }
 
   const fetchJobs = async () => {
+
+    navigator.geolocation.getCurrentPosition(function(position) {
+      setFiltersByKeyValue("location", {
+        "lat": position.coords.latitude,
+        "long": position.coords.longitude,
+        "range": 1500
+      });
+    });
+
     const { items, meta } = await jobApi.search({ ...filters })
+    console.log({ items, meta, filters });
     setJobs(items)
     setPagingMeta(meta)
   }
@@ -162,18 +172,7 @@ export default function FindJobs(props) {
 
               {/* <Location /> */}
 
-              <div className="results-count mt-4 ">
-                Showing {
-                  pagingMeta.itemCount !== 0 &&
-                  <>
-                    <span className="first">
-                      {((pagingMeta.currentPage - 1) * pagingMeta.itemsPerPage) + 1}
-                    </span> – <span className="last">
-                      {(((pagingMeta.currentPage - 1) * pagingMeta.itemsPerPage) + pagingMeta.itemCount)}
-                    </span> of
-                  </>
-                } {pagingMeta.totalItems} results
-              </div>
+              <ResultCount />
 
               <div className="filter-btn-groups mt-3">
                 <Sort />

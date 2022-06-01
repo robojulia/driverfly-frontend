@@ -8,80 +8,72 @@ import { useTranslation } from "../../hooks/useTranslation";
 import { Bell, List } from 'react-bootstrap-icons';
 import React from "react";
 import { Nav, Navbar, NavDropdown } from "react-bootstrap";
-
 import "bootstrap/dist/css/bootstrap.min.css";
-
-
-
 export default function MyNav() {
     const { authCheck } = useAuth();
     const { t } = useTranslation();
     return (
         <>
             <Navbar collapseOnSelect expand="lg" variant="dark">
-                <Navbar.Brand>
-
-                </Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="mr-auto">
                         <Nav.Link className="nav-item ml-30">
                             <Link href="/">
-                                <div>{t("HOME")}</div>
+                                <div href="/" className="">{t("HOME")}</div >
                             </Link>
                         </Nav.Link>
                         <Nav.Link className="nav-item ml-30">
                             <Link href="/about">
-                                <div>{t("ABOUT_US")}</div>
+                                <div href="/about" className="">{t("ABOUT_US")}</div >
                             </Link>
                         </Nav.Link>
                         <Nav.Link className="nav-item ml-30">
                             <Link href="/find-jobs">
-                                <div>{t("FIND_A_Job")}</div>
+                                <div href="/find-jobs" className="">{t("FIND_A_Job")}</div >
                             </Link>
                         </Nav.Link >
                         <NavDropdown title="Driver Resources" id="collasible-nav-dropdown" >
                             <NavDropdown.Item>
                                 <Link href="/faq">
-                                    <div className="dropdown-item">{t("FAQ")}</div>
+                                   <a className="dropdown-item" href="/faq" >{t("FAQ")}</a>
                                 </Link>
                             </NavDropdown.Item>
                             <NavDropdown.Item >
                                 <Link href="/">
-                                    <div className="dropdown-item" href="#">{t("GET_YOUR_CDL")} </div>
+                                   <a className="dropdown-item" href="/">{t("GET_YOUR_CDL")} </a>
                                 </Link>
                             </NavDropdown.Item>
                             <NavDropdown.Item >
                                 <Link href="/owner-operators">
-                                    <div className="dropdown-item"> {t("OWNER_OPERATORS")} </div>
+                                   <a className="dropdown-item" href="/owner-operators"> {t("OWNER_OPERATORS")} </a>
                                 </Link>
                             </NavDropdown.Item>
                         </NavDropdown>
                         <NavDropdown title="Motor Carrier Solutions" id="collasible-nav-dropdown" >
                             <NavDropdown.Item>
                                 <Link href="http://go.driverfly.co/">
-                                    <div className="dropdown-item">{t("OUR_SOLUTION")}  </div>
+                                   <a className="dropdown-item" href="http://go.driverfly.co/">{t("OUR_SOLUTION")}  </a>
                                 </Link>
                             </NavDropdown.Item>
                             <NavDropdown.Item >
                                 <Link href="http://go.driverfly.co/motor-carriers">
-                                    <div className="dropdown-item">{t("OPTIOS_&_PRICING")} </div>
+                                   <a className="dropdown-item"  href="http://go.driverfly.co/motor-carriers">{t("OPTIOS_&_PRICING")} </a>
                                 </Link>
                             </NavDropdown.Item>
                             <NavDropdown.Item >
                                 <Link href="http://go.driverfly.co/sign-up">
-                                    <div className="dropdown-item">{t("REQUESR_AQUOTE")} </div>
+                                   <a className="dropdown-item" href="http://go.driverfly.co/sign-up">{t("REQUESR_AQUOTE")} </a>
                                 </Link>
                             </NavDropdown.Item>
-
                             <NavDropdown.Item >
                                 <Link href="https://digitalhiringapp.com/">
-                                    <div className="dropdown-item">{t("FREE_DIGITAL_APPLICATION")} </div>
+                                   <a className="dropdown-item" href="https://digitalhiringapp.com/">{t("FREE_DIGITAL_APPLICATION")} </a>
                                 </Link>
                             </NavDropdown.Item>
                             <NavDropdown.Item >
                                 <Link href="/third-party-resources">
-                                    <div className="dropdown-item" href="#"> {t("THIRD_PARTY_RESOURCES")} </div>
+                                   <a className="dropdown-item" href="/third-party-resources"> {t("THIRD_PARTY_RESOURCES")} </a>
                                 </Link>
                             </NavDropdown.Item>
                         </NavDropdown>
@@ -100,11 +92,8 @@ export default function MyNav() {
                             </>}
                     </ul>
                 </Navbar.Collapse>
-
             </Navbar>
             
-
-
         </>
     )
 }

@@ -19,14 +19,15 @@ export default function EnumFilterByKeyValue(props) {
                         value="" /> All
                 </div>
             }
-            {Object.keys(props.enumArray).map((key) => {
+            {Object.values(props.enumArray).map((value) => {
                 return (
-                    <div key={key} className="topping pt-2">
+                    <div key={value} className="topping pt-2">
                         <input
+                            defaultChecked={(filters[props.name]) && (filters[props.name] == value)}
                             onChange={props.handleChange}
                             type="radio"
                             name={props.name}
-                            value={key} /> {props.translate ? t(props.enumArray[key].toLowerCase()) : props.enumArray[key]}
+                            value={value} /> {props.translate ? t((props.labelPrefix ? props.labelPrefix + "." : "") + value) : value}
                     </div>
                 )
             })}
