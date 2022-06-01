@@ -139,12 +139,6 @@ a:hover {
     background-color: #2da2af !important;
     border-color: #2da2af !important;
 }
-
-/* button.btn.btn-danger:hover {
-    background: #c4c4c4;
-    border-color: #c4c4c4;
-} */
-
 .container {
     max-width: 1170px;
 }
@@ -251,12 +245,6 @@ h2 {
     background: #1D4354 !important;
     border-color: #1D4354;
     border: 1px solid #1D4354;
-    /*
-    2022-04-28  kom     Remove override of bootstrap default padding
-                        - All buttons requiring this padding should implement a newly created class (eg .btn-primary_padded) with the below settings
-    */
-    /* padding: 15px 30px !important;
-    border-radius: 3px; */
     border-color: #0062cc00 !important;
 }
 
@@ -277,11 +265,6 @@ li:hover ul {
 .filter-sec {
     padding: 30px 0px;
 }
-
-/* .form-control {
-     height: 50px;
-     padding: 12px 30px;
- } */
 .heading-label {
     font-size: 20px;
 }
@@ -408,18 +391,6 @@ li:hover ul {
 .show-more:focus {
     color: #2da2af;
 }
-
-/*
-2022-04-28  kom     Remove override of bootstrap default padding
-                    - All buttons requiring this padding should implement a newly created class (eg .btn-danger_padded) with the below settings
-*/
-/* .btn.btn-danger {
-    background: #2da2af;
-    border-color: #2da2af;
-    font-size: 16px;
-    padding: 20px 40px;
-} */
-
 .btn.btn-danger_padded {
     background: #2da2af;
     border-color: #2da2af;
@@ -526,8 +497,6 @@ li:hover ul {
 .btn.btn-outline-danger {
     color: #2da2af;
     border-color: #2da2af;
-    /* KN: please implement these in a different class name */
-    /* padding: 12px 26px; */
 }
 
 .btn.btn-outline-danger:hover {
@@ -615,7 +584,6 @@ span.urgent {
 }
 
 .page-numbers:hover {
-    /* background: #2da2af; */
     background: #357694 !important;
     transition: all 0.3s;
     text-decoration: none;
@@ -634,48 +602,6 @@ input[type='range']::-webkit-slider-runnable-track {
 input[type='range']::-webkit-slider-thumb {
     border-color: #2EC8C4;
 }
-
-/* KN: do not override base controls, create custom class if these are needed for specific controls and implement */
-/* input[type='range'] {
-    width: 210px;
-    height: 30px;
-    overflow: hidden;
-    cursor: pointer;
-    outline: none;
-}
-
-input[type='range'],
-input[type='range']::-webkit-slider-runnable-track,
-input[type='range']::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    background: none;
-}
-
-input[type='range']::-webkit-slider-runnable-track {
-    width: 200px;
-    height: 6px;
-    background: #2EC8C4;
-}
-
-input[type='range']:nth-child(2)::-webkit-slider-runnable-track {
-    background: none;
-}
-
-input[type='range']::-webkit-slider-thumb {
-    position: relative;
-    height: 15px;
-    width: 15px;
-    margin-top: -5px;
-    background: #fff;
-    border: 1px solid #2EC8C4;
-    border-radius: 25px;
-    z-index: 1;
-}
-
-input[type='range']:nth-child(1)::-webkit-slider-thumb {
-    z-index: 2;
-} */
-
 .rangeslider {
     position: relative !important;
     height: 60px;
@@ -901,17 +827,6 @@ input[type='range']:nth-child(1)::-webkit-slider-thumb {
     text-transform: capitalize;
 
 }
-
-/* .top-links-sec nav li:first-child:after {
-    content: ">";
-    font-family: FontAwesome;
-    font-style: normal;
-    font-weight: normal;
-    text-decoration: inherit;
-    margin-left: 5px;
-    color: #6a6a6a;
-    margin: 0px 10px;
-} */
 .top-links-sec ol li .current_page{
     color: #000;
 }
@@ -1146,28 +1061,6 @@ input[type='range']:nth-child(1)::-webkit-slider-thumb {
 .about_work svg {
     margin: 0 auto;
 }
-
-/* i.fa.fa-file-archive-o,
-i.fa.fa-filter,
-i.fa.fa-paper-plane,
-i.fa.fa-bell-o,
-i.fa.fa-trophy,
-i.fa.fa-hand-peace-o,
-i.fa.fa-pencil,
-i.fa.fa-file-audio-o {
-    content: "\f131";
-    color: #4aa2af;
-}
-i.fa.fa-file-archive-o,
-i.fa.fa-filter,
-i.fa.fa-paper-plane,
-i.fa.fa-bell-o,
-i.fa.fa-trophy,
-i.fa.fa-hand-peace-o,
-i.fa.fa-pencil,
-i.fa.fa-file-audio-o {
-    font-size: 60px;
-} */
 .how-it-work-sec .card,
 .driver-sec .card {
     text-align: center;
@@ -1200,10 +1093,6 @@ i.fa.fa-file-audio-o {
     color: #2ec8c4;
     margin: 30px 0px 50px;
 }
-
-/*.who-we-serve-sec img{
-     min-height: 800px;
- }*/
 .who-we-serve-inner {
     margin-bottom: 35px;
     min-height: 235px;
@@ -1806,13 +1695,6 @@ img.who-we-img.img-fluid {
 .icon.text-theme {
     margin-right: 15px;
 }
-
-/* kn: please implement this in another class name */
-/* .sidebar .btn.btn-danger {
-    padding: 15px 40px;
-    width: 100%;
-} */
-
 .socials-apply .title {
     text-align: center;
     margin: 10px 0 31px;
@@ -2087,18 +1969,6 @@ img.who-we-img.img-fluid {
     .tab-sec .truck-img {
         width: 80px !important;
     }
-
-    i.fa.fa-file-archive-o,
-    i.fa.fa-filter,
-    i.fa.fa-paper-plane,
-    i.fa.fa-bell-o,
-    i.fa.fa-trophy,
-    i.fa.fa-hand-peace-o,
-    i.fa.fa-pencil,
-    i.fa.fa-file-audio-o {
-        font-size: 40px;
-    }
-
     .custom-tst .item {
         width: 100%;
     }
@@ -2271,9 +2141,6 @@ img.who-we-img.img-fluid {
     }
 }
 
-/* .owl-carousel .owl-dots.disabled, .owl-carousel .owl-nav.disabled {
-     display: block !important;
- } */
 .about-testominial .owl-nav .disabled {
     display: none !important;
 }
