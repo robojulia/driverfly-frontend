@@ -140,10 +140,10 @@ a:hover {
     border-color: #2da2af !important;
 }
 
-button.btn.btn-danger:hover {
+/* button.btn.btn-danger:hover {
     background: #c4c4c4;
     border-color: #c4c4c4;
-}
+} */
 
 .container {
     max-width: 1170px;
@@ -2399,7 +2399,22 @@ li.link-wrapper>a.active {
 .home_search {
     color: #C5C5C5;
 }
-
+.create_btn{
+    background-color: #1D4354 !important;
+    color: #fff !important;
+}
+.close_btn{
+    background-color: #dc3545 !important;
+    color: #fff !important;
+    border-color: #dc3545 !important;
+}
+.my_btn_secondary{
+    background: #5c636a !important;
+    color: #fff !important;
+}
+.select_dropdown .dropdown-item:hover {
+   color: #5c636a !important;
+}
 /* new css code */
 .hire-driver-bg {
     background: #D1DDDD;
