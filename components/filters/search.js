@@ -6,10 +6,9 @@ import { updateQueryStringParameter } from "../../logics/utils"
 
 export default function Search(props) {
 
-  const { state, method } = useContext(jobContext)
+  const { t, state, method } = props
   const { filters } = state
   const { setFilters, applyFilters } = method
-  const { t } = useTranslation();
 
   const searchHandler = e => {
     if (e.key === 'Enter') {
