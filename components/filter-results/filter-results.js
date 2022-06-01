@@ -14,6 +14,7 @@ import TypeOfDelivery from '../filters/type-of-delivery'
 import Range from "../filters/location/range"
 import { useTranslation } from '../../hooks/useTranslation'
 import jobContext from '../../context/jobContext'
+import TransmissionType from '../filters/vehicle-transmission-type'
 
 
 
@@ -38,6 +39,7 @@ export default function FilterResults() {
                 < EmploymentType t={t} state={state} method={method} />
                 < TypeOfDelivery t={t} state={state} method={method} />
                 < Equipment t={t} state={state} method={method} />
+                <TransmissionType t={t} state={state} method={method} />
                 < Schedule t={t} state={state} method={method} />
                 < PayStructure t={t} state={state} method={method} />
                 < SpecialEndorsementsRequired t={t} state={state} method={method} />

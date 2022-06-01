@@ -16,6 +16,7 @@ import Search from '../../../filters/search'
 import { Container, Row, Col, Offcanvas, Button } from 'react-bootstrap';
 import Sort from '../../../find-jobs/sort'
 import { Filter } from 'react-bootstrap-icons'
+import TransmissionType from '../../../filters/vehicle-transmission-type'
 
 
 
@@ -60,6 +61,7 @@ export default function Filters() {
                             < EmploymentType t={t} state={state} method={method} />
                             < TypeOfDelivery t={t} state={state} method={method} />
                             < Equipment t={t} state={state} method={method} />
+                            <TransmissionType t={t} state={state} method={method} />
                             < Schedule t={t} state={state} method={method} />
                             < PayStructure t={t} state={state} method={method} />
                             < SpecialEndorsementsRequired t={t} state={state} method={method} />

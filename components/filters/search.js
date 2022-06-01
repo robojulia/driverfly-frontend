@@ -1,8 +1,3 @@
-import { useRouter } from "next/router"
-import { useContext } from "react"
-import jobContext from "../../context/jobContext"
-import { useTranslation } from "../../hooks/useTranslation"
-import { updateQueryStringParameter } from "../../logics/utils"
 
 export default function Search(props) {
 
