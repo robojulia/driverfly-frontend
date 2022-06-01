@@ -41,7 +41,7 @@ export default function ViewModal(props) {
                 </h4>
             }
             {props.header}
-            <Button variant="secondary" onClick={props.onCloseClick ?? hideModelHandler}>
+            <Button variant="" onClick={props.onCloseClick ?? hideModelHandler}>
                 <XLg /> {t(props.closeText || "CLOSE")}
             </Button>
         </Modal.Header>

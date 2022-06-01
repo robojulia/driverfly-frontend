@@ -100,10 +100,10 @@ export default function ViewDataTable(props) {
                         <Dropdown
                             autoClose="outside"
                         >
-                            <Dropdown.Toggle variant="secondary">
+                            <Dropdown.Toggle variant="" className="my_btn_secondary">
                                 <Gear />
                             </Dropdown.Toggle>
-                            <Dropdown.Menu>
+                            <Dropdown.Menu className="select_dropdown">
                                 {
                                     columns.filter(v => !!v.name).map((v, i) => (
                                         <Dropdown.Item disabled={v.hidable === false} key={i} onClick={() => onColumnHide(i)}>
