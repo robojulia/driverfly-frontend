@@ -521,6 +521,7 @@
     "VEHICLES": "Vehicles",
     "TRAILER": "Trailer",
     "TRANSMISSION": "Transmission",
+    "TRANSMISSION_TYPE": "Transmission Type",
     "MAKE": "Make",
     "PHOTO": "Photo",
     "TYPE": "Type",

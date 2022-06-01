@@ -1,19 +1,17 @@
-import { useContext } from "react"
-import jobContext from "../../context/jobContext"
 import { MvrType } from "../../enums/users/mvr-type.enum"
 import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
-import { useTranslation } from "../../hooks/useTranslation";
-import ViewMoreRadioFilter from "../find-jobs/filters/view-more-radio-filter"
+import ViewMoreRadioFilter from "./view-more-radio-filter";
 
-export default function MvrRequirement() {
-  const { t } = useTranslation();
-  const { state, method } = useContext(jobContext)
+export default function MvrRequirement(props) {
+
+  const { t, state, method } = props
   const { handleChange } = method
 
   return (
     <>
       <FindJobFilterAccordion header={t("mvr_requirements")}>
         <ViewMoreRadioFilter
+          {...props}
           handleChange={handleChange}
           name="mvr_requirements"
           labelPrefix="MvrType"

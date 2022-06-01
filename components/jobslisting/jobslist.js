@@ -12,20 +12,8 @@ import Pagination from '../find-jobs/pagination'
 export default function JobsList() {
 
   const { state, method } = useContext(jobContext)
-  const { jobs, pagingMeta, filters } = state
-  const { setFilters, applyFilters } = method
+  const { jobs } = state
   const { t } = useTranslation();
-
-  const currentPageIndex = parseInt(pagingMeta.currentPage)
-  const previousPageIndex = currentPageIndex - 1
-  const nextPageIndex = currentPageIndex + 1
-
-  const handlePaging = async (page) => {
-    await setFilters({
-      ...filters,
-      page: parseInt(page)
-    }, applyFilters())
-  }
 
   return (
     <>

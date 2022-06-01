@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from "react"
+import { useState } from "react"
 import Collapse from 'react-bootstrap/Collapse'
-import EnumFilterByKeyValue from "../../enum-filters/enum-filter-by-key-value"
+import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value";
 
 export default function ViewMoreRadioFilter(props) {
 
@@ -14,6 +14,7 @@ export default function ViewMoreRadioFilter(props) {
     return (
         <>
             <EnumFilterByKeyValue
+                {...props}
                 translate={true}
                 withAll={true}
                 enumArray={firstHalf}
@@ -27,6 +28,7 @@ export default function ViewMoreRadioFilter(props) {
                     <Collapse in={open} dimension="height">
                         <div id="example-collapse-text">
                             <EnumFilterByKeyValue
+                                {...props}
                                 translate={true}
                                 enumArray={secondHalf}
                                 name={props.name}
