@@ -133,7 +133,7 @@ export default function Dashboard() {
                         <tbody>
                             <tr>
                                 <td>
-                                    {t(`DriverLicenseType.${driver.license_type}`)}
+                                  {driver.license_type || 'N/A'}
                                 </td>
                                 <td>
                                     {driver.years_cdl_experience || 0}
