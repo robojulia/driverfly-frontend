@@ -6,20 +6,16 @@ import FilterResult from '../components/filter-results/filter-results'
 import JobsList from '../components/jobslisting/jobslist'
 import Layout from "../components/layouts"
 import jobsContext from "../context/jobContext"
-import Location from "../components/location/Location"
 import BaseApi from "./api/_baseApi"
 import JobApi from "./api/job"
-import { updateQueryStringParameter } from "../logics/utils"
 import Sort from "../components/find-jobs/sort"
 import ResultCount from "../components/find-jobs/result-count"
 
 export default function FindJobs(props) {
 
   let { params } = props
-  // const params = {}
   const jobApi = new JobApi();
-  const baseApi = new BaseApi();
-
+  const router = useRouter()
   const [jobs, setJobs] = useState([])
   const [pagingMeta, setPagingMeta] = useState({
     currentPage: 1,
@@ -38,13 +34,6 @@ export default function FindJobs(props) {
       ...filters,
       [key]: value
     })
-  }
-
-  const router = useRouter()
-
-  const sortHandler = e => {
-    const { name, value } = e.target;
-    setFiltersByKeyValue("order_by", value)
   }
 
   const handleChange = (e) => {
@@ -68,38 +57,6 @@ export default function FindJobs(props) {
   }
 
   const setFiltersForQuery = async () => {
-    // To DO - If user come from driver dashboard
-    // if (params.jobs_for_driver) {
-    //   await Promise.all([
-    //     driverApi.getDriver("drivers")
-    //       .catch(error => {
-    //         console.error("unable to fetch driver info", error);
-    //         throw error;
-    //       }),
-    //     driverApi.getPreferences()
-    //       .catch(error => {
-    //         console.error("unable to fetch driver preference info", error);
-    //         throw error;
-    //       })
-    //   ])
-    //     .then(values => {
-    //       const [driver, preferences] = values;
-    //       // console.log("preferences", preferences.find(item => (item.category == "MATCHING" && item.label == "TEAM_DRIVER")));
-    //       console.log("driver", driver)
-    //       console.log("preferences", preferences)
-
-    //       if (driver.license_type) {
-    //         document.getElementsByName("cdl_class").forEach(input => {
-    //           if (input.type.toLowerCase() === "radio" && input.value === driver.license_type) {
-    //             input.checked = true;
-    //             setFiltersByKeyValue("cdl_class", driver.license_type)
-    //           }
-    //         })
-    //       }
-
-    //     })
-    // }
-
     Object.keys(params).map(key => {
       let inputs = document.getElementsByName(key);
       if (inputs[0].tagName.toLowerCase() !== "input") {
@@ -120,19 +77,23 @@ export default function FindJobs(props) {
   }
 
   const fetchJobs = async () => {
-
-    navigator.geolocation.getCurrentPosition(function(position) {
-      setFiltersByKeyValue("location", {
-        "lat": position.coords.latitude,
-        "long": position.coords.longitude,
-        "range": 1500
+    try {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        setFiltersByKeyValue("location", {
+          "lat": position.coords.latitude,
+          "long": position.coords.longitude,
+          "range": 1500
+        });
       });
-    });
 
-    const { items, meta } = await jobApi.search({ ...filters })
-    console.log({ items, meta, filters });
-    setJobs(items)
-    setPagingMeta(meta)
+      const { items, meta } = await jobApi.search({ ...filters })
+      console.log({ items, meta, filters });
+      setJobs(items)
+      setPagingMeta(meta)
+    } catch (e) {
+      // console.error('exception is here: ', e);
+      throw e
+    }
   }
 
   useEffect(fetchJobs, [filters])
@@ -170,13 +131,12 @@ export default function FindJobs(props) {
             </div>
             <div className="col-md-9 outer pl-4 ">
 
-              {/* <Location /> */}
-
               <ResultCount />
 
               <div className="filter-btn-groups mt-3">
                 <Sort />
               </div>
+
               < JobsList />
 
             </div>

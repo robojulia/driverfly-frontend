@@ -1,10 +1,7 @@
-import { useTranslation } from "../../hooks/useTranslation";
-import { useContext } from "react"
-import jobContext from "../../context/jobContext"
 
 export default function EnumFilterByKeyValue(props) {
-    const { t } = useTranslation();
-    const { state, method } = useContext(jobContext)
+
+    const { t, state, method } = props
     const { filters } = state
 
     return (
@@ -16,7 +13,7 @@ export default function EnumFilterByKeyValue(props) {
                         onChange={props.handleChange}
                         type="radio"
                         name={props.name}
-                        value="" /> All
+                        value="" /> {t('ALL')}
                 </div>
             }
             {Object.values(props.enumArray).map((value) => {
