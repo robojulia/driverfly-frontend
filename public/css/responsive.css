@@ -5,4 +5,20 @@
     .hire-driver-section{
         flex-direction: column !important;
     }
+    .Slider-container-bg::before {
+      display: none;
+    }
+    .Slider_box {
+        width: 100%;
+    }
+}
+@media (min-width:769px) and (max-width:990px){
+    .Slider_owl-next,.Slider_owl-prev {
+        top: 60%;
+    }
+}
+@media (min-width:991px) and (max-width:1200px){
+    .Slider_owl-next,.Slider_owl-prev {
+        top: 60%;
+    }
 }
