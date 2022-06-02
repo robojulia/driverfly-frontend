@@ -4,7 +4,7 @@ import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css'
 import TrainingType from '../training-type/Training-Type'
 import LocationType from '../location-type/Location-Type'
 import PrivateEnrollment from '../private-enrollment/Private-Enrollment'
-import Range from "../location/Range"
+import Range from "../school-location/Range"
 
 export default function FilterSchools() {
 

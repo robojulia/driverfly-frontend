@@ -92,6 +92,14 @@ export default function FindSchools(props) {
         setPagingMeta(meta)
     }
 
+    const handleClick = (data) => async () => {
+        let link = 'https://form.jotform.com/212917100952046?';
+        link += 'providerName=' + data.provider_name;
+        link += '&providerPhone=' + data.phone;
+        link += '&providerEmail=' + data.email;
+        window.open(link);
+    }
+
     useEffect(fetchSchools, [filters])
     useEffect(async () => {
       try {
@@ -137,6 +145,11 @@ export default function FindSchools(props) {
             <div className="filter-sec">
                 <div className="container">
                     <div className="row">
+                        <div>
+                            <h3>Getting Your CDL</h3>
+                            <p>
+                            <h3>Things to Consider</h3>
+                        </div>
                         <div className="col-12 col-lg-3 lg-mt-0 mt-5">
                             < FilterSchools />
                         </div>
@@ -149,18 +162,18 @@ export default function FindSchools(props) {
                                             <th>Private Enrollment Only</th>
                                             <th>Provider Name</th>
                                             <th>Location Name</th>
-                                            <th>Location</th>
+                                            <th>Address</th>
                                             <th>Training Type</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        { schools.length > 0 && schools.map(school => (
-                                            <tr>
+                                        { schools.length > 0 && schools.map((school, index) => (
+                                            <tr key={index} onClick={handleClick(school)}>
                                                 <td> { school.location_type } </td>
                                                 <td> { school.private_enrollment ? 'Yes' : 'No' } </td>
                                                 <td> { school.provider_name } </td>
                                                 <td> { school.location_name } </td>
-                                                <td> { school.location } </td>
+                                                <td> { school.address } </td>
                                                 <td> { school.training_type } </td>
                                             </tr>
                                         ))}
