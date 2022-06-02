@@ -2325,7 +2325,7 @@ li.link-wrapper>a.active {
 }
 
 .hire-driver-left::before {
-    background:  linear-gradient(to bottom, #1D4354 0%, rgb(0 123 255 / 25%) 100%), url("../img/black-man-truck-driver-near-his-truck-parked-in-a-FD6XPWU.jpeg");
+    background:  linear-gradient(to bottom, #1D4354 0%, rgb(0 123 255 / 25%) 100%), url("/img/black-man-truck-driver-near-his-truck-parked-in-a-FD6XPWU.jpeg");
     content: "";
     background-size: cover;
     position: absolute;
@@ -2372,7 +2372,7 @@ li.link-wrapper>a.active {
 
 .owner-operator-bg::before {
     content: "";
-    background-image: url('../img/driver-getting.jpg');
+    background-image: url('/img/driver-getting.jpg');
     background-size: cover;
     position: absolute;
     top: 0px;
@@ -2439,7 +2439,7 @@ li.link-wrapper>a.active {
 
 .get-feature-section::before {
     content: "";
-    background-image: url('../img/husband-and-wife-driving-team-checking-their-itine-RW6LREM.jpeg');
+    background-image: url('/img/husband-and-wife-driving-team-checking-their-itine-RW6LREM.jpeg');
     background-size: cover;
     background-position: center;
     position: absolute;
