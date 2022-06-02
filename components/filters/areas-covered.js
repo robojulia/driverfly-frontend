@@ -9,7 +9,7 @@ export default function AreasCovered(props) {
 
   return (
     <>
-      <FindJobFilterAccordion header={t("areas_covered")}>
+      <FindJobFilterAccordion {...props} header={t("areas_covered")}>
         <ViewMoreRadioFilter
           {...props}
           handleChange={handleChange}

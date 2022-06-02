@@ -9,7 +9,7 @@ export default function SpecialEndorsementsRequired(props) {
 
   return (
     <>
-      <FindJobFilterAccordion header={t("special_endorsements_required")}>
+      <FindJobFilterAccordion {...props} header={t("special_endorsements_required")}>
         <ViewMoreRadioFilter
           {...props}
           handleChange={handleChange}

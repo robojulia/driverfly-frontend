@@ -10,7 +10,7 @@ export default function TransmissionType(props) {
 
   return (
     <>
-      <FindJobFilterAccordion header={t("TRANSMISSION_TYPE")}>
+      <FindJobFilterAccordion {...props} header={t("TRANSMISSION_TYPE")}>
         <div className="custom-control custom-checkbox p-0">
           <div className="App">
             <EnumFilterByKeyValue

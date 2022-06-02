@@ -32,10 +32,10 @@ export default function FilterResults() {
           <div className="bs-example">
             <div className="tab-content">
               <div className="accordion bg-transparent" id="accordionExample">
-                < Category t={t} state={state} method={method} />
-                < Range t={t} state={state} method={method} />
-                < PostedDate t={t} state={state} method={method} />
-                < AreasCovered t={t} state={state} method={method} />
+                < Category open={true} t={t} state={state} method={method} />
+                < Range open={true} t={t} state={state} method={method} />
+                < PostedDate open={true} t={t} state={state} method={method} />
+                < AreasCovered open={true} t={t} state={state} method={method} />
                 < EmploymentType t={t} state={state} method={method} />
                 < TypeOfDelivery t={t} state={state} method={method} />
                 < Equipment t={t} state={state} method={method} />

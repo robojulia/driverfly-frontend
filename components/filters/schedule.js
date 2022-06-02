@@ -10,8 +10,7 @@ export default function Schedule(props) {
 
   return (
     <>
-
-      <FindJobFilterAccordion header={t("schedule")}>
+      <FindJobFilterAccordion {...props} header={t("schedule")}>
         <ViewMoreRadioFilter
           {...props}
           handleChange={handleChange}

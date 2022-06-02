@@ -10,7 +10,7 @@ export default function TypeOfDelivery(props) {
   return (
     <>
 
-      <FindJobFilterAccordion header={t("TYPE_OF_DELIVERY")}>
+      <FindJobFilterAccordion {...props} header={t("TYPE_OF_DELIVERY")}>
         <ViewMoreRadioFilter
           {...props}
           handleChange={handleChange}
