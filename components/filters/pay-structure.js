@@ -8,9 +8,8 @@ export default function PayStructure(props) {
   const { handleChange } = method
 
   return (
-
     <>
-      <FindJobFilterAccordion header={t("pay_structure")}>
+      <FindJobFilterAccordion {...props} header={t("pay_structure")}>
         <ViewMoreRadioFilter
           {...props}
           handleChange={handleChange}

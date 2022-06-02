@@ -9,7 +9,7 @@ export default function MvrRequirement(props) {
 
   return (
     <>
-      <FindJobFilterAccordion header={t("mvr_requirements")}>
+      <FindJobFilterAccordion {...props} header={t("mvr_requirements")}>
         <ViewMoreRadioFilter
           {...props}
           handleChange={handleChange}

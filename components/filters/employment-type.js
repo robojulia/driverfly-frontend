@@ -9,7 +9,7 @@ export default function EmploymentType(props) {
 
   return (
     <>
-      <FindJobFilterAccordion header={t("employment_type")}>
+      <FindJobFilterAccordion {...props} header={t("employment_type")}>
         <ViewMoreRadioFilter
           {...props}
           handleChange={handleChange}
