@@ -1,6 +1,6 @@
 export enum JobEmploymentType {
     // W2
-    W2 = 'SALARIED',
+    W2 = 'W2',
     // 1099
     CONTRACT = 'CONTRACTOR',
     // Owner-Operator

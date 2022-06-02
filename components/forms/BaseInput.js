@@ -78,7 +78,7 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
         min={min}
         max={max}
         step={step}
-        placeholder={t(placeholder)}
+        placeholder={t(placeholder === true ? name : placeholder)}
         value={value == null ? "" : value}
         onChange={onChange}
         onKeyDown={onKeyDown}

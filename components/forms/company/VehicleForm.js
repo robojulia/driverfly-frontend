@@ -154,7 +154,6 @@ export function VehicleForm(props) {
                     className="col-3"
                     label="MODEL"
                     name="model"
-                    required
                     placeholder="MODEL"
                     formik={form}
                     />
@@ -163,7 +162,6 @@ export function VehicleForm(props) {
                     label="YEAR"
                     name="year"
                     type="int"
-                    required
                     placeholder="YEAR"
                     formik={form}
                     />

@@ -205,15 +205,11 @@
     "associate": "Associate",
     "doctoral": "Doctoral",
     "DriverLicenseType": {
-        "CDL_CLASS_A": "CDL Class A",
-        "CDL_CLASS_B": "CDL Class B",
-        "CDL_CLASS_C": "CDL Class C"
+        "CDL_CLASS_A": "Class A CDL",
+        "CDL_CLASS_B": "Class B CDL",
+        "CDL_CLASS_C": "Class C CDL"
     },
-    "cdl_class_a": "CDL Class A",
-    "cdl_class_b": "CDL Class B",
-    "cdl_class_c": "CDL Class C",
-    "cdl_class": "CDL Class",
-    "cdl_class_type": "CDL Class Type",
+    "CDL_CLASS": "CDL Class",
     "LICENSE_TYPE": "License Type",
     "first_name": "First Name",
     "last_name": "Last Name",
@@ -262,6 +258,7 @@
     "has_past_duis": "Do you have past DUI's?",
     "years_of_past_duis": "Years of past DUI's",
     "criminal_history_last_3_years": "Criminal history in last 3 years",
+    "MAX_MOVING_VIOLATIONS": "Maximum moving violations",
     "accidents_last_5_years": "Accidents within the last 5 years",
     "accident_details": "Accident Details",
     "has_had_license_revoked": "Has any of the driver's license, permit, or privilege to operate a CMV even been suspended or revoked?",
@@ -894,5 +891,6 @@
     "VEHICLE": "Vehicle",
     "{number}_CHARACTERS_REMAINING": "{{number}} characters remaining",
     "GOVERNED_SPEED": "Governed speed",
-    "MAX_SPEED": "Max speed"
+    "MAX_SPEED": "Max speed",
+    "MINIMUM_CDL_CLASS": "Minimum CDL Class"
 }

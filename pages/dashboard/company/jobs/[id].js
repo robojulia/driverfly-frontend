@@ -169,7 +169,7 @@ export default function Job() {
                     year: null,
                     photo: null
                 })) || [],
-                cdl_class: job.cdl_class || [],
+                cdl_class: job.cdl_class,
                 min_years_experience: job.min_years_experience,
                 min_degree: job.min_degree,
                 required_skills: job.required_skills || [],
@@ -629,7 +629,6 @@ export default function Job() {
                                     className="col-12"
                                     label="team_drivers"
                                     name="team_drivers"
-                                    required
                                     placeholder="team_drivers"
                                     labelPrefix="JobTeamDriver"
                                     enumType={JobTeamDriver}
@@ -943,11 +942,11 @@ export default function Job() {
                         >
                             <Row>
                                 <div className="col-md-6">
-                                    <BaseCheckList
+                                    <BaseSelect
                                         className="col-12"
-                                        label="cdl_class"
+                                        label="MINIMUM_CDL_CLASS"
                                         name="cdl_class"
-                                        cols={2}
+                                        placeholder
                                         labelPrefix="DriverLicenseType"
                                         enumType={DriverLicenseType}
                                         formik={form}
@@ -956,7 +955,7 @@ export default function Job() {
                                         className="col-12"
                                         label="min_years_experience"
                                         name="min_years_experience"
-                                        placeholder="min_years_experience"
+                                        placeholder
                                         min="0"
                                         type="number"
                                         formik={form}
@@ -1197,9 +1196,9 @@ export default function Job() {
                                     }
                                     <BaseInput
                                         className="col-12"
-                                        label="accidents_last_5_years"
+                                        label="MAX_MOVING_VIOLATIONS"
                                         placeholder="count"
-                                        name="max_accidents"
+                                        name="max_moving_violations"
                                         min="0"
                                         type="int"
                                         formik={form}

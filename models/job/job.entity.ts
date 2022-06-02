@@ -33,7 +33,7 @@ export class JobEntity {
     description_short?: string;
     drivers_needed?: number;
     expiry_date?: string | Date;
-    geography?: JobGeography = JobGeography.LOCAL;
+    geography?: JobGeography;
     schedule?: JobSchedule;
     schedule_other?: string;
     employment_type?: JobEmploymentType;
@@ -58,7 +58,7 @@ export class JobEntity {
     benefits?: JobBenefits[] = [];
     benefits_other?: string;
     vehicles?: VehicleEntity[] = [];
-    cdl_class?: DriverLicenseType[] = [];
+    cdl_class?: DriverLicenseType;
     min_years_experience?: number;
     min_degree?: EducationLevel;
     required_skills?: JobSkillEntity[] = [];
@@ -73,7 +73,7 @@ export class JobEntity {
     accept_sap_graduates?: boolean = false;
     must_have_clean_criminal_history?: boolean = true;
     criminal_history?: JobCriminalEntity[] = [];
-    max_accidents?: number;
+    max_moving_violations?: number;
     safety_requirements_other?: string;
     created_at?: string | Date;
 
@@ -112,7 +112,7 @@ export class JobEntity {
             delivery_type: yup.array(
                 (yup.string() as any).enum(JobDeliveryType)
             ),
-            team_drivers: (yup.string() as any).enum(JobTeamDriver).required().nullable(),
+            team_drivers: (yup.string() as any).enum(JobTeamDriver).nullable(),
             pay_method: //yup.array(
                 (yup.string() as any).enum(JobPayMethod).required().nullable(),
             //),
@@ -168,10 +168,7 @@ export class JobEntity {
             vehicles: (yup.array(
                 BasicEntity.yupSchema()
             ) as any).unique("id").nullable(),
-            cdl_class: yup.array(
-                (yup.string() as any)
-                    .enum(DriverLicenseType)
-            ),
+            cdl_class: (yup.string() as any).enum(DriverLicenseType).nullable(),
             min_years_experience: yup.number().min(0).nullable(),
             min_degree: (yup.string() as any).enum(EducationLevel).nullable(),
             required_skills: (yup.array(
@@ -197,7 +194,7 @@ export class JobEntity {
             criminal_history: (yup.array(
                 JobCriminalEntity.yupSchema()
             ) as any).unique("type"),
-            max_accidents: yup.number().min(0).nullable(),
+            max_moving_violations: yup.number().min(0).nullable(),
             safety_requirements_other: yup.string().max(250).nullable(),
         });
 
