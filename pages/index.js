@@ -14,7 +14,7 @@ import { useTranslation } from "../hooks/useTranslation";
 import { DriverLicenseType } from "../enums/users/driver-license-type.enum";
 import { JobEmploymentType } from "../enums/jobs/job-employment-type.enum";
 import { useRouter } from "next/router";
-import { Arrow90degDown, Search } from "react-bootstrap-icons";
+import { GeoAlt, Search } from "react-bootstrap-icons";
 import NewsletterSingup from "../components/newsletter-signup/NewsletterSingup";
 export default function Index() {
   const router = useRouter();
@@ -67,17 +67,31 @@ export default function Index() {
               </div>
 
               <div className="hero-search">
-                <div className="input-group">
+                <div className="input-group border-0">
                   <div className="input-group-prepend">
-                    <Search className="home_search" />
+                    <Search color="#C5C5C5"/>
                   </div>
                   <input
                     onKeyPress={searchHandler}
                     onChange={handleChange}
                     name="keywords"
                     type="text"
-                    className=""
+                    className="mx-3"
                     placeholder="Job Title or Keywords"
+                    aria-label=""
+                    aria-describedby="basic-addon1"
+                  />
+                </div>
+                <div className="input-group">
+                  <div className="input-group-prepend">
+                    <GeoAlt color="#C5C5C5" />
+                  </div>
+
+                  <input
+                    onKeyPress={searchHandler}
+                    type="text"
+                    className="mx-3"
+                    placeholder="Location"
                     aria-label=""
                     aria-describedby="basic-addon1"
                   />
@@ -89,7 +103,7 @@ export default function Index() {
                   aria-label="Default select example"
                   id="exampleFormControlSelect1"
                 >
-                  <option className="selectbg">All Types</option>
+                  <option className="selectbg">Work Type</option>
                   {Object.keys(JobEmploymentType).map((key, index) => {
                     return (
                       <option key={index} value={key}>
@@ -105,7 +119,7 @@ export default function Index() {
                   aria-label="Default select example"
                   id="exampleFormControlSelect1"
                 >
-                  <option>All Categories</option>
+                  <option>Class Type</option>
                   {Object.keys(DriverLicenseType).map((key, index) => {
                     return (
                       <option key={index} value={key}>
