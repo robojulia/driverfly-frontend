@@ -71,6 +71,7 @@ export default function Job() {
     authCompany();
 
     const { authCheck, hasPermission } = useAuth();
+
     const user = authCheck();
 
     const { t } = useTranslation();
@@ -79,6 +80,7 @@ export default function Job() {
         initialValues: new JobEntity(),
         validationSchema: JobEntity.yupSchema(),
         onSubmit: async (data) => {
+
             data.min_weekly_pay = parseFloat(data.min_weekly_pay)
             data.max_weekly_pay = parseFloat(data.max_weekly_pay)
             data.min_rate = parseFloat(data.min_rate)
@@ -436,7 +438,7 @@ export default function Job() {
 
     const maxRadius = {
         [JobGeography.LOCAL]: 100,
-        [JobGeography.REGIONAL]: 1000,
+        [JobGeography.REGIONAL]: 1500,
         [JobGeography.OTR]: 3000
     };
 
@@ -515,7 +517,7 @@ export default function Job() {
                                     valueKey="id"
                                     labelKey="street"
                                     options={locations}
-                                    append={<Button variant="outline-secondary" disabled={!hasPermission("CanCreateLocation")} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
+                                    append={<Button variant="outline-secondary create_btn" disabled={!hasPermission("CanCreateLocation")} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
                                 />
                                 <BaseInput
                                     className="col-12"
@@ -523,6 +525,7 @@ export default function Job() {
                                     name="expiry_date"
                                     placeholder="expiration_date"
                                     type="date"
+                                    min={new Date().toISOString().split("T")[0]}
                                     formik={form}
                                 />
                                 <BaseInput
@@ -900,8 +903,8 @@ export default function Job() {
                                                     <InputGroup.Text>{i + 1}</InputGroup.Text>
                                                 </>}
                                                 append={<>
-                                                    <Button variant="outline-secondary" disabled={!hasPermission("CanCreateVehicle")} onClick={() => setCreateVehicle(i)}><PlusCircle /> {t("CREATE")}</Button>
-                                                    <Button variant="outline-danger" onClick={() => form.setFieldValue("vehicles", form.values.vehicles.filter((v, idx) => i != idx))}><DashCircle /></Button>
+                                                    <Button variant="outline-secondary create_btn" disabled={!hasPermission("CanCreateVehicle")} onClick={() => setCreateVehicle(i)}><PlusCircle /> {t("CREATE")}</Button>
+                                                    <Button variant="outline-danger close_btn" onClick={() => form.setFieldValue("vehicles", form.values.vehicles.filter((v, idx) => i != idx))}><DashCircle /></Button>
                                                 </>}
                                             />
                                         </Row>))
@@ -955,7 +958,7 @@ export default function Job() {
                                         name="min_years_experience"
                                         placeholder="min_years_experience"
                                         min="0"
-                                        type="int"
+                                        type="number"
                                         formik={form}
                                     />
                                     <BaseSelect

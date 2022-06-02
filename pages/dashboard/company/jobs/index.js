@@ -103,7 +103,7 @@ export default function JobListing() {
                         </button>
                     </Col>
                 </Row>
-                <Row className="mt-5">
+                <Row className="mt-5 my_job_listing">
                     <Col lg="12 ">
                         <ViewDataTable
                             columns={[

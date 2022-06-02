@@ -63,7 +63,7 @@ export default function FeaturedJobs() {
 
                                         </div>
                                     ))}
-                                    {/* <div className="col-md-6">
+                                    <div className="col-md-6">
 
                                         <div className="media align-items-center ">
                                             <img className="d-flex mr-4 truck-img border-0 " src="img/CTR-logo-cartoon.png" width="100" height="75" alt="" />
@@ -143,8 +143,8 @@ export default function FeaturedJobs() {
 
                                             </div>
                                         </div>
-                                    </div> */}
-                                    {/* <div className="col-md-6">
+                                    </div> 
+                                    <div className="col-md-6">
                                         <div className="media align-items-center ">
                                             <img className="d-flex mr-4 truck-img border-0 " src="img/CTR-logo-cartoon.png" width="100" height="75" alt="" />
                                             <div className="media-body">
@@ -163,7 +163,7 @@ export default function FeaturedJobs() {
 
                                             </div>
                                         </div>
-                                    </div> */}
+                                    </div>
                                 </div>
 
                             </div>

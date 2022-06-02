@@ -1,0 +1,22 @@
+import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
+import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
+import ViewMoreRadioFilter from "./view-more-radio-filter";
+
+export default function EmploymentType(props) {
+
+  const { t, state, method } = props
+  const { handleChange } = method
+
+  return (
+    <>
+      <FindJobFilterAccordion {...props} header={t("employment_type")}>
+        <ViewMoreRadioFilter
+          {...props}
+          handleChange={handleChange}
+          name="employment_type"
+          labelPrefix="JobEmploymentType"
+          enums={JobEmploymentType} />
+      </FindJobFilterAccordion>
+    </>
+  )
+}

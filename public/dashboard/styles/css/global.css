@@ -300,9 +300,8 @@
 
 }
 
-.w-24 {
-
-    width: 22% !important;
+.w-23 {
+    width: 23% !important;
     display: inline-block;
     margin: 2% 1%;
 }
@@ -387,6 +386,9 @@ textarea {
     border-color: #565e64 !important;
 }
 
+.modal-dialog button:hover {
+    color: #fff;
+}
 .icon_left {
     float: left;
     color: #5dcac4;
@@ -406,7 +408,9 @@ textarea {
 .mt-34 {
     margin-top: 34px;
 }
-
+.mt-39{
+margin-top: 39px;
+}
 .ml_5 {
     margin-left: 5px;
 }

@@ -31,7 +31,7 @@ const FullLayout = ({ children }) => {
       text: "dashboard"
     },
     {
-      pathname: "/find-jobs",
+      pathname: "/dashboard/driver/find-jobs",
       icon: Search,
       text: "find_new_job"
     },
@@ -96,7 +96,7 @@ const FullLayout = ({ children }) => {
           name="description"
           content="Ample Admin Next Js Aadmin Dashboard "
         />
-        <link rel="icon" href="/favicon.ico" />
+         <link rel="icon" href="/img/DriverFly-Official-Favicon.png" />
       </Head>
       <div className="header">
         <div className="contentArea ">

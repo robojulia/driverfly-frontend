@@ -1,7 +1,8 @@
 import Link from 'next/link';
-import Breadcrumbs from 'nextjs-breadcrumbs';
 import Layout from "../components/layouts";
 import { Accordion } from 'react-bootstrap';
+import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
+
 
 export default function FAQ() {
     return (
@@ -12,7 +13,7 @@ export default function FAQ() {
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
                         <h2>FAQ</h2>
-                        < Breadcrumbs />
+                        < Breadcrumb />
                     </div>
                 </div>
             </div>

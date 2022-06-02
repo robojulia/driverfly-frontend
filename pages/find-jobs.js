@@ -1,4 +1,3 @@
-import axios from "axios"
 import 'bootstrap/dist/css/bootstrap.css'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from "react"
@@ -7,18 +6,16 @@ import FilterResult from '../components/filter-results/filter-results'
 import JobsList from '../components/jobslisting/jobslist'
 import Layout from "../components/layouts"
 import jobsContext from "../context/jobContext"
-import Location from "../components/location/Location"
 import BaseApi from "./api/_baseApi"
 import JobApi from "./api/job"
-import { updateQueryStringParameter } from "../logics/utils"
+import Sort from "../components/find-jobs/sort"
+import ResultCount from "../components/find-jobs/result-count"
 
 export default function FindJobs(props) {
 
   let { params } = props
-  // const params = {}
   const jobApi = new JobApi();
-  const baseApi = new BaseApi();
-
+  const router = useRouter()
   const [jobs, setJobs] = useState([])
   const [pagingMeta, setPagingMeta] = useState({
     currentPage: 1,
@@ -37,13 +34,6 @@ export default function FindJobs(props) {
       ...filters,
       [key]: value
     })
-  }
-
-  const router = useRouter()
-
-  const sortHandler = e => {
-    const { name, value } = e.target;
-    setFiltersByKeyValue("order_by", value)
   }
 
   const handleChange = (e) => {
@@ -67,38 +57,6 @@ export default function FindJobs(props) {
   }
 
   const setFiltersForQuery = async () => {
-    // To DO - If user come from driver dashboard
-    // if (params.jobs_for_driver) {
-    //   await Promise.all([
-    //     driverApi.getDriver("drivers")
-    //       .catch(error => {
-    //         console.error("unable to fetch driver info", error);
-    //         throw error;
-    //       }),
-    //     driverApi.getPreferences()
-    //       .catch(error => {
-    //         console.error("unable to fetch driver preference info", error);
-    //         throw error;
-    //       })
-    //   ])
-    //     .then(values => {
-    //       const [driver, preferences] = values;
-    //       // console.log("preferences", preferences.find(item => (item.category == "MATCHING" && item.label == "TEAM_DRIVER")));
-    //       console.log("driver", driver)
-    //       console.log("preferences", preferences)
-
-    //       if (driver.license_type) {
-    //         document.getElementsByName("cdl_class").forEach(input => {
-    //           if (input.type.toLowerCase() === "radio" && input.value === driver.license_type) {
-    //             input.checked = true;
-    //             setFiltersByKeyValue("cdl_class", driver.license_type)
-    //           }
-    //         })
-    //       }
-
-    //     })
-    // }
-
     Object.keys(params).map(key => {
       let inputs = document.getElementsByName(key);
       if (inputs[0].tagName.toLowerCase() !== "input") {
@@ -119,9 +77,23 @@ export default function FindJobs(props) {
   }
 
   const fetchJobs = async () => {
-    const { items, meta } = await jobApi.search({ ...filters })
-    setJobs(items)
-    setPagingMeta(meta)
+    try {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        setFiltersByKeyValue("location", {
+          "lat": position.coords.latitude,
+          "long": position.coords.longitude,
+          "range": 1500
+        });
+      });
+
+      const { items, meta } = await jobApi.search({ ...filters })
+      console.log({ items, meta, filters });
+      setJobs(items)
+      setPagingMeta(meta)
+    } catch (e) {
+      // console.error('exception is here: ', e);
+      throw e
+    }
   }
 
   useEffect(fetchJobs, [filters])
@@ -147,6 +119,7 @@ export default function FindJobs(props) {
         handleChange,
         setPagingMeta,
         setFilters,
+        setFiltersByKeyValue,
         applyFilters: fetchJobs
       },
     }}>
@@ -158,30 +131,12 @@ export default function FindJobs(props) {
             </div>
             <div className="col-md-9 outer pl-4 ">
 
-              {/* <Location /> */}
-
-              <div className="results-count mt-4 ">
-                Showing {
-                  pagingMeta.itemCount !== 0 &&
-                  <>
-                    <span className="first">
-                      {((pagingMeta.currentPage - 1) * pagingMeta.itemsPerPage) + 1}
-                    </span> – <span className="last">
-                      {(((pagingMeta.currentPage - 1) * pagingMeta.itemsPerPage) + pagingMeta.itemCount)}
-                    </span> of
-                  </>
-                } {pagingMeta.totalItems} results
-              </div>
+              <ResultCount />
 
               <div className="filter-btn-groups mt-3">
-                <span className="text-secondary w-sm-25">Sort by:
-                  <select onChange={sortHandler} className="custom-select shadow-none mt-lg-0 mt-md-3">
-                    <option value="">Default</option>
-                    <option value="DESC">Newest</option>
-                    <option value="ASC">Oldest</option>
-                  </select>
-                </span>
+                <Sort />
               </div>
+
               < JobsList />
 
             </div>

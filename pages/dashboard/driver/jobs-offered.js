@@ -3,7 +3,6 @@ import FullLayout from "../../../components/dashboard/layouts/FullLayout";
 import { Col, Row, Card, CardBody, Table } from "reactstrap";
 import useRedirect from '../../../hooks/useRedirect';
 import { Container } from "react-bootstrap";
-import style from '../../../public/dashboard/styles/css/Driver/dashboard.module.css';
 import { useEffect } from "react";
 import useAuth from "../../../hooks/useAuth";
 import { useState } from "react";
@@ -53,15 +52,11 @@ export default function OfferedJobs() {
         fetchJobs()
     }, []);
 
-    // useEffect(() => {
-    //     console.log("applicantJobs", applicantJobs)
-    // }, [applicantJobs]);
-
     return (
         <>
 
             <div className={JobList.joblisting}>
-                <Row className={JobList.link}>
+                <Row>
                     <Col sm="6" lg="8">
                         <h2 className='mt-3'>{t('jobs_offered')}</h2>
                     </Col>
@@ -73,8 +68,13 @@ export default function OfferedJobs() {
                                 {
                                     name: "job_title",
                                     selector: applicant =>
-                                        (<OverlyPopover skipTranslate={true} header={t('job_title')} str={applicant.job.title} />),
+                                    (<Link href={`/dashboard/driver/find-jobs/${applicant.job.id}`}>
+                                        < a>
+                                            <OverlyPopover skipTranslate={true} header={t('job_title')} str={applicant.job.title} />
+                                        </a>
+                                    </Link>),
                                     hidable: false
+
                                 },
                                 {
                                     name: "company",
