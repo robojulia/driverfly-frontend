@@ -46,7 +46,7 @@ export default function Range(props) {
 
     return (
         <>
-            <FindJobFilterAccordion header={t("LOCATION")}>
+            <FindJobFilterAccordion {...props} header={t("LOCATION")}>
                 <AsyncTypeahead
                     id="async-example"
                     name="location"

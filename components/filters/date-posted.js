@@ -33,7 +33,7 @@ export default function DatePosted(props) {
 
   return (
     <>
-      <FindJobFilterAccordion header={t("POST_DATE")}>
+      <FindJobFilterAccordion {...props} header={t("POST_DATE")}>
         <ViewMoreRadioFilter
           {...props}
           handleChange={changeHandler}
