@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import React from "react";
 
-import {PenFill, TrashFill, Eye, EyeFill} from 'react-bootstrap-icons';
+import { PenFill, TrashFill, Eye, EyeFill } from 'react-bootstrap-icons';
 
 
 import JobApi from "../../../api/job";
@@ -24,6 +24,7 @@ import ListActions from "../../../../components/list-actions/ListActions";
 
 import { buildAddress } from "../../../../utils/common";
 import ViewDataTable from "../../../../components/viewDetails/viewDataTable";
+import OverlyPopover from "../../../../components/popover/overly-popover";
 
 export default function JobListing() {
 
@@ -57,7 +58,7 @@ export default function JobListing() {
      * 
      * @param {number} id
      */
-     const onPreviewClick = (id) => {
+    const onPreviewClick = (id) => {
         router.push(`/jobs/${id}`);
     }
 
@@ -65,7 +66,7 @@ export default function JobListing() {
      * 
      * @param {number} id
      */
-     const onViewApplicantsClick = (id) => {
+    const onViewApplicantsClick = (id) => {
         router.push(`/dashboard/company/applicants?jobId=${id}`);
     }
 
@@ -109,12 +110,12 @@ export default function JobListing() {
                             columns={[
                                 {
                                     name: "job_title",
-                                    selector: j => j.title,
+                                    selector: job => (<OverlyPopover skipTranslate={true} header={t('job_title')} str={job.title} />),
                                     hidable: false
                                 },
                                 {
                                     name: "location",
-                                    selector: j => buildAddress(j.location || {})
+                                    selector: job => (<OverlyPopover skipTranslate={true} header={t('location')} str={buildAddress(job.location || {})} />)
                                 },
                                 {
                                     name: "drivers_needed",
@@ -129,20 +130,27 @@ export default function JobListing() {
                                     selector: j => j.geography ? t("JobGeography." + j.geography) : null
                                 },
                                 {
-                                    name: "schedule",
-                                    selector: j => j.schedule ? t("JobSchedule." + j.schedule) : null
+                                    name: "SCHEDULE",
+                                    selector: job => (<OverlyPopover labelPrefix="JobSchedule" skipTranslate={false} header={t('SCHEDULE')} str={job.schedule} />),
                                 },
                                 {
-                                    name: "employment_type",
-                                    selector: j => j.employment_type ? t("JobEmploymentType." + j.employment_type) : null
+                                    name: "EMPLOYMENT_TYPE",
+                                    selector: job => (<OverlyPopover labelPrefix="JobEmploymentType" skipTranslate={false} header={t('EMPLOYMENT_TYPE')} str={job.employment_type} />),
                                 },
                                 {
-                                    name: "delivery_type",
-                                    selector: j => j.delivery_type ? t("JobDeliveryType." + j.delivery_type) : null
+                                    name: "DELIVERY_TYPE",
+                                    selector: j =>
+                                    (<ShowEnumFromString
+                                        popover_header={t('DELIVERY_TYPE')}
+                                        labelPrefix="JobDeliveryType"
+                                        popover={true}
+                                        str={j.delivery_type}
+                                        enumArray={JobDeliveryType} />
+                                    )
                                 },
                                 {
-                                    name: "team_drivers",
-                                    selector: j => j.team_drivers ? t("JobTeamDriver." + j.team_drivers) : null
+                                    name: "TEAM_DRIVERS",
+                                    selector: job => (<OverlyPopover labelPrefix="JobTeamDriver" skipTranslate={false} header={t('TEAM_DRIVERS')} str={job.team_drivers} />),
                                 },
                             ]}
                             actions={j => ([
@@ -164,7 +172,7 @@ export default function JobListing() {
                                 },
                             ])}
                             items={jobs}
-                            />
+                        />
                     </Col>
                 </Row>
             </div>
