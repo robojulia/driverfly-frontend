@@ -214,6 +214,11 @@
     "cdl_class_c": "CDL Class C",
     "cdl_class": "CDL Class",
     "cdl_class_type": "CDL Class Type",
+    "drug_test_type": "Drug Test Type",
+    "JobDrugTestType": {
+        "HAIR_FOLLICLE_TEST": "Hair Follicle Test",
+        "DOT_URINE_ANALYSIS": "DOT urine analysis"
+    },
     "LICENSE_TYPE": "License Type",
     "first_name": "First Name",
     "last_name": "Last Name",

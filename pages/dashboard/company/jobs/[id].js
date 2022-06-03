@@ -56,6 +56,7 @@ import { VehicleForm } from "../../../../components/forms/company/VehicleForm";
 import ViewCard from "../../../../components/viewDetails/viewCard";
 import { VehicleEntity } from "../../../../models/company/vehicle.entity";
 import { LocationForm } from "../../../../components/forms/company/LocationForm";
+import { JobDrugTestType } from "../../../../enums/jobs/job-drug-test-type.enum";
 
 export default function Job() {
     const router = useRouter();
@@ -80,7 +81,7 @@ export default function Job() {
         initialValues: new JobEntity(),
         validationSchema: JobEntity.yupSchema(),
         onSubmit: async (data) => {
-
+            console.log(data);
             data.min_weekly_pay = parseFloat(data.min_weekly_pay)
             data.max_weekly_pay = parseFloat(data.max_weekly_pay)
             data.min_rate = parseFloat(data.min_rate)
@@ -179,6 +180,7 @@ export default function Job() {
                 transmission_type_experience: job.transmission_type_experience || [],
                 max_applicant_radius: job.max_applicant_radius,
                 must_pass_drug_test: job.must_pass_drug_test,
+                drug_test_type: job.drug_test_type || [],
                 must_have_clean_mvr: job.must_have_clean_mvr,
                 mvr_requirements: job.mvr_requirements || [],
                 accept_sap_graduates: job.accept_sap_graduates,
@@ -1083,6 +1085,16 @@ export default function Job() {
                                         name="must_pass_drug_test"
                                         formik={form}
                                     />
+                                    <BaseCheckList
+                                        className="col-12"
+                                        label="drug_test_type"
+                                        name="drug_test_type"
+                                        cols={2}
+                                        labelPrefix="JobDrugTestType"
+                                        enumType={JobDrugTestType}
+                                        formik={form}
+                                    />
+
                                     <BaseCheck
                                         className="col-12"
                                         label="must_have_clean_mvr"
