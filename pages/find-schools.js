@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import schoolContext from "../context/schoolContext"
-import { Container, Col, ProgressBar, Row, Table, ToastContainer, FormGroup, InputGroup } from "react-bootstrap";
+import { Container, Col, ProgressBar, Row, Table, ToastContainer, FormGroup, InputGroup, Accordion } from "react-bootstrap";
 import Head from "next/head";
 import Layout from "../components/layouts";
 import RangeSlider from 'react-bootstrap-range-slider';
@@ -29,9 +29,21 @@ export default function FindSchools(props) {
         totalItems: 0,
         totalPages: 1
     })
+
     const [filters, setFilters] = useState({
         ...params
     })
+
+    const currentPageIndex = parseInt(pagingMeta.currentPage)
+    const previousPageIndex = currentPageIndex - 1
+    const nextPageIndex = currentPageIndex + 1
+
+    const handlePaging = async (page) => {
+      await setFilters({
+        ...filters,
+        page: parseInt(page)
+      })
+    }
 
     const setFiltersByKeyValue = (key, value) => {
         setFilters({
@@ -133,10 +145,10 @@ export default function FindSchools(props) {
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
-                        <h2>CDL Schools</h2>
+                        <h2>Get Your CDL</h2>
                         <ul className="d-flex">
                             <li><a href="index.html" className="nav-link text-dark px-0">Home <i className="fa fa-caret-right px-2" aria-hidden="true"></i></a></li>
-                            <li><a href="#" className="nav-link text-dark px-0">CDL Schools</a></li>
+                            <li><a href="#" className="nav-link text-dark px-0">Get Your CDL</a></li>
                         </ul>
                     </div>
                 </div>
@@ -146,9 +158,34 @@ export default function FindSchools(props) {
                 <div className="container">
                     <div className="row">
                         <div>
-                            <h3>Getting Your CDL</h3>
-                            <p>
-                            <h3>Things to Consider</h3>
+                            <Accordion defaultActiveKey="0">
+                                <Accordion.Item eventKey="0">
+                                    <Accordion.Header> <span className="btn-link"> Things to Consider </span></Accordion.Header>
+                                    <Accordion.Body>
+                                        <p>Before getting your CDL, make sure to read the FMCSA's instructions and download your state's manual about
+                                        the process. Also, decide which type of vehicle and which class you would like your license for, as well as whether
+                                        or not you want any endorsements.</p>
+                                    </Accordion.Body>
+                                </Accordion.Item>
+                                <Accordion.Item eventKey="1">
+                                    <Accordion.Header> <span className="btn-link"> Getting Your CDL </span></Accordion.Header>
+                                    <Accordion.Body>
+                                        <p>To get your CDL, you must first get a Commerical Learners Permit (CLP). This requires passing knowledge tests
+                                        and providing the necessary documentation, which may include your driving record, medicals, or proof of residency.
+                                        The documents you'll need will depend on the type of license you're trying to get and the state you're in.</p>
+                                        <p>Afterwards, you must do Entry-Level Driver Training with a training provider registered on the FMCSA's Training Provider
+                                        Registry. You can search for a provider with the tool below.</p>
+                                        <p>Once you've completed your training, you must take the Skills Test. After passing the skills test, bring your documentation
+                                        to the counter to be processed. You will then be given or mail your license, depending on your state.</p>
+                                    </Accordion.Body>
+                                </Accordion.Item>
+                                <Accordion.Item eventKey="2">
+                                    <Accordion.Header> <span className="btn-link"> Grants </span></Accordion.Header>
+                                    <Accordion.Body>
+                                        <p></p>
+                                    </Accordion.Body>
+                                </Accordion.Item>
+                            </Accordion>
                         </div>
                         <div className="col-12 col-lg-3 lg-mt-0 mt-5">
                             < FilterSchools />
@@ -174,11 +211,62 @@ export default function FindSchools(props) {
                                                 <td> { school.provider_name } </td>
                                                 <td> { school.location_name } </td>
                                                 <td> { school.address } </td>
-                                                <td> { school.training_type } </td>
+                                                <td> { school.training_type.join(", ") } </td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </Table>
+                                {
+                                  pagingMeta.totalPages !== 0 &&
+
+                                  <ul className="pagination">
+                                    {
+                                      currentPageIndex > 1 &&
+                                      <>
+                                        <li onClick={() => { handlePaging(1) }}>
+                                          <span className="next page-numbers " role="button" >
+                                            First
+                                          </span>
+                                        </li>
+                                      </>
+                                    }
+
+                                    {
+                                      currentPageIndex > 1 &&
+                                      <li onClick={() => { handlePaging(previousPageIndex) }} >
+                                        <span className="page-numbers" role="button" >
+                                          {previousPageIndex}
+                                        </span>
+                                      </li>
+                                    }
+
+                                    {
+                                      <li >
+                                        <span className="page-numbers current active" role="button" >
+                                          {currentPageIndex}
+                                        </span>
+                                      </li>
+                                    }
+
+                                    {
+                                      currentPageIndex < pagingMeta.totalPages &&
+                                      <li onClick={() => { handlePaging(nextPageIndex) }} >
+                                        <span className="page-numbers " role="button" >
+                                          {nextPageIndex}
+                                        </span>
+                                      </li>
+                                    }
+
+                                    {
+                                      nextPageIndex < pagingMeta.totalPages &&
+                                      <li onClick={() => { handlePaging(pagingMeta.totalPages) }}>
+                                        <span className="next page-numbers " role="button" >
+                                          Last
+                                        </span>
+                                      </li>
+                                    }
+                                  </ul>
+                                }
                             </div>
                         </div>
                     </div>

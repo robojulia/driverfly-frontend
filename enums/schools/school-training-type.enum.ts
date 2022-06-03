@@ -8,5 +8,5 @@ export enum SchoolTrainingType {
     // school bus
     SCHOOL_BUS = 'SCHOOL_BUS',
     // hazardous materials
-    HAZMAT = 'HAZARDOUS_MATERIALS'
+    HAZARDOUS_MATERIALS = 'HAZARDOUS_MATERIALS'
   }
