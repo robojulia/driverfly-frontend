@@ -566,10 +566,10 @@ export default function Job() {
                                 <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                     <BaseSelect
                                         className={`col-${form.values.schedule === JobSchedule.OTHER ? 6 : 12}`}
-                                        label="schedule"
+                                        label="SCHEDULE"
                                         name="schedule"
                                         required
-                                        placeholder="schedule"
+                                        placeholder="SCHEDULE"
                                         labelPrefix="JobSchedule"
                                         enumType={JobSchedule}
                                         formik={form}
@@ -588,19 +588,19 @@ export default function Job() {
                                 </Row>
                                 <BaseSelect
                                     className="col-12"
-                                    label="employment_type"
+                                    label="EMPLOYMENT_TYPE"
                                     name="employment_type"
                                     required
-                                    placeholder="employment_type"
+                                    placeholder="EMPLOYMENT_TYPE"
                                     labelPrefix="JobEmploymentType"
                                     enumType={JobEmploymentType}
                                     formik={form}
                                 />
                                 <BaseCheckList
                                     className="col-12"
-                                    label="equipment_type"
+                                    label="EQUIPMENT_TYPE"
                                     name="equipment_type"
-                                    placeholder="equipment_type"
+                                    placeholder="EQUIPMENT_TYPE"
                                     cols={2}
                                     labelPrefix="JobEquipmentType"
                                     enumType={JobEquipmentType}
@@ -619,9 +619,9 @@ export default function Job() {
                                 }
                                 <BaseCheckList
                                     className="col-12"
-                                    label="delivery_type"
+                                    label="DELIVERY_TYPE"
                                     name="delivery_type"
-                                    placeholder="delivery_type"
+                                    placeholder="DELIVERY_TYPE"
                                     cols={2}
                                     labelPrefix="JobDeliveryType"
                                     enumType={JobDeliveryType}
@@ -629,10 +629,10 @@ export default function Job() {
                                 />
                                 <BaseSelect
                                     className="col-12"
-                                    label="team_drivers"
+                                    label="TEAM_DRIVERS"
                                     name="team_drivers"
                                     required
-                                    placeholder="team_drivers"
+                                    placeholder="TEAM_DRIVERS"
                                     labelPrefix="JobTeamDriver"
                                     enumType={JobTeamDriver}
                                     formik={form}
@@ -659,10 +659,10 @@ export default function Job() {
                                 />
                                 <BaseSelect
                                     className="col-12"
-                                    label="pay_method"
+                                    label="PAY_METHOD"
                                     name="pay_method"
                                     required
-                                    placeholder="pay_method"
+                                    placeholder="PAY_METHOD"
                                     labelPrefix="JobPayMethod"
                                     enumType={JobPayMethod}
                                     formik={form}
@@ -956,9 +956,9 @@ export default function Job() {
                                     />
                                     <BaseInput
                                         className="col-12"
-                                        label="min_years_experience"
+                                        label="MIN_YEARS_EXPERIENCE"
                                         name="min_years_experience"
-                                        placeholder="min_years_experience"
+                                        placeholder="MIN_YEARS_EXPERIENCE"
                                         min="0"
                                         type="number"
                                         formik={form}
@@ -973,7 +973,7 @@ export default function Job() {
                                         formik={form}
                                     />
                                     <div className="col-12">
-                                        <label>{t("required_skills")}:</label>
+                                        <label>{t("REQUIRED_SKILLS")}:</label>
                                         {form.touched.required_skills && typeof form.errors.required_skills === "string" ? <span className="text-danger small">{form.errors.required_skills}</span> : null}
                                         {form.values.required_skills.map((v, i) => {
                                             return (
