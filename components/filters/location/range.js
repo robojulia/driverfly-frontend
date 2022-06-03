@@ -3,13 +3,13 @@ import React, { useEffect, useState } from 'react';
 import RangeSlider from 'react-bootstrap-range-slider';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead'; // ES2015
 import FindJobFilterAccordion from '../../find-jobs-accordion/find-job-filter-accordion';
-
+import MapboxApi from "../../../pages/api/mapbox"
 
 export default function Range(props) {
 
     const { t, state, method } = props
-    const { filters } = state
-    const { setFilters } = method
+    const { setFiltersByKeyValue } = method
+    const mapboxApi = new MapboxApi()
 
     const [range, setRange] = useState(50);
     const [location, setLocation] = useState(null);
@@ -17,29 +17,31 @@ export default function Range(props) {
     const [options, setOptions] = useState([]);
 
     const handleSearch = async (query) => {
-        setIsLoading(true);
+        console.log("queryyyyy", query);
         try {
-            const endpoint = `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${process.env.MAPBOX_API_KEY}&autocomplete=true`;
-            const results = await fetch(endpoint).then(response => response.json());
-            setOptions(results?.features);
-            setIsLoading(false);
-
+            if (query) {
+                setIsLoading(true);
+                const results = await mapboxApi.forwardGeocoding(query)
+                setOptions(results?.features || []);
+                setIsLoading(false);
+            } else {
+                setLocation(null)
+            }
         } catch (error) {
             console.error("exception.......", error);
         }
     };
 
     const handleTypeheadChange = () => {
+        let val = null
         if (location) {
-            setFilters({
-                ...filters,
-                location: {
-                    long: location.geometry.coordinates[0],
-                    lat: location.geometry.coordinates[1],
-                    range
-                }
-            })
+            val = {
+                long: location.geometry.coordinates[0],
+                lat: location.geometry.coordinates[1],
+                range
+            }
         }
+        setFiltersByKeyValue('location', val)
     }
 
     useEffect(handleTypeheadChange, [location, range])
@@ -55,6 +57,7 @@ export default function Range(props) {
                     minLength={1}
                     onChange={value => setLocation(value[0])}
                     onSearch={handleSearch}
+                    onInputChange={handleSearch}
                     options={options}
                     placeholder="Location"
                     renderMenuItemChildren={(option, props) => (
