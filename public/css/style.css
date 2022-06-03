@@ -1363,12 +1363,17 @@ img.who-we-img.img-fluid {
 
 .hero-search .input-group {
     width: 35% !important;
+    height: 70px;
+    border-left: 1px solid #ccc;
 }
 
 .hero-search .input-group-prepend {
     align-items: center;
     padding: 0px 3px 0px 10px;
     font-size: 20px;
+    position: absolute;
+    top: 23px;
+    left: -3px;
 }
 
 .hero-search .filter-inner {
@@ -1903,9 +1908,6 @@ li.link-wrapper>a.active {
     width: 11% !important;
 }
 
-.home_search {
-    color: #C5C5C5;
-}
 .create_btn{
     background-color: #1D4354 !important;
     color: #fff !important;
