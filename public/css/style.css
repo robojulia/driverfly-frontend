@@ -1363,12 +1363,17 @@ img.who-we-img.img-fluid {
 
 .hero-search .input-group {
     width: 35% !important;
+    height: 70px;
+    border-left: 1px solid #ccc;
 }
 
 .hero-search .input-group-prepend {
     align-items: center;
     padding: 0px 3px 0px 10px;
     font-size: 20px;
+    position: absolute;
+    top: 23px;
+    left: -3px;
 }
 
 .hero-search .filter-inner {
@@ -1762,385 +1767,6 @@ img.who-we-img.img-fluid {
     padding-bottom: 170px;
 }
 
-/******************************** MEDIA QUERY *************************/
-@media screen and (max-width:1024px) {
-    .tab-content .media {
-        padding: 30px 10px 25px 10px !important;
-    }
-
-    .media {
-        padding: 30px 15px 15px 15px;
-    }
-
-}
-@media screen and (max-width:992px) {
-    .logo {
-        width: 50% !important;
-        vertical-align: top;
-    }
-    .header-sec .navbar {
-        width: 50%;
-        position:static;
-        margin-top: 20px;
-    }
-    .header-sec .navbar-collapse {
-        width: 100%;
-        text-align: left;
-        left: 0px;
-        top: 140px;
-        background: rgb(0, 0, 0);
-        position: absolute;
-        padding: 25px 0px;
-        z-index: 999999;
-    }
-}
-@media screen and (max-width:768px) {
-
-    img {
-        width: 100% !important;
-    }
-
-    .btn.btn-link {
-        text-align: left;
-        padding: 0px;
-    }
-
-    .header-sec i.fa.fa-bars {
-        color: #fff !important;
-    }
-
-    .about-inner {
-        margin-left: 0px;
-    }
-
-    .who-we-serve-sec .col {
-        flex-basis: 100% !important;
-    }
-
-    .who-we-serve-inner {
-        min-height: auto;
-    }
-
-    .box {
-        margin: 100px 0px 20px 25px;
-    }
-
-    .box i.fa.fa-quote-left {
-        font-size: 40px;
-        top: -18px;
-        left: 28px;
-    }
-
-    .partners img {
-        width: 60% !important;
-    }
-
-    .partners {
-        padding: 40px 15px 75px;
-    }
-
-    .footer-logo {
-        width: 209px !important;
-        height: 100%;
-        border: none;
-        object-fit: contain;
-    }
-
-    .footer .col-md-5.pl-5 {
-        padding: 15px !important;
-    }
-
-    .footer-inner {
-        padding: 0px !important;
-    }
-
-    .contact-form .col-sm-12.col-lg-5.pl-0 {
-        padding: 15px !important;
-    }
-
-    .top-outer.bg-white.py-5 {
-        padding: 20px !important;
-    }
-
-    .faq-inner.pl-3 {
-        padding: 0px 0px 30px !important;
-    }
-
-    .footer-inner .nav-link {
-        font-size: 15px;
-    }
-
-    .widget-title {
-        font-size: 16px;
-        white-space: nowrap;
-    }
-
-    .filter-sec .media {
-        display: block;
-    }
-
-    .filter-sec .truck-img {
-        max-width: 100%;
-        margin-bottom: 20px;
-        border: none;
-    }
-
-    .filter-sec .media label.checkbox-inline {
-        display: none;
-    }
-
-    .filter-btn-groups .btn.btn-danger {
-        padding: 10px 20px;
-        margin-bottom: 20px;
-    }
-
-    .filter-btn-groups {
-        align-items: baseline;
-    }
-
-    .filter-inner input.form-control {
-        width: 100% !important;
-    }
-
-    .hero-sec {
-        height: auto;
-        padding: 10px 0px 25px;
-    }
-
-    .hero-inner h1 {
-        font-size: 21px;
-    }
-
-    .hero-inner h2 {
-        display: none;
-    }
-
-    .hero-search {
-        display: block;
-        margin: 0px 0px 20px;
-        padding: 0px;
-        background-color: transparent;
-    }
-
-    .hero-search .input-group {
-        width: 100% !important;
-        background: white;
-        margin-bottom: 15px;
-        border-radius: 5px;
-    }
-
-    .hero-search .filter-inner {
-        border: none;
-        height: 52px;
-        width: 100%;
-        background: white;
-        border-radius: 5px;
-        margin-bottom: 15px;
-    }
-
-    .custom-sel {
-        width: 100% !important;
-        height: 52px !important;
-        margin-bottom: 15px;
-        border-radius: 5px !important;
-
-    }
-
-    .hero-search .input-group input {
-        width: 85%;
-    }
-
-    .form-group-search {
-        padding: 0px !important;
-    }
-
-    .tab-sec .nav-link {
-        padding: 12px 35px;
-    }
-
-    .tab-sec ul.nav.nav-tabs {
-        width: 350px;
-    }
-
-    .tab-sec {
-        padding: 30px 0px;
-    }
-
-    .tab-sec .truck-img {
-        width: 80px !important;
-    }
-    .custom-tst .item {
-        width: 100%;
-    }
-
-    .testimonial-sec .about-testominial .custom-tst .item {
-        width: 50px !important;
-    }
-
-    .custom-tst button.owl-next {
-        width: 40px;
-        height: 40px;
-        font-size: 17px !important;
-        position: absolute;
-        right: -24px;
-        top: 45%;
-    }
-
-    .custom-tst button.owl-prev {
-        width: 40px;
-        height: 40px;
-        font-size: 17px !important;
-        position: absolute;
-        left: 2px;
-        top: 45%;
-    }
-
-    .ort-inner .truck-img {
-        max-width: 150px;
-        height: 160px;
-    }
-
-    .ort-inner .media h4 {
-        font-size: 21px;
-    }
-
-    .ort-inner .job-location p {
-        display: flex;
-        align-items: baseline;
-    }
-
-    .ort-inner .job-location {
-        display: unset !important;
-    }
-
-    .ort-general {
-        padding: 50px 0px 35px;
-    }
-
-    .related-job-sec .truck-img {
-        display: none !important;
-    }
-
-    .related-job-sec .media {
-        display: block;
-    }
-
-    .related-job-sec .media h4 {
-        white-space: unset;
-        line-height: 25px;
-    }
-
-    .related-job-sec .btn.btn-outline-danger {
-        display: none;
-    }
-
-    .job-deatails-sec .row {
-        flex-direction: column-reverse;
-    }
-
-    .job-deatails-inner {
-        margin-top: 45px;
-    }
-
-    .ort-btn .btn.btn-danger {
-        padding: 14px 20px;
-    }
-
-    .footer-social-icons {
-        padding-top: 0px;
-        margin-bottom: 20px;
-    }
-
-    .media {
-        padding: 30px 0px 30px 0px;
-    }
-
-    .sidebar-inner {
-        padding: 0px;
-    }
-
-    .header-sec {
-        min-height: 100px !important;
-      
-    }
-    .header-sec  .navbar-collapse{
-      
-        top: 101px;
-
-    }
-
-    .logo img {
-        height: 100px;
-        max-width: 100px;
-        padding: 0px 0px;
-    }
-
-    .slide___3-Nqo {
-        padding: 10% !important;
-    }
-
-}
-
-@media screen and (max-width:1070px) {
-   
-    .ml-30 {
-        margin-left:0px;
-    }
-}
-@media screen and (max-width:991px) {
-    .slide___3-Nqo {
-        padding: 7%;
-    }
-    .ml-30 {
-        margin-left:30px;
-    }
-}
-
-@media screen and (max-width:464px) {
-    .tab-sec ul.nav.nav-tabs {
-        width: 300px;
-    }
-
-    .top-links-sec h2 {
-        font-size: 20px;
-    }
-
-    .Slider_owl-next,
-    .Slider_owl-prev {
-        display: none;
-    }
-}
-
-
-@media (max-width:1267px) {
-
-    .navbar-toggler {
-        background: #4aa2af;
-        color: #fff;
-        margin: 0px 15px 10px;
-    }
-
-    .btn.btn-primary {
-        padding: 3px 10px !important;
-
-    }
-
-    .btn.btn-primary {
-        padding: 7px 10px;
-    }
-
- 
-
-    .nav-link {
-        font-size: 15px;
-    }
-
-    .logo {
-        width: 150px;
-        border-right: solid 0px;
-    }
-}
-
 .about-testominial .owl-nav .disabled {
     display: none !important;
 }
@@ -2282,9 +1908,6 @@ li.link-wrapper>a.active {
     width: 11% !important;
 }
 
-.home_search {
-    color: #C5C5C5;
-}
 .create_btn{
     background-color: #1D4354 !important;
     color: #fff !important;
@@ -2325,7 +1948,7 @@ li.link-wrapper>a.active {
 }
 
 .hire-driver-left::before {
-    background:  linear-gradient(to bottom, #1D4354 0%, rgb(0 123 255 / 25%) 100%), url("../img/black-man-truck-driver-near-his-truck-parked-in-a-FD6XPWU.jpeg");
+    background:  linear-gradient(to bottom, #1D4354 0%, rgb(0 123 255 / 25%) 100%), url("/img/black-man-truck-driver-near-his-truck-parked-in-a-FD6XPWU.jpeg");
     content: "";
     background-size: cover;
     position: absolute;
@@ -2372,7 +1995,7 @@ li.link-wrapper>a.active {
 
 .owner-operator-bg::before {
     content: "";
-    background-image: url('../img/driver-getting.jpg');
+    background-image: url('/img/driver-getting.jpg');
     background-size: cover;
     position: absolute;
     top: 0px;
@@ -2439,7 +2062,7 @@ li.link-wrapper>a.active {
 
 .get-feature-section::before {
     content: "";
-    background-image: url('../img/husband-and-wife-driving-team-checking-their-itine-RW6LREM.jpeg');
+    background-image: url('/img/husband-and-wife-driving-team-checking-their-itine-RW6LREM.jpeg');
     background-size: cover;
     background-position: center;
     position: absolute;

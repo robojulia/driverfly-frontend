@@ -23,6 +23,7 @@ import "../../utils/yup";
 import { VehicleTransmissionType } from '../../enums/vehicles/vehicle-transmission-type.enum';
 import { BasicEntity } from '../BasicEntity.entity';
 import { JobPayFrequency } from '../../enums/jobs/job-pay-frequency.enum';
+import { JobDrugTestType } from '../../enums/jobs/job-drug-test-type.enum';
 
 export class JobEntity {
     id?: number;
@@ -68,6 +69,7 @@ export class JobEntity {
     transmission_type_experience?: string;
     max_applicant_radius?: number = 100;
     must_pass_drug_test?: boolean = true;
+    drug_test_type?: JobDrugTestType[] = [];
     must_have_clean_mvr?: boolean = true;
     mvr_requirements?: JobMvrEntity[] = [];
     accept_sap_graduates?: boolean = false;
@@ -185,6 +187,10 @@ export class JobEntity {
                 (yup.string() as any).enum(VehicleTransmissionType)
             ),
             must_pass_drug_test: yup.boolean().default(true),
+            drug_test_type: yup.array(
+                (yup.string() as any)
+                    .enum(JobDrugTestType)
+            ),
             must_have_clean_mvr: yup.boolean().default(true),
             mvr_requirements: (yup.array(
                 JobMvrEntity.yupSchema()

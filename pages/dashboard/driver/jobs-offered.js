@@ -3,7 +3,6 @@ import FullLayout from "../../../components/dashboard/layouts/FullLayout";
 import { Col, Row, Card, CardBody, Table } from "reactstrap";
 import useRedirect from '../../../hooks/useRedirect';
 import { Container } from "react-bootstrap";
-import style from '../../../public/dashboard/styles/css/Driver/dashboard.module.css';
 import { useEffect } from "react";
 import useAuth from "../../../hooks/useAuth";
 import { useState } from "react";
@@ -53,15 +52,11 @@ export default function OfferedJobs() {
         fetchJobs()
     }, []);
 
-    // useEffect(() => {
-    //     console.log("applicantJobs", applicantJobs)
-    // }, [applicantJobs]);
-
     return (
         <>
 
             <div className={JobList.joblisting}>
-                <Row className={JobList.link}>
+                <Row>
                     <Col sm="6" lg="8">
                         <h2 className='mt-3'>{t('jobs_offered')}</h2>
                     </Col>
@@ -73,8 +68,13 @@ export default function OfferedJobs() {
                                 {
                                     name: "job_title",
                                     selector: applicant =>
-                                        (<OverlyPopover skipTranslate={true} header={t('job_title')} str={applicant.job.title} />),
+                                    (<Link href={`/dashboard/driver/find-jobs/${applicant.job.id}`}>
+                                        < a>
+                                            <OverlyPopover skipTranslate={true} header={t('job_title')} str={applicant.job.title} />
+                                        </a>
+                                    </Link>),
                                     hidable: false
+
                                 },
                                 {
                                     name: "company",
@@ -119,20 +119,20 @@ export default function OfferedJobs() {
                                             : null
                                 },
                                 {
-                                    name: "schedule",
+                                    name: "SCHEDULE",
                                     selector: applicant =>
-                                        (<OverlyPopover labelPrefix="JobSchedule" skipTranslate={false} header={t('schedule')} str={applicant.job.schedule} />),
+                                        (<OverlyPopover labelPrefix="JobSchedule" skipTranslate={false} header={t('SCHEDULE')} str={applicant.job.schedule} />),
                                 },
                                 {
-                                    name: "employment_type",
+                                    name: "EMPLOYMENT_TYPE",
                                     selector: applicant =>
-                                        (<OverlyPopover labelPrefix="JobEmploymentType" skipTranslate={false} header={t('employment_type')} str={applicant.job.employment_type} />),
+                                        (<OverlyPopover labelPrefix="JobEmploymentType" skipTranslate={false} header={t('EMPLOYMENT_TYPE')} str={applicant.job.employment_type} />),
                                 },
                                 {
-                                    name: "delivery_type",
+                                    name: "DELIVERY_TYPE",
                                     selector: applicant =>
                                     (<ShowEnumFromString
-                                        popover_header={t('delivery_type')}
+                                        popover_header={t('DELIVERY_TYPE')}
                                         labelPrefix="JobDeliveryType"
                                         popover={true}
                                         str={applicant.job.delivery_type}
@@ -140,9 +140,9 @@ export default function OfferedJobs() {
                                     )
                                 },
                                 {
-                                    name: "team_drivers",
+                                    name: "TEAM_DRIVERS",
                                     selector: applicant =>
-                                        (<OverlyPopover labelPrefix="JobTeamDriver" skipTranslate={false} header={t('team_drivers')} str={applicant.job.team_drivers} />),
+                                        (<OverlyPopover labelPrefix="JobTeamDriver" skipTranslate={false} header={t('TEAM_DRIVERS')} str={applicant.job.team_drivers} />),
                                 },
                             ]}
                             items={applicantJobs}
