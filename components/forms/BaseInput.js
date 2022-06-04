@@ -15,6 +15,8 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
       value = meta.value;
       touched = meta.touched;
       error = meta.error;
+
+      if (name === "invite_code") console.log(value, touched, error);
     }
     onChange = onChange || formik.handleChange
     handleBlur = handleBlur || formik.handleBlur;
@@ -78,7 +80,7 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
         min={min}
         max={max}
         step={step}
-        placeholder={t(placeholder === true ? name : placeholder)}
+        placeholder={t(placeholder === true ? label || name : placeholder)}
         value={value == null ? "" : value}
         onChange={onChange}
         onKeyDown={onKeyDown}

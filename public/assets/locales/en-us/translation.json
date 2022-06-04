@@ -804,6 +804,8 @@
         },
         "required": "This field is required",
         "oneOf": "Value must be one of {{values}}",
+        "mustBe": "Value must be {{values}}",
+        "cannotBe": "Value cannot be {{values}}",
         "notOneOf": "Value cannot be one of {{values}}",
         "notType": "Not a valid {{type}}",
         "defined": "Field must exist"
@@ -900,5 +902,9 @@
     "{number}_CHARACTERS_REMAINING": "{{number}} characters remaining",
     "GOVERNED_SPEED": "Governed speed",
     "MAX_SPEED": "Max speed",
-    "MINIMUM_CDL_CLASS": "Minimum CDL Class"
+    "MINIMUM_CDL_CLASS": "Minimum CDL Class",
+    "DOES_NOT_MATCH": "The value does not match the value expected",
+    "INVITE_CODE": "Invitation Code",
+    "UNABLE_TO_SIGNUP": "Unable to sign up new user, our team has been notified.",
+    "SUCCESSFULLY_REGISTERED": "Registered successfully! Please Check Your Email"
 }

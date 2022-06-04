@@ -53,14 +53,14 @@ function BaseSelect ( { append, prepend, formik, required, className, enumType, 
       append={append}
       >
       <select
-        value={value || ""}
+        value={value == null ? "" : value}
         onChange={onChange}
         onBlur={handleBlur}
         disabled={readOnly}
         name={name}
         className={`form-select ${error ? "is-invalid" : ""}`} 
         >
-        {placeholder && <option value="">{t("SELECT_{name}", { name: placeholder === true ? label : placeholder.toString() }, { translateProps: true })}</option>}
+        {placeholder && <option value="">{t("SELECT_{name}", { name: placeholder === true ? label || name : placeholder.toString() }, { translateProps: true })}</option>}
         {options && options.map((v, i) => (<option key={i} value={v[valueKey]}>{t(labelPrefix ? `${labelPrefix}.${v[labelKey]}` : v[labelKey])}</option>))}
       </select>
     </BaseControl>

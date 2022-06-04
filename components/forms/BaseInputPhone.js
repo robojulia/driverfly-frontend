@@ -44,7 +44,7 @@ function BaseInputPhone({ formik, required, className, label, handleBlur, placeh
         }}
         defaultErrorMessage={error}
         country={'us'}
-        placeholder={t(placeholder)}
+        placeholder={t(placeholder === true ? label || name : placeholder)}
         value={value || ""}
         onChange={onChange}
         onKeyDown={onKeyDown}
