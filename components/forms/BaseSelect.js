@@ -22,9 +22,9 @@ function BaseSelect ( { append, prepend, formik, required, className, enumType, 
   }
 
   if (typeof enumType === "object") {
-    options = Object.keys(enumType).map(key => ({
-      [valueKey]: key,
-      [labelKey]: enumType[key]
+    options = Object.entries(enumType).map(([key, value]) => ({
+      [valueKey]: value,
+      [labelKey]: key
     }))
   }
   else if (options && options.length > 0 && typeof options[0] !== "object") {
@@ -60,7 +60,7 @@ function BaseSelect ( { append, prepend, formik, required, className, enumType, 
         name={name}
         className={`form-select ${error ? "is-invalid" : ""}`} 
         >
-        {placeholder && <option value="">{t("SELECT_{name}", { name: placeholder }, { translateProps: true })}</option>}
+        {placeholder && <option value="">{t("SELECT_{name}", { name: placeholder === true ? label : placeholder.toString() }, { translateProps: true })}</option>}
         {options && options.map((v, i) => (<option key={i} value={v[valueKey]}>{t(labelPrefix ? `${labelPrefix}.${v[labelKey]}` : v[labelKey])}</option>))}
       </select>
     </BaseControl>

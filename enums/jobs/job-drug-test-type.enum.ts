@@ -1,0 +1,4 @@
+export enum JobDrugTestType {
+    HAIR_FOLLICLE_TEST = 'HAIR_FOLLICLE_TEST',
+    DOT_URINE_ANALYSIS = 'DOT_URINE_ANALYSIS',
+}

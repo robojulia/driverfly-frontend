@@ -9,7 +9,7 @@ export default function Equipment(props) {
 
   return (
     <>
-      <FindJobFilterAccordion {...props} header={t("equipment_type")}>
+      <FindJobFilterAccordion {...props} header={t("EQUIPMENT_TYPE")}>
         <ViewMoreRadioFilter
           {...props}
           handleChange={handleChange}

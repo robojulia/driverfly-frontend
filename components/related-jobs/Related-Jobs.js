@@ -3,6 +3,7 @@ import Link from "next/link"
 import { useTranslation } from "../../hooks/useTranslation"
 import CompanyPhoto from "../jobs/company-photo";
 import { GeoAltFill, CurrencyDollar, Star } from 'react-bootstrap-icons';
+import { buildAddress } from "../../utils/common";
 
 
 export default function RelatedJobs({ jobs }) {
@@ -42,18 +43,16 @@ export default function RelatedJobs({ jobs }) {
                                                 {
                                                     job.location &&
                                                     <p className="pr-4">
-                                                       <GeoAltFill className="mr-1" />
-                                                        <>
-                                                            {job.location.street || t('no_street')}, {job.location.city || t('no_city')}, {job.location.state || t('no_state')}, {job.location.zip_code || t('no_zip')}
-                                                        </>
+                                                        <GeoAltFill className="mr-1" />
+                                                        {buildAddress(job.location)}
                                                     </p>
                                                 }
                                             </div>
-                                            <p>< CurrencyDollar className="mr-1"/>{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} {t('per week')}</p>
+                                            <p>< CurrencyDollar className="mr-1" />{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} {t('per week')}</p>
                                         </div>
                                         <div className="job-metas">
                                             <div className="job-location">
-                                                < Star className="mr-1"/><strong>
+                                                < Star className="mr-1" /><strong>
                                                     {job.description_short}
                                                 </strong>
                                             </div>

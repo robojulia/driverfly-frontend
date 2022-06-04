@@ -118,7 +118,7 @@ export default function Dashboard() {
                         <thead>
                             <tr>
                                 <th scope="col w-100">
-                                    {t("cdl_class_type")}
+                                    {t("CDL_CLASS")}
                                 </th>
                                 <th scope="col">
                                     {t("years_cdl_experience")}
