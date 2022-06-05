@@ -353,7 +353,17 @@ export default function ThirdPartyResources()
             for_drivers: true,
             for_oo: true,
             for_companies: true
-        }
+        },
+        {
+            company: "Truckbase",
+            type: "Load Board",
+            link: "https://truckbase.ai/?utm_source=driverfly",
+            description:
+                `The first AI-powered truck board`,
+            for_drivers: false,
+            for_oo: false,
+            for_companies: true
+        },
     ];
 
     const [audience, setAudience] = useState("all");
