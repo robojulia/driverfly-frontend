@@ -204,7 +204,7 @@ h2 {
 
 .ml-30 {
     margin-left:30px;
-} 
+}
  .nav-item {
     padding: 0px 0px 0px 30px;
 }
@@ -1454,9 +1454,8 @@ img.who-we-img.img-fluid {
     border: none !important;
     background: white !important;
     color: #252834 !important;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 500;
-    font-family: "Nunito";
     padding: 12px 50px;
     display: inline-block;
     border-radius: 4px;
@@ -2093,7 +2092,7 @@ li.link-wrapper>a.active {
     display: flex;
     justify-content: center;
     align-items: center;
-    
+
 }
 .news-letter-signup-sec p{
 font-size: 16px;

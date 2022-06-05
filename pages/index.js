@@ -146,25 +146,25 @@ export default function Index() {
         <div className="container d-flex justify-content-center hire-driver-section
        ">
           <div className="hire-driver-item hire-driver-left d-flex flex-column justify-content-around">
-            <h1>Hire A Driver</h1>
+            <h1>Hire a Driver</h1>
             <p>
               Get exposed to qualified drivers throughout the United States.{" "}
             </p>
             <div>
-              <button className="theme-bg-btn" type="button">
-                post a job
+              <button className="theme-bg-btn" type="button" onClick={() => router.push("signup")}>
+                Post a Job
               </button>
             </div>
           </div>
           <div className="hire-driver-item hire-driver-right d-flex flex-column justify-content-around">
-            <h1>Find A job</h1>
+            <h1>Find a Job</h1>
             <p>
               Search from hundreds of available CDL and non-CDL driver jobs
               across the US.
             </p>
             <div>
-              <button className="white-bg-btn" type="button">
-                browse jobs
+              <button className="white-bg-btn" type="button" onClick={() => router.push("find-jobs")}>
+                Browse Jobs
               </button>
             </div>
           </div>
@@ -173,13 +173,17 @@ export default function Index() {
       <div className="opacity-overly">
         <section className="owner-operator-bg">
           <div className="container text-center">
-            <h1 className="owner-operator-title">Owner opertors</h1>
+            <h1 className="owner-operator-title">Owner Operators</h1>
             <p className="owner-operatot-text">
-              Are you looking to lease on to a Motor Carrier? We’ve got
-              opportunities for you too! Go to the job search and select owner
-              operator for job type.
+              Are you looking to lease onto a motor carrier? We have
+              opportunities for you too! Go to the job search page and select owner
+              operator for employment type.
             </p>
-            <button className=" white-bg-btn ">Lease on to a carriers</button>
+            <button
+                className="white-bg-btn"
+                onClick={() => router.push({pathname: 'find-jobs', query: { "employment_type": 'OWNER_OPERATOR' }})}>
+                    Lease onto a Carrier
+            </button>
           </div>
         </section>
       </div>
@@ -229,7 +233,7 @@ export default function Index() {
             <p>
               Create your free account in just minutes to be featured in front of hundreds of motor carriers.
             </p>
-            <button className="theme-bg-btn ">Create an Account</button>
+            <button className="theme-bg-btn " onClick={() => router.push("signupf")}>Create an Account</button>
           </div>
         </section>
       </div>
