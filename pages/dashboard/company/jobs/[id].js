@@ -958,7 +958,8 @@ export default function Job() {
                                         label="MIN_YEARS_EXPERIENCE"
                                         name="min_years_experience"
                                         placeholder
-                                        min="0"
+                                        step={0.01}
+                                        min={0}
                                         type="number"
                                         formik={form}
                                     />
