@@ -179,9 +179,9 @@
         "DOCTORAL": "Doctoral"
     },
     "DriverLicenseType": {
-        "CDL_CLASS_A": "Class A CDL",
-        "CDL_CLASS_B": "Class B CDL",
-        "CDL_CLASS_C": "Class C CDL"
+        "A": "Class A CDL",
+        "B": "Class B CDL",
+        "C": "Class C CDL"
     },
     "CDL_CLASS": "CDL Class",
     "cdl_class_type": "CDL Class Type",

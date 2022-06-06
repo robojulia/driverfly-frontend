@@ -12,11 +12,11 @@ export default function ShowEnumFromString(props) {
     }
     const separator = props.separator ? props.separator : ','
     const skipTranslate = props.skipTranslate ? true : false
-    const skipLowerCase = props.skipLowerCase ? true : false
+    const compareEnum = props.compareEnum ? true : false
     const arr = str.split(separator)
 
     const templateString = arr.map(item => {
-        const enumValue = !(props.enumArray[item]) ? '' : (skipLowerCase ? props.enumArray[item] : props.enumArray[item])
+        const enumValue = (!compareEnum) ? item : props.enumArray[item]
         return skipTranslate ? enumValue : t((props.labelPrefix ? props.labelPrefix + "." : "") + enumValue)
     }).join(', ')
 
