@@ -73,7 +73,13 @@ export default function JobsAppliedTo() {
                                 {
                                     name: "job_title",
                                     selector: applicant =>
-                                        (<OverlyPopover skipTranslate={true} header={t('job_title')} str={applicant.job.title} />),
+                                        (
+                                            <Link href={`/jobs/${applicant.job.id}`}>
+                                                <a>
+                                                    <OverlyPopover skipTranslate={true} header={t('job_title')} str={applicant.job.title} />
+                                                </a>
+                                            </Link>
+                                        ),
                                     hidable: false
                                 },
                                 {
