@@ -639,7 +639,7 @@ export default function Job() {
                         </Col>
                         <Col lg="6" xl="4">
                             <ViewCard
-                                title="benefits"
+                                title="BENEFITS"
                             >
                                 <BaseSelect
                                     className="col-12 mb-2"

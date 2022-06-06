@@ -100,7 +100,7 @@
     "JobEmploymentType": {
         "W2": "Salaried (W2)",
         "SALARIED": "Salaried (W2)",
-        "CONTRACTOR": "Contractor (1099)",
+        "CONTRACT": "Contractor (1099)",
         "OWNER_OPERATOR": "Owner-Operator",
         "PART_TIME": "Part-Time",
         "SEASONAL": "Seasonal",
