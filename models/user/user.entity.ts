@@ -1,3 +1,4 @@
+import { JwtTokenPayload } from '../auth/jwt-token-payload.interface';
 import { CompanyEntity } from '../company/company.entity';
 import { RoleEntity } from '../roles/role.enttiy';
 
@@ -18,5 +19,5 @@ export interface UserEntity {
     company?: CompanyEntity;
 
     token?: string;
+    jwt?: JwtTokenPayload;
 }
-  

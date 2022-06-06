@@ -51,7 +51,8 @@ export default function DriverProfileNav(props) {
             </div>
           </DropdownToggle >
           <DropdownMenu>
-            <DropdownItem><LogoutButton /></DropdownItem>
+            <Impersonate />
+            <LogoutButton />
           </DropdownMenu>
         </Dropdown>
       </div>

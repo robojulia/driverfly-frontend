@@ -56,13 +56,13 @@ export default function Sidebar(props) {
 
 /**
  * 
- * @param {SidebarItem[]} items 
+ * @param {SidebarItem[]} values 
  * @param {(string[]) => boolean} hasPermission 
  * @returns {SidebarItem[]}
  */
-function filterItems(items, hasPermission) {
+function filterItems(values, hasPermission) {
 
-    return items.map(i => {
+    return values.map(i => {
         let { permissions, items } = i;
 
         if (items) {
@@ -76,7 +76,9 @@ function filterItems(items, hasPermission) {
         }
 
         if (permissions) {
-            if (!Array.isArray(permissions)) permissions = [permissions];
+            if (!Array.isArray(permissions)) {
+                permissions = [permissions];
+            }
 
             if (!hasPermission(...permissions)) return null;
         }
@@ -144,7 +146,7 @@ function findLast(arr, predicate) {
  */
 function SidebarLink(props) {
     let { isMobile, t, currentPath } = props;
-    let { pathname, items, icon, text, permissions } = props.item;
+    let { pathname, items, text, permissions } = props.item;
 
     if (!pathname && items) pathname = items[0]?.pathname;
 
@@ -153,7 +155,7 @@ function SidebarLink(props) {
         <Link href={pathname}>
             <a href="#">
             {
-            icon &&
+            props.item.icon != null &&
             <span className="float-left">
                 < props.item.icon className="icon_left" />
             </span>

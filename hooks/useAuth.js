@@ -3,6 +3,28 @@ import Router from 'next/router'
 
 import { UserEntity, UserRole } from "../models/user/user.entity";
 
+function parseJwt(token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+
+    let decodedBase64 = null;
+    if (window.Buffer) {
+        decodedBase64 = Buffer.from(base64, "base64").toString();
+    }
+    else if (window.atob) {
+        decodedBase64 = atob(base64);
+    }
+    else {
+        throw new Error("Unable to decode Base64 str");
+    }
+
+    var jsonPayload = decodeURIComponent(decodedBase64.split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+}
+
 const useAuth = () => {
 
     const { getItem, setItem, removeItem } = useStorage();
@@ -13,15 +35,9 @@ const useAuth = () => {
      * @returns 
      */
     const setAuth = (user) => {
-        if (user.roles) {
-            const permissions = new Set();
+        if (user.token && !user.jwt)
+            user.jwt = parseJwt(user.token);
 
-            user.roles.forEach(r => {
-                r.permissions.forEach(p => permissions.add(p));
-            });
-
-            user.permissions = Array.from(permissions);
-        }
         return setItem('user', JSON.stringify(user));
     }
 
@@ -30,10 +46,11 @@ const useAuth = () => {
 
         const user = authCheck();
 
-        const currentPermissions = new Set(user.permissions || []);
+        if (user.jwt?.super_admin) return true;
 
-        return user.permissions && permissions.some(p => currentPermissions.has(p));
-        
+        const currentPermissions = new Set(user.jwt?.permissions || []);
+
+        return user.jwt?.permissions && permissions.some(p => currentPermissions.has(p));
     }
 
     /**
@@ -45,6 +62,18 @@ const useAuth = () => {
         const user = json ? JSON.parse(json) : false;
         return user;
     }
+
+    const isSuperUser = () => {
+        const user = authCheck();
+
+        return user.jwt?.impersonatedBy || user.jwt?.super_admin || false;
+    };
+
+    const isImpersonating = () => {
+        const user = authCheck();
+
+        return !!user.jwt?.impersonatedBy;
+    };
 
     const isDriver = () => {
         const user = authCheck();
@@ -78,6 +107,8 @@ const useAuth = () => {
         setAuth,
         authCheck,
         isDriver,
+        isSuperUser,
+        isImpersonating,
         authenticateDriver,
         isCompany,
         authenticateCompany,

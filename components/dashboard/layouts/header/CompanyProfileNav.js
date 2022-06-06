@@ -1,9 +1,4 @@
-import {
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    Dropdown,
-} from "reactstrap";
+import { Dropdown } from "react-bootstrap";
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -12,6 +7,7 @@ import user1 from "../../../../public/dashboard/assets/images/users/user1.jpg";
 
 import { useTranslation } from "../../../../hooks/useTranslation";
 import useAuth from "../../../../hooks/useAuth";
+import Impersonate from "../../../impersonate/impersonate";
 
 export default function CompanyProfileNav({ user }) {
     const { authenticateCompany } = useAuth();
@@ -22,7 +18,9 @@ export default function CompanyProfileNav({ user }) {
 
     const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
-    const toggle = () => setDropdownOpen((prevState) => !prevState);
+    const toggle = (e) => {
+        setDropdownOpen(!dropdownOpen);
+    }
 
     const menu_options = [
         {
@@ -51,42 +49,32 @@ export default function CompanyProfileNav({ user }) {
     return (
         <>
             <div className="profile">
-                <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-                    <DropdownToggle>
+                <Dropdown isOpen={dropdownOpen} toggle={toggle} >
+                    <Dropdown.Toggle variant="light">
+                        <Image
+                            src={user1}
+                            alt="profile"
+                            className="rounded-circle"
+                            width="30"
+                            height="30"
 
-                        <div style={{ lineHeight: "0px" }}>
-
-                            <Image
-                                src={user1}
-                                alt="profile"
-                                className="rounded-circle"
-                                width="30"
-                                height="30"
-
-                            />
-                            <span> {user.first_name}    {user.last_name}
-                                {/* {user.company?.name || "Driverfly Company"} */}
-                                .</span>
-                            {/* <br />
-<span style={{ paddingLeft: "35px"}}>
-{user.name || "DriverFly User"}
-.</span> */}
-                        </div>
-
-                    </DropdownToggle >
-                    <DropdownMenu>
+                        />
+                        <span> {user.first_name}    {user.last_name}</span>
+                    </Dropdown.Toggle >
+                    <Dropdown.Menu>
                         {menu_options.map((v, i) => {
-                            if (!v.label) return <DropdownItem key={i} divider />
+                            if (!v.label) return <Dropdown.Divider key={i} />
 
                             return (
                                 <Link key={i} href={v.href || "#"}>
-                                    <DropdownItem>{v.label}</DropdownItem>
+                                    <Dropdown.Item>{v.label}</Dropdown.Item>
                                 </Link>
                             );
                         })}
-                        <DropdownItem divider />
-                        <DropdownItem><LogoutButton /></DropdownItem>
-                    </DropdownMenu>
+                        <Dropdown.Divider />
+                        <Impersonate />
+                        <LogoutButton />
+                    </Dropdown.Menu>
                 </Dropdown>
             </div>
         </>
