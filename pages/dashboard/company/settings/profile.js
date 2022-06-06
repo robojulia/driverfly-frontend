@@ -46,10 +46,10 @@ export default function Profile() {
       cell_number: user.cell_number
     },
     validationSchema: yup.object({
-      email: yup.string().required(t("this_field_is_required")).nullable(),
+      email: yup.string().required().nullable(),
       password: yup.string().nullable(),
-      first_name: yup.string().required(t("this_field_is_required")).nullable(),
-      last_name: yup.string().required(t("this_field_is_required")).nullable(),
+      first_name: yup.string().required().nullable(),
+      last_name: yup.string().required().nullable(),
       contact_number: yup.string().nullable(),
       cell_number: yup.string().nullable(),
     }),

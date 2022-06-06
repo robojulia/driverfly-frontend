@@ -194,8 +194,11 @@
         background: white;
         margin-bottom: 15px;
         border-radius: 5px;
+        height: auto;
     }
-
+.hero-search .input-group-prepend{
+    top: 14px;
+} 
     .hero-search .filter-inner {
         border: none;
         height: 52px;
