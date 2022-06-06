@@ -233,7 +233,7 @@ export default function Index() {
             <p>
               Create your free account in just minutes to be featured in front of hundreds of motor carriers.
             </p>
-            <button className="theme-bg-btn " onClick={() => router.push("signupf")}>Create an Account</button>
+            <button className="theme-bg-btn " onClick={() => router.push("signup")}>Create an Account</button>
           </div>
         </section>
       </div>

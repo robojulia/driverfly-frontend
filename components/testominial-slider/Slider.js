@@ -33,8 +33,8 @@ export default class extends React.Component {
                         <Slide index={1}> <div className="Slider_item d-flex justify-content-center align-items-center">
                         <div className="Slider_item d-flex justify-content-center align-items-center">
                             <div className="Slider_box">
-                                <Quote />
-                                <img src="img/Robert-Driver.jpg" alt="" className="" />
+                                <Quote/>
+                                <img src="img/Robert-Driver.jpg" alt=""/>
                                 <h3>Robert Richards</h3>
                                 <span className="job text-theme">Tanker Hauler</span>
                                 <div className="description">Thanks guys you're awesome. Got a job and got moving in less than a week.</div>

@@ -1220,11 +1220,8 @@ img.who-we-img.img-fluid {
     position: absolute;
     top: -51px;
     left: 35px;
-    z-index: -1;
     font-weight: bold;
 }
-
-
 
 .Slider_box h3 {
     margin-top: 40px;
@@ -1245,7 +1242,7 @@ img.who-we-img.img-fluid {
 
 .description {
     color: #6a6a6a;
-    margin-top: 35px;
+    margin-top: 15px;
 }
 
 .partners {
