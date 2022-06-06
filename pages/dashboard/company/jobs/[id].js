@@ -631,7 +631,6 @@ export default function Job() {
                                     className="col-12"
                                     label="TEAM_DRIVERS"
                                     name="team_drivers"
-                                    placeholder
                                     labelPrefix="JobTeamDriver"
                                     enumType={JobTeamDriver}
                                     formik={form}
@@ -640,7 +639,7 @@ export default function Job() {
                         </Col>
                         <Col lg="6" xl="4">
                             <ViewCard
-                                title="benefits"
+                                title="BENEFITS"
                             >
                                 <BaseSelect
                                     className="col-12 mb-2"
@@ -958,7 +957,8 @@ export default function Job() {
                                         label="MIN_YEARS_EXPERIENCE"
                                         name="min_years_experience"
                                         placeholder
-                                        min="0"
+                                        step={0.01}
+                                        min={0}
                                         type="number"
                                         formik={form}
                                     />

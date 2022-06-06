@@ -41,7 +41,7 @@ export class JobEntity {
     equipment_type?: JobEquipmentType[] = [];
     equipment_type_other?: string;
     delivery_type?: JobDeliveryType[] = [];
-    team_drivers?: JobTeamDriver;
+    team_drivers?: JobTeamDriver = JobTeamDriver.NO_TEAM_DRIVER;
     pay_method?: JobPayMethod;
     pay_frequency?: JobPayFrequency;
     min_salary?: number;
