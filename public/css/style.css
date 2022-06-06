@@ -2124,7 +2124,23 @@ text-align: center;
     background:#1b4454;
     color: #ffffff;
 }
+
 .my_job_listing .sc-jqUVSM:active  {
     background:#1b4454;
     color: #ffffff;
+}
+.privacy__policies__container {
+    text-align: justify;
+}
+.privacy__policies__container ol li{
+    list-style: decimal;
+    color: #6c757d;
+}
+.privacy__policies__container  a {
+    color: #000;
+    text-decoration: none;
+}
+.privacy__policies__container  a:hover {
+    color: #2da2af;
+    text-decoration: none;
 }
