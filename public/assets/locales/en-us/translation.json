@@ -93,9 +93,6 @@
         "REGIONAL": "Regional",
         "LOCAL": "Local"
     },
-    "otr": "OTR",
-    "regional": "Regional",
-    "local": "Local",
     "preferred_schedule": "Preferred Schedule",
     "JobEmploymentType": {
         "W2": "Salaried (W2)",
@@ -106,24 +103,12 @@
         "SEASONAL": "Seasonal",
         "ONE_TIME_GIG": "One Time Gig"
     },
-    "salaried": "Salaried (W2)",
-    "contractor": "Contractor (1099)",
-    "owner_operator": "Owner-Operator",
-    "part_time": "Part-Time",
-    "seasonal": "Seasonal",
-    "one_time_gig": "One Time Gig",
     "TEAM_DRIVERS": "Team Drivers",
     "JobTeamDriver": {
         "HAS_TEAM_DRIVER": "Has team drivers",
         "OPEN_TEAM_DRIVER": "Open to team drivers",
         "NO_TEAM_DRIVER": "Not open to team drivers"
     },
-    "has_team_driver": "Has team drivers",
-    "open_team_driver": "Open to team drivers",
-    "no_team_driver": "Not open to team drivers",
-    "has_team_drivers": "Has team drivers",
-    "open_to_team_drivers": "Open to team drivers",
-    "not_open_to_team_drivers": "Not open to team drivers",
     "per_week": "per week",
     "posted": "posted",
     "ago": "ago",
@@ -136,12 +121,6 @@
         "SALARY": "Salary",
         "PERCENT_PER_WEIGHT": "Percent per weight"
     },
-    "rate_per_mile": "Rate per mile",
-    "percent_per_move": "Percent per move",
-    "hourly": "Hourly",
-    "set_weekly": "Set Weekly",
-    "salary": "Salary",
-    "percent_per_weight": "Percent per weight",
     "preferred_benefits": "Preferred Benefits",
     "OTHER_BENEFITS": "Other Benefits",
     "JobBenefits": {
@@ -199,11 +178,6 @@
         "ASSOCIATE": "Associate",
         "DOCTORAL": "Doctoral"
     },
-    "high_school": "High school",
-    "bachelor": "Bachelor",
-    "master": "Master",
-    "associate": "Associate",
-    "doctoral": "Doctoral",
     "DriverLicenseType": {
         "CDL_CLASS_A": "Class A CDL",
         "CDL_CLASS_B": "Class B CDL",
@@ -223,13 +197,8 @@
     "qualifications": "Qualifications",
     "voilations": "Voilations",
     "voilations_in_last_3_years": "Number of moving violations in the last 3 years",
-    "this_field_is_required": "This field is required",
-    "{name}_field_is_required": "{{name}} is required",
-    "{name}_must_not_be_greater_than_{length}_characters": "{{name}} must not be greater than {{length}} characters",
-    "{name}_file_must_be_{file}": "{{name}} must be of type {{file}}",
     "pdf": "PDF",
     "UNRECOGNIZED_DOCUMENT_TYPE": "UNRECOGNIZED DOCUMENT TYPE",
-    "please_select_0_or_above": "Please select 0 or above",
     "successfully_saved_information": "Successfully saved your information",
     "unable_to_save_information": "Unable to save your information",
     "above_21": "Above 21?",
@@ -833,7 +802,7 @@
         "DRIVER_LICENSE": "Drivers License",
         "MEDICAL_CARD": "Medical Card",
         "MVR": "Motor Vehicle Record (MVR)",
-        "PHYSICAL": "Physical"
+        "PHYSICAL": "DOT Long Form Physical"
     },
     "YEARS": "Years",
     "MY_ACCOUNT": "My Account",

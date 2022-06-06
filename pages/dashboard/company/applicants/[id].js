@@ -160,7 +160,7 @@ function View(props) {
             text: null
         },
         validationSchema: yup.object({
-            text: yup.string().required(t("this_field_is_required")).nullable()
+            text: yup.string().required().nullable()
         }),
         onSubmit: async (values) => {
             const api = new ApplicantApi();
