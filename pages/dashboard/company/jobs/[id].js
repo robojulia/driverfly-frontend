@@ -631,7 +631,6 @@ export default function Job() {
                                     className="col-12"
                                     label="TEAM_DRIVERS"
                                     name="team_drivers"
-                                    placeholder
                                     labelPrefix="JobTeamDriver"
                                     enumType={JobTeamDriver}
                                     formik={form}
