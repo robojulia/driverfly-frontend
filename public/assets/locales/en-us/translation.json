@@ -903,5 +903,7 @@
         "404": "The requested resource was not found",
         "401": "The user is not authorized to perform the requested action"
     },
-    "USERS": "Users"
+    "USERS": "Users",
+    "CREATE_USER": "Create User",
+    "EDIT_USER": "Edit User"
 }
