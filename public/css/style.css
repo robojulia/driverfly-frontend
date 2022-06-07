@@ -1355,13 +1355,19 @@ img.who-we-img.img-fluid {
     height: auto;
     padding: 15px;
     color: black;
-    width: 90%;
+    width: 100%;
 }
-
+.hero-search .form-control{
+    border: 0;
+}
+.hero-search .rbt-menu .dropdown-menu .show{
+top:-4px !important;
+}
 .hero-search .input-group {
     width: 35% !important;
     height: 70px;
     border-left: 1px solid #ccc;
+    display: grid;
 }
 
 .hero-search .input-group-prepend {

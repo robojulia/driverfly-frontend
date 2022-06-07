@@ -71,7 +71,9 @@
         text-align: left;
         padding: 0px;
     }
-
+    .hero-search .form-group-search{
+        width: 100%;
+    }
     .header-sec i.fa.fa-bars {
         color: #fff !important;
     }
@@ -217,7 +219,8 @@
     }
 
     .hero-search .input-group input {
-        width: 85%;
+        width: 96%;
+        border: 0px;
     }
 
     .form-group-search {
