@@ -8,5 +8,3 @@ export enum ApplicantStatus {
     HIRED = "HIRED",
     WITHDRAWN = "WITHDRAWN"
 }
-
-//*lead, shortlisted, interviewed, hired, not inclined (add reason code)

@@ -29,8 +29,14 @@ function MyApp({ Component, pageProps }) {
   yup.setLocale({
     mixed: {
       required: (ctx) => t("yup.required"),
-      oneOf: (ctx) => t("yup.oneOf", { values: ctx.values.join(',') }),
-      notOneOf: (ctx) => t("yup.notOneOf", { values: ctx.values.join(',') }),
+      oneOf: (ctx) => Array.isArray(ctx.values) ? 
+        t("yup.oneOf", { values: ctx.values.join(',') }) :
+        t("yup.mustBe", { values: ctx.values })
+      ,
+      notOneOf: (ctx) => Array.isArray(ctx.values) ? 
+        t("yup.notOneOf", { values: ctx.values.join(',') }) :
+        t("yup.cannotBe", { values: ctx.values })
+      ,
       notType: (ctx) => t("yup.notType", { type: `yup.type.${ctx.type}` }, { translateProps: true }),
       notType: (ctx) => t("yup.defined"),
       default: (ctx) => t("yup.default"),
