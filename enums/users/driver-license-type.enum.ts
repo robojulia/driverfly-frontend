@@ -1,5 +1,5 @@
 export enum DriverLicenseType {
-  CDL_CLASS_A = 'CDL_CLASS_A',
-  CDL_CLASS_B = 'CDL_CLASS_B',
-  CDL_CLASS_C = 'CDL_CLASS_C',
+  CDL_CLASS_A = 'A',
+  CDL_CLASS_B = 'B',
+  CDL_CLASS_C = 'C',
 }

@@ -37,18 +37,14 @@ export default function Login() {
 
     const authApi = new AuthApi();
 
-    const translations = {
-        required: t("this_field_is_required"),
-    };
-
     const form = useFormik({
         initialValues: {
             email: null,
             password: null,
         },
         validationSchema: yup.object({
-            email: yup.string().email().required(t('{name}_field_is_required', {name: t('email')})).nullable(),
-            password: yup.string().required(t('{name}_field_is_required', {name: t('PASSWORD')})).nullable(),
+            email: yup.string().email().required().nullable(),
+            password: yup.string().required().nullable(),
         }),
         onSubmit: async (values) => {
 

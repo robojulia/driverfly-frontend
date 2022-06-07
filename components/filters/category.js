@@ -1,24 +1,20 @@
-import { useContext } from "react"
-import jobContext from "../../context/jobContext"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 import { DriverLicenseType } from "../../enums/users/driver-license-type.enum"
-import { ChevronDown } from 'react-bootstrap-icons'
-import { Accordion } from 'react-bootstrap';
 import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
-import { useTranslation } from "../../hooks/useTranslation";
 
 
-export default function Category() {
-  const { t } = useTranslation();
-  const { state, method } = useContext(jobContext)
+export default function Category(props) {
+
+  const { t, state, method } = props
   const { handleChange } = method
 
   return (
     <>
-      <FindJobFilterAccordion header= {t("CATEGORY")}>
+      <FindJobFilterAccordion {...props} header={t("CATEGORY")}>
         <div className="custom-control custom-checkbox p-0">
           <div className="App">
             <EnumFilterByKeyValue
+              {...props}
               translate={true}
               withAll={true}
               enumArray={DriverLicenseType}

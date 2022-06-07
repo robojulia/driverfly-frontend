@@ -1,20 +1,17 @@
-import { useContext } from "react"
-import jobContext from "../../context/jobContext"
 import { JobPayMethod } from "../../enums/jobs/job-pay-method.enum"
 import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
-import { useTranslation } from "../../hooks/useTranslation";
-import ViewMoreRadioFilter from "../find-jobs/filters/view-more-radio-filter"
+import ViewMoreRadioFilter from "./view-more-radio-filter";
 
-export default function PayStructure() {
-  const { t } = useTranslation();
-  const { state, method } = useContext(jobContext)
+export default function PayStructure(props) {
+
+  const { t, state, method } = props
   const { handleChange } = method
 
   return (
-
     <>
-      <FindJobFilterAccordion header={t("pay_structure")}>
+      <FindJobFilterAccordion {...props} header={t("pay_structure")}>
         <ViewMoreRadioFilter
+          {...props}
           handleChange={handleChange}
           name="pay_structure"
           labelPrefix="JobPayMethod"

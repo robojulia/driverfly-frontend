@@ -1,15 +1,9 @@
-import { useRouter } from "next/router"
-import { useContext } from "react"
-import jobContext from "../../context/jobContext"
-import { useTranslation } from "../../hooks/useTranslation"
-import { updateQueryStringParameter } from "../../logics/utils"
 
 export default function Search(props) {
 
-  const { state, method } = useContext(jobContext)
+  const { t, state, method } = props
   const { filters } = state
   const { setFilters, applyFilters } = method
-  const { t } = useTranslation();
 
   const searchHandler = e => {
     if (e.key === 'Enter') {

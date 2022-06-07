@@ -5,12 +5,13 @@
  * @param {import("formik").FormikConfig} interfaces.formik
  * @param {ToastInterface} interfaces.toast 
  * @param {(string) => string} interfaces.t const { t } = useTranslation() interface
+ * @param {string} interfaces.defaultMessage the default error message to display (will be translated)
  * @returns {boolean} true if handled fully, false if not
  */
 function globalAjaxExceptionHandler(error, interfaces) {
     if (!error) return true;
 
-    const { formik, toast, t } = interfaces;
+    const { formik, toast, t, defaultMessage } = interfaces;
 
     const { response } = error;
 
@@ -58,7 +59,7 @@ function globalAjaxExceptionHandler(error, interfaces) {
 
     console.error(`globalAjaxExceptionHandler: encountered`, error);
     if (toast) {
-        toast?.error(t('ERROR_MESSAGE_DEFAULT'));
+        toast?.error(t(defaultMessage || 'ERROR_MESSAGE_DEFAULT'));
         return true; // handled via toast
     }
 
@@ -89,7 +90,7 @@ function globalAjaxExceptionHandler(error, interfaces) {
                      */
                     const { setError, setTouched } = formik.getFieldHelpers(key);
                     setError(t(value));
-                    setTouched(true);
+                    setTouched(true, false);
                     return true;
                 }
                 else if (toast) {

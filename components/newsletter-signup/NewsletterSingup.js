@@ -6,7 +6,7 @@ export default function NewsletterSingup() {
         <>
             <div className='d-flex flex-column align-items-center justify-content-center'>
                 <h1 className='general-headings text-white mt-3'>NEWSLETTER SIGN UP</h1>
-                <p>Subscribe to Driver Hiring Pacific newsletter to get the latest jobs posted,<br /> candidates ,and other latest news stay updated.​</p>
+                <p>Subscribe to DriverFly Pacific newsletter to get the latest jobs posted,<br /> candidates, and other latest news stay updated.​</p>
                 <div className="input-group my-3 w-50" >
                     <div className="input-group input-group-lg">
                         <input type="text" className="form-control" placeholder='Enter Your Email' />

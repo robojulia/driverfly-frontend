@@ -21,6 +21,7 @@ import { buildAddress } from "../../utils/common"
 export default function Detail({ jobDetail, relatedJobs }) {
 
   const { t } = useTranslation();
+  console.log(jobDetail);
 
   return (
     <>
@@ -66,23 +67,12 @@ export default function Detail({ jobDetail, relatedJobs }) {
                         {
                           jobDetail.location &&
                           <p className="pr-4">
-                            <i className="fa fa-map-marker mr-2" aria-hidden="true"></i>
+                            < GeoAltFill className="mr-1" />
                             {buildAddress(jobDetail.location)}
                           </p>
                         }
                       </div>
-                      <div className="job-metas">
-                        <div className="job-location d-flex align-items-center">
-                          {
-                            jobDetail.location &&
-                            <p className="pr-4">
-                              < GeoAltFill  className="mr-1"/>
-                              <>
-                                {jobDetail.location.street || t('no_street')}, {jobDetail.location.city || t('no_city')}, {jobDetail.location.state || t('no_state')}, {jobDetail.location.zip_code || t('no_zip')}
-                              </>
-                            </p>
-                          }
-                        </div>
+                      <div >
                         <p><CurrencyDollar />{jobDetail.min_weekly_pay ? jobDetail.min_weekly_pay : 0} - {jobDetail.max_weekly_pay ? jobDetail.max_weekly_pay : 0} {t('per week')}</p>
                       </div>
                     </div>
@@ -91,10 +81,6 @@ export default function Detail({ jobDetail, relatedJobs }) {
               </div>
             </div>
             <div className="col-md-3">
-              {/* <div className="ort-btn mt-lg-4 mt-0">
-                <button type="button" className="btn btn-danger" data-toggle="modal" data-target="#exampleModal"> {t('apply_now')} <i className="fa fa-long-arrow-right pl-1" aria-hidden="true"></i></button>
-                <button type="button" className="btn btn-danger"> <i className="fa fa-star-o" aria-hidden="true"></i> {t('shortlist')} </button>
-              </div> */}
               <JobApply job={jobDetail} />
             </div>
           </div>

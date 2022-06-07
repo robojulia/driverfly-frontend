@@ -1,14 +1,12 @@
-import { useContext } from "react"
-import jobContext from "../../context/jobContext"
 import moment from "moment"
 import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
-import { useTranslation } from "../../hooks/useTranslation";
 import { JobDatePosted } from "../../enums/jobs/job-date-posted.enum"
-import ViewMoreRadioFilter from "../find-jobs/filters/view-more-radio-filter";
+import ViewMoreRadioFilter from "./view-more-radio-filter";
 
-export default function DatePosted() {
-  const { t } = useTranslation();
-  const { state, method } = useContext(jobContext)
+
+export default function DatePosted(props) {
+
+  const { t, state, method } = props
   const { handleChange } = method
 
   function changeHandler(e) {
@@ -35,8 +33,9 @@ export default function DatePosted() {
 
   return (
     <>
-      <FindJobFilterAccordion header={t("POST_DATE")}>
+      <FindJobFilterAccordion {...props} header={t("POST_DATE")}>
         <ViewMoreRadioFilter
+          {...props}
           handleChange={changeHandler}
           name="date_created"
           labelPrefix="JobDatePosted"

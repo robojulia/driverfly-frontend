@@ -20,7 +20,7 @@ export default function Forgot() {
       email: null
     },
     validationSchema: yup.object({
-      email: yup.string().email(t("INVALID_EMAIL_FORMAT")).required(t("this_field_is_required")).nullable()
+      email: yup.string().email(t("INVALID_EMAIL_FORMAT")).required().nullable()
     }),
     onSubmit: async (values) => {
       const api = new AuthApi();
