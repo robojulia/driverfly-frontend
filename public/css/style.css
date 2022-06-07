@@ -2141,3 +2141,8 @@ text-align: center;
     color: #2da2af;
     text-decoration: none;
 }
+.privacy__policies__container  h5, .privacy__policies__container  h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #6a6a6a;
+}
