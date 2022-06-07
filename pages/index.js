@@ -45,7 +45,7 @@ export default function Index() {
                   Get hired fast. Start Searching.
                 </h2>
               </div>
-              <HeroSearch t={t} router={router} />
+              <HeroSearch />
               <TrendingWords />
             </div>
           </div>

@@ -1,11 +1,14 @@
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { GeoAlt, Search } from "react-bootstrap-icons";
 import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
 import { DriverLicenseType } from "../../enums/users/driver-license-type.enum"
+import { useTranslation } from "../../hooks/useTranslation";
 
 export default function HeroSearch(props) {
 
-    const { t, router } = props
+    const router = useRouter();
+    const { t } = useTranslation();
 
     const [filters, setFilters] = useState({});
 
