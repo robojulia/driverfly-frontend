@@ -22,7 +22,13 @@ export default class UserApi extends BaseApi {
     }
 
     async list() : Promise<UserEntity> {
-        const { data } = await this.get("user");
+        const { data } = await this.get("user/list");
+
+        return data;
+    }
+
+    async findById(id: number, user: UserEntity) : Promise<UserEntity> {
+        const { data } = await this.get(`user/${id}`);
 
         return data;
     }

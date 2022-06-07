@@ -12,10 +12,6 @@ import {PenFill, TrashFill} from 'react-bootstrap-icons';
 
 
 import UserApi from "../../../../api/user";
-import { VehicleType } from "../../../../../enums/vehicles/vehicle-type.enum";
-import { VehicleTrailerType } from "../../../../../enums/vehicles/vehicle-trailer-type.enum";
-import { VehicleAccessory } from "../../../../../enums/vehicles/vehicle-accessory.enum";
-import { VehicleEntity } from "../../../../../models/company/vehicle.entity";
 import ViewDataTable from "../../../../../components/viewDetails/viewDataTable";
 
 export default function UserList() {
@@ -25,20 +21,15 @@ export default function UserList() {
 
   const { t } = useTranslation();
   const router = useRouter();
-  // const { authCheck, setAuth } = useAuth();
-  // const user = authCheck();
-  // console.log('user', user);
+  const { authCheck, setAuth } = useAuth();
+  const user = authCheck();
 
   const [ users, setUsers ] = useState([]);
 
   useEffect(async () => {
     const api = new UserApi();
-
     const v = await api.list();
-
-    console.log(v);
-
-    setUsers(v);
+    setUsers(v.filter((u) => u.id !== user.id && u.status === "ACTIVE"));
   }, []);
 
   /**
@@ -53,28 +44,22 @@ export default function UserList() {
 
   /**
    * 
-   * @param {React.MouseEvent} e 
+   * @param {number} id
    */
-  const onEditClick = (e) => {
-    e.preventDefault();
-    const { name } =  e.currentTarget;
-
-    router.push(`${router.pathname}/${name}`);
+  const onEditClick = (id) => {
+    router.push(`${router.pathname}/${id}`);
   }
 
   /**
    * 
-   * @param {React.MouseEvent} e 
+   * @param {number} id
    */
-   const onDeleteClick = async (e) => {
-    e.preventDefault();
-    const { name } =  e.currentTarget;
+   const onDeleteClick = async (id) => {
+    const api = new UserApi();
 
-    const api = new VehicleApi();
+    await api.remove(id);
 
-    await api.remove(name);
-
-    setVehicles(vehicles.filter(v => v.id != name));
+    setUsers(users.filter(v => v.id != id));
   }
 
 
@@ -95,42 +80,20 @@ export default function UserList() {
           <ViewDataTable
             columns={[
                 {
-                    name: "job_title",
-                    selector: j => j.title,
+                    name: "name",
+                    selector: j => `${j.first_name} ${j.last_name}`,
                     hidable: false
                 },
                 {
-                    name: "location",
-                    selector: j => buildAddress(j.location || {})
+                    name: "email",
+                    selector: j => j.email,
+                    hidable: false
                 },
                 {
-                    name: "drivers_needed",
-                    selector: j => j.drivers_needed
-                },
-                {
-                    name: "expiration_date",
-                    selector: j => j.expiry_date ? new Date(j.expiry_date).toDateString() : null
-                },
-                {
-                    name: "GEOGRAPHY",
-                    selector: j => j.geography ? t("JobGeography." + j.geography) : null
-                },
-                {
-                    name: "schedule",
-                    selector: j => j.schedule ? t("JobSchedule." + j.schedule) : null
-                },
-                {
-                    name: "employment_type",
-                    selector: j => j.employment_type ? t("JobEmploymentType." + j.employment_type) : null
-                },
-                {
-                    name: "delivery_type",
-                    selector: j => j.delivery_type ? t("JobDeliveryType." + j.delivery_type) : null
-                },
-                {
-                    name: "team_drivers",
-                    selector: j => j.team_drivers ? t("JobTeamDriver." + j.team_drivers) : null
-                },
+                  name: "contact_number",
+                  selector: j => j.contact_number,
+                  hidable: false
+              }
             ]}
             actions={j => ([
                 {

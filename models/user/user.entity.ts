@@ -25,11 +25,12 @@ export class UserEntity {
         return yup.object({
             first_name: yup.string().required().nullable(),
             last_name: yup.string().required().nullable(),
-            contact_number: yup.string().required().nullable(),
-            cell_number: yup.string().required().nullable(),
-            timezone: yup.string().required().nullable().optional(),
-            language: yup.string().required().nullable().optional(),
-          });
+            email: yup.string().required().nullable(),
+            contact_number: yup.string().nullable(),
+            cell_number: yup.string().nullable(),
+            timezone: yup.string().nullable(),
+            language: yup.string().nullable(),
+        });
     }
 }
   

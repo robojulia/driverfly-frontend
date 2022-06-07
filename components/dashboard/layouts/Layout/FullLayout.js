@@ -55,22 +55,25 @@ const FullLayout = ({ children }) => {
             permissions: "CanViewCompany",
         },
         {
-          pathname: "/dashboard/company/settings/users",
-          icon: PeopleFill,
-          text: "USERS",
-          permissions: "CanViewUser",
+            pathname: "/dashboard/company/settings/users",
+            icon: PeopleFill,
+            text: "USERS",
+            permissions: "CanViewUser",
+            startsWith: true
         },
         {
             pathname: "/dashboard/company/settings/vehicles",
             icon: CardImage,
             text: "VEHICLES",
             permissions: "CanViewVehicle",
+            startsWith: true
         },
         {
             pathname: "/dashboard/company/settings/locations",
             icon: GeoAltFill,
             text: "TERMINALS",
             permissions: "CanViewLocation",
+            startsWith: true
         },
         {
             pathname: "/dashboard/company/settings/profile",

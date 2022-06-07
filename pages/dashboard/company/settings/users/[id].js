@@ -33,7 +33,7 @@ export default function User() {
         <ChildPageLayout
             title={id ? "EDIT_USER" : "CREATE_USER"}
             backPath={backPath}
-            >
+        >
           <UserForm
             id={id}
             onSaveComplete={goBack}
