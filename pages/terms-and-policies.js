@@ -14,8 +14,9 @@ export default function TermsAndPolicies() {
                 </div>
             </div>
             <div className='container my-5 privacy__policies__container'>
-                <h4 className="">I. Legal Action</h4>
-                <h5 className='py-3'>A. Arbitration and Dispute Resolution</h5>
+                <h5 className="">I. Legal Action</h5>
+                <h5 className='py-3 '>A. Arbitration and Dispute Resolution</h5>
+                <h5 className='pb-3'>1. Disputes and Arbitration</h5>
                 <p className='text-secondary'>DriverFly is committed to customer satisfaction. If you have a problem or dispute, we will try to resolve it. If we are unsuccessful, you may pursue your claim as explained in this section.</p>
                 <p className='text-secondary'>You agree to give us an opportunity to resolve any problem, dispute, or claim relating in any way to the Sites and/or any of its related applications or services; any dealings with DriverFly, including with our marketing and customer service agents; the purchase, use, or performance of any services or products available through this Site; any representations made by DriverFly; or our Privacy Policy (collectively, “Claims”) by providing Notice to Customer Support. Unless prohibited by applicable law, any Claim must be brought within two (2) years from the date on which such Claim arose or accrued. If we are unable to resolve your Claims within 60 days of receipt, you may seek relief through arbitration or small claims court, as set forth below. This informal process is a condition precedent to your ability to initiate a claim in arbitration or small claims court.</p>
                 <p className='text-secondary'>This Agreement shall be governed by the laws of the State of Delaware, United States of America, without regard to conflict of laws. All Claims or other matters in dispute between you or any Third- party and DriverFly, its subsidiaries or affiliates, or any third party partners or companies offering products or services through the Site, whether based upon contract, tort, statute, or otherwise, shall be governed by the laws of the State of Delaware, without regard to conflict of laws provisions that would result in the application of the laws of any other jurisdiction.</p>
@@ -154,7 +155,7 @@ export default function TermsAndPolicies() {
                         <p>obtain or attempt to obtain any Content through any means not intentionally made available through this Site, including harvesting or otherwise collecting information about others such as email addresses.</p>
                     </li>
                 </ol>
-                <h4> III. User Rights and Responsibilities</h4>
+                <h5> III. User Rights and Responsibilities</h5>
                 <h5 className='py-3'>Privacy Policy</h5>
                 <p className="text-secondary">Your privacy is very important to us. Please read our <a href="/terms-and-policies">Privacy Policy</a>, which governs your use of this Site. By using this Site, you agree that the terms of this policy are reasonable and satisfactory to you. You consent to the use of your personal information by DriverFly.co, digitalhiringapp.com, and/or any third party partners in accordance with the terms of this policy. DriverFly will not be responsible for any damages resulting from a lapse in compliance with the Privacy Policy.</p>
                 <h5 className=" py-3">Accounts, Security, Passwords</h5>
