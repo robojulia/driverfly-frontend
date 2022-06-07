@@ -16,7 +16,9 @@ import { JobEmploymentType } from "../enums/jobs/job-employment-type.enum";
 import { useRouter } from "next/router";
 import { GeoAlt, Search } from "react-bootstrap-icons";
 import NewsletterSingup from "../components/newsletter-signup/NewsletterSingup";
+import HeroSearch from "../components/home/hero-search";
 export default function Index() {
+
   const router = useRouter();
   const { t } = useTranslation();
 
@@ -24,28 +26,6 @@ export default function Index() {
   function updateState() {
     setShowRecent(!showRecent);
   }
-
-  const [filters, setFilters] = useState({});
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFilters({
-      ...filters,
-      [name]: value,
-    });
-  };
-  const handleSubmit = (e) => {
-    router.push({
-      pathname: "find-jobs",
-      query: { ...filters },
-    });
-  };
-
-  const searchHandler = (e) => {
-    if (e.key === "Enter") {
-      handleSubmit();
-    }
-  };
 
   return (
     <>
@@ -65,78 +45,7 @@ export default function Index() {
                   Get hired fast. Start Searching.
                 </h2>
               </div>
-
-              <div className="hero-search">
-                <div className="input-group border-0">
-                  <div className="input-group-prepend">
-                    <Search color="#C5C5C5"/>
-                  </div>
-                  <input
-                    onKeyPress={searchHandler}
-                    onChange={handleChange}
-                    name="keywords"
-                    type="text"
-                    className="mx-3"
-                    placeholder="Job Title or Keywords"
-                    aria-label=""
-                    aria-describedby="basic-addon1"
-                  />
-                </div>
-                <div className="input-group">
-                  <div className="input-group-prepend">
-                    <GeoAlt color="#C5C5C5" />
-                  </div>
-
-                  <input
-                    onKeyPress={searchHandler}
-                    type="text"
-                    className="mx-3"
-                    placeholder="Location"
-                    aria-label=""
-                    aria-describedby="basic-addon1"
-                  />
-                </div>
-                <select
-                  name="employment_type"
-                  onChange={handleChange}
-                  className="form-select custom-sel"
-                  aria-label="Default select example"
-                  id="exampleFormControlSelect1"
-                >
-                  <option className="selectbg">Work Type</option>
-                  {Object.keys(JobEmploymentType).map((key, index) => {
-                    return (
-                      <option key={index} value={key}>
-                        {t(JobEmploymentType[key].toLowerCase())}
-                      </option>
-                    );
-                  })}
-                </select>
-                <select
-                  name="cdl_class"
-                  onChange={handleChange}
-                  className="form-select custom-sel "
-                  aria-label="Default select example"
-                  id="exampleFormControlSelect1"
-                >
-                  <option>Class Type</option>
-                  {Object.keys(DriverLicenseType).map((key, index) => {
-                    return (
-                      <option key={index} value={key}>
-                        {t(DriverLicenseType[key].toLowerCase())}
-                      </option>
-                    );
-                  })}
-                </select>
-                <div className="form-group form-group-search m-0">
-                  <button
-                    className="btn-submit btn btn-block btn-theme hvr-shrink"
-                    type="button"
-                  >
-                    Search
-                  </button>
-                </div>
-              </div>
+              <HeroSearch />
               <TrendingWords />
             </div>
           </div>
@@ -180,9 +89,9 @@ export default function Index() {
               operator for employment type.
             </p>
             <button
-                className="white-bg-btn"
-                onClick={() => router.push({pathname: 'find-jobs', query: { "employment_type": 'OWNER_OPERATOR' }})}>
-                    Lease onto a Carrier
+              className="white-bg-btn"
+              onClick={() => router.push({ pathname: 'find-jobs', query: { "employment_type": 'OWNER_OPERATOR' } })}>
+              Lease onto a Carrier
             </button>
           </div>
         </section>
