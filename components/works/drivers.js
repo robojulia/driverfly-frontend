@@ -55,7 +55,7 @@ export default function Driver() {
                          < Trophy />
                         <div className="card-body px-0">
                             <h5 className="card-title">Get Hired</h5>
-                            <p className="card-text">Employer will contact you directly to discuss the opportunity and their unique hiring steps.</p>
+                            <p className="card-text">Employers will contact you directly to discuss their opportunities and unique hiring steps.</p>
                         </div>
                     </div>
                 </div>
