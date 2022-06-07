@@ -79,20 +79,25 @@ export default function UserList() {
         <Col  lg="12">
           <ViewDataTable
             columns={[
-                {
-                    name: "name",
-                    selector: j => `${j.first_name} ${j.last_name}`,
-                    hidable: false
-                },
-                {
-                    name: "email",
-                    selector: j => j.email,
-                    hidable: false
-                },
-                {
-                  name: "contact_number",
-                  selector: j => j.contact_number,
-                  hidable: false
+              {
+                name: "name",
+                selector: j => `${j.first_name} ${j.last_name}`,
+                hidable: false
+              },
+              {
+                name: "roles",
+                selector: j => j.roles.map((role) => role.name).join(", "),
+                hidable: false
+              },
+              {
+                name: "email",
+                selector: j => j.email,
+                hidable: false
+              },
+              {
+                name: "contact_number",
+                selector: j => j.contact_number,
+                hidable: false
               }
             ]}
             actions={j => ([
