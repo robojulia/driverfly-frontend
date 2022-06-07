@@ -6,6 +6,7 @@ import Head from "next/head";
 import Layout from "../components/layouts";
 import RangeSlider from 'react-bootstrap-range-slider';
 import FilterSchools from '../components/filter-schools/filter-schools'
+import CdlInfo from '../components/cdl-info/CdlInfo'
 import SchoolApi from "./api/school"
 import { useTranslation } from "../hooks/useTranslation";
 import { useFormik } from "formik";
@@ -157,36 +158,7 @@ export default function FindSchools(props) {
             <div className="filter-sec">
                 <div className="container">
                     <div className="row">
-                        <div>
-                            <Accordion defaultActiveKey="0">
-                                <Accordion.Item eventKey="0">
-                                    <Accordion.Header> <span className="btn-link"> Things to Consider </span></Accordion.Header>
-                                    <Accordion.Body>
-                                        <p>Before getting your CDL, make sure to read the FMCSA's instructions and download your state's manual about
-                                        the process. Also, decide which type of vehicle and which class you would like your license for, as well as whether
-                                        or not you want any endorsements.</p>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                                <Accordion.Item eventKey="1">
-                                    <Accordion.Header> <span className="btn-link"> Getting Your CDL </span></Accordion.Header>
-                                    <Accordion.Body>
-                                        <p>To get your CDL, you must first get a Commerical Learners Permit (CLP). This requires passing knowledge tests
-                                        and providing the necessary documentation, which may include your driving record, medicals, or proof of residency.
-                                        The documents you'll need will depend on the type of license you're trying to get and the state you're in.</p>
-                                        <p>Afterwards, you must do Entry-Level Driver Training with a training provider registered on the FMCSA's Training Provider
-                                        Registry. You can search for a provider with the tool below.</p>
-                                        <p>Once you've completed your training, you must take the Skills Test. After passing the skills test, bring your documentation
-                                        to the counter to be processed. You will then be given or mail your license, depending on your state.</p>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                                <Accordion.Item eventKey="2">
-                                    <Accordion.Header> <span className="btn-link"> Grants </span></Accordion.Header>
-                                    <Accordion.Body>
-                                        <p></p>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                            </Accordion>
-                        </div>
+                        < CdlInfo />
                         <div className="col-12 col-lg-3 lg-mt-0 mt-5">
                             < FilterSchools />
                         </div>
@@ -196,7 +168,7 @@ export default function FindSchools(props) {
                                     <thead>
                                         <tr>
                                             <th>Location Type</th>
-                                            <th>Private Enrollment Only</th>
+                                            <th>Enrollment Type</th>
                                             <th>Provider Name</th>
                                             <th>Location Name</th>
                                             <th>Address</th>
