@@ -1,9 +1,11 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GeoAlt, Search } from "react-bootstrap-icons";
+import { AsyncTypeahead } from "react-bootstrap-typeahead";
 import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
 import { DriverLicenseType } from "../../enums/users/driver-license-type.enum"
 import { useTranslation } from "../../hooks/useTranslation";
+import MapboxApi from "../../pages/api/mapbox";
 
 export default function HeroSearch(props) {
 
@@ -11,6 +13,12 @@ export default function HeroSearch(props) {
     const { t } = useTranslation();
 
     const [filters, setFilters] = useState({});
+    const mapboxApi = new MapboxApi()
+
+    const [range, setRange] = useState(50);
+    const [location, setLocation] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [options, setOptions] = useState([]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -27,11 +35,42 @@ export default function HeroSearch(props) {
         });
     };
 
-    const searchHandler = (e) => {
+    const handleKeywordSearch = (e) => {
         if (e.key === "Enter") {
             handleSubmit();
         }
     };
+
+    const handleTypeheadSearch = async (query) => {
+        try {
+            if (query) {
+                setIsLoading(true);
+                const results = await mapboxApi.forwardGeocoding(query)
+                setOptions(results?.features || []);
+                setIsLoading(false);
+            } else {
+                setLocation(null)
+            }
+        } catch (error) {
+            console.error("exception.......", error);
+        }
+    };
+
+    const handleTypeheadChange = () => {
+        let val = null
+        if (location) {
+            val = {
+                ...filters,
+                place_name: location.place_name,
+                long: location.geometry.coordinates[0],
+                lat: location.geometry.coordinates[1],
+                range: 1500
+            }
+        }
+        setFilters(val);
+    }
+
+    useEffect(handleTypeheadChange, [location])
 
     return (
         <div className="hero-search">
@@ -40,7 +79,7 @@ export default function HeroSearch(props) {
                     <Search color="#C5C5C5" />
                 </div>
                 <input
-                    onKeyPress={searchHandler}
+                    onKeyPress={handleKeywordSearch}
                     onChange={handleChange}
                     name="keywords"
                     type="text"
@@ -50,20 +89,29 @@ export default function HeroSearch(props) {
                     aria-describedby="basic-addon1"
                 />
             </div>
-            {/* <div className="input-group">
-                <div className="input-group-prepend">
-                    <GeoAlt color="#C5C5C5" />
-                </div>
 
-                <input
-                    onKeyPress={searchHandler}
-                    type="text"
-                    className="mx-3"
+            <div className="input-group">
+                {/* <div className="input-group-prepend">
+                    <GeoAlt color="#C5C5C5" />
+                </div> */}
+                <AsyncTypeahead
+                    id="async-example"
+                    name="location"
+                    isLoading={isLoading}
+                    labelKey="place_name"
+                    minLength={1}
+                    onChange={value => setLocation(value[0])}
+                    onSearch={handleTypeheadSearch}
+                    onInputChange={handleTypeheadSearch}
+                    options={options}
                     placeholder="Location"
-                    aria-label=""
-                    aria-describedby="basic-addon1"
+                    renderMenuItemChildren={(option, props) => (
+                        <>
+                            <span className='text-dark'>{option.place_name}</span>
+                        </>
+                    )}
                 />
-            </div> */}
+            </div>
             <select
                 name="employment_type"
                 onChange={handleChange}

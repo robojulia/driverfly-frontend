@@ -1,10 +1,12 @@
 import { MvrType } from "../../enums/users/mvr-type.enum"
+import { useTranslation } from "../../hooks/useTranslation";
 import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
 import ViewMoreRadioFilter from "./view-more-radio-filter";
 
 export default function MvrRequirement(props) {
 
-  const { t, state, method } = props
+  const { t } = useTranslation();
+  const { state, method } = props
   const { handleChange } = method
 
   return (
