@@ -1,10 +1,10 @@
+import { useEffect, useState } from 'react';
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
+import PageLayout from "../../../../../components/layouts/PageLayout";
 import { Col, Row, Table } from "reactstrap";
 import useAuth from '../../../../../hooks/useAuth';
 import { useRouter } from "next/router"
-import { useEffect, useState } from 'react'
 import useRedirect from '../../../../../hooks/useRedirect';
-import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useTranslation } from "../../../../../hooks/useTranslation";
 
@@ -21,7 +21,7 @@ export default function UserList() {
 
   const { t } = useTranslation();
   const router = useRouter();
-  const { authCheck, setAuth } = useAuth();
+  const { authCheck, hasPermission } = useAuth();
   const user = authCheck();
 
   const [ users, setUsers ] = useState([]);
@@ -64,40 +64,43 @@ export default function UserList() {
 
 
   return (
-    <>
-      <Row>
-        <Col xs="10">
-          <h2>{t("USERS")}</h2>
-        </Col>
-        <Col xs="2" className="text-right">
-          <button className="btn btn-primary" onClick={onAddClick}>
-            + {t("CREATE")}
-          </button>
-        </Col>
-      </Row>
-      <Row className="mt-5 my_company_users">
+    <PageLayout 
+      title="USERS" 
+      actions={[
+        {
+          title: "CREATE",
+          onClick: onAddClick
+        }
+      ]}>
+      <Row className="mt-5">
         <Col  lg="12">
           <ViewDataTable
             columns={[
               {
                 name: "name",
-                selector: j => `${j.first_name} ${j.last_name}`,
+                selector: j => j.name,
                 hidable: false
               },
               {
-                name: "roles",
+                name: "ROLES",
                 selector: j => j.roles.map((role) => role.name).join(", "),
-                hidable: false
+                hidable: true
               },
               {
                 name: "email",
                 selector: j => j.email,
-                hidable: false
+                hidable: true
               },
               {
-                name: "contact_number",
+                name: "phone",
                 selector: j => j.contact_number,
-                hidable: false
+                hidable: true
+              },
+              {
+                name: "phone_cell",
+                selector: j => j.cell_number,
+                hidable: true,
+                hide: true
               }
             ]}
             actions={j => ([
@@ -114,7 +117,7 @@ export default function UserList() {
           />
         </Col>
       </Row>
-    </>
+    </PageLayout>
   )
 };
 

@@ -887,5 +887,5 @@
     "INVITE_CODE": "Invitation Code",
     "UNABLE_TO_SIGNUP": "Unable to sign up new user, our team has been notified.",
     "SUCCESSFULLY_REGISTERED": "Registered successfully! Please Check Your Email",
-    "roles": "Roles"
+    "ROLES": "Roles"
 }
