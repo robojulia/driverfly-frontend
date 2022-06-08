@@ -1,16 +1,13 @@
 import { useEffect, useState } from 'react';
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
 import PageLayout from "../../../../../components/layouts/PageLayout";
-import { Col, Row, Table } from "reactstrap";
+import { Col, Row } from "reactstrap";
 import useAuth from '../../../../../hooks/useAuth';
 import { useRouter } from "next/router"
 import useRedirect from '../../../../../hooks/useRedirect';
 import 'react-toastify/dist/ReactToastify.css'
 import { useTranslation } from "../../../../../hooks/useTranslation";
-
 import {PenFill, TrashFill} from 'react-bootstrap-icons';
-
-
 import UserApi from "../../../../api/user";
 import ViewDataTable from "../../../../../components/viewDetails/viewDataTable";
 
@@ -106,12 +103,14 @@ export default function UserList() {
             actions={j => ([
                 {
                     onClick: e => onEditClick(j.id),
-                    label: (<><PenFill /> {t("EDIT")}</>)
+                    label: (<><PenFill /> {t("EDIT")}</>),
+                    permission: hasPermission("CanUpdateUser")
                 },
                 {
                     onClick: e => onDeleteClick(j.id),
-                    label: (<><TrashFill /> {t("DELETE")}</>)
-                },
+                    label: (<><TrashFill /> {t("DELETE")}</>),
+                    permission: hasPermission("CanDeleteUser")
+                }
             ])}
             items={users}
           />
