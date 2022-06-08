@@ -206,6 +206,7 @@
     "basic": "Basic",
     "basic_details": "Basic Details",
     "driver_license_number": "Driver License Number",
+    "License_Restrictions":"License Restrictions",
     "expiration_date": "Expiration Date",
     "cdl_experience": "CDL Experience",
     "years_cdl_experience": "Years of CDL Experience",
