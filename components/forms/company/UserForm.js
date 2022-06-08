@@ -41,12 +41,12 @@ export function UserForm(props) {
                 else {
                     user = await api.create(dto);
                 }
-                !!id ? toast.formSuccess(t, "update", "USER") : toast.formSuccess(t, "create", "USER");
+                toast.formSuccess(t, !!id ? "update" : "create", "USER");
                 if (onSaveComplete) onSaveComplete(user);
             }
             catch (e) {
                 console.error("Unable to save entity", e);
-                !!id ? toast.formSuccess(t, "update", "USER") : toast.formSuccess(t, "create", "USER");
+                toast.formFailed(t, !!id ? "update" : "create", "USER");
                 if (onSaveError) onSaveError(e);
             }
         },
@@ -114,10 +114,11 @@ export function UserForm(props) {
                     required
                     placeholder
                     formik={form}
+                    readOnly={!!id}
                 />
                 {!id && 
                     <BaseInput
-                    className="col-6 mt-1"
+                    className="col-12 mt-1"
                     label="PASSWORD"
                     required
                     type="password"
