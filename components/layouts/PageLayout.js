@@ -18,22 +18,18 @@ export default function PageLayout({ title, actions, children }) {
         <>
             <ToastContainer />
             <Row>
-                <Col xs="10">
                 {
                     title &&
-                        <h2>
-                            {t(title)}
-                        </h2>
+                        <Col>
+                            <h2>
+                                {t(title)}
+                            </h2>
+                        </Col>
                 }
-                </Col>
                 {
                     actions && 
-                        <Col xs="2" className="text-right text-nowrap">
-                        {actions.map((action) => 
-                            <button key={action.title} className="btn btn-primary" onClick={action.onClick}>
-                            + {t(action.title)}
-                            </button>
-                        )}
+                        <Col className="text-right text-nowrap">
+                            {actions}
                         </Col>
                 }
             </Row>

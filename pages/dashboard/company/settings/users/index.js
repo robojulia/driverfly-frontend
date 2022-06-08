@@ -10,6 +10,7 @@ import { useTranslation } from "../../../../../hooks/useTranslation";
 import {PenFill, TrashFill} from 'react-bootstrap-icons';
 import UserApi from "../../../../api/user";
 import ViewDataTable from "../../../../../components/viewDetails/viewDataTable";
+import { Status } from '../../../../../enums/status.enum';
 
 export default function UserList() {
 
@@ -26,7 +27,7 @@ export default function UserList() {
   useEffect(async () => {
     const api = new UserApi();
     const v = await api.list();
-    setUsers(v.filter((u) => u.id !== user.id && u.status === "ACTIVE"));
+    setUsers(v.filter((u) => u.id !== user.id && u.status === Status.ACTIVE));
   }, []);
 
   /**
@@ -59,16 +60,24 @@ export default function UserList() {
     setUsers(users.filter(v => v.id != id));
   }
 
+  const createUserPageActions = () => {
+    const actions = [];
+    if (hasPermission("CanCreateUser")) {
+      actions.push(
+        <button className="btn btn-primary" onClick={onAddClick}>
+          + {t("CREATE")}
+        </button>
+      );
+    }
+
+    return actions;
+  }
+
 
   return (
     <PageLayout 
       title="USERS" 
-      actions={[
-        {
-          title: "CREATE",
-          onClick: onAddClick
-        }
-      ]}>
+      actions={createUserPageActions()}>
       <Row className="mt-5">
         <Col  lg="12">
           <ViewDataTable
