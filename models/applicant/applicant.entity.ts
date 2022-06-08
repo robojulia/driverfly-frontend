@@ -34,6 +34,7 @@ export class ApplicantEntity {
   license_state?: string;
   license_type?: DriverLicenseType;
   years_cdl_experience?: number;
+  license_restrictions?: string;
   can_pass_drug_test?: boolean = false;
   is_owner_operator?: boolean = false;
   transmission_type?: VehicleTransmissionType[] = [];
@@ -81,6 +82,7 @@ export class ApplicantEntity {
         license_state: yup.string().nullable(),
         license_type: yup.string().nullable(),
         years_cdl_experience: yup.number().min(0).nullable(),
+        license_restrictions: yup.string().required(),
         can_pass_drug_test: yup.bool().nullable(),
         is_owner_operator: yup.bool().nullable(),
         transmission_type: yup.array(

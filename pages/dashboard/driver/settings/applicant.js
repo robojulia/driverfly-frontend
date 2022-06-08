@@ -228,6 +228,14 @@ export default function Applicant() {
                                     placeholder="years_cdl_experience"
                                     formik={form}
                                 />
+                                  <BaseInput
+                                    className="col-12 p-1 "
+                                    label="License_Restrictions"
+                                    name="license_restrictions"
+                                    type="text"
+                                    placeholder="License_Restrictions"
+                                    formik={form}
+                                />
                                 <BaseCheck
                                     className="col-12 p-1  mt-2"
                                     label="OWNER_OPERATOR"
