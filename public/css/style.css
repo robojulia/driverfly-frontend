@@ -2129,23 +2129,27 @@ text-align: center;
     background:#1b4454;
     color: #ffffff;
 }
-.privacy__policies__container {
+.terms__and__policies__container, .privacy__policies__container {
     text-align: justify;
 }
-.privacy__policies__container ol li{
+.terms__and__policies__container ol li{
     list-style: decimal;
     color: #6c757d;
 }
-.privacy__policies__container  a {
+.terms__and__policies__container a, .privacy__policies__container a {
     color: #000;
     text-decoration: none;
 }
-.privacy__policies__container  a:hover {
+.terms__and__policies__container a:hover, .privacy__policies__container a:hover {
     color: #2da2af;
     text-decoration: none;
 }
-.privacy__policies__container  h5, .privacy__policies__container  h4 {
+.terms__and__policies__container  h5, .terms__and__policies__container  h4 {
     font-size: 16px;
     font-weight: 700;
     color: #6a6a6a;
+}
+.privacy__policies__container ol li {
+    list-style: circle;
+    color: #6c757d;
 }
