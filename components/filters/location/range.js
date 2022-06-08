@@ -4,10 +4,12 @@ import RangeSlider from 'react-bootstrap-range-slider';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead'; // ES2015
 import FindJobFilterAccordion from '../../find-jobs-accordion/find-job-filter-accordion';
 import MapboxApi from "../../../pages/api/mapbox"
+import { useTranslation } from '../../../hooks/useTranslation';
 
 export default function Range(props) {
 
-    const { t, state, method } = props
+    const { t } = useTranslation();
+    const { state, method } = props
     const { filters } = state
     const { setFiltersByKeyValue } = method
     const mapboxApi = new MapboxApi()
