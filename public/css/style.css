@@ -86,7 +86,7 @@ input,
 textarea,
 button,
 li {
-    margin: 0;
+    margin: 0 ;
     padding: 0;
     border: 0;
     list-style: none;
@@ -139,9 +139,7 @@ a:hover {
     background-color: #2da2af !important;
     border-color: #2da2af !important;
 }
-.container {
-    max-width: 1170px;
-}
+
 
 strong {
     font-family: sans-serif;
@@ -2145,4 +2143,35 @@ text-align: center;
     font-size: 16px;
     font-weight: 700;
     color: #6a6a6a;
+}
+/* Custom Trucker Recruiting section */
+.custom-trucker-title{
+    font-size: 25px;
+    margin: 0;
+    line-height: 60px;
+}
+.custom-trucker-follow-btn{
+    width: 200px;
+    height: 45px;
+    border-radius: 4px;
+    background-color: #2da2af;
+    transition: all ease-in-out 0.5s;
+    color: #fff;
+}
+.custom-trucker-follow-btn:hover{
+    border-color: #c4c4c4;
+    background-color: #c4c4c4;
+}
+.custom-trucker-review-btn{
+    width: 200px;
+    height: 45px;
+    border-radius: 4px;
+}
+.social-profile-sec{
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #fafafa;  
+    display: flex;
+    align-items: baseline;
+    border-radius: 4px;
 }
