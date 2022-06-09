@@ -848,6 +848,8 @@
     "SEARCH": "Search",
     "FILTERS": "Filters",
     "SHOWING": "Showing",
+    "SHOW_MORE": "Show More +",
+    "SHOW_LESS": "Show less -",
     "OF": "Of",
     "RESULT": "Results",
     "FILTER_RESULT": "Filter Results",

@@ -1,7 +1,9 @@
+import { useTranslation } from "../../hooks/useTranslation";
 
 export default function EnumFilterByKeyValue(props) {
 
-    const { t, state, method } = props
+    const { t } = useTranslation();
+    const { state, method } = props
     const { filters } = state
 
     return (

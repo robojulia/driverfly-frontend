@@ -1,11 +1,13 @@
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 import { DriverLicenseType } from "../../enums/users/driver-license-type.enum"
 import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
+import { useTranslation } from "../../hooks/useTranslation";
 
 
 export default function Category(props) {
 
-  const { t, state, method } = props
+  const { t } = useTranslation();
+  const { state, method } = props
   const { handleChange } = method
 
   return (
