@@ -9,8 +9,8 @@ import { generateUUID } from "../../utils/common";
 
 export default function ListActions({ id, options, onClick }) {
     const [ state, setState ] = useState({ anchorEl: null });
-
-    const filteredOptions = options.filter((option) => option.permission || typeof(option.permission) === 'undefined');
+    
+    const filteredOptions = options.filter((option) => !option.hide);
 
     const handleClick = event => {
         setState({ anchorEl: event.currentTarget });

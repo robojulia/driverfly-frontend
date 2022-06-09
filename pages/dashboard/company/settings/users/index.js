@@ -5,7 +5,6 @@ import { Col, Row } from "reactstrap";
 import useAuth from '../../../../../hooks/useAuth';
 import { useRouter } from "next/router"
 import useRedirect from '../../../../../hooks/useRedirect';
-import 'react-toastify/dist/ReactToastify.css'
 import { useTranslation } from "../../../../../hooks/useTranslation";
 import {PenFill, TrashFill} from 'react-bootstrap-icons';
 import UserApi from "../../../../api/user";
@@ -60,26 +59,21 @@ export default function UserList() {
     setUsers(users.filter(v => v.id != id));
   }
 
-  const createUserPageActions = () => {
-    const actions = [];
-    if (hasPermission("CanCreateUser")) {
-      actions.push(
-        <button className="btn btn-primary" onClick={onAddClick}>
-          + {t("CREATE")}
-        </button>
-      );
-    }
-
-    return actions;
-  }
-
-
   return (
     <PageLayout 
       title="USERS" 
-      actions={createUserPageActions()}>
+      actions={
+        <>
+          {
+            hasPermission("CanCreateUser") &&
+              <button className="btn btn-primary" onClick={onAddClick}>
+                + {t("CREATE")}
+              </button>
+          }
+        </>
+      }>
       <Row className="mt-5">
-        <Col  lg="12">
+        <Col>
           <ViewDataTable
             columns={[
               {
@@ -113,12 +107,12 @@ export default function UserList() {
                 {
                     onClick: e => onEditClick(j.id),
                     label: (<><PenFill /> {t("EDIT")}</>),
-                    permission: hasPermission("CanUpdateUser")
+                    hide: !hasPermission("CanUpdateUser")
                 },
                 {
                     onClick: e => onDeleteClick(j.id),
                     label: (<><TrashFill /> {t("DELETE")}</>),
-                    permission: hasPermission("CanDeleteUser")
+                    hide: !hasPermission("CanDeleteUser")
                 }
             ])}
             items={users}
