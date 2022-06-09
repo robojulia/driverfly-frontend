@@ -6,14 +6,14 @@ export default function Tags() {
                 <h5 className="mt-5 mb-4"><span  className='text-dark'>Tags</span></h5>
                 <div className="card border-0">
                     <div className='row mb-3'>
-                        <div className='col-5 p-0'>
+                        <div className='col-6 p-0'>
                             <ul className="list-group list-group-flush">
                                 <li className={Blog.tag}>
                                     <a href="">Register</a>
                                 </li>
                             </ul>
                         </div>
-                        <div className='col-5 p-0'>
+                        <div className='col-6 p-0'>
                             <ul className="list-group list-group-flush">
                                 <li className={Blog.tag}>
                                     <a href="">Log in</a>
@@ -22,14 +22,14 @@ export default function Tags() {
                         </div>
                     </div>
                     <div className='row mb-3'>
-                        <div className='col-5 p-0'>
+                        <div className='col-6 p-0'>
                             <ul className="list-group list-group-flush">
                                 <li className={Blog.tag}>
                                     <a href="">Training</a>
                                 </li>
                             </ul>
                         </div>
-                        <div className='col-5 p-0'>
+                        <div className='col-6 p-0'>
                             <ul className="list-group list-group-flush">
                                 <li className={Blog.tag}>
                                     <a href="">Trucking laws</a>
@@ -37,7 +37,6 @@ export default function Tags() {
                             </ul>
                         </div>
                     </div>
-
                 </div>
             </div>
         </>
