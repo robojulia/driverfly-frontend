@@ -11,12 +11,14 @@ export default function QuickLinks() {
                         </Link>
                     </li>
                     <li className="nav-item">
-                    <Link href="https://ctrecruiting.com/">
+                        <Link href="https://ctrecruiting.com/">
                             <a target="_blank" className="nav-link" >Driver Recruiting</a>
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="#">Featured Employers</a>
+                        <Link href="https://driverhiringusa.com/employers">
+                            <a  target="_blank" className="nav-link">Featured Employers</a>
+                        </Link>
                     </li>
                     <li className="nav-item">
                         <Link href="/faq">
