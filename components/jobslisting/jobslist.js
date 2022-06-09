@@ -50,14 +50,14 @@ export default function JobsList() {
                   {
                     job.location &&
                     <>
-                      <p>
+                      <p className='m-0'>
                         < GeoAltFill className='mr-1' />
                         <span className='mr-4'>
                           {buildAddress(job.location || {})}
                         </span></p>
                     </>
                   }
-                  <p>
+                  <p className='m-0'>
                     < CurrencyDollar className='mr-1' />{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} {t("per_week")} </p>
                 </div>
                 <div className="job-location">
