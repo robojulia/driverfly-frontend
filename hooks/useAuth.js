@@ -1,7 +1,7 @@
 import useStorage from './useStorage';
 import Router from 'next/router'
 
-import { UserEntity, UserRole } from "../models/user/user.entity";
+import { UserEntity } from "../models/user/user.entity";
 
 const useAuth = () => {
 
@@ -71,10 +71,12 @@ const useAuth = () => {
     }
 
     const removeAuth = () => {
-        return removeItem('user')
+        removeItem('user')
+        Router.push('/login')
     }
 
     return {
+        user: authCheck(),
         setAuth,
         authCheck,
         isDriver,
