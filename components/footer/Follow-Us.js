@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Facebook, Twitter, Instagram } from 'react-bootstrap-icons';
+import { Facebook, Instagram } from 'react-bootstrap-icons';
 
 export default function FollowUs
 
@@ -14,14 +14,6 @@ justify-content-md-end justify-content-center  ">
                         <Link href="https://www.facebook.com/DriverFlyJobs/">
                             <a target="_blank">
                                 < Facebook />
-                            </a>
-                        </Link>
-
-                    </div>
-                    <div className="social">
-                        <Link href="">
-                            <a target="_blank">
-                                < Twitter />
                             </a>
                         </Link>
 
