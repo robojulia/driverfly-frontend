@@ -23,7 +23,7 @@ import BaseCheck from "../../../../components/forms/BaseCheck";
 
 import * as style from "../../../../public/components/styles/ImportApplicantsModule.module.css"
 import ApplicantApi from "../../../api/applicant";
-import * as yupUtil from "../../../../utils/yup";
+import OverlyPopover from "../../../../components/popover/overly-popover";
 
 export default function Import() {
 
@@ -219,11 +219,11 @@ export default function Import() {
                     </div>
                     <div className="text-nowrap" style={{float: "right"}}>
                         <Switch
-                            label="ONLY_DISPLAY_ERRORS"
+                            label={<OverlyPopover skipTranslate={false} str={"ONLY_DISPLAY_ERRORS"}>FFFFFFF</OverlyPopover>}
                             readOnly={!canClear}
                             value={onlyErrors}
                             onChange={onOnlyErrorsChange}
-                            />
+                        />
                     </div>
                 </Col>
             </Row>
