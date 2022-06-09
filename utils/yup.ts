@@ -1,7 +1,7 @@
 import * as yup from "yup"
 
 yup.addMethod(yup.string, "enum", function(enumType, message) {
-  const keys = Object.keys(enumType);
+  const keys = Object.values(enumType);
   const set = new Set(keys);
   return this.test("enum", message, function (str) {
       if (str && !set.has(str)) {

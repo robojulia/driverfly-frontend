@@ -14,6 +14,7 @@ import ResultCount from "../components/find-jobs/result-count"
 export default function FindJobs(props) {
 
   let { params } = props
+
   const jobApi = new JobApi();
   const router = useRouter()
   const [jobs, setJobs] = useState([])
@@ -59,6 +60,9 @@ export default function FindJobs(props) {
   const setFiltersForQuery = async () => {
     Object.keys(params).map(key => {
       let inputs = document.getElementsByName(key);
+      if (!inputs.length) {
+        return
+      }
       if (inputs[0].tagName.toLowerCase() !== "input") {
         return
       }
@@ -73,6 +77,14 @@ export default function FindJobs(props) {
         })
       }
     })
+    if (params.hasOwnProperty('long') && params.hasOwnProperty('lat')) {
+      setFiltersByKeyValue("location", {
+        "place_name": params.place_name,
+        "lat": params.lat,
+        "long": params.long,
+        "range": params.range || 1500
+      });
+    }
     params = {}
   }
 

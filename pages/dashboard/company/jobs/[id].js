@@ -56,6 +56,7 @@ import { VehicleForm } from "../../../../components/forms/company/VehicleForm";
 import ViewCard from "../../../../components/viewDetails/viewCard";
 import { VehicleEntity } from "../../../../models/company/vehicle.entity";
 import { LocationForm } from "../../../../components/forms/company/LocationForm";
+import { JobDrugTestType } from "../../../../enums/jobs/job-drug-test-type.enum";
 
 export default function Job() {
     const router = useRouter();
@@ -80,7 +81,7 @@ export default function Job() {
         initialValues: new JobEntity(),
         validationSchema: JobEntity.yupSchema(),
         onSubmit: async (data) => {
-
+            console.log(data);
             data.min_weekly_pay = parseFloat(data.min_weekly_pay)
             data.max_weekly_pay = parseFloat(data.max_weekly_pay)
             data.min_rate = parseFloat(data.min_rate)
@@ -169,7 +170,7 @@ export default function Job() {
                     year: null,
                     photo: null
                 })) || [],
-                cdl_class: job.cdl_class || [],
+                cdl_class: job.cdl_class,
                 min_years_experience: job.min_years_experience,
                 min_degree: job.min_degree,
                 required_skills: job.required_skills || [],
@@ -179,6 +180,7 @@ export default function Job() {
                 transmission_type_experience: job.transmission_type_experience || [],
                 max_applicant_radius: job.max_applicant_radius,
                 must_pass_drug_test: job.must_pass_drug_test,
+                drug_test_type: job.drug_test_type || [],
                 must_have_clean_mvr: job.must_have_clean_mvr,
                 mvr_requirements: job.mvr_requirements || [],
                 accept_sap_graduates: job.accept_sap_graduates,
@@ -564,10 +566,10 @@ export default function Job() {
                                 <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                     <BaseSelect
                                         className={`col-${form.values.schedule === JobSchedule.OTHER ? 6 : 12}`}
-                                        label="schedule"
+                                        label="SCHEDULE"
                                         name="schedule"
                                         required
-                                        placeholder="schedule"
+                                        placeholder="SCHEDULE"
                                         labelPrefix="JobSchedule"
                                         enumType={JobSchedule}
                                         formik={form}
@@ -586,19 +588,19 @@ export default function Job() {
                                 </Row>
                                 <BaseSelect
                                     className="col-12"
-                                    label="employment_type"
+                                    label="EMPLOYMENT_TYPE"
                                     name="employment_type"
                                     required
-                                    placeholder="employment_type"
+                                    placeholder="EMPLOYMENT_TYPE"
                                     labelPrefix="JobEmploymentType"
                                     enumType={JobEmploymentType}
                                     formik={form}
                                 />
                                 <BaseCheckList
                                     className="col-12"
-                                    label="equipment_type"
+                                    label="EQUIPMENT_TYPE"
                                     name="equipment_type"
-                                    placeholder="equipment_type"
+                                    placeholder="EQUIPMENT_TYPE"
                                     cols={2}
                                     labelPrefix="JobEquipmentType"
                                     enumType={JobEquipmentType}
@@ -617,9 +619,9 @@ export default function Job() {
                                 }
                                 <BaseCheckList
                                     className="col-12"
-                                    label="delivery_type"
+                                    label="DELIVERY_TYPE"
                                     name="delivery_type"
-                                    placeholder="delivery_type"
+                                    placeholder="DELIVERY_TYPE"
                                     cols={2}
                                     labelPrefix="JobDeliveryType"
                                     enumType={JobDeliveryType}
@@ -627,10 +629,8 @@ export default function Job() {
                                 />
                                 <BaseSelect
                                     className="col-12"
-                                    label="team_drivers"
+                                    label="TEAM_DRIVERS"
                                     name="team_drivers"
-                                    required
-                                    placeholder="team_drivers"
                                     labelPrefix="JobTeamDriver"
                                     enumType={JobTeamDriver}
                                     formik={form}
@@ -639,7 +639,7 @@ export default function Job() {
                         </Col>
                         <Col lg="6" xl="4">
                             <ViewCard
-                                title="benefits"
+                                title="BENEFITS"
                             >
                                 <BaseSelect
                                     className="col-12 mb-2"
@@ -657,10 +657,10 @@ export default function Job() {
                                 />
                                 <BaseSelect
                                     className="col-12"
-                                    label="pay_method"
+                                    label="PAY_METHOD"
                                     name="pay_method"
                                     required
-                                    placeholder="pay_method"
+                                    placeholder="PAY_METHOD"
                                     labelPrefix="JobPayMethod"
                                     enumType={JobPayMethod}
                                     formik={form}
@@ -943,21 +943,22 @@ export default function Job() {
                         >
                             <Row>
                                 <div className="col-md-6">
-                                    <BaseCheckList
+                                    <BaseSelect
                                         className="col-12"
-                                        label="cdl_class"
+                                        label="MINIMUM_CDL_CLASS"
                                         name="cdl_class"
-                                        cols={2}
+                                        placeholder
                                         labelPrefix="DriverLicenseType"
                                         enumType={DriverLicenseType}
                                         formik={form}
                                     />
                                     <BaseInput
                                         className="col-12"
-                                        label="min_years_experience"
+                                        label="MIN_YEARS_EXPERIENCE"
                                         name="min_years_experience"
-                                        placeholder="min_years_experience"
-                                        min="0"
+                                        placeholder
+                                        step={0.01}
+                                        min={0}
                                         type="number"
                                         formik={form}
                                     />
@@ -971,7 +972,7 @@ export default function Job() {
                                         formik={form}
                                     />
                                     <div className="col-12">
-                                        <label>{t("required_skills")}:</label>
+                                        <label>{t("REQUIRED_SKILLS")}:</label>
                                         {form.touched.required_skills && typeof form.errors.required_skills === "string" ? <span className="text-danger small">{form.errors.required_skills}</span> : null}
                                         {form.values.required_skills.map((v, i) => {
                                             return (
@@ -1083,6 +1084,16 @@ export default function Job() {
                                         name="must_pass_drug_test"
                                         formik={form}
                                     />
+                                    <BaseCheckList
+                                        className="col-12"
+                                        label="drug_test_type"
+                                        name="drug_test_type"
+                                        cols={2}
+                                        labelPrefix="JobDrugTestType"
+                                        enumType={JobDrugTestType}
+                                        formik={form}
+                                    />
+
                                     <BaseCheck
                                         className="col-12"
                                         label="must_have_clean_mvr"
@@ -1197,9 +1208,9 @@ export default function Job() {
                                     }
                                     <BaseInput
                                         className="col-12"
-                                        label="accidents_last_5_years"
+                                        label="MAX_MOVING_VIOLATIONS"
                                         placeholder="count"
-                                        name="max_accidents"
+                                        name="max_moving_violations"
                                         min="0"
                                         type="int"
                                         formik={form}

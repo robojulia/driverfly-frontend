@@ -212,9 +212,9 @@ export default function Applicant() {
                                     />
                                     <BaseSelect
                                         className="col-6 pl-3"
-                                        label="cdl_class"
+                                        label="CDL_CLASS"
                                         name="license_type"
-                                        placeholder="cdl_class"
+                                        placeholder
                                         labelPrefix="DriverLicenseType"
                                         enumType={DriverLicenseType}
                                         formik={form}
@@ -226,6 +226,14 @@ export default function Applicant() {
                                     name="years_cdl_experience"
                                     type="number"
                                     placeholder="years_cdl_experience"
+                                    formik={form}
+                                />
+                                  <BaseInput
+                                    className="col-12 p-1 "
+                                    label="License_Restrictions"
+                                    name="license_restrictions"
+                                    type="text"
+                                    placeholder="License_Restrictions"
                                     formik={form}
                                 />
                                 <BaseCheck

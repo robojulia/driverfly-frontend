@@ -1,11 +1,9 @@
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import Collapse from 'react-bootstrap/Collapse'
-import { useTranslation } from "../../hooks/useTranslation";
-import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value";
+import EnumFilterByKeyValue from "../../enum-filters/enum-filter-by-key-value"
 
 export default function ViewMoreRadioFilter(props) {
 
-    const { t } = useTranslation();
     const [open, setOpen] = useState(false);
 
     const enumArray = Object.values(props.enums)
@@ -16,7 +14,6 @@ export default function ViewMoreRadioFilter(props) {
     return (
         <>
             <EnumFilterByKeyValue
-                {...props}
                 translate={true}
                 withAll={true}
                 enumArray={firstHalf}
@@ -30,7 +27,6 @@ export default function ViewMoreRadioFilter(props) {
                     <Collapse in={open} dimension="height">
                         <div id="example-collapse-text">
                             <EnumFilterByKeyValue
-                                {...props}
                                 translate={true}
                                 enumArray={secondHalf}
                                 name={props.name}
@@ -44,7 +40,7 @@ export default function ViewMoreRadioFilter(props) {
                         <span
                             onClick={() => setOpen(!open)}
                             className="read-or-hide">
-                            {!open ? t('SHOW_MORE') : t('SHOW_LESS')}
+                            {!open ? "Show More +" : " Show less -"}
                         </span>
                     </div>
                 </>

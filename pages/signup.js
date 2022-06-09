@@ -5,7 +5,7 @@ import { useState } from 'react'
 import Layout from "../components/layouts"
 import SignupStyle from "../public/css/signup.module.css"
 import useAuth from '../hooks/useAuth';
-import Router from 'next/router'
+import Router, { useRouter } from 'next/router'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -26,21 +26,22 @@ import { useTranslation } from "../hooks/useTranslation";
 import { SignUpRole } from "../enums/auth/sign-up-role.enum"
 import { Row } from "reactstrap"
 
-
+import { globalAjaxExceptionHandler } from "../utils/ajax";
 
 
 export default function Signup() {
 
+  const router = useRouter();
+
   const { authCheck, setAuth } = useAuth();
 
   if (authCheck()) {
-    Router.push('/dashboard')
+    router.push('/dashboard')
   }
 
   const { t } = useTranslation();
 
   const translations = {
-    required: t("this_field_is_required"),
     passwordsDoNotMatch: t("PASSWORDS_DO_NOT_MATCH")
   };
 
@@ -54,17 +55,18 @@ export default function Signup() {
       confirmPassword: null,
       phone: null,
       role: null,
+      invite_code: null,
       accept_tos: false
     },
     validationSchema: yup.object({
-      first_name: yup.string().required(translations.required).nullable(),
-      last_name: yup.string().required(translations.required).nullable(),
+      first_name: yup.string().required().nullable(),
+      last_name: yup.string().required().nullable(),
       name: yup.string().when("role", {
         is: SignUpRole.COMPANY,
-        then: yup.string().required(translations.required).nullable()
+        then: yup.string().required().nullable()
       }).nullable(),
-      email: yup.string().email().required(translations.required).nullable(),
-      password: yup.string().required(translations.required).nullable(),
+      email: yup.string().email().required().nullable(),
+      password: yup.string().required().nullable(),
       confirmPassword: yup.string().test({
         test: (value, context) => {
           const password = context.resolve(yup.ref("password"));
@@ -77,55 +79,28 @@ export default function Signup() {
         }
       }).nullable(),
       phone: yup.string().nullable(),
-      role: yup.string().enum(SignUpRole).required(translations.required).nullable(),
-      accept_tos: yup.boolean().oneOf([true], translations.required)
+      role: yup.string().enum(SignUpRole).required().nullable(),
+      invite_code: yup.string().required().nullable(),
+      accept_tos: yup.boolean().oneOf([true])
     }),
-    onSubmit: async (values) => {
+    onSubmit: async (dto) => {
+      console.log(dto);
       const api = new AuthApi();
 
       try {
-        await api.signUp({
-          email: values.email,
-          password: values.password,
-          name: values.name,
-          first_name: values.first_name,
-          last_name: values.last_name,
-          phone: values.phone,
-          role: values.role
-        });
-        toast.success("Registered successfully! Please Check Your Email", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-        setTimeout(() => {
-          Router.push('/login')
-        }, 3000);
+        await api.signUp(dto);
+        toast.success(t("SUCCESSFULLY_REGISTERED"));
+        setTimeout(goToLogin, 3000);
       }
       catch (e) {
-        const { data, status } = e.response;
-        switch (status) {
-          case 409:
-            Object.entries(data).forEach((err) => {
-              const [key, value] = err;
-              console.error(key, value);
-              form.setFieldTouched(key, true, false);
-              form.setFieldError(key, t(value));
-            });
-            break;
-          default:
-            console.error("Unable to sign up user", e);
-            toast.error("Unable to create user");
-            break;
-        }
+        globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SIGNUP" });
       }
-
     }
   });
+
+  const goToLogin = function () {
+    router.push('/login')
+  }
 
   return (
     <>
@@ -172,15 +147,11 @@ export default function Signup() {
                 <Row>
                   <BaseSelect
                     className="col-12 mt-1"
-                    label={t("ROLE")}
+                    label="ROLE"
                     name="role"
                     required
-                    placeholder={t("ROLE")}
-                    value={form.values.role}
-                    onChange={form.handleChange}
-                    handleBlur={form.handleBlur}
-                    touched={form.touched.role}
-                    error={form.errors.role}
+                    placeholder
+                    formik={form}
                     labelPrefix="SignUpRole"
                     enumType={SignUpRole}
                   />
@@ -188,117 +159,77 @@ export default function Signup() {
                     form.values.role === SignUpRole.COMPANY &&
                     <BaseInput
                       className="col-12 mt-1"
-                      label={t("COMPANY_NAME")}
+                      label="COMPANY_NAME"
                       required
                       name="name"
-                      placeholder={t("COMPANY_NAME")}
-                      value={form.values.name}
-                      touched={form.touched.name}
-                      error={form.errors.name}
-                      onChange={form.handleChange}
-                      handleBlur={form.handleBlur}
+                      placeholder
+                      formik={form}
                     />
                   }
                   <BaseInput
                     className="col-6 mt-1"
-                    label={t("FIRST_NAME")}
+                    label="FIRST_NAME"
                     required
                     name="first_name"
-                    placeholder={t("FIRST_NAME")}
-                    value={form.values.first_name}
-                    touched={form.touched.first_name}
-                    error={form.errors.first_name}
-                    onChange={form.handleChange}
-                    handleBlur={form.handleBlur}
+                    placeholder
+                    formik={form}
                   />
                   <BaseInput
                     className="col-6 mt-1"
-                    label={t("LAST_NAME")}
+                    label="LAST_NAME"
                     required
                     name="last_name"
-                    placeholder={t("LAST_NAME")}
-                    value={form.values.last_name}
-                    touched={form.touched.last_name}
-                    error={form.errors.last_name}
-                    onChange={form.handleChange}
-                    handleBlur={form.handleBlur}
+                    placeholder
+                    formik={form}
                   />
                   <BaseInput
                     className="col-12 mt-1"
-                    label={t("EMAIL")}
+                    label="EMAIL"
                     required
                     name="email"
-                    placeholder={t("EMAIL")}
-                    value={form.values.email}
-                    touched={form.touched.email}
-                    error={form.errors.email}
-                    onChange={form.handleChange}
-                    handleBlur={form.handleBlur}
+                    placeholder
+                    formik={form}
                   />
-                  {/* <BaseInput
-                    className="col-12 mt-1"
-                    label={t("PHONE")}
-                    name="phone"
-                    type="tel"
-                    placeholder={t("PHONE")}
-                    value={form.values.phone}
-                    touched={form.touched.phone}
-                    error={form.errors.phone}
-                    onChange={form.handleChange}
-                    handleBlur={form.handleBlur}
-
-                  /> */}
-
 
                   <BaseInputPhone
                     className="col-12 mt-1"
-                    label={t("PHONE")}
+                    label="PHONE"
                     name="phone"
-                    type="tel"
-                    placeholder={t("PHONE")}
-                    value={form.values.phone}
-                    touched={form.touched.phone}
-                    error={form.errors.phone}
-                    onChange={(value, country, e, formattedValue) => { form.setFieldValue('phone', formattedValue) }}
-                    handleBlur={(event, data) => { form.setFieldValue('phone', event.target.value) }}
-                    onKeyDown={(event) => { form.setFieldValue('phone', event.target.value) }}
+                    placeholder
+                    formik={form}
                   />
 
                   <BaseInput
                     className="col-6 mt-1"
-                    label={t("PASSWORD")}
+                    label="PASSWORD"
                     required
                     type="password"
                     name="password"
-                    placeholder={t("PASSWORD")}
-                    value={form.values.password}
-                    touched={form.touched.password}
-                    error={form.errors.password}
-                    onChange={form.handleChange}
-                    handleBlur={form.handleBlur}
+                    placeholder
+                    formik={form}
                   />
                   <BaseInput
                     className="col-6 mt-1"
-                    label={t("CONFIRM_PASSWORD")}
+                    label="CONFIRM_PASSWORD"
                     required
                     type="password"
                     name="confirmPassword"
-                    placeholder={t("CONFIRM_PASSWORD")}
-                    value={form.values.confirmPassword}
-                    touched={form.touched.confirmPassword}
-                    error={form.errors.confirmPassword}
-                    onChange={form.handleChange}
-                    handleBlur={form.handleBlur}
+                    placeholder
+                    formik={form}
+                  />
+                  <BaseInput
+                    className="col-12 mt-1"
+                    label="INVITE_CODE"
+                    required
+                    name="invite_code"
+                    placeholder
+                    formik={form}
                   />
                   <BaseCheck
                     className="col-12 mt-2"
-                    label={t("YOU_ACCEPT_OUR_TOS")}
+                    label="YOU_ACCEPT_OUR_TOS"
                     name="accept_tos"
-                    checked={form.values.accept_tos}
-                    onChange={form.handleChange}
-                    handleBlur={form.handleBlur}
-                    touched={form.touched.accept_tos}
-                    error={form.errors.accept_tos}
+                    formik={form}
                   />
                 </Row>
                 <button disabled={form.isSubmitting}
@@ -309,15 +240,14 @@ export default function Signup() {
               </form>
               <div className="my-5">
                 <div className={SignupStyle.lineheader}>
-                  <span>or</span>
+                  <span>{t("OR")}</span>
                 </div>
                 <button
-                  type="submit"
-                  className='btn btn-dark w-100 d-block p-3 my-3'>
-                  <Link href="/login">
-                    <a className="text-white">{t("IF_YOURE_ALREADY_A_USER_LOGIN_HERE")}</a>
-                  </Link>
-
+                  type="button"
+                  className='btn btn-dark w-100 d-block p-3 my-3'
+                  onClick={goToLogin}
+                  >
+                  {t("IF_YOURE_ALREADY_A_USER_LOGIN_HERE")}
                 </button>
               </div>
             </div>

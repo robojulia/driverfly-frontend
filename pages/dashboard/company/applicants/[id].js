@@ -160,7 +160,7 @@ function View(props) {
             text: null
         },
         validationSchema: yup.object({
-            text: yup.string().required(t("this_field_is_required")).nullable()
+            text: yup.string().required().nullable()
         }),
         onSubmit: async (values) => {
             const api = new ApplicantApi();
@@ -693,9 +693,9 @@ function Edit(props) {
                                     />
                                     <BaseSelect
                                         className="col-6"
-                                        label="cdl_class"
+                                        label="CDL_CLASS"
                                         name="license_type"
-                                        placeholder="cdl_class"
+                                        placeholder
                                         labelPrefix="DriverLicenseType"
                                         enumType={DriverLicenseType}
                                         formik={form}

@@ -2,11 +2,13 @@ import moment from "moment"
 import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
 import { JobDatePosted } from "../../enums/jobs/job-date-posted.enum"
 import ViewMoreRadioFilter from "./view-more-radio-filter";
+import { useTranslation } from "../../hooks/useTranslation";
 
 
 export default function DatePosted(props) {
 
-  const { t, state, method } = props
+  const { t } = useTranslation();
+  const { state, method } = props
   const { handleChange } = method
 
   function changeHandler(e) {

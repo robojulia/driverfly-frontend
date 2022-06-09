@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import React from "react";
 
-import {PenFill, TrashFill, Eye, EyeFill} from 'react-bootstrap-icons';
+import { PenFill, TrashFill, Eye, EyeFill } from 'react-bootstrap-icons';
 
 
 import JobApi from "../../../api/job";
@@ -24,16 +24,25 @@ import ListActions from "../../../../components/list-actions/ListActions";
 
 import { buildAddress } from "../../../../utils/common";
 import ViewDataTable from "../../../../components/viewDetails/viewDataTable";
+import OverlyPopover from "../../../../components/popover/overly-popover";
+import useAuth from "../../../../hooks/useAuth";
+import useStorage from "../../../../hooks/useStorage";
 
 export default function JobListing() {
 
     const { authCompany } = useRedirect();
-
     authCompany()
+
+    const { authCheck } = useAuth();
+    const user = authCheck();
+    const columnSettingKey = `company.${user.id}.jobs.columns`
+    let settingsJson = useStorage().getItem(columnSettingKey)
+    let settingsArray = settingsJson ? JSON.parse(settingsJson) : []
 
     const { t } = useTranslation();
     const router = useRouter()
     const [jobs, setJobs] = useState([])
+    const [columnHistory, setColumnHistory] = useState([])
 
     useEffect(async () => {
         const api = new JobApi();
@@ -41,6 +50,12 @@ export default function JobListing() {
         const v = await api.list();
 
         setJobs(v);
+
+        let columnArray = []
+        await settingsArray.map(v => {
+            columnArray[v.name] = v
+        })
+        setColumnHistory(columnArray)
     }, []);
 
     /**
@@ -57,7 +72,7 @@ export default function JobListing() {
      * 
      * @param {number} id
      */
-     const onPreviewClick = (id) => {
+    const onPreviewClick = (id) => {
         router.push(`/jobs/${id}`);
     }
 
@@ -65,7 +80,7 @@ export default function JobListing() {
      * 
      * @param {number} id
      */
-     const onViewApplicantsClick = (id) => {
+    const onViewApplicantsClick = (id) => {
         router.push(`/dashboard/company/applicants?jobId=${id}`);
     }
 
@@ -109,40 +124,55 @@ export default function JobListing() {
                             columns={[
                                 {
                                     name: "job_title",
-                                    selector: j => j.title,
+                                    selector: job => (<OverlyPopover skipTranslate={true} header={t('job_title')} str={job.title} />),
                                     hidable: false
                                 },
                                 {
                                     name: "location",
-                                    selector: j => buildAddress(j.location || {})
+                                    selector: job => (<OverlyPopover skipTranslate={true} header={t('location')} str={buildAddress(job.location || {})} />),
+                                    hide: (!!columnHistory.location?.hide),
                                 },
                                 {
                                     name: "drivers_needed",
-                                    selector: j => j.drivers_needed
+                                    selector: j => j.drivers_needed,
+                                    hide: (!!columnHistory.drivers_needed?.hide),
                                 },
                                 {
                                     name: "expiration_date",
-                                    selector: j => j.expiry_date ? new Date(j.expiry_date).toDateString() : null
+                                    selector: j => j.expiry_date ? new Date(j.expiry_date).toDateString() : null,
+                                    hide: (!!columnHistory.expiration_date?.hide),
                                 },
                                 {
                                     name: "GEOGRAPHY",
-                                    selector: j => j.geography ? t("JobGeography." + j.geography) : null
+                                    selector: j => j.geography ? t("JobGeography." + j.geography) : null,
+                                    hide: (!!columnHistory.GEOGRAPHY?.hide),
                                 },
                                 {
-                                    name: "schedule",
-                                    selector: j => j.schedule ? t("JobSchedule." + j.schedule) : null
+                                    name: "SCHEDULE",
+                                    selector: job => (<OverlyPopover labelPrefix="JobSchedule" skipTranslate={false} header={t('SCHEDULE')} str={job.schedule} />),
+                                    hide: (!!columnHistory.SCHEDULE?.hide),
                                 },
                                 {
-                                    name: "employment_type",
-                                    selector: j => j.employment_type ? t("JobEmploymentType." + j.employment_type) : null
+                                    name: "EMPLOYMENT_TYPE",
+                                    selector: job => (<OverlyPopover labelPrefix="JobEmploymentType" skipTranslate={false} header={t('EMPLOYMENT_TYPE')} str={job.employment_type} />),
+                                    hide: (!!columnHistory.EMPLOYMENT_TYPE?.hide),
                                 },
                                 {
-                                    name: "delivery_type",
-                                    selector: j => j.delivery_type ? t("JobDeliveryType." + j.delivery_type) : null
+                                    name: "DELIVERY_TYPE",
+                                    selector: j =>
+                                    (<ShowEnumFromString
+                                        popover_header={t('DELIVERY_TYPE')}
+                                        labelPrefix="JobDeliveryType"
+                                        popover={true}
+                                        str={j.delivery_type}
+                                        enumArray={JobDeliveryType} />
+                                    ),
+                                    hide: (!!columnHistory.DELIVERY_TYPE?.hide),
                                 },
                                 {
-                                    name: "team_drivers",
-                                    selector: j => j.team_drivers ? t("JobTeamDriver." + j.team_drivers) : null
+                                    name: "TEAM_DRIVERS",
+                                    selector: job => (<OverlyPopover labelPrefix="JobTeamDriver" skipTranslate={false} header={t('TEAM_DRIVERS')} str={job.team_drivers} />),
+                                    hide: (!!columnHistory.TEAM_DRIVERS?.hide),
                                 },
                             ]}
                             actions={j => ([
@@ -164,7 +194,8 @@ export default function JobListing() {
                                 },
                             ])}
                             items={jobs}
-                            />
+                            columnSettingKey={columnSettingKey}
+                        />
                     </Col>
                 </Row>
             </div>

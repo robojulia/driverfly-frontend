@@ -3,7 +3,6 @@ import FullLayout from "../../../components/dashboard/layouts/FullLayout";
 import { Col, Row, Card, CardBody, Table } from "reactstrap";
 import useRedirect from '../../../hooks/useRedirect';
 import { Container } from "react-bootstrap";
-import style from '../../../public/dashboard/styles/css/Driver/dashboard.module.css';
 import { useEffect } from "react";
 import useAuth from "../../../hooks/useAuth";
 import { useState } from "react";
@@ -20,17 +19,23 @@ import ViewDataTable from '../../../components/viewDetails/viewDataTable';
 import OverlyPopover from '../../../components/popover/overly-popover';
 import { buildAddress } from '../../../utils/common';
 import { JobDeliveryType } from '../../../enums/jobs/job-delivery-type.enum';
+import useStorage from '../../../hooks/useStorage';
 
 export default function OfferedJobs() {
 
     const { authDriver } = useRedirect();
     authDriver()
+
     const { t } = useTranslation();
+    const applicantApi = new ApplicantApi();
     const { authCheck } = useAuth();
     const user = authCheck();
-    const applicantApi = new ApplicantApi();
+    const columnSettingKey = `driver.${user.id}.jobs-offered.columns`
+    let settingsJson = useStorage().getItem(columnSettingKey)
+    let settingsArray = settingsJson ? JSON.parse(settingsJson) : []
 
     const [applicantJobs, setApplicantJobs] = useState([])
+    const [columnHistory, setColumnHistory] = useState([])
 
     const fetchJobs = () => {
 
@@ -43,25 +48,24 @@ export default function OfferedJobs() {
                 setApplicantJobs(data)
             })
             .catch(function (error) {
-
-            }).then(function () {
-
+                console.error(error)
             })
     }
 
-    useEffect(() => {
+    useEffect(async () => {
         fetchJobs()
+        let columnArray = []
+        await settingsArray.map(v => {
+            columnArray[v.name] = v
+        })
+        setColumnHistory(columnArray)
     }, []);
-
-    // useEffect(() => {
-    //     console.log("applicantJobs", applicantJobs)
-    // }, [applicantJobs]);
 
     return (
         <>
 
             <div className={JobList.joblisting}>
-                <Row className={JobList.link}>
+                <Row>
                     <Col sm="6" lg="8">
                         <h2 className='mt-3'>{t('jobs_offered')}</h2>
                     </Col>
@@ -73,26 +77,35 @@ export default function OfferedJobs() {
                                 {
                                     name: "job_title",
                                     selector: applicant =>
-                                        (<OverlyPopover skipTranslate={true} header={t('job_title')} str={applicant.job.title} />),
+                                    (<Link href={`/dashboard/driver/find-jobs/${applicant.job.id}`}>
+                                        < a>
+                                            <OverlyPopover skipTranslate={true} header={t('job_title')} str={applicant.job.title} />
+                                        </a>
+                                    </Link>),
                                     hidable: false
+
                                 },
                                 {
                                     name: "company",
-                                    selector: applicant => applicant.company?.name || null
+                                    selector: applicant => applicant.company?.name || null,
+                                    hide: (!!columnHistory.company?.hide),
                                 },
                                 {
                                     name: "location",
                                     selector: applicant =>
-                                        (<OverlyPopover skipTranslate={true} header={t('location')} str={buildAddress(applicant.job.location || {})} />)
+                                        (<OverlyPopover skipTranslate={true} header={t('location')} str={buildAddress(applicant.job.location || {})} />),
+                                    hide: (!!columnHistory.location?.hide),
                                 },
                                 {
                                     name: "drivers_needed",
-                                    selector: applicant => applicant.job.drivers_needed
+                                    selector: applicant => applicant.job.drivers_needed,
+                                    hide: (!!columnHistory.drivers_needed?.hide),
                                 },
                                 {
                                     name: "est_pay_per_week",
                                     selector: applicant =>
-                                        (<OverlyPopover skipTranslate={true} header={t('est_pay_per_week')} str={`${applicant.job.min_weekly_pay ? applicant.job.min_weekly_pay : 0} - ${applicant.job.max_weekly_pay ? applicant.job.max_weekly_pay : 0} ${t('per_week')}`} icon={< CurrencyDollar className='mr-1' />} />)
+                                        (<OverlyPopover skipTranslate={true} header={t('est_pay_per_week')} str={`${applicant.job.min_weekly_pay ? applicant.job.min_weekly_pay : 0} - ${applicant.job.max_weekly_pay ? applicant.job.max_weekly_pay : 0} ${t('per_week')}`} icon={< CurrencyDollar className='mr-1' />} />),
+                                    hide: (!!columnHistory.est_pay_per_week?.hide),
                                 },
                                 {
                                     name: "LICENSE_TYPE",
@@ -102,50 +115,58 @@ export default function OfferedJobs() {
                                         labelPrefix="DriverLicenseType"
                                         popover={true}
                                         str={applicant.job.cdl_class}
-                                        enumArray={DriverLicenseType} />)
+                                        enumArray={DriverLicenseType} />),
+                                    hide: (!!columnHistory.LICENSE_TYPE?.hide),
                                 },
                                 {
                                     name: "DATE_HIRED",
                                     selector: applicant =>
                                         applicant.last_updated_at ?
                                             (<OverlyPopover skipTranslate={true} header={t('DATE_HIRED')} str={new Date(applicant.last_updated_at).toDateString()} />)
-                                            : null
+                                            : null,
+                                    hide: (!!columnHistory.DATE_HIRED?.hide),
                                 },
                                 {
                                     name: "expiration_date",
                                     selector: applicant =>
                                         applicant.job.expiry_date ?
                                             (<OverlyPopover skipTranslate={true} header={t('expiration_date')} str={new Date(applicant.job.expiry_date).toDateString()} />)
-                                            : null
+                                            : null,
+                                    hide: (!!columnHistory.expiration_date?.hide),
                                 },
                                 {
-                                    name: "schedule",
+                                    name: "SCHEDULE",
                                     selector: applicant =>
-                                        (<OverlyPopover labelPrefix="JobSchedule" skipTranslate={false} header={t('schedule')} str={applicant.job.schedule} />),
+                                        (<OverlyPopover labelPrefix="JobSchedule" skipTranslate={false} header={t('SCHEDULE')} str={applicant.job.schedule} />),
+                                    hide: (!!columnHistory.SCHEDULE?.hide),
                                 },
                                 {
-                                    name: "employment_type",
+                                    name: "EMPLOYMENT_TYPE",
                                     selector: applicant =>
-                                        (<OverlyPopover labelPrefix="JobEmploymentType" skipTranslate={false} header={t('employment_type')} str={applicant.job.employment_type} />),
+                                        (<OverlyPopover labelPrefix="JobEmploymentType" skipTranslate={false} header={t('EMPLOYMENT_TYPE')} str={applicant.job.employment_type} />),
+                                    hide: (!!columnHistory.EMPLOYMENT_TYPE?.hide),
                                 },
                                 {
-                                    name: "delivery_type",
+                                    name: "DELIVERY_TYPE",
                                     selector: applicant =>
                                     (<ShowEnumFromString
-                                        popover_header={t('delivery_type')}
+                                        popover_header={t('DELIVERY_TYPE')}
                                         labelPrefix="JobDeliveryType"
                                         popover={true}
                                         str={applicant.job.delivery_type}
                                         enumArray={JobDeliveryType} />
-                                    )
+                                    ),
+                                    hide: (!!columnHistory.DELIVERY_TYPE?.hide),
                                 },
                                 {
-                                    name: "team_drivers",
+                                    name: "TEAM_DRIVERS",
                                     selector: applicant =>
-                                        (<OverlyPopover labelPrefix="JobTeamDriver" skipTranslate={false} header={t('team_drivers')} str={applicant.job.team_drivers} />),
+                                        (<OverlyPopover labelPrefix="JobTeamDriver" skipTranslate={false} header={t('TEAM_DRIVERS')} str={applicant.job.team_drivers} />),
+                                    hide: (!!columnHistory.TEAM_DRIVERS?.hide),
                                 },
                             ]}
                             items={applicantJobs}
+                            columnSettingKey={columnSettingKey}
                         />
                     </Col>
                 </Row>

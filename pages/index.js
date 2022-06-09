@@ -14,9 +14,11 @@ import { useTranslation } from "../hooks/useTranslation";
 import { DriverLicenseType } from "../enums/users/driver-license-type.enum";
 import { JobEmploymentType } from "../enums/jobs/job-employment-type.enum";
 import { useRouter } from "next/router";
-import { Arrow90degDown, Search } from "react-bootstrap-icons";
+import { GeoAlt, Search } from "react-bootstrap-icons";
 import NewsletterSingup from "../components/newsletter-signup/NewsletterSingup";
+import HeroSearch from "../components/home/hero-search";
 export default function Index() {
+
   const router = useRouter();
   const { t } = useTranslation();
 
@@ -24,28 +26,6 @@ export default function Index() {
   function updateState() {
     setShowRecent(!showRecent);
   }
-
-  const [filters, setFilters] = useState({});
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFilters({
-      ...filters,
-      [name]: value,
-    });
-  };
-  const handleSubmit = (e) => {
-    router.push({
-      pathname: "find-jobs",
-      query: { ...filters },
-    });
-  };
-
-  const searchHandler = (e) => {
-    if (e.key === "Enter") {
-      handleSubmit();
-    }
-  };
 
   return (
     <>
@@ -65,64 +45,7 @@ export default function Index() {
                   Get hired fast. Start Searching.
                 </h2>
               </div>
-
-              <div className="hero-search">
-                <div className="input-group">
-                  <div className="input-group-prepend">
-                    <Search className="home_search" />
-                  </div>
-                  <input
-                    onKeyPress={searchHandler}
-                    onChange={handleChange}
-                    name="keywords"
-                    type="text"
-                    className=""
-                    placeholder="Job Title or Keywords"
-                    aria-label=""
-                    aria-describedby="basic-addon1"
-                  />
-                </div>
-                <select
-                  name="employment_type"
-                  onChange={handleChange}
-                  className="form-select custom-sel"
-                  aria-label="Default select example"
-                  id="exampleFormControlSelect1"
-                >
-                  <option className="selectbg">All Types</option>
-                  {Object.keys(JobEmploymentType).map((key, index) => {
-                    return (
-                      <option key={index} value={key}>
-                        {t(JobEmploymentType[key].toLowerCase())}
-                      </option>
-                    );
-                  })}
-                </select>
-                <select
-                  name="cdl_class"
-                  onChange={handleChange}
-                  className="form-select custom-sel "
-                  aria-label="Default select example"
-                  id="exampleFormControlSelect1"
-                >
-                  <option>All Categories</option>
-                  {Object.keys(DriverLicenseType).map((key, index) => {
-                    return (
-                      <option key={index} value={key}>
-                        {t(DriverLicenseType[key].toLowerCase())}
-                      </option>
-                    );
-                  })}
-                </select>
-                <div className="form-group form-group-search m-0">
-                  <button
-                    className="btn-submit btn btn-block btn-theme hvr-shrink"
-                    type="button"
-                  >
-                    Search
-                  </button>
-                </div>
-              </div>
+              <HeroSearch />
               <TrendingWords />
             </div>
           </div>
@@ -132,25 +55,25 @@ export default function Index() {
         <div className="container d-flex justify-content-center hire-driver-section
        ">
           <div className="hire-driver-item hire-driver-left d-flex flex-column justify-content-around">
-            <h1>Hire A Driver</h1>
+            <h1>Hire a Driver</h1>
             <p>
               Get exposed to qualified drivers throughout the United States.{" "}
             </p>
             <div>
-              <button className="theme-bg-btn" type="button">
-                post a job
+              <button className="theme-bg-btn" type="button" onClick={() => router.push("signup")}>
+                Post a Job
               </button>
             </div>
           </div>
           <div className="hire-driver-item hire-driver-right d-flex flex-column justify-content-around">
-            <h1>Find A job</h1>
+            <h1>Find a Job</h1>
             <p>
               Search from hundreds of available CDL and non-CDL driver jobs
               across the US.
             </p>
             <div>
-              <button className="white-bg-btn" type="button">
-                browse jobs
+              <button className="white-bg-btn" type="button" onClick={() => router.push("find-jobs")}>
+                Browse Jobs
               </button>
             </div>
           </div>
@@ -159,13 +82,17 @@ export default function Index() {
       <div className="opacity-overly">
         <section className="owner-operator-bg">
           <div className="container text-center">
-            <h1 className="owner-operator-title">Owner opertors</h1>
+            <h1 className="owner-operator-title">Owner Operators</h1>
             <p className="owner-operatot-text">
-              Are you looking to lease on to a Motor Carrier? We’ve got
-              opportunities for you too! Go to the job search and select owner
-              operator for job type.
+              Are you looking to lease onto a motor carrier? We have
+              opportunities for you too! Go to the job search page and select owner
+              operator for employment type.
             </p>
-            <button className=" white-bg-btn ">Lease on to a carriers</button>
+            <button
+              className="white-bg-btn"
+              onClick={() => router.push({ pathname: 'find-jobs', query: { "employment_type": 'OWNER_OPERATOR' } })}>
+              Lease onto a Carrier
+            </button>
           </div>
         </section>
       </div>
@@ -215,7 +142,7 @@ export default function Index() {
             <p>
               Create your free account in just minutes to be featured in front of hundreds of motor carriers.
             </p>
-            <button className="theme-bg-btn ">Create an Account</button>
+            <button className="theme-bg-btn " onClick={() => router.push("signup")}>Create an Account</button>
           </div>
         </section>
       </div>
