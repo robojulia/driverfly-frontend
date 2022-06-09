@@ -24,7 +24,7 @@ function BaseSelect ( { append, prepend, formik, required, className, enumType, 
   if (typeof enumType === "object") {
     options = Object.entries(enumType).map(([key, value]) => ({
       [valueKey]: value,
-      [labelKey]: key
+      [labelKey]: value
     }))
   }
   else if (options && options.length > 0 && typeof options[0] !== "object") {
