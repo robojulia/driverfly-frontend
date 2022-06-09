@@ -64,7 +64,7 @@ export default function CompanyProfileNav({ user }) {
                                 height="30"
 
                             />
-                            <span> {user.first_name}    {user.last_name}
+                            <span> {user?.first_name}    {user?.last_name}
                                 {/* {user.company?.name || "Driverfly Company"} */}
                                 .</span>
                             {/* <br />

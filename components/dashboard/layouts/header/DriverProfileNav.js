@@ -1,35 +1,26 @@
 import {
-  Navbar,
-  Collapse,
-  Nav,
-  NavItem,
-  NavbarBrand,
-  UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
   Dropdown,
-  Button,
 } from "reactstrap";
-import React, { useEffect } from "react";
-import Link from "next/link";
-import Logo from "../logo/Logo";
+import React from "react";
 import Image from "next/image";
 import LogoutButton from '../../../buttons/Logout';
-import useAuth from "../../../../hooks/useAuth";
-import { useRouter } from "next/router"
 import user1 from "../../../../public/dashboard/assets/images/users/user1.jpg";
+import { useTranslation } from "../../../../hooks/useTranslation";
+import useAuth from "../../../../hooks/useAuth";
 
 
-export default function DriverProfileNav(props) {
+export default function DriverProfileNav() {
 
-  const { isDriver } = useAuth();
-
-  const router = useRouter();
+  const { t } = useTranslation();
 
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
+
+  const { user, removeAuth } = useAuth();
 
 
   return (
@@ -45,13 +36,11 @@ export default function DriverProfileNav(props) {
                 width="30"
                 height="30"
               />
-              <span>{props.user.first_name}  {props.user.last_name}</span>
-              {/* <span>{props.user.name || "DriverFly User"}.</span> */}
-              <p></p>
+              <span>{user?.first_name}  {user?.last_name}</span>
             </div>
           </DropdownToggle >
           <DropdownMenu>
-            <DropdownItem><LogoutButton /></DropdownItem>
+            <DropdownItem onClick={removeAuth}>{t("LOGOUT")}</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>
