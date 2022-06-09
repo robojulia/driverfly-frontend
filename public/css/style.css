@@ -2127,6 +2127,7 @@ text-align: center;
     background:#1b4454;
     color: #ffffff;
 }
+/* Terms And Policies & Privacy Policies  */
 .terms__and__policies__container, .privacy__policies__container {
     text-align: justify;
 }
@@ -2146,6 +2147,10 @@ text-align: center;
     font-size: 16px;
     font-weight: 700;
     color: #6a6a6a;
+}
+.privacy__policies__container ol li {
+    list-style: circle !important;
+    color: #6c757d !important;
 }
 /* Custom Trucker Recruiting section */
 .custom-trucker-title{
