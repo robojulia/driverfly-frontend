@@ -89,7 +89,6 @@ export default function JobApply({ job }) {
     <>
       <div className="ort-btn mt-lg-4 mt-0">
         <button type="button" className="btn btn-danger" onClick={onApplyClick}> {t('apply_now')} <i className="fa fa-long-arrow-right pl-1" aria-hidden="true"></i></button>
-        <button type="button" className="btn btn-danger"> <i className="fa fa-star-o" aria-hidden="true"></i> {t('shortlist')} </button>
       </div>
 
       <ViewModal
