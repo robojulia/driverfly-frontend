@@ -1,52 +1,30 @@
 import React, { useEffect }  from "react";
-import Link from "next/link";
 import Logo from "../logo/Logo";
-import Image from "next/image";
-import LogoutButton from '../../../buttons/Logout';
 import useAuth from "../../../../hooks/useAuth";
 
 
 import {
   Navbar,
   Collapse,
-  Nav,
-  NavItem,
-  NavbarBrand,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Dropdown,
-  Button,
 } from "reactstrap";
-import LogoWhite from "../../../../public/dashboard/assets/images/logos/amplelogowhite.svg";
-import user1 from "../../../../public/dashboard/assets/images/users/user1.jpg";
 import DriverProfileNav from "./DriverProfileNav";
 import CompanyProfileNav from "./CompanyProfileNav";
 import { useRouter } from "next/router";
+import { useTranslation } from "../../../../hooks/useTranslation";
 
-const Header = ({ showMobmenu }) => {
+const Header = () => {
 
-  const { authCheck, isDriver, isCompany, setAuth } = useAuth();
+  const { t } = useTranslation();
 
-  const router = useRouter();
+  const { authCheck, isDriver, isCompany } = useAuth();
 
   const user = authCheck();
 
-
-  useEffect(async () => {
-    if (!user)
-      await router.push('/');
-
-  }, [ user ]);
-
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [dropdownOpen, setDropdownOpen] = React.useState(false);
-
-  const toggle = () => setDropdownOpen((prevState) => !prevState);
-  const Handletoggle = () => {
-    setIsOpen(!isOpen);
-  };
+  // const router = useRouter();
+  // if (!user) {
+  //   router.push('/');
+  //   return null;
+  // }
 
   return (
     <Navbar color="" dark expand="md">
@@ -58,11 +36,11 @@ const Header = ({ showMobmenu }) => {
 
 
         {
-          isDriver() ? < DriverProfileNav user={user} /> : ""
+          isDriver() && < DriverProfileNav user={user} />
         }
 
         {
-          isCompany() ? < CompanyProfileNav user={user} /> : ""
+          isCompany() && < CompanyProfileNav user={user} />
         }
 
       </Collapse>

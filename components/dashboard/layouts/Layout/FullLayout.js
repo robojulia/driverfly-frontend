@@ -5,7 +5,7 @@ import Sidebar from "../sidebars/Sidebar";
 import Head from "next/head";
 
 import { useTranslation } from "../../../../hooks/useTranslation";
-import { Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, CheckSquareFill, GiftFill, GearFill, EnvelopeFill } from 'react-bootstrap-icons';
+import { Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, CheckSquareFill, GiftFill, GearFill, EnvelopeFill, PeopleFill } from 'react-bootstrap-icons';
 
 // company layout
 const FullLayout = ({ children }) => {
@@ -53,18 +53,27 @@ const FullLayout = ({ children }) => {
             icon: Building,
             text: "company",
             permissions: "CanViewCompany",
-          },
+        },
+        {
+            pathname: "/dashboard/company/settings/users",
+            icon: PeopleFill,
+            text: "USERS",
+            permissions: "CanViewUser",
+            startsWith: true
+        },
         {
             pathname: "/dashboard/company/settings/vehicles",
             icon: CardImage,
             text: "VEHICLES",
             permissions: "CanViewVehicle",
+            startsWith: true
         },
         {
             pathname: "/dashboard/company/settings/locations",
             icon: GeoAltFill,
             text: "TERMINALS",
             permissions: "CanViewLocation",
+            startsWith: true
         },
         {
             pathname: "/dashboard/company/settings/profile",
