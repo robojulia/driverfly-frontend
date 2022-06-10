@@ -219,7 +219,7 @@ export default function Import() {
                     </div>
                     <div className="text-nowrap" style={{float: "right"}}>
                         <Switch
-                            label={<OverlyPopover skipTranslate={false} str={"ONLY_DISPLAY_ERRORS"}>FFFFFFF</OverlyPopover>}
+                            label={<OverlyPopover skipTranslate={false} str={"ONLY_DISPLAY_ERRORS_EXPLANATION"}>{t("ONLY_DISPLAY_ERRORS")}</OverlyPopover>}
                             readOnly={!canClear}
                             value={onlyErrors}
                             onChange={onOnlyErrorsChange}
