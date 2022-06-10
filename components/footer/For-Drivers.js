@@ -11,18 +11,18 @@ export default function ForDrivers() {
                         </Link>
                     </li>
                     <li className="nav-item">
-                    <Link  href="/login">
-                        <a className="nav-link" href="#">Search Jobs</a>
+                    <Link  href="/find-jobs">
+                        <a className="nav-link">Search Jobs</a>
                     </Link>
                     </li>
                     <li className="nav-item">
                     <Link  href="/login">
-                        <a className="nav-link" href="#">My Resume</a>
+                        <a className="nav-link">My Resume</a>
                     </Link>
                     </li>
                     <li className="nav-item">
                     <Link  href="/login">
-                        <a className="nav-link" href="#">Messages</a>
+                        <a className="nav-link">Messages</a>
                     </Link>
                     </li>
                 </ul>
