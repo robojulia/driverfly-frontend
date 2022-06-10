@@ -19,16 +19,18 @@ export default function SaveJob({ job, wrapperClassName, spanClassName }) {
     const [isSaved, setIsSaved] = useState(false)
     const setSaved = () => { setIsSaved(true) }
     const setUnsaved = () => { setIsSaved(false) }
+    const [isLoading, setIsLoading] = useState(true)
 
     useEffect(async () => {
         await savedJobApi.getByJobId(job.id)
             .then((data) => (data.status === 200))
             .catch((error) => (error?.response?.status === 404) && false)
             .then(saved => saved ? setSaved() : setUnsaved())
+            .then(setIsLoading(false))
     }, [])
 
     const showMessage = (status, action) => {
-        if (status) {
+        if (!!status) {
             toast(t('Forms.SUCCESS_{action}_{name}', { action, name: 'JOB' }, { translateProps: true }))
         } else {
             toast(t('Forms.FAIL_{action}_{name}', { action, name: 'JOB' }, { translateProps: true }))
@@ -52,18 +54,24 @@ export default function SaveJob({ job, wrapperClassName, spanClassName }) {
             .then(unsaved => unsaved ? setUnsaved() : setSaved())
     }
 
+    const handleClick = async () => {
+        setIsLoading(true);
+        (!!isSaved) ? await markUnsaved() : await markSaved();
+        setIsLoading(false);
+    }
+
     return (
         <div className={wrapperClassName || "ort-btn mt-lg-4 mt-0 "}>
-            <span
-                onClick={() => (isSaved) ? markUnsaved() : markSaved()}
-                role="button"
+            <button
+                disabled={isLoading}
+                onClick={handleClick}
                 className={spanClassName || "btn btn btn-danger px-5"}>
                 {
                     isSaved ?
                         <><BookmarkCheckFill /> {t('SAVED')}</>
                         : <><BookmarkPlus /> {t('SAVE_JOB')}</>
                 }
-            </span>
+            </button>
         </div>
     )
 }
