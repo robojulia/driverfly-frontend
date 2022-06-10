@@ -33,7 +33,7 @@ export default function Filters() {
         <>
             <Row>
                 <Col md="3">
-                    < Search t={t} state={state} method={method}
+                    < Search state={state} method={method}
                         inputClassName="form-control shadow-sm p-4" labelClassName="text-secondary w-sm-25" />
                 </Col>
                 <Col md="3">
@@ -54,18 +54,18 @@ export default function Filters() {
                     </Offcanvas.Header>
                     <Offcanvas.Body>
                         <div className="accordion bg-transparent px-3" id="accordionExample">
-                            < Category t={t} state={state} method={method} />
-                            < Range t={t} state={state} method={method} />
-                            < PostedDate t={t} state={state} method={method} />
-                            < AreasCovered t={t} state={state} method={method} />
-                            < EmploymentType t={t} state={state} method={method} />
-                            < TypeOfDelivery t={t} state={state} method={method} />
-                            < Equipment t={t} state={state} method={method} />
-                            < TransmissionType t={t} state={state} method={method} />
-                            < Schedule t={t} state={state} method={method} />
-                            < PayStructure t={t} state={state} method={method} />
-                            < SpecialEndorsementsRequired t={t} state={state} method={method} />
-                            < MvrRequirement t={t} state={state} method={method} />
+                            < Category state={state} method={method} />
+                            < Range state={state} method={method} />
+                            < PostedDate state={state} method={method} />
+                            < AreasCovered state={state} method={method} />
+                            < EmploymentType state={state} method={method} />
+                            < TypeOfDelivery state={state} method={method} />
+                            < Equipment state={state} method={method} />
+                            < TransmissionType state={state} method={method} />
+                            < Schedule state={state} method={method} />
+                            < PayStructure state={state} method={method} />
+                            < SpecialEndorsementsRequired state={state} method={method} />
+                            < MvrRequirement state={state} method={method} />
                         </div>
                     </Offcanvas.Body>
                 </Offcanvas>

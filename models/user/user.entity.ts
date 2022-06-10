@@ -1,7 +1,9 @@
 import { CompanyEntity } from '../company/company.entity';
 import { RoleEntity } from '../roles/role.enttiy';
 
-export interface UserEntity {
+import * as yup from "yup";
+
+export class UserEntity {
     id?: number;
     email?: string;
     name?: string;
@@ -18,5 +20,17 @@ export interface UserEntity {
     company?: CompanyEntity;
 
     token?: string;
+
+    static yupSchema() {
+        return yup.object({
+            first_name: yup.string().required().nullable(),
+            last_name: yup.string().required().nullable(),
+            email: yup.string().required().nullable(),
+            contact_number: yup.string().nullable(),
+            cell_number: yup.string().nullable(),
+            timezone: yup.string().nullable(),
+            language: yup.string().nullable(),
+        });
+    }
 }
   

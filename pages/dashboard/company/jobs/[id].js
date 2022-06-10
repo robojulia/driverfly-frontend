@@ -947,7 +947,7 @@ export default function Job() {
                                         className="col-12"
                                         label="MINIMUM_CDL_CLASS"
                                         name="cdl_class"
-                                        placeholder
+                                        placeholder="MINIMUM_CDL_CLASS"
                                         labelPrefix="DriverLicenseType"
                                         enumType={DriverLicenseType}
                                         formik={form}
