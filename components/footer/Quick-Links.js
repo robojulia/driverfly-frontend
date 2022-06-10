@@ -16,8 +16,8 @@ export default function QuickLinks() {
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link href="https://driverhiringusa.com/employers">
-                            <a  target="_blank" className="nav-link">Featured Employers</a>
+                        <Link href="/">
+                            <a className="nav-link">Featured Employers</a>
                         </Link>
                     </li>
                     <li className="nav-item">
@@ -27,6 +27,11 @@ export default function QuickLinks() {
                     </li>
                     <li className="nav-item">
                         <a className="nav-link" href="#">The DriverFly on the Wall Blog</a>
+                    </li>
+                    <li className="nav-item">
+                        <Link href="/blog">
+                            <a className="nav-link"  target="_blank">Blog</a>
+                        </Link>
                     </li>
                     <li className="nav-item">
                         <Link href="/contact">

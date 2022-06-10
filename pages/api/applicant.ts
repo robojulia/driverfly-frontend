@@ -55,6 +55,19 @@ class ApplicantApi extends BaseApi {
         return data;
     }
 
+    me = {
+        get: async () => {
+            const { data } = await this.get(this.baseUrl);
+
+            return data;
+        },
+        update: async (dto: ApplicantEntity) : Promise<ApplicantEntity> => {
+            const { data } = await this.put(this.baseUrl, dto);
+
+            return data;
+        },
+    }
+
     documents = {
         baseUrl: (applicantId: number) => `${this.baseUrl}/${applicantId}/documents`,
         create: async (applicantId: number, dto: DocumentEntity): Promise<DocumentEntity> => {
