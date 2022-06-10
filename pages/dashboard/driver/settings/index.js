@@ -219,7 +219,7 @@ export default function Profile() {
             <Row className="mt-2">
               <div className="col-12 border-0 text-end">
                 <div className="col">
-                  <button type="submit" className={`btn btn-primary`} >
+                  <button type="submit" className={`theme-secondary-btn`} >
                     {t("UPDATE")}
                   </button>
                 </div>

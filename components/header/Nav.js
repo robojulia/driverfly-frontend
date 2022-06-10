@@ -82,13 +82,13 @@ export default function MyNav() {
                         <li><a href="#" className="nav-link"> < Bell /></a></li>
                         {authCheck() ?
                             <>
-                                <DashboardButton className="btn btn-primary mr-4" />
-                                <LogoutButton className="btn btn-primary mr-4" />
+                                <DashboardButton className="theme-secondary-btn mr-4" />
+                                <LogoutButton className="theme-secondary-btn mr-4" />
                             </>
                             :
                             <>
-                                <LoginButton className="btn btn-primary mr-4" />
-                                <SignupButton className="btn btn-primary mr-4" />
+                                <LoginButton className="theme-secondary-btn mr-4" />
+                                <SignupButton className="theme-secondary-btn mr-4" />
                             </>}
                     </ul>
                 </Navbar.Collapse>

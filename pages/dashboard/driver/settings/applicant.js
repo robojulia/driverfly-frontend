@@ -86,7 +86,7 @@ export default function Applicant() {
                 </Col>
                 <Col xs="3">
                     <div style={{ float: "right" }}>
-                        <Button type="submit">{t("SAVE")}</Button>
+                        <Button variant="primary" type="submit">{t("SAVE")}</Button>
                     </div>
                 </Col>
             </Row>

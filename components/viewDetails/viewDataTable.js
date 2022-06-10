@@ -105,11 +105,11 @@ export default function ViewDataTable(props) {
                     onChange={e => setSearch(e.target.value.toLowerCase())}
                     value={search}
                     append={(<>
-                        <Button variant="primary" type="button" onClick={onSearchClick}><Search /></Button>
+                        <Button variant="" className="theme-secondary-btn" type="button" onClick={onSearchClick}><Search /></Button>
                         <Dropdown
                             autoClose="outside"
                         >
-                            <Dropdown.Toggle variant="" className="my_btn_secondary">
+                            <Dropdown.Toggle variant="" className="theme-general-btn">
                                 <Gear />
                             </Dropdown.Toggle>
                             <Dropdown.Menu className="select_dropdown">
