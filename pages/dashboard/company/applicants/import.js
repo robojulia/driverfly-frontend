@@ -218,12 +218,14 @@ export default function Import() {
                         {!form.isValid && <span className="text-danger small">{t("ONE_OR_MORE_ERRORS_WERE_FOUND_ON_INPUT_FILE")}</span>}
                     </div>
                     <div className="text-nowrap" style={{float: "right"}}>
+                    <OverlyPopover skipTranslate={false} str={"ONLY_DISPLAY_ERRORS_EXPLANATION"}>
                         <Switch
-                            label={<OverlyPopover skipTranslate={false} str={"ONLY_DISPLAY_ERRORS_EXPLANATION"}>{t("ONLY_DISPLAY_ERRORS")}</OverlyPopover>}
+                            label={"ONLY_DISPLAY_ERRORS"}
                             readOnly={!canClear}
                             value={onlyErrors}
                             onChange={onOnlyErrorsChange}
                         />
+                    </OverlyPopover>
                     </div>
                 </Col>
             </Row>
