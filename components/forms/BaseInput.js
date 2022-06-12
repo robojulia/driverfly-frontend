@@ -22,6 +22,10 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
     handleBlur = handleBlur || formik.handleBlur;
   }
 
+  if (type === "date" && typeof(value) === "string" && value?.includes("T")) {
+    value = value.split("T")[0];
+  }
+
   if (type === "int" || type === "integer") {
     type = "number";
     step = 1;

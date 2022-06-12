@@ -5,9 +5,9 @@ import useAuth from '../../hooks/useAuth';
 // In rewrite method you pass a page folder name(as a string). which // you create to handle underConstraction  functionalty.
 export function middleware(req: NextRequest, ev: NextFetchEvent) {
 
-  const { authCheck } = useAuth();
+  // const { authCheck } = useAuth();
 
-  console.log('middleware  authCheck', authCheck())
+  // console.log('middleware  authCheck', authCheck())
   // return NextResponse.redirect("/underConstraction");
 
   // if (authCheck()) {
@@ -16,7 +16,4 @@ export function middleware(req: NextRequest, ev: NextFetchEvent) {
 
   // return NextResponse.redirect(`${process.env.FRONTEND_BASE_URL}/login`)
   return NextResponse.next()
-
-
-
 }
