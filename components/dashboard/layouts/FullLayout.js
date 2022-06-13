@@ -5,7 +5,7 @@ import Sidebar from "./sidebars/Sidebar";
 import Head from "next/head";
 
 import { useTranslation } from "../../../hooks/useTranslation";
-import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, BellFill, SearchHeartFill, CheckSquareFill, GiftFill, GearFill, ShareFill } from 'react-bootstrap-icons';
+import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, BellFill, SearchHeartFill, CheckSquareFill, GiftFill, GearFill, ShareFill, EnvelopeFill } from 'react-bootstrap-icons';
 import useAuth from "../../../hooks/useAuth";
 
 
@@ -54,6 +54,11 @@ const FullLayout = ({ children }) => {
       pathname: "/dashboard/driver/free-resources",
       icon: GiftFill,
       text: "free_resources"
+    },
+    {
+      pathname: "/dashboard/driver/messages",
+      icon: EnvelopeFill,
+      text: "Messages"
     },
     {
       icon: GearFill,
