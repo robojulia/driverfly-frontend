@@ -27,9 +27,13 @@ export default function OverlyPopover(props) {
         delay={{ show: 250, hide: 400 }}
         overlay={popover}
     >
-        <span >
-            {props.icon ? props.icon : null}
-            {props.slice_at ? templateString.slice(0, props.slice_at) : templateString}...
-        </span>
+        {props.children ? 
+            <span>{props.children}</span>
+            :
+            <span >
+                {props.icon ? props.icon : null}
+                {props.slice_at ? templateString.slice(0, props.slice_at) : templateString}...
+            </span>
+        }
     </OverlayTrigger>
 }
