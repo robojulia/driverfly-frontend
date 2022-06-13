@@ -6,13 +6,14 @@ import { ApplicantEmployerEntity } from "../../../../models/applicant/applicant-
 import { ApplicantEquipmentEntity } from "../../../../models/applicant/applicant-equipment.entity";
 import { ApplicantExperienceEntity } from "../../../../models/applicant/applicant-experience.entity";
 import { DocumentEntity } from "../../../../models/documents/document.entity";
-
 import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
 import { VehicleTransmissionType } from "../../../../enums/vehicles/vehicle-transmission-type.enum";
 import { DriverEndorsement } from "../../../../enums/users/driver-endorsement.enum";
 import { EducationLevel } from "../../../../enums/users/education-level.enum";
 import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-document-type.enum";
 import { JobEquipmentType } from "../../../../enums/jobs/job-equipment-type.enum";
+import { LicenseRestrictions } from "../../../../enums/applicants/applicant-license-restrictions-type.enum.ts";
+
 
 import ApplicantApi from "../../../api/applicant";
 
@@ -223,12 +224,13 @@ export default function Applicant() {
                                     placeholder="years_cdl_experience"
                                     formik={form}
                                 />
-                                  <BaseInput
+                                  <BaseSelect
                                     className="col-12 p-1 "
                                     label="License_Restrictions"
                                     name="license_restrictions"
-                                    type="text"
-                                    placeholder="License_Restrictions"
+                                    placeholder
+                                    labelPrefix="LicenseRestrictions"
+                                    enumType={LicenseRestrictions}
                                     formik={form}
                                 />
                                 <BaseCheck
