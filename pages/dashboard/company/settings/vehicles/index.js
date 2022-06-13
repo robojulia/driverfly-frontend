@@ -89,7 +89,7 @@ export default function VehicleList() {
             <h2>{t("VEHICLES")}</h2>
           </Col>
           <Col xs="2" className="text-right">
-            <button className="btn btn-primary" onClick={onAddClick}>
+            <button className="theme-secondary-btn" onClick={onAddClick}>
               + {t("CREATE")}
             </button>
           </Col>

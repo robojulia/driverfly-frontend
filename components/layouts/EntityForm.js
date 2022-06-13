@@ -21,7 +21,7 @@ export default function EntityForm(props) {
         <form className={className} onSubmit={onSubmit}>
             <Row>
                 <Col xs="12" className="text-end">
-                    <Button type="submit" variant="primary">
+                    <Button type="submit" className="theme-secondary-btn">
                         {t(id ? "UPDATE" : "CREATE")}
                     </Button>
                 </Col>

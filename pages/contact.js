@@ -67,7 +67,7 @@ export default function Contact() {
                                     onChange={onChange}
                                 />
                                 <div className="form-group">
-                                    <button type="submit" className="btn btn-danger float-right py-3 px-5 mb-4">Submit <ArrowRight /> </button>
+                                    <button type="submit" className="btn contact-submit-btn float-right py-3 px-5 mb-4">Submit <ArrowRight /> </button>
                                 </div>
                             </form>
                         </div>

@@ -42,7 +42,7 @@ export default function Filters() {
                     </div>
                 </Col>
                 <Col md="3">
-                    <Button variant="primary" onClick={handleShowFilters} className="mt-39">
+                    <Button onClick={handleShowFilters} className="mt-39 theme-primary-btn-outline">
                         <Filter /> {t('FILTERS')}
                     </Button>
                 </Col>

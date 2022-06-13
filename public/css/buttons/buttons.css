@@ -1,0 +1,141 @@
+.theme-secondary-btn {
+    background: #1D4354 !important;
+    border: 1px solid #1D4354 !important;
+    border-color: #0062cc00 !important;
+    color: #fff !important;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    border-radius: .25rem;
+}
+
+.theme-secondary-btn:hover {
+    color: #fff;
+}
+
+.theme-primary-btn {
+    background: #2EC8C4 !important;
+    border-color: #2EC8C4;
+    padding: 12px 40px;
+    color: #fff !important;
+    border-radius: 3px;
+}
+
+.hero-search .theme-primary-btn:hover {
+    background-color: #1D4354;
+    color: rgb(255, 255, 255);
+}
+
+.theme-bg-btn {
+    font-size: 16px;
+    font-weight: bold;
+    fill: #fff;
+    color: #fff;
+    background-color: #2EC8C4;
+    border-radius: 0px 0px 0px 0px;
+    padding: 15px 40px 15px 40px;
+    position: relative;
+    transition: all ease-in-out 0.4s;
+}
+
+.theme-bg-btn:hover {
+    background-color: #1D4354;
+}
+
+.white-bg-btn:hover {
+    color: #2EC8C4;
+}
+
+.theme-primary-btn-outline {
+    position: relative;
+    transition: all ease-in-out 0.4s;
+    background: #fff;
+    border: solid 1px;
+    display: inline-block;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #4aa2af;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    border-radius: .25rem;
+}
+
+.theme-primary-btn-outline:hover {
+    color: white;
+    background-color: #2da2af;
+    border-color: #2da2af;
+}
+
+.contact-submit-btn {
+    background-color: #2da2af !important;
+    color: #fff !important;
+}
+
+.theme-general-btn {
+    background-color: #818a91 !important;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    border-radius: .25rem;
+    color: #fff !important;
+}
+
+.theme-general-btn:hover {
+    color: #fff;
+}
+
+.ort-btn .theme-primary-btn {
+    padding: 14px 70px;
+    width: 100%;
+}
+
+.ort-btn .theme-primary-btn:hover {
+    background-color: #b4b4b4 !important;
+}
+
+.ort-btn .theme-general-btn {
+    background: #b4b4b4;
+    border-color: #b4b4b4;
+    margin: 18px 0px;
+    width: 100%;
+    padding: 14px 70px;
+    color: #fff;
+}
+
+.ort-btn .theme-general-btn svg {
+    vertical-align: text-top;
+}
+
+.ort-btn .theme-general-btn:hover {
+    background: #2EC8C4;
+    color: #fff;
+}
+
+.create_btn {
+    background-color: #1D4354 !important;
+    color: #fff !important;
+}
+
+.close_btn {
+    background-color: #dc3545 !important;
+    color: #fff !important;
+    border-color: #dc3545 !important;
+}
+
+.btn-primary {
+    background: #1b4454 !important;
+    border-color: #1b4454 !important;
+    color: #fff !important;
+}
+
+.btn-primary:hover {
+    background: #1b4454 !important;
+    border-color: #1b4454;
+    color: #fff !important;
+}
+
+.btn.btn-primary_padded {
+    padding: 15px 30px !important;
+    border-radius: 3px;
+}

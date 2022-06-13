@@ -6,6 +6,8 @@ import "../public/css/responsive.css";
 import "../public/dashboard/styles/css/global.css";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import "../public/bootstrap/css/bootstrap.min.css";
+import "../public/css/buttons/buttons.css";
+
 
 
 

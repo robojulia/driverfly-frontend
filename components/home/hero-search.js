@@ -147,7 +147,7 @@ export default function HeroSearch(props) {
             <div className="form-group form-group-search m-0">
                 <button
                     onClick={handleSubmit}
-                    className="btn-submit btn btn-block btn-theme hvr-shrink"
+                    className="theme-primary-btn btn-block btn-theme hvr-shrink"
                     type="button"
                 >
                     {t('SEARCH')}
