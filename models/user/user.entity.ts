@@ -1,3 +1,4 @@
+import { JwtTokenPayload } from '../auth/jwt-token-payload.interface';
 import { CompanyEntity } from '../company/company.entity';
 import { RoleEntity } from '../roles/role.enttiy';
 
@@ -13,6 +14,7 @@ export class UserEntity {
     roles?: RoleEntity[];
     theme_color?: boolean;
     swipe_actions?: boolean;
+    activated?: boolean;
     timezone?: string;
     language?: string;
     contact_number?: string;
@@ -20,6 +22,7 @@ export class UserEntity {
     company?: CompanyEntity;
 
     token?: string;
+    jwt?: JwtTokenPayload;
 
     static yupSchema() {
         return yup.object({
@@ -33,4 +36,3 @@ export class UserEntity {
         });
     }
 }
-  

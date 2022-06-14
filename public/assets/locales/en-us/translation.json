@@ -913,7 +913,10 @@
     "INVITE_CODE": "Invitation Code",
     "UNABLE_TO_SIGNUP": "Unable to sign up new user, our team has been notified.",
     "SUCCESSFULLY_REGISTERED": "Registered successfully! Please Check Your Email",
+    "IMPERSONATE": "Impersonate",
     "ROLES": "Roles",
-    "ONLY_DISPLAY_ERRORS_EXPLANATION": "Turn on to only show drivers who cannot be imported due to missing or duplicate fields."
-
+    "ONLY_DISPLAY_ERRORS_EXPLANATION": "Turn on to only show drivers who cannot be imported due to missing or duplicate fields.",
+    "DRIVERS": "Drivers",
+    "NOT_ACTIVATED": "Not activated",
+    "RESTORE": "Restore"
 }
