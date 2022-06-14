@@ -24,7 +24,7 @@ function BaseSelect ( { append, prepend, formik, required, className, enumType, 
   if (typeof enumType === "object") {
     options = Object.entries(enumType).map(([key, value]) => ({
       [valueKey]: value,
-      [labelKey]: key
+      [labelKey]: value
     }))
   }
   else if (options && options.length > 0 && typeof options[0] !== "object") {
@@ -38,6 +38,28 @@ function BaseSelect ( { append, prepend, formik, required, className, enumType, 
       [valueKey]: v[valueKey],
       [labelKey]: createLabel(v)
     }));
+  }
+
+  /**
+   * 
+   * @param {React.ChangeEvent<HTMLSelectElement>} e 
+   */
+   function onChangeProxy(e) {
+    const { name, value } = e.target;
+
+    if (!onChange) return;
+
+    if (!value) {
+      onChange({
+        ...e,
+        target: {
+          ...e.target,
+          name: name,
+          value: null
+        }
+      });
+    } else onChange(e);
+
   }
 
   return (
@@ -54,7 +76,7 @@ function BaseSelect ( { append, prepend, formik, required, className, enumType, 
       >
       <select
         value={value == null ? "" : value}
-        onChange={onChange}
+        onChange={onChangeProxy}
         onBlur={handleBlur}
         disabled={readOnly}
         name={name}

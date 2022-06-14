@@ -7,6 +7,7 @@ import { Columns, Gear, Search } from "react-bootstrap-icons";
 import { useEffect, useState } from "react";
 import BaseCheck from "../forms/BaseCheck";
 import ListActions from "../list-actions/ListActions";
+import useStorage from "../../hooks/useStorage";
 
 /**
  * @typedef ViewTableProps
@@ -21,11 +22,13 @@ import ListActions from "../list-actions/ListActions";
  * @returns 
  */
 export default function ViewDataTable(props) {
+
     const { t } = useTranslation();
 
-    const [ items, setItems ] = useState([]);
-    const [ columns, setColumns ] = useState([]);
-    const [ search, setSearch ] = useState("");
+    const [settingsEnabled, setSettingsEnabled] = useState(false);
+    const [items, setItems] = useState([]);
+    const [columns, setColumns] = useState([]);
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         setItems(props.items);
@@ -37,23 +40,22 @@ export default function ViewDataTable(props) {
                     selector: j => (
                         <ListActions
                             options={props.actions(j)}
-                            />
+                        />
                     )
                 }
             ]);
         }
         else
             setColumns(props.columns);
-    }, [ props ]);
+    }, [props]);
 
     const onSearchClick = (e) => {
         setItems(
-            props.items.filter(v => 
+            props.items.filter(v =>
                 columns.some(c => c.name && !c.hide && !!c.selector(v)?.toLowerCase().includes(search)))
         )
 
     };
-
 
     /**
      * 
@@ -69,13 +71,20 @@ export default function ViewDataTable(props) {
      * @param {React.ChangeEvent<HTMLInputElement>} e 
      */
     const onColumnHide = (idx) => {
-        // const { name, value } = e.target;
+        setSettingsEnabled(true)
+
         setColumns(columns.map((v, i) => ({
             ...v,
             hide: idx == i ? v.hidable !== false && !v.hide : !!v.hide
 
         })))
     }
+
+    useEffect(() => {
+        if (settingsEnabled && props.columnSettingKey) {
+            useStorage().setItem(props.columnSettingKey, JSON.stringify(columns))
+        }
+    }, [columns])
 
     return (
         <DataTable
@@ -96,18 +105,18 @@ export default function ViewDataTable(props) {
                     onChange={e => setSearch(e.target.value.toLowerCase())}
                     value={search}
                     append={(<>
-                        <Button variant="primary" type="button" onClick={onSearchClick}><Search /></Button>
+                        <Button variant="" className="theme-secondary-btn" type="button" onClick={onSearchClick}><Search /></Button>
                         <Dropdown
                             autoClose="outside"
                         >
-                            <Dropdown.Toggle variant="" className="my_btn_secondary">
+                            <Dropdown.Toggle variant="" className="theme-general-btn">
                                 <Gear />
                             </Dropdown.Toggle>
                             <Dropdown.Menu className="select_dropdown">
                                 {
                                     columns.filter(v => !!v.name).map((v, i) => (
                                         <Dropdown.Item disabled={v.hidable === false} key={i} onClick={() => onColumnHide(i)}>
-                                            {v.hide ? (<del>{t(v.name)}</del>) : ( v.hidable === false ? (<i>{t(v.name)}</i>) : t(v.name))}
+                                            {v.hide ? (<del>{t(v.name)}</del>) : (v.hidable === false ? (<i>{t(v.name)}</i>) : t(v.name))}
                                         </Dropdown.Item>
                                     ))
                                 }
@@ -126,7 +135,7 @@ export default function ViewDataTable(props) {
                     </>)}
                 />
             </>}
-            
+
             data={items}
         />
 

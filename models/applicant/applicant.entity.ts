@@ -3,6 +3,7 @@ import { CompanyEntity } from '../company/company.entity';
 import { DocumentEntity } from '../documents/document.entity';
 import { ApplicantExperienceEntity } from './applicant-experience.entity';
 import { DriverLicenseType } from '../../enums/users/driver-license-type.enum';
+import { LicenseRestrictions} from '../../enums/applicants/applicant-license-restrictions-type.enum';
 import { ApplicantEquipmentEntity } from './applicant-equipment.entity';
 import { EducationLevel } from '../../enums/users/education-level.enum';
 import { ApplicantEmployerEntity } from './applicant-employer.entity';
@@ -34,6 +35,7 @@ export class ApplicantEntity {
   license_state?: string;
   license_type?: DriverLicenseType;
   years_cdl_experience?: number;
+  license_restrictions?: LicenseRestrictions;
   can_pass_drug_test?: boolean = false;
   is_owner_operator?: boolean = false;
   transmission_type?: VehicleTransmissionType[] = [];
@@ -79,8 +81,9 @@ export class ApplicantEntity {
         license_number: yup.string().nullable(),
         license_expiry: yup.date().nullable(),
         license_state: yup.string().nullable(),
-        license_type: yup.string().nullable(),
+        license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
         years_cdl_experience: yup.number().min(0).nullable(),
+        license_restrictions: (yup.string() as any).enum(LicenseRestrictions).nullable(),
         can_pass_drug_test: yup.bool().nullable(),
         is_owner_operator: yup.bool().nullable(),
         transmission_type: yup.array(

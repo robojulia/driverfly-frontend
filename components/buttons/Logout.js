@@ -1,7 +1,7 @@
 import useAuth from '../../hooks/useAuth';
 import Router from 'next/router'
 import { useTranslation } from "../../hooks/useTranslation";
-import { DropdownItem } from 'reactstrap';
+import { Dropdown } from "react-bootstrap";
 
 
 export default function Logout(props) {
@@ -14,9 +14,9 @@ export default function Logout(props) {
     }
 
     return (
-        <DropdownItem
+        <Dropdown.Item
             onClick={handleLogoutClick}>
             {t("LOGOUT")}
-        </DropdownItem>
+        </Dropdown.Item>
     )
 }

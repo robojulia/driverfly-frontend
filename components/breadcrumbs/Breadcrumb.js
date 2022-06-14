@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { CaretRightFill} from "react-bootstrap-icons";
+import { CaretRightFill } from "react-bootstrap-icons";
 
 const convertBreadcrumb = string => {
   return string
@@ -31,20 +31,22 @@ const Breadcrumb = () => {
 
   return (
     <nav aria-label="breadcrumbs">
-        
+
       <ol>
         <li>
-        <Link href="/">
-                <a>Home</a>
-        </Link>
-        < CaretRightFill  className='mx-2 align-text-bottom'/>
+          <Link href="/">
+            <a>Home</a>
+          </Link>
+          < CaretRightFill className='mx-2 align-text-bottom' />
         </li>
         {breadcrumbs.map((breadcrumb, i) => {
+          var str = convertBreadcrumb(breadcrumb.breadcrumb);
+          var res = str.replaceAll('-', ' ');
           return (
             <li key={breadcrumb.href}>
               <Link href={breadcrumb.href}>
                 <a className='current_page'>
-                  {convertBreadcrumb(breadcrumb.breadcrumb)}
+                  {res}
                 </a>
               </Link>
             </li>

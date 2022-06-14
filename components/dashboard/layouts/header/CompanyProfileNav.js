@@ -1,5 +1,6 @@
 import { Dropdown } from "react-bootstrap";
 import React from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 import LogoutButton from '../../../buttons/Logout';
@@ -16,6 +17,8 @@ export default function CompanyProfileNav({ user }) {
 
     const { t } = useTranslation();
 
+    const router = useRouter();
+
     const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
     const toggle = (e) => {
@@ -25,7 +28,7 @@ export default function CompanyProfileNav({ user }) {
     const menu_options = [
         {
             href: "/dashboard/company/settings",
-            label: t("COMPANY_SETTINGS")
+            label: "COMPANY_SETTINGS"
         },
         // {
         //     href: "/dashboard/company/settings",
@@ -42,7 +45,7 @@ export default function CompanyProfileNav({ user }) {
         {}, // divider
         {
             href: "/dashboard/company/settings/profile",
-            label: t("MY_PROFILE")
+            label: "MY_PROFILE"
         },
     ];
 
@@ -57,7 +60,6 @@ export default function CompanyProfileNav({ user }) {
                             className="rounded-circle"
                             width="30"
                             height="30"
-
                         />
                         <span> {user.first_name}    {user.last_name}</span>
                     </Dropdown.Toggle >
@@ -66,9 +68,7 @@ export default function CompanyProfileNav({ user }) {
                             if (!v.label) return <Dropdown.Divider key={i} />
 
                             return (
-                                <Link key={i} href={v.href || "#"}>
-                                    <Dropdown.Item>{v.label}</Dropdown.Item>
-                                </Link>
+                                <Dropdown.Item onClick={e => router.push(v.href || "#")}>{t(v.label)}</Dropdown.Item>
                             );
                         })}
                         <Dropdown.Divider />

@@ -379,16 +379,6 @@ textarea {
 .modal-dialog {
     max-width: 1000px !important;
 }
-
-.modal-dialog button {
-    color: #fff;
-    background-color: #5c636a !important;
-    border-color: #565e64 !important;
-}
-
-.modal-dialog button:hover {
-    color: #fff;
-}
 .icon_left {
     float: left;
     color: #5dcac4;

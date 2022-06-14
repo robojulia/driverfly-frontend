@@ -17,6 +17,7 @@ import { ArrowRight, GeoAltFill, CurrencyDollar } from "react-bootstrap-icons"
 import { buildAddress } from "../../../../utils/common"
 import useRedirect from "../../../../hooks/useRedirect"
 import FullLayout from "../../../../components/dashboard/layouts/FullLayout"
+import SaveJob from "../../../../components/dashboard/driver/save-job"
 
 export default function Detail({ jobDetail, relatedJobs }) {
 
@@ -89,6 +90,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
             </div>
             <div className="col-md-3">
               <JobApply job={jobDetail} />
+              <SaveJob job={jobDetail} />
             </div>
           </div>
         </div>

@@ -6,13 +6,14 @@ import { ApplicantEmployerEntity } from "../../../../models/applicant/applicant-
 import { ApplicantEquipmentEntity } from "../../../../models/applicant/applicant-equipment.entity";
 import { ApplicantExperienceEntity } from "../../../../models/applicant/applicant-experience.entity";
 import { DocumentEntity } from "../../../../models/documents/document.entity";
-
 import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
 import { VehicleTransmissionType } from "../../../../enums/vehicles/vehicle-transmission-type.enum";
 import { DriverEndorsement } from "../../../../enums/users/driver-endorsement.enum";
 import { EducationLevel } from "../../../../enums/users/education-level.enum";
 import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-document-type.enum";
 import { JobEquipmentType } from "../../../../enums/jobs/job-equipment-type.enum";
+import { LicenseRestrictions } from "../../../../enums/applicants/applicant-license-restrictions-type.enum.ts";
+
 
 import ApplicantApi from "../../../api/applicant";
 
@@ -49,12 +50,7 @@ export default function Applicant() {
                 delete values.jobs;
 
             try {
-                if (values.id) {
-                    values = await api.update(values.id, values);
-                }
-                else {
-                    values = await api.create(values);
-                }
+                values = await api.me.update(values);
 
                 toast.success(t("successfully_saved_information"));
 
@@ -67,7 +63,7 @@ export default function Applicant() {
     });
 
     useEffect(async () => {
-        const applicant = await api.getByUserId();
+        const applicant = await api.me.get();
 
         form.setValues({
             ...form.values,
@@ -86,7 +82,7 @@ export default function Applicant() {
                 </Col>
                 <Col xs="3">
                     <div style={{ float: "right" }}>
-                        <Button type="submit">{t("SAVE")}</Button>
+                        <Button variant="primary" type="submit">{t("SAVE")}</Button>
                     </div>
                 </Col>
             </Row>
@@ -226,6 +222,15 @@ export default function Applicant() {
                                     name="years_cdl_experience"
                                     type="number"
                                     placeholder="years_cdl_experience"
+                                    formik={form}
+                                />
+                                  <BaseSelect
+                                    className="col-12 p-1 "
+                                    label="License_Restrictions"
+                                    name="license_restrictions"
+                                    placeholder
+                                    labelPrefix="LicenseRestrictions"
+                                    enumType={LicenseRestrictions}
                                     formik={form}
                                 />
                                 <BaseCheck

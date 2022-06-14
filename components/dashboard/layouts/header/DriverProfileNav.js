@@ -1,59 +1,44 @@
-import {
-  Navbar,
-  Collapse,
-  Nav,
-  NavItem,
-  NavbarBrand,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Dropdown,
-  Button,
-} from "reactstrap";
-import React, { useEffect } from "react";
-import Link from "next/link";
-import Logo from "../logo/Logo";
+import { Dropdown } from "react-bootstrap";
+import React from "react";
 import Image from "next/image";
 import LogoutButton from '../../../buttons/Logout';
-import useAuth from "../../../../hooks/useAuth";
-import { useRouter } from "next/router"
 import user1 from "../../../../public/dashboard/assets/images/users/user1.jpg";
+import { useTranslation } from "../../../../hooks/useTranslation";
+import useAuth from "../../../../hooks/useAuth";
+import Impersonate from "../../../impersonate/impersonate";
 
 
-export default function DriverProfileNav(props) {
+export default function DriverProfileNav() {
 
-  const { isDriver } = useAuth();
+  const { user, authenticateDriver } = useAuth();
 
-  const router = useRouter();
+  const { t } = useTranslation();
 
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
+
+  authenticateDriver();
 
 
   return (
     <>
       <div className="profile">
         <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-          <DropdownToggle>
-            <div style={{ lineHeight: "0px" }}>
-              <Image
-                src={user1}
-                alt="profile"
-                className="rounded-circle"
-                width="30"
-                height="30"
-              />
-              <span>{props.user.first_name}  {props.user.last_name}</span>
-              {/* <span>{props.user.name || "DriverFly User"}.</span> */}
-              <p></p>
-            </div>
-          </DropdownToggle >
-          <DropdownMenu>
+          <Dropdown.Toggle variant="light">
+            <Image
+              src={user1}
+              alt="profile"
+              className="rounded-circle"
+              width="30"
+              height="30"
+            />
+            <span>{user?.first_name}  {user?.last_name}</span>
+          </Dropdown.Toggle >
+          <Dropdown.Menu>
             <Impersonate />
             <LogoutButton />
-          </DropdownMenu>
+          </Dropdown.Menu>
         </Dropdown>
       </div>
     </>

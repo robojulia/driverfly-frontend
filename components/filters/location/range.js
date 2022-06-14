@@ -4,20 +4,22 @@ import RangeSlider from 'react-bootstrap-range-slider';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead'; // ES2015
 import FindJobFilterAccordion from '../../find-jobs-accordion/find-job-filter-accordion';
 import MapboxApi from "../../../pages/api/mapbox"
+import { useTranslation } from '../../../hooks/useTranslation';
 
 export default function Range(props) {
 
-    const { t, state, method } = props
+    const { t } = useTranslation();
+    const { state, method } = props
+    const { filters } = state
     const { setFiltersByKeyValue } = method
     const mapboxApi = new MapboxApi()
 
-    const [range, setRange] = useState(50);
+    const [range, setRange] = useState(filters.location?.range || 50);
     const [location, setLocation] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [options, setOptions] = useState([]);
 
     const handleSearch = async (query) => {
-        console.log("queryyyyy", query);
         try {
             if (query) {
                 setIsLoading(true);
@@ -50,6 +52,7 @@ export default function Range(props) {
         <>
             <FindJobFilterAccordion {...props} header={t("LOCATION")}>
                 <AsyncTypeahead
+                    defaultInputValue={filters.place_name || ""}
                     id="async-example"
                     name="location"
                     isLoading={isLoading}

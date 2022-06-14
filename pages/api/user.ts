@@ -1,48 +1,52 @@
 import BaseApi from "./_baseApi";
 
 import { UserEntity } from "../../models/user/user.entity";
-import { DocumentEntity } from "../../models/documents/document.entity";
 import { UserPreferenceCategory } from "../../enums/users/user-preference-category.enum";
 import { UserPreferenceEntity } from "../../models/user/user-preference.entity";
 
 export default class UserApi extends BaseApi {
-    async getDocumentUrl(d: DocumentEntity): Promise<DocumentEntity> {
-        const { data } = await this.get(`documents/${d.id}`);
+    async create(user: UserEntity) : Promise<UserEntity> {
+        const { data } = await this.post(`user`, user);
 
         return data;
-    }
-    async getDocuments(): Promise<DocumentEntity[]> {
-        const { data } = await this.get(`user/uploaded/documents`);
-
-        return data as DocumentEntity[];
-    }
-
-    async deleteDocument(type: string): Promise<void> {
-        await this.delete(`user/documents`, {
-            type: type
-        });
-    }
-
-    async postDocuments(formData: FormData): Promise<DocumentEntity[]> {
-        const { data } = await this.post("user/documents", formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
-
-        return data as DocumentEntity[];
     }
 
     async update(id: number, user: UserEntity) : Promise<UserEntity> {
         const { data } = await this.put(`user/${id}`, user);
 
-        return data.user;
+        return data;
     }
 
-    async putUser(userId, user) {
-        const { data } = await this.put(`user/${userId}`, user);
+    async remove(id: number) : Promise<void> {
+        await this.delete(`user/${id}`);
+    }
 
-        return data.user;
+    async list(companyId?: number) : Promise<UserEntity> {
+        const { data } = await this.get(this.buildUrl("user/list", { companyId }));
+
+        return data;
+    }
+
+    async findById(id: number, user: UserEntity) : Promise<UserEntity> {
+        const { data } = await this.get(`user/${id}`);
+
+        return data;
+    }
+
+    me = {
+        get: async () : Promise<UserEntity> => {
+            const { data } = await this.get("user");
+
+            return data;
+        },
+        update: async (user: UserEntity) : Promise<UserEntity> => {
+            const { data } = await this.put("user", user);
+    
+            return data;
+        },
+        remove: async () : Promise<void> => {
+            await this.delete("user");
+        },
     }
 
     preferences = {

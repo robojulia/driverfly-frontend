@@ -28,22 +28,22 @@ export default function FilterResults() {
       <div className="filter_container">
         <h5 className='font-weight-normal'>{t('FILTER_RESULT')}</h5>
         <form >
-          < Search t={t} state={state} method={method} />
+          < Search state={state} method={method} />
           <div className="bs-example">
             <div className="tab-content">
               <div className="accordion bg-transparent" id="accordionExample">
-                < Category open={true} t={t} state={state} method={method} />
-                < Range open={true} t={t} state={state} method={method} />
-                < PostedDate open={true} t={t} state={state} method={method} />
-                < AreasCovered open={true} t={t} state={state} method={method} />
-                < EmploymentType t={t} state={state} method={method} />
-                < TypeOfDelivery t={t} state={state} method={method} />
-                < Equipment t={t} state={state} method={method} />
-                < TransmissionType t={t} state={state} method={method} />
-                < Schedule t={t} state={state} method={method} />
-                < PayStructure t={t} state={state} method={method} />
-                < SpecialEndorsementsRequired t={t} state={state} method={method} />
-                < MvrRequirement t={t} state={state} method={method} />
+                < Category open={true} state={state} method={method} />
+                < Range open={true} state={state} method={method} />
+                < PostedDate open={true} state={state} method={method} />
+                < AreasCovered open={true} state={state} method={method} />
+                < EmploymentType state={state} method={method} />
+                < TypeOfDelivery state={state} method={method} />
+                < Equipment state={state} method={method} />
+                < TransmissionType state={state} method={method} />
+                < Schedule state={state} method={method} />
+                < PayStructure state={state} method={method} />
+                < SpecialEndorsementsRequired state={state} method={method} />
+                < MvrRequirement state={state} method={method} />
               </div>
             </div>
           </div>
