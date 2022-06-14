@@ -21,7 +21,7 @@ import { globalAjaxExceptionHandler } from "../utils/ajax";
 import ViewCard from './viewDetails/viewCard'
 import { ApplicantDocumentType } from '../enums/applicants/applicant-document-type.enum'
 import { DocumentEntity } from '../models/documents/document.entity'
-import { PlusCircle, DashCircle } from 'react-bootstrap-icons'
+import { PlusCircle, DashCircle, ArrowRight, Star} from 'react-bootstrap-icons'
 import BaseInputPhone from './forms/BaseInputPhone'
 
 export default function JobApply({ job }) {
@@ -88,7 +88,8 @@ export default function JobApply({ job }) {
   return (
     <>
       <div className="ort-btn mt-lg-4 mt-0">
-        <button type="button" className="btn btn-danger" onClick={onApplyClick}> {t('apply_now')} <i className="fa fa-long-arrow-right pl-1" aria-hidden="true"></i></button>
+        <button type="button" className="btn theme-primary-btn" onClick={onApplyClick}> {t('apply_now')}<ArrowRight /></button>
+        <button type="button" className="btn theme-general-btn"> <Star /> {t('shortlist')} </button>
       </div>
 
       <ViewModal

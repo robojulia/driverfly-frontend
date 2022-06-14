@@ -302,10 +302,10 @@ export default function Applicants(props) {
                         </Col>
                         <Col xs="4">
                             <ButtonGroup size="sm" style={{ float: "right" }}>
-                                <button className="btn btn-primary" onClick={() => router.push("/dashboard/company/applicants/create")}>
+                                <button className="theme-secondary-btn mr-4 mb-2" onClick={() => router.push("/dashboard/company/applicants/create")}>
                                     + {t("ADD_{name}", { name: "APPLICANT" }, { translateProps: true })}
                                 </button>
-                                <button className="btn  my_btn_secondary" onClick={() => router.push("/dashboard/company/applicants/import")}>
+                                <button className="theme-general-btn mb-2" onClick={() => router.push("/dashboard/company/applicants/import")}>
                                     + {t("IMPORT_APPLICANTS")}
                                 </button>
                             </ButtonGroup>

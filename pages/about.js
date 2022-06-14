@@ -89,7 +89,7 @@ export default function About()
                                     <div className="who-we-serve-inner">
                                         <h3>Prospective Drivers</h3>
                                         <p>Considering a new career as a truck driver? Learn all about how to get your CDL and what to expect in terms of finding work.</p>
-                                        <button type="button" className="btn btn-danger">Learn More</button>
+                                        <button type="button" className="theme-general-btn">Learn More</button>
                                     </div>
                                     <div className="who-we-serve-inner">
                                         <h3>Owner Ops</h3>
@@ -128,7 +128,7 @@ export default function About()
                             <div className="who-we-serve-inner mb-3">
                                 <h3>Not sure where to start?</h3>
                                 <p>With over 400+ clients across the US, our dedicated recruiting arm can answer any questions or support you in getting placed with a driver job that pays well and matches your needs and offerings.</p>
-                                <button type="button" className="btn btn-danger">Contact Us</button>
+                                <button type="button" className="theme-general-btn">Contact Us</button>
                             </div>
                         </div>
                     </div>

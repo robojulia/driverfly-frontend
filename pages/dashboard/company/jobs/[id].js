@@ -491,7 +491,7 @@ export default function Job() {
                 <form onSubmit={form.handleSubmit} >
                     <div className="col-12 border-0 text-end">
                         <div className="col">
-                            <button type="submit" className={`btn btn-primary`} >
+                            <button type="submit" className={`theme-secondary-btn`} >
                                 {t(id ? "UPDATE" : "CREATE")}
                             </button>
                         </div>
