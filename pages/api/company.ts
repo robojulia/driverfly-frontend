@@ -9,17 +9,23 @@ export default class CompanyApi extends BaseApi {
         this.companyId = companyId;
     }
     baseUrl(companyId?: number): string { return `companies/${companyId ?? this.companyId}` }
+    employerBaseUrl(companyId?: number): string { return `employer/${companyId ?? this.companyId}` }
     async getById(): Promise<CompanyEntity> {
         const { data } = await this.get("companies");
 
         return data;
     }
-    async update(dto: CompanyEntity) : Promise<CompanyEntity> {
+    async update(dto: CompanyEntity): Promise<CompanyEntity> {
         const { data } = await this.put("companies", dto);
 
         return data;
     }
-    async remove() : Promise<void> {
+    async remove(): Promise<void> {
         await this.delete("companies");
+    }
+    async getEmployerById(companyId?: number): Promise<CompanyEntity> {
+        const { data } = await this.get(this.employerBaseUrl(companyId));
+
+        return data;
     }
 }

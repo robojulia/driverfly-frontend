@@ -196,7 +196,6 @@
         "M": "M (only Class B and C passenger vehicle or school bus)",
         "N": "N (only Class C passenger vehicle or school bus)",
         "V": "V (medical variance)"
-
     },
     "CDL_CLASS": "CDL Class",
     "CDL_CLASS_TYPE": "CDL Class Type",
@@ -301,6 +300,14 @@
     "become_your_own_boss": "Become Your Own Boss",
     "connect_with_our_community": "Connect With Our Community",
     "follow_us": "Follow us",
+    "FOLLOW_US": "Follow us",
+    "SOCIAL_PROFILE": "Socail Profile",
+    "EMPLOYER_LOCATION": "Employer Location",
+    "COMPANY_INFORMATION": "Company Information",
+    "TEAM_SIZE": "Team Size",
+    "POSTED_JOBS": "Posted Jobs",
+    "VIEWS": "Views",
+    "ADD_REVIEW": "Add Review",
     "sign_up_for_newsletter": "Sign up for our newsletter",
     "join_our_driverfly_community": "Join our DriverFly Community forum to ask any questions or share any educational or hilarious content.",
     "follow_us_paragraph": "Follow us on social media for engaging content, driving tips, and relevant industry news/regulation changes",
@@ -915,5 +922,4 @@
     "SUCCESSFULLY_REGISTERED": "Registered successfully! Please Check Your Email",
     "ROLES": "Roles",
     "ONLY_DISPLAY_ERRORS_EXPLANATION": "Turn on to only show drivers who cannot be imported due to missing or duplicate fields."
-
 }
