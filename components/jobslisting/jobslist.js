@@ -41,7 +41,8 @@ export default function JobsList() {
                 } {
                   job?.company?.name &&
                   <>
-                    {t('by')} <span role="button" className="employer text-theme">{job.company?.name}</span>
+                    {t('by')} <Link href={`/employer/${job.company?.id}`}>
+                      <span role="button" className="employer text-theme">{job.company?.name}</span></Link>
                   </>
                 }
               </div>

@@ -24,7 +24,6 @@ export default function CompanyPhoto(props) {
                 break
         }
         return ret
-
     }
 
     useEffect(async () => {

@@ -24,8 +24,8 @@ export default class CompanyApi extends BaseApi {
         await this.delete(this.baseUrl);
     }
 
-    async getEmployerById(companyId?: number): Promise<CompanyEntity> {
-        const { data } = await this.get(`${this.employerBaseUrl}/${companyId}`);
+    async getEmployerById(id?: number) {
+        const { data } = await this.get(`${this.employerBaseUrl}/${id}`);
 
         return data;
     }

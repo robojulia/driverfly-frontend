@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { StarFill, Link45deg, PhoneFlip, Mailbox2, Bell } from 'react-bootstrap-icons';
+import { StarFill, Link45deg, PhoneFlip, Mailbox2, Bell, ArrowRight } from 'react-bootstrap-icons';
 import Layout from '../../components/layouts';
 import CompanyInfo from '../../components/employer/CompanyInfo';
 import CompanyJob from '../../components/employer/CompanyJob';
@@ -8,18 +8,21 @@ import ReviewForm from '../../components/employer/ReviewForm';
 import CompanyApi from "../api/company"
 import DocumentApi from "../api/document"
 import { useTranslation } from '../../hooks/useTranslation';
+import JobApi from '../api/job';
+import Link from 'next/link';
 
 export default function CompanyDetail({ company, jobs }) {
 
   const { t } = useTranslation();
   const documentApi = new DocumentApi(company.id)
-  const [companyPhoto, setCompanyPhoto] = useState(null)
+  const [companyPhoto, setCompanyPhoto] = useState("/driverfly-logo-square.png")
 
-  // useEffect(async () => {
-  //   if (company.photo?.id)
-  //     await documentApi.getCompanyPhoto(company.photo.id)
-  //       .then(data => setCompanyPhoto(data))
-  // }, [company])
+  useEffect(async () => {
+    if (company.photo?.id)
+      await documentApi.getSignedUrl(company.photo?.id)
+        .then(data => setCompanyPhoto(data))
+        .catch(error => console.error("error", error))
+  }, [company])
 
   return (
     <>
@@ -38,7 +41,8 @@ export default function CompanyDetail({ company, jobs }) {
                     <div className='d-flex align-items-center'>
                       <h1 className='custom-trucker-title mx-2'>{company.name}</h1>
                       <span data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">
-                        <StarFill color='#2da2af' /> </span>
+                        {/* <StarFill color='#2da2af' /> */}
+                      </span>
                     </div>
                     {/* <div className='d-flex my-3'>
                       <a>
@@ -78,6 +82,11 @@ export default function CompanyDetail({ company, jobs }) {
           <CompanyInfo company={company} jobsPosted={jobs.length} />
           <div className='row'>
             <div className='col-md-8 col-sm-12 col-lg-8'>
+              <Link href={`/find-jobs?companyId=${company.id}`}>
+                <a className='text-dark text-center text-decoration-none'>
+                  {t('view_all_jobs')} <ArrowRight className="pl-1" />
+                </a>
+              </Link>
               <CompanyJob jobs={jobs} />
               {/* <ReviewForm /> */}
             </div>
@@ -101,12 +110,11 @@ export async function getServerSideProps(context) {
       return { notFound: true }
 
     const data = id ? await new CompanyApi().getEmployerById(id) : []
-
-    console.log(data.company);
-    if (!!!data.company)
+    if (!!!data)
       return { notFound: true }
 
-    return { props: { company: data.company, jobs: data.jobs } }
+    const { items } = await new JobApi().search({ companyId: id, take: 3 });
+    return { props: { company: data, jobs: items } }
   } catch (error) {
     console.error("Exception is here:", error);
     return { props: { company: [], jobs: [] } }
