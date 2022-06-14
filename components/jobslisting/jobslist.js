@@ -21,7 +21,7 @@ export default function JobsList() {
         {jobs.length > 0 && jobs.map(job => (
           <div key={job.id} className="media align-items-center shadow-sm">
 
-            <CompanyPhoto className="d-flex mr-4 truck-img" company={job.company} />
+            <CompanyPhoto className="d-flex mr-4 truck-img" job={job} company={job.company} />
             <div className="media-body">
               <h4 className="mt-0">{job.title}
                 <span
