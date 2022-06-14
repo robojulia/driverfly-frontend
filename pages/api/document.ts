@@ -13,7 +13,7 @@ export default class DocumentApi extends BaseApi {
 
         return data;
     }
-    // /vehicle/:vehicleId/:type
+
     async getVehiclePhoto(vehicleId: number): Promise<DocumentEntity> {
         const { data } = await this.get(`documents/vehicle/${vehicleId}`);
 

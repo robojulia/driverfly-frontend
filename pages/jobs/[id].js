@@ -59,7 +59,8 @@ export default function Detail({ jobDetail, relatedJobs }) {
                       } {
                         jobDetail?.company?.name &&
                         <>
-                          {t('by')} <span role="button" className="employer text-theme">{jobDetail.company?.name}</span>
+                          {t('by')} <Link  href={`/employer/${jobDetail.company?.id}`}>
+                            <span role="button" className="employer text-theme">{jobDetail.company?.name}</span></Link>
                         </>
                       }
                     </div>
