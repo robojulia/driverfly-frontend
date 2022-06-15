@@ -51,7 +51,7 @@ export async function getServerSideProps({ query }) {
 
   await signupAPI.verifyEmailToken({ emailVerifyToken })
     .then(res => {
-      // console.log("res.status", res);
+      console.log("verifyEmailToken.status", res);
       if (res?.status == 200) {
         response = {
           verified: true,
@@ -64,7 +64,7 @@ export async function getServerSideProps({ query }) {
         }
       }
     }).catch(error => {
-      // console.log("error.response", error.response.data);
+      console.log("verifyEmailToken.error.response", error.response.data);
       if (error?.response?.status == 422 || error?.response?.data?.errors?.User) {
         response = {
           verified: false,
