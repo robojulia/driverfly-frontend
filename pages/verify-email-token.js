@@ -51,27 +51,31 @@ export async function getServerSideProps({ query }) {
 
   await signupAPI.verifyEmailToken({ emailVerifyToken })
     .then(res => {
-      console.log("verifyEmailToken.status", res);
+      // console.log("verifyEmailToken.status", res);
       if (res?.status == 200) {
         response = {
+          res, // for testing
           verified: true,
           message: "Account activated Successfully! please proceed to login."
         }
       } else {
         response = {
+          res, // for testing
           verified: false,
           message: "Something went wrong"
         }
       }
     }).catch(error => {
-      console.log("verifyEmailToken.error.response", error.response.data);
+      // console.log("verifyEmailToken.error.response", error.response.data);
       if (error?.response?.status == 422 || error?.response?.data?.errors?.User) {
         response = {
+          error, //for testing
           verified: false,
           message: `${error?.response?.data?.errors?.User || "Something went wrong"}`
         }
       } else {
         response = {
+          error, //for testing
           verified: false,
           message: "Something went wrong"
         }
