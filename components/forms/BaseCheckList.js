@@ -73,13 +73,6 @@ function BaseCheckList({
       [labelKey]: value
     }))
   }
-  // if (typeof enumType === "object") {
-  //   options = Object.keys(enumType).map(key => ({
-  //     [valueKey]: key,
-  //     [labelKey]: enumType[key]
-  //   }))
-  // }
-
   if (!value) value = [];
 
   return (

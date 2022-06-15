@@ -224,15 +224,6 @@ export default function Applicant() {
                                     placeholder="years_cdl_experience"
                                     formik={form}
                                 />
-                                  {/* <BaseSelect
-                                    className="col-12 p-1 "
-                                    label="License_Restrictions"
-                                    name="license_restrictions"
-                                    placeholder
-                                    labelPrefix="LicenseRestrictions"
-                                    enumType={LicenseRestrictions}
-                                    formik={form}
-                                /> */}
                                     <BaseCheckList
                                     className="col-12 p-1 "
                                     label="License_Restrictions"
