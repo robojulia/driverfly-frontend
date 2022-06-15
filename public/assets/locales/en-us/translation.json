@@ -456,6 +456,7 @@
     "other_safety_requirements": "Other Safety Requirements",
     "max_applicant_radius": "Max Applicant Radius",
     "vehicle": "Vehicle",
+    "VEHICLE_INFO": "Vehicle Info",
     "new_vehicle": "New Vehicle",
     "tractor": "Tractor",
     "box_truck_regular": "Box Truck (Regular)",

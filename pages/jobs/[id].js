@@ -18,6 +18,7 @@ import StructuredData from "../../components/seo/StructuredData"
 import { ArrowRight, GeoAltFill, CurrencyDollar } from "react-bootstrap-icons"
 import { buildAddress } from "../../utils/common"
 import SaveJob from "../../components/dashboard/driver/save-job"
+import JobVehicles from "../../components/jobs/job-vehicles"
 
 export default function Detail({ jobDetail, relatedJobs }) {
 
@@ -94,6 +95,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
             <div className="row">
               <div className="col-lg-8">
                 < JobDescription job={jobDetail} />
+                < JobVehicles job={jobDetail} />
                 < SocilShare />
                 < RelatedJobs jobs={relatedJobs} />
               </div>
