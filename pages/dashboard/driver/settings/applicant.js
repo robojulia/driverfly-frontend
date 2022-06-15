@@ -12,7 +12,7 @@ import { DriverEndorsement } from "../../../../enums/users/driver-endorsement.en
 import { EducationLevel } from "../../../../enums/users/education-level.enum";
 import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-document-type.enum";
 import { JobEquipmentType } from "../../../../enums/jobs/job-equipment-type.enum";
-import { LicenseRestrictions } from "../../../../enums/applicants/applicant-license-restrictions-type.enum.ts";
+import { LicenseRestrictions } from "../../../../enums/applicants/applicant-license-restrictions-type.enum";
 
 
 import ApplicantApi from "../../../api/applicant";
@@ -224,7 +224,7 @@ export default function Applicant() {
                                     placeholder="years_cdl_experience"
                                     formik={form}
                                 />
-                                  <BaseSelect
+                                  {/* <BaseSelect
                                     className="col-12 p-1 "
                                     label="License_Restrictions"
                                     name="license_restrictions"
@@ -232,6 +232,15 @@ export default function Applicant() {
                                     labelPrefix="LicenseRestrictions"
                                     enumType={LicenseRestrictions}
                                     formik={form}
+                                /> */}
+                                    <BaseCheckList
+                                    className="col-12 p-1 "
+                                    label="License_Restrictions"
+                                    name="license_restrictions"
+                                    labelPrefix="LicenseRestrictions"
+                                    enumType={LicenseRestrictions}
+                                    formik={form}
+                                    cols="2"
                                 />
                                 <BaseCheck
                                     className="col-12 p-1  mt-2"
