@@ -91,7 +91,6 @@ export default function Matching() {
             benefits: UserPreferenceEntity.yupSchema(),
         }),
         onSubmit: async values => {
-            console.log("values", values);
             const api = new UserApi();
 
             try {
@@ -99,7 +98,6 @@ export default function Matching() {
                     Object
                         .entries(values)
                         .map(async ([key, preference]) => {
-                            console.log("preferenceeee ", preference);
                             if (preference.value) {
                                 if (preference.id) preference = await api.preferences.update(user.id, preference.id, preference);
                                 else preference = await api.preferences.create(user.id, preference);
