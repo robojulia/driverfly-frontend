@@ -25,6 +25,18 @@ class ApplicantApi extends BaseApi {
         return data;
     }
 
+    async assign(id: number) {
+        const { data } = await this.post(this.baseUrl + "/" + id + "/assign", null);
+
+        return data;
+    }
+
+    async unassign(id: number) {
+        const { data } = await this.delete(this.baseUrl + "/" + id + "/assign");
+
+        return data;
+    }
+
     async search(params: ApplicantEntity, config?: AxiosRequestConfig): Promise<ApplicantEntity[]> {
         const { data } = await this.get(this.buildUrl(this.baseUrl + "/search", params), config);
 

@@ -952,5 +952,8 @@
     "ONLY_DISPLAY_ERRORS_EXPLANATION": "Turn on to only show drivers who cannot be imported due to missing or duplicate fields.",
     "DRIVERS": "Drivers",
     "NOT_ACTIVATED": "Not activated",
-    "RESTORE": "Restore"
+    "RESTORE": "Restore",
+    "ASSIGN_TO_ME": "Assign To Me",
+    "UNASSIGN": "Unassign",
+    "ASSIGNED_TO": "Assigned To"
 }
