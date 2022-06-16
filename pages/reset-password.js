@@ -1,151 +1,147 @@
-import axios from "axios"
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import Breadcrumbs from 'nextjs-breadcrumbs'
-import { useState } from "react"
-import Back from '../components/back-to-login/Back-Login'
+import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 import Layout from "../components/layouts"
 import Forgotpassword from '../public/css/Forgot.module.css'
 import ResetPasswordAPI from "./api/reset-account"
 import { ToastContainer, toast } from 'react-toastify'
 
-export default function Forgot() {
+import { useTranslation } from "../hooks/useTranslation";
+import BaseInput from '../components/forms/BaseInput';
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { Col, Container, Row } from "react-bootstrap";
+
+export default function ResetPassword({ passwordResetToken }) {
+
+  const router = useRouter();
+  const { t } = useTranslation();
   const resetPasswordAPI = new ResetPasswordAPI();
-  const [password, setPassword] = useState("")
-  const [passwordError, setPasswordError] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [confirmPasswordError, setConfirmPasswordError] = useState("")
-  const router = useRouter()
-  const { passwordResetToken } = router.query
 
-  const submitHandler = async (e) => {
-    e.preventDefault()
+  const translations = {
+    passwordsDoNotMatch: t("PASSWORDS_DO_NOT_MATCH")
+  };
 
-    // validate password
-    if (!password) {
-      setPasswordError("password is required")
-      return
-    }
+  const form = useFormik({
+    initialValues: {
+      password: null,
+      passwordConfirm: null,
+      passwordResetToken: passwordResetToken,
+    },
+    validationSchema: yup.object({
+      passwordResetToken: yup.string().required().nullable(),
+      password: yup.string().required().nullable(),
+      passwordConfirm: yup.string().test({
+        test: (value, context) => {
+          const password = context.resolve(yup.ref("password"));
+          if (value === password) return true;
 
-    if (!confirmPassword) {
-      setConfirmPasswordError("password confirmation is required")
-      return
-    }
-
-    if (confirmPassword !== password) {
-      setConfirmPasswordError("password does not match confirmation password")
-      return
-    }
-
-    // clear errors
-    if (passwordError || confirmPasswordError) {
-      setPasswordError("")
-      setConfirmPasswordError("")
-    }
-
-
-    await resetPasswordAPI.newPassword({
-      password,
-      passwordConfirm: confirmPassword,
-      passwordResetToken
-    })
-      .then(res => {
-        // console.log("res.status", res.status);
-        if (res.status == 200) {
-          toast.success("Password Reset Successfully", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
+          return context.createError({
+            path: context.path,
+            message: translations.passwordsDoNotMatch
           });
-          router.push("/login")
         }
-      }).catch(error => {
-        // console.log("error.response", error.response.status);
-        if (error?.response?.status == 422) {
-          toast.error("User not exist", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-
-        } else {
-          toast.error("Something went wrong", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-
-        }
-      })
-
-
-  }
+      }).nullable(),
+    }),
+    onSubmit: async (dto) => {
+      await resetPasswordAPI.newPassword(dto)
+        .then(res => {
+          if (res.status == 200) {
+            toast.success(t("SUCCESS_RESET_PASSWORD"));
+            setTimeout(() => {
+              router.push("/login")
+            }, 3000);
+          }
+        })
+        .catch(error => {
+          if (error?.response?.status == 422) {
+            toast.error(t('INVALID_RESET_PASSWORD_TOKEN'))
+          } else {
+            toast.error(t('FAILED_RESET_PASSWORD'))
+          }
+        })
+    }
+  })
 
   return (
     <>
       <ToastContainer />
-
-
       <div className="top-links-sec">
-        <div className="container">
+        <Container>
           <div className="top-links-inner d-flex align-items-center justify-content-between">
-            <h2>Reset Password</h2>
-            < Breadcrumbs />
+            <h2>{t('RESET_PASSWORD')}</h2>
+            < Breadcrumb />
           </div>
-        </div>
+        </Container>
       </div>
       <div className={Forgotpassword.formsec}>
-        <div className="container">
-          <div className='row'>
-            <div className='col-lg-2'></div>
-            <div className='col-lg-8'>
-
-              <h4 className='text-center mt-5 font-weight-normal'>Reset Password</h4>
-              <p className="mt-2 mb-5 text-center  text-secondary ">Please Enter Your New Password</p>
-              <form onSubmit={submitHandler} className={Forgotpassword.mb}>
+        <Container>
+          <Row>
+            <Col xs={{ span: 8, offset: 2 }}>
+              <h4 className='text-center mt-5 font-weight-normal'>{t('RESET_PASSWORD')}</h4>
+              <p className="mt-2 mb-5 text-center  text-secondary ">{t('ENTER_NEW_PASSWORD')}</p>
+              <form
+                onSubmit={form.handleSubmit}
+                className={Forgotpassword.mb}>
                 <div className="form-group">
-                  <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" className="form-control py-4" placeholder="Password" id="password" />
-                  <p style={{ fontStyle: "italic", color: "red" }}>{passwordError}</p>
+                  <BaseInput
+                    required
+                    type="password"
+                    name="password"
+                    placeholder="PASSWORD"
+                    formik={form}
+                  />
                 </div>
                 <div className="form-group">
-                  <input value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} type="password" className="form-control py-4" placeholder="Confirmed Password" id="password" />
-                  <p style={{ fontStyle: "italic", color: "red" }}>{confirmPasswordError}</p>
+                  <BaseInput
+                    required
+                    type="password"
+                    name="passwordConfirm"
+                    placeholder="CONFIRM_PASSWORD"
+                    formik={form}
+                  />
                 </div>
-
-
-                <button type="submit" className={Forgotpassword.success_btn}>Get New Password</button>
+                <button disabled={form.isSubmitting}
+                  type="submit"
+                  className={Forgotpassword.success_btn}>
+                  {t("UPDATE_PASSWORD")}
+                </button>
                 <Link href="/login">
-                  <button className={Forgotpassword.danger_btn}>
-                    Cancel </button>
+                  <button
+                    className={Forgotpassword.danger_btn}>
+                    {t('CANCEL')}
+                  </button>
                 </Link>
                 <Link href="/login">
-                  <div><a href="" className={Forgotpassword.backlink}>Back To Login</a></div>
+                  <span
+                    role="button"
+                    className={Forgotpassword.backlink}>
+                    {t('BACK_TO_LOGIN')}
+                  </span>
                 </Link>
               </form>
-
-            </div>
-            <div className='col-lg-2'></div>
-          </div>
-        </div>
+            </Col>
+          </Row>
+        </Container>
       </div>
-
-
     </>
   )
 }
-Forgot.getLayout = function getLayout(page) {
+
+export async function getServerSideProps(context) {
+  if (!!!context.query.passwordResetToken) {
+    return {
+      notFound: true
+    }
+  }
+  return {
+    props: {
+      ...context.query
+    }
+  }
+}
+
+ResetPassword.getLayout = function getLayout(page) {
   return (
     <Layout>
       {page}

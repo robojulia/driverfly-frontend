@@ -5,6 +5,12 @@ import "../public/css/style.css";
 import "../public/css/responsive.css";
 import "../public/dashboard/styles/css/global.css";
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import "../public/bootstrap/css/bootstrap.min.css";
+import "../public/css/buttons/buttons.css";
+
+
+
+
 // import "../lang/i18nextconfig";
 // import { appWithTranslation } from 'next-i18next';
 // import { i18n } from 'next-i18next'
@@ -25,8 +31,14 @@ function MyApp({ Component, pageProps }) {
   yup.setLocale({
     mixed: {
       required: (ctx) => t("yup.required"),
-      oneOf: (ctx) => t("yup.oneOf", { values: ctx.values.join(',') }),
-      notOneOf: (ctx) => t("yup.notOneOf", { values: ctx.values.join(',') }),
+      oneOf: (ctx) => Array.isArray(ctx.values) ? 
+        t("yup.oneOf", { values: ctx.values.join(',') }) :
+        t("yup.mustBe", { values: ctx.values })
+      ,
+      notOneOf: (ctx) => Array.isArray(ctx.values) ? 
+        t("yup.notOneOf", { values: ctx.values.join(',') }) :
+        t("yup.cannotBe", { values: ctx.values })
+      ,
       notType: (ctx) => t("yup.notType", { type: `yup.type.${ctx.type}` }, { translateProps: true }),
       notType: (ctx) => t("yup.defined"),
       default: (ctx) => t("yup.default"),

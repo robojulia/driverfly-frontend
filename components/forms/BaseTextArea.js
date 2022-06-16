@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from '../../hooks/useTranslation';
 
 function BaseTextArea({ formik, required, className, maxLength, label, rows, placeholder, value, onChange, handleBlur, readOnly, name, touched, error, }) {
@@ -19,12 +19,19 @@ function BaseTextArea({ formik, required, className, maxLength, label, rows, pla
     handleBlur = handleBlur || formik.handleBlur;
   }
 
+  const [ remaining, setRemaining ] = useState(maxLength || -1);
+
+  useEffect(() => {
+    if (maxLength > 0) {
+      setRemaining(maxLength - (value || "").length);
+    }
+  }, [ value ]);
+
   return (
     <div className={className}>
-      {label && <label>{t(label)}{required ? "*" : ""}:</label>}
-      <br />
+      {label && <><label>{t(label)}{required ? "*" : ""}:</label><br /></>}
       <textarea
-        placeholder={placeholder}
+        placeholder={t(placeholder)}
         value={value || ""}
         rows={rows}
         maxLength={maxLength}
@@ -34,7 +41,8 @@ function BaseTextArea({ formik, required, className, maxLength, label, rows, pla
         name={name}
         className={`form-control ${error ? "is-invalid" : ""}`}
        />
-      {touched && error && (typeof error === "string") ? <span className="text-danger small">{error}</span> : null}
+      {maxLength > 0 && <span className="text-info float-right small">{t("{number}_CHARACTERS_REMAINING", { number: remaining })}</span>}
+      {touched && error && (typeof error === "string") && <span className="text-danger small">{error}</span>}
     </div>
   )
 }

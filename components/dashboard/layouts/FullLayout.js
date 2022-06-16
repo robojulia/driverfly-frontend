@@ -1,20 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container } from "reactstrap";
 import Header from "./header/Header";
 import Sidebar from "./sidebars/Sidebar";
 import Head from "next/head";
 
 import { useTranslation } from "../../../hooks/useTranslation";
-import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, FileEarmarkMedicalFill, CheckSquareFill, GiftFill, GearFill } from 'react-bootstrap-icons';
+import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, BellFill, SearchHeartFill, CheckSquareFill, GiftFill, GearFill, ShareFill, EnvelopeFill } from 'react-bootstrap-icons';
+import useAuth from "../../../hooks/useAuth";
 
 
 // driver layout
 const FullLayout = ({ children }) => {
   const { t } = useTranslation();
-  const [open, setOpen] = React.useState(false);
-  const showMobilemenu = () => {
-    setOpen(!open);
-  };
+
+  const { user } = useAuth();
+
+  useEffect(() => {
+    console.log("FullLayout: USER", user);
+
+  }, [ user ]);
+
+  // const { isDriver } = useAuth();
+
+  // isDriver();
 
   const menuItems = [
     {
@@ -23,22 +31,7 @@ const FullLayout = ({ children }) => {
       text: "dashboard"
     },
     {
-      pathname: "/dashboard/driver/my-account",
-      icon: PersonFill,
-      text: "my_account",
-    },
-    // {
-    //   pathname: "/dashboard/driver/my-application",
-    //   icon: FileEarmarkFill,
-    //   text: "my_application"
-    // },
-    // {
-    //   pathname: "/dashboard/driver/my-docs",
-    //   icon: FileEarmarkMedicalFill,
-    //   text: "my_docs"
-    // },
-    {
-      pathname: "/find-jobs",
+      pathname: "/dashboard/driver/find-jobs",
       icon: Search,
       text: "find_new_job"
     },
@@ -63,6 +56,11 @@ const FullLayout = ({ children }) => {
       text: "free_resources"
     },
     {
+      pathname: "/dashboard/driver/messages",
+      icon: EnvelopeFill,
+      text: "Messages"
+    },
+    {
       icon: GearFill,
       text: "SETTINGS",
       items: [
@@ -76,6 +74,21 @@ const FullLayout = ({ children }) => {
           icon: FileEarmarkFill,
           text: "my_application",
         },
+        {
+          pathname: "/dashboard/driver/settings/communication",
+          icon: BellFill,
+          text: "COMMUNICATION",
+        },
+        {
+          pathname: "/dashboard/driver/settings/sharing",
+          icon: ShareFill,
+          text: "SHARING",
+        },
+        {
+          pathname: "/dashboard/driver/settings/matching",
+          icon: SearchHeartFill,
+          text: "JOB_MATCHING",
+        },
       ],
     },
   ];
@@ -88,25 +101,19 @@ const FullLayout = ({ children }) => {
           name="description"
           content="Ample Admin Next Js Aadmin Dashboard "
         />
-        <link rel="icon" href="/favicon.ico" />
+         <link rel="icon" href="/img/DriverFly-Official-Favicon.png" />
       </Head>
       <div className="header">
         <div className="contentArea ">
           {/********header**********/}
-          <Header showMobmenu={() => showMobilemenu()} />
+          <Header />
         </div>
       </div>
       <main className="maincontainer">
         < div className="dashboardsidebar">
           <div className="pageWrapper d-md-block d-lg-flex">
             {/******** Sidebar **********/}
-            <Sidebar open={open} items={menuItems} />
-            {/* <aside
-              className={`sidebarArea ${!open ? "" : "showSidebar"
-                }`}
-            >
-              <Sidebar showMobilemenu={() => showMobilemenu()} />
-            </aside> */}
+            <Sidebar items={menuItems} />
             {/********Content Area**********/}
             <div className="header">
 

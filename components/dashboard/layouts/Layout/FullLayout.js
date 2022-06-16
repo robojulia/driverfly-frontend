@@ -5,7 +5,7 @@ import Sidebar from "../sidebars/Sidebar";
 import Head from "next/head";
 
 import { useTranslation } from "../../../../hooks/useTranslation";
-import { Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, CheckSquareFill, GiftFill, GearFill } from 'react-bootstrap-icons';
+import { Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, CheckSquareFill, GiftFill, GearFill, EnvelopeFill, PeopleFill } from 'react-bootstrap-icons';
 
 // company layout
 const FullLayout = ({ children }) => {
@@ -26,34 +26,23 @@ const FullLayout = ({ children }) => {
       pathname: "/dashboard/company/jobs",
       icon: BagFill,
       text: "JOB_LISTINGS",
+      permissions: "CanViewJob",
       startsWith: true
     },
     {
       pathname: "/dashboard/company/applicants",
       icon: FileEarmarkFill,
       text: "APPLICANTS",
+      permissions: "CanViewApplicant",
       startsWith: true
     },
-    // {
-    //   pathname: "/dashboard/company/driver-applications-and-resume",
-    //   icon: AssignmentIcon,
-    //   text: t("DRIVER_APPLICATION")
-    // },
-    // {
-    //   pathname: "/dashboard/company/sms",
-    //   icon: EmailIcon,
-    //   text: t("MESSAGES")
-    // },
-    // {
-    //   pathname: "/dashboard/company/driver-directory",
-    //   icon: ContactPageIcon,
-    //   text: t("DRIVER_DIRECTORY")
-    // },
-    // {
-    //   pathname: "/dashboard/company/safety-and-complience",
-    //   icon: GppGoodIcon,
-    //   text: t("SAFETY_COMPLIANCE")
-    // },
+    {
+      pathname: "/dashboard/company/messages",
+      icon: EnvelopeFill,
+      text: "MESSAGES",
+      startsWith: true
+    },
+  
     {
       pathname: "/dashboard/company/settings",
       icon: GearFill,
@@ -62,30 +51,38 @@ const FullLayout = ({ children }) => {
         {
             pathname: "/dashboard/company/settings",
             icon: Building,
-            text: "company"
+            text: "company",
+            permissions: "CanViewCompany",
+        },
+        {
+            pathname: "/dashboard/company/settings/users",
+            icon: PeopleFill,
+            text: "USERS",
+            permissions: "CanViewUser",
+            startsWith: true
         },
         {
             pathname: "/dashboard/company/settings/vehicles",
             icon: CardImage,
-            text: "VEHICLES"
+            text: "VEHICLES",
+            permissions: "CanViewVehicle",
+            startsWith: true
         },
         {
-          pathname: "/dashboard/company/settings/locations",
-          icon: GeoAltFill,
-          text: "LOCATIONS"
+            pathname: "/dashboard/company/settings/locations",
+            icon: GeoAltFill,
+            text: "TERMINALS",
+            permissions: "CanViewLocation",
+            startsWith: true
         },
         {
-          pathname: "/dashboard/company/settings/profile",
-          icon: PersonFill,
-          text: "MY_PROFILE",
+            pathname: "/dashboard/company/settings/profile",
+            icon: PersonFill,
+            text: "MY_PROFILE",
         },
       ],
     },
-    // {
-    //   pathname: "/dashboard/company/admin-approval-jobs",
-    //   icon: null,
-    //   text: "Admin approval for jobs"
-    // }
+  
   ];
 
 
@@ -97,7 +94,7 @@ return (
           name="description"
           content={t("DRIVERFLY_COMPANY_DASHBOARD")}
         />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/img/DriverFly-Official-Favicon.png" />
       </Head>
       <div className="header">
             <div className="contentArea ">

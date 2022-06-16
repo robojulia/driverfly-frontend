@@ -9,7 +9,7 @@ export default function DriversNewsletter
                     <p className="text-secondary mb-4">Subscribe to the DriverFly Newsletter to get the latest jobs feeds.</p>
                     <form action="">
                         <input type="email" className="form-control" placeholder="Email Adress" />
-                        <button type="submit" className="btn btn-danger btn-lg btn-block mt-3">Submit</button>
+                        <button type="submit" className="theme-primary-btn btn-block mt-3">Submit</button>
                     </form>
                 </ul>
             </div>
@@ -21,7 +21,7 @@ export default function DriversNewsletter
 
                     <form action="">
                         <input type="email" className="form-control" placeholder="Email Adress" />
-                        <button type="submit" className="btn btn-danger btn-lg btn-block mt-3">Submit</button>
+                        <button type="submit" className="theme-primary-btn btn-block mt-3">Submit</button>
                     </form>
                 </ul>
             </div>

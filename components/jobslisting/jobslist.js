@@ -4,34 +4,24 @@ import jobContext from "../../context/jobContext"
 import timeSince from "../../utils/timeSince"
 import { useTranslation } from "../../hooks/useTranslation"
 import CompanyPhoto from '../jobs/company-photo'
+import { GeoAltFill, CurrencyDollar } from 'react-bootstrap-icons';
+import { buildAddress } from '../../utils/common'
+import Pagination from '../find-jobs/pagination'
+
 
 export default function JobsList() {
 
   const { state, method } = useContext(jobContext)
-  const { jobs, pagingMeta, filters } = state
-  const { setFilters, applyFilters } = method
+  const { jobs } = state
   const { t } = useTranslation();
-
-  const currentPageIndex = parseInt(pagingMeta.currentPage)
-  const previousPageIndex = currentPageIndex - 1
-  const nextPageIndex = currentPageIndex + 1
-
-  const handlePaging = async (page) => {
-    await setFilters({
-      ...filters,
-      page: parseInt(page)
-    }, applyFilters())
-  }
 
   return (
     <>
       <div className="filter-outer mt-5">
         {jobs.length > 0 && jobs.map(job => (
           <div key={job.id} className="media align-items-center shadow-sm">
-            {/* <label className="checkbox-inline" htmlFor="remember">
-              <input type="checkbox" name="remember" id="remember" value="1" />
-            </label> */}
-            <CompanyPhoto className="d-flex mr-4 truck-img" company={job.company} />
+
+            <CompanyPhoto className="d-flex mr-4 truck-img" job={job} company={job.company} />
             <div className="media-body">
               <h4 className="mt-0">{job.title}
                 <span
@@ -39,7 +29,7 @@ export default function JobsList() {
                   data-toggle="tooltip"
                   data-placement="top"
                   title="Tooltip on top">
-                  {/* <i className="fa fa-star" aria-hidden="true"></i> */}
+
                 </span>
               </h4>
               <div className="job-date-author">
@@ -51,7 +41,8 @@ export default function JobsList() {
                 } {
                   job?.company?.name &&
                   <>
-                    {t('by')} <span role="button" className="employer text-theme">{job.company?.name}</span>
+                    {t('by')} <Link href={`/employer/${job.company?.id}`}>
+                      <span role="button" className="employer text-theme">{job.company?.name}</span></Link>
                   </>
                 }
               </div>
@@ -60,82 +51,37 @@ export default function JobsList() {
                   {
                     job.location &&
                     <>
-                      <p><i className="fa fa-map-marker" aria-hidden="true"></i>
+                      <p className='m-0'>
+                        < GeoAltFill className='mr-1' />
                         <span className='mr-4'>
-                          <>
-                            {job.location.street || t('no_street')}, {job.location.city || t('no_city')}, {job.location.state || t('no_state')}, {job.location.zip_code || t('no_zip')}
-                          </>
+                          {buildAddress(job.location || {})}
                         </span></p>
                     </>
                   }
-                  <p>
-                    <i className="fa fa-usd mr-1 " aria-hidden="true"></i>{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} per week </p>
+                  <p className='m-0'>
+                    < CurrencyDollar className='mr-1' />{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} {t("per_week")} </p>
                 </div>
                 <div className="job-location">
-                  {/* <i className="fa fa-star-o" aria-hidden="true"></i> */}
+
                   <strong className="text-secondary">{job.description_short}</strong>
                 </div>
               </div>
 
             </div>
             <Link href={`/jobs/${job.id}`}>
-              <button type="button" className="btn btn-outline-danger">{t('browse_job')}</button>
+              <button type="button" className="theme-primary-btn-outline">{t('browse_job')}</button>
             </Link>
 
           </div>
         ))}
 
-        {
-          pagingMeta.totalPages !== 0 &&
+        <Pagination />
 
-          <ul className="pagination ">
-            {
-              currentPageIndex > 1 &&
-              <>
-                <li onClick={() => { handlePaging(1) }}>
-                  <span className="next page-numbers " role="button" >
-                    First
-                  </span>
-                </li>
-              </>
-            }
-
-            {
-              currentPageIndex > 1 &&
-              <li onClick={() => { handlePaging(previousPageIndex) }} >
-                <span className="page-numbers " role="button" >
-                  {previousPageIndex}
-                </span>
-              </li>
-            }
-
-            {
-              <li >
-                <span className="page-numbers current active" role="button" >
-                  {currentPageIndex}
-                </span>
-              </li>
-            }
-
-            {
-              currentPageIndex < pagingMeta.totalPages &&
-              <li onClick={() => { handlePaging(nextPageIndex) }} >
-                <span className="page-numbers " role="button" >
-                  {nextPageIndex}
-                </span>
-              </li>
-            }
-
-            {
-              nextPageIndex < pagingMeta.totalPages &&
-              <li onClick={() => { handlePaging(pagingMeta.totalPages) }}>
-                <span className="next page-numbers " role="button" >
-                  Last
-                </span>
-              </li>
-            }
-          </ul>
-        }
+        <div className="jumbotron mt-4">
+          <p className="lead">
+            {t('CANT_FIND_WHAT_YOU_WANT')}
+          </p>
+        </div>
       </div>
 
     </>

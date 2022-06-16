@@ -12,17 +12,20 @@ export default function ShowEnumFromString(props) {
     }
     const separator = props.separator ? props.separator : ','
     const skipTranslate = props.skipTranslate ? true : false
-    const skipLowerCase = props.skipLowerCase ? true : false
+    const compareEnum = props.compareEnum ? true : false
     const arr = str.split(separator)
 
     const templateString = arr.map(item => {
-        const enumValue = !(props.enumArray[item]) ? '' : (skipLowerCase ? props.enumArray[item] : props.enumArray[item].toLowerCase())
+        const enumValue = (!compareEnum) ? item : props.enumArray[item]
         return skipTranslate ? enumValue : t((props.labelPrefix ? props.labelPrefix + "." : "") + enumValue)
     }).join(', ')
 
     const popover = (
         <Popover id="popover-basic">
-            {/* <Popover.Header as="h3">Popover right</Popover.Header> */}
+            {
+                props.popover_header &&
+                <Popover.Header as="h3">{props.popover_header}</Popover.Header>
+            }
             <Popover.Body>
                 {templateString}
             </Popover.Body>

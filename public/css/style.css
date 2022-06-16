@@ -1,5 +1,7 @@
 @import url('http://fonts.cdnfonts.com/css/arial');
-
+@import url('https://fonts.googleapis.com/css2?family=Akronim&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+@import '../css/hover-min.css';
 html,
 body,
 div,
@@ -84,13 +86,21 @@ input,
 textarea,
 button,
 li {
-    margin: 0;
+    margin: 0 ;
     padding: 0;
     border: 0;
     list-style: none;
     vertical-align: baseline;
     box-sizing: border-box;
-    /*font-family: 'Arial', sans-serif;*/
+    font-family: 'Arial, Helvetica, sans-serif', sans-serif;
+}
+
+.general-headings {
+    text-align: center;
+    font-size: 40px;
+    margin-bottom: 45px;
+    font-weight: 400;
+    background-color: #fff0;
 }
 
 button:focus,
@@ -130,14 +140,6 @@ a:hover {
     border-color: #2da2af !important;
 }
 
-button.btn.btn-danger:hover {
-    background: #c4c4c4;
-    border-color: #c4c4c4;
-}
-
-.container {
-    max-width: 1170px;
-}
 
 strong {
     font-family: sans-serif;
@@ -175,11 +177,18 @@ h2 {
 .header-sec {
     background: #060606F7;
     min-height: 186px;
+    position: relative;
+}
+.header-sec .navbar{
+    width: 80%;
+    display: inline-block;
+    text-align: end;
 }
 
 .logo {
     width: 228px;
     border-right: solid 1px;
+    display: inline-block;
 }
 
 .logo img {
@@ -189,12 +198,12 @@ h2 {
     border-right: solid 0px;
 }
 
-.navbar-nav .nav-link:hover {
-    border-bottom: 1px solid white;
-    transition: all 1s;
-}
 
-.nav-item {
+
+.ml-30 {
+    margin-left:30px;
+}
+ .nav-item {
     padding: 0px 0px 0px 30px;
 }
 
@@ -205,43 +214,30 @@ h2 {
     padding: 20px 10px;
 }
 
-ul.dropdown-menu {
-    background: #171717;
-    padding: 12px 20px;
-    left: 9px;
-    border-radius: 0px;
-    transition: all 0.3s;
+.nav-link:hover a{
+    border-bottom: #000;
+}
+.header-sec .dropdown-menu {
+    background: #171717 !important;
+    padding: 12px 20px  !important;
+    left: 9px  !important;
+    border-radius: 0px  !important;
+    transition: all 0.3s  !important;
+}
+.dropdown-item:focus, .dropdown-item:hover {
+    background-color: #e9ecef00 !important;
 }
 
 .dropdown-item {
     color: #aaa !important;
     font-size: 15px;
     line-height: 35px;
-    padding: 0px;
+    /* padding: 0px; */
 }
 
 .dropdown-item:hover {
     color: white !important;
 }
-
-.btn.btn-primary {
-    background: #1D4354 !important;
-    border-color: #1D4354;
-    border: 1px solid #1D4354;
-    /*
-    2022-04-28  kom     Remove override of bootstrap default padding
-                        - All buttons requiring this padding should implement a newly created class (eg .btn-primary_padded) with the below settings
-    */
-    /* padding: 15px 30px !important;
-    border-radius: 3px; */
-    border-color: #0062cc00 !important;
-}
-
-.btn.btn-primary_padded {
-    padding: 15px 30px !important;
-    border-radius: 3px;
-}
-
 .nav-link i.fa.fa-bell-o {
     font-size: 25px;
 }
@@ -254,13 +250,19 @@ li:hover ul {
 .filter-sec {
     padding: 30px 0px;
 }
-
-/* .form-control {
-     height: 50px;
-     padding: 12px 30px;
- } */
 .heading-label {
     font-size: 20px;
+}
+
+.tab-content .accordion-button:not(.collapsed) {
+    color: #000;
+    background-color: transparent;
+    box-shadow: inset 0 0px 0 rgb(0 0 0 / 13%);
+    padding: 15px 0px;
+}
+
+.tab-content .accordion-button:active {
+    color: #000 !important;
 }
 
 .tab-content .card-header {
@@ -270,7 +272,16 @@ li:hover ul {
     border-bottom: none;
 }
 
-.tab-content .card {
+.tab-content .accordion-item:last-of-type .accordion-button.collapsed {
+
+    padding: 15px 0;
+}
+
+.tab-content .accordion-body {
+    padding: 0;
+}
+
+.tab-content .accordion-item {
     border: none;
 }
 
@@ -290,14 +301,50 @@ li:hover ul {
     cursor: pointer;
     line-height: 35px;
     font-weight: 400;
+    color: #000;
+    text-decoration: none !important;
+}
+
+.btn-link:hover {
+    color: #000 !important;
+}
+
+.btn-link::before {
+    vertical-align: sub !important;
+}
+
+.faq-outer .btn-link {
+    color: #6a6a6a;
+    text-decoration: none;
+    font-weight: 800;
+}
+
+.faq-outer .btn-link:hover {
+    color: #5cc7c3 !important;
+}
+
+.faq-outer .accordion-button:not(.collapsed) {
+    background-color: #e7f1ff00;
 }
 
 .tab-content .card-header:hover i {
     color: #1a1a1a !important;
 }
 
-.tab-content i.fa.fa-angle-down {
-    color: #cbcbcb;
+.tab-content svg {
+    color: #000000;
+    font-size: 15px;
+    margin-top: 10px;
+
+}
+
+.tab-content:hover svg {
+    fill: #000000;
+
+}
+
+.fa-angle-down:before {
+    vertical-align: sub;
 }
 
 .tab-content i.fa.fa-angle-up {
@@ -329,18 +376,6 @@ li:hover ul {
 .show-more:focus {
     color: #2da2af;
 }
-
-/*
-2022-04-28  kom     Remove override of bootstrap default padding
-                    - All buttons requiring this padding should implement a newly created class (eg .btn-danger_padded) with the below settings
-*/
-/* .btn.btn-danger {
-    background: #2da2af;
-    border-color: #2da2af;
-    font-size: 16px;
-    padding: 20px 40px;
-} */
-
 .btn.btn-danger_padded {
     background: #2da2af;
     border-color: #2da2af;
@@ -399,9 +434,7 @@ li:hover ul {
 
 }
 
-.btn-outline-danger {
-    border-color: #4aa2af !important;
-}
+
 
 .filter-btn-groups button.btn.btn-danger:nth-child(3) {
     background: #df8a13;
@@ -443,18 +476,6 @@ li:hover ul {
     height: 20px;
     margin-right: 15px;
 }
-
-.btn.btn-outline-danger {
-    color: #2da2af;
-    border-color: #2da2af;
-    padding: 12px 26px;
-}
-
-.btn.btn-outline-danger:hover {
-    color: white;
-    background-color: #2da2af;
-}
-
 .media:hover {
     border-color: #2da2af;
 }
@@ -534,56 +555,24 @@ span.urgent {
 }
 
 .page-numbers:hover {
-    background: #2da2af;
+    background: #357694 !important;
     transition: all 0.3s;
     text-decoration: none;
+    color: white !important;
 }
 
 .page-numbers.current.active {
-    background: #2da2af;
-    color: white;
-}
-
-input[type='range'] {
-    width: 210px;
-    height: 30px;
-    overflow: hidden;
-    cursor: pointer;
-    outline: none;
-}
-
-input[type='range'],
-input[type='range']::-webkit-slider-runnable-track,
-input[type='range']::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    background: none;
+    background: #1D4354 !important;
+    color: white !important;
 }
 
 input[type='range']::-webkit-slider-runnable-track {
-    width: 200px;
-    height: 6px;
     background: #2EC8C4;
 }
 
-input[type='range']:nth-child(2)::-webkit-slider-runnable-track {
-    background: none;
-}
-
 input[type='range']::-webkit-slider-thumb {
-    position: relative;
-    height: 15px;
-    width: 15px;
-    margin-top: -5px;
-    background: #fff;
-    border: 1px solid #2EC8C4;
-    border-radius: 25px;
-    z-index: 1;
+    border-color: #2EC8C4;
 }
-
-input[type='range']:nth-child(1)::-webkit-slider-thumb {
-    z-index: 2;
-}
-
 .rangeslider {
     position: relative !important;
     height: 60px;
@@ -714,18 +703,6 @@ input[type='range']:nth-child(1)::-webkit-slider-thumb {
     font-weight: 600;
     font-family: sans-serif;
 }
-
-.footer-inner .btn.btn-danger {
-    background: #2EC8C4;
-    border-color: #2EC8C4;
-    padding: 12px 40px;
-}
-
-.footer-inner .btn.btn-danger:hover {
-    background: #2EC8C4;
-
-}
-
 .footer-inner {
     margin-bottom: 30px;
 }
@@ -750,9 +727,7 @@ input[type='range']:nth-child(1)::-webkit-slider-thumb {
     margin-right: 10px;
 }
 
-.footer-social-icons i.fa.fa-facebook,
-i.fa.fa-twitter,
-i.fa.fa-instagram {
+.footer-social-icons svg {
     color: #44A2A0;
 }
 
@@ -811,16 +786,8 @@ i.fa.fa-instagram {
     text-transform: capitalize;
 
 }
-
-.top-links-sec nav li:first-child:after {
-    content: "\f0da";
-    font-family: FontAwesome;
-    font-style: normal;
-    font-weight: normal;
-    text-decoration: inherit;
-    margin-left: 5px;
-    color: #6a6a6a;
-    margin: 0px 10px;
+.top-links-sec ol li .current_page{
+    color: #000;
 }
 
 .top-links-sec ol {
@@ -952,6 +919,7 @@ i.fa.fa-instagram {
 
 .faq_question_widget a {
     color: #6a6a6a;
+    text-decoration: none;
 
 
 }
@@ -992,7 +960,7 @@ i.fa.fa-instagram {
 
 /************************************** ABOUT-SEC *********************************/
 .about-sec {
-    background-image: url("../img/iphone-6-mockup-featuring-a-construction-worker-driving-a-truck-a4073-3.png");
+    background-image: url("/img/iphone-6-mockup-featuring-a-construction-worker-driving-a-truck-a4073-3.png");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -1043,18 +1011,15 @@ i.fa.fa-instagram {
     background-color: #fff0;
 }
 
-i.fa.fa-file-archive-o,
-i.fa.fa-filter,
-i.fa.fa-paper-plane,
-i.fa.fa-bell-o,
-i.fa.fa-trophy,
-i.fa.fa-hand-peace-o,
-i.fa.fa-pencil,
-i.fa.fa-file-audio-o {
-    content: "\f131";
+.how-it-work-sec svg {
     color: #4aa2af;
+    font-size: 60px;
+
 }
 
+.about_work svg {
+    margin: 0 auto;
+}
 .how-it-work-sec .card,
 .driver-sec .card {
     text-align: center;
@@ -1066,7 +1031,7 @@ i.fa.fa-file-audio-o {
 }
 
 .card:hover h5,
-.card:hover i {
+.card:hover svg {
     color: white !important;
 }
 
@@ -1075,16 +1040,7 @@ i.fa.fa-file-audio-o {
     color: white !important;
 }
 
-i.fa.fa-file-archive-o,
-i.fa.fa-filter,
-i.fa.fa-paper-plane,
-i.fa.fa-bell-o,
-i.fa.fa-trophy,
-i.fa.fa-hand-peace-o,
-i.fa.fa-pencil,
-i.fa.fa-file-audio-o {
-    font-size: 60px;
-}
+
 
 .who-we-serve-sec {
     background: #F0F0F0;
@@ -1096,10 +1052,6 @@ i.fa.fa-file-audio-o {
     color: #2ec8c4;
     margin: 30px 0px 50px;
 }
-
-/*.who-we-serve-sec img{
-     min-height: 800px;
- }*/
 .who-we-serve-inner {
     margin-bottom: 35px;
     min-height: 235px;
@@ -1115,21 +1067,6 @@ i.fa.fa-file-audio-o {
     line-height: 28px;
     margin-bottom: 25px;
 }
-
-.who-we-serve-inner .btn.btn-danger {
-    background-color: #818a91;
-    border-color: #818a91;
-    padding: 8px 25px;
-}
-
-.who-we-serve-inner .btn-danger:not(:disabled):not(.disabled).active,
-.btn-danger:not(:disabled):not(.disabled):active,
-.show>.btn-danger.dropdown-toggle {
-    color: #fff;
-    background-color: #818a91 !important;
-    border-color: #818a91 !important;
-}
-
 img.who-we-img.img-fluid {
     width: 100%;
     margin-bottom: 20px;
@@ -1161,7 +1098,7 @@ img.who-we-img.img-fluid {
     font-size: 18px !important;
     position: absolute;
     right: 0;
-    top: 45%;
+    top: 40%;
 
 }
 
@@ -1183,11 +1120,29 @@ img.who-we-img.img-fluid {
     margin: 100px 10px 20px;
     box-shadow: 1px 1px 4px 0 rgb(0 0 0 / 9%);
 }
+.Slider-container-bg::before{
+    content: '';
+    background: #fff;
+    height: 200px;
+    width: 80%;
+    display: inline-block;
+    position: absolute;
+    top: 128px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    bottom: 0;
+    box-shadow: 1px 1px 4px 0 rgb(0 0 0 / 9%);
+    border-radius: 4px;
+}
 
 .Slider_box {
     background: white;
     position: relative;
     text-align: center;
+    width: 70%;
+    border-radius: 4px;
     padding: 45px 45px 30px;
     margin: 100px 10px 20px;
     box-shadow: 1px 1px 4px 0 rgb(0 0 0 / 9%);
@@ -1203,22 +1158,13 @@ img.who-we-img.img-fluid {
     right: 0;
 }
 
-.Slider_box i.fa.fa-quote-left {
+.Slider_box svg {
     color: #2da2af !important;
-    font-size: 55px;
+    font-size: 100px;
     position: absolute;
-    top: -33px;
+    top: -51px;
     left: 35px;
-    z-index: -1;
-}
-
-.Slider_box i.fa.fa-quote-left {
-    color: #2da2af !important;
-    font-size: 55px;
-    position: absolute;
-    top: -33px;
-    left: 35px;
-    z-index: -1;
+    font-weight: bold;
 }
 
 .Slider_box h3 {
@@ -1240,7 +1186,7 @@ img.who-we-img.img-fluid {
 
 .description {
     color: #6a6a6a;
-    margin-top: 35px;
+    margin-top: 15px;
 }
 
 .partners {
@@ -1279,7 +1225,7 @@ img.who-we-img.img-fluid {
 }
 
 .hero-sec {
-    background: linear-gradient(to bottom, #7a7a7a 0%, rgb(0 123 255 / 25%) 100%), url(../img/truck-on-windy-road-hero-min.jpg);
+    background: linear-gradient(to bottom, #7a7a7a 0%, rgb(0 123 255 / 25%) 100%), url(/img/truck-on-windy-road-hero-min.jpg);
     background-color: #9f9b9b91;
     background-position: center;
     background-repeat: no-repeat;
@@ -1295,6 +1241,7 @@ img.who-we-img.img-fluid {
     font-size: 60px;
     line-height: 60px;
     font-weight: 400;
+    letter-spacing: 2.5px;
 }
 
 .hero-inner h2 {
@@ -1306,7 +1253,7 @@ img.who-we-img.img-fluid {
 
 .trending-keywords a,
 .trending-keywords li {
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .trending-keywords li {
@@ -1337,23 +1284,32 @@ img.who-we-img.img-fluid {
     padding: 0px 0px 0px 10px;
     border-radius: 5px;
     margin: 30px 0px;
+    justify-content: space-between;
 }
 
 .hero-search .input-group input {
-    height: auto;
     padding: 15px;
     color: black;
-    width: 90%;
+    width: 100%;
+    height: 70px;
 }
-
+.hero-search .form-control{
+    border: 0;
+}
 .hero-search .input-group {
     width: 35% !important;
+    height: 70px;
+    border-left: 1px solid #ccc;
+    display: grid;
 }
 
 .hero-search .input-group-prepend {
     align-items: center;
     padding: 0px 3px 0px 10px;
     font-size: 20px;
+    position: absolute;
+    top: 23px;
+    left: -3px;
 }
 
 .hero-search .filter-inner {
@@ -1371,18 +1327,19 @@ img.who-we-img.img-fluid {
 }
 
 .custom-sel {
-    width: 21% !important;
+    width: 25% !important;
     height: 70px !important;
     border-radius: 0px !important;
     box-shadow: none !important;
     color: #6a6a6a !important;
-
     padding: 0 15px !important;
+    border: 0 !important;
+    border-left: 1px solid #ccc !important;
 }
 
 .form-group-search {
-    padding: 10px !important;
-    min-width: 160px;
+    width: 20%;
+    padding: 0 10px 0px 0px !important;
 }
 
 .btn-submit {
@@ -1433,9 +1390,8 @@ img.who-we-img.img-fluid {
     border: none !important;
     background: white !important;
     color: #252834 !important;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 500;
-    font-family: "Nunito";
     padding: 12px 50px;
     display: inline-block;
     border-radius: 4px;
@@ -1457,8 +1413,7 @@ img.who-we-img.img-fluid {
 
 /************************** DRIVER-SEC **********************/
 .driver-sec {
-    background-color: transparent;
-    background-image: linear-gradient(180deg, #DEEFEE 0%, #61D2D3 100%);
+    background-color: #fafafa;
 }
 
 .driver-sec .card {
@@ -1476,16 +1431,6 @@ img.who-we-img.img-fluid {
     font-size: 18px;
 }
 
-.hero-search .btn-submit {
-    background-color: #2EC8C4;
-    color: rgb(255, 255, 255);
-}
-
-.hero-search .btn-submit:hover {
-    background-color: #1D4354;
-    color: rgb(255, 255, 255);
-}
-
 .Slider_owl-prev {
     width: 60px;
     height: 50px;
@@ -1494,7 +1439,7 @@ img.who-we-img.img-fluid {
     font-size: 18px !important;
     position: absolute;
     left: 0;
-    top: 45%;
+    top: 40%;
 }
 
 .Slider_owl-prev:hover,
@@ -1511,22 +1456,6 @@ img.who-we-img.img-fluid {
 .ort-general {
     padding: 75px 0px 35px;
     background-color: #fafafa;
-}
-
-.ort-btn .btn.btn-danger {
-    padding: 14px 70px;
-    width: 100%;
-}
-
-.ort-btn button.btn.btn-danger:nth-child(2) {
-    background: #b4b4b4;
-    border-color: #b4b4b4;
-    margin: 18px 0px;
-    width: 100%;
-}
-
-.ort-btn button.btn.btn-danger:nth-child(2):hover {
-    background: #2da2af;
 }
 
 .ort-inner .media:hover {
@@ -1655,7 +1584,7 @@ img.who-we-img.img-fluid {
     color: #2da2af;
 }
 
-.icon i.fa.fa-usd {
+.icon svg {
     color: #2da2af;
     font-size: 28px;
 }
@@ -1690,12 +1619,6 @@ img.who-we-img.img-fluid {
 .icon.text-theme {
     margin-right: 15px;
 }
-
-.sidebar .btn.btn-danger {
-    padding: 15px 40px;
-    width: 100%;
-}
-
 .socials-apply .title {
     text-align: center;
     margin: 10px 0 31px;
@@ -1737,11 +1660,7 @@ img.who-we-img.img-fluid {
     font-size: 16px;
 }
 
-.share-links i.fa.fa-facebook,
-i.fa.fa-twitter,
-i.fa.fa-linkedin,
-i.fa.fa-pinterest-p,
-i.fa.fa-plus {
+.share-links svg {
     color: #2EC8C4;
     margin-left: 0px;
     transition: all 0.4s ease-in-out 0s;
@@ -1751,13 +1670,10 @@ i.fa.fa-plus {
     font-size: 17px;
     width: 40px;
     height: 40px;
+    cursor: pointer;
 }
 
-.share-links i.fa.fa-facebook:hover,
-i.fa.fa-twitter:hover,
-i.fa.fa-linkedin:hover,
-i.fa.fa-pinterest-p:hover,
-i.fa.fa-plus:hover {
+.share-links:hover svg {
     color: #2EC8C4;
     background: #fff;
 }
@@ -1770,367 +1686,6 @@ i.fa.fa-plus:hover {
     padding-bottom: 170px;
 }
 
-/******************************** MEDIA QUERY *************************/
-@media screen and (max-width:1024px) {
-    .tab-content .media {
-        padding: 30px 10px 25px 10px !important;
-    }
-
-    .media {
-        padding: 30px 15px 15px 15px;
-    }
-
-}
-
-@media screen and (max-width:768px) {
-    img {
-        width: 100% !important;
-    }
-
-    .btn.btn-link {
-        text-align: left;
-        padding: 0px;
-    }
-
-    .header-sec i.fa.fa-bars {
-        color: #fff !important;
-    }
-
-    .about-inner {
-        margin-left: 0px;
-    }
-
-    .who-we-serve-sec .col {
-        flex-basis: 100% !important;
-    }
-
-    .who-we-serve-inner {
-        min-height: auto;
-    }
-
-    .box {
-        margin: 100px 0px 20px 25px;
-    }
-
-    .box i.fa.fa-quote-left {
-        font-size: 40px;
-        top: -18px;
-        left: 28px;
-    }
-
-    .partners img {
-        width: 60% !important;
-    }
-
-    .partners {
-        padding: 40px 15px 75px;
-    }
-
-    .footer-logo {
-        width: 209px !important;
-        height: 100%;
-        border: none;
-        object-fit: contain;
-    }
-
-    .footer .col-md-5.pl-5 {
-        padding: 15px !important;
-    }
-
-    .footer-inner {
-        padding: 0px !important;
-    }
-
-    .contact-form .col-sm-12.col-lg-5.pl-0 {
-        padding: 15px !important;
-    }
-
-    .top-outer.bg-white.py-5 {
-        padding: 20px !important;
-    }
-
-    .faq-inner.pl-3 {
-        padding: 0px 0px 30px !important;
-    }
-
-    .footer-inner .nav-link {
-        font-size: 15px;
-    }
-
-    .widget-title {
-        font-size: 16px;
-        white-space: nowrap;
-    }
-
-    .filter-sec .media {
-        display: block;
-    }
-
-    .filter-sec .truck-img {
-        max-width: 100%;
-        margin-bottom: 20px;
-        border: none;
-    }
-
-    .filter-sec .media label.checkbox-inline {
-        display: none;
-    }
-
-    .filter-btn-groups .btn.btn-danger {
-        padding: 10px 20px;
-        margin-bottom: 20px;
-    }
-
-    .filter-btn-groups {
-        align-items: baseline;
-    }
-
-    .filter-inner input.form-control {
-        width: 100% !important;
-    }
-
-    .hero-sec {
-        height: auto;
-        padding: 10px 0px 25px;
-    }
-
-    .hero-inner h1 {
-        font-size: 21px;
-    }
-
-    .hero-inner h2 {
-        display: none;
-    }
-
-    .hero-search {
-        display: block;
-        margin: 0px 0px 20px;
-        padding: 0px;
-        background-color: transparent;
-    }
-
-    .hero-search .input-group {
-        width: 100% !important;
-        background: white;
-        margin-bottom: 15px;
-        border-radius: 5px;
-    }
-
-    .hero-search .filter-inner {
-        border: none;
-        height: 52px;
-        width: 100%;
-        background: white;
-        border-radius: 5px;
-        margin-bottom: 15px;
-    }
-
-    .custom-sel {
-        width: 100% !important;
-        height: 52px !important;
-        margin-bottom: 15px;
-        border-radius: 5px !important;
-
-    }
-
-    .hero-search .input-group input {
-        width: 85%;
-    }
-
-    .form-group-search {
-        padding: 0px !important;
-    }
-
-    .tab-sec .nav-link {
-        padding: 12px 35px;
-    }
-
-    .tab-sec ul.nav.nav-tabs {
-        width: 350px;
-    }
-
-    .tab-sec {
-        padding: 30px 0px;
-    }
-
-    .tab-sec .truck-img {
-        width: 80px !important;
-    }
-
-    i.fa.fa-file-archive-o,
-    i.fa.fa-filter,
-    i.fa.fa-paper-plane,
-    i.fa.fa-bell-o,
-    i.fa.fa-trophy,
-    i.fa.fa-hand-peace-o,
-    i.fa.fa-pencil,
-    i.fa.fa-file-audio-o {
-        font-size: 40px;
-    }
-
-    .custom-tst .item {
-        width: 100%;
-    }
-
-    .testimonial-sec .about-testominial .custom-tst .item {
-        width: 50px !important;
-    }
-
-    .custom-tst button.owl-next {
-        width: 40px;
-        height: 40px;
-        font-size: 17px !important;
-        position: absolute;
-        right: -24px;
-        top: 45%;
-    }
-
-    .custom-tst button.owl-prev {
-        width: 40px;
-        height: 40px;
-        font-size: 17px !important;
-        position: absolute;
-        left: 2px;
-        top: 45%;
-    }
-
-    .ort-inner .truck-img {
-        max-width: 150px;
-        height: 160px;
-    }
-
-    .ort-inner .media h4 {
-        font-size: 21px;
-    }
-
-    .ort-inner .job-location p {
-        display: flex;
-        align-items: baseline;
-    }
-
-    .ort-inner .job-location {
-        display: unset !important;
-    }
-
-    .ort-general {
-        padding: 50px 0px 35px;
-    }
-
-    .related-job-sec .truck-img {
-        display: none !important;
-    }
-
-    .related-job-sec .media {
-        display: block;
-    }
-
-    .related-job-sec .media h4 {
-        white-space: unset;
-        line-height: 25px;
-    }
-
-    .related-job-sec .btn.btn-outline-danger {
-        display: none;
-    }
-
-    .job-deatails-sec .row {
-        flex-direction: column-reverse;
-    }
-
-    .job-deatails-inner {
-        margin-top: 45px;
-    }
-
-    .ort-btn .btn.btn-danger {
-        padding: 14px 20px;
-    }
-
-    .footer-social-icons {
-        padding-top: 0px;
-        margin-bottom: 20px;
-    }
-
-    .media {
-        padding: 30px 0px 30px 0px;
-    }
-
-    .sidebar-inner {
-        padding: 0px;
-    }
-
-    .header-sec {
-        min-height: 100px !important;
-    }
-
-    .logo img {
-        height: 100px;
-        max-width: 100px;
-        padding: 0px 0px;
-    }
-
-    .slide___3-Nqo {
-        padding: 10% !important;
-    }
-
-}
-
-
-@media screen and (max-width:991px) {
-    .slide___3-Nqo {
-        padding: 7%;
-    }
-}
-
-@media screen and (max-width:464px) {
-    .tab-sec ul.nav.nav-tabs {
-        width: 300px;
-    }
-
-    .top-links-sec h2 {
-        font-size: 20px;
-    }
-
-    .Slider_owl-next,
-    .Slider_owl-prev {
-        display: none;
-    }
-}
-
-
-@media (max-width:1267px) {
-
-    .navbar-toggler {
-        background: #4aa2af;
-        color: #fff;
-        margin: 0px 15px 10px;
-    }
-
-    .btn.btn-primary {
-        padding: 3px 10px !important;
-
-    }
-
-    .btn.btn-primary {
-        padding: 7px 10px;
-    }
-
-    .nav-item {
-        padding: 0px 0px 0px 10px;
-    }
-
-    .nav-link {
-        font-size: 15px;
-    }
-
-    .logo {
-        width: 150px;
-        border-right: solid 0px;
-    }
-}
-
-/* .owl-carousel .owl-dots.disabled, .owl-carousel .owl-nav.disabled {
-     display: block !important;
- } */
 .about-testominial .owl-nav .disabled {
     display: none !important;
 }
@@ -2211,51 +1766,306 @@ li.link-wrapper>a.active {
 .form-range {
     height: 38px !important;
 }
+
 .filter_container #accordionExample.accordion>.card {
     overflow: auto !important;
 
 }
-.filter_container #async-example{
-   display: contents !important;
+
+.filter_container #async-example {
+    display: contents !important;
 }
-.filter_container .rbt a{
+
+.filter_container .rbt a {
     border-left: 1px solid #ced4da;
     border-right: 1px solid #ced4da;
     padding: .25rem 0.5rem;
 }
+
 .filter_container .rbt a:last-child {
     border-bottom: 1px solid #ced4da;
-  }
-
-.ort-general a{
-      color: #000 !important;
-  }
-  .ort-general p{
-   margin: 0px;
-   color: #6a6a87;
 }
 
+.ort-general a {
+    color: #000 !important;
+}
 
- .overflow_cls tbody tr td{
-    width: 23.1%;
+.ort-general p {
+    margin: 0px;
+    color: #6a6a87;
+}
+
+.overflow_cls tbody tr td {
+    width: 23%;
 }
 
 .overflow_cls thead {
     width: 100%;
     margin-bottom: 20px;
 }
+
 .overflow_cls tbody {
     height: 750px;
     display: table-caption;
-    width: 100%;
+    width: 98%;
     overflow: auto;
+    margin: 0 auto;
 }
-.location_table__hed th{
+
+.location_table__hed th {
     width: 22.5%;
 }
-.vehicles_table__hed  th{
+
+.vehicles_table__hed th {
     width: 10%;
+    border-top: 0px solid #dee2e6 !important;
+    border-bottom: 1px solid #dee2e6 !important;
 }
+
 .vehicles_container tbody tr td {
     width: 11% !important;
+}
+.select_dropdown .dropdown-item:hover {
+   color: #5c636a !important;
+}
+/* new css code */
+.hire-driver-bg {
+    background: #D1DDDD;
+    padding: 50px 0px;
+}
+
+.hire-driver-item {
+    width: 50%;
+    padding: 30px;
+    height: 300px;
+    line-height: 1;
+    transition: background 0.3s, border-radius 0.3s, opacity 0.3s;
+}
+
+.hire-driver-item:hover {
+    opacity: 0.8;
+}
+
+.hire-driver-left {
+    position: relative;
+    height: 300px;
+}
+
+.hire-driver-left::before {
+    background:  linear-gradient(to bottom, #1D4354 0%, rgb(0 123 255 / 25%) 100%), url("/img/black-man-truck-driver-near-his-truck-parked-in-a-FD6XPWU.jpeg");
+    content: "";
+    background-size: cover;
+    position: absolute;
+    background-position: center center;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+}
+
+.hire-driver-right {
+    background-color: transparent;
+    background-image: linear-gradient(180deg, #2EC8C4 0%, #1D4354 100%);
+    opacity: 1;
+    position: relative;
+}
+
+.hire-driver-item h1 {
+    color: #fff;
+    font-size: 42px;
+    font-weight: 500;
+    position: relative;
+}
+
+.hire-driver-item p {
+    color: #fff;
+    font-size: 23px;
+    line-height: 30px;
+    position: relative;
+}
+
+.opacity-overly {
+    background-color: #1D4354;
+}
+
+.owner-operator-bg {
+    position: relative;
+    height: 400px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.owner-operator-bg::before {
+    content: "";
+    background-image: url('/img/driver-getting.jpg');
+    background-size: cover;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    opacity: 0.5;
+}
+
+.owner-operator-title {
+    color: #2EC8C4;
+    font-family: "Akronim", Sans-serif;
+    font-size: 50px;
+    font-weight: 500;
+    position: relative;
+}
+
+.owner-operatot-text {
+    color: #FFFFFF;
+    font-size: 23px;
+    position: relative;
+}
+
+.white-bg-btn {
+    font-size: 16px;
+    font-weight: bold;
+    fill: #1D4354;
+    color: #1D4354;
+    background-color: #FFFFFF;
+    border-radius: 0px 0px 0px 0px;
+    padding: 15px 40px 15px 40px;
+    position: relative;
+    transition: all ease-in-out 0.4s;
+}
+.get-feature-section {
+    position: relative;
+    height: 400px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.get-feature-section::before {
+    content: "";
+    background-image: url('/img/husband-and-wife-driving-team-checking-their-itine-RW6LREM.jpeg');
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    opacity: 0.45;
+    background-attachment: fixed;
+}
+
+.get-feature-section h1 {
+    color: #FFFFFF;
+    font-size: 40px;
+    text-transform: uppercase;
+    position: relative;
+}
+
+.get-feature-section p {
+    color: #FFFFFF;
+    font-size: 18px;
+    position: relative;
+}
+.news-letter-signup-sec{
+    height: 350px;
+    background-color: #17161A;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.news-letter-signup-sec p{
+font-size: 16px;
+line-height: 30px;
+text-align: center;
+}
+/* muli crousal styling */
+.react-multi-carousel-dot button {
+    border-color: #2EC8C4 !important;
+    width: 15px !important;
+    height: 15px !important;
+}
+
+.react-multi-carousel-item {
+    margin-bottom: 20px !important;
+}
+
+.featured-companies {
+    border: none !important;
+    transition: all ease-in-out 0.5s;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.featured-companies:hover {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.my_job_listing .sc-jqUVSM:hover  {
+    background:#1b4454;
+    color: #ffffff;
+}
+
+.my_job_listing .sc-jqUVSM:active  {
+    background:#1b4454;
+    color: #ffffff;
+}
+/* Terms And Policies & Privacy Policies  */
+.terms__and__policies__container, .privacy__policies__container {
+    text-align: justify;
+}
+.terms__and__policies__container ol li{
+    list-style: decimal;
+    color: #6c757d;
+}
+.terms__and__policies__container a, .privacy__policies__container a {
+    color: #000;
+    text-decoration: none;
+}
+.terms__and__policies__container a:hover, .privacy__policies__container a:hover {
+    color: #2da2af;
+    text-decoration: none;
+}
+.terms__and__policies__container  h5, .terms__and__policies__container  h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #6a6a6a;
+}
+.privacy__policies__container ol li {
+    list-style: circle !important;
+    color: #6c757d !important;
+}
+/* Custom Trucker Recruiting section */
+.custom-trucker-title{
+    font-size: 25px;
+    margin: 0;
+    line-height: 60px;
+}
+.custom-trucker-follow-btn{
+    width: 200px;
+    height: 45px;
+    border-radius: 4px;
+    background-color: #2da2af;
+    transition: all ease-in-out 0.5s;
+    color: #fff;
+}
+.custom-trucker-follow-btn:hover{
+    border-color: #c4c4c4;
+    background-color: #c4c4c4;
+}
+.custom-trucker-review-btn{
+    width: 200px;
+    height: 45px;
+    border-radius: 4px;
+}
+.social-profile-sec{
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #fafafa;
+    display: flex;
+    align-items: baseline;
+    border-radius: 4px;
 }

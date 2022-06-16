@@ -46,10 +46,10 @@ export default function Profile() {
       cell_number: user.cell_number
     },
     validationSchema: yup.object({
-      email: yup.string().required(t("this_field_is_required")).nullable(),
+      email: yup.string().required().nullable(),
       password: yup.string().nullable(),
-      first_name: yup.string().required(t("this_field_is_required")).nullable(),
-      last_name: yup.string().required(t("this_field_is_required")).nullable(),
+      first_name: yup.string().required().nullable(),
+      last_name: yup.string().required().nullable(),
       contact_number: yup.string().nullable(),
       cell_number: yup.string().nullable(),
     }),
@@ -94,10 +94,10 @@ export default function Profile() {
         <Row>
           <h2>{t("MY_PROFILE")}</h2>
         </Row>
-        <div className='container-fluid'>
+        <div className='container-fluid p-0'>
           <div className="modal-header border-0">
           </div>
-          <form className="modal-body" onSubmit={form.handleSubmit} >
+          <form className="modal-body p-0" onSubmit={form.handleSubmit} >
             <Row>
               <BaseInput
                 className="col-6 mt-1"
@@ -190,8 +190,8 @@ export default function Profile() {
             </Row>
             <Row className="mt-2">
               <div className="col-12 border-0 text-end">
-                <div className="col">
-                  <button type="submit" className={`btn btn-primary`} >
+                <div className="col p-0">
+                  <button type="submit" className={`theme-secondary-btn`} >
                     {t("UPDATE")}
                   </button>
                 </div>

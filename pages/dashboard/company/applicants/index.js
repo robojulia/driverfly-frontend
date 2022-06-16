@@ -98,7 +98,7 @@ export default function Applicants(props) {
         id: aJob.job.id,
         job: aJob.job,
         title: aJob.job.title,
-        location: `${aJob.job.location.city}, ${aJob.job.location.state}`,
+        location: `${aJob.job.location?.city}, ${aJob.job.location?.state}`,
         geography: aJob.job.geography,
         employment_type: aJob.job.employment_type,
         weekly_range: `${numbers.toCurrency(aJob.job.min_weekly_pay)} - ${numbers.toCurrency(aJob.job.max_weekly_pay)}`,
@@ -289,9 +289,9 @@ export default function Applicants(props) {
 
             <div>
                 {/***Top Cards***/}
-                <Row>
+                <Col>
                     <h2>{t("APPLICANTS")}</h2>
-                </Row>
+                </Col>
                 <div className='applicants__section mt-4'>
                     <Row>
                         <Col xs="4">
@@ -302,10 +302,10 @@ export default function Applicants(props) {
                         </Col>
                         <Col xs="4">
                             <ButtonGroup size="sm" style={{ float: "right" }}>
-                                <button className="btn btn-primary" onClick={() => router.push("/dashboard/company/applicants/create")}>
+                                <button className="theme-secondary-btn mr-4 mb-2" onClick={() => router.push("/dashboard/company/applicants/create")}>
                                     + {t("ADD_{name}", { name: "APPLICANT" }, { translateProps: true })}
                                 </button>
-                                <button className="btn btn-secondary" onClick={() => router.push("/dashboard/company/applicants/import")}>
+                                <button className="theme-general-btn mb-2" onClick={() => router.push("/dashboard/company/applicants/import")}>
                                     + {t("IMPORT_APPLICANTS")}
                                 </button>
                             </ButtonGroup>

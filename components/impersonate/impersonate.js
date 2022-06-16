@@ -1,0 +1,200 @@
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { Dropdown, Button, Row } from "react-bootstrap";
+import useAuth from "../../hooks/useAuth";
+import { useTranslation } from "../../hooks/useTranslation";
+import ViewModal from "../viewDetails/viewModal";
+import { ArrowCounterclockwise } from "react-bootstrap-icons";
+import CompanyApi from "../../pages/api/company";
+import AuthApi from "../../pages/api/auth";
+import UserApi from "../../pages/api/user";
+import { useFormik } from "formik";
+import BaseSelect from "../forms/BaseSelect";
+import { toast, ToastContainer } from "react-toastify";
+import { CompanyEntity } from "../../models/company/company.entity";
+import { UserEntity } from "../../models/user/user.entity";
+
+import * as yup from "yup";
+
+/**
+ * @type {UserEntity[]}
+ */
+const USERS_PROTO = [];
+
+/**
+ * @type {CompanyEntity[]}
+ */
+ const COMPANIES_PROTO = [];
+
+export default function Impersonate() {
+    const { isSuperUser, isImpersonating, setAuth, isDriver, isCompany, authCheck } = useAuth();
+
+    const { t } = useTranslation();
+
+    if (!isSuperUser()) return null;
+
+    const impersonating = isImpersonating();
+
+    const [ open, setOpen ] = useState(false);
+
+    const router = useRouter();
+
+    /**
+     * 
+     * @param {React.MouseEvent<HTMLelement>} e 
+     */
+     const onClick = (e) => {
+        setOpen(true);
+    };
+
+    const [ companies, setCompanies ] = useState(COMPANIES_PROTO);
+
+    const [ users, setUsers ] = useState(USERS_PROTO);
+
+    useEffect(async () => {
+        if (open) {
+            const api = new CompanyApi();
+
+            const companies = await api.list();
+
+            companies.splice(0, 0, { id: -1, name: `----${t("DRIVERS")}----` });
+
+            setCompanies(companies);
+        }
+
+    }, [ open ]);
+
+    const onSubmit = async (e) => {
+        const api = new AuthApi();
+
+        const auth = await api.impersonate(e);
+
+        setAuth(auth);
+
+        setOpen(false);
+
+        if (auth.company) {
+            await router.push('/dashboard/company');//, undefined, { locale: data.data.user.language })
+        }
+        else {
+            await router.push('/dashboard/driver');//, undefined, { locale: data.data.user.language })
+        }
+
+    }
+
+    const form = useFormik({
+        initialValues: {
+            companyId: null,
+            userId: null
+        },
+        validationSchema: yup.object({
+            companyId: yup.number().required().nullable(),
+            userId: yup.number().when("companyId", {
+                is: -1,
+                then: yup.number().required().nullable()
+            }).test((value, context) => {
+                if (!value) return true;
+
+                console.log("UserId", value);
+
+                const user = users.find(v => v.id == value);
+
+                if (!user.activated) return context.createError({
+                    path: context.path,
+                    message: t("NOT_ACTIVATED")
+                });
+
+                return true;
+            }).nullable()
+        }),
+        onSubmit: onSubmit
+    });
+
+    /**
+     * 
+     * @param {React.ChangeEvent<HTMLSelectElement>} e 
+     */
+    const onCompanyChange = (e) => {
+        const { value } = e.target;
+
+        form.setValues({
+            companyId: value,
+            userId: null
+        });
+    };
+
+    useEffect(async () => {
+        if (form.values.companyId) {
+            const api = new UserApi();
+
+            setUsers(await api.list(form.values.companyId));
+        } else setUsers([]);
+
+    }, [ form.values.companyId ]);
+
+    /**
+     * 
+     * @param {React.MouseEvent<HTMLButtonElement>} e 
+     */
+    const onRestoreClick = (e) => {
+        const user = authCheck();
+        onSubmit({
+            companyId: user.jwt.impersonatedBy.company,
+            userId: user.jwt.impersonatedBy.user
+        });
+    };
+
+    const canSubmit = !form.isSubmitting && form.isValid && !form.isValidating;
+
+
+    return (<>
+        <Dropdown.Item
+            onClick={onClick}
+            >
+            {t("IMPERSONATE")}
+        </Dropdown.Item>
+        <ViewModal
+            title="IMPERSONATE"
+            onCloseClick={() => setOpen(false)}
+            show={open}
+            footer={<>
+            {
+                impersonating &&
+                <Button disabled={!canSubmit} variant="secondary" onClick={onRestoreClick}>
+                    <ArrowCounterclockwise /> {t("RESTORE")}
+                </Button>
+            }
+            <Button disabled={!canSubmit} onClick={form.handleSubmit}>{t("IMPERSONATE")}</Button>
+            </>}
+            >
+            <form>
+                <Row>
+                    <BaseSelect
+                        className="col-12"
+                        label="COMPANY"
+                        name="companyId"
+                        placeholder
+                        onChange={onCompanyChange}
+                        options={companies}
+                        valueKey="id"
+                        createLabel={c => c.id < 0 ? c.name : `${c.name} (#${c.id})`}
+                        formik={form}
+                    />
+                    <BaseSelect
+                        className="col-12"
+                        label="USER"
+                        name="userId"
+                        placeholder
+                        options={users}
+                        valueKey="id"
+                        createLabel={c => `${c.name} (#${c.id}) ${c.activated ? "" : `*${t("NOT_ACTIVATED")}*`}`}
+                        formik={form}
+                    />
+
+                </Row>
+
+            </form>
+
+        </ViewModal>
+    </>);
+}

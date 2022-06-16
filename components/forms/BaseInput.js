@@ -1,7 +1,8 @@
 import React from 'react'
 import { useTranslation } from '../../hooks/useTranslation';
+import BaseControl from './BaseControl';
 
-function BaseInput({ formik, accept, required, className, label, handleBlur, type, min, max, step, placeholder, value, onChange, onKeyDown, readOnly, name, touched, error, }) {
+function BaseInput({ formik, accept, required, className, label, handleBlur, type, min, max, step, placeholder, value, onChange, onKeyDown, readOnly, name, touched, error, append, prepend }) {
   const { t } = useTranslation();
 
   if (formik) {
@@ -14,9 +15,15 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
       value = meta.value;
       touched = meta.touched;
       error = meta.error;
+
+      if (name === "invite_code") console.log(value, touched, error);
     }
     onChange = onChange || formik.handleChange
     handleBlur = handleBlur || formik.handleBlur;
+  }
+
+  if (type === "date" && typeof(value) === "string" && value?.includes("T")) {
+    value = value.split("T")[0];
   }
 
   if (type === "int" || type === "integer") {
@@ -27,12 +34,49 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
        * @param {React.KeyboardEvent<HTMLInputElement} e
        */
       function (e) {
+        // prevent negative if the min value is set to 0
+        if (min != null && parseInt(min) >= 0 && e.key === "-") e.preventDefault();
+
         if (e.key === ".") e.preventDefault();
       };
   }
+  else if (type === "number") {
+    onKeyDown = onKeyDown ||
+      /**
+       * @param {React.KeyboardEvent<HTMLInputElement} e
+       */
+      function (e) {
+        // prevent negative if the min value is set to 0
+        if (min != null && parseInt(min) >= 0 && e.key === "-") e.preventDefault();
+      };
+  }
+
+  if (type === "number") {
+    let currentOnChange = onChange;
+
+    /**
+     * @param {React.ChangeEvent<HTMLInputElement>} e
+     */
+    onChange = (e) => {
+      const { value } = e.target;
+
+      if (value && value.startsWith(".")) e.target.value = `0${value}`;
+
+      if (currentOnChange) currentOnChange(e);
+    }
+  }
   return (
-    <div className={className}>
-      {label && <><label>{t(label)}{required ? "*" : ""}:</label><br /></>}
+    <BaseControl
+      className={className}
+      name={name}
+      label={label}
+      required={required}
+      formik={formik}
+      touched={touched}
+      error={error}
+      prepend={prepend}
+      append={append}
+      >
       <input
         accept={type == "file" ? accept : null}
         onBlur={handleBlur}
@@ -40,16 +84,15 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
         min={min}
         max={max}
         step={step}
-        placeholder={t(placeholder)}
-        value={value || ""}
+        placeholder={t(placeholder === true ? label || name : placeholder)}
+        value={value == null ? "" : value}
         onChange={onChange}
         onKeyDown={onKeyDown}
         readOnly={readOnly}
         name={name}
         className={`form-control ${error ? "is-invalid" : ""}`}
       />
-      {touched && error && (typeof error === "string") ? <span className="text-danger small">{error}</span> : null}
-    </div>
+    </BaseControl>
   )
 }
 

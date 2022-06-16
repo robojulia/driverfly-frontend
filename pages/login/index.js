@@ -7,13 +7,16 @@ import { useState } from 'react';
 import Layout from "../../components/layouts";
 import login from '../../public/css/Login.module.css'
 import Link from 'next/link';
-import Breadcrumbs from 'nextjs-breadcrumbs';
+import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 import AuthApi from "../api/auth";
 
 import { useTranslation } from "../../hooks/useTranslation";
+import BaseInput from '../../components/forms/BaseInput';
+import { useFormik } from "formik";
+import * as yup from "yup";
 
 
 export default function Login() {
@@ -32,44 +35,37 @@ export default function Login() {
         Router.push('/dashboard/company')
     }
 
-    const [formData, setFormData] = useState({
-        email: '',
-        password: ''
-    });
+    const authApi = new AuthApi();
 
-    const [serverValidation, setServerValidation] = useState([]);
-    const [validation, setValidation] = useState();
+    const form = useFormik({
+        initialValues: {
+            email: null,
+            password: null,
+        },
+        validationSchema: yup.object({
+            email: yup.string().email().required().nullable(),
+            password: yup.string().required().nullable(),
+        }),
+        onSubmit: async (values) => {
 
-    const validateForm = () => {
-
-        let errors = {};
-
-        if (!formData.email) {
-            errors.email = "Email is required";
-        }
-
-        if (!formData.password) {
-            errors.password = "Password is required";
-        }
-
-        setValidation(errors);
-        return Object.keys(errors).length == 0;
-    }
-
-    const submit = async (e) => {
-        e.preventDefault();
-
-        if (validateForm()) {
-            const api = new AuthApi();
-
-            //await axios.post(`${process.env.BASE_URL_API}/auth/login`, formData)
-            await api.login(formData)
+            await authApi.login({
+                email: values.email,
+                password: values.password,
+            })
                 .then(data => {
 
                     // console.log("handle success", data);
                     if (data.status == 201) {
-                        console.log("handle success data", data.data);
-                        console.log(data.data);
+                        toast.success(t('LOGIN_SUCCESSFULL'), {
+                            position: "top-right",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                        });
+
                         // data.data.user.language = "es-mx";
                         setAuth(data.data.user)
 
@@ -83,18 +79,32 @@ export default function Login() {
 
                         // Router.push('/')
                     } else {
-                        console.log('not 201')
-                        setServerValidation("Something went south");
+                        toast.warning(t("ERROR_MESSAGE_DEFAULT"), {
+                            position: "top-right",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                        });
                     }
                 })
                 .catch(function (error) {
                     // handle error
 
-                    if (error?.response?.data?.errors?.user) {
-                        setServerValidation(error.response.data.errors.user);
+                    if (error?.response?.data?.user) {
+                        toast.warning(t(error.response.data.user), {
+                            position: "top-right",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                        });
                     } else {
-                        setServerValidation("Invalid Credentials");
-                        toast.warning("Invalid Credentials", {
+                        toast.warning(t("INVALID_CREDENTIALS"), {
                             position: "top-right",
                             autoClose: 3000,
                             hideProgressBar: false,
@@ -110,9 +120,10 @@ export default function Login() {
                     // always executed
                     console.log("always executed");
                 });
-        }
 
-    }
+        }
+    })
+
 
     return (
         <>
@@ -121,7 +132,7 @@ export default function Login() {
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
                         <h2>{t("LOGIN")}</h2>
-                        <Breadcrumbs />
+                        <Breadcrumb />
                     </div>
                 </div>
             </div>
@@ -139,39 +150,44 @@ export default function Login() {
                     <div className='col-lg-2'></div>
                     <div className='col-lg-8'>
                         <form
-                            onSubmit={submit}
+                            onSubmit={form.handleSubmit}
                             className={login.loginform}>
-                            <div className="form-group">
-                                <input type="email"
-                                    onChange={e => setFormData({ ...formData, email: e.target.value })}
-                                    className="form-control"
-                                    placeholder={t('USER_NAME_OR_EAMIL')} id="email" />
-                                <div className="text-danger">{validation?.email}</div>
-                            </div>
-                            <div className="form-group">
-                                <input type="password"
-                                    onChange={e => setFormData({ ...formData, password: e.target.value })}
-                                    className="form-control" placeholder={t("ENTER_PASSWORD")} id="pwd" />
-                                <div className="text-danger">{validation?.password}</div>
-                            </div>
+                            <BaseInput
+                                className="form-group"
+                                label={t("EMAIL")}
+                                required
+                                name="email"
+                                placeholder={t("EMAIL")}
+                                value={form.values.email}
+                                touched={form.touched.email}
+                                error={form.errors.email}
+                                onChange={form.handleChange}
+                                handleBlur={form.handleBlur}
+                            />
+                            <BaseInput
+                                className="form-group"
+                                label={t("PASSWORD")}
+                                required
+                                type="password"
+                                name="password"
+                                placeholder={t("PASSWORD")}
+                                value={form.values.password}
+                                touched={form.touched.password}
+                                error={form.errors.password}
+                                onChange={form.handleChange}
+                                handleBlur={form.handleBlur}
+                            />
+
                             <div className="form-group form-check">
                                 <label className="form-check-label w-50">
-                                    <input className="form-check-input" type="checkbox" /> {t("KEEP_ME_SIGNED_IN")}
+                                    <input className="form-check-input keep_sign_in_check" type="checkbox" /> {t("KEEP_ME_SIGNED_IN")}
                                 </label>
                                 <Link href="/forgot-password">
                                     <a className={login.pricol}>{t("LOST_YOUR_PASSWORD")}</a>
                                 </Link>
                             </div>
-                            {serverValidation instanceof Array ? serverValidation.map((inValid) => {
-                                return (
-                                    <div className="text-danger">{inValid}</div>
-                                )
-
-                            }) : <div className="text-danger">{serverValidation}</div>}
                             <button type="submit" className={login.submit}>{t("LOGIN")}</button>
                         </form>
-
-
 
                         <div className={login.lineheader}>
                             <span>{t("OR")}</span>

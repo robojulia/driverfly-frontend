@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useTranslation } from "../../../../hooks/useTranslation";
 import Link from "next/link";
 import { useMediaQuery } from "react-responsive";
+import useAuth from "../../../../hooks/useAuth";
 /**
  * @typedef SidebarProps
  * @property {boolean} open indicates if the sidebar is open or not
@@ -18,6 +19,7 @@ import { useMediaQuery } from "react-responsive";
  * @property {Icon} icon
  * @property {string} text 
  * @property {boolean} startsWith
+ * @property {string | string[]} permissions
  */
 
 /**
@@ -31,21 +33,59 @@ export default function Sidebar(props) {
 
     const { t } = useTranslation();
 
-    let current = findLast(props.items, v => IsSelected(v, router.asPath));
+    const { hasPermission } = useAuth();
 
-    if (!current) current = props.items[0];
+    const items = filterItems(props.items, hasPermission);
+
+    let current = findLast(items, v => IsSelected(v, router.asPath));
+
+    if (!current) current = items[0];
 
     return (<>
         <aside
             className={`sidebarArea ${!props.open ? "" : "showSidebar"}`}>
             <SidebarArea>
-                {props.items.map((v, i) => (<SidebarLink key={i} isMobile={isMobile} item={v} t={t} currentPath={router.asPath} />))}
+                {items.map((v, i) => (<SidebarLink key={i} isMobile={isMobile} item={v} t={t} currentPath={router.asPath} />))}
             </SidebarArea>
         </aside>
         {!isMobile && current?.items?.length > 0 &&
         <Sidebar open={props.open} items={current.items} />
         }
     </>);
+}
+
+/**
+ * 
+ * @param {SidebarItem[]} values 
+ * @param {(string[]) => boolean} hasPermission 
+ * @returns {SidebarItem[]}
+ */
+function filterItems(values, hasPermission) {
+
+    return values.map(i => {
+        let { permissions, items } = i;
+
+        if (items) {
+            items = filterItems(items, hasPermission);
+            if (!items) return null;
+
+            return {
+                ...i,
+                items: items
+            };
+        }
+
+        if (permissions) {
+            if (!Array.isArray(permissions)) {
+                permissions = [permissions];
+            }
+
+            if (!hasPermission(...permissions)) return null;
+        }
+
+        return i;
+    }).filter(v => !!v);
+
 }
 
 function SidebarArea({ children }) {
@@ -106,7 +146,7 @@ function findLast(arr, predicate) {
  */
 function SidebarLink(props) {
     let { isMobile, t, currentPath } = props;
-    let { pathname, items, icon, text } = props.item;
+    let { pathname, items, text, permissions } = props.item;
 
     if (!pathname && items) pathname = items[0]?.pathname;
 
@@ -115,7 +155,7 @@ function SidebarLink(props) {
         <Link href={pathname}>
             <a href="#">
             {
-            icon &&
+            props.item.icon != null &&
             <span className="float-left">
                 < props.item.icon className="icon_left" />
             </span>

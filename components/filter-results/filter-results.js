@@ -1,59 +1,49 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css'
-import AcceptingDriversFrom from '../accepting-drivers-from/AcceptingDriversFrom'
-import AreasCovered from '../areascovered/AreasCovered'
-import Category from '../category/Category'
-import EmploymentType from '../employment-type/Employment-Type'
-import FullParty from '../full-part/Time'
-import JobType from '../jobtype/JobType'
-import Location from '../location/Location'
-import MinimumAge from '../minimum-age/Minimum-Age'
-import MvrRequirement from '../mvr-requirements/MVR-Requirements'
-import PayStructure from '../pay-structure/Pay-Structure'
-import PostedDate from '../postedate/PostedDate'
-import Salary from '../salary/salary'
-import Schedule from '../schedule/Schedule'
-import Search from '../search/search'
-import ShowMoreEquipment from '../show-more-equipment/ShowMoreEquipment'
-import SpecialAccommodations from '../special-accommodations/Special-Accommodations'
-import SpecialEndorsementsRequired from '../special-endorsements-required/Special-Endorsements-Required'
-import TypeOfDelivery from '../type-of-delivery/TypeOfDelivery'
-import Range from "../location/Range"
+import AreasCovered from '../filters/areas-covered'
+import Category from '../filters/category'
+import EmploymentType from '../filters/employment-type'
+import MvrRequirement from '../filters/mvr-requirements'
+import PayStructure from '../filters/pay-structure'
+import PostedDate from '../filters/date-posted'
+import Schedule from '../filters/schedule'
+import Search from '../filters/search'
+import Equipment from '../filters/equipment'
+import SpecialEndorsementsRequired from '../filters/special-endorsements-required'
+import TypeOfDelivery from '../filters/type-of-delivery'
+import Range from "../filters/location/range"
+import { useTranslation } from '../../hooks/useTranslation'
+import jobContext from '../../context/jobContext'
+import TransmissionType from '../filters/vehicle-transmission-type'
 
 
 
 export default function FilterResults() {
 
-
-
-
+  const { t } = useTranslation();
+  const { state, method } = useContext(jobContext)
 
   return (
     <>
       <div className="filter_container">
-        <h5 className='font-weight-normal'>Filter Results</h5>
+        <h5 className='font-weight-normal'>{t('FILTER_RESULT')}</h5>
         <form >
-          < Search />
+          < Search state={state} method={method} />
           <div className="bs-example">
             <div className="tab-content">
               <div className="accordion bg-transparent" id="accordionExample">
-                < Category />
-                < Range />
-                {/* < JobType /> */}
-                {/* < Salary /> */}
-                < PostedDate />
-                < AreasCovered />
-                {/* < FullParty /> */}
-                < EmploymentType />
-                < TypeOfDelivery />
-                {/* < AcceptingDriversFrom /> */}
-                < ShowMoreEquipment />
-                < Schedule />
-                < PayStructure />
-                {/* < MinimumAge /> */}
-                {/* < SpecialAccommodations /> */}
-                < SpecialEndorsementsRequired />
-                < MvrRequirement />
+                < Category open={true} state={state} method={method} />
+                < Range open={true} state={state} method={method} />
+                < PostedDate open={true} state={state} method={method} />
+                < AreasCovered open={true} state={state} method={method} />
+                < EmploymentType state={state} method={method} />
+                < TypeOfDelivery state={state} method={method} />
+                < Equipment state={state} method={method} />
+                < TransmissionType state={state} method={method} />
+                < Schedule state={state} method={method} />
+                < PayStructure state={state} method={method} />
+                < SpecialEndorsementsRequired state={state} method={method} />
+                < MvrRequirement state={state} method={method} />
               </div>
             </div>
           </div>

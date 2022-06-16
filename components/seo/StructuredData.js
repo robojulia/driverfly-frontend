@@ -1,4 +1,4 @@
-import { DriverDegree } from "../../enums/drivers/driver-degree.enum";
+import { EducationLevel } from "../../enums/users/education-level.enum";
 import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
 import { JobEquipmentType } from "../../enums/jobs/job-equipment-type.enum";
 import { JobEntity } from "../../models/job/job.entity";
@@ -150,19 +150,19 @@ postgraduate degree
         const educationalRequirements = [];
 
         switch (job.min_degree) {
-            case DriverDegree.DOCTORAL:
+            case EducationLevel.DOCTORAL:
                 educationalRequirements.push("postgraduate degree");
                 break;
-            case DriverDegree.ASSOCIATE:
+            case EducationLevel.ASSOCIATE:
                 educationalRequirements.push("associate degree");
                 break;
-            case DriverDegree.BACHELOR:
+            case EducationLevel.BACHELOR:
                 educationalRequirements.push("bachelor degree");
                 break;
-            case DriverDegree.MASTER:
+            case EducationLevel.MASTER:
                 // todo: determine master education requirements type.
                 break;
-            case DriverDegree.HIGH_SCHOOL:
+            case EducationLevel.HIGH_SCHOOL:
                 educationalRequirements.push("high school");
                 break;
         }

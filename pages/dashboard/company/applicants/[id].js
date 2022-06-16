@@ -21,10 +21,10 @@ import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import { calculateAge, dateRange } from "../../../../utils/date";
 import { buildAddress } from "../../../../utils/common";
 import { ApplicantStatus } from "../../../../enums/applicants/applicant-status.enum";
-import { DriverLicenseType } from '../../../../enums/drivers/driver-license-type.enum';
+import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
 import { VehicleTransmissionType } from '../../../../enums/vehicles/vehicle-transmission-type.enum';
-import { DriverEndorsement } from '../../../../enums/drivers/driver-endorsement.enum';
-import { DriverDegree } from "../../../../enums/drivers/driver-degree.enum";
+import { DriverEndorsement } from '../../../../enums/users/driver-endorsement.enum';
+import { EducationLevel } from "../../../../enums/users/education-level.enum";
 
 import ShowEnumFromString from "../../../../components/enum-filters/show-enum-from-string";
 import ViewTable from "../../../../components/viewDetails/viewTable";
@@ -160,7 +160,7 @@ function View(props) {
             text: null
         },
         validationSchema: yup.object({
-            text: yup.string().required(t("this_field_is_required")).nullable()
+            text: yup.string().required().nullable()
         }),
         onSubmit: async (values) => {
             const api = new ApplicantApi();
@@ -243,7 +243,7 @@ function View(props) {
                                     transmission_type: applicant.transmission_type?.map(v => t(`VehicleTransmissionType.${v}`)),
                                     ENDORSEMENTS: applicant.endorsements?.map(v => t(`DriverEndorsement.${v}`)),
                                     above_21: applicant.birthdate ? calculateAge(applicant.birthdate) >= 21 : null,
-                                    highest_degree: applicant.highest_degree ? t(`DriverDegree.${applicant.highest_degree}`) : null,
+                                    highest_degree: applicant.highest_degree ? t(`EducationLevel.${applicant.highest_degree}`) : null,
                                     emergency_contact: applicant.emergency_contact_name,
                                     phone: applicant.emergency_contact_number,
                                     relationship: applicant.emergency_contact_relationship,
@@ -693,9 +693,9 @@ function Edit(props) {
                                     />
                                     <BaseSelect
                                         className="col-6"
-                                        label="cdl_class"
+                                        label="CDL_CLASS"
                                         name="license_type"
-                                        placeholder="cdl_class"
+                                        placeholder
                                         labelPrefix="DriverLicenseType"
                                         enumType={DriverLicenseType}
                                         formik={form}
@@ -747,8 +747,8 @@ function Edit(props) {
                                     name="highest_degree"
                                     placeholder="HIGHEST_DEGREE"
                                     formik={form}
-                                    labelPrefix="DriverDegree"
-                                    enumType={DriverDegree}
+                                    labelPrefix="EducationLevel"
+                                    enumType={EducationLevel}
                                 />
                                 <Col xs="12" className='mt-2'>
                                     <ViewCard title="EMERGENCY_CONTACT">
@@ -1293,6 +1293,7 @@ function Edit(props) {
                                                         placeholder="TYPE"
                                                         labelPrefix="ApplicantDocumentType"
                                                         enumType={ApplicantDocumentType}
+                                                        readOnly={!!entity.id && !entity.file_base64}
                                                         formik={form}
                                                     />
                                                 </td>

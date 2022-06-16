@@ -1,27 +1,25 @@
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
-import { Col, Row } from "reactstrap";
+import { Row } from "reactstrap";
 import useAuth from '../../../../hooks/useAuth';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react'
 import useRedirect from '../../../../hooks/useRedirect';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import Modal from "react-bootstrap/Modal"
-import Button from "react-bootstrap/Button"
 
 import { useFormik } from "formik";
-import * as yup from "yup";
 import "../../../../utils/yup";
 
-import BaseFile from "../../../../components/forms/BaseFile";
 import BaseInput from "../../../../components/forms/BaseInput";
 import BaseTextArea from "../../../../components/forms/BaseTextArea";
 
 import { useTranslation } from "../../../../hooks/useTranslation";
 
 import CompanyApi from "../../../api/company";
-import DocumentApi from "../../../api/document";
-import { getBase64 } from "../../../../utils/file";
+
+import FileInput from "../../../../components/forms/FileInput";
+import { CompanyEntity } from "../../../../models/company/company.entity";
+import { DocumentType } from "../../../../models/documents/document.entity";
 
 export default function Settings() {
   const { t } = useTranslation();
@@ -36,37 +34,13 @@ export default function Settings() {
   const user = authCheck();
 
   const form = useFormik({
-    initialValues: {
-      name: null,
-      about: null,
-      website: null,
-      photo: null,
-    },
-    validationSchema: yup.object({
-      name: yup.string().required(t("this_field_is_required")).nullable(),
-      about: yup.string().nullable(),
-      website: yup.string().url(t("MUST_BE_A_VALID_URL")).nullable(),
-      photo: yup.object({}).nullable(),
-    }),
+    initialValues: new CompanyEntity(),
+    validationSchema: CompanyEntity.yupSchema(),
     onSubmit: async (values) => {
-      const dto = {
-        name: values.name,
-        about: values.about,
-        website: values.website,
-        photo: values.photo?.file_base64 ? {
-          visibility: values.photo.visibility,
-          name: values.photo.name,
-          mime_type: values.photo.mime_type,
-          file_base64: values.photo.file_base64
-        } : null
-      };
-      if (values.photo && !values.photo.file_base64 && values.photo.id)
-        delete dto.photo;
-
       const api = new CompanyApi();
 
       try {
-        const company = await api.update(dto);
+        const company = await api.update(values);
         setAuth({
           ...user,
           company: {
@@ -94,69 +68,9 @@ export default function Settings() {
 
     const company = await api.getById();
 
-    form.setValues({
-      name: company.name,
-      about: company.about,
-      website: company.website,
-      photo: company.photo
-    });
+    form.setValues(company);
+
   }, []);
-
-    /**
-     * 
-     * @param {React.ChangeEvent<HTMLInputElement>} e 
-     */
-     const uploadHandler = async (e) => {
-      e.preventDefault();
-      const { target: { name, files } } = e;
-  
-      let photo = null;
-
-      if (files && files[0]) {
-        const file = files[0];
-
-        photo = {
-          visibility: "PUBLIC",
-          name: file.name,
-          mime_type: file.type,
-          path: URL.createObjectURL(file),
-          file_base64: await getBase64(file)
-        };
-      }
-
-      form.setFieldValue(name, photo);
-  }
-  const [ pdfModel, set_pdfModel ] = useState({
-      name: null,
-      url: null,
-    });
-
-  const viewHandler = async (e) => {
-      e.preventDefault();
-      const { target: { name } } = e;
-  
-      const file = form.getFieldMeta(name).value;
-      console.log(file);
-  
-      let url = file.path;
-
-      if (file.id) {
-          const api = new DocumentApi();
-          const document = await api.getSignedUrl(file.id);
-          url = document.path;
-      }
-  
-      set_pdfModel({
-        name: file.name,
-        url: url
-      });
-    }
-  
-    const hideModelHandler = (e) => {
-      set_pdfModel({
-        name: null, url: null
-      });
-    }
 
   return (
     <>
@@ -166,10 +80,10 @@ export default function Settings() {
         <Row>
           <h2>{t("COMPANY")}</h2>
         </Row>
-        <div className='container-fluid'>
+        <div className='container-fluid p-0'>
           <div className="modal-header border-0">
           </div>
-          <form className="modal-body" onSubmit={form.handleSubmit} >
+          <form className="modal-body p-0" onSubmit={form.handleSubmit} >
             <Row>
               <BaseInput
                 className="col-12"
@@ -177,22 +91,14 @@ export default function Settings() {
                 name={`name`}
                 required
                 placeholder={t("NAME")}
-                value={form.values.name}
-                touched={form.touched.name}
-                error={form.errors.name}
-                onChange={form.handleChange}
-                handleBlur={form.handleBlur}
+                formik={form}
                 />
               <BaseInput
                 className="col-12"
                 label={t("WEBSITE")}
                 name={`website`}
                 placeholder="http://www.example.com"
-                value={form.values.website}
-                touched={form.touched.website}
-                error={form.errors.website}
-                onChange={form.handleChange}
-                handleBlur={form.handleBlur}
+                formik={form}
                 />
               <BaseTextArea
                 className="col-12"
@@ -200,30 +106,21 @@ export default function Settings() {
                 name={`about`}
                 rows={3}
                 placeholder={t("ABOUT")}
-                value={form.values.about}
-                touched={form.touched.about}
-                error={form.errors.about}
-                onChange={form.handleChange}
-                handleBlur={form.handleBlur}
+                formik={form}
                 />
-              <BaseFile
-                  className="col-12"
-                  label={t("photo")}
-                  name={`photo`}
-                  accept="image/*"
-                  value={form.values.photo}
-                  onChange={uploadHandler}
-                  onView={viewHandler}
-                  onDelete={uploadHandler}
-                  handleBlur={form.handleBlur}
-                  touched={form.touched.photo}
-                  error={form.errors.photo}
-                  />
+              <FileInput
+                className="col-12"
+                label={`photo`}
+                name={`photo`}
+                accept="image/*"
+                documentType={DocumentType.PHOTO}
+                formik={form}
+              />
             </Row>
             <Row className="mt-2">
-                <div className="col-12 border-0 text-end">
+                <div className="col-12 border-0 text-right">
                     <div className="col">
-                        <button type="submit" className={`btn btn-primary`} >
+                        <button type="submit" className={`theme-secondary-btn`} >
                         {t("UPDATE")}
                         </button>
                     </div>
@@ -233,21 +130,6 @@ export default function Settings() {
           </form>
         </div>
       </div>
-      <Modal show={!!pdfModel.name} onHide={() => hideModelHandler()}>
-        <Modal.Header>{pdfModel.name}</Modal.Header>
-
-        <Modal.Body>
-        {(
-            pdfModel.name &&
-                <img className="img-thumbnail" src={pdfModel.url} />
-        )}
-        </Modal.Body>
-
-        <Modal.Footer>
-            <Button variant="secondary" onClick={() => hideModelHandler()}>{t("close")}</Button>
-        </Modal.Footer>
-
-      </Modal>
     </>
   )
 };

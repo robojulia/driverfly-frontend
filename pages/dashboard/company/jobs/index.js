@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import React from "react";
 
-import {PenFill, TrashFill, Eye, EyeFill} from 'react-bootstrap-icons';
+import { PenFill, TrashFill, Eye, EyeFill } from 'react-bootstrap-icons';
 
 
 import JobApi from "../../../api/job";
@@ -23,16 +23,26 @@ import ShowEnumFromString from "../../../../components/enum-filters/show-enum-fr
 import ListActions from "../../../../components/list-actions/ListActions";
 
 import { buildAddress } from "../../../../utils/common";
+import ViewDataTable from "../../../../components/viewDetails/viewDataTable";
+import OverlyPopover from "../../../../components/popover/overly-popover";
+import useAuth from "../../../../hooks/useAuth";
+import useStorage from "../../../../hooks/useStorage";
 
 export default function JobListing() {
 
     const { authCompany } = useRedirect();
-
     authCompany()
+
+    const { authCheck } = useAuth();
+    const user = authCheck();
+    const columnSettingKey = `company.${user.id}.jobs.columns`
+    let settingsJson = useStorage().getItem(columnSettingKey)
+    let settingsArray = settingsJson ? JSON.parse(settingsJson) : []
 
     const { t } = useTranslation();
     const router = useRouter()
     const [jobs, setJobs] = useState([])
+    const [columnHistory, setColumnHistory] = useState([])
 
     useEffect(async () => {
         const api = new JobApi();
@@ -40,6 +50,12 @@ export default function JobListing() {
         const v = await api.list();
 
         setJobs(v);
+
+        let columnArray = []
+        await settingsArray.map(v => {
+            columnArray[v.name] = v
+        })
+        setColumnHistory(columnArray)
     }, []);
 
     /**
@@ -56,7 +72,7 @@ export default function JobListing() {
      * 
      * @param {number} id
      */
-     const onPreviewClick = (id) => {
+    const onPreviewClick = (id) => {
         router.push(`/jobs/${id}`);
     }
 
@@ -64,7 +80,7 @@ export default function JobListing() {
      * 
      * @param {number} id
      */
-     const onViewApplicantsClick = (id) => {
+    const onViewApplicantsClick = (id) => {
         router.push(`/dashboard/company/applicants?jobId=${id}`);
     }
 
@@ -96,98 +112,90 @@ export default function JobListing() {
                     <Col xs="10">
                         <h2>{t("JOBS")}</h2>
                     </Col>
-                    <Col xs="2">
-                        <button className="btn btn-primary" onClick={onAddClick}>
+                    <Col xs="2" className="text-right">
+                        <button className="theme-secondary-btn" onClick={onAddClick}>
                             + {t("CREATE")}
                         </button>
                     </Col>
                 </Row>
-                <Row className="mt-5">
+                <Row className="mt-5 my_job_listing">
                     <Col lg="12 ">
-                        <Card className="job_listing">
-                            <CardBody className={JobList.jobtable}>
-                                <div className="table-responsive">
-                                    <Table striped>
-                                        <thead className="listing_head">
-                                            <tr>
-                                                <th>{t('job_title')}</th>
-                                                <th>{t('location')}</th>
-                                                <th>{t('drivers_needed')}</th>
-                                                <th>{t('expiration_date')}</th>
-                                                <th>{t('geography')}</th>
-                                                <th>{t('schedule')}</th>
-                                                <th>{t('employment_type')}</th>
-                                                <th>{t('equipment_type')}</th>
-                                                <th>{t('delivery_type')}</th>
-                                                <th>{t('team_drivers')}</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {!jobs || !jobs.length &&
-                                                <tr>
-                                                    <td colSpan={11}>
-                                                        {t("NO_{name}_FOUND", { name: t("JOBS") })}
-
-                                                    </td>
-                                                </tr>
-                                            }
-                                            {
-                                                jobs &&
-                                                jobs.map((job, index) => {
-                                                    return <tr key={index}>
-                                                        <td>{job.title} </td>
-                                                        <td>
-                                                            {buildAddress(job.location || {})}
-                                                        </td>
-                                                        <td>{job.drivers_needed} </td>
-                                                        <td>{job.expiry_date && new Date(job.expiry_date).toDateString()} </td>
-                                                        <td><ShowEnumFromString popover={true} str={job.geography} enumArray={JobGeography} /></td>
-                                                        <td><ShowEnumFromString popover={true} str={job.schedule} enumArray={JobSchedule} /></td>
-                                                        <td><ShowEnumFromString popover={true} str={job.employment_type} enumArray={JobEmploymentType} /></td>
-                                                        <td><ShowEnumFromString popover={true} str={job.equipment_type} enumArray={JobEquipmentType} /></td>
-                                                        <td><ShowEnumFromString popover={true} str={job.delivery_type} enumArray={JobDeliveryType} /></td>
-                                                        <td><ShowEnumFromString popover={true} str={job.team_drivers} enumArray={JobTeamDriver} /></td>
-                                                        <td className="text-nowrap">
-                                                            <ListActions
-                                                                options={[
-                                                                    {
-                                                                        onClick: e => onViewApplicantsClick(job.id),
-                                                                        label: (<><EyeFill /> {t("VIEW_{name}", { name: t("APPLICANTS") })}</>)
-                                                                    },
-                                                                    {
-                                                                        onClick: e => onPreviewClick(job.id),
-                                                                        label: (<><Eye /> {t("VIEW_{name}", { name: t("POST") })}</>)
-                                                                    },
-                                                                    {
-                                                                        onClick: e => onEditClick(job.id),
-                                                                        label: (<><PenFill /> {t("EDIT")}</>)
-                                                                    },
-                                                                    {
-                                                                        onClick: e => onDeleteClick(job.id),
-                                                                        label: (<><TrashFill /> {t("DELETE")}</>)
-                                                                    },
-                                                                ]}
-                                                                />
-                                                        </td>
-                                                    </tr>
-                                                })
-                                            }
-                                        </tbody>
-                                    </Table>
-                                </div>
-                                <Row className="py-4">
-                                    <Col sm="6" lg="9">
-                                        <nav aria-label="Page navigation example p-0">
-                                            <ul className="pagination p-0">
-                                                {/* <li className="page-item"><a className="page-link" href="#">Page 1</a></li> */}
-                                            </ul>
-                                        </nav>
-                                    </Col>
-                                </Row>
-                            </CardBody>
-
-                        </Card>
+                        <ViewDataTable
+                            columns={[
+                                {
+                                    name: "job_title",
+                                    selector: job => (<OverlyPopover skipTranslate={true} header={t('job_title')} str={job.title} />),
+                                    hidable: false
+                                },
+                                {
+                                    name: "location",
+                                    selector: job => (<OverlyPopover skipTranslate={true} header={t('location')} str={buildAddress(job.location || {})} />),
+                                    hide: (!!columnHistory.location?.hide),
+                                },
+                                {
+                                    name: "drivers_needed",
+                                    selector: j => j.drivers_needed,
+                                    hide: (!!columnHistory.drivers_needed?.hide),
+                                },
+                                {
+                                    name: "expiration_date",
+                                    selector: j => j.expiry_date ? new Date(j.expiry_date).toDateString() : null,
+                                    hide: (!!columnHistory.expiration_date?.hide),
+                                },
+                                {
+                                    name: "GEOGRAPHY",
+                                    selector: j => j.geography ? t("JobGeography." + j.geography) : null,
+                                    hide: (!!columnHistory.GEOGRAPHY?.hide),
+                                },
+                                {
+                                    name: "SCHEDULE",
+                                    selector: job => (<OverlyPopover labelPrefix="JobSchedule" skipTranslate={false} header={t('SCHEDULE')} str={job.schedule} />),
+                                    hide: (!!columnHistory.SCHEDULE?.hide),
+                                },
+                                {
+                                    name: "EMPLOYMENT_TYPE",
+                                    selector: job => (<OverlyPopover labelPrefix="JobEmploymentType" skipTranslate={false} header={t('EMPLOYMENT_TYPE')} str={job.employment_type} />),
+                                    hide: (!!columnHistory.EMPLOYMENT_TYPE?.hide),
+                                },
+                                {
+                                    name: "DELIVERY_TYPE",
+                                    selector: j =>
+                                    (<ShowEnumFromString
+                                        popover_header={t('DELIVERY_TYPE')}
+                                        labelPrefix="JobDeliveryType"
+                                        popover={true}
+                                        str={j.delivery_type}
+                                        enumArray={JobDeliveryType} />
+                                    ),
+                                    hide: (!!columnHistory.DELIVERY_TYPE?.hide),
+                                },
+                                {
+                                    name: "TEAM_DRIVERS",
+                                    selector: job => (<OverlyPopover labelPrefix="JobTeamDriver" skipTranslate={false} header={t('TEAM_DRIVERS')} str={job.team_drivers} />),
+                                    hide: (!!columnHistory.TEAM_DRIVERS?.hide),
+                                },
+                            ]}
+                            actions={j => ([
+                                {
+                                    onClick: e => onViewApplicantsClick(j.id),
+                                    label: (<><EyeFill /> {t("VIEW_{name}", { name: "APPLICANTS" }, { translateProps: true })}</>)
+                                },
+                                {
+                                    onClick: e => onPreviewClick(j.id),
+                                    label: (<><Eye /> {t("VIEW_{name}", { name: t("POST") })}</>)
+                                },
+                                {
+                                    onClick: e => onEditClick(j.id),
+                                    label: (<><PenFill /> {t("EDIT")}</>)
+                                },
+                                {
+                                    onClick: e => onDeleteClick(j.id),
+                                    label: (<><TrashFill /> {t("DELETE")}</>)
+                                },
+                            ])}
+                            items={jobs}
+                            columnSettingKey={columnSettingKey}
+                        />
                     </Col>
                 </Row>
             </div>

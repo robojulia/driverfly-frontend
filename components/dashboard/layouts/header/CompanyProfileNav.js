@@ -1,28 +1,34 @@
-import {
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    Dropdown,
-} from "reactstrap";
+import { Dropdown } from "react-bootstrap";
 import React from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 import LogoutButton from '../../../buttons/Logout';
 import user1 from "../../../../public/dashboard/assets/images/users/user1.jpg";
 
 import { useTranslation } from "../../../../hooks/useTranslation";
+import useAuth from "../../../../hooks/useAuth";
+import Impersonate from "../../../impersonate/impersonate";
 
 export default function CompanyProfileNav({ user }) {
+    const { authenticateCompany } = useAuth();
+
+    authenticateCompany();
+
     const { t } = useTranslation();
+
+    const router = useRouter();
 
     const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
-    const toggle = () => setDropdownOpen((prevState) => !prevState);
+    const toggle = (e) => {
+        setDropdownOpen(!dropdownOpen);
+    }
 
     const menu_options = [
         {
             href: "/dashboard/company/settings",
-            label: t("COMPANY_SETTINGS")
+            label: "COMPANY_SETTINGS"
         },
         // {
         //     href: "/dashboard/company/settings",
@@ -39,49 +45,36 @@ export default function CompanyProfileNav({ user }) {
         {}, // divider
         {
             href: "/dashboard/company/settings/profile",
-            label: t("MY_PROFILE")
+            label: "MY_PROFILE"
         },
     ];
 
     return (
         <>
             <div className="profile">
-                <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-                    <DropdownToggle>
-
-                        <div style={{ lineHeight: "0px" }}>
-
-                            <Image
-                                src={user1}
-                                alt="profile"
-                                className="rounded-circle"
-                                width="30"
-                                height="30"
-
-                            />
-                            <span> {user.first_name}    {user.last_name}
-                                {/* {user.company?.name || "Driverfly Company"} */}
-                                .</span>
-                            {/* <br />
-<span style={{ paddingLeft: "35px"}}>
-{user.name || "DriverFly User"}
-.</span> */}
-                        </div>
-
-                    </DropdownToggle >
-                    <DropdownMenu>
+                <Dropdown isOpen={dropdownOpen} toggle={toggle} >
+                    <Dropdown.Toggle variant="light">
+                        <Image
+                            src={user1}
+                            alt="profile"
+                            className="rounded-circle"
+                            width="30"
+                            height="30"
+                        />
+                        <span> {user.first_name}    {user.last_name}</span>
+                    </Dropdown.Toggle >
+                    <Dropdown.Menu>
                         {menu_options.map((v, i) => {
-                            if (!v.label) return <DropdownItem key={i} divider />
+                            if (!v.label) return <Dropdown.Divider key={i} />
 
                             return (
-                                <Link key={i} href={v.href || "#"}>
-                                    <DropdownItem>{v.label}</DropdownItem>
-                                </Link>
+                                <Dropdown.Item onClick={e => router.push(v.href || "#")}>{t(v.label)}</Dropdown.Item>
                             );
                         })}
-                        <DropdownItem divider />
-                        <DropdownItem><LogoutButton /></DropdownItem>
-                    </DropdownMenu>
+                        <Dropdown.Divider />
+                        <Impersonate />
+                        <LogoutButton />
+                    </Dropdown.Menu>
                 </Dropdown>
             </div>
         </>

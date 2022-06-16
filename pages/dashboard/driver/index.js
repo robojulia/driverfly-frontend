@@ -11,6 +11,10 @@ import JobList from "../../../public/dashboard/styles/css/JobList.module.css"
 import Link from 'next/link';
 
 import { useTranslation } from "../../../hooks/useTranslation";
+import DashboardApi from "../../api/dashboard"
+import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
+import BaseApi from "../../api/_baseApi";
+import ApplicantApi from "../../api/applicant";
 
 export default function Dashboard() {
 
@@ -22,34 +26,41 @@ export default function Dashboard() {
     const { authCheck } = useAuth();
 
     const user = authCheck();
+    const dashboardApi = new DashboardApi();
+    const applicantApi = new ApplicantApi();
 
-    const [jobs, setJobs] = useState([])
+    const [stats, setStats] = useState({
+        [ApplicantStatus.APPLIED]: 0,
+        [ApplicantStatus.SHORTLISTED]: 0,
+        [ApplicantStatus.HIRED]: 0,
+        [ApplicantStatus.REJECTED]: 0,
+    })
+    const setStatsByKeyValue = (key, value) => {
+        setStats(prevState => ({
+            ...prevState,
+            [key]: value
+        }))
+    }
 
-    const fetchJobs = () => {
+    const [driver, setDriver] = useState([])
 
-        const headers = {
-            'Authorization': `Bearer ${user.token}`,
-        };
-
-        axios.get(
-            `${process.env.BASE_URL_API}/jobs/`,
-            { headers: headers }
-        )
-            .then(data => {
-               
-                setJobs(data.data)
-            })
+    const getDashboardData = async () => {
+        await dashboardApi.getStatsForDriver()
+            .then(data => data.map((item) => {
+                setStatsByKeyValue(ApplicantStatus[item.status], item.count)
+            }))
             .catch(function (error) {
-               
+
             }).then(function () {
-               
+
             })
     }
 
-    useEffect(() => {
-        fetchJobs()
+    useEffect(async () => {
+        getDashboardData()
+        const driver = await applicantApi.getByUserId();
+        setDriver(driver);
     }, []);
-
 
     return (
         <>
@@ -57,35 +68,40 @@ export default function Dashboard() {
             <div className="job_info_container">
 
                 <Container fluid className='pt-5'>
-                    <Row className='justify-content-center text-center d-block'>
-                        <Col lg={3} md={3} col={12} className={`p-5 mr-3 bg_yellow w-24  ${style.job_info_container}`} >
-                            <h2 className="text-white font-weight-bolder">12 </h2>
-                            <h3 className="font-weight-bolder">{t("applied_jobs")}</h3>
-                            <Link href="#">
+                    <Row className='justify-content-center text-center d-flex'>
+                        <div className={` py-5 bg_yellow w-23  ${style.job_info_container}`} >
+                            <h2 className="text-white font-weight-bolder">
+                                {stats[ApplicantStatus.APPLIED] || "0"}
+                            </h2>
+                            <h3 className="font-weight-bolder">{t("ApplicantStatus.APPLIED")}</h3>
+                        </div>
+                        <div className={` py-5 bg_green w-23   ${style.job_info_container}`}>
+                            <h2 className={`font-weight-bolder  ${style.text_yellow}`}>
+                                {stats[ApplicantStatus.SHORTLISTED] || "0"}
+                            </h2>
+                            <h3 className="font-weight-bolder">{t("ApplicantStatus.SHORTLISTED")}</h3>
+                            {/* <Link href="#">
                                 <button className={` mt-3 text-white ${style.btn_blue}`}>{t("view")}</button>
-                            </Link>
-                        </Col>
-                        <Col lg={3} md={3} col={12} className={`p-5 mr-3 bg_green w-24   ${style.job_info_container}`}>
-                            <h2 className={`font-weight-bolder  ${style.text_yellow}`}>4 </h2>
-                            <h3 className="font-weight-bolder">{t("new_offers")}</h3>
-                            <Link href="#">
-                                <button className={` mt-3 text-white ${style.btn_blue}`}>{t("view")}</button>
-                            </Link>
-                        </Col>
-                        <Col lg={3} md={3} col={12} className={`p-5 mr-3 bg_blue w-24   ${style.job_info_container}`} >
-                            <h2 className={`font-weight-bolder  ${style.text_yellow}`}>12 </h2>
-                            <h3 className="font-weight-bolder text-white">{t("saved_jobs")}</h3>
-                            <Link href="#">
+                            </Link> */}
+                        </div>
+                        <div className={` py-5 bg_blue w-23   ${style.job_info_container}`} >
+                            <h2 className={`font-weight-bolder  ${style.text_yellow}`}>
+                                {stats[ApplicantStatus.HIRED] || "0"}
+                            </h2>
+                            <h3 className="font-weight-bolder text-white">{t("ApplicantStatus.HIRED")}</h3>
+                            {/* <Link href="#">
                                 <button className={` mt-3 text-dark ${style.btn_green}`}>{t("view")}</button>
-                            </Link>
-                        </Col>
-                        <Col lg={3} md={3} col={12} className={`p-5 mr-3 myrtlegreen w-24   ${style.job_info_container}`}>
-                            <h2 className="text-white font-weight-bolder">4 </h2>
-                            <h3 className={style.text_yellow}>{t("past_jobs")}</h3>
-                            <Link href="#">
+                            </Link> */}
+                        </div>
+                        <div className={` py-5 myrtlegreen w-23   ${style.job_info_container}`}>
+                            <h2 className="text-white font-weight-bolder">
+                                {stats[ApplicantStatus.REJECTED] || "0"}
+                            </h2>
+                            <h3 className={style.text_yellow}>{t("ApplicantStatus.REJECTED")}</h3>
+                            {/* <Link href="#">
                                 <button className={` mt-3 text-dark ${style.btn_green}`}>{t("view")}</button>
-                            </Link>
-                        </Col>
+                            </Link> */}
+                        </div>
                     </Row>
                 </Container>
 
@@ -93,38 +109,46 @@ export default function Dashboard() {
 
             <div className=''>
                 <Row>
-                    <Col>
-                        <h2 className='font-weight-bold my-3'>{t("current_job")}</h2>
-                    </Col>
+                    <div>
+                        {/* <h2 className='font-weight-bold my-3'>{t("current_job")}</h2> */}
+                    </div>
                 </Row>
-                <div class="table-responsive">
-                    <table class="table table-borderless ">
+                <div className="table-responsive">
+                    <table className="table table-borderless ">
                         <thead>
                             <tr>
-                                <th scope="col">{t("job_title")}</th>
-                                <th scope="col">{t("company")}</th>
-                                <th scope="col"></th>
+                                <th scope="col w-100">
+                                    {t("CDL_CLASS")}
+                                </th>
+                                <th scope="col">
+                                    {t("years_cdl_experience")}
+                                </th>
+                                <th scope="col">
+                                    {t("driver_license_number")}
+                                </th>
                                 <th scope="col"></th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Class A CDL – Texas –NE OTR</td>
-                                <td>CR England</td>
                                 <td>
-                                    <Link href="#">
-                                        <button className={` mt-3 text-white ${style.btn_blue}`}>{t("update_status")}</button>
-                                    </Link>
+                                  {driver.license_type || 'N/A'}
                                 </td>
                                 <td>
-                                    <Link href="#">
-                                        <button className={` mt-3 text-white ${style.btn_blue}`}>{t("transfer_internally")}</button>
-                                    </Link>
+                                    {driver.years_cdl_experience || 0}
                                 </td>
                                 <td>
-                                    <Link href="#">
-                                        <button className={` mt-3 text-white ${style.btn_blue}`}>{t("find_new_job")}</button>
+                                    {driver.license_number || "N/A"}
+                                </td>
+                                <td className="p-0">
+                                    <Link href="/dashboard/driver/settings/applicant">
+                                        <button className={`text-white ${style.btn_blue}`}>{t("update_status")}</button>
+                                    </Link>
+                                </td>
+                                <td className="p-0">
+                                    <Link href="/dashboard/driver/find-jobs">
+                                        <button className={`text-white ${style.btn_blue}`}>{t("find_new_job")}</button>
                                     </Link>
                                 </td>
 
@@ -138,7 +162,7 @@ export default function Dashboard() {
 
 
 
-            <div className={JobList.joblisting}>
+            {/* <div className={JobList.joblisting}>
                 <Row className={JobList.link}>
                     <Col sm="6" lg="8">
                         <h2 className='mt-3'>{t("suggested_jobs")}</h2>
@@ -146,7 +170,7 @@ export default function Dashboard() {
                 </Row>
                 <Row className="mt-5">
                     <Col lg="12 ">
-                        <Card>
+                        <Card className="border-0">
                             <CardBody className={JobList.jobtable}>
                                 <div className="table-responsive">
                                     <Table striped>
@@ -237,7 +261,7 @@ export default function Dashboard() {
                         </Card>
                     </Col>
                 </Row>
-            </div>
+            </div> */}
 
         </>
     )

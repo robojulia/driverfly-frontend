@@ -259,6 +259,7 @@
 
 .side_bar .bg-light {
     background-color: transparent !important;
+    padding: 0.5rem 0;
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
@@ -299,11 +300,12 @@
 
 }
 
-.w-24 {
-
-    width: 23%;
+.w-23 {
+    width: 23% !important;
     display: inline-block;
+    margin: 2% 1%;
 }
+
 
 
 textarea {
@@ -377,13 +379,6 @@ textarea {
 .modal-dialog {
     max-width: 1000px !important;
 }
-
-.modal-dialog button {
-    color: #fff;
-    background-color: #5c636a !important;
-    border-color: #565e64 !important;
-}
-
 .icon_left {
     float: left;
     color: #5dcac4;
@@ -403,7 +398,9 @@ textarea {
 .mt-34 {
     margin-top: 34px;
 }
-
+.mt-39{
+margin-top: 39px;
+}
 .ml_5 {
     margin-left: 5px;
 }
@@ -455,8 +452,10 @@ textarea {
     padding: 15px 15px 15px 15px;
 }
 .location_table__hed th{
-    padding: 15px 15px 15px 0px;
     width: 22.5%;
+    border-top: 0px solid #dee2e6 !important;
+    border-bottom: 1px solid #dee2e6 !important;
+
 }
 
 .table> :not(:first-child) {
@@ -514,11 +513,7 @@ textarea {
         width: 35%;
     }
 
-    .w-24 {
-
-        width: 100%;
-        margin: 2% 1%;
-    }
+    
      .account_tabs .react-tabs__tab {
         background-color: #1b4454 !important;
         color: #fff;
@@ -573,4 +568,32 @@ textarea {
         top: 0;
     }
     
+}
+.table thead th {
+    border-bottom: 0px solid #dee2e6 !important;
+}
+.table td, .table th {
+    border-top: 0px solid #dee2e6 !important;
+}
+.table {
+    margin: 0rem;
+}
+.job_listing{
+    border: solid 0px !important;
+}
+.keep_sign_in_check{
+    padding: 0 !important;
+}
+.header-sec ul li svg{
+    width: 25px;
+    height: 30px;
+    color: #4aa2af;
+}
+.faq_search svg{ 
+ color: #6a6a6a;
+ font-size: 18px;
+}
+.accordion-button:not(.collapsed)::after {
+    background-image: url("../../../img/arrowdown.svg");
+
 }

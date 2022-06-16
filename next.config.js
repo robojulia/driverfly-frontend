@@ -1,5 +1,7 @@
 module.exports = {
-  reactStrictMode: true,
+  
+  swcMinify: false, // it should be false by default 
+  reactStrictMode: false,
   reloadOnPrerender: true,
   env: {
     BASE_URL: process.env.BASE_URL,

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import Breadcrumbs from 'nextjs-breadcrumbs'
+import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 import Back from '../components/back-to-login/Back-Login'
 import Layout from "../components/layouts"
 import Forgotpassword from '../public/css/Forgot.module.css'
@@ -20,7 +20,7 @@ export default function Forgot() {
       email: null
     },
     validationSchema: yup.object({
-      email: yup.string().email(t("INVALID_EMAIL_FORMAT")).required(t("this_field_is_required")).nullable()
+      email: yup.string().email(t("INVALID_EMAIL_FORMAT")).required().nullable()
     }),
     onSubmit: async (values) => {
       const api = new AuthApi();
@@ -57,7 +57,7 @@ export default function Forgot() {
         <div className="container">
           <div className="top-links-inner d-flex align-items-center justify-content-between">
             <h2>{t("FORGOT_PASSWORD")}</h2>
-            < Breadcrumbs />
+            < Breadcrumb />
           </div>
         </div>
       </div>

@@ -6,13 +6,14 @@ import { ApplicantEmployerEntity } from "../../../../models/applicant/applicant-
 import { ApplicantEquipmentEntity } from "../../../../models/applicant/applicant-equipment.entity";
 import { ApplicantExperienceEntity } from "../../../../models/applicant/applicant-experience.entity";
 import { DocumentEntity } from "../../../../models/documents/document.entity";
-
-import { DriverLicenseType } from "../../../../enums/drivers/driver-license-type.enum";
+import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
 import { VehicleTransmissionType } from "../../../../enums/vehicles/vehicle-transmission-type.enum";
-import { DriverEndorsement } from "../../../../enums/drivers/driver-endorsement.enum";
-import { DriverDegree } from "../../../../enums/drivers/driver-degree.enum";
+import { DriverEndorsement } from "../../../../enums/users/driver-endorsement.enum";
+import { EducationLevel } from "../../../../enums/users/education-level.enum";
 import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-document-type.enum";
 import { JobEquipmentType } from "../../../../enums/jobs/job-equipment-type.enum";
+import { LicenseRestrictions } from "../../../../enums/applicants/applicant-license-restrictions-type.enum";
+
 
 import ApplicantApi from "../../../api/applicant";
 
@@ -49,12 +50,7 @@ export default function Applicant() {
                 delete values.jobs;
 
             try {
-                if (values.id) {
-                    values = await api.update(values.id, values);
-                }
-                else {
-                    values = await api.create(values);
-                }
+                values = await api.me.update(values);
 
                 toast.success(t("successfully_saved_information"));
 
@@ -67,7 +63,7 @@ export default function Applicant() {
     });
 
     useEffect(async () => {
-        const applicant = await api.getByUserId();
+        const applicant = await api.me.get();
 
         form.setValues({
             ...form.values,
@@ -86,7 +82,7 @@ export default function Applicant() {
                 </Col>
                 <Col xs="3">
                     <div style={{ float: "right" }}>
-                        <Button type="submit">{t("SAVE")}</Button>
+                        <Button variant="primary" type="submit">{t("SAVE")}</Button>
                     </div>
                 </Col>
             </Row>
@@ -96,7 +92,7 @@ export default function Applicant() {
                         <Row>
                             <Col md="4" className="px-2">
                                 <BaseInput
-                                    className="col-12"
+                                    className="col-12 p-1 "
                                     label="FIRST_NAME"
                                     required
                                     readOnly
@@ -105,7 +101,7 @@ export default function Applicant() {
                                     formik={form}
                                 />
                                 <BaseInput
-                                    className="col-12"
+                                    className="col-12 p-1 "
                                     label="LAST_NAME"
                                     required
                                     readOnly
@@ -114,7 +110,7 @@ export default function Applicant() {
                                     formik={form}
                                 />
                                 <BaseInput
-                                    className="col-12"
+                                    className="col-12 p-1 "
                                     label="BIRTHDATE"
                                     type="date"
                                     name="birthdate"
@@ -123,7 +119,7 @@ export default function Applicant() {
                                 />
 
                                 <BaseInputPhone
-                                    className="col-12"
+                                    className="col-12 p-1 "
                                     label="PHONE"
                                     type="tel"
                                     name="phone"
@@ -137,7 +133,7 @@ export default function Applicant() {
                                     onKeyDown={(event) => { form.setFieldValue('phone', event.target.value) }}
                                 />
                                 {/* <BaseInput
-                                    className="col-12"
+                                    className="col-12 p-1 "
                                     label="PHONE"
                                     type="tel"
                                     name="phone"
@@ -146,7 +142,7 @@ export default function Applicant() {
                                     formik={form}
                                 /> */}
                                 <BaseInput
-                                    className="col-12"
+                                    className="col-12 p-1 "
                                     label="EMAIL"
                                     required
                                     readOnly
@@ -156,14 +152,14 @@ export default function Applicant() {
                                     formik={form}
                                 />
                                 <BaseInput
-                                    className="col-12"
+                                    className="col-12 p-1 "
                                     label="STREET"
                                     name="street"
                                     placeholder="STREET"
                                     formik={form}
                                 />
                                 <BaseInput
-                                    className="col-12"
+                                    className="col-12 p-1 "
                                     label="CITY"
                                     name="city"
                                     placeholder="CITY"
@@ -171,14 +167,14 @@ export default function Applicant() {
                                 />
                                 <Row>
                                     <StateSelect
-                                        className="col-6"
+                                        className="col-12 pl-3 pr-3 p-1"
                                         label="STATE"
                                         name="state"
                                         placeholder="STATE"
                                         formik={form}
                                     />
                                     <BaseInput
-                                        className="col-6"
+                                        className="col-12 pl-3 pr-3 p-1"
                                         label="ZIP_CODE"
                                         name="zip_code"
                                         placeholder="ZIP_CODE"
@@ -188,14 +184,14 @@ export default function Applicant() {
                             </Col>
                             <Col md="4" className="px-2">
                                 <BaseInput
-                                    className="col-12"
+                                    className="col-12 p-1 "
                                     label="driver_license_number"
                                     name="license_number"
                                     placeholder="driver_license_number"
                                     formik={form}
                                 />
                                 <BaseInput
-                                    className="col-12"
+                                    className="col-12 p-1 "
                                     label="expiration_date"
                                     name="license_expiry"
                                     type="date"
@@ -204,38 +200,47 @@ export default function Applicant() {
                                 />
                                 <Row>
                                     <StateSelect
-                                        className="col-6"
+                                        className="col-6 pl-3"
                                         label="state_issued"
                                         name="license_state"
                                         placeholder="state_issued"
                                         formik={form}
                                     />
                                     <BaseSelect
-                                        className="col-6"
-                                        label="cdl_class"
+                                        className="col-6 pl-3"
+                                        label="CDL_CLASS"
                                         name="license_type"
-                                        placeholder="cdl_class"
+                                        placeholder
                                         labelPrefix="DriverLicenseType"
                                         enumType={DriverLicenseType}
                                         formik={form}
                                     />
                                 </Row>
                                 <BaseInput
-                                    className="col-12"
+                                    className="col-12 p-1 "
                                     label="years_cdl_experience"
                                     name="years_cdl_experience"
                                     type="number"
                                     placeholder="years_cdl_experience"
                                     formik={form}
                                 />
+                                    <BaseCheckList
+                                    className="col-12 p-1 "
+                                    label="License_Restrictions"
+                                    name="license_restrictions"
+                                    labelPrefix="LicenseRestrictions"
+                                    enumType={LicenseRestrictions}
+                                    formik={form}
+                                    cols="2"
+                                />
                                 <BaseCheck
-                                    className="col-12 mt-2"
+                                    className="col-12 p-1  mt-2"
                                     label="OWNER_OPERATOR"
                                     name="is_owner_operator"
                                     formik={form}
                                 />
                                 <BaseCheck
-                                    className="col-12 mt-2"
+                                    className="col-12 p-1  mt-2"
                                     label="AUTHORIZED_TO_WORK_IN_THE_US"
                                     name="authorized_to_work_in_us"
                                     formik={form}
@@ -243,7 +248,7 @@ export default function Applicant() {
                             </Col>
                             <Col md="4" className="px-2">
                                 <BaseCheckList
-                                    className="col-12"
+                                    className="col-12 p-1 "
                                     label="TRANSMISSION_EXPERIENCE"
                                     name="transmission_type"
                                     labelPrefix="VehicleTransmissionType"
@@ -252,7 +257,7 @@ export default function Applicant() {
                                     cols="2"
                                 />
                                 <BaseCheckList
-                                    className="col-12"
+                                    className="col-12 p-1 "
                                     label="ENDORSEMENTS"
                                     name="endorsements"
                                     labelPrefix="DriverEndorsement"
@@ -261,18 +266,18 @@ export default function Applicant() {
                                     cols="2"
                                 />
                                 <BaseSelect
-                                    className="col-12"
+                                    className="col-12 p-1 "
                                     label="HIGHEST_DEGREE"
                                     name="highest_degree"
                                     placeholder="HIGHEST_DEGREE"
                                     formik={form}
-                                    labelPrefix="DriverDegree"
-                                    enumType={DriverDegree}
+                                    labelPrefix="EducationLevel"
+                                    enumType={EducationLevel}
                                 />
                                 <Col xs="12" className='mt-2'>
                                     <ViewCard title="EMERGENCY_CONTACT">
                                         <BaseInput
-                                            className="col-12"
+                                            className="col-12 p-1 "
                                             name={`emergency_contact_name`}
                                             label="NAME"
                                             placeholder="FULL_NAME"
@@ -281,7 +286,7 @@ export default function Applicant() {
 
 
                                         <BaseInputPhone
-                                            className="col-12"
+                                            className="col-12 p-1 "
                                             name={`emergency_contact_number`}
                                             label="PHONE"
                                             type="tel"
@@ -294,7 +299,7 @@ export default function Applicant() {
                                             onKeyDown={(event) => { form.setFieldValue('emergency_contact_number', event.target.value) }}
                                         />
                                         {/* <BaseInput
-                                            className="col-12"
+                                            className="col-12 p-1 "
                                             name={`emergency_contact_number`}
                                             label="PHONE"
                                             type="tel"
@@ -302,7 +307,7 @@ export default function Applicant() {
                                             formik={form}
                                         /> */}
                                         <BaseInput
-                                            className="col-12"
+                                            className="col-12 p-1 "
                                             name={`emergency_contact_relationship`}
                                             label="RELATIONSHIP"
                                             placeholder="RELATIONSHIP"
@@ -314,8 +319,8 @@ export default function Applicant() {
                             </Col>
                         </Row>
                         <Row>
-                            <Col md="6">
-                                <Col xs="12">
+                            <Col md="6" className="p-0 mt-2">
+                                <Col xs="12" className="p-2">
                                     <ViewCard
                                         title="equipment_experience"
                                         actions={<Button size='sm' onClick={() => form.setValues({
@@ -512,7 +517,7 @@ export default function Applicant() {
                                     <AccordionDetails>
                                         <Row>
                                             <BaseInput
-                                                className="col-12"
+                                                className="col-12 p-1 "
                                                 name={`employers[${i}].name`}
                                                 label="NAME"
                                                 required
@@ -520,49 +525,49 @@ export default function Applicant() {
                                                 formik={form}
                                             />
                                             <BaseInput
-                                                className="col-6"
+                                                className="col-6 p-1"
                                                 name={`employers[${i}].start_at`}
                                                 label="DATES_EMPLOYED"
                                                 type="date"
                                                 formik={form}
                                             />
                                             <BaseInput
-                                                className="col-6"
+                                                className="col-6 p-1"
                                                 name={`employers[${i}].end_at`}
                                                 label="THROUGH_OPTIONAL"
                                                 type="date"
                                                 formik={form}
                                             />
                                             <BaseInput
-                                                className="col-12"
+                                                className="col-12 p-1 "
                                                 name={`employers[${i}].title`}
                                                 label="TITLE"
                                                 placeholder="TITLE"
                                                 formik={form}
                                             />
                                             <BaseInput
-                                                className="col-12"
+                                                className="col-12 p-1 "
                                                 name={`employers[${i}].street`}
                                                 label="STREET"
                                                 placeholder="STREET"
                                                 formik={form}
                                             />
                                             <BaseInput
-                                                className="col-12"
+                                                className="col-12 p-1 "
                                                 name={`employers[${i}].city`}
                                                 label="CITY"
                                                 placeholder="CITY"
                                                 formik={form}
                                             />
                                             <StateSelect
-                                                className="col-6"
+                                                className="col-6 p-1"
                                                 name={`employers[${i}].state`}
                                                 label="STATE"
                                                 placeholder="STATE"
                                                 formik={form}
                                             />
                                             <BaseInput
-                                                className="col-6"
+                                                className="col-6 p-1"
                                                 name={`employers[${i}].zip_code`}
                                                 label="ZIP_CODE"
                                                 placeholder="ZIP_CODE"
@@ -570,7 +575,7 @@ export default function Applicant() {
                                             />
 
                                             <BaseInputPhone
-                                                className="col-12"
+                                                className="col-12 p-1 "
                                                 name={`employers[${i}].phone`}
                                                 label="PHONE"
                                                 type="tel"
@@ -582,7 +587,7 @@ export default function Applicant() {
                                                 onKeyDown={(event) => { form.setFieldValue('`employers[${i}].phone`', event.target.value) }}
                                             />
                                             {/* <BaseInput
-                                                className="col-12"
+                                                className="col-12 p-1 "
                                                 name={`employers[${i}].phone`}
                                                 label="PHONE"
                                                 type="tel"
@@ -590,19 +595,19 @@ export default function Applicant() {
                                                 formik={form}
                                             /> */}
                                             <BaseCheck
-                                                className="col-12 mt-2"
+                                                className="col-12 p-1  mt-2"
                                                 name={`employers[${i}].can_contact`}
                                                 label="MAY_CONTACT_COMPANY"
                                                 formik={form}
                                             />
                                             <BaseCheck
-                                                className="col-12 mt-2"
+                                                className="col-12 p-1  mt-2"
                                                 name={`employers[${i}].is_subject_to_fmcsrs`}
                                                 label="SUBJECT_TO_FMCSRS"
                                                 formik={form}
                                             />
                                             <BaseCheck
-                                                className="col-12 mt-2"
+                                                className="col-12 p-1  mt-2"
                                                 name={`employers[${i}].is_subject_to_drug_tests`}
                                                 label="JOB_DESIGNATED_AS_SATEFY_SENSITIVE"
                                                 formik={form}
@@ -619,13 +624,13 @@ export default function Applicant() {
                         <Row>
                             <Col md="6">
                                 <BaseCheck
-                                    className="col-12 mt-2"
+                                    className="col-12 p-1  mt-2"
                                     label="CAN_PASS_DRUG_TEST"
                                     name="can_pass_drug_test"
                                     formik={form}
                                 />
                                 <BaseCheck
-                                    className="col-12 mt-2"
+                                    className="col-12 p-1  mt-2"
                                     label="HAS_DUIS"
                                     name="has_past_dui"
                                     formik={form}
@@ -685,13 +690,13 @@ export default function Applicant() {
                                     </Col>
                                 }
                                 <BaseTextArea
-                                    className="col-12 mt-2"
+                                    className="col-12 p-1  mt-2"
                                     label="criminal_history_last_3_years"
                                     name="criminal_history"
                                     formik={form}
                                 />
                                 <BaseInput
-                                    className="col-12 mt-2"
+                                    className="col-12 p-1  mt-2"
                                     label="accidents_last_5_years"
                                     name="accident_count"
                                     type="int"
@@ -701,7 +706,7 @@ export default function Applicant() {
                                 {
                                     form.values.accident_count > 0 &&
                                     <BaseTextArea
-                                        className="col-12 mt-2"
+                                        className="col-12 p-1  mt-2"
                                         label="accident_details"
                                         name="accident_details"
                                         formik={form}
@@ -711,7 +716,7 @@ export default function Applicant() {
                             <Col md="6">
                                 <Row>
                                     <BaseCheck
-                                        className="col-12 mt-2"
+                                        className="col-12 p-1  mt-2"
                                         label="has_had_license_revoked"
                                         name="license_revoked"
                                         formik={form}
@@ -719,14 +724,14 @@ export default function Applicant() {
                                     {
                                         form.values.license_revoked &&
                                         <BaseTextArea
-                                            className="col-12 mt-2"
+                                            className="col-12 p-1  mt-2"
                                             label="details"
                                             name="license_revoked_details"
                                             formik={form}
                                         />
                                     }
                                     <BaseCheck
-                                        className="col-12 mt-2"
+                                        className="col-12 p-1  mt-2"
                                         label="has_had_psp_violations"
                                         name="psp_violations"
                                         formik={form}
@@ -734,14 +739,14 @@ export default function Applicant() {
                                     {
                                         form.values.psp_violations &&
                                         <BaseTextArea
-                                            className="col-12 mt-2"
+                                            className="col-12 p-1  mt-2"
                                             label="details"
                                             name="violations_details"
                                             formik={form}
                                         />
                                     }
                                     <BaseCheck
-                                        className="col-12 mt-2"
+                                        className="col-12 p-1  mt-2"
                                         label="has_had_tickets_last_5_years"
                                         name="tickets"
                                         formik={form}
@@ -749,14 +754,14 @@ export default function Applicant() {
                                     {
                                         form.values.tickets &&
                                         <BaseTextArea
-                                            className="col-12 mt-2"
+                                            className="col-12 p-1  mt-2"
                                             label="details"
                                             name="tickets_details"
                                             formik={form}
                                         />
                                     }
                                     <BaseCheck
-                                        className="col-12 mt-2"
+                                        className="col-12 p-1  mt-2"
                                         label="has_had_positive_drug_test"
                                         name="positive_drug_test"
                                         formik={form}
@@ -764,7 +769,7 @@ export default function Applicant() {
                                     {
                                         form.values.positive_drug_test &&
                                         <BaseTextArea
-                                            className="col-12 mt-2"
+                                            className="col-12 p-1  mt-2"
                                             label="details"
                                             name="positive_drug_test_details"
                                             formik={form}

@@ -1,6 +1,4 @@
 import { DocumentEntity } from "../../models/documents/document.entity";
-import { DriverEntity } from "../../models/driver/Driver.entity";
-import { DriverPreferenceEntity } from "../../models/driver/DriverPreference.entity";
 import BaseApi from "./_baseApi";
 
 export default class DocumentApi extends BaseApi {
@@ -12,6 +10,12 @@ export default class DocumentApi extends BaseApi {
 
     async getCompanyPhoto(id: number): Promise<DocumentEntity> {
         const { data } = await this.get(`documents/company/${id}/photo`);
+
+        return data;
+    }
+
+    async getVehiclePhoto(vehicleId: number): Promise<DocumentEntity> {
+        const { data } = await this.get(`documents/vehicle/${vehicleId}`);
 
         return data;
     }

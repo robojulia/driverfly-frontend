@@ -2,6 +2,9 @@ import timeSince from "../../utils/timeSince"
 import Link from "next/link"
 import { useTranslation } from "../../hooks/useTranslation"
 import CompanyPhoto from "../jobs/company-photo";
+import { GeoAltFill, CurrencyDollar, Star } from 'react-bootstrap-icons';
+import { buildAddress } from "../../utils/common";
+
 
 export default function RelatedJobs({ jobs }) {
     const { t } = useTranslation();
@@ -40,18 +43,16 @@ export default function RelatedJobs({ jobs }) {
                                                 {
                                                     job.location &&
                                                     <p className="pr-4">
-                                                        <i className="fa fa-map-marker mr-2" aria-hidden="true"></i>
-                                                        <>
-                                                            {job.location.street || t('no_street')}, {job.location.city || t('no_city')}, {job.location.state || t('no_state')}, {job.location.zip_code || t('no_zip')}
-                                                        </>
+                                                        <GeoAltFill className="mr-1" />
+                                                        {buildAddress(job.location)}
                                                     </p>
                                                 }
                                             </div>
-                                            <p><i className="fa fa-usd mr-1" aria-hidden="true"></i>{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} {t('per week')}</p>
+                                            <p>< CurrencyDollar className="mr-1" />{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} {t('per week')}</p>
                                         </div>
                                         <div className="job-metas">
                                             <div className="job-location">
-                                                <i className="fa fa-star-o" aria-hidden="true"></i><strong>
+                                                < Star className="mr-1" /><strong>
                                                     {job.description_short}
                                                 </strong>
                                             </div>
@@ -59,7 +60,7 @@ export default function RelatedJobs({ jobs }) {
 
                                     </div>
                                     <Link href={`/jobs/${job.id}`}>
-                                        <button type="button" className="btn btn-primary btn-sm">{t('browse_job')}</button>
+                                        <button type="button" className="theme-primary-btn-outline btn-sm">{t('browse_job')}</button>
                                     </Link>
 
                                 </div>
