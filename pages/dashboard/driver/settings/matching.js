@@ -145,95 +145,94 @@ export default function Matching() {
 
 
     return (<>
-    <PageLayout title="JOB_MATCHING">
-        <form onSubmit={form.handleSubmit}>
-            <Row>
-                <BaseCheckList
-                    className="col-12 mt-3"
-                    label="preferred_geography"
-                    name="geography.value"
-                    formik={form}
-                    labelPrefix="JobGeography"
-                    enumType={JobGeography}
+        <PageLayout title="JOB_MATCHING">
+            <form onSubmit={form.handleSubmit}>
+                <Row>
+                    <BaseCheckList
+                        className="col-12 mt-3"
+                        label="preferred_geography"
+                        name="geography.value"
+                        formik={form}
+                        labelPrefix="JobGeography"
+                        enumType={JobGeography}
                     />
-                <BaseCheckList
-                    className="col-12 mt-3"
-                    label="preferred_schedule"
-                    name="schedule.value"
-                    cols={3}
-                    formik={form}
-                    labelPrefix="JobSchedule"
-                    options={Object.keys(JobSchedule).filter(v => v != JobSchedule.OTHER).map(key => ({
-                        value: key,
-                        label: JobSchedule[key]
-                    }))}
+                    <BaseCheckList
+                        className="col-12 mt-3"
+                        label="preferred_schedule"
+                        name="schedule.value"
+                        cols={3}
+                        formik={form}
+                        labelPrefix="JobSchedule"
+                        options={Object.keys(JobSchedule).filter(v => v != JobSchedule.OTHER).map(key => ({
+                            value: key,
+                            label: JobSchedule[key]
+                        }))}
                     />
-                <BaseCheckList
-                    className="col-12 mt-3"
-                    label="PREFERRED_EMPLOYMENT_TYPE"
-                    name="employment_type.value"
-                    cols={3}
-                    formik={form}
-                    labelPrefix="JobEmploymentType"
-                    enumType={JobEmploymentType}
+                    <BaseCheckList
+                        className="col-12 mt-3"
+                        label="PREFERRED_EMPLOYMENT_TYPE"
+                        name="employment_type.value"
+                        cols={3}
+                        formik={form}
+                        labelPrefix="JobEmploymentType"
+                        enumType={JobEmploymentType}
                     />
-                <BaseCheckList
-                    className="col-12 mt-3"
-                    label="team_drivers"
-                    name="team_drivers.value"
-                    cols={3}
-                    formik={form}
-                    labelPrefix="JobTeamDriver"
-                    enumType={JobTeamDriver}
+                    <BaseCheckList
+                        className="col-12 mt-3"
+                        label="team_drivers"
+                        name="team_drivers.value"
+                        cols={3}
+                        formik={form}
+                        labelPrefix="JobTeamDriver"
+                        enumType={JobTeamDriver}
                     />
-                <BaseInput
-                    className="col-12 mt-3"
-                    label="preferred_min_pay_per_week"
-                    name="min_pay.value"
-                    type="number"
-                    min="0"
-                    formik={form}
-                    onKeyDown={preventNegative}
+                    <BaseInput
+                        className="col-12 mt-3"
+                        label="preferred_min_pay_per_week"
+                        name="min_pay.value"
+                        type="number"
+                        min="0"
+                        formik={form}
+                        onKeyDown={preventNegative}
                     />
-                <BaseCheckList
-                    className="col-12 mt-3"
-                    label="preferred_pay_method"
-                    name="pay_method.value"
-                    cols={3}
-                    formik={form}
-                    labelPrefix="JobPayMethod"
-                    enumType={JobPayMethod}
+                    <BaseCheckList
+                        className="col-12 mt-3"
+                        label="preferred_pay_method"
+                        name="pay_method.value"
+                        cols={3}
+                        formik={form}
+                        labelPrefix="JobPayMethod"
+                        enumType={JobPayMethod}
                     />
-                <BaseCheckList
-                    className="col-12 mt-3"
-                    label="preferred_benefits"
-                    name="benefits.value"
-                    cols={3}
-                    formik={form}
-                    labelPrefix="JobBenefits"
-                    options={Object.keys(JobBenefits).filter(v => v != JobBenefits.OTHER).map(key => ({
-                        value: key,
-                        label: JobBenefits[key]
-                    }))}
+                    <BaseCheckList
+                        className="col-12 mt-3"
+                        label="preferred_benefits"
+                        name="benefits.value"
+                        cols={3}
+                        formik={form}
+                        labelPrefix="JobBenefits"
+                        options={Object.keys(JobBenefits).filter(v => v != JobBenefits.OTHER).map(key => ({
+                            value: key,
+                            label: JobBenefits[key]
+                        }))}
                     />
-            </Row>
-            <Row className="mt-2">
-                <Col className="text-end">
-                    <Button type="submit" variant="primary" disabled={form.isSubmitting || !form.isValid || !form.dirty}>
-                        {t("UPDATE")}
-                    </Button>
-                </Col>
-            </Row>
-        </form>
-    </PageLayout>
+                </Row>
+                <Row className="mt-2">
+                    <Col className="text-end">
+                        <Button type="submit" variant="primary" disabled={form.isSubmitting || !form.isValid || !form.dirty}>
+                            {t("UPDATE")}
+                        </Button>
+                    </Col>
+                </Row>
+            </form>
+        </PageLayout>
     </>);
 }
 
 Matching.getLayout = function getLayout(page) {
     return (
-      <FullLayout>
-        {page}
-      </FullLayout>
+        <FullLayout>
+            {page}
+        </FullLayout>
     )
-  }
-  
+}
