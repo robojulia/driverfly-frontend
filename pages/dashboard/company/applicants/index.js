@@ -88,6 +88,7 @@ export default function Applicants(props) {
         name: `${applicant.first_name} ${applicant.last_name}`.trim(),
         phone: applicant.phone,
         email: applicant.email,
+        assignedUser: applicant.assignedUser?.name || t("NONE")
     });
 
     /**
@@ -365,6 +366,7 @@ function renderApplicantView(props) {
                 <th>{t("NAME")}</th>
                 <th>{t("PHONE")}</th>
                 <th>{t("EMAIL")}</th>
+                <th>{t("ASSIGNED_TO")}</th>
                 <th>{/* ACTIONS */}</th>
             </tr>
         </thead>
@@ -383,6 +385,7 @@ function renderApplicantView(props) {
                     <td>{applicant.name}</td>
                     <td>{applicant.phone}</td>
                     <td>{applicant.email}</td>
+                    <td>{applicant.assignedUser}</td>
                     <td>
                         <button className='btn' name={applicant.id} onClick={onViewClick}>
                             <EyeFill />
@@ -486,6 +489,7 @@ function renderApplicantView(props) {
                                 <th className='text-center'>{t("STATUS")}</th>
                                 <th className='text-center'>{t("MEETS_BASIC_QUALIFICATIONS")}</th>
                                 <th>{t("REASONS_IF_NO")}</th>
+                                <th>{t("ASSIGNED_TO")}</th>
                                 <th colSpan={2}>{/** Change status */}</th>
                             </tr>
                             {job.applicants?.map((applicant) => (
@@ -499,6 +503,7 @@ function renderApplicantView(props) {
                                 <td>
                                     {applicant.qualification_fail_reason.join("<br />")}
                                 </td>
+                                <td>{applicant.assignedUser}</td>
                                 <td>
                                     <select className={`form-select`} onChange={e => changeStatus(e, applicant.id, job.id)} value="">
                                         <option>{t("CHANGE_STATUS")}</option>
