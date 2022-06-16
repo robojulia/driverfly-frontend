@@ -47,7 +47,7 @@ export default function Range() {
 
     return (
         <>
-            <div className="card">
+            <div className="p-2">
                 <div className="card-header" id="headingTwo">
                     <h4 className="clearfix mb-0">
                         <a className="btn-3 btn-link" data-toggle="collapse"

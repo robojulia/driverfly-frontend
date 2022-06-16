@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css'
 
-import TrainingType from '../training-type/Training-Type'
-import LocationType from '../location-type/Location-Type'
-import PrivateEnrollment from '../private-enrollment/Private-Enrollment'
-import Range from "../school-location/Range"
+import TrainingType from '../school-filters/Training-Type'
+import LocationType from '../school-filters/Location-Type'
+import PrivateEnrollment from '../school-filters/Private-Enrollment'
+import Range from "../school-filters/Range"
+import schoolContext from '../../context/schoolContext'
 
 export default function FilterSchools() {
+
+  const { state, method } = useContext(schoolContext)
 
   return (
     <>
@@ -16,10 +19,10 @@ export default function FilterSchools() {
           <div className="bs-example">
             <div className="tab-content">
               <div className="accordion bg-transparent" id="accordionExample">
-                < Range />
-                < TrainingType />
-                < LocationType />
-                < PrivateEnrollment />
+                < Range state={state} method={method} />
+                < TrainingType state={state} method={method} />
+                < LocationType state={state} method={method} />
+                < PrivateEnrollment state={state} method={method} />
               </div>
             </div>
           </div>

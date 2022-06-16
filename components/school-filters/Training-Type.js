@@ -5,15 +5,15 @@ import schoolContext from "../../context/schoolContext"
 import { SchoolTrainingType } from "../../enums/schools/school-training-type.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 
-export default function TrainingType() {
+export default function TrainingType(props) {
 
-  const { state, method } = useContext(schoolContext)
+  const { state, method } = props
   const { handleChange } = method
 
   return (
 
     <>
-      <div className="card">
+      <div className="p-2">
         <div className="card-header" id="headingFour">
           <h4 className="clearfix mb-0">
             <a className="btn-3 btn-link" data-toggle="collapse"
@@ -27,9 +27,11 @@ export default function TrainingType() {
           <div className="card-body">
             <div className="App">
               <EnumFilterByKeyValue
+                {...props}
                 translate={true}
                 withAll={true}
                 enumArray={SchoolTrainingType}
+                labelPrefix="SchoolTrainingType"
                 name="training_type"
                 handleChange={handleChange}
               />

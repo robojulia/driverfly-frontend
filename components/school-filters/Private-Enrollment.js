@@ -1,24 +1,23 @@
 import { updateQueryStringParameter } from "../../logics/utils"
 import { useRouter } from "next/router"
 import { useContext } from "react"
-import schoolContext from "../../context/schoolContext"
-import { SchoolLocationType } from "../../enums/schools/school-location-type.enum"
+import { SchoolPrivateEnrollment } from "../../enums/schools/school-private-enrollment.enum"
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 
-export default function LocationType() {
+export default function PrivateEnrollment(props) {
 
-  const { state, method } = useContext(schoolContext)
+  const { state, method } = props
   const { handleChange } = method
 
   return (
 
     <>
-      <div className="card">
+      <div className="p-2">
         <div className="card-header" id="headingFour">
           <h4 className="clearfix mb-0">
             <a className="btn-3 btn-link" data-toggle="collapse"
               data-target="#collapseFour" aria-expanded="true"
-              aria-controls="collapseFour">Location Type <i
+              aria-controls="collapseFour">Private Enrollment Only <i
                 className="fa fa-angle-down"></i></a>
           </h4>
         </div>
@@ -27,10 +26,12 @@ export default function LocationType() {
           <div className="card-body">
             <div className="App">
               <EnumFilterByKeyValue
+                {...props}
                 translate={true}
                 withAll={true}
-                enumArray={SchoolLocationType}
-                name="location_type"
+                enumArray={SchoolPrivateEnrollment}
+                labelPrefix="SchoolPrivateEnrollment"
+                name="private_enrollment"
                 handleChange={handleChange}
               />
             </div>
