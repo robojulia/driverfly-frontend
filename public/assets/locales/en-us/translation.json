@@ -700,6 +700,7 @@
     "EDIT": "Edit",
     "DELETE": "Delete",
     "PLEASE_CHECK_EMAIL": "Please check your email",
+    "VERIFYING_EMAIL_TOKEN": "Verifying Email Token",
     "ENTER_DETAILS_TO_RESET_YOUR_PASSWORD": "Enter your details to reset your password",
     "RESET_PASSWORD": "Reset Password",
     "FAILED_RESET_PASSWORD": "Failed to Reset Password",
