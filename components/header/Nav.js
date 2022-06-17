@@ -40,7 +40,7 @@ export default function MyNav() {
                                 </Link>
                             </NavDropdown.Item>
                             <NavDropdown.Item >
-                                <Link href="/">
+                                <Link href="/find-schools">
                                    <a className="dropdown-item" href="/">{t("GET_YOUR_CDL")} </a>
                                 </Link>
                             </NavDropdown.Item>
@@ -93,7 +93,7 @@ export default function MyNav() {
                     </ul>
                 </Navbar.Collapse>
             </Navbar>
-            
+
         </>
     )
 }

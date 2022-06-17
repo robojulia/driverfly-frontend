@@ -9,6 +9,7 @@ import { UserEntity } from "../../../models/user/user.entity";
 import UserApi from "../../../pages/api/user";
 import * as toast from "../../../utils/toast";
 
+
 /**
  * 
  * @param {object} props 
@@ -45,7 +46,7 @@ export function UserForm(props) {
                 if (onSaveComplete) onSaveComplete(user);
             }
             catch (e) {
-                console.error("Unable to save entity", e);
+                console.error("Unable to save entity", e.response);
                 toast.formFailed(t, !!id ? "update" : "create", "USER");
                 if (onSaveError) onSaveError(e);
             }
@@ -69,14 +70,14 @@ export function UserForm(props) {
             };
             form.setValues(entity);
         }
-    }, [ id ]);
+    }, [id]);
 
     return (
         <EntityForm
             className={className}
             onSubmit={form.handleSubmit}
             id={id}
-            >
+        >
             <Row className="mt-2">
                 <BaseInput
                     className="col-6 mt-1"
@@ -116,14 +117,14 @@ export function UserForm(props) {
                     formik={form}
                     readOnly={!!id}
                 />
-                {!id && 
+                {!id &&
                     <BaseInput
-                    className="col-12 mt-1"
-                    label="PASSWORD"
-                    required
-                    type="password"
-                    name="password"
-                    formik={form}
+                        className="col-12 mt-1"
+                        label="PASSWORD"
+                        required
+                        type="password"
+                        name="password"
+                        formik={form}
                     />
                 }
             </Row>
