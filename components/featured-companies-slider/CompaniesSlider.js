@@ -6,19 +6,12 @@ import { useEffect, useState } from 'react'
 
 
 export default function CompaniesSlider() {
-    const api = new CompanyApi();
-    const [ companies, setCompanies] = useState([]);
+    const companyApi = new CompanyApi();
+    const [companies, setCompanies] = useState([]);
 
     const fetchCompanies = () => {
-
-        const headers = {
-        };
-
-       api.employerList()
-            .then(data => {
-                console.log("handle success", data)
-                setCompanies(data)
-            })
+        companyApi.employer.list({ take: 3 })
+            .then(data => setCompanies(data))
             .catch(function (error) {
                 console.log("handle error success", error.response)
             })
@@ -63,9 +56,9 @@ export default function CompaniesSlider() {
                 <div style={{ margin: " 10px" }}><div className="card  featured-companies">
                     <img style={{ height: '200px' }} src="img/CAMBRIDGE-TRANSPORT-truck-1.jpeg" className="card-img-top" alt="..." />
                     <div className="card-body text-center">
-                        <span  className='my-3 card-title'>Cambridge Transport </span>
+                        <span className='my-3 card-title'>Cambridge Transport </span>
                         <i className="bi bi-star-fill" style={{ color: "Yellow" }}></i>
-                        <br/>
+                        <br />
                         <a href="#" className="btn btn-sm btn-primary my-3">1 Open Job</a>
                     </div>
                 </div></div>
@@ -74,25 +67,25 @@ export default function CompaniesSlider() {
                     <div className="card-body text-center">
                         <span className='my-3 card-title'>Everett Madison Truck </span>
                         <i className="bi bi-star-fill" style={{ color: "Yellow" }}></i>
-                        <br/>
+                        <br />
                         <a href="#" className="btn btn-sm btn-primary my-3">1 Open Job</a>
                     </div>
                 </div></div>
                 <div style={{ margin: "10px" }}><div className="card  featured-companies">
                     <img style={{ height: '200px' }} src="img/Froggy-Logistics.jpg" className="card-img-top" alt="..." />
                     <div className="card-body text-center">
-                        <span  className='my-3 card-title'>Froggy Logistics </span>
+                        <span className='my-3 card-title'>Froggy Logistics </span>
                         <i className="bi bi-star-fill" style={{ color: "Yellow" }}></i>
-                        <br/>
+                        <br />
                         <a href="#" className="btn btn-sm btn-primary my-3">1 Open Job</a>
                     </div>
                 </div></div>
                 <div style={{ margin: " 10px" }} ><div className="card  featured-companies">
                     <img style={{ height: '200px' }} src="img/CTR-logo-cartoon (1).png" className="card-img-top" alt="..." />
                     <div className="card-body text-center">
-                        <span  className='my-3 card-title'> Customer Truck Recruiting </span>
+                        <span className='my-3 card-title'> Customer Truck Recruiting </span>
                         <i className="bi bi-star-fill" style={{ color: "Yellow" }}></i>
-                        <br/>
+                        <br />
                         <a href="#" className="btn btn-sm btn-primary my-3">1 Open Job</a>
                     </div>
                 </div></div>

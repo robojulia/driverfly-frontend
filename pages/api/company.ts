@@ -4,7 +4,6 @@ import { JobEntity } from "../../models/job/job.entity";
 
 export default class CompanyApi extends BaseApi {
     baseUrl: string = "companies"
-    employerBaseUrl: string = "employer"
     async list(): Promise<CompanyEntity[]> {
         const { data } = await this.get(this.baseUrl + "/list");
 
@@ -24,14 +23,18 @@ export default class CompanyApi extends BaseApi {
         await this.delete(this.baseUrl);
     }
 
-    async getEmployerById(id?: number) {
-        const { data } = await this.get(`${this.employerBaseUrl}/${id}`);
+    employer = {
+        baseUrl: "employer",
+        getById: async (id: number): Promise<CompanyEntity> => {
+            const { data } = await this.get(`${this.employer.baseUrl}/${id}`);
 
-        return data;
+            return data;
+        },
+        list: async (params): Promise<CompanyEntity> => {
+            const { data } = await this.get(`${this.employer.baseUrl}`, { params });
+
+            return data;
+        },
     }
-    async employerList(): Promise<CompanyEntity[]> {
-        const { data } = await this.get(this.employerBaseUrl + "/list");
-        
-        return data;
-    }
+
 }

@@ -109,7 +109,8 @@ export async function getServerSideProps(context) {
     if (!!!id)
       return { notFound: true }
 
-    const data = id ? await new CompanyApi().getEmployerById(id) : []
+    const companyApi = new CompanyApi();
+    const data = id ? await companyApi.employer.getById(id) : []
     if (!!!data)
       return { notFound: true }
 
