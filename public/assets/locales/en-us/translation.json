@@ -700,6 +700,7 @@
     "EDIT": "Edit",
     "DELETE": "Delete",
     "PLEASE_CHECK_EMAIL": "Please check your email",
+    "VERIFYING_EMAIL_TOKEN": "Verifying Email Token",
     "ENTER_DETAILS_TO_RESET_YOUR_PASSWORD": "Enter your details to reset your password",
     "RESET_PASSWORD": "Reset Password",
     "FAILED_RESET_PASSWORD": "Failed to Reset Password",
@@ -926,5 +927,8 @@
     "ONLY_DISPLAY_ERRORS_EXPLANATION": "Turn on to only show drivers who cannot be imported due to missing or duplicate fields.",
     "DRIVERS": "Drivers",
     "NOT_ACTIVATED": "Not activated",
-    "RESTORE": "Restore"
+    "RESTORE": "Restore",
+    "ASSIGN_TO_ME": "Assign To Me",
+    "UNASSIGN": "Unassign",
+    "ASSIGNED_TO": "Assigned To"
 }

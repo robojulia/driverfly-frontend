@@ -8,22 +8,23 @@ import Layout from "../components/layouts"
 import Forgotpassword from '../public/css/Forgot.module.css'
 import SignupAPI from "./api/signup"
 import { ToastContainer, toast } from 'react-toastify'
+import { useTranslation } from "../hooks/useTranslation"
 
 export default function VerifyEmailToken(props) {
   console.log("props", props);
+  const { t } = useTranslation()
 
   return (
     <>
       <div className="top-links-sec">
         <div className="container">
           <div className="top-links-inner d-flex align-items-center justify-content-between">
-            <h2>Verifying Email Token</h2>
-            {/* < Breadcrumbs /> */}
+            <h2>{t('VERIFYING_EMAIL_TOKEN')}</h2>
           </div>
         </div>
       </div>
       <div className={Forgotpassword.formsec}>
-        <div className="container">
+        <div className="container py-5 my-5">
           <div className='row'>
             <div className='col-lg-2'></div>
             <div className='col-lg-8'>
@@ -47,39 +48,19 @@ export async function getServerSideProps({ query }) {
   const { emailVerifyToken } = query
 
   const signupAPI = new SignupAPI();
-  let response = {}
+  let response = {
+    verified: false,
+    message: "Something went wrong"
+  }
 
   await signupAPI.verifyEmailToken({ emailVerifyToken })
     .then(res => {
-      // console.log("verifyEmailToken.status", res);
       if (res?.status == 200) {
-        response = {
-          res, // for testing
-          verified: true,
-          message: "Account activated Successfully! please proceed to login."
-        }
-      } else {
-        response = {
-          res, // for testing
-          verified: false,
-          message: "Something went wrong"
-        }
+        response.verified = true
+        response.message = "Account activated Successfully! please proceed to login."
       }
     }).catch(error => {
-      // console.log("verifyEmailToken.error.response", error.response.data);
-      if (error?.response?.status == 422 || error?.response?.data?.errors?.User) {
-        response = {
-          error, //for testing
-          verified: false,
-          message: `${error?.response?.data?.errors?.User || "Something went wrong"}`
-        }
-      } else {
-        response = {
-          error, //for testing
-          verified: false,
-          message: "Something went wrong"
-        }
-      }
+      response.message = (error?.response?.status == 422 || error?.response?.data?.errors?.User) ? `${error?.response?.data?.errors?.User}` : "Something went wrong"
     })
 
   return { props: { response } }

@@ -6,6 +6,6 @@ export class VerifyEmailTokenDto {
 
 export default class SignupAPI extends BaseApi {
     async verifyEmailToken(dto: VerifyEmailTokenDto) {
-        return this.get(`email/verify/${dto.emailVerifyToken}`);
+        return this.get(`user/email/verify/${dto.emailVerifyToken}`);
     }
 }

@@ -20,6 +20,7 @@ export class ApplicantEntity {
   version?: number;
   user?: UserEntity;
   company?: CompanyEntity;
+  assignedUser?: UserEntity;
   type?: ApplicantType;
   first_name?: string;
   last_name?: string;
