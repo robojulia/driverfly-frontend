@@ -7,8 +7,7 @@ import BaseInputPhone from "../BaseInputPhone";
 import EntityForm from "../../layouts/EntityForm";
 import { UserEntity } from "../../../models/user/user.entity";
 import UserApi from "../../../pages/api/user";
-import * as Ctoast from "../../../utils/toast";
-import { toast } from 'react-toastify'
+import * as toast from "../../../utils/toast";
 
 
 /**
@@ -43,18 +42,12 @@ export function UserForm(props) {
                 else {
                     user = await api.create(dto);
                 }
-                Ctoast.formSuccess(t, !!id ? "update" : "create", "USER");
+                toast.formSuccess(t, !!id ? "update" : "create", "USER");
                 if (onSaveComplete) onSaveComplete(user);
             }
             catch (e) {
                 console.error("Unable to save entity", e.response);
-                if (e?.response?.data?.email == "EMAIL_ALREADY_EXISTS") {
-                    toast.error(t("EMAIL_ALREADY_EXISTS"));
-                }
-                else {
-                    Ctoast.formFailed(t, !!id ? "update" : "create", "USER");
-                }
-
+                toast.formFailed(t, !!id ? "update" : "create", "USER");
                 if (onSaveError) onSaveError(e);
             }
         },
@@ -66,7 +59,7 @@ export function UserForm(props) {
 
             const entity = await api.findById(id);
             if (!entity) {
-                Ctoast.error(t("UNABLE_TO_FIND_{name}", { name: "USER" }, { translateProps: true }));
+                toast.error(t("UNABLE_TO_FIND_{name}", { name: "USER" }, { translateProps: true }));
                 if (onLoadError) onLoadError();
                 return;
             }
