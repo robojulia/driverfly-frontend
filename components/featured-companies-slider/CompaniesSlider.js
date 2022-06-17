@@ -53,16 +53,23 @@ export default function CompaniesSlider() {
                 autoPlaySpeed={1000}
                 keyBoardControl={true}
                 itemClass="carousel-item-padding-40-px">
-                <div style={{ margin: " 10px" }}><div className="card  featured-companies">
-                    <img style={{ height: '200px' }} src="img/CAMBRIDGE-TRANSPORT-truck-1.jpeg" className="card-img-top" alt="..." />
-                    <div className="card-body text-center">
-                        <span className='my-3 card-title'>Cambridge Transport </span>
-                        <i className="bi bi-star-fill" style={{ color: "Yellow" }}></i>
-                        <br />
-                        <a href="#" className="btn btn-sm btn-primary my-3">1 Open Job</a>
-                    </div>
-                </div></div>
-                <div style={{ margin: "10px" }}><div className="card  featured-companies">
+                {companies.length > 0 && companies.map(company => (
+                    <>
+                        <div style={{ margin: " 10px" }}>
+                            <div className="card  featured-companies">
+                                <img style={{ height: '200px' }} src="img/CAMBRIDGE-TRANSPORT-truck-1.jpeg" className="card-img-top" alt="..." />
+                                <div className="card-body text-center">
+                                    <span className='my-3 card-title'>{company.name}</span>
+                                    <i className="bi bi-star-fill" style={{ color: "Yellow" }}></i>
+                                    <br />
+                                    <a href="#" className="btn btn-sm btn-primary my-3">1 Open Job</a>
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                ))}
+
+                {/* <div style={{ margin: "10px" }}><div className="card  featured-companies">
                     <img style={{ height: '200px' }} src="img/Everett-Madison-Truck-1.jpg" className="card-img-top" alt="..." />
                     <div className="card-body text-center">
                         <span className='my-3 card-title'>Everett Madison Truck </span>
@@ -88,7 +95,7 @@ export default function CompaniesSlider() {
                         <br />
                         <a href="#" className="btn btn-sm btn-primary my-3">1 Open Job</a>
                     </div>
-                </div></div>
+                </div></div> */}
             </Carousel>
 
         </div>
