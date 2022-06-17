@@ -7,7 +7,9 @@ import BaseInputPhone from "../BaseInputPhone";
 import EntityForm from "../../layouts/EntityForm";
 import { UserEntity } from "../../../models/user/user.entity";
 import UserApi from "../../../pages/api/user";
-import * as toast from "../../../utils/toast";
+import * as Ctoast from "../../../utils/toast";
+import { toast } from 'react-toastify'
+
 
 /**
  * 
@@ -41,12 +43,18 @@ export function UserForm(props) {
                 else {
                     user = await api.create(dto);
                 }
-                toast.formSuccess(t, !!id ? "update" : "create", "USER");
+                Ctoast.formSuccess(t, !!id ? "update" : "create", "USER");
                 if (onSaveComplete) onSaveComplete(user);
             }
             catch (e) {
-                console.error("Unable to save entity", e);
-                toast.formFailed(t, !!id ? "update" : "create", "USER");
+                console.error("Unable to save entity", e.response);
+                if (e?.response?.data?.email == "EMAIL_ALREADY_EXISTS") {
+                    toast.error(t("EMAIL_ALREADY_EXISTS"));
+                }
+                else {
+                    Ctoast.formFailed(t, !!id ? "update" : "create", "USER");
+                }
+
                 if (onSaveError) onSaveError(e);
             }
         },
@@ -58,7 +66,7 @@ export function UserForm(props) {
 
             const entity = await api.findById(id);
             if (!entity) {
-                toast.error(t("UNABLE_TO_FIND_{name}", { name: "USER" }, { translateProps: true }));
+                Ctoast.error(t("UNABLE_TO_FIND_{name}", { name: "USER" }, { translateProps: true }));
                 if (onLoadError) onLoadError();
                 return;
             }
@@ -69,14 +77,14 @@ export function UserForm(props) {
             };
             form.setValues(entity);
         }
-    }, [ id ]);
+    }, [id]);
 
     return (
         <EntityForm
             className={className}
             onSubmit={form.handleSubmit}
             id={id}
-            >
+        >
             <Row className="mt-2">
                 <BaseInput
                     className="col-6 mt-1"
@@ -116,14 +124,14 @@ export function UserForm(props) {
                     formik={form}
                     readOnly={!!id}
                 />
-                {!id && 
+                {!id &&
                     <BaseInput
-                    className="col-12 mt-1"
-                    label="PASSWORD"
-                    required
-                    type="password"
-                    name="password"
-                    formik={form}
+                        className="col-12 mt-1"
+                        label="PASSWORD"
+                        required
+                        type="password"
+                        name="password"
+                        formik={form}
                     />
                 }
             </Row>
