@@ -10,7 +10,7 @@ export default function VehiclePhoto({ vehicle }) {
     const documentApi = new DocumentApi();
 
     const fetchVehiclephoto = async () => {
-        await documentApi.getVehiclePhoto(vehicle.photo.id)
+        await documentApi.getPhoto(vehicle.photo.id)
             .then(file => setPhoto(file.path))
             .catch(error => console.error("error", error))
     }
