@@ -1,6 +1,7 @@
 import { CompanyEntity } from "../../models/company/company.entity";
 import BaseApi from "./_baseApi";
 import { JobEntity } from "../../models/job/job.entity";
+import { FindManyOptions } from "../../models/general/find-many-options.dto";
 
 export default class CompanyApi extends BaseApi {
     baseUrl: string = "companies"
@@ -30,7 +31,7 @@ export default class CompanyApi extends BaseApi {
 
             return data;
         },
-        list: async (params): Promise<CompanyEntity> => {
+        list: async (params: FindManyOptions): Promise<CompanyEntity[]> => {
             const { data } = await this.get(`${this.employer.baseUrl}`, { params });
 
             return data;
