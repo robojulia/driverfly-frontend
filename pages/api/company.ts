@@ -29,4 +29,9 @@ export default class CompanyApi extends BaseApi {
 
         return data;
     }
+    async employerList(): Promise<CompanyEntity[]> {
+        const { data } = await this.get(this.employerBaseUrl + "/list");
+        
+        return data;
+    }
 }

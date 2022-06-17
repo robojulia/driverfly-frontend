@@ -1,8 +1,33 @@
 import React from 'react'
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import CompanyApi from '../../pages/api/company';
+import { useEffect, useState } from 'react'
+
 
 export default function CompaniesSlider() {
+    const api = new CompanyApi();
+    const [ companies, setCompanies] = useState([]);
+
+    const fetchCompanies = () => {
+
+        const headers = {
+        };
+
+       api.employerList()
+            .then(data => {
+                console.log("handle success", data)
+                setCompanies(data)
+            })
+            .catch(function (error) {
+                console.log("handle error success", error.response)
+            })
+    }
+
+    useEffect(() => {
+        fetchCompanies()
+    }, []);
+
     const responsive = {
         superLargeDesktop: {
             // the naming can be any, depends on you.
