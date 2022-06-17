@@ -840,6 +840,32 @@
     "YEARS": "Years",
     "MY_ACCOUNT": "My Account",
     "APPLICANT_INFO_DESCRIPTION": "This is the information which will be submitted to a company when you apply to a job",
+    "SchoolTrainingType": {
+        "CDL_A": "CDL A",
+        "CDL_B": "CDL B",
+        "PASSENGER": "Passenger",
+        "SCHOOL_BUS": "School Bus",
+        "HAZARDOUS_MATERIALS": "Hazardous Materials"
+    },
+    "cdl_a": "CDL A",
+    "cdl_b": "CDL B",
+    "passenger": "Passenger",
+    "school_bus": "School Bus",
+    "hazardous_materials": "Hazardous Materials",
+    "SchoolLocationType": {
+        "IN_PERSON": "In Person",
+        "ONLINE": "Online",
+        "TRAVELING": "Traveling"
+    },
+    "in_person": "In Person",
+    "online": "Online",
+    "traveling": "Traveling",
+    "SchoolPrivateEnrollment": {
+        "PRIVATE_ONLY": "Yes",
+        "NOT_PRIVATE_ONLY": "No"
+    },
+    "private_only": "Yes",
+    "not_private_only": "No",
     "CANCEL": "Cancel",
     "ApplicantJobService": {
         "APPLICANT_ALREADY_APPLIED": "You have already applied to this job",
