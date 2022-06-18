@@ -831,7 +831,7 @@
     "REMOVE": "Remove",
     "ApplicantDocumentType": {
         "RESUME": "Resume",
-        "DRIVER_LICENSE": "Drivers License",
+        "DRIVERS_LICENSE": "Drivers License",
         "MEDICAL_CARD": "Medical Card",
         "MVR": "Motor Vehicle Record (MVR)",
         "PHYSICAL": "DOT Long Form Physical"

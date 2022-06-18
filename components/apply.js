@@ -15,6 +15,9 @@ import Button from "react-bootstrap/Button"
 
 import { ApplicantEntity } from '../models/applicant/applicant.entity'
 import ApplicantApi from '../pages/api/applicant'
+import UserApi from '../pages/api/user';
+import { UserPreferenceCategory } from '../enums/users/user-preference-category.enum';
+import { SharePreference } from '../enums/users/share-preference.enum';
 
 import ViewModal from "./viewDetails/viewModal";
 import { globalAjaxExceptionHandler } from "../utils/ajax";
@@ -52,23 +55,33 @@ export default function JobApply({ job }) {
   });
 
   useEffect(async () => {
-    const api = new ApplicantApi();
-    try {
-      const applicant = await api.getByUserId();
-      apply_form.setValues({
-        ...apply_form.values,
-        ...applicant,
-      });
-    }
-    catch (e) {
-      if (e.response?.status === 401) {
-        // swallow the error here if it's a 401
-        // this is a mixed public & private page
-        return;
-      }
-      throw e;
-    }
+    if (user && user.id) {
+      const api = new ApplicantApi();
+      const userApi = new UserApi();
+      try {
+        const applicant = await api.getByUserId();
+        const preferences = await userApi.preferences.list(user.id, { category: UserPreferenceCategory.SHARING });
 
+        applicant.documents = applicant.documents.filter(
+          (document) => !preferences.some(
+            (preference) => preference.label === document.type && preference.value === SharePreference.NEVER
+          )
+        );
+
+        apply_form.setValues({
+          ...apply_form.values,
+          ...applicant,
+        });
+      }
+      catch (e) {
+        if (e.response?.status === 401) {
+          // swallow the error here if it's a 401
+          // this is a mixed public & private page
+          return;
+        }
+        throw e;
+      }
+    }
   }, [])
 
   const [ viewForm, setViewForm ] = useState(false);
