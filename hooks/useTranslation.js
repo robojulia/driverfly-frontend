@@ -37,7 +37,7 @@ export function useTranslation (ns = null) {
      * @param {{ [key: string]: string }} props 
      * @param {{ translateProps: boolean }} options
      */
-    const t = (name, props, options) => {
+    const t = (name, props = null, options = null) => {
         if (name == null) return;
         
         /**

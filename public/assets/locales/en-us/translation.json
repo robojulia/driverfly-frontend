@@ -956,5 +956,11 @@
     "RESTORE": "Restore",
     "ASSIGN_TO_ME": "Assign To Me",
     "UNASSIGN": "Unassign",
-    "ASSIGNED_TO": "Assigned To"
+    "ASSIGNED_TO": "Assigned To",
+    "COMPANY_PROFILE_DASHBOARD": "Company Profile Dashboard",
+    "ApplicantPipelineChartLabel": {
+        "LEADS": "Leads",
+        "IN_PROCESS": "In Process",
+        "HIRED": "Hired"
+    }
 }
