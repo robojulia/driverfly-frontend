@@ -2,16 +2,13 @@ import { useTranslation } from "../../hooks/useTranslation";
 import { Card } from "react-bootstrap";
 import { CardBody, CardHeader } from "reactstrap";
 
-/**
- * @typedef ViewCardProps
- * @property {string} title
- * @property {any} children
- */
+export interface ViewCardProps {
+    title?: string;
+    children?: JSX.Element | JSX.Element[];
+    actions?: JSX.Element | JSX.Element[];
+}
 
-/**
- * @param {ViewCardProps} props
- */
-export default function ViewCard(props) {
+export default function ViewCard(props: ViewCardProps) {
     const { t } = useTranslation();
 
     const { title, actions, children } = props;

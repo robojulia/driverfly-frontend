@@ -4,16 +4,17 @@ import 'react-toastify/dist/ReactToastify.css'
 import { useTranslation } from "../../hooks/useTranslation";
 import { Row, Col } from "react-bootstrap";
 
-/**
- * 
- * @param {object} param0 
- * @param {string} param0.title
- * @param {any} param0.actions
- * @param {any} param0.children
- * @returns 
- */
-export default function PageLayout({ title, actions, children }) {
+export interface PageLayoutProps {
+    title?: string;
+    actions?: JSX.Element | JSX.Element[];
+    children?: JSX.Element | JSX.Element[];
+}
+
+export default function PageLayout(props: PageLayoutProps) {
+    const { title, actions, children } = props;
+
     const { t } = useTranslation();
+
     return (
         <>
             <ToastContainer />
