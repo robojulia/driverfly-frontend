@@ -62,11 +62,13 @@ export default function JobApply({ job }) {
         const applicant = await api.getByUserId();
         const preferences = await userApi.preferences.list(user.id, { category: UserPreferenceCategory.SHARING });
 
-        applicant.documents = applicant.documents.filter(
-          (document) => !preferences.some(
-            (preference) => preference.label === document.type && preference.value === SharePreference.NEVER
-          )
-        );
+        if (preferences.length > 0) {
+          applicant.documents = applicant.documents.filter(
+            (document) => !preferences.some(
+              (preference) => preference.label === document.type && preference.value === SharePreference.NEVER
+            )
+          );
+        } else applicant.documents = applicant.documents.filter((document) => document.type === ApplicantDocumentType.RESUME);
 
         apply_form.setValues({
           ...apply_form.values,
