@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import CompanyPhoto from "../jobs/company-photo"
 import CompanyJobsCount from '../employer/company-jobs-count';
 import { useTranslation } from '../../hooks/useTranslation';
+import Link from "next/link";
 
 
 export default function CompaniesSlider() {
@@ -14,7 +15,7 @@ export default function CompaniesSlider() {
     const [companies, setCompanies] = useState([]);
 
     const fetchCompanies = async () => {
-        await companyApi.employer.list({ take: 3 })
+        await companyApi.employer.list({ take: 6 })
             .then(data => setCompanies(data))
             .catch(function (error) {
                 console.log("handle error success", error.response)
@@ -59,17 +60,20 @@ export default function CompaniesSlider() {
                 itemClass="carousel-item-padding-40-px">
                 {companies.length > 0 && companies.map(company => (
                     <>
-                        <div style={{ margin: " 10px" }}>
-                            <div className="card  featured-companies">
-                                <CompanyPhoto className="card-img-top" style={{ height: '200px' }} company={company} />
-                                <div className="card-body text-center">
-                                    <span className='my-3 card-title'>{company.name}</span>
-                                    {/* <i className="bi bi-star-fill" style={{ color: "Yellow" }}></i> */}
-                                    <br />
-                                    <CompanyJobsCount companyId={company.id} label={`${t("JOBS")}`} className="btn btn-sm btn-primary my-3" />
+                        <Link href={`/employer/${company.id}`}>
+                            <a>
+                                <div style={{ margin: " 10px" }}>
+                                    <div className="card  featured-companies">
+                                        <CompanyPhoto className="card-img-top" style={{ height: '200px' }} company={company} />
+                                        <div className="card-body text-center">
+                                            <span className='my-3 card-title'>{company.name}</span>
+                                            <br />
+                                            <CompanyJobsCount companyId={company.id} label={`${t("JOBS")}`} className="btn btn-sm btn-primary my-3" />
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            </a>
+                        </Link>
                     </>
                 ))}
             </Carousel>
