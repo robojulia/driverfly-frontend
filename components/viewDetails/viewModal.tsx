@@ -3,23 +3,17 @@ import { useState, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { X, XLg } from "react-bootstrap-icons";
 
-/**
- * @typedef ViewModalProps
- * @property {boolean} show
- * @property {string} title
- * @property {string|JSX.Element|JSX.Element[]} header
- * @property {string|JSX.Element|JSX.Element[]} footer
- * @property {string} closeText
- * @property {() => void} onCloseClick
- * @property {JSX.Element|JSX.Element[]} children
- */
+export interface ViewModalProps {
+    show?: boolean;
+    title?: string;
+    header?: string|JSX.Element|JSX.Element[];
+    footer?: string|JSX.Element|JSX.Element[];
+    closeText?: string;
+    onCloseClick?: () => void;
+    children?: JSX.Element|JSX.Element[];
+}
 
-/**
- * 
- * @param {ViewModalProps} props 
- * @returns 
- */
-export default function ViewModal(props) {
+export default function ViewModal(props: ViewModalProps) {
     const { t } = useTranslation();
     const [ show, setShow ] = useState(!!props.show);
 

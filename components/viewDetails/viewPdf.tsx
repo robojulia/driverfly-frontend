@@ -8,26 +8,32 @@ import ViewModal from "./viewModal";
 
 import { useEffect, useState } from "react";
 import { useTranslation } from "../../hooks/useTranslation";
-/**
- * @typedef ViewPdfProps
- * @property {string} name
- * @property {string} url
- * @property {() => void} onCloseClick
- */
 
-/**
- * 
- * @param {ViewPdfProps} props 
- * @returns 
- */
-export default function ViewPdf(props) {
+export interface ViewPdfProps {
+    name?: string;
+    url?: string;
+    onCloseClick?: () => void;
+}
+export default function ViewPdf(props: ViewPdfProps) {
     const { t } = useTranslation();
     // const defaultLayoutPluginInstance = defaultLayoutPlugin()
 
     const { name, url, onCloseClick } = props;
 
     return (
-        <></>
+        <ViewModal
+            show={!!url}
+            title={name}
+            onCloseClick={onCloseClick}
+        >
+            {
+                url &&
+                <div className="embed-responsive embed-responsive-1by1">
+                    <iframe className="embed-responsive-item" src={url}></iframe>
+                </div>
+            }
+
+        </ViewModal>
         // <ViewModal show={!!url} title={name} onCloseClick={onCloseClick}>
         //     {(
         //         url &&
