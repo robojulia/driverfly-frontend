@@ -3,22 +3,32 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import CompanyApi from '../../pages/api/company';
 import { useEffect, useState } from 'react'
+import CompanyPhoto from "../jobs/company-photo"
 
 
 export default function CompaniesSlider() {
     const companyApi = new CompanyApi();
     const [companies, setCompanies] = useState([]);
 
-    const fetchCompanies = () => {
-        companyApi.employer.list({ take: 3 })
+    const fetchCompanies = async () => {
+        await companyApi.employer.list({ take: 3 })
             .then(data => setCompanies(data))
             .catch(function (error) {
                 console.log("handle error success", error.response)
             })
     }
 
-    useEffect(() => {
-        fetchCompanies()
+    const fetchCompanyCount = async (companyId) => {
+        return await companyApi.employer.getJobCount(companyId)
+            .then(data => (data))
+            .catch(function (error) {
+                console.log("handle error success", error.response)
+            })
+    }
+
+
+    useEffect(async () => {
+        await fetchCompanies()
     }, []);
 
     const responsive = {
@@ -57,45 +67,17 @@ export default function CompaniesSlider() {
                     <>
                         <div style={{ margin: " 10px" }}>
                             <div className="card  featured-companies">
-                                <img style={{ height: '200px' }} src="img/CAMBRIDGE-TRANSPORT-truck-1.jpeg" className="card-img-top" alt="..." />
+                                <CompanyPhoto className="card-img-top" style={{ height: '200px' }} company={company} />
                                 <div className="card-body text-center">
                                     <span className='my-3 card-title'>{company.name}</span>
                                     <i className="bi bi-star-fill" style={{ color: "Yellow" }}></i>
                                     <br />
-                                    <a href="#" className="btn btn-sm btn-primary my-3">1 Open Job</a>
+                                    <a href="#" className="btn btn-sm btn-primary my-3">{fetchCompanyCount(company.id)}Job</a>
                                 </div>
                             </div>
                         </div>
                     </>
                 ))}
-
-                {/* <div style={{ margin: "10px" }}><div className="card  featured-companies">
-                    <img style={{ height: '200px' }} src="img/Everett-Madison-Truck-1.jpg" className="card-img-top" alt="..." />
-                    <div className="card-body text-center">
-                        <span className='my-3 card-title'>Everett Madison Truck </span>
-                        <i className="bi bi-star-fill" style={{ color: "Yellow" }}></i>
-                        <br />
-                        <a href="#" className="btn btn-sm btn-primary my-3">1 Open Job</a>
-                    </div>
-                </div></div>
-                <div style={{ margin: "10px" }}><div className="card  featured-companies">
-                    <img style={{ height: '200px' }} src="img/Froggy-Logistics.jpg" className="card-img-top" alt="..." />
-                    <div className="card-body text-center">
-                        <span className='my-3 card-title'>Froggy Logistics </span>
-                        <i className="bi bi-star-fill" style={{ color: "Yellow" }}></i>
-                        <br />
-                        <a href="#" className="btn btn-sm btn-primary my-3">1 Open Job</a>
-                    </div>
-                </div></div>
-                <div style={{ margin: " 10px" }} ><div className="card  featured-companies">
-                    <img style={{ height: '200px' }} src="img/CTR-logo-cartoon (1).png" className="card-img-top" alt="..." />
-                    <div className="card-body text-center">
-                        <span className='my-3 card-title'> Customer Truck Recruiting </span>
-                        <i className="bi bi-star-fill" style={{ color: "Yellow" }}></i>
-                        <br />
-                        <a href="#" className="btn btn-sm btn-primary my-3">1 Open Job</a>
-                    </div>
-                </div></div> */}
             </Carousel>
 
         </div>
