@@ -2,7 +2,7 @@ export enum JobEmploymentType {
     // W2
     W2 = 'W2',
     // 1099
-    CONTRACT = 'CONTRACTOR',
+    CONTRACT = 'CONTRACT',
     // Owner-Operator
     OWNER_OPERATOR = 'OWNER_OPERATOR',
     // Part-Time
