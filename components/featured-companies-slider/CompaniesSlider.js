@@ -1,12 +1,15 @@
-import React from 'react'
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import CompanyApi from '../../pages/api/company';
 import { useEffect, useState } from 'react'
 import CompanyPhoto from "../jobs/company-photo"
+import CompanyJobsCount from '../employer/company-jobs-count';
+import { useTranslation } from '../../hooks/useTranslation';
 
 
 export default function CompaniesSlider() {
+
+    const { t } = useTranslation();
     const companyApi = new CompanyApi();
     const [companies, setCompanies] = useState([]);
 
@@ -17,15 +20,6 @@ export default function CompaniesSlider() {
                 console.log("handle error success", error.response)
             })
     }
-
-    const fetchCompanyCount = async (companyId) => {
-        return await companyApi.employer.getJobCount(companyId)
-            .then(data => (data))
-            .catch(function (error) {
-                console.log("handle error success", error.response)
-            })
-    }
-
 
     useEffect(async () => {
         await fetchCompanies()
@@ -70,9 +64,9 @@ export default function CompaniesSlider() {
                                 <CompanyPhoto className="card-img-top" style={{ height: '200px' }} company={company} />
                                 <div className="card-body text-center">
                                     <span className='my-3 card-title'>{company.name}</span>
-                                    <i className="bi bi-star-fill" style={{ color: "Yellow" }}></i>
+                                    {/* <i className="bi bi-star-fill" style={{ color: "Yellow" }}></i> */}
                                     <br />
-                                    <a href="#" className="btn btn-sm btn-primary my-3">{fetchCompanyCount(company.id)}Job</a>
+                                    <CompanyJobsCount companyId={company.id} label={`${t("JOBS")}`} className="btn btn-sm btn-primary my-3" />
                                 </div>
                             </div>
                         </div>
