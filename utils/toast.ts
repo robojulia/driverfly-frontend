@@ -43,7 +43,13 @@ function formFailed(t: (text: string, props: any, options: any) => string, actio
     toast.error(t("Forms.FAIL_{action}_{name}", { action: `Forms.${formAction}`, name: name }, { translateProps: true }));
 }
 
+function customFailed(t: (text: string) => string, message: string) {
+
+    toast.error(t(message));
+}
+
 export {
+    customFailed,
     formFailed,
     formSuccess
 };
