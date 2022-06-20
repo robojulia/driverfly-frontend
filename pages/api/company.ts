@@ -31,6 +31,11 @@ export default class CompanyApi extends BaseApi {
 
             return data;
         },
+        getJobCount: async (id: number): Promise<number> => {
+            const { data } = await this.get(`${this.employer.baseUrl}/${id}/jobs-count`);
+
+            return data;
+        },
         list: async (params: FindManyOptions): Promise<CompanyEntity[]> => {
             const { data } = await this.get(`${this.employer.baseUrl}`, { params });
 
