@@ -47,7 +47,13 @@ export function UserForm(props) {
             }
             catch (e) {
                 console.error("Unable to save entity", e.response);
-                toast.formFailed(t, !!id ? "update" : "create", "USER");
+                if (e?.response?.data?.email == "EMAIL_ALREADY_EXISTS") {
+                    toast.customFailed(t, "EMAIL_ALREADY_EXISTS");
+                }
+                else {
+                    toast.formFailed(t, !!id ? "update" : "create", "USER");
+                }
+
                 if (onSaveError) onSaveError(e);
             }
         },
