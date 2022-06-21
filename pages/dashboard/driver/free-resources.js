@@ -38,7 +38,7 @@ export default function FreeResources() {
                     </Col>
                     <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
                         {/* intentionally not targetting _blank since this is just a tab change */}
-                        <h2> <Link href="/dashboard/driver/my-docs"><a className={style.link_style}>{t("access_your_mvr")}</a></Link> </h2>
+                        <h2> <Link href="/dashboard/driver/settings/applicant"><a className={style.link_style}>{t("access_your_mvr")}</a></Link> </h2>
                         <br />
                         <span className={style.description}>{t("access_your_mvr_paragraph")}</span>
                     </Col>
