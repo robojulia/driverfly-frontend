@@ -8,6 +8,8 @@ import EntityForm from "../../layouts/EntityForm";
 import { UserEntity } from "../../../models/user/user.entity";
 import UserApi from "../../../pages/api/user";
 import * as toast from "../../../utils/toast";
+import { globalAjaxExceptionHandler } from "../../../utils/ajax";
+
 
 
 /**
@@ -48,7 +50,8 @@ export function UserForm(props) {
             catch (e) {
                 console.error("Unable to save entity", e.response);
                 if (e?.response?.data?.email == "EMAIL_ALREADY_EXISTS") {
-                    toast.customFailed(t, "EMAIL_ALREADY_EXISTS");
+                    globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SIGNUP" });
+
                 }
                 else {
                     toast.formFailed(t, !!id ? "update" : "create", "USER");
