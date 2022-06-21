@@ -109,6 +109,7 @@
         "ONE_TIME_GIG": "One Time Gig"
     },
     "TEAM_DRIVERS": "Team Drivers",
+    "team_drivers": "Team Drivers",
     "JobTeamDriver": {
         "HAS_TEAM_DRIVER": "Has team drivers",
         "OPEN_TEAM_DRIVER": "Open to team drivers",
