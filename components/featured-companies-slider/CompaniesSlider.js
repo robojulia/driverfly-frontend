@@ -1,24 +1,29 @@
-import React from 'react'
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import CompanyApi from '../../pages/api/company';
 import { useEffect, useState } from 'react'
+import CompanyPhoto from "../jobs/company-photo"
+import CompanyJobsCount from '../employer/company-jobs-count';
+import { useTranslation } from '../../hooks/useTranslation';
+import Link from "next/link";
 
 
 export default function CompaniesSlider() {
+
+    const { t } = useTranslation();
     const companyApi = new CompanyApi();
     const [companies, setCompanies] = useState([]);
 
-    const fetchCompanies = () => {
-        companyApi.employer.list({ take: 3 })
+    const fetchCompanies = async () => {
+        await companyApi.employer.list({ take: 6 })
             .then(data => setCompanies(data))
             .catch(function (error) {
                 console.log("handle error success", error.response)
             })
     }
 
-    useEffect(() => {
-        fetchCompanies()
+    useEffect(async () => {
+        await fetchCompanies()
     }, []);
 
     const responsive = {
@@ -55,47 +60,22 @@ export default function CompaniesSlider() {
                 itemClass="carousel-item-padding-40-px">
                 {companies.length > 0 && companies.map(company => (
                     <>
-                        <div style={{ margin: " 10px" }}>
-                            <div className="card  featured-companies">
-                                <img style={{ height: '200px' }} src="img/CAMBRIDGE-TRANSPORT-truck-1.jpeg" className="card-img-top" alt="..." />
-                                <div className="card-body text-center">
-                                    <span className='my-3 card-title'>{company.name}</span>
-                                    <i className="bi bi-star-fill" style={{ color: "Yellow" }}></i>
-                                    <br />
-                                    <a href="#" className="btn btn-sm btn-primary my-3">1 Open Job</a>
+                        <Link href={`/employer/${company.id}`}>
+                            <a>
+                                <div style={{ margin: " 10px" }}>
+                                    <div className="card  featured-companies">
+                                        <CompanyPhoto className="card-img-top" style={{ height: '200px' }} company={company} />
+                                        <div className="card-body text-center">
+                                            <span className='my-3 card-title'>{company.name}</span>
+                                            <br />
+                                            <CompanyJobsCount companyId={company.id} label={`${t("JOBS")}`} className="btn btn-sm btn-primary my-3" />
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            </a>
+                        </Link>
                     </>
                 ))}
-
-                {/* <div style={{ margin: "10px" }}><div className="card  featured-companies">
-                    <img style={{ height: '200px' }} src="img/Everett-Madison-Truck-1.jpg" className="card-img-top" alt="..." />
-                    <div className="card-body text-center">
-                        <span className='my-3 card-title'>Everett Madison Truck </span>
-                        <i className="bi bi-star-fill" style={{ color: "Yellow" }}></i>
-                        <br />
-                        <a href="#" className="btn btn-sm btn-primary my-3">1 Open Job</a>
-                    </div>
-                </div></div>
-                <div style={{ margin: "10px" }}><div className="card  featured-companies">
-                    <img style={{ height: '200px' }} src="img/Froggy-Logistics.jpg" className="card-img-top" alt="..." />
-                    <div className="card-body text-center">
-                        <span className='my-3 card-title'>Froggy Logistics </span>
-                        <i className="bi bi-star-fill" style={{ color: "Yellow" }}></i>
-                        <br />
-                        <a href="#" className="btn btn-sm btn-primary my-3">1 Open Job</a>
-                    </div>
-                </div></div>
-                <div style={{ margin: " 10px" }} ><div className="card  featured-companies">
-                    <img style={{ height: '200px' }} src="img/CTR-logo-cartoon (1).png" className="card-img-top" alt="..." />
-                    <div className="card-body text-center">
-                        <span className='my-3 card-title'> Customer Truck Recruiting </span>
-                        <i className="bi bi-star-fill" style={{ color: "Yellow" }}></i>
-                        <br />
-                        <a href="#" className="btn btn-sm btn-primary my-3">1 Open Job</a>
-                    </div>
-                </div></div> */}
             </Carousel>
 
         </div>
