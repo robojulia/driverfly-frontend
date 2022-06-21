@@ -23,15 +23,13 @@ export default function JobsList() {
 
             <CompanyPhoto className="d-flex mr-4 truck-img" job={job} company={job.company} />
             <div className="media-body">
-              <h4 className="mt-0">{job.title}
-                <span
-                  className=""
-                  data-toggle="tooltip"
-                  data-placement="top"
-                  title="Tooltip on top">
-
-                </span>
-              </h4>
+              <Link href={`/jobs/${job.id}`}>
+                <a className='text-decoration-none '>
+                  <h4 className="mt-0 text-blue">
+                    {job.title}
+                  </h4>
+                </a>
+              </Link>
               <div className="job-date-author">
                 {
                   job.created_at &&
