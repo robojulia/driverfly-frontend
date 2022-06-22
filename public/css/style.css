@@ -2069,3 +2069,10 @@ text-align: center;
     align-items: baseline;
     border-radius: 4px;
 }
+
+/*
+* text color classes    
+*/
+.text-blue {
+    color: #007bff !important;
+}

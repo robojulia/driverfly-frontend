@@ -1,3 +1,4 @@
+import { style } from "@mui/system";
 import { useEffect, useState } from "react";
 import DocumentApi from "../../pages/api/document";
 
@@ -40,6 +41,7 @@ export default function CompanyPhoto(props) {
     return <>
         <img
             className={props.className}
+            style={props.style}
             src={photo}
             alt="Company Image" />
     </>
