@@ -7,12 +7,13 @@ import useAuth from "./useAuth";
 import { i18n } from "../next.config";
 
 import translations_EN_US from "../public/assets/locales/en-us/translation.json";
-/**
- * 
- * @param {string} ns the namespace to use (defaults to common)
- * @returns 
- */
-export function useTranslation (ns = null) {
+
+export interface TranslateInterface {
+    (name: string, props?: { [key: string]: string }, options?: { translateProps: boolean }): string;
+    ready: boolean;
+}
+
+export function useTranslation (ns?: string) {
     const locales = {
         "en": translations_EN_US,
         "en-us": translations_EN_US,
@@ -37,7 +38,7 @@ export function useTranslation (ns = null) {
      * @param {{ [key: string]: string }} props 
      * @param {{ translateProps: boolean }} options
      */
-    const t = (name, props = null, options = null) => {
+    const t: TranslateInterface = (name, props = null, options = null) => {
         if (name == null) return;
         
         /**

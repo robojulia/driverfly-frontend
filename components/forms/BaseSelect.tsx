@@ -1,9 +1,23 @@
 import React from 'react'
 
 import { useTranslation } from "../../hooks/useTranslation"
-import BaseControl from './BaseControl';
+import BaseControl, { BaseControlProps } from './BaseControl';
 
-function BaseSelect ( { append, prepend, formik, required, className, enumType, options, valueKey = "value", labelKey = "label", labelPrefix, createLabel, label, placeholder, value, onChange, handleBlur, readOnly, name, touched, error, } ) {
+export interface BaseSelectProps extends BaseControlProps {
+  enumType?: object;
+  options?: {value?: string, label?: string}[];
+  valueKey?: string;
+  labelKey?: string;
+  labelPrefix?: string;
+  createLabel?: (any) => string;
+  placeholder?: string | boolean;
+  value?: any;
+  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  handleBlur?: (e: React.FocusEvent<HTMLSelectElement>) => void;
+  readOnly?: boolean;
+}
+
+function BaseSelect ( { append, prepend, formik, required, className, enumType, options, valueKey = "value", labelKey = "label", labelPrefix, createLabel, label, placeholder, value, onChange, handleBlur, readOnly, name, touched, error, }: BaseSelectProps ) {
   const { t } = useTranslation();
 
   if (formik) {
@@ -79,10 +93,10 @@ function BaseSelect ( { append, prepend, formik, required, className, enumType, 
         onChange={onChangeProxy}
         onBlur={handleBlur}
         disabled={readOnly}
-        name={name}
+        name={name?.toString()}
         className={`form-select ${error ? "is-invalid" : ""}`} 
         >
-        {placeholder && <option value="">{t("SELECT_{name}", { name: placeholder === true ? label || name : placeholder.toString() }, { translateProps: true })}</option>}
+        {placeholder && <option value="">{t("SELECT_{name}", { name: placeholder === true ? `${label || name}` : placeholder.toString() }, { translateProps: true })}</option>}
         {options && options.map((v, i) => (<option key={i} value={v[valueKey]}>{t(labelPrefix ? `${labelPrefix}.${v[labelKey]}` : v[labelKey])}</option>))}
       </select>
     </BaseControl>

@@ -1,13 +1,25 @@
 
 
-import React from 'react';
+import React, { ReactNode } from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useState } from 'react';
 import { Menu, MenuItem, Button } from "@mui/material"
 
 import { generateUUID } from "../../utils/common";
 
-export default function ListActions({ id, options, onClick }) {
+export interface ListActionsProps {
+  id?: string;
+  options?: ListActionOptions[];
+  onClick?: (e: React.MouseEvent) => void;
+}
+
+export interface ListActionOptions {
+  label: string | ReactNode;
+  onClick?: (e: React.MouseEvent) => void;
+  hide?: boolean;
+}
+
+export default function ListActions({ id, options, onClick }: ListActionsProps) {
     const [ state, setState ] = useState({ anchorEl: null });
     
     const filteredOptions = options.filter((option) => !option.hide);
@@ -16,7 +28,7 @@ export default function ListActions({ id, options, onClick }) {
         setState({ anchorEl: event.currentTarget });
     };
     
-    const handleClose = () => {
+    const handleClose = (e: React.MouseEvent) => {
         setState({ anchorEl: null });
     };
 

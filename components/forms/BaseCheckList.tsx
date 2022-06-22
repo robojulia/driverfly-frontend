@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { useTranslation } from "../../hooks/useTranslation"
+import { BaseControlProps } from './BaseControl';
 
 function InlineLayout(t, options, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix) {
   return (
@@ -32,6 +33,19 @@ function ColLayout(t, options, cols, value, name, labelKey, valueKey, onChange, 
   );
 }
 
+export interface BaseCheckListProps extends BaseControlProps {
+  options?: object[];
+  labelKey?: string;
+  valueKey?: string;
+  labelPrefix?: string;
+  value?: string[];
+  cols?: number;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  readOnly?: boolean;
+  enumType?: object;
+}
+
 function BaseCheckList({
   formik,
   required,
@@ -50,7 +64,7 @@ function BaseCheckList({
   touched,
   error,
   enumType
-}) {
+}: BaseCheckListProps) {
   const { t } = useTranslation();
 
   if (formik) {

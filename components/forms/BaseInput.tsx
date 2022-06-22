@@ -1,8 +1,22 @@
 import React from 'react'
 import { useTranslation } from '../../hooks/useTranslation';
-import BaseControl from './BaseControl';
+import BaseControl, { BaseControlProps } from './BaseControl';
 
-function BaseInput({ formik, accept, required, className, label, handleBlur, type, min, max, step, placeholder, value, onChange, onKeyDown, readOnly, name, touched, error, append, prepend }) {
+export interface BaseInputProps extends BaseControlProps {
+  accept?: string;
+  handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  type?: string;
+  min?: string;
+  max?: string;
+  step?: number;
+  placeholder?: string | boolean;
+  value?: any;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  readOnly?: boolean;
+}
+
+function BaseInput({ formik, accept, required, className, label, handleBlur, type, min, max, step, placeholder, value, onChange, onKeyDown, readOnly, name, touched, error, append, prepend }: BaseInputProps) {
   const { t } = useTranslation();
 
   if (formik) {
@@ -84,7 +98,7 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
         min={min}
         max={max}
         step={step}
-        placeholder={t(placeholder === true ? label || name : placeholder)}
+        placeholder={t(placeholder === true ? label || name : (placeholder || "").toString())}
         value={value == null ? "" : value}
         onChange={onChange}
         onKeyDown={onKeyDown}

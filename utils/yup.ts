@@ -31,7 +31,10 @@ function unique(thisObj, list, field, options, message) {
     const set = new Set();
 
     for (let i = 0; i < list.length; i++) {
-      let value = !options.mapper ? yup.ref(field).getter(list[i]) : mapper(list[i]);
+      let value;
+      if (mapper) value = mapper(list[i]);
+      else if (field) value = yup.ref(field).getter(list[i]);
+      else value = list[i];
 
       if (!value) continue;
 

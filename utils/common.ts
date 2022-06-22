@@ -1,4 +1,9 @@
-function buildAddress({ street, city, state, zip_code }) {
+function buildAddress(props?: { street?: string, city?: string, state?: string, zip_code?: string }) {
+
+    if (!props) return;
+
+    const { street, city, state, zip_code } = props;
+    
     let address = "";
 
     if (street) address += street;

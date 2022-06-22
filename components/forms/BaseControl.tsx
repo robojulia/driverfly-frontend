@@ -3,7 +3,21 @@ import { InputGroup } from 'react-bootstrap';
 
 import { useTranslation } from "../../hooks/useTranslation"
 
-function BaseControl ( { formik, required, className, label, children, touched, error, name, prepend, append } ) {
+export interface BaseControlProps {
+  formik?: any;
+  required?: boolean;
+  className?: string;
+  label?: string;
+  children?: JSX.Element | JSX.Element[];
+  touched?: boolean;
+  error?: string;
+  name?: string;
+  append?: JSX.Element | JSX.Element[];
+  prepend?: JSX.Element | JSX.Element[];
+  after?: JSX.Element | JSX.Element[];
+}
+
+function BaseControl ( { formik, required, className, label, children, touched, error, name, prepend, append, after } : BaseControlProps ) {
   const { t } = useTranslation();
 
   if (formik) {
@@ -30,6 +44,7 @@ return (
         {append}
       </InputGroup>
       {touched && error && (typeof error === "string") ? <span className="text-danger small">{t(error)}</span> : null}
+      {after}
     </div>
   )
 }

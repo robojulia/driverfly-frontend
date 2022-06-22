@@ -63,7 +63,7 @@ function globalAjaxExceptionHandler(error, interfaces) {
         return true; // handled via toast
     }
 
-    function readErrorObj(data, { formik, toast, t, keyPrefix }) {
+    function readErrorObj(data, { formik, toast, t, keyPrefix = null }) {
         if (data instanceof Array) {
             return data.every((value, key) => handleValue(`${keyPrefix || ""}[${key}]`, value));
         }
