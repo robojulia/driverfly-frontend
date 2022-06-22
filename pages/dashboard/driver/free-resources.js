@@ -27,7 +27,7 @@ export default function FreeResources() {
             <Container fluid>
                 <Row className='mt-5'>
                     <Col className='col-lg-4 col-md-4  col-12 my-lg-0 my-4'>
-                        <h2> <Link href="/resources"><a className={style.link_style} target="_blank">{t("vendor_discounts")}</a></Link> </h2>
+                        <h2> <Link href="/third-party-resources"><a className={style.link_style}>{t("vendor_discounts")}</a></Link> </h2>
                         <br />
                         <span className={style.description}>{t("vendor_discounts_paragraph")}</span>
                     </Col>
