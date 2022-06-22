@@ -15,7 +15,7 @@ export default function CompanyJob({ jobs }) {
         jobs &&
         jobs.slice(0, 2).map((job, index) => (
           <div key={index} className="media mt-2 shadow-sm">
-            <Link href={`/jobs/${job.id}`}>
+            <Link href={`/jobs/${job.id}/${job.slug}`}>
               <div className="media-body" role='button'>
                 {/* <span className="urgent">URGENT</span> */}
                 {/* <h6>FUll Time(W2)</h6> */}
