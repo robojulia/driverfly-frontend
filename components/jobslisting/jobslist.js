@@ -23,7 +23,7 @@ export default function JobsList() {
 
             <CompanyPhoto className="d-flex mr-4 truck-img" job={job} company={job.company} />
             <div className="media-body">
-              <Link href={`/jobs/${job.id}`}>
+              <Link href={`/jobs/${job.id}/${job.slug}`}>
                 <a className='text-decoration-none '>
                   <h4 className="mt-0 text-blue">
                     {job.title}
@@ -66,7 +66,7 @@ export default function JobsList() {
               </div>
 
             </div>
-            <Link href={`/jobs/${job.id}`}>
+            <Link href={`/jobs/${job.id}/${job.slug}`}>
               <button type="button" className="theme-primary-btn-outline">{t('browse_job')}</button>
             </Link>
 
