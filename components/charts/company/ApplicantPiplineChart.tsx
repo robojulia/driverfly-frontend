@@ -14,21 +14,10 @@ export function ApplicantPipelineChart() {
 
         applicants.forEach(v => {
             v.jobs.forEach(j => {
-                switch (j.status) {
-                    case ApplicantStatus.LEAD:
-                    case ApplicantStatus.APPLIED:
-                        leads++;
-                        break;
-                    case ApplicantStatus.HIRED:
-                        hired++;
-                        break;
-                    case ApplicantStatus.REJECTED:
-                    case ApplicantStatus.WITHDRAWN:
-                        break;
-                    default:
-                        inProcess++;
-                        break;
-                }
+                if (!j.status) return;
+                if (j.status.startsWith("NEW_")) leads++;
+                else if (j.status.startsWith("IN_PROCESS_")) inProcess++;
+                else if (j.status.startsWith("COMPLETED_")) hired++;
             });
         });
         return [leads, inProcess, hired];
