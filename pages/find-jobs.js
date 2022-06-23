@@ -26,16 +26,15 @@ export default function FindJobs(props) {
     totalPages: 1
   })
 
-  const [filters, setFilters] = useState({
-    ...params
-  })
-
+  const [filters, setFilters] = useState({ ...params })
   const setFiltersByKeyValue = (key, value) => {
     setFilters({
       ...filters,
       [key]: value
     })
   }
+  const [location, setLocation] = useState(null);
+  const [range, setRange] = useState(filters.location?.range || 50);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -126,11 +125,15 @@ export default function FindJobs(props) {
         jobs,
         pagingMeta,
         filters,
+        location,
+        range,
       },
       method: {
         handleChange,
         setPagingMeta,
         setFilters,
+        setLocation,
+        setRange,
         setFiltersByKeyValue,
         applyFilters: fetchJobs
       },
