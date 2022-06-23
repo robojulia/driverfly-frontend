@@ -10,12 +10,10 @@ export default function Range(props) {
 
     const { t } = useTranslation();
     const { state, method } = props
-    const { filters } = state
-    const { setFiltersByKeyValue } = method
+    const { filters, location, range } = state
+    const { setFiltersByKeyValue, setLocation, setRange } = method
     const mapboxApi = new MapboxApi()
 
-    const [range, setRange] = useState(filters.location?.range || 50);
-    const [location, setLocation] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [options, setOptions] = useState([]);
 
@@ -35,9 +33,11 @@ export default function Range(props) {
     };
 
     const handleTypeheadChange = () => {
+        console.log("location", location);
         let val = null
         if (location) {
             val = {
+                place_name: location.place_name,
                 long: location.geometry.coordinates[0],
                 lat: location.geometry.coordinates[1],
                 range
@@ -47,12 +47,13 @@ export default function Range(props) {
     }
 
     useEffect(handleTypeheadChange, [location, range])
+    useEffect(() => { console.log("Alive") }, [])
 
     return (
         <>
             <FindJobFilterAccordion {...props} header={t("LOCATION")}>
                 <AsyncTypeahead
-                    defaultInputValue={filters.place_name || ""}
+                    defaultInputValue={filters.place_name || filters.location?.place_name || ""}
                     id="async-example"
                     name="location"
                     isLoading={isLoading}
