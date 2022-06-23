@@ -66,7 +66,7 @@ export default function Call() {
                                 onChange={(e) => setIdentity(e.target.value)}
                                 type="text"
                                 placeholder="What's your name?"></input>
-                            <input style={{ padding:'10px', background: '#1b4454', color:'#fff'}} type="submit" value="Begin Session"></input>
+                            <input style={{ padding:'10px', background: '#1b4454', color:'#fff', borderRadius:'10px'}} type="submit" value="Begin Session"></input>
                         </form>
                     </div>
                 }

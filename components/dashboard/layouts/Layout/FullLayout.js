@@ -5,7 +5,7 @@ import Sidebar from "../sidebars/Sidebar";
 import Head from "next/head";
 
 import { useTranslation } from "../../../../hooks/useTranslation";
-import { Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, CheckSquareFill, GiftFill, GearFill, EnvelopeFill, PeopleFill } from 'react-bootstrap-icons';
+import {TelephoneFill,  Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, CheckSquareFill, GiftFill, GearFill, EnvelopeFill, PeopleFill } from 'react-bootstrap-icons';
 
 // company layout
 const FullLayout = ({ children }) => {
@@ -40,6 +40,12 @@ const FullLayout = ({ children }) => {
       pathname: "/dashboard/company/messages",
       icon: EnvelopeFill,
       text: "MESSAGES",
+      startsWith: true
+    },
+    {
+      pathname: "/dashboard/company/call",
+      icon: TelephoneFill,
+      text: "CALL",
       startsWith: true
     },
   
