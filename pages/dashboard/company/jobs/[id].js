@@ -1103,14 +1103,14 @@ export default function Job() {
                                     {
                                         !form.values.must_have_clean_mvr &&
                                         <div className="col-12">
-                                            <label>{t("mvr_requirements")}:</label>
+                                            <label>{t("MVR_REQUIREMENTS")}:</label>
                                             {form.touched.mvr_requirements && typeof form.errors.mvr_requirements === "string" ? <span className="text-danger small">{form.errors.mvr_requirements}</span> : null}
                                             {form.values.mvr_requirements.map((v, i) => {
                                                 return (
                                                     <div key={i} className="row">
                                                         <BaseSelect
                                                             className="col-3"
-                                                            label="max"
+                                                            label="MAX"
                                                             name={`mvr_requirements.${i}.max_count`}
                                                             required
                                                             value={v.max_count}
