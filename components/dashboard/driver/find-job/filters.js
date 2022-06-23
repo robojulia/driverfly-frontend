@@ -46,7 +46,11 @@ export default function Filters() {
                         <Filter /> {t('FILTERS')}
                     </Button>
                 </Col>
-                <Offcanvas show={showFilters} onHide={handleCloseFilters} placement="end" className="tab-content">
+                <Offcanvas
+                    show={showFilters}
+                    onHide={handleCloseFilters}
+                    placement="end"
+                    className="tab-content">
                     <Offcanvas.Header closeButton>
                         <Offcanvas.Title className="px-3">
                             {t('FILTER_RESULT')}

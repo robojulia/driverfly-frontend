@@ -1,16 +1,15 @@
 import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
 import useRedirect from '../../../../hooks/useRedirect';
 import { Container, Row, Col, Offcanvas, Button } from 'react-bootstrap';
-import { useTranslation } from '../../../../hooks/useTranslation';
 import JobApi from '../../../api/job';
 import { useEffect, useState } from 'react';
 import jobsContext from "../../../../context/jobContext"
 import JobsList from "../../../../components/find-jobs/job-list";
 import ResultCount from "../../../../components/find-jobs/result-count"
 import Filters from "../../../../components/dashboard/driver/find-job/filters";
+import OtrJobsList from "../../../../components/find-jobs/otr-job-list";
+import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
 export default function FindJobs() {
-
-    const { t } = useTranslation();
 
     const { authDriver } = useRedirect();
     authDriver()
@@ -34,26 +33,25 @@ export default function FindJobs() {
         })
     }
 
+    const [location, setLocation] = useState(null);
+    const [range, setRange] = useState(filters.location?.range || 50);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFiltersByKeyValue(name, value)
     }
 
     const fetchJobs = async () => {
-        try {
-            const { items, meta } = await jobApi.search({ ...filters })
-            setJobs(items)
-            setPagingMeta(meta)
-        } catch (e) {
-            // console.error('exception is here: ', e);
-            throw e
-        }
+        await jobApi.search({ ...filters })
+            .then(({ items, meta }) => {
+                setJobs(items)
+                setPagingMeta(meta)
+            })
+            .catch((e) => { console.error('exception is here: ', e.response) })
     }
 
     useEffect(fetchJobs, [filters])
-    useEffect(async () => {
-        await fetchJobs()
-    }, [])
+    useEffect(async () => { await fetchJobs() }, [])
 
     return (
         <jobsContext.Provider value={{
@@ -61,11 +59,15 @@ export default function FindJobs() {
                 jobs,
                 pagingMeta,
                 filters,
+                location,
+                range,
             },
             method: {
                 handleChange,
                 setPagingMeta,
                 setFilters,
+                setLocation,
+                setRange,
                 setFiltersByKeyValue,
                 applyFilters: fetchJobs
             },
@@ -78,6 +80,14 @@ export default function FindJobs() {
                         < JobsList />
                     </Col>
                 </Row>
+                {
+                    (!!filters.location && !!filters.areas_covered && filters.areas_covered == JobGeography.OTR) &&
+                    <Row className='mt-5'>
+                        <Col className='col-12 my-lg-0 my-4'>
+                            < OtrJobsList />
+                        </Col>
+                    </Row>
+                }
             </Container>
         </jobsContext.Provider>
     )
