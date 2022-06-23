@@ -19,7 +19,7 @@ export class CompanyEntity {
             const regex_email = `([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)`
             const regex_number = `/^[-+]?[0-9]+$/`
 
-            if (!value?.match(regex_email)) return true;
+            if (!value?.match(regex_email) && !!value?.match(regex_number)) return true;
             // if (!value?.match(regex_number)) return true;
 
             return context.createError({
