@@ -57,6 +57,7 @@
     "sass": "^1.45.1",
     "simplebar-react": "^2.3.6",
     "styled-components": "^5.3.5",
+    "twilio-client": "^1.14.0",
     "wysiwyg": "^2.0.0",
     "yup": "^0.32.11"
   },
