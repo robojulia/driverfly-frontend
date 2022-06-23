@@ -656,6 +656,7 @@
     "EDIT_JOB": "Edit Job",
     "CREATE_JOB": "Create Job",
     "JOBS": "Jobs",
+    "OTR_JOBS_FROM_US": "All OTR Jobs from US",
     "JOB": "Job",
     "DATE_{name}": "Date {{name}}",
     "DATE_APPLIED": "Date Applied",
