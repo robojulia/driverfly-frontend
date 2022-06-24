@@ -212,9 +212,33 @@ const years = [
     },
 ];
 
+const year2Only = [
+    {
+        value: 2,
+        label: 2
+    },
+];
+
+const year3Only = [
+    {
+        value: 3,
+        label: 3
+    },
+];
+
+const year5Only = [
+    {
+        value: 5,
+        label: 5
+    },
+];
+
 export {
     counts,
     years,
+    year2Only,
+    year3Only,
+    year5Only,
     jobBenefits,
     jobGeography,
     jobType,
