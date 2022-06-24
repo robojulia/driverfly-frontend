@@ -682,6 +682,9 @@
     "CANNOT_PASS_DRUG_TEST": "Cannot pass drug test",
     "DOES_NOT_HAVE_{name}_EXPERIENCE": "Does not have {{name}} experience",
     "YEARS_OF_{name}_EXPERIENCE_TOO_LOW": "Years of {{name}} experience is too low",
+    "APPLICATION_STATUS": "Application Status",
+    "MY_APPLICATIONS": "My Applications",
+    "NO_RECORDS_FOUND": "No Record Found",
     "ApplicantStatus": {
         "APPLIED": "Applied",
         "LEAD": "Lead",
@@ -691,7 +694,6 @@
         "REJECTED": "Rejected",
         "HIRED": "Hired",
         "WITHDRAWN": "Withdrawn",
-
         "NEW_SOURCED": "New - Sourced",
         "NEW_REFERRED": "New - Referred",
         "NEW_APPLIED_SHORT_FORM": "New - Applied - Short Form",
