@@ -214,7 +214,7 @@ function View(props) {
                 <Col>
                     <div style={{ float: "right" }}>
                         <ButtonGroup size="sm">
-                            <Button type="button" variant='secondary' onClick={onAssignClick}>
+                            <Button type="button" className='theme-general-btn' variant='' onClick={onAssignClick}>
                                 <BookmarkCheck /> {t("ASSIGN_TO_ME")}
                             </Button>
                             {
@@ -440,7 +440,7 @@ function View(props) {
             }
         </Row>
         <Row>
-            <Col md="5">
+            <Col md="12">
                 <ViewCard title="UPLOADED_DOCUMENTS">
                     <ViewTable
                         type="DOCUMENTS"
@@ -458,7 +458,7 @@ function View(props) {
                     />
                 </ViewCard>
             </Col>
-            <Col md="6" className="offset-md-1">
+            <Col md="12">
                 <ViewCard title="NOTES">
                     <ViewTable
                         type="NOTES"
@@ -598,7 +598,7 @@ function Edit(props) {
         <form onSubmit={form.handleSubmit}>
             <Row>
                 <Col>
-                    <div style={{ float: "right" }}>
+                    <div style={{ float: "right"}}>
                         <Button type="submit">{t("SAVE")}</Button>
                     </div>
                 </Col>
@@ -677,7 +677,7 @@ function Edit(props) {
                                     placeholder="CITY"
                                     formik={form}
                                 />
-                                <Row>
+                                <Row className='px-3'>
                                     <StateSelect
                                         className="col-6"
                                         label="STATE"
@@ -710,7 +710,7 @@ function Edit(props) {
                                     placeholder="expiration_date"
                                     formik={form}
                                 />
-                                <Row>
+                                <Row className="px-3">
                                     <StateSelect
                                         className="col-6"
                                         label="state_issued"
@@ -822,7 +822,7 @@ function Edit(props) {
                         </Row>
                         <Row>
                             <Col md="6">
-                                <Col xs="12">
+                                <Col xs="12"  className='p-2 mt-2' >
                                     <ViewCard
                                         title="equipment_experience"
                                         actions={<Button size='sm' onClick={() => form.setValues({
@@ -893,10 +893,10 @@ function Edit(props) {
                                     </ViewCard>
                                 </Col>
                             </Col>
-                            <Col md="6">
+                            <Col md="6" className='px-2'>
                                 {
                                     form.values.is_owner_operator &&
-                                    <Col xs="12">
+                                    <Col xs="12" className='mt-3'>
                                         <ViewCard
                                             title="equipment_owned"
                                             actions={<Button size='sm' onClick={() => form.setValues({
