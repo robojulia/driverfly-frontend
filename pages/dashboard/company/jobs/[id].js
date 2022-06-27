@@ -23,7 +23,7 @@ import BaseRange from "../../../../components/forms/BaseRange";
 
 import { useRouter } from "next/router"
 
-import { counts, years } from "../../../../utils/jobs";
+import { counts, year2Only, year3Only, year5Only, years, years2, years3, years5 } from "../../../../utils/jobs";
 
 import { EducationLevel } from "../../../../enums/users/education-level.enum";
 import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
@@ -1127,15 +1127,43 @@ export default function Job() {
                                                             enumType={MvrType}
                                                             formik={form}
                                                         />
-                                                        <BaseSelect
-                                                            className="col-3"
-                                                            label="within"
-                                                            name={`mvr_requirements.${i}.max_years`}
-                                                            required
-                                                            value={v.max_years}
-                                                            options={years}
-                                                            formik={form}
-                                                        />
+                                                        {
+                                                            form.values.mvr_requirements[i].type === MvrType.DUI &&
+                                                            <BaseSelect
+                                                                className="col-3"
+                                                                label="within"
+                                                                name={`mvr_requirements.${i}.max_years`}
+                                                                required
+                                                                value={v.max_years}
+                                                                options={year2Only}
+                                                                formik={form}
+                                                            />
+                                                        }
+                                                        {
+                                                            form.values.mvr_requirements[i].type === MvrType.MOVING_VIOLATION_NOT_AT_FAULT &&
+                                                            <BaseSelect
+                                                                className="col-3"
+                                                                label="within"
+                                                                name={`mvr_requirements.${i}.max_years`}
+                                                                required
+                                                                value={v.max_years}
+                                                                options={year3Only}
+                                                                formik={form}
+                                                            />
+                                                        }
+                                                        {
+                                                            (form.values.mvr_requirements[i].type === MvrType.INFRACTIONS ||
+                                                                form.values.mvr_requirements[i].type === MvrType.TICKETS) &&
+                                                            <BaseSelect
+                                                                className="col-3"
+                                                                label="within"
+                                                                name={`mvr_requirements.${i}.max_years`}
+                                                                required
+                                                                value={v.max_years}
+                                                                options={year5Only}
+                                                                formik={form}
+                                                            />
+                                                        }
                                                         <div className="col-2 mt-4">
                                                             <button className="btn btn-yellow" name={i} onClick={removeMvrRequirement}>x</button>
                                                         </div>

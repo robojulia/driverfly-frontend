@@ -5,7 +5,7 @@ import Sidebar from "./sidebars/Sidebar";
 import Head from "next/head";
 
 import { useTranslation } from "../../../hooks/useTranslation";
-import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, BellFill, SearchHeartFill, CheckSquareFill, GiftFill, GearFill, ShareFill, EnvelopeFill } from 'react-bootstrap-icons';
+import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, BellFill, SearchHeartFill, CheckSquareFill, GiftFill, GearFill, ShareFill, EnvelopeFill, CardList } from 'react-bootstrap-icons';
 import useAuth from "../../../hooks/useAuth";
 
 
@@ -34,6 +34,11 @@ const FullLayout = ({ children }) => {
       pathname: "/dashboard/driver/find-jobs",
       icon: Search,
       text: "find_new_job"
+    },
+    {
+      pathname: "/dashboard/driver/applications",
+      icon: CardList,
+      text: "MY_APPLICATIONS"
     },
     {
       pathname: "/dashboard/driver/jobs-offered",
