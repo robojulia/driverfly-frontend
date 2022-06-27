@@ -17,10 +17,9 @@ export class CompanyEntity {
         .test({
           test: (value, context) => {
             const regex_email = `([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)`
-            const regex_number = `/^[-+]?[0-9]+$/`
+            const regex_number = `[0-9]{7,12}`
 
-            if (!value?.match(regex_email) && !!value?.match(regex_number)) return true;
-            // if (!value?.match(regex_number)) return true;
+            if (!value?.match(regex_email) && !value?.match(regex_number)) return true;
 
             return context.createError({
               path: context.path,
