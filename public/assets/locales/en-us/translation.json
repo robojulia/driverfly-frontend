@@ -683,6 +683,9 @@
     "CANNOT_PASS_DRUG_TEST": "Cannot pass drug test",
     "DOES_NOT_HAVE_{name}_EXPERIENCE": "Does not have {{name}} experience",
     "YEARS_OF_{name}_EXPERIENCE_TOO_LOW": "Years of {{name}} experience is too low",
+    "APPLICATION_STATUS": "Application Status",
+    "MY_APPLICATIONS": "My Applications",
+    "NO_RECORDS_FOUND": "No Record Found",
     "ApplicantStatus": {
         "APPLIED": "Applied",
         "LEAD": "Lead",
@@ -692,7 +695,6 @@
         "REJECTED": "Rejected",
         "HIRED": "Hired",
         "WITHDRAWN": "Withdrawn",
-
         "NEW_SOURCED": "New - Sourced",
         "NEW_REFERRED": "New - Referred",
         "NEW_APPLIED_SHORT_FORM": "New - Applied - Short Form",
@@ -797,6 +799,7 @@
     "UPDATE_PASSWORD": "Update Password",
     "SUCCESS_RESET_PASSWORD": " Password Update Successfully",
     "INVALID_EMAIL_FORMAT": "Invalid email format",
+    "NO_EMAIL_AND_NUMBER": "Email and Phone Numbers are not allowed",
     "USER_NOT_FOUND": "User with the email specified was not found.",
     "RESET_PASSWORD_EMAIL_SENT_RECENTLY": "A password reset email was recently sent, please check your email or try again after 15 minutes",
     "BACK_TO_LOGIN": "Back To Login",
