@@ -798,6 +798,7 @@
     "UPDATE_PASSWORD": "Update Password",
     "SUCCESS_RESET_PASSWORD": " Password Update Successfully",
     "INVALID_EMAIL_FORMAT": "Invalid email format",
+    "NO_EMAIL_AND_NUMBER": "Email and Phone Numbers are not allowed",
     "USER_NOT_FOUND": "User with the email specified was not found.",
     "RESET_PASSWORD_EMAIL_SENT_RECENTLY": "A password reset email was recently sent, please check your email or try again after 15 minutes",
     "BACK_TO_LOGIN": "Back To Login",
