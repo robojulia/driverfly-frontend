@@ -81,15 +81,6 @@ export default function Job() {
         initialValues: new JobEntity(),
         validationSchema: JobEntity.yupSchema(),
         onSubmit: async (data) => {
-            console.log(data);
-            data.min_weekly_pay = parseFloat(data.min_weekly_pay)
-            data.max_weekly_pay = parseFloat(data.max_weekly_pay)
-            data.min_rate = parseFloat(data.min_rate)
-            data.max_rate = parseFloat(data.max_rate)
-            data.min_miles = parseFloat(data.min_miles)
-            data.max_miles = parseFloat(data.max_miles)
-            data.min_salary = parseFloat(data.min_salary)
-            data.max_salary = parseFloat(data.max_salary)
             try {
                 const jobApi = await new JobApi();
 
@@ -236,8 +227,8 @@ export default function Job() {
                 max_hours = null;
                 min_salary = null;
                 max_salary = null;
-                min_weekly_pay = (min_miles >= 0 && min_rate >= 0 ? (min_miles * min_rate).toFixed(2) : min_weekly_pay);
-                max_weekly_pay = (max_miles >= 0 && max_rate >= 0 ? (max_miles * max_rate).toFixed(2) : max_weekly_pay);
+                min_weekly_pay = (min_miles >= 0 && min_rate >= 0 ? parseFloat((min_miles * min_rate).toFixed(2)) : min_weekly_pay);
+                max_weekly_pay = (max_miles >= 0 && max_rate >= 0 ? parseFloat((max_miles * max_rate).toFixed(2)) : max_weekly_pay);
                 break;
             case JobPayMethod.PERCENT_PER_MOVE:
             case JobPayMethod.PERCENT_PER_WEIGHT:
@@ -278,8 +269,8 @@ export default function Job() {
                 max_percent = null;
                 min_salary = null;
                 max_salary = null;
-                min_weekly_pay = (min_hours >= 0 && min_rate >= 0 ? (min_hours * min_rate).toFixed(2) : min_weekly_pay);
-                max_weekly_pay = (max_hours >= 0 && max_rate >= 0 ? (max_hours * max_rate).toFixed(2) : max_weekly_pay);
+                min_weekly_pay = (min_hours >= 0 && min_rate >= 0 ? parseFloat((min_hours * min_rate).toFixed(2)) : min_weekly_pay);
+                max_weekly_pay = (max_hours >= 0 && max_rate >= 0 ? parseFloat((max_hours * max_rate).toFixed(2)) : max_weekly_pay);
                 break;
             case JobPayMethod.SET_WEEKLY:
                 /*
@@ -314,8 +305,8 @@ export default function Job() {
                 max_hours = null;
                 min_rate = null;
                 max_rate = null;
-                min_weekly_pay = min_salary >= 0 ? (min_salary / 52).toFixed(2) : min_weekly_pay;
-                max_weekly_pay = max_salary >= 0 ? (max_salary / 52).toFixed(2) : min_weekly_pay;
+                min_weekly_pay = min_salary >= 0 ? parseFloat((min_salary / 52).toFixed(2)) : min_weekly_pay;
+                max_weekly_pay = max_salary >= 0 ? parseFloat((max_salary / 52).toFixed(2)) : min_weekly_pay;
                 break;
         }
 
