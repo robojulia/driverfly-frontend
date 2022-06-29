@@ -515,6 +515,8 @@
     "drivers_needed": "Drivers Needed",
     "JOB_LISTINGS": "Job Listings",
     "APPLICANTS": "Applicants",
+    "APPLICANTS_PER_RECRUITER": "Applicants per recruiter",
+    "UNASSIGNED": "Unassigned",
     "MESSAGES": "Messages",
     "DRIVER_APPLICATION": "Driver Application",
     "DRIVER_DIRECTORY": "Driver Directory",
