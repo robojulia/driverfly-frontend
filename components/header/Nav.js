@@ -7,7 +7,7 @@ import DashboardButton from "../buttons/DashboardButton";
 import { useTranslation } from "../../hooks/useTranslation";
 import { Bell, List } from 'react-bootstrap-icons';
 import React from "react";
-import { Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { Nav, Navbar, NavDropdown, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 export default function MyNav() {
     const { authCheck } = useAuth();
@@ -83,7 +83,7 @@ export default function MyNav() {
                         {authCheck() ?
                             <>
                                 <DashboardButton className="theme-secondary-btn mr-4" />
-                                <LogoutButton className="theme-secondary-btn mr-4" />
+                                <LogoutButton as={Button} className="theme-secondary-btn mr-4" />
                             </>
                             :
                             <>
