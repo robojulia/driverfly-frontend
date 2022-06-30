@@ -2076,3 +2076,6 @@ text-align: center;
 .text-blue {
     color: #007bff !important;
 }
+input[type=checkbox] {
+    padding: 7px !important;
+}

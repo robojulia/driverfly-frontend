@@ -179,7 +179,7 @@ export default function Applicants() {
                     <Button variant="primary" onClick={() => router.push("/dashboard/company/applicants/create")}>
                         + {t("CREATE")}
                     </Button>
-                    <Button variant="secondary" onClick={() => router.push("/dashboard/company/applicants/import")}>
+                    <Button variant="" className="theme-general-btn" onClick={() => router.push("/dashboard/company/applicants/import")}>
                         + {t("IMPORT_APPLICANTS")}
                     </Button>
                 </ButtonGroup>
