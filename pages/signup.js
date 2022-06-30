@@ -81,7 +81,7 @@ export default function Signup() {
       phone: yup.string().nullable(),
       role: yup.string().enum(SignUpRole).required().nullable(),
       invite_code: yup.string().required().nullable(),
-      accept_tos: yup.boolean().oneOf([true])
+      accept_tos: yup.boolean().oneOf([true], (t("MUST_BE_CHECKED")))
     }),
     onSubmit: async (dto) => {
       console.log(dto);
