@@ -423,7 +423,8 @@
     "DriverEndorsement": {
         "HAZMAT": "Hazmat",
         "TANKERS": "Tankers",
-        "DOUBLES": "Doubles",
+        "DOUBLES_TRIPLES": "Doubles/Triples",
+        "SCHOOL_BUS": "School Bus",
         "TWIC": "TWIC"
     },
     "hazmat": "Hazmat",
@@ -736,7 +737,7 @@
         "CRIMINAL_OFFENSE": "Criminal offense(s)",
         "INAPPROPRIATE_BEHAVIOR": "Inappropriate behavior",
         "CITIZENSHIP": "Citizenship",
-        "ENDORSEMENTS": "Endorsements",
+        "ENDORSEMENTS": "Endorsements/TWIC",
         "FAILED_DRUG_TEST": "Failed drug test",
         "OTHER": "Other"
     },
@@ -810,7 +811,7 @@
     "GO_BACK": "Go Back",
     "STATE_AND_ZIP": "State & Zip",
     "UNKNOWN": "Unknown",
-    "ENDORSEMENTS": "Endorsements",
+    "ENDORSEMENTS": "Endorsements/TWIC",
     "AUTHORIZED_TO_WORK_IN_THE_US": "Authorized to work in the US",
     "WORK_HISTORY": "Work History",
     "SAFETY_BACKGROUND": "Safety Background",
