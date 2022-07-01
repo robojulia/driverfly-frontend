@@ -44,6 +44,7 @@ export function VehicleForm(props) {
         initialValues: vehicle,
         validationSchema: VehicleEntity.yupSchema(),
         onSubmit: async (dto) => {
+            dto.max_speed = parseInt(dto.max_speed)
             const api = new VehicleApi();
             try {
                 let vehicle = null;
