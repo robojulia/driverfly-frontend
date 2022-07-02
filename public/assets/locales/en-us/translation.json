@@ -521,6 +521,7 @@
     "MESSAGES": "Messages",
     "CALL": "Call",
     "MAKE_CALL": "Make Call",
+    "COULD_NOT_MAKE_CALL": "Could not make Call",
     "DRIVER_APPLICATION": "Driver Application",
     "DRIVER_DIRECTORY": "Driver Directory",
     "SAFETY_COMPLIANCE": "Safety & Compliance",
