@@ -482,8 +482,8 @@ export default function Job() {
                 backPath={backPath}
             >
                 <form onSubmit={form.handleSubmit} >
-                    <div className="col-12 border-0 text-end">
-                        <div className="col">
+                    <div className="col-12 border-0 text-end p-0 mb-2">
+                        <div className="col p-0">
                             <button type="submit" className={`theme-secondary-btn`} >
                                 {t(id ? "UPDATE" : "CREATE")}
                             </button>
@@ -831,7 +831,7 @@ export default function Job() {
                                 {/* todo: add job pay information */}
                                 <BaseCheckList
                                     className="col-12"
-                                    label="benefits"
+                                    label="BENEFITS"
                                     name="benefits"
                                     placeholder="benefits"
                                     cols={2}
@@ -909,7 +909,7 @@ export default function Job() {
                     <hr />
                     <Row>
                         <BaseTextArea
-                            className="col-md-10 offset-md-1"
+                            className="col-md-12"
                             label="description"
                             name="description"
                             required
@@ -930,7 +930,7 @@ export default function Job() {
                         /> */}
                     </Row>
                     <hr />
-                    <div className="row">
+                    <div className="row px-3">
                         <ViewCard
                             title="requirements"
                         >
@@ -995,7 +995,7 @@ export default function Job() {
                                                     </div>
                                                 </Row>);
                                         })}
-                                        <div className="col-6 offset-6 text-end mt-2">
+                                        <div className="col-6 offset-6 text-end mt-2 p-0">
                                             <button className="btn btn-yellow" onClick={addRequiredSkills}>+ {t("more")}</button>
                                         </div>
                                     </div>
