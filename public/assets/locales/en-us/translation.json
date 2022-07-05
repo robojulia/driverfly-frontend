@@ -146,7 +146,7 @@
         "EXCLUDE_NY_FL": "No traveling to New York or Florida",
         "NO_FORCED_DISPATCH": "No forced dispatch",
         "COMPANION_DRIVERS": "Companion drivers allowed",
-        "ONBOARD_DEVICES": "Onboard devices/subscriptions (ex. Netflix, Rand McNally, etc.)",
+        "ONBOARD_DEVICES": "Onboard devices / subscriptions (ex. Netflix, Rand McNally, etc.)",
         "PETS_ALLOWED": "Pets allowed",
         "RIDER_POLICY": "Rider policy",
         "OTHER": "Other"
