@@ -328,7 +328,7 @@ export default function Job() {
 
         function getOrCurrent(field) {
             const v = name === field ? value : form.values[field];
-            if (v != null && v != "") return v;
+            if (v != null && v != "") return parseFloat(v);
             // return v;
         }
     }
