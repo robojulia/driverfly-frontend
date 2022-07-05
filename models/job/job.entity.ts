@@ -24,6 +24,7 @@ import { VehicleTransmissionType } from '../../enums/vehicles/vehicle-transmissi
 import { BasicEntity } from '../BasicEntity.entity';
 import { JobPayFrequency } from '../../enums/jobs/job-pay-frequency.enum';
 import { JobDrugTestType } from '../../enums/jobs/job-drug-test-type.enum';
+import { numberRangeEnd, numberRangeStart } from '../../utils/yup';
 
 export class JobEntity {
     id?: number;
@@ -120,46 +121,46 @@ export class JobEntity {
             //),
             min_salary: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.SALARY,
-                then: yup.number().min(0).required().nullable()
+                then: numberRangeStart("max_salary", 0).required()
             }).nullable(),
             max_salary: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.SALARY,
-                then: yup.number().min(0).required().nullable()
+                then: numberRangeEnd("min_salary", 0).required()
             }).nullable(),
             min_rate: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.RATE_PER_MILE || v === JobPayMethod.HOURLY,
-                then: yup.number().min(0).required().nullable()
+                then: numberRangeStart("max_rate", 0).required()
             }).nullable(),
             max_rate: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.RATE_PER_MILE || v === JobPayMethod.HOURLY,
-                then: yup.number().min(0).required().nullable()
+                then: numberRangeEnd("min_rate", 0).required()
             }).nullable(),
             min_hours: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.HOURLY,
-                then: yup.number().min(0).required().nullable()
+                then: numberRangeStart("max_hours", 0).required()
             }).nullable(),
             max_hours: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.HOURLY,
-                then: yup.number().min(0).required().nullable()
+                then: numberRangeEnd("min_hours", 0).required()
             }).nullable(),
             min_percent: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.PERCENT_PER_MOVE || v === JobPayMethod.PERCENT_PER_WEIGHT,
-                then: yup.number().min(0).required().nullable()
+                then: numberRangeStart("max_percent", 0).required()
             }).nullable(),
             max_percent: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.PERCENT_PER_MOVE || v === JobPayMethod.PERCENT_PER_WEIGHT,
-                then: yup.number().min(0).required().nullable()
+                then: numberRangeEnd("min_percent", 0).required()
             }).nullable(),
             min_miles: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.RATE_PER_MILE,
-                then: yup.number().min(0).required().nullable()
+                then: numberRangeStart("max_miles", 0).required()
             }).nullable(),
             max_miles: yup.number().when("pay_method", {
                 is: v => v === JobPayMethod.RATE_PER_MILE,
-                then: yup.number().min(0).required().nullable()
+                then: numberRangeEnd("min_miles", 0).required()
             }).nullable(),
-            min_weekly_pay: yup.number().min(0).required().nullable(),
-            max_weekly_pay: yup.number().min(0).required().nullable(),
+            min_weekly_pay: numberRangeStart("max_weekly_pay", 0).required(),
+            max_weekly_pay: numberRangeEnd("min_weekly_pay", 0).required(),
             benefits: yup.array(
                 (yup.string() as any).enum(JobBenefits)
             ),

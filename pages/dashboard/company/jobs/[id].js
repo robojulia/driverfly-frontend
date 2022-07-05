@@ -327,7 +327,9 @@ export default function Job() {
         });
 
         function getOrCurrent(field) {
-            return name === field ? +value : form.values[field];
+            const v = name === field ? value : form.values[field];
+            if (v != null && v != "") return v;
+            // return v;
         }
     }
 

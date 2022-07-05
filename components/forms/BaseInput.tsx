@@ -51,7 +51,9 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
         // prevent negative if the min value is set to 0
         if (min != null && parseInt(min) >= 0 && e.key === "-") e.preventDefault();
 
-        if (e.key === ".") e.preventDefault();
+        if (e.key === ".") {
+          e.preventDefault();
+        }
       };
   }
   else if (type === "number") {
@@ -74,7 +76,9 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
     onChange = (e) => {
       const { value } = e.target;
 
-      if (value && value.startsWith(".")) e.target.value = `0${value}`;
+      if (value && value.startsWith(".")) {
+        e.target.value = `0${value}`;
+      }
 
       if (currentOnChange) currentOnChange(e);
     }
