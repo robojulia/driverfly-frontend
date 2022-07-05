@@ -53,7 +53,7 @@ export default function CompaniesSlider() {
                 draggable={false}
                 showDots={true}
                 arrows={false}
-                autoPlay={false}
+                autoPlay={true}
                 infinite={true}
                 autoPlaySpeed={1000}
                 keyBoardControl={true}

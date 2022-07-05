@@ -558,8 +558,14 @@ function Edit(props) {
 
                 router.push(`/dashboard/company/applicants/${values.id}`);
             } catch (e) {
-                console.error("Unable to save applicant info", e);
-                toast.error(t("unable_to_save_information"));
+                console.error("Unable to save applicant info", e.response);
+                if(e?.response?.data?.email == "ALREADY_EXISTS"){
+                    toast.error(t("EMAIL_ALREADY_EXISTS"));
+                }
+                else{
+                    toast.error(t("unable_to_save_information"));
+
+                }
             }
         }
     });

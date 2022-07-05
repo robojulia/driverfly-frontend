@@ -64,8 +64,8 @@ export default function Detail({ jobDetail, relatedJobs }) {
                         {
                           jobDetail.location &&
                           <p className="pr-4">
-                            < GeoAltFill className="mr-1" />
-                            {buildAddress(jobDetail.location)}
+                            {/* < GeoAltFill className="mr-1" /> */}
+                            {buildAddress(jobDetail.location,{ street: false, zip_code: false})}
                           </p>
                         }
                       </div>
