@@ -10,6 +10,8 @@ import {PenFill, TrashFill} from 'react-bootstrap-icons';
 import UserApi from "../../../../api/user";
 import ViewDataTable from "../../../../../components/viewDetails/viewDataTable";
 import { Status } from '../../../../../enums/status.enum';
+import { UserEntity } from '../../../../../models/user/user.entity';
+import { useEffectAsync } from '../../../../../utils/react';
 
 export default function UserList() {
 
@@ -23,7 +25,7 @@ export default function UserList() {
 
   const [ users, setUsers ] = useState([]);
 
-  useEffect(async () => {
+  useEffectAsync(async () => {
     const api = new UserApi();
     const v = await api.list();
     setUsers(v.filter((u) => u.id !== user.id && u.status === Status.ACTIVE));
@@ -74,7 +76,7 @@ export default function UserList() {
       }>
       <Row className="mt-5">
         <Col>
-          <ViewDataTable
+          <ViewDataTable<UserEntity>
             columns={[
               {
                 name: "name",
@@ -100,7 +102,7 @@ export default function UserList() {
                 name: "phone_cell",
                 selector: j => j.cell_number,
                 hidable: true,
-                hide: true
+                hide: 1
               }
             ]}
             actions={j => ([
