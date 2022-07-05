@@ -19,6 +19,7 @@ import { JobDeliveryType } from '../../../../enums/jobs/job-delivery-type.enum';
 import useStorage from "../../../../hooks/useStorage";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import { useEffectAsync } from "../../../../utils/react";
+import { ApplicantJobEntity } from "../../../../models/applicant/applicant-job.entity";
 
 export default function Index() {
 
@@ -33,18 +34,14 @@ export default function Index() {
     let settingsJson = useStorage().getItem(columnSettingKey)
     let settingsArray = settingsJson ? JSON.parse(settingsJson) : []
 
-    const [applications, setApplications] = useState([])
-    const [columnHistory, setColumnHistory] = useState([])
-
-    const fetchApplications = async () => {
-        await applicantApi.getJobApplications()
-            .then(data => setApplications(data))
-            .catch((error) => { console.error(error) })
-    }
+    const [applications, setApplications] = useState<ApplicantJobEntity[]>([])
+    const [columnHistory, setColumnHistory] = useState<string[]>([])
 
     useEffectAsync(async () => {
-        fetchApplications()
-        let columnArray = []
+        const aJobs = await applicantApi.me.jobs();
+
+        setApplications(aJobs);
+        let columnArray: string[] = []
         await settingsArray.map(v => {
             columnArray[v.name] = v
         })
@@ -60,7 +57,7 @@ export default function Index() {
             </Row>
             <Row className="mt-5">
                 <Col lg="12 ">
-                    <ViewDataTable<any>
+                    <ViewDataTable<ApplicantJobEntity>
                         columns={[
                             {
                                 name: "job_title",
@@ -77,7 +74,7 @@ export default function Index() {
                             },
                             {
                                 name: "company",
-                                selector: applicant => applicant.company?.name,
+                                selector: applicant => applicant.company.name,
                             },
                             {
                                 name: "location",
