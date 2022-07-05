@@ -45,11 +45,11 @@ const FullLayout = ({ children }) => {
       icon: BagFill,
       text: "jobs_offered"
     },
-    {
-      pathname: "/dashboard/driver/jobs-applied-to",
-      icon: CheckSquareFill,
-      text: "jobs_applied_to"
-    },
+    // {
+    //   pathname: "/dashboard/driver/jobs-applied-to",
+    //   icon: CheckSquareFill,
+    //   text: "jobs_applied_to"
+    // },
     {
       pathname: "/dashboard/driver/jobs-saved",
       icon: ClockHistory,
