@@ -48,11 +48,12 @@ export default function JobsList() {
                                     {
                                         job.location &&
                                         <>
-                                            <p>
-                                                < GeoAltFill className='mr-1' />
+                                           
+                                                {/* < GeoAltFill className='mr-1' /> */}
                                                 <span className='mr-4'>
-                                                    {buildAddress(job.location || {})}
-                                                </span></p>
+                                                {buildAddress(job.location || {},{ street: false, zip_code: false})}
+
+                                                </span>
                                         </>
                                     }
                                     <p>

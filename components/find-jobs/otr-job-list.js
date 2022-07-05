@@ -87,9 +87,9 @@ export default function OtrJobsList() {
                                         job.location &&
                                         <>
                                             <p>
-                                                < GeoAltFill className='mr-1' />
+                                                {/* < GeoAltFill className='mr-1' /> */}
                                                 <span className='mr-4'>
-                                                    {buildAddress(job.location || {})}
+                                                    {buildAddress(job.location || {},{ street: false, zip_code: false})}
                                                 </span></p>
                                         </>
                                     }

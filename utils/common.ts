@@ -1,4 +1,4 @@
-function buildAddress(props?: { street?: string, city?: string, state?: string, zip_code?: string }) {
+function buildAddress(props?: { street?: string, city?: string, state?: string, zip_code?: string}, show?: { street?: boolean, city?: boolean, state?: boolean, zip_code?: boolean}) {
 
     if (!props) return;
 
@@ -6,18 +6,16 @@ function buildAddress(props?: { street?: string, city?: string, state?: string, 
     
     let address = "";
 
-    if (street) address += street;
+    if (street && show?.street !== false) address += street;
 
-    if (city) address += (address.length > 0 ? ", " : "") + city;
+    if (city && show?.city !== false) address += (address.length > 0 ? ", " : "") + city;
 
-    if (state) address += (address.length > 0 ? ", " : "") + state;
+    if (state && show?.state !== false) address += (address.length > 0 ? ", " : "") + state;
 
-    if (zip_code) address += (address.length > 0 ? ", " : "") + zip_code;
+    if (zip_code && show?.zip_code !== false) address += (address.length > 0 ? ", " : "") + zip_code;
 
     return address;
 }
-
-
 function generateUUID() { // Public Domain/MIT
     var d = new Date().getTime();//Timestamp
     var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
