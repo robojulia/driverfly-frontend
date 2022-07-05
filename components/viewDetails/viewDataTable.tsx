@@ -81,7 +81,7 @@ export default function ViewDataTable<TElement>(props: ViewTableProps<TElement>)
     const onSearchClick = (e?: React.MouseEvent) => {
         setItems(
             props.items.filter(v =>
-                columns.some(c => c.name && !c.hide && !!(c.selector(v) as any)?.toLowerCase().includes(search)))
+                columns.some(c => c.name && !c.hide && c.selector && !!c.selector(v)?.toString()?.toLowerCase()?.includes(search)))
         )
 
     };
