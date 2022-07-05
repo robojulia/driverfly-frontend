@@ -21,7 +21,7 @@ export default class UserApi extends BaseApi {
         await this.delete(`user/${id}`);
     }
 
-    async list(companyId?: number) : Promise<UserEntity> {
+    async list(companyId?: number) : Promise<UserEntity[]> {
         const { data } = await this.get(this.buildUrl("user/list", { companyId }));
 
         return data;

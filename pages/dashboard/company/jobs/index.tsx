@@ -11,6 +11,7 @@ import { PenFill, TrashFill, Eye, EyeFill } from 'react-bootstrap-icons';
 
 
 import JobApi from "../../../api/job";
+import { JobEntity } from "../../../../models/job/job.entity";
 import { useTranslation } from "../../../../hooks/useTranslation";
 import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
 import { JobSchedule } from "../../../../enums/jobs/job-schedule.enum";
@@ -27,6 +28,7 @@ import ViewDataTable from "../../../../components/viewDetails/viewDataTable";
 import OverlyPopover from "../../../../components/popover/overly-popover";
 import useAuth from "../../../../hooks/useAuth";
 import useStorage from "../../../../hooks/useStorage";
+import { useEffectAsync } from "../../../../utils/react";
 
 export default function JobListing() {
 
@@ -44,7 +46,7 @@ export default function JobListing() {
     const [jobs, setJobs] = useState([])
     const [columnHistory, setColumnHistory] = useState([])
 
-    useEffect(async () => {
+    useEffectAsync(async () => {
         const api = new JobApi();
 
         const v = await api.list();
@@ -120,46 +122,44 @@ export default function JobListing() {
                 </Row>
                 <Row className="mt-5 my_job_listing">
                     <Col lg="12 ">
-                        <ViewDataTable
+                        <ViewDataTable<JobEntity>
                             columns={[
                                 {
                                     name: "job_title",
-                                    selector: job => (<OverlyPopover skipTranslate={true} header={t('job_title')} str={job.title} />),
+                                    cell: job => (<OverlyPopover skipTranslate={true} header={t('job_title')} str={job.title} />),
+                                    selector: job => job.title,
                                     hidable: false
                                 },
                                 {
                                     name: "location",
-                                    selector: job => (<OverlyPopover skipTranslate={true} header={t('location')} str={buildAddress(job.location || {})} />),
-                                    hide: (!!columnHistory.location?.hide),
+                                    cell: job => (<OverlyPopover skipTranslate={true} header={t('location')} str={buildAddress(job.location || {})} />),
+                                    selector: job => buildAddress(job.location || {})
                                 },
                                 {
                                     name: "drivers_needed",
                                     selector: j => j.drivers_needed,
-                                    hide: (!!columnHistory.drivers_needed?.hide),
                                 },
                                 {
                                     name: "expiration_date",
                                     selector: j => j.expiry_date ? new Date(j.expiry_date).toDateString() : null,
-                                    hide: (!!columnHistory.expiration_date?.hide),
                                 },
                                 {
                                     name: "GEOGRAPHY",
                                     selector: j => j.geography ? t("JobGeography." + j.geography) : null,
-                                    hide: (!!columnHistory.GEOGRAPHY?.hide),
                                 },
                                 {
                                     name: "SCHEDULE",
-                                    selector: job => (<OverlyPopover labelPrefix="JobSchedule" skipTranslate={false} header={t('SCHEDULE')} str={job.schedule} />),
-                                    hide: (!!columnHistory.SCHEDULE?.hide),
+                                    cell: job => (<OverlyPopover labelPrefix="JobSchedule" skipTranslate={false} header={t('SCHEDULE')} str={job.schedule} />),
+                                    selector: job => t(`JobSchedule.${job.schedule}`)
                                 },
                                 {
                                     name: "EMPLOYMENT_TYPE",
-                                    selector: job => (<OverlyPopover labelPrefix="JobEmploymentType" skipTranslate={false} header={t('EMPLOYMENT_TYPE')} str={job.employment_type} />),
-                                    hide: (!!columnHistory.EMPLOYMENT_TYPE?.hide),
+                                    cell: job => (<OverlyPopover labelPrefix="JobEmploymentType" skipTranslate={false} header={t('EMPLOYMENT_TYPE')} str={job.employment_type} />),
+                                    selector: job => t(`JobEmploymentType.${job.employment_type}`)
                                 },
                                 {
                                     name: "DELIVERY_TYPE",
-                                    selector: j =>
+                                    cell: j =>
                                     (<ShowEnumFromString
                                         popover_header={t('DELIVERY_TYPE')}
                                         labelPrefix="JobDeliveryType"
@@ -167,12 +167,12 @@ export default function JobListing() {
                                         str={j.delivery_type}
                                         enumArray={JobDeliveryType} />
                                     ),
-                                    hide: (!!columnHistory.DELIVERY_TYPE?.hide),
+                                    selector: job => t(`JobDeliveryType.${job.delivery_type}`),
                                 },
                                 {
                                     name: "TEAM_DRIVERS",
-                                    selector: job => (<OverlyPopover labelPrefix="JobTeamDriver" skipTranslate={false} header={t('TEAM_DRIVERS')} str={job.team_drivers} />),
-                                    hide: (!!columnHistory.TEAM_DRIVERS?.hide),
+                                    cell: job => (<OverlyPopover labelPrefix="JobTeamDriver" skipTranslate={false} header={t('TEAM_DRIVERS')} str={job.team_drivers} />),
+                                    selector: job => t(`JobTeamDriver.${job.team_drivers}`),
                                 },
                             ]}
                             actions={j => ([
