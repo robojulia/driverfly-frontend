@@ -64,23 +64,12 @@ export default function Detail({ jobDetail, relatedJobs }) {
                         {
                           jobDetail.location &&
                           <p className="pr-4">
-                            <i className="fa fa-map-marker mr-2" aria-hidden="true"></i>
-                            {buildAddress(jobDetail.location)}
+                            {/* <i className="fa fa-map-marker mr-2" aria-hidden="true"></i> */}
+                            {buildAddress(jobDetail.location,{ street: false, zip_code: false})}
                           </p>
                         }
                       </div>
                       <div className="job-metas">
-                        <div className="job-location d-flex align-items-center">
-                          {
-                            jobDetail.location &&
-                            <p className="pr-4">
-                              < GeoAltFill className="mr-1" />
-                              <>
-                                {jobDetail.location.street || t('no_street')}, {jobDetail.location.city || t('no_city')}, {jobDetail.location.state || t('no_state')}, {jobDetail.location.zip_code || t('no_zip')}
-                              </>
-                            </p>
-                          }
-                        </div>
                         <p><CurrencyDollar />{jobDetail.min_weekly_pay ? jobDetail.min_weekly_pay : 0} - {jobDetail.max_weekly_pay ? jobDetail.max_weekly_pay : 0} {t('per week')}</p>
                       </div>
                     </div>

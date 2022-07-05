@@ -28,8 +28,8 @@ export default function CompanyJob({ jobs }) {
                       {
                         job.location &&
                         <>
-                          <GeoAltFill className="mr-1" />
-                          {buildAddress(job.location)}
+                          {/* <GeoAltFill className="mr-1" /> */}
+                          {buildAddress(job.location,{ street: false, zip_code: false})}
                         </>
                       }
                     </span>
