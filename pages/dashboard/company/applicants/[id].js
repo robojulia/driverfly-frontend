@@ -212,7 +212,7 @@ function View(props) {
         {canEdit &&
             <Row>
                 <Col>
-                    <div style={{ float: "right" }}>
+                    <div style={{ float: "right", marginBottom: "10px" }}>
                         <ButtonGroup size="sm">
                             <Button type="button" className='theme-general-btn' variant='' onClick={onAssignClick}>
                                 <BookmarkCheck /> {t("ASSIGN_TO_ME")}
@@ -407,7 +407,7 @@ function View(props) {
             </Col>
         </Row>
         <Row>
-            <Col md="5">
+            <Col md="6">
                 <ViewCard title="JOBS_APPLIED_TO_WITH_YOU">
                     <ViewTable
                         type="JOBS"
@@ -425,7 +425,7 @@ function View(props) {
                 </ViewCard>
             </Col>
             {applicant &&
-                <Col md="6" className="offset-md-1">
+                <Col md="6">
                     <ViewCard title={t("CONSIDER_{name}_FOR", { name: applicant?.first_name })}>
                         <ViewTable
                             type="OTHER_ROLES"
