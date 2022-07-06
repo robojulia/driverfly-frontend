@@ -6,23 +6,14 @@ import CompanyJob from '../../components/employer/CompanyJob';
 import ContactForm from '../../components/employer/ContactForm';
 import ReviewForm from '../../components/employer/ReviewForm';
 import CompanyApi from "../api/company"
-import DocumentApi from "../api/document"
 import { useTranslation } from '../../hooks/useTranslation';
 import JobApi from '../api/job';
 import Link from 'next/link';
+import CompanyPhoto from '../../components/jobs/company-photo';
 
-export default function CompanyDetail({ company, jobs }) {
+export default function CompanyDetail({ company, jobs, jobCount }) {
 
   const { t } = useTranslation();
-  const documentApi = new DocumentApi(company.id)
-  const [companyPhoto, setCompanyPhoto] = useState("/driverfly-logo-square.png")
-
-  useEffect(async () => {
-    if (company.photo?.id)
-      await documentApi.getSignedUrl(company.photo?.id)
-        .then(data => setCompanyPhoto(data))
-        .catch(error => console.error("error", error))
-  }, [company])
 
   return (
     <>
@@ -32,9 +23,7 @@ export default function CompanyDetail({ company, jobs }) {
             <div className='col-md-8 col-lg-8 col-sm-12'>
               <div className="row g-0 ">
                 <div className="col-md-4  col-lg-4 col-sm-4 text-center shadow p-3  bg-white rounded">
-                  <img src={companyPhoto}
-                    className="img-fluid rounded-start"
-                    alt="..." />
+                  <CompanyPhoto className="img-fluid rounded-start" company={company} />
                 </div>
                 <div className="col-md-8 col-lg-8 col-sm-8 ">
                   <div className="card-body">
@@ -79,14 +68,17 @@ export default function CompanyDetail({ company, jobs }) {
       </section>
       <section className='my-4'>
         <div className='container'>
-          <CompanyInfo company={company} jobsPosted={jobs.length} />
+          <CompanyInfo company={company} jobCount={jobCount} />
           <div className='row'>
             <div className='col-md-8 col-sm-12 col-lg-8'>
-              <Link href={`/find-jobs?companyId=${company.id}`}>
-                <a className='text-dark text-center text-decoration-none'>
-                  {t('view_all_jobs')} <ArrowRight className="pl-1" />
-                </a>
-              </Link>
+              {
+                !!jobCount &&
+                <Link href={`/find-jobs?companyId=${company.id}`}>
+                  <a className='text-dark text-center text-decoration-none'>
+                    {t('view_all_jobs')} <ArrowRight className="pl-1" />
+                  </a>
+                </Link>
+              }
               <CompanyJob jobs={jobs} />
               {/* <ReviewForm /> */}
             </div>
@@ -104,17 +96,32 @@ export default function CompanyDetail({ company, jobs }) {
 
 export async function getServerSideProps(context) {
   try {
-    const id = context.params?.id;
+    const companyId = context.params?.id || false
 
-    if (!!!id)
+    if (!!!companyId)
       return { notFound: true }
 
-    const data = id ? await new CompanyApi().getEmployerById(id) : []
-    if (!!!data)
+    const companyApi = new CompanyApi();
+    const jobApi = new JobApi();
+    let company = null
+    let jobCount = 0
+    let jobs = []
+
+    await Promise.all([
+      await companyApi.employer.getById(companyId),
+      await companyApi.employer.getJobCount(companyId),
+      await jobApi.search({ companyId, take: 3 })
+    ])
+      .then(([data, counts, { items }]) => {
+        company = data
+        jobCount = counts
+        jobs = items
+      })
+
+    if (!!!company)
       return { notFound: true }
 
-    const { items } = await new JobApi().search({ companyId: id, take: 3 });
-    return { props: { company: data, jobs: items } }
+    return { props: { company, jobs, jobCount } }
   } catch (error) {
     console.error("Exception is here:", error);
     return { props: { company: [], jobs: [] } }

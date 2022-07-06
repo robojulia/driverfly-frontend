@@ -21,6 +21,33 @@ import { useTranslation } from "../hooks/useTranslation";
 
 import { useEffect } from "react";
 
+// set up chart JS
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  BarController,
+  BarElement
+} from 'chart.js'
+import { Chart } from 'react-chartjs-2'
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  BarController,
+  BarElement
+)
+
 function MyApp({ Component, pageProps }) {
   const { locale } = useRouter()
 
@@ -59,8 +86,8 @@ function MyApp({ Component, pageProps }) {
     number: {
       min: (ctx) => t("yup.number.min", { min: ctx.min }),
       max: (ctx) => t("yup.number.max", { max: ctx.max }),
-      lessThan: (ctx) => t("yup.number.lessThan", { more: ctx.more }),
-      greaterThan: (ctx) => t("yup.number.greaterThan", { more: ctx.more }),
+      lessThan: (ctx) => t("yup.number.lessThan", { less: ctx.less }),
+      moreThan: (ctx) => t("yup.number.greaterThan", { more: ctx.more }),
       positive: (ctx) => t("yup.number.positive", { more: ctx.more }),
       negative: (ctx) => t("yup.number.negative", { less: ctx.less }),
       integer: (ctx) => t("yup.number.integer")

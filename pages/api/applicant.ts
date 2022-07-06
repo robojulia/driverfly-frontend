@@ -25,13 +25,25 @@ class ApplicantApi extends BaseApi {
         return data;
     }
 
+    async assign(id: number) {
+        const { data } = await this.post(this.baseUrl + "/" + id + "/assign", null);
+
+        return data;
+    }
+
+    async unassign(id: number) {
+        const { data } = await this.delete(this.baseUrl + "/" + id + "/assign");
+
+        return data;
+    }
+
     async search(params: ApplicantEntity, config?: AxiosRequestConfig): Promise<ApplicantEntity[]> {
         const { data } = await this.get(this.buildUrl(this.baseUrl + "/search", params), config);
 
         return data;
     }
 
-    async list(params: { jobId?: number, email?: string }): Promise<ApplicantEntity[]> {
+    async list(params?: { jobId?: number, email?: string }): Promise<ApplicantEntity[]> {
         const { data } = await this.get(this.buildUrl(this.baseUrl + "/list", params));
 
         return data;
@@ -55,13 +67,24 @@ class ApplicantApi extends BaseApi {
         return data;
     }
 
+    async getJobApplications() {
+        const { data } = await this.get(`${this.baseUrl}/job-applications`);
+
+        return data;
+    }
+
     me = {
-        get: async () => {
+        get: async () : Promise<ApplicantEntity> => {
             const { data } = await this.get(this.baseUrl);
 
             return data;
         },
-        update: async (dto: ApplicantEntity) : Promise<ApplicantEntity> => {
+        jobs: async () : Promise<ApplicantJobEntity[]> => {
+            const { data } = await this.get(this.baseUrl + "/jobs");
+
+            return data;
+        },
+        update: async (dto: ApplicantEntity): Promise<ApplicantEntity> => {
             const { data } = await this.put(this.baseUrl, dto);
 
             return data;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import DocumentApi from "../../pages/api/document";
 
-export default function VehiclePhoto({ vehicle }) {
+export default function VehiclePhoto({ vehicle, style, className }) {
 
     if (!!!vehicle || !!!vehicle.photo?.id)
         return <></>
@@ -10,7 +10,7 @@ export default function VehiclePhoto({ vehicle }) {
     const documentApi = new DocumentApi();
 
     const fetchVehiclephoto = async () => {
-        await documentApi.getVehiclePhoto(vehicle.photo.id)
+        await documentApi.getPhoto(vehicle.photo.id)
             .then(file => setPhoto(file.path))
             .catch(error => console.error("error", error))
     }
@@ -21,9 +21,8 @@ export default function VehiclePhoto({ vehicle }) {
 
     return <>
         <img
-            style={props.style}
-            className={props.className}
-            src={photo}
-            alt=" Image" />
+            style={style}
+            className={className}
+            src={photo} />
     </>
 }

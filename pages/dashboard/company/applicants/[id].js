@@ -1,4 +1,4 @@
-import { Plus, ArrowsExpand, ChevronUp, Pencil, PlusCircle, DashCircle, XCircle } from 'react-bootstrap-icons';
+import { Plus, ArrowsExpand, ChevronUp, Pencil, PlusCircle, DashCircle, XCircle, BookmarkCheck, BookmarkDash } from 'react-bootstrap-icons';
 import { toast } from "react-toastify";
 
 import { useRouter } from "next/router";
@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 import ApplicantApi from "../../../api/applicant";
 import DocumentApi from "../../../api/document";
 import JobApi from "../../../api/job";
-import { Button, Col, Row, Table } from "react-bootstrap";
+import { Button, ButtonGroup, Col, Row, Table } from "react-bootstrap";
 import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 
 import ViewDetails from "../../../../components/viewDetails/viewDetails";
@@ -79,7 +79,7 @@ export default function Applicant() {
 
     const [applicant, setApplicant] = useState(new ApplicantEntity());
 
-    let { authCheck } = useAuth();
+    let { authCheck, hasPermission } = useAuth();
 
     const user = authCheck();
 
@@ -98,7 +98,7 @@ export default function Applicant() {
         }
     }, [id, viewMode]);
 
-    const canEdit = applicant.id && applicant.company?.id === user.company?.id;
+    const canEdit = applicant.id && hasPermission("CanUpdateApplicant");
 
     const backPath =
         viewMode === ViewModes.VIEW || !id
@@ -114,7 +114,7 @@ export default function Applicant() {
     return (
         <>
             <ChildPageLayout backPath={backPath} title={title}>
-                {viewMode === ViewModes.VIEW && <View applicant={applicant} t={t} canEdit={canEdit} router={router} />}
+                {viewMode === ViewModes.VIEW && <View applicant={applicant} setApplicant={setApplicant} t={t} canEdit={canEdit} router={router} />}
                 {viewMode === ViewModes.EDIT && <Edit applicant={applicant} t={t} router={router} />}
             </ChildPageLayout>
         </>
@@ -133,12 +133,13 @@ Applicant.getLayout = function getLayout(page) {
  * Renders the page in VIEW only mode (default)
  * @param {object} props
  * @param {ApplicantEntity} props.applicant
+ * @param {React.Dispatch<React.SetStateAction<ApplicantEntity>>} props.setApplicant
  * @param {(string, object) => string} props.t
  * @param {boolean} props.canEdit
  * @param {import('next/router').NextRouter} props.router
  */
 function View(props) {
-    const { applicant, t, canEdit, router } = props;
+    const { applicant, setApplicant, t, canEdit, router } = props;
 
     const [pdf, setPdf] = useState({});
 
@@ -193,14 +194,39 @@ function View(props) {
 
     };
 
+    const onAssignClick = async () => {
+        const api = new ApplicantApi();
+
+
+        setApplicant(await api.assign(applicant.id));
+    }
+
+    const onUnassignClick = async() => {
+        const api = new ApplicantApi();
+
+
+        setApplicant(await api.unassign(applicant.id));
+    };
+
     return (<>
         {canEdit &&
             <Row>
                 <Col>
-                    <div style={{ float: "right" }}>
-                        <Button type="button" onClick={onEditClick}>
-                            <Pencil /> {t("EDIT")}
-                        </Button>
+                    <div style={{ float: "right", marginBottom: "10px" }}>
+                        <ButtonGroup size="sm">
+                            <Button type="button" className='theme-general-btn' variant='' onClick={onAssignClick}>
+                                <BookmarkCheck /> {t("ASSIGN_TO_ME")}
+                            </Button>
+                            {
+                                applicant?.assignedUser &&
+                                <Button type="button" variant='danger' onClick={onUnassignClick}>
+                                    <BookmarkDash /> {t("UNASSIGN")}
+                                </Button>
+                            }
+                            <Button type="button" onClick={onEditClick}>
+                                <Pencil /> {t("EDIT")}
+                            </Button>
+                        </ButtonGroup>
 
                     </div>
                 </Col>
@@ -214,6 +240,7 @@ function View(props) {
                             <ViewDetails
                                 default={t("NOT_ANSWERED")}
                                 obj={{
+                                    ASSIGNED_TO: applicant.assignedUser?.name || t("NONE"),
                                     PHONE: applicant.phone,
                                     EMAIL: applicant.email,
                                     STREET: applicant.street,
@@ -231,7 +258,7 @@ function View(props) {
                                     state_issued: applicant.license_state,
                                     cdl_class_type: applicant.license_type ? t(`DriverLicenseType.${applicant.license_type}`) : null,
                                     years_cdl_experience: applicant.years_cdl_experience,
-                                    owner_operator: { text: applicant.is_owner_operator, default: t("UNKNOWN") },
+                                    OWNER_OPERATOR: { text: applicant.is_owner_operator, default: t("UNKNOWN") },
                                     AUTHORIZED_TO_WORK_IN_THE_US: applicant.authorized_to_work_in_us,
                                 }}
                             />
@@ -380,7 +407,7 @@ function View(props) {
             </Col>
         </Row>
         <Row>
-            <Col md="5">
+            <Col md="6">
                 <ViewCard title="JOBS_APPLIED_TO_WITH_YOU">
                     <ViewTable
                         type="JOBS"
@@ -398,7 +425,7 @@ function View(props) {
                 </ViewCard>
             </Col>
             {applicant &&
-                <Col md="6" className="offset-md-1">
+                <Col md="6">
                     <ViewCard title={t("CONSIDER_{name}_FOR", { name: applicant?.first_name })}>
                         <ViewTable
                             type="OTHER_ROLES"
@@ -413,7 +440,7 @@ function View(props) {
             }
         </Row>
         <Row>
-            <Col md="5">
+            <Col md="12">
                 <ViewCard title="UPLOADED_DOCUMENTS">
                     <ViewTable
                         type="DOCUMENTS"
@@ -431,7 +458,7 @@ function View(props) {
                     />
                 </ViewCard>
             </Col>
-            <Col md="6" className="offset-md-1">
+            <Col md="12">
                 <ViewCard title="NOTES">
                     <ViewTable
                         type="NOTES"
@@ -531,8 +558,14 @@ function Edit(props) {
 
                 router.push(`/dashboard/company/applicants/${values.id}`);
             } catch (e) {
-                console.error("Unable to save applicant info", e);
-                toast.error(t("unable_to_save_information"));
+                console.error("Unable to save applicant info", e.response);
+                if(e?.response?.data?.email == "ALREADY_EXISTS"){
+                    toast.error(t("EMAIL_ALREADY_EXISTS"));
+                }
+                else{
+                    toast.error(t("unable_to_save_information"));
+
+                }
             }
         }
     });
@@ -571,7 +604,7 @@ function Edit(props) {
         <form onSubmit={form.handleSubmit}>
             <Row>
                 <Col>
-                    <div style={{ float: "right" }}>
+                    <div style={{ float: "right"}}>
                         <Button type="submit">{t("SAVE")}</Button>
                     </div>
                 </Col>
@@ -650,7 +683,7 @@ function Edit(props) {
                                     placeholder="CITY"
                                     formik={form}
                                 />
-                                <Row>
+                                <Row className='px-3'>
                                     <StateSelect
                                         className="col-6"
                                         label="STATE"
@@ -683,7 +716,7 @@ function Edit(props) {
                                     placeholder="expiration_date"
                                     formik={form}
                                 />
-                                <Row>
+                                <Row className="px-3">
                                     <StateSelect
                                         className="col-6"
                                         label="state_issued"
@@ -795,7 +828,7 @@ function Edit(props) {
                         </Row>
                         <Row>
                             <Col md="6">
-                                <Col xs="12">
+                                <Col xs="12"  className='p-2 mt-2' >
                                     <ViewCard
                                         title="equipment_experience"
                                         actions={<Button size='sm' onClick={() => form.setValues({
@@ -866,10 +899,10 @@ function Edit(props) {
                                     </ViewCard>
                                 </Col>
                             </Col>
-                            <Col md="6">
+                            <Col md="6" className='px-2'>
                                 {
                                     form.values.is_owner_operator &&
-                                    <Col xs="12">
+                                    <Col xs="12" className='mt-3'>
                                         <ViewCard
                                             title="equipment_owned"
                                             actions={<Button size='sm' onClick={() => form.setValues({

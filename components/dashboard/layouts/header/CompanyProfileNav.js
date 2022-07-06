@@ -68,7 +68,7 @@ export default function CompanyProfileNav({ user }) {
                             if (!v.label) return <Dropdown.Divider key={i} />
 
                             return (
-                                <Dropdown.Item onClick={e => router.push(v.href || "#")}>{t(v.label)}</Dropdown.Item>
+                                <Dropdown.Item key={i} onClick={e => router.push(v.href || "#")}>{t(v.label)}</Dropdown.Item>
                             );
                         })}
                         <Dropdown.Divider />

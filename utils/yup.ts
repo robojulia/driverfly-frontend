@@ -1,4 +1,5 @@
 import * as yup from "yup"
+import { TestContext } from "yup/lib/util/createValidation"
 
 yup.addMethod(yup.string, "enum", function(enumType, message) {
   const keys = Object.values(enumType);
@@ -18,7 +19,7 @@ yup.addMethod(yup.string, "enum", function(enumType, message) {
 });
 
 /**
- * @param {import("yup/lib/util/createValidation").TestContext} thisObj
+ * @param {TestContext} thisObj
  * @param {any[]} list 
  * @param {string} field
  * @param {object} options 
@@ -31,7 +32,10 @@ function unique(thisObj, list, field, options, message) {
     const set = new Set();
 
     for (let i = 0; i < list.length; i++) {
-      let value = !options.mapper ? yup.ref(field).getter(list[i]) : mapper(list[i]);
+      let value;
+      if (mapper) value = mapper(list[i]);
+      else if (field) value = yup.ref(field).getter(list[i]);
+      else value = list[i];
 
       if (!value) continue;
 
@@ -79,6 +83,25 @@ unique.addTest = function (field, options, message) {
 }
 
 yup.addMethod(yup.array, "unique", unique.addTest);
+
+export function numberRangeStart(maxField: string, minValue: number) {
+  return yup.number().moreThan(minValue)
+
+  // DO NOT IMPLEMENT BELOW: will cause Cyclic dependency when used in tandum with numberRangeEnd
+  // .when(maxField, {
+  //   is: v => v != null && +v > minValue,
+  //   then: yup.number().lessThan(yup.ref(maxField)).nullable()
+  // })
+  .nullable()
+}
+
+export function numberRangeEnd(minField: string, minValue: number) {
+  return yup.number().when(minField, {
+    is: v => v != null && +v > minValue,
+    then: yup.number().moreThan(yup.ref(minField)).nullable(),
+    otherwise: yup.number().moreThan(minValue).nullable()
+  }).nullable()
+}
 
 // export default {
 //   object: yup.object,

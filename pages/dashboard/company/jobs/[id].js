@@ -23,7 +23,7 @@ import BaseRange from "../../../../components/forms/BaseRange";
 
 import { useRouter } from "next/router"
 
-import { counts, years } from "../../../../utils/jobs";
+import { counts, year2Only, year3Only, year5Only, years, years2, years3, years5 } from "../../../../utils/jobs";
 
 import { EducationLevel } from "../../../../enums/users/education-level.enum";
 import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
@@ -81,15 +81,6 @@ export default function Job() {
         initialValues: new JobEntity(),
         validationSchema: JobEntity.yupSchema(),
         onSubmit: async (data) => {
-            console.log(data);
-            data.min_weekly_pay = parseFloat(data.min_weekly_pay)
-            data.max_weekly_pay = parseFloat(data.max_weekly_pay)
-            data.min_rate = parseFloat(data.min_rate)
-            data.max_rate = parseFloat(data.max_rate)
-            data.min_miles = parseFloat(data.min_miles)
-            data.max_miles = parseFloat(data.max_miles)
-            data.min_salary = parseFloat(data.min_salary)
-            data.max_salary = parseFloat(data.max_salary)
             try {
                 const jobApi = await new JobApi();
 
@@ -236,8 +227,8 @@ export default function Job() {
                 max_hours = null;
                 min_salary = null;
                 max_salary = null;
-                min_weekly_pay = (min_miles >= 0 && min_rate >= 0 ? (min_miles * min_rate).toFixed(2) : min_weekly_pay);
-                max_weekly_pay = (max_miles >= 0 && max_rate >= 0 ? (max_miles * max_rate).toFixed(2) : max_weekly_pay);
+                min_weekly_pay = (min_miles >= 0 && min_rate >= 0 ? parseFloat((min_miles * min_rate).toFixed(2)) : min_weekly_pay);
+                max_weekly_pay = (max_miles >= 0 && max_rate >= 0 ? parseFloat((max_miles * max_rate).toFixed(2)) : max_weekly_pay);
                 break;
             case JobPayMethod.PERCENT_PER_MOVE:
             case JobPayMethod.PERCENT_PER_WEIGHT:
@@ -278,8 +269,8 @@ export default function Job() {
                 max_percent = null;
                 min_salary = null;
                 max_salary = null;
-                min_weekly_pay = (min_hours >= 0 && min_rate >= 0 ? (min_hours * min_rate).toFixed(2) : min_weekly_pay);
-                max_weekly_pay = (max_hours >= 0 && max_rate >= 0 ? (max_hours * max_rate).toFixed(2) : max_weekly_pay);
+                min_weekly_pay = (min_hours >= 0 && min_rate >= 0 ? parseFloat((min_hours * min_rate).toFixed(2)) : min_weekly_pay);
+                max_weekly_pay = (max_hours >= 0 && max_rate >= 0 ? parseFloat((max_hours * max_rate).toFixed(2)) : max_weekly_pay);
                 break;
             case JobPayMethod.SET_WEEKLY:
                 /*
@@ -314,8 +305,8 @@ export default function Job() {
                 max_hours = null;
                 min_rate = null;
                 max_rate = null;
-                min_weekly_pay = min_salary >= 0 ? (min_salary / 52).toFixed(2) : min_weekly_pay;
-                max_weekly_pay = max_salary >= 0 ? (max_salary / 52).toFixed(2) : min_weekly_pay;
+                min_weekly_pay = min_salary >= 0 ? parseFloat((min_salary / 52).toFixed(2)) : min_weekly_pay;
+                max_weekly_pay = max_salary >= 0 ? parseFloat((max_salary / 52).toFixed(2)) : min_weekly_pay;
                 break;
         }
 
@@ -336,7 +327,9 @@ export default function Job() {
         });
 
         function getOrCurrent(field) {
-            return name === field ? +value : form.values[field];
+            const v = name === field ? value : form.values[field];
+            if (v != null && v != "") return parseFloat(v);
+            // return v;
         }
     }
 
@@ -489,8 +482,8 @@ export default function Job() {
                 backPath={backPath}
             >
                 <form onSubmit={form.handleSubmit} >
-                    <div className="col-12 border-0 text-end">
-                        <div className="col">
+                    <div className="col-12 border-0 text-end p-0 mb-2">
+                        <div className="col p-0">
                             <button type="submit" className={`theme-secondary-btn`} >
                                 {t(id ? "UPDATE" : "CREATE")}
                             </button>
@@ -838,7 +831,7 @@ export default function Job() {
                                 {/* todo: add job pay information */}
                                 <BaseCheckList
                                     className="col-12"
-                                    label="benefits"
+                                    label="BENEFITS"
                                     name="benefits"
                                     placeholder="benefits"
                                     cols={2}
@@ -916,7 +909,7 @@ export default function Job() {
                     <hr />
                     <Row>
                         <BaseTextArea
-                            className="col-md-10 offset-md-1"
+                            className="col-md-12"
                             label="description"
                             name="description"
                             required
@@ -937,7 +930,7 @@ export default function Job() {
                         /> */}
                     </Row>
                     <hr />
-                    <div className="row">
+                    <div className="row px-3">
                         <ViewCard
                             title="requirements"
                         >
@@ -1002,7 +995,7 @@ export default function Job() {
                                                     </div>
                                                 </Row>);
                                         })}
-                                        <div className="col-6 offset-6 text-end mt-2">
+                                        <div className="col-6 offset-6 text-end mt-2 p-0">
                                             <button className="btn btn-yellow" onClick={addRequiredSkills}>+ {t("more")}</button>
                                         </div>
                                     </div>
@@ -1103,14 +1096,14 @@ export default function Job() {
                                     {
                                         !form.values.must_have_clean_mvr &&
                                         <div className="col-12">
-                                            <label>{t("mvr_requirements")}:</label>
+                                            <label>{t("MVR_REQUIREMENTS")}:</label>
                                             {form.touched.mvr_requirements && typeof form.errors.mvr_requirements === "string" ? <span className="text-danger small">{form.errors.mvr_requirements}</span> : null}
                                             {form.values.mvr_requirements.map((v, i) => {
                                                 return (
                                                     <div key={i} className="row">
                                                         <BaseSelect
                                                             className="col-3"
-                                                            label="max"
+                                                            label="MAX"
                                                             name={`mvr_requirements.${i}.max_count`}
                                                             required
                                                             value={v.max_count}
@@ -1127,15 +1120,43 @@ export default function Job() {
                                                             enumType={MvrType}
                                                             formik={form}
                                                         />
-                                                        <BaseSelect
-                                                            className="col-3"
-                                                            label="within"
-                                                            name={`mvr_requirements.${i}.max_years`}
-                                                            required
-                                                            value={v.max_years}
-                                                            options={years}
-                                                            formik={form}
-                                                        />
+                                                        {
+                                                            form.values.mvr_requirements[i].type === MvrType.DUI &&
+                                                            <BaseSelect
+                                                                className="col-3"
+                                                                label="within"
+                                                                name={`mvr_requirements.${i}.max_years`}
+                                                                required
+                                                                value={v.max_years}
+                                                                options={year2Only}
+                                                                formik={form}
+                                                            />
+                                                        }
+                                                        {
+                                                            form.values.mvr_requirements[i].type === MvrType.MOVING_VIOLATION_NOT_AT_FAULT &&
+                                                            <BaseSelect
+                                                                className="col-3"
+                                                                label="within"
+                                                                name={`mvr_requirements.${i}.max_years`}
+                                                                required
+                                                                value={v.max_years}
+                                                                options={year3Only}
+                                                                formik={form}
+                                                            />
+                                                        }
+                                                        {
+                                                            (form.values.mvr_requirements[i].type === MvrType.INFRACTIONS ||
+                                                                form.values.mvr_requirements[i].type === MvrType.TICKETS) &&
+                                                            <BaseSelect
+                                                                className="col-3"
+                                                                label="within"
+                                                                name={`mvr_requirements.${i}.max_years`}
+                                                                required
+                                                                value={v.max_years}
+                                                                options={year5Only}
+                                                                formik={form}
+                                                            />
+                                                        }
                                                         <div className="col-2 mt-4">
                                                             <button className="btn btn-yellow" name={i} onClick={removeMvrRequirement}>x</button>
                                                         </div>

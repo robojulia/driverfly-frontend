@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Facebook, Twitter, Instagram, People, Eye, FilePost } from 'react-bootstrap-icons'
 import { useTranslation } from '../../hooks/useTranslation';
 
-export default function CompanyInfo({ company, jobsPosted }) {
+export default function CompanyInfo({ company, jobCount }) {
     const { t } = useTranslation();
     const regex = `([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)`
     const validAbout = !!!(company.about?.match(regex))
@@ -73,7 +73,7 @@ export default function CompanyInfo({ company, jobsPosted }) {
                             </div>
                             <div>
                                 <p className='mb-0'>{t('POSTED_JOBS')}</p>
-                                <small className='text-muted'>{jobsPosted || 0}</small>
+                                <small className='text-muted'>{jobCount || 0}</small>
                             </div>
 
                         </div>

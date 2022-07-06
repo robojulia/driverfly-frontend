@@ -3,6 +3,7 @@ import { CompanyEntity } from '../company/company.entity';
 import { RoleEntity } from '../roles/role.enttiy';
 
 import * as yup from "yup";
+import { Status } from '../../enums/status.enum';
 
 export class UserEntity {
     id?: number;
@@ -11,6 +12,7 @@ export class UserEntity {
     first_name?: string;
     last_name?: string;
     enabled_notifications?: boolean;
+    status: Status;
     roles?: RoleEntity[];
     theme_color?: boolean;
     swipe_actions?: boolean;

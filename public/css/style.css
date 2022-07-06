@@ -1795,7 +1795,6 @@ li.link-wrapper>a.active {
     color: #6a6a87;
 }
 
-
 .overflow_cls tbody tr td {
     width: 23%;
 }
@@ -2065,8 +2064,22 @@ text-align: center;
 .social-profile-sec{
     padding: 15px;
     margin-bottom: 15px;
-    background: #fafafa;  
+    background: #fafafa;
     display: flex;
     align-items: baseline;
     border-radius: 4px;
+}
+
+/*
+* text color classes    
+*/
+.text-blue {
+    color: #007bff !important;
+}
+input[type=checkbox] {
+    padding: 7px !important;
+}
+.dialer__close .btn-close{
+    color: #fff !important;
+    background-color: #fff !important;
 }

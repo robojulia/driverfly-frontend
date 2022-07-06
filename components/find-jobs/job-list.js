@@ -23,15 +23,13 @@ export default function JobsList() {
 
                         <CompanyPhoto className="d-flex mr-4 truck-img" company={job.company} />
                         <div className="media-body">
-                            <h4 className="mt-0">{job.title}
-                                <span
-                                    className=""
-                                    data-toggle="tooltip"
-                                    data-placement="top"
-                                    title="Tooltip on top">
-
-                                </span>
-                            </h4>
+                            <Link href={`/dashboard/driver/find-jobs/${job.id}`}>
+                                <a className='text-decoration-none '>
+                                    <h4 className="mt-0">
+                                        {job.title}
+                                    </h4>
+                                </a>
+                            </Link>
                             <div className="job-date-author">
                                 {
                                     job.created_at &&
@@ -50,11 +48,12 @@ export default function JobsList() {
                                     {
                                         job.location &&
                                         <>
-                                            <p>
-                                                < GeoAltFill className='mr-1' />
+                                           
+                                                {/* < GeoAltFill className='mr-1' /> */}
                                                 <span className='mr-4'>
-                                                    {buildAddress(job.location || {})}
-                                                </span></p>
+                                                {buildAddress(job.location || {},{ street: false, zip_code: false})}
+
+                                                </span>
                                         </>
                                     }
                                     <p>

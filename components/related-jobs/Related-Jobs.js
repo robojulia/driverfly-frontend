@@ -34,7 +34,9 @@ export default function RelatedJobs({ jobs }) {
                                             } {
                                                 job?.company?.name &&
                                                 <>
-                                                    {t('by')} <span role="button" className="employer text-theme">{job.company?.name}</span>
+                                                    {t('by')} <Link href={`/employer/${job.company?.id}`}>
+                                                        <span role="button" className="employer text-theme">{job.company?.name}</span>
+                                                    </Link>
                                                 </>
                                             }
                                         </div>
@@ -43,8 +45,8 @@ export default function RelatedJobs({ jobs }) {
                                                 {
                                                     job.location &&
                                                     <p className="pr-4">
-                                                        <GeoAltFill className="mr-1" />
-                                                        {buildAddress(job.location)}
+                                                        {/* <GeoAltFill className="mr-1" /> */}
+                                                        {buildAddress(job.location,{ street: false, zip_code: false})}
                                                     </p>
                                                 }
                                             </div>
@@ -59,7 +61,7 @@ export default function RelatedJobs({ jobs }) {
                                         </div>
 
                                     </div>
-                                    <Link href={`/jobs/${job.id}`}>
+                                    <Link href={`/jobs/${job.id}/${job.slug}`}>
                                         <button type="button" className="theme-primary-btn-outline btn-sm">{t('browse_job')}</button>
                                     </Link>
 
