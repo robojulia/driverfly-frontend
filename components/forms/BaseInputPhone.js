@@ -35,9 +35,9 @@ function BaseInputPhone({ formik, required, className, label, handleBlur, placeh
       error={error}
       prepend={prepend}
       append={append}
-      >
+    >
       <PhoneInput
-        onlyCountries={['us']}
+        onlyCountries={process.env.PHONE_INPUT_COUNTRY_ALLOWED.split(',') || ['us']}
         isValid={!error}
         inputProps={{
           name: { name },
