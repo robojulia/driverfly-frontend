@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 import LogoutButton from '../../../buttons/Logout';
-import user1 from "../../../../public/dashboard/assets/images/users/user1.jpg";
 
 import { useTranslation } from "../../../../hooks/useTranslation";
 import useAuth from "../../../../hooks/useAuth";
@@ -54,8 +53,7 @@ export default function CompanyProfileNav({ user }) {
             <div className="profile">
                 <Dropdown isOpen={dropdownOpen} toggle={toggle} >
                     <Dropdown.Toggle variant="light">
-                        <Image
-                            src={user1}
+                        <img src="/dashboard/assets/images/users/user1.jpg"
                             alt="profile"
                             className="rounded-circle"
                             width="30"
