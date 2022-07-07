@@ -14,7 +14,7 @@ const Breadcrumb = () => {
 
   useEffect(() => {
     if (router) {
-      const linkPath = router.asPath.split('/');
+      const linkPath = router.pathname.split('/');
       linkPath.shift();
 
       const pathArray = linkPath.map((path, i) => {
@@ -23,11 +23,13 @@ const Breadcrumb = () => {
 
       setBreadcrumbs(pathArray);
     }
+
   }, [router]);
 
   if (!breadcrumbs) {
     return null;
   }
+ 
 
   return (
     <nav aria-label="breadcrumbs">
@@ -39,6 +41,7 @@ const Breadcrumb = () => {
           </Link>
           < CaretRightFill className='mx-2 align-text-bottom' />
         </li>
+       
         {breadcrumbs.map((breadcrumb, i) => {
           var str = convertBreadcrumb(breadcrumb.breadcrumb);
           var res = str.replaceAll('-', ' ');
