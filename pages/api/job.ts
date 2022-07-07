@@ -7,6 +7,10 @@ export default class JobApi extends BaseApi {
     constructor() {
         super();
     }
+    async sitemap(): Promise<JobEntity[]> {
+        const { data } = await this.get(`${this.baseUrl}/sitemap`);
+        return data;
+    }
     async create(entity: JobEntity): Promise<JobEntity> {
         const { data } = await this.post(this.baseUrl, entity);
 
@@ -36,7 +40,7 @@ export default class JobApi extends BaseApi {
         return data;
     }
 
-    async apply(jobId: number, body: ApplicantEntity) : Promise<ApplicantEntity> {
+    async apply(jobId: number, body: ApplicantEntity): Promise<ApplicantEntity> {
         const { data } = await this.post(`${this.baseUrl}/${jobId}/apply`, body);
 
         return data;
