@@ -59,15 +59,15 @@ export default function Signup() {
       accept_tos: false
     },
     validationSchema: yup.object({
-      first_name: yup.string().required().nullable(),
-      last_name: yup.string().required().nullable(),
+      first_name: yup.string().trim().required().nullable(),
+      last_name: yup.string().trim().required().nullable(),
       name: yup.string().when("role", {
         is: SignUpRole.COMPANY,
-        then: yup.string().required().nullable()
+        then: yup.string().trim().required().nullable()
       }).nullable(),
-      email: yup.string().email().required().nullable(),
-      password: yup.string().required().nullable(),
-      confirmPassword: yup.string().test({
+      email: yup.string().trim().email().required().nullable(),
+      password: yup.string().trim().required().nullable(),
+      confirmPassword: yup.string().trim().test({
         test: (value, context) => {
           const password = context.resolve(yup.ref("password"));
           if (value === password) return true;
@@ -78,9 +78,9 @@ export default function Signup() {
           });
         }
       }).nullable(),
-      phone: yup.string().nullable(),
+      phone: yup.string().trim().nullable(),
       role: yup.string().enum(SignUpRole).required().nullable(),
-      invite_code: yup.string().required().nullable(),
+      invite_code: yup.string().trim().required().nullable(),
       accept_tos: yup.boolean().oneOf([true], (t("MUST_BE_CHECKED")))
     }),
     onSubmit: async (dto) => {
