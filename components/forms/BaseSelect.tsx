@@ -5,7 +5,7 @@ import BaseControl, { BaseControlProps } from './BaseControl';
 
 export interface BaseSelectProps extends BaseControlProps {
   enumType?: object;
-  options?: {value?: string, label?: string}[];
+  options?: {value?: string, label?: string}[] | any[];
   valueKey?: string;
   labelKey?: string;
   labelPrefix?: string;

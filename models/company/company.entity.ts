@@ -5,8 +5,9 @@ import { compact } from "lodash";
 
 export class CompanyEntity {
 
-  name: string;
-  about: string;
+  id?: number;
+  name?: string;
+  about?: string;
   website?: string;
   photo?: DocumentEntity;
 

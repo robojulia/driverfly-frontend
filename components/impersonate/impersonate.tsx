@@ -15,16 +15,7 @@ import { CompanyEntity } from "../../models/company/company.entity";
 import { UserEntity } from "../../models/user/user.entity";
 
 import * as yup from "yup";
-
-/**
- * @type {UserEntity[]}
- */
-const USERS_PROTO = [];
-
-/**
- * @type {CompanyEntity[]}
- */
- const COMPANIES_PROTO = [];
+import { useEffectAsync } from "../../utils/react";
 
 export default function Impersonate() {
     const { isSuperUser, isImpersonating, setAuth, isDriver, isCompany, authCheck } = useAuth();
@@ -47,11 +38,11 @@ export default function Impersonate() {
         setOpen(true);
     };
 
-    const [ companies, setCompanies ] = useState(COMPANIES_PROTO);
+    const [ companies, setCompanies ] = useState<CompanyEntity[]>([]);
 
-    const [ users, setUsers ] = useState(USERS_PROTO);
+    const [ users, setUsers ] = useState<UserEntity[]>([]);
 
-    useEffect(async () => {
+    useEffectAsync(async () => {
         if (open) {
             const api = new CompanyApi();
 
@@ -123,7 +114,7 @@ export default function Impersonate() {
         });
     };
 
-    useEffect(async () => {
+    useEffectAsync(async () => {
         if (form.values.companyId) {
             const api = new UserApi();
 
@@ -164,7 +155,7 @@ export default function Impersonate() {
                     <ArrowCounterclockwise /> {t("RESTORE")}
                 </Button>
             }
-            <Button disabled={!canSubmit} onClick={form.handleSubmit}>{t("IMPERSONATE")}</Button>
+            <Button disabled={!canSubmit} onClick={e => form.submitForm()}>{t("IMPERSONATE")}</Button>
             </>}
             >
             <form>
@@ -177,7 +168,7 @@ export default function Impersonate() {
                         onChange={onCompanyChange}
                         options={companies}
                         valueKey="id"
-                        createLabel={c => c.id < 0 ? c.name : `${c.name} (#${c.id})`}
+                        createLabel={c => c.id < 0 ? c.name : `${c.name || t("NO_NAME")} (#${c.id})`}
                         formik={form}
                     />
                     <BaseSelect
