@@ -63,7 +63,7 @@ export default function Index() {
                                 name: "job_title",
                                 cell: applicant =>
                                 (
-                                    <Link href={`/jobs/${applicant.job.id}`}>
+                                    <Link href={`/jobs/${applicant.job.id}/${applicant.job.slug}`}>
                                         <a>
                                             <OverlyPopover skipTranslate={true} header={t('job_title')} str={applicant.job.title} />
                                         </a>
