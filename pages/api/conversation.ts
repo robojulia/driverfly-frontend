@@ -23,6 +23,12 @@ export class ConversationApi extends BaseApi {
 
         return data;
     }
+    async markRead(id: number): Promise<ConversationEntity> {
+        const { data } = await this.put(`${this.baseUrl}/${id}/read`, null)
+
+        return data;
+    }
+
     async getById(id: number) : Promise<ConversationEntity> { 
         const { data } = await this.get(`${this.baseUrl}/${id}`);
 

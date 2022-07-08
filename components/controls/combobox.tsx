@@ -4,22 +4,22 @@ import { useTranslation } from "../../hooks/useTranslation";
 
 import style from "../../public/components/styles/css/ComboBox.module.css";
 
-/**
- * @typedef ComboboxItem
- * @prop {string} text
- * @prop {string} value
- * @prop {string[]} parts
- */
-/**
- * 
- * @param {object} props 
- * @param {string} props.label
- * @param {string} props.name
- * @param {(React.ChangeEvent<HTMLInputElement>) => void} props.onChange
- * @param {ComboboxItem[]|(string) => ComboboxItem[]|(string) => Promise<ComboboxItem[]>} props.options
- * @returns 
- */
-export default function Combobox(props) {
+
+export interface ComboboxProps {
+    label?: string;
+    name?: string;
+    minLength?: number;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>|any) => void;
+    options?: ComboboxItem[]|((search: string) => Promise<ComboboxItem[]>);
+}
+
+export interface ComboboxItem {
+    text: string;
+    value: any;
+    parts?: string[]
+}
+
+export default function Combobox(props: ComboboxProps) {
     const { label, name, options, onChange } = props;
 
     const minLength = props.minLength || 1;
@@ -33,11 +33,7 @@ export default function Combobox(props) {
         options: []
     });
 
-    /**
-     * 
-     * @param {React.ChangeEvent<HTMLInputElement>} e 
-     */
-    const onInputChange = async (e) => {
+    const onInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = e.target;
 
         const query = value?.toLowerCase() || "";
@@ -116,14 +112,10 @@ export default function Combobox(props) {
         });
     };
 
-    /**
-     * 
-     * @param {React.MouseEvent} e 
-     */
-    const onOptionClick = (e, value) => {
+    const onOptionClick = (e: React.MouseEvent<HTMLAnchorElement>, value: any) => {
         e.preventDefault();
 
-        const { innerText } = e.target;
+        const { innerText } = e.currentTarget;
 
         setState({
             ...state,
@@ -147,7 +139,7 @@ export default function Combobox(props) {
         <>
         {label && <label htmlFor={name}>{t(label)}</label>}
         <Dropdown className={style.form_combobox} show={state.show}>
-            <FormControl name={name} onChange={onInputChange} onFocus={onInputFocus} onBlur={onInputBlur} type="text" placeholder={t(minLength > 1 ? "TYPE_AT_LEAST_{num}_CHARACTERS_TO_SEE_OPTIONS" : "START_TYPING_TO_SEE_OPTIONS", { num: minLength })} value={state.query} autoComplete="off" />
+            <FormControl name={name} onChange={onInputChange} onFocus={onInputFocus} onBlur={onInputBlur} type="text" placeholder={t(minLength > 1 ? "TYPE_AT_LEAST_{num}_CHARACTERS_TO_SEE_OPTIONS" : "START_TYPING_TO_SEE_OPTIONS", { num: minLength.toString() })} value={state.query} autoComplete="off" />
             <Dropdown.Menu className="w-100">
                 {state.options.length === 0 && <span className="text-warning small">{t("NO_MATCHING_RESULTS")}</span>}
                 {state.options.map((o, i) => 

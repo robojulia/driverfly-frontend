@@ -1,7 +1,19 @@
-import { toast } from 'react-toastify'
+import { toast, ToastContent, ToastOptions } from 'react-toastify'
+import { TranslateInterface } from '../hooks/useTranslation';
+
+export interface ToastInterface {
+    success: ToastMessageInterface;
+    info: ToastMessageInterface;
+    error: ToastMessageInterface;
+    warning: ToastMessageInterface;
+}
+
+interface ToastMessageInterface {
+    (content: ToastContent, options?: ToastOptions<{}> | undefined): React.ReactText;
+}
 
 
-function formSuccess(t: (text: string, props: any, options: any) => string, action: "create" | "update" | "delete" | string, name: string) {
+function formSuccess(t: TranslateInterface, action: "create" | "update" | "delete" | string, name: string) {
     let formAction = "";
 
     switch (action) {

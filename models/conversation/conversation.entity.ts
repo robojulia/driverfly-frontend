@@ -13,7 +13,7 @@ export class CreateConversationDto {
     chattable_type?: ChattableType;
     chattable_id?: number;
     chattable_name?: string;
-    message: string;
+    message?: string;
 
     static yupSchema() {
         return yup.object({
