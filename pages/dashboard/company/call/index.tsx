@@ -97,7 +97,7 @@ export default function Call() {
 
     const connectCall = () => {
         setConnected(true)
-        if (identity?.phone) device.connect({ 'PhoneNumber': identity.phone, 'call_mode': 'WEB', })
+        if (identity?.phone) device.connect({ 'PhoneNumber': formatPhoneNumber(identity.phone), 'call_mode': 'WEB', })
     }
 
     const disconnectCall = () => {
@@ -119,6 +119,8 @@ export default function Call() {
             toast.error(t('COULD_NOT_MAKE_CALL'))
         }
     }, [ready])
+
+    const formatPhoneNumber = (phoneNumberString) => (`+${('' + phoneNumberString).replace(/\D/g, '')}`)
 
     return (
         <>
@@ -173,7 +175,7 @@ export default function Call() {
                                         {`${identity.first_name} ${identity.last_name}`}
                                     </h4>
                                     <h3 className="text-info pb-3">
-                                        {identity.phone}
+                                        {(identity.phone)}
                                     </h3>
                                 </Col>
                                 <Col lg='12' className="text-center pb-5  rounded">

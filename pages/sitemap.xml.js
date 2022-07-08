@@ -10,7 +10,7 @@ export const getServerSideProps = async ({ res }) => {
     const jobs = await jobApi.sitemap()
 
     const staticPages = fs
-        .readdirSync("pages")
+        .readdirSync(process.cwd() + "/pages")
         .filter((staticPage) => {
             return ![
                 "_app.js",

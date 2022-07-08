@@ -51,7 +51,7 @@ export default function Forgot() {
 
   return (
     <>
-      
+
 
       <div className="top-links-sec">
         <div className="container">
@@ -72,7 +72,7 @@ export default function Forgot() {
               <p className="mt-2 mb-5 text-center  text-secondary ">{t("ENTER_DETAILS_TO_RESET_YOUR_PASSWORD")}</p>
               <form onSubmit={form.handleSubmit} className={Forgotpassword.mb}>
                 <BaseInput
-                  className="col-12"
+                  className="col-12 p-0"
                   required
                   name="email"
                   label={t("EMAIL")}
@@ -82,14 +82,18 @@ export default function Forgot() {
                   error={form.errors.email}
                   onChange={form.handleChange}
                   handleBlur={form.handleBlur}
-                  />
+                />
                 <button disabled={form.isSubmitting}
                   type="submit"
                   className={`${Forgotpassword.success_btn} w-100 d-block p-3 mt-2`}>
                   {t("RESET_PASSWORD")}
                 </button>
-                <Link href="/login" className={Forgotpassword.backlink}>
-                  {t("BACK_TO_LOGIN")}
+                <Link href="/login">
+                  <span
+                    role="button"
+                    className={Forgotpassword.backlink}>
+                    {t('BACK_TO_LOGIN')}
+                  </span>
                 </Link>
               </form>
             </div>
