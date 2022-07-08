@@ -60,20 +60,22 @@ export default function JobApply({ job }) {
       const userApi = new UserApi();
       try {
         const applicant = await api.getByUserId();
-        const preferences = await userApi.preferences.list(user.id, { category: UserPreferenceCategory.SHARING });
+        if (applicant) {
+          const preferences = await userApi.preferences.list(user.id, { category: UserPreferenceCategory.SHARING });
 
-        if (preferences.length > 0) {
-          applicant.documents = applicant.documents.filter(
-            (document) => !preferences.some(
-              (preference) => preference.label === document.type && preference.value === SharePreference.NEVER
-            )
-          );
-        } else applicant.documents = applicant.documents.filter((document) => document.type === ApplicantDocumentType.RESUME);
+          if (preferences.length > 0) {
+            applicant.documents = applicant.documents.filter(
+              (document) => !preferences.some(
+                (preference) => preference.label === document.type && preference.value === SharePreference.NEVER
+              )
+            );
+          } else applicant.documents = applicant.documents?.filter((document) => document.type === ApplicantDocumentType.RESUME);
 
-        apply_form.setValues({
-          ...apply_form.values,
-          ...applicant,
-        });
+          apply_form.setValues({
+            ...apply_form.values,
+            ...applicant,
+          });
+        }
       }
       catch (e) {
         if (e.response?.status === 401) {

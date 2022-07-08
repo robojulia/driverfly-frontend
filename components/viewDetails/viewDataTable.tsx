@@ -107,7 +107,7 @@ export default function ViewDataTable<TElement>(props: ViewTableProps<TElement>)
         setColumns(newColumns);
     }
 
-    const canHideColumns = props.columns.some(v => v.hidable);
+    const canHideColumns = props.columns.some(v => !("hidable" in v) || v.hidable);
 
     return (
         <DataTable<TElement>
