@@ -19,7 +19,7 @@ export class CompanyEntity {
         .test({
           test: (value, context) => {
             const regex_number = `[0-9]{7,12}`
-            let result = value.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}/g);
+            let result = value?.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}/g);
             
             if (!result && !!!value?.match(regex_number)) return true;
             return context.createError({

@@ -2,31 +2,35 @@ import { Navbar, Container } from "react-bootstrap";
 
 import { Icon } from "react-bootstrap-icons";
 import { useRouter } from "next/router";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { TranslateInterface, useTranslation } from "../../../../hooks/useTranslation";
 import Link from "next/link";
 import { useMediaQuery } from "react-responsive";
 import useAuth from "../../../../hooks/useAuth";
-/**
- * @typedef SidebarProps
- * @property {boolean} open indicates if the sidebar is open or not
- * @property {SidebarItem[]} items
- */
 
-/**
- * @typedef SidebarItem
- * @property {string} pathname The logical path for the link
- * @property {SidebarItem[]} items Indicates whether to check for exact equality or if the path starts with the text
- * @property {Icon} icon
- * @property {string} text 
- * @property {boolean} startsWith
- * @property {string | string[]} permissions
- */
+export interface SidebarProps {
+    open: boolean;
+    items: SidebarItem[];
+}
+
+export interface SidebarItem {
+    pathname?: string;
+    
+    icon?: Icon;
+    text?: string;
+    startsWith?: boolean;
+    permissions?: string | string[];
+    items: SidebarItem[];
+
+    isSelected: boolean;
+}
 
 /**
  * 
  * @param {SidebarProps} props 
  */
-export default function Sidebar(props) {
+export default function Sidebar(props: SidebarProps) {
+    let { items, open } = props;
+
     const isMobile = !useMediaQuery({ query: `(min-width: 992px)` });
 
     const router = useRouter();
@@ -35,7 +39,7 @@ export default function Sidebar(props) {
 
     const { hasPermission } = useAuth();
 
-    const items = filterItems(props.items, hasPermission);
+    items = filterItems(items, hasPermission);
 
     let current = findLast(items, v => IsSelected(v, router.asPath));
 
@@ -43,9 +47,9 @@ export default function Sidebar(props) {
 
     return (<>
         <aside
-            className={`sidebarArea ${!props.open ? "" : "showSidebar"}`}>
+            className={`sidebarArea ${!open ? "" : "showSidebar"}`}>
             <SidebarArea>
-                {items.map((v, i) => (<SidebarLink key={i} isMobile={isMobile} item={v} t={t} currentPath={router.asPath} />))}
+                {props.items.map((v, i) => (<SidebarLink key={v.pathname} isMobile={isMobile} item={v} t={t} currentPath={router.asPath} />))}
             </SidebarArea>
         </aside>
         {!isMobile && current?.items?.length > 0 &&
@@ -54,13 +58,28 @@ export default function Sidebar(props) {
     </>);
 }
 
+function SidebarArea({ children }) {
+    return (
+        <div className="side_bar">
+        <Navbar bg="light" expand="lg">
+          <Container className="p-0">
+            <Navbar.Toggle aria-controls="basic-navbar-nav " />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <ul>{children}</ul>
+            </Navbar.Collapse>
+          </Container>
+        </Navbar>
+      </div>
+    );
+}
+
 /**
  * 
  * @param {SidebarItem[]} values 
  * @param {(string[]) => boolean} hasPermission 
  * @returns {SidebarItem[]}
  */
-function filterItems(values, hasPermission) {
+function filterItems(values: SidebarItem[], hasPermission) {
 
     return values.map(i => {
         let { permissions, items } = i;
@@ -88,26 +107,7 @@ function filterItems(values, hasPermission) {
 
 }
 
-function SidebarArea({ children }) {
-    return (
-        <div className="side_bar">
-        <Navbar bg="light" expand="lg">
-          <Container className="p-0">
-            <Navbar.Toggle aria-controls="basic-navbar-nav " />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <ul>{children}</ul>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
-      </div>
-    );
-}
-
-/**
- * 
- * @param {SidebarItem} item 
- */
-function IsSelected(item, currentPath) {
+function IsSelected(item: SidebarItem, currentPath) {
     if ("isSelected" in item) return item.isSelected;
 
     if (item.items) {
@@ -119,12 +119,7 @@ function IsSelected(item, currentPath) {
     return item.isSelected = currentPath == item.pathname;
 }
 
-/**
- * 
- * @param {any[]} arr 
- * @param {(value, index: number) => boolean} predicate 
- */
-function findLast(arr, predicate) {
+function findLast<In>(arr: In[], predicate: (value: In, index: number) => boolean) {
     for (let i = arr.length - 1; i > -1; i--) {
         let value = arr[i];
 
@@ -132,21 +127,16 @@ function findLast(arr, predicate) {
     }
 }
 
-/**
- * @typedef SidebarLinkProps
- * @property {SidebarItem} item the sidebar item
- * @property {boolean} isMobile Indicates whether the view is mobile mode or not
- * @property {string} currentPath Indicates if current item is selected
- * @property {(string) => string} t translation
- */
+interface SidebarLinkProps {
+    item: SidebarItem;
+    isMobile: boolean;
+    currentPath: string;
+    t: TranslateInterface;
+}
 
-/**
- * 
- * @param {SidebarLinkProps} props 
- */
-function SidebarLink(props) {
+function SidebarLink(props: SidebarLinkProps) {
     let { isMobile, t, currentPath } = props;
-    let { pathname, items, text, permissions } = props.item;
+    let { icon: Cmp, pathname, items, text } = props.item;
 
     if (!pathname && items) pathname = items[0]?.pathname;
 
@@ -155,9 +145,9 @@ function SidebarLink(props) {
         <Link href={pathname}>
             <a href="#">
             {
-            props.item.icon != null &&
+            Cmp &&
             <span className="float-left">
-                < props.item.icon className="icon_left" />
+                < Cmp className="icon_left" />
             </span>
             }
             {t(text)}
