@@ -1,4 +1,5 @@
 import fs from "fs";
+import path from "path";
 import JobApi from "./api/job";
 
 const Sitemap = () => { }
@@ -11,7 +12,8 @@ export const getServerSideProps = async ({ res }) => {
         const jobApi = new JobApi()
         const jobs = await jobApi.sitemap()
 
-        const sitemap = process.cwd() + "/pages"
+        const sitemap = path.join(process.cwd(), 'pages')
+
         // const staticPages = fs
         //     .readdirSync(process.cwd() + "/pages")
         //     .filter((staticPage) => {
