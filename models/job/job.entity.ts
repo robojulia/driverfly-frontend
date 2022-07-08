@@ -28,6 +28,7 @@ import { numberRangeEnd, numberRangeStart } from '../../utils/yup';
 
 export class JobEntity {
     id?: number;
+    slug?: string;
     location: LocationEntity = new LocationEntity();
     company: CompanyEntity = null;
     title: string;
