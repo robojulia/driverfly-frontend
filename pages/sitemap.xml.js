@@ -1,10 +1,7 @@
 import fs from "fs";
 import JobApi from "./api/job";
 
-const Sitemap = (props) => {
-
-    console.log('props', props);
-}
+const Sitemap = () => { }
 
 export const getServerSideProps = async ({ res }) => {
 
@@ -59,14 +56,12 @@ export const getServerSideProps = async ({ res }) => {
         res.end();
 
         return {
-            props: {
-                data: process.cwd()
-            },
+            props: {},
         }
     } catch (error) {
         console.error(error.message);
         return {
-            props: { error },
+            props: {},
         }
     }
 }
