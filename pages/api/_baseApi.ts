@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-import useAuth from '../../hooks/useAuth';
+// import useAuth from '../../hooks/useAuth';
+import { useToken } from '../../hooks/useAuth2';
 
 export default class BaseApi {
     private mergeRequestConfig(config?: AxiosRequestConfig): AxiosRequestConfig {
@@ -8,16 +9,17 @@ export default class BaseApi {
 
         config.baseURL = process.env.BASE_URL_API;
 
-        const { authCheck } = useAuth();
-        const user = authCheck();
+        const { getToken } = useToken();
 
-        console.log("BaseApi: ", user);
+        const token = getToken(true);
 
-        if (user) {
+        console.log("BaseApi: ", token);
+
+        if (token) {
             if (!config.headers)
                 config.headers = {};
 
-            config.headers.Authorization = `Bearer ${user.token}`;
+            config.headers.Authorization = `Bearer ${token}`;
         }
 
         return config;

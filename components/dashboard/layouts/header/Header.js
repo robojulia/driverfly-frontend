@@ -1,6 +1,6 @@
 import React, { useEffect }  from "react";
 import Logo from "../logo/Logo";
-import useAuth from "../../../../hooks/useAuth";
+import { useAuth } from "../../../../hooks/useAuth2";
 
 
 import {
@@ -16,9 +16,7 @@ const Header = () => {
 
   const { t } = useTranslation();
 
-  const { authCheck, isDriver, isCompany } = useAuth();
-
-  const user = authCheck();
+  const { user, loginGuard } = useAuth();
 
   // const router = useRouter();
   // if (!user) {
@@ -36,11 +34,11 @@ const Header = () => {
 
 
         {
-          isDriver() && < DriverProfileNav user={user} />
+          user && !user.company && < DriverProfileNav user={user} />
         }
 
         {
-          isCompany() && < CompanyProfileNav user={user} />
+          user && user.company && < CompanyProfileNav user={user} />
         }
 
       </Collapse>

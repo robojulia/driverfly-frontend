@@ -49,7 +49,7 @@ export default function Sidebar(props: SidebarProps) {
         <aside
             className={`sidebarArea ${!open ? "" : "showSidebar"}`}>
             <SidebarArea>
-                {props.items.map((v, i) => (<SidebarLink key={v.pathname} isMobile={isMobile} item={v} t={t} currentPath={router.asPath} />))}
+                {props.items.map((v, i) => (<SidebarLink key={v.text} isMobile={isMobile} item={v} t={t} currentPath={router.asPath} />))}
             </SidebarArea>
         </aside>
         {!isMobile && current?.items?.length > 0 &&

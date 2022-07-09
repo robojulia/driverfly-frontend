@@ -24,9 +24,6 @@ export default function Dashboard() {
 
     const { t } = useTranslation();
 
-    const { authDriver } = useRedirect();
-
-    authDriver()
     const { authCheck } = useAuth();
 
     const user = authCheck();

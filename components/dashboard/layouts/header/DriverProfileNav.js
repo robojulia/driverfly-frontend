@@ -1,15 +1,19 @@
 import { Dropdown } from "react-bootstrap";
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import LogoutButton from '../../../buttons/Logout';
 import { useTranslation } from "../../../../hooks/useTranslation";
-import useAuth from "../../../../hooks/useAuth";
+// import useAuth from "../../../../hooks/useAuth";
 import Impersonate from "../../../impersonate/impersonate";
+
+import { useAuth } from "../../../../hooks/useAuth2";
 
 
 export default function DriverProfileNav() {
 
-  const { user, authenticateDriver } = useAuth();
+  const { user, loginGuard } = useAuth();
+
+  loginGuard();
 
   const { t } = useTranslation();
 
@@ -17,13 +21,11 @@ export default function DriverProfileNav() {
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
 
-  authenticateDriver();
-
 
   return (
     <>
       <div className="profile">
-        <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+        <Dropdown show={dropdownOpen} onToggle={toggle} >
           <Dropdown.Toggle variant="light">
             <img src="/dashboard/assets/images/users/user1.jpg"
               alt="profile"

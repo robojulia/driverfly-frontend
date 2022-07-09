@@ -1,18 +1,20 @@
 import { Dropdown } from "react-bootstrap";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 import LogoutButton from '../../../buttons/Logout';
 
 import { useTranslation } from "../../../../hooks/useTranslation";
-import useAuth from "../../../../hooks/useAuth";
+// import useAuth from "../../../../hooks/useAuth";
+import { useAuth } from "../../../../hooks/useAuth2";
 import Impersonate from "../../../impersonate/impersonate";
 
 export default function CompanyProfileNav({ user }) {
-    const { authenticateCompany } = useAuth();
+    
+    const { loginGuard } = useAuth();
 
-    authenticateCompany();
+    loginGuard();
 
     const { t } = useTranslation();
 
@@ -51,7 +53,7 @@ export default function CompanyProfileNav({ user }) {
     return (
         <>
             <div className="profile">
-                <Dropdown isOpen={dropdownOpen} toggle={toggle} >
+                <Dropdown show={dropdownOpen} onToggle={toggle} >
                     <Dropdown.Toggle variant="light">
                         <img src="/dashboard/assets/images/users/user1.jpg"
                             alt="profile"

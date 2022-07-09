@@ -1,4 +1,5 @@
-import useAuth from '../../hooks/useAuth';
+// import useAuth from '../../hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth2';
 import Router from 'next/router'
 import axios from 'axios';
 import { useRouter } from 'next/router'
@@ -25,15 +26,15 @@ export default function Login() {
 
     const { t } = useTranslation();
 
-    const { authCheck, isDriver, isCompany, setAuth } = useAuth();
+    const { login } = useAuth();
 
-    if (isDriver()) {
-        Router.push('/dashboard/driver')
-    }
+    // if (isDriver()) {
+    //     Router.push('/dashboard/driver')
+    // }
 
-    if (isCompany()) {
-        Router.push('/dashboard/company')
-    }
+    // if (isCompany()) {
+    //     Router.push('/dashboard/company')
+    // }
 
     const authApi = new AuthApi();
 
@@ -56,38 +57,22 @@ export default function Login() {
 
                     // console.log("handle success", data);
                     if (data.status == 201) {
-                        toast.success(t('LOGIN_SUCCESSFULL'), {
-                            position: "top-right",
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                        });
+                        toast.success(t('LOGIN_SUCCESSFULL'));
 
                         // data.data.user.language = "es-mx";
-                        setAuth(data.data.user)
+                        login(data.data.user)
 
-                        if (isDriver()) {
-                            Router.push('/dashboard/driver');//, undefined, { locale: data.data.user.language })
-                        }
+                        // if (isDriver()) {
+                        //     Router.push('/dashboard/driver');//, undefined, { locale: data.data.user.language })
+                        // }
 
-                        if (isCompany()) {
-                            Router.push('/dashboard/company');//, undefined, { locale: data.data.user.language })
-                        }
+                        // if (isCompany()) {
+                        //     Router.push('/dashboard/company');//, undefined, { locale: data.data.user.language })
+                        // }
 
                         // Router.push('/')
                     } else {
-                        toast.warning(t("ERROR_MESSAGE_DEFAULT"), {
-                            position: "top-right",
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                        });
+                        toast.warning(t("ERROR_MESSAGE_DEFAULT"));
                     }
                 })
                 .catch(function (error) {

@@ -11,6 +11,10 @@ export interface JwtTokenPayload {
     permissions: string[];
     // companyId
     company: number;
+
+    iat?: number;
+    nbf?: number;
+    exp?: number;
   
     // used when impersonating another company/user
     impersonatedBy?: {
