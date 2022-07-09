@@ -32,7 +32,6 @@ import BaseInput from "../../../../../components/forms/BaseInput";
 import BaseSelect from "../../../../../components/forms/BaseSelect";
 import BaseCheckList from "../../../../../components/forms/BaseCheckList";
 import BaseTextArea from "../../../../../components/forms/BaseTextArea";
-import BaseFile from "../../../../../components/forms/BaseFile";
 
 import { preventNegative, positiveInt } from "../../../../../utils/input";
 import Link from "next/link";

@@ -39,7 +39,7 @@ export interface BaseCheckListProps extends BaseControlProps {
   valueKey?: string;
   labelPrefix?: string;
   value?: string[];
-  cols?: number;
+  cols?: string | number;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   readOnly?: boolean;
@@ -93,7 +93,7 @@ function BaseCheckList({
     <div className={className}>
       {label && <span style={{ marginRight: "20px" }}>{t(label)}{required ? "*" : ""}:</span>}
       {cols ?
-        ColLayout(t, options, cols, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix)
+        ColLayout(t, options, +cols, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix)
         : InlineLayout(t, options, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix)}
       {touched && error && (typeof error === "string") ? <span className="text-danger small">{error}</span> : null}
     </div>

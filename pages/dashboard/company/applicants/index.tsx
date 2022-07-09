@@ -95,7 +95,7 @@ export default function Applicants() {
     }
 
     const onEditClick = (id: number) => {
-        router.push(`${router.pathname}/${id}?viewMode=edit`);
+        router.push(`${router.pathname}/${id}/edit`);
     }
 
     /**

@@ -1,7 +1,7 @@
-import BaseSelect from "./BaseSelect";
+import BaseSelect, { BaseSelectProps } from "./BaseSelect";
 import stateList from "../../utils/stateList";
 
-export default function StateSelect ( props )
+export default function StateSelect ( props: BaseSelectProps )
 {
 
     return (<BaseSelect

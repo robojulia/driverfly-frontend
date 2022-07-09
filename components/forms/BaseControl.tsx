@@ -2,9 +2,10 @@ import React from 'react'
 import { InputGroup } from 'react-bootstrap';
 
 import { useTranslation } from "../../hooks/useTranslation"
+import { FormikInterface } from '../../utils/formik';
 
 export interface BaseControlProps {
-  formik?: any;
+  formik?: FormikInterface<any>;
   required?: boolean;
   className?: string;
   label?: string;
