@@ -7,13 +7,22 @@ import DocumentApi from '../../pages/api/document';
 import { getBase64 } from "../../utils/file";
 import ViewModal from '../viewDetails/viewModal';
 import ViewPdf from '../viewDetails/viewPdf';
+import { BaseControlProps } from './BaseControl';
 
-export default function FileInput({ documentType, formik, accept, required, className, label, handleBlur, placeholder, value, onChange, readOnly, name, touched, error, }) {
+export interface FileInputProps extends BaseControlProps {
+    documentType?: string;
+    accept?: string;
+    handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+    placeholder?: string | boolean;
+    value?: any;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+    readOnly?: boolean;
+  }
+  
+  export default function FileInput({ documentType, formik, accept, required, className, label, handleBlur, placeholder, value, onChange, readOnly, name, touched, error, }: FileInputProps) {
     const { t } = useTranslation();
     if (formik) {
-        /**
-         * @type {import('formik').FieldMetaProps}
-         */
         const meta = formik.getFieldMeta(name);
 
         const metas = {
@@ -132,7 +141,7 @@ export default function FileInput({ documentType, formik, accept, required, clas
                         onBlur={handleBlur}
                         type={value?.name ? "text" : "file"}
                         value={value?.name || ""}
-                        placeholder={t(placeholder)}
+                        placeholder={t(placeholder === true ? label || name : (placeholder || "").toString())}
                         disabled={!!value?.name}
                         onChange={formattedOnChange}
                         readOnly={readOnly}
@@ -159,7 +168,7 @@ export default function FileInput({ documentType, formik, accept, required, clas
             {accept === "application/pdf" &&
                 <ViewPdf name={value?.name} url={viewDoc} onCloseClick={close} />}
             {accept.startsWith("image/") &&
-                <ViewModal show={!!viewDoc} name={value?.name} onCloseClick={close}>
+                <ViewModal show={!!viewDoc} title={value?.name} onCloseClick={close}>
                     <img className="img-thumbnail" src={viewDoc} />
                 </ViewModal>}
         </>);

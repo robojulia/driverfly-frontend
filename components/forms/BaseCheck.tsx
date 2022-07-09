@@ -1,13 +1,19 @@
 import React from 'react'
 import { useTranslation } from '../../hooks/useTranslation';
+import { BaseControlProps } from './BaseControl';
 
-function BaseCheck ( { prefixLabel, formik, required, className, label, checked, onChange, handleBlur, readOnly, name, touched, error, } ) {
+export interface BaseCheckProps extends BaseControlProps {
+  checked?: boolean;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  readOnly?: boolean;
+
+}
+
+export default function BaseCheck ( { formik, required, className, label, checked, onChange, handleBlur, readOnly, name, touched, error, }: BaseCheckProps ) {
   const { t } = useTranslation();
 
   if (formik) {
-    /**
-     * @type {import('formik').FieldMetaProps}
-     */
     const meta = formik.getFieldMeta(name);
 
     if (meta) {
@@ -23,7 +29,7 @@ function BaseCheck ( { prefixLabel, formik, required, className, label, checked,
    * 
    * @param {React.ChangeEvent<HTMLInputElement>} e 
    */
-  const onChangeWrapper = (e) => {
+  const onChangeProxy = (e) => {
     const { checked } = e.target;
 
     if (onChange) {
@@ -46,7 +52,7 @@ function BaseCheck ( { prefixLabel, formik, required, className, label, checked,
           id={name}
           type="checkbox"
           checked={checked}
-          onChange={onChangeWrapper}
+          onChange={onChangeProxy}
           readOnly={readOnly}
           name={name}
           role="switch"
@@ -59,6 +65,4 @@ function BaseCheck ( { prefixLabel, formik, required, className, label, checked,
     </div>
   )
 }
-
-export default BaseCheck
 

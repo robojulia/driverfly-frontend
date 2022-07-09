@@ -6,8 +6,8 @@ export interface BaseInputProps extends BaseControlProps {
   accept?: string;
   handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   type?: string;
-  min?: string;
-  max?: string;
+  min?: string | number;
+  max?: string | number;
   step?: number;
   placeholder?: string | boolean;
   value?: any;
@@ -49,7 +49,7 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
        */
       function (e) {
         // prevent negative if the min value is set to 0
-        if (min != null && parseInt(min) >= 0 && e.key === "-") e.preventDefault();
+        if (min != null && +min >= 0 && e.key === "-") e.preventDefault();
 
         if (e.key === ".") {
           e.preventDefault();
@@ -63,7 +63,7 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
        */
       function (e) {
         // prevent negative if the min value is set to 0
-        if (min != null && parseInt(min) >= 0 && e.key === "-") e.preventDefault();
+        if (min != null && +min >= 0 && e.key === "-") e.preventDefault();
       };
   }
 

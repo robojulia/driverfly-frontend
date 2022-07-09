@@ -2,19 +2,13 @@ import ViewTableStyle from "../../public/components/styles/css/ViewTable.module.
 import { useTranslation } from "../../hooks/useTranslation";
 import { Table } from "react-bootstrap";
 
-/**
- * @typedef ViewTableProps
- * @property {object} headers
- * @property {string} type
- * @property {object[]} items
- */
+export interface ViewTableProps<T> {
+    headers: Record<string, string|JSX.Element>;
+    type?: string;
+    items: T[];
+}
 
-/**
- * 
- * @param {ViewTableProps} props 
- * @returns 
- */
-export default function ViewTable(props) {
+export default function ViewTable<T>(props: ViewTableProps<T>) {
     const { t } = useTranslation();
 
     const { headers, type, items } = props;

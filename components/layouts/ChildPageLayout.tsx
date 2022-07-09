@@ -6,18 +6,12 @@ import { ChevronLeft } from "react-bootstrap-icons";
 import useLastPage from "../../hooks/useLastPage";
 import { useTranslation } from "../../hooks/useTranslation";
 
-/**
- * @typedef ChildPageLayoutProps
- * @property {string} title defaults to "GO_BACK"
- * @property {string} backPath
- * @property {import("react").ReactChild[]} children
- */
-
-/**
- * This method will render a page that is considered a child of another page (with a "go back" button)
- * @param {ChildPageLayoutProps} props
- */
-export default function ChildPageLayout({ title, backPath, children }) {
+export interface ChildPageLayoutProps {
+    title?: string;
+    backPath?: string;
+    readonly children?: JSX.Element | JSX.Element[];
+}
+export default function ChildPageLayout({ title, backPath, children }: ChildPageLayoutProps) {
     const router = useRouter();
     const { t } = useTranslation();
 
