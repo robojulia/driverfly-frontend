@@ -3,6 +3,7 @@ import { Container } from "reactstrap";
 import Header from "../header/Header";
 import Sidebar from "../sidebars/Sidebar";
 import Head from "next/head";
+import Scripts from "../../../scripts";
 
 import { useTranslation } from "../../../../hooks/useTranslation";
 import {TelephoneFill,  Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, CheckSquareFill, GiftFill, GearFill, EnvelopeFill, PeopleFill } from 'react-bootstrap-icons';
@@ -102,6 +103,7 @@ return (
         />
         <link rel="icon" href="/img/DriverFly-Official-Favicon.png" />
       </Head>
+      <Scripts  />
       <div className="header">
             <div className="contentArea ">
               {/********header**********/}

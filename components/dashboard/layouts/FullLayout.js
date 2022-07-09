@@ -8,6 +8,8 @@ import { useTranslation } from "../../../hooks/useTranslation";
 import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, BellFill, SearchHeartFill, CheckSquareFill, GiftFill, GearFill, ShareFill, EnvelopeFill, CardList } from 'react-bootstrap-icons';
 import useAuth from "../../../hooks/useAuth";
 
+import Scripts from "../../scripts";
+
 
 // driver layout
 const FullLayout = ({ children }) => {
@@ -108,6 +110,7 @@ const FullLayout = ({ children }) => {
         />
          <link rel="icon" href="/img/DriverFly-Official-Favicon.png" />
       </Head>
+      <Scripts />
       <div className="header">
         <div className="contentArea ">
           {/********header**********/}

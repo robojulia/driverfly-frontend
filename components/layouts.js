@@ -12,6 +12,7 @@ export default function Layout({ children }) {
                 <meta httpEquiv="x-ua-compatible" content="ie=edge" />
             </Head>
             <Header />
+            <Scripts />
             <main>{children}</main>
             <Footer />
             <Scripts />
