@@ -6,14 +6,14 @@ import { useTranslation } from "../../../../hooks/useTranslation";
 // import useAuth from "../../../../hooks/useAuth";
 import Impersonate from "../../../impersonate/impersonate";
 
-import { useAuth } from "../../../../hooks/useAuth2";
-
+// import { useAuth } from "../../../../hooks/useAuth2";
+import useAuth from "../../../../hooks/useAuth";
 
 export default function DriverProfileNav() {
 
-  const { user, loginGuard } = useAuth();
+  const { user, authenticateDriver } = useAuth();
 
-  loginGuard();
+  authenticateDriver();
 
   const { t } = useTranslation();
 

@@ -1,7 +1,7 @@
 import React, { useEffect }  from "react";
 import Logo from "../logo/Logo";
-import { useAuth } from "../../../../hooks/useAuth2";
-
+// import { useAuth } from "../../../../hooks/useAuth2";
+import useAuth from "../../../../hooks/useAuth";
 
 import {
   Navbar,
@@ -16,7 +16,7 @@ const Header = () => {
 
   const { t } = useTranslation();
 
-  const { user, loginGuard } = useAuth();
+  const { user } = useAuth();
 
   // const router = useRouter();
   // if (!user) {

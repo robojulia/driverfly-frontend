@@ -7,14 +7,15 @@ import LogoutButton from '../../../buttons/Logout';
 
 import { useTranslation } from "../../../../hooks/useTranslation";
 // import useAuth from "../../../../hooks/useAuth";
-import { useAuth } from "../../../../hooks/useAuth2";
+import useRedirect from "../../../../hooks/useRedirect";
+// import { useAuth } from "../../../../hooks/useAuth2";
 import Impersonate from "../../../impersonate/impersonate";
 
 export default function CompanyProfileNav({ user }) {
     
-    const { loginGuard } = useAuth();
+    const { authCompany } = useRedirect();
 
-    loginGuard();
+    authCompany();
 
     const { t } = useTranslation();
 

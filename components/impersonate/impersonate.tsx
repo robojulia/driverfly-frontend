@@ -22,8 +22,6 @@ export default function Impersonate() {
 
     const { t } = useTranslation();
 
-    if (!isSuperUser()) return null;
-
     const impersonating = isImpersonating();
 
     const [ open, setOpen ] = useState(false);
@@ -137,6 +135,8 @@ export default function Impersonate() {
 
     const canSubmit = !form.isSubmitting && form.isValid && !form.isValidating;
 
+
+    if (!isSuperUser()) return null;
 
     return (<>
         <Dropdown.Item
