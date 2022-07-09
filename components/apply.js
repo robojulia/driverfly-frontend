@@ -106,7 +106,7 @@ export default function JobApply({ job }) {
     <>
       <div className="ort-btn mt-lg-4 mt-0">
         <button type="button" className="btn theme-primary-btn" onClick={onApplyClick}> {t('apply_now')}<ArrowRight /></button>
-        <button type="button" className="btn theme-general-btn"> <Star /> {t('shortlist')} </button>
+        {/* <button type="button" className="btn theme-general-btn"> <Star /> {t('shortlist')} </button> */}
       </div>
 
       <ViewModal
