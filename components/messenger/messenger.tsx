@@ -75,6 +75,7 @@ export function Messenger(props) {
             ...conversations,
             e
         ]);
+        setConversation(e);
      }
 
      const onConversationUpdated = (e: ConversationEntity) => {

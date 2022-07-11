@@ -83,9 +83,7 @@ export function ConversationForm(props: ConversationFormProps) {
         // };
         form.setValues({
             ...form.values,
-            chattable_type: entity?.chattable_type,
-            chattable_name: entity?.chattable_name,
-            chattable_id: entity?.chattable_id,
+            ...entity,
             message: null,
         });
 
