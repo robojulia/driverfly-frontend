@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 
 import { useState } from 'react';
 import Layout from "../../components/layouts";
-import login from '../../public/css/Login.module.css'
+import style from '../../public/css/Login.module.css'
 import Link from 'next/link';
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
 import { ToastContainer, toast } from 'react-toastify'
@@ -124,7 +124,7 @@ export default function Login() {
             <div className="container mb-5 p-lg-2 p-0">
                 <p className=" mt-5 text-secondary  p-lg-0 p-2">{t("DON'T_HAVE_AN_ACCOUNT_MAKE_ONE")}
                     <Link href="/signup">
-                        <a className={login.link}>{t("HERE")}</a>
+                        <a className={style.link}>{t("HERE")}</a>
                     </Link>
                 </p>
                 <h2 className='text-center mt-5'>{t("QUICK_LOGIN")}</h2>
@@ -136,18 +136,14 @@ export default function Login() {
                     <div className='col-lg-8'>
                         <form
                             onSubmit={form.handleSubmit}
-                            className={login.loginform}>
+                            className={style.loginform}>
                             <BaseInput
                                 className="form-group"
                                 label={t("EMAIL")}
                                 required
                                 name="email"
                                 placeholder={t("EMAIL")}
-                                value={form.values.email}
-                                touched={form.touched.email}
-                                error={form.errors.email}
-                                onChange={form.handleChange}
-                                handleBlur={form.handleBlur}
+                                formik={form}
                             />
                             <BaseInput
                                 className="form-group"
@@ -156,11 +152,7 @@ export default function Login() {
                                 type="password"
                                 name="password"
                                 placeholder={t("PASSWORD")}
-                                value={form.values.password}
-                                touched={form.touched.password}
-                                error={form.errors.password}
-                                onChange={form.handleChange}
-                                handleBlur={form.handleBlur}
+                                formik={form}
                             />
 
                             <div className="form-group form-check">
@@ -168,19 +160,19 @@ export default function Login() {
                                     <input className="form-check-input keep_sign_in_check" type="checkbox" /> {t("KEEP_ME_SIGNED_IN")}
                                 </label>
                                 <Link href="/forgot-password">
-                                    <a className={login.pricol}>{t("LOST_YOUR_PASSWORD")}</a>
+                                    <a className={style.pricol}>{t("LOST_YOUR_PASSWORD")}</a>
                                 </Link>
                             </div>
-                            <button type="submit" className={login.submit}>{t("LOGIN")}</button>
+                            <button type="submit" className={style.submit}>{t("LOGIN")}</button>
                         </form>
 
-                        <div className={login.lineheader}>
+                        <div className={style.lineheader}>
                             <span>{t("OR")}</span>
                         </div>
 
-                        <div className={login.back_to_signup}>
+                        <div className={style.back_to_signup}>
                             <Link href="/signup">
-                                <a className={login.facebook}>{t("CREATE_AN_ACCOUNT")}</a>
+                                <a className={style.facebook}>{t("CREATE_AN_ACCOUNT")}</a>
                             </Link>
 
                         </div>
