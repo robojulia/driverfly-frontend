@@ -3,12 +3,12 @@ import FullLayout from "../../../components/dashboard/layouts/FullLayout";
 import useRedirect from '../../../hooks/useRedirect';
 import { Container, Row, Col } from 'react-bootstrap';
 import Link from 'next/link';
-import fb from "../../../public/dashboard/assets/images/socialicon/fb.png";
-import insta from "../../../public/dashboard/assets/images/socialicon/insta.png";
-import linkedin from "../../../public/dashboard/assets/images/socialicon/linkedin.png";
+import { Facebook, Instagram, Linkedin, Pinterest, Plus, Twitter } from 'react-bootstrap-icons';
+
 import Image from "next/image";
 
 import { useTranslation } from '../../../hooks/useTranslation';
+import { SocialLinks } from '../../../components/social/social-links';
 
 
 export default function FreeResources() {
@@ -73,26 +73,31 @@ export default function FreeResources() {
                             <span className={style.description}>{t("follow_us_paragraph")}</span>
                             <br />
                             <br />
-                            <Link href="https://www.facebook.com/DriverFlyJobs/">
+                            <SocialLinks
+                                showText
+                                iconSize={25}
+                                breakComponent={<br />}
+                                />
+                            {/* <Link href="https://www.facebook.com/DriverFlyJobs/">
                                 <a target="_blank">
-                                   <div className={style.social_icon}> <Image src={fb} alt="fb" /> </div>
+                                   < Facebook size={25} style={{ paddingRight: "5px" }} />
                                    facebook.com/DriverFlyJobs
                                 </a>
                             </Link>
                             <br />
                             <Link href="https://www.instagram.com/driver_hiring" >
                                 <a target="_blank">
-                                   <div className={style.social_icon}> <Image src={insta} alt="ig" /> </div>
+                                    < Instagram size={25} style={{ paddingRight: "5px" }} />
                                    @driver_hiring
                                 </a>
                             </Link>
                             <br />
                             <Link href="https://www.linkedin.com/company/driverfly/">
                                 <a target="_blank">
-                                   <div className={style.social_icon}> <Image src={linkedin} alt="linkedin" />  </div>
+                                    <Linkedin size={25} style={{ paddingRight: "5px" }} />
                                    linkedin.com/company/driverfly
                                 </a>
-                            </Link>
+                            </Link> */}
                         </div>
                     </Col>
                     <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
