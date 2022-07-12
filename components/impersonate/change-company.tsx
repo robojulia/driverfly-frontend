@@ -36,23 +36,23 @@ export default function ChangeCompany() {
         setDropdownOpen(!dropdownOpen);
     }
 
+    if (!user?.company?.children) return null;
+
     return (<>
         <Dropdown show={dropdownOpen} onToggle={toggle} >
-            <Dropdown.Toggle disabled={!user?.company?.children || user.company.children.length <= 1} variant="light">
+            <Dropdown.Toggle disabled={user.company.children.length <= 1} variant="light">
                 {/* <img src="/dashboard/assets/images/users/user1.jpg"
                     alt="profile"
                     className="rounded-circle"
                     width="30"
                     height="30"
                 /> */}
-                <span>{user?.company?.name}</span>
+                <span>{user.company.name}</span>
             </Dropdown.Toggle >
             <Dropdown.Menu>
-                {user?.company?.children.map((v, i) => {
-                    return (
-                        <Dropdown.Item key={i} onClick={e => onClick(e, v)}>{v.name} {v.id === user.company.id ? `(${t("CURRENT")})` : ""}</Dropdown.Item>
-                    );
-                })}
+                {user.company
+                    .children
+                    .map((v, i) => (<Dropdown.Item key={v.id} onClick={e => onClick(e, v)}>{v.name} {v.id === user.company.id ? `(${t("CURRENT")})` : ""}</Dropdown.Item>))}
             </Dropdown.Menu>
         </Dropdown>
     </>);
