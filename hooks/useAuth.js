@@ -66,7 +66,7 @@ const useAuth = () => {
     const isSuperUser = () => {
         const user = authCheck();
 
-        return user.jwt?.impersonatedBy || user.jwt?.super_admin || false;
+        return user.jwt?.super_admin || false;
     };
 
     const isImpersonating = () => {
@@ -104,6 +104,12 @@ const useAuth = () => {
         Router.push('/login')
     }
 
+    const companyChildren = () => {
+        const user = authCheck();
+
+        return user.jwt?.companies;
+    }
+
     return {
         user: authCheck(),
         setAuth,
@@ -114,6 +120,7 @@ const useAuth = () => {
         authenticateDriver,
         isCompany,
         authenticateCompany,
+        companyChildren,
         removeAuth,
         hasPermission,
     };

@@ -11,6 +11,8 @@ export class CompanyEntity {
   website?: string;
   photo?: DocumentEntity;
 
+  children?: CompanyEntity[];
+
   static yupSchema() {
     const { t } = useTranslation()
     return yup.object({

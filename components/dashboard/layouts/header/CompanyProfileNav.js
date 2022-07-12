@@ -10,6 +10,8 @@ import { useTranslation } from "../../../../hooks/useTranslation";
 import useRedirect from "../../../../hooks/useRedirect";
 // import { useAuth } from "../../../../hooks/useAuth2";
 import Impersonate from "../../../impersonate/impersonate";
+import BaseSelect from "../../../forms/BaseSelect";
+import ChangeCompany from "../../../impersonate/change-company";
 
 export default function CompanyProfileNav({ user }) {
     
@@ -53,7 +55,8 @@ export default function CompanyProfileNav({ user }) {
 
     return (
         <>
-            <div className="profile">
+            <div className="profile btn-group">
+                <ChangeCompany />
                 <Dropdown show={dropdownOpen} onToggle={toggle} >
                     <Dropdown.Toggle variant="light">
                         <img src="/dashboard/assets/images/users/user1.jpg"

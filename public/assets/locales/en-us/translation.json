@@ -1061,5 +1061,7 @@
         "IN_PROCESS": "In Process",
         "HIRED": "Hired"
     },
-    "NO_NAME": "No Name"
+    "NO_NAME": "No Name",
+    "SWITCH_COMPANY": "Switch Company",
+    "CHANGE": "Change"
 }

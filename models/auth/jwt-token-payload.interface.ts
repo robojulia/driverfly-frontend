@@ -1,3 +1,5 @@
+import { CompanyEntity } from "../company/company.entity";
+
 export interface JwtTokenPayload {
     // userId
     sub: number;
@@ -11,6 +13,8 @@ export interface JwtTokenPayload {
     permissions: string[];
     // companyId
     company: number;
+    // companies
+    companies: CompanyEntity[];
 
     iat?: number;
     nbf?: number;

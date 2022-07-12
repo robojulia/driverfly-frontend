@@ -22,4 +22,10 @@ export default class AuthApi extends BaseApi {
 
         return user;
     }
+
+    async changeOrganization(dto: { companyId: number }) : Promise<UserEntity> {
+        const { data: { user } } = await this.get(this.buildUrl(`${this.baseUrl}/change-organization`, dto));
+
+        return user;
+    }
 }
