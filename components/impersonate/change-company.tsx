@@ -25,7 +25,7 @@ export default function ChangeCompany() {
 
         setAuth(auth);
 
-        await router.push('/dashboard/company');
+        await router.reload();
     };
 
     const user = authCheck();
