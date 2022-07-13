@@ -3,10 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Navbar, Row } from "react-bootstrap";
 import { Plus } from "react-bootstrap-icons";
 import { ChattableType } from "../../enums/conversation/chattable-type.enum";
-import useAuth from "../../hooks/useAuth";
 import { useTranslation } from "../../hooks/useTranslation";
 import { ConversationEntity, CreateConversationDto } from "../../models/conversation/conversation.entity";
-import ApplicantApi from "../../pages/api/applicant";
 import { ConversationApi } from "../../pages/api/conversation";
 import { useEffectAsync } from "../../utils/react";
 import { ComboboxItem } from "../controls/combobox";
@@ -20,10 +18,6 @@ export interface MessengerProps {
 
 export function Messenger(props) {
     const { getOptions } = props;
-
-    const { authCheck } = useAuth();
-
-    const user = authCheck();
 
     const { t } = useTranslation();
 

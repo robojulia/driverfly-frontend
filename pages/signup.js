@@ -4,7 +4,7 @@ import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 import { useState } from 'react'
 import Layout from "../components/layouts"
 import SignupStyle from "../public/css/signup.module.css"
-import useAuth from '../hooks/useAuth';
+import { useAuth } from '../hooks/useAuth';
 import Router, { useRouter } from 'next/router'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -33,9 +33,9 @@ export default function Signup() {
 
   const router = useRouter();
 
-  const { authCheck, setAuth } = useAuth();
+  const { user } = useAuth();
 
-  if (authCheck()) {
+  if (user) {
     router.push('/dashboard')
   }
 

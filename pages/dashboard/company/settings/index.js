@@ -1,9 +1,8 @@
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
 import { Row } from "reactstrap";
-import useAuth from '../../../../hooks/useAuth';
+import { useAuth } from '../../../../hooks/useAuth';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react'
-import useRedirect from '../../../../hooks/useRedirect';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -24,14 +23,7 @@ import { DocumentType } from "../../../../models/documents/document.entity";
 export default function Settings() {
   const { t } = useTranslation();
 
-  const { authCompany } = useRedirect();
-
-  authCompany();
-
-  const router = useRouter();
-
-  const { authCheck, setAuth } = useAuth();
-  const user = authCheck();
+  const { user, updateUser } = useAuth();
 
   const form = useFormik({
     initialValues: new CompanyEntity(),
@@ -41,7 +33,7 @@ export default function Settings() {
 
       try {
         const company = await api.update(values);
-        setAuth({
+        updateUser({
           ...user,
           company: {
             ...user.company,
@@ -49,11 +41,8 @@ export default function Settings() {
             about: company.about,
             photo: company.photo
           }
-        });
+        })
         toast.success(t("successfully_saved_information"));
-        setTimeout(() => {
-          router.reload();
-        }, 2000);
       }
       catch (e) {
         console.error("Unable to save company", e);

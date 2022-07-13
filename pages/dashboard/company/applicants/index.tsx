@@ -1,7 +1,6 @@
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import Applicant from "../../../../public/dashboard/styles/css/Applicants.module.css"
-import useRedirect from '../../../../hooks/useRedirect';
 import { toast } from "react-toastify";
 
 import { TranslateInterface, useTranslation } from "../../../../hooks/useTranslation";
@@ -30,7 +29,7 @@ import PageLayout from "../../../../components/layouts/PageLayout";
 import { useEffectAsync } from "../../../../utils/react";
 import ViewDataTable from "../../../../components/viewDetails/viewDataTable";
 import { ApplicantJobEntity } from "../../../../models/applicant/applicant-job.entity";
-import useAuth from "../../../../hooks/useAuth";
+import { useAuth } from "../../../../hooks/useAuth";
 import BaseSelect from "../../../../components/forms/BaseSelect";
 import BaseTextArea from "../../../../components/forms/BaseTextArea";
 
@@ -64,11 +63,6 @@ interface ConsolodatedApplicantJob extends ApplicantJobEntity {
 }
 
 export default function Applicants() {
-    // always check for auth first
-    const { authCompany } = useRedirect();
-
-    authCompany();
-
     // continue loading
     const { t } = useTranslation();
 

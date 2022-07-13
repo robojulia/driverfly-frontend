@@ -1,6 +1,5 @@
 import style from '../../../public/dashboard/styles/css/Driver/free-resources.module.css';
 import FullLayout from "../../../components/dashboard/layouts/FullLayout";
-import useRedirect from '../../../hooks/useRedirect';
 import { Container, Row, Col } from 'react-bootstrap';
 import Link from 'next/link';
 import { Facebook, Instagram, Linkedin, Pinterest, Plus, Twitter } from 'react-bootstrap-icons';
@@ -14,10 +13,6 @@ import { SocialLinks } from '../../../components/social/social-links';
 export default function FreeResources() {
 
     const { t } = useTranslation();
-
-    const { authDriver } = useRedirect();
-
-    authDriver()
 
     return (
         <>

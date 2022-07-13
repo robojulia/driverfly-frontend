@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { TranslateInterface, useTranslation } from "../../../../hooks/useTranslation";
 import Link from "next/link";
 import { useMediaQuery } from "react-responsive";
-import useAuth from "../../../../hooks/useAuth";
+import { useAuth } from "../../../../hooks/useAuth";
 
 export interface SidebarProps {
     open: boolean;

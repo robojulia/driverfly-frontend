@@ -1,22 +1,16 @@
 
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
-import useRedirect from '../../../../hooks/useRedirect';
 import React from "react";
 
 import PageLayout from "../../../../components/layouts/PageLayout";
 
 import { ApplicantApi } from "../../../api/applicant";
-import useAuth from "../../../../hooks/useAuth";
 
 import { ChattableType } from "../../../../enums/conversation/chattable-type.enum";
 import { CancelTokenSource } from "axios";
 import { Messenger } from "../../../../components/messenger/messenger";
 
 export default function MessageList() {
-
-    const { authCompany } = useRedirect();
-
-    authCompany()
 
     const getOptions = async (query: string, cancellationToken: CancelTokenSource) => {
          const api = new ApplicantApi();

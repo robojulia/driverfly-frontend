@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { Dropdown, Button, Row } from "react-bootstrap";
-import useAuth from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { useTranslation } from "../../hooks/useTranslation";
 import ViewModal from "../viewDetails/viewModal";
 import AuthApi from "../../pages/api/auth";
@@ -12,7 +12,7 @@ import * as yup from "yup";
 import { CompanyEntity } from "../../models/company/company.entity";
 
 export default function ChangeCompany() {
-    const { setAuth, authCheck } = useAuth();
+    const { user, updateUser } = useAuth();
 
     const { t } = useTranslation();
 
@@ -23,12 +23,10 @@ export default function ChangeCompany() {
 
         const auth = await api.changeOrganization({ companyId: company.id });
 
-        setAuth(auth);
+        updateUser(auth);
 
-        await router.reload();
+        // await router.reload();
     };
-
-    const user = authCheck();
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
 

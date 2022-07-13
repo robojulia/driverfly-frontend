@@ -1,6 +1,5 @@
 
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
-import useRedirect from '../../../../hooks/useRedirect';
 import { useState } from "react";
 import React from "react";
 
@@ -18,17 +17,14 @@ import ShowEnumFromString from "../../../../components/enum-filters/show-enum-fr
 import { buildAddress } from "../../../../utils/common";
 import ViewDataTable from "../../../../components/viewDetails/viewDataTable";
 import OverlyPopover from "../../../../components/popover/overly-popover";
-import useAuth from "../../../../hooks/useAuth";
+import { useAuth } from "../../../../hooks/useAuth";
 import useStorage from "../../../../hooks/useStorage";
 import { useEffectAsync } from "../../../../utils/react";
 
 export default function JobListing() {
 
-    const { authCompany } = useRedirect();
-    authCompany()
+    const { user } = useAuth();
 
-    const { authCheck } = useAuth();
-    const user = authCheck();
     const columnSettingKey = `company.${user.id}.jobs.columns`
     let settingsJson = useStorage().getItem(columnSettingKey)
     let settingsArray = settingsJson ? JSON.parse(settingsJson) : []

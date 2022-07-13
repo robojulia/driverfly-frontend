@@ -1,8 +1,6 @@
 import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
 import { Col, Row, Card, CardBody, Table } from "reactstrap";
-import useRedirect from '../../../../hooks/useRedirect';
-import { useEffect } from "react";
-import useAuth from "../../../../hooks/useAuth";
+import { useAuth } from "../../../../hooks/useAuth";
 import { useState } from "react";
 import JobList from "../../../../public/dashboard/styles/css/JobList.module.css"
 import Link from 'next/link';
@@ -23,13 +21,9 @@ import { ApplicantJobEntity } from "../../../../models/applicant/applicant-job.e
 
 export default function Index() {
 
-    const { authDriver } = useRedirect();
-    authDriver()
-
     const { t } = useTranslation();
     const applicantApi = new ApplicantApi();
-    const { authCheck } = useAuth();
-    const user = authCheck();
+    const { user } = useAuth();
     const columnSettingKey = `driver.${user.id}.applications.columns`
     let settingsJson = useStorage().getItem(columnSettingKey)
     let settingsArray = settingsJson ? JSON.parse(settingsJson) : []

@@ -1,5 +1,4 @@
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
-import useRedirect from '../../../../../hooks/useRedirect';
 import { useTranslation } from "../../../../../hooks/useTranslation";
 
 import { useRouter } from "next/router"
@@ -17,10 +16,6 @@ export default function Location() {
     if (isNaN(parseInt(id))) id = null; // create mode
 
     const { t } = useTranslation();
-
-    const { authCompany } = useRedirect();
-
-    authCompany()
 
     const goBack = () => {
         setTimeout(

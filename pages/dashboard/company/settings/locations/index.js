@@ -1,9 +1,7 @@
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
 import { Col, Row, Table } from "reactstrap";
-import useAuth from '../../../../../hooks/useAuth';
 import { useRouter } from "next/router"
 import { useEffect, useState } from 'react'
-import useRedirect from '../../../../../hooks/useRedirect';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useTranslation } from "../../../../../hooks/useTranslation";
@@ -19,14 +17,6 @@ export default function LocationList() {
 
   const router = useRouter();
   const { t } = useTranslation();
-
-  const { authCompany } = useRedirect();
-
-  authCompany()
-
-  const { authCheck, setAuth } = useAuth();
-  const user = authCheck();
-  console.log('user', user);
 
   const [ locations, setLocations ] = useState([]);
 

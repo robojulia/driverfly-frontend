@@ -7,7 +7,7 @@ import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 
 import { useFormik } from "formik";
 import { useTranslation } from "../../../hooks/useTranslation";
-import useAuth from "../../../hooks/useAuth";
+import { useAuth } from "../../../hooks/useAuth";
 
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import { Button, Col, Row, Table } from "react-bootstrap";

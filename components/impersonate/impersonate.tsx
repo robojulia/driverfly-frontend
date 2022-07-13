@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Dropdown, Button, Row } from "react-bootstrap";
-import useAuth from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { useTranslation } from "../../hooks/useTranslation";
 import ViewModal from "../viewDetails/viewModal";
 import { ArrowCounterclockwise } from "react-bootstrap-icons";
@@ -18,11 +18,9 @@ import * as yup from "yup";
 import { useEffectAsync } from "../../utils/react";
 
 export default function Impersonate() {
-    const { isSuperUser, isImpersonating, setAuth, isDriver, isCompany, authCheck } = useAuth();
+    const { user, login, isImpersonating, isSuperAdmin } = useAuth();
 
     const { t } = useTranslation();
-
-    const impersonating = isImpersonating();
 
     const [ open, setOpen ] = useState(false);
 
@@ -58,17 +56,9 @@ export default function Impersonate() {
 
         const auth = await api.impersonate(e);
 
-        setAuth(auth);
-
         setOpen(false);
 
-        if (auth.company) {
-            await router.push('/dashboard/company');//, undefined, { locale: data.data.user.language })
-        }
-        else {
-            await router.push('/dashboard/driver');//, undefined, { locale: data.data.user.language })
-        }
-
+        login(auth);
     }
 
     const form = useFormik({
@@ -126,7 +116,6 @@ export default function Impersonate() {
      * @param {React.MouseEvent<HTMLButtonElement>} e 
      */
     const onRestoreClick = (e) => {
-        const user = authCheck();
         onSubmit({
             companyId: user.jwt.impersonatedBy.company,
             userId: user.jwt.impersonatedBy.user
@@ -136,7 +125,7 @@ export default function Impersonate() {
     const canSubmit = !form.isSubmitting && form.isValid && !form.isValidating;
 
 
-    if (!isSuperUser()) return null;
+    if (!isSuperAdmin) return null;
 
     return (<>
         <Dropdown.Item
@@ -150,7 +139,7 @@ export default function Impersonate() {
             show={open}
             footer={<>
             {
-                impersonating &&
+                isImpersonating &&
                 <Button disabled={!canSubmit} variant="secondary" onClick={onRestoreClick}>
                     <ArrowCounterclockwise /> {t("RESTORE")}
                 </Button>

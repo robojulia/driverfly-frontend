@@ -1,8 +1,6 @@
 import FullLayout from "../../../components/dashboard/layouts/FullLayout";
 import { Col, Row } from "react-bootstrap";
-import useRedirect from '../../../hooks/useRedirect';
 import style from '../../../public/dashboard/styles/css/Driver/dashboard.module.css';
-import useAuth from "../../../hooks/useAuth";
 import { useState } from "react";
 import Link from 'next/link';
 
@@ -24,9 +22,6 @@ export default function Dashboard() {
 
     const { t } = useTranslation();
 
-    const { authCheck } = useAuth();
-
-    const user = authCheck();
     const applicantApi = new ApplicantApi();
 
     const [stats, setStats] = useState(STATS_PROTO)

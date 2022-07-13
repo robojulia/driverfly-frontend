@@ -1,7 +1,4 @@
-// import useAuth from '../../hooks/useAuth';
-import { useAuth } from '../../hooks/useAuth2';
-import Router from 'next/router'
-import axios from 'axios';
+import { useAuth } from '../../hooks/useAuth';
 import { useRouter } from 'next/router'
 
 import { useState } from 'react';
@@ -18,6 +15,7 @@ import { useTranslation } from "../../hooks/useTranslation";
 import BaseInput from '../../components/forms/BaseInput';
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { globalAjaxExceptionHandler } from '../../utils/ajax';
 
 
 export default function Login() {
@@ -49,63 +47,17 @@ export default function Login() {
         }),
         onSubmit: async (values) => {
 
-            await authApi.login({
-                email: values.email,
-                password: values.password,
-            })
-                .then(data => {
-
-                    // console.log("handle success", data);
-                    if (data.status == 201) {
-                        toast.success(t('LOGIN_SUCCESSFULL'));
-
-                        // data.data.user.language = "es-mx";
-                        login(data.data.user)
-
-                        // if (isDriver()) {
-                        //     Router.push('/dashboard/driver');//, undefined, { locale: data.data.user.language })
-                        // }
-
-                        // if (isCompany()) {
-                        //     Router.push('/dashboard/company');//, undefined, { locale: data.data.user.language })
-                        // }
-
-                        // Router.push('/')
-                    } else {
-                        toast.warning(t("ERROR_MESSAGE_DEFAULT"));
-                    }
-                })
-                .catch(function (error) {
-                    // handle error
-
-                    if (error?.response?.data?.user) {
-                        toast.warning(t(error.response.data.user), {
-                            position: "top-right",
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                        });
-                    } else {
-                        toast.warning(t("INVALID_CREDENTIALS"), {
-                            position: "top-right",
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                        });
-                    }
-
-                })
-                .then(function () {
-                    // always executed
-                    console.log("always executed");
+            try {
+                const user = await authApi.login({
+                    email: values.email,
+                    password: values.password,
                 });
 
+                toast.success(t('LOGIN_SUCCESSFULL'));
+                login(user);
+            } catch (e) {
+                globalAjaxExceptionHandler(e, { formik: form, t: t, defaultMessage: "INVALID_CREDENTIALS", toast: toast});
+            }
         }
     })
 

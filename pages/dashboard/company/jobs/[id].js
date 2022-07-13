@@ -2,8 +2,7 @@
 import { Row, Button, Col, ButtonGroup, InputGroup } from "react-bootstrap";
 import { PlusCircle, DashCircle } from "react-bootstrap-icons";
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
-import useRedirect from '../../../../hooks/useRedirect';
-import useAuth from '../../../../hooks/useAuth';
+import { useAuth } from '../../../../hooks/useAuth';
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useEffect } from "react";
@@ -67,13 +66,7 @@ export default function Job() {
 
     if (isNaN(parseInt(id))) id = null; // create mode
 
-    // validate that this is a company profile
-    const { authCompany } = useRedirect();
-    authCompany();
-
-    const { authCheck, hasPermission } = useAuth();
-
-    const user = authCheck();
+    const { hasPermission } = useAuth();
 
     const { t } = useTranslation();
 

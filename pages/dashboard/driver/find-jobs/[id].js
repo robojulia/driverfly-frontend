@@ -15,15 +15,12 @@ import CompanyPhoto from "../../../../components/jobs/company-photo"
 import StructuredData from "../../../../components/seo/StructuredData"
 import { ArrowRight, GeoAltFill, CurrencyDollar } from "react-bootstrap-icons"
 import { buildAddress } from "../../../../utils/common"
-import useRedirect from "../../../../hooks/useRedirect"
 import FullLayout from "../../../../components/dashboard/layouts/FullLayout"
 import SaveJob from "../../../../components/dashboard/driver/save-job"
 
 export default function Detail({ jobDetail, relatedJobs }) {
 
   const { t } = useTranslation();
-  const { authDriver } = useRedirect()
-  authDriver()
 
   return (
     <>

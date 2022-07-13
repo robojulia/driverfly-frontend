@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
-import useAuth from "../../../../hooks/useAuth";
+import { useAuth } from "../../../../hooks/useAuth";
 import { useTranslation } from "../../../../hooks/useTranslation";
 import UserApi from "../../../api/user";
 import { Row, Col, Button } from "react-bootstrap";
@@ -17,11 +17,9 @@ import BaseCheck from "../../../../components/forms/BaseCheck";
 import BaseCheckList from "../../../../components/forms/BaseCheckList";
 
 export default function Communication() {
-    const { authCheck } = useAuth();
+    const { user } = useAuth();
 
     const { t } = useTranslation();
-
-    const user = authCheck();
 
     const form = useFormik({
         initialValues: {

@@ -6,18 +6,16 @@ import Image from "next/image";
 import LogoutButton from '../../../buttons/Logout';
 
 import { useTranslation } from "../../../../hooks/useTranslation";
-// import useAuth from "../../../../hooks/useAuth";
-import useRedirect from "../../../../hooks/useRedirect";
-// import { useAuth } from "../../../../hooks/useAuth2";
+import { useAuth } from "../../../../hooks/useAuth";
 import Impersonate from "../../../impersonate/impersonate";
 import BaseSelect from "../../../forms/BaseSelect";
 import ChangeCompany from "../../../impersonate/change-company";
 
-export default function CompanyProfileNav({ user }) {
-    
-    const { authCompany } = useRedirect();
+export default function CompanyProfileNav() {
 
-    authCompany();
+    const { getUser } = useAuth();
+
+    const user = getUser();
 
     const { t } = useTranslation();
 

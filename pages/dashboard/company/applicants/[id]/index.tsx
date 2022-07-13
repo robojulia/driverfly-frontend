@@ -11,7 +11,7 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../../hooks/useTranslation";
 import { useEffectAsync } from "../../../../../utils/react";
-import useAuth from "../../../../../hooks/useAuth";
+import { useAuth } from "../../../../../hooks/useAuth";
 
 import { calculateAge, dateRange } from "../../../../../utils/date";
 import { buildAddress } from "../../../../../utils/common";

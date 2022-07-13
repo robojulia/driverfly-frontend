@@ -1,4 +1,3 @@
-import useRedirect from '../../hooks/useRedirect';
 import { useEffect, useState } from "react"
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import axios from "axios"

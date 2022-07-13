@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import useAuth from '../hooks/useAuth'
+import { useAuth } from '../hooks/useAuth'
 import { toast } from 'react-toastify'
 import { useFormik } from "formik"
 import { useTranslation } from "../hooks/useTranslation"
@@ -29,8 +29,7 @@ import BaseInputPhone from './forms/BaseInputPhone'
 
 export default function JobApply({ job }) {
 
-  const { authCheck } = useAuth();
-  const user = authCheck()
+  const { user } = useAuth();
   const { t } = useTranslation();
 
   const jobApi = new JobApi();
@@ -59,22 +58,24 @@ export default function JobApply({ job }) {
       const api = new ApplicantApi();
       const userApi = new UserApi();
       try {
-        const applicant = await api.getByUserId();
-        if (applicant) {
-          const preferences = await userApi.preferences.list(user.id, { category: UserPreferenceCategory.SHARING });
+        if (!user.company) {
+          const applicant = await api.getByUserId();
+          if (applicant) {
+            const preferences = await userApi.preferences.list(user.id, { category: UserPreferenceCategory.SHARING });
 
-          if (preferences.length > 0) {
-            applicant.documents = applicant.documents.filter(
-              (document) => !preferences.some(
-                (preference) => preference.label === document.type && preference.value === SharePreference.NEVER
-              )
-            );
-          } else applicant.documents = applicant.documents?.filter((document) => document.type === ApplicantDocumentType.RESUME);
+            if (preferences.length > 0) {
+              applicant.documents = applicant.documents.filter(
+                (document) => !preferences.some(
+                  (preference) => preference.label === document.type && preference.value === SharePreference.NEVER
+                )
+              );
+            } else applicant.documents = applicant.documents?.filter((document) => document.type === ApplicantDocumentType.RESUME);
 
-          apply_form.setValues({
-            ...apply_form.values,
-            ...applicant,
-          });
+            apply_form.setValues({
+              ...apply_form.values,
+              ...applicant,
+            });
+          }
         }
       }
       catch (e) {
