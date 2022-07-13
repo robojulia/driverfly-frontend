@@ -7,7 +7,8 @@ import BaseInputPhone from "../BaseInputPhone";
 import EntityForm from "../../layouts/EntityForm";
 import { UserEntity } from "../../../models/user/user.entity";
 import UserApi from "../../../pages/api/user";
-import * as toast from "../../../utils/toast";
+import { formSuccess } from "../../../utils/toast";
+import { toast } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 
 
@@ -44,18 +45,19 @@ export function UserForm(props) {
                 else {
                     user = await api.create(dto);
                 }
-                toast.formSuccess(t, !!id ? "update" : "create", "USER");
+                formSuccess(t, !!id ? "update" : "create", "USER");
                 if (onSaveComplete) onSaveComplete(user);
             }
             catch (e) {
                 console.error("Unable to save entity", e.response);
-                if (e?.response?.data?.email == "EMAIL_ALREADY_EXISTS") {
-                    globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SIGNUP" });
+                globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SIGNUP" });
+                // if (e?.response?.data?.email == "EMAIL_ALREADY_EXISTS") {
+                //     globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SIGNUP" });
 
-                }
-                else {
-                    toast.formFailed(t, !!id ? "update" : "create", "USER");
-                }
+                // }
+                // else {
+                //     formFailed(t, !!id ? "update" : "create", "USER");
+                // }
 
                 if (onSaveError) onSaveError(e);
             }
