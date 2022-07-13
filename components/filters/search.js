@@ -5,14 +5,11 @@ export default function Search(props) {
   const { t } = useTranslation();
   const { state, method } = props
   const { filters } = state
-  const { setFilters, applyFilters } = method
+  const { setFiltersByKeyValue } = method
 
   const searchHandler = e => {
     if (e.key === 'Enter') {
-      setFilters({
-        ...filters,
-        keywords: e.target.value
-      }, applyFilters())
+      setFiltersByKeyValue(e.target.name, e.target.value)
     }
   }
 

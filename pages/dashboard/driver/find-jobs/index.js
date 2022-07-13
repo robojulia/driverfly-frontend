@@ -29,6 +29,7 @@ export default function FindJobs() {
     const setFiltersByKeyValue = (key, value) => {
         setFilters({
             ...filters,
+            page: 1,
             [key]: value
         })
     }
