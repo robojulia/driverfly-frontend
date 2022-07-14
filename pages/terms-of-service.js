@@ -1,5 +1,5 @@
 import Link from 'next/link';
-// import Breadcrumbs from 'nextjs-breadcrumbs';
+import Breadcrumb from '../components/breadcrumbs/Breadcrumb';
 import Layout from "../components/layouts";
 import Terms from "../public/css/Terms.module.css"
 
@@ -10,7 +10,7 @@ export default function TermsOfService() {
               <div className="container">
                   <div className="top-links-inner d-flex align-items-center justify-content-between">
                       <h2>Terms Of Service</h2>
-                      {/* < Breadcrumbs /> */}
+                      < Breadcrumb />
                     </div>
                 </div>
             </div>
@@ -75,7 +75,7 @@ export default function TermsOfService() {
 
 TermsOfService.getLayout = function getLayout(page){
     return (
-        <Layout>
+        <Layout title="terms_of_services">
             {page}
         </Layout>
     )
