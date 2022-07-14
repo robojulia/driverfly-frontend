@@ -109,7 +109,7 @@ export default function FAQ() {
 }
 FAQ.getLayout = function getLayout(page) {
     return (
-        <Layout>
+        <Layout title="FAQ">
             {page}
         </Layout>
     )

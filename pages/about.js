@@ -2,22 +2,17 @@ import Head from "next/head";
 import Layout from "../components/layouts";
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 import Slider from '../components/testominial-slider/Slider';
-import { FileEarmarkZip, Funnel, CheckSquare, Bell, Trophy, HandIndexThumb} from 'react-bootstrap-icons';
+import { FileEarmarkZip, Funnel, CheckSquare, Bell, Trophy, HandIndexThumb } from 'react-bootstrap-icons';
 
 
-export default function About()
-{
+export default function About() {
     return (
         <>
-            <Head>
-                <title>About - DriverFly</title>
-            </Head>
-
             <div className="top-links-sec">
                 <div className="container p-0">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
                         <h2>About</h2>
-                       < Breadcrumb/>
+                        < Breadcrumb />
                     </div>
                 </div>
             </div>
@@ -25,27 +20,27 @@ export default function About()
 
             <div className="about-sec">
                 <div className="about-linear">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-sm-12 col-lg-4">
-                            <img src="img/mockup-of-a-happy-customer-showing-off-his-t-shirt-inside-a-modern-office-26189-4.png" alt="" className="about-img img-fluid" />
-                        </div>
-                        <div className="col-sm-12 col-lg-8">
-                            <div className="about-inner">
-                                <h3>About DriverFly</h3>
-                                <p>DriverFly was built as a digital platform to connect new and experienced CDL and non-CDL drivers with companies of all sizes and offerings.</p>
-                                <p>Unlike traditional job boards, DriverFly caters to the DRIVER. Moreover, drivers undergo different challenges and require different information in deciding which motor carriers to go with. At DriverFly, We’ve built our system to make finding a job and connecting with motor carrier companies as easy as possible.</p>
-                                <p>With jobs across the entire US, our system seeks to level the playing field by providing a reputable platform that allows all motor carriers, not just the mega carriers, to grow through successful driver relationships. Likewise, we serve as a place for drivers to have access to more jobs where they’ll be treated fairly and compensated more generously.</p>
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-sm-12 col-lg-4">
+                                <img src="img/mockup-of-a-happy-customer-showing-off-his-t-shirt-inside-a-modern-office-26189-4.png" alt="" className="about-img img-fluid" />
+                            </div>
+                            <div className="col-sm-12 col-lg-8">
+                                <div className="about-inner">
+                                    <h3>About DriverFly</h3>
+                                    <p>DriverFly was built as a digital platform to connect new and experienced CDL and non-CDL drivers with companies of all sizes and offerings.</p>
+                                    <p>Unlike traditional job boards, DriverFly caters to the DRIVER. Moreover, drivers undergo different challenges and require different information in deciding which motor carriers to go with. At DriverFly, We’ve built our system to make finding a job and connecting with motor carrier companies as easy as possible.</p>
+                                    <p>With jobs across the entire US, our system seeks to level the playing field by providing a reputable platform that allows all motor carriers, not just the mega carriers, to grow through successful driver relationships. Likewise, we serve as a place for drivers to have access to more jobs where they’ll be treated fairly and compensated more generously.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-              </div>
             </div>
 
             <div className="how-it-work-sec about_work">
                 <div className="container-fluid">
-                     <h3>How It Works</h3>
+                    <h3>How It Works</h3>
                     <div className="row">
                         <div className="col-md-4">
                             <div className="card">
@@ -139,16 +134,16 @@ export default function About()
                 <div className="container">
                     <h2 className="text-center">What Drivers Say About Us</h2>
                     < Slider />
-                       <div className="row mt-5">
-                           <div className="col-md-12">
-                               <div className="partners">
-                                   <h2>Partners</h2>
-                                   <img src="img/wilds_logo_250.png" alt="" className="img-fluid" />
-                                   <h3>Women in Logistics and Delivery Services (WILDS)</h3>
-                                   <p>DriverFly is a proud member of WILDS, helping women find opportunities in the male-oriented trucking industry. Learn more about what WILDS does here.</p>
-                               </div>
-                           </div>
-                       </div>
+                    <div className="row mt-5">
+                        <div className="col-md-12">
+                            <div className="partners">
+                                <h2>Partners</h2>
+                                <img src="img/wilds_logo_250.png" alt="" className="img-fluid" />
+                                <h3>Women in Logistics and Delivery Services (WILDS)</h3>
+                                <p>DriverFly is a proud member of WILDS, helping women find opportunities in the male-oriented trucking industry. Learn more about what WILDS does here.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </>
@@ -157,7 +152,7 @@ export default function About()
 
 About.getLayout = function getLayout(page) {
     return (
-        <Layout>
+        <Layout title="ABOUT">
             {page}
         </Layout>
     )

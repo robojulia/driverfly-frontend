@@ -183,7 +183,7 @@ export default function TermsAndPolicies2() {
 
 TermsAndPolicies2.getLayout = function getLayout(page) {
     return (
-        <Layout>
+        <Layout title="privacy_policy">
             {page}
         </Layout>
     )

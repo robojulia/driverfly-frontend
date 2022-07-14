@@ -138,7 +138,7 @@ export default function Login() {
 }
 Login.getLayout = function getLayout(page) {
     return (
-        <Layout>
+        <Layout title="Login">
             {page}
         </Layout>
     )
