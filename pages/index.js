@@ -30,6 +30,7 @@ export default function Index() {
   return (
     <>
       <Head>
+        <meta name="google-site-verification" content="a5P-XIrhHiU0L_fx7XCCJyH_popidpb4pa6dEbzKO8w" />
         <title>Home - DriverFly</title>
         <link rel="icon" href="/img/DriverFly-Official-Favicon.png" />
       </Head>
