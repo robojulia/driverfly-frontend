@@ -84,6 +84,11 @@ unique.addTest = function (field, options, message) {
 
 yup.addMethod(yup.array, "unique", unique.addTest);
 
+export function stringEnum<Enum>(enumType: Enum) {
+  const keys = Object.values(enumType);
+  return yup.mixed<Enum>().oneOf(keys).nullable();
+}
+
 export function numberRangeStart(maxField: string, minValue: number) {
   return yup.number().moreThan(minValue)
 
