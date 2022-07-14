@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
-import useAuth from "../../../../hooks/useAuth";
+import { useAuth } from "../../../../hooks/useAuth";
 import { useTranslation } from "../../../../hooks/useTranslation";
 import UserApi from "../../../api/user";
 import { Row, Col, Button } from "react-bootstrap";
@@ -21,11 +21,11 @@ import BaseSelect from "../../../../components/forms/BaseSelect";
 import { UserPreferenceSharingLabel } from "../../../../enums/users/user-preference-sharing-label.enum";
 
 export default function Sharing() {
-    const { authCheck } = useAuth();
+    const { getUser } = useAuth();
 
     const { t } = useTranslation();
 
-    const user = authCheck();
+    const user = getUser();
 
     const form = useFormik({
         initialValues: {

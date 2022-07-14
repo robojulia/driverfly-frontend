@@ -3,18 +3,22 @@ import { Container } from "reactstrap";
 import Header from "../header/Header";
 import Sidebar from "../sidebars/Sidebar";
 import Head from "next/head";
+import Scripts from "../../../scripts";
 
 import { useTranslation } from "../../../../hooks/useTranslation";
 import {TelephoneFill,  Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, CheckSquareFill, GiftFill, GearFill, EnvelopeFill, PeopleFill } from 'react-bootstrap-icons';
+import CompanyProfileNav from "../header/CompanyProfileNav";
+import { useAuth } from "../../../../hooks/useAuth";
 
 // company layout
 const FullLayout = ({ children }) => {
   const { t } = useTranslation();
 
-  const [open, setOpen] = React.useState(false);
-  const showMobilemenu = () => {
-    setOpen(!open);
-  };
+  const { user } = useAuth();
+
+  if (!user?.company) {
+    return <></>
+  }
 
   const menuItems = [
     {
@@ -102,17 +106,20 @@ return (
         />
         <link rel="icon" href="/img/DriverFly-Official-Favicon.png" />
       </Head>
+      <Scripts  />
       <div className="header">
             <div className="contentArea ">
               {/********header**********/}
-              <Header showMobmenu={() => showMobilemenu()} />
+              <Header>
+                <CompanyProfileNav />
+              </Header>
             </div>
             </div>
       <main className="maincontainer">
         < div className="dashboardsidebar">
           <div className="pageWrapper d-md-block d-lg-flex">
             {/******** Sidebar **********/}
-            <Sidebar open={open} items={menuItems} />
+            <Sidebar items={menuItems} />
             {/********Content Area**********/}
             <div className="header">
            

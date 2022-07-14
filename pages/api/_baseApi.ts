@@ -1,24 +1,25 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-import useAuth from '../../hooks/useAuth';
+import { useToken } from '../../hooks/useAuth';
 
 export default class BaseApi {
     private mergeRequestConfig(config?: AxiosRequestConfig): AxiosRequestConfig {
         if (!config) config = {};
 
-        config.baseURL = process.env.BASE_URL_API;
+        if (!config.baseURL)
+            config.baseURL = process.env.BASE_URL_API;
 
-        const { authCheck } = useAuth();
-        const user = authCheck();
+        const { getToken } = useToken();
 
-        console.log("BaseApi: ", user);
+        const token = getToken();
 
-        if (user) {
-            if (!config.headers)
-                config.headers = {};
+        console.log("BaseApi: ", token);
 
-            config.headers.Authorization = `Bearer ${user.token}`;
-        }
+        if (!config.headers)
+            config.headers = {};
+
+        if (token && !config.headers.Authorization)
+            config.headers.Authorization = `Bearer ${token}`;
 
         return config;
     }

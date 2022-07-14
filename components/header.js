@@ -1,11 +1,11 @@
 import Link from "next/link";
-import useAuth from '../hooks/useAuth';
+import { useAuth } from '../hooks/useAuth';
 import LoginButton from '../components/buttons/Login';
 import SignupButton from '../components/buttons/Signup';
 import LogoutButton from '../components/buttons/Logout';
 
 export default function Header() {
-    const { authCheck } = useAuth();
+    const { getUser } = useAuth();
 
     return (
         <>
@@ -85,7 +85,7 @@ export default function Header() {
                                 <ul className="d-flex align-items-center mb-0">
                                     <li><a href="" className="nav-link"> <i className="fa fa-bell-o pt-1"
                                         aria-hidden="true"></i></a></li>
-                                    {authCheck() ? <LogoutButton /> : <><LoginButton /> <SignupButton /></>}
+                                    {getUser() ? <LogoutButton /> : <><LoginButton /> <SignupButton /></>}
                                 </ul>
                             </div>
                         </nav>

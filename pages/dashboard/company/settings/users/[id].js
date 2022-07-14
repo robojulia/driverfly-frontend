@@ -1,5 +1,4 @@
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
-import useRedirect from '../../../../../hooks/useRedirect';
 import 'react-toastify/dist/ReactToastify.css'
 import { useRouter } from "next/router"
 import "../../../../../utils/yup";
@@ -14,10 +13,6 @@ export default function User() {
     const backPath = "/dashboard/company/settings/users";
 
     if (isNaN(parseInt(id))) id = null; // create mode
-
-    const { authCompany } = useRedirect();
-
-    authCompany()
 
     const goBack = () => {
         setTimeout(

@@ -1,14 +1,42 @@
-/**
- * 
- * @param {Error} error
- * @param {object} interfaces 
- * @param {import("formik").FormikConfig} interfaces.formik
- * @param {ToastInterface} interfaces.toast 
- * @param {(string) => string} interfaces.t const { t } = useTranslation() interface
- * @param {string} interfaces.defaultMessage the default error message to display (will be translated)
- * @returns {boolean} true if handled fully, false if not
- */
-function globalAjaxExceptionHandler(error, interfaces) {
+import { TranslateInterface } from "../hooks/useTranslation";
+import { FormikInterface } from "./formik";
+import { ToastInterface } from "./toast";
+
+interface AjaxError extends Error {
+    response?: {
+        data?: string | ClassValidatorError | InternalError | InternalErrorMessage
+    }
+}
+
+interface ClassValidatorError {
+    statusCode: number;
+    error: any;
+    message: string | string[];
+}
+
+function isClassValidatorError(obj: unknown): obj is ClassValidatorError {
+    return Object.prototype.hasOwnProperty.call(obj, "statusCode")
+        && Object.prototype.hasOwnProperty.call(obj, "error")
+        && Object.prototype.hasOwnProperty.call(obj, "message");
+}
+
+interface InternalError {
+    [key: string | number]: string | InternalErrorMessage | InternalError;
+}
+
+interface InternalErrorMessage {
+    context?: {
+        [key: string]: any;
+    };
+    error?: string;
+}
+
+function isInternalErrorMessage(obj: unknown): obj is InternalErrorMessage {
+    return Object.prototype.hasOwnProperty.call(obj, "context")
+        && Object.prototype.hasOwnProperty.call(obj, "error");
+}
+
+function globalAjaxExceptionHandler(error: AjaxError, interfaces: { formik: FormikInterface<any>, t: TranslateInterface, defaultMessage?: string, toast?: ToastInterface }) {
     if (!error) return true;
 
     const { formik, toast, t, defaultMessage } = interfaces;
@@ -28,7 +56,7 @@ function globalAjaxExceptionHandler(error, interfaces) {
 
         if (typeof data === "object") {
             // class-validator standard structure
-            if (data.statusCode && data.error && data.message) {
+            if (isClassValidatorError(data)) {
                 const { message } = data;
 
                 const messages = message instanceof Array ? message : [message];
@@ -39,18 +67,17 @@ function globalAjaxExceptionHandler(error, interfaces) {
                     return true; // we consider this safely handled via toast
                 }
     
-            }
+            } else {
+                console.error(`globalAjaxExceptionHandler: encountered`, data, response, error);
 
-
-            console.error(`globalAjaxExceptionHandler: encountered`, data, response, error);
-
-            const fullyHandled = readErrorObj(data, { formik, toast, t });
-            if (fullyHandled) {
-                // formik?.setErrors({
-                //     ...(formik?.errors || {}),
-                //     ...data
-                // });
-                return true; // safely handled via formik
+                const fullyHandled = readErrorObj(data);
+                if (fullyHandled) {
+                    // formik?.setErrors({
+                    //     ...(formik?.errors || {}),
+                    //     ...data
+                    // });
+                    return true; // safely handled via formik
+                }
             }
 
             // complicated if we needed something more advanced.
@@ -59,49 +86,47 @@ function globalAjaxExceptionHandler(error, interfaces) {
 
     console.error(`globalAjaxExceptionHandler: encountered`, error);
     if (toast) {
-        toast?.error(t(defaultMessage || 'ERROR_MESSAGE_DEFAULT'));
+        toast.error(t(defaultMessage || 'ERROR_MESSAGE_DEFAULT'));
         return true; // handled via toast
     }
 
-    function readErrorObj(data, { formik, toast, t, keyPrefix = null }) {
+    function readErrorObj(data: InternalError | InternalErrorMessage, keyPrefix?: string) {
         if (data instanceof Array) {
             return data.every((value, key) => handleValue(`${keyPrefix || ""}[${key}]`, value));
         }
 
-        if (typeof data === "object") {
-            return Object.entries(data).every(([key, value]) => handleValue(`${keyPrefix || ""}${keyPrefix ? "." : ""}${key}`, value));
+        if (isInternalErrorMessage(data)) {
+            toast.error(t(data.error, data.context, { translateProps: true }));
+            return true;
         }
 
-        return false;
+        return Object.entries(data).every(([key, value]) => handleValue(`${keyPrefix || ""}${keyPrefix ? "." : ""}${key}`, value));
 
-        function handleValue(key, value) {
-            if (typeof value === "object") {
-                return readErrorObj(data, { formik, toast, t, keyPrefix: key });
+        function handleValue(key, value: string | InternalError | InternalErrorMessage) {
+            let context;
+            if (isInternalErrorMessage(value)) {
+                context = value.context;
+                value = value.error;
             }
 
             if (typeof value === "string") {
-                /**
-                 * @type {import('formik').FieldMetaProps}
-                 */
                 const meta = formik?.getFieldMeta(key);
                 if (meta) {
-                    /**
-                     * @type {import('formik').FieldHelperProps}
-                     */
                     const { setError, setTouched } = formik.getFieldHelpers(key);
                     setError(t(value));
                     setTouched(true, false);
                     return true;
                 }
                 else if (toast) {
-                    toast.error(t(value));
+                    toast.error(t(value, context, { translateProps: true }));
                     return true;
                 }
-             }
 
-             return false;
+                return false;
+            }
+
+            return readErrorObj(value, key);
         }
-
     }
 
     return false; // unhandled

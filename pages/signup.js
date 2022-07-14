@@ -4,7 +4,7 @@ import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 import { useState } from 'react'
 import Layout from "../components/layouts"
 import SignupStyle from "../public/css/signup.module.css"
-import useAuth from '../hooks/useAuth';
+import { useAuth } from '../hooks/useAuth';
 import Router, { useRouter } from 'next/router'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -33,9 +33,9 @@ export default function Signup() {
 
   const router = useRouter();
 
-  const { authCheck, setAuth } = useAuth();
+  const { user } = useAuth();
 
-  if (authCheck()) {
+  if (user) {
     router.push('/dashboard')
   }
 
@@ -59,15 +59,15 @@ export default function Signup() {
       accept_tos: false
     },
     validationSchema: yup.object({
-      first_name: yup.string().required().nullable(),
-      last_name: yup.string().required().nullable(),
+      first_name: yup.string().trim().required().nullable(),
+      last_name: yup.string().trim().required().nullable(),
       name: yup.string().when("role", {
         is: SignUpRole.COMPANY,
-        then: yup.string().required().nullable()
+        then: yup.string().trim().required().nullable()
       }).nullable(),
-      email: yup.string().email().required().nullable(),
-      password: yup.string().required().nullable(),
-      confirmPassword: yup.string().test({
+      email: yup.string().trim().email().required().nullable(),
+      password: yup.string().trim().required().nullable(),
+      confirmPassword: yup.string().trim().test({
         test: (value, context) => {
           const password = context.resolve(yup.ref("password"));
           if (value === password) return true;
@@ -78,9 +78,9 @@ export default function Signup() {
           });
         }
       }).nullable(),
-      phone: yup.string().nullable(),
+      phone: yup.string().trim().nullable(),
       role: yup.string().enum(SignUpRole).required().nullable(),
-      invite_code: yup.string().required().nullable(),
+      invite_code: yup.string().trim().required().nullable(),
       accept_tos: yup.boolean().oneOf([true], (t("MUST_BE_CHECKED")))
     }),
     onSubmit: async (dto) => {

@@ -15,15 +15,12 @@ import CompanyPhoto from "../../../../components/jobs/company-photo"
 import StructuredData from "../../../../components/seo/StructuredData"
 import { ArrowRight, GeoAltFill, CurrencyDollar } from "react-bootstrap-icons"
 import { buildAddress } from "../../../../utils/common"
-import useRedirect from "../../../../hooks/useRedirect"
 import FullLayout from "../../../../components/dashboard/layouts/FullLayout"
 import SaveJob from "../../../../components/dashboard/driver/save-job"
 
 export default function Detail({ jobDetail, relatedJobs }) {
 
   const { t } = useTranslation();
-  const { authDriver } = useRedirect()
-  authDriver()
 
   return (
     <>
@@ -65,7 +62,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
                           jobDetail.location &&
                           <p className="pr-4">
                             {/* <i className="fa fa-map-marker mr-2" aria-hidden="true"></i> */}
-                            {buildAddress(jobDetail.location,{ street: false, zip_code: false})}
+                            {buildAddress(jobDetail.location, { street: false, zip_code: false })}
                           </p>
                         }
                       </div>
@@ -106,7 +103,7 @@ export async function getServerSideProps(context) {
   try {
     const id = context.params?.id;
     const data = id ? await new JobApi().getById(id) : []
-    const { items } = await new JobApi().search({ companyId: data.company?.id, take: 3 });
+    const { items } = await new JobApi().search({ exclude: { jobId: id }, companyId: data.company?.id, take: 3 });
     return {
       props: { jobDetail: data, relatedJobs: items }
     }

@@ -9,7 +9,9 @@ import "../public/bootstrap/css/bootstrap.min.css";
 import "../public/css/buttons/buttons.css";
 
 
+import { useToken } from "../hooks/useAuth";
 
+import UserGuard from "../components/auth/user-guard";
 
 // import "../lang/i18nextconfig";
 // import { appWithTranslation } from 'next-i18next';
@@ -19,7 +21,7 @@ import * as yup from "yup";
 
 import { useTranslation } from "../hooks/useTranslation";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 // set up chart JS
 import {
@@ -48,10 +50,16 @@ ChartJS.register(
   BarElement
 )
 
+import { UserContext } from '../context/user-context';
+import { UserEntity } from "../models/user/user.entity";
+import { useEffectAsync } from "../utils/react";
+
 function MyApp({ Component, pageProps }) {
-  const { locale } = useRouter()
+  const { locale, router } = useRouter()
 
   const { t } = useTranslation();
+
+  const { getUser } = useToken();
 
   const getLayout = Component.getLayout || ((page) => page)
 
@@ -125,7 +133,20 @@ function MyApp({ Component, pageProps }) {
 
   }, []);
 
-  return getLayout(<Component {...pageProps} />)
+  const [ userContext, setUserContext ] = useState({
+    user: getUser(),
+    setUser: updateUserContext
+  });
+
+  function updateUserContext(u) {
+    setUserContext({ user: u, setUser: updateUserContext })
+  }
+
+  return (<UserContext.Provider value={userContext}>
+    <UserGuard>
+      {getLayout(<Component {...pageProps} />)}
+    </UserGuard>
+  </UserContext.Provider>);
 }
 
 export default MyApp;

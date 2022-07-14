@@ -1,5 +1,5 @@
 import Link from "next/link";
-import useAuth from '../../hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth';
 import LoginButton from '../../components/buttons/Login';
 import SignupButton from '../../components/buttons/Signup';
 import LogoutButton from '../../components/buttons/Logout';
@@ -10,7 +10,7 @@ import React from "react";
 import { Nav, Navbar, NavDropdown, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 export default function MyNav() {
-    const { authCheck } = useAuth();
+    const { user } = useAuth();
     const { t } = useTranslation();
     return (
         <>
@@ -80,7 +80,7 @@ export default function MyNav() {
                     </Nav>
                     <ul className="d-flex align-items-center mb-0">
                         <li><a href="#" className="nav-link"> < Bell /></a></li>
-                        {authCheck() ?
+                        {user ?
                             <>
                                 <DashboardButton className="theme-secondary-btn mr-4" />
                                 <LogoutButton as={Button} className="theme-secondary-btn mr-4" />

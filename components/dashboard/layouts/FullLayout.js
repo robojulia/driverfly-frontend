@@ -6,7 +6,10 @@ import Head from "next/head";
 
 import { useTranslation } from "../../../hooks/useTranslation";
 import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, BellFill, SearchHeartFill, CheckSquareFill, GiftFill, GearFill, ShareFill, EnvelopeFill, CardList } from 'react-bootstrap-icons';
-import useAuth from "../../../hooks/useAuth";
+import { useAuth } from "../../../hooks/useAuth";
+
+import Scripts from "../../scripts";
+import DriverProfileNav from "./header/DriverProfileNav";
 
 
 // driver layout
@@ -15,14 +18,9 @@ const FullLayout = ({ children }) => {
 
   const { user } = useAuth();
 
-  useEffect(() => {
-    console.log("FullLayout: USER", user);
-
-  }, [ user ]);
-
-  // const { isDriver } = useAuth();
-
-  // isDriver();
+  if (user?.company) {
+    return <></>
+  }
 
   const menuItems = [
     {
@@ -108,10 +106,13 @@ const FullLayout = ({ children }) => {
         />
          <link rel="icon" href="/img/DriverFly-Official-Favicon.png" />
       </Head>
+      <Scripts />
       <div className="header">
         <div className="contentArea ">
           {/********header**********/}
-          <Header />
+          <Header>
+            <DriverProfileNav />
+          </Header>
         </div>
       </div>
       <main className="maincontainer">

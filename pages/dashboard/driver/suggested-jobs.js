@@ -9,17 +9,12 @@ import bg1 from "../../../public/dashboard/assets/images/bg/bg1.jpg";
 import bg2 from "../../../public/dashboard/assets/images/bg/bg2.jpg";
 import bg3 from "../../../public/dashboard/assets/images/bg/bg3.jpg";
 import bg4 from "../../../public/dashboard/assets/images/bg/bg4.jpg";
-import useRedirect from '../../../hooks/useRedirect';
 import { useEffect, useState } from "react"
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import axios from "axios"
 import timeSince from '../../../utils/timeSince';
 
 export default function SuggestedJobes() {
-
-  const { authDriver } = useRedirect();
-
-  authDriver()
 
 
   const [jobs, setJobs] = useState([])

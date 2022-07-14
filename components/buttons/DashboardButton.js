@@ -1,16 +1,18 @@
-import useAuth from '../../hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth';
 import Router from 'next/router'
 import { useTranslation } from "../../hooks/useTranslation";
 
 
 export default function DashboardButton(props) {
     const { t } = useTranslation();
-    const { isDriver, isCompany } = useAuth();
+    const { getUser } = useAuth();
 
     const handleRedirect = () => {
-        if (isCompany()) {
+        const user = getUser();
+
+        if (user?.company) {
             Router.push('/dashboard/company')
-        } else if (isDriver()) {
+        } else if (user) {
             Router.push('/dashboard/driver')
         } else {
             Router.push('/')

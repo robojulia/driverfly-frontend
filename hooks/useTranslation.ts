@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 // import * as fs from "fs/promises";
 // const fsp = require('fs').promises
 
-import useAuth from "./useAuth";
+import { useAuth } from "./useAuth";
 import { i18n } from "../next.config";
 
 import translations_EN_US from "../public/assets/locales/en-us/translation.json";
@@ -24,8 +24,7 @@ export function useTranslation (ns?: string) {
 
     const [ translations, setTranslations ] = useState({});
 
-    const { authCheck } = useAuth();
-    const user = authCheck();
+    const { user } = useAuth();
 
     if (user) {
         if (i18n?.locales.some(v => v === user.language))

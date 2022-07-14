@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react';
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
 import PageLayout from "../../../../../components/layouts/PageLayout";
 import { Col, Row } from "reactstrap";
-import useAuth from '../../../../../hooks/useAuth';
+import { useAuth } from '../../../../../hooks/useAuth';
 import { useRouter } from "next/router"
-import useRedirect from '../../../../../hooks/useRedirect';
 import { useTranslation } from "../../../../../hooks/useTranslation";
 import {PenFill, TrashFill} from 'react-bootstrap-icons';
 import UserApi from "../../../../api/user";
@@ -15,13 +14,9 @@ import { useEffectAsync } from '../../../../../utils/react';
 
 export default function UserList() {
 
-  const { authCompany } = useRedirect();
-  authCompany();
-
   const { t } = useTranslation();
   const router = useRouter();
-  const { authCheck, hasPermission } = useAuth();
-  const user = authCheck();
+  const { user, hasPermission } = useAuth();
 
   const [ users, setUsers ] = useState([]);
 

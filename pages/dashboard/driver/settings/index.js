@@ -8,7 +8,7 @@ import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
 import PageLayout from "../../../../components/layouts/PageLayout";
 
 // hooks
-import useAuth from '../../../../hooks/useAuth';
+import { useAuth } from '../../../../hooks/useAuth';
 import { useTranslation } from "../../../../hooks/useTranslation";
 
 // inputs
@@ -28,11 +28,7 @@ import * as toast from "../../../../utils/toast";
 export default function Profile() {
   const { t } = useTranslation();
 
-  const router = useRouter();
-
-  const { authCheck, setAuth } = useAuth();
-
-  const user = authCheck();
+  const { user, updateUser } = useAuth();
 
   const form = useFormik({
     initialValues: new UserEntity(),
@@ -49,12 +45,11 @@ export default function Profile() {
           phone: values.contact_number,
         });
         const savedUser = await userApi.me.update(values);
-        setAuth({
+        updateUser({
           ...user,
           ...savedUser,
         });
         toast.formSuccess(t, "update", "USER");
-        setTimeout(router.reload, 2000);
       }
       catch (e) {
         console.error("Unable to save user", e);

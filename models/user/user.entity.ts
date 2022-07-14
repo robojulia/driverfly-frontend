@@ -4,6 +4,7 @@ import { RoleEntity } from '../roles/role.enttiy';
 
 import * as yup from "yup";
 import { Status } from '../../enums/status.enum';
+import { JwtRefreshTokenPayload } from '../auth/jwt-refresh-token-payload.interface';
 
 export class UserEntity {
     id?: number;
@@ -25,6 +26,8 @@ export class UserEntity {
 
     token?: string;
     jwt?: JwtTokenPayload;
+    refreshToken?: string;
+    jwtRefresh?: JwtRefreshTokenPayload;
 
     static yupSchema() {
         return yup.object({

@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import jobContext from "../../context/jobContext"
 import { useTranslation } from "../../hooks/useTranslation"
 
@@ -10,15 +10,20 @@ export default function Pagination() {
     const { setFilters, applyFilters } = method
     const { t } = useTranslation();
 
-    const currentPageIndex = parseInt(pagingMeta.currentPage)
-    const previousPageIndex = currentPageIndex - 1
-    const nextPageIndex = currentPageIndex + 1
+    const pagingValues = {
+        current: parseInt(pagingMeta.currentPage),
+        previous: parseInt(pagingMeta.currentPage) - 1,
+        next: parseInt(pagingMeta.currentPage) + 1,
+    }
+    const [pageIndex, setPageIndex] = useState([])
 
-    const handlePaging = async (page) => {
-        await setFilters({
+    useEffect(() => { setPageIndex(pagingValues) }, [pagingMeta])
+
+    const handlePaging = (page) => {
+        setFilters({
             ...filters,
             page: parseInt(page)
-        }, applyFilters())
+        })
     }
 
     return (
@@ -30,7 +35,7 @@ export default function Pagination() {
 
                     <ul className="pagination ">
                         {
-                            currentPageIndex > 1 &&
+                            pageIndex.current > 1 &&
                             <>
                                 <li onClick={() => { handlePaging(1) }}>
                                     <span className="next page-numbers " role="button" >
@@ -41,10 +46,10 @@ export default function Pagination() {
                         }
 
                         {
-                            currentPageIndex > 1 &&
-                            <li onClick={() => { handlePaging(previousPageIndex) }} >
+                            pageIndex.current > 1 &&
+                            <li onClick={() => { handlePaging(pageIndex.previous) }} >
                                 <span className="page-numbers " role="button" >
-                                    {previousPageIndex}
+                                    {pageIndex.previous}
                                 </span>
                             </li>
                         }
@@ -52,22 +57,22 @@ export default function Pagination() {
                         {
                             <li >
                                 <span className="page-numbers current active" role="button" >
-                                    {currentPageIndex}
+                                    {pageIndex.current}
                                 </span>
                             </li>
                         }
 
                         {
-                            currentPageIndex < pagingMeta.totalPages &&
-                            <li onClick={() => { handlePaging(nextPageIndex) }} >
+                            pageIndex.current < pagingMeta.totalPages &&
+                            <li onClick={() => { handlePaging(pageIndex.next) }} >
                                 <span className="page-numbers " role="button" >
-                                    {nextPageIndex}
+                                    {pageIndex.next}
                                 </span>
                             </li>
                         }
 
                         {
-                            currentPageIndex < pagingMeta.totalPages &&
+                            pageIndex.current < pagingMeta.totalPages &&
                             <li onClick={() => { handlePaging(pagingMeta.totalPages) }}>
                                 <span className="next page-numbers " role="button" >
                                     {t('LAST_PAGE')}

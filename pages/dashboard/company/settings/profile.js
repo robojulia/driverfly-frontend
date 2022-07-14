@@ -1,9 +1,8 @@
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
 import { Col, Row } from "reactstrap";
-import useAuth from '../../../../hooks/useAuth';
+import { useAuth } from '../../../../hooks/useAuth';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react'
-import useRedirect from '../../../../hooks/useRedirect';
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import BaseInputPhone from "../../../../components/forms/BaseInputPhone";
@@ -22,14 +21,9 @@ import UserApi from "../../../api/user";
 export default function Profile() {
   const { t } = useTranslation();
 
-  const { authCompany } = useRedirect();
-
-  authCompany();
-
   const router = useRouter();
 
-  const { authCheck, setAuth } = useAuth();
-  const user = authCheck();
+  const { user, login } = useAuth();
 
   const form = useFormik({
     initialValues: {
@@ -74,9 +68,6 @@ export default function Profile() {
           cell_number: updatedUser.cell_number
         });
         toast.success(t("successfully_saved_information"));
-        setTimeout(() => {
-          router.reload();
-        }, 2000);
       }
       catch (e) {
         console.error("Unable to save company", e);

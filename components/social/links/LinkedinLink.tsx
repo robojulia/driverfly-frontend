@@ -1,0 +1,17 @@
+import { Linkedin } from 'react-bootstrap-icons';
+import { BaseSocialLink } from './BaseSocialLink';
+import { SocialLinkProps } from './SocialLinkProps';
+
+export function LinkedinLink(props: SocialLinkProps) {
+    const { showText, iconSize } = props;
+
+    return (
+        <BaseSocialLink
+            href="https://www.linkedin.com/company/driverfly"
+            text={showText ? "linkedin.com/company/driverfly" : null}
+            iconSize={iconSize}
+            icon={Linkedin}
+        />
+    );
+
+}

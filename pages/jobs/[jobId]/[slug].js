@@ -14,6 +14,7 @@ import { ArrowRight, GeoAltFill, CurrencyDollar } from "react-bootstrap-icons"
 import { buildAddress } from "../../../utils/common"
 import SaveJob from "../../../components/dashboard/driver/save-job"
 import JobVehicles from "../../../components/jobs/job-vehicles"
+import { ToastContainer } from "react-toastify"
 
 export default function Detail({ jobDetail, relatedJobs }) {
 
@@ -22,6 +23,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
 
   return (
     <>
+      <ToastContainer />
       <StructuredData type="JobPosting" data={StructuredData.JobPosting(jobDetail, t)} />
       <section className="top-links-sec ort-general">
         <div className="container">
@@ -65,7 +67,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
                           jobDetail.location &&
                           <p className="pr-4">
                             {/* < GeoAltFill className="mr-1" /> */}
-                            {buildAddress(jobDetail.location,{ street: false, zip_code: false})}
+                            {buildAddress(jobDetail.location, { street: false, zip_code: false })}
                           </p>
                         }
                       </div>
@@ -113,7 +115,7 @@ export async function getServerSideProps(context) {
     if (!!!job)
       return { notFound: true }
 
-    const { items } = await new JobApi().search({ companyId: job.company?.id, take: 3 });
+    const { items } = await new JobApi().search({ exclude: { jobId: jobId }, companyId: job.company?.id, take: 3 });
     return {
       props: { jobDetail: job, relatedJobs: items }
     }

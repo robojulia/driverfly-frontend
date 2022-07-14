@@ -1,5 +1,4 @@
-import useAuth from '../../hooks/useAuth';
-import Router from 'next/router'
+import { useAuth } from '../../hooks/useAuth';
 import { useTranslation } from "../../hooks/useTranslation";
 import { Dropdown } from "react-bootstrap";
 
@@ -12,17 +11,12 @@ export default function Logout(props: LogoutProps) {
     let { as: Cmp = Dropdown.Item, className } = props;
 
     const { t } = useTranslation();
-    const { removeAuth } = useAuth();
-
-    const handleLogoutClick = () => {
-        removeAuth()
-        Router.push('/login')
-    }
+    const { logout } = useAuth();
 
     return (
         <Cmp
             className={className}
-            onClick={handleLogoutClick}>
+            onClick={logout}>
             {t("LOGOUT")}
         </Cmp>
     )

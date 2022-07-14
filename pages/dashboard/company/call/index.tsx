@@ -1,6 +1,5 @@
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
 import { Col, Row } from "reactstrap";
-import useRedirect from '../../../../hooks/useRedirect';
 import { useEffect, useState } from 'react';
 import CallApi from "../../../api/call"
 import ApplicantApi from "../../../api/applicant"
@@ -15,8 +14,6 @@ import Spinner from 'react-bootstrap/Spinner'
 
 export default function Call() {
 
-    const { authCompany } = useRedirect()
-    authCompany()
     const { t } = useTranslation()
 
     const applicantApi = new ApplicantApi()

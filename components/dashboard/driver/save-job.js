@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { BookmarkCheckFill, BookmarkPlus } from "react-bootstrap-icons"
-import useAuth from '../../../hooks/useAuth';
+import { useAuth } from '../../../hooks/useAuth';
 import { useTranslation } from '../../../hooks/useTranslation';
 import SavedJobApi from '../../../pages/api/saved-job';
 import { toast } from 'react-toastify';
 
 export default function SaveJob({ job, wrapperClassName, spanClassName }) {
 
-    const { authCheck } = useAuth();
-    const user = authCheck()
+    const { getUser } = useAuth();
+    const user = getUser()
     if (!user) {
         return <></>
     }

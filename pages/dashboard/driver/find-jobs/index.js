@@ -1,5 +1,4 @@
 import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
-import useRedirect from '../../../../hooks/useRedirect';
 import { Container, Row, Col, Offcanvas, Button } from 'react-bootstrap';
 import JobApi from '../../../api/job';
 import { useEffect, useState } from 'react';
@@ -10,9 +9,6 @@ import Filters from "../../../../components/dashboard/driver/find-job/filters";
 import OtrJobsList from "../../../../components/find-jobs/otr-job-list";
 import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
 export default function FindJobs() {
-
-    const { authDriver } = useRedirect();
-    authDriver()
 
     const jobApi = new JobApi();
 
@@ -29,6 +25,7 @@ export default function FindJobs() {
     const setFiltersByKeyValue = (key, value) => {
         setFilters({
             ...filters,
+            page: 1,
             [key]: value
         })
     }
