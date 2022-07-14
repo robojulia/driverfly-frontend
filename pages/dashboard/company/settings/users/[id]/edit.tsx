@@ -9,11 +9,9 @@ import { UserEntity } from "../../../../../../models/user/user.entity";
 import { useEffectAsync } from "../../../../../../utils/react";
 import UserApi from "../../../../../api/user";
 
-export default function EditUser() {
+export default function EditUser({ id }) {
     const router = useRouter();
     const { t } = useTranslation();
-
-    const { id } = router.query;
 
     const backPath = `/dashboard/company/settings/users/${id}`;
 
@@ -58,4 +56,20 @@ EditUser.getLayout = function getLayout(page) {
             {page}
         </FullLayout>
     )
+}
+
+
+export async function getServerSideProps(context) {
+    try {
+        const id = +context.params?.id;
+        if (!id)
+            return { notFound: true }
+
+        return {
+            props: { id: id }
+        }
+    } catch (error) {
+        console.error("EditUser error:", error);
+        return { props: { id: null } }
+    }
 }

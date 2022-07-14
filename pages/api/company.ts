@@ -4,13 +4,13 @@ import { FindManyOptions } from "../../models/general/find-many-options.dto";
 
 export default class CompanyApi extends BaseApi {
     baseUrl: string = "companies"
-    async list(): Promise<CompanyEntity[]> {
-        const { data } = await this.get(this.baseUrl + "/list");
+    async list(params?: { withPhoto?: boolean }): Promise<CompanyEntity[]> {
+        const { data } = await this.get(this.buildUrl(this.baseUrl + "/list", params));
 
         return data;
     }
-    async findById(id: number): Promise<CompanyEntity> {
-        const { data } = await this.get(`${this.baseUrl}/${id}`);
+    async findById(id: number, params?: { withPhoto?: boolean }): Promise<CompanyEntity> {
+        const { data } = await this.get(this.buildUrl(`${this.baseUrl}/${id}`, params));
 
         return data;
     }

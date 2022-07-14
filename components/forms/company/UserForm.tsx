@@ -10,6 +10,7 @@ import { formSuccess } from "../../../utils/toast";
 import { toast } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { BaseFormProps } from "./BaseFormProps";
+import { useEffect } from "react";
 
 
 export interface UserFormProps extends BaseFormProps<UserEntity> {
@@ -19,22 +20,20 @@ export function UserForm(props: UserFormProps) {
     const { t } = useTranslation();
     let { className, entity, onSaveComplete, onSaveError } = props;
 
-    if (!entity) entity = new UserEntity();
-
     const form = useFormik({
-        initialValues: entity,
+        initialValues: new UserEntity(),
         validationSchema: UserEntity.yupSchema(),
         onSubmit: async (dto) => {
             const api = new UserApi();
             try {
                 let user = null;
-                if (entity.id) {
+                if (entity?.id) {
                     user = await api.update(entity.id, dto);
                 }
                 else {
                     user = await api.create(dto);
                 }
-                formSuccess(t, !!entity.id ? "update" : "create", "USER");
+                formSuccess(t, !!entity?.id ? "update" : "create", "USER");
                 if (onSaveComplete) onSaveComplete(user);
             }
             catch (e) {
@@ -46,12 +45,16 @@ export function UserForm(props: UserFormProps) {
         },
     });
 
+    useEffect(() => {
+        form.setValues(entity);
+    }, [ entity ])
+
     return (
         <EntityForm
             className={className}
             onSubmit={form.handleSubmit}
             formik={form}
-            id={entity.id}
+            id={entity?.id}
         >
             <Row className="mt-2">
                 <BaseInput
@@ -90,9 +93,9 @@ export function UserForm(props: UserFormProps) {
                     required
                     placeholder
                     formik={form}
-                    readOnly={!!entity.id}
+                    readOnly={!!entity?.id}
                 />
-                {!entity.id &&
+                {!entity?.id &&
                     <BaseInput
                         className="col-12 mt-1"
                         label="PASSWORD"

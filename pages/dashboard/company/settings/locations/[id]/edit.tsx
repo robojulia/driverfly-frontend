@@ -4,63 +4,58 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useTranslation } from "../../../../../../hooks/useTranslation";
 import { useEffectAsync } from "../../../../../../utils/react";
+import { useAuth } from "../../../../../../hooks/useAuth";
 
 import FullLayout from "../../../../../../components/dashboard/layouts/Layout/FullLayout";
 import ChildPageLayout from "../../../../../../components/layouts/ChildPageLayout";
-import { CompanyForm } from "../../../../../../components/forms/company/CompanyForm";
 
-import { CompanyEntity } from "../../../../../../models/company/company.entity";
-import CompanyApi from "../../../../../api/company";
-import { useAuth } from "../../../../../../hooks/useAuth";
+import { LocationForm } from "../../../../../../components/forms/company/LocationForm";
+import { LocationEntity } from "../../../../../../models/company/location.entity";
+import LocationApi from "../../../../../api/location";
 
-export default function EditCompany({ id }) {
+export default function EditLocation({ id }) {
     const router = useRouter();
     const { t } = useTranslation();
 
-    const { refreshToken } = useAuth();
+    const { user } = useAuth();
 
-    const backPath = id ? `/dashboard/company/settings/companies/${id}` : "/dashboard/company/settings/companies";
+    const backPath = `/dashboard/company/settings/locations/${id}`;
 
-    const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
+    const goBack = (path?: string) => window.setTimeout(() => router.push(path || backPath), 2000);
 
-    const [ company, setCompany ] = useState(new CompanyEntity());
+    const [ location, setLocation ] = useState(new LocationEntity());
 
     useEffectAsync(async () => {
         if (id) {
-            const api = new CompanyApi();
+            const api = new LocationApi();
 
             const entity = await api.findById(+id);
 
-            if (entity) setCompany(entity);
+            if (entity) setLocation(entity);
             else {
                 toast.error(t("UNABLE_TO_FIND_{name}", { name: "COMPANY" }, { translateProps: true }));
-                goBack();
+                goBack("/dashboard/company/settings/companies");
             }
         } else {
             toast.error(t("UNABLE_TO_FIND_{name}", { name: "COMPANY" }, { translateProps: true }));
-            goBack();
+            goBack("/dashboard/company/settings/companies");
         }
-    }, [ id ]);
-
-    async function onSaveComplete(e: CompanyEntity) {
-        await refreshToken();
-        goBack();
-    }
+    }, [ id, user ]);
 
     return (
         <ChildPageLayout
-            title={t("EDIT_{name}", { name: "COMPANY" }, { translateProps: true })}
+            title={t("EDIT_{name}", { name: "TERMINAL" }, { translateProps: true })}
             backPath={backPath}
             >
-            <CompanyForm
-                entity={company}
-                onSaveComplete={onSaveComplete}
+            <LocationForm
+                entity={location}
+                onSaveComplete={v => goBack()}
                 />
         </ChildPageLayout>
     );
 }
 
-EditCompany.getLayout = function getLayout(page) {
+EditLocation.getLayout = function getLayout(page) {
     return (
         <FullLayout>
             {page}
@@ -78,7 +73,7 @@ export async function getServerSideProps(context) {
             props: { id: id }
         }
     } catch (error) {
-        console.error("CompanyEdit error:", error);
+        console.error("EditLocation error:", error);
         return { props: { id: null } }
     }
 }

@@ -600,6 +600,7 @@
     "UPDATE": "Update",
     "LOCATIONS": "Locations",
     "TERMINALS": "Terminals",
+    "TERMINAL": "Terminal",
     "STREET": "Street",
     "CITY": "City",
     "STATE": "State",
@@ -1070,5 +1071,6 @@
     "ARE_YOU_SURE_YOU_WANT_TO_DELETE": "Are you sure you want to delete this record? This action is not reversable",
     "DELETE_CONFIRMATION": "Delete Confirmation",
     "DO_NOT_DELETE": "Do Not Delete",
-    "COMPANIES": "Companies"
+    "COMPANIES": "Companies",
+    "NO_APPLIED_JOBS_FOUND": "No applied jobs found"
 }

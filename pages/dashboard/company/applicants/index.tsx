@@ -68,7 +68,7 @@ export default function Applicants() {
 
     const router = useRouter();
 
-    const { user } = useAuth();
+    const { user, hasPermission } = useAuth();
 
     let { viewMode, jobId } = router.query;
 
@@ -167,18 +167,25 @@ export default function Applicants() {
         });
     }
 
+    const canCreate = hasPermission("CanCreateApplicant");
+
     return (
         <PageLayout
             title="APPLICANTS"
             actions={(
-                <ButtonGroup size="sm" style={{ float: "right" }}>
-                    <Button variant="primary" onClick={() => router.push("/dashboard/company/applicants/create")}>
-                        + {t("CREATE")}
-                    </Button>
-                    <Button variant="" className="theme-general-btn" onClick={() => router.push("/dashboard/company/applicants/import")}>
-                        + {t("IMPORT_APPLICANTS")}
-                    </Button>
-                </ButtonGroup>
+                <>
+                {
+                    canCreate &&
+                    <ButtonGroup size="sm" style={{ float: "right" }}>
+                        <Button variant="primary" onClick={() => router.push("/dashboard/company/applicants/create")}>
+                            + {t("CREATE")}
+                        </Button>
+                        <Button variant="" className="theme-general-btn" onClick={() => router.push("/dashboard/company/applicants/import")}>
+                            + {t("IMPORT_APPLICANTS")}
+                        </Button>
+                    </ButtonGroup>
+                }
+                </>
             )}
             >
             <Row>
@@ -422,7 +429,7 @@ function ApplicantView(props: ViewProps) {
     });
 
     return (<ViewDataTable<ConsolodatedApplicant>
-        preExpanded
+        preExpanded={(applicant) => applicant.jobs?.length > 0}
         columns={[
             {
                 name: "NAME",
@@ -448,17 +455,20 @@ function ApplicantView(props: ViewProps) {
         items={items}
         actions={row => [
             {
-                label: <><EyeFill style={{ marginRight: "5px" }} /> {t("VIEW")}</>,
+                icon: EyeFill,
+                label: "VIEW",
                 onClick: (e) => onViewClick(row.id)
             },
             {
-                label: <><PencilFill style={{ marginRight: "5px" }} /> {t("EDIT")}</>,
+                icon: PencilFill,
+                label: "EDIT",
                 onClick: (e) => onEditClick(row.id),
                 hide: !hasPermission("CanEditApplicant")
             },
         ]}
         expandableRowsComponent={({ data }) => (
             <ViewDataTable<ConsolodatedApplicantJob>
+                noDataComponent={(<>{t("NO_APPLIED_JOBS_FOUND")}</>)}
                 columns={[
                     {
                         name: "JOB",
@@ -633,11 +643,13 @@ function JobView(props: ViewProps) {
                 hideSearch
                 actions={row => [
                     {
-                        label: <><EyeFill style={{ marginRight: "5px" }} /> {t("VIEW")}</>,
+                        icon: EyeFill,
+                        label: "VIEW",
                         onClick: (e) => onViewClick(row.applicant.id)
                     },
                     {
-                        label: <><PencilFill style={{ marginRight: "5px" }} /> {t("EDIT")}</>,
+                        icon: PencilFill,
+                        label: "EDIT",
                         onClick: (e) => onEditClick(row.applicant.id),
                         hide: !hasPermission("CanEditApplicant")
                     },

@@ -26,6 +26,7 @@ export default function ChangeCompany() {
         updateUser(auth);
 
         // await router.reload();
+        // await router.replace("/dashboard/company");
     };
 
     const [dropdownOpen, setDropdownOpen] = useState(false);

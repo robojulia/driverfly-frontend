@@ -26,7 +26,7 @@ export default function CompanyList() {
 
   useEffectAsync(async () => {
     const api = new CompanyApi();
-    const v = await api.list();
+    const v = await api.list({ withPhoto: true });
     setCompanies(v.filter((u) => u.id !== company.id && u.status === Status.ACTIVE));
   }, [ company ]);
 
@@ -69,42 +69,45 @@ export default function CompanyList() {
           }
         </>
       }>
-      <Row className="mt-5">
-        <Col>
-          <ViewDataTable<CompanyEntity>
-            columns={[
-              {
-                name: "NAME",
-                selector: j => j.name,
-                cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.name}</a></Link>),
-                hidable: false
-              },
-              {
-                name: "WEBSITE",
-                selector: j => j.website,
-              },
-            ]}
-            actions={j => ([
-                {
-                    onClick: e => onViewClick(j.id),
-                    label: (<><EyeFill /> {t("VIEW")}</>),
-                    hide: !hasPermission("CanViewCompany")
-                },
-                {
-                    onClick: e => onEditClick(j.id),
-                    label: (<><PenFill /> {t("EDIT")}</>),
-                    hide: !hasPermission("CanUpdateCompany")
-                },
-                {
-                    onClick: e => onDeleteClick(j.id),
-                    label: (<><TrashFill /> {t("DELETE")}</>),
-                    hide: !hasPermission("CanDeleteCompany")
-                }
-            ])}
-            items={companies}
-          />
-        </Col>
-      </Row>
+      <ViewDataTable<CompanyEntity>
+        columns={[
+          {
+            name: "PHOTO",
+            cell: (v) => v.photo && <img className="img-thumbnail" style={{maxWidth: "100px"}} src={v.photo.path} />
+          },
+          {
+            name: "NAME",
+            selector: j => j.name,
+            cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.name}</a></Link>),
+            hidable: false
+          },
+          {
+            name: "WEBSITE",
+            selector: j => j.website,
+          },
+        ]}
+        actions={j => ([
+            {
+                onClick: e => onViewClick(j.id),
+                icon: EyeFill,
+                label: "VIEW",
+                hide: !hasPermission("CanViewCompany")
+            },
+            {
+                onClick: e => onEditClick(j.id),
+                icon: PenFill,
+                label: "EDIT",
+                hide: !hasPermission("CanUpdateCompany")
+            },
+            {
+                onClick: e => onDeleteClick(j.id),
+                icon: TrashFill,
+                label: "DELETE",
+                hide: !hasPermission("CanDeleteCompany")
+            }
+        ])}
+        items={companies}
+      />
     </PageLayout>
   )
 };

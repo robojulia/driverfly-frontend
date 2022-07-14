@@ -9,11 +9,9 @@ import { ApplicantEntity } from "../../../../../models/applicant/applicant.entit
 import { useEffectAsync } from "../../../../../utils/react";
 import ApplicantApi from "../../../../api/applicant";
 
-export default function EditApplicant() {
+export default function EditApplicant({ id }) {
     const router = useRouter();
     const { t } = useTranslation();
-
-    const { id } = router.query;
 
     const backPath = `/dashboard/company/applicants/${id}`;
 
@@ -46,7 +44,6 @@ export default function EditApplicant() {
             <ApplicantForm
                 entity={applicant}
                 onSaveComplete={goBack}
-                onSaveError={goBack}
                 />
         </ChildPageLayout>
     );
@@ -59,3 +56,19 @@ EditApplicant.getLayout = function getLayout(page) {
         </FullLayout>
     )
 }
+
+export async function getServerSideProps(context) {
+    try {
+        const id = +context.params?.id;
+        if (!id)
+            return { notFound: true }
+
+        return {
+            props: { id: id }
+        }
+    } catch (error) {
+        console.error("EditApplicant error:", error);
+        return { props: { id: null } }
+    }
+}
+

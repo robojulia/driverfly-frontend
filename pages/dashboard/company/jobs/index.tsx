@@ -23,7 +23,7 @@ import { useEffectAsync } from "../../../../utils/react";
 
 export default function JobListing() {
 
-    const { user } = useAuth();
+    const { user, hasPermission } = useAuth();
 
     const columnSettingKey = `company.${user.id}.jobs.columns`
     let settingsJson = useStorage().getItem(columnSettingKey)
@@ -46,7 +46,7 @@ export default function JobListing() {
             columnArray[v.name] = v
         })
         setColumnHistory(columnArray)
-    }, [ user ]);
+    }, [ ]);
 
     /**
      * 
@@ -67,7 +67,7 @@ export default function JobListing() {
     }
 
     const onEditClick = (id: number) => {
-        router.push(`${router.pathname}/${id}`);
+        router.push(`${router.pathname}/${id}/edit`);
     }
 
     const onDeleteClick = async (id: number) => {
@@ -144,19 +144,25 @@ export default function JobListing() {
                 actions={j => ([
                     {
                         onClick: e => onViewApplicantsClick(j.id),
-                        label: (<><EyeFill /> {t("VIEW_{name}", { name: "APPLICANTS" }, { translateProps: true })}</>)
+                        icon: EyeFill,
+                        label: t("VIEW_{name}", { name: "APPLICANTS" }, { translateProps: true })
                     },
                     {
                         onClick: e => onPreviewClick(j.id, j.slug),
-                        label: (<><Eye /> {t("VIEW_{name}", { name: t("POST") })}</>)
+                        icon: Eye,
+                        label: t("VIEW_{name}", { name: "POST" }, { translateProps: true })
                     },
                     {
                         onClick: e => onEditClick(j.id),
-                        label: (<><PenFill /> {t("EDIT")}</>)
+                        icon: PenFill,
+                        label: "EDIT",
+                        hide: !hasPermission("CanEditJob")
                     },
                     {
                         onClick: e => onDeleteClick(j.id),
-                        label: (<><TrashFill /> {t("DELETE")}</>)
+                        icon: TrashFill,
+                        label: "DELETE",
+                        hide: !hasPermission("CanDeleteJob")
                     },
                 ])}
                 items={jobs}

@@ -51,9 +51,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
     const { t } = useTranslation();
     let { className, entity, onSaveComplete, onSaveError } = props;
 
-    if (!entity) entity = new ApplicantEntity();
-
-    let { hasPermission } = useAuth();
+    let { user, hasPermission } = useAuth();
 
     const protectedFields = {
         license_number: hasPermission("CanViewApplicant.license_number"),
@@ -61,7 +59,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
     };
 
     const form = useFormik({
-        initialValues: entity,
+        initialValues: new ApplicantEntity(),
         validationSchema: ApplicantEntity.yupSchema(),
         onSubmit: async (values) => {
             const api = new ApplicantApi();
@@ -71,14 +69,14 @@ export function ApplicantForm(props: ApplicantFormProps) {
                 delete values.jobs;
 
             try {
-                if (entity.id) {
+                if (entity?.id) {
                     values = await api.update(entity.id, values);
                 }
                 else {
                     values = await api.create(values);
                 }
 
-                for (let i = 0; i < entity.jobs?.length; i++) {
+                for (let i = 0; i < entity?.jobs?.length; i++) {
                     let job = entity.jobs[i];
 
                     if (!jobs.some(v => v.job?.id === job.job.id)) {
@@ -97,12 +95,12 @@ export function ApplicantForm(props: ApplicantFormProps) {
                     }
                 }
 
-                formSuccess(t, entity.id ? "update": "create", "APPLICANT");
+                formSuccess(t, entity?.id ? "update": "create", "APPLICANT");
                 if (onSaveComplete) onSaveComplete(values);
             } catch (e) {
                 console.error("Unable to save applicant info", e);
                 if (!globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast }))
-                    formFailed(t, entity.id ? "update": "create", "APPLICANT");
+                    formFailed(t, entity?.id ? "update": "create", "APPLICANT");
 
                 if (onSaveError) onSaveError(e);
             }
@@ -116,14 +114,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
         const jobs = await api.list();
 
         setJobs(jobs);
+    }, [ user ]);
 
-        form.setValues(entity);
+    useEffect(() => {
+        if (entity)
+            form.setValues(entity);
     }, [ entity ]);
 
     return (
         <EntityForm
             id={entity?.id}
-            canSubmit={form.dirty && !form.isSubmitting && !form.isValidating && form.isValid}
+            formik={form}
             onSubmit={form.handleSubmit}
             className={className}
         >

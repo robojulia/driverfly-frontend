@@ -12,6 +12,11 @@ export default class VehicleApi extends BaseApi {
 
         return data;
     }
+    async findById (id: number, params?: { withPhoto?: boolean }): Promise<VehicleEntity> {
+        const { data } = await this.get(`${this.baseUrl}/${id}` + (params && params.withPhoto ? "?withPhoto=true" : ""));
+
+        return data;
+    }
     async create (entity: VehicleEntity): Promise<VehicleEntity> {
         const { data } = await this.post(this.baseUrl, entity);
 

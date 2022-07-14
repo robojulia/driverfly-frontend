@@ -40,9 +40,9 @@ export default function Impersonate() {
 
     useEffectAsync(async () => {
         if (open) {
-            const api = new CompanyApi();
+            const api = new AuthApi();
 
-            const companies = await api.list();
+            const companies = await api.findCompanies();
 
             companies.splice(0, 0, { id: -1, name: `----${t("DRIVERS")}----` });
 
@@ -59,6 +59,8 @@ export default function Impersonate() {
         setOpen(false);
 
         login(auth);
+
+        await router.reload();
     }
 
     const form = useFormik({

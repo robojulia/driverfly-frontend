@@ -66,7 +66,7 @@ export default function Job() {
 
     if (isNaN(parseInt(id))) id = null; // create mode
 
-    const { hasPermission } = useAuth();
+    const { company, hasPermission } = useAuth();
 
     const { t } = useTranslation();
 
@@ -106,6 +106,12 @@ export default function Job() {
             const jobApi = new JobApi();
 
             const job = await jobApi.getById(id);
+
+            if (job.company.id !== company.id) {
+                toast.error(t("NOT_ALLOWED"))
+                await router.push(backPath);
+                return;
+            }
             console.log(job);
 
             form.setValues({
@@ -185,7 +191,7 @@ export default function Job() {
             set_vehicles(await vehicleApi.list());
         }
 
-    }, [id]);
+    }, [company, id]);
 
     /// custom PayMethod logic
 

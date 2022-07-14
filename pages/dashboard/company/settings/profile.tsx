@@ -1,20 +1,19 @@
-import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
-import { Col, Row } from "react-bootstrap";
-import { useAuth } from '../../../../hooks/useAuth';
 import { toast } from 'react-toastify'
-import BaseInputPhone from "../../../../components/forms/BaseInputPhone";
+import { Col, Row } from "react-bootstrap";
 
 import { useFormik } from "formik";
-import * as yup from "yup";
-
-import BaseInput from "../../../../components/forms/BaseInput";
-
+import { useAuth } from '../../../../hooks/useAuth';
 import { useTranslation } from "../../../../hooks/useTranslation";
 
-import UserApi from "../../../api/user";
+import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
+
+import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
 import PageLayout from "../../../../components/layouts/PageLayout";
 import EntityForm from "../../../../components/layouts/EntityForm";
-import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
+import BaseInputPhone from "../../../../components/forms/BaseInputPhone";
+import BaseInput from "../../../../components/forms/BaseInput";
+
+import UserApi from "../../../api/user";
 import { UserEntity } from "../../../../models/user/user.entity";
 
 export default function Profile() {
@@ -26,13 +25,6 @@ export default function Profile() {
     initialValues: user,
     validationSchema: UserEntity.yupSchema(),
     onSubmit: async (values) => {
-      // const dto = {
-      //   first_name: values.first_name,
-      //   last_name: values.last_name,
-      //   name: `${values.first_name} ${values.last_name}`,
-      //   contact_number: values.contact_number,
-      //   cell_number: values.cell_number
-      // };
       const api = new UserApi();
 
       try {
@@ -48,7 +40,7 @@ export default function Profile() {
         toast.success(t("successfully_saved_information"));
       }
       catch (e) {
-        console.error("Unable to save company", e);
+        console.error("Unable to save user", e);
         globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast });
       }
     }

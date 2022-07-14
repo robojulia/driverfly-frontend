@@ -19,22 +19,20 @@ export function CompanyForm(props: CompanyFormProps) {
     const { t } = useTranslation();
     let { className, entity, onSaveComplete, onSaveError } = props;
 
-    if (!entity) entity = new CompanyEntity();
-
     const form = useFormik({
-        initialValues: entity,
+        initialValues: new CompanyEntity(),
         validationSchema: CompanyEntity.yupSchema(),
         onSubmit: async (dto) => {
             const api = new CompanyApi();
             try {
                 let company = null;
-                if (entity.id) {
+                if (entity?.id) {
                     company = await api.update(entity.id, dto);
                 }
                 else {
                     company = await api.create(dto);
                 }
-                formSuccess(t, !!entity.id ? "update" : "create", "COMPANY");
+                formSuccess(t, !!entity?.id ? "update" : "create", "COMPANY");
                 if (onSaveComplete) onSaveComplete(company);
             }
             catch (e) {
@@ -47,7 +45,8 @@ export function CompanyForm(props: CompanyFormProps) {
     });
 
     useEffect(() => {
-      form.setValues(entity);
+      if (entity)
+        form.setValues(entity);
     }, [entity]);
 
     return (
@@ -55,7 +54,7 @@ export function CompanyForm(props: CompanyFormProps) {
             className={className}
             onSubmit={form.handleSubmit}
             formik={form}
-            id={entity.id}
+            id={entity?.id}
         >
             <Row>
               <BaseInput

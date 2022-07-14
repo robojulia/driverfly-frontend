@@ -17,12 +17,10 @@ import { DeleteButton } from "../../../../../../components/buttons/DeleteButton"
 import { CompanyEntity } from "../../../../../../models/company/company.entity";
 import CompanyApi from "../../../../../api/company";
 
-export default function ViewCompany() {
+export default function ViewCompany({ id }) {
     const router = useRouter();
 
     const { t } = useTranslation();
-
-    let { id } = router.query;
 
     const { hasPermission, refreshToken } = useAuth();
 
@@ -36,10 +34,10 @@ export default function ViewCompany() {
         if (id) {
             const api = new CompanyApi();
 
-            const data = await api.findById(+id);
+            const data = await api.findById(+id, { withPhoto: true });
 
             if (!data) {
-                toast.error(t("UNABLE_TO_FIND_{name}", { name: t("COMPANY") }));
+                toast.error(t("UNABLE_TO_FIND_{name}", { name: "COMPANY" }, { translateProps: true }));
                 goBack();
                 return;
             }
@@ -91,6 +89,10 @@ export default function ViewCompany() {
             <Col>
                 <ViewDetails
                     obj={{
+                        PHOTO: {
+                            label: "PHOTO",
+                            text: company?.photo ? <img className="img-thumbnail" style={{maxWidth: "100px"}} src={company.photo.path} /> : null
+                        },
                         NAME: company.name,
                         WEBSITE: company.website,
                         ABOUT: company.about,

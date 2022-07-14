@@ -69,59 +69,58 @@ export default function UserList() {
           }
         </>
       }>
-      <Row className="mt-5">
-        <Col>
-          <ViewDataTable<UserEntity>
-            columns={[
+        <ViewDataTable<UserEntity>
+          columns={[
+            {
+              name: "name",
+              selector: j => j.name,
+              cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.name}</a></Link>),
+              hidable: false
+            },
+            {
+              name: "ROLES",
+              selector: j => j.roles.map((role) => role.name).join(", "),
+              hidable: true
+            },
+            {
+              name: "email",
+              selector: j => j.email,
+              hidable: true
+            },
+            {
+              name: "phone",
+              selector: j => j.contact_number,
+              hidable: true
+            },
+            {
+              name: "phone_cell",
+              selector: j => j.cell_number,
+              hidable: true,
+              hide: 1
+            }
+          ]}
+          actions={j => ([
               {
-                name: "name",
-                selector: j => j.name,
-                cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.name}</a></Link>),
-                hidable: false
+                  onClick: e => onViewClick(j.id),
+                  icon: EyeFill,
+                  label: "VIEW",
+                  hide: !hasPermission("CanViewUser")
               },
               {
-                name: "ROLES",
-                selector: j => j.roles.map((role) => role.name).join(", "),
-                hidable: true
+                  onClick: e => onEditClick(j.id),
+                  icon: PenFill,
+                  label: "EDIT",
+                  hide: !hasPermission("CanUpdateUser")
               },
               {
-                name: "email",
-                selector: j => j.email,
-                hidable: true
-              },
-              {
-                name: "phone",
-                selector: j => j.contact_number,
-                hidable: true
-              },
-              {
-                name: "phone_cell",
-                selector: j => j.cell_number,
-                hidable: true,
-                hide: 1
+                  onClick: e => onDeleteClick(j.id),
+                  icon: TrashFill,
+                  label: "DELETE",
+                  hide: !hasPermission("CanDeleteUser")
               }
-            ]}
-            actions={j => ([
-                {
-                    onClick: e => onViewClick(j.id),
-                    label: (<><EyeFill /> {t("VIEW")}</>),
-                    hide: !hasPermission("CanViewUser")
-                },
-                {
-                    onClick: e => onEditClick(j.id),
-                    label: (<><PenFill /> {t("EDIT")}</>),
-                    hide: !hasPermission("CanUpdateUser")
-                },
-                {
-                    onClick: e => onDeleteClick(j.id),
-                    label: (<><TrashFill /> {t("DELETE")}</>),
-                    hide: !hasPermission("CanDeleteUser")
-                }
-            ])}
-            items={users}
-          />
-        </Col>
-      </Row>
+          ])}
+          items={users}
+        />
     </PageLayout>
   )
 };

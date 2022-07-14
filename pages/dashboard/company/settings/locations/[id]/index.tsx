@@ -1,12 +1,7 @@
 import { toast } from "react-toastify";
 
 import { Button, ButtonGroup, Col, Row } from "react-bootstrap";
-import { ArrowsExpand, BookmarkCheck, BookmarkDash, Pencil, Plus, Trash } from "react-bootstrap-icons";
-
-import FullLayout from "../../../../../../components/dashboard/layouts/Layout/FullLayout";
-import ChildPageLayout from "../../../../../../components/layouts/ChildPageLayout";
-import ViewCard from "../../../../../../components/viewDetails/viewCard";
-import ViewDetails from "../../../../../../components/viewDetails/viewDetails";
+import { Pencil } from "react-bootstrap-icons";
 
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -14,61 +9,73 @@ import { useEffectAsync } from "../../../../../../utils/react";
 import { useTranslation } from "../../../../../../hooks/useTranslation";
 import { useAuth } from "../../../../../../hooks/useAuth";
 
-import UserApi from "../../../../../api/user";
-import { UserEntity } from "../../../../../../models/user/user.entity";
+import FullLayout from "../../../../../../components/dashboard/layouts/Layout/FullLayout";
+import ChildPageLayout from "../../../../../../components/layouts/ChildPageLayout";
+import ViewDetails from "../../../../../../components/viewDetails/viewDetails";
 import { DeleteButton } from "../../../../../../components/buttons/DeleteButton";
 
-export default function ViewUser({ id }) {
+import { globalAjaxExceptionHandler } from "../../../../../../utils/ajax";
+
+import { LocationEntity } from "../../../../../../models/company/location.entity";
+import LocationApi from "../../../../../api/location";
+
+export default function ViewLocation({ id }) {
     const router = useRouter();
 
     const { t } = useTranslation();
 
-    const { hasPermission } = useAuth();
+    const { user } = useAuth();
 
-    const [user, setUser] = useState(new UserEntity());
+    const { hasPermission, refreshToken } = useAuth();
 
-    const backPath = "/dashboard/company/settings/users";
+    const [location, setLocation] = useState(new LocationEntity());
+
+    const backPath = "/dashboard/company/settings/locations";
 
     const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
 
     useEffectAsync(async () => {
         if (id) {
-            const api = new UserApi();
+            const api = new LocationApi();
 
             const data = await api.findById(+id);
 
             if (!data) {
-                toast.error(t("UNABLE_TO_FIND_{name}", { name: t("USER") }));
+                toast.error(t("UNABLE_TO_FIND_{name}", { name: "TERMINAL" }, { translateProps: true }));
                 goBack();
                 return;
             }
 
-            setUser(data);
+            setLocation(data);
         } else {
-            toast.error(t("UNABLE_TO_FIND_{name}", { name: "USER" }, { translateProps: true }));
+            toast.error(t("UNABLE_TO_FIND_{name}", { name: "TERMINAL" }, { translateProps: true }));
             goBack();
         }
 
-    }, [ id ]);
+    }, [ id, user ]);
 
     const onEditClick = async () => {
         await router.push(router.asPath + `/edit`);
     };
 
     const onDeleteClick = async () => {
-        const api = new UserApi();
+        try {
+            const api = new LocationApi();
 
-        await api.remove(user.id);
-        await router.push(backPath);
+            await api.remove(location.id);
+            await router.push(backPath);
+        } catch (e) {
+            globalAjaxExceptionHandler(e, { t: t, toast: toast });
+        }
     };
 
-    const canEdit = hasPermission("CanUpdateUser");
-    const canDelete = hasPermission("CanDeleteUser");
+    const canEdit = hasPermission("CanUpdateLocation");
+    const canDelete = hasPermission("CanDeleteLocation");
 
     return (
         <ChildPageLayout
             backPath={backPath}
-            title={t("VIEW_{name}", { name: "USER" }, { translateProps: true })}
+            title={t("VIEW_{name}", { name: "TERMINAL" }, { translateProps: true })}
             actions={
                 (<ButtonGroup>
                     {canDelete &&
@@ -89,11 +96,10 @@ export default function ViewUser({ id }) {
             <Col>
                 <ViewDetails
                     obj={{
-                        FIRST_NAME: user.first_name,
-                        LAST_NAME: user.last_name,
-                        EMAIL: user.email,
-                        phone: user.contact_number,
-                        phone_cell: user.cell_number,
+                        STREET: location.street,
+                        STATE: location.state,
+                        CITY: location.city,
+                        ZIP_CODE: location.zip_code,
                     }}
                     />
             </Col>
@@ -101,14 +107,13 @@ export default function ViewUser({ id }) {
     </ChildPageLayout>);
 }
 
-ViewUser.getLayout = function getLayout(page) {
+ViewLocation.getLayout = function getLayout(page) {
     return (
         <FullLayout>
             {page}
         </FullLayout>
     )
 }
-
 
 export async function getServerSideProps(context) {
     try {
@@ -120,7 +125,7 @@ export async function getServerSideProps(context) {
             props: { id: id }
         }
     } catch (error) {
-        console.error("ViewUser error:", error);
+        console.error("ViewLocation error:", error);
         return { props: { id: null } }
     }
 }

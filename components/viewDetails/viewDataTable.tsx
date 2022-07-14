@@ -3,7 +3,7 @@ import { Button, Dropdown } from "react-bootstrap";
 import DataTable, { TableColumn } from 'react-data-table-component';
 import BaseInput from "../forms/BaseInput";
 import { Gear, Search } from "react-bootstrap-icons";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import ListActions, { ListActionOptions } from "../list-actions/ListActions";
 import useStorage from "../../hooks/useStorage";
 import { ExpandableRowsComponent } from "react-data-table-component/dist/src/DataTable/types";
@@ -13,9 +13,10 @@ export interface ViewTableProps<TElement> {
     items: TElement[];
     columnSettingKey?: string;
     actions?: (row: TElement) => ListActionOptions[];
-    preExpanded?: boolean | ((TElement) => boolean);
+    preExpanded?: boolean | ((row: TElement) => boolean);
     expandableRowsComponent?: ExpandableRowsComponent<TElement>;
     hideSearch?: boolean;
+    noDataComponent?: ReactNode;
 
 }
 
@@ -121,7 +122,7 @@ export default function ViewDataTable<TElement>(props: ViewTableProps<TElement>)
             responsive
             fixedHeader
 
-            noDataComponent={(<>{t("NO_RECORDS_FOUND")}</>)}
+            noDataComponent={props.noDataComponent || (<>{t("NO_RECORDS_FOUND")}</>)}
 
             expandOnRowClicked
             expandableRowsHideExpander

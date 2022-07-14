@@ -2,6 +2,7 @@ import { ForgotPasswordDto } from "../../models/auth/forgot-password.dto";
 import { JwtRefreshTokenPayload } from "../../models/auth/jwt-refresh-token-payload.interface";
 import { LoginDto } from "../../models/auth/login.dto";
 import { SignUpDto } from "../../models/auth/sign-up.dto";
+import { CompanyEntity } from "../../models/company/company.entity";
 import { UserEntity } from "../../models/user/user.entity";
 import BaseApi from "./_baseApi";
 
@@ -17,6 +18,12 @@ export default class AuthApi extends BaseApi {
     }
     async forgotPassword(dto: ForgotPasswordDto) {
         await this.post(`${this.baseUrl}/forgot-password`, dto);
+    }
+
+    async findCompanies(): Promise<CompanyEntity[]> {
+        const { data } = await this.get(`${this.baseUrl}/companies`);
+
+        return data;
     }
 
     async refreshToken(token: string) : Promise<UserEntity> {
