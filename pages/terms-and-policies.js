@@ -206,7 +206,7 @@ export default function TermsAndPolicies() {
 
 TermsAndPolicies.getLayout = function getLayout(page) {
     return (
-        <Layout>
+        <Layout title="terms_and_condition">
             {page}
         </Layout>
     )

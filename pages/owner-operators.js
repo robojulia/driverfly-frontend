@@ -46,7 +46,7 @@ export default function Owneroperators() {
 
 Owneroperators.getLayout = function getLayout(page){
     return (
-        <Layout>
+        <Layout title="OWNER_OPERATOR">
             {page}
         </Layout>
     )

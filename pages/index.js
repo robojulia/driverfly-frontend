@@ -29,11 +29,6 @@ export default function Index() {
 
   return (
     <>
-      <Head>
-        <title>Home - DriverFly</title>
-        <link rel="icon" href="/img/DriverFly-Official-Favicon.png" />
-      </Head>
-
       <section className="hero-sec">
         <div className="container ">
           <div className="row mt-5">
@@ -168,7 +163,7 @@ export default function Index() {
 
 Index.getLayout = function getLayout(page) {
   return (
-    <Layout>
+    <Layout title="HOME">
       {page}
     </Layout>
   )

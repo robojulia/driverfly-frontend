@@ -143,7 +143,7 @@ export async function getServerSideProps(context) {
 
 ResetPassword.getLayout = function getLayout(page) {
   return (
-    <Layout>
+    <Layout title="RESET_PASSWORD">
       {page}
     </Layout>
   )

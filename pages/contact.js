@@ -10,15 +10,9 @@ import { ArrowLeft, ArrowRight, Newspaper, PersonBadgeFill, QuestionCircle } fro
 export default function Contact() {
     function onChange(value) {
         console.log("Captcha value:", value);
-      }
+    }
     return (
         <>
-            <Head>
-                <title>Contact - DriverFly</title>
-            </Head>
-
-
-
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
@@ -82,7 +76,7 @@ export default function Contact() {
                         </div>
                         <div className="col-md-4">
                             <div className="contact-icon-inner">
-                              <Newspaper />
+                                <Newspaper />
 
 
 
@@ -92,7 +86,7 @@ export default function Contact() {
                         </div>
                         <div className="col-md-4">
                             <div className="contact-icon-inner">
-                              <QuestionCircle />
+                                <QuestionCircle />
                             </div>
                             <h3 className="title text-center  my-4"><Link href="/faq"><a className='text-black'>Have questions?</a></Link></h3>
                         </div>
@@ -104,7 +98,7 @@ export default function Contact() {
 }
 Contact.getLayout = function getLayout(page) {
     return (
-        <Layout>
+        <Layout title="contact">
             {page}
         </Layout>
     )
