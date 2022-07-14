@@ -66,7 +66,7 @@ export default function JobsList() {
 
             </div>
             <Link href={`/jobs/${job.id}/${job.slug}`}>
-              <button type="button" className="theme-primary-btn-outline">{t('browse_job')}</button>
+              <button type="button" className="theme-primary-btn-outline">{t('view_job')}</button>
             </Link>
 
           </div>

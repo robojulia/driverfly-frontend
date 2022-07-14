@@ -204,10 +204,7 @@ export function useAuth() {
                         return !(await logoutAndRedirect());
                     }
 
-                    console.log("loginGuard:: refreshing jwt", router.asPath)
-                    const api = new AuthApi();
-                    const newUser = await api.refreshToken(user.refreshToken);
-                    updateUser(newUser);
+                    await refreshToken();
                     return false;
                 } else {
                     return !(await logoutAndRedirect());
@@ -218,6 +215,14 @@ export function useAuth() {
         } else {
             return !(await logoutAndRedirect());
         }
+    }
+
+    async function refreshToken() {
+        const { user } = userContext;
+        console.log("refreshToken:: refreshing jwt", router.asPath)
+        const api = new AuthApi();
+        const newUser = await api.refreshToken(user.refreshToken);
+        updateUser(newUser);
     }
 
     return {
@@ -232,6 +237,7 @@ export function useAuth() {
         logout,
         hasPermission,
         loginGuard,
+        refreshToken,
     };
 
 }

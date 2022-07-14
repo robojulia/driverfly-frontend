@@ -10,7 +10,7 @@ export interface ViewModalProps {
     footer?: string|JSX.Element|JSX.Element[];
     closeText?: string;
     onCloseClick?: () => void;
-    children?: JSX.Element|JSX.Element[];
+    readonly children?: React.ReactChildren | React.ReactChild;
 }
 
 export default function ViewModal(props: ViewModalProps) {

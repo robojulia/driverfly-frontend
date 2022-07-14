@@ -27,7 +27,7 @@ export default class UserApi extends BaseApi {
         return data;
     }
 
-    async findById(id: number, user: UserEntity) : Promise<UserEntity> {
+    async findById(id: number) : Promise<UserEntity> {
         const { data } = await this.get(`user/${id}`);
 
         return data;

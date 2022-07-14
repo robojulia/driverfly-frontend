@@ -12,7 +12,7 @@ export default function Category(props) {
 
   return (
     <>
-      <FindJobFilterAccordion {...props} header={t("CATEGORY")}>
+      <FindJobFilterAccordion {...props} header={t("cdl_type")}>
         <div className="custom-control custom-checkbox p-0">
           <div className="App">
             <EnumFilterByKeyValue

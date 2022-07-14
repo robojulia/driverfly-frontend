@@ -104,7 +104,7 @@ export default function OtrJobsList() {
 
                         </div>
                         <Link href={`/dashboard/driver/find-jobs/${job.id}`}>
-                            <button type="button" className="theme-primary-btn-outline">{t('browse_job')}</button>
+                            <button type="button" className="theme-primary-btn-outline">{t('view_job')}</button>
                         </Link>
 
                     </div>

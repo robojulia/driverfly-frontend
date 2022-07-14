@@ -48,6 +48,7 @@
     "view": "View",
     "view_all_jobs": "View all jobs",
     "browse_job": "Browse Job",
+    "view_job": "View Job",
     "no_street": "NO Street",
     "no_city": "NO City",
     "no_state": "NO State",
@@ -225,6 +226,7 @@
     "License_Restrictions": "License Restrictions",
     "expiration_date": "Expiration Date",
     "cdl_experience": "CDL Experience",
+    "cdl_type": "CDL Type",
     "years_cdl_experience": "Years of CDL Experience",
     "years_cdl_driving_experience": "Years of CDL Driving Experience",
     "highest_degree": "Highest Degree",
@@ -1063,5 +1065,9 @@
     },
     "NO_NAME": "No Name",
     "SWITCH_COMPANY": "Switch Company",
-    "CHANGE": "Change"
+    "CHANGE": "Change",
+    "USER_NOT_ACTIVATED": "Check your email to activate your account",
+    "ARE_YOU_SURE_YOU_WANT_TO_DELETE": "Are you sure you want to delete this record? This action is not reversable",
+    "DELETE_CONFIRMATION": "Delete Confirmation",
+    "DO_NOT_DELETE": "Do Not Delete"
 }
