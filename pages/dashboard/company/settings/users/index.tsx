@@ -1,16 +1,20 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
 import PageLayout from "../../../../../components/layouts/PageLayout";
 import { Col, Row } from "reactstrap";
 import { useAuth } from '../../../../../hooks/useAuth';
 import { useRouter } from "next/router"
 import { useTranslation } from "../../../../../hooks/useTranslation";
-import {PenFill, TrashFill} from 'react-bootstrap-icons';
+import {EyeFill, PenFill, TrashFill} from 'react-bootstrap-icons';
 import UserApi from "../../../../api/user";
 import ViewDataTable from "../../../../../components/viewDetails/viewDataTable";
 import { Status } from '../../../../../enums/status.enum';
 import { UserEntity } from '../../../../../models/user/user.entity';
 import { useEffectAsync } from '../../../../../utils/react';
+import { globalAjaxExceptionHandler } from '../../../../../utils/ajax';
+import { toast } from 'react-toastify';
+import Link from 'next/link';
+import { Button } from 'react-bootstrap';
 
 export default function UserList() {
 
@@ -26,34 +30,30 @@ export default function UserList() {
     setUsers(v.filter((u) => u.id !== user.id && u.status === Status.ACTIVE));
   }, []);
 
-  /**
-   * 
-   * @param {React.MouseEvent} e 
-   */
-   const onAddClick = (e) => {
+   const onAddClick = (e: React.MouseEvent) => {
     e.preventDefault();
 
     router.push(`${router.pathname}/create`);
   }
 
-  /**
-   * 
-   * @param {number} id
-   */
-  const onEditClick = (id) => {
+  const onEditClick = (id: number) => {
+    router.push(`${router.pathname}/${id}/edit`);
+  }
+
+  const onViewClick = (id: number) => {
     router.push(`${router.pathname}/${id}`);
   }
 
-  /**
-   * 
-   * @param {number} id
-   */
-   const onDeleteClick = async (id) => {
-    const api = new UserApi();
+  const onDeleteClick = async (id: number) => {
+    try {
+      const api = new UserApi();
 
-    await api.remove(id);
+      await api.remove(id);
 
-    setUsers(users.filter(v => v.id != id));
+      setUsers(users.filter(v => v.id != id));
+    } catch (e) {
+      globalAjaxExceptionHandler(e, { t: t, defaultMessage: "UNABLE_TO_DELETE", toast: toast });
+    }
   }
 
   return (
@@ -63,9 +63,9 @@ export default function UserList() {
         <>
           {
             hasPermission("CanCreateUser") &&
-              <button className="btn btn-primary" onClick={onAddClick}>
+              <Button variant='primary' onClick={onAddClick}>
                 + {t("CREATE")}
-              </button>
+              </Button>
           }
         </>
       }>
@@ -76,6 +76,7 @@ export default function UserList() {
               {
                 name: "name",
                 selector: j => j.name,
+                cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.name}</a></Link>),
                 hidable: false
               },
               {
@@ -101,6 +102,11 @@ export default function UserList() {
               }
             ]}
             actions={j => ([
+                {
+                    onClick: e => onViewClick(j.id),
+                    label: (<><EyeFill /> {t("VIEW")}</>),
+                    hide: !hasPermission("CanViewUser")
+                },
                 {
                     onClick: e => onEditClick(j.id),
                     label: (<><PenFill /> {t("EDIT")}</>),

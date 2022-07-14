@@ -7,7 +7,7 @@ import { Row, Col } from "react-bootstrap";
 export interface PageLayoutProps {
     title?: string;
     actions?: JSX.Element | JSX.Element[];
-    children?: JSX.Element | JSX.Element[];
+    readonly children?: JSX.Element | JSX.Element[];
 }
 
 export default function PageLayout(props: PageLayoutProps) {
