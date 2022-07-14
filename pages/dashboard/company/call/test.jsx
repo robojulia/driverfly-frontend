@@ -1,22 +1,10 @@
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
-import { Col, Row } from "reactstrap";
-import useRedirect from '../../../../hooks/useRedirect';
 import { useEffect, useState } from 'react';
 import CallApi from "../../../api/call"
-import ApplicantApi from "../../../api/applicant"
-import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
-import ViewDataTable from "../../../../components/viewDetails/viewDataTable";
-import { useEffectAsync } from "../../../../utils/react";
-import { TelephoneFill, TelephoneMinusFill, TelephoneOutboundFill, TelephonePlus, TelephonePlusFill, XCircleFill } from "react-bootstrap-icons";
 import { useTranslation } from "../../../../hooks/useTranslation";
-import { Container, Modal } from "react-bootstrap";
-import { toast } from 'react-toastify'
-import Spinner from 'react-bootstrap/Spinner'
 
 export default function Test() {
 
-    const { authCompany } = useRedirect()
-    authCompany()
     const { t } = useTranslation()
 
     const callApi = new CallApi()
