@@ -63,7 +63,7 @@ export async function getServerSideProps({ query }) {
       response.message = (error?.response?.status == 422 || error?.response?.data?.errors?.User) ? `${error?.response?.data?.errors?.User}` : "Something went wrong"
     })
 
-  return { props: { response } }
+  return { props: { response, emailVerifyToken } }
 }
 
 VerifyEmailToken.getLayout = function getLayout(page) {
