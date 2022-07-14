@@ -8,7 +8,7 @@ import { useMediaQuery } from "react-responsive";
 import { useAuth } from "../../../../hooks/useAuth";
 
 export interface SidebarProps {
-    open: boolean;
+    open?: boolean;
     items: SidebarItem[];
 }
 
@@ -19,9 +19,10 @@ export interface SidebarItem {
     text?: string;
     startsWith?: boolean;
     permissions?: string | string[];
-    items: SidebarItem[];
+    visible?: boolean;
+    items?: SidebarItem[];
 
-    isSelected: boolean;
+    isSelected?: boolean;
 }
 
 /**
@@ -73,16 +74,12 @@ function SidebarArea({ children }) {
     );
 }
 
-/**
- * 
- * @param {SidebarItem[]} values 
- * @param {(string[]) => boolean} hasPermission 
- * @returns {SidebarItem[]}
- */
 function filterItems(values: SidebarItem[], hasPermission) {
 
     return values.map(i => {
-        let { permissions, items } = i;
+        let { permissions, items, visible } = i;
+
+        if (visible === false) return null;
 
         if (items) {
             items = filterItems(items, hasPermission);

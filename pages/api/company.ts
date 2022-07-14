@@ -1,6 +1,5 @@
 import { CompanyEntity } from "../../models/company/company.entity";
 import BaseApi from "./_baseApi";
-import { JobEntity } from "../../models/job/job.entity";
 import { FindManyOptions } from "../../models/general/find-many-options.dto";
 
 export default class CompanyApi extends BaseApi {
@@ -10,19 +9,41 @@ export default class CompanyApi extends BaseApi {
 
         return data;
     }
-    async getById(): Promise<CompanyEntity> {
-        const { data } = await this.get(this.baseUrl);
+    async findById(id: number): Promise<CompanyEntity> {
+        const { data } = await this.get(`${this.baseUrl}/${id}`);
 
         return data;
     }
-    async update(dto: CompanyEntity): Promise<CompanyEntity> {
-        const { data } = await this.put(this.baseUrl, dto);
+    async create(dto: CompanyEntity): Promise<CompanyEntity> {
+        const { data } = await this.post(this.baseUrl, dto);
 
         return data;
     }
-    async remove(): Promise<void> {
-        await this.delete(this.baseUrl);
+    async update(id: number, dto: CompanyEntity): Promise<CompanyEntity> {
+        const { data } = await this.put(`${this.baseUrl}/${id}`, dto);
+
+        return data;
     }
+    async remove(id: number): Promise<void> {
+        await this.delete(`${this.baseUrl}/${id}`);
+    }
+
+    me = {
+        get: async (): Promise<CompanyEntity> => {
+            const { data } = await this.get(this.baseUrl);
+
+            return data;
+        },
+        update: async (dto: CompanyEntity): Promise<CompanyEntity> => {
+            const { data } = await this.put(this.baseUrl, dto);
+
+            return data;
+        },
+        remove: async () : Promise<void> => {
+            await this.delete(this.baseUrl);
+        },
+
+    };
 
     employer = {
         baseUrl: "employer",

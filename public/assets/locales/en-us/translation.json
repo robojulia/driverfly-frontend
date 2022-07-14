@@ -1069,5 +1069,6 @@
     "USER_NOT_ACTIVATED": "Check your email to activate your account",
     "ARE_YOU_SURE_YOU_WANT_TO_DELETE": "Are you sure you want to delete this record? This action is not reversable",
     "DELETE_CONFIRMATION": "Delete Confirmation",
-    "DO_NOT_DELETE": "Do Not Delete"
+    "DO_NOT_DELETE": "Do Not Delete",
+    "COMPANIES": "Companies"
 }
