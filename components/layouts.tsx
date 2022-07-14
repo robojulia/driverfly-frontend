@@ -5,7 +5,11 @@ import Scripts from './scripts';
 import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from '../hooks/useTranslation'
 
-export default function Layout({ children, title }) {
+export interface LayoutProps {
+    title?: string;
+    readonly children?: React.ReactChild | React.ReactChildren | any
+}
+export default function Layout({ children, title }: LayoutProps) {
     const { t } = useTranslation();
 
     return (
