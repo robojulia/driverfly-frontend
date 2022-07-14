@@ -46,7 +46,7 @@ export default function JobListing() {
             columnArray[v.name] = v
         })
         setColumnHistory(columnArray)
-    }, []);
+    }, [ user ]);
 
     /**
      * 

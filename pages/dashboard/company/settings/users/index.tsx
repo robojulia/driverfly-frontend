@@ -28,7 +28,7 @@ export default function UserList() {
     const api = new UserApi();
     const v = await api.list();
     setUsers(v.filter((u) => u.id !== user.id && u.status === Status.ACTIVE));
-  }, []);
+  }, [ user ]);
 
    const onAddClick = (e: React.MouseEvent) => {
     e.preventDefault();

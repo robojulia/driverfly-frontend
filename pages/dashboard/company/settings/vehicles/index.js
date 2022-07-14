@@ -34,7 +34,7 @@ export default function VehicleList() {
     console.log(v);
 
     setVehicles(v);
-  }, []);
+  }, [ user ]);
 
   /**
    * 

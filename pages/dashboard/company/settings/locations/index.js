@@ -12,11 +12,14 @@ import {PenFill, TrashFill} from 'react-bootstrap-icons';
 
 import LocationApi from "../../../../api/location";
 import LocationEntity from "../../../../../models/company/location.entity";
+import { useAuth } from "../../../../../hooks/useAuth";
 
 export default function LocationList() {
 
   const router = useRouter();
   const { t } = useTranslation();
+
+  const { user } = useAuth();
 
   const [ locations, setLocations ] = useState([]);
 
@@ -26,7 +29,7 @@ export default function LocationList() {
     const v = await api.list();
 
     setLocations(v);
-  }, []);
+  }, [ user ]);
 
   /**
    * 

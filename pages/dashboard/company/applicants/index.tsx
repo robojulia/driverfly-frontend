@@ -68,6 +68,8 @@ export default function Applicants() {
 
     const router = useRouter();
 
+    const { user } = useAuth();
+
     let { viewMode, jobId } = router.query;
 
     if (!ViewMode[`${viewMode}`]) viewMode = ViewMode.applicant;
@@ -82,7 +84,7 @@ export default function Applicants() {
         });
 
         setApplicants(data);
-    }, [ jobId, viewMode ]);
+    }, [ user, jobId, viewMode ]);
 
     const onViewClick = (id: number) => {
         router.push(`${router.pathname}/${id}`);
