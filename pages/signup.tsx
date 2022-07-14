@@ -1,17 +1,14 @@
 import Head from "next/head"
 import Link from "next/link"
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
-import { useState } from 'react'
 import Layout from "../components/layouts"
 import SignupStyle from "../public/css/signup.module.css"
 import { useAuth } from '../hooks/useAuth';
-import Router, { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 import { useFormik } from "formik";
-import * as yup from "yup";
-import "../utils/yup";
 
 import BaseInput from "../components/forms/BaseInput";
 import BaseSelect from "../components/forms/BaseSelect";
@@ -27,6 +24,7 @@ import { SignUpRole } from "../enums/auth/sign-up-role.enum"
 import { Row } from "reactstrap"
 
 import { globalAjaxExceptionHandler } from "../utils/ajax";
+import { SignUpDto } from "../models/auth/sign-up.dto";
 
 
 export default function Signup() {
@@ -41,50 +39,10 @@ export default function Signup() {
 
   const { t } = useTranslation();
 
-  const translations = {
-    passwordsDoNotMatch: t("PASSWORDS_DO_NOT_MATCH")
-  };
-
   const form = useFormik({
-    initialValues: {
-      first_name: null,
-      last_name: null,
-      name: null,
-      email: null,
-      password: null,
-      confirmPassword: null,
-      phone: null,
-      role: null,
-      invite_code: null,
-      accept_tos: false
-    },
-    validationSchema: yup.object({
-      first_name: yup.string().trim().required().nullable(),
-      last_name: yup.string().trim().required().nullable(),
-      name: yup.string().when("role", {
-        is: SignUpRole.COMPANY,
-        then: yup.string().trim().required().nullable()
-      }).nullable(),
-      email: yup.string().trim().email().required().nullable(),
-      password: yup.string().trim().required().nullable(),
-      confirmPassword: yup.string().trim().test({
-        test: (value, context) => {
-          const password = context.resolve(yup.ref("password"));
-          if (value === password) return true;
-
-          return context.createError({
-            path: context.path,
-            message: translations.passwordsDoNotMatch
-          });
-        }
-      }).nullable(),
-      phone: yup.string().trim().nullable(),
-      role: yup.string().enum(SignUpRole).required().nullable(),
-      invite_code: yup.string().trim().required().nullable(),
-      accept_tos: yup.boolean().oneOf([true], (t("MUST_BE_CHECKED")))
-    }),
+    initialValues: new SignUpDto(),
+    validationSchema: SignUpDto.yupSchema(),
     onSubmit: async (dto) => {
-      console.log(dto);
       const api = new AuthApi();
 
       try {
@@ -217,14 +175,17 @@ export default function Signup() {
                     placeholder
                     formik={form}
                   />
-                  <BaseInput
-                    className="col-12 mt-1"
-                    label="INVITE_CODE"
-                    required
-                    name="invite_code"
-                    placeholder
-                    formik={form}
-                  />
+                  {
+                    form.values.role === SignUpRole.COMPANY &&
+                    <BaseInput
+                      className="col-12 mt-1"
+                      label="INVITE_CODE"
+                      required
+                      name="invite_code"
+                      placeholder
+                      formik={form}
+                    />
+                  }
                   <BaseCheck
                     className="col-12 mt-2"
                     label="YOU_ACCEPT_OUR_TOS"
