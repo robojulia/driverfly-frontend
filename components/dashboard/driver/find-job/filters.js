@@ -59,15 +59,15 @@ export default function Filters() {
                     <Offcanvas.Body>
                         <div className="accordion bg-transparent px-3" id="accordionExample">
                             < Category state={state} method={method} />
-                            < Range state={state} method={method} />
                             < PostedDate state={state} method={method} />
+                            < Range state={state} method={method} />
                             < AreasCovered state={state} method={method} />
-                            < EmploymentType state={state} method={method} />
+                            < PayStructure state={state} method={method} />
                             < TypeOfDelivery state={state} method={method} />
+                            < EmploymentType state={state} method={method} />
                             < Equipment state={state} method={method} />
                             < TransmissionType state={state} method={method} />
                             < Schedule state={state} method={method} />
-                            < PayStructure state={state} method={method} />
                             < SpecialEndorsementsRequired state={state} method={method} />
                             < MvrRequirement state={state} method={method} />
                         </div>

@@ -62,7 +62,7 @@ export default function RelatedJobs({ jobs }) {
 
                                     </div>
                                     <Link href={`/jobs/${job.id}/${job.slug}`}>
-                                        <button type="button" className="theme-primary-btn-outline btn-sm">{t('browse_job')}</button>
+                                        <button type="button" className="theme-primary-btn-outline btn-sm">{t('view_job')}</button>
                                     </Link>
 
                                 </div>
