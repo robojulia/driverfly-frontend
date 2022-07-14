@@ -33,15 +33,15 @@ export default function FilterResults() {
             <div className="tab-content">
               <div className="accordion bg-transparent" id="accordionExample">
                 < Category open={true} state={state} method={method} />
-                < Range open={true} state={state} method={method} />
                 < PostedDate open={true} state={state} method={method} />
+                < Range open={true} state={state} method={method} />
                 < AreasCovered open={true} state={state} method={method} />
-                < EmploymentType state={state} method={method} />
-                < TypeOfDelivery state={state} method={method} />
-                < Equipment state={state} method={method} />
-                < TransmissionType state={state} method={method} />
-                < Schedule state={state} method={method} />
                 < PayStructure state={state} method={method} />
+                < TypeOfDelivery state={state} method={method} />
+                < EmploymentType state={state} method={method} />
+                < Equipment state={state} method={method} />
+                 < TransmissionType state={state} method={method} />
+                < Schedule state={state} method={method} />
                 < SpecialEndorsementsRequired state={state} method={method} />
                 < MvrRequirement state={state} method={method} />
               </div>
