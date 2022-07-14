@@ -13,7 +13,7 @@ export class UserEntity {
     first_name?: string;
     last_name?: string;
     enabled_notifications?: boolean;
-    status: Status;
+    status?: Status;
     roles?: RoleEntity[];
     theme_color?: boolean;
     swipe_actions?: boolean;
