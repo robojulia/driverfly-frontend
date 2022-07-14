@@ -3,11 +3,16 @@ import Footer from "./footer/Footer";
 import Header from "./header/Header";
 import Scripts from './scripts';
 import 'react-toastify/dist/ReactToastify.css';
+import { useTranslation } from '../hooks/useTranslation'
 
-export default function Layout({ children }) {
+export default function Layout({ children, title }) {
+    const { t } = useTranslation();
+
     return (
         <>
             <Head>
+                <title>{t("Driverfly")} {title ? `| ${t(title)}` : ""}</title>
+                <link rel="icon" href="/img/DriverFly-Official-Favicon.png" />
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                 <meta httpEquiv="x-ua-compatible" content="ie=edge" />
             </Head>

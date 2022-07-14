@@ -4,6 +4,7 @@ import Blog from '../public/css/Blog.module.css'
 import BlogSidebar from '../components/blog-sidebar/Blog-Sidebar';
 import { ArrowRight, Chat, Clock } from 'react-bootstrap-icons';
 // import Breadcrumbs from 'nextjs-breadcrumbs';
+import Breadcrumb from '../components/breadcrumbs/Breadcrumb';
 export default function Blogs() {
     return (
         <>
@@ -11,7 +12,7 @@ export default function Blogs() {
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
                         <h2>The DriverFly On The Wall Blog</h2>
-                        {/* < Breadcrumbs /> */}
+                        < Breadcrumb />
                     </div>
                 </div>
             </div>
@@ -79,7 +80,7 @@ export default function Blogs() {
 }
 Blogs.getLayout = function getLayout(page) {
     return (
-        <Layout>
+        <Layout title="blog">
             {page}
         </Layout>
     )

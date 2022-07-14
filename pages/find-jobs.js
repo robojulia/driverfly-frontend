@@ -177,7 +177,7 @@ export async function getServerSideProps(context) {
 
 FindJobs.getLayout = function getLayout(page) {
     return (
-        <Layout>
+        <Layout title="FIND_A_Job">
             {page}
         </Layout>
     )
