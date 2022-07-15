@@ -478,7 +478,7 @@ export default function ThirdPartyResources()
 
 ThirdPartyResources.getLayout = function getLayout(page) {
     return (
-        <Layout>
+        <Layout title="THIRD_PARTY_RESOURCES">
         {page}
         </Layout>
     )

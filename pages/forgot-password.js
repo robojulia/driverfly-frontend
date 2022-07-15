@@ -105,7 +105,7 @@ export default function Forgot() {
 }
 Forgot.getLayout = function getLayout(page) {
   return (
-    <Layout>
+    <Layout title="FORGOT_PASSWORD">
       {page}
     </Layout>
   )

@@ -1,0 +1,141 @@
+import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
+import { Col, Row, Table } from "reactstrap";
+import { useRouter } from "next/router"
+import React, { useEffect, useState } from 'react'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import { useTranslation } from "../../../../../hooks/useTranslation";
+
+
+import {EyeFill, PenFill, TrashFill} from 'react-bootstrap-icons';
+
+
+import LocationApi from "../../../../api/location";
+import { LocationEntity } from "../../../../../models/company/location.entity";
+import { useAuth } from "../../../../../hooks/useAuth";
+import PageLayout from "../../../../../components/layouts/PageLayout";
+import { useEffectAsync } from "../../../../../utils/react";
+import { Button, ButtonGroup } from "react-bootstrap";
+import ViewDataTable from "../../../../../components/viewDetails/viewDataTable";
+import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
+import Link from "next/link";
+
+export default function LocationList() {
+
+  const router = useRouter();
+  const { t } = useTranslation();
+
+  const { user, hasPermission } = useAuth();
+
+  const [ locations, setLocations ] = useState([]);
+
+  useEffectAsync(async () => {
+    try {
+      const api = new LocationApi();
+
+      const v = await api.list();
+
+      setLocations(v);
+    } catch (e) {
+      globalAjaxExceptionHandler(e, { t: t, toast: toast });
+    }
+  }, [ user ]);
+
+  /**
+   * 
+   * @param {React.MouseEvent} e 
+   */
+   const onAddClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    router.push(`${router.asPath}/create`);
+  }
+
+  const onEditClick = (id: number) => {
+    router.push(`${router.asPath}/${id}/edit`);
+  }
+
+  const onViewClick = (id: number) => {
+    router.push(`${router.asPath}/${id}`);
+  }
+
+  const onDeleteClick = async (id: number) => {
+     try {
+      const api = new LocationApi();
+
+      await api.remove(id);
+
+      setLocations(locations.filter(v => v.id != name));
+     } catch (e) {
+       globalAjaxExceptionHandler(e, { t: t, toast: toast });
+     }
+  }
+
+  const canCreate = hasPermission("CanCreateLocation");
+
+
+  return (
+    <PageLayout
+      title="TERMINALS"
+      actions={(<ButtonGroup>
+        {canCreate &&
+          <Button onClick={onAddClick}>
+            + {t("CREATE")}
+          </Button>
+        }
+      </ButtonGroup>)}
+    >
+      <ViewDataTable<LocationEntity>
+        columns={[
+          {
+            name: "STREET",
+            selector: v => v.street,
+            cell: v => <Link href={`${router.asPath}/${v.id}`}><a>{v.street}</a></Link>,
+            hidable: false,
+          },
+          {
+            name: "CITY",
+            selector: v => v.city,
+          },
+          {
+            name: "STATE",
+            selector: v => v.state,
+          },
+          {
+            name: "ZIP_CODE",
+            selector: v => v.zip_code,
+          },
+        ]}
+        actions={l => ([
+          {
+              onClick: e => onViewClick(l.id),
+              icon: EyeFill,
+              label: "VIEW",
+              hide: !hasPermission("CanViewLocation")
+          },
+          {
+              onClick: e => onEditClick(l.id),
+              icon: PenFill,
+              label: "EDIT",
+              hide: !hasPermission("CanUpdateLocation")
+          },
+          {
+              onClick: e => onDeleteClick(l.id),
+              icon: TrashFill,
+              label: "DELETE",
+              hide: !hasPermission("CanDeleteLocation")
+          }
+        ])}
+        items={locations}
+        />
+    </PageLayout>
+  )
+};
+
+LocationList.getLayout = function getLayout(page) {
+  return (
+    <FullLayout>
+      {page}
+    </FullLayout>
+  )
+}

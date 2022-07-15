@@ -1,7 +1,7 @@
 import { DocumentEntity } from "../documents/document.entity";
 import * as yup from "yup";
 import { useTranslation } from "../../hooks/useTranslation";
-import { compact } from "lodash";
+import { Status } from "../../enums/status.enum";
 
 export class CompanyEntity {
 
@@ -11,6 +11,9 @@ export class CompanyEntity {
   website?: string;
   photo?: DocumentEntity;
 
+  status?: Status;
+
+  parent?: CompanyEntity;
   children?: CompanyEntity[];
 
   static yupSchema() {

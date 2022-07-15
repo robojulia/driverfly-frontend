@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../hooks/useTranslation";
 import { Row } from "react-bootstrap";
@@ -10,84 +9,52 @@ import UserApi from "../../../pages/api/user";
 import { formSuccess } from "../../../utils/toast";
 import { toast } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
+import { BaseFormProps } from "./BaseFormProps";
+import { useEffect } from "react";
 
 
+export interface UserFormProps extends BaseFormProps<UserEntity> {
+}
 
-/**
- * 
- * @param {object} props 
- * @param {number} props.id
- * @param {UserEntity} props.user
- * @param {string} props.className
- * @param {(UserEntity) => void} props.onSaveComplete
- * @param {(Error) => void} props.onSaveError
- * @param {(Error) => void} props.onLoadError
- * @returns 
- */
-export function UserForm(props) {
+export function UserForm(props: UserFormProps) {
     const { t } = useTranslation();
-    let { className, id, user, onSaveComplete, onSaveError, onLoadError } = props;
-
-    if (!user) user = new UserEntity();
-
-    if (!id) id = user?.id;
+    let { className, entity, onSaveComplete, onSaveError } = props;
 
     const form = useFormik({
-        initialValues: user,
+        initialValues: new UserEntity(),
         validationSchema: UserEntity.yupSchema(),
         onSubmit: async (dto) => {
             const api = new UserApi();
             try {
                 let user = null;
-                if (id) {
-                    user = await api.update(id, dto);
+                if (entity?.id) {
+                    user = await api.update(entity.id, dto);
                 }
                 else {
                     user = await api.create(dto);
                 }
-                formSuccess(t, !!id ? "update" : "create", "USER");
+                formSuccess(t, !!entity?.id ? "update" : "create", "USER");
                 if (onSaveComplete) onSaveComplete(user);
             }
             catch (e) {
                 console.error("Unable to save entity", e.response);
                 globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SIGNUP" });
-                // if (e?.response?.data?.email == "EMAIL_ALREADY_EXISTS") {
-                //     globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SIGNUP" });
-
-                // }
-                // else {
-                //     formFailed(t, !!id ? "update" : "create", "USER");
-                // }
 
                 if (onSaveError) onSaveError(e);
             }
         },
     });
 
-    useEffect(async () => {
-        if (id && !user.id) {
-            const api = new UserApi();
-
-            const entity = await api.findById(id);
-            if (!entity) {
-                toast.error(t("UNABLE_TO_FIND_{name}", { name: "USER" }, { translateProps: true }));
-                if (onLoadError) onLoadError();
-                return;
-            }
-
-            form.initialValues = {
-                ...form.initialValues,
-                ...entity
-            };
-            form.setValues(entity);
-        }
-    }, [id]);
+    useEffect(() => {
+        form.setValues(entity);
+    }, [ entity ])
 
     return (
         <EntityForm
             className={className}
             onSubmit={form.handleSubmit}
-            id={id}
+            formik={form}
+            id={entity?.id}
         >
             <Row className="mt-2">
                 <BaseInput
@@ -126,9 +93,9 @@ export function UserForm(props) {
                     required
                     placeholder
                     formik={form}
-                    readOnly={!!id}
+                    readOnly={!!entity?.id}
                 />
-                {!id &&
+                {!entity?.id &&
                     <BaseInput
                         className="col-12 mt-1"
                         label="PASSWORD"

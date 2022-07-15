@@ -35,12 +35,10 @@ import ApplicantApi from "../../../../api/applicant";
 import DocumentApi from "../../../../api/document";
 import ChildPageLayout from "../../../../../components/layouts/ChildPageLayout";
 
-export default function ViewApplicant() {
+export default function ViewApplicant({ id }) {
     const router = useRouter();
 
     const { t } = useTranslation();
-
-    let { id } = router.query;
 
     const { hasPermission } = useAuth();
 
@@ -453,4 +451,19 @@ ViewApplicant.getLayout = function getLayout(page) {
             {page}
         </FullLayout>
     )
+}
+
+export async function getServerSideProps(context) {
+    try {
+        const id = +context.params?.id;
+        if (!id)
+            return { notFound: true }
+
+        return {
+            props: { id: id }
+        }
+    } catch (error) {
+        console.error("ViewApplicant error:", error);
+        return { props: { id: null } }
+    }
 }

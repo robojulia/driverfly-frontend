@@ -1,7 +1,18 @@
 import React from 'react'
-import BaseControl from './BaseControl';
+import BaseControl, { BaseControlProps } from './BaseControl';
 
-function BaseRange ( { valueSuffix, formik, prepend, append, required, className, label, handleBlur, min, max, placeholder, value, onChange, readOnly, name, touched, error, } ) {
+export interface BaseRangeProps extends BaseControlProps {
+  valueSuffix?: string;
+
+  handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  min?: string | number;
+  max?: string | number;
+  value?: any;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  readOnly?: boolean;
+}
+
+export default function BaseRange ( { valueSuffix, formik, prepend, append, required, className, label, handleBlur, min, max, value, onChange, readOnly, name, touched, error, }: BaseRangeProps ) {
   if (formik) {
     /**
      * @type {import('formik').FieldMetaProps}
@@ -44,5 +55,3 @@ function BaseRange ( { valueSuffix, formik, prepend, append, required, className
     </BaseControl>
   );
 }
-
-export default BaseRange

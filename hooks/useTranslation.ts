@@ -9,7 +9,7 @@ import { i18n } from "../next.config";
 import translations_EN_US from "../public/assets/locales/en-us/translation.json";
 
 export interface TranslateInterface {
-    (name: string, props?: { [key: string]: string }, options?: { translateProps: boolean }): string;
+    (name: string, props?: { [key: string]: string|number }, options?: { translateProps: boolean }): string;
     ready: boolean;
 }
 
@@ -58,7 +58,7 @@ export function useTranslation (ns?: string) {
                 Object
                     .entries(props)
                     .forEach(([key, value]) => {
-                        translatedText = translatedText.replace(new RegExp("{{" + key+ "}}", "gm"), options?.translateProps ? t(value) : value);
+                        translatedText = translatedText.replace(new RegExp("{{" + key+ "}}", "gm"), options?.translateProps ? t(`${value}`) : value);
                     });
             }
         }

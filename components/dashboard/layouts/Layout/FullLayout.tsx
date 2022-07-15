@@ -6,7 +6,7 @@ import Head from "next/head";
 import Scripts from "../../../scripts";
 
 import { useTranslation } from "../../../../hooks/useTranslation";
-import {TelephoneFill,  Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, CheckSquareFill, GiftFill, GearFill, EnvelopeFill, PeopleFill } from 'react-bootstrap-icons';
+import {TelephoneFill,  Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, CheckSquareFill, GiftFill, GearFill, EnvelopeFill, PeopleFill, Hospital } from 'react-bootstrap-icons';
 import CompanyProfileNav from "../header/CompanyProfileNav";
 import { useAuth } from "../../../../hooks/useAuth";
 
@@ -63,6 +63,13 @@ const FullLayout = ({ children }) => {
             icon: Building,
             text: "company",
             permissions: "CanViewCompany",
+        },
+        {
+          pathname: "/dashboard/company/settings/companies",
+          icon: Hospital,
+          text: "COMPANIES",
+          permissions: "CanViewCompany",
+          startsWith: true
         },
         {
             pathname: "/dashboard/company/settings/users",

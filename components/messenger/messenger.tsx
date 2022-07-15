@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Navbar, Row } from "react-bootstrap";
 import { Plus } from "react-bootstrap-icons";
 import { ChattableType } from "../../enums/conversation/chattable-type.enum";
+import { useAuth } from "../../hooks/useAuth";
 import { useTranslation } from "../../hooks/useTranslation";
 import { ConversationEntity, CreateConversationDto } from "../../models/conversation/conversation.entity";
 import { ConversationApi } from "../../pages/api/conversation";
@@ -21,6 +22,8 @@ export function Messenger(props) {
 
     const { t } = useTranslation();
 
+    const { user } = useAuth();
+
     const [conversations, setConversations] = useState<ConversationEntity[]>([]);
 
     const [conversation, setConversation] = useState<ConversationEntity>(new ConversationEntity());
@@ -30,7 +33,7 @@ export function Messenger(props) {
         const c = await api.list();
 
         setConversations(c);
-    }, []);
+    }, [ user ]);
 
     // useEffect(() => {
     //     if (!conversation.id && conversations.length > 0) onConversationClick(conversations[0]);

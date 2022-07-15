@@ -46,7 +46,7 @@ export default function ViewDetails(props: ViewDetailProps) {
                 }
                 if (isListValue(value))
                     return resolveValue(value.text);
-                return null;
+                return value;
             default: return value?.toString();
         }
 

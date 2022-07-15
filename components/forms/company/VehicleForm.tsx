@@ -20,75 +20,59 @@ import BaseInput from "../BaseInput";
 import FileInput from "../FileInput";
 import BaseTextArea from "../BaseTextArea";
 import EntityForm from "../../layouts/EntityForm";
+import { BaseFormProps } from "./BaseFormProps";
+import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 
-/**
- * 
- * @param {object} props 
- * @param {number} props.id
- * @param {VehicleEntity} props.vehicle
- * @param {string} props.className
- * @param {(VehicleEntity) => void} props.onSaveComplete
- * @param {(Error) => void} props.onSaveError
- * @param {(Error) => void} props.onLoadError
- * @returns 
- */
-export function VehicleForm(props) {
+export interface VehicleFormProps extends BaseFormProps<VehicleEntity> {
+
+}
+
+export function VehicleForm(props: VehicleFormProps) {
     const { t } = useTranslation();
-    let { className, id, vehicle, onSaveComplete, onSaveError, onLoadError } = props;
+    let { className, entity, onSaveComplete, onSaveError } = props;
 
-    if (!vehicle) vehicle = new VehicleEntity();
-
-    if (!id) id = vehicle?.id;
+    const action = !!entity?.id ? "Forms.UPDATED" : "Forms.CREATED";
 
     const form = useFormik({
-        initialValues: vehicle,
+        initialValues: new VehicleEntity(),
         validationSchema: VehicleEntity.yupSchema(),
         onSubmit: async (dto) => {
-            dto.max_speed = parseInt(dto.max_speed)
+            if (dto.max_speed)
+                dto.max_speed = +dto.max_speed;
+
             const api = new VehicleApi();
             try {
                 let vehicle = null;
-                if (id) {
-                    vehicle = await api.update(id, dto);
+                if (entity?.id) {
+                    vehicle = await api.update(entity.id, dto);
                 }
                 else {
                     vehicle = await api.create(dto);
                 }
-                toast.success(t("Forms.SUCCESS_{action}_{name}", { action: !!id ? "Forms.UPDATED" : "Forms.CREATED", name: "VEHICLE" }, { translateProps: true }));
+                toast.success(t("Forms.SUCCESS_{action}_{name}", { action: action, name: "VEHICLE" }, { translateProps: true }));
                 if (onSaveComplete) onSaveComplete(vehicle);
             }
             catch (e) {
                 console.error("Unable to save entity", e);
-                toast.error(t("Forms.FAIL_{action}_{name}", { action: !!id ? "Forms.UPDATED" : "Forms.CREATED", name: "VEHICLE" }, { translateProps: true }));
+                globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: t("Forms.FAIL_{action}_{name}", { action: action, name: "VEHICLE" }, { translateProps: true })});
                 if (onSaveError) onSaveError(e);
             }
         },
     });
 
-    useEffect(async () => {
-        if (id && !vehicle.id) {
-            const api = new VehicleApi();
-
-            const entity = await api.getById(id);
-            if (!entity) {
-                toast.error(t("UNABLE_TO_FIND_{name}", { name: "VEHICLE" }, { translateProps: true }));
-                if (onLoadError) onLoadError();
-                return;
-            }
-
-            form.initialValues = {
-                ...form.initialValues,
-                ...entity
-            };
+    useEffect(() => {
+        if (entity)
             form.setValues(entity);
-        }
-    }, [ id ]);
+    }, [ entity ]);
+
+    // console.log("Rendering VehicleForm");
 
     return (
         <EntityForm
             className={className}
             onSubmit={form.handleSubmit}
-            id={id}
+            id={entity?.id}
+            formik={form}
             >
             <Row className="mt-2">
                 <BaseSelect
@@ -192,7 +176,7 @@ export function VehicleForm(props) {
                     label="OTHER"
                     name="accessory_other"
                     required
-                    rows="3"
+                    rows={3}
                     placeholder="ACCESSORIES"
                     formik={form}
                     />

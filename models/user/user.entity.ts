@@ -12,8 +12,9 @@ export class UserEntity {
     name?: string;
     first_name?: string;
     last_name?: string;
+    password?: string;
     enabled_notifications?: boolean;
-    status: Status;
+    status?: Status;
     roles?: RoleEntity[];
     theme_color?: boolean;
     swipe_actions?: boolean;
@@ -38,6 +39,10 @@ export class UserEntity {
             cell_number: yup.string().nullable(),
             timezone: yup.string().nullable(),
             language: yup.string().nullable(),
+            password: yup.string().when("id", {
+                is: v => !v,
+                then: yup.string().required().nullable()
+            }).nullable()
         });
     }
 }

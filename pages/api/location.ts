@@ -12,6 +12,11 @@ export default class LocationApi extends BaseApi {
 
         return data;
     }
+    async findById(id: number): Promise<LocationEntity> {
+        const { data } = await this.get(`${this.baseUrl}/${id}`);
+
+        return data;
+    }
     async create (entity: LocationEntity): Promise<LocationEntity> {
         const { data } = await this.post(this.baseUrl, entity);
 

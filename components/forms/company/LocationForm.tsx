@@ -1,8 +1,12 @@
+import { toast } from 'react-toastify';
+
 import { useFormik } from "formik";
 import { useTranslation } from "../../../hooks/useTranslation";
-import { toast } from 'react-toastify'
 import { useEffect } from "react";
+
 import { Row } from "react-bootstrap";
+
+import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 
 import BaseInput from "../BaseInput";
 import EntityForm from "../../layouts/EntityForm";
@@ -10,74 +14,51 @@ import StateSelect from "../StateSelect";
 
 import { LocationEntity } from "../../../models/company/location.entity";
 import LocationApi from "../../../pages/api/location";
+import { BaseFormProps } from "./BaseFormProps";
 
-/**
- * 
- * @param {object} props 
- * @param {number} props.id
- * @param {LocationEntity} props.location
- * @param {string} props.className
- * @param {(LocationEntity) => void} props.onSaveComplete
- * @param {(Error) => void} props.onSaveError
- * @param {(Error) => void} props.onLoadError
- * @returns 
- */
-export function LocationForm(props) {
+export interface LocationFormProps extends BaseFormProps<LocationEntity> {
+
+}
+
+export function LocationForm(props: LocationFormProps) {
     const { t } = useTranslation();
-    let { className, id, location, onSaveComplete, onSaveError, onLoadError } = props;
-
-    if (!location) location = new LocationEntity();
-
-    if (!id) id = location?.id;
+    let { className, entity, onSaveComplete, onSaveError } = props;
 
     const form = useFormik({
-        initialValues: location,
+        initialValues: new LocationEntity(),
         validationSchema: LocationEntity.yupSchema(),
         onSubmit: async (dto) => {
             const api = new LocationApi();
             try {
                 let location = null;
-                if (id) {
-                    location = await api.update(id, dto);
+                if (entity?.id) {
+                    location = await api.update(entity.id, dto);
                 }
                 else {
                     location = await api.create(dto);
                 }
-                toast.success(t("Forms.SUCCESS_{action}_{name}", { action: !!id ? "Forms.UPDATED" : "Forms.CREATED", name: "LOCATION" }, { translateProps: true }));
+                toast.success(t("Forms.SUCCESS_{action}_{name}", { action: !!entity?.id ? "Forms.UPDATED" : "Forms.CREATED", name: "TERMINAL" }, { translateProps: true }));
                 if (onSaveComplete) onSaveComplete(location);
             }
             catch (e) {
                 console.error("Unable to save entity", e);
-                toast.error(t("Forms.FAIL_{action}_{name}", { action: !!id ? "Forms.UPDATED" : "Forms.CREATED", name: "LOCATION" }, { translateProps: true }));
+                globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast, defaultMessage: t("Forms.FAIL_{action}_{name}", { action: !!entity?.id ? "Forms.UPDATED" : "Forms.CREATED", name: "TERMINAL" }, { translateProps: true })});
                 if (onSaveError) onSaveError(e);
             }
         },
     });
 
-    useEffect(async () => {
-        if (id && !location.id) {
-            const api = new LocationApi();
-
-            const entity = await api.getById(id);
-            if (!entity) {
-                toast.error(t("UNABLE_TO_FIND_{name}", { name: "LOCATION" }, { translateProps: true }));
-                if (onLoadError) onLoadError();
-                return;
-            }
-
-            form.initialValues = {
-                ...form.initialValues,
-                ...entity
-            };
+    useEffect(() => {
+        if (entity)
             form.setValues(entity);
-        }
-    }, [ id ]);
+    }, [ entity ]);
 
     return (
         <EntityForm
             className={className}
             onSubmit={form.handleSubmit}
-            id={id}
+            id={entity?.id}
+            formik={form}
             >
             <Row className="mt-2">
                 <BaseInput

@@ -1,7 +1,19 @@
+import { ReactNode } from "react";
 import { OverlayTrigger, Popover, Tooltip } from "react-bootstrap";
 import { useTranslation } from "../../hooks/useTranslation";
 
-export default function OverlyPopover(props) {
+export interface OverlyPopoverProps {
+    str?: string;
+    skipTranslate?: boolean;
+    labelPrefix?: string;
+    header?: string|ReactNode;
+    icon?: ReactNode;
+    slice_at?: number;
+
+    readonly children?: string | React.ReactChildren | React.ReactChild;
+}
+
+export default function OverlyPopover(props: OverlyPopoverProps) {
     const { t } = useTranslation();
     if (!props.str) {
         return <></>

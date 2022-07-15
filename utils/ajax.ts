@@ -36,7 +36,7 @@ function isInternalErrorMessage(obj: unknown): obj is InternalErrorMessage {
         && Object.prototype.hasOwnProperty.call(obj, "error");
 }
 
-function globalAjaxExceptionHandler(error: AjaxError, interfaces: { formik: FormikInterface<any>, t: TranslateInterface, defaultMessage?: string, toast?: ToastInterface }) {
+function globalAjaxExceptionHandler(error: AjaxError, interfaces: { formik?: FormikInterface<any>, t: TranslateInterface, defaultMessage?: string, toast?: ToastInterface }) {
     if (!error) return true;
 
     const { formik, toast, t, defaultMessage } = interfaces;

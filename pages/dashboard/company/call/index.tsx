@@ -144,7 +144,8 @@ export default function Call() {
                         actions={applicant => ([
                             {
                                 onClick: e => openCallDialog(applicant),
-                                label: (<><TelephoneFill />  {t("MAKE_CALL")}</>)
+                                icon: TelephoneFill,
+                                label: "MAKE_CALL"
                             },
                         ])}
                         items={applicants}

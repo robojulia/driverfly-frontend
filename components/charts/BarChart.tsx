@@ -5,6 +5,7 @@ import { useTranslation } from "../../hooks/useTranslation";
 import { useEffectAsync } from "../../utils/react";
 import { Button } from "react-bootstrap";
 import { ArrowClockwise } from "react-bootstrap-icons";
+import { useAuth } from "../../hooks/useAuth";
 
 export interface BarChartProps {
     title: string;
@@ -18,6 +19,8 @@ export function BarChart(props: BarChartProps): JSX.Element {
 
     const { t } = useTranslation();
 
+    const { user } = useAuth();
+
     const [ data, setData ] = useState<number[]>([]);
 
 
@@ -28,7 +31,7 @@ export function BarChart(props: BarChartProps): JSX.Element {
         setData(data);
     };
 
-    useEffectAsync(refreshData, []);
+    useEffectAsync(refreshData, [ user ]);
 
     return (
     <ViewCard

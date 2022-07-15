@@ -139,11 +139,7 @@ export default function FindSchools(props) {
                 applyFilters: fetchSchools
             },
         }}>
-            <Head>
-                <title>CDL Schools</title>
-            </Head>
-
-            <div className="top-links-sec">
+           <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
                         <h2>Get Your CDL</h2>
@@ -258,7 +254,7 @@ export async function getServerSideProps(context) {
 
 FindSchools.getLayout = function getLayout(page) {
     return (
-        <Layout>
+        <Layout title="find_school">
             {page}
         </Layout>
     )
