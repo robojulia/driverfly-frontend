@@ -4,7 +4,7 @@ import style from '../../../public/dashboard/styles/css/Driver/dashboard.module.
 import { useState } from "react";
 import Link from 'next/link';
 
-import PageLayout from "../../../components/layouts/PageLayout";
+import PageLayout from "../../../components/layouts/page/PageLayout";
 import { useTranslation } from "../../../hooks/useTranslation";
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
 import ApplicantApi from "../../api/applicant";

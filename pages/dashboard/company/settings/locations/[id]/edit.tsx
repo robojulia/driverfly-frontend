@@ -7,7 +7,7 @@ import { useEffectAsync } from "../../../../../../utils/react";
 import { useAuth } from "../../../../../../hooks/useAuth";
 
 import FullLayout from "../../../../../../components/dashboard/layouts/Layout/FullLayout";
-import ChildPageLayout from "../../../../../../components/layouts/ChildPageLayout";
+import ChildPageLayout from "../../../../../../components/layouts/page/ChildPageLayout";
 
 import { LocationForm } from "../../../../../../components/forms/company/LocationForm";
 import { LocationEntity } from "../../../../../../models/company/location.entity";

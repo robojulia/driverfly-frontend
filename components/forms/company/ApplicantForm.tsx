@@ -14,7 +14,7 @@ import { Button, Col, Row, Table } from "react-bootstrap";
 import { ChevronUp, DashCircle, PlusCircle, XCircle } from "react-bootstrap-icons";
 
 import { BaseFormProps } from "./BaseFormProps";
-import EntityForm from "../../layouts/EntityForm";
+import EntityForm from "../../layouts/page/EntityForm";
 import ViewCard from "../../viewDetails/viewCard";
 import BaseCheckList from "../BaseCheckList";
 import BaseInput from "../BaseInput";

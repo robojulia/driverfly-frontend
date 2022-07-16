@@ -7,7 +7,7 @@ import { useTranslation } from "../../../../../hooks/useTranslation";
 import { useEffectAsync } from "../../../../../utils/react";
 
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
-import ChildPageLayout from "../../../../../components/layouts/ChildPageLayout";
+import ChildPageLayout from "../../../../../components/layouts/page/ChildPageLayout";
 import { JobForm } from "../../../../../components/forms/company/JobForm";
 
 import JobApi from "../../../../api/job";

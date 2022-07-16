@@ -1,4 +1,4 @@
-import ChildPageLayout from "../../../../components/layouts/ChildPageLayout";
+import ChildPageLayout from "../../../../components/layouts/page/ChildPageLayout";
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
 import { Col, ProgressBar, Row, Table, InputGroup } from "react-bootstrap";
 import { toast } from "react-toastify";

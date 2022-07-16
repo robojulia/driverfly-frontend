@@ -3,7 +3,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import FullLayout from "../../../../../../components/dashboard/layouts/Layout/FullLayout";
 import { UserForm } from "../../../../../../components/forms/company/UserForm";
-import ChildPageLayout from "../../../../../../components/layouts/ChildPageLayout";
+import ChildPageLayout from "../../../../../../components/layouts/page/ChildPageLayout";
 import { useTranslation } from "../../../../../../hooks/useTranslation";
 import { UserEntity } from "../../../../../../models/user/user.entity";
 import { useEffectAsync } from "../../../../../../utils/react";

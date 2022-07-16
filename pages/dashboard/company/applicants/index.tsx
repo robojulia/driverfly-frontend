@@ -23,7 +23,7 @@ import ShowEnumFromString from "../../../../components/enum-filters/show-enum-fr
 import * as numbers from "../../../../utils/number";
 import { Button, ButtonGroup } from "react-bootstrap";
 
-import PageLayout from "../../../../components/layouts/PageLayout";
+import PageLayout from "../../../../components/layouts/page/PageLayout";
 import { useEffectAsync } from "../../../../utils/react";
 import ViewDataTable from "../../../../components/viewDetails/viewDataTable";
 import { ApplicantJobEntity } from "../../../../models/applicant/applicant-job.entity";

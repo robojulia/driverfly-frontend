@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
-import { useTranslation } from "../../hooks/useTranslation";
-import { FormikInterface } from "../../utils/formik";
+import { useTranslation } from "../../../hooks/useTranslation";
+import { FormikInterface } from "../../../utils/formik";
 
 export interface EntityFormProps {
     id?: number;

@@ -14,7 +14,7 @@ import { VehicleType } from "../../../../../enums/vehicles/vehicle-type.enum";
 import { VehicleTrailerType } from "../../../../../enums/vehicles/vehicle-trailer-type.enum";
 import { VehicleAccessory } from "../../../../../enums/vehicles/vehicle-accessory.enum";
 import { VehicleEntity } from "../../../../../models/company/vehicle.entity";
-import PageLayout from "../../../../../components/layouts/PageLayout";
+import PageLayout from "../../../../../components/layouts/page/PageLayout";
 import { ButtonGroup, Button, Col, Row, Table } from "react-bootstrap";
 import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
 import { useEffectAsync } from "../../../../../utils/react";

@@ -2,7 +2,7 @@
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
 import React from "react";
 
-import PageLayout from "../../../../components/layouts/PageLayout";
+import PageLayout from "../../../../components/layouts/page/PageLayout";
 
 import { ApplicantApi } from "../../../api/applicant";
 

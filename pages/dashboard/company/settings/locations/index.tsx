@@ -13,7 +13,7 @@ import {EyeFill, PenFill, TrashFill} from 'react-bootstrap-icons';
 import LocationApi from "../../../../api/location";
 import { LocationEntity } from "../../../../../models/company/location.entity";
 import { useAuth } from "../../../../../hooks/useAuth";
-import PageLayout from "../../../../../components/layouts/PageLayout";
+import PageLayout from "../../../../../components/layouts/page/PageLayout";
 import { useEffectAsync } from "../../../../../utils/react";
 import { Button, ButtonGroup } from "react-bootstrap";
 import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";

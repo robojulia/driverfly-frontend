@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Layout from "../components/layouts";
+import { PublicLayout } from "../components/layouts/PublicLayout";
 import { Accordion } from 'react-bootstrap';
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 
@@ -109,8 +109,8 @@ export default function FAQ() {
 }
 FAQ.getLayout = function getLayout(page) {
     return (
-        <Layout title="FAQ">
+        <PublicLayout title="FAQ">
             {page}
-        </Layout>
+        </PublicLayout>
     )
 }

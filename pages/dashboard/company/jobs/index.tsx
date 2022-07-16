@@ -5,7 +5,7 @@ import React from "react";
 
 import { PenFill, TrashFill, Eye, EyeFill } from 'react-bootstrap-icons';
 
-import PageLayout from "../../../../components/layouts/PageLayout";
+import PageLayout from "../../../../components/layouts/page/PageLayout";
 
 import JobApi from "../../../api/job";
 import { JobEntity } from "../../../../models/job/job.entity";

@@ -6,7 +6,7 @@ import { useAuth } from "../../../../hooks/useAuth";
 import { useTranslation } from "../../../../hooks/useTranslation";
 import UserApi from "../../../api/user";
 import { Row, Col, Button } from "react-bootstrap";
-import PageLayout from "../../../../components/layouts/PageLayout";
+import PageLayout from "../../../../components/layouts/page/PageLayout";
 import { UserPreferenceEntity } from "../../../../models/user/user-preference.entity"
 
 import * as yup from "yup";
@@ -28,6 +28,7 @@ import BaseInput from "../../../../components/forms/BaseInput";
 import { preventNegative } from "../../../../utils/input";
 import { JobPayMethod } from "../../../../enums/jobs/job-pay-method.enum";
 import { JobBenefits } from "../../../../enums/jobs/job-benefits.enum";
+import { useEffectAsync } from "../../../../utils/react";
 
 export default function Matching() {
     const { user } = useAuth();
@@ -41,43 +42,43 @@ export default function Matching() {
                 category: UserPreferenceCategory.MATCHING,
                 label: UserPreferenceMatchingLabel.GEOGRAPHY,
                 value: [],
-            },
+            } as UserPreferenceEntity,
             schedule: {
                 ...new UserPreferenceEntity(),
                 category: UserPreferenceCategory.MATCHING,
                 label: UserPreferenceMatchingLabel.SCHEDULE,
                 value: [],
-            },
+            } as UserPreferenceEntity,
             employment_type: {
                 ...new UserPreferenceEntity(),
                 category: UserPreferenceCategory.MATCHING,
                 label: UserPreferenceMatchingLabel.EMPLOYMENT_TYPE,
                 value: [],
-            },
+            } as UserPreferenceEntity,
             team_drivers: {
                 ...new UserPreferenceEntity(),
                 category: UserPreferenceCategory.MATCHING,
                 label: UserPreferenceMatchingLabel.TEAM_DRIVERS,
                 value: [],
-            },
+            } as UserPreferenceEntity,
             min_pay: {
                 ...new UserPreferenceEntity(),
                 category: UserPreferenceCategory.MATCHING,
                 label: UserPreferenceMatchingLabel.MIN_PAY,
                 value: 0,
-            },
+            } as UserPreferenceEntity,
             pay_method: {
                 ...new UserPreferenceEntity(),
                 category: UserPreferenceCategory.MATCHING,
                 label: UserPreferenceMatchingLabel.PAY_METHOD,
                 value: [],
-            },
+            } as UserPreferenceEntity,
             benefits: {
                 ...new UserPreferenceEntity(),
                 category: UserPreferenceCategory.MATCHING,
                 label: UserPreferenceMatchingLabel.BENEFITS,
                 value: [],
-            },
+            } as UserPreferenceEntity,
         },
         validationSchema: yup.object({
             geography: UserPreferenceEntity.yupSchema(),
@@ -117,7 +118,7 @@ export default function Matching() {
         }
     });
 
-    useEffect(async () => {
+    useEffectAsync(async () => {
         if (user && user.id) {
             const api = new UserApi();
 
@@ -125,7 +126,7 @@ export default function Matching() {
 
             populateForm(preferences);
         }
-    }, []);
+    }, [ user ]);
 
     /**
      * 

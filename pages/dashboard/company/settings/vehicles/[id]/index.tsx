@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Col, Row } from "react-bootstrap";
 import { Pencil } from "react-bootstrap-icons";
 
 import FullLayout from "../../../../../../components/dashboard/layouts/Layout/FullLayout";
-import ChildPageLayout from "../../../../../../components/layouts/ChildPageLayout";
+import ChildPageLayout from "../../../../../../components/layouts/page/ChildPageLayout";
 import ViewDetails from "../../../../../../components/viewDetails/viewDetails";
 import { DeleteButton } from "../../../../../../components/buttons/DeleteButton";
 

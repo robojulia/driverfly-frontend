@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 
 // layouts
 import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
-import PageLayout from "../../../../components/layouts/PageLayout";
+import PageLayout from "../../../../components/layouts/page/PageLayout";
 
 // hooks
 import { useAuth } from '../../../../hooks/useAuth';
@@ -58,7 +58,7 @@ export default function Profile() {
     }
   });
 
-  useEffect(async () => {
+  useEffect(() => {
     form.setValues({
       first_name: user.first_name,
       last_name: user.last_name,
@@ -68,7 +68,7 @@ export default function Profile() {
       timezone: user.timezone,
       language: user.language,
     });
-  }, [ ]);
+  }, [ user ]);
 
   return (
     <PageLayout title="MY_ACCOUNT">

@@ -3,7 +3,6 @@ import { useState } from "react"
 import JobApply from "../../../../components/apply"
 import JobDescription from '../../../../components/job-description/JobDescription'
 import JonInformation from '../../../../components/job-information-sidebar/JobInformation'
-import Layout from "../../../../components/layouts"
 import RelatedJobs from '../../../../components/related-jobs/Related-Jobs'
 import SocilShare from '../../../../components/share-link/ShareLink'
 import timeSince from "../../../../utils/timeSince"

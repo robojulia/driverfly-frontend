@@ -6,7 +6,7 @@ import { useTranslation } from "../../../../../../hooks/useTranslation";
 import { useEffectAsync } from "../../../../../../utils/react";
 
 import FullLayout from "../../../../../../components/dashboard/layouts/Layout/FullLayout";
-import ChildPageLayout from "../../../../../../components/layouts/ChildPageLayout";
+import ChildPageLayout from "../../../../../../components/layouts/page/ChildPageLayout";
 import { CompanyForm } from "../../../../../../components/forms/company/CompanyForm";
 
 import { CompanyEntity } from "../../../../../../models/company/company.entity";

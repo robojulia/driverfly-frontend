@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Layout from "../components/layouts";
+import { PublicLayout } from "../components/layouts/PublicLayout";
 import Blog from '../public/css/Blog.module.css'
 import BlogSidebar from '../components/blog-sidebar/Blog-Sidebar';
 import { ArrowRight, Chat, Clock } from 'react-bootstrap-icons';
@@ -80,8 +80,8 @@ export default function Blogs() {
 }
 Blogs.getLayout = function getLayout(page) {
     return (
-        <Layout title="blog">
+        <PublicLayout title="blog">
             {page}
-        </Layout>
+        </PublicLayout>
     )
 }

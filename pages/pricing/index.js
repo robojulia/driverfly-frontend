@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Layout from "../../components/layouts";
+import { PublicLayout } from "../../components/layouts/PublicLayout";
 import Pric from '../../public/css/Pricing.module.css'
 import MonthlyPricing from '../../components/pricing/monthly'
 import YearlyPricing from '../../components/pricing/yearly'
@@ -123,8 +123,8 @@ return (
 }
 Pricing.getLayout = function getLayout(page){
 return (
-<Layout>
+<PublicLayout>
    {page}
-</Layout>
+</PublicLayout>
 )
 }

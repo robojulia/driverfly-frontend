@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { StarFill, Link45deg, PhoneFlip, Mailbox2, Bell, ArrowRight } from 'react-bootstrap-icons';
-import Layout from '../../components/layouts';
+import { PublicLayout } from "../../components/layouts/PublicLayout";
 import CompanyInfo from '../../components/employer/CompanyInfo';
 import CompanyJob from '../../components/employer/CompanyJob';
 import ContactForm from '../../components/employer/ContactForm';
@@ -130,9 +130,9 @@ export async function getServerSideProps(context) {
 
 CompanyDetail.getLayout = function getLayout(page) {
   return (
-    <Layout>
+    <PublicLayout>
       {page}
-    </Layout>
+    </PublicLayout>
   )
 
 };

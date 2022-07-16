@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
-import Layout from "../components/layouts";
+import { PublicLayout } from "../components/layouts/PublicLayout";
 import resource from '../public/css/ThirdPartyResources.module.css'
 
 export default function ThirdPartyResources()
@@ -478,8 +478,8 @@ export default function ThirdPartyResources()
 
 ThirdPartyResources.getLayout = function getLayout(page) {
     return (
-        <Layout title="THIRD_PARTY_RESOURCES">
+        <PublicLayout title="THIRD_PARTY_RESOURCES">
         {page}
-        </Layout>
+        </PublicLayout>
     )
 }

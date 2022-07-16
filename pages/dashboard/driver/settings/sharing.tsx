@@ -6,7 +6,7 @@ import { useAuth } from "../../../../hooks/useAuth";
 import { useTranslation } from "../../../../hooks/useTranslation";
 import UserApi from "../../../api/user";
 import { Row, Col, Button } from "react-bootstrap";
-import PageLayout from "../../../../components/layouts/PageLayout";
+import PageLayout from "../../../../components/layouts/page/PageLayout";
 import { UserPreferenceEntity } from "../../../../models/user/user-preference.entity"
 
 import * as yup from "yup";
@@ -19,6 +19,7 @@ import BaseCheck from "../../../../components/forms/BaseCheck";
 import BaseCheckList from "../../../../components/forms/BaseCheckList";
 import BaseSelect from "../../../../components/forms/BaseSelect";
 import { UserPreferenceSharingLabel } from "../../../../enums/users/user-preference-sharing-label.enum";
+import { useEffectAsync } from "../../../../utils/react";
 
 export default function Sharing() {
     const { getUser } = useAuth();
@@ -34,25 +35,25 @@ export default function Sharing() {
                 category: UserPreferenceCategory.SHARING,
                 label: UserPreferenceSharingLabel.MVR,
                 value: SharePreference.NEVER,
-            },
+            } as UserPreferenceEntity,
             drivers_license: {
                 ...new UserPreferenceEntity(),
                 category: UserPreferenceCategory.SHARING,
                 label: UserPreferenceSharingLabel.DRIVERS_LICENSE,
                 value: SharePreference.NEVER,
-            },
+            } as UserPreferenceEntity,
             medical_card: {
                 ...new UserPreferenceEntity(),
                 category: UserPreferenceCategory.SHARING,
                 label: UserPreferenceSharingLabel.MEDICAL_CARD,
                 value: SharePreference.NEVER,
-            },
+            } as UserPreferenceEntity,
             employment_history: {
                 ...new UserPreferenceEntity(),
                 category: UserPreferenceCategory.SHARING,
                 label: UserPreferenceSharingLabel.EMPLOYMENT_HISTORY,
                 value: SharePreference.NEVER,
-            },
+            } as UserPreferenceEntity,
             physical: {
                 ...new UserPreferenceEntity(),
                 category: UserPreferenceCategory.SHARING,
@@ -96,7 +97,7 @@ export default function Sharing() {
         }
     });
 
-    useEffect(async () => {
+    useEffectAsync(async () => {
         if (user && user.id) {
             const api = new UserApi();
 
@@ -104,7 +105,7 @@ export default function Sharing() {
 
             populateForm(preferences);
         }
-    }, []);
+    }, [ user ]);
 
     /**
      * 

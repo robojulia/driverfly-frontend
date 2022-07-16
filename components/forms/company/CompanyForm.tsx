@@ -7,7 +7,7 @@ import { CompanyEntity } from "../../../models/company/company.entity";
 import CompanyApi from "../../../pages/api/company";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { formSuccess } from "../../../utils/toast";
-import EntityForm from "../../layouts/EntityForm";
+import EntityForm from "../../layouts/page/EntityForm";
 import BaseInput from "../BaseInput";
 import BaseTextArea from "../BaseTextArea";
 import FileInput from "../FileInput";
