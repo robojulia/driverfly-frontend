@@ -1,6 +1,6 @@
 
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 
 import { PenFill, TrashFill, Eye, EyeFill } from 'react-bootstrap-icons';
@@ -15,7 +15,7 @@ import { useRouter } from "next/router";
 import ShowEnumFromString from "../../../../components/enum-filters/show-enum-from-string";
 
 import { buildAddress } from "../../../../utils/common";
-import ViewDataTable from "../../../../components/viewDetails/viewDataTable";
+import ViewDataTable, { getDataTableColumnKey } from "../../../../components/viewDetails/viewDataTable";
 import OverlyPopover from "../../../../components/popover/overly-popover";
 import { useAuth } from "../../../../hooks/useAuth";
 import useStorage from "../../../../hooks/useStorage";
@@ -25,14 +25,11 @@ export default function JobListing() {
 
     const { user, hasPermission } = useAuth();
 
-    const columnSettingKey = `company.${user.id}.jobs.columns`
-    let settingsJson = useStorage().getItem(columnSettingKey)
-    let settingsArray = settingsJson ? JSON.parse(settingsJson) : []
+    const columnSettingKey = getDataTableColumnKey("company", user, "jobs");
 
     const { t } = useTranslation();
     const router = useRouter()
     const [jobs, setJobs] = useState([])
-    const [columnHistory, setColumnHistory] = useState([])
 
     useEffectAsync(async () => {
         const api = new JobApi();
@@ -40,13 +37,7 @@ export default function JobListing() {
         const v = await api.list();
 
         setJobs(v);
-
-        let columnArray = []
-        await settingsArray.map(v => {
-            columnArray[v.name] = v
-        })
-        setColumnHistory(columnArray)
-    }, [ ]);
+    }, [ user ]);
 
     /**
      * 
@@ -78,6 +69,11 @@ export default function JobListing() {
         setJobs(jobs.filter(v => v.id != id));
     }
 
+    const can = {
+        editJob: hasPermission("CanEditJob"),
+        deleteJob: hasPermission("CanDeleteJob"),
+    };
+
     return (
         <PageLayout
             title="JOBS"
@@ -89,41 +85,51 @@ export default function JobListing() {
         >
 
             <ViewDataTable<JobEntity>
+                columnSettingKey={columnSettingKey}
+
                 columns={[
                     {
+                        id: "job_title",
                         name: "job_title",
                         cell: job => (<OverlyPopover skipTranslate={true} header={t('job_title')} str={job.title} />),
                         selector: job => job.title,
                         hidable: false
                     },
                     {
+                        id: "location",
                         name: "location",
                         cell: job => (<OverlyPopover skipTranslate={true} header={t('location')} str={buildAddress(job.location || {})} />),
                         selector: job => buildAddress(job.location || {})
                     },
                     {
+                        id: "drivers_needed",
                         name: "drivers_needed",
                         selector: j => j.drivers_needed,
                     },
                     {
+                        id: "expiration_date",
                         name: "expiration_date",
                         selector: j => j.expiry_date ? new Date(j.expiry_date).toDateString() : null,
                     },
                     {
+                        id: "geography",
                         name: "GEOGRAPHY",
                         selector: j => j.geography ? t("JobGeography." + j.geography) : null,
                     },
                     {
+                        id: "schedule",
                         name: "SCHEDULE",
                         cell: job => (<OverlyPopover labelPrefix="JobSchedule" skipTranslate={false} header={t('SCHEDULE')} str={job.schedule} />),
                         selector: job => t(`JobSchedule.${job.schedule}`)
                     },
                     {
+                        id: "employment_type",
                         name: "EMPLOYMENT_TYPE",
                         cell: job => (<OverlyPopover labelPrefix="JobEmploymentType" skipTranslate={false} header={t('EMPLOYMENT_TYPE')} str={job.employment_type} />),
                         selector: job => t(`JobEmploymentType.${job.employment_type}`)
                     },
                     {
+                        id: "delivery_type",
                         name: "DELIVERY_TYPE",
                         cell: j =>
                         (<ShowEnumFromString
@@ -136,6 +142,7 @@ export default function JobListing() {
                         selector: job => t(`JobDeliveryType.${job.delivery_type}`),
                     },
                     {
+                        id: "team_drivers",
                         name: "TEAM_DRIVERS",
                         cell: job => (<OverlyPopover labelPrefix="JobTeamDriver" skipTranslate={false} header={t('TEAM_DRIVERS')} str={job.team_drivers} />),
                         selector: job => t(`JobTeamDriver.${job.team_drivers}`),
@@ -156,17 +163,16 @@ export default function JobListing() {
                         onClick: e => onEditClick(j.id),
                         icon: PenFill,
                         label: "EDIT",
-                        hide: !hasPermission("CanEditJob")
+                        hide: !can.editJob
                     },
                     {
                         onClick: e => onDeleteClick(j.id),
                         icon: TrashFill,
                         label: "DELETE",
-                        hide: !hasPermission("CanDeleteJob")
+                        hide: !can.deleteJob
                     },
                 ])}
                 items={jobs}
-                columnSettingKey={columnSettingKey}
             />
         </PageLayout>
     )

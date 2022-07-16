@@ -6,7 +6,7 @@ import { useAuth } from '../../../../../hooks/useAuth';
 import { useRouter } from "next/router"
 import { useTranslation } from "../../../../../hooks/useTranslation";
 import {EyeFill, PenFill, TrashFill} from 'react-bootstrap-icons';
-import ViewDataTable from "../../../../../components/viewDetails/viewDataTable";
+import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
 import { Status } from '../../../../../enums/status.enum';
 import { useEffectAsync } from '../../../../../utils/react';
 import { globalAjaxExceptionHandler } from '../../../../../utils/ajax';
@@ -20,7 +20,9 @@ export default function CompanyList() {
 
   const { t } = useTranslation();
   const router = useRouter();
-  const { company, hasPermission } = useAuth();
+  const { user, company, hasPermission } = useAuth();
+
+  const columnSettingKey = getDataTableColumnKey("company", user, "companies");
 
   const [ companies, setCompanies ] = useState([]);
 
@@ -70,18 +72,22 @@ export default function CompanyList() {
         </>
       }>
       <ViewDataTable<CompanyEntity>
+        columnSettingKey={columnSettingKey}
         columns={[
           {
+            id: "photo",
             name: "PHOTO",
             cell: (v) => v.photo && <img className="img-thumbnail" style={{maxWidth: "100px"}} src={v.photo.path} />
           },
           {
+            id: "name",
             name: "NAME",
             selector: j => j.name,
             cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.name}</a></Link>),
             hidable: false
           },
           {
+            id: "website",
             name: "WEBSITE",
             selector: j => j.website,
           },

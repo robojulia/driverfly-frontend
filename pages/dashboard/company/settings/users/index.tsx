@@ -7,7 +7,7 @@ import { useRouter } from "next/router"
 import { useTranslation } from "../../../../../hooks/useTranslation";
 import {EyeFill, PenFill, TrashFill} from 'react-bootstrap-icons';
 import UserApi from "../../../../api/user";
-import ViewDataTable from "../../../../../components/viewDetails/viewDataTable";
+import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
 import { Status } from '../../../../../enums/status.enum';
 import { UserEntity } from '../../../../../models/user/user.entity';
 import { useEffectAsync } from '../../../../../utils/react';
@@ -21,6 +21,8 @@ export default function UserList() {
   const { t } = useTranslation();
   const router = useRouter();
   const { user, hasPermission } = useAuth();
+
+  const columnSettingKey = getDataTableColumnKey("company", user, "users");
 
   const [ users, setUsers ] = useState([]);
 
@@ -70,32 +72,34 @@ export default function UserList() {
         </>
       }>
         <ViewDataTable<UserEntity>
+          columnSettingKey={columnSettingKey}
           columns={[
             {
+              id: "name",
               name: "name",
               selector: j => j.name,
               cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.name}</a></Link>),
               hidable: false
             },
             {
+              id: "roles",
               name: "ROLES",
               selector: j => j.roles.map((role) => role.name).join(", "),
-              hidable: true
             },
             {
+              id: "email",
               name: "email",
               selector: j => j.email,
-              hidable: true
             },
             {
+              id: "phone",
               name: "phone",
               selector: j => j.contact_number,
-              hidable: true
             },
             {
+              id: "phone_cell",
               name: "phone_cell",
               selector: j => j.cell_number,
-              hidable: true,
               hide: 1
             }
           ]}
