@@ -61,7 +61,7 @@ export default function BaseCheck ( { formik, required, className, label, checke
         {label && <label htmlFor={name} style={{ marginLeft: ".5em"}} className="form-check-label">{t(label)}{required ? "*" : ""}</label>}
 
       </div>
-      {touched && error && (typeof error === "string") ? <span className="text-danger small">{error}</span> : null}
+      {touched && error && (typeof error === "string") ? <span className="text-danger small">{t(error)}</span> : null}
     </div>
   )
 }

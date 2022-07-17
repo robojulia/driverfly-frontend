@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import Layout from "../components/layouts";
+import { PublicLayout } from "../components/layouts/PublicLayout";
 import ReCAPTCHA from "react-google-recaptcha";
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 import { ArrowLeft, ArrowRight, Newspaper, PersonBadgeFill, QuestionCircle } from 'react-bootstrap-icons';
@@ -98,8 +98,8 @@ export default function Contact() {
 }
 Contact.getLayout = function getLayout(page) {
     return (
-        <Layout title="contact">
+        <PublicLayout title="contact">
             {page}
-        </Layout>
+        </PublicLayout>
     )
 }

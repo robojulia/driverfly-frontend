@@ -1,13 +1,12 @@
-import ChildPageLayout from "../../../../components/layouts/ChildPageLayout";
+import ChildPageLayout from "../../../../components/layouts/page/ChildPageLayout";
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
-import { Container, Col, ProgressBar, Row, Table, ToastContainer, FormGroup, InputGroup } from "react-bootstrap";
-import { parseCSV } from "../../../../utils/file";
+import { Col, ProgressBar, Row, Table, InputGroup } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useFormik } from "formik";
 import * as yup from "yup";
 
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
-import { useTranslation } from '../../../../hooks/useTranslation'
+import { TranslateInterface, useTranslation } from '../../../../hooks/useTranslation'
 
 import { Check, CheckCircle, ExclamationTriangle, XCircle } from "react-bootstrap-icons";
 
@@ -18,14 +17,16 @@ import FileDownload from 'js-file-download';
 
 import * as fileUtils from "../../../../utils/file";
 import Switch from "../../../../components/controls/switch";
-import BaseInput from "../../../../components/forms/BaseInput";
-import BaseCheck from "../../../../components/forms/BaseCheck";
 
-import * as style from "../../../../public/components/styles/ImportApplicantsModule.module.css"
+import * as _style from "../../../../public/components/styles/ImportApplicantsModule.module.css"
 import ApplicantApi from "../../../api/applicant";
 import OverlyPopover from "../../../../components/popover/overly-popover";
+import { FormikInterface } from "../../../../utils/formik";
+import { SchemaDescription, SchemaObjectDescription } from "yup/lib/schema";
 
 export default function Import() {
+
+    const style: any = _style;
 
     const { t } = useTranslation();
 
@@ -45,9 +46,9 @@ export default function Import() {
             items: initialValues
         },
         validationSchema: yup.object({
-            items: yup
+            items: (yup
                 .array(schema)
-                .min(1, t("PLEASE_UPLOAD_A_FILE_WITH_AT_LEAST_ONE_ROW"))
+                .min(1, t("PLEASE_UPLOAD_A_FILE_WITH_AT_LEAST_ONE_ROW")) as any)
                 .unique(t("{name}_must_be_unique_in_list", { name: "EMAIL" }, { translateProps: true }), "email", v => v.email),
         }),
         validate: async (values) => {
@@ -124,13 +125,6 @@ export default function Import() {
             let contents = await fileUtils.readCSV(file, {
                 onProgress: (p) => setProgress(p)
             });
-            // contents = parseCSV(contents);
-            // if (contents.length <= 1) {
-            //     toast.error("FILE_HAS_NO_RECORDS");
-            //     return;
-            // }
-
-            // headers = contents[0];
 
             if (contents.length > 0 && contents[0][0] === headers[0]) contents = contents.slice(1);
 
@@ -184,7 +178,6 @@ export default function Import() {
 
 
     return (<>
-        <ToastContainer />
         <ChildPageLayout title="IMPORT_APPLICANTS" backPath="/dashboard/company/applicants">
             <Row>
                 <Col>
@@ -196,7 +189,7 @@ export default function Import() {
                         <input onChange={onFileChange} disabled={!canUpload} className="form-control" type="file" accept=".csv" value={fileName} id="formFile" />
                         {
                             !!fileName &&
-                            <div class="input-group-append">
+                            <div className="input-group-append">
                                 <button type="button" disabled={!canClear} onClick={onClearClick} className="btn btn-md btn-danger">{t("CLEAR")}</button>
                             </div>
                         }
@@ -232,7 +225,7 @@ export default function Import() {
             {progress > 0 && progress < 100 &&
             <Row>
                 <Col>
-                    <ProgressBar variant="primary" min="0" max="100" now={progress} label={`${progress}%`} striped animated  />
+                    <ProgressBar variant="primary" min={0} max={100} now={progress} label={`${progress}%`} striped animated  />
                 </Col>
             </Row>
             }
@@ -243,7 +236,7 @@ export default function Import() {
                             <tr>
                                 <th className={style.frozen_col}><CheckCircle /></th>
                                 <th className={style.frozen_col}>#</th>
-                                {headers.map(k => (<th>{k}{schemaDescribe.fields[k].tests.some(v => v.name === "required") ? "*" : ""}</th>))}
+                                {headers.map(k => (<th>{k}{(schemaDescribe.fields[k] as SchemaDescription).tests.some(v => v.name === "required") ? "*" : ""}</th>))}
                             </tr>
                         </thead>
                         <tbody>
@@ -290,14 +283,9 @@ export default function Import() {
     </>);
 }
 
-/**
- * @param {import("formik").FormikConfig} form
- * @param {import("yup/lib/schema").SchemaObjectDescription} schema 
- * @param {string} header 
- */
-function guessControl(form, schema, warnings, header, index, t) {
+function guessControl(form: FormikInterface, schema, warnings: Record<string, string>, header: string, index: number, t: TranslateInterface) {
 
-    const desc = schema.fields[header];
+    const desc: SchemaObjectDescription = schema.fields[header];
     const name = `items.${index}.${header}`;
     const meta = form.getFieldMeta(name);
 
@@ -322,71 +310,6 @@ function guessControl(form, schema, warnings, header, index, t) {
         </>);
     }
     return value;
-
-    const required = desc.tests.some(v => v.name === "required");
-
-    let type = desc.type;
-
-    let subType = null;
-    switch (type) {
-        case "boolean":
-            return (
-            <BaseCheck
-                name={name}
-                checked={!!meta.value}
-                onChange={form.handleChange}
-                required={required}
-                />);
-        case "string":
-            if (desc.tests.some(v => v.name === "email")) subType == "email";
-
-            return (
-                <BaseInput
-                    type={subType || "text"}
-                    required={required}
-                    placeholder={header}
-                    name={name}
-                    value={meta.value}
-                    touched={meta.touched}
-                    error={meta.errors}
-                    onChange={form.handleChange}
-                    handleBlur={form.handleBlur}
-                    />
-            );
-        case "date":
-            return (
-                <BaseInput
-                    type={"date"}
-                    required={required}
-                    placeholder={header}
-                    name={name}
-                    value={meta.value}
-                    touched={meta.touched}
-                    error={meta.errors}
-                    onChange={form.handleChange}
-                    handleBlur={form.handleBlur}
-                    />
-            );
-        case "number":
-            return (
-                <BaseInput
-                    type="number"
-                    required={required}
-                    placeholder={header}
-                    name={name}
-                    value={meta.value}
-                    touched={meta.touched}
-                    error={meta.errors}
-                    onChange={form.handleChange}
-                    handleBlur={form.handleBlur}
-                    />
-            );
-        default:
-            // console.log("Unknown type", desc);
-            return meta.value;
-    }
-
-
 }
 
 Import.getLayout = function getLayout(page) {

@@ -51,7 +51,7 @@ export default class UserApi extends BaseApi {
 
     preferences = {
         baseUrl: (userId: number) => `user/${userId}/preferences`,
-        list: async (userId: number, query: { category: UserPreferenceCategory, label: string }) : Promise<UserPreferenceEntity[]> => {
+        list: async (userId: number, query?: { category?: UserPreferenceCategory, label?: string }) : Promise<UserPreferenceEntity[]> => {
             const { data } = await this.get(this.buildUrl(this.preferences.baseUrl(userId), query));
 
             return data;

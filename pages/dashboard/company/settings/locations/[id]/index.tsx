@@ -10,7 +10,7 @@ import { useTranslation } from "../../../../../../hooks/useTranslation";
 import { useAuth } from "../../../../../../hooks/useAuth";
 
 import FullLayout from "../../../../../../components/dashboard/layouts/Layout/FullLayout";
-import ChildPageLayout from "../../../../../../components/layouts/ChildPageLayout";
+import ChildPageLayout from "../../../../../../components/layouts/page/ChildPageLayout";
 import ViewDetails from "../../../../../../components/viewDetails/viewDetails";
 import { DeleteButton } from "../../../../../../components/buttons/DeleteButton";
 

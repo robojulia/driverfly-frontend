@@ -3,7 +3,7 @@ import { useTranslation } from "../../../hooks/useTranslation";
 import { Row } from "react-bootstrap";
 import BaseInput from "../BaseInput";
 import BaseInputPhone from "../BaseInputPhone";
-import EntityForm from "../../layouts/EntityForm";
+import EntityForm from "../../layouts/page/EntityForm";
 import { UserEntity } from "../../../models/user/user.entity";
 import UserApi from "../../../pages/api/user";
 import { formSuccess } from "../../../utils/toast";
@@ -46,7 +46,8 @@ export function UserForm(props: UserFormProps) {
     });
 
     useEffect(() => {
-        // form.setValues(entity);
+        if (entity)
+            form.setValues(entity);
     }, [ entity ])
 
     return (

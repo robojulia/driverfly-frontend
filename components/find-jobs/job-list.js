@@ -23,7 +23,7 @@ export default function JobsList() {
 
                         <CompanyPhoto className="d-flex mr-4 truck-img" company={job.company} />
                         <div className="media-body">
-                            <Link href={`/dashboard/driver/find-jobs/${job.id}`}>
+                            <Link href={`/dashboard/driver/jobs/${job.id}`}>
                                 <a className='text-decoration-none '>
                                     <h4 className="mt-0">
                                         {job.title}
@@ -64,9 +64,8 @@ export default function JobsList() {
                                     <strong className="text-secondary">{job.description_short}</strong>
                                 </div>
                             </div>
-
                         </div>
-                        <Link href={`/dashboard/driver/find-jobs/${job.id}`}>
+                        <Link href={`/dashboard/driver/jobs/${job.id}`}>
                             <button type="button" className="theme-primary-btn-outline">{t('view_job')}</button>
                         </Link>
 

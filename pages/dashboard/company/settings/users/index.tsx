@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
-import PageLayout from "../../../../../components/layouts/PageLayout";
+import PageLayout from "../../../../../components/layouts/page/PageLayout";
 import { Col, Row } from "reactstrap";
 import { useAuth } from '../../../../../hooks/useAuth';
 import { useRouter } from "next/router"
 import { useTranslation } from "../../../../../hooks/useTranslation";
 import {EyeFill, PenFill, TrashFill} from 'react-bootstrap-icons';
 import UserApi from "../../../../api/user";
-import ViewDataTable from "../../../../../components/viewDetails/viewDataTable";
+import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
 import { Status } from '../../../../../enums/status.enum';
 import { UserEntity } from '../../../../../models/user/user.entity';
 import { useEffectAsync } from '../../../../../utils/react';
@@ -22,9 +22,13 @@ export default function UserList() {
   const router = useRouter();
   const { user, hasPermission } = useAuth();
 
+  const columnSettingKey = getDataTableColumnKey("company", user, "users");
+
   const [ users, setUsers ] = useState([]);
 
   useEffectAsync(async () => {
+    if (!user) return;
+    
     const api = new UserApi();
     const v = await api.list();
     setUsers(v.filter((u) => u.id !== user.id && u.status === Status.ACTIVE));
@@ -70,32 +74,34 @@ export default function UserList() {
         </>
       }>
         <ViewDataTable<UserEntity>
+          columnSettingKey={columnSettingKey}
           columns={[
             {
+              id: "name",
               name: "name",
               selector: j => j.name,
               cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.name}</a></Link>),
               hidable: false
             },
             {
+              id: "roles",
               name: "ROLES",
               selector: j => j.roles.map((role) => role.name).join(", "),
-              hidable: true
             },
             {
+              id: "email",
               name: "email",
               selector: j => j.email,
-              hidable: true
             },
             {
+              id: "phone",
               name: "phone",
               selector: j => j.contact_number,
-              hidable: true
             },
             {
+              id: "phone_cell",
               name: "phone_cell",
               selector: j => j.cell_number,
-              hidable: true,
               hide: 1
             }
           ]}
