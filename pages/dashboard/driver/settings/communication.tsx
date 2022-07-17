@@ -85,14 +85,14 @@ export default function Communication() {
     });
 
     useEffectAsync(async () => {
-        if (user && user.id) {
+        if (user) {
             const api = new UserApi();
 
             const preferences = await api.preferences.list(user.id, { category: UserPreferenceCategory.COMMUNICATION });
 
             populateForm(preferences);
         }
-    }, []);
+    }, [ user ]);
 
     /**
      * 

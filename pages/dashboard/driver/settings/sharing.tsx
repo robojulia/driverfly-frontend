@@ -98,7 +98,7 @@ export default function Sharing() {
     });
 
     useEffectAsync(async () => {
-        if (user && user.id) {
+        if (user) {
             const api = new UserApi();
 
             const preferences = await api.preferences.list(user.id, { category: UserPreferenceCategory.SHARING });

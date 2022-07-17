@@ -51,7 +51,7 @@ export default function Profile() {
       title="MY_PROFILE"
     >
       <EntityForm
-        id={user.id}
+        id={user?.id}
         canSubmit={true}
         onSubmit={form.handleSubmit}
       >

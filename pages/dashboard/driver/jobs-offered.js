@@ -11,7 +11,7 @@ import { useTranslation } from "../../../hooks/useTranslation";
 import { CurrencyDollar } from 'react-bootstrap-icons';
 import ShowEnumFromString from '../../../components/enum-filters/show-enum-from-string';
 import { DriverLicenseType } from '../../../enums/users/driver-license-type.enum';
-import ViewDataTable from '../../../components/viewDetails/viewDataTable';
+import ViewDataTable, { getDataTableColumnKey } from '../../../components/viewDetails/viewDataTable';
 import OverlyPopover from '../../../components/popover/overly-popover';
 import { buildAddress } from '../../../utils/common';
 import { JobDeliveryType } from '../../../enums/jobs/job-delivery-type.enum';
@@ -22,31 +22,18 @@ export default function OfferedJobs() {
     const { t } = useTranslation();
     const applicantApi = new ApplicantApi();
     const { user } = useAuth();
-    const columnSettingKey = `driver.${user.id}.jobs-offered.columns`
-    let settingsJson = useStorage().getItem(columnSettingKey)
-    let settingsArray = settingsJson ? JSON.parse(settingsJson) : []
-
+    const columnSettingKey = getDataTableColumnKey("driver", user, "jobs-offered");
     const [applicantJobs, setApplicantJobs] = useState([])
-    const [columnHistory, setColumnHistory] = useState([])
-
-    const fetchJobs = async () => {
-
-        await applicantApi.getApplicantJobsByStatus({
-            application_status: ApplicantStatus.HIRED
-        })
-            .then(data => setApplicantJobs(data))
-            .catch((error) => {
-                console.error(error)
-            })
-    }
 
     useEffect(async () => {
-        fetchJobs()
-        let columnArray = []
-        await settingsArray.map(v => {
-            columnArray[v.name] = v
-        })
-        setColumnHistory(columnArray)
+        if (user) {
+            const data = await applicantApi.getApplicantJobsByStatus({
+                application_status: ApplicantStatus.HIRED
+            })
+
+            setApplicantJobs(data);
+    
+        }
     }, []);
 
     return (

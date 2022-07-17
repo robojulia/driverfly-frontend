@@ -27,7 +27,7 @@ export interface ViewTableColumn<TElement> extends TableColumn<TElement> {
 }
 
 export function getDataTableColumnKey(type: "company"|"driver", user: UserEntity, entity: string) {
-    return `${type}.${user.id}.${entity}.columns`;
+    return `${type}.${user?.id || 0}.${entity}.columns`;
 }
 
 export default function ViewDataTable<TElement>(props: ViewTableProps<TElement>) {

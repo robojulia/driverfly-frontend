@@ -10,39 +10,31 @@ import { useTranslation } from "../../../hooks/useTranslation";
 import { CurrencyDollar } from 'react-bootstrap-icons';
 import ShowEnumFromString from '../../../components/enum-filters/show-enum-from-string';
 import { DriverLicenseType } from '../../../enums/users/driver-license-type.enum';
-import ViewDataTable from '../../../components/viewDetails/viewDataTable';
+import ViewDataTable, { getDataTableColumnKey } from '../../../components/viewDetails/viewDataTable';
 import { buildAddress } from '../../../utils/common';
 import OverlyPopover from '../../../components/popover/overly-popover';
 import { JobDeliveryType } from '../../../enums/jobs/job-delivery-type.enum';
 import useStorage from "../../../hooks/useStorage";
+import { useEffectAsync } from "../../../utils/react";
 
 export default function JobsSaved() {
 
     const { t } = useTranslation();
     const savedJobApi = new SavedJobApi();
     const { user } = useAuth();
-    const columnSettingKey = `driver.${user.id}.jobs-saved.columns`
-    let settingsJson = useStorage().getItem(columnSettingKey)
-    let settingsArray = settingsJson ? JSON.parse(settingsJson) : []
+
+    const columnSettingKey = getDataTableColumnKey("driver", user, "jobs-saved");//`driver.${user.id}.jobs-saved.columns`
 
     const [savedJobs, setSavedJobs] = useState([])
-    const [columnHistory, setColumnHistory] = useState([])
 
-    const fetchJobs = async () => {
-        await savedJobApi.list()
-            .then(data => setSavedJobs(data))
-            .catch((error) => {
-                console.error(error)
-            })
-    }
-
-    useEffect(async () => {
-        fetchJobs()
-        let columnArray = []
-        await settingsArray.map(v => {
-            columnArray[v.name] = v
-        })
-        setColumnHistory(columnArray)
+    useEffectAsync(async () => {
+        if (user) {
+            const data = await savedJobApi.list()
+            setSavedJobs(data);
+        }
+        else {
+            setSavedJobs([]);
+        }
     }, []);
 
     return (

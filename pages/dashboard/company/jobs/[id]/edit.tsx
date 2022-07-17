@@ -26,6 +26,7 @@ export default function EditJob({ id }) {
     const [ job, setJob ] = useState(new JobEntity());
 
     useEffectAsync(async () => {
+        if (!user) return;
         if (id) {
             const api = new JobApi();
 

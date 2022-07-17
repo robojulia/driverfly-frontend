@@ -119,7 +119,7 @@ export default function Matching() {
     });
 
     useEffectAsync(async () => {
-        if (user && user.id) {
+        if (user) {
             const api = new UserApi();
 
             const preferences = await api.preferences.list(user.id, { category: UserPreferenceCategory.MATCHING });

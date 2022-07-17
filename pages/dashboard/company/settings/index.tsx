@@ -30,7 +30,7 @@ export default function Settings() {
       title="COMPANY"
     >
       <CompanyForm
-        entity={user.company}
+        entity={user?.company}
         onSaveComplete={onSaveComplete}
       />
     </PageLayout>

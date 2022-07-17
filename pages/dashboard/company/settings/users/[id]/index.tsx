@@ -32,6 +32,8 @@ export default function ViewUser({ id }) {
     const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
 
     useEffectAsync(async () => {
+        if (!user) return;
+        
         if (id) {
             const api = new UserApi();
 
@@ -49,7 +51,7 @@ export default function ViewUser({ id }) {
             goBack();
         }
 
-    }, [ id ]);
+    }, [ user, id ]);
 
     const onEditClick = async () => {
         await router.push(router.asPath + `/edit`);

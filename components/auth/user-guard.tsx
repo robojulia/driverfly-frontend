@@ -30,12 +30,13 @@ export function UserGuard({ permissions, children }: UserGuardProps) {
 
                     if (!hasPermission(...permissions)) {
                         await router.push("/");
-                        return;
+                        return false;
                     }
                 }
+                else return false;
             }
 
-            if (user && user.jwt.exp) {
+            if (user && user.jwt?.exp) {
                 const msToExpiration = jwtExpiryTimeout(user.jwt);
                 console.log("Expires in ms: ", msToExpiration);
 
@@ -44,6 +45,8 @@ export function UserGuard({ permissions, children }: UserGuardProps) {
                 setTimeoutId(timeoutId);
             }
         }
+
+        return true;
     }
 
     return (<Loading

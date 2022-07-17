@@ -34,6 +34,8 @@ export default function ViewVehicle({ id }) {
     const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
 
     useEffectAsync(async () => {
+        if (!user) return;
+
         if (id) {
             const api = new VehicleApi();
 

@@ -59,15 +59,17 @@ export default function Profile() {
   });
 
   useEffect(() => {
-    form.setValues({
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email,
-      contact_number: user.contact_number,
-      cell_number: user.cell_number,
-      timezone: user.timezone,
-      language: user.language,
-    });
+    if (user) {
+      form.setValues({
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        contact_number: user.contact_number,
+        cell_number: user.cell_number,
+        timezone: user.timezone,
+        language: user.language,
+      });
+    }
   }, [ user ]);
 
   return (
