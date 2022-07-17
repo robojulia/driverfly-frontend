@@ -45,11 +45,9 @@ export default function ViewDataTable<TElement>(props: ViewTableProps<TElement>)
     const [search, setSearch] = useState("");
 
     useEffect(() => {
-        setItems(props.items);
+        if (!search)
+            setItems(props.items);
 
-    }, [ props ]);
-
-    useEffect(() => {
         const visible = new Set(storage?.item || props.columns.filter(v => v.id && !v.hide).map(v => v.id));
         const columns: TableColumn<TElement>[] = props.columns.map(v => ({
             ...v,
@@ -66,9 +64,13 @@ export default function ViewDataTable<TElement>(props: ViewTableProps<TElement>)
             });
         }
         setColumns(columns);
-    }, [
-        storage?.item
-    ]);
+
+    }, [ props, storage?.item ]);
+
+    // useEffect(() => {
+    // }, [
+    //     storage?.item
+    // ]);
 
     const doSearch = (search: string) => {
         setItems(

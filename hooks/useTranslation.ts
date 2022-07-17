@@ -28,10 +28,6 @@ export function useTranslation (ns?: string) {
         if (typeof translationObj === "string") {
             translatedText = translationObj;
 
-            if (name === "VIEW_{name}") {
-                console.log(name, props, options, translatedText);
-            }
-
             if (props) {
                 Object
                     .entries(props)

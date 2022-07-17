@@ -11,14 +11,13 @@ import JobApi from "../../../api/job";
 import { JobEntity } from "../../../../models/job/job.entity";
 import { useTranslation } from "../../../../hooks/useTranslation";
 import { JobDeliveryType } from "../../../../enums/jobs/job-delivery-type.enum";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import ShowEnumFromString from "../../../../components/enum-filters/show-enum-from-string";
 
 import { buildAddress } from "../../../../utils/common";
 import ViewDataTable, { getDataTableColumnKey } from "../../../../components/viewDetails/viewDataTable";
 import OverlyPopover from "../../../../components/popover/overly-popover";
 import { useAuth } from "../../../../hooks/useAuth";
-import useStorage from "../../../../hooks/useStorage";
 import { useEffectAsync } from "../../../../utils/react";
 
 export default function JobListing() {
@@ -29,15 +28,19 @@ export default function JobListing() {
 
     const { t } = useTranslation();
     const router = useRouter()
-    const [jobs, setJobs] = useState([])
+    const [jobs, setJobs] = useState<JobEntity[]>([])
+    const api = new JobApi();
 
     useEffectAsync(async () => {
-        const api = new JobApi();
+        console.log("refresh fired");
+        // const api = new JobApi();
 
         const v = await api.list();
 
         setJobs(v);
-    }, [ user ]);
+    }, [ user ], () => {
+        console.log("unloading page...")
+    });
 
     /**
      * 
@@ -62,15 +65,13 @@ export default function JobListing() {
     }
 
     const onDeleteClick = async (id: number) => {
-        const api = new JobApi();
-
         await api.remove(id);
 
         setJobs(jobs.filter(v => v.id != id));
     }
 
     const can = {
-        editJob: hasPermission("CanEditJob"),
+        editJob: hasPermission("CanUpdateJob"),
         deleteJob: hasPermission("CanDeleteJob"),
     };
 

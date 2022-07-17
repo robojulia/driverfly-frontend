@@ -173,7 +173,7 @@ export default function VehicleList() {
             onClick: e => onEditClick(v.id),
             icon: PenFill,
             label: "EDIT",
-            hide: !hasPermission("CanEditVehicle")
+            hide: !hasPermission("CanUpdateVehicle")
           },
           {
             onClick: e => onDeleteClick(v.id),
