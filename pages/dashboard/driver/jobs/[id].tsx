@@ -16,13 +16,24 @@ import { ArrowRight, GeoAltFill, CurrencyDollar } from "react-bootstrap-icons"
 import { buildAddress } from "../../../../utils/common"
 import FullLayout from "../../../../components/dashboard/layouts/FullLayout"
 import SaveJob from "../../../../components/dashboard/driver/save-job"
+import PageLayout from "../../../../components/layouts/page/PageLayout"
+import { JobEntity } from "../../../../models/job/job.entity"
+import ChildPageLayout from "../../../../components/layouts/page/ChildPageLayout"
 
-export default function Detail({ jobDetail, relatedJobs }) {
+export interface JobDetailProps {
+    jobDetail: JobEntity;
+    relatedJobs: JobEntity[];
+}
+
+export default function JobDetail({ jobDetail, relatedJobs }: JobDetailProps) {
 
   const { t } = useTranslation();
 
   return (
-    <>
+    <ChildPageLayout
+        backPath="/dashboard/driver/jobs"
+        title={jobDetail.title}
+    >
       <ToastContainer />
       <StructuredData type="JobPosting" data={StructuredData.JobPosting(jobDetail, t)} />
       <section className="top-links-sec ort-general">
@@ -95,24 +106,36 @@ export default function Detail({ jobDetail, relatedJobs }) {
           </div>
         </div>
       </section>
-    </>
+    </ChildPageLayout>
   )
 }
 export async function getServerSideProps(context) {
   try {
     const id = context.params?.id;
-    const data = id ? await new JobApi().getById(id) : []
+
+    if (!id) {
+        return {
+            notFound: true
+        };
+    }
+    const data = await new JobApi().getById(id);
+
+    if (!data) {
+        return {
+            notFound: true
+        };
+    }
     const { items } = await new JobApi().search({ exclude: { jobId: id }, companyId: data.company?.id, take: 3 });
     return {
       props: { jobDetail: data, relatedJobs: items }
     }
   } catch (error) {
     console.error("Exception is here:", error);
-    return { props: { jobDetail: [], relatedJobs: [] } }
+    return { notFound: true }
   }
 }
 
-Detail.getLayout = function getLayout(page) {
+JobDetail.getLayout = function getLayout(page) {
   return (
     <FullLayout>
       {page}

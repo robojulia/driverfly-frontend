@@ -146,7 +146,7 @@ export default function Dashboard() {
                                 </Link>
                             </td>
                             <td className="p-0">
-                                <Link href="/dashboard/driver/find-jobs">
+                                <Link href="/dashboard/driver/jobs">
                                     <button className={`text-white ${style.btn_blue}`}>{t("find_new_job")}</button>
                                 </Link>
                             </td>

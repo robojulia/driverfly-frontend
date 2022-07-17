@@ -29,9 +29,9 @@ const FullLayout = ({ children }) => {
       text: "dashboard"
     },
     {
-      pathname: "/dashboard/driver/find-jobs",
+      pathname: "/dashboard/driver/jobs",
       icon: Search,
-      text: "find_new_job"
+      text: "FIND_JOBS"
     },
     {
       pathname: "/dashboard/driver/applications",

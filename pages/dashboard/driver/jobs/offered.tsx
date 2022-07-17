@@ -44,7 +44,7 @@ export default function OfferedJobs() {
                         name: "job_title",
                         selector: v => v.job.title,
                         cell: applicant =>
-                        (<Link href={`/dashboard/driver/find-jobs/${applicant.job.id}`}>
+                        (<Link href={`/dashboard/driver/jobs/${applicant.job.id}`}>
                             < a>
                                 <OverlyPopover skipTranslate={true} header={t('job_title')} str={applicant.job.title} />
                             </a>
