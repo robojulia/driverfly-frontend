@@ -31,7 +31,7 @@ export default function SaveJob({ job, wrapperClassName, spanClassName }: SaveJo
 
     useEffectAsync(async () => {
         await savedJobApi.getByJobId(job.id)
-            .then((data) => (data.status === 200))
+            .then(data => true)
             .catch((error) => (error?.response?.status === 404) && false)
             .then(saved => saved ? setSaved() : setUnsaved())
             .then(() => setIsLoading(false))
@@ -48,7 +48,7 @@ export default function SaveJob({ job, wrapperClassName, spanClassName }: SaveJo
 
     const markSaved = async () => {
         await savedJobApi.saveJob(job.id)
-            .then((data) => (data.status === 201))
+            .then(data => true)
             .catch((error) => ((error?.response?.status === 404) ? false : true))
             .then(saved => showMessage(saved, 'SAVED'))
             .then(saved => saved ? setSaved() : setUnsaved())
@@ -56,7 +56,7 @@ export default function SaveJob({ job, wrapperClassName, spanClassName }: SaveJo
 
     const markUnsaved = async () => {
         await savedJobApi.remove(job.id)
-            .then((data) => (data.status === 200))
+            .then(data => true)
             .catch((error) => ((error?.response?.status === 404) && false))
             .then(unsaved => showMessage(unsaved, 'UNSAVED'))
             .then(unsaved => unsaved ? setUnsaved() : setSaved())
