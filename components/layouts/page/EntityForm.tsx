@@ -21,6 +21,7 @@ export default function EntityForm(props: EntityFormProps) {
 
     if (formik) {
         canSubmit = !formik.isValidating && !formik.isSubmitting && formik.isValid;
+        if (!onSubmit) onSubmit = formik.handleSubmit;
     }
 
     return (
