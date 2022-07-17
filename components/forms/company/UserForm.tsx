@@ -46,7 +46,7 @@ export function UserForm(props: UserFormProps) {
     });
 
     useEffect(() => {
-        form.setValues(entity);
+        // form.setValues(entity);
     }, [ entity ])
 
     return (
