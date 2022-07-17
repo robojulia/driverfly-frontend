@@ -17,7 +17,7 @@ export interface ListActionsProps {
 
 export interface ListActionOptions {
   icon?: Icon;
-  label: string | ReactNode;
+  label: string | ReactNode | (() => string|ReactNode);
   onClick?: (e: React.MouseEvent) => void;
   hide?: boolean;
 }
@@ -60,7 +60,10 @@ export default function ListActions({ id, options, onClick }: ListActionsProps) 
             onClose={handleClose}
           >
               {filteredOptions.map((v, i) => {
-                const { icon: Cmp, label } = v;
+                let { icon: Cmp, label } = v;
+
+                if (typeof label === "function") label = label();
+                
                 return (
                   <MenuItem key={i} onClick={e => {
                       e.preventDefault();

@@ -380,8 +380,6 @@ export function JobForm(props: JobFormProps) {
         setCreateLocation(false);
     }
 
-    console.log("Create entity", { createVehicle, createLocation });
-
     return (
         <>
         <EntityForm
