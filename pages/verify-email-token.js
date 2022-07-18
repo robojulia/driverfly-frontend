@@ -4,7 +4,7 @@ import Link from 'next/link'
 // import Breadcrumbs from 'nextjs-breadcrumbs'
 import { useEffect, useState } from "react"
 import Back from '../components/back-to-login/Back-Login'
-import Layout from "../components/layouts"
+import { PublicLayout } from "../components/layouts/PublicLayout";
 import Forgotpassword from '../public/css/Forgot.module.css'
 import SignupAPI from "./api/signup"
 import { ToastContainer, toast } from 'react-toastify'
@@ -68,8 +68,8 @@ export async function getServerSideProps({ query }) {
 
 VerifyEmailToken.getLayout = function getLayout(page) {
   return (
-    <Layout>
+    <PublicLayout>
       {page}
-    </Layout>
+    </PublicLayout>
   )
 }

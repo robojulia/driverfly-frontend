@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Breadcrumb from '../components/breadcrumbs/Breadcrumb';
-import Layout from "../components/layouts";
+import { PublicLayout } from "../components/layouts/PublicLayout";
 import Terms from "../public/css/Terms.module.css"
 
 export default function TermsOfService() {
@@ -75,8 +75,8 @@ export default function TermsOfService() {
 
 TermsOfService.getLayout = function getLayout(page){
     return (
-        <Layout title="terms_of_services">
+        <PublicLayout title="terms_of_services">
             {page}
-        </Layout>
+        </PublicLayout>
     )
 }

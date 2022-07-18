@@ -1,7 +1,7 @@
 import Head from "next/head"
 import Link from "next/link"
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
-import Layout from "../components/layouts"
+import { PublicLayout } from "../components/layouts/PublicLayout";
 import SignupStyle from "../public/css/signup.module.css"
 import { useAuth } from '../hooks/useAuth';
 import { useRouter } from 'next/router'
@@ -224,8 +224,8 @@ export default function Signup() {
 
 Signup.getLayout = function getLayout(page) {
   return (
-    <Layout>
+    <PublicLayout>
       {page}
-    </Layout>
+    </PublicLayout>
   )
 }

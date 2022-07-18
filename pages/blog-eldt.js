@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Layout from "../components/layouts";
+import { PublicLayout } from "../components/layouts/PublicLayout";
 import BlogDetail from '../public/css/BlogDetail.module.css'
 import SocilShare from '../components/share-link/ShareLink';
 import JonInformation from '../components/job-information-sidebar/JobInformation';
@@ -58,8 +58,8 @@ export default function EldtBlog() {
 
 EldtBlog.getLayout = function getLayout(page) {
     return (
-        <Layout>
+        <PublicLayout>
             {page}
-        </Layout>
+        </PublicLayout>
     )
 }

@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useTranslation } from "../../../../../hooks/useTranslation";
 
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
-import ChildPageLayout from "../../../../../components/layouts/ChildPageLayout";
+import ChildPageLayout from "../../../../../components/layouts/page/ChildPageLayout";
 import { CompanyForm } from "../../../../../components/forms/company/CompanyForm";
 import { useAuth } from "../../../../../hooks/useAuth";
 import { CompanyEntity } from "../../../../../models/company/company.entity";

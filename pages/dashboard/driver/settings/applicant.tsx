@@ -36,6 +36,7 @@ import { useFormik } from "formik";
 import { useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'
+import { useEffectAsync } from "../../../../utils/react";
 
 export default function Applicant() {
     const { t } = useTranslation();
@@ -62,7 +63,7 @@ export default function Applicant() {
         }
     });
 
-    useEffect(async () => {
+    useEffectAsync(async () => {
         const applicant = await api.me.get();
 
         form.setValues({
@@ -121,26 +122,11 @@ export default function Applicant() {
                                 <BaseInputPhone
                                     className="col-12 p-1 "
                                     label="PHONE"
-                                    type="tel"
                                     name="phone"
                                     readOnly
                                     placeholder={t("PHONE")}
-                                    value={form.values.phone}
-                                    touched={form.touched.phone}
-                                    error={form.errors.phone}
-                                    onChange={(value, country, e, formattedValue) => { form.setFieldValue('phone', formattedValue) }}
-                                    handleBlur={(event, data) => { form.setFieldValue('phone', event.target.value) }}
-                                    onKeyDown={(event) => { form.setFieldValue('phone', event.target.value) }}
-                                />
-                                {/* <BaseInput
-                                    className="col-12 p-1 "
-                                    label="PHONE"
-                                    type="tel"
-                                    name="phone"
-                                    readOnly
-                                    placeholder="PHONE"
                                     formik={form}
-                                /> */}
+                                />
                                 <BaseInput
                                     className="col-12 p-1 "
                                     label="EMAIL"
@@ -289,23 +275,9 @@ export default function Applicant() {
                                             className="col-12 p-1 "
                                             name={`emergency_contact_number`}
                                             label="PHONE"
-                                            type="tel"
-                                            placeholder="PHONE"
-                                            value={form.values.emergency_contact_number}
-                                            touched={form.touched.emergency_contact_number}
-                                            error={form.errors.emergency_contact_number}
-                                            onChange={(value, country, e, formattedValue) => { form.setFieldValue('emergency_contact_number', formattedValue) }}
-                                            handleBlur={(event, data) => { form.setFieldValue('emergency_contact_number', event.target.value) }}
-                                            onKeyDown={(event) => { form.setFieldValue('emergency_contact_number', event.target.value) }}
-                                        />
-                                        {/* <BaseInput
-                                            className="col-12 p-1 "
-                                            name={`emergency_contact_number`}
-                                            label="PHONE"
-                                            type="tel"
                                             placeholder="PHONE"
                                             formik={form}
-                                        /> */}
+                                        />
                                         <BaseInput
                                             className="col-12 p-1 "
                                             name={`emergency_contact_relationship`}
@@ -578,22 +550,9 @@ export default function Applicant() {
                                                 className="col-12 p-1 "
                                                 name={`employers[${i}].phone`}
                                                 label="PHONE"
-                                                type="tel"
-                                                placeholder="PHONE"
-                                                value={form.values.employers[i].phone}
-                                               
-                                                onChange={(value, country, e, formattedValue) => { form.setFieldValue('`employers[${i}].phone`', formattedValue) }}
-                                                handleBlur={(event, data) => { form.setFieldValue('`employers[${i}].phone`', event.target.value) }}
-                                                onKeyDown={(event) => { form.setFieldValue('`employers[${i}].phone`', event.target.value) }}
-                                            />
-                                            {/* <BaseInput
-                                                className="col-12 p-1 "
-                                                name={`employers[${i}].phone`}
-                                                label="PHONE"
-                                                type="tel"
                                                 placeholder="PHONE"
                                                 formik={form}
-                                            /> */}
+                                            />
                                             <BaseCheck
                                                 className="col-12 p-1  mt-2"
                                                 name={`employers[${i}].can_contact`}

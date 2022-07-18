@@ -1,21 +1,17 @@
+import React from "react";
 import { useTranslation } from "../../hooks/useTranslation";
 
-/**
- * @typedef SwitchProps
- * @property {string} className
- * @property {string} label
- * @property {string} name
- * @property {boolean} value
- * @property {boolean} required
- * @property {boolean} readOnly
- * @property {(React.ChangeEvent<HTMLInputElement>) => void} onChange
- */
+export interface SwitchProps {
+    className?: string;
+    label?: string;
+    name?: string;
+    value?: boolean;
+    required?: boolean;
+    readOnly?: boolean;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
-/**
- * 
- * @param {SwitchProps} props 
- */
-export default function Switch(props) {
+export default function Switch(props: SwitchProps) {
     const { t } = useTranslation();
 
     let { readOnly, name, value, label, required, className, onChange } = props || {};
@@ -35,6 +31,4 @@ export default function Switch(props) {
             {label && <label htmlFor={name} className="form-check-label" style={{ marginLeft: "4px" }}>{t(label)}{required ? "*" : ""}</label>}
         </div>
     );
-
-
 }

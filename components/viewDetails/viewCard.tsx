@@ -4,7 +4,7 @@ import { CardBody, CardHeader } from "reactstrap";
 
 export interface ViewCardProps {
     title?: string;
-    children?: JSX.Element | JSX.Element[];
+    readonly children?: any;
     actions?: JSX.Element | JSX.Element[];
 }
 

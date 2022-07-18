@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Layout from "../components/layouts";
+import { PublicLayout } from "../components/layouts/PublicLayout";
 import FilterResult from '../components/filter-results/filter-results'
 import Owneroperator from '../public/css/Owneroperator.module.css'
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
@@ -46,8 +46,8 @@ export default function Owneroperators() {
 
 Owneroperators.getLayout = function getLayout(page){
     return (
-        <Layout title="OWNER_OPERATOR">
+        <PublicLayout title="OWNER_OPERATOR">
             {page}
-        </Layout>
+        </PublicLayout>
     )
 }

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
-import Layout from "../../components/layouts";
+import { PublicLayout } from "../../components/layouts/PublicLayout";
 
 export default function TermsAndPolicies2() {
     return (
@@ -183,8 +183,8 @@ export default function TermsAndPolicies2() {
 
 TermsAndPolicies2.getLayout = function getLayout(page) {
     return (
-        <Layout title="privacy_policy">
+        <PublicLayout title="privacy_policy">
             {page}
-        </Layout>
+        </PublicLayout>
     )
 }

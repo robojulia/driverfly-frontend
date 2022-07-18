@@ -13,7 +13,7 @@ import { counts, year2Only, year3Only, year5Only, years } from "../../../utils/j
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 
 import { Button, Col, InputGroup, Row } from "react-bootstrap";
-import EntityForm from "../../layouts/EntityForm";
+import EntityForm from "../../layouts/page/EntityForm";
 import ViewCard from "../../viewDetails/viewCard";
 import ViewModal from "../../viewDetails/viewModal";
 import { VehicleForm } from "./VehicleForm";
@@ -379,8 +379,6 @@ export function JobForm(props: JobFormProps) {
         ]);
         setCreateLocation(false);
     }
-
-    console.log("Create entity", { createVehicle, createLocation });
 
     return (
         <>

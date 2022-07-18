@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Layout from "../components/layouts";
+import { PublicLayout } from "../components/layouts/PublicLayout";
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 import Slider from '../components/testominial-slider/Slider';
 import { FileEarmarkZip, Funnel, CheckSquare, Bell, Trophy, HandIndexThumb } from 'react-bootstrap-icons';
@@ -152,8 +152,8 @@ export default function About() {
 
 About.getLayout = function getLayout(page) {
     return (
-        <Layout title="ABOUT">
+        <PublicLayout title="ABOUT">
             {page}
-        </Layout>
+        </PublicLayout>
     )
 }

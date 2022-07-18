@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
-import Layout from "../components/layouts"
+import { PublicLayout } from "../components/layouts/PublicLayout";
 import Forgotpassword from '../public/css/Forgot.module.css'
 import ResetPasswordAPI from "./api/reset-account"
 import { ToastContainer, toast } from 'react-toastify'
@@ -143,8 +143,8 @@ export async function getServerSideProps(context) {
 
 ResetPassword.getLayout = function getLayout(page) {
   return (
-    <Layout title="RESET_PASSWORD">
+    <PublicLayout title="RESET_PASSWORD">
       {page}
-    </Layout>
+    </PublicLayout>
   )
 }

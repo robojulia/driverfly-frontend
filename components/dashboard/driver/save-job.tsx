@@ -4,8 +4,16 @@ import { useAuth } from '../../../hooks/useAuth';
 import { useTranslation } from '../../../hooks/useTranslation';
 import SavedJobApi from '../../../pages/api/saved-job';
 import { toast } from 'react-toastify';
+import { JobEntity } from '../../../models/job/job.entity';
+import { useEffectAsync } from '../../../utils/react';
 
-export default function SaveJob({ job, wrapperClassName, spanClassName }) {
+export interface SaveJobProps {
+    job?: JobEntity;
+    wrapperClassName?: string;
+    spanClassName?: string;
+}
+
+export default function SaveJob({ job, wrapperClassName, spanClassName }: SaveJobProps) {
 
     const { getUser } = useAuth();
     const user = getUser()
@@ -21,12 +29,12 @@ export default function SaveJob({ job, wrapperClassName, spanClassName }) {
     const setUnsaved = () => { setIsSaved(false) }
     const [isLoading, setIsLoading] = useState(true)
 
-    useEffect(async () => {
+    useEffectAsync(async () => {
         await savedJobApi.getByJobId(job.id)
-            .then((data) => (data.status === 200))
+            .then(data => true)
             .catch((error) => (error?.response?.status === 404) && false)
             .then(saved => saved ? setSaved() : setUnsaved())
-            .then(setIsLoading(false))
+            .then(() => setIsLoading(false))
     }, [])
 
     const showMessage = (status, action) => {
@@ -40,7 +48,7 @@ export default function SaveJob({ job, wrapperClassName, spanClassName }) {
 
     const markSaved = async () => {
         await savedJobApi.saveJob(job.id)
-            .then((data) => (data.status === 201))
+            .then(data => true)
             .catch((error) => ((error?.response?.status === 404) ? false : true))
             .then(saved => showMessage(saved, 'SAVED'))
             .then(saved => saved ? setSaved() : setUnsaved())
@@ -48,7 +56,7 @@ export default function SaveJob({ job, wrapperClassName, spanClassName }) {
 
     const markUnsaved = async () => {
         await savedJobApi.remove(job.id)
-            .then((data) => (data.status === 200))
+            .then(data => true)
             .catch((error) => ((error?.response?.status === 404) && false))
             .then(unsaved => showMessage(unsaved, 'UNSAVED'))
             .then(unsaved => unsaved ? setUnsaved() : setSaved())

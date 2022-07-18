@@ -10,7 +10,7 @@ import { useTranslation } from "../../../../hooks/useTranslation";
 import { CurrencyDollar } from 'react-bootstrap-icons';
 import ShowEnumFromString from '../../../../components/enum-filters/show-enum-from-string';
 import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
-import ViewDataTable from '../../../../components/viewDetails/viewDataTable';
+import ViewDataTable, { getDataTableColumnKey } from '../../../../components/viewDetails/viewDataTable';
 import { buildAddress } from '../../../../utils/common';
 import OverlyPopover from '../../../../components/popover/overly-popover';
 import { JobDeliveryType } from '../../../../enums/jobs/job-delivery-type.enum';
@@ -24,23 +24,17 @@ export default function Index() {
     const { t } = useTranslation();
     const applicantApi = new ApplicantApi();
     const { user } = useAuth();
-    const columnSettingKey = `driver.${user.id}.applications.columns`
-    let settingsJson = useStorage().getItem(columnSettingKey)
-    let settingsArray = settingsJson ? JSON.parse(settingsJson) : []
 
     const [applications, setApplications] = useState<ApplicantJobEntity[]>([])
-    const [columnHistory, setColumnHistory] = useState<string[]>([])
 
     useEffectAsync(async () => {
+        if (!user) return;
         const aJobs = await applicantApi.me.jobs();
 
         setApplications(aJobs);
-        let columnArray: string[] = []
-        await settingsArray.map(v => {
-            columnArray[v.name] = v
-        })
-        setColumnHistory(columnArray)
-    }, []);
+    }, [ user ]);
+
+    const columnSettingKey = getDataTableColumnKey("driver", user, "applications");
 
     return (
         <div className={JobList.joblisting}>
@@ -52,6 +46,7 @@ export default function Index() {
             <Row className="mt-5">
                 <Col lg="12 ">
                     <ViewDataTable<ApplicantJobEntity>
+                        columnSettingKey={columnSettingKey}
                         columns={[
                             {
                                 name: "job_title",
@@ -154,7 +149,6 @@ export default function Index() {
                             },
                         ]}
                         items={applications}
-                        columnSettingKey={columnSettingKey}
                     />
                 </Col>
             </Row>
