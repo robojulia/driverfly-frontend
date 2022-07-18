@@ -1,7 +1,7 @@
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
 import { Col, Row } from "reactstrap";
 import { useEffect, useState } from 'react';
-import CallApi from "../../../api/call"
+import TwilioApi from "../../../api/twilio"
 import ApplicantApi from "../../../api/applicant"
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import ViewDataTable from "../../../../components/viewDetails/viewDataTable";
@@ -17,15 +17,16 @@ export default function Call() {
     const { t } = useTranslation()
 
     const applicantApi = new ApplicantApi()
-    const callApi = new CallApi()
+    const twilioApi = new TwilioApi()
 
+    const [callingId, setCallingId] = useState(null)
     const [applicants, setApplicants] = useState<ApplicantEntity[]>([])
     const [device, setDevice] = useState(null)
     const [identity, setIdentity] = useState<ApplicantEntity>({})
     const [status, setStatus] = useState("Disconnected")
     const [ready, setReady] = useState(false)
     const [connected, setConnected] = useState(false)
-    const [loading, setloading] = useState(false)
+    const [loading, setloading] = useState(true)
 
     const [showCaller, setShowCaller] = useState(false)
     const handleShowCaller = () => setShowCaller(true)
@@ -36,17 +37,28 @@ export default function Call() {
     }
 
     useEffectAsync(async () => {
+        await twilioApi.getPhoneNumber()
+            .then(({ value }) => setCallingId(value || null))
+            .catch(error => toast.error(t(error?.response?.data?.message || "NO_TWILIO_NUMBER_AVAILABLE")))
+
         await applicantApi.list()
-            .then(data => setApplicants(data))
-            .catch(error => console.error("applicantApi.list error....", error));
+            .then(data => {
+                setloading(false)
+                setApplicants(data)
+            })
+            .catch(error => console.error("applicantApi.list error....", error.response));
     }, [])
 
     const setupTwilio = async () => {
-        callApi.generateToken()
-            .then(async ({ token }) => {
-                await setupClient(token)
-                    .catch(error => console.error("creating device error....", error))
-            })
+        if (!!callingId) {
+            twilioApi.generateToken()
+                .then(async ({ token }) => {
+                    await setupClient(token)
+                        .catch(error => console.error("creating device error....", error))
+                })
+        } else {
+            toast.error(t("NO_TWILIO_NUMBER_AVAILABLE"))
+        }
     }
 
     const setupClient = async (token) => {
@@ -130,6 +142,7 @@ export default function Call() {
                             {
                                 name: "name",
                                 selector: applicant => `${applicant.first_name} ${applicant.last_name}`,
+                                hidable: false
                             },
                             {
                                 name: "email",
@@ -139,6 +152,7 @@ export default function Call() {
                             {
                                 name: "phone",
                                 selector: applicant => applicant.phone,
+                                hidable: false
                             },
                         ]}
                         actions={applicant => ([
