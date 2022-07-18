@@ -35,7 +35,7 @@ export default function Pagination() {
 
                     <ul className="pagination ">
                         {
-                            pageIndex.current > 1 &&
+                            pageIndex.current > 2 &&
                             <>
                                 <li onClick={() => { handlePaging(1) }}>
                                     <span className="next page-numbers " role="button" >
