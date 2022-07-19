@@ -8,7 +8,7 @@ import Schedule from '../../../filters/schedule'
 import Equipment from '../../../filters/equipment'
 import SpecialEndorsementsRequired from '../../../filters/special-endorsements-required'
 import TypeOfDelivery from '../../../filters/type-of-delivery'
-import Range from "../../../filters/location/range"
+import Range from '../../../filters/location/range'
 import Category from '../../../filters/category'
 import { useTranslation } from '../../../../hooks/useTranslation'
 import jobContext from '../../../../context/jobContext'
@@ -28,6 +28,12 @@ export default function Filters() {
     const [showFilters, setShowFilters] = useState(false);
     const handleCloseFilters = () => setShowFilters(false);
     const handleShowFilters = () => setShowFilters(true);
+
+    const { setFilters } = method
+    const { filters } = state
+    const handleReset = async () => {
+      await setFilters([])
+    }
 
     return (
         <>
@@ -52,9 +58,16 @@ export default function Filters() {
                     placement="end"
                     className="tab-content">
                     <Offcanvas.Header closeButton>
-                        <Offcanvas.Title className="px-3">
+                        <Offcanvas.Title className="px-3 mt-2">
                             {t('FILTER_RESULT')}
                         </Offcanvas.Title>
+                        <Button
+                            type='button'
+                            onClick={handleReset}
+                            className='theme-secondary-btn ml-4'>
+                            Reset All
+                        </Button>
+
                     </Offcanvas.Header>
                     <Offcanvas.Body>
                         <div className="accordion bg-transparent px-3" id="accordionExample">

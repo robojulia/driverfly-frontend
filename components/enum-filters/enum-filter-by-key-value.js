@@ -11,7 +11,7 @@ export default function EnumFilterByKeyValue(props) {
             {props.withAll &&
                 <div className="topping ">
                     <input
-                        defaultChecked={(!filters[props.name]) || (filters[props.name] == "")}
+                        checked={(!!!filters[props.name]) || (filters[props.name] == "")}
                         onChange={props.handleChange}
                         type="radio"
                         name={props.name}
@@ -22,7 +22,7 @@ export default function EnumFilterByKeyValue(props) {
                 return (
                     <div key={value} className="topping pt-2">
                         <input
-                            defaultChecked={(filters[props.name]) && (filters[props.name] == value)}
+                            checked={(filters[props.name]) && (filters[props.name] == value)}
                             onChange={props.handleChange}
                             type="radio"
                             name={props.name}
