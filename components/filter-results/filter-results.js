@@ -25,8 +25,8 @@ export default function FilterResults() {
 
   const { setFilters } = method
   const { filters } = state
-  const handleReset = async () => {
-    await setFilters([])
+  const handleReset =  () => {
+     setFilters([])
   }
   return (
     <>
