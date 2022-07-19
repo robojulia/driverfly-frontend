@@ -23,10 +23,23 @@ export default function FilterResults() {
   const { t } = useTranslation();
   const { state, method } = useContext(jobContext)
 
+  const { setFilters } = method
+  const { filters } = state
+  const handleReset = async () => {
+    await setFilters([])
+  }
   return (
     <>
       <div className="filter_container">
-        <h5 className='font-weight-normal'>{t('FILTER_RESULT')}</h5>
+        <div className='d-flex'>
+          <h5 className='font-weight-normal mt-2'>{t('FILTER_RESULT')}</h5>
+          <button
+            type='button'
+            onClick={handleReset}
+            className='theme-secondary-btn ml-4'>
+            Reset All
+          </button>
+        </div>
         <form >
           < Search state={state} method={method} />
           <div className="bs-example">
@@ -40,7 +53,7 @@ export default function FilterResults() {
                 < TypeOfDelivery state={state} method={method} />
                 < EmploymentType state={state} method={method} />
                 < Equipment state={state} method={method} />
-                 < TransmissionType state={state} method={method} />
+                < TransmissionType state={state} method={method} />
                 < Schedule state={state} method={method} />
                 < SpecialEndorsementsRequired state={state} method={method} />
                 < MvrRequirement state={state} method={method} />
