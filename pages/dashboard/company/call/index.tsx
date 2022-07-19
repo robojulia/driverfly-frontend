@@ -108,7 +108,10 @@ export default function Call() {
 
     const connectCall = () => {
         setConnected(true)
-        if (identity?.phone) device.connect({ 'PhoneNumber': formatPhoneNumber(identity.phone), 'call_mode': 'WEB', })
+        if (identity?.phone) device.connect({
+            'PhoneNumber': formatPhoneNumber(identity.phone),
+            'from': callingId,
+        })
     }
 
     const disconnectCall = () => {
