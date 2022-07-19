@@ -11,6 +11,7 @@ import { useTranslation } from "../../../../hooks/useTranslation";
 import { Container, Modal } from "react-bootstrap";
 import { toast } from 'react-toastify'
 import Spinner from 'react-bootstrap/Spinner'
+import ViewMissedCalls from "../../../../components/call/view-missed-calls";
 
 export default function Call() {
 
@@ -37,6 +38,7 @@ export default function Call() {
     }
 
     useEffectAsync(async () => {
+
         await twilioApi.getPhoneNumber()
             .then(({ value }) => setCallingId(value || null))
             .catch(error => toast.error(t(error?.response?.data?.message || "NO_TWILIO_NUMBER_AVAILABLE")))
@@ -137,6 +139,10 @@ export default function Call() {
 
             <Row className="">
                 <Col lg="12 ">
+                    <ViewMissedCalls
+                        btnClassName='btn-danger'
+                        label="VIEW_MISSED_CALLS"
+                    />
                     <ViewDataTable
                         columns={[
                             {
