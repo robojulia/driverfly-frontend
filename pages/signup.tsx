@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
+
 import { useFormik } from "formik";
 
 import BaseInput from "../components/forms/BaseInput";
@@ -21,7 +22,7 @@ import AuthApi from "./api/auth";
 
 import { useTranslation } from "../hooks/useTranslation";
 import { SignUpRole } from "../enums/auth/sign-up-role.enum"
-import { Row } from "reactstrap"
+import { Row, Col } from "reactstrap"
 
 import { globalAjaxExceptionHandler } from "../utils/ajax";
 import { SignUpDto } from "../models/auth/sign-up.dto";
@@ -186,12 +187,23 @@ export default function Signup() {
                       formik={form}
                     />
                   }
-                  <BaseCheck
-                    className="col-12 mt-2"
-                    label="YOU_ACCEPT_OUR_TOS"
-                    name="accept_tos"
-                    formik={form}
-                  />
+                </Row>
+                <Row className="mt-2">
+                  <Col className="d-flex">
+                    <BaseCheck
+                      // className="col-12 mt-2"
+                      label="YOU_ACCEPT_OUR_TOS"
+                      name="accept_tos"
+                      formik={form}
+                    />
+                    <Link href="/terms-and-policies">
+                      <a className="mx-1" >{t("terms_and_condition")}</a>
+                    </Link>  and 
+                    <Link href="/privacy-policy">
+                      <a className="mx-1">{t("privacy_policy")}</a>
+                    </Link>
+                  </Col>
+
                 </Row>
                 <button disabled={form.isSubmitting}
                   type="submit"
@@ -207,7 +219,7 @@ export default function Signup() {
                   type="button"
                   className='btn btn-dark w-100 d-block p-3 my-3'
                   onClick={goToLogin}
-                  >
+                >
                   {t("IF_YOURE_ALREADY_A_USER_LOGIN_HERE")}
                 </button>
               </div>
