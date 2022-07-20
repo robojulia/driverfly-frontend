@@ -100,7 +100,14 @@ export function numberRangeStart(maxField: string, minValue: number) {
   .nullable()
 }
 
-export function numberRangeEnd(minField: string, minValue: number) {
+export function numberRangeEnd(minField: string, minValue: number, inclusive?: boolean) {
+  if (inclusive) {
+    return yup.number().when(minField, {
+      is: v => v != null && +v > minValue,
+      then: yup.number().min(yup.ref(minField)).nullable(),
+      otherwise: yup.number().moreThan(minValue).nullable()
+    }).nullable()
+  }
   return yup.number().when(minField, {
     is: v => v != null && +v > minValue,
     then: yup.number().moreThan(yup.ref(minField)).nullable(),

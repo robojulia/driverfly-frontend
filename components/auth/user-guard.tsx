@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { yupInit } from "../../config/yup";
 import { jwtExpiryTimeout, useAuth } from "../../hooks/useAuth";
 import { useEffectAsync } from "../../utils/react";
 import { Loading } from "../loading/loading";
@@ -11,6 +12,7 @@ export interface UserGuardProps {
 
 export function UserGuard({ permissions, children }: UserGuardProps) {
     const router = useRouter();
+    yupInit();
 
     const { user, hasPermission, loginGuard } = useAuth();
 
