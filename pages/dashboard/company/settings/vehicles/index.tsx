@@ -1,8 +1,8 @@
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
 import { useAuth } from '../../../../../hooks/useAuth';
 import { useRouter } from "next/router"
-import React, { useEffect, useState } from 'react'
-import { ToastContainer, toast } from 'react-toastify'
+import React, { useState } from 'react'
+import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useTranslation } from "../../../../../hooks/useTranslation";
 
@@ -14,9 +14,9 @@ import { VehicleType } from "../../../../../enums/vehicles/vehicle-type.enum";
 import { VehicleTrailerType } from "../../../../../enums/vehicles/vehicle-trailer-type.enum";
 import { VehicleAccessory } from "../../../../../enums/vehicles/vehicle-accessory.enum";
 import { VehicleEntity } from "../../../../../models/company/vehicle.entity";
-import PageLayout from "../../../../../components/layouts/PageLayout";
+import PageLayout from "../../../../../components/layouts/page/PageLayout";
 import { ButtonGroup, Button, Col, Row, Table } from "react-bootstrap";
-import ViewDataTable from "../../../../../components/viewDetails/viewDataTable";
+import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
 import { useEffectAsync } from "../../../../../utils/react";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import OverlyPopover from "../../../../../components/popover/overly-popover";
@@ -28,9 +28,10 @@ export default function VehicleList() {
   const { t } = useTranslation();
 
   const { user, hasPermission } = useAuth();
-  console.log('user', user);
 
   const [ vehicles, setVehicles ] = useState<VehicleEntity[]>([]);
+
+  const columnSettingKey = getDataTableColumnKey("company", user, "vehicles");
 
   useEffectAsync(async () => {
     const api = new VehicleApi();
@@ -99,48 +100,59 @@ export default function VehicleList() {
       </ButtonGroup>)}
     >
       <ViewDataTable<VehicleEntity>
+        columnSettingKey={columnSettingKey}
         columns={[
           {
+            id: "photo",
             name: "PHOTO",
             cell: (v) => v.photo && <img className="img-thumbnail" style={{maxWidth: "100px"}} src={v.photo.path} />
           },
           {
+            id: "type",
             name: "TYPE",
             selector: getVehicleType,
             cell: v => (<Link href={`${router.asPath}/${v.id}`}><a>{getVehicleType(v)}</a></Link>),
             hidable: false,
           },
           {
+            id: "trailer",
             name: "TRAILER",
             selector: v =>  v.trailer_type === VehicleTrailerType.OTHER ? v.trailer_type_other : (v.trailer_type && t(`VehicleTrailerType.${v.trailer_type}`) || "")
           },
           {
+            id: "transmission",
             name: "TRANSMISSION",
             selector: v => v.transmission_type ? t(`VehicleTransmissionType.` + v.transmission_type) : null
           },
           {
+            id: "make",
             name: "MAKE",
             selector: v => v.make,
           },
           {
+            id: "model",
             name: "MODEL",
             selector: v => v.model,
           },
           {
+            id: "year",
             name: "YEAR",
             selector: v => v.year,
           },
           {
+            id: "governed_speed",
             name: "GOVERNED_SPEED",
             selector: v => v.is_governed ? t("YES") : t("NO"),
             hide: 1,
           },
           {
+            id: "max_speed",
             name: "MAX_SPEED",
             selector: v => v.is_governed ? v.max_speed : null,
             hide: 1,
           },
           {
+            id: "accessories",
             name: "ACCESSORIES",
             selector: getVehicleAccessories,
             cell: v => (<OverlyPopover
@@ -161,7 +173,7 @@ export default function VehicleList() {
             onClick: e => onEditClick(v.id),
             icon: PenFill,
             label: "EDIT",
-            hide: !hasPermission("CanEditVehicle")
+            hide: !hasPermission("CanUpdateVehicle")
           },
           {
             onClick: e => onDeleteClick(v.id),
@@ -183,3 +195,8 @@ VehicleList.getLayout = function getLayout(page) {
     </FullLayout>
   )
 }
+
+// export async function getServerSideProps(context) {
+//   const { user } = useUserContext();
+  
+// }

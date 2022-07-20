@@ -13,7 +13,7 @@ import { counts, year2Only, year3Only, year5Only, years } from "../../../utils/j
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 
 import { Button, Col, InputGroup, Row } from "react-bootstrap";
-import EntityForm from "../../layouts/EntityForm";
+import EntityForm from "../../layouts/page/EntityForm";
 import ViewCard from "../../viewDetails/viewCard";
 import ViewModal from "../../viewDetails/viewModal";
 import { VehicleForm } from "./VehicleForm";
@@ -49,6 +49,7 @@ import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmi
 import { JobDrugTestType } from "../../../enums/jobs/job-drug-test-type.enum";
 import { CriminalHistoryType } from "../../../enums/users/criminal-history-type.enum";
 import { MvrType } from "../../../enums/users/mvr-type.enum";
+import { buildAddress } from "../../../utils/common";
 
 export interface JobFormProps extends BaseFormProps<JobEntity> {
 
@@ -380,8 +381,6 @@ export function JobForm(props: JobFormProps) {
         setCreateLocation(false);
     }
 
-    console.log("Create entity", { createVehicle, createLocation });
-
     return (
         <>
         <EntityForm
@@ -411,7 +410,7 @@ export function JobForm(props: JobFormProps) {
                             placeholder="LOCATION"
                             formik={form}
                             valueKey="id"
-                            labelKey="street"
+                            createLabel={v => buildAddress(v)}
                             options={locations}
                             append={<Button variant="outline-secondary create_btn" disabled={!hasPermission("CanCreateLocation")} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
                         />
@@ -807,7 +806,7 @@ export function JobForm(props: JobFormProps) {
                     name="description"
                     required
                     rows={3}
-                    maxLength={800}
+                    maxLength={1500}
                     placeholder="description"
                     formik={form}
                 />

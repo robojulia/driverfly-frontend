@@ -3,6 +3,7 @@ import { useToken } from "../../hooks/useAuth";
 
 import { UserContext } from "../../context/user-context";
 import { UserGuard } from "./user-guard";
+import { TranslationProvider } from "./translation-provider";
 
 export interface AuthProviderProps {
     Component: React.ElementType;
@@ -26,9 +27,11 @@ export function AuthProvider(props: AuthProviderProps) {
 
     return (
         <UserContext.Provider value={userContext}>
-            <UserGuard permissions={getPermissions}>
-                {getLayout(<Component {...pageProps} />)}
-            </UserGuard>
+            <TranslationProvider>
+                <UserGuard permissions={getPermissions}>
+                    {getLayout(<Component {...pageProps} />)}
+                </UserGuard>
+            </TranslationProvider>
         </UserContext.Provider>
     );
 }

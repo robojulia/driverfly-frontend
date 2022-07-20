@@ -6,7 +6,7 @@ import { useAuth } from "../../../../hooks/useAuth";
 import { useTranslation } from "../../../../hooks/useTranslation";
 import UserApi from "../../../api/user";
 import { Row, Col, Button } from "react-bootstrap";
-import PageLayout from "../../../../components/layouts/PageLayout";
+import PageLayout from "../../../../components/layouts/page/PageLayout";
 import { UserPreferenceEntity } from "../../../../models/user/user-preference.entity"
 
 import * as yup from "yup";
@@ -15,6 +15,7 @@ import { UserPreferenceCategory } from "../../../../enums/users/user-preference-
 import { UserPreferenceCommunicationLabel } from "../../../../enums/users/user-preferences-communication-label.enum";
 import BaseCheck from "../../../../components/forms/BaseCheck";
 import BaseCheckList from "../../../../components/forms/BaseCheckList";
+import { useEffectAsync } from "../../../../utils/react";
 
 export default function Communication() {
     const { user } = useAuth();
@@ -28,25 +29,25 @@ export default function Communication() {
                 category: UserPreferenceCategory.COMMUNICATION,
                 label: UserPreferenceCommunicationLabel.RECEIVE_DRIVERFLY,
                 value: false,
-            },
+            } as UserPreferenceEntity,
             preferred_method: {
                 ...new UserPreferenceEntity(),
                 category: UserPreferenceCategory.COMMUNICATION,
                 label: UserPreferenceCommunicationLabel.PREFERRED_METHOD,
                 value: []
-            },
+            } as UserPreferenceEntity,
             receive_suggested_jobs: {
                 ...new UserPreferenceEntity(),
                 category: UserPreferenceCategory.COMMUNICATION,
                 label: UserPreferenceCommunicationLabel.RECEIVE_SUGGESTED_JOBS,
                 value: false
-            },
+            } as UserPreferenceEntity,
             receive_newsletter: {
                 ...new UserPreferenceEntity(),
                 category: UserPreferenceCategory.COMMUNICATION,
                 label: UserPreferenceCommunicationLabel.RECEIVE_NEWSLETTER,
                 value: false
-            },
+            } as UserPreferenceEntity,
         },
         validationSchema: yup.object({
             receive_driverfly: UserPreferenceEntity.yupSchema(),
@@ -83,15 +84,15 @@ export default function Communication() {
         }
     });
 
-    useEffect(async () => {
-        if (user && user.id) {
+    useEffectAsync(async () => {
+        if (user) {
             const api = new UserApi();
 
             const preferences = await api.preferences.list(user.id, { category: UserPreferenceCategory.COMMUNICATION });
 
             populateForm(preferences);
         }
-    }, []);
+    }, [ user ]);
 
     /**
      * 

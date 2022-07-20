@@ -1,7 +1,9 @@
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { yupInit } from "../../config/yup";
 import { jwtExpiryTimeout, useAuth } from "../../hooks/useAuth";
 import { useEffectAsync } from "../../utils/react";
+import { Loading } from "../loading/loading";
 
 export interface UserGuardProps {
     permissions?: string | string[];
@@ -10,15 +12,15 @@ export interface UserGuardProps {
 
 export function UserGuard({ permissions, children }: UserGuardProps) {
     const router = useRouter();
+    yupInit();
 
-    const [ isLoading, setIsLoading ] = useState(true);
     const { user, hasPermission, loginGuard } = useAuth();
 
     const [ timeoutId, setTimeoutId ] = useState(null);
 
-    useEffectAsync(CheckAuth, [ isLoading, user, router.asPath ], () => {
+    function destructor() {
         if (timeoutId) window.clearTimeout(timeoutId);
-    });
+    }
 
     async function CheckAuth() {
         console.log("Checking Auth...");
@@ -28,13 +30,15 @@ export function UserGuard({ permissions, children }: UserGuardProps) {
                     if (typeof permissions === "string")
                         permissions = [permissions];
 
-                    if (hasPermission(...permissions)) setIsLoading(false);
+                    if (!hasPermission(...permissions)) {
+                        await router.push("/");
+                        return false;
+                    }
                 }
+                else return false;
             }
-            else
-                setIsLoading(false);
 
-            if (user && user.jwt.exp) {
+            if (user && user.jwt?.exp) {
                 const msToExpiration = jwtExpiryTimeout(user.jwt);
                 console.log("Expires in ms: ", msToExpiration);
 
@@ -43,13 +47,16 @@ export function UserGuard({ permissions, children }: UserGuardProps) {
                 setTimeoutId(timeoutId);
             }
         }
-    }
-  
-    if (isLoading) {
-        // todo: build loading page
-        return <>Checking authorization...</>;
+
+        return true;
     }
 
-    return <>{children}</>
-
+    return (<Loading
+        fetch={CheckAuth}
+        triggers={[ user, router.asPath ]}
+        destructor={destructor}
+        loadingText={"Checking authorization..."}
+        >
+        {children}
+    </Loading>);
 }

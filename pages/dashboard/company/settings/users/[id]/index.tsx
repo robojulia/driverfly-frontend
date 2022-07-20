@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Col, Row } from "react-bootstrap";
 import { ArrowsExpand, BookmarkCheck, BookmarkDash, Pencil, Plus, Trash } from "react-bootstrap-icons";
 
 import FullLayout from "../../../../../../components/dashboard/layouts/Layout/FullLayout";
-import ChildPageLayout from "../../../../../../components/layouts/ChildPageLayout";
+import ChildPageLayout from "../../../../../../components/layouts/page/ChildPageLayout";
 import ViewCard from "../../../../../../components/viewDetails/viewCard";
 import ViewDetails from "../../../../../../components/viewDetails/viewDetails";
 
@@ -32,6 +32,8 @@ export default function ViewUser({ id }) {
     const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
 
     useEffectAsync(async () => {
+        if (!user) return;
+        
         if (id) {
             const api = new UserApi();
 
@@ -49,7 +51,7 @@ export default function ViewUser({ id }) {
             goBack();
         }
 
-    }, [ id ]);
+    }, [ user, id ]);
 
     const onEditClick = async () => {
         await router.push(router.asPath + `/edit`);

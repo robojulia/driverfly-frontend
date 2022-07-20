@@ -4,7 +4,7 @@ import style from '../../../public/dashboard/styles/css/Driver/dashboard.module.
 import { useState } from "react";
 import Link from 'next/link';
 
-import PageLayout from "../../../components/layouts/PageLayout";
+import PageLayout from "../../../components/layouts/page/PageLayout";
 import { useTranslation } from "../../../hooks/useTranslation";
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
 import ApplicantApi from "../../api/applicant";
@@ -146,7 +146,7 @@ export default function Dashboard() {
                                 </Link>
                             </td>
                             <td className="p-0">
-                                <Link href="/dashboard/driver/find-jobs">
+                                <Link href="/dashboard/driver/jobs">
                                     <button className={`text-white ${style.btn_blue}`}>{t("find_new_job")}</button>
                                 </Link>
                             </td>

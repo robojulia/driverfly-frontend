@@ -29,9 +29,9 @@ const FullLayout = ({ children }) => {
       text: "dashboard"
     },
     {
-      pathname: "/dashboard/driver/find-jobs",
+      pathname: "/dashboard/driver/jobs",
       icon: Search,
-      text: "find_new_job"
+      text: "FIND_JOBS"
     },
     {
       pathname: "/dashboard/driver/applications",
@@ -39,19 +39,14 @@ const FullLayout = ({ children }) => {
       text: "MY_APPLICATIONS"
     },
     {
-      pathname: "/dashboard/driver/jobs-offered",
+      pathname: "/dashboard/driver/jobs/offered",
       icon: BagFill,
-      text: "jobs_offered"
+      text: "JOBS_OFFERED"
     },
-    // {
-    //   pathname: "/dashboard/driver/jobs-applied-to",
-    //   icon: CheckSquareFill,
-    //   text: "jobs_applied_to"
-    // },
     {
-      pathname: "/dashboard/driver/jobs-saved",
+      pathname: "/dashboard/driver/jobs/saved",
       icon: ClockHistory,
-      text: "jobs_saved"
+      text: "JOBS_SAVED"
     },
     {
       pathname: "/dashboard/driver/free-resources",

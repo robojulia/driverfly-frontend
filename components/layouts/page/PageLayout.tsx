@@ -1,7 +1,7 @@
 import { Container } from "react-bootstrap";
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../../hooks/useTranslation";
 import { Row, Col } from "react-bootstrap";
 
 export interface PageLayoutProps {

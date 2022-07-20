@@ -1,6 +1,6 @@
 import FullLayout from "../../../components/dashboard/layouts/Layout/FullLayout";
 import { Col, Row } from "reactstrap";
-import PageLayout from "../../../components/layouts/PageLayout";
+import PageLayout from "../../../components/layouts/page/PageLayout";
 import { ApplicantPipelineChart } from "../../../components/charts/company/ApplicantPiplineChart";
 import { ApplicantsPerRecruiterChart } from "../../../components/charts/company/ApplicantsPerRecruiterChart";
 import { useAuth } from "../../../hooks/useAuth";

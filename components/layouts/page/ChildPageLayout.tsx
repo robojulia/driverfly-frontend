@@ -3,8 +3,8 @@ import { Col, Container, Row } from "react-bootstrap";
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { ChevronLeft } from "react-bootstrap-icons";
-import useLastPage from "../../hooks/useLastPage";
-import { useTranslation } from "../../hooks/useTranslation";
+import useLastPage from "../../../hooks/useLastPage";
+import { useTranslation } from "../../../hooks/useTranslation";
 import { PageLayoutProps } from "./PageLayout";
 
 export interface ChildPageLayoutProps extends PageLayoutProps {

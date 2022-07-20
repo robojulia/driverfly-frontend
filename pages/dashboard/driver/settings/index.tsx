@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 
 // layouts
 import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
-import PageLayout from "../../../../components/layouts/PageLayout";
+import PageLayout from "../../../../components/layouts/page/PageLayout";
 
 // hooks
 import { useAuth } from '../../../../hooks/useAuth';
@@ -24,6 +24,7 @@ import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import { UserEntity } from "../../../../models/user/user.entity";
 
 import * as toast from "../../../../utils/toast";
+import EntityForm from "../../../../components/layouts/page/EntityForm";
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -58,21 +59,18 @@ export default function Profile() {
     }
   });
 
-  useEffect(async () => {
-    form.setValues({
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email,
-      contact_number: user.contact_number,
-      cell_number: user.cell_number,
-      timezone: user.timezone,
-      language: user.language,
-    });
-  }, [ ]);
+  useEffect(() => {
+    if (user) {
+      form.setValues(user);
+    }
+  }, [ user ]);
 
   return (
     <PageLayout title="MY_ACCOUNT">
-      <form onSubmit={form.handleSubmit} >
+      <EntityForm
+        id={user?.id}
+        formik={form}
+      >
         <Row>
           <BaseInput
             className="col-6"
@@ -117,16 +115,7 @@ export default function Profile() {
             formik={form}
           />
         </Row>
-        <Row className="mt-2">
-          <div className="col-12 border-0 text-end">
-            <div className="col">
-              <button type="submit" className={`btn btn-primary`} >
-                {t("UPDATE")}
-              </button>
-            </div>
-          </div>
-        </Row>
-      </form>
+      </EntityForm>
     </PageLayout>
   )
 };

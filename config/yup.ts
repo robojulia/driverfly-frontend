@@ -35,7 +35,11 @@ export function yupInit() {
           unique: (ctx) => t("yup.string.unique", { field: ctx.field })
         } as any,
         number: {
-          min: (ctx) => t("yup.number.min", { min: ctx.min }),
+          min: (ctx) => {
+            console.log(ctx);
+            debugger;
+            return t("yup.number.min", { min: ctx.min })
+          },
           max: (ctx) => t("yup.number.max", { max: ctx.max }),
           lessThan: (ctx) => t("yup.number.lessThan", { less: ctx.less }),
           moreThan: (ctx) => t("yup.number.greaterThan", { more: ctx.more }),

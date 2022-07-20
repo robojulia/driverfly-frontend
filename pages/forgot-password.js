@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 import Back from '../components/back-to-login/Back-Login'
-import Layout from "../components/layouts"
+import { PublicLayout } from "../components/layouts/PublicLayout";
 import Forgotpassword from '../public/css/Forgot.module.css'
 import AuthApi from "./api/auth";
 import { ToastContainer, toast } from 'react-toastify'
@@ -105,8 +105,8 @@ export default function Forgot() {
 }
 Forgot.getLayout = function getLayout(page) {
   return (
-    <Layout title="FORGOT_PASSWORD">
+    <PublicLayout title="FORGOT_PASSWORD">
       {page}
-    </Layout>
+    </PublicLayout>
   )
 }

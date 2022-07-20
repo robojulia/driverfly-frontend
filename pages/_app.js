@@ -19,7 +19,6 @@ import { AuthProvider } from "../components/auth/auth-provider";
 
 function MyApp({ Component, pageProps }) {
 
-  yupInit();
   chartJsInit();
   bootstrapInit();
 

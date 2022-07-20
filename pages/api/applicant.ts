@@ -61,12 +61,6 @@ class ApplicantApi extends BaseApi {
         return data;
     }
 
-    async getApplicantJobsByStatus(params: ApplicantJobsByStatusDto) {
-        const { data } = await this.get(`${this.baseUrl}/applicant-jobs-by-status`, { params });
-
-        return data;
-    }
-
     me = {
         get: async () : Promise<ApplicantEntity> => {
             const { data } = await this.get(this.baseUrl);

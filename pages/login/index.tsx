@@ -2,7 +2,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { useRouter } from 'next/router'
 
 import { useState } from 'react';
-import Layout from "../../components/layouts";
+import { PublicLayout } from "../../components/layouts/PublicLayout";
 import style from '../../public/css/Login.module.css'
 import Link from 'next/link';
 import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
@@ -138,8 +138,8 @@ export default function Login() {
 }
 Login.getLayout = function getLayout(page) {
     return (
-        <Layout title="Login">
+        <PublicLayout title="Login">
             {page}
-        </Layout>
+        </PublicLayout>
     )
 }

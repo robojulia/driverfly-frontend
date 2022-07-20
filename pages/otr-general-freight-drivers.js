@@ -3,7 +3,7 @@ import { ArrowLeftRight } from "react-bootstrap-icons"
 import JobApply from "../components/apply"
 import JobDescription from '../components/job-description/JobDescription'
 import JonInformation from '../components/job-information-sidebar/JobInformation'
-import Layout from "../components/layouts"
+import { PublicLayout } from "../components/layouts/PublicLayout";
 import RelatedJobs from '../components/related-jobs/Related-Jobs'
 import SocilShare from '../components/share-link/ShareLink'
 import { ArrowRight } from 'react-bootstrap-icons';
@@ -107,8 +107,8 @@ export async function getServerSideProps () {
 
 Apply.getLayout = function getLayout ( page ) {
   return (
-    <Layout>
+    <PublicLayout>
       {page}
-    </Layout>
+    </PublicLayout>
   )
 }

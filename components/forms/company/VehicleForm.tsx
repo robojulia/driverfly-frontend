@@ -19,7 +19,7 @@ import BaseCheck from "../BaseCheck";
 import BaseInput from "../BaseInput";
 import FileInput from "../FileInput";
 import BaseTextArea from "../BaseTextArea";
-import EntityForm from "../../layouts/EntityForm";
+import EntityForm from "../../layouts/page/EntityForm";
 import { BaseFormProps } from "./BaseFormProps";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 

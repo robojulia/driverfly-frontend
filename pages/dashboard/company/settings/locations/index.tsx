@@ -13,10 +13,10 @@ import {EyeFill, PenFill, TrashFill} from 'react-bootstrap-icons';
 import LocationApi from "../../../../api/location";
 import { LocationEntity } from "../../../../../models/company/location.entity";
 import { useAuth } from "../../../../../hooks/useAuth";
-import PageLayout from "../../../../../components/layouts/PageLayout";
+import PageLayout from "../../../../../components/layouts/page/PageLayout";
 import { useEffectAsync } from "../../../../../utils/react";
 import { Button, ButtonGroup } from "react-bootstrap";
-import ViewDataTable from "../../../../../components/viewDetails/viewDataTable";
+import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import Link from "next/link";
 
@@ -26,6 +26,8 @@ export default function LocationList() {
   const { t } = useTranslation();
 
   const { user, hasPermission } = useAuth();
+
+  const columnSettingKey = getDataTableColumnKey("company", user, "locations");
 
   const [ locations, setLocations ] = useState([]);
 
@@ -86,22 +88,27 @@ export default function LocationList() {
       </ButtonGroup>)}
     >
       <ViewDataTable<LocationEntity>
+        columnSettingKey={columnSettingKey}
         columns={[
           {
+            id: "street",
             name: "STREET",
             selector: v => v.street,
             cell: v => <Link href={`${router.asPath}/${v.id}`}><a>{v.street}</a></Link>,
             hidable: false,
           },
           {
+            id: "city",
             name: "CITY",
             selector: v => v.city,
           },
           {
+            id: "state",
             name: "STATE",
             selector: v => v.state,
           },
           {
+            id: "zip_code",
             name: "ZIP_CODE",
             selector: v => v.zip_code,
           },
