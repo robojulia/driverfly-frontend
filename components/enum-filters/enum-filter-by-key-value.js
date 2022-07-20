@@ -5,15 +5,13 @@ export default function EnumFilterByKeyValue(props) {
     const { t } = useTranslation();
     const { state, method } = props
     const { filters } = state
-
     return (
         <>
             {props.withAll &&
                 <div className="topping ">
                     <input
                         defaultChecked={(!filters[props.name]) || (filters[props.name] == "")}
-                        onChange={props.handleChange}
-                        type="radio"
+                            type="radio"
                         name={props.name}
                         value="" /> {t('ALL')}
                 </div>

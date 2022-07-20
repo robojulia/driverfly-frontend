@@ -22,7 +22,6 @@ export default function FilterResults() {
 
   const { t } = useTranslation();
   const { state, method } = useContext(jobContext)
-
   return (
     <>
       <div className="filter_container">

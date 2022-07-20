@@ -2,13 +2,16 @@ import { JobPayMethod } from "../../enums/jobs/job-pay-method.enum"
 import { useTranslation } from "../../hooks/useTranslation";
 import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
 import ViewMoreRadioFilter from "./view-more-radio-filter";
+import BaseInput from '../../components/forms/BaseInput';
 
 export default function PayStructure(props) {
 
   const { t } = useTranslation();
   const { state, method } = props
   const { handleChange } = method
-
+  console.log(state.filters, 'propsChecks')
+  // fitler.paystructure.value set? input
+  //placeholder, lables from translation
   return (
     <>
       <FindJobFilterAccordion {...props} header={t("pay_structure")}>
@@ -18,6 +21,28 @@ export default function PayStructure(props) {
           name="pay_structure"
           labelPrefix="JobPayMethod"
           enums={JobPayMethod} />
+          {state.filters.pay_structure && <div className="d-flex justify-content-space-between mt-3">
+            <input
+              step={0.01}
+              min={0}
+              className="col-6 text-secondary pt-2 pb-2 border rounded mr-1"
+              required
+              name="min_weekly_pay"
+              placeholder={t("min_weekly")}
+              type="number"
+              onChange={handleChange}
+            />
+          <input
+              step={0.01}
+              min={0}
+              className="col-6 text-secondary pt-2 pb-2 border rounded" 
+              required
+              name="max_weekly_pay"
+              placeholder={t("max_weekly")}
+              type="number"
+              onChange={handleChange}
+            />
+          </div>}
       </FindJobFilterAccordion>
     </>
   )
