@@ -85,7 +85,7 @@ export class JobEntity {
         return yup.object({
             title: yup.string().required().max(100).nullable(),
             location: BasicEntity.yupSchema(),
-            description: yup.string().max(800).required().nullable(),
+            description: yup.string().max(1500).required().nullable(),
             drivers_needed: yup.number().min(0).nullable(),
             expiry_date: yup.date().nullable(),
             geography: (yup.string() as any).enum(JobGeography).required().nullable(),
