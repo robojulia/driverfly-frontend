@@ -5,7 +5,6 @@ export default function EnumFilterByKeyValue(props) {
     const { t } = useTranslation();
     const { state, method } = props
     const { filters } = state
-
     return (
         <>
             {props.withAll &&
