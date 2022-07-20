@@ -5,6 +5,7 @@ import { RoleEntity } from '../roles/role.enttiy';
 import * as yup from "yup";
 import { Status } from '../../enums/status.enum';
 import { JwtRefreshTokenPayload } from '../auth/jwt-refresh-token-payload.interface';
+import { DocumentEntity } from '../documents/document.entity';
 
 export class UserEntity {
     id?: number;
@@ -24,6 +25,7 @@ export class UserEntity {
     contact_number?: string;
     cell_number?: string;
     company?: CompanyEntity;
+    photo?: DocumentEntity;
 
     token?: string;
     jwt?: JwtTokenPayload;
@@ -42,7 +44,11 @@ export class UserEntity {
             password: yup.string().when("id", {
                 is: v => !v,
                 then: yup.string().required().nullable()
-            }).nullable()
+            }).nullable(),
+            photo: yup.mixed().when({
+                is: v => !!v,
+                then: DocumentEntity.yupSchema()
+              }).optional(),
         });
     }
 }
