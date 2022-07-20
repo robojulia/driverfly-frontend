@@ -9,9 +9,6 @@ export default function PayStructure(props) {
   const { t } = useTranslation();
   const { state, method } = props
   const { handleChange } = method
-  console.log(state.filters, 'propsChecks')
-  // fitler.paystructure.value set? input
-  //placeholder, lables from translation
   return (
     <>
       <FindJobFilterAccordion {...props} header={t("pay_structure")}>
