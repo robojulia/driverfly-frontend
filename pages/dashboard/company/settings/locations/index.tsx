@@ -67,20 +67,25 @@ export default function LocationList() {
 
       await api.remove(id);
 
-      setLocations(locations.filter(v => v.id != name));
+      setLocations(locations.filter(v => v.id != id));
      } catch (e) {
        globalAjaxExceptionHandler(e, { t: t, toast: toast });
      }
   }
 
-  const canCreate = hasPermission("CanCreateLocation");
+  const can = {
+    create: hasPermission("CanCreateLocation"),
+    view: hasPermission("CanViewLocation"),
+    update: hasPermission("CanUpdateLocation"),
+    delete: hasPermission("CanDeleteLocation")
+  };
 
 
   return (
     <PageLayout
       title="TERMINALS"
       actions={(<ButtonGroup>
-        {canCreate &&
+        {can.create &&
           <Button onClick={onAddClick}>
             + {t("CREATE")}
           </Button>
@@ -118,19 +123,19 @@ export default function LocationList() {
               onClick: e => onViewClick(l.id),
               icon: EyeFill,
               label: "VIEW",
-              hide: !hasPermission("CanViewLocation")
+              hide: !can.view
           },
           {
               onClick: e => onEditClick(l.id),
               icon: PenFill,
               label: "EDIT",
-              hide: !hasPermission("CanUpdateLocation")
+              hide: !can.update
           },
           {
               onClick: e => onDeleteClick(l.id),
               icon: TrashFill,
               label: "DELETE",
-              hide: !hasPermission("CanDeleteLocation")
+              hide: !can.delete
           }
         ])}
         items={locations}

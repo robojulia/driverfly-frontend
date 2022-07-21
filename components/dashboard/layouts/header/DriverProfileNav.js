@@ -4,6 +4,7 @@ import Image from "next/image";
 import LogoutButton from '../../../buttons/Logout';
 import { useTranslation } from "../../../../hooks/useTranslation";
 import Impersonate from "../../../impersonate/impersonate";
+import UserPhoto from "../../driver/user-photo"
 
 import { useAuth } from "../../../../hooks/useAuth";
 
@@ -23,12 +24,8 @@ export default function DriverProfileNav() {
       <div className="profile">
         <Dropdown show={dropdownOpen} onToggle={toggle} >
           <Dropdown.Toggle variant="light">
-            <img src="/dashboard/assets/images/users/user1.jpg"
-              alt="profile"
-              className="rounded-circle"
-              width="30"
-              height="30"
-            />
+            < UserPhoto user={user} className="rounded-circle" width="30" height="30" />
+            {console.log("Login user pic",user)}
             <span>{user?.first_name}  {user?.last_name}</span>
           </Dropdown.Toggle >
           <Dropdown.Menu>

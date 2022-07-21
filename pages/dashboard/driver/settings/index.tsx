@@ -25,6 +25,7 @@ import { UserEntity } from "../../../../models/user/user.entity";
 
 import * as toast from "../../../../utils/toast";
 import EntityForm from "../../../../components/layouts/page/EntityForm";
+import FileInput from "../../../../components/forms/FileInput";
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -63,7 +64,7 @@ export default function Profile() {
     if (user) {
       form.setValues(user);
     }
-  }, [ user ]);
+  }, [user]);
 
   return (
     <PageLayout title="MY_ACCOUNT">
@@ -112,6 +113,14 @@ export default function Profile() {
             type="email"
             readOnly
             required
+            formik={form}
+          />
+          <FileInput
+            className="col-12"
+            label={`photo`}
+            name={`photo`}
+            accept="image/*"
+            documentType={"PHOTO"}
             formik={form}
           />
         </Row>

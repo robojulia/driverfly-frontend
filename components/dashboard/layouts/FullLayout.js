@@ -26,7 +26,7 @@ const FullLayout = ({ children }) => {
     {
       pathname: "/dashboard/driver",
       icon: HouseFill,
-      text: "dashboard"
+      text: "DASHBOARD"
     },
     {
       pathname: "/dashboard/driver/jobs",
@@ -51,12 +51,12 @@ const FullLayout = ({ children }) => {
     {
       pathname: "/dashboard/driver/free-resources",
       icon: GiftFill,
-      text: "free_resources"
+      text: "FREE_RESOURCES"
     },
     {
       pathname: "/dashboard/driver/messages",
       icon: EnvelopeFill,
-      text: "Messages"
+      text: "MESSAGES"
     },
     {
       icon: GearFill,
@@ -70,7 +70,7 @@ const FullLayout = ({ children }) => {
         {
           pathname: "/dashboard/driver/settings/applicant",
           icon: FileEarmarkFill,
-          text: "my_application",
+          text: "MY_APPLICATION",
         },
         {
           pathname: "/dashboard/driver/settings/communication",
