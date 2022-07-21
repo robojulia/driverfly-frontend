@@ -4,10 +4,38 @@ import { PublicLayout } from "../components/layouts/PublicLayout";
 import ReCAPTCHA from "react-google-recaptcha";
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 import { ArrowLeft, ArrowRight, Newspaper, PersonBadgeFill, QuestionCircle } from 'react-bootstrap-icons';
+import { useTranslation } from "../hooks/useTranslation";
 
-
+import BaseInput from "../components/forms/BaseInput";
+import BaseTextArea from "../components/forms/BaseTextArea";
+import { useFormik } from "formik";
+import { ContactFormDto } from "../models/general/contact-form.dto";
+import { Row, Col } from "reactstrap"
+import { ToastContainer, toast } from 'react-toastify'
 
 export default function Contact() {
+
+    const { t } = useTranslation();
+
+    const form = useFormik({
+        initialValues: new ContactFormDto(),
+        validationSchema: ContactFormDto.yupSchema(),
+        onSubmit: async (dto) => {
+            // const api = new AuthApi();
+
+            // try {
+            //     await api.signUp(dto);
+            //     toast.success(t("SUCCESSFULLY_REGISTERED"));
+            //     setTimeout(goToLogin, 3000);
+            // }
+            // catch (e) {
+            //     globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SIGNUP" });
+            // }
+            console.log("Call Successfuly")
+        }
+    });
+
+
     function onChange(value) {
         console.log("Captcha value:", value);
     }
@@ -23,9 +51,7 @@ export default function Contact() {
             </div>
 
             <div className="top-outer bg-white py-5"></div>
-
-
-            <div className="contact-form">
+              <div className="contact-form">
                 <div className="container">
                     <div className="row contact-inner bg-white">
                         <div className="col-sm-12 col-lg-5 pl-0">
@@ -42,53 +68,74 @@ export default function Contact() {
                             </article>
                         </div>
                         <div className="col-sm-12 col-lg-7 contact-outer">
-                            <form action="" method="post">
-                                <h3>We want to hear form you!</h3>
-                                <div className="form-group">
-                                    <div className="row">
-                                        <div className="col"><input type="text" className="form-control shadow-sm p-4" name="your_name" placeholder="Your Name" required="required" /></div>
-                                        <div className="col"> <input type="email" className="form-control shadow-sm p-4" name="email" placeholder="Email Address" required="required" /></div>
-                                    </div>
-                                </div>
-                                <div className="form-group">
-                                    <input type="text" className="form-control shadow-sm p-4" name="subject" placeholder="Subject" required="required" />
-                                </div>
-                                <div className="form-group">
-                                    <textarea name="message" id="message" cols="20" rows="6" className="form-control shadow-sm " placeholder="Message"></textarea>
-                                </div>
-                                <ReCAPTCHA
-                                    sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-                                    onChange={onChange}
-                                />
-                                <div className="form-group">
-                                    <button type="submit" className="btn contact-submit-btn float-right py-3 px-5 mb-4">Submit <ArrowRight /> </button>
-                                </div>
-                            </form>
+                            <ToastContainer />
+                            <h3>{t("We_want_to_hear_form_you")}</h3>
+                            <div className="container p-0">
+                                <Row>
+                                    <Col>
+                                        <ToastContainer />
+                                        <form onSubmit={form.handleSubmit}>
+                                            <Row>
+                                                <BaseInput
+                                                    className="col-6 mt-4"
+                                                    required
+                                                    name="name"
+                                                    placeholder
+                                                    formik={form}
+                                                />
+                                                <BaseInput
+                                                    className="col-6 mt-4"
+                                                    required
+                                                    name="email"
+                                                    placeholder
+                                                    formik={form}
+                                                />
+                                                <BaseInput
+                                                    className="col-12 mt-4"
+                                                    name="subject"
+                                                    placeholder
+                                                    formik={form}
+                                                />
+                                                <BaseTextArea
+                                                    className="col-12 my-4"
+                                                    name="message"
+                                                    placeholder
+                                                    formik={form}
+                                                />
+                                            </Row>
+                                            <ReCAPTCHA
+                                                sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+                                                onChange={onChange}
+                                            />
+                                            <button disabled={form.isSubmitting}
+                                                type="submit"
+                                                className="btn contact-submit-btn float-right py-3 px-5 mb-4">
+                                                {t("submit")}  <ArrowRight />
+                                            </button>
+                                        </form>
+                                    </Col>
+                                </Row>
+                            </div>
                         </div>
                     </div>
                     <div className="row mt-5 pt-4 contact-icon">
                         <div className="col-md-4">
                             <div className="contact-icon-inner">
                                 < PersonBadgeFill />
-
                             </div>
-                            <h3 className="title text-center  my-4"><Link href="/signup"><a className='text-black'>Want to join us?</a></Link></h3>
+                            <h3 className="title text-center my-4"><Link href="/signup"><a className='text-black'>Want to join us?</a></Link></h3>
                         </div>
                         <div className="col-md-4">
                             <div className="contact-icon-inner">
                                 <Newspaper />
-
-
-
                             </div>
-                            <h3 className="title text-center  my-4"><Link href="/blog"><a className='text-black'>Read our latest news</a></Link></h3>
-
+                            <h3 className="title text-center my-4"><Link href="/blog"><a className='text-black'>Read our latest news</a></Link></h3>
                         </div>
                         <div className="col-md-4">
                             <div className="contact-icon-inner">
                                 <QuestionCircle />
                             </div>
-                            <h3 className="title text-center  my-4"><Link href="/faq"><a className='text-black'>Have questions?</a></Link></h3>
+                            <h3 className="title text-center my-4"><Link href="/faq"><a className='text-black'>Have questions?</a></Link></h3>
                         </div>
                     </div>
                 </div>
