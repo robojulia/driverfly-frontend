@@ -12,6 +12,8 @@ import { useFormik } from "formik";
 import { ContactFormDto } from "../models/general/contact-form.dto";
 import { Row, Col } from "reactstrap"
 import { ToastContainer, toast } from 'react-toastify'
+import ContactApi from './api/contact';
+import { globalAjaxExceptionHandler } from '../utils/ajax';
 
 export default function Contact() {
 
@@ -21,17 +23,15 @@ export default function Contact() {
         initialValues: new ContactFormDto(),
         validationSchema: ContactFormDto.yupSchema(),
         onSubmit: async (dto) => {
-            // const api = new AuthApi();
+            const contactApi = new ContactApi();
 
-            // try {
-            //     await api.signUp(dto);
-            //     toast.success(t("SUCCESSFULLY_REGISTERED"));
-            //     setTimeout(goToLogin, 3000);
-            // }
-            // catch (e) {
-            //     globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SIGNUP" });
-            // }
-            console.log("Call Successfuly")
+            try {
+                await contactApi.sendMail(dto);
+                toast.success(t("MAIL_SUCCESSFULLY_SEND"));
+            }
+            catch (e) {
+                globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SEND_ME" });
+            }
         }
     });
 
@@ -44,7 +44,7 @@ export default function Contact() {
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
-                        <h2>Contact</h2>
+                        <h2>{t("contact")}</h2>
                         < Breadcrumb />
                     </div>
                 </div>
@@ -57,18 +57,17 @@ export default function Contact() {
                         <div className="col-sm-12 col-lg-5 pl-0">
                             <article>
                                 <div className="contact-infomation">
-                                    <h2>Contact Infomation</h2>
-                                    <p>Have Questions? Please submit your query to us and we will come to you as soon as possible.</p>
+                                    <h2>{t("CONTACT_INFORMARION")}</h2>
+                                    <p>{t("HAVE_QUENTIONS")}</p>
                                     <ul className="address_list">
-                                        <li><a href="#" className="nav-link px-0"> Los Angeles, CA</a></li>
-                                        <li><a href="mailto:#" className="nav-link px-0">Email: info@driverfly.co</a></li>
-                                        <li><a href="#" className="nav-link px-0"> Call: (614) 259-7225</a></li>
+                                        <li><a href="#" className="nav-link px-0"> {t("LOS_ANGELES_CA")}</a></li>
+                                        <li><a href="mailto:#" className="nav-link px-0">{t("EMAIL_INFO_DRIVERFLY_CO")}</a></li>
+                                        <li><a href="#" className="nav-link px-0">{t("Call_(614)_259_7225")}</a></li>
                                     </ul>
                                 </div>
                             </article>
                         </div>
                         <div className="col-sm-12 col-lg-7 contact-outer">
-                            <ToastContainer />
                             <h3>{t("We_want_to_hear_form_you")}</h3>
                             <div className="container p-0">
                                 <Row>
@@ -123,19 +122,19 @@ export default function Contact() {
                             <div className="contact-icon-inner">
                                 < PersonBadgeFill />
                             </div>
-                            <h3 className="title text-center my-4"><Link href="/signup"><a className='text-black'>Want to join us?</a></Link></h3>
+                            <h3 className="title text-center my-4"><Link href="/signup"><a className='text-black'>{t("WANT_TO_JOIN_US")}</a></Link></h3>
                         </div>
                         <div className="col-md-4">
                             <div className="contact-icon-inner">
                                 <Newspaper />
                             </div>
-                            <h3 className="title text-center my-4"><Link href="/blog"><a className='text-black'>Read our latest news</a></Link></h3>
+                            <h3 className="title text-center my-4"><Link href="/blog"><a className='text-black'>{t("READ_OUR_LATEST_NEWS")}</a></Link></h3>
                         </div>
                         <div className="col-md-4">
                             <div className="contact-icon-inner">
                                 <QuestionCircle />
                             </div>
-                            <h3 className="title text-center my-4"><Link href="/faq"><a className='text-black'>Have questions?</a></Link></h3>
+                            <h3 className="title text-center my-4"><Link href="/faq"><a className='text-black'>{t("HAVE_QUESTIONS")}</a></Link></h3>
                         </div>
                     </div>
                 </div>
