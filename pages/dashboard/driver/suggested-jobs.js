@@ -14,21 +14,21 @@ import { useEffect, useState } from "react"
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import axios from "axios"
 import timeSince from '../../../utils/timeSince';
-import SuggestedJobApi from '../../api/suggested-job';
+import ApplicantApi from '../../api/applicant';
 
 export default function SuggestedJobs() {
 
-  const suggestedJobApi = new SuggestedJobApi();
+  const api = new ApplicantApi();
 
   const { user } = useAuth();
 
   const [jobs, setJobs] = useState([])
 
   const fetchjobs = async () => {
-      await suggestedJobApi.list()
+      await api.me.suggested_jobs()
           .then(data => setJobs(data.slice(0, 5)))
           .catch((error) => {
-              console.error(error)
+              console.error(error);
           })
       console.log(jobs)
   }
