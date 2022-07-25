@@ -9,34 +9,28 @@ import bg1 from "../../../public/dashboard/assets/images/bg/bg1.jpg";
 import bg2 from "../../../public/dashboard/assets/images/bg/bg2.jpg";
 import bg3 from "../../../public/dashboard/assets/images/bg/bg3.jpg";
 import bg4 from "../../../public/dashboard/assets/images/bg/bg4.jpg";
+import { useAuth } from '../../../hooks/useAuth';
 import { useEffect, useState } from "react"
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import axios from "axios"
 import timeSince from '../../../utils/timeSince';
+import SuggestedJobApi from '../../api/suggested-job';
 
-export default function SuggestedJobes() {
+export default function SuggestedJobs() {
 
+  const suggestedJobApi = new SuggestedJobApi();
+
+  const { user } = useAuth();
 
   const [jobs, setJobs] = useState([])
 
-  const fetchjobs = () => {
-
-    const headers = {
-    };
-
-    axios.get(
-      `${process.env.BASE_URL_API}/jobs/`,
-      { headers: headers }
-    )
-      .then(data => {
-        console.log("handle success", data.data)
-        setJobs(data.data)
-      })
-      .catch(function (error) {
-        console.log("handle error success", error.response)
-      }).then(function () {
-        console.log("always executed")
-      })
+  const fetchjobs = async () => {
+      await suggestedJobApi.list()
+          .then(data => setJobs(data.slice(0, 5)))
+          .catch((error) => {
+              console.error(error)
+          })
+      console.log(jobs)
   }
 
   useEffect(() => {
@@ -60,19 +54,15 @@ export default function SuggestedJobes() {
                     <tr>
                       <th>#</th>
                       <th>Job Title</th>
-                      <th>Job Type</th>
-                      <th>Company</th>
-                      <th>Post Date</th>
+                      <th>Score</th>
                     </tr>
                   </thead>
                   <tbody>
                     {jobs.length > 0 && jobs.map((job, index) => (
                       <tr>
                         <th scope="row">{index + 1}</th>
-                        <td>{job.title}</td>
-                        <td>{job.job_type}</td>
-                        <td>{job.company}</td>
-                        <td>{timeSince(job.created_at)}</td>
+                        <td>{job.job.title}</td>
+                        <td>{job.score}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -87,7 +77,7 @@ export default function SuggestedJobes() {
   )
 };
 
-SuggestedJobes.getLayout = function getLayout(page) {
+SuggestedJobs.getLayout = function getLayout(page) {
   return (
     <FullLayout>
       {page}
