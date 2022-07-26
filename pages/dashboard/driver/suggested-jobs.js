@@ -25,8 +25,8 @@ export default function SuggestedJobs() {
   const [jobs, setJobs] = useState([])
 
   const fetchjobs = async () => {
-      await api.me.suggested_jobs()
-          .then(data => setJobs(data.slice(0, 5)))
+      await api.me.suggestedJobs()
+          .then(data => setJobs(data))
           .catch((error) => {
               console.error(error);
           })

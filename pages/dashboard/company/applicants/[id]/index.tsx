@@ -34,6 +34,8 @@ import { ApplicantStatus } from "../../../../../enums/applicants/applicant-statu
 import ApplicantApi from "../../../../api/applicant";
 import DocumentApi from "../../../../api/document";
 import ChildPageLayout from "../../../../../components/layouts/page/ChildPageLayout";
+import SuggestedJobs from "../../../driver/suggested-jobs";
+import { ApplicantSuggestedJobEntity } from "../../../../../models/applicant/applicant-suggested-job.entity";
 
 export default function ViewApplicant({ id }) {
     const router = useRouter();
@@ -48,6 +50,7 @@ export default function ViewApplicant({ id }) {
     };
 
     const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
+    const [applicantSuggestedJobs, setApplicantSuggestedJobs] = useState<ApplicantSuggestedJobEntity[]>([]);
 
     const backPath = "/dashboard/company/applicants";
 
@@ -59,6 +62,12 @@ export default function ViewApplicant({ id }) {
 
             const data = await api.getById(+id);
 
+            const suggestedJobs = await api.suggestedJobs.get(id);
+
+            if (suggestedJobs && suggestedJobs.length > 0) {
+                setApplicantSuggestedJobs(suggestedJobs);
+            }
+            
             if (!data) {
                 toast.error(t("UNABLE_TO_FIND_{name}", { name: t("APPLICANT") }));
                 goBack();
@@ -369,9 +378,12 @@ export default function ViewApplicant({ id }) {
                             type="OTHER_ROLES"
                             headers={{
                                 role: "ROLE",
-                                consider: null
+                                score: "SCORE"
                             }}
-                            items={[]}
+                            items={applicantSuggestedJobs.map(sJob => ({
+                                role: sJob.job.title,
+                                score: sJob.score
+                            }))}
                         />
                     </ViewCard>
                 </Col>

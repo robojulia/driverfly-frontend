@@ -73,13 +73,21 @@ class ApplicantApi extends BaseApi {
 
             return data;
         },
-        suggested_jobs: async(): Promise<ApplicantSuggestedJobEntity[]> => {
+        suggestedJobs: async(): Promise<ApplicantSuggestedJobEntity[]> => {
             const { data } = await this.get(this.baseUrl + "/suggested-jobs");
 
             return data;
         },
         update: async (dto: ApplicantEntity): Promise<ApplicantEntity> => {
             const { data } = await this.put(this.baseUrl, dto);
+
+            return data;
+        },
+    }
+
+    suggestedJobs = {
+        get: async (applicantId: number) : Promise<ApplicantSuggestedJobEntity[]> => {
+            const { data } = await this.get(`${this.baseUrl}/${applicantId}/suggested-jobs`);
 
             return data;
         },
