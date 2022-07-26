@@ -2,7 +2,7 @@ import FullLayout from "../../../components/dashboard/layouts/FullLayout";
 import { useAuth } from '../../../hooks/useAuth';
 import { useState } from "react"
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
-import ApplicantApi from '../../api/applicant';
+import ApplicantApi from '../../../pages/api/applicant';
 import { globalAjaxExceptionHandler } from '../../../utils/ajax';
 import { toast } from 'react-toastify';
 import { useTranslation } from '../../../hooks/useTranslation';
@@ -55,7 +55,7 @@ export default function SuggestedJobs() {
                         <td scope="row">{index + 1}</td>
                         <td>{job.job?.title}</td>
                         <td>{t(`JobEmploymentType.${job.job?.employment_type}`)}</td>
-                        <td>{job.job?.company.name}</td>
+                        <td>{job.job?.company?.name}</td>
                         <td>{new Date(job.job?.created_at).toDateString()}</td>
                       </tr>
                     ))}
