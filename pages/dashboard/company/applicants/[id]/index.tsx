@@ -63,11 +63,8 @@ export default function ViewApplicant({ id }) {
             const data = await api.getById(+id);
 
             const suggestedJobs = await api.suggestedJobs.get(id);
+            setApplicantSuggestedJobs(suggestedJobs);
 
-            if (suggestedJobs && suggestedJobs.length > 0) {
-                setApplicantSuggestedJobs(suggestedJobs);
-            }
-            
             if (!data) {
                 toast.error(t("UNABLE_TO_FIND_{name}", { name: t("APPLICANT") }));
                 goBack();
