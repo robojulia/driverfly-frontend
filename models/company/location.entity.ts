@@ -18,9 +18,9 @@ export class LocationEntity {
     static yupSchema() {
         return yup.object({
             street: yup.string().nullable(),
-            city: yup.string().required().nullable(),
+            city: yup.string().matches(/^[^0-9]+$/).required().nullable(),
             state: yup.string().required().nullable(),
-            zip_code: yup.string().nullable(),
+            zip_code: yup.string().matches(/^[0-9]+$/).min(5).max(5).nullable(),
         });
     }
 }
