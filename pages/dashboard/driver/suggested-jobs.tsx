@@ -44,7 +44,9 @@ export default function SuggestedJobs() {
                     <tr>
                       <th>#</th>
                       <th>Job Title</th>
-                      <th>Score</th>
+                      <th>Job Type</th>
+                      <th>Company</th>
+                      <th>Post Date</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -52,7 +54,9 @@ export default function SuggestedJobs() {
                       <tr>
                         <td scope="row">{index + 1}</td>
                         <td>{job.job?.title}</td>
-                        <td>{job.score}</td>
+                        <td>{t(`JobEmploymentType.${job.job?.employment_type}`)}</td>
+                        <td>{job.job?.company.name}</td>
+                        <td>{new Date(job.job?.created_at).toDateString()}</td>
                       </tr>
                     ))}
                   </tbody>

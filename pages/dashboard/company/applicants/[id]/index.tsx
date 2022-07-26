@@ -361,7 +361,7 @@ export default function ViewApplicant({ id }) {
                             date_applied: "DATE_APPLIED"
                         }}
                         items={applicant?.jobs?.map(aJob => ({
-                            title: <Link href={`/jobs/${aJob.job.id}`}><a>{aJob.job.title}</a></Link>,
+                            title: <Link href={`/jobs/${aJob.job.id}/${aJob.job.title}`}><a>{aJob.job.title}</a></Link>,
                             status: <ShowEnumFromString skipLowerCase popover={true} str={aJob.status} labelPrefix="ApplicantStatus" enumArray={ApplicantStatus} />,
                             date_applied: new Date(aJob.created_at).toDateString()
                         }))}
@@ -374,12 +374,10 @@ export default function ViewApplicant({ id }) {
                         <ViewTable
                             type="OTHER_ROLES"
                             headers={{
-                                role: "ROLE",
-                                score: "SCORE"
+                                role: "ROLE"
                             }}
                             items={applicantSuggestedJobs.map(sJob => ({
-                                role: sJob.job.title,
-                                score: sJob.score
+                                role: <Link href={`/jobs/${sJob.job.id}/${sJob.job.title}`}><a>{sJob.job.title}</a></Link>
                             }))}
                         />
                     </ViewCard>
