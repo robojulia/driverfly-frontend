@@ -23,7 +23,7 @@ export default function ViewUser({ id }) {
 
     const { t } = useTranslation();
 
-    const { hasPermission } = useAuth();
+    const { company, hasPermission } = useAuth();
 
     const [user, setUser] = useState(new UserEntity());
 
@@ -51,7 +51,7 @@ export default function ViewUser({ id }) {
             goBack();
         }
 
-    }, [ user, id ]);
+    }, [ company, id ]);
 
     const onEditClick = async () => {
         await router.push(router.asPath + `/edit`);

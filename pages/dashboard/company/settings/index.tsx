@@ -18,6 +18,7 @@ export default function Settings() {
       company: {
         ...user.company,
         name: c.name,
+        website: c.website,
         about: c.about,
         photo: c.photo
       }

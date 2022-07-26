@@ -1077,10 +1077,6 @@ export function JobForm(props: JobFormProps) {
                                     <label>{t("criminal_history")}:</label>
                                     {form.touched.criminal_history && typeof form.errors.criminal_history === "string" ? <span className="text-danger small">{form.errors.criminal_history}</span> : null}
                                     {form.values.criminal_history.map((v, i) => {
-                                        const get = function (part, field) {
-                                            if (part.criminal_history && part.criminal_history[i])
-                                                return part.criminal_history[i][field];
-                                        }
                                         return (
                                             <div key={i} className="row">
                                                 <BaseSelect

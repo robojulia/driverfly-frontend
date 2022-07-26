@@ -886,7 +886,8 @@
     "yup": {
         "type": {
             "date": "date, it must be in the format MM/dd/yyyy (eg. 01/12/2014)",
-            "number": "number"
+            "number": "number",
+            "object": "value"
         },
         "string": {
             "length": "Text must be {{length}} characters",

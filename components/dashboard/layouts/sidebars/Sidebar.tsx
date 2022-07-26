@@ -50,7 +50,7 @@ export default function Sidebar(props: SidebarProps) {
         <aside
             className={`sidebarArea ${!open ? "" : "showSidebar"}`}>
             <SidebarArea>
-                {props.items.map((v, i) => (<SidebarLink key={v.text} isMobile={isMobile} item={v} t={t} currentPath={router.asPath} />))}
+                {items.map((v, i) => (<SidebarLink key={v.pathname} isMobile={isMobile} item={v} t={t} currentPath={router.asPath} />))}
             </SidebarArea>
         </aside>
         {!isMobile && current?.items?.length > 0 &&
@@ -74,7 +74,7 @@ function SidebarArea({ children }) {
     );
 }
 
-function filterItems(values: SidebarItem[], hasPermission) {
+function filterItems(values: SidebarItem[], hasPermission): SidebarItem[] {
 
     return values.map(i => {
         let { permissions, items, visible } = i;
@@ -83,10 +83,17 @@ function filterItems(values: SidebarItem[], hasPermission) {
 
         if (items) {
             items = filterItems(items, hasPermission);
-            if (!items) return null;
+            if (!items?.length) return null;
+
+            if (items.length === 1) return {
+                ...items[0],
+                text: i.text,
+                icon: i.icon,
+            };
 
             return {
                 ...i,
+                pathname: items[0].pathname,
                 items: items
             };
         }
@@ -152,7 +159,7 @@ function SidebarLink(props: SidebarLinkProps) {
         </Link>
         {isMobile && items &&
             <ul>
-                {items.map((v, i) => (<SidebarLink key={i} isMobile={isMobile} item={v} t={t} currentPath={currentPath} />))}
+                {items.map((v, i) => (<SidebarLink key={v.pathname} isMobile={isMobile} item={v} t={t} currentPath={currentPath} />))}
             </ul>
         }
     </li>);

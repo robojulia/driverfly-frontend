@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import FullLayout from "../../../../../../components/dashboard/layouts/Layout/FullLayout";
 import { UserForm } from "../../../../../../components/forms/company/UserForm";
 import ChildPageLayout from "../../../../../../components/layouts/page/ChildPageLayout";
+import { useAuth } from "../../../../../../hooks/useAuth";
 import { useTranslation } from "../../../../../../hooks/useTranslation";
 import { UserEntity } from "../../../../../../models/user/user.entity";
 import { useEffectAsync } from "../../../../../../utils/react";
@@ -17,11 +18,11 @@ export default function EditUser({ id }) {
 
     const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
 
+    const { company } = useAuth();
+
     const [ user, setUser ] = useState(new UserEntity());
 
     useEffectAsync(async () => {
-        if (!user) return;
-        
         if (id) {
             const api = new UserApi();
 
@@ -36,7 +37,7 @@ export default function EditUser({ id }) {
             toast.error(t("UNABLE_TO_FIND_{name}", { name: "USER" }, { translateProps: true }));
             goBack();
         }
-    }, [ user, id ]);
+    }, [ company, id ]);
 
     return (
         <ChildPageLayout
