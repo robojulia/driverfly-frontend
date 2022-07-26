@@ -25,7 +25,6 @@ export default function DriverProfileNav() {
         <Dropdown show={dropdownOpen} onToggle={toggle} >
           <Dropdown.Toggle variant="light">
             < UserPhoto user={user} className="rounded-circle" width="30" height="30" />
-            {console.log("Login user pic",user)}
             <span>{user?.first_name}  {user?.last_name}</span>
           </Dropdown.Toggle >
           <Dropdown.Menu>
