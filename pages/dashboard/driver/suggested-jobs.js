@@ -61,7 +61,7 @@ export default function SuggestedJobs() {
                     {jobs.length > 0 && jobs.map((job, index) => (
                       <tr>
                         <th scope="row">{index + 1}</th>
-                        <td>{job.job.title}</td>
+                        <td>{job.job?.title}</td>
                         <td>{job.score}</td>
                       </tr>
                     ))}
