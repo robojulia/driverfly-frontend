@@ -106,7 +106,7 @@ export default function JobApply({ job }) {
   return (
     <>
       <div className="ort-btn mt-lg-4 mt-0">
-        <button type="button" className="btn theme-primary-btn" onClick={onApplyClick}> {t('apply_now')}<ArrowRight /></button>
+        <button type="button" className="btn theme-primary-btn" onClick={onApplyClick}> {t('APPLY_NOW')}<ArrowRight /></button>
         {/* <button type="button" className="btn theme-general-btn"> <Star /> {t('shortlist')} </button> */}
       </div>
 

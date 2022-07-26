@@ -17,7 +17,7 @@ export default function FreeResources() {
     return (
         <>
             < div className='row'>
-                <h1>{t("free_resources")}</h1>
+                <h1>{t("FREE_RESOURCES")}</h1>
             </div>
             <Container fluid>
                 <Row className='mt-5'>

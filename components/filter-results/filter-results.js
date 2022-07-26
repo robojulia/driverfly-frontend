@@ -37,7 +37,7 @@ export default function FilterResults() {
             type='button'
             onClick={handleReset}
             className='theme-secondary-btn ml-4'>
-            Reset All
+            {t("reset_all")}
           </button>
         </div>
         <form >
