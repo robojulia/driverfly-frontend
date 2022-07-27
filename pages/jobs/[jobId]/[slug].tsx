@@ -121,7 +121,7 @@ export async function getServerSideProps(context) {
     }
   } catch (error) {
     console.error("Exception is here:", error);
-    return { props: { jobDetail: [], relatedJobs: [] } }
+    return { props: { jobDetail: {}, relatedJobs: [] } }
   }
 }
 
