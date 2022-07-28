@@ -20,7 +20,6 @@ import UserApi from "../../../api/user";
 import ApplicantApi from "../../../api/applicant";
 
 // entities
-import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import { UserEntity } from "../../../../models/user/user.entity";
 
 import * as toast from "../../../../utils/toast";
@@ -36,6 +35,7 @@ export default function Profile() {
     initialValues: new UserEntity(),
     validationSchema: UserEntity.yupSchema(),
     onSubmit: async (values) => {
+
       const userApi = new UserApi();
       const applicantApi = new ApplicantApi();
 
@@ -47,9 +47,11 @@ export default function Profile() {
           phone: values.contact_number,
         });
         const savedUser = await userApi.me.update(values);
+
         updateUser({
           ...user,
           ...savedUser,
+          photo: savedUser.photo || null
         });
         toast.formSuccess(t, "update", "USER");
       }
