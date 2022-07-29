@@ -1,0 +1,8 @@
+a.primary {
+    color: #2da2af;
+}
+
+a.primary:hover {
+    color: #2da2af;
+    text-decoration: none;
+}
