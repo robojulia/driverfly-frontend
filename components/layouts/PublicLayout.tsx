@@ -4,6 +4,7 @@ import Header from "../header/Header";
 import Scripts from '../scripts';
 import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from '../../hooks/useTranslation'
+import { ToastContainer } from 'react-toastify';
 
 export interface PublicLayoutProps {
     title?: string;
@@ -22,6 +23,7 @@ export function PublicLayout({ children, title }: PublicLayoutProps) {
                 <meta httpEquiv="x-ua-compatible" content="ie=edge" />
             </Head>
             <Header />
+            <ToastContainer />
             <main>{children}</main>
             <Footer />
             <Scripts />
