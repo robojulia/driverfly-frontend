@@ -36,7 +36,7 @@ export default class JobApi extends BaseApi {
         return data;
     }
 
-    async search(params: SearchJobsDto) {
+    async search(params: SearchJobsDto): Promise<{ items: JobEntity[], meta: any }> {
         const { data } = await this.get(`${this.baseUrl}/search`, { params });
         return data;
     }

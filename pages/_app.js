@@ -4,6 +4,7 @@ import "../public/css/style.css";
 import "../public/css/responsive.css";
 import "../public/dashboard/styles/css/global.css";
 import "../public/css/buttons/buttons.css";
+import "../public/css/links/links.css";
 
 // init bootstrap
 import "bootstrap/dist/css/bootstrap.css";
@@ -19,7 +20,6 @@ import { AuthProvider } from "../components/auth/auth-provider";
 
 function MyApp({ Component, pageProps }) {
 
-  yupInit();
   chartJsInit();
   bootstrapInit();
 

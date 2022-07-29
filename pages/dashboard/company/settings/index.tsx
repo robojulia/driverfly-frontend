@@ -4,7 +4,7 @@ import { useAuth } from '../../../../hooks/useAuth';
 import { useTranslation } from "../../../../hooks/useTranslation";
 
 import { CompanyEntity } from "../../../../models/company/company.entity";
-import PageLayout from "../../../../components/layouts/PageLayout";
+import PageLayout from "../../../../components/layouts/page/PageLayout";
 import { CompanyForm } from "../../../../components/forms/company/CompanyForm";
 
 export default function Settings() {
@@ -30,7 +30,7 @@ export default function Settings() {
       title="COMPANY"
     >
       <CompanyForm
-        entity={user.company}
+        entity={user?.company}
         onSaveComplete={onSaveComplete}
       />
     </PageLayout>

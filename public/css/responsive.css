@@ -5,14 +5,7 @@
     .hire-driver-section{
         flex-direction: column !important;
     }
-   .job_info_container .w-23 {
-         width: 45% !important;
-    }
-
 }@media (max-width:767px){
-   .job_info_container .w-23 {
-         width: 100% !important;
-   }
     .Slider-container-bg::before {
       display: none;
     }

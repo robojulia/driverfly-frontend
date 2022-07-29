@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useTranslation } from "../../../../hooks/useTranslation";
 
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
-import ChildPageLayout from "../../../../components/layouts/ChildPageLayout";
+import ChildPageLayout from "../../../../components/layouts/page/ChildPageLayout";
 import { JobForm } from "../../../../components/forms/company/JobForm";
 
 export default function CreateJob() {

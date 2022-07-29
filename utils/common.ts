@@ -1,4 +1,4 @@
-function buildAddress(props?: { street?: string, city?: string, state?: string, zip_code?: string}, show?: { street?: boolean, city?: boolean, state?: boolean, zip_code?: boolean}) {
+function buildAddress(props?: { street?: string, city?: string, state?: string, zip_code?: string}) {
 
     if (!props) return;
 
@@ -6,13 +6,13 @@ function buildAddress(props?: { street?: string, city?: string, state?: string, 
     
     let address = "";
 
-    if (street && show?.street !== false) address += street;
+    if (street) address += street;
 
-    if (city && show?.city !== false) address += (address.length > 0 ? ", " : "") + city;
+    if (city) address += (address.length > 0 ? ", " : "") + city;
 
-    if (state && show?.state !== false) address += (address.length > 0 ? ", " : "") + state;
+    if (state) address += (address.length > 0 ? ", " : "") + state;
 
-    if (zip_code && show?.zip_code !== false) address += (address.length > 0 ? ", " : "") + zip_code;
+    if (zip_code) address += (address.length > 0 ? ", " : "") + zip_code;
 
     return address;
 }

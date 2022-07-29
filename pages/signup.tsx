@@ -1,12 +1,13 @@
 import Head from "next/head"
 import Link from "next/link"
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
-import Layout from "../components/layouts"
+import { PublicLayout } from "../components/layouts/PublicLayout";
 import SignupStyle from "../public/css/signup.module.css"
 import { useAuth } from '../hooks/useAuth';
 import { useRouter } from 'next/router'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+
 
 import { useFormik } from "formik";
 
@@ -21,21 +22,16 @@ import AuthApi from "./api/auth";
 
 import { useTranslation } from "../hooks/useTranslation";
 import { SignUpRole } from "../enums/auth/sign-up-role.enum"
-import { Row } from "reactstrap"
+import { Row, Col, Button } from "react-bootstrap"
 
 import { globalAjaxExceptionHandler } from "../utils/ajax";
 import { SignUpDto } from "../models/auth/sign-up.dto";
+import { PublicPage } from "../components/layouts/public/PublicPage";
 
 
 export default function Signup() {
 
   const router = useRouter();
-
-  const { user } = useAuth();
-
-  if (user) {
-    router.push('/dashboard')
-  }
 
   const { t } = useTranslation();
 
@@ -48,7 +44,7 @@ export default function Signup() {
       try {
         await api.signUp(dto);
         toast.success(t("SUCCESSFULLY_REGISTERED"));
-        setTimeout(goToLogin, 3000);
+        setTimeout(() => router.push('/login'), 3000);
       }
       catch (e) {
         globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SIGNUP" });
@@ -56,176 +52,163 @@ export default function Signup() {
     }
   });
 
-  const goToLogin = function () {
-    router.push('/login')
-  }
-
   return (
-    <>
-      <Head>
-        <title>{t("DRIVERFLY_SIGN_UP")}</title>
-      </Head>
-
-      <div className="top-links-sec">
-        <div className="container">
-          <div className="top-links-inner d-flex align-items-center justify-content-between">
-            <h2>{t("SIGN_UP")}</h2>
-            <Breadcrumb />
-          </div>
-        </div>
-      </div>
-      <div className={SignupStyle.banner}>
-        <div className="container">
-          <h1>Drivers, have access<br />to over 1,000 jobs for free.</h1>
-          <p>Are you a motor carrier? View our packages
+    <PublicPage
+      title="SIGN_UP"
+    >
+      <Row className={`${SignupStyle.banner}`}>
+        <Col>
+          <h1>{t("SignUp.DRIVERS_HAVE_ACCESS")}<br />{t("SignUp.TO_OVER_1000_JOBS")}</h1>
+          <p>{t("SignUp.ARE_YOU_A_MOTOR_CARRIER")} {t("SignUp.VIEW_OUR_PACKAGES")}
             <Link href="http://go.driverfly.co/motor-carriers">
-              <a> here </a>
+              <a className="mx-1">{t("HERE")}</a>
             </Link>
-            or
+            {t("OR")}
             <Link href="/contact">
-              <a>  contact us </a>
+              <a className="mx-1">{t("SignUp.CONTACT_US")}</a>
             </Link>
-            for an account.</p>
-          <p>If you are already a user, login
+            {t("SignUp.FOR_AN_ACCOUNT")}</p>
+          <p>{t("SignUp.IF_YOU_ARE_ALREADY_A_USER_LOGIN")}
             <Link href="/login">
-              <a> here.</a>
-            </Link>
+              <a className="ml-1">{t("HERE")}</a>
+            </Link>.
           </p>
-        </div>
-      </div>
-      <div className="container">
-        <div className="row">
-          <div className="col-lg-2">
-          </div>
-          <div className="col-lg-8">
-            <div className={SignupStyle.form}>
-              <ToastContainer />
-              <h2 className="text-center my-5">{t("CREATE_NEW_ACCOUNT")}</h2>
-              <form onSubmit={form.handleSubmit}>
-                <Row>
-                  <BaseSelect
-                    className="col-12 mt-1"
-                    label="ROLE"
-                    name="role"
-                    required
-                    placeholder
-                    formik={form}
-                    labelPrefix="SignUpRole"
-                    enumType={SignUpRole}
-                  />
-                  {
-                    form.values.role === SignUpRole.COMPANY &&
-                    <BaseInput
-                      className="col-12 mt-1"
-                      label="COMPANY_NAME"
-                      required
-                      name="name"
-                      placeholder
-                      formik={form}
-                    />
-                  }
-                  <BaseInput
-                    className="col-6 mt-1"
-                    label="FIRST_NAME"
-                    required
-                    name="first_name"
-                    placeholder
-                    formik={form}
-                  />
-                  <BaseInput
-                    className="col-6 mt-1"
-                    label="LAST_NAME"
-                    required
-                    name="last_name"
-                    placeholder
-                    formik={form}
-                  />
-                  <BaseInput
-                    className="col-12 mt-1"
-                    label="EMAIL"
-                    required
-                    name="email"
-                    placeholder
-                    formik={form}
-                  />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <h2 className="text-center">{t("CREATE_NEW_ACCOUNT")}</h2>
+        </Col>
+      </Row>
+      <Row className="justify-content-lg-center">
+        <Col lg="8">
+          <form onSubmit={form.handleSubmit}>
+            <Row>
+              <BaseSelect
+                className="col-12 mt-1"
+                label="ROLE"
+                name="role"
+                required
+                placeholder
+                formik={form}
+                labelPrefix="SignUpRole"
+                enumType={SignUpRole}
+              />
+              {
+                form.values.role === SignUpRole.COMPANY &&
+                <BaseInput
+                  className="col-12 mt-1"
+                  label="COMPANY_NAME"
+                  required
+                  name="name"
+                  placeholder
+                  formik={form}
+                />
+              }
+              <BaseInput
+                className="col-6 mt-1"
+                label="FIRST_NAME"
+                required
+                name="first_name"
+                placeholder
+                formik={form}
+              />
+              <BaseInput
+                className="col-6 mt-1"
+                label="LAST_NAME"
+                required
+                name="last_name"
+                placeholder
+                formik={form}
+              />
+              <BaseInput
+                className="col-12 mt-1"
+                label="EMAIL"
+                required
+                name="email"
+                placeholder
+                formik={form}
+              />
 
-                  <BaseInputPhone
-                    className="col-12 mt-1"
-                    label="PHONE"
-                    name="phone"
-                    placeholder
-                    formik={form}
-                  />
+              <BaseInputPhone
+                className="col-12 mt-1"
+                label="PHONE"
+                name="phone"
+                placeholder
+                formik={form}
+              />
 
-                  <BaseInput
-                    className="col-6 mt-1"
-                    label="PASSWORD"
-                    required
-                    type="password"
-                    name="password"
-                    placeholder
-                    formik={form}
-                  />
-                  <BaseInput
-                    className="col-6 mt-1"
-                    label="CONFIRM_PASSWORD"
-                    required
-                    type="password"
-                    name="confirmPassword"
-                    placeholder
-                    formik={form}
-                  />
-                  {
-                    form.values.role === SignUpRole.COMPANY &&
-                    <BaseInput
-                      className="col-12 mt-1"
-                      label="INVITE_CODE"
-                      required
-                      name="invite_code"
-                      placeholder
-                      formik={form}
-                    />
-                  }
-                  <BaseCheck
-                    className="col-12 mt-2"
-                    label="YOU_ACCEPT_OUR_TOS"
-                    name="accept_tos"
-                    formik={form}
-                  />
-                </Row>
-                <button disabled={form.isSubmitting}
-                  type="submit"
-                  className='btn btn-dark w-100 d-block p-3 mt-5 mb-4'>
-                  {t("REGISTER_NOW")}
-                </button>
-              </form>
-              <div className="my-5">
-                <div className={SignupStyle.lineheader}>
-                  <span>{t("OR")}</span>
+              <BaseInput
+                className="col-6 mt-1"
+                label="PASSWORD"
+                required
+                type="password"
+                name="password"
+                placeholder
+                formik={form}
+              />
+              <BaseInput
+                className="col-6 mt-1"
+                label="CONFIRM_PASSWORD"
+                required
+                type="password"
+                name="confirmPassword"
+                placeholder
+                formik={form}
+              />
+              {
+                form.values.role === SignUpRole.COMPANY &&
+                <BaseInput
+                  className="col-12 mt-1"
+                  label="INVITE_CODE"
+                  required
+                  name="invite_code"
+                  placeholder
+                  formik={form}
+                />
+              }
+            </Row>
+            <Row className="mt-2">
+              <Col className="d-flex">
+                <BaseCheck
+                  // className="col-12 mt-2"
+                  label="YOU_ACCEPT_OUR_TOS"
+                  name="accept_tos"
+                  formik={form}
+                />
+                <Link href="/terms-and-policies">
+                  <a className="mx-1 primary" >{t("terms_and_condition")}</a>
+                </Link>
+                <span>{t("AND")}</span>
+                <Link href="/privacy-policy">
+                  <a className="mx-1 primary">{t("privacy_policy")}</a>
+                </Link>
+              </Col>
+
+            </Row>
+            <div className="d-grid gap-2 my-4">
+                <Button disabled={form.isSubmitting} size="lg" type="submit">{t("REGISTER_NOW")}</Button>
+                <div className="my-1 w-100 text-center">
+                    <span>{t("OR")}</span>
                 </div>
-                <button
-                  type="button"
-                  className='btn btn-dark w-100 d-block p-3 my-3'
-                  onClick={goToLogin}
-                  >
-                  {t("IF_YOURE_ALREADY_A_USER_LOGIN_HERE")}
-                </button>
-              </div>
+                <Link href="/login">
+                    <Button size="lg">{t("IF_YOURE_ALREADY_A_USER_LOGIN_HERE")}</Button>
+                </Link>
             </div>
-          </div>
-          <div className="col-lg-2">
-          </div>
+          </form>
+        </Col>
+      </Row>
 
-        </div>
-      </div>
-    </>
+    </PublicPage>
   )
 }
 
 Signup.getLayout = function getLayout(page) {
   return (
-    <Layout>
+    <PublicLayout
+      title="SIGN_UP"
+    >
       {page}
-    </Layout>
+    </PublicLayout>
   )
 }

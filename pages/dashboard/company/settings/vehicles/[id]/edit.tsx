@@ -6,7 +6,7 @@ import { useTranslation } from "../../../../../../hooks/useTranslation";
 import { useEffectAsync } from "../../../../../../utils/react";
 
 import FullLayout from "../../../../../../components/dashboard/layouts/Layout/FullLayout";
-import ChildPageLayout from "../../../../../../components/layouts/ChildPageLayout";
+import ChildPageLayout from "../../../../../../components/layouts/page/ChildPageLayout";
 import { VehicleForm } from "../../../../../../components/forms/company/VehicleForm";
 
 import { VehicleEntity } from "../../../../../../models/company/vehicle.entity";

@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Layout from "../components/layouts";
+import { PublicLayout } from "../components/layouts/PublicLayout";
 import Featured from "../components/jobs/Featured";
 import Recent from "../components/jobs/Recent";
 import Drivers from "../components/works/drivers";
@@ -163,9 +163,9 @@ export default function Index() {
 
 Index.getLayout = function getLayout(page) {
   return (
-    <Layout title="HOME">
+    <PublicLayout title="HOME">
       {page}
-    </Layout>
+    </PublicLayout>
   )
 
 };

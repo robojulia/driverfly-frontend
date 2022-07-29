@@ -1,6 +1,5 @@
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
-import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
-import Applicant from "../../../../public/dashboard/styles/css/Applicants.module.css"
+import { Row, Col } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 import { TranslateInterface, useTranslation } from "../../../../hooks/useTranslation";
@@ -17,7 +16,6 @@ import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum
 import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
 
 import { JobEntity } from '../../../../models/job/job.entity';
-import { UserEntity } from '../../../../models/user/user.entity';
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 
 import ShowEnumFromString from "../../../../components/enum-filters/show-enum-from-string";
@@ -25,7 +23,7 @@ import ShowEnumFromString from "../../../../components/enum-filters/show-enum-fr
 import * as numbers from "../../../../utils/number";
 import { Button, ButtonGroup } from "react-bootstrap";
 
-import PageLayout from "../../../../components/layouts/PageLayout";
+import PageLayout from "../../../../components/layouts/page/PageLayout";
 import { useEffectAsync } from "../../../../utils/react";
 import ViewDataTable from "../../../../components/viewDetails/viewDataTable";
 import { ApplicantJobEntity } from "../../../../models/applicant/applicant-job.entity";
@@ -432,24 +430,25 @@ function ApplicantView(props: ViewProps) {
         preExpanded={(applicant) => applicant.jobs?.length > 0}
         columns={[
             {
+                id: "name",
                 name: "NAME",
                 selector: applicant => getApplicantName(applicant),
                 hidable: false,
             },
             {
+                id: "phone",
                 name: "PHONE",
                 selector: applicant => applicant.phone,
-                hidable: false,
             },
             {
+                id: "email",
                 name: "EMAIL",
                 selector: applicant => applicant.email,
-                hidable: false,
             },
             {
+                id: "assigned_to",
                 name: "ASSIGNED_TO",
                 selector: applicant => applicant.assignedUser?.name || t("NONE"),
-                hidable: false,
             },
         ]}
         items={items}
@@ -563,29 +562,30 @@ function JobView(props: ViewProps) {
         preExpanded
         columns={[
             {
+                id: "job",
                 name: "JOB",
                 selector: job => job.title,
                 hidable: false,
             },
             {
+                id: "location",
                 name: "LOCATION",
                 selector: job => buildAddress(job.location),
-                hidable: false,
             },
             {
+                id: "geography",
                 name: "GEOGRAPHY",
                 selector: job => job.geography ? t(`JobGeography.${job.geography}`) : "",
-                hidable: false,
             },
             {
+                id: "type",
                 name: "TYPE",
                 selector: job => job.employment_type ? t(`JobEmploymentType.${job.employment_type}`) : "",
-                hidable: false,
             },
             {
+                id: "weekly_range",
                 name: "WEEKLY_RANGE",
                 selector: job => `${numbers.toCurrency(job.min_weekly_pay)} - ${numbers.toCurrency(job.max_weekly_pay)}`,
-                hidable: false,
             },
         ]}
         items={items}

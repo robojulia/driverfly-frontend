@@ -1,13 +1,13 @@
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
 import { useEffect, useState } from 'react';
-import CallApi from "../../../api/call"
+import TwilioApi from "../../../api/twilio"
 import { useTranslation } from "../../../../hooks/useTranslation";
 
 export default function Test() {
 
     const { t } = useTranslation()
 
-    const callApi = new CallApi()
+    const twilioApi = new TwilioApi()
 
     const [device, setDevice] = useState(null)
     const [identity, setIdentity] = useState('+923214604331')
@@ -15,7 +15,7 @@ export default function Test() {
     const [ready, setReady] = useState(false)
 
     const setupTwilio = async () => {
-        callApi.generateToken()
+        twilioApi.generateToken()
             .then(async ({ token }) => {
                 await setupClient(token)
                     .catch(error => console.error("creating device error....", error))

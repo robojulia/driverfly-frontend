@@ -1,0 +1,118 @@
+import { Button, Col, Row } from 'react-bootstrap';
+
+import Link from 'next/link';
+import { toast } from 'react-toastify'
+
+import { PublicLayout } from "../components/layouts/PublicLayout";
+import { PublicPage } from '../components/layouts/public/PublicPage';
+import BaseInput from '../components/forms/BaseInput';
+
+import { useFormik } from "formik";
+import { useAuth } from '../hooks/useAuth';
+import { useTranslation } from "../hooks/useTranslation";
+
+import AuthApi from "./api/auth";
+
+import { globalAjaxExceptionHandler } from '../utils/ajax';
+import { LoginDto } from '../models/auth/login.dto';
+
+export default function Login() {
+
+    const { t } = useTranslation();
+
+    const { login } = useAuth();
+
+    const authApi = new AuthApi();
+
+    const form = useFormik({
+        initialValues: new LoginDto(),
+        validationSchema: LoginDto.yupSchema(),
+        onSubmit: async (values) => {
+
+            try {
+                const user = await authApi.login(values);
+
+                toast.success(t('LOGIN_SUCCESSFULL'));
+                login(user);
+            } catch (e) {
+                globalAjaxExceptionHandler(e, { formik: form, t: t, defaultMessage: "INVALID_CREDENTIALS", toast: toast});
+            }
+        }
+    })
+
+
+    return (
+        <PublicPage
+            title="LOGIN"
+        >
+            <Row className='mb-2 p-lg-2 p-0'>
+                <Col>
+                    <p className=" mt-5 text-secondary  p-lg-0 p-2">
+                        {t("DON'T_HAVE_AN_ACCOUNT_MAKE_ONE")}
+                        <Link href="/signup">
+                            <a className="primary">{t("HERE")}</a>
+                        </Link>!
+                    </p>
+                    <h2 className='text-center mt-5'>{t("QUICK_LOGIN")}</h2>
+                    <p className="mt-3 text-center">{t("LOGIN_YOUR_ACCOUNT")}</p>
+                </Col>
+            </Row>
+            <Row className="justify-content-lg-center">
+                <Col lg="8">
+                    <form
+                        onSubmit={form.handleSubmit}>
+                        <BaseInput
+                            className="form-group"
+                            label={t("EMAIL")}
+                            required
+                            name="email"
+                            placeholder
+                            formik={form}
+                        />
+                        <BaseInput
+                            className="form-group"
+                            label={t("PASSWORD")}
+                            required
+                            type="password"
+                            name="password"
+                            placeholder
+                            formik={form}
+                        />
+
+                        <Row>
+                            <Col>
+                                <div className="form-group form-check">
+                                    <label className="form-check-label">
+                                        <input className="form-check-input" type="checkbox" /> {t("KEEP_ME_SIGNED_IN")}
+                                    </label>
+                                </div>
+                            </Col>
+                            <Col className='text-end'>
+                                <Link href="/forgot-password">
+                                    <a className="primary">{t("LOST_YOUR_PASSWORD")}</a>
+                                </Link>
+                            </Col>
+                        </Row>
+                        <div className="d-grid gap-2 my-4">
+                            <Button disabled={form.isSubmitting} size="lg" type="submit">{t("LOGIN")}</Button>
+                            <div className="my-1 w-100 text-center">
+                                <span>{t("OR")}</span>
+                            </div>
+                            <Link href="/signup">
+                                <Button size="lg">{t("CREATE_AN_ACCOUNT")}</Button>
+                            </Link>
+                        </div>
+                    </form>
+                </Col>
+            </Row>
+        </PublicPage>
+    );
+}
+
+Login.getLayout = function getLayout(page) {
+    return (
+        <PublicLayout title="Login">
+            {page}
+        </PublicLayout>
+    )
+}

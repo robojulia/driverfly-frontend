@@ -9,7 +9,7 @@ import { Row } from "react-bootstrap";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 
 import BaseInput from "../BaseInput";
-import EntityForm from "../../layouts/EntityForm";
+import EntityForm from "../../layouts/page/EntityForm";
 import StateSelect from "../StateSelect";
 
 import { LocationEntity } from "../../../models/company/location.entity";
@@ -65,7 +65,6 @@ export function LocationForm(props: LocationFormProps) {
                     className="col-12"
                     label="STREET"
                     name="street"
-                    required
                     placeholder="STREET"
                     formik={form}
                     />
@@ -81,6 +80,7 @@ export function LocationForm(props: LocationFormProps) {
                     className="col-4"
                     label="STATE"
                     name="state"
+                    required
                     placeholder="STATE"
                     formik={form}
                     />
@@ -88,7 +88,6 @@ export function LocationForm(props: LocationFormProps) {
                     className="col-4"
                     label="ZIP_CODE"
                     name="zip_code"
-                    required
                     placeholder="ZIP_CODE"
                     formik={form}
                     />

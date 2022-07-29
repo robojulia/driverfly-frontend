@@ -33,7 +33,7 @@ import { ApplicantStatus } from "../../../../../enums/applicants/applicant-statu
 
 import ApplicantApi from "../../../../api/applicant";
 import DocumentApi from "../../../../api/document";
-import ChildPageLayout from "../../../../../components/layouts/ChildPageLayout";
+import ChildPageLayout from "../../../../../components/layouts/page/ChildPageLayout";
 
 export default function ViewApplicant({ id }) {
     const router = useRouter();

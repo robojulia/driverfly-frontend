@@ -1,4 +1,4 @@
-import Layout from "../../components/layouts";
+import { PublicLayout } from "../../components/layouts/PublicLayout";
 
 export default function Index()
 {
@@ -11,8 +11,8 @@ export default function Index()
 
 Index.getLayout = function getLayout(page) {
     return (
-        <Layout>
+        <PublicLayout>
             {page}
-        </Layout>
+        </PublicLayout>
     )
 }

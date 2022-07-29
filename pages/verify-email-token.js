@@ -4,14 +4,14 @@ import Link from 'next/link'
 // import Breadcrumbs from 'nextjs-breadcrumbs'
 import { useEffect, useState } from "react"
 import Back from '../components/back-to-login/Back-Login'
-import Layout from "../components/layouts"
+import { PublicLayout } from "../components/layouts/PublicLayout";
 import Forgotpassword from '../public/css/Forgot.module.css'
 import SignupAPI from "./api/signup"
 import { ToastContainer, toast } from 'react-toastify'
 import { useTranslation } from "../hooks/useTranslation"
 
-export default function VerifyEmailToken(props) {
-  console.log("props", props);
+export default function VerifyEmailToken({ response }) {
+  console.log("response", response);
   const { t } = useTranslation()
 
   return (
@@ -30,7 +30,7 @@ export default function VerifyEmailToken(props) {
             <div className='col-lg-8'>
 
               <h4 className='text-center mt-5 font-weight-normal'>
-                {props.response.message}
+                {t(`${response.message}`)}
               </h4>
               <p className="mt-2 mb-5 text-center  text-secondary "></p>
 
@@ -47,6 +47,12 @@ export default function VerifyEmailToken(props) {
 export async function getServerSideProps({ query }) {
   const { emailVerifyToken } = query
 
+  if (!!!emailVerifyToken) {
+    return {
+      notFound: true
+    }
+  }
+
   const signupAPI = new SignupAPI();
   let response = {
     verified: false,
@@ -60,7 +66,7 @@ export async function getServerSideProps({ query }) {
         response.message = "Account activated Successfully! please proceed to login."
       }
     }).catch(error => {
-      response.message = (error?.response?.status == 422 || error?.response?.data?.errors?.User) ? `${error?.response?.data?.errors?.User}` : "Something went wrong"
+      response.message = error?.response?.data?.message || "ERROR_MESSAGE_DEFAULT"
     })
 
   return { props: { response, emailVerifyToken } }
@@ -68,8 +74,8 @@ export async function getServerSideProps({ query }) {
 
 VerifyEmailToken.getLayout = function getLayout(page) {
   return (
-    <Layout>
+    <PublicLayout>
       {page}
-    </Layout>
+    </PublicLayout>
   )
 }

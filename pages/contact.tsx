@@ -1,0 +1,151 @@
+import Head from 'next/head';
+import Link from 'next/link';
+import { PublicLayout } from "../components/layouts/PublicLayout";
+import ReCAPTCHA from "react-google-recaptcha";
+import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
+import { ArrowLeft, ArrowRight, Newspaper, PersonBadgeFill, QuestionCircle } from 'react-bootstrap-icons';
+import { useTranslation } from "../hooks/useTranslation";
+
+import BaseInput from "../components/forms/BaseInput";
+import BaseTextArea from "../components/forms/BaseTextArea";
+import { useFormik } from "formik";
+import { ContactFormDto } from "../models/general/contact-form.dto";
+import { Row, Col } from "reactstrap"
+import { ToastContainer, toast } from 'react-toastify'
+import ContactApi from './api/contact';
+import { globalAjaxExceptionHandler } from '../utils/ajax';
+
+export default function Contact() {
+
+    const { t } = useTranslation();
+
+    const form = useFormik({
+        initialValues: new ContactFormDto(),
+        validationSchema: ContactFormDto.yupSchema(),
+        onSubmit: async (dto) => {
+            const contactApi = new ContactApi();
+
+            try {
+                await contactApi.sendMail(dto);
+                toast.success(t("MAIL_SUCCESSFULLY_SEND"));
+            }
+            catch (e) {
+                globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SEND_ME" });
+            }
+        }
+    });
+
+
+    function onChange(value) {
+        console.log("Captcha value:", value);
+    }
+    return (
+        <>
+            <div className="top-links-sec">
+                <div className="container">
+                    <div className="top-links-inner d-flex align-items-center justify-content-between">
+                        <h2>{t("contact")}</h2>
+                        < Breadcrumb />
+                    </div>
+                </div>
+            </div>
+
+            <div className="top-outer bg-white py-5"></div>
+              <div className="contact-form">
+                <div className="container">
+                    <div className="row contact-inner bg-white">
+                        <div className="col-sm-12 col-lg-5 pl-0">
+                            <article>
+                                <div className="contact-infomation">
+                                    <h2>{t("CONTACT_INFORMARION")}</h2>
+                                    <p>{t("HAVE_QUENTIONS")}</p>
+                                    <ul className="address_list">
+                                        <li><a href="#" className="nav-link px-0"> {t("LOS_ANGELES_CA")}</a></li>
+                                        <li><a href="mailto:#" className="nav-link px-0">{t("EMAIL_INFO_DRIVERFLY_CO")}</a></li>
+                                        <li><a href="#" className="nav-link px-0">{t("Call_(614)_259_7225")}</a></li>
+                                    </ul>
+                                </div>
+                            </article>
+                        </div>
+                        <div className="col-sm-12 col-lg-7 contact-outer">
+                            <h3>{t("We_want_to_hear_form_you")}</h3>
+                            <div className="container p-0">
+                                <Row>
+                                    <Col>
+                                        <ToastContainer />
+                                        <form onSubmit={form.handleSubmit}>
+                                            <Row>
+                                                <BaseInput
+                                                    className="col-6 mt-4"
+                                                    required
+                                                    name="name"
+                                                    placeholder
+                                                    formik={form}
+                                                />
+                                                <BaseInput
+                                                    className="col-6 mt-4"
+                                                    required
+                                                    name="email"
+                                                    placeholder
+                                                    formik={form}
+                                                />
+                                                <BaseInput
+                                                    className="col-12 mt-4"
+                                                    name="subject"
+                                                    placeholder
+                                                    formik={form}
+                                                />
+                                                <BaseTextArea
+                                                    className="col-12 my-4"
+                                                    name="message"
+                                                    placeholder
+                                                    formik={form}
+                                                />
+                                            </Row>
+                                            <ReCAPTCHA
+                                                sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+                                                onChange={onChange}
+                                            />
+                                            <button disabled={form.isSubmitting}
+                                                type="submit"
+                                                className="btn contact-submit-btn float-right py-3 px-5 mb-4">
+                                                {t("submit")}  <ArrowRight />
+                                            </button>
+                                        </form>
+                                    </Col>
+                                </Row>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row mt-5 pt-4 contact-icon">
+                        <div className="col-md-4">
+                            <div className="contact-icon-inner">
+                                < PersonBadgeFill />
+                            </div>
+                            <h3 className="title text-center my-4"><Link href="/signup"><a className='text-black'>{t("WANT_TO_JOIN_US")}</a></Link></h3>
+                        </div>
+                        <div className="col-md-4">
+                            <div className="contact-icon-inner">
+                                <Newspaper />
+                            </div>
+                            <h3 className="title text-center my-4"><Link href="/blog"><a className='text-black'>{t("READ_OUR_LATEST_NEWS")}</a></Link></h3>
+                        </div>
+                        <div className="col-md-4">
+                            <div className="contact-icon-inner">
+                                <QuestionCircle />
+                            </div>
+                            <h3 className="title text-center my-4"><Link href="/faq"><a className='text-black'>{t("HAVE_QUESTIONS")}</a></Link></h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    )
+}
+Contact.getLayout = function getLayout(page) {
+    return (
+        <PublicLayout title="contact">
+            {page}
+        </PublicLayout>
+    )
+}

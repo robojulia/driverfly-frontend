@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css'
 import FilterResult from '../components/filter-results/filter-results'
 import JobsList from '../components/jobslisting/jobslist'
-import Layout from "../components/layouts"
+import { PublicLayout } from "../components/layouts/PublicLayout";
 import jobsContext from "../context/jobContext"
 import BaseApi from "./api/_baseApi"
 import JobApi from "./api/job"
@@ -177,8 +177,8 @@ export async function getServerSideProps(context) {
 
 FindJobs.getLayout = function getLayout(page) {
     return (
-        <Layout title="FIND_A_Job">
+        <PublicLayout title="FIND_A_Job">
             {page}
-        </Layout>
+        </PublicLayout>
     )
 }

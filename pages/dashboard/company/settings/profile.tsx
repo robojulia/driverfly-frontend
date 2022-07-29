@@ -8,8 +8,8 @@ import { useTranslation } from "../../../../hooks/useTranslation";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
-import PageLayout from "../../../../components/layouts/PageLayout";
-import EntityForm from "../../../../components/layouts/EntityForm";
+import PageLayout from "../../../../components/layouts/page/PageLayout";
+import EntityForm from "../../../../components/layouts/page/EntityForm";
 import BaseInputPhone from "../../../../components/forms/BaseInputPhone";
 import BaseInput from "../../../../components/forms/BaseInput";
 
@@ -51,7 +51,7 @@ export default function Profile() {
       title="MY_PROFILE"
     >
       <EntityForm
-        id={user.id}
+        id={user?.id}
         canSubmit={true}
         onSubmit={form.handleSubmit}
       >

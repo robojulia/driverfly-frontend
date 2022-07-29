@@ -1,13 +1,10 @@
 import useStorage from './useStorage';
 import { useRouter } from 'next/router'
 import { UserEntity } from "../models/user/user.entity";
-import { useContext } from 'react';
-import { UserContext } from '../context/user-context';
-import { useEffectAsync } from '../utils/react';
+import { useUserContext } from '../context/user-context';
 import AuthApi from '../pages/api/auth';
 import { JwtRefreshTokenPayload } from '../models/auth/jwt-refresh-token-payload.interface';
 import { CompanyEntity } from '../models/company/company.entity';
-import { JwtTokenPayload } from '../models/auth/jwt-token-payload.interface';
 
 export function parseJwt(token) {
     var base64Url = token.split('.')[1];
@@ -32,8 +29,8 @@ export function parseJwt(token) {
 }
 
 export function useToken() {
-    const { getItem, setItem, removeItem } = useStorage();
     const storageKey = "user";
+    const { getItem, setItem, removeItem } = useStorage();
 
     function setUser(user: UserEntity) {
         if (!user.token) throw new Error("User does not have a jwt token");
@@ -127,7 +124,7 @@ export function useAuth() {
 
     const router = useRouter();
 
-    const userContext = useContext(UserContext);
+    const userContext = useUserContext();
 
     function login(u: UserEntity) {
         updateUser(u);
@@ -219,10 +216,15 @@ export function useAuth() {
 
     async function refreshToken() {
         const { user } = userContext;
-        console.log("refreshToken:: refreshing jwt", router.asPath)
-        const api = new AuthApi();
-        const newUser = await api.refreshToken(user.refreshToken);
-        updateUser(newUser);
+        console.log("refreshToken:: refreshing jwt", router.asPath);
+        try {
+            const api = new AuthApi();
+            const newUser = await api.refreshToken(user.refreshToken);
+            updateUser(newUser);
+        } catch (e) {
+            console.error("Unable to refresh jwt token", e);
+            await logoutAndRedirect();
+        }
     }
 
     return {

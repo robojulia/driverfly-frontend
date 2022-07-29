@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useTranslation } from "../../../../../hooks/useTranslation";
 
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
-import ChildPageLayout from "../../../../../components/layouts/ChildPageLayout";
+import ChildPageLayout from "../../../../../components/layouts/page/ChildPageLayout";
 
 import { LocationEntity } from "../../../../../models/company/location.entity";
 import { LocationForm } from "../../../../../components/forms/company/LocationForm";

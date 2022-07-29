@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import schoolContext from "../context/schoolContext"
 import { Container, Col, ProgressBar, Row, Table, ToastContainer, FormGroup, InputGroup, Accordion } from "react-bootstrap";
 import Head from "next/head";
-import Layout from "../components/layouts";
+import { PublicLayout } from "../components/layouts/PublicLayout";
 import RangeSlider from 'react-bootstrap-range-slider';
 import FilterSchools from '../components/filter-schools/filter-schools'
 import CdlInfo from '../components/cdl-info/CdlInfo'
@@ -254,8 +254,8 @@ export async function getServerSideProps(context) {
 
 FindSchools.getLayout = function getLayout(page) {
     return (
-        <Layout title="find_school">
+        <PublicLayout title="find_school">
             {page}
-        </Layout>
+        </PublicLayout>
     )
 }
