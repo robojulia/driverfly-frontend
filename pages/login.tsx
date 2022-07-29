@@ -51,7 +51,7 @@ export default function Login() {
                         {t("DON'T_HAVE_AN_ACCOUNT_MAKE_ONE")}
                         <Link href="/signup">
                             <a className="primary">{t("HERE")}</a>
-                        </Link>
+                        </Link>!
                     </p>
                     <h2 className='text-center mt-5'>{t("QUICK_LOGIN")}</h2>
                     <p className="mt-3 text-center">{t("LOGIN_YOUR_ACCOUNT")}</p>
@@ -94,7 +94,7 @@ export default function Login() {
                             </Col>
                         </Row>
                         <div className="d-grid gap-2 my-4">
-                            <Button size="lg" type="submit">{t("LOGIN")}</Button>
+                            <Button disabled={form.isSubmitting} size="lg" type="submit">{t("LOGIN")}</Button>
                             <div className="my-1 w-100 text-center">
                                 <span>{t("OR")}</span>
                             </div>
