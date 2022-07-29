@@ -21,7 +21,7 @@ export default function DriverProfileNav() {
 
   return (
     <>
-      <div className="profile">
+      <div className="profile profile-logo">
         <Dropdown show={dropdownOpen} onToggle={toggle} >
           <Dropdown.Toggle variant="light">
             < UserPhoto user={user} className="rounded-circle" width="30" height="30" />
