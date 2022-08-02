@@ -94,7 +94,6 @@ export function UserForm(props: UserFormProps) {
                     required
                     placeholder
                     formik={form}
-                    readOnly={!!entity?.id}
                 />
                 {!entity?.id &&
                     <BaseInput

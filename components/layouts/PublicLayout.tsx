@@ -1,9 +1,11 @@
 import Head from 'next/head'
 import Footer from "../footer/Footer";
 import Header from "../header/Header";
-import Scripts from '../scripts';
+import { Scripts } from '../scripts/scripts';
 import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from '../../hooks/useTranslation'
+import { ToastContainer } from 'react-toastify';
+import { ManyChatScript } from '../scripts/manychat/manychat';
 
 export interface PublicLayoutProps {
     title?: string;
@@ -22,6 +24,7 @@ export function PublicLayout({ children, title }: PublicLayoutProps) {
                 <meta httpEquiv="x-ua-compatible" content="ie=edge" />
             </Head>
             <Header />
+            <ToastContainer />
             <main>{children}</main>
             <Footer />
             <Scripts />
