@@ -1,6 +1,6 @@
 import ChildPageLayout from "../../../../components/layouts/page/ChildPageLayout";
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
-import { Col, ProgressBar, Row, Table, InputGroup } from "react-bootstrap";
+import { Col, ProgressBar, Row, Table, InputGroup, Dropdown } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -23,6 +23,12 @@ import ApplicantApi from "../../../api/applicant";
 import OverlyPopover from "../../../../components/popover/overly-popover";
 import { FormikInterface } from "../../../../utils/formik";
 import { SchemaDescription, SchemaObjectDescription } from "yup/lib/schema";
+import { LicenseRestrictions } from "../../../../enums/applicants/applicant-license-restrictions-type.enum";
+import { matchEnum } from "../../../../utils/enums.utils";
+import { VehicleTransmissionType } from "../../../../enums/vehicles/vehicle-transmission-type.enum";
+import { DriverEndorsement } from "../../../../enums/users/driver-endorsement.enum";
+import { EducationLevel } from "../../../../enums/users/education-level.enum";
+import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
 
 export default function Import() {
 
@@ -138,7 +144,26 @@ export default function Import() {
                     if (col) {
                         switch (desc.type) {
                             case "boolean": entity[header] = col === "Y"; break;
+                            case "array": entity[header] = col.split(","); break;
                             default: entity[header] = col;
+                        }
+
+                        switch (header) {
+                            case "license_restrictions":
+                                entity.license_restrictions = entity.license_restrictions.map(v => matchEnum(v, LicenseRestrictions, "LicenseRestrictions", t));
+                                break;
+                            case "transmission_type":
+                                entity.transmission_type = entity.transmission_type.map(v => matchEnum(v, VehicleTransmissionType, "VehicleTransmissionType", t));
+                                break;
+                            case "endorsements":
+                                entity.endorsements = entity.endorsements.map(v => matchEnum(v, DriverEndorsement, "DriverEndorsement", t));
+                                break;
+                            case "highest_degree":
+                                entity.highest_degree = matchEnum(entity.highest_degree, EducationLevel, "EducationLevel", t);
+                                break;
+                            case "license_type":
+                                entity.license_type = matchEnum(entity.license_type, DriverLicenseType, "DriverLicenseType", t);
+                                break;
                         }
                     }
             });
@@ -150,7 +175,19 @@ export default function Import() {
         }
     }
 
-    const headers = Object.keys(schemaDescribe.fields);//Object.keys(new ApplicantEntity());
+    const headers = Object
+        .keys(schemaDescribe.fields)
+        .filter(v => {
+            switch (v) {
+                case "equipment_experience":
+                case "equipment_owned":
+                case "employers":
+                case "documents":
+                case "jobs":
+                    return false;
+                default: return true;
+            }
+        });//Object.keys(new ApplicantEntity());
 
     const onDownloadClick = (e) => {
         FileDownload(headers.join(","), "Import Applicants Template.csv");
@@ -236,7 +273,85 @@ export default function Import() {
                             <tr>
                                 <th className={style.frozen_col}><CheckCircle /></th>
                                 <th className={style.frozen_col}>#</th>
-                                {headers.map(k => (<th>{k}{(schemaDescribe.fields[k] as SchemaDescription).tests.some(v => v.name === "required") ? "*" : ""}</th>))}
+                                {
+                                headers.map(k => {
+                                    const text = `${k}${(schemaDescribe.fields[k] as SchemaDescription).tests.some(v => v.name === "required") ? "*" : ""}`;
+
+                                    switch (k) {
+                                        case "license_restrictions":
+                                            return (
+                                                <th>
+                                                    <Dropdown>
+                                                        <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
+                                                        <Dropdown.Menu>
+                                                            {Object.values(LicenseRestrictions).map(v => {
+                                                                return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
+                                                            })}
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+                                                </th>
+                                            );
+                                        case "transmission_type":
+                                            return (
+                                                <th>
+                                                    <Dropdown>
+                                                        <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
+                                                        <Dropdown.Menu>
+                                                            {Object.values(VehicleTransmissionType).map(v => {
+                                                                return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
+                                                            })}
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+                                                </th>
+                                            );
+                                        case "endorsements":
+                                            return (
+                                                <th>
+                                                    <Dropdown>
+                                                        <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
+                                                        <Dropdown.Menu>
+                                                            {Object.values(DriverEndorsement).map(v => {
+                                                                return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
+                                                            })}
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+                                                </th>
+                                            );
+                                            break;
+                                        case "highest_degree":
+                                            return (
+                                                <th>
+                                                    <Dropdown>
+                                                        <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
+                                                        <Dropdown.Menu>
+                                                            {Object.values(EducationLevel).map(v => {
+                                                                return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
+                                                            })}
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+                                                </th>
+                                            );
+                                            break;
+                                        case "license_type":
+                                            return (
+                                                <th>
+                                                    <Dropdown>
+                                                        <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
+                                                        <Dropdown.Menu>
+                                                            {Object.values(DriverLicenseType).map(v => {
+                                                                return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
+                                                            })}
+                                                        </Dropdown.Menu>
+                                                    </Dropdown>
+                                                </th>
+                                            );
+                                            break;
+                                        default:
+                                            return (<th>{text}</th>);
+                                    }
+                                    
+                                    })
+                                }
                             </tr>
                         </thead>
                         <tbody>
@@ -292,6 +407,80 @@ function guessControl(form: FormikInterface, schema, warnings: Record<string, st
     let value = meta.value;
     if (desc.type === "boolean") {
         value = value ? t("YES") : t("NO")
+    }
+
+    if (value) {
+        switch (header) {
+            case "license_restrictions":
+                value = value
+                    .map(v => {
+                        const key = `LicenseRestrictions.${v}`;
+                        const text = t(key);
+                        if (key === text) return v;
+
+                        return text;
+                    });
+                break;
+            case "transmission_type":
+                value = value
+                    .map(v => {
+                        const key = `VehicleTransmissionType.${v}`;
+                        const text = t(key);
+                        if (key === text) return v;
+
+                        return text;
+                    });
+                break;
+            case "endorsements":
+                value = value
+                    .map(v => {
+                        const key = `DriverEndorsement.${v}`;
+                        const text = t(key);
+                        if (key === text) return v;
+
+                        return text;
+                    });
+                break;
+            case "highest_degree":
+                {
+                    const key = `EducationLevel.${value}`;
+                    const text = t(key);
+                    if (key !== text) value = text;
+                }
+                break;
+            case "license_type":
+                {
+                    const key = `DriverLicenseType.${value}`;
+                    const text = t(key);
+                    if (key !== text) value = text;
+                }
+                break;
+        }
+    }
+
+    if (Array.isArray(value)) {
+        return (
+            <>
+            <ul itemType="circle">
+                {
+                    value.map((v, i) => {
+                        const error = meta.error ? meta.error[i] : null;
+
+                        if (error) {
+                            return (<li>
+                                {v}
+                                <br />
+                                <span className="text-danger small">{error}</span>
+                            </li>);
+                        }
+
+                        return (<li>{v}</li>)
+                    })
+                }
+            </ul>
+            </>
+            );
+
     }
 
     if (meta.error) {

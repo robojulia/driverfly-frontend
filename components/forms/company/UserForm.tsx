@@ -98,7 +98,6 @@ export function UserForm(props: UserFormProps) {
                     required
                     placeholder
                     formik={form}
-                    readOnly={!!entity?.id}
                 />
                 <RoleSelect
                     className="col-12 mt-1"

@@ -2,6 +2,7 @@ import { AxiosRequestConfig } from "axios";
 import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
 import { ApplicantJobEntity } from "../../models/applicant/applicant-job.entity";
 import { ApplicantNoteEntity } from "../../models/applicant/applicant-note.entity";
+import { ApplicantSuggestedJobEntity } from "../../models/applicant/applicant-suggested-job.entity";
 import { ApplicantEntity } from "../../models/applicant/applicant.entity";
 import { DocumentEntity } from "../../models/documents/document.entity";
 import { ApplicantJobsByStatusDto } from "../../models/job/applicant-jobs-by-status.dto";
@@ -72,8 +73,21 @@ class ApplicantApi extends BaseApi {
 
             return data;
         },
+        suggestedJobs: async(): Promise<ApplicantSuggestedJobEntity[]> => {
+            const { data } = await this.get(this.baseUrl + "/suggested-jobs");
+
+            return data;
+        },
         update: async (dto: ApplicantEntity): Promise<ApplicantEntity> => {
             const { data } = await this.put(this.baseUrl, dto);
+
+            return data;
+        },
+    }
+
+    suggestedJobs = {
+        get: async (applicantId: number) : Promise<ApplicantSuggestedJobEntity[]> => {
+            const { data } = await this.get(`${this.baseUrl}/${applicantId}/suggested-jobs`);
 
             return data;
         },

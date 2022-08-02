@@ -8,8 +8,9 @@ import { useTranslation } from "../../../hooks/useTranslation";
 import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, BellFill, SearchHeartFill, CheckSquareFill, GiftFill, GearFill, ShareFill, EnvelopeFill, CardList } from 'react-bootstrap-icons';
 import { useAuth } from "../../../hooks/useAuth";
 
-import Scripts from "../../scripts";
+import { Scripts } from "../../scripts/scripts";
 import DriverProfileNav from "./header/DriverProfileNav";
+import { ManyChatScript } from "../../scripts/manychat/manychat";
 
 
 // driver layout
