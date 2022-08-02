@@ -34,7 +34,7 @@ import { ApplicantStatus } from "../../../../../enums/applicants/applicant-statu
 import ApplicantApi from "../../../../api/applicant";
 import DocumentApi from "../../../../api/document";
 import ChildPageLayout from "../../../../../components/layouts/page/ChildPageLayout";
-import SuggestedJobs from "../../../driver/suggested-jobs";
+import SuggestedJobs from "../../../../../components/dashboard/driver/suggested-jobs";
 import { ApplicantSuggestedJobEntity } from "../../../../../models/applicant/applicant-suggested-job.entity";
 
 export default function ViewApplicant({ id }) {
