@@ -1,5 +1,6 @@
 import React from "react";
 import { VehicleType } from "../../../enums/vehicles/vehicle-type.enum";
+import { useTranslation } from "../../../hooks/useTranslation";
 import { VehicleEntity } from "../../../models/company/vehicle.entity";
 import VehicleApi from "../../../pages/api/vehicle";
 import { buildAddress } from "../../../utils/common";
@@ -11,6 +12,7 @@ export interface VehicleSelectProps extends BaseSelectProps {
 }
 
 export function VehicleSelect(props: VehicleSelectProps) {
+    const { t } = useTranslation();
 
     async function fetchData() {
         const api = new VehicleApi();
