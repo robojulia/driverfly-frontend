@@ -115,6 +115,19 @@ export function numberRangeEnd(minField: string, minValue: number, inclusive?: b
   }).nullable()
 }
 
+export function cityRegexValidation() {
+  return yup.string().matches(/^[^0-9]+$/, 'City must include only letters.').nullable();
+}
+
+export function zipCodeRegexValidation() {
+  return yup
+    .string()
+    .matches(/^[0-9]+$/, 'Zip Code must be a 5 digit number.')
+    .min(5, 'Zip Code must be at least 5 digits.')
+    .max(5, 'Zip Code must be no more than 5 digits.')
+    .nullable();
+}
+
 // export default {
 //   object: yup.object,
 //   string: yup.string,
