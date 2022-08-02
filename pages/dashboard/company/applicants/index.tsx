@@ -462,7 +462,7 @@ function ApplicantView(props: ViewProps) {
                 icon: PencilFill,
                 label: "EDIT",
                 onClick: (e) => onEditClick(row.id),
-                hide: !hasPermission("CanEditApplicant")
+                hide: !hasPermission("CanUpdateApplicant")
             },
         ]}
         expandableRowsComponent={({ data }) => (
@@ -651,7 +651,7 @@ function JobView(props: ViewProps) {
                         icon: PencilFill,
                         label: "EDIT",
                         onClick: (e) => onEditClick(row.applicant.id),
-                        hide: !hasPermission("CanEditApplicant")
+                        hide: !hasPermission("CanUpdateApplicant")
                     },
                 ]}
                 items={data.applicants}
