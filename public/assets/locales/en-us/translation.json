@@ -1102,5 +1102,8 @@
     "Call_(614)_259_7225":"Call: (614) 259-7225",
     "WANT_TO_JOIN_US":"Want to join us?",
     "READ_OUR_LATEST_NEWS":"Read our latest news",
-    "HAVE_QUESTIONS":"Have questions?"
+    "HAVE_QUESTIONS":"Have questions?",
+    "CITY_REGEX_VALIDATION_MESSAGE": "City must include only letters.",
+    "ZIP_CODE_REGEX_VALIDATION_MESSAGE": "Zip Code must be a 5 digit number."
+
 }
