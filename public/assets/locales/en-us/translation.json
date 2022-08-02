@@ -513,7 +513,7 @@
     "LOGIN": "Login",
     "LOGOUT": "Logout",
     "DON'T_HAVE_AN_ACCOUNT_MAKE_ONE": "Don't have an account? Make one",
-    "HERE": " here!",
+    "HERE": "here",
     "QUICK_LOGIN": "Quick Login",
     "LOGIN_YOUR_ACCOUNT": "Login Your Account",
     "USER_NAME_OR_EAMIL": "Username or email",
@@ -1104,6 +1104,16 @@
     "READ_OUR_LATEST_NEWS":"Read our latest news",
     "HAVE_QUESTIONS":"Have questions?",
     "CITY_REGEX_VALIDATION_MESSAGE": "City must include only letters.",
-    "ZIP_CODE_REGEX_VALIDATION_MESSAGE": "Zip Code must be a 5 digit number."
-
+    "ZIP_CODE_REGEX_VALIDATION_MESSAGE": "Zip Code must be a 5 digit number.",
+    "SCORE": "Score",
+    "SignUp": {
+        "DRIVERS_HAVE_ACCESS": "Drivers, have access",
+        "TO_OVER_1000_JOBS": "to over 1,000 jobs for free.",
+        "ARE_YOU_A_MOTOR_CARRIER": "Are you a motor carrier?",
+        "VIEW_OUR_PACKAGES": "View our packages",
+        "CONTACT_US": "contact us",
+        "FOR_AN_ACCOUNT": "for an account.",
+        "IF_YOU_ARE_ALREADY_A_USER_LOGIN": "If you are already a user, login"
+    },
+    "AND": "and"
 }

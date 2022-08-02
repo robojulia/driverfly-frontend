@@ -34,6 +34,8 @@ import { ApplicantStatus } from "../../../../../enums/applicants/applicant-statu
 import ApplicantApi from "../../../../api/applicant";
 import DocumentApi from "../../../../api/document";
 import ChildPageLayout from "../../../../../components/layouts/page/ChildPageLayout";
+import SuggestedJobs from "../../../../../components/dashboard/driver/suggested-jobs";
+import { ApplicantSuggestedJobEntity } from "../../../../../models/applicant/applicant-suggested-job.entity";
 
 export default function ViewApplicant({ id }) {
     const router = useRouter();
@@ -48,6 +50,7 @@ export default function ViewApplicant({ id }) {
     };
 
     const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
+    const [applicantSuggestedJobs, setApplicantSuggestedJobs] = useState<ApplicantSuggestedJobEntity[]>([]);
 
     const backPath = "/dashboard/company/applicants";
 
@@ -58,6 +61,9 @@ export default function ViewApplicant({ id }) {
             const api = new ApplicantApi();
 
             const data = await api.getById(+id);
+
+            const suggestedJobs = await api.suggestedJobs.get(id);
+            setApplicantSuggestedJobs(suggestedJobs);
 
             if (!data) {
                 toast.error(t("UNABLE_TO_FIND_{name}", { name: t("APPLICANT") }));
@@ -355,7 +361,7 @@ export default function ViewApplicant({ id }) {
                             date_applied: "DATE_APPLIED"
                         }}
                         items={applicant?.jobs?.map(aJob => ({
-                            title: <Link href={`/jobs/${aJob.job.id}`}><a>{aJob.job.title}</a></Link>,
+                            title: <Link href={`/jobs/${aJob.job.id}/${aJob.job.title}`}><a>{aJob.job.title}</a></Link>,
                             status: <ShowEnumFromString skipLowerCase popover={true} str={aJob.status} labelPrefix="ApplicantStatus" enumArray={ApplicantStatus} />,
                             date_applied: new Date(aJob.created_at).toDateString()
                         }))}
@@ -368,10 +374,11 @@ export default function ViewApplicant({ id }) {
                         <ViewTable
                             type="OTHER_ROLES"
                             headers={{
-                                role: "ROLE",
-                                consider: null
+                                role: "ROLE"
                             }}
-                            items={[]}
+                            items={applicantSuggestedJobs.map(sJob => ({
+                                role: <Link href={`/jobs/${sJob.job.id}/${sJob.job.title}`}><a>{sJob.job.title}</a></Link>
+                            }))}
                         />
                     </ViewCard>
                 </Col>

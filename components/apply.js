@@ -48,7 +48,9 @@ export default function JobApply({ job }) {
         setViewForm(false);
       }
       catch (e) {
+  
         globalAjaxExceptionHandler(e, { formik: apply_form, toast: toast, t: t });
+        if(e.response?.data?.message == "ApplicantJobService.APPLICANT_ALREADY_APPLIED") setViewForm(false)
       }
     }
   });

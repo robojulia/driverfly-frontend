@@ -216,10 +216,15 @@ export function useAuth() {
 
     async function refreshToken() {
         const { user } = userContext;
-        console.log("refreshToken:: refreshing jwt", router.asPath)
-        const api = new AuthApi();
-        const newUser = await api.refreshToken(user.refreshToken);
-        updateUser(newUser);
+        console.log("refreshToken:: refreshing jwt", router.asPath);
+        try {
+            const api = new AuthApi();
+            const newUser = await api.refreshToken(user.refreshToken);
+            updateUser(newUser);
+        } catch (e) {
+            console.error("Unable to refresh jwt token", e);
+            await logoutAndRedirect();
+        }
     }
 
     return {

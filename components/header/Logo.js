@@ -3,7 +3,11 @@ export default function Logo() {
     return (
         <>
             <div className="logo">
-                <img src="/img/DriverFly-Official-Favicon.png" className="logo" />
+                <Link href="/">
+                    <a>
+                        <img src="/img/DriverFly-Official-Favicon.png" className="logo" />
+                    </a>
+                </Link>
             </div>
         </>
     )
