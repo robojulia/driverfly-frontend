@@ -36,8 +36,6 @@ export function yupInit() {
         } as any,
         number: {
           min: (ctx) => {
-            console.log(ctx);
-            debugger;
             return t("yup.number.min", { min: ctx.min })
           },
           max: (ctx) => t("yup.number.max", { max: ctx.max }),

@@ -658,7 +658,7 @@ function JobView(props: ViewProps) {
                         icon: PencilFill,
                         label: "EDIT",
                         onClick: (e) => onEditClick(row.applicant.id),
-                        hide: !hasPermission("CanEditApplicant")
+                        hide: !hasPermission("CanUpdateApplicant")
                     },
                 ]}
                 items={data.applicants}

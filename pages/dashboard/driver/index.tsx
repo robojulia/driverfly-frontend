@@ -10,6 +10,7 @@ import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum
 import ApplicantApi from "../../api/applicant";
 import { useEffectAsync } from "../../../utils/react";
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
+import SuggestedJobs from "../../../components/dashboard/driver/suggested-jobs";
 
 const STATS_PROTO = {
     "APPLIED": 0,
@@ -156,6 +157,7 @@ export default function Dashboard() {
 
                     </tbody>
                 </table>
+                <SuggestedJobs />
             </div>
 
         </PageLayout>
