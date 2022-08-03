@@ -38,13 +38,12 @@ export default function DeletedUsersList() {
 
     const onRestoreUserClick = async (id: number) => {
         try {
-            let user = new UserEntity();
             const userApi = new UserApi();
-            user.status = Status.ACTIVE
-            await userApi.update(id, user );
+            await userApi.mark(id, Status.ACTIVE)
+                .then(data => {
+                    setUsers(users.filter(v => v.id != id));
+                })
 
-            setUsers(users.filter(v => v.id != id));
-            
         } catch (e) {
             globalAjaxExceptionHandler(e, { t: t, defaultMessage: "UNABLE_TO_UPDATE", toast: toast });
         }
