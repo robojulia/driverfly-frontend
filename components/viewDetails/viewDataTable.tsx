@@ -128,11 +128,9 @@ export default function ViewDataTable<TElement>(props: ViewTableProps<TElement>)
 
             noDataComponent={props.noDataComponent || (<>{t("NO_RECORDS_FOUND")}</>)}
 
-            expandOnRowClicked
-            expandableRowsHideExpander
             expandableRowExpanded={row => !props.preExpanded ? false : (typeof props.preExpanded === "boolean" ? props.preExpanded : props.preExpanded(row))}
             expandableRows={!!props.expandableRowsComponent}
-            expandableRowsComponent={props.expandableRowsComponent ? (expandableProps) => (<Container fluid className="bg-secondary px-sm-3 px-md-4 px-lg-5">{<props.expandableRowsComponent {...expandableProps} />}</Container>) : null}
+            expandableRowsComponent={props.expandableRowsComponent ? (expandableProps) => (<Container fluid className="bg-secondary pl-md-5 pr-0">{<props.expandableRowsComponent {...expandableProps} />}</Container>) : null}
 
             subHeader={!props.hideSearch}
             subHeaderComponent={!props.hideSearch && <>
