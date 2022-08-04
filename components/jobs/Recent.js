@@ -10,7 +10,7 @@ export default function RecentJobs() {
         };
 
         axios.get(
-            `${process.env.BASE_URL_API}/jobs/`,
+            `${process.env.BASE_URL_API}jobs/`,
             { headers: headers }
         )
             .then(data => {
