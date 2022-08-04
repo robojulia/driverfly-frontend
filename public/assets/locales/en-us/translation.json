@@ -1104,6 +1104,8 @@
     "WANT_TO_JOIN_US":"Want to join us?",
     "READ_OUR_LATEST_NEWS":"Read our latest news",
     "HAVE_QUESTIONS":"Have questions?",
+    "CITY_REGEX_VALIDATION_MESSAGE": "City must include only letters.",
+    "ZIP_CODE_REGEX_VALIDATION_MESSAGE": "Zip Code must be a 5 digit number.",
     "SCORE": "Score",
     "SignUp": {
         "DRIVERS_HAVE_ACCESS": "Drivers, have access",
