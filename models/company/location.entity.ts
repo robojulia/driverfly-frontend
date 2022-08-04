@@ -1,4 +1,5 @@
 import * as yup from "yup";
+import { cityRegexValidation, zipCodeRegexValidation } from "../../utils/yup";
 
 export class LocationEntity {
     id?: number;
@@ -18,9 +19,9 @@ export class LocationEntity {
     static yupSchema() {
         return yup.object({
             street: yup.string().nullable(),
-            city: yup.string().required().nullable(),
+            city: cityRegexValidation().required(),
             state: yup.string().required().nullable(),
-            zip_code: yup.string().nullable(),
+            zip_code: zipCodeRegexValidation(),
         });
     }
 }

@@ -1,5 +1,6 @@
 import * as yup from "yup"
 import { TestContext } from "yup/lib/util/createValidation"
+import { useTranslation } from "../hooks/useTranslation";
 
 yup.addMethod(yup.string, "enum", function(enumType, message) {
   const keys = Object.values(enumType);
@@ -113,6 +114,18 @@ export function numberRangeEnd(minField: string, minValue: number, inclusive?: b
     then: yup.number().moreThan(yup.ref(minField)).nullable(),
     otherwise: yup.number().moreThan(minValue).nullable()
   }).nullable()
+}
+
+export function cityRegexValidation() {
+  const { t } = useTranslation();
+
+  return yup.string().matches(/^[^0-9]+$/, t("CITY_REGEX_VALIDATION_MESSAGE")).nullable();
+}
+
+export function zipCodeRegexValidation() {
+  const { t } = useTranslation();
+
+  return yup.string().matches(/^[0-9]+$/, t("ZIP_CODE_REGEX_VALIDATION_MESSAGE")).min(5).max(5).nullable();
 }
 
 // export default {
