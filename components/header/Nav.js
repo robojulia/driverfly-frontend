@@ -36,44 +36,36 @@ export default function MyNav() {
                         <NavDropdown title="Driver Resources" id="collasible-nav-dropdown" >
                             <NavDropdown.Item>
                                 <Link href="/faq">
-                                   <a className="dropdown-item" href="/faq" >{t("FAQ")}</a>
+                                    <a className="dropdown-item" href="/faq" >{t("FAQ")}</a>
                                 </Link>
                             </NavDropdown.Item>
                             <NavDropdown.Item >
                                 <Link href="/find-schools">
-                                   <a className="dropdown-item" href="/">{t("GET_YOUR_CDL")} </a>
+                                    <a className="dropdown-item" href="/">{t("GET_YOUR_CDL")} </a>
                                 </Link>
                             </NavDropdown.Item>
                             <NavDropdown.Item >
                                 <Link href="/owner-operators">
-                                   <a className="dropdown-item" href="/owner-operators"> {t("OWNER_OPERATORS")} </a>
+                                    <a className="dropdown-item" href="/owner-operators"> {t("OWNER_OPERATORS")} </a>
                                 </Link>
                             </NavDropdown.Item>
                         </NavDropdown>
                         <NavDropdown title="Motor Carrier Solutions" id="collasible-nav-dropdown" >
-                            <NavDropdown.Item>
-                                <Link href="http://go.driverfly.co/">
-                                   <a className="dropdown-item" href="http://go.driverfly.co/">{t("OUR_SOLUTION")}  </a>
-                                </Link>
+                            <NavDropdown.Item
+                                href="http://go.driverfly.co/motor-carriers" target="_blank" >{t("OUR_SOLUTION")}
                             </NavDropdown.Item>
-                            <NavDropdown.Item >
-                                <Link href="http://go.driverfly.co/motor-carriers">
-                                   <a className="dropdown-item"  href="http://go.driverfly.co/motor-carriers">{t("OPTIOS_&_PRICING")} </a>
-                                </Link>
+                            <NavDropdown.Item
+                                href="http://go.driverfly.co/motor-carriers" target="_blank" >{t("OPTIOS_&_PRICING")}
                             </NavDropdown.Item>
-                            <NavDropdown.Item >
-                                <Link href="http://go.driverfly.co/sign-up">
-                                   <a className="dropdown-item" href="http://go.driverfly.co/sign-up">{t("REQUESR_AQUOTE")} </a>
-                                </Link>
+                            <NavDropdown.Item
+                                className="dropdown-item" href="http://go.driverfly.co/sign-up" target="_blank">{t("REQUESR_AQUOTE")}
                             </NavDropdown.Item>
-                            <NavDropdown.Item >
-                                <Link href="https://digitalhiringapp.com/">
-                                   <a className="dropdown-item" href="https://digitalhiringapp.com/">{t("FREE_DIGITAL_APPLICATION")} </a>
-                                </Link>
+                            <NavDropdown.Item
+                                className="dropdown-item" href="https://digitalhiringapp.com/" target="_blank">{t("FREE_DIGITAL_APPLICATION")}
                             </NavDropdown.Item>
                             <NavDropdown.Item >
                                 <Link href="/third-party-resources">
-                                   <a className="dropdown-item" href="/third-party-resources"> {t("THIRD_PARTY_RESOURCES")} </a>
+                                    <a className="dropdown-item p-0"> {t("THIRD_PARTY_RESOURCES")} </a>
                                 </Link>
                             </NavDropdown.Item>
                         </NavDropdown>
