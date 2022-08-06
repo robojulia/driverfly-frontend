@@ -32,7 +32,7 @@ export default function Index() {
         const aJobs = await applicantApi.me.jobs();
 
         setApplications(aJobs);
-    }, [ user ]);
+    }, [user]);
 
     const columnSettingKey = getDataTableColumnKey("driver", user, "applications");
 
@@ -48,6 +48,10 @@ export default function Index() {
                     <ViewDataTable<ApplicantJobEntity>
                         columnSettingKey={columnSettingKey}
                         columns={[
+                            {
+                                name: 'ID',
+                                selector: applicant => applicant.job.id,
+                            },
                             {
                                 name: "job_title",
                                 cell: applicant =>
@@ -106,7 +110,7 @@ export default function Index() {
                             {
                                 name: "DATE_APPLIED",
                                 cell: applicant =>
-                                        (<OverlyPopover skipTranslate={true} header={t('DATE_APPLIED')} str={new Date(applicant.created_at).toDateString()} />),
+                                    (<OverlyPopover skipTranslate={true} header={t('DATE_APPLIED')} str={new Date(applicant.created_at).toDateString()} />),
                                 selector: applicant => new Date(applicant.created_at).toDateString(),
                             },
                             {

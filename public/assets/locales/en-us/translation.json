@@ -608,6 +608,7 @@
     "EDIT_VEHICLE": "Edit Vehicle",
     "CREATE_VEHICLE": "Create Vehicle",
     "CREATE": "Create",
+    "DELETED_USERS":"Deleted Users",
     "OTHER": "Other",
     "TRAILER_TYPE": "Trailer Type",
     "trailer_type": "Trailer Type",
