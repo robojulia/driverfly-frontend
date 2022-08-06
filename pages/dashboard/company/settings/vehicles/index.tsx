@@ -103,6 +103,11 @@ export default function VehicleList() {
         columnSettingKey={columnSettingKey}
         columns={[
           {
+            id: "id",
+            name: "ID",
+            selector: v => v.id,
+          },
+          {
             id: "photo",
             name: "PHOTO",
             cell: (v) => v.photo && <img className="img-thumbnail" style={{maxWidth: "100px"}} src={v.photo.path} />

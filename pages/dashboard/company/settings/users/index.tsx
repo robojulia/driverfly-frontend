@@ -15,6 +15,7 @@ import { globalAjaxExceptionHandler } from '../../../../../utils/ajax';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
 import { Button } from 'react-bootstrap';
+import { join } from 'path/posix';
 
 export default function UserList() {
 
@@ -76,6 +77,11 @@ export default function UserList() {
         <ViewDataTable<UserEntity>
           columnSettingKey={columnSettingKey}
           columns={[
+            {
+              id: "name",
+              name: "ID",
+              selector: j=> j.id,
+            },
             {
               id: "name",
               name: "name",

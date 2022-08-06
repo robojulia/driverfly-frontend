@@ -90,6 +90,11 @@ export default function JobListing() {
 
                 columns={[
                     {
+                        id: "id",
+                        name: "ID",
+                        selector: j => j.id,
+                    },
+                    {
                         id: "job_title",
                         name: "job_title",
                         cell: job => (<OverlyPopover skipTranslate={true} header={t('job_title')} str={job.title} />),
