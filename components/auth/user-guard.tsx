@@ -31,20 +31,28 @@ export function UserGuard({ permissions, children }: UserGuardProps) {
                         permissions = [permissions];
 
                     if (!hasPermission(...permissions)) {
-                        await router.push("/");
+                        router.push("/");
                         return false;
                     }
                 }
                 else return false;
             }
 
-            if (user && user.jwt?.exp) {
-                const msToExpiration = jwtExpiryTimeout(user.jwt);
-                console.log("Expires in ms: ", msToExpiration);
-
-                const timeoutId = window.setTimeout(CheckAuth, msToExpiration);
-
-                setTimeoutId(timeoutId);
+            if (user) {
+                if (user.emailTokenTimestamp) {
+                    if (router.asPath.startsWith("/dashboard")) {
+                        router.push("/login/verify-email");
+                        return false;
+                    }
+                }
+                if (user.jwt?.exp) {
+                    const msToExpiration = jwtExpiryTimeout(user.jwt);
+                    console.log("Expires in ms: ", msToExpiration);
+    
+                    const timeoutId = window.setTimeout(CheckAuth, msToExpiration);
+    
+                    setTimeoutId(timeoutId);
+                }
             }
         }
 

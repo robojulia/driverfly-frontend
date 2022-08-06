@@ -3,18 +3,18 @@ import { Button, Col, Row } from 'react-bootstrap';
 import Link from 'next/link';
 import { toast } from 'react-toastify'
 
-import { PublicLayout } from "../components/layouts/PublicLayout";
-import { PublicPage } from '../components/layouts/public/PublicPage';
-import BaseInput from '../components/forms/BaseInput';
+import { PublicLayout } from "../../components/layouts/PublicLayout";
+import { PublicPage } from '../../components/layouts/public/PublicPage';
+import BaseInput from '../../components/forms/BaseInput';
 
 import { useFormik } from "formik";
-import { useAuth } from '../hooks/useAuth';
-import { useTranslation } from "../hooks/useTranslation";
+import { useAuth } from '../../hooks/useAuth';
+import { useTranslation } from "../../hooks/useTranslation";
 
-import AuthApi from "./api/auth";
+import AuthApi from "../api/auth";
 
-import { globalAjaxExceptionHandler } from '../utils/ajax';
-import { LoginDto } from '../models/auth/login.dto';
+import { globalAjaxExceptionHandler } from '../../utils/ajax';
+import { LoginDto } from '../../models/auth/login.dto';
 
 export default function Login() {
 
@@ -93,7 +93,7 @@ export default function Login() {
                                 </Link>
                             </Col>
                         </Row>
-                        <div className="d-grid gap-2 my-4">
+                        <div className="d-grid gap-2 mt-4">
                             <Button disabled={form.isSubmitting} size="lg" type="submit">{t("LOGIN")}</Button>
                             <div className="my-1 w-100 text-center">
                                 <span>{t("OR")}</span>
