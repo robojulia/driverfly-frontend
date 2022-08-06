@@ -111,7 +111,7 @@ return (
           name="description"
           content={t("DRIVERFLY_COMPANY_DASHBOARD")}
         />
-        <link rel="icon" href="/img/DriverFly-Official-Favicon.png" />
+        <link rel="icon" href="/img/favicon.ico" />
       </Head>
       <Scripts />
       <div className="header">
