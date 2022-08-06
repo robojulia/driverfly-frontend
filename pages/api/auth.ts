@@ -3,6 +3,7 @@ import { JwtRefreshTokenPayload } from "../../models/auth/jwt-refresh-token-payl
 import { LoginDto } from "../../models/auth/login.dto";
 import { SignUpDto } from "../../models/auth/sign-up.dto";
 import { VerifyEmailDto } from "../../models/auth/verify-email.dto";
+import { VerifyPhoneDto } from "../../models/auth/verify-phone.dto";
 import { CompanyEntity } from "../../models/company/company.entity";
 import { UserEntity } from "../../models/user/user.entity";
 import BaseApi from "./_baseApi";
@@ -27,6 +28,14 @@ export default class AuthApi extends BaseApi {
 
     async sendVerifyEmail(email: string) {
         await this.post(`${this.baseUrl}/verify-email/resend`, { email: email });
+    }
+
+    async verifyPhone(dto: VerifyPhoneDto) {
+        await this.post(`${this.baseUrl}/verify-phone`, dto);
+    }
+
+    async sendVerifyPhone(dto: VerifyPhoneDto) {
+        await this.post(`${this.baseUrl}/verify-phone/resend`, dto);
     }
 
     async findCompanies(): Promise<CompanyEntity[]> {

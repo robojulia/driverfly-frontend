@@ -46,6 +46,13 @@ export function UserGuard({ permissions, children }: UserGuardProps) {
                 //         return false;
                 //     }
                 // }
+
+                // if (user.phoneTokenTimestamp) {
+                //     if (router.asPath.startsWith("/dashboard")) {
+                //         router.push("/login/verify-phone");
+                //         return false;
+                //     }
+                // }
                 if (user.jwt?.exp) {
                     const msToExpiration = jwtExpiryTimeout(user.jwt);
                     console.log("Expires in ms: ", msToExpiration);

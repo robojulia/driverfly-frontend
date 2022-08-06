@@ -1124,7 +1124,15 @@
         "RESEND_VERIFICATION_EMAIL": "Resend verification email"
 
     },
+    "VERIFY_PHONE": "Verify Phone Number",
+    "VerifyPhone": {
+        "CHECK_YOUR_PHONE_TO_VERIFY": "Check your phone for a verification token",
+        "RESEND_VERIFICATION_TEXT": "Resend verification text"
+    },
     "UNABLE_TO_VERIFY_EMAIL": "No user with the specified email and token were found",
     "EMAIL_VERIFIED": "Email was successfully verified",
-    "EMAIL_IS_REQUIRED": "Email is required"
+    "PHONE_VERIFIED": "Phone was successfully verified",
+    "EMAIL_IS_REQUIRED": "Email is required",
+    "PHONE_IS_REQUIRED": "Phone is required",
+    "PLEASE_CHECK_PHONE": "Please check your phone"
 }

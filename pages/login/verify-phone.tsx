@@ -12,11 +12,12 @@ import { PublicLayout } from "../../components/layouts/PublicLayout";
 import { PublicPage } from "../../components/layouts/public/PublicPage"
 
 import AuthApi from "../api/auth";
-import { VerifyEmailDto } from "../../models/auth/verify-email.dto";
+import { VerifyPhoneDto } from '../../models/auth/verify-phone.dto';
 import React, { useEffect } from 'react';
 import BaseInput from '../../components/forms/BaseInput';
+import BaseInputPhone from '../../components/forms/BaseInputPhone';
 
-export default function VerifyEmail(props: VerifyEmailDto) {
+export default function VerifyPhone(props: VerifyPhoneDto) {
   const router = useRouter();
   const { t } = useTranslation();
   const { user, updateUser, login } = useAuth();
@@ -24,18 +25,18 @@ export default function VerifyEmail(props: VerifyEmailDto) {
   const api = new AuthApi();
 
   const form = useFormik({
-    initialValues: new VerifyEmailDto(),
-    validationSchema: VerifyEmailDto.yupSchema(),
+    initialValues: new VerifyPhoneDto(),
+    validationSchema: VerifyPhoneDto.yupSchema(),
     onSubmit: async (dto) => {
       try {
-        await api.verifyEmail(dto);
+        await api.verifyPhone(dto);
 
-        toast.success(t("EMAIL_VERIFIED"));
+        toast.success(t("PHONE_VERIFIED"));
 
         if (user) {
           updateUser({
             ...user,
-            emailTokenTimestamp: null,
+            phoneTokenTimestamp: null,
           });
         }
         else {
@@ -50,20 +51,18 @@ export default function VerifyEmail(props: VerifyEmailDto) {
 
   async function resendVerify(e?: React.MouseEvent<HTMLButtonElement>) {
     try {
-      if (form.values.email) {
-        await api.sendVerifyEmail(form.values.email);
-
-        if (user) {
-          updateUser({
-            ...user,
-            email: form.values.email
-          });
-        }
-
-        toast.success(t("PLEASE_CHECK_EMAIL"));
+      if (!form.values.phone) {
+        toast.error(t("PHONE_IS_REQUIRED"));
       }
       else {
-        toast.error(t("EMAIL_IS_REQUIRED"));
+        await api.sendVerifyPhone(form.values);
+
+        updateUser({
+          ...user,
+          cell_number: form.values.phone
+        });
+
+        toast.success(t("PLEASE_CHECK_PHONE"));
       }
     }
     catch (e) {
@@ -73,19 +72,25 @@ export default function VerifyEmail(props: VerifyEmailDto) {
   }
 
   useEffect(() => {
+    if (!user) {
+      router.replace("/login");
+      return;
+    }
+    
     if (user) {
-      if (!user.emailTokenTimestamp) {
+      if (!user.phoneTokenTimestamp) {
         login(user);
         return; // no need to verify
-      } else {
+      } else
+      {
         form.setValues({
           ...form.values,
           ...props,
-          email: user.email
+          phone: user.cell_number,
         });
       }
     }
-    else if (props.email || props.token) {
+    else if (props.phone || props.token) {
       form.setValues({
         ...form.values,
         ...props
@@ -95,23 +100,23 @@ export default function VerifyEmail(props: VerifyEmailDto) {
 
   return (
     <PublicPage
-      title="VERIFY_EMAIL"
+      title="VERIFY_PHONE"
       >
       <Row className='mb-2 p-lg-2 p-0'>
           <Col>
-              <h2 className='text-center mt-5'>{t("VERIFY_EMAIL")}</h2>
-              <p className="mt-3 text-center">{t("VerifyEmail.CHECK_YOUR_EMAIL_TO_VERIFY")}</p>
+              <h2 className='text-center mt-5'>{t("VERIFY_PHONE")}</h2>
+              <p className="mt-3 text-center">{t("VerifyPhone.CHECK_YOUR_PHONE_TO_VERIFY")}</p>
           </Col>
       </Row>
       <Row className="justify-content-lg-center">
         <Col lg="8">
           <Form
             onSubmit={form.handleSubmit}>
-            <BaseInput
+            <BaseInputPhone
                 className="form-group"
-                label="EMAIL"
+                label="PHONE"
                 required
-                name="email"
+                name="phone"
                 placeholder
                 formik={form}
               />
@@ -128,7 +133,7 @@ export default function VerifyEmail(props: VerifyEmailDto) {
               <div className="my-1 w-100 text-center">
                   <span>{t("OR")}</span>
               </div>
-              <Button disabled={form.isSubmitting} size="lg" onClick={resendVerify}>{t("VerifyEmail.RESEND_VERIFICATION_EMAIL")}</Button>
+              <Button disabled={form.isSubmitting} size="lg" onClick={resendVerify}>{t("VerifyPhone.RESEND_VERIFICATION_TEXT")}</Button>
             </div>
           </Form>
         </Col>
@@ -137,12 +142,12 @@ export default function VerifyEmail(props: VerifyEmailDto) {
   )
 }
 export async function getServerSideProps({ query }) {
-  const { token, email } = query || {};
+  const { token, phone } = query || {};
 
-  return { props: { token: token || "", email: email || "" } }
+  return { props: { token: token || "", phone: phone || "" } }
 }
 
-VerifyEmail.getLayout = function getLayout(page) {
+VerifyPhone.getLayout = function getLayout(page) {
   return (
     <PublicLayout>
       {page}

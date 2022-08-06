@@ -15,7 +15,7 @@ export interface BaseInputPhoneProps extends BaseControlProps {
 }
 
 
-function BaseInputPhone({ formik, required, className, label, handleBlur, placeholder, value, onChange, onKeyDown, name, error, touched, append, prepend }: BaseInputPhoneProps) {
+function BaseInputPhone({ formik, required, className, label, handleBlur, placeholder, value, onChange, onKeyDown, readOnly, name, error, touched, append, prepend }: BaseInputPhoneProps) {
   const { t } = useTranslation();
 
   if (formik) {
@@ -57,12 +57,15 @@ function BaseInputPhone({ formik, required, className, label, handleBlur, placeh
         onlyCountries={ ['us']}
         isValid={!error}
         inputProps={{
-          name: { name },
+          name: name,
+          readOnly: readOnly,
+          disabled: readOnly
         }}
         defaultErrorMessage={error}
         country={'us'}
         placeholder={t(placeholder === true ? label || name : (placeholder || "").toString())}
         value={value || ""}
+        disabled={readOnly}
         onChange={onChangeProxy}
         onKeyDown={onKeyDown}
         onBlur={handleBlur}

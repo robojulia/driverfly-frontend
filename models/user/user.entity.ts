@@ -25,6 +25,7 @@ export class UserEntity {
     contact_number?: string;
     cell_number?: string;
     emailTokenTimestamp?: Date | string;
+    phoneTokenTimestamp?: Date | string;
     company?: CompanyEntity;
     photo?: DocumentEntity;
 
