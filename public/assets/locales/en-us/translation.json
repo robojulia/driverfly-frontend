@@ -1134,5 +1134,6 @@
     "PHONE_VERIFIED": "Phone was successfully verified",
     "EMAIL_IS_REQUIRED": "Email is required",
     "PHONE_IS_REQUIRED": "Phone is required",
-    "PLEASE_CHECK_PHONE": "Please check your phone"
+    "PLEASE_CHECK_PHONE": "Please check your phone",
+    "TECHNICAL_ASSISTANCE_HELP": "For technical assistance, reach out to help@driverfly.co"
 }

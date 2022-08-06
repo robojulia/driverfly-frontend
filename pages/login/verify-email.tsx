@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify'
-import { Button, Col, Form, Row } from "react-bootstrap"
+import { Alert, Button, Col, Form, Row } from "react-bootstrap"
 
 import { globalAjaxExceptionHandler } from '../../utils/ajax';
 
@@ -90,6 +90,8 @@ export default function VerifyEmail(props: VerifyEmailDto) {
         ...form.values,
         ...props
       });
+    } else {
+      router.replace("/")
     }
   }, [ props, user ]);
 
@@ -97,13 +99,13 @@ export default function VerifyEmail(props: VerifyEmailDto) {
     <PublicPage
       title="VERIFY_EMAIL"
       >
-      <Row className='mb-2 p-lg-2 p-0'>
-          <Col>
-              <h2 className='text-center mt-5'>{t("VERIFY_EMAIL")}</h2>
-              <p className="mt-3 text-center">{t("VerifyEmail.CHECK_YOUR_EMAIL_TO_VERIFY")}</p>
+      <Row className='mt-3'>
+          <Col className="text-center">
+              <h2>{t("VERIFY_EMAIL")}</h2>
+              <p className="mt-3">{t("VerifyEmail.CHECK_YOUR_EMAIL_TO_VERIFY")}</p>
           </Col>
       </Row>
-      <Row className="justify-content-lg-center">
+      <Row className="mt-2 justify-content-lg-center">
         <Col lg="8">
           <Form
             onSubmit={form.handleSubmit}>
@@ -131,6 +133,11 @@ export default function VerifyEmail(props: VerifyEmailDto) {
               <Button disabled={form.isSubmitting} size="lg" onClick={resendVerify}>{t("VerifyEmail.RESEND_VERIFICATION_EMAIL")}</Button>
             </div>
           </Form>
+        </Col>
+      </Row>
+      <Row className="mt-2 justify-content-lg-center">
+        <Col lg="8">
+          <Alert variant='info'>{t("TECHNICAL_ASSISTANCE_HELP")}</Alert>
         </Col>
       </Row>
     </PublicPage>

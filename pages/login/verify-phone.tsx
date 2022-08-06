@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify'
-import { Button, Col, Form, Row } from "react-bootstrap"
+import { Alert, Button, Col, Form, Row } from "react-bootstrap"
 
 import { globalAjaxExceptionHandler } from '../../utils/ajax';
 
@@ -102,13 +102,13 @@ export default function VerifyPhone(props: VerifyPhoneDto) {
     <PublicPage
       title="VERIFY_PHONE"
       >
-      <Row className='mb-2 p-lg-2 p-0'>
-          <Col>
-              <h2 className='text-center mt-5'>{t("VERIFY_PHONE")}</h2>
-              <p className="mt-3 text-center">{t("VerifyPhone.CHECK_YOUR_PHONE_TO_VERIFY")}</p>
+      <Row className='mt-3'>
+          <Col className="text-center">
+              <h2>{t("VERIFY_PHONE")}</h2>
+              <p className="mt-3">{t("VerifyPhone.CHECK_YOUR_PHONE_TO_VERIFY")}</p>
           </Col>
       </Row>
-      <Row className="justify-content-lg-center">
+      <Row className="mt-2 justify-content-lg-center">
         <Col lg="8">
           <Form
             onSubmit={form.handleSubmit}>
@@ -136,6 +136,11 @@ export default function VerifyPhone(props: VerifyPhoneDto) {
               <Button disabled={form.isSubmitting} size="lg" onClick={resendVerify}>{t("VerifyPhone.RESEND_VERIFICATION_TEXT")}</Button>
             </div>
           </Form>
+        </Col>
+      </Row>
+      <Row className="mt-2 justify-content-lg-center">
+        <Col lg="8">
+          <Alert variant='info'>{t("TECHNICAL_ASSISTANCE_HELP")}</Alert>
         </Col>
       </Row>
     </PublicPage>

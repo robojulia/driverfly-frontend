@@ -45,15 +45,15 @@ export default function Login() {
         <PublicPage
             title="LOGIN"
         >
-            <Row className='mb-2 p-lg-2 p-0'>
+            <Row className='mb-2 mt-3'>
                 <Col>
-                    <p className=" mt-5 text-secondary  p-lg-0 p-2">
+                    <p className=" text-secondary">
                         {t("DON'T_HAVE_AN_ACCOUNT_MAKE_ONE")}
                         <Link href="/signup">
-                            <a className="primary">{t("HERE")}</a>
+                            <a className="primary ml-1">{t("HERE")}</a>
                         </Link>!
                     </p>
-                    <h2 className='text-center mt-5'>{t("QUICK_LOGIN")}</h2>
+                    <h2 className='text-center mt-3'>{t("QUICK_LOGIN")}</h2>
                     <p className="mt-3 text-center">{t("LOGIN_YOUR_ACCOUNT")}</p>
                 </Col>
             </Row>
