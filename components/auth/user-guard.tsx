@@ -39,12 +39,13 @@ export function UserGuard({ permissions, children }: UserGuardProps) {
             }
 
             if (user) {
-                if (user.emailTokenTimestamp) {
-                    if (router.asPath.startsWith("/dashboard")) {
-                        router.push("/login/verify-email");
-                        return false;
-                    }
-                }
+                // HF, temporarily disable this redirect until notification service is fixed
+                // if (user.emailTokenTimestamp) {
+                //     if (router.asPath.startsWith("/dashboard")) {
+                //         router.push("/login/verify-email");
+                //         return false;
+                //     }
+                // }
                 if (user.jwt?.exp) {
                     const msToExpiration = jwtExpiryTimeout(user.jwt);
                     console.log("Expires in ms: ", msToExpiration);
