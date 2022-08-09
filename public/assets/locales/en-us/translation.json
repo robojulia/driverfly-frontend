@@ -1118,6 +1118,8 @@
     "AND": "and",
     "ACTIVE": "Active",
     "DELETED": "Deleted",
+    "ZIP_CODE_MIN_VALIDATION_MESSAGE": "Zip Code must be at least 5 digits",
+    "ZIP_CODE_MAX_VALIDATION_MESSAGE": "Zip Code must be no more than 5 digits",
     "VERIFY_EMAIL": "Verify Email",
     "TOKEN": "Token",
     "VERIFY": "Verify",
