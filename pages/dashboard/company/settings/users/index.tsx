@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
 import PageLayout from "../../../../../components/layouts/page/PageLayout";
 import { TabbedLayout } from '../../../../../components/layouts/page/TabbedLayout';
-import { Col, Row } from "reactstrap";
 import { useAuth } from '../../../../../hooks/useAuth';
 import { useRouter } from "next/router"
 import { useTranslation } from "../../../../../hooks/useTranslation";
@@ -25,16 +24,15 @@ export default function UserList() {
 
   const columnSettingKey = getDataTableColumnKey("company", user, "users");
 
-  const [ activeUsers, setActiveUsers ] = useState([]);
-  const [ deletedUsers, setDeletedUsers ] = useState([]);
+
+  const [ users, setUsers ] = useState([]);
 
   useEffectAsync(async () => {
     if (!user) return;
     
     const api = new UserApi();
     const v = await api.list();
-    setActiveUsers(v.filter((u) => u.id !== user.id && u.status === Status.ACTIVE));
-    setDeletedUsers(v.filter((u) => u.id !== user.id && u.status === Status.DELETED));
+    setUsers(v);
 
   }, [ user ]);
 
@@ -65,41 +63,44 @@ export default function UserList() {
 
       await api.remove(id);
 
-      setActiveUsers(activeUsers.filter(v => v.id != id));
+      setUsers(users.map(v => {
+        if (v.id === id) {
+          return {...v, status: Status.DELETED};
+        }
+      
+        return v;
+      }));
+
     } catch (e) {
       globalAjaxExceptionHandler(e, { t: t, defaultMessage: "UNABLE_TO_DELETE", toast: toast });
     }
   }
 
   const onRestoreClick = async (id: number) => {
-    // try {
-    //   const api = new UserApi();
+    try {
+      const api = new UserApi();
 
-    //   await api.remove(id);
+      const restoredUser = users.find(v => v.id === id);
+      restoredUser.status = Status.ACTIVE;
 
-    //   setUsers(users.filter(v => v.id != id));
-    // } catch (e) {
-    //   globalAjaxExceptionHandler(e, { t: t, defaultMessage: "UNABLE_TO_DELETE", toast: toast });
-    // }
+      await api.restore(restoredUser);
+
+      setUsers(users.map(v => {
+        if (v.id === id) {
+          return {...v, status: Status.ACTIVE};
+        }
+      
+        return v;
+      }));
+
+    } catch (e) {
+      globalAjaxExceptionHandler(e, { t: t, defaultMessage: "UNABLE_TO_DELETE", toast: toast });
+    }
   }
 
-  // const createTabs = (users: UserEntity[]) => {
-  //   let tabs = {};
-
-  //   const activeUsers = users.filter((u) => u.id !== user.id && u.status === Status.ACTIVE);
-  //   const deletedUsers = users.filter((u) => u.id !== user.id && u.status === Status.DELETED);
-
-
-  //   tabs[Status.ACTIVE] = createUsersTab(activeUsers, Status.ACTIVE);
-  //   tabs[Status.DELETED] = createUsersTab(deletedUsers, Status.DELETED);
-    
-
-  //   return tabs;
-  // }
-
   const tabs = {
-    [Status.ACTIVE]: createUsersTab(activeUsers, Status.ACTIVE),
-    [Status.DELETED]: createUsersTab(deletedUsers, Status.DELETED),
+    [Status.ACTIVE]: createUsersTab(users.filter((u) => u.id !== user.id && u.status === Status.ACTIVE), Status.ACTIVE),
+    [Status.DELETED]: createUsersTab(users.filter((u) => u.id !== user.id && u.status === Status.DELETED), Status.DELETED),
   };
 
   function createUsersTab(users: UserEntity[], title: string) {
@@ -150,22 +151,22 @@ export default function UserList() {
             ]}
             actions={j => ([
                 {
-                    onClick: e => onViewClick(j.id),
-                    icon: EyeFill,
-                    label: "VIEW",
-                    hide: !can.viewUser
+                  onClick: e => onViewClick(j.id),
+                  icon: EyeFill,
+                  label: "VIEW",
+                  hide: !can.viewUser
                 },
                 {
-                    onClick: e => onEditClick(j.id),
-                    icon: PenFill,
-                    label: "EDIT",
-                    hide: !can.editUser
+                  onClick: e => onEditClick(j.id),
+                  icon: PenFill,
+                  label: "EDIT",
+                  hide: !can.editUser
                 },
                 {
-                    onClick: e => onDeleteClick(j.id),
-                    icon: TrashFill,
-                    label: "DELETE",
-                    hide: !(can.deleteUser && title === Status.ACTIVE)
+                  onClick: e => onDeleteClick(j.id),
+                  icon: TrashFill,
+                  label: "DELETE",
+                  hide: !(can.deleteUser && title === Status.ACTIVE)
                 },
                 {
                   onClick: e => onRestoreClick(j.id),
