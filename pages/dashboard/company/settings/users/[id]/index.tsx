@@ -23,7 +23,7 @@ export default function ViewUser({ id }) {
 
     const { t } = useTranslation();
 
-    const { hasPermission } = useAuth();
+    const { hasPermission, company } = useAuth();
 
     const [user, setUser] = useState(new UserEntity());
 
@@ -32,13 +32,18 @@ export default function ViewUser({ id }) {
     const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
 
     useEffectAsync(async () => {
-        if (!user) return;
-        
         if (id) {
             const api = new UserApi();
 
-            const data = await api.findById(+id);
-
+            let data = null
+            
+            try {
+                data = await api.findById(+id);
+            }
+            catch (e) {
+                // silent error for now
+                data = null;
+            }
             if (!data) {
                 toast.error(t("UNABLE_TO_FIND_{name}", { name: t("USER") }));
                 goBack();
@@ -51,7 +56,7 @@ export default function ViewUser({ id }) {
             goBack();
         }
 
-    }, [ user, id ]);
+    }, [ company, id ]);
 
     const onEditClick = async () => {
         await router.push(router.asPath + `/edit`);

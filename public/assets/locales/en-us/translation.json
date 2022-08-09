@@ -1117,5 +1117,25 @@
     },
     "AND": "and",
     "ZIP_CODE_MIN_VALIDATION_MESSAGE": "Zip Code must be at least 5 digits",
-    "ZIP_CODE_MAX_VALIDATION_MESSAGE": "Zip Code must be no more than 5 digits"
+    "ZIP_CODE_MAX_VALIDATION_MESSAGE": "Zip Code must be no more than 5 digits",
+    "VERIFY_EMAIL": "Verify Email",
+    "TOKEN": "Token",
+    "VERIFY": "Verify",
+    "VerifyEmail": {
+        "CHECK_YOUR_EMAIL_TO_VERIFY": "Check your email for a verification token",
+        "RESEND_VERIFICATION_EMAIL": "Resend verification email"
+
+    },
+    "VERIFY_PHONE": "Verify Phone Number",
+    "VerifyPhone": {
+        "CHECK_YOUR_PHONE_TO_VERIFY": "Check your phone for a verification token",
+        "RESEND_VERIFICATION_TEXT": "Resend verification text"
+    },
+    "UNABLE_TO_VERIFY_EMAIL": "No user with the specified email and token were found",
+    "EMAIL_VERIFIED": "Email was successfully verified",
+    "PHONE_VERIFIED": "Phone was successfully verified",
+    "EMAIL_IS_REQUIRED": "Email is required",
+    "PHONE_IS_REQUIRED": "Phone is required",
+    "PLEASE_CHECK_PHONE": "Please check your phone",
+    "TECHNICAL_ASSISTANCE_HELP": "For technical assistance, reach out to help@driverfly.co"
 }

@@ -73,19 +73,6 @@ export default function Impersonate() {
             userId: yup.number().when("companyId", {
                 is: -1,
                 then: yup.number().required().nullable()
-            }).test((value, context) => {
-                if (!value) return true;
-
-                console.log("UserId", value);
-
-                const user = users.find(v => v.id == value);
-
-                if (!user.activated) return context.createError({
-                    path: context.path,
-                    message: t("NOT_ACTIVATED")
-                });
-
-                return true;
             }).nullable()
         }),
         onSubmit: onSubmit
@@ -169,7 +156,7 @@ export default function Impersonate() {
                         placeholder
                         options={users}
                         valueKey="id"
-                        createLabel={c => `${c.name} (#${c.id}) ${c.activated ? "" : `*${t("NOT_ACTIVATED")}*`}`}
+                        createLabel={c => `${c.name} (#${c.id})`}
                         formik={form}
                     />
 
