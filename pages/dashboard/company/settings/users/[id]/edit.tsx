@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import FullLayout from "../../../../../../components/dashboard/layouts/Layout/FullLayout";
 import { UserForm } from "../../../../../../components/forms/company/UserForm";
 import ChildPageLayout from "../../../../../../components/layouts/page/ChildPageLayout";
+import { useAuth } from "../../../../../../hooks/useAuth";
 import { useTranslation } from "../../../../../../hooks/useTranslation";
 import { UserEntity } from "../../../../../../models/user/user.entity";
 import { useEffectAsync } from "../../../../../../utils/react";
@@ -13,6 +14,8 @@ export default function EditUser({ id }) {
     const router = useRouter();
     const { t } = useTranslation();
 
+    const { company } = useAuth();
+
     const backPath = `/dashboard/company/settings/users/${id}`;
 
     const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
@@ -20,12 +23,18 @@ export default function EditUser({ id }) {
     const [ user, setUser ] = useState(new UserEntity());
 
     useEffectAsync(async () => {
-        if (!user) return;
-        
         if (id) {
             const api = new UserApi();
 
-            const entity = await api.findById(+id);
+            let entity = null
+            
+            try {
+                entity = await api.findById(+id);
+            }
+            catch (e) {
+                // silent error for now
+                entity = null;
+            }
 
             if (entity) setUser(entity);
             else {
@@ -36,7 +45,7 @@ export default function EditUser({ id }) {
             toast.error(t("UNABLE_TO_FIND_{name}", { name: "USER" }, { translateProps: true }));
             goBack();
         }
-    }, [ user, id ]);
+    }, [ company, id ]);
 
     return (
         <ChildPageLayout
@@ -46,7 +55,7 @@ export default function EditUser({ id }) {
             <UserForm
                 entity={user}
                 onSaveComplete={goBack}
-                onSaveError={goBack}
+                // onSaveError={goBack}
                 />
         </ChildPageLayout>
     );

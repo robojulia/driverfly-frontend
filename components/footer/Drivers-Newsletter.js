@@ -2,7 +2,7 @@ import Link from "next/link";
 export default function DriversNewsletter
     () {
     return (
-        <>
+        <div id="newsletter-section">
             <div className="footer-inner">
                 <h2 className="widget-title font-weight-normal">Drivers Newsletter</h2>
                 <ul className="p-0">
@@ -25,7 +25,6 @@ export default function DriversNewsletter
                     </form>
                 </ul>
             </div>
-
-        </>
+        </div>
     )
 }

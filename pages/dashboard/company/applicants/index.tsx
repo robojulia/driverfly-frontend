@@ -11,7 +11,7 @@ import { EyeFill, PencilFill} from 'react-bootstrap-icons';
 
 import ApplicantApi from "../../../api/applicant";
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { NextRouter, useRouter } from 'next/router';
 import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum';
 import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
 
@@ -40,6 +40,7 @@ import { ApplicantReasonCodeFired, ApplicantReasonCodeNotInterested, ApplicantRe
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 
 import OverlyPopover from "../../../../components/popover/overly-popover";
+import Link from "next/link";
 
 const ViewMode = {
     job: "job",
@@ -194,8 +195,8 @@ export default function Applicants() {
                             label={t("VIEW_BY_{name}", { name: t("APPLICANT") })}
                         />
                     </FormGroup>
-                    {viewMode === ViewMode.applicant && <ApplicantView applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
-                    {viewMode === ViewMode.job && <JobView applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
+                    {viewMode === ViewMode.applicant && <ApplicantView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
+                    {viewMode === ViewMode.job && <JobView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
                 </Col>
             </Row>
             <ViewModal
@@ -399,11 +400,12 @@ interface ViewProps {
     onChangeStatus: (e: React.ChangeEvent<HTMLSelectElement>, applicant: ApplicantEntity, job: JobEntity) => Promise<void>;
     onViewClick: (applicantId: number) => void;
     onEditClick: (applicantId: number) => void;
+    router: NextRouter;
     t: TranslateInterface;
 }
 
 function ApplicantView(props: ViewProps) {
-    const { applicants, onChangeStatus, onViewClick, onEditClick, t } = props;
+    const { router, applicants, onChangeStatus, onViewClick, onEditClick, t } = props;
 
     const { hasPermission } = useAuth();
 
@@ -433,6 +435,11 @@ function ApplicantView(props: ViewProps) {
                 id: "name",
                 name: "NAME",
                 selector: applicant => getApplicantName(applicant),
+                cell: applicant => (
+                    <Link href={`${router.pathname}/${applicant.id}`}>
+                        <a>{getApplicantName(applicant)}</a>
+                    </Link>
+                ),
                 hidable: false,
             },
             {
@@ -520,7 +527,7 @@ function ApplicantView(props: ViewProps) {
 }
 
 function JobView(props: ViewProps) {
-    const { applicants, onChangeStatus, onViewClick, onEditClick, t } = props;
+    const { router, applicants, onChangeStatus, onViewClick, onEditClick, t } = props;
 
     const { hasPermission } = useAuth();
 
@@ -595,6 +602,11 @@ function JobView(props: ViewProps) {
                     {
                         name: "NAME",
                         selector: aJob => getApplicantName(aJob.applicant),
+                        cell: aJob => (
+                            <Link href={`${router.pathname}/${aJob.applicant.id}`}>
+                                <a>{getApplicantName(aJob.applicant)}</a>
+                            </Link>
+                        ),
                         hidable: false,
                     },
                     {

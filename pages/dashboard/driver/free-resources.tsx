@@ -96,7 +96,7 @@ export default function FreeResources() {
                         </div>
                     </Col>
                     <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
-                        <h2> <Link href=""><a className={style.link_style}>{t("sign_up_for_newsletter")}</a></Link> </h2>
+                        <h2> <Link href="/#newsletter-section" scroll={false}><a className={style.link_style}>{t("sign_up_for_newsletter")}</a></Link> </h2>
                         <br />
                         <span className={style.description}>{t("sign_up_for_newsletter_paragraph")}</span>
                     </Col>

@@ -100,7 +100,9 @@ export function jwtExpiryTimeout(jwt: JwtRefreshTokenPayload) {
     const nowMsSinceEpoc = now.getTime();// + (now.getTimezoneOffset() * 60 * 1000);
     const expMsSinceEpoc = jwt.exp * 1000;
 
-    const msToExpiry = Math.max(0, expMsSinceEpoc - nowMsSinceEpoc);
+    const refreshBufferWindow = 10 * 1000; // 10 seconds
+
+    const msToExpiry = Math.max(0, (expMsSinceEpoc - nowMsSinceEpoc) - refreshBufferWindow);
 
     console.log("EXPIRE CHECK", { jwt,  now: new Date(nowMsSinceEpoc), exp: new Date(expMsSinceEpoc), msToExpiry})
 

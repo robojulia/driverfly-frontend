@@ -1,5 +1,5 @@
 import { useTranslation } from "../../hooks/useTranslation";
-import { Button, Dropdown } from "react-bootstrap";
+import { Button, Container, Dropdown } from "react-bootstrap";
 import DataTable, { TableColumn } from 'react-data-table-component';
 import BaseInput from "../forms/BaseInput";
 import { Gear, Search } from "react-bootstrap-icons";
@@ -128,13 +128,11 @@ export default function ViewDataTable<TElement>(props: ViewTableProps<TElement>)
 
             noDataComponent={props.noDataComponent || (<>{t("NO_RECORDS_FOUND")}</>)}
 
-            expandOnRowClicked
-            expandableRowsHideExpander
             expandableRowExpanded={row => !props.preExpanded ? false : (typeof props.preExpanded === "boolean" ? props.preExpanded : props.preExpanded(row))}
             expandableRows={!!props.expandableRowsComponent}
-            expandableRowsComponent={props.expandableRowsComponent}
+            expandableRowsComponent={props.expandableRowsComponent ? (expandableProps) => (<Container fluid className="bg-secondary pl-5 pr-0">{<props.expandableRowsComponent {...expandableProps} />}</Container>) : null}
 
-            subHeader
+            subHeader={!props.hideSearch}
             subHeaderComponent={!props.hideSearch && <>
                 <BaseInput
                     placeholder="SEARCH"

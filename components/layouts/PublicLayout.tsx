@@ -19,7 +19,7 @@ export function PublicLayout({ children, title }: PublicLayoutProps) {
         <>
             <Head>
                 <title>{"Driverfly"} {title ? `| ${t(title)}` : ""}</title>
-                <link rel="icon" href="/img/DriverFly-Official-Favicon.png" />
+                <link rel="icon" href="/img/favicon.ico" />
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                 <meta httpEquiv="x-ua-compatible" content="ie=edge" />
             </Head>

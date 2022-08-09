@@ -1,31 +1,30 @@
-import { useEffect, useState } from "react"
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
-import axios from "axios"
+import { toast } from "react-toastify";
+import { globalAjaxExceptionHandler } from "../../utils/ajax";
+import { buildAddress } from "../../utils/common";
+
+import { useState } from "react"
+import { useTranslation } from "../../hooks/useTranslation";
+import { useEffectAsync } from "../../utils/react";
+
+import JobApi from "../../pages/api/job";
+
+import { JobEntity } from "../../models/job/job.entity";
+
 export default function RecentJobs() {
-    const [jobs, setJobs] = useState([])
+    const [jobs, setJobs] = useState<JobEntity[]>([]);
+    const { t } = useTranslation();
 
-    const fetchjobs = () => {
+    useEffectAsync(async () => {
+        const api = new JobApi();
 
-        const headers = {
-        };
-
-        axios.get(
-            `${process.env.BASE_URL_API}/jobs/`,
-            { headers: headers }
-        )
-            .then(data => {
-                console.log("handle success", data.data)
-                setJobs(data.data)
-            })
-            .catch(function (error) {
-                console.log("handle error success", error.response)
-            }).then(function () {
-                console.log("always executed")
-            })
-    }
-
-    useEffect(() => {
-        fetchjobs()
+        try {
+            const { items } = await api.search({ take: 5 });
+            setJobs(items);
+        }
+        catch (e) {
+            globalAjaxExceptionHandler(e, { t: t, toast: toast });
+        }
     }, []);
 
     return (
@@ -38,7 +37,7 @@ export default function RecentJobs() {
                             <div className="tab-pane fade show active" id="home">
                                 <div className="row">
                                     {jobs.length > 0 && jobs.map((job, index) => (
-                                        <div className="col-md-6">
+                                        <div key={job.id} className="col-md-6">
                                             <div className="media align-items-center ">
                                                 <img className="d-flex mr-4 truck-img border-0 " src="img/CTR-logo-cartoon.png" width="100" height="75" alt="" />
                                                 <div className="media-body">
@@ -49,7 +48,7 @@ export default function RecentJobs() {
                                                         data-placement="top" title="Tooltip on top"> <i className="fa fa-star" aria-hidden="true"></i> </span></h4>
                                                     <div className="job-metas">
                                                         <div className="job-location">
-                                                            <strong>{job.location}</strong>
+                                                            <strong>{buildAddress(job.location)}</strong>
                                                         </div>
                                                     </div>
 
