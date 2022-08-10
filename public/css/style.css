@@ -945,7 +945,6 @@ input[type='range']::-webkit-slider-thumb {
 
 .card-header {
     background-color: white !important;
-    border-radius: 5px !important;
     cursor: pointer;
 }
 

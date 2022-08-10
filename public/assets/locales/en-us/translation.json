@@ -197,6 +197,7 @@
         "DOCTORAL": "Doctoral"
     },
     "DriverLicenseType": {
+        "NONE": "No CDL",
         "A": "Class A CDL",
         "B": "Class B CDL",
         "C": "Class C CDL"
@@ -431,7 +432,7 @@
     "years": "Years",
     "other_required_skills": "Other Required Skills",
     "{name}_must_be_unique_in_list": "{{name}} must be unique in list",
-    "required_equipment": "Required Equipment",
+    "REQUIRED_EQUIPMENT": "Required Equipment",
     "pay_structure": "Pay Structure",
     "DriverEndorsement": {
         "HAZMAT": "Hazmat",
@@ -466,7 +467,7 @@
     "COUNT": "Count",
     "MAX": "Max",
     "ever": "Ever",
-    "criminal_history": "Criminal History",
+    "CRIMINAL_HISTORY": "Criminal History",
     "no_criminal_history": "No Criminal History",
     "other_safety_requirements": "Other Safety Requirements",
     "max_applicant_radius": "Max Applicant Radius",
@@ -1137,5 +1138,6 @@
     "EMAIL_IS_REQUIRED": "Email is required",
     "PHONE_IS_REQUIRED": "Phone is required",
     "PLEASE_CHECK_PHONE": "Please check your phone",
-    "TECHNICAL_ASSISTANCE_HELP": "For technical assistance, reach out to help@driverfly.co"
+    "TECHNICAL_ASSISTANCE_HELP": "For technical assistance, reach out to help@driverfly.co",
+    "DESCRIPTION": "Description"
 }
