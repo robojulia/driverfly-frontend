@@ -11,6 +11,7 @@ export function FacebookLink(props: SocialLinkProps) {
             text={showText ? "facebook.com/DriverFlyJobs" : null}
             iconSize={iconSize}
             icon={Facebook}
+            color="#4267B2"
         />
     );
 
