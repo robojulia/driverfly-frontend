@@ -21,8 +21,8 @@ export default class UserApi extends BaseApi {
         await this.delete(`user/${id}`);
     }
 
-    async restore(user: UserEntity) : Promise<void> {
-        const { data } = await this.put(`user/${user.id}`, user);
+    async restore(id: number) : Promise<void> {
+        const { data } = await this.put(`user/${id}/restore`, null);
     }
 
     async list(companyId?: number) : Promise<UserEntity[]> {

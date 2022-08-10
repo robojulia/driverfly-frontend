@@ -80,10 +80,7 @@ export default function UserList() {
     try {
       const api = new UserApi();
 
-      const restoredUser = users.find(v => v.id === id);
-      restoredUser.status = Status.ACTIVE;
-
-      await api.restore(restoredUser);
+      await api.restore(id);
 
       setUsers(users.map(v => {
         if (v.id === id) {
@@ -99,11 +96,11 @@ export default function UserList() {
   }
 
   const tabs = {
-    [`Status.${Status.ACTIVE}`]: createUsersTable(users.filter((u) => u.id !== user.id && u.status === Status.ACTIVE), Status.ACTIVE),
-    [`Status.${Status.DELETED}`]: createUsersTable(users.filter((u) => u.id !== user.id && u.status === Status.DELETED), Status.DELETED),
+    [`Status.${Status.ACTIVE}`]: createUsersTable(users.filter((u) => u.id !== user.id && u.status === Status.ACTIVE)),
+    [`Status.${Status.DELETED}`]: createUsersTable(users.filter((u) => u.id !== user.id && u.status === Status.DELETED)),
   };
 
-  function createUsersTable(users: UserEntity[], title: string) {
+  function createUsersTable(users: UserEntity[]) {
     return (
       <ViewDataTable<UserEntity>
         columnSettingKey={columnSettingKey}
@@ -154,13 +151,13 @@ export default function UserList() {
               onClick: e => onDeleteClick(j.id),
               icon: TrashFill,
               label: "DELETE",
-              hide: !(can.deleteUser && title === Status.ACTIVE)
+              hide: !(can.deleteUser && j.status === Status.ACTIVE)
             },
             {
               onClick: e => onRestoreClick(j.id),
               icon: ArrowCounterclockwise,
               label: "RESTORE",
-              hide: !(can.deleteUser && title === Status.DELETED)
+              hide: !(can.deleteUser && j.status === Status.DELETED)
             }
         ])}
         items={users}
