@@ -34,7 +34,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
                   <span className="text-dark text-center text-decoration-none">
                     <CompanyPhoto className="d-flex mr-4 truck-img mb-3" company={jobDetail.company} />
                     <Link href="/find-jobs">
-                      <a>
+                      <a style={{ color: "black"}}>
                         {t('view_all_jobs')} <ArrowRight className="pl-1" />
                       </a>
                     </Link>

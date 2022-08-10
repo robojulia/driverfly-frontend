@@ -95,7 +95,9 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">{t('DELIVERY_TYPE')}</div>
-                <ShowEnumFromString labelPrefix="JobDeliveryType" str={job.delivery_type} />
+                <div className="value">
+                  <ShowEnumFromString labelPrefix="JobDeliveryType" str={job.delivery_type} />
+                </div>
               </div>
             </li>
 
@@ -105,7 +107,9 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">{t('EQUIPMENT_TYPE')}</div>
-                <ShowEnumFromString labelPrefix="JobEquipmentType" str={job.equipment_type} />
+                <div className="value">
+                  <ShowEnumFromString labelPrefix="JobEquipmentType" str={job.equipment_type} />
+                </div>
               </div>
             </li>
 
@@ -115,7 +119,9 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">{t('SCHEDULE')}</div>
-                <ShowEnumFromString labelPrefix="JobSchedule" str={job.schedule} />
+                <div className="value">
+                  <ShowEnumFromString labelPrefix="JobSchedule" str={job.schedule} />
+                </div>
               </div>
             </li>
 
@@ -125,7 +131,9 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">{t('TEAM_DRIVERS')}</div>
-                <ShowEnumFromString labelPrefix="JobTeamDriver" str={job.team_drivers} />
+                <div className="value">
+                  <ShowEnumFromString labelPrefix="JobTeamDriver" str={job.team_drivers} />
+                </div>
               </div>
             </li>
 
@@ -135,7 +143,9 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">{t('PAY_METHOD')}</div>
-                <ShowEnumFromString labelPrefix="JobPayMethod" str={job.pay_method} />
+                <div className="value">
+                  <ShowEnumFromString labelPrefix="JobPayMethod" str={job.pay_method} />
+                </div>
               </div>
             </li>
 
@@ -145,7 +155,9 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">{t('MINIMUM_CDL_CLASS')}</div>
-                <ShowEnumFromString labelPrefix="DriverLicenseType" str={job.cdl_class} />
+                <div className="value">
+                  <ShowEnumFromString labelPrefix="DriverLicenseType" str={job.cdl_class} />
+                </div>
               </div>
             </li>
 
@@ -155,7 +167,9 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">{t('TRANSMISSION_TYPE')}</div>
-                <ShowEnumFromString labelPrefix="VehicleTransmissionType" str={job.transmission_type_experience} />
+                <div className="value">
+                  <ShowEnumFromString labelPrefix="VehicleTransmissionType" str={job.transmission_type_experience} />
+                </div>
               </div>
             </li>
 
@@ -165,7 +179,9 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">{t('ENDORSEMENTS')}</div>
-                <ShowEnumFromString labelPrefix="DriverEndorsement" str={job.required_endorsement} />
+                <div className="value">
+                  <ShowEnumFromString labelPrefix="DriverEndorsement" str={job.required_endorsement} />
+                </div>
               </div>
             </li>
 
@@ -175,7 +191,7 @@ export default function JonInformation({ job }) {
               </div>
               <div className="details">
                 <div className="text">{t('MIN_YEARS_EXPERIENCE')}</div>
-                <span>{job.min_years_experience}</span>
+                <div className="value">{job.min_years_experience}</div>
               </div>
             </li>
 
@@ -190,7 +206,7 @@ export default function JonInformation({ job }) {
                   {job.mvr_requirements &&
                     job.mvr_requirements.map((item, index) => {
                       return <li key={index}>
-                        <div className="row">
+                        <div className="row value">
                           <div className="col-md-12">
                             {t(MvrType[item.type].toLowerCase())}
                           </div>
