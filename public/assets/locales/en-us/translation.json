@@ -1116,8 +1116,6 @@
         "IF_YOU_ARE_ALREADY_A_USER_LOGIN": "If you are already a user, login"
     },
     "AND": "and",
-    "ACTIVE": "Active",
-    "DELETED": "Deleted",
     "ZIP_CODE_MIN_VALIDATION_MESSAGE": "Zip Code must be at least 5 digits",
     "ZIP_CODE_MAX_VALIDATION_MESSAGE": "Zip Code must be no more than 5 digits",
     "VERIFY_EMAIL": "Verify Email",
@@ -1139,5 +1137,10 @@
     "EMAIL_IS_REQUIRED": "Email is required",
     "PHONE_IS_REQUIRED": "Phone is required",
     "PLEASE_CHECK_PHONE": "Please check your phone",
-    "TECHNICAL_ASSISTANCE_HELP": "For technical assistance, reach out to help@driverfly.co"
+    "TECHNICAL_ASSISTANCE_HELP": "For technical assistance, reach out to help@driverfly.co",
+    "Status": {
+        "ACTIVE": "Active",
+        "DELETED": "Deleted"
+    },
+    "UNABLE_TO_RESTORE": "Unable to restore."
 }

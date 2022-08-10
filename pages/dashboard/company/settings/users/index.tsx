@@ -94,95 +94,95 @@ export default function UserList() {
       }));
 
     } catch (e) {
-      globalAjaxExceptionHandler(e, { t: t, defaultMessage: "UNABLE_TO_DELETE", toast: toast });
+      globalAjaxExceptionHandler(e, { t: t, defaultMessage: "UNABLE_TO_RESTORE", toast: toast });
     }
   }
 
   const tabs = {
-    [Status.ACTIVE]: createUsersTab(users.filter((u) => u.id !== user.id && u.status === Status.ACTIVE), Status.ACTIVE),
-    [Status.DELETED]: createUsersTab(users.filter((u) => u.id !== user.id && u.status === Status.DELETED), Status.DELETED),
+    [`Status.${Status.ACTIVE}`]: createUsersTable(users.filter((u) => u.id !== user.id && u.status === Status.ACTIVE), Status.ACTIVE),
+    [`Status.${Status.DELETED}`]: createUsersTable(users.filter((u) => u.id !== user.id && u.status === Status.DELETED), Status.DELETED),
   };
 
-  function createUsersTab(users: UserEntity[], title: string) {
+  function createUsersTable(users: UserEntity[], title: string) {
     return (
-      <PageLayout 
-        title="USERS" 
-        actions={
-          <>
+      <ViewDataTable<UserEntity>
+        columnSettingKey={columnSettingKey}
+        columns={[
+          {
+            id: "name",
+            name: "name",
+            selector: j => j.name,
+            cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.name}</a></Link>),
+            hidable: false
+          },
+          {
+            id: "roles",
+            name: "ROLES",
+            selector: j => j.roles.map((role) => role.name).join(", "),
+          },
+          {
+            id: "email",
+            name: "email",
+            selector: j => j.email,
+          },
+          {
+            id: "phone",
+            name: "phone",
+            selector: j => j.contact_number,
+          },
+          {
+            id: "phone_cell",
+            name: "phone_cell",
+            selector: j => j.cell_number,
+            hide: 1
+          }
+        ]}
+        actions={j => ([
             {
-              can.createUser &&
-                <Button variant='primary' onClick={onAddClick}>
-                  + {t("CREATE")}
-                </Button>
+              onClick: e => onViewClick(j.id),
+              icon: EyeFill,
+              label: "VIEW",
+              hide: !can.viewUser
+            },
+            {
+              onClick: e => onEditClick(j.id),
+              icon: PenFill,
+              label: "EDIT",
+              hide: !can.editUser
+            },
+            {
+              onClick: e => onDeleteClick(j.id),
+              icon: TrashFill,
+              label: "DELETE",
+              hide: !(can.deleteUser && title === Status.ACTIVE)
+            },
+            {
+              onClick: e => onRestoreClick(j.id),
+              icon: ArrowCounterclockwise,
+              label: "RESTORE",
+              hide: !(can.deleteUser && title === Status.DELETED)
             }
-          </>
-        }>
-          <ViewDataTable<UserEntity>
-            columnSettingKey={columnSettingKey}
-            columns={[
-              {
-                id: "name",
-                name: "name",
-                selector: j => j.name,
-                cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.name}</a></Link>),
-                hidable: false
-              },
-              {
-                id: "roles",
-                name: "ROLES",
-                selector: j => j.roles.map((role) => role.name).join(", "),
-              },
-              {
-                id: "email",
-                name: "email",
-                selector: j => j.email,
-              },
-              {
-                id: "phone",
-                name: "phone",
-                selector: j => j.contact_number,
-              },
-              {
-                id: "phone_cell",
-                name: "phone_cell",
-                selector: j => j.cell_number,
-                hide: 1
-              }
-            ]}
-            actions={j => ([
-                {
-                  onClick: e => onViewClick(j.id),
-                  icon: EyeFill,
-                  label: "VIEW",
-                  hide: !can.viewUser
-                },
-                {
-                  onClick: e => onEditClick(j.id),
-                  icon: PenFill,
-                  label: "EDIT",
-                  hide: !can.editUser
-                },
-                {
-                  onClick: e => onDeleteClick(j.id),
-                  icon: TrashFill,
-                  label: "DELETE",
-                  hide: !(can.deleteUser && title === Status.ACTIVE)
-                },
-                {
-                  onClick: e => onRestoreClick(j.id),
-                  icon: ArrowCounterclockwise,
-                  label: "RESTORE",
-                  hide: !(can.deleteUser && title === Status.DELETED)
-                }
-            ])}
-            items={users}
-          />
-      </PageLayout>
+        ])}
+        items={users}
+      />
     );
   }
 
   return (
-    <TabbedLayout items={tabs}></TabbedLayout>
+    <PageLayout 
+    title="USERS" 
+    actions={
+      <>
+        {
+          can.createUser &&
+            <Button variant='primary' onClick={onAddClick}>
+              + {t("CREATE")}
+            </Button>
+        }
+      </>
+    }>
+      <TabbedLayout items={tabs}></TabbedLayout>
+    </PageLayout>
   )
 };
 
