@@ -10,12 +10,13 @@ import OtrJobsList from "../../../../components/find-jobs/otr-job-list";
 import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
 import { useEffectAsync } from "../../../../utils/react";
 import PageLayout from "../../../../components/layouts/page/PageLayout";
+import { JobEntity } from "../../../../models/job/job.entity";
 
 export default function FindJobs() {
 
     const jobApi = new JobApi();
 
-    const [jobs, setJobs] = useState([])
+    const [jobs, setJobs] = useState<JobEntity[]>([])
 
     const [pagingMeta, setPagingMeta] = useState({
         currentPage: 1,
@@ -25,6 +26,7 @@ export default function FindJobs() {
         totalPages: 1
     })
 
+    const [searchQuery, setSearchQuery] = useState<string>();
     const [filters, setFilters] = useState<{
         location?: {
             range?: number,
@@ -43,6 +45,11 @@ export default function FindJobs() {
             [key]: value
         })
     }
+    const handleReset = () => {
+        setSearchQuery('')
+        setFilters([])
+    }
+
 
     const [location, setLocation] = useState(null);
     const [range, setRange] = useState(filters.location?.range || 50);
@@ -58,7 +65,7 @@ export default function FindJobs() {
         setPagingMeta(meta)
     }
 
-    useEffectAsync(fetchJobs, [ filters ]);
+    useEffectAsync(fetchJobs, [filters]);
 
     return (
         <PageLayout
@@ -71,6 +78,7 @@ export default function FindJobs() {
                     filters,
                     location,
                     range,
+                    searchQuery,
                 },
                 method: {
                     handleChange,
@@ -79,7 +87,9 @@ export default function FindJobs() {
                     setLocation,
                     setrange: setRange,
                     setFiltersByKeyValue,
-                    applyFilters: fetchJobs
+                    applyFilters: fetchJobs,
+                    setSearchQuery,
+                    handleReset
                 },
             }}>
                 <Container fluid>

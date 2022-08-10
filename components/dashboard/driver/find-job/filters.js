@@ -29,11 +29,11 @@ export default function Filters() {
     const handleCloseFilters = () => setShowFilters(false);
     const handleShowFilters = () => setShowFilters(true);
 
-    const { setFilters } = method
-    const { filters } = state
-    const handleReset = async () => {
-      await setFilters([])
-    }
+    const { setFilters, setFiltersByKeyValue, handleReset } = method
+    const { searchQuery } = state
+
+    const handleSearchQuery = () => setFiltersByKeyValue('keywords', searchQuery)
+
 
     return (
         <>
@@ -42,12 +42,15 @@ export default function Filters() {
                     < Search state={state} method={method}
                         inputClassName="form-control shadow-sm p-4" labelClassName="text-secondary w-sm-25" />
                 </Col>
-                <Col md="3">
+                <Col md="2">
                     <div className="filter-btn-groups">
                         <Sort inputClassName="custom-select shadow-none mt-2" labelClassName="text-secondary w-sm-25" />
                     </div>
                 </Col>
-                <Col md="3">
+                <Col md="4">
+                    <Button onClick={handleSearchQuery} className="mt-39 mr-3 theme-primary-btn-outline">
+                        {t('SEARCH')}
+                    </Button>
                     <Button onClick={handleShowFilters} className="mt-39 theme-primary-btn-outline">
                         <Filter /> {t('FILTERS')}
                     </Button>

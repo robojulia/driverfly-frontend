@@ -23,11 +23,9 @@ export default function FilterResults() {
   const { t } = useTranslation();
   const { state, method } = useContext(jobContext)
 
-  const { setFilters } = method
+  const { setFilters, handleReset } = method
   const { filters } = state
-  const handleReset =  () => {
-     setFilters([])
-  }
+
   return (
     <>
       <div className="filter_container">
