@@ -2,20 +2,24 @@
     color: #a5a5a5
 }
 
-.link, .link:hover{
+.link, .link:hover {
     color: #5dcac4 !important;
-    text-decoration:none;
+    text-decoration: none;
     font-weight: 500;
 }
-.link_style{
+
+.link_style {
+    font-size: 1.25rem;
     color: black !important;
-    text-decoration:none !important;
+    text-decoration: none !important;
 }
-.mt_90{
+
+.mt_90 {
     margin-top: 90px;
 }
+
 @media screen and (max-width: 992px) {
-    .mt_90{
+    .mt_90 {
         margin-top: 0px;
     }
 }
@@ -24,20 +28,24 @@
 .example::-webkit-scrollbar {
     display: none;
 }
-.social_icon{
+
+.social_icon {
     color: blue;
     margin-top: 10px;
     width: 15%;
     display: inline-block;
 }
-.social_icon img{
+
+.social_icon img {
     width: 30px !important;
     vertical-align: middle !important;
 }
+
 .social_icon span {
     vertical-align: middle !important;
-    
+
 }
-.soial_text{
+
+.soial_text {
     margin-left: 20px;
 }

@@ -1031,10 +1031,10 @@ input[type='range']::-webkit-slider-thumb {
     border: 0;
 }
 
-.card:hover h5,
+/* .card:hover h5,
 .card:hover svg {
     color: white !important;
-}
+} */
 
 .how-it-work-sec .card:hover {
     background-color: #2da2af;
