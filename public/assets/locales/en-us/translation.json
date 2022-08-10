@@ -197,6 +197,7 @@
         "DOCTORAL": "Doctoral"
     },
     "DriverLicenseType": {
+        "NONE": "No CDL",
         "A": "Class A CDL",
         "B": "Class B CDL",
         "C": "Class C CDL"
@@ -431,7 +432,7 @@
     "years": "Years",
     "other_required_skills": "Other Required Skills",
     "{name}_must_be_unique_in_list": "{{name}} must be unique in list",
-    "required_equipment": "Required Equipment",
+    "REQUIRED_EQUIPMENT": "Required Equipment",
     "pay_structure": "Pay Structure",
     "DriverEndorsement": {
         "HAZMAT": "Hazmat",
@@ -466,7 +467,7 @@
     "COUNT": "Count",
     "MAX": "Max",
     "ever": "Ever",
-    "criminal_history": "Criminal History",
+    "CRIMINAL_HISTORY": "Criminal History",
     "no_criminal_history": "No Criminal History",
     "other_safety_requirements": "Other Safety Requirements",
     "max_applicant_radius": "Max Applicant Radius",
@@ -843,8 +844,14 @@
     "WORK_HISTORY": "Work History",
     "SAFETY_BACKGROUND": "Safety Background",
     "WEEKLY_RANGE": "Weekly Range",
+    "SALARY_RANGE": "Salary Range",
+    "RATE_RANGE": "Rate Range",
+    "HOUR_RANGE": "Hour Range",
+    "MILES_RANGE": "Miles Range",
+    "PERCENT_RANGE": "Percent Range",
     "GEOGRAPHY": "Geography",
     "NOT_ANSWERED": "Not Answered",
+    "NOT_SPECIFIED": "Not Specified",
     "CAN_PASS_DRUG_TEST": "Can pass drug test",
     "DATES_EMPLOYED": "Date(s) Employed",
     "TITLE": "Title",
@@ -1142,5 +1149,6 @@
         "ACTIVE": "Active",
         "DELETED": "Deleted"
     },
-    "UNABLE_TO_RESTORE": "Unable to restore."
+    "UNABLE_TO_RESTORE": "Unable to restore.",
+    "DESCRIPTION": "Description"
 }

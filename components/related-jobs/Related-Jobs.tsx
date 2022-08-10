@@ -4,27 +4,33 @@ import { useTranslation } from "../../hooks/useTranslation"
 import CompanyPhoto from "../jobs/company-photo";
 import { GeoAltFill, CurrencyDollar, Star } from 'react-bootstrap-icons';
 import { buildAddress } from "../../utils/common";
+import { JobEntity } from "../../models/job/job.entity";
+import { Col, Row } from "react-bootstrap";
 
+export interface RelatedJobsProps {
+    jobs: JobEntity[];
+}
 
-export default function RelatedJobs({ jobs }) {
+export default function RelatedJobs({ jobs }: RelatedJobsProps) {
     const { t } = useTranslation();
 
     return (
         <>
             <div className="related-job-sec">
                 <h3>{t('related_jobs')}</h3>
-                <div className="row mt-3">
-                    <div className="col-md-12">
+                <Row className="mt-3">
+                    <Col>
                         {
                             jobs &&
                             jobs.map((job, index) => {
                                 return <div key={index} className="media align-items-center ">
                                     <CompanyPhoto className="d-flex mr-4 truck-img" company={job.company} />
                                     <div className="media-body">
-                                        <h4 className="mt-0">
-                                            {job.title}<span className="d-block mt-2" data-toggle="tooltip"
-                                                data-placement="top" title="Tooltip on top">
-                                            </span></h4>
+                                        <Link href={`/jobs/${job.id}/${job.slug}`}>
+                                            <a className="text-decoration-none">
+                                                <h4 className="mt-0">{job.title}</h4>
+                                            </a>
+                                        </Link>
                                         <div className="job-date-author">
                                             {
                                                 job.created_at &&
@@ -46,7 +52,7 @@ export default function RelatedJobs({ jobs }) {
                                                     job.location &&
                                                     <p className="pr-4">
                                                         {/* <GeoAltFill className="mr-1" /> */}
-                                                        {buildAddress(job.location,{ street: false, zip_code: false})}
+                                                        {buildAddress(job.location, { street: false, zip_code: false })}
                                                     </p>
                                                 }
                                             </div>
@@ -59,17 +65,12 @@ export default function RelatedJobs({ jobs }) {
                                                 </strong>
                                             </div>
                                         </div>
-
                                     </div>
-                                    <Link href={`/jobs/${job.id}/${job.slug}`}>
-                                        <button type="button" className="theme-primary-btn-outline btn-sm">{t('view_job')}</button>
-                                    </Link>
-
                                 </div>
                             })
                         }
-                    </div>
-                </div>
+                    </Col>
+                </Row>
             </div>
         </>
     )
