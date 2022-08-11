@@ -40,6 +40,11 @@ export default function OfferedJobs() {
             <ViewDataTable<ApplicantJobEntity>
                 columns={[
                     {
+                        id: "id",
+                        name: "ID",
+                        selector: applicant => applicant.company?.id,
+                    },
+                    {
                         id: "title",
                         name: "job_title",
                         selector: v => v.job.title,

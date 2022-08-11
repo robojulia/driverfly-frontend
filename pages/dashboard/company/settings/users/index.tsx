@@ -15,6 +15,7 @@ import { globalAjaxExceptionHandler } from '../../../../../utils/ajax';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
 import { Button } from 'react-bootstrap';
+import { join } from 'path/posix';
 
 export default function UserList() {
 
@@ -84,60 +85,65 @@ export default function UserList() {
           }
         </>
       }>
-      <ViewDataTable<UserEntity>
-        columnSettingKey={columnSettingKey}
-        columns={[
-          {
-            id: "name",
-            name: "name",
-            selector: j => j.name,
-            cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.name}</a></Link>),
-            hidable: false
-          },
-          {
-            id: "roles",
-            name: "ROLES",
-            selector: j => j.roles.map((role) => role.name).join(", "),
-          },
-          {
-            id: "email",
-            name: "email",
-            selector: j => j.email,
-          },
-          {
-            id: "phone",
-            name: "phone",
-            selector: j => j.contact_number,
-          },
-          {
-            id: "phone_cell",
-            name: "phone_cell",
-            selector: j => j.cell_number,
-            hide: 1
-          }
-        ]}
-        actions={j => ([
-          {
-            onClick: e => onViewClick(j.id),
-            icon: EyeFill,
-            label: "VIEW",
-            hide: !hasPermission("CanViewUser")
-          },
-          {
-            onClick: e => onEditClick(j.id),
-            icon: PenFill,
-            label: "EDIT",
-            hide: !hasPermission("CanUpdateUser")
-          },
-          {
-            onClick: e => onDeleteClick(j.id),
-            icon: TrashFill,
-            label: "DELETE",
-            hide: !hasPermission("CanDeleteUser")
-          }
-        ])}
-        items={users}
-      />
+        <ViewDataTable<UserEntity>
+          columnSettingKey={columnSettingKey}
+          columns={[
+            {
+              id: "name",
+              name: "ID",
+              selector: j=> j.id,
+            },
+            {
+              id: "name",
+              name: "name",
+              selector: j => j.name,
+              cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.name}</a></Link>),
+              hidable: false
+            },
+            {
+              id: "roles",
+              name: "ROLES",
+              selector: j => j.roles.map((role) => role.name).join(", "),
+            },
+            {
+              id: "email",
+              name: "email",
+              selector: j => j.email,
+            },
+            {
+              id: "phone",
+              name: "phone",
+              selector: j => j.contact_number,
+            },
+            {
+              id: "phone_cell",
+              name: "phone_cell",
+              selector: j => j.cell_number,
+              hide: 1
+            }
+          ]}
+          actions={j => ([
+              {
+                  onClick: e => onViewClick(j.id),
+                  icon: EyeFill,
+                  label: "VIEW",
+                  hide: !hasPermission("CanViewUser")
+              },
+              {
+                  onClick: e => onEditClick(j.id),
+                  icon: PenFill,
+                  label: "EDIT",
+                  hide: !hasPermission("CanUpdateUser")
+              },
+              {
+                  onClick: e => onDeleteClick(j.id),
+                  icon: TrashFill,
+                  label: "DELETE",
+                  hide: !hasPermission("CanDeleteUser")
+              }
+          ])}
+          items={users}
+        />
     </PageLayout>
   )
 };

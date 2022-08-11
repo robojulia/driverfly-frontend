@@ -96,6 +96,11 @@ export default function LocationList() {
         columnSettingKey={columnSettingKey}
         columns={[
           {
+            id: "name",
+            name: "ID",
+            selector: v=> v.id,
+          },
+          {
             id: "street",
             name: "STREET",
             selector: v => v.street,
