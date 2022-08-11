@@ -434,9 +434,9 @@ function ApplicantView(props: ViewProps) {
                 preExpanded={(applicant) => applicant.jobs?.length > 0}
                 columns={[
                     {
-                        name: "ID",
+                        id: "id",
+                        name: 'ID',
                         selector: applicant => applicant.id,
-                        hidable: false,
                     },
                     {
                         id: "name",
