@@ -45,10 +45,7 @@ export default function FindJobs(props) {
     const [location, setLocation] = useState(null);
     const [range, setRange] = useState(filters.location?.range || 50);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFiltersByKeyValue(name, value)
-    }
+    const handleChange = ({ name, value }) => setFiltersByKeyValue(name, value)
 
     const setNativeValue = (element, value) => {
         if (!element) {

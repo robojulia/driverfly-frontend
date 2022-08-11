@@ -1,3 +1,4 @@
+import { KeyboardEvent, ChangeEvent } from "react";
 import { useTranslation } from "../../hooks/useTranslation";
 
 export default function Search(props) {
@@ -7,7 +8,8 @@ export default function Search(props) {
   const { searchQuery } = state
   const { setFiltersByKeyValue, setSearchQuery } = method
 
-  const searchHandler = ({ key, target: { name, value } }) => (key === 'Enter') && setFiltersByKeyValue(name, value)
+  const searchHandler = ({ key }: KeyboardEvent<HTMLInputElement>): void => (key === 'Enter') && setFiltersByKeyValue('keywords', searchQuery)
+  const changeHandler = ({ target: { value } }: ChangeEvent<HTMLInputElement>): void => setSearchQuery(value)
 
   return (
     <>
@@ -16,7 +18,7 @@ export default function Search(props) {
         value={searchQuery}
         name="keywords"
         onKeyPress={searchHandler}
-        onChange={(e) => { setSearchQuery(e.target.value) }}
+        onChange={changeHandler}
         type="text"
         className={props.inputClassName || "form-control shadow-sm p-4"}
         placeholder={t("KEYWORD_PLACEHOLDER")} />

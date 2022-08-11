@@ -1,7 +1,7 @@
 import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
 import { Container, Row, Col } from 'react-bootstrap';
 import JobApi from '../../../api/job';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import jobsContext from "../../../../context/jobContext"
 import JobsList from "../../../../components/find-jobs/job-list";
 import ResultCount from "../../../../components/find-jobs/result-count"
@@ -38,31 +38,29 @@ export default function FindJobs() {
         location: null,
         page: 1
     })
-    const setFiltersByKeyValue = (key, value) => {
+    const setFiltersByKeyValue = (key: string, value: any): void => {
         setFilters({
             ...filters,
             page: 1,
             [key]: value
         })
     }
-    const handleReset = () => {
+    const handleReset = (): void => {
         setSearchQuery('')
         setFilters([])
     }
 
-
-    const [location, setLocation] = useState(null);
+    const [location, setLocation] = useState<any>(null);
     const [range, setRange] = useState(filters.location?.range || 50);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFiltersByKeyValue(name, value)
-    }
+    const handleChange = ({ target: { name, value } }): void => setFiltersByKeyValue(name, value)
 
-    const fetchJobs = async () => {
-        const { items, meta } = await jobApi.search({ ...filters as any });
-        setJobs(items)
-        setPagingMeta(meta)
+    const fetchJobs = async (): Promise<void> => {
+        await jobApi.search({ ...filters as any })
+            .then(({ items, meta }) => {
+                setJobs(items)
+                setPagingMeta(meta)
+            })
     }
 
     useEffectAsync(fetchJobs, [filters]);
@@ -85,7 +83,7 @@ export default function FindJobs() {
                     handlePaging: setPagingMeta,
                     setFilters,
                     setLocation,
-                    setrange: setRange,
+                    setRange,
                     setFiltersByKeyValue,
                     applyFilters: fetchJobs,
                     setSearchQuery,

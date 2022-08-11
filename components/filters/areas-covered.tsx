@@ -3,22 +3,20 @@ import { useTranslation } from "../../hooks/useTranslation";
 import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
 import ViewMoreRadioFilter from "./view-more-radio-filter";
 
-export default function AreasCovered(props) {
+export default function AreasCovered(props: any) {
 
   const { t } = useTranslation();
   const { state, method } = props
   const { handleChange } = method
 
   return (
-    <>
-      <FindJobFilterAccordion {...props} header={t("AREAS_COVERED")}>
-        <ViewMoreRadioFilter
-          {...props}
-          handleChange={handleChange}
-          name="areas_covered"
-          labelPrefix="JobGeography"
-          enums={JobGeography} />
-      </FindJobFilterAccordion>
-    </>
+    <FindJobFilterAccordion {...props} header={t("AREAS_COVERED")}>
+      <ViewMoreRadioFilter
+        {...props}
+        handleChange={handleChange}
+        name="areas_covered"
+        labelPrefix="JobGeography"
+        enums={JobGeography} />
+    </FindJobFilterAccordion>
   )
 }

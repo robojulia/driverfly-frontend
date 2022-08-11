@@ -18,22 +18,19 @@ import Sort from '../../../find-jobs/sort'
 import { Filter } from 'react-bootstrap-icons'
 import TransmissionType from '../../../filters/vehicle-transmission-type'
 
-
-
 export default function Filters() {
 
     const { t } = useTranslation();
     const { state, method } = useContext(jobContext)
 
-    const [showFilters, setShowFilters] = useState(false);
+    const [showFilters, setShowFilters] = useState<boolean>(false);
     const handleCloseFilters = () => setShowFilters(false);
     const handleShowFilters = () => setShowFilters(true);
 
-    const { setFilters, setFiltersByKeyValue, handleReset } = method
+    const { setFiltersByKeyValue, handleReset } = method
     const { searchQuery } = state
 
     const handleSearchQuery = () => setFiltersByKeyValue('keywords', searchQuery)
-
 
     return (
         <>
