@@ -1655,13 +1655,11 @@ img.who-we-img.img-fluid {
 }
 
 .share-links .title {
-    color: #222222;
     margin: 0px;
     font-size: 16px;
 }
 
 .share-links svg {
-    color: #2EC8C4;
     margin-left: 0px;
     transition: all 0.4s ease-in-out 0s;
     padding: 12px 10px 10px 14px;
@@ -1671,11 +1669,6 @@ img.who-we-img.img-fluid {
     width: 40px;
     height: 40px;
     cursor: pointer;
-}
-
-.share-links:hover svg {
-    color: #2EC8C4;
-    background: #fff;
 }
 
 .pt-160 {
@@ -1786,9 +1779,9 @@ li.link-wrapper>a.active {
     border-bottom: 1px solid #ced4da;
 }
 
-.ort-general a {
+/* .ort-general a {
     color: #000 !important;
-}
+} */
 
 .ort-general p {
     margin: 0px;

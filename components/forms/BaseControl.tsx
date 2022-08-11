@@ -34,7 +34,7 @@ function BaseControl ( { formik, required, className, label, children, touched, 
   }
 
   return (
-    <div className={`${className || ""} w-100`}>
+    <div className={`${className || ""}`}>
       {label && <>
         <label>{t(label)}{required ? "*" : ""}:</label>
         <br />

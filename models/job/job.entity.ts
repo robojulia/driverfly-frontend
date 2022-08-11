@@ -68,7 +68,7 @@ export class JobEntity {
     required_skills_other?: string;
     required_equipment?: JobEquipmentEntity[] = [];
     required_endorsement?: DriverEndorsement[] = [];
-    transmission_type_experience?: string;
+    transmission_type_experience?: VehicleTransmissionType[] = [];
     max_applicant_radius?: number = 100;
     must_pass_drug_test?: boolean = true;
     drug_test_type?: JobDrugTestType[] = [];
