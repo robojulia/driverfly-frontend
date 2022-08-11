@@ -432,6 +432,11 @@ function ApplicantView(props: ViewProps) {
         preExpanded={(applicant) => applicant.jobs?.length > 0}
         columns={[
             {
+                id: "id",
+                name: 'ID',
+                selector: applicant => applicant.id,
+            },
+            {
                 id: "name",
                 name: "NAME",
                 selector: applicant => getApplicantName(applicant),
@@ -476,6 +481,11 @@ function ApplicantView(props: ViewProps) {
             <ViewDataTable<ConsolodatedApplicantJob>
                 noDataComponent={(<>{t("NO_APPLIED_JOBS_FOUND")}</>)}
                 columns={[
+                    {
+                        name: "ID",
+                        selector: aJob => aJob.job.id,
+                        hidable: false,
+                    },
                     {
                         name: "JOB",
                         selector: aJob => aJob.job.title,

@@ -5,7 +5,7 @@ import { Col, Row } from "reactstrap";
 import { useAuth } from '../../../../../hooks/useAuth';
 import { useRouter } from "next/router"
 import { useTranslation } from "../../../../../hooks/useTranslation";
-import {EyeFill, PenFill, TrashFill} from 'react-bootstrap-icons';
+import { EyeFill, PenFill, TrashFill } from 'react-bootstrap-icons';
 import UserApi from "../../../../api/user";
 import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
 import { Status } from '../../../../../enums/status.enum';
@@ -15,6 +15,7 @@ import { globalAjaxExceptionHandler } from '../../../../../utils/ajax';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
 import { Button } from 'react-bootstrap';
+import { join } from 'path/posix';
 
 export default function UserList() {
 
@@ -24,17 +25,17 @@ export default function UserList() {
 
   const columnSettingKey = getDataTableColumnKey("company", user, "users");
 
-  const [ users, setUsers ] = useState([]);
+  const [users, setUsers] = useState([]);
 
   useEffectAsync(async () => {
     if (!user) return;
-    
+
     const api = new UserApi();
     const v = await api.list();
     setUsers(v.filter((u) => u.id !== user.id && u.status === Status.ACTIVE));
-  }, [ user ]);
+  }, [user]);
 
-   const onAddClick = (e: React.MouseEvent) => {
+  const onAddClick = (e: React.MouseEvent) => {
     e.preventDefault();
 
     router.push(`${router.pathname}/create`);
@@ -46,6 +47,12 @@ export default function UserList() {
 
   const onViewClick = (id: number) => {
     router.push(`${router.pathname}/${id}`);
+  }
+
+  const onDeletedUserClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    router.push(`${router.pathname}/deleted-users`);
   }
 
   const onDeleteClick = async (id: number) => {
@@ -61,21 +68,31 @@ export default function UserList() {
   }
 
   return (
-    <PageLayout 
-      title="USERS" 
+    <PageLayout
+      title="USERS"
       actions={
         <>
           {
             hasPermission("CanCreateUser") &&
-              <Button variant='primary' onClick={onAddClick}>
-                + {t("CREATE")}
-              </Button>
+            <Button variant='primary' onClick={onAddClick}>
+              + {t("CREATE")}
+            </Button>
+          }
+          {
+            <Button variant='danger ml-3' onClick={onDeletedUserClick}>
+              - {t("DELETED_USERS")}
+            </Button>
           }
         </>
       }>
         <ViewDataTable<UserEntity>
           columnSettingKey={columnSettingKey}
           columns={[
+            {
+              id: "name",
+              name: "ID",
+              selector: j=> j.id,
+            },
             {
               id: "name",
               name: "name",
