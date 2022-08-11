@@ -58,6 +58,11 @@ export default function DeletedUsersList() {
                 columns={[
                     {
                         id: "name",
+                        name: "ID",
+                        selector: j=> j.id,
+                      },
+                    {
+                        id: "name",
                         name: "name",
                         selector: j => j.name,
                         cell: (j) => j.name,

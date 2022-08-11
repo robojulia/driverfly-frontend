@@ -96,6 +96,11 @@ export default function JobListing() {
 
                 columns={[
                     {
+                        id: "id",
+                        name: "ID",
+                        selector: j => j.id,
+                    },
+                    {
                         id: "job_title",
                         name: "job_title",
                         cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.title}</a></Link>),
