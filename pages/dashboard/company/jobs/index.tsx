@@ -40,7 +40,7 @@ export default function JobListing() {
         const v = await api.list();
 
         setJobs(v);
-    }, [ user ], () => {
+    }, [user], () => {
         console.log("unloading page...")
     });
 
@@ -117,6 +117,11 @@ export default function JobListing() {
                         id: "drivers_needed",
                         name: "drivers_needed",
                         selector: j => j.drivers_needed,
+                    },
+                    {
+                        id: "applicantsCount",
+                        name: "APPLICANTS",
+                        selector: j => j.applicantsCount,
                     },
                     {
                         id: "expiration_date",
