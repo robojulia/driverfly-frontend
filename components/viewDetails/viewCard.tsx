@@ -1,9 +1,10 @@
 import { useTranslation } from "../../hooks/useTranslation";
 import { Card } from "react-bootstrap";
-import { CardBody, CardHeader } from "reactstrap";
 
 export interface ViewCardProps {
     title?: string;
+    titleAs?: React.ElementType;
+    variant?: "primary" | "secondary",
     readonly children?: any;
     actions?: JSX.Element | JSX.Element[];
 }
@@ -11,15 +12,24 @@ export interface ViewCardProps {
 export default function ViewCard(props: ViewCardProps) {
     const { t } = useTranslation();
 
-    const { title, actions, children } = props;
+    let { title, actions, children, variant, titleAs: TitleAsCmp } = props;
+
+    function renderTitleCmp() {
+        if (TitleAsCmp) return <TitleAsCmp>{t(title)}</TitleAsCmp>
+
+        return <h5>{t(title)}</h5>
+    }
 
     return (
-        <Card >
-            {(title || actions) && <CardHeader>
-                {title && <div style={{float: "left"}}>{t(title)}</div>}
+        <Card className={`card-${variant || "primary"}`}
+        >
+            {(title || actions) && <Card.Header>
+                {title && <div style={{float: "left"}}>
+                    {renderTitleCmp()}
+                </div>}
                 {actions && <div style={{float: "right"}}>{actions}</div>}
-            </CardHeader>}
-            {children && <CardBody>{children}</CardBody>}
+            </Card.Header>}
+            {children && <Card.Body>{children}</Card.Body>}
         </Card>
     );
 

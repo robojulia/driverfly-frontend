@@ -33,8 +33,8 @@ export default function Detail({ jobDetail, relatedJobs }) {
                 <div className="media align-items-center bg-transparent border-0 p-0">
                   <span className="text-dark text-center text-decoration-none">
                     <CompanyPhoto className="d-flex mr-4 truck-img mb-3" company={jobDetail.company} />
-                    <Link href="/find-jobs">
-                      <a>
+                    <Link href={`/find-jobs?companyId=${jobDetail.company?.id}`}>
+                      <a style={{ color: "black"}}>
                         {t('view_all_jobs')} <ArrowRight className="pl-1" />
                       </a>
                     </Link>

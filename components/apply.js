@@ -224,7 +224,7 @@ export default function JobApply({ job }) {
                                             />
                                         </td>
                                         <td>
-                                            <a href="" onClick={() => apply_form.setValues({
+                                            <a href="#" onClick={() => apply_form.setValues({
                                                 ...apply_form.values,
                                                 documents: apply_form.values.documents.filter((v, idx) => i != idx)
                                             })}><DashCircle color="red" /></a>

@@ -10,6 +10,7 @@ export function LinkedinLink(props: SocialLinkProps) {
             href="https://www.linkedin.com/company/driverfly"
             text={showText ? "linkedin.com/company/driverfly" : null}
             iconSize={iconSize}
+            color="#0072b1"
             icon={Linkedin}
         />
     );

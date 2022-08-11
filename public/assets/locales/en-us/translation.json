@@ -197,6 +197,7 @@
         "DOCTORAL": "Doctoral"
     },
     "DriverLicenseType": {
+        "NONE": "No CDL",
         "A": "Class A CDL",
         "B": "Class B CDL",
         "C": "Class C CDL"
@@ -431,7 +432,7 @@
     "years": "Years",
     "other_required_skills": "Other Required Skills",
     "{name}_must_be_unique_in_list": "{{name}} must be unique in list",
-    "required_equipment": "Required Equipment",
+    "REQUIRED_EQUIPMENT": "Required Equipment",
     "pay_structure": "Pay Structure",
     "DriverEndorsement": {
         "HAZMAT": "Hazmat",
@@ -466,7 +467,7 @@
     "COUNT": "Count",
     "MAX": "Max",
     "ever": "Ever",
-    "criminal_history": "Criminal History",
+    "CRIMINAL_HISTORY": "Criminal History",
     "no_criminal_history": "No Criminal History",
     "other_safety_requirements": "Other Safety Requirements",
     "max_applicant_radius": "Max Applicant Radius",
@@ -845,8 +846,14 @@
     "WORK_HISTORY": "Work History",
     "SAFETY_BACKGROUND": "Safety Background",
     "WEEKLY_RANGE": "Weekly Range",
+    "SALARY_RANGE": "Salary Range",
+    "RATE_RANGE": "Rate Range",
+    "HOUR_RANGE": "Hour Range",
+    "MILES_RANGE": "Miles Range",
+    "PERCENT_RANGE": "Percent Range",
     "GEOGRAPHY": "Geography",
     "NOT_ANSWERED": "Not Answered",
+    "NOT_SPECIFIED": "Not Specified",
     "CAN_PASS_DRUG_TEST": "Can pass drug test",
     "DATES_EMPLOYED": "Date(s) Employed",
     "TITLE": "Title",
@@ -1029,8 +1036,8 @@
     "SHOWING": "Showing",
     "SHOW_MORE": "Show More +",
     "SHOW_LESS": "Show less -",
-    "OF": "Of",
-    "RESULT": "Results",
+    "OF": "of",
+    "RESULT": "results",
     "FILTER_RESULT": "Filter Results",
     "SEARCH_KEYWORD": "Job Title or Keywords",
     "KEYWORD_PLACEHOLDER": "e.g. flatbed",
@@ -1117,5 +1124,28 @@
         "FOR_AN_ACCOUNT": "for an account.",
         "IF_YOU_ARE_ALREADY_A_USER_LOGIN": "If you are already a user, login"
     },
-    "AND": "and"
+    "AND": "and",
+    "ZIP_CODE_MIN_VALIDATION_MESSAGE": "Zip Code must be at least 5 digits",
+    "ZIP_CODE_MAX_VALIDATION_MESSAGE": "Zip Code must be no more than 5 digits",
+    "VERIFY_EMAIL": "Verify Email",
+    "TOKEN": "Token",
+    "VERIFY": "Verify",
+    "VerifyEmail": {
+        "CHECK_YOUR_EMAIL_TO_VERIFY": "Check your email for a verification token",
+        "RESEND_VERIFICATION_EMAIL": "Resend verification email"
+
+    },
+    "VERIFY_PHONE": "Verify Phone Number",
+    "VerifyPhone": {
+        "CHECK_YOUR_PHONE_TO_VERIFY": "Check your phone for a verification token",
+        "RESEND_VERIFICATION_TEXT": "Resend verification text"
+    },
+    "UNABLE_TO_VERIFY_EMAIL": "No user with the specified email and token were found",
+    "EMAIL_VERIFIED": "Email was successfully verified",
+    "PHONE_VERIFIED": "Phone was successfully verified",
+    "EMAIL_IS_REQUIRED": "Email is required",
+    "PHONE_IS_REQUIRED": "Phone is required",
+    "PLEASE_CHECK_PHONE": "Please check your phone",
+    "TECHNICAL_ASSISTANCE_HELP": "For technical assistance, reach out to help@driverfly.co",
+    "DESCRIPTION": "Description"
 }

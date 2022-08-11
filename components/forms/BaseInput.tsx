@@ -29,8 +29,6 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
       value = meta.value;
       touched = meta.touched;
       error = meta.error;
-
-      if (name === "invite_code") console.log(value, touched, error);
     }
     onChange = onChange || formik.handleChange
     handleBlur = handleBlur || formik.handleBlur;

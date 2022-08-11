@@ -4,7 +4,7 @@ export default function DriversNewsletter
     return (
         <div id="newsletter-section">
             <div className="footer-inner">
-                <h2 className="widget-title font-weight-normal">Drivers Newsletter</h2>
+                <h2 className="widget-title font-weight-normal">Driver Alerts</h2>
                 <ul className="p-0">
                     <p className="text-secondary mb-4">Subscribe to the DriverFly Newsletter to get the latest jobs feeds.</p>
                     <form action="">
@@ -15,7 +15,7 @@ export default function DriversNewsletter
             </div>
             <div className="footer-inner">
                 <h2 className="widget-title font-weight-normal">
-                    Companies Newsletter</h2>
+                    Company Newsletter</h2>
                 <p className="text-secondary mb-4">Subscribe to the DriverFly Newsletter to get the latest <br /> discount codes & coupons, and major news headlines.</p>
                 <ul className="p-0">
 

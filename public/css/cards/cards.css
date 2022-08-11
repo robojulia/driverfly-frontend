@@ -1,0 +1,46 @@
+.card > .card-header {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+
+}
+.card-primary *,
+.card-secondary * {
+    padding: 0px;
+}
+
+/* primary theme */
+.card-primary {
+    border-color: #2EC8C4 !important;
+}
+
+.card-primary > .card-header h5 {
+    color: #5dcac4 !important;
+}
+
+.card-primary > .card-header {
+    color: #5dcac4 !important;
+    background-color: #1b4454 !important;
+}
+
+.card-primary > .card-body {
+    background: #2ec8c347 !important;
+}
+
+
+/* secondary theme */
+.card-secondary {
+    border-color: #1D4354 !important;
+}
+
+.card-secondary > .card-header h5 {
+    color: #1D4354 !important;
+}
+
+.card-secondary > .card-header {
+    color: #1D4354 !important;
+    background-color: #1d425445 !important;
+}
+
+.card-secondary > .card-body {
+    background: #1d42540d !important;
+}
