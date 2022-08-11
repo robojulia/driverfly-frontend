@@ -5,7 +5,6 @@ import { useTranslation } from "../../hooks/useTranslation"
 export default function Sort(props) {
 
     const { state, method } = useContext(jobContext)
-    const { filters } = state
     const { handleChange } = method
     const { t } = useTranslation();
 

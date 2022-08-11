@@ -5,8 +5,10 @@ import { AsyncTypeahead } from 'react-bootstrap-typeahead'; // ES2015
 import FindJobFilterAccordion from '../../find-jobs-accordion/find-job-filter-accordion';
 import MapboxApi from "../../../pages/api/mapbox"
 import { useTranslation } from '../../../hooks/useTranslation';
+import { TypeaheadMenuProps } from 'react-bootstrap-typeahead/types/components/TypeaheadMenu';
+import { Option } from 'react-bootstrap-typeahead/types/types';
 
-export default function Range(props) {
+export default function Range(props: any) {
 
     const { t } = useTranslation();
     const { state, method } = props
@@ -14,10 +16,10 @@ export default function Range(props) {
     const { setFiltersByKeyValue, setLocation, setRange } = method
     const mapboxApi = new MapboxApi()
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [options, setOptions] = useState([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [options, setOptions] = useState<any>([]);
 
-    const handleSearch = async (query) => {
+    const handleSearch = async (query: string): Promise<void> => {
         try {
             if (query) {
                 setIsLoading(true);
@@ -32,8 +34,7 @@ export default function Range(props) {
         }
     };
 
-    const handleTypeheadChange = () => {
-        console.log("location", location);
+    const handleTypeheadChange = (): void => {
         let val = null
         if (location) {
             val = {
@@ -47,7 +48,6 @@ export default function Range(props) {
     }
 
     useEffect(handleTypeheadChange, [location, range])
-    useEffect(() => { console.log("Alive") }, [])
 
     return (
         <>
@@ -55,7 +55,6 @@ export default function Range(props) {
                 <AsyncTypeahead
                     defaultInputValue={filters.place_name || filters.location?.place_name || ""}
                     id="async-example"
-                    name="location"
                     isLoading={isLoading}
                     labelKey="place_name"
                     minLength={1}
@@ -64,10 +63,8 @@ export default function Range(props) {
                     onInputChange={handleSearch}
                     options={options}
                     placeholder="Location"
-                    renderMenuItemChildren={(option, props) => (
-                        <>
-                            <span className='text-dark'>{option.place_name}</span>
-                        </>
+                    renderMenuItemChildren={(option: any, menuProps: TypeaheadMenuProps, idx: number) => (
+                        <span className='text-dark'>{option.place_name}</span>
                     )}
                 />
                 {

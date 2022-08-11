@@ -3,15 +3,16 @@ import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accor
 import { JobDatePosted } from "../../enums/jobs/job-date-posted.enum"
 import ViewMoreRadioFilter from "./view-more-radio-filter";
 import { useTranslation } from "../../hooks/useTranslation";
+import { ChangeEvent } from "react";
 
 
-export default function DatePosted(props) {
+export default function DatePosted(props: any) {
 
   const { t } = useTranslation();
   const { state, method } = props
   const { handleChange } = method
 
-  function changeHandler(e) {
+  function changeHandler(e: ChangeEvent<HTMLInputElement>): void {
     if (e.target.value == JobDatePosted.LAST_HOUR) {
       e.target.value = moment.utc().subtract(1, "hours").format("YYYY-MM-DD HH:mm:ss")
     }
@@ -34,15 +35,13 @@ export default function DatePosted(props) {
   }
 
   return (
-    <>
-      <FindJobFilterAccordion {...props} header={t("POST_DATE")}>
-        <ViewMoreRadioFilter
-          {...props}
-          handleChange={changeHandler}
-          name="date_created"
-          labelPrefix="JobDatePosted"
-          enums={JobDatePosted} />
-      </FindJobFilterAccordion>
-    </>
+    <FindJobFilterAccordion {...props} header={t("POST_DATE")}>
+      <ViewMoreRadioFilter
+        {...props}
+        handleChange={changeHandler}
+        name="date_created"
+        labelPrefix="JobDatePosted"
+        enums={JobDatePosted} />
+    </FindJobFilterAccordion>
   )
 }
