@@ -71,7 +71,7 @@ export default function Applicants() {
 
     let { viewMode, jobId } = router.query;
 
-    if (!ViewMode[`${viewMode}`]) viewMode = ViewMode.applicant;
+    if (!ViewMode[`${viewMode}`]) viewMode = ViewMode.job;
 
     const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
 
@@ -192,7 +192,7 @@ export default function Applicants() {
                     <FormGroup style={{ float: "right" }}>
                         <FormControlLabel
                             control={<Switch value={viewMode === ViewMode.applicant ? ViewMode.job : ViewMode.applicant} checked={viewMode === ViewMode.applicant} onChange={onViewModeChange} />}
-                            label={t("VIEW_BY_{name}", { name: t("APPLICANT") })}
+                            label={t("VIEW_BY_{name}", { name: t(viewMode === ViewMode.applicant ? "APPLICANT" : "JOB") })}
                         />
                     </FormGroup>
                     {viewMode === ViewMode.applicant && <ApplicantView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}

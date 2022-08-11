@@ -80,6 +80,7 @@ export class JobEntity {
     max_moving_violations?: number;
     safety_requirements_other?: string;
     created_at?: string | Date;
+    applicantsCount?: number;
 
     static yupSchema() {
         return yup.object({
