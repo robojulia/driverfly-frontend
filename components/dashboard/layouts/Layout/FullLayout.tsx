@@ -6,7 +6,7 @@ import Head from "next/head";
 import { Scripts } from "../../../scripts/scripts";
 
 import { useTranslation } from "../../../../hooks/useTranslation";
-import {TelephoneFill,  Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, CheckSquareFill, GiftFill, GearFill, EnvelopeFill, PeopleFill, Hospital } from 'react-bootstrap-icons';
+import {TelephoneFill,  Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, CheckSquareFill, GiftFill, GearFill, EnvelopeFill, PeopleFill, Hospital,Receipt } from 'react-bootstrap-icons';
 import CompanyProfileNav from "../header/CompanyProfileNav";
 import { useAuth } from "../../../../hooks/useAuth";
 
@@ -50,6 +50,12 @@ const FullLayout = ({ children }) => {
       pathname: "/dashboard/company/call",
       icon: TelephoneFill,
       text: "CALL",
+      startsWith: true
+    },
+    {
+      pathname: "/dashboard/company/invoices",
+      icon: Receipt,
+      text: "Invoice",
       startsWith: true
     },
   
