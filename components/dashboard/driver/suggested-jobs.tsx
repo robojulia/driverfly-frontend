@@ -31,7 +31,7 @@ export default function SuggestedJobs() {
     <>
       <div>
         <Row>
-          <h2>{t("suggested_jobs")}</h2>
+          <h2>{t("SUGGESTED_JOBS")}</h2>
         </Row>
         <Row>
           <Col lg="12">
