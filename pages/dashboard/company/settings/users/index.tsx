@@ -5,7 +5,7 @@ import { TabbedLayout } from '../../../../../components/layouts/page/TabbedLayou
 import { useAuth } from '../../../../../hooks/useAuth';
 import { useRouter } from "next/router"
 import { useTranslation } from "../../../../../hooks/useTranslation";
-import {EyeFill, PenFill, TrashFill} from 'react-bootstrap-icons';
+import { EyeFill, PenFill, TrashFill, ArrowCounterclockwise } from 'react-bootstrap-icons';
 import UserApi from "../../../../api/user";
 import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
 import { Status } from '../../../../../enums/status.enum';
@@ -32,8 +32,15 @@ export default function UserList() {
 
     const api = new UserApi();
     const v = await api.list();
-    setUsers(v.filter((u) => u.id !== user.id && u.status === Status.ACTIVE));
+    setUsers(v);
   }, [ user ]);
+
+  const can = {
+    createUser: hasPermission("CanCreateUser"),
+    viewUser: hasPermission("CanViewUser"),
+    editUser: hasPermission("CanUpdateUser"),
+    deleteUser: hasPermission("CanDeleteUser"),
+  };
 
    const onAddClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -47,12 +54,6 @@ export default function UserList() {
 
   const onViewClick = (id: number) => {
     router.push(`${router.pathname}/${id}`);
-  }
-
-  const onDeletedUserClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-
-    router.push(`${router.pathname}/deleted-users`);
   }
 
   const onDeleteClick = async (id: number) => {
@@ -74,73 +75,110 @@ export default function UserList() {
     }
   }
 
+  const onRestoreClick = async (id: number) => {
+    try {
+      const api = new UserApi();
+
+      await api.restore(id);
+
+      setUsers(users.map(v => {
+        if (v.id === id) {
+          return {...v, status: Status.ACTIVE};
+        }
+      
+        return v;
+      }));
+
+    } catch (e) {
+      globalAjaxExceptionHandler(e, { t: t, defaultMessage: "UNABLE_TO_RESTORE", toast: toast });
+    }
+  }
+
+  const tabs = {
+    [`Status.${Status.ACTIVE}`]: createUsersTable(users.filter((u) => u.id !== user.id && u.status === Status.ACTIVE)),
+    [`Status.${Status.DELETED}`]: createUsersTable(users.filter((u) => u.id !== user.id && u.status === Status.DELETED)),
+  };
+
+
+  function createUsersTable(users: UserEntity[]) {
+    return (
+      <ViewDataTable<UserEntity>
+        columnSettingKey={columnSettingKey}
+        columns={[
+          {
+            id: "name",
+            name: "name",
+            selector: j => j.name,
+            cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.name}</a></Link>),
+            hidable: false
+          },
+          {
+            id: "roles",
+            name: "ROLES",
+            selector: j => j.roles.map((role) => role.name).join(", "),
+          },
+          {
+            id: "email",
+            name: "email",
+            selector: j => j.email,
+          },
+          {
+            id: "phone",
+            name: "phone",
+            selector: j => j.contact_number,
+          },
+          {
+            id: "phone_cell",
+            name: "phone_cell",
+            selector: j => j.cell_number,
+            hide: 1
+          }
+        ]}
+        actions={j => ([
+          {
+            onClick: e => onViewClick(j.id),
+            icon: EyeFill,
+            label: "VIEW",
+            hide: !can.viewUser
+          },
+          {
+            onClick: e => onEditClick(j.id),
+            icon: PenFill,
+            label: "EDIT",
+            hide: !can.editUser
+          },
+          {
+            onClick: e => onDeleteClick(j.id),
+            icon: TrashFill,
+            label: "DELETE",
+            hide: !(can.deleteUser && j.status === Status.ACTIVE)
+          },
+          {
+            onClick: e => onRestoreClick(j.id),
+            icon: ArrowCounterclockwise,
+            label: "RESTORE",
+            hide: !(can.deleteUser && j.status === Status.DELETED)
+          }
+        ])}
+        items={users}
+      />
+    );
+  }
+  
   return (
     <PageLayout 
-      title="USERS" 
-      actions={
-        <>
-          {
-            hasPermission("CanCreateUser") &&
-              <Button variant='primary' onClick={onAddClick}>
-                + {t("CREATE")}
-              </Button>
-          }
-        </>
-      }>
-        <ViewDataTable<UserEntity>
-          columnSettingKey={columnSettingKey}
-          columns={[
-            {
-              id: "name",
-              name: "name",
-              selector: j => j.name,
-              cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.name}</a></Link>),
-              hidable: false
-            },
-            {
-              id: "roles",
-              name: "ROLES",
-              selector: j => j.roles.map((role) => role.name).join(", "),
-            },
-            {
-              id: "email",
-              name: "email",
-              selector: j => j.email,
-            },
-            {
-              id: "phone",
-              name: "phone",
-              selector: j => j.contact_number,
-            },
-            {
-              id: "phone_cell",
-              name: "phone_cell",
-              selector: j => j.cell_number,
-              hide: 1
-            }
-          ]}
-          actions={j => ([
-              {
-                  onClick: e => onViewClick(j.id),
-                  icon: EyeFill,
-                  label: "VIEW",
-                  hide: !hasPermission("CanViewUser")
-              },
-              {
-                  onClick: e => onEditClick(j.id),
-                  icon: PenFill,
-                  label: "EDIT",
-                  hide: !hasPermission("CanUpdateUser")
-              },
-              {
-                  onClick: e => onDeleteClick(j.id),
-                  icon: TrashFill,
-                  label: "DELETE",
-                  hide: !hasPermission("CanDeleteUser")
-              }
-          ])}
-          items={users}
-        />
+    title="USERS" 
+    actions={
+      <>
+        {
+          can.createUser &&
+            <Button variant='primary' onClick={onAddClick}>
+              + {t("CREATE")}
+            </Button>
+        }
+      </>
+    }>
+      <TabbedLayout items={tabs}></TabbedLayout>
     </PageLayout>
   )
 };
