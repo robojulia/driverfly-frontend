@@ -121,6 +121,7 @@ export default function JobListing() {
                     {
                         id: "applicantsCount",
                         name: "APPLICANTS",
+                        cell: j => (<Link href={`/dashboard/company/applicants?jobId=${j.id}`}><a className="btn btn-link">{j.applicantsCount}</a></Link>),
                         selector: j => j.applicantsCount,
                     },
                     {
