@@ -29,11 +29,9 @@ export default function SuggestedJobs() {
 
   return (
     <>
-
       <div>
-
         <Row>
-          <h1>Jobs</h1>
+          <h2>{t("SUGGESTED_JOBS")}</h2>
         </Row>
         <Row>
           <Col lg="12">
@@ -65,7 +63,6 @@ export default function SuggestedJobs() {
             </Card>
           </Col>
         </Row>
-
       </div>
     </>
   )
