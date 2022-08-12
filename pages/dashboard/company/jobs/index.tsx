@@ -40,7 +40,7 @@ export default function JobListing() {
         const v = await api.list();
 
         setJobs(v);
-    }, [ user ], () => {
+    }, [user], () => {
         console.log("unloading page...")
     });
 
@@ -96,6 +96,11 @@ export default function JobListing() {
 
                 columns={[
                     {
+                        id: "id",
+                        name: "ID",
+                        selector: j => j.id,
+                    },
+                    {
                         id: "job_title",
                         name: "job_title",
                         cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.title}</a></Link>),
@@ -112,6 +117,11 @@ export default function JobListing() {
                         id: "drivers_needed",
                         name: "drivers_needed",
                         selector: j => j.drivers_needed,
+                    },
+                    {
+                        id: "applicantsCount",
+                        name: "APPLICANTS",
+                        selector: j => j.applicantsCount,
                     },
                     {
                         id: "expiration_date",

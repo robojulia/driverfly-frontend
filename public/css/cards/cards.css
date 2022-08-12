@@ -14,16 +14,16 @@
 }
 
 .card-primary > .card-header h5 {
-    color: #5dcac4 !important;
+    color: #fff !important;
 }
 
 .card-primary > .card-header {
     color: #5dcac4 !important;
-    background-color: #1b4454 !important;
+    background-color: #2DA2AF !important;
 }
 
 .card-primary > .card-body {
-    background: #2ec8c347 !important;
+    background: #F2F2F2 !important;
 }
 
 
@@ -43,4 +43,8 @@
 
 .card-secondary > .card-body {
     background: #1d42540d !important;
+}
+
+.table-striped>tbody>tr:nth-child(even)>td, .table-striped>tbody>tr:nth-child(even)>th {
+    background-color: #fff;
 }

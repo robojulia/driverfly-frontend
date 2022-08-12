@@ -52,7 +52,7 @@ export default function RelatedJobs({ jobs }: RelatedJobsProps) {
                                                     job.location &&
                                                     <p className="pr-4">
                                                         {/* <GeoAltFill className="mr-1" /> */}
-                                                        {buildAddress(job.location, { street: false, zip_code: false })}
+                                                        {buildAddress(job.location)}
                                                     </p>
                                                 }
                                             </div>

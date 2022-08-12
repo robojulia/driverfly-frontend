@@ -6,16 +6,19 @@ const jobContext = createContext<{
     pagingMeta: {},
     filters?: any,
     location?: any,
-    range?: number
+    range?: number,
+    searchQuery?: string
   },
   method: {
     handleChange: (e?: any) => void,
     handlePaging: (e?: any) => void,
     setFilters: (e?: any) => void,
+    setSearchQuery: (e?: any) => void,
     setLocation: (e?: any) => void,
-    setrange: (e?: any) => void,
+    setRange: (e?: any) => void,
     setFiltersByKeyValue: (key?: any, value?: any) => void,
-    applyFilters: () => void
+    applyFilters: () => void,
+    handleReset: () => void,
   }
 }>({
   state: {
@@ -24,15 +27,18 @@ const jobContext = createContext<{
     filters: {},
     location: {},
     range: null,
+    searchQuery: '',
   },
   method: {
     handleChange: (e?: any) => { },
     handlePaging: () => { },
     setFilters: (e?: any) => { },
+    setSearchQuery: (e?: any) => { },
     setLocation: (e?: any) => { },
-    setrange: () => { },
+    setRange: () => { },
     setFiltersByKeyValue: (e?: any) => { },
-    applyFilters: () => { }
+    applyFilters: () => { },
+    handleReset: () => { }
   },
 })
 export default jobContext

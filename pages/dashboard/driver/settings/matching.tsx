@@ -25,6 +25,7 @@ import { JobSchedule } from "../../../../enums/jobs/job-schedule.enum";
 import { JobEmploymentType } from "../../../../enums/jobs/job-employment-type.enum";
 import { JobTeamDriver } from "../../../../enums/jobs/job-team-driver.enum";
 import BaseInput from "../../../../components/forms/BaseInput";
+import BaseMoneyInput from "../../../../components/forms/BaseMoneyInput";
 import { preventNegative } from "../../../../utils/input";
 import { JobPayMethod } from "../../../../enums/jobs/job-pay-method.enum";
 import { JobBenefits } from "../../../../enums/jobs/job-benefits.enum";
@@ -126,7 +127,7 @@ export default function Matching() {
 
             populateForm(preferences);
         }
-    }, [ user ]);
+    }, [user]);
 
     /**
      * 
@@ -185,14 +186,13 @@ export default function Matching() {
                         labelPrefix="JobTeamDriver"
                         enumType={JobTeamDriver}
                     />
-                    <BaseInput
-                        className="col-12 mt-3"
+                    <BaseMoneyInput
+                        className="col-5 mt-3"
                         label="preferred_min_pay_per_week"
                         name="min_pay.value"
-                        type="number"
-                        min="0"
-                        formik={form}
                         onKeyDown={preventNegative}
+                        formik={form}
+                        placeholder="00.00"
                     />
                     <BaseCheckList
                         className="col-12 mt-3"

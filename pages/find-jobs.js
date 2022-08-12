@@ -36,13 +36,16 @@ export default function FindJobs(props) {
             [key]: value
         })
     }
+    const handleReset = () => {
+        setSearchQuery('')
+        setFilters([])
+    }
+
+    const [searchQuery, setSearchQuery] = useState();
     const [location, setLocation] = useState(null);
     const [range, setRange] = useState(filters.location?.range || 50);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFiltersByKeyValue(name, value)
-    }
+    const handleChange = ({ name, value }) => setFiltersByKeyValue(name, value)
 
     const setNativeValue = (element, value) => {
         if (!element) {
@@ -132,6 +135,7 @@ export default function FindJobs(props) {
                 filters,
                 location,
                 range,
+                searchQuery,
             },
             method: {
                 handleChange,
@@ -140,7 +144,9 @@ export default function FindJobs(props) {
                 setLocation,
                 setRange,
                 setFiltersByKeyValue,
-                applyFilters: fetchJobs
+                applyFilters: fetchJobs,
+                setSearchQuery,
+                handleReset
             },
         }}>
             <div className="filter-sec">

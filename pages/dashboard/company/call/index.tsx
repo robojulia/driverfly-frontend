@@ -149,6 +149,10 @@ export default function Call() {
                     <ViewDataTable
                         columns={[
                             {
+                                name: "id",
+                                selector: applicant => applicant.id
+                            },
+                            {
                                 name: "name",
                                 selector: applicant => `${applicant.first_name} ${applicant.last_name}`,
                                 hidable: false
