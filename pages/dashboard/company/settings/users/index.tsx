@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
 import PageLayout from "../../../../../components/layouts/page/PageLayout";
-import { Col, Row } from "reactstrap";
+import { TabbedLayout } from '../../../../../components/layouts/page/TabbedLayout';
 import { useAuth } from '../../../../../hooks/useAuth';
 import { useRouter } from "next/router"
 import { useTranslation } from "../../../../../hooks/useTranslation";
-import { EyeFill, PenFill, TrashFill } from 'react-bootstrap-icons';
+import { EyeFill, PenFill, TrashFill, ArrowCounterclockwise } from 'react-bootstrap-icons';
 import UserApi from "../../../../api/user";
 import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
 import { Status } from '../../../../../enums/status.enum';
@@ -25,17 +25,24 @@ export default function UserList() {
 
   const columnSettingKey = getDataTableColumnKey("company", user, "users");
 
-  const [users, setUsers] = useState([]);
+  const [ users, setUsers ] = useState([]);
 
   useEffectAsync(async () => {
     if (!user) return;
 
     const api = new UserApi();
     const v = await api.list();
-    setUsers(v.filter((u) => u.id !== user.id && u.status === Status.ACTIVE));
-  }, [user]);
+    setUsers(v);
+  }, [ user ]);
 
-  const onAddClick = (e: React.MouseEvent) => {
+  const can = {
+    createUser: hasPermission("CanCreateUser"),
+    viewUser: hasPermission("CanViewUser"),
+    editUser: hasPermission("CanUpdateUser"),
+    deleteUser: hasPermission("CanDeleteUser"),
+  };
+
+   const onAddClick = (e: React.MouseEvent) => {
     e.preventDefault();
 
     router.push(`${router.pathname}/create`);
@@ -49,101 +56,129 @@ export default function UserList() {
     router.push(`${router.pathname}/${id}`);
   }
 
-  const onDeletedUserClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-
-    router.push(`${router.pathname}/deleted-users`);
-  }
-
   const onDeleteClick = async (id: number) => {
     try {
       const api = new UserApi();
 
       await api.remove(id);
 
-      setUsers(users.filter(v => v.id != id));
+      setUsers(users.map(v => {
+        if (v.id === id) {
+          return {...v, status: Status.DELETED};
+        }
+      
+        return v;
+      }));
+
     } catch (e) {
       globalAjaxExceptionHandler(e, { t: t, defaultMessage: "UNABLE_TO_DELETE", toast: toast });
     }
   }
 
-  return (
-    <PageLayout
-      title="USERS"
-      actions={
-        <>
+  const onRestoreClick = async (id: number) => {
+    try {
+      const api = new UserApi();
+
+      await api.restore(id);
+
+      setUsers(users.map(v => {
+        if (v.id === id) {
+          return {...v, status: Status.ACTIVE};
+        }
+      
+        return v;
+      }));
+
+    } catch (e) {
+      globalAjaxExceptionHandler(e, { t: t, defaultMessage: "UNABLE_TO_RESTORE", toast: toast });
+    }
+  }
+
+  const tabs = {
+    [`Status.${Status.ACTIVE}`]: createUsersTable(users.filter((u) => u.id !== user.id && u.status === Status.ACTIVE)),
+    [`Status.${Status.DELETED}`]: createUsersTable(users.filter((u) => u.id !== user.id && u.status === Status.DELETED)),
+  };
+
+
+  function createUsersTable(users: UserEntity[]) {
+    return (
+      <ViewDataTable<UserEntity>
+        columnSettingKey={columnSettingKey}
+        columns={[
           {
-            hasPermission("CanCreateUser") &&
+            id: "name",
+            name: "name",
+            selector: j => j.name,
+            cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.name}</a></Link>),
+            hidable: false
+          },
+          {
+            id: "roles",
+            name: "ROLES",
+            selector: j => j.roles.map((role) => role.name).join(", "),
+          },
+          {
+            id: "email",
+            name: "email",
+            selector: j => j.email,
+          },
+          {
+            id: "phone",
+            name: "phone",
+            selector: j => j.contact_number,
+          },
+          {
+            id: "phone_cell",
+            name: "phone_cell",
+            selector: j => j.cell_number,
+            hide: 1
+          }
+        ]}
+        actions={j => ([
+          {
+            onClick: e => onViewClick(j.id),
+            icon: EyeFill,
+            label: "VIEW",
+            hide: !can.viewUser
+          },
+          {
+            onClick: e => onEditClick(j.id),
+            icon: PenFill,
+            label: "EDIT",
+            hide: !can.editUser
+          },
+          {
+            onClick: e => onDeleteClick(j.id),
+            icon: TrashFill,
+            label: "DELETE",
+            hide: !(can.deleteUser && j.status === Status.ACTIVE)
+          },
+          {
+            onClick: e => onRestoreClick(j.id),
+            icon: ArrowCounterclockwise,
+            label: "RESTORE",
+            hide: !(can.deleteUser && j.status === Status.DELETED)
+          }
+        ])}
+        items={users}
+      />
+    );
+  }
+  
+  return (
+    <PageLayout 
+    title="USERS" 
+    actions={
+      <>
+        {
+          can.createUser &&
             <Button variant='primary' onClick={onAddClick}>
               + {t("CREATE")}
             </Button>
-          }
-          {
-            <Button variant='danger ml-3' onClick={onDeletedUserClick}>
-              - {t("DELETED_USERS")}
-            </Button>
-          }
-        </>
-      }>
-        <ViewDataTable<UserEntity>
-          columnSettingKey={columnSettingKey}
-          columns={[
-            {
-              id: "name",
-              name: "ID",
-              selector: j=> j.id,
-            },
-            {
-              id: "name",
-              name: "name",
-              selector: j => j.name,
-              cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.name}</a></Link>),
-              hidable: false
-            },
-            {
-              id: "roles",
-              name: "ROLES",
-              selector: j => j.roles.map((role) => role.name).join(", "),
-            },
-            {
-              id: "email",
-              name: "email",
-              selector: j => j.email,
-            },
-            {
-              id: "phone",
-              name: "phone",
-              selector: j => j.contact_number,
-            },
-            {
-              id: "phone_cell",
-              name: "phone_cell",
-              selector: j => j.cell_number,
-              hide: 1
-            }
-          ]}
-          actions={j => ([
-              {
-                  onClick: e => onViewClick(j.id),
-                  icon: EyeFill,
-                  label: "VIEW",
-                  hide: !hasPermission("CanViewUser")
-              },
-              {
-                  onClick: e => onEditClick(j.id),
-                  icon: PenFill,
-                  label: "EDIT",
-                  hide: !hasPermission("CanUpdateUser")
-              },
-              {
-                  onClick: e => onDeleteClick(j.id),
-                  icon: TrashFill,
-                  label: "DELETE",
-                  hide: !hasPermission("CanDeleteUser")
-              }
-          ])}
-          items={users}
-        />
+        }
+      </>
+    }>
+      <TabbedLayout items={tabs}></TabbedLayout>
     </PageLayout>
   )
 };

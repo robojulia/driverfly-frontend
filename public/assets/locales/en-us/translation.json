@@ -1146,5 +1146,10 @@
     "PHONE_IS_REQUIRED": "Phone is required",
     "PLEASE_CHECK_PHONE": "Please check your phone",
     "TECHNICAL_ASSISTANCE_HELP": "For technical assistance, reach out to help@driverfly.co",
+    "Status": {
+        "ACTIVE": "Active",
+        "DELETED": "Deleted"
+    },
+    "UNABLE_TO_RESTORE": "Unable to restore.",
     "DESCRIPTION": "Description"
 }
