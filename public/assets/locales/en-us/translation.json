@@ -1162,5 +1162,6 @@
         "DELETED": "Deleted"
     },
     "UNABLE_TO_RESTORE": "Unable to restore.",
-    "DESCRIPTION": "Description"
+    "DESCRIPTION": "Description",
+    "GET_RESULTS":"Press enter to get results"
 }
