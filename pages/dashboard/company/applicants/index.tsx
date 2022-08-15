@@ -445,6 +445,16 @@ function ApplicantView(props: ViewProps) {
                         hidable: false,
                     },
                     {
+                        id: "city",
+                        name: "CITY",
+                        selector: applicant => applicant.city,
+                    },
+                    {
+                        id: "state",
+                        name: "STATE",
+                        selector: applicant => applicant.state,
+                    },
+                    {
                         id: "phone",
                         name: "PHONE",
                         selector: applicant => applicant.phone,
@@ -483,6 +493,7 @@ function ApplicantView(props: ViewProps) {
                                 selector: aJob => aJob.job.id,
                                 hidable: false,
                             },
+                            
                             {
                                 name: "JOB",
                                 selector: aJob => aJob.job.title,
@@ -619,6 +630,14 @@ function JobView(props: ViewProps) {
                             </Link>
                         ),
                         hidable: false,
+                    },
+                    {
+                        name: "CITY",
+                        selector: aJob => aJob.applicant.city,
+                    },
+                    {
+                        name: "STATE",
+                        selector: aJob => aJob.applicant.state,
                     },
                     {
                         name: "DATE_APPLIED",
