@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
 import { useAuth } from "../../../../hooks/useAuth";
@@ -20,6 +20,7 @@ import BaseCheckList from "../../../../components/forms/BaseCheckList";
 import BaseSelect from "../../../../components/forms/BaseSelect";
 import { UserPreferenceSharingLabel } from "../../../../enums/users/user-preference-sharing-label.enum";
 import { useEffectAsync } from "../../../../utils/react";
+import ViewModal from "../../../../components/viewDetails/viewModal";
 
 export default function Sharing() {
     const { getUser } = useAuth();
@@ -27,6 +28,16 @@ export default function Sharing() {
     const { t } = useTranslation();
 
     const user = getUser();
+    const [sharingValue, setsharingValue] = useState<{
+        name: string, value: string, label: string
+    }>({
+        name: '', value: '', label: ''
+    });
+    const clearSharingValue = (): void => setsharingValue({ name: '', value: '', label: '' })
+
+    const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
+    const openConfirmationModal = (): void => setShowConfirmationModal(true)
+    const closeConfirmationModal = (): void => setShowConfirmationModal(false)
 
     const form = useFormik({
         initialValues: {
@@ -105,7 +116,7 @@ export default function Sharing() {
 
             populateForm(preferences);
         }
-    }, [ user ]);
+    }, [user]);
 
     /**
      * 
@@ -121,6 +132,29 @@ export default function Sharing() {
         });
     }
 
+    const onChangeSharePreference = ({ target: { name, value } }): void => {
+        if (!!!name || !!!value) return
+
+        const label_name = name.split('.')[0] || ''
+        const label = t(`UserPreferenceSharingLabel.${form.values[label_name]?.label}`)
+
+        if (value === SharePreference.ALWAYS) {
+            setsharingValue({ name, value, label })
+            openConfirmationModal()
+        } else {
+            form.setFieldValue(name, value);
+        }
+    }
+
+    const handleCloseClick = (): void => {
+        clearSharingValue()
+        closeConfirmationModal()
+    }
+
+    const handleConfirmClick = (): void => {
+        (sharingValue.name && sharingValue.value) && form.setFieldValue(sharingValue.name, sharingValue.value);
+        handleCloseClick()
+    }
 
     return (<>
         <PageLayout title="SHARING">
@@ -133,6 +167,7 @@ export default function Sharing() {
                         formik={form}
                         labelPrefix="SharePreference"
                         enumType={SharePreference}
+                        onChange={onChangeSharePreference}
                     />
                     <BaseSelect
                         className="col-6 mt-3"
@@ -141,6 +176,7 @@ export default function Sharing() {
                         formik={form}
                         labelPrefix="SharePreference"
                         enumType={SharePreference}
+                        onChange={onChangeSharePreference}
                     />
                     <BaseSelect
                         className="col-6 mt-3"
@@ -149,6 +185,7 @@ export default function Sharing() {
                         formik={form}
                         labelPrefix="SharePreference"
                         enumType={SharePreference}
+                        onChange={onChangeSharePreference}
                     />
                     <BaseSelect
                         className="col-6 mt-3"
@@ -157,6 +194,7 @@ export default function Sharing() {
                         formik={form}
                         labelPrefix="SharePreference"
                         enumType={SharePreference}
+                        onChange={onChangeSharePreference}
                     />
                     <BaseSelect
                         className="col-6 mt-3"
@@ -165,6 +203,7 @@ export default function Sharing() {
                         formik={form}
                         labelPrefix="SharePreference"
                         enumType={SharePreference}
+                        onChange={onChangeSharePreference}
                     />
                 </Row>
                 <Row className="mt-2">
@@ -175,6 +214,17 @@ export default function Sharing() {
                     </Col>
                 </Row>
             </form>
+            <ViewModal
+                show={showConfirmationModal}
+                closeText="CANCEL"
+                onCloseClick={handleCloseClick}
+                title="CONFIRMATION"
+                footer={<button type="button" className="btn btn-primary w-100 p-lg-3 p-5 mx-2" onClick={handleConfirmClick}>{t('CONFIRM')}</button>}
+            >
+                <p className="m-3">
+                    {t('SHARING_CONFIRMATION_TEXT_{label}', { label: sharingValue.label }, { translateProps: true })}
+                </p>
+            </ViewModal>
         </PageLayout>
     </>);
 }
