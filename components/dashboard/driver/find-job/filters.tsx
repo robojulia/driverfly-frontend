@@ -30,7 +30,6 @@ export default function Filters() {
     const { setFiltersByKeyValue, handleReset } = method
     const { searchQuery } = state
 
-    const handleSearchQuery = () => setFiltersByKeyValue('keywords', searchQuery)
 
     return (
         <>
@@ -44,10 +43,7 @@ export default function Filters() {
                         <Sort inputClassName="custom-select shadow-none mt-2" labelClassName="text-secondary w-sm-25" />
                     </div>
                 </Col>
-                <Col md="4">
-                    <Button onClick={handleSearchQuery} className="mt-39 mr-3 theme-primary-btn-outline">
-                        {t('SEARCH')}
-                    </Button>
+                <Col md="7" className='text-right'>
                     <Button onClick={handleShowFilters} className="mt-39 theme-primary-btn-outline">
                         <Filter /> {t('FILTERS')}
                     </Button>

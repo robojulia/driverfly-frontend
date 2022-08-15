@@ -22,6 +22,8 @@ export default function Search(props) {
         type="text"
         className={props.inputClassName || "form-control shadow-sm p-4"}
         placeholder={t("KEYWORD_PLACEHOLDER")} />
+      <small className='ml-1 mt-2 form-text text-muted'>{t("GET_RESULTS")}</small>
+
     </>
   )
 }
