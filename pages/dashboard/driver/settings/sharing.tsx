@@ -219,7 +219,13 @@ export default function Sharing() {
                 closeText="CANCEL"
                 onCloseClick={handleCloseClick}
                 title="CONFIRMATION"
-                footer={<button type="button" className="btn btn-primary w-100 p-lg-3 p-5 mx-2" onClick={handleConfirmClick}>{t('CONFIRM')}</button>}
+                footer=
+                {
+                    <>
+                        <button type="button" className="btn btn-primary w-100 p-lg-3 p-5 mx-2" onClick={handleConfirmClick}>{t('CONFIRM')}</button>
+                        <p className="text-center text-danger w-100">{t("NOTE_YOU_CAN_CHANGE_BACK_IN_FUTURE")}</p>
+                    </>
+                }
             >
                 <p className="m-3">
                     {t('SHARING_CONFIRMATION_TEXT_{label}', { label: sharingValue.label }, { translateProps: true })}
