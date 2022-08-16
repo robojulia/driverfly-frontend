@@ -433,9 +433,9 @@ function ApplicantView(props: ViewProps) {
             <ViewDataTable<ConsolodatedApplicant>
                 // preExpanded={(applicant) => applicant.jobs?.length > 0}
                 customStyles={{
-                    headCells: {
+                    headRow: {
                         style: {
-                            background: "#2da2af",
+                            background: "#5bb0b9",
                             color: "white"
                         },
                     },
@@ -498,7 +498,7 @@ function ApplicantView(props: ViewProps) {
                         customStyles={{
                             headCells: {
                                 style: {
-                                    background: "#1b4454",
+                                    background: "#98a3ad",
                                     color: "white"
                                 },
                             },
@@ -605,9 +605,9 @@ function JobView(props: ViewProps) {
 
     return (<ViewDataTable<ConsolodatedJob>
         customStyles={{
-            headCells: {
+            headRow: {
                 style: {
-                    background: "#1b4454",
+                    background: "#98a3ad",
                     color: "white"
                 },
             },
@@ -646,7 +646,7 @@ function JobView(props: ViewProps) {
                 customStyles={{
                     headCells: {
                         style: {
-                            background: "#2da2af",
+                            background: "#5bb0b9",
                             color: "white"
                         },
                     },

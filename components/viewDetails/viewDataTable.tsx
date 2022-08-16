@@ -132,7 +132,7 @@ export default function ViewDataTable<TElement>(props: ViewTableProps<TElement>)
 
             expandableRowExpanded={row => !props.preExpanded ? false : (typeof props.preExpanded === "boolean" ? props.preExpanded : props.preExpanded(row))}
             expandableRows={!!props.expandableRowsComponent}
-            expandableRowsComponent={props.expandableRowsComponent ? (expandableProps) => (<Container fluid className="bg-secondary pl-5 pr-0">{<props.expandableRowsComponent {...expandableProps} />}</Container>) : null}
+            expandableRowsComponent={props.expandableRowsComponent ? (expandableProps) => (<Container fluid className="bg-light pl-5 pr-0">{<props.expandableRowsComponent {...expandableProps} />}</Container>) : null}
 
             subHeader={!props.hideSearch}
             subHeaderComponent={!props.hideSearch && <>
