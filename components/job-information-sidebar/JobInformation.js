@@ -30,7 +30,7 @@ export default function JonInformation({ job }) {
                 <h3>{t('job_information')}</h3>
 
                 <div className="sidebar-inner">
-                    <ul className="list">
+                    <ul className="list p-0">
 
                         {/* DATE POSTED START */}
                         <li>
