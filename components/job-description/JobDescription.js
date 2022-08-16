@@ -15,18 +15,18 @@ export default function JobDescription({ job }) {
                     <p>{job.description}</p>
                 </div>
                 <div className="shadow-sm p-3 mb-5 bg-white rounded mt-3">
-                    <h3 className="mt-5">{t('BENEFITS')}</h3>
+                    <h3>{t('BENEFITS')}</h3>
                     <p>
                         <ShowEnumFromString labelPrefix="JobBenefits" str={job.benefits} enumArray={JobBenefits} />
                         , {job.benefits_other}
                     </p>
                 </div>
                 <div className="shadow-sm p-3 mb-5 bg-white rounded mt-3">
-                    <h3 className="mt-5">{t('REQUIRED_SKILLS')}</h3>
-                    <ul>
+                    <h3>{t('REQUIRED_SKILLS')}</h3>
+                    <ul className="p-0">
                         {job.required_skills &&
                             job.required_skills.map((item, index) => (
-                                <li className="row" key={index}>
+                                <li className="row px-0" key={index}>
                                     <div className="col-md-3">
                                         <ShowEnumFromString labelPrefix="JobEquipmentType" str={item.type} enumArray={JobEquipmentType} />
                                     </div>
@@ -36,7 +36,7 @@ export default function JobDescription({ job }) {
                                 </li>
                             ))
                         }
-                        <li className="row">
+                        <li className="row px-0">
                             <div className="col-md-3">
                                 {t('OTHER')}
                             </div>
