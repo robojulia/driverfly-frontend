@@ -105,7 +105,8 @@
         "PHYSICAL": "DOT Long Form Physical",
         "EMPLOYMENT_HISTORY": "Past Employment"
     },
-    "SHARING_CONFIRMATION_TEXT_{label}": "Are you sure you want to always automatically share your {{label}}? This means anytime you apply for a new job or approve a carrier connection, your {{label}} will automatically be shared with them. Note: you can change this back at any point in the future",
+    "SHARING_CONFIRMATION_TEXT_{label}": "Are you sure you want to always automatically share your {{label}}? This means anytime you apply for a new job or approve a carrier connection, your {{label}} will automatically be shared with them.",
+    "NOTE_YOU_CAN_CHANGE_BACK_IN_FUTURE":"Note: you can change this back at any point in the future.",
     "share_my_mvr": "Automatically Share my MVR",
     "share_my_drivers_license": "Automatically Share my Drivers License",
     "share_my_medical_card": "Automatically Share my Medical Card",
