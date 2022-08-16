@@ -1163,5 +1163,6 @@
     },
     "UNABLE_TO_RESTORE": "Unable to restore.",
     "DESCRIPTION": "Description",
-    "GET_RESULTS":"Press enter to get results"
+    "GET_RESULTS":"Press enter to get results",
+    "NO_RELATED_JOBS_YET":"No related jobs yet."
 }

@@ -71,7 +71,7 @@ export default function RelatedJobs({ jobs }: RelatedJobsProps) {
                                 })
                                 :
                                 <div className="media align-items-center">
-                                    No related jobs yet.
+                                    {t("NO_RELATED_JOBS_YET")}
                                 </div>
                         }
                     </Col>
