@@ -147,6 +147,14 @@ export default function Call() {
                         label="VIEW_MISSED_CALLS"
                     />
                     <ViewDataTable
+                     customStyles={{
+                        headCells: {
+                            style: {
+                                background: "#5bb0b9",
+                                color: "white"
+                            },
+                        },
+                    }}
                         columns={[
                             {
                                 name: "id",

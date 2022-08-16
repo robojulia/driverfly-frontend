@@ -52,12 +52,12 @@ const FullLayout = ({ children }) => {
       text: "CALL",
       startsWith: true
     },
-    {
-      pathname: "/dashboard/company/invoices",
-      icon: Receipt,
-      text: "Invoice",
-      startsWith: true
-    },
+    // {
+    //   pathname: "/dashboard/company/invoices",
+    //   icon: Receipt,
+    //   text: "Invoice",
+    //   startsWith: true
+    // },
   
     {
       pathname: "/dashboard/company/settings",

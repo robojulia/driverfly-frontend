@@ -47,6 +47,14 @@ export default function Index() {
                 <Col lg="12 ">
                     <ViewDataTable<ApplicantJobEntity>
                         columnSettingKey={columnSettingKey}
+                        customStyles={{
+                            headCells: {
+                                style: {
+                                    background: "#5bb0b9",
+                                    color: "white"
+                                },
+                            },
+                        }}
                         columns={[
                             {
                                 name: 'ID',

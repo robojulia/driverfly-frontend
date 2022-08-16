@@ -104,6 +104,14 @@ export default function UserList() {
     return (
       <ViewDataTable<UserEntity>
         columnSettingKey={columnSettingKey}
+        customStyles={{
+          headCells: {
+              style: {
+                  background: "#5bb0b9",
+                  color: "white"
+              },
+          },
+      }}
         columns={[
           {
             id: "name",

@@ -101,6 +101,14 @@ export default function VehicleList() {
     >
       <ViewDataTable<VehicleEntity>
         columnSettingKey={columnSettingKey}
+        customStyles={{
+          headCells: {
+              style: {
+                  background: "#5bb0b9",
+                  color: "white"
+              },
+          },
+      }}
         columns={[
           {
             id: "id",

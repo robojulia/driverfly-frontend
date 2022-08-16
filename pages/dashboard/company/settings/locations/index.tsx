@@ -94,6 +94,14 @@ export default function LocationList() {
     >
       <ViewDataTable<LocationEntity>
         columnSettingKey={columnSettingKey}
+        customStyles={{
+          headCells: {
+              style: {
+                  background: "#5bb0b9",
+                  color: "white"
+              },
+          },
+      }}
         columns={[
           {
             id: "name",
