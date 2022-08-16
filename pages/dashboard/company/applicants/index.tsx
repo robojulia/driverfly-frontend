@@ -431,7 +431,15 @@ function ApplicantView(props: ViewProps) {
     return (
         <div className="applicant__table__sty">
             <ViewDataTable<ConsolodatedApplicant>
-                preExpanded={(applicant) => applicant.jobs?.length > 0}
+                // preExpanded={(applicant) => applicant.jobs?.length > 0}
+                customStyles={{
+                    headRow: {
+                        style: {
+                            background: "#5bb0b9",
+                            color: "white"
+                        },
+                    },
+                }}
                 columns={[
                     {
                         id: "id",
@@ -487,13 +495,21 @@ function ApplicantView(props: ViewProps) {
                 expandableRowsComponent={({ data }) => (
                     <ViewDataTable<ConsolodatedApplicantJob>
                         noDataComponent={(<>{t("NO_APPLIED_JOBS_FOUND")}</>)}
+                        customStyles={{
+                            headCells: {
+                                style: {
+                                    background: "#98a3ad",
+                                    color: "white"
+                                },
+                            },
+                        }}
                         columns={[
                             {
                                 name: "ID",
                                 selector: aJob => aJob.job.id,
                                 hidable: false,
                             },
-                            
+
                             {
                                 name: "JOB",
                                 selector: aJob => aJob.job.title,
@@ -588,7 +604,14 @@ function JobView(props: ViewProps) {
 
 
     return (<ViewDataTable<ConsolodatedJob>
-        preExpanded
+        customStyles={{
+            headRow: {
+                style: {
+                    background: "#98a3ad",
+                    color: "white"
+                },
+            },
+        }}
         columns={[
             {
                 id: "job",
@@ -620,6 +643,14 @@ function JobView(props: ViewProps) {
         items={items}
         expandableRowsComponent={({ data }) => (
             <ViewDataTable<ConsolodatedApplicantJob>
+                customStyles={{
+                    headCells: {
+                        style: {
+                            background: "#5bb0b9",
+                            color: "white"
+                        },
+                    },
+                }}
                 columns={[
                     {
                         name: "NAME",
