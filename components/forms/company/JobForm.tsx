@@ -66,30 +66,13 @@ export function JobForm(props: JobFormProps) {
 
     let { className, entity, onSaveComplete, onSaveError } = props;
 
+    const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
+
     const form = useFormik({
         initialValues: new JobEntity(),
         validationSchema: JobEntity.yupSchema(),
         onSubmit: async (data) => {
-            try {
-                const jobApi = new JobApi();
-
-                let job = null;
-                if (entity?.id) {
-                    job = await jobApi.update(entity.id, data);
-                }
-                else {
-                    job = await jobApi.create(data);
-                }
-
-                toast.success(t("Forms.SUCCESS_{action}_{name}", { action: !!entity?.id ? "Forms.UPDATED" : "Forms.CREATED", name: "JOB" }, { translateProps: true }));
-                if (onSaveComplete) onSaveComplete(job);
-            }
-            catch (e) {
-                console.error("Unable to save job", e);
-                globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast,
-                    defaultMessage: t("Forms.FAIL_{action}_{name}", { action: !!entity?.id ? "Forms.UPDATED" : "Forms.CREATED", name: "JOB" }, { translateProps: true })});
-                if (onSaveError) onSaveError(e);
-            }
+            setShowConfirmationModal(true);
         }
     });
 
@@ -384,6 +367,30 @@ export function JobForm(props: JobFormProps) {
             location
         ]);
         setCreateLocation(false);
+    }
+
+    const handleConfirmClick = async () => {
+        try {
+            const jobApi = new JobApi();
+            let job = null;
+            if (entity?.id) {
+                job = await jobApi.update(entity.id, form.values);
+            }
+            else {
+                job = await jobApi.create(form.values);
+            }
+
+            setShowConfirmationModal(false);
+            
+            toast.success(t("Forms.SUCCESS_{action}_{name}", { action: !!entity?.id ? "Forms.UPDATED" : "Forms.CREATED", name: "JOB" }, { translateProps: true }));
+            if (onSaveComplete) onSaveComplete(job);
+        }
+        catch (e) {
+            console.error("Unable to save job", e);
+            globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast,
+                defaultMessage: t("Forms.FAIL_{action}_{name}", { action: !!entity?.id ? "Forms.UPDATED" : "Forms.CREATED", name: "JOB" }, { translateProps: true })});
+            if (onSaveError) onSaveError(e);
+        }
     }
 
     return (
@@ -1165,6 +1172,19 @@ export function JobForm(props: JobFormProps) {
             <LocationForm
                 onSaveComplete={onLocationAdded}
             />
+        </ViewModal>
+        <ViewModal
+            title="CONFIRMATION"
+            show={showConfirmationModal}
+            onCloseClick={() => setShowConfirmationModal(false)}
+            footer=
+            {
+                <button type="button" className="btn btn-primary w-100 p-lg-3 p-5 mx-2" onClick={handleConfirmClick}>{t('CONFIRM')}</button>
+            }
+        >
+            <p className="m-3">
+                {t('JOB_CREATION_CONFIRMATION')}
+            </p>
         </ViewModal>
         </>
     );
