@@ -6,7 +6,7 @@ import { Gear, Search } from "react-bootstrap-icons";
 import React, { ReactNode, useEffect, useState } from "react";
 import ListActions, { ListActionOptions } from "../list-actions/ListActions";
 import useStorage from "../../hooks/useStorage";
-import { ExpandableRowsComponent } from "react-data-table-component/dist/src/DataTable/types";
+import { ExpandableRowsComponent, TableStyles } from "react-data-table-component/dist/src/DataTable/types";
 import { useStatefulStorage, StatefulStorageInterface } from "../../hooks/useStatefulStorage";
 import { UserEntity } from "../../models/user/user.entity";
 
@@ -19,14 +19,14 @@ export interface ViewTableProps<TElement> {
     expandableRowsComponent?: ExpandableRowsComponent<TElement>;
     hideSearch?: boolean;
     noDataComponent?: ReactNode;
-
+    customStyles?: TableStyles;
 }
 
 export interface ViewTableColumn<TElement> extends TableColumn<TElement> {
     hidable?: boolean;
 }
 
-export function getDataTableColumnKey(type: "company"|"driver", user: UserEntity, entity: string) {
+export function getDataTableColumnKey(type: "company" | "driver", user: UserEntity, entity: string) {
     return `${type}.${user?.id || 0}.${entity}.columns`;
 }
 
@@ -65,7 +65,7 @@ export default function ViewDataTable<TElement>(props: ViewTableProps<TElement>)
         }
         setColumns(columns);
 
-    }, [ props, storage?.item ]);
+    }, [props, storage?.item]);
 
     // useEffect(() => {
     // }, [
@@ -116,6 +116,8 @@ export default function ViewDataTable<TElement>(props: ViewTableProps<TElement>)
 
     return (
         <DataTable<TElement>
+            customStyles={props.customStyles}
+
             columns={columns.filter(v => !v.hide).map(v => ({
                 ...v,
                 name: typeof v.name === "string" ? t(v.name) : v.name,
