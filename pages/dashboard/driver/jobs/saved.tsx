@@ -41,6 +41,14 @@ export default function JobsSaved() {
             title="SAVED_JOBS"
         >
             <ViewDataTable<SavedJobEntity>
+                    customStyles={{
+                        headCells: {
+                            style: {
+                                background: "#5bb0b9",
+                                color: "white"
+                            },
+                        },
+                    }}
                 columns={[
                     {
                         id: "id",

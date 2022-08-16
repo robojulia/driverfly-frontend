@@ -73,6 +73,14 @@ export default function CompanyList() {
       }>
       <ViewDataTable<CompanyEntity>
         columnSettingKey={columnSettingKey}
+        customStyles={{
+          headCells: {
+              style: {
+                  background: "#5bb0b9",
+                  color: "white"
+              },
+          },
+      }}
         columns={[
           {
             id: "id",

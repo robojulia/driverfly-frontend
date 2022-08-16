@@ -38,6 +38,14 @@ export default function OfferedJobs() {
             title="JOBS_OFFERED"
             >
             <ViewDataTable<ApplicantJobEntity>
+                    customStyles={{
+                        headCells: {
+                            style: {
+                                background: "#5bb0b9",
+                                color: "white"
+                            },
+                        },
+                    }}
                 columns={[
                     {
                         id: "id",
