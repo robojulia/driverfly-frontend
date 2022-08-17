@@ -2,7 +2,7 @@ import timeSince from "../../utils/timeSince"
 import Link from "next/link"
 import { useTranslation } from "../../hooks/useTranslation"
 import CompanyPhoto from "../jobs/company-photo";
-import { GeoAltFill, CurrencyDollar, Star } from 'react-bootstrap-icons';
+import {CurrencyDollar} from 'react-bootstrap-icons';
 import { buildAddress } from "../../utils/common";
 import { JobEntity } from "../../models/job/job.entity";
 import { Col, Row } from "react-bootstrap";
@@ -52,7 +52,6 @@ export default function RelatedJobs({ jobs }: RelatedJobsProps) {
                                                     {
                                                         job.location &&
                                                         <p className="pr-4">
-                                                            {/* <GeoAltFill className="mr-1" /> */}
                                                             {buildAddress(job.location)}
                                                         </p>
                                                     }
@@ -61,7 +60,7 @@ export default function RelatedJobs({ jobs }: RelatedJobsProps) {
                                             </div>
                                             <div className="job-metas">
                                                 <div className="job-location">
-                                                    < Star className="mr-1" /><strong>
+                                                    <strong>
                                                         {job.description_short}
                                                     </strong>
                                                 </div>
