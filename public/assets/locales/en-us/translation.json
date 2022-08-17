@@ -525,6 +525,8 @@
     "LOGOUT": "Logout",
     "DON'T_HAVE_AN_ACCOUNT_MAKE_ONE": "Don't have an account? Make one",
     "HERE": "here",
+    "HERE!": "here!",
+
     "QUICK_LOGIN": "Quick Login",
     "LOGIN_YOUR_ACCOUNT": "Login Your Account",
     "USER_NAME_OR_EAMIL": "Username or email",
@@ -1166,5 +1168,6 @@
     "DESCRIPTION": "Description",
     "GET_RESULTS":"Press enter to get results",
     "NO_RELATED_JOBS_YET":"No related jobs yet.",
-    "JOB_CREATION_CONFIRMATION": "By submitting, I confirm that the details of this job are as honest and accurate to the best of my knowledge."
+    "JOB_CREATION_CONFIRMATION": "By submitting, I confirm that the details of this job are as honest and accurate to the best of my knowledge.",
+    "DON'T_HAVE_AN_ACCOUNT":"Don't have an account? Make one"
 }
