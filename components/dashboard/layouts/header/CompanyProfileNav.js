@@ -53,7 +53,7 @@ export default function CompanyProfileNav() {
 
     return (
         <>
-            <div className="profile btn-group">
+            <div className="profile profile-logo btn-group">
                 <ChangeCompany />
                 <Dropdown show={dropdownOpen} onToggle={toggle} >
                     <Dropdown.Toggle variant="light">

@@ -59,6 +59,9 @@
     img {
         width: 100% !important;
     }
+    .logo_container img{
+        width: 50% !important;
+    }
 
     .btn.btn-link {
         text-align: left;
@@ -406,5 +409,11 @@
     .logo {
         width: 150px;
         border-right: solid 0px;
+    }
+}
+@media (max-width:600px) {
+
+    .logo_container img{
+        width: 100% !important;
     }
 }
