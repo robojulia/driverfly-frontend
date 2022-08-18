@@ -113,7 +113,6 @@ export default function Profile() {
             name="email"
             placeholder="email"
             type="email"
-            readOnly
             required
             formik={form}
           />

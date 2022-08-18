@@ -1,4 +1,4 @@
-import { TableCell, Table, TableRow, TableHead, TableContainer } from "@mui/material";
+import { Table } from "react-bootstrap";
 
 import { useTranslation } from "../../hooks/useTranslation";
 
@@ -97,32 +97,32 @@ export default function ViewDetails(props: ViewDetailProps) {
                 if (typeof firstValue === "object")
                 {
                     return (
-                        <>
-                        <TableRow>
-                            <TableCell colSpan={2}>
+                        <tr key={key}>
+                            <td colSpan={2}>
                                 {t(value.label)}
                                 <hr />
                                 <Table>
-                                    {
-                                        <TableRow>
+                                    <thead>
+                                        <tr>
                                             {Object.entries(firstValue).map(([subKey, subValue], subI) => (
-                                                <TableCell key={subI}><strong>{t(subValue.label || subKey)}</strong></TableCell>
+                                                <td key={subI}><strong>{t(subValue.label || subKey)}</strong></td>
                                             ))}
-                                        </TableRow>
-                                    }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
                                     {
-                                        value.items.map(v => (
-                                        <TableRow>
+                                        value.items.map((v, i) => (
+                                        <tr key={i}>
                                             {Object.values(v).map((subValue, subI) => (
-                                                <TableCell key={subI}>{resolveText(subValue)}</TableCell>
+                                                <td key={subI}>{resolveText(subValue)}</td>
                                             ))}
-                                        </TableRow>
+                                        </tr>
                                         ))
                                     }
+                                    </tbody>
                                 </Table>
-                            </TableCell>
-                        </TableRow>
-                        </>
+                            </td>
+                        </tr>
                     );
                 }
                 else {
@@ -131,22 +131,24 @@ export default function ViewDetails(props: ViewDetailProps) {
                 }
             }
 
-            return (<>
-                <TableRow>
-                    <TableCell>{t(value.label)}</TableCell>
-                    <TableCell>{resolveText(value)}</TableCell>
-                </TableRow>
-            </>);
+            return (
+                <tr key={key}>
+                    <td>{t(value.label)}</td>
+                    <td>{resolveText(value)}</td>
+                </tr>
+            );
         }
 
         return (<></>);
     }
 
     return (
-        <Table>
-            {Object
-                .entries(props.obj)
-                .map(([ key, value ], i) => resolveItem(key, value, i))}
+        <Table bordered striped>
+            <tbody>
+                {Object
+                    .entries(props.obj)
+                    .map(([ key, value ], i) => resolveItem(key, value, i))}
+            </tbody>
         </Table>
     );
 

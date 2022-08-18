@@ -17,10 +17,10 @@ export default function Dashboard() {
                 {
                     hasPermission("CanViewApplicant") && 
                     <>
-                        <Col xs="6">
+                        <Col md="6">
                             <ApplicantPipelineChart />
                         </Col>
-                        <Col xs="6">
+                        <Col md="6">
                             <ApplicantsPerRecruiterChart />
                         </Col>
                     </>

@@ -38,12 +38,12 @@ export class ApplicantEntity {
   years_cdl_experience?: number;
   // license_restrictions?: LicenseRestrictions;
   license_restrictions?: LicenseRestrictions[] = [];
-  can_pass_drug_test?: boolean = false;
+  can_pass_drug_test?: boolean = true;
   is_owner_operator?: boolean = false;
   transmission_type?: VehicleTransmissionType[] = [];
   endorsements?: DriverEndorsement[] = [];
   highest_degree?: EducationLevel;
-  authorized_to_work_in_us?: boolean = false;
+  authorized_to_work_in_us?: boolean = true;
   emergency_contact_name?: string;
   emergency_contact_number?: string;
   emergency_contact_relationship?: string;

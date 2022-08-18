@@ -31,11 +31,8 @@ export default function Profile() {
         const updatedUser = await api.me.update(values);
         updateUser({
           ...user,
-          first_name: updatedUser.first_name,
-          last_name: updatedUser.last_name,
-          name: updatedUser.name,
-          contact_number: updatedUser.contact_number,
-          cell_number: updatedUser.cell_number
+          ...updatedUser,
+          company: user.company,
         });
         toast.success(t("successfully_saved_information"));
       }
@@ -92,7 +89,6 @@ export default function Profile() {
             className="col-12 mt-1"
             label="EMAIL"
             name="email"
-            readOnly
             placeholder
             formik={form}
           />

@@ -143,9 +143,9 @@ export default function Import() {
                     const desc = schemaDescribe.fields[header];
                     if (col) {
                         switch (desc.type) {
-                            case "boolean": entity[header] = col === "Y"; break;
-                            case "array": entity[header] = col.split(","); break;
-                            default: entity[header] = col;
+                            case "boolean": entity[header] = col.trim().toLowerCase().startsWith("y") || col.toLowerCase().startsWith("t"); break;
+                            case "array": entity[header] = col.split(",").map(v => v.trim()).filter(v => !!v); break;
+                            default: entity[header] = col.trim();
                         }
 
                         switch (header) {

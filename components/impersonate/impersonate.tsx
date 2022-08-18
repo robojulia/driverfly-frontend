@@ -22,7 +22,7 @@ export default function Impersonate() {
 
     const { t } = useTranslation();
 
-    const [ open, setOpen ] = useState(false);
+    const [open, setOpen] = useState(false);
 
     const router = useRouter();
 
@@ -30,13 +30,13 @@ export default function Impersonate() {
      * 
      * @param {React.MouseEvent<HTMLelement>} e 
      */
-     const onClick = (e) => {
+    const onClick = (e) => {
         setOpen(true);
     };
 
-    const [ companies, setCompanies ] = useState<CompanyEntity[]>([]);
+    const [companies, setCompanies] = useState<CompanyEntity[]>([]);
 
-    const [ users, setUsers ] = useState<UserEntity[]>([]);
+    const [users, setUsers] = useState<UserEntity[]>([]);
 
     useEffectAsync(async () => {
         if (open) {
@@ -49,7 +49,7 @@ export default function Impersonate() {
             setCompanies(companies);
         }
 
-    }, [ open ]);
+    }, [open]);
 
     const onSubmit = async (e) => {
         const api = new AuthApi();
@@ -73,19 +73,6 @@ export default function Impersonate() {
             userId: yup.number().when("companyId", {
                 is: -1,
                 then: yup.number().required().nullable()
-            }).test((value, context) => {
-                if (!value) return true;
-
-                console.log("UserId", value);
-
-                const user = users.find(v => v.id == value);
-
-                if (!user.activated) return context.createError({
-                    path: context.path,
-                    message: t("NOT_ACTIVATED")
-                });
-
-                return true;
             }).nullable()
         }),
         onSubmit: onSubmit
@@ -111,7 +98,7 @@ export default function Impersonate() {
             setUsers(await api.list(form.values.companyId));
         } else setUsers([]);
 
-    }, [ form.values.companyId ]);
+    }, [form.values.companyId]);
 
     /**
      * 
@@ -130,9 +117,9 @@ export default function Impersonate() {
     if (!isSuperAdmin) return null;
 
     return (<>
-        <Dropdown.Item
+        <Dropdown.Item className="text-dark"
             onClick={onClick}
-            >
+        >
             {t("IMPERSONATE")}
         </Dropdown.Item>
         <ViewModal
@@ -140,15 +127,15 @@ export default function Impersonate() {
             onCloseClick={() => setOpen(false)}
             show={open}
             footer={<>
-            {
-                isImpersonating &&
-                <Button disabled={!canSubmit} variant="secondary" onClick={onRestoreClick}>
-                    <ArrowCounterclockwise /> {t("RESTORE")}
-                </Button>
-            }
-            <Button disabled={!canSubmit} onClick={e => form.submitForm()}>{t("IMPERSONATE")}</Button>
+                {
+                    isImpersonating &&
+                    <Button disabled={!canSubmit} variant="secondary" onClick={onRestoreClick}>
+                        <ArrowCounterclockwise /> {t("RESTORE")}
+                    </Button>
+                }
+                <Button disabled={!canSubmit} onClick={e => form.submitForm()}>{t("IMPERSONATE")}</Button>
             </>}
-            >
+        >
             <form>
                 <Row>
                     <BaseSelect
@@ -169,7 +156,7 @@ export default function Impersonate() {
                         placeholder
                         options={users}
                         valueKey="id"
-                        createLabel={c => `${c.name} (#${c.id}) ${c.activated ? "" : `*${t("NOT_ACTIVATED")}*`}`}
+                        createLabel={c => `${c.name} (#${c.id})`}
                         formik={form}
                     />
 

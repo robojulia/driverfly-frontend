@@ -125,7 +125,11 @@ export function cityRegexValidation() {
 export function zipCodeRegexValidation() {
   const { t } = useTranslation();
 
-  return yup.string().matches(/^[0-9]+$/, t("ZIP_CODE_REGEX_VALIDATION_MESSAGE")).min(5).max(5).nullable();
+  return yup.string()
+    .matches(/^[0-9]+$/, t("ZIP_CODE_REGEX_VALIDATION_MESSAGE"))
+    .min(5, t("ZIP_CODE_MIN_VALIDATION_MESSAGE"))
+    .max(5, t("ZIP_CODE_MAX_VALIDATION_MESSAGE"))
+    .nullable();
 }
 
 // export default {

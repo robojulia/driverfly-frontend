@@ -14,6 +14,8 @@ export default function EditUser({ id }) {
     const router = useRouter();
     const { t } = useTranslation();
 
+    const { company } = useAuth();
+
     const backPath = `/dashboard/company/settings/users/${id}`;
 
     const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
@@ -26,7 +28,15 @@ export default function EditUser({ id }) {
         if (id) {
             const api = new UserApi();
 
-            const entity = await api.findById(+id);
+            let entity = null
+            
+            try {
+                entity = await api.findById(+id);
+            }
+            catch (e) {
+                // silent error for now
+                entity = null;
+            }
 
             if (entity) setUser(entity);
             else {
@@ -47,7 +57,7 @@ export default function EditUser({ id }) {
             <UserForm
                 entity={user}
                 onSaveComplete={goBack}
-                onSaveError={goBack}
+                // onSaveError={goBack}
                 />
         </ChildPageLayout>
     );

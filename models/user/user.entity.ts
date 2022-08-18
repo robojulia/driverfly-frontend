@@ -24,6 +24,8 @@ export class UserEntity {
     language?: string;
     contact_number?: string;
     cell_number?: string;
+    emailTokenTimestamp?: Date | string;
+    phoneTokenTimestamp?: Date | string;
     company?: CompanyEntity;
     photo?: DocumentEntity;
 
@@ -36,7 +38,7 @@ export class UserEntity {
         return yup.object({
             first_name: yup.string().required().nullable(),
             last_name: yup.string().required().nullable(),
-            email: yup.string().required().nullable(),
+            email: yup.string().email().required().nullable(),
             contact_number: yup.string().nullable(),
             cell_number: yup.string().nullable(),
             timezone: yup.string().nullable(),

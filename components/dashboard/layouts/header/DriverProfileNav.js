@@ -10,30 +10,30 @@ import { useAuth } from "../../../../hooks/useAuth";
 
 export default function DriverProfileNav() {
 
-  const { user } = useAuth();
+    const { user } = useAuth();
 
-  const { t } = useTranslation();
+    const { t } = useTranslation();
 
-  const [dropdownOpen, setDropdownOpen] = React.useState(false);
+    const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
-  const toggle = () => setDropdownOpen((prevState) => !prevState);
+    const toggle = () => setDropdownOpen((prevState) => !prevState);
 
 
-  return (
-    <>
-      <div className="profile profile-logo">
-        <Dropdown show={dropdownOpen} onToggle={toggle} >
-          <Dropdown.Toggle variant="light">
-            < UserPhoto className="rounded-circle" width="30" height="30" />
-            <span>{user?.first_name}  {user?.last_name}</span>
-          </Dropdown.Toggle >
-          <Dropdown.Menu>
-            <Impersonate />
-            <LogoutButton />
-          </Dropdown.Menu>
-        </Dropdown>
-      </div>
-    </>
-  )
+    return (
+        <>
+            <div className="profile profile-logo">
+                <Dropdown show={dropdownOpen} onToggle={toggle} >
+                    <Dropdown.Toggle variant="light">
+                        < UserPhoto className="rounded-circle" width="30" height="30" />
+                        <span>{user?.first_name}  {user?.last_name}</span>
+                    </Dropdown.Toggle >
+                    <Dropdown.Menu>
+                        <Impersonate />
+                        <LogoutButton className="text-dark" />
+                    </Dropdown.Menu>
+                </Dropdown>
+            </div>
+        </>
+    )
 }
 

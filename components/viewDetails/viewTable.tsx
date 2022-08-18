@@ -38,7 +38,7 @@ export default function ViewTable<T>(props: ViewTableProps<T>) {
                 }
                 {items?.map((item, i) => (
                     <tr key={i}>
-                        {headerKeys?.map(v => (<td>{item[v]}</td>))}
+                        {headerKeys?.map(v => (<td key={v}>{item[v]}</td>))}
                     </tr>
                 ))}
             </tbody>

@@ -25,6 +25,7 @@ import { BasicEntity } from '../BasicEntity.entity';
 import { JobPayFrequency } from '../../enums/jobs/job-pay-frequency.enum';
 import { JobDrugTestType } from '../../enums/jobs/job-drug-test-type.enum';
 import { numberRangeEnd, numberRangeStart } from '../../utils/yup';
+import { JobPreferredLocation } from '../../enums/jobs/job-preferred-location.enum';
 
 export class JobEntity {
     id?: number;
@@ -37,6 +38,7 @@ export class JobEntity {
     drivers_needed?: number;
     expiry_date?: string | Date;
     geography?: JobGeography;
+    preferred_location?:JobPreferredLocation;
     schedule?: JobSchedule;
     schedule_other?: string;
     employment_type?: JobEmploymentType;
@@ -68,7 +70,7 @@ export class JobEntity {
     required_skills_other?: string;
     required_equipment?: JobEquipmentEntity[] = [];
     required_endorsement?: DriverEndorsement[] = [];
-    transmission_type_experience?: string;
+    transmission_type_experience?: VehicleTransmissionType[] = [];
     max_applicant_radius?: number = 100;
     must_pass_drug_test?: boolean = true;
     drug_test_type?: JobDrugTestType[] = [];
@@ -80,6 +82,7 @@ export class JobEntity {
     max_moving_violations?: number;
     safety_requirements_other?: string;
     created_at?: string | Date;
+    applicantsCount?: number;
 
     static yupSchema() {
         return yup.object({
@@ -89,6 +92,7 @@ export class JobEntity {
             drivers_needed: yup.number().min(0).nullable(),
             expiry_date: yup.date().nullable(),
             geography: (yup.string() as any).enum(JobGeography).required().nullable(),
+            preferred_location: (yup.string() as any).enum(JobPreferredLocation).required().nullable(),
             max_applicant_radius: yup.number().min(1)
                 .when("geography", {
                     is: JobGeography.LOCAL,
