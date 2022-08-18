@@ -25,6 +25,7 @@
     "contact": "Contact",
     "find_new_job": "Find New Job",
     "preferred_geography": "Preferred Geography",
+    "PREFERRED_LOCATION":"Preferred Loaction",
     "job_title": "Job Title",
     "job_information": "Job Information",
     "job_description": "Job Description",
@@ -116,6 +117,11 @@
     "authorize_companies_contact_past_employers": "Authorize companies to contact my past employers",
     "matching_preferences": "Preferred Job Type",
     "JobGeography": {
+        "OTR": "OTR",
+        "REGIONAL": "Regional",
+        "LOCAL": "Local"
+    },
+    "JobPreferredLocation": {
         "OTR": "OTR",
         "REGIONAL": "Regional",
         "LOCAL": "Local"
