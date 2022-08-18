@@ -1,186 +1,161 @@
-import style from '../../../public/dashboard/styles/css/Driver/free-resources.module.css';
 import FullLayout from "../../../components/dashboard/layouts/FullLayout";
-import { Container, Row, Col } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 import Link from 'next/link';
-import { Facebook, Instagram, Linkedin, Pinterest, Plus, Twitter } from 'react-bootstrap-icons';
-
-import Image from "next/image";
+import { ArrowUpRightSquare } from 'react-bootstrap-icons';
 
 import { useTranslation } from '../../../hooks/useTranslation';
 import { SocialLinks } from '../../../components/social/social-links';
-import Card from 'react-bootstrap/Card';
-
+import PageLayout from '../../../components/layouts/page/PageLayout';
+import ViewCard from '../../../components/viewDetails/viewCard';
 
 export default function FreeResources() {
 
     const { t } = useTranslation();
 
-    return (
-        <>
-            <Container fluid>
-                <Row >
-                    <h1>{t("FREE_RESOURCES")}</h1>
-                </Row>
-                <Row className='mt-5'>
-                    <Col className='col-lg-4 col-md-4  col-12 my-lg-0 my-4'>
-                        <Card className='border-0 shadow-sm'>
-                            <Card.Body>
-                                <Card.Title>
-                                    <Link href="/third-party-resources">
-                                        <a target="_blank" className={style.link_style}>
-                                            {t("vendor_discounts")}
-                                        </a>
-                                    </Link>
-                                </Card.Title>
-                                <Card.Text>
-                                    {t("vendor_discounts_paragraph")}
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
-                        <Card className='border-0 shadow-sm'>
-                            <Card.Body>
-                                <Card.Title>
-                                    <Link href="https://ctrecruiting.com/pay-calculator">
-                                        <a target="_blank" className={style.link_style}>
-                                            {t("salary_comparison_tool")}
-                                        </a>
-                                    </Link>
-                                </Card.Title>
-                                <Card.Text>
-                                    {t("salary_comparison_tool_paragraph")}
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
-                        <Card className='border-0 shadow-sm'>
-                            <Card.Body>
-                                <Card.Title>
-                                    <Link href="/dashboard/driver/settings/applicant">
-                                        <a target="_blank" className={style.link_style}>
-                                            {t("access_your_mvr")}
-                                        </a>
-                                    </Link>
-                                </Card.Title>
-                                <Card.Text>
-                                    {t("access_your_mvr_paragraph")}
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
-                <Row className={style.mt_90}>
-                    <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
-                        <Card className='border-0 shadow-sm'>
-                            <Card.Body>
-                                <Card.Title>
-                                    <Link href="#">
-                                        <a target="_blank" className={style.link_style}>
-                                            {t("refer_a_friend_program")}
-                                        </a>
-                                    </Link>
-                                </Card.Title>
-                                <Card.Text>
-                                    {t("refer_a_friend_paragraph")}
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
-                        <Card className='border-0 shadow-sm'>
-                            <Card.Body>
-                                <Card.Title>
-                                    <Link href="#">
-                                        <a target="_blank" className={style.link_style}>
-                                            {t("enter_sweepstakes")}
-                                        </a>
-                                    </Link>
-                                </Card.Title>
-                                <Card.Text>
-                                    {t("enter_sweepstakes_paragraph")}
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
-                        <Card className='border-0 shadow-sm'>
-                            <Card.Body>
-                                <Card.Title>
-                                    <Link href="https://drivergrowth.com/">
-                                        <a target="_blank" className={style.link_style}>
-                                            {t("become_your_own_boss")}
-                                        </a>
-                                    </Link>
-                                </Card.Title>
-                                <Card.Text>
-                                    {t("become_your_own_boss_paragraph")}
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
-                <Row className={style.mt_90}>
-                    <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
-                        <Card className='border-0 shadow-sm'>
-                            <Card.Body>
-                                <Card.Title>
-                                    <Link href="#">
-                                        <a target="_blank" className={style.link_style}>
-                                            {t("connect_with_our_community")}
-                                        </a>
-                                    </Link>
-                                </Card.Title>
-                                <Card.Text>
-                                    {t("join_our_driverfly_community")}
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
-                        <Card className='border-0 shadow-sm'>
-                            <Card.Body>
-                                <Card.Title>
-                                    <Link href="#">
-                                        <a target="_blank" className={style.link_style}>
-                                            {t("FOLLOW_US")}
-                                        </a>
-                                    </Link>
-                                </Card.Title>
-                                <Card.Text>
-                                    {t("follow_us_paragraph")}
-                                    <br />
-                                    <br />
-                                    <SocialLinks
-                                        showText
-                                        iconSize={25}
-                                        breakComponent={<br />}
-                                    />
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                    <Col className='col-lg-4  col-md-4 col-12  my-lg-0 my-4'>
-                        <Card className='border-0 shadow-sm'>
-                            <Card.Body>
-                                <Card.Title>
-                                    <Link href="/#newsletter-section">
-                                        <a target="_blank" className={style.link_style}>
-                                            {t("sign_up_for_newsletter")}
-                                        </a>
-                                    </Link>
-                                </Card.Title>
-                                <Card.Text>
-                                    {t("sign_up_for_newsletter_paragraph")}
-                                </Card.Text>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
+    function renderLink(url) {
+        return (
+            <Link href={url}>
+                <Button
+                    size="sm"
+                    variant="primary"
+                >
+                    <ArrowUpRightSquare />
 
-            </Container>
-        </>
+                </Button>
+            </Link>
+        );
+    }
+
+    return (
+        <PageLayout
+            title="FREE_RESOURCES"
+        >
+            <Row>
+                <Col>
+                    <ViewCard
+                        title="vendor_discounts"
+                        actions={renderLink("/third-party-resources")}
+                    >
+                        {t("vendor_discounts_paragraph")}
+                    </ViewCard>
+                </Col>
+                <Col>
+                    <ViewCard
+                        title="salary_comparison_tool"
+                        actions={renderLink("https://ctrecruiting.com/pay-calculator")}
+                    >
+                        {t("salary_comparison_tool_paragraph")}
+                    </ViewCard>
+                </Col>
+                <Col>
+                    <ViewCard
+                        title="access_your_mvr"
+                        actions={renderLink("/dashboard/driver/settings/applicant")}
+                    >
+                        {t("access_your_mvr_paragraph")}
+                    </ViewCard>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <ViewCard
+                        title="refer_a_friend_program"
+                        actions={renderLink("https://ctrecruiting.com/referral")}
+                    >
+                        {t("refer_a_friend_paragraph")}
+                    </ViewCard>
+                </Col>
+                <Col>
+                    <ViewCard
+                        title="enter_sweepstakes"
+                        // actions={(
+                        //     <Link href="/dashboard/driver/settings/applicant">
+                        //         <Button
+                        //             size="sm"
+                        //             variant="primary"
+                        //         >
+                        //             <ArrowUpRightSquare />
+
+                        //         </Button>
+                        //     </Link>
+                        // )}
+                    >
+                        {t("enter_sweepstakes_paragraph")}
+                    </ViewCard>
+                </Col>
+                <Col>
+                    <ViewCard
+                        title="become_your_own_boss"
+                        actions={renderLink("https://drivergrowth.com/")}
+                    >
+                        {t("become_your_own_boss_paragraph")}
+                    </ViewCard>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <ViewCard
+                        title="connect_with_our_community"
+                        // actions={(
+                        //     <Link href="/dashboard/driver/settings/applicant">
+                        //         <Button
+                        //             size="sm"
+                        //             variant="primary"
+                        //         >
+                        //             <ArrowUpRightSquare />
+
+                        //         </Button>
+                        //     </Link>
+                        // )}
+                    >
+                        {t("join_our_driverfly_community")}
+                    </ViewCard>
+                </Col>
+                <Col>
+                    <ViewCard
+                        title="follow_us"
+                        // actions={(
+                        //     <Link href="/dashboard/driver/settings/applicant">
+                        //         <Button
+                        //             size="sm"
+                        //             variant="primary"
+                        //         >
+                        //             <ArrowUpRightSquare />
+
+                        //         </Button>
+                        //     </Link>
+                        // )}
+                    >
+                        {t("follow_us_paragraph")}
+                        <br />
+                        <br />
+                        <SocialLinks
+                            showText
+                            iconSize={25}
+                            breakComponent={<br />}
+                            />
+                    </ViewCard>
+                </Col>
+                <Col>
+                    <ViewCard
+                        title="sign_up_for_newsletter"
+                        // actions={(
+                        //     <Link href="https://drivergrowth.com/">
+                        //         <Button
+                        //             size="sm"
+                        //             variant="primary"
+                        //         >
+                        //             <ArrowUpRightSquare />
+
+                        //         </Button>
+                        //     </Link>
+                        // )}
+                        >
+                        {t("sign_up_for_newsletter_paragraph")}
+                    </ViewCard>
+                </Col>
+            </Row>
+        </PageLayout>
     )
 };
 

@@ -33,18 +33,18 @@ function BaseControl ( { formik, required, className, label, children, touched, 
     }
   }
 
-return (
-    <div className={className}>
+  return (
+    <div className={`${className || ""}`}>
       {label && <>
         <label>{t(label)}{required ? "*" : ""}:</label>
         <br />
       </>}
       <InputGroup className="flex-nowrap">
-        {prepend}
+        {prepend && <div className="input-group-prepend">{prepend}</div>}
         {children}
-        {append}
+        {append && <div className="input-group-append">{append}</div>}
       </InputGroup>
-      {touched && error && (typeof error === "string") ? <span className="text-danger small">{t(error)}</span> : null}
+      {touched && error && typeof error === "string" && <span className="text-danger small">{t(error)}</span>}
       {after}
     </div>
   )

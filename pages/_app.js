@@ -4,6 +4,7 @@ import "../public/css/style.css";
 import "../public/css/responsive.css";
 import "../public/dashboard/styles/css/global.css";
 import "../public/css/buttons/buttons.css";
+import "../public/css/cards/cards.css";
 import "../public/css/links/links.css";
 
 // init bootstrap
