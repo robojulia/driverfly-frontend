@@ -4,12 +4,20 @@
     white-space: nowrap;
     height: 400px;
     border: 1px solid #5dcac4;
-    border-radius: 25px;
+    border-top-left-radius	: 25px;
+    border-top-right-radius	: 25px;
+
     /* border: 1px solid #5dcac4;
     border-radius: 25px;
     padding: 25px; */
 }
-
+.table_wrapper_overflowX::-webkit-scrollbar {
+    background: #f1f1f1; 
+    display: block;
+  }
+  .table_wrapper_overflowX::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
 .table_overflowX {
     margin-top: 5px;
 }
