@@ -2,6 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Akronim&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
 @import '../css/hover-min.css';
+
 html,
 body,
 div,
@@ -86,7 +87,7 @@ input,
 textarea,
 button,
 li {
-    margin: 0 ;
+    margin: 0;
     padding: 0;
     border: 0;
     list-style: none;
@@ -179,7 +180,8 @@ h2 {
     min-height: 186px;
     position: relative;
 }
-.header-sec .navbar{
+
+.header-sec .navbar {
     width: 80%;
     display: inline-block;
     text-align: end;
@@ -201,9 +203,10 @@ h2 {
 
 
 .ml-30 {
-    margin-left:30px;
+    margin-left: 30px;
 }
- .nav-item {
+
+.nav-item {
     padding: 0px 0px 0px 30px;
 }
 
@@ -214,17 +217,20 @@ h2 {
     padding: 20px 10px;
 }
 
-.nav-link:hover a{
+.nav-link:hover a {
     border-bottom: #000;
 }
+
 .header-sec .dropdown-menu {
     background: #171717 !important;
-    padding: 12px 20px  !important;
-    left: 9px  !important;
-    border-radius: 0px  !important;
-    transition: all 0.3s  !important;
+    padding: 12px 20px !important;
+    left: 9px !important;
+    border-radius: 0px !important;
+    transition: all 0.3s !important;
 }
-.dropdown-item:focus, .dropdown-item:hover {
+
+.dropdown-item:focus,
+.dropdown-item:hover {
     background-color: #e9ecef00 !important;
 }
 
@@ -238,6 +244,7 @@ h2 {
 .dropdown-item:hover {
     color: white !important;
 }
+
 .nav-link i.fa.fa-bell-o {
     font-size: 25px;
 }
@@ -250,6 +257,7 @@ li:hover ul {
 .filter-sec {
     padding: 30px 0px;
 }
+
 .heading-label {
     font-size: 20px;
 }
@@ -376,6 +384,7 @@ li:hover ul {
 .show-more:focus {
     color: #2da2af;
 }
+
 .btn.btn-danger_padded {
     background: #2da2af;
     border-color: #2da2af;
@@ -477,6 +486,7 @@ li:hover ul {
     height: 20px;
     margin-right: 15px;
 }
+
 .media:hover {
     border-color: #2da2af;
 }
@@ -574,6 +584,7 @@ input[type='range']::-webkit-slider-runnable-track {
 input[type='range']::-webkit-slider-thumb {
     border-color: #2EC8C4;
 }
+
 .rangeslider {
     position: relative !important;
     height: 60px;
@@ -704,6 +715,7 @@ input[type='range']::-webkit-slider-thumb {
     font-weight: 600;
     font-family: sans-serif;
 }
+
 .footer-inner {
     margin-bottom: 30px;
 }
@@ -787,7 +799,8 @@ input[type='range']::-webkit-slider-thumb {
     text-transform: capitalize;
 
 }
-.top-links-sec ol li .current_page{
+
+.top-links-sec ol li .current_page {
     color: #000;
 }
 
@@ -945,7 +958,6 @@ input[type='range']::-webkit-slider-thumb {
 
 .card-header {
     background-color: white !important;
-    border-radius: 5px !important;
     cursor: pointer;
 }
 
@@ -1021,6 +1033,7 @@ input[type='range']::-webkit-slider-thumb {
 .about_work svg {
     margin: 0 auto;
 }
+
 .how-it-work-sec .card,
 .driver-sec .card {
     text-align: center;
@@ -1053,6 +1066,7 @@ input[type='range']::-webkit-slider-thumb {
     color: #2ec8c4;
     margin: 30px 0px 50px;
 }
+
 .who-we-serve-inner {
     margin-bottom: 35px;
     min-height: 235px;
@@ -1068,6 +1082,7 @@ input[type='range']::-webkit-slider-thumb {
     line-height: 28px;
     margin-bottom: 25px;
 }
+
 img.who-we-img.img-fluid {
     width: 100%;
     margin-bottom: 20px;
@@ -1121,7 +1136,8 @@ img.who-we-img.img-fluid {
     margin: 100px 10px 20px;
     box-shadow: 1px 1px 4px 0 rgb(0 0 0 / 9%);
 }
-.Slider-container-bg::before{
+
+.Slider-container-bg::before {
     content: '';
     background: #fff;
     height: 200px;
@@ -1294,9 +1310,11 @@ img.who-we-img.img-fluid {
     width: 100%;
     height: 70px;
 }
-.hero-search .form-control{
+
+.hero-search .form-control {
     border: 0;
 }
+
 .hero-search .input-group {
     width: 35% !important;
     height: 70px;
@@ -1555,7 +1573,7 @@ img.who-we-img.img-fluid {
 }
 
 .sidebar-inner {
-    padding: 25px;
+    padding: 25px 0px;
     background: #fafafa;
     margin-top: 28px;
 }
@@ -1620,6 +1638,7 @@ img.who-we-img.img-fluid {
 .icon.text-theme {
     margin-right: 15px;
 }
+
 .socials-apply .title {
     text-align: center;
     margin: 10px 0 31px;
@@ -1656,13 +1675,11 @@ img.who-we-img.img-fluid {
 }
 
 .share-links .title {
-    color: #222222;
     margin: 0px;
     font-size: 16px;
 }
 
 .share-links svg {
-    color: #2EC8C4;
     margin-left: 0px;
     transition: all 0.4s ease-in-out 0s;
     padding: 12px 10px 10px 14px;
@@ -1672,11 +1689,6 @@ img.who-we-img.img-fluid {
     width: 40px;
     height: 40px;
     cursor: pointer;
-}
-
-.share-links:hover svg {
-    color: #2EC8C4;
-    background: #fff;
 }
 
 .pt-160 {
@@ -1787,9 +1799,9 @@ li.link-wrapper>a.active {
     border-bottom: 1px solid #ced4da;
 }
 
-.ort-general a {
+/* .ort-general a {
     color: #000 !important;
-}
+} */
 
 .ort-general p {
     margin: 0px;
@@ -1826,9 +1838,11 @@ li.link-wrapper>a.active {
 .vehicles_container tbody tr td {
     width: 11% !important;
 }
+
 .select_dropdown .dropdown-item:hover {
-   color: #5c636a !important;
+    color: #5c636a !important;
 }
+
 /* new css code */
 .hire-driver-bg {
     background: #D1DDDD;
@@ -1853,7 +1867,7 @@ li.link-wrapper>a.active {
 }
 
 .hire-driver-left::before {
-    background:  linear-gradient(to bottom, #1D4354 0%, rgb(0 123 255 / 25%) 100%), url("/img/black-man-truck-driver-near-his-truck-parked-in-a-FD6XPWU.jpeg");
+    background: linear-gradient(to bottom, #1D4354 0%, rgb(0 123 255 / 25%) 100%), url("/img/black-man-truck-driver-near-his-truck-parked-in-a-FD6XPWU.jpeg");
     content: "";
     background-size: cover;
     position: absolute;
@@ -1935,6 +1949,7 @@ li.link-wrapper>a.active {
     position: relative;
     transition: all ease-in-out 0.4s;
 }
+
 .get-feature-section {
     position: relative;
     height: 400px;
@@ -1970,7 +1985,8 @@ li.link-wrapper>a.active {
     font-size: 18px;
     position: relative;
 }
-.news-letter-signup-sec{
+
+.news-letter-signup-sec {
     height: 350px;
     background-color: #17161A;
     color: #fff;
@@ -1979,11 +1995,13 @@ li.link-wrapper>a.active {
     align-items: center;
 
 }
-.news-letter-signup-sec p{
-font-size: 16px;
-line-height: 30px;
-text-align: center;
+
+.news-letter-signup-sec p {
+    font-size: 16px;
+    line-height: 30px;
+    text-align: center;
 }
+
 /* muli crousal styling */
 .react-multi-carousel-dot button {
     border-color: #2EC8C4 !important;
@@ -2005,47 +2023,60 @@ text-align: center;
 .featured-companies:hover {
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
-.my_job_listing .sc-jqUVSM:hover  {
-    background:#1b4454;
+
+.my_job_listing .sc-jqUVSM:hover {
+    background: #1b4454;
     color: #ffffff;
 }
 
-.my_job_listing .sc-jqUVSM:active  {
-    background:#1b4454;
+.my_job_listing .sc-jqUVSM:active {
+    background: #1b4454;
     color: #ffffff;
 }
+
 /* Terms And Policies & Privacy Policies  */
-.terms__and__policies__container, .privacy__policies__container {
+.terms__and__policies__container,
+.privacy__policies__container {
     text-align: justify;
 }
-.terms__and__policies__container ol li{
+
+.terms__and__policies__container ol li {
     list-style: decimal;
     color: #6c757d;
 }
-.terms__and__policies__container a, .privacy__policies__container a {
+
+.terms__and__policies__container a,
+.privacy__policies__container a {
     color: #000;
     text-decoration: none;
 }
-.terms__and__policies__container a:hover, .privacy__policies__container a:hover {
+
+.terms__and__policies__container a:hover,
+.privacy__policies__container a:hover {
     color: #2da2af;
     text-decoration: none;
 }
-.terms__and__policies__container  h5, .terms__and__policies__container  h4 {
+
+.terms__and__policies__container h5,
+.terms__and__policies__container h4 {
     font-size: 16px;
     font-weight: 700;
     color: #6a6a6a;
 }
+
 .privacy__policies__container ol li {
     list-style: circle !important;
     color: #6c757d !important;
 }
+
 /* Custom Trucker Recruiting section */
-.custom-trucker-title{
+.custom-trucker-title {
     font-size: 25px;
     margin: 0;
     line-height: 60px;
 }
-.custom-trucker-follow-btn{
+
+.custom-trucker-follow-btn {
     width: 200px;
     height: 45px;
     border-radius: 4px;
@@ -2053,16 +2084,19 @@ text-align: center;
     transition: all ease-in-out 0.5s;
     color: #fff;
 }
-.custom-trucker-follow-btn:hover{
+
+.custom-trucker-follow-btn:hover {
     border-color: #c4c4c4;
     background-color: #c4c4c4;
 }
-.custom-trucker-review-btn{
+
+.custom-trucker-review-btn {
     width: 200px;
     height: 45px;
     border-radius: 4px;
 }
-.social-profile-sec{
+
+.social-profile-sec {
     padding: 15px;
     margin-bottom: 15px;
     background: #fafafa;
@@ -2077,10 +2111,15 @@ text-align: center;
 .text-blue {
     color: #007bff !important;
 }
+
 input[type=checkbox] {
     padding: 7px !important;
 }
-.dialer__close .btn-close{
+
+.dialer__close .btn-close {
     color: #fff !important;
     background-color: #fff !important;
+}
+.get_result_text{
+    color: #5dcac4 !important;
 }

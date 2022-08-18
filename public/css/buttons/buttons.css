@@ -129,6 +129,12 @@
     color: #fff !important;
 }
 
+.badge-primary {
+    background: #2da2af !important;
+    border-color: #2da2af !important;
+    color: #fff !important;
+}
+
 .btn-primary:hover {
     background: #2da2af !important;
     border-color: #2da2af;

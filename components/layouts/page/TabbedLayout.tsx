@@ -43,8 +43,8 @@ export function TabbedLayout(props: TabbedLayoutProps) {
                 item: value
             } as TabbedLayoutItem;
         })
-        .filter(value => !!value.hidden);
-
+        .filter(value => value.hidden !== true);
+    
     return (
         <Tabs id={id} className={className}>
             <TabList>

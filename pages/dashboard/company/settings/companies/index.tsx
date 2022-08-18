@@ -5,7 +5,7 @@ import { Col, Row } from "reactstrap";
 import { useAuth } from '../../../../../hooks/useAuth';
 import { useRouter } from "next/router"
 import { useTranslation } from "../../../../../hooks/useTranslation";
-import {EyeFill, PenFill, TrashFill} from 'react-bootstrap-icons';
+import { EyeFill, PenFill, TrashFill } from 'react-bootstrap-icons';
 import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
 import { Status } from '../../../../../enums/status.enum';
 import { useEffectAsync } from '../../../../../utils/react';
@@ -24,13 +24,13 @@ export default function CompanyList() {
 
   const columnSettingKey = getDataTableColumnKey("company", user, "companies");
 
-  const [ companies, setCompanies ] = useState([]);
+  const [companies, setCompanies] = useState([]);
 
   useEffectAsync(async () => {
     const api = new CompanyApi();
     const v = await api.list({ withPhoto: true });
     setCompanies(v.filter((u) => u.id !== company.id && u.status === Status.ACTIVE));
-  }, [ company ]);
+  }, [company]);
 
   const onAddClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -59,25 +59,38 @@ export default function CompanyList() {
   }
 
   return (
-    <PageLayout 
-      title="COMPANIES" 
+    <PageLayout
+      title="COMPANIES"
       actions={
         <>
           {
             hasPermission("CanCreateCompany") &&
-              <Button variant='primary' onClick={onAddClick}>
-                + {t("CREATE")}
-              </Button>
+            <Button variant='primary' onClick={onAddClick}>
+              + {t("CREATE")}
+            </Button>
           }
         </>
       }>
       <ViewDataTable<CompanyEntity>
         columnSettingKey={columnSettingKey}
+        customStyles={{
+          headCells: {
+              style: {
+                  background: "#5bb0b9",
+                  color: "white"
+              },
+          },
+      }}
         columns={[
+          {
+            id: "id",
+            name: "ID",
+            selector: j => j.id,
+          },
           {
             id: "photo",
             name: "PHOTO",
-            cell: (v) => v.photo && <img className="img-thumbnail" style={{maxWidth: "100px"}} src={v.photo.path} />
+            cell: (v) => v.photo && <img className="img-thumbnail" style={{ maxWidth: "100px" }} src={v.photo.path} />
           },
           {
             id: "name",
@@ -93,24 +106,24 @@ export default function CompanyList() {
           },
         ]}
         actions={j => ([
-            {
-                onClick: e => onViewClick(j.id),
-                icon: EyeFill,
-                label: "VIEW",
-                hide: !hasPermission("CanViewCompany")
-            },
-            {
-                onClick: e => onEditClick(j.id),
-                icon: PenFill,
-                label: "EDIT",
-                hide: !hasPermission("CanUpdateCompany")
-            },
-            {
-                onClick: e => onDeleteClick(j.id),
-                icon: TrashFill,
-                label: "DELETE",
-                hide: !hasPermission("CanDeleteCompany")
-            }
+          {
+            onClick: e => onViewClick(j.id),
+            icon: EyeFill,
+            label: "VIEW",
+            hide: !hasPermission("CanViewCompany")
+          },
+          {
+            onClick: e => onEditClick(j.id),
+            icon: PenFill,
+            label: "EDIT",
+            hide: !hasPermission("CanUpdateCompany")
+          },
+          {
+            onClick: e => onDeleteClick(j.id),
+            icon: TrashFill,
+            label: "DELETE",
+            hide: !hasPermission("CanDeleteCompany")
+          }
         ])}
         items={companies}
       />

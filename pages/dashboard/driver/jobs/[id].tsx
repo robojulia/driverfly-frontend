@@ -71,7 +71,6 @@ export default function JobDetail({ jobDetail, relatedJobs }: JobDetailProps) {
                         {
                           jobDetail.location &&
                           <p className="pr-4">
-                            {/* <i className="fa fa-map-marker mr-2" aria-hidden="true"></i> */}
                             {buildAddress(jobDetail.location)}
                           </p>
                         }

@@ -3,7 +3,7 @@ import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayo
 import { useEffect, useState } from "react";
 import React from "react";
 
-import { PenFill, TrashFill, Eye, EyeFill } from 'react-bootstrap-icons';
+import { PenFill, TrashFill, Eye, EyeFill, Plus } from 'react-bootstrap-icons';
 
 import PageLayout from "../../../../components/layouts/page/PageLayout";
 
@@ -19,6 +19,8 @@ import ViewDataTable, { getDataTableColumnKey } from "../../../../components/vie
 import OverlyPopover from "../../../../components/popover/overly-popover";
 import { useAuth } from "../../../../hooks/useAuth";
 import { useEffectAsync } from "../../../../utils/react";
+import Link from "next/link";
+import { Button } from "react-bootstrap";
 
 export default function JobListing() {
 
@@ -38,7 +40,7 @@ export default function JobListing() {
         const v = await api.list();
 
         setJobs(v);
-    }, [ user ], () => {
+    }, [user], () => {
         console.log("unloading page...")
     });
 
@@ -64,6 +66,10 @@ export default function JobListing() {
         router.push(`${router.pathname}/${id}/edit`);
     }
 
+    const onViewClick = (id: number) => {
+        router.push(`${router.pathname}/${id}`);
+    }
+
     const onDeleteClick = async (id: number) => {
         await api.remove(id);
 
@@ -79,20 +85,32 @@ export default function JobListing() {
         <PageLayout
             title="JOBS"
             actions={
-                <button className="theme-secondary-btn" onClick={onAddClick}>
-                    + {t("CREATE")}
-                </button>
+                <Button variant="primary" onClick={onAddClick}>
+                    <Plus /> {t("CREATE")}
+                </Button>
             }
         >
 
             <ViewDataTable<JobEntity>
                 columnSettingKey={columnSettingKey}
-
-                columns={[
+                customStyles={{
+                    headCells: {
+                        style: {
+                            background: "#5bb0b9",
+                            color: "white"
+                        },
+                    },
+                }}
+                 columns={[
+                    {
+                        id: "id",
+                        name: "ID",
+                        selector: j => j.id,
+                    },
                     {
                         id: "job_title",
                         name: "job_title",
-                        cell: job => (<OverlyPopover skipTranslate={true} header={t('job_title')} str={job.title} />),
+                        cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.title}</a></Link>),
                         selector: job => job.title,
                         hidable: false
                     },
@@ -106,6 +124,12 @@ export default function JobListing() {
                         id: "drivers_needed",
                         name: "drivers_needed",
                         selector: j => j.drivers_needed,
+                    },
+                    {
+                        id: "applicantsCount",
+                        name: "APPLICANTS",
+                        cell: j => (<Link href={`/dashboard/company/applicants?jobId=${j.id}&viewMode=applicant`}><a className="btn btn-link"><span className="badge badge-pill badge-primary">{j.applicantsCount}</span></a></Link>),
+                        selector: j => j.applicantsCount,
                     },
                     {
                         id: "expiration_date",
@@ -159,6 +183,11 @@ export default function JobListing() {
                         onClick: e => onPreviewClick(j.id, j.slug),
                         icon: Eye,
                         label: t("VIEW_{name}", { name: "POST" }, { translateProps: true })
+                    },
+                    {
+                        onClick: e => onViewClick(j.id),
+                        icon: Eye,
+                        label: "VIEW"
                     },
                     {
                         onClick: e => onEditClick(j.id),

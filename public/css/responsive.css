@@ -59,6 +59,9 @@
     img {
         width: 100% !important;
     }
+    .logo_container img{
+        width: 50% !important;
+    }
 
     .btn.btn-link {
         text-align: left;
@@ -308,8 +311,10 @@
         margin-top: 45px;
     }
 
-    .ort-btn .btn.btn-danger {
-        padding: 14px 20px;
+    .ort-btn .theme-primary-btn,.ort-btn .btn.btn-danger {
+        padding: 14px 0px !important;
+        width: 100% !important;
+        margin-top: 5px;
     }
 
     .footer-social-icons {
@@ -404,5 +409,11 @@
     .logo {
         width: 150px;
         border-right: solid 0px;
+    }
+}
+@media (max-width:600px) {
+
+    .logo_container img{
+        width: 100% !important;
     }
 }
