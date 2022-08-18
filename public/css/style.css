@@ -1044,8 +1044,8 @@ input[type='range']::-webkit-slider-thumb {
     border: 0;
 }
 
-.card:hover h5,
-.card:hover svg {
+.how-it-work-sec .card:hover h5,
+.how-it-work-sec .card:hover svg {
     color: white !important;
 }
 

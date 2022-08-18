@@ -28,6 +28,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f09433', end
                 < Ico size={iconSize} style={{ paddingRight: text ? "5px" : undefined }} />
                 {text}
             </a>
-        </Link>
+        </Link >
     );
 }
