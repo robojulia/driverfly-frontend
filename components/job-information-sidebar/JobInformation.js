@@ -26,7 +26,7 @@ export default function JonInformation({ job }) {
 
     return (
         <>
-            <div className="sidebar shadow-sm p-3 mb-5 bg-white rounded">
+            <div className="sidebar shadow-sm p-3 mb-5  rounded">
                 <h3>{t('job_information')}</h3>
 
                 <div className="sidebar-inner">

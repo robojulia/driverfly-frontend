@@ -9,19 +9,19 @@ export default function JobDescription({ job }) {
     return (
         <>
             <div className="job-deatails-inner">
-                <div className="shadow-sm p-3 mb-5 bg-white rounded">
+                <div className="shadow-sm p-3 mb-5  rounded">
                     <h3>{t('job_description')}</h3>
                     <p>{job.description_short}</p>
                     <p>{job.description}</p>
                 </div>
-                <div className="shadow-sm p-3 mb-5 bg-white rounded mt-3">
+                <div className="shadow-sm p-3 mb-5  rounded mt-3">
                     <h3>{t('BENEFITS')}</h3>
                     <p>
                         <ShowEnumFromString labelPrefix="JobBenefits" str={job.benefits} enumArray={JobBenefits} />
                         , {job.benefits_other}
                     </p>
                 </div>
-                <div className="shadow-sm p-3 mb-5 bg-white rounded mt-3">
+                <div className="shadow-sm p-3 mb-5  rounded mt-3">
                     <h3>{t('REQUIRED_SKILLS')}</h3>
                     <ul className="p-0">
                         {job.required_skills &&
