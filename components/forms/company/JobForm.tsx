@@ -55,7 +55,6 @@ import BasePercentInput from "../BasePercentInput";
 import BaseMilesInput from "../BaseMilesInput";
 import BaseHoursInput from "../BaseHoursInput";
 import { BaseListRowControl } from "../lists/BaseListRowControl";
-import { JobPreferredLocation } from "../../../enums/jobs/job-preferred-location.enum";
 
 export interface JobFormProps extends BaseFormProps<JobEntity> {
 
@@ -469,16 +468,7 @@ export function JobForm(props: JobFormProps) {
                                 formik={form}
                             />
                         }
-                        <BaseSelect
-                            className="col-12"
-                            label="PREFERRED_LOCATION"
-                            placeholder="PREFERRED_LOCATION"
-                            name="preferred_location"
-                            required
-                            formik={form}
-                            labelPrefix="JobPreferredLocation"
-                            enumType={JobPreferredLocation}
-                            />
+                        
                         <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                             <BaseSelect
                                 className={`col-${form.values.schedule === JobSchedule.OTHER ? 6 : 12}`}
