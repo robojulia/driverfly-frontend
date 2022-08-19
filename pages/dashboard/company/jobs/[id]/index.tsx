@@ -26,6 +26,12 @@ import { VehicleType } from "../../../../../enums/vehicles/vehicle-type.enum";
 import { version } from "os";
 import { JobEmploymentType } from "../../../../../enums/jobs/job-employment-type.enum";
 
+import CompanyPhoto from "../../../../../components/jobs/company-photo"
+import JobDescription from '../../../../../components/job-description/JobDescription'
+import { ArrowRight, GeoAltFill, CurrencyDollar } from "react-bootstrap-icons"
+import timeSince from "../../../../../utils/timeSince"
+import JobVehicles from "../../../../../components/jobs/job-vehicles"
+import JonInformation from '../../../../../components/job-information-sidebar/JobInformation'
 
 export default function ViewJob({ id }) {
     const router = useRouter();
@@ -106,6 +112,74 @@ export default function ViewJob({ id }) {
                 </ButtonGroup>
             )}
         >
+            <Row>
+                <Col>
+                <section className="top-links-sec ort-general">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-9">
+              <div className="ort-inner">
+                <div className="media align-items-center bg-transparent border-0 p-0">
+                  <span className="text-dark text-center text-decoration-none">
+                    <CompanyPhoto className="d-flex mr-4 truck-img mb-3" company={job.company} />
+                  </span>
+                  <div className="media-body">
+                    {/* <h6>Solo</h6> */}
+                    <h4 className="mt-0">
+                      {job.title}
+                      <span className="" data-toggle="tooltip"
+                        data-placement="top" title={job.title}>
+                      </span>
+                    </h4>
+                    <div className="job-date-author">
+                      {
+                        job.created_at &&
+                        <>
+                          {t('posted')} {timeSince(job.created_at)} {t('ago')}
+                        </>
+                      } {
+                        job?.company?.name &&
+                        <>
+                          {t('by')} <span role="button" className="employer text-theme">{job.company?.name}</span>
+                        </>
+                      }
+                    </div>
+                    <div className="job-metas">
+                      <div className="job-location d-flex align-items-center">
+                        {
+                          job.location &&
+                          <p className="pr-4">
+                            {buildAddress(job.location)}
+                          </p>
+                        }
+                      </div>
+                      <div className="job-metas">
+                        <p><CurrencyDollar />{job.min_weekly_pay ? job.min_weekly_pay : 0} - {job.max_weekly_pay ? job.max_weekly_pay : 0} {t('per week')}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="job-deatails-sec">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-8">
+                < JobDescription job={job} />
+                < JobVehicles job={job} />
+              </div>
+              <div className="col-lg-4">
+                < JonInformation job={job} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+                </Col>
+            </Row>
             <Row>
                 <Col>
                     <ViewCard
