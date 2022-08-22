@@ -17,6 +17,7 @@ import JobVehicles from './job-vehicles';
 import React from 'react';
 
 export interface ViewJobDetailProps {
+    className?: string;
     job: JobEntity;
     relatedJobs?: React.ReactNode;
     canApply?: boolean | (() => boolean);
@@ -30,6 +31,7 @@ export interface ViewJobDetailProps {
 export default function ViewJobDetail(props: ViewJobDetailProps) {
 
     const {
+        className,
         job,
         relatedJobs,
         canApply,
@@ -41,8 +43,8 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
     const { t } = useTranslation();
 
     return (
-        <section className="top-links-sec ort-general">
-            <Container>
+        <section className={`${className} "top-links-sec ort-general"`}>
+            <Container fluid >
                 <Row>
                     <Col md={9}>
                         <div className="ort-inner ">
