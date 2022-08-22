@@ -246,13 +246,12 @@ export function JobForm(props: JobFormProps) {
         });
     }
 
-    function removeRequiredSkill(e) {
+    function removeRequiredSkill(idx, e) {
         e.preventDefault();
 
-        const { name } = e.target;
         form.setValues({
             ...form.values,
-            required_skills: form.values.required_skills.filter((v, i) => i != name),
+            required_skills: form.values.required_skills.filter((v, i) => i != idx),
         });
     }
 
@@ -295,13 +294,12 @@ export function JobForm(props: JobFormProps) {
         });
     }
 
-    function removeMvrRequirement(e) {
+    function removeMvrRequirement(idx, e) {
         e.preventDefault();
 
-        const { name } = e.target;
         form.setValues({
             ...form.values,
-            mvr_requirements: form.values.mvr_requirements.filter((v, i) => i != name),
+            mvr_requirements: form.values.mvr_requirements.filter((v, i) => i != idx),
         });
     }
 
@@ -320,13 +318,12 @@ export function JobForm(props: JobFormProps) {
         });
     }
 
-    function removeCriminalHistoryRequirement(e) {
+    function removeCriminalHistoryRequirement(idx, e) {
         e.preventDefault();
 
-        const { name } = e.target;
         form.setValues({
             ...form.values,
-            criminal_history: form.values.criminal_history.filter((v, i) => i != name),
+            criminal_history: form.values.criminal_history.filter((v, i) => i != idx),
         });
     }
 
@@ -853,7 +850,7 @@ export function JobForm(props: JobFormProps) {
                                             <BaseListRowControl
                                                 key={i}
                                                 index={i}
-                                                onRemoveClick={(idx, e) => removeRequiredSkill(e)}
+                                                onRemoveClick={(idx, e) => removeRequiredSkill(idx, e)}
                                                 >
                                                 <BaseSelect
                                                     className="mx-1"
@@ -1010,7 +1007,7 @@ export function JobForm(props: JobFormProps) {
                                                     <BaseListRowControl
                                                         key={i}
                                                         index={i}
-                                                        onRemoveClick={(idx, e) => removeMvrRequirement(e)}
+                                                        onRemoveClick={(idx, e) => removeMvrRequirement(idx, e)}
                                                     >
                                                         <BaseSelect
                                                             className="mx-1"
@@ -1096,7 +1093,7 @@ export function JobForm(props: JobFormProps) {
                                                 <BaseListRowControl
                                                     key={i}
                                                     index={i}
-                                                    onRemoveClick={(idx, e) => removeCriminalHistoryRequirement}
+                                                    onRemoveClick={(idx, e) => removeCriminalHistoryRequirement(idx, e)}
                                                 >
                                                     <BaseSelect
                                                         className="mx-1"
