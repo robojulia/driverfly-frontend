@@ -12,9 +12,10 @@ export interface RelatedJobsProps {
     jobs: JobEntity[];
     jobLink?: string;
     hideCompanyName?: boolean | (() => boolean);
+    jobLinkSlugable?: boolean | (() => boolean);
 }
 
-export default function RelatedJobs({ jobs, jobLink, hideCompanyName }: RelatedJobsProps) {
+export default function RelatedJobs({ jobs, jobLink, hideCompanyName, jobLinkSlugable }: RelatedJobsProps) {
     const { t } = useTranslation();
 
     return (
@@ -29,7 +30,7 @@ export default function RelatedJobs({ jobs, jobLink, hideCompanyName }: RelatedJ
                                 <div key={index} className="media align-items-center ">
                                     <CompanyPhoto className="d-flex mr-4 truck-img" company={job.company} />
                                     <div className="media-body">
-                                        <Link href={`/${jobLink || 'jobs'}/${job.id}/${job.slug}`}>
+                                        <Link href={`/${jobLink || 'jobs'}/${job.id}/${jobLinkSlugable && job.slug}`}>
                                             <a className="text-decoration-none">
                                                 <h4 className="mt-0">{job.title}</h4>
                                             </a>
