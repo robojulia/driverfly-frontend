@@ -30,7 +30,7 @@ export default function RelatedJobs({ jobs, jobLink, hideCompanyName, jobLinkSlu
                                 <div key={index} className="media align-items-center ">
                                     <CompanyPhoto className="d-flex mr-4 truck-img" company={job.company} />
                                     <div className="media-body">
-                                        <Link href={`/${jobLink || 'jobs'}/${job.id}/${jobLinkSlugable && job.slug}`}>
+                                        <Link href={`/${jobLink || 'jobs'}/${job.id}/${jobLinkSlugable ? job.slug : ''}`}>
                                             <a className="text-decoration-none">
                                                 <h4 className="mt-0">{job.title}</h4>
                                             </a>
