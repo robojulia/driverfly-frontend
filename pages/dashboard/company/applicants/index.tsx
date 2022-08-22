@@ -437,6 +437,11 @@ function ApplicantView(props: ViewProps) {
                         hidable: false,
                     },
                     {
+                        id: "member",
+                        name: "IS_MMEMBER",
+                        selector: applicant => !!!applicant.user?.id ? t('MMEMBER') : t('NON_MMEMBER'),
+                    },
+                    {
                         id: "city",
                         name: "CITY",
                         selector: applicant => applicant.city,
@@ -644,6 +649,11 @@ function JobView(props: ViewProps) {
                             </Link>
                         ),
                         hidable: false,
+                    },
+                    {
+                        id: "member",
+                        name: "IS_MMEMBER",
+                        selector: aJob => !!!aJob.applicant.user?.id ? t('MMEMBER') : t('NON_MMEMBER'),
                     },
                     {
                         name: "CITY",
