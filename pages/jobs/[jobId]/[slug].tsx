@@ -32,7 +32,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
         canApply={true}
         canSave={true}
         hideVehicles={false}
-        hideCompanyName={true}
+        hideCompanyName={false}
         viewAllJobsLink={`/find-jobs?companyId=${jobDetail.company?.id}`}
       />
     </>
