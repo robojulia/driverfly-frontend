@@ -173,7 +173,6 @@ export default function Applicant() {
                                     label="PREFERRED_LOCATION"
                                     placeholder="PREFERRED_LOCATION"
                                     name="preferred_location"
-                                    required
                                     formik={form}
                                     labelPrefix="JobGeography"
                                     enumType={JobGeography}
