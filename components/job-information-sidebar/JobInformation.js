@@ -17,6 +17,7 @@ import { JobBenefits } from "../../enums/jobs/job-benefits.enum";
 import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
 import { DriverEndorsement } from "../../enums/users/driver-endorsement.enum";
 import { VehicleTransmissionType } from "../../enums/vehicles/vehicle-transmission-type.enum";
+import ShowFormattedDate from "../jobs/show-formatted-date";
 
 export default function JonInformation({ job }) {
 
@@ -26,12 +27,10 @@ export default function JonInformation({ job }) {
 
     return (
         <>
-            <div className="sidebar shadow-sm p-3 mb-5  rounded">
-                <h3>{t('job_information')}</h3>
-
-                <div className="sidebar-inner">
+            <div className="sidebar p-4  m-1 mb-5 shadow-lg single-job-items rounded">
+                <h3 className="border-bottom py-2">{t('job_information')}</h3>
+                <div className="sidebar-inner pt-1">
                     <ul className="list p-0">
-
                         {/* DATE POSTED START */}
                         <li>
                             <div className="icon">
@@ -40,8 +39,7 @@ export default function JonInformation({ job }) {
                             <div className="details">
                                 <div className="text">{t('POSTED')}</div>
                                 <div className="value text-muted">
-                                    <span className="text"><span className="number">{timeSince(job.created_at)}</span> {t('ago')}</span>
-
+                                    <ShowFormattedDate date={job.created_at} />
                                 </div>
                             </div>
                         </li>
@@ -53,7 +51,7 @@ export default function JonInformation({ job }) {
                             </div>
                             <div className="details">
                                 <div className="text">{t('OFFERED_SALARY')}</div>
-                                <div className="value text-muted"><CurrencyDollar /><span className="price-text">{job.min_weekly_pay}</span> - <CurrencyDollar /><span className="price-text">{job.max_weekly_pay}</span> {t('per_week')}</div>
+                                <div className="value text-muted"><CurrencyDollar /><span className="price-text">{job.min_weekly_pay || 0}</span> - <CurrencyDollar /><span className="price-text">{job.max_weekly_pay || 0}</span> {t('per_week')}</div>
                             </div>
                         </li>
 

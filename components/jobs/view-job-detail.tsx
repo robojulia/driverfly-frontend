@@ -12,11 +12,13 @@ import JonInformation from '../job-information-sidebar/JobInformation';
 import RelatedJobs from '../related-jobs/Related-Jobs';
 import SocilShare from '../share-link/ShareLink';
 import CompanyPhoto from './company-photo';
+import ShowFormattedDate from './show-formatted-date';
 import JobVehicles from './job-vehicles';
+import React from 'react';
 
 export interface ViewJobDetailProps {
     job: JobEntity;
-    relatedJobs?: JobEntity[];
+    relatedJobs?: React.ReactNode;
     canApply?: boolean | (() => boolean);
     canSave?: boolean | (() => boolean);
     hideVehicles?: boolean | (() => boolean);
@@ -25,17 +27,25 @@ export interface ViewJobDetailProps {
 }
 
 
-export default function ViewJobDetail({ job, relatedJobs, canApply, canSave, hideVehicles, viewAllJobsLink, hideCompanyName }: ViewJobDetailProps) {
+export default function ViewJobDetail(props: ViewJobDetailProps) {
 
+    const {
+        job,
+        relatedJobs,
+        canApply,
+        canSave,
+        hideVehicles,
+        viewAllJobsLink,
+        hideCompanyName
+    } = props
     const { t } = useTranslation();
-    console.log(job);
 
     return (
         <section className="top-links-sec ort-general">
             <Container>
                 <Row>
                     <Col md={9}>
-                        <div className="ort-inner">
+                        <div className="ort-inner ">
                             <div className="media align-items-center bg-transparent border-0 p-0">
                                 <span className="text-dark text-center text-decoration-none">
                                     <CompanyPhoto className="d-flex mr-4 truck-img mb-3" company={job.company} />
@@ -52,9 +62,14 @@ export default function ViewJobDetail({ job, relatedJobs, canApply, canSave, hid
                                         {job.title}
                                     </h4>
                                     <div className="job-date-author">
+                                        <ShowFormattedDate
+                                            date={job.created_at}
+                                            showTimeSince
+                                            // hideTime
+                                            labelPrefix="POSTED"
+                                            labelPostfix='AGO'
+                                        />
                                         {
-                                            job.created_at && <span>{t('POSTED')} {timeSince(job.created_at)} {t('AGO')}</span>
-                                        } {
                                             (!!!hideCompanyName && job.company?.name) &&
                                             <>
                                                 {t('BY')} <Link href={`/employer/${job.company?.id}`}>
@@ -89,7 +104,7 @@ export default function ViewJobDetail({ job, relatedJobs, canApply, canSave, hid
                             < JobDescription job={job} />
                             {!!!hideVehicles && < JobVehicles job={job} />}
                             < SocilShare />
-                            {relatedJobs && < RelatedJobs jobs={relatedJobs} />}
+                            {relatedJobs || <></>}
                         </Col>
                         <Col lg={4}>
                             < JonInformation job={job} />
