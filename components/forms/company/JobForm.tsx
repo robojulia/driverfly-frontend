@@ -640,7 +640,7 @@ export function JobForm(props: JobFormProps) {
                                     label="min_rate"
                                     name="min_rate"
                                     required
-                                    placeholder="1.50"
+                                    placeholder="0.50"
                                     onChange={handlePayMethodUpdate}
                                     formik={form}
                                 />
@@ -649,7 +649,7 @@ export function JobForm(props: JobFormProps) {
                                     label="max_rate"
                                     name="max_rate"
                                     required
-                                    placeholder="4.00"
+                                    placeholder="0.70"
                                     onChange={handlePayMethodUpdate}
                                     formik={form}
                                 />
