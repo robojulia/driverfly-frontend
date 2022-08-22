@@ -202,6 +202,8 @@ export default function ViewApplicant({ id }) {
                                     years_cdl_experience: applicant.years_cdl_experience,
                                     OWNER_OPERATOR: { text: applicant.is_owner_operator, default: t("UNKNOWN") },
                                     AUTHORIZED_TO_WORK_IN_THE_US: applicant.authorized_to_work_in_us,
+                                    PREFERRED_LOCATION: applicant.preferred_location,
+
                                 }}
                             />
                         </Col>
