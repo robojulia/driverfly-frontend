@@ -593,7 +593,7 @@ export function JobForm(props: JobFormProps) {
                                     label="min_miles"
                                     name="min_miles"
                                     required
-                                    placeholder="50"
+                                    placeholder="1500"
                                     onChange={handlePayMethodUpdate}
                                     formik={form}
                                 />
@@ -602,7 +602,7 @@ export function JobForm(props: JobFormProps) {
                                     label="max_miles"
                                     name="max_miles"
                                     required
-                                    placeholder="100"
+                                    placeholder="3000"
                                     onChange={handlePayMethodUpdate}
                                     formik={form}
                                 />
