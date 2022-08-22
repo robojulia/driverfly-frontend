@@ -25,7 +25,7 @@
     "contact": "Contact",
     "find_new_job": "Find New Job",
     "preferred_geography": "Preferred Geography",
-    "PREFERRED_LOCATION":"Preferred Location",
+    "PREFERRED_LOCATION": "Preferred Location",
     "job_title": "Job Title",
     "job_information": "Job Information",
     "job_description": "Job Description",
@@ -107,7 +107,7 @@
         "EMPLOYMENT_HISTORY": "Past Employment"
     },
     "SHARING_CONFIRMATION_TEXT_{label}": "Are you sure you want to always automatically share your {{label}}? This means anytime you apply for a new job or approve a carrier connection, your {{label}} will automatically be shared with them.",
-    "NOTE_YOU_CAN_CHANGE_BACK_IN_FUTURE":"Note: you can change this back at any point in the future.",
+    "NOTE_YOU_CAN_CHANGE_BACK_IN_FUTURE": "Note: you can change this back at any point in the future.",
     "share_my_mvr": "Automatically Share my MVR",
     "share_my_drivers_license": "Automatically Share my Drivers License",
     "share_my_medical_card": "Automatically Share my Medical Card",
@@ -139,9 +139,11 @@
         "NO_TEAM_DRIVER": "Not open to team drivers"
     },
     "per_week": "per week",
+    "PER_WEEK": "per week",
     "POSTED": "Posted",
+    "AGO": "ago",
     "ago": "ago",
-    "by": "by",
+    "BY": "by",
     "JobPayMethod": {
         "RATE_PER_MILE": "Rate per mile",
         "PERCENT_PER_MOVE": "Percent per move",
@@ -527,7 +529,6 @@
     "DON'T_HAVE_AN_ACCOUNT_MAKE_ONE": "Don't have an account? Make one",
     "HERE": "here",
     "HERE!": "here!",
-
     "QUICK_LOGIN": "Quick Login",
     "LOGIN_YOUR_ACCOUNT": "Login Your Account",
     "USER_NAME_OR_EAMIL": "Username or email",
@@ -543,6 +544,9 @@
     "drivers_needed": "Drivers Needed",
     "JOB_LISTINGS": "Job Listings",
     "APPLICANTS": "Applicants",
+    "IS_MMEMBER": "Is Member",
+    "MMEMBER": "Member",
+    "NON_MMEMBER": "Non Member",
     "APPLICANTS_PER_RECRUITER": "Applicants per recruiter",
     "UNASSIGNED": "Unassigned",
     "MESSAGES": "Messages",
@@ -1118,6 +1122,7 @@
     "COMPANIES": "Companies",
     "NO_APPLIED_JOBS_FOUND": "No applied jobs found",
     "MAIL_SUCCESSFULLY_SEND": "Mail Sussessfully Send",
+    "THANKS_FOR_CONTACTING_US": "Thanks For Contacting Us",
     "UNABLE_TO_SEND_ME": "Unable To Send Me",
     "CONTACT_INFORMARION": "Contact Infomation",
     "HAVE_QUENTIONS": "Have Questions? Please submit your query to us and we will come to you as soon as possible.",
@@ -1167,8 +1172,8 @@
     },
     "UNABLE_TO_RESTORE": "Unable to restore.",
     "DESCRIPTION": "Description",
-    "GET_RESULTS":"Press enter to get results",
-    "NO_RELATED_JOBS_YET":"No related jobs yet.",
+    "GET_RESULTS": "Press enter to get results",
+    "NO_RELATED_JOBS_YET": "No related jobs yet.",
     "JOB_CREATION_CONFIRMATION": "By submitting, I confirm that the details of this job are as honest and accurate to the best of my knowledge.",
-    "DON'T_HAVE_AN_ACCOUNT":"Don't have an account? Make one"
+    "DON'T_HAVE_AN_ACCOUNT": "Don't have an account? Make one"
 }

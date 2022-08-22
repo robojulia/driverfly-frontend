@@ -174,21 +174,21 @@ export default function JobListing() {
                     },
                 ]}
                 actions={j => ([
-                    {
-                        onClick: e => onViewApplicantsClick(j.id),
-                        icon: EyeFill,
-                        label: t("VIEW_{name}", { name: "APPLICANTS" }, { translateProps: true })
-                    },
+                    // {
+                    //     onClick: e => onViewApplicantsClick(j.id),
+                    //     icon: EyeFill,
+                    //     label: t("VIEW_{name}", { name: "APPLICANTS" }, { translateProps: true })
+                    // },
                     {
                         onClick: e => onPreviewClick(j.id, j.slug),
                         icon: Eye,
                         label: t("VIEW_{name}", { name: "POST" }, { translateProps: true })
                     },
-                    {
-                        onClick: e => onViewClick(j.id),
-                        icon: Eye,
-                        label: "VIEW"
-                    },
+                    // {
+                    //     onClick: e => onViewClick(j.id),
+                    //     icon: Eye,
+                    //     label: "VIEW"
+                    // },
                     {
                         onClick: e => onEditClick(j.id),
                         icon: PenFill,
