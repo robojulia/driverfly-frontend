@@ -28,7 +28,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
       <StructuredData type="JobPosting" data={StructuredData.JobPosting(jobDetail, t)} />
       <ViewJobDetail
         job={jobDetail}
-        relatedJobs={< RelatedJobs jobs={relatedJobs} jobLink="jobs" hideCompanyName={false} />}
+        relatedJobs={< RelatedJobs jobs={relatedJobs} jobLink="jobs" hideCompanyName={false} jobLinkSlugable={true} />}
         canApply={true}
         canSave={true}
         hideVehicles={false}

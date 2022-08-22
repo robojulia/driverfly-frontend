@@ -24,6 +24,7 @@ export interface ViewJobDetailProps {
     canSave?: boolean | (() => boolean);
     hideVehicles?: boolean | (() => boolean);
     hideCompanyName?: boolean | (() => boolean);
+    hideSocialLinks?: boolean | (() => boolean);
     viewAllJobsLink?: string;
 }
 
@@ -38,13 +39,14 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
         canSave,
         hideVehicles,
         viewAllJobsLink,
-        hideCompanyName
+        hideCompanyName,
+        hideSocialLinks
     } = props
     const { t } = useTranslation();
 
     return (
         <section className={`${className} "top-links-sec ort-general"`}>
-            <Container fluid >
+            <Container>
                 <Row>
                     <Col md={9}>
                         <div className="ort-inner ">
@@ -82,7 +84,7 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                                     </div>
                                     <div className="job-metas">
                                         <div className="job-location d-flex align-items-center">
-                                            <p className="pr-4">{buildAddress(job.location)}</p>
+                                            <p className="pr-4 m-0">{buildAddress(job.location)}</p>
                                         </div>
                                         <div >
                                             <p><CurrencyDollar />{job.min_weekly_pay || 0} - {job.max_weekly_pay || 0} {t('PER_WEEK')}</p>
@@ -105,7 +107,7 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                         <Col lg={8}>
                             < JobDescription job={job} />
                             {!!!hideVehicles && < JobVehicles job={job} />}
-                            < SocilShare />
+                            {!!!hideSocialLinks && < SocilShare />}
                             {relatedJobs || <></>}
                         </Col>
                         <Col lg={4}>
