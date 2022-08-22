@@ -16,6 +16,8 @@ import "../public/bootstrap/css/bootstrap.min.css";
 import { yupInit } from "../config/yup";
 import { chartJsInit } from "../config/chartjs";
 import { bootstrapInit } from "../config/bootstrap";
+import { ScrollToTOp } from "../config/scroll-to-top";
+
 
 import { AuthProvider } from "../components/auth/auth-provider";
 
@@ -23,6 +25,7 @@ function MyApp({ Component, pageProps }) {
 
   chartJsInit();
   bootstrapInit();
+  ScrollToTOp();
 
   return (
     <AuthProvider
