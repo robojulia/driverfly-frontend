@@ -43,6 +43,7 @@ import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
 import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
 import { ApplicantDocumentType } from "../../../enums/applicants/applicant-document-type.enum";
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
+import { JobGeography } from "../../../enums/jobs/job-geography.enum";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> {
 }
@@ -267,6 +268,16 @@ export function ApplicantForm(props: ApplicantFormProps) {
                                     label="AUTHORIZED_TO_WORK_IN_THE_US"
                                     name="authorized_to_work_in_us"
                                     formik={form}
+                                />
+                                <BaseSelect
+                                    className="col-12 mt-1"
+                                    label="PREFERRED_LOCATION"
+                                    placeholder="PREFERRED_LOCATION"
+                                    name="preferred_location"
+                                    required
+                                    formik={form}
+                                    labelPrefix="JobGeography"
+                                    enumType={JobGeography}
                                 />
                             </Col>
                             <Col md="4" className="px-2">

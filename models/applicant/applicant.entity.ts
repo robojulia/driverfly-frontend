@@ -14,6 +14,7 @@ import * as yup from "yup";
 import { VehicleTransmissionType } from '../../enums/vehicles/vehicle-transmission-type.enum';
 import { DriverEndorsement } from '../../enums/users/driver-endorsement.enum';
 import { ApplicantDocumentType } from '../../enums/applicants/applicant-document-type.enum';
+import { JobGeography } from '../../enums/jobs/job-geography.enum';
 
 export class ApplicantEntity {
   id?: number;
@@ -44,6 +45,7 @@ export class ApplicantEntity {
   endorsements?: DriverEndorsement[] = [];
   highest_degree?: EducationLevel;
   authorized_to_work_in_us?: boolean = true;
+  preferred_location?:JobGeography;
   emergency_contact_name?: string;
   emergency_contact_number?: string;
   emergency_contact_relationship?: string;
@@ -85,6 +87,8 @@ export class ApplicantEntity {
         license_state: yup.string().nullable(),
         license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
         years_cdl_experience: yup.number().min(0).nullable(),
+        preferred_location: (yup.string() as any).enum(JobGeography).required().nullable(),
+
         // license_restrictions: (yup.string() as any).enum(LicenseRestrictions).nullable(),
 
         license_restrictions: yup.array(
