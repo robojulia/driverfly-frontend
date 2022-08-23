@@ -45,7 +45,7 @@ export function CompanyForm(props: CompanyFormProps) {
     });
 
     useEffect(() => {
-      if (entity)
+      if (entity && !form.dirty)
         form.setValues(entity);
     }, [entity]);
 
