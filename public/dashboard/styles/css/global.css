@@ -620,3 +620,6 @@ textarea {
     background-image: url("../../../img/arrowdown.svg");
 
 }
+.my_chart canvas{
+    height: 270px;
+}

@@ -1105,6 +1105,20 @@
         "IN_PROCESS": "In Process",
         "HIRED": "Hired"
     },
+    "TotalApplicantsBarChartLabel": {
+        "JAN": "January",
+        "FEB": "February",
+        "MAR": "March",
+        "ARP":"April",
+        "MAY":"May",
+        "JUN":"June",
+        "JUL":"July",
+        "AUG":"August",
+        "SEP":"September",
+        "OCT":"October",
+        "NOV":"November",
+        "DEC":"December"
+    },
     "NO_NAME": "No Name",
     "SWITCH_COMPANY": "Switch Company",
     "CHANGE": "Change",

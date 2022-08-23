@@ -2,6 +2,8 @@ import { BarChart } from "../BarChart";
 import { ApplicantApi } from "../../../pages/api/applicant";
 import { useTranslation } from "../../../hooks/useTranslation";
 import { useState } from "react";
+import { PieChart } from "../PieChart";
+
 
 export function ApplicantsPerRecruiterChart() {
     const { t } = useTranslation();
@@ -28,7 +30,7 @@ export function ApplicantsPerRecruiterChart() {
     };
 
     return (
-        <BarChart
+        <PieChart
             title="APPLICANTS_PER_RECRUITER"
             labels={recruiterLabels}
             fetchData={fetchData}

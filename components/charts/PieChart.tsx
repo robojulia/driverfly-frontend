@@ -1,20 +1,18 @@
-import React, { useState } from "react";
-import ViewCard from "../viewDetails/viewCard";
-import { Bar } from "react-chartjs-2";
+import React, { useEffect, useState } from 'react';
+import { Doughnut } from 'react-chartjs-2';
+import { Chart, ArcElement } from 'chart.js'
+Chart.register(ArcElement);
 import { useTranslation } from "../../hooks/useTranslation";
 import { useEffectAsync } from "../../utils/react";
-import { Button } from "react-bootstrap";
-import { ArrowClockwise } from "react-bootstrap-icons";
 import { useAuth } from "../../hooks/useAuth";
 
-export interface BarChartProps {
+
+export interface PieChartProps {
     title: string;
     labels: string[];
     fetchData: () => Promise<number[]>;
 }
-
-
-export function BarChart(props: BarChartProps): JSX.Element {
+export function PieChart(props: PieChartProps): JSX.Element {
     const { title, labels, fetchData } = props;
 
     const { t } = useTranslation();
@@ -32,9 +30,8 @@ export function BarChart(props: BarChartProps): JSX.Element {
     };
 
     useEffectAsync(refreshData, [ user ]);
-
     return (
-        <Bar
+        <Doughnut
             options={{
                 maintainAspectRatio: false,
                 responsive: true
@@ -45,14 +42,10 @@ export function BarChart(props: BarChartProps): JSX.Element {
                     label: t(title),
                     data: data,
                     backgroundColor: [
+                        'rgba(29, 67, 84)',
+                        'rgba(92, 200, 196)',
                         'rgba(245, 192, 24)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                    ],
-                    borderColor: [
-                        'rgba(245, 192, 24)',
-                        'rgba(245, 192, 24)',
-                        'rgba(255, 206, 86, 1)',
+
                     ],
                     borderWidth: 1
                 }]
@@ -60,4 +53,5 @@ export function BarChart(props: BarChartProps): JSX.Element {
         />
    
     );
-}
+
+};
