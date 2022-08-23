@@ -53,7 +53,8 @@ export interface FileInputProps extends BaseControlProps {
      */
     async function formattedOnChange(e) {
         if (!onChange) return;
-
+        
+        if(e.target.files[0].size <= 3000000 ){
         const { type } = e.target;
 
         let newValue = null;
@@ -85,7 +86,7 @@ export interface FileInputProps extends BaseControlProps {
                 value: newValue
             }
         });
-
+    }
     }
 
     function clear(e) {
