@@ -24,253 +24,257 @@ import { globalAjaxExceptionHandler } from "../utils/ajax";
 import ViewCard from './viewDetails/viewCard'
 import { ApplicantDocumentType } from '../enums/applicants/applicant-document-type.enum'
 import { DocumentEntity } from '../models/documents/document.entity'
-import { PlusCircle, DashCircle, ArrowRight, Star} from 'react-bootstrap-icons'
+import { PlusCircle, DashCircle, ArrowRight, Star } from 'react-bootstrap-icons'
 import BaseInputPhone from './forms/BaseInputPhone'
 
 export default function JobApply({ job }) {
 
-  const { user } = useAuth();
-  const { t } = useTranslation();
+    const { user } = useAuth();
+    const { t } = useTranslation();
 
-  const jobApi = new JobApi();
+    const jobApi = new JobApi();
 
-  const apply_form = useFormik({
-    initialValues: new ApplicantEntity(),
-    validationSchema: ApplicantEntity.yupSchema(),
-    onSubmit: async (dto) => {
-      console.log("apply_form.values", dto)
+    const apply_form = useFormik({
+        initialValues: new ApplicantEntity(),
+        validationSchema: ApplicantEntity.yupSchema(),
+        onSubmit: async (dto) => {
+            console.log("apply_form.values", dto)
 
 
-      try {
-        const applicant = await jobApi.apply(job.id, dto);
+            try {
+                const applicant = await jobApi.apply(job.id, dto);
 
-        toast.success(t('job_applied_success_message'))
+                toast.success(t('job_applied_success_message'))
+                setViewForm(false);
+            }
+            catch (e) {
+
+                globalAjaxExceptionHandler(e, { formik: apply_form, toast: toast, t: t });
+                if (e.response?.data?.message == "ApplicantJobService.APPLICANT_ALREADY_APPLIED") setViewForm(false)
+            }
+        }
+    });
+
+    useEffect(async () => {
+        if (user && user.id) {
+            const api = new ApplicantApi();
+            const userApi = new UserApi();
+            try {
+                if (!user.company) {
+                    const applicant = await api.getByUserId();
+                    if (applicant) {
+                        const preferences = await userApi.preferences.list(user.id, { category: UserPreferenceCategory.SHARING });
+
+                        if (preferences.length > 0) {
+                            applicant.documents = applicant.documents.filter(
+                                (document) => !preferences.some(
+                                    (preference) => preference.label === document.type && preference.value === SharePreference.NEVER
+                                )
+                            );
+                        } else applicant.documents = applicant.documents?.filter((document) => document.type === ApplicantDocumentType.RESUME);
+
+                        apply_form.setValues({
+                            ...apply_form.values,
+                            ...applicant,
+                        });
+                    }
+                }
+            }
+            catch (e) {
+                if (e.response?.status === 401) {
+                    // swallow the error here if it's a 401
+                    // this is a mixed public & private page
+                    return;
+                }
+                throw e;
+            }
+        }
+    }, [])
+
+    const [viewForm, setViewForm] = useState(false);
+    const onApplyClick = (e) => {
+        setViewForm(!viewForm);
+    }
+
+    const onCloseClick = (e) => {
         setViewForm(false);
-      }
-      catch (e) {
-  
-        globalAjaxExceptionHandler(e, { formik: apply_form, toast: toast, t: t });
-        if(e.response?.data?.message == "ApplicantJobService.APPLICANT_ALREADY_APPLIED") setViewForm(false)
-      }
     }
-  });
 
-  useEffect(async () => {
-    if (user && user.id) {
-      const api = new ApplicantApi();
-      const userApi = new UserApi();
-      try {
-        if (!user.company) {
-          const applicant = await api.getByUserId();
-          if (applicant) {
-            const preferences = await userApi.preferences.list(user.id, { category: UserPreferenceCategory.SHARING });
+    if (apply_form.errors && Object.keys(apply_form.errors).length > 0)
+        console.error(apply_form.errors);
+    
 
-            if (preferences.length > 0) {
-              applicant.documents = applicant.documents.filter(
-                (document) => !preferences.some(
-                  (preference) => preference.label === document.type && preference.value === SharePreference.NEVER
-                )
-              );
-            } else applicant.documents = applicant.documents?.filter((document) => document.type === ApplicantDocumentType.RESUME);
+    // uncomment this to go into form debugging mode
+    // useEffect(async () => {
+    //   console.log("apply_form", apply_form.values)
+    // }, [apply_form])
 
-            apply_form.setValues({
-              ...apply_form.values,
-              ...applicant,
-            });
-          }
-        }
-      }
-      catch (e) {
-        if (e.response?.status === 401) {
-          // swallow the error here if it's a 401
-          // this is a mixed public & private page
-          return;
-        }
-        throw e;
-      }
-    }
-  }, [])
+    return (
+        <>
+            <div className="ort-btn mt-lg-4 mt-0">
+                <button type="button" className="btn theme-primary-btn" onClick={onApplyClick}> {t('APPLY_NOW')}<ArrowRight /></button>
+                {/* <button type="button" className="btn theme-general-btn"> <Star /> {t('shortlist')} </button> */}
+            </div>
 
-  const [ viewForm, setViewForm ] = useState(false);
-  const onApplyClick = (e) => {
-    setViewForm(!viewForm);
-  }
-
-  const onCloseClick = (e) => {
-    setViewForm(false);
-  }
-
-  // uncomment this to go into form debugging mode
-  // useEffect(async () => {
-  //   console.log("apply_form", apply_form.values)
-  // }, [apply_form])
-
-  return (
-    <>
-      <div className="ort-btn mt-lg-4 mt-0">
-        <button type="button" className="btn theme-primary-btn" onClick={onApplyClick}> {t('APPLY_NOW')}<ArrowRight /></button>
-        {/* <button type="button" className="btn theme-general-btn"> <Star /> {t('shortlist')} </button> */}
-      </div>
-
-      <ViewModal
-        show={viewForm}
-        closeText="CANCEL"
-        onCloseClick={onCloseClick}
-        title="apply_for_this_job"
-        footer={<button type="submit" className="btn btn-primary w-100 p-lg-3 p-5" onClick={apply_form.handleSubmit}>{t('submit')}</button>}
-      >
-        <form onSubmit={apply_form.handleSubmit}>
-          {typeof apply_form.errors.job === "string" &&
-            <Row>
-              <span className='text-danger'>{apply_form.errors.job}</span>
-            </Row>
-          }
-          <Row>
-            <BaseInput
-                className=" col-6 mt-3"
-                label="first_name"
-                placeholder="first_name"
-                name="first_name"
-                formik={apply_form}
-              />
-            <BaseInput
-                className="col-6 mt-3"
-                label="last_name"
-                placeholder="last_name"
-                name="last_name"
-                formik={apply_form}
-              />
-          </Row>
-          <Row>
-            <BaseInput
-              readOnly={user?.email ? true : false}
-              type="email"
-              className=" col-6 mt-3"
-              label="email"
-              placeholder="email"
-              name="email"
-              formik={apply_form}
-            />
-            <BaseInputPhone
-              className=" col-6 mt-3"
-              label="contact_number"
-              placeholder="contact_number"
-              name="phone"
-              formik={apply_form}
-            />
-          </Row>
-          <Row>
-            <BaseSelect
-                className="col-12 mt-3"
-                label="highest_degree"
-                placeholder="highest_degree"
-                name="highest_degree"
-                enumType={EducationLevel}
-                labelPrefix="EducationLevel"
-                formik={apply_form}
-              />
-          </Row>
-          {/* Files Start */}
-          <Row>
-            <Col sm="12" className="mt-3">
-              <ViewCard
-                title="DOCUMENTS"
-                actions={<Button size='sm'
-                    disabled={apply_form.values.documents?.length === Object.keys(ApplicantDocumentType).length}
-                    onClick={() => apply_form.setValues({
-                        ...apply_form.values,
-                        documents: [
-                            ...(apply_form.values.documents || []),
-                            new DocumentEntity()
-                        ]
-                    })}><PlusCircle /> {t("ADD")}</Button>}
+            <ViewModal
+                show={viewForm}
+                closeText="CANCEL"
+                onCloseClick={onCloseClick}
+                title="apply_for_this_job"
+                footer={<button type="submit" className="btn btn-primary w-100 p-lg-3 p-5" onClick={apply_form.handleSubmit}>{t('submit')}</button>}
             >
-                {!apply_form.values.documents?.length &&
-                    t("NONE")
-                }
-                {
-                    apply_form.values.documents?.length > 0 &&
+                <form onSubmit={apply_form.handleSubmit}>
+                    {typeof apply_form.errors.job === "string" &&
+                        <Row>
+                            <span className='text-danger'>{apply_form.errors.job}</span>
+                        </Row>
+                    }
+                    <Row>
+                        <BaseInput
+                            className=" col-6 mt-3"
+                            label="first_name"
+                            placeholder="first_name"
+                            name="first_name"
+                            formik={apply_form}
+                        />
+                        <BaseInput
+                            className="col-6 mt-3"
+                            label="last_name"
+                            placeholder="last_name"
+                            name="last_name"
+                            formik={apply_form}
+                        />
+                    </Row>
+                    <Row>
+                        <BaseInput
+                            readOnly={user?.email ? true : false}
+                            type="email"
+                            className=" col-6 mt-3"
+                            label="email"
+                            placeholder="email"
+                            name="email"
+                            formik={apply_form}
+                        />
+                        <BaseInputPhone
+                            className=" col-6 mt-3"
+                            label="contact_number"
+                            placeholder="contact_number"
+                            name="phone"
+                            formik={apply_form}
+                        />
+                    </Row>
+                    <Row>
+                        <BaseSelect
+                            className="col-12 mt-3"
+                            label="highest_degree"
+                            placeholder="highest_degree"
+                            name="highest_degree"
+                            enumType={EducationLevel}
+                            labelPrefix="EducationLevel"
+                            formik={apply_form}
+                        />
+                    </Row>
+                    {/* Files Start */}
+                    <Row>
+                        <Col sm="12" className="mt-3">
+                            <ViewCard
+                                title="DOCUMENTS"
+                                actions={<Button size='sm'
+                                    disabled={apply_form.values.documents?.length === Object.keys(ApplicantDocumentType).length}
+                                    onClick={() => apply_form.setValues({
+                                        ...apply_form.values,
+                                        documents: [
+                                            ...(apply_form.values.documents || []),
+                                            new DocumentEntity()
+                                        ]
+                                    })}><PlusCircle /> {t("ADD")}</Button>}
+                            >
+                                {!apply_form.values.documents?.length &&
+                                    t("NONE")
+                                }
+                                {
+                                    apply_form.values.documents?.length > 0 &&
 
-                    <Table striped>
-                        <thead>
-                            <tr>
-                                <th>{t("TYPE")}</th>
-                                <th>{t("DOCUMENT")}</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {apply_form.values
-                                .documents
-                                .map((entity, i) => (
-                                    <tr key={i}>
-                                        <td>
-                                            <BaseSelect
-                                                name={`documents[${i}].type`}
-                                                required
-                                                placeholder="TYPE"
-                                                labelPrefix="ApplicantDocumentType"
-                                                enumType={ApplicantDocumentType}
-                                                readOnly={!!entity.id && !entity.file_base64}
-                                                formik={apply_form}
-                                            />
-                                        </td>
-                                        <td>
-                                            <FileInput
-                                                name={`documents[${i}]`}
-                                                required
-                                                accept="application/pdf"
-                                                formik={apply_form}
-                                            />
-                                        </td>
-                                        <td>
-                                            <a href="" onClick={() => apply_form.setValues({
-                                                ...apply_form.values,
-                                                documents: apply_form.values.documents.filter((v, idx) => i != idx)
-                                            })}><DashCircle color="red" /></a>
-                                        </td>
+                                    <Table striped>
+                                        <thead>
+                                            <tr>
+                                                <th>{t("TYPE")}</th>
+                                                <th>{t("DOCUMENT")}</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {apply_form.values
+                                                .documents
+                                                .map((entity, i) => (
+                                                    <tr key={i}>
+                                                        <td>
+                                                            <BaseSelect
+                                                                name={`documents[${i}].type`}
+                                                                required
+                                                                placeholder="TYPE"
+                                                                labelPrefix="ApplicantDocumentType"
+                                                                enumType={ApplicantDocumentType}
+                                                                readOnly={!!entity.id && !entity.file_base64}
+                                                                formik={apply_form}
+                                                            />
+                                                        </td>
+                                                        <td>
+                                                            <FileInput
+                                                                name={`documents[${i}]`}
+                                                                required
+                                                                accept="application/pdf"
+                                                                formik={apply_form}
+                                                            />
+                                                        </td>
+                                                        <td>
+                                                            <button onClick={() => apply_form.setValues({
+                                                                ...apply_form.values,
+                                                                documents: apply_form.values.documents.filter((v, idx) => i != idx)
+                                                            })}><DashCircle color="red" /></button>
+                                                        </td>
 
-                                    </tr>
-                                ))}
-                        </tbody>
-                    </Table>
-                }
-            </ViewCard>
-            </Col>
-          </Row>
-          {/* Files End */}
+                                                    </tr>
+                                                ))}
+                                        </tbody>
+                                    </Table>
+                                }
+                            </ViewCard>
+                        </Col>
+                    </Row>
+                    {/* Files End */}
 
-          <Row>
-            <BaseInput
-                className=" col-6 mt-3"
-                label="years_cdl_driving_experience"
-                placeholder="years_cdl_driving_experience"
-                name="years_cdl_experience"
-                type="int"
-                min={0}
-                formik={apply_form}
-              />
-            <BaseInput
-              className=" col-6 mt-3"
-              label={t("voilations_in_last_3_years")}
-              placeholder={t("voilations_in_last_3_years")}
-              name="accident_count"
-              type="int"
-              min={0}
-              formik={apply_form}
-              />
-          </Row>
+                    <Row>
+                        <BaseInput
+                            className=" col-6 mt-3"
+                            label="years_cdl_driving_experience"
+                            placeholder="years_cdl_driving_experience"
+                            name="years_cdl_experience"
+                            type="int"
+                            min={0}
+                            formik={apply_form}
+                        />
+                        <BaseInput
+                            className=" col-6 mt-3"
+                            label={t("voilations_in_last_3_years")}
+                            placeholder={t("voilations_in_last_3_years")}
+                            name="accident_count"
+                            type="int"
+                            min={0}
+                            formik={apply_form}
+                        />
+                    </Row>
 
-          <Row>
-            <BaseCheck
-                className="col-6 mt-4"
-                label="can_pass_drug_and_alcohol_test"
-                name="can_pass_drug_test"
-                formik={apply_form}
-                />
-          </Row>
+                    <Row>
+                        <BaseCheck
+                            className="col-6 mt-4"
+                            label="can_pass_drug_and_alcohol_test"
+                            name="can_pass_drug_test"
+                            formik={apply_form}
+                        />
+                    </Row>
 
-          {/* //To Do - Either will be able to create new account or not
+                    {/* //To Do - Either will be able to create new account or not
           {
             !user &&
             <>
@@ -321,16 +325,16 @@ export default function JobApply({ job }) {
           }
             */}
 
-          <Row>
-            <div className=" col-12">
-              <p className='mx-3 mt-5'>{t('i_accept_{terms_and_condition}', { terms_and_condition: t('terms_and_condition') })}</p>
-            </div>
-          </Row>
-        </form>
+                    <Row>
+                        <div className=" col-12">
+                            <p className='mx-3 mt-5'>{t('i_accept_{terms_and_condition}', { terms_and_condition: t('terms_and_condition') })}</p>
+                        </div>
+                    </Row>
+                </form>
 
 
-      </ViewModal>
+            </ViewModal>
 
-    </>
-  )
+        </>
+    )
 }

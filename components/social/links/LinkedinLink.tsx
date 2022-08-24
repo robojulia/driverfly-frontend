@@ -7,6 +7,7 @@ export function LinkedinLink(props: SocialLinkProps) {
 
     return (
         <BaseSocialLink
+            color='#0077B5'
             href="https://www.linkedin.com/company/driverfly"
             text={showText ? "linkedin.com/company/driverfly" : null}
             iconSize={iconSize}

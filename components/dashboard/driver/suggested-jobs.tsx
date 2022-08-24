@@ -7,6 +7,7 @@ import { globalAjaxExceptionHandler } from '../../../utils/ajax';
 import { toast } from 'react-toastify';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { useEffectAsync } from "../../../utils/react";
+import Link from "next/link";
 
 export default function SuggestedJobs() {
 
@@ -28,46 +29,43 @@ export default function SuggestedJobs() {
   }, []);
 
   return (
-    <>
-
-      <div>
-
-        <Row>
-          <h1>Jobs</h1>
-        </Row>
-        <Row>
-          <Col lg="12">
-            <Card>
-              <CardBody className="">
-                <Table bordered striped>
-                  <thead>
+    <div className="pt-5">
+      <Row>
+        <h2>{t("SUGGESTED_JOBS")}</h2>
+      </Row>
+      <Row>
+        <Col lg="12">
+          <Card>
+            <CardBody className="">
+              <Table bordered striped>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Job Title</th>
+                    <th>Job Type</th>
+                    <th>Company</th>
+                    <th>Post Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {jobs.length > 0 && jobs.map((job, index) => (
                     <tr>
-                      <th>#</th>
-                      <th>Job Title</th>
-                      <th>Job Type</th>
-                      <th>Company</th>
-                      <th>Post Date</th>
+                      <td scope="row">{index + 1}</td>
+                      <td>
+                        <Link href={`/dashboard/driver/jobs/${job.job?.id}`}><a>{job.job?.title}</a></Link>
+                      </td>
+                      <td>{t(`JobEmploymentType.${job.job?.employment_type}`)}</td>
+                      <td>{job.job?.company?.name}</td>
+                      <td>{new Date(job.job?.created_at).toDateString()}</td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {jobs.length > 0 && jobs.map((job, index) => (
-                      <tr>
-                        <td scope="row">{index + 1}</td>
-                        <td>{job.job?.title}</td>
-                        <td>{t(`JobEmploymentType.${job.job?.employment_type}`)}</td>
-                        <td>{job.job?.company?.name}</td>
-                        <td>{new Date(job.job?.created_at).toDateString()}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-
-      </div>
-    </>
+                  ))}
+                </tbody>
+              </Table>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
+    </div>
   )
 };
 

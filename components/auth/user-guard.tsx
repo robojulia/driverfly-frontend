@@ -31,20 +31,36 @@ export function UserGuard({ permissions, children }: UserGuardProps) {
                         permissions = [permissions];
 
                     if (!hasPermission(...permissions)) {
-                        await router.push("/");
+                        router.push("/");
                         return false;
                     }
                 }
                 else return false;
             }
 
-            if (user && user.jwt?.exp) {
-                const msToExpiration = jwtExpiryTimeout(user.jwt);
-                console.log("Expires in ms: ", msToExpiration);
+            if (user) {
+                // HF, temporarily disable this redirect until notification service is fixed
+                // if (user.emailTokenTimestamp) {
+                //     if (router.asPath.startsWith("/dashboard")) {
+                //         router.push("/login/verify-email");
+                //         return false;
+                //     }
+                // }
 
-                const timeoutId = window.setTimeout(CheckAuth, msToExpiration);
-
-                setTimeoutId(timeoutId);
+                // if (user.phoneTokenTimestamp) {
+                //     if (router.asPath.startsWith("/dashboard")) {
+                //         router.push("/login/verify-phone");
+                //         return false;
+                //     }
+                // }
+                if (user.jwt?.exp) {
+                    const msToExpiration = jwtExpiryTimeout(user.jwt);
+                    console.log("Expires in ms: ", msToExpiration);
+    
+                    const timeoutId = window.setTimeout(CheckAuth, msToExpiration);
+    
+                    setTimeoutId(timeoutId);
+                }
             }
         }
 

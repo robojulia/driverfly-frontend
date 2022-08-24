@@ -23,7 +23,7 @@ export function PublicPage(props: PublicPageProps) {
                 </div>
             </div>
         }
-        <Container>
+        <Container className="mb-4">
             {children}
         </Container>
     </>);

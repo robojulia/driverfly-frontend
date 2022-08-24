@@ -27,7 +27,7 @@ export default function Contact() {
 
             try {
                 await contactApi.sendMail(dto);
-                toast.success(t("MAIL_SUCCESSFULLY_SEND"));
+                toast.success(t("THANKS_FOR_CONTACTING_US"));
             }
             catch (e) {
                 globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SEND_ME" });

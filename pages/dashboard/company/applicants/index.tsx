@@ -1,28 +1,19 @@
 import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
 import { Row, Col } from "react-bootstrap";
 import { toast } from "react-toastify";
-
 import { TranslateInterface, useTranslation } from "../../../../hooks/useTranslation";
-
 import { FormGroup, FormControlLabel, Switch } from '@mui/material';
-import { EyeFill, PencilFill} from 'react-bootstrap-icons';
-
-
-
+import { EyeFill, PencilFill } from 'react-bootstrap-icons';
 import ApplicantApi from "../../../api/applicant";
 import React, { useEffect, useState } from 'react';
 import { NextRouter, useRouter } from 'next/router';
 import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum';
 import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
-
 import { JobEntity } from '../../../../models/job/job.entity';
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
-
 import ShowEnumFromString from "../../../../components/enum-filters/show-enum-from-string";
-
 import * as numbers from "../../../../utils/number";
 import { Button, ButtonGroup } from "react-bootstrap";
-
 import PageLayout from "../../../../components/layouts/page/PageLayout";
 import { useEffectAsync } from "../../../../utils/react";
 import ViewDataTable from "../../../../components/viewDetails/viewDataTable";
@@ -30,15 +21,12 @@ import { ApplicantJobEntity } from "../../../../models/applicant/applicant-job.e
 import { useAuth } from "../../../../hooks/useAuth";
 import BaseSelect from "../../../../components/forms/BaseSelect";
 import BaseTextArea from "../../../../components/forms/BaseTextArea";
-
 import { buildAddress } from "../../../../utils/common";
 import ViewModal from "../../../../components/viewDetails/viewModal";
 import { useFormik } from "formik";
 import BaseCheckList from "../../../../components/forms/BaseCheckList";
 import { ApplicantReasonCodeFired, ApplicantReasonCodeNotInterested, ApplicantReasonCodeNotQualified, ApplicantReasonCodeQuit } from "../../../../enums/applicants/applicant-reason-codes.enum";
-
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
-
 import OverlyPopover from "../../../../components/popover/overly-popover";
 import Link from "next/link";
 
@@ -46,21 +34,17 @@ const ViewMode = {
     job: "job",
     applicant: "applicant"
 }
-
 interface ConsolodatedApplicant extends ApplicantEntity {
     jobs?: ConsolodatedApplicantJob[];
 }
-
 interface ConsolodatedJob extends JobEntity {
     applicants?: ConsolodatedApplicantJob[];
 }
-
 interface ConsolodatedApplicantJob extends ApplicantJobEntity {
     // todo: extend with qualifications
     meets_basic_qualifications?: boolean;
     qualification_fail_reason?: string[];
 }
-
 export default function Applicants() {
     // continue loading
     const { t } = useTranslation();
@@ -71,9 +55,9 @@ export default function Applicants() {
 
     let { viewMode, jobId } = router.query;
 
-    if (!ViewMode[`${viewMode}`]) viewMode = ViewMode.applicant;
+    if (!ViewMode[`${viewMode}`]) viewMode = ViewMode.job;
 
-    const [ applicants, setApplicants ] = useState<ApplicantEntity[]>([]);
+    const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
 
     useEffectAsync(async () => {
         const api = new ApplicantApi();
@@ -83,7 +67,7 @@ export default function Applicants() {
         });
 
         setApplicants(data);
-    }, [ user, jobId, viewMode ]);
+    }, [user, jobId, viewMode]);
 
     const onViewClick = (id: number) => {
         router.push(`${router.pathname}/${id}`);
@@ -130,7 +114,7 @@ export default function Applicants() {
                     const api = new ApplicantApi();
 
                     await api.jobs.update(applicant.id, job.id, { status: value });
-        
+
                     await router.reload();
                     break;
             }
@@ -173,26 +157,26 @@ export default function Applicants() {
             title="APPLICANTS"
             actions={(
                 <>
-                {
-                    canCreate &&
-                    <ButtonGroup size="sm" style={{ float: "right" }}>
-                        <Button variant="primary" onClick={() => router.push("/dashboard/company/applicants/create")}>
-                            + {t("CREATE")}
-                        </Button>
-                        <Button variant="" className="theme-general-btn" onClick={() => router.push("/dashboard/company/applicants/import")}>
-                            + {t("IMPORT_APPLICANTS")}
-                        </Button>
-                    </ButtonGroup>
-                }
+                    {
+                        canCreate &&
+                        <ButtonGroup size="sm" style={{ float: "right" }}>
+                            <Button variant="primary" onClick={() => router.push("/dashboard/company/applicants/create")}>
+                                + {t("CREATE")}
+                            </Button>
+                            <Button variant="" className="theme-general-btn" onClick={() => router.push("/dashboard/company/applicants/import")}>
+                                + {t("IMPORT_APPLICANTS")}
+                            </Button>
+                        </ButtonGroup>
+                    }
                 </>
             )}
-            >
+        >
             <Row>
                 <Col className='force-overflow p-0  '>
                     <FormGroup style={{ float: "right" }}>
                         <FormControlLabel
                             control={<Switch value={viewMode === ViewMode.applicant ? ViewMode.job : ViewMode.applicant} checked={viewMode === ViewMode.applicant} onChange={onViewModeChange} />}
-                            label={t("VIEW_BY_{name}", { name: t("APPLICANT") })}
+                            label={t("VIEW_BY_{name}", { name: t(viewMode === ViewMode.applicant ? "APPLICANT" : "JOB") })}
                         />
                     </FormGroup>
                     {viewMode === ViewMode.applicant && <ApplicantView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
@@ -216,7 +200,7 @@ export default function Applicants() {
                             labelPrefix="ApplicantStatus"
                             enumType={ApplicantStatus}
                             onChange={onStatusChange}
-                            />
+                        />
                         {
                             applicantJobForm.values.status === ApplicantStatus.OTHER &&
                             <BaseTextArea
@@ -226,7 +210,7 @@ export default function Applicants() {
                                 required
                                 maxLength={100}
                                 formik={applicantJobForm}
-                                />
+                            />
                         }
                         {
                             applicantJobForm.values.status === ApplicantStatus.INACTIVE_CONTACTED_NOT_QUALIFIED &&
@@ -239,7 +223,7 @@ export default function Applicants() {
                                 formik={applicantJobForm}
                                 labelPrefix="ApplicantReasonCodeNotQualified"
                                 enumType={ApplicantReasonCodeNotQualified}
-                                />
+                            />
                         }
                         {
                             applicantJobForm.values.status === ApplicantStatus.INACTIVE_CONTACTED_UNINTERESTED &&
@@ -252,7 +236,7 @@ export default function Applicants() {
                                 formik={applicantJobForm}
                                 labelPrefix="ApplicantReasonCodeNotInterested"
                                 enumType={ApplicantReasonCodeNotInterested}
-                                />
+                            />
                         }
                         {
                             applicantJobForm.values.status === ApplicantStatus.INACTIVE_QUIT &&
@@ -265,7 +249,7 @@ export default function Applicants() {
                                 formik={applicantJobForm}
                                 labelPrefix="ApplicantReasonCodeQuit"
                                 enumType={ApplicantReasonCodeQuit}
-                                />
+                            />
                         }
                         {
                             applicantJobForm.values.status === ApplicantStatus.INACTIVE_FIRED &&
@@ -278,7 +262,7 @@ export default function Applicants() {
                                 formik={applicantJobForm}
                                 labelPrefix="ApplicantReasonCodeFired"
                                 enumType={ApplicantReasonCodeFired}
-                                />
+                            />
                         }
                         {
                             applicantJobForm.values.reason_codes?.includes("OTHER") &&
@@ -289,7 +273,7 @@ export default function Applicants() {
                                 required
                                 maxLength={100}
                                 formik={applicantJobForm}
-                                />
+                            />
                         }
                     </Row>
                     <Row>
@@ -322,11 +306,11 @@ function getApplicantStatus(applicantJob: ApplicantJobEntity, t: TranslateInterf
         case ApplicantStatus.INACTIVE_CONTACTED_NOT_QUALIFIED:
             return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v === ApplicantReasonCodeNotQualified.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeNotQualified.${v}`)).join(", ")})`;
         case ApplicantStatus.INACTIVE_CONTACTED_UNINTERESTED:
-            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v === ApplicantReasonCodeNotInterested.OTHER ? applicantJob.reason_codes_other :t(`ApplicantReasonCodeNotInterested.${v}`)).join(", ")})`;
+            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v === ApplicantReasonCodeNotInterested.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeNotInterested.${v}`)).join(", ")})`;
         case ApplicantStatus.INACTIVE_QUIT:
-            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v === ApplicantReasonCodeQuit.OTHER ? applicantJob.reason_codes_other :t(`ApplicantReasonCodeQuit.${v}`)).join(", ")})`;
+            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v === ApplicantReasonCodeQuit.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeQuit.${v}`)).join(", ")})`;
         case ApplicantStatus.INACTIVE_FIRED:
-            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v === ApplicantReasonCodeFired.OTHER ? applicantJob.reason_codes_other :t(`ApplicantReasonCodeFired.${v}`)).join(", ")})`;
+            return `${t(`ApplicantStatus.${applicantJob.status}`)} (${applicantJob.reason_codes.map(v => v === ApplicantReasonCodeFired.OTHER ? applicantJob.reason_codes_other : t(`ApplicantReasonCodeFired.${v}`)).join(", ")})`;
         default:
             return t(`ApplicantStatus.${applicantJob.status}`);
     }
@@ -383,9 +367,9 @@ function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
 
             if (!experience) {
                 results.meets_basic_qualifications = false;
-                results.qualification_fail_reason.push({ key: "DOES_NOT_HAVE_{name}_EXPERIENCE", name: `JobEquipmentType.${skill.type}`});
+                results.qualification_fail_reason.push({ key: "DOES_NOT_HAVE_{name}_EXPERIENCE", name: `JobEquipmentType.${skill.type}` });
             }
-            else if ( experience.years < skill.years) {
+            else if (experience.years < skill.years) {
                 results.meets_basic_qualifications = false;
                 results.qualification_fail_reason.push({ key: "YEARS_OF_{name}_EXPERIENCE_TOO_LOW", name: `JobEquipmentType.${skill.type}` });
             }
@@ -428,102 +412,144 @@ function ApplicantView(props: ViewProps) {
         };
     });
 
-    return (<ViewDataTable<ConsolodatedApplicant>
-        preExpanded={(applicant) => applicant.jobs?.length > 0}
-        columns={[
-            {
-                id: "name",
-                name: "NAME",
-                selector: applicant => getApplicantName(applicant),
-                cell: applicant => (
-                    <Link href={`${router.pathname}/${applicant.id}`}>
-                        <a>{getApplicantName(applicant)}</a>
-                    </Link>
-                ),
-                hidable: false,
-            },
-            {
-                id: "phone",
-                name: "PHONE",
-                selector: applicant => applicant.phone,
-            },
-            {
-                id: "email",
-                name: "EMAIL",
-                selector: applicant => applicant.email,
-            },
-            {
-                id: "assigned_to",
-                name: "ASSIGNED_TO",
-                selector: applicant => applicant.assignedUser?.name || t("NONE"),
-            },
-        ]}
-        items={items}
-        actions={row => [
-            {
-                icon: EyeFill,
-                label: "VIEW",
-                onClick: (e) => onViewClick(row.id)
-            },
-            {
-                icon: PencilFill,
-                label: "EDIT",
-                onClick: (e) => onEditClick(row.id),
-                hide: !hasPermission("CanUpdateApplicant")
-            },
-        ]}
-        expandableRowsComponent={({ data }) => (
-            <ViewDataTable<ConsolodatedApplicantJob>
-                noDataComponent={(<>{t("NO_APPLIED_JOBS_FOUND")}</>)}
+    return (
+        <div className="applicant__table__sty">
+            <ViewDataTable<ConsolodatedApplicant>
+                // preExpanded={(applicant) => applicant.jobs?.length > 0}
+                customStyles={{
+                    headRow: {
+                        style: {
+                            background: "#5bb0b9",
+                            color: "white"
+                        },
+                    },
+                }}
                 columns={[
                     {
-                        name: "JOB",
-                        selector: aJob => aJob.job.title,
+                        id: "id",
+                        name: 'ID',
+                        selector: applicant => applicant.id,
+                    },
+                    {
+                        id: "name",
+                        name: "NAME",
+                        selector: applicant => getApplicantName(applicant),
                         hidable: false,
                     },
                     {
-                        name: "DATE_APPLIED",
-                        selector: aJob => new Date(aJob.created_at).toDateString(),
-                        hidable: false,
+                        id: "member",
+                        name: "IS_MMEMBER",
+                        selector: applicant => !!!applicant.user?.id ? t('MMEMBER') : t('NON_MMEMBER'),
                     },
                     {
-                        name: "STATUS",
-                        cell: aJob => (<OverlyPopover
-                            skipTranslate
-                            slice_at={40}
-                            str={getApplicantStatus(aJob, t)}
-                        />),
-                        selector: aJob => getApplicantStatus(aJob, t),//t(`ApplicantStatus.${aJob.status}`),
-                        hidable: false,
+                        id: "city",
+                        name: "CITY",
+                        selector: applicant => applicant.city,
                     },
                     {
-                        name: "MEETS_BASIC_QUALIFICATIONS",
-                        selector: aJob => t(aJob.meets_basic_qualifications ? "YES" : "NO"),
-                        hidable: false,
+                        id: "state",
+                        name: "STATE",
+                        selector: applicant => applicant.state,
                     },
                     {
-                        name: "REASONS_IF_NO",
-                        selector: aJob => aJob.qualification_fail_reason.join("<br />"),
-                        hidable: false,
+                        id: "phone",
+                        name: "PHONE",
+                        selector: applicant => applicant.phone,
                     },
                     {
-                        cell: aJob => (
-                            <BaseSelect
-                                name={data.id.toString()}
-                                value=""
-                                onChange={e => onChangeStatus(e, data, aJob.job)}
-                                placeholder={"CHANGE_STATUS"}
-                                labelPrefix="ApplicantStatus"
-                                enumType={ApplicantStatus}
-                            />
-                        )
+                        id: "email",
+                        name: "EMAIL",
+                        selector: applicant => applicant.email,
+                    },
+                    {
+                        id: "assigned_to",
+                        name: "ASSIGNED_TO",
+                        selector: applicant => applicant.assignedUser?.name || t("NONE"),
                     },
                 ]}
-                hideSearch
-                items={data.jobs}
-                />
-        )}
-     />);
+                items={items}
+                actions={row => [
+                    {
+                        icon: EyeFill,
+                        label: "VIEW",
+                        onClick: (e) => onViewClick(row.id)
+                    },
+                    {
+                        icon: PencilFill,
+                        label: "EDIT",
+                        onClick: (e) => onEditClick(row.id),
+                        hide: !hasPermission("CanEditApplicant")
+                    },
+                ]}
+                expandableRowsComponent={({ data }) => (
+                    <ViewDataTable<ConsolodatedApplicantJob>
+                        noDataComponent={(<>{t("NO_APPLIED_JOBS_FOUND")}</>)}
+                        customStyles={{
+                            headCells: {
+                                style: {
+                                    background: "#98a3ad",
+                                    color: "white"
+                                },
+                            },
+                        }}
+                        columns={[
+                            {
+                                name: "ID",
+                                selector: aJob => aJob.job.id,
+                                hidable: false,
+                            },
+
+                            {
+                                name: "JOB",
+                                selector: aJob => aJob.job.title,
+                                hidable: false,
+                            },
+                            {
+                                name: "DATE_APPLIED",
+                                selector: aJob => new Date(aJob.created_at).toDateString(),
+                                hidable: false,
+                            },
+                            {
+                                name: "STATUS",
+                                cell: aJob => (<OverlyPopover
+                                    skipTranslate
+                                    slice_at={40}
+                                    str={getApplicantStatus(aJob, t)}
+                                />),
+                                selector: aJob => getApplicantStatus(aJob, t),//t(`ApplicantStatus.${aJob.status}`),
+                                hidable: false,
+                            },
+                            {
+                                name: "MEETS_BASIC_QUALIFICATIONS",
+                                selector: aJob => t(aJob.meets_basic_qualifications ? "YES" : "NO"),
+                                hidable: false,
+                            },
+                            {
+                                name: "REASONS_IF_NO",
+                                selector: aJob => aJob.qualification_fail_reason.join(),
+                                hidable: false,
+                            },
+                            {
+                                cell: aJob => (
+                                    <BaseSelect
+                                        name={data.id.toString()}
+                                        value=""
+                                        onChange={e => onChangeStatus(e, data, aJob.job)}
+                                        placeholder={"CHANGE_STATUS"}
+                                        labelPrefix="ApplicantStatus"
+                                        enumType={ApplicantStatus}
+                                    />
+                                )
+                            },
+                        ]}
+                        hideSearch
+                        items={data.jobs}
+                    />
+                )}
+            />
+        </div>
+
+    );
 }
 
 function JobView(props: ViewProps) {
@@ -532,7 +558,7 @@ function JobView(props: ViewProps) {
     const { hasPermission } = useAuth();
 
     let items: ConsolodatedJob[] = [];
-    
+
     let jobMap: { [jobId: number]: ConsolodatedJob } = {};
 
     applicants.forEach(applicant => {
@@ -566,7 +592,14 @@ function JobView(props: ViewProps) {
     items = Object.values(jobMap);
 
     return (<ViewDataTable<ConsolodatedJob>
-        preExpanded
+        customStyles={{
+            headRow: {
+                style: {
+                    background: "#5bb0b9",
+                    color: "white"
+                },
+            },
+        }}
         columns={[
             {
                 id: "job",
@@ -598,6 +631,14 @@ function JobView(props: ViewProps) {
         items={items}
         expandableRowsComponent={({ data }) => (
             <ViewDataTable<ConsolodatedApplicantJob>
+                customStyles={{
+                    headCells: {
+                        style: {
+                            background: "#98a3ad",
+                            color: "white"
+                        },
+                    },
+                }}
                 columns={[
                     {
                         name: "NAME",
@@ -608,6 +649,19 @@ function JobView(props: ViewProps) {
                             </Link>
                         ),
                         hidable: false,
+                    },
+                    {
+                        id: "member",
+                        name: "IS_MMEMBER",
+                        selector: aJob => !!!aJob.applicant.user?.id ? t('MMEMBER') : t('NON_MMEMBER'),
+                    },
+                    {
+                        name: "CITY",
+                        selector: aJob => aJob.applicant.city,
+                    },
+                    {
+                        name: "STATE",
+                        selector: aJob => aJob.applicant.state,
                     },
                     {
                         name: "DATE_APPLIED",
@@ -621,7 +675,7 @@ function JobView(props: ViewProps) {
                             slice_at={40}
                             str={getApplicantStatus(aJob, t)}
                         />),
-                        selector: aJob => getApplicantStatus(aJob, t),//t(`ApplicantStatus.${aJob.status}`),
+                        selector: aJob => getApplicantStatus(aJob, t),
                         hidable: false,
                     },
                     {
@@ -631,7 +685,7 @@ function JobView(props: ViewProps) {
                     },
                     {
                         name: "REASONS_IF_NO",
-                        selector: aJob => aJob.qualification_fail_reason.join("<br />"),
+                        selector: aJob => aJob.qualification_fail_reason.join(),
                         hidable: false,
                     },
                     {
@@ -667,7 +721,7 @@ function JobView(props: ViewProps) {
                     },
                 ]}
                 items={data.applicants}
-                />
+            />
         )}
-     />);
+    />);
 }

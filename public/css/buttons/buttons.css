@@ -86,7 +86,7 @@
 }
 
 .ort-btn .theme-primary-btn {
-    padding: 14px 70px;
+    padding: 14px 5px;
     width: 100%;
 }
 
@@ -129,6 +129,12 @@
     color: #fff !important;
 }
 
+.badge-primary {
+    background: #2da2af !important;
+    border-color: #2da2af !important;
+    color: #fff !important;
+}
+
 .btn-primary:hover {
     background: #2da2af !important;
     border-color: #2da2af;
@@ -138,4 +144,18 @@
 .btn.btn-primary_padded {
     padding: 15px 30px !important;
     border-radius: 3px;
+}
+.theme-primary2-btn{
+    background: #1b4454 !important;
+    border-color: #1b4454 !important;
+    padding: 14px 5px !important;
+    color: #fff !important;
+    width: 100%;
+}
+.theme-danger-btn{
+    background: #e9280e !important;
+    border-color: #e9280e !important;
+    padding: 14px 5px !important;
+    color: #fff !important;
+    width: 100%;
 }

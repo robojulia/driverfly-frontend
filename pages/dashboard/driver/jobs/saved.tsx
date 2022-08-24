@@ -34,14 +34,27 @@ export default function JobsSaved() {
         else {
             setSavedJobs([]);
         }
-    }, [ user ]);
+    }, [user]);
 
     return (
         <PageLayout
             title="SAVED_JOBS"
-            >
+        >
             <ViewDataTable<SavedJobEntity>
+                    customStyles={{
+                        headCells: {
+                            style: {
+                                background: "#5bb0b9",
+                                color: "white"
+                            },
+                        },
+                    }}
                 columns={[
+                    {
+                        id: "id",
+                        name: "ID",
+                        selector: v => v.id,
+                    },
                     {
                         id: "title",
                         name: "job_title",

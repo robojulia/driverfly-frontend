@@ -16,7 +16,6 @@ interface ClassValidatorError {
 
 function isClassValidatorError(obj: unknown): obj is ClassValidatorError {
     return Object.prototype.hasOwnProperty.call(obj, "statusCode")
-        && Object.prototype.hasOwnProperty.call(obj, "error")
         && Object.prototype.hasOwnProperty.call(obj, "message");
 }
 
