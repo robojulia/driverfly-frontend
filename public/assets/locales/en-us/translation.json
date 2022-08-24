@@ -964,6 +964,7 @@
     "{name}_ALREADY_EXISTS": "{{name}} already exists and will be merged",
     "{name}_ALREADY_EXISTS_NO_MERGE": "{{name}} may be a user of DriverFly who has previously applied to a job with your company.",
     "UNABLE_TO_SAVE": "Unable to save",
+    "UNABLE_TO_DELETE": "Unable to delete",
     "CLEAR": "Clear",
     "IMPORT": "Import",
     "BASIC_DETAILS": "Basic Details",

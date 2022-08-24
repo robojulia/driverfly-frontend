@@ -109,6 +109,11 @@ class ApplicantApi extends BaseApi {
 
             return data;
         },
+        update: async (noteId: number, dto: ApplicantNoteEntity): Promise<ApplicantNoteEntity> => {
+            const { data } = await this.put(`${this.baseUrl}/notes/${noteId}`, dto);
+
+            return data;
+        },
         remove: async (noteId: number): Promise<any> => {
             const { data } = await this.delete(`${this.baseUrl}/notes/${noteId}`);
 
