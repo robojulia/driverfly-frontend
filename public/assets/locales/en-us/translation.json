@@ -903,6 +903,7 @@
     "SAVE": "Save",
     "IMPORT_APPLICANTS": "Import Applicants",
     "UPLOAD_YOUR_FILE": "Upload your file",
+    "FILE_MUST_BE_OF_{size}_{unit}": "File size must not be greater than {{size}} {{unit}}",
     "DOWNLOAD_TEMPLATE": "Download Template",
     "ONLY_DISPLAY_ERRORS": "Only display errors",
     "ONE_OR_MORE_ERRORS_WERE_FOUND_ON_INPUT_FILE": "One or more errors were found on the input file, please correct them and re-upload",
