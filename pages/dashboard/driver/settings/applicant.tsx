@@ -37,6 +37,7 @@ import { useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'
 import { useEffectAsync } from "../../../../utils/react";
+import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
 
 export default function Applicant() {
     const { t } = useTranslation();
@@ -230,6 +231,14 @@ export default function Applicant() {
                                     label="AUTHORIZED_TO_WORK_IN_THE_US"
                                     name="authorized_to_work_in_us"
                                     formik={form}
+                                />
+                               <BaseCheckList
+                                    className="col-12 mt-2"
+                                    label="PREFERRED_LOCATION"
+                                    name="preferred_location"
+                                    formik={form}
+                                    labelPrefix="JobGeography"
+                                    enumType={JobGeography}
                                 />
                             </Col>
                             <Col md="4" className="px-2">

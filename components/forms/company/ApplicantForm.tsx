@@ -269,15 +269,14 @@ export function ApplicantForm(props: ApplicantFormProps) {
                                     name="authorized_to_work_in_us"
                                     formik={form}
                                 />
-                                <BaseSelect
-                                    className="col-12 mt-1"
+                                <BaseCheckList
+                                    className="col-12 mt-2"
                                     label="PREFERRED_LOCATION"
-                                    placeholder="PREFERRED_LOCATION"
                                     name="preferred_location"
-                                    required
                                     formik={form}
                                     labelPrefix="JobGeography"
                                     enumType={JobGeography}
+
                                 />
                             </Col>
                             <Col md="4" className="px-2">
