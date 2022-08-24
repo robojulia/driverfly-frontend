@@ -33,7 +33,7 @@ export default function ChildPageLayout({ title, backPath, actions, children }: 
             <Row>
                 <Col>
                     <h2>
-                        <span style={{cursor: "pointer"}} onClick={handleBack}><ChevronLeft /></span>
+                        <span style={{ cursor: "pointer" }} onClick={handleBack}><ChevronLeft /></span>
                         {t(title || "GO_BACK")}
                     </h2>
                 </Col>

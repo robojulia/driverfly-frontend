@@ -607,6 +607,12 @@ function JobView(props: ViewProps) {
         }}
         columns={[
             {
+                id: "Id",
+                name: "ID",
+                selector: job => job.id,
+                hidable: false,
+            },
+            {
                 id: "job",
                 name: "JOB",
                 selector: job => job.title,

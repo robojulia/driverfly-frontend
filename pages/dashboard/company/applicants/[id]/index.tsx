@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 
 import { Button, ButtonGroup, Col, Row } from "react-bootstrap";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
-import { ArrowsExpand, BookmarkCheck, BookmarkDash, Pencil, Plus } from "react-bootstrap-icons";
+import { ArrowsExpand, BookmarkCheck, BookmarkDash, JournalPlus, Pencil, Plus, PlusLg, Trash } from "react-bootstrap-icons";
 
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
 
@@ -36,6 +36,7 @@ import DocumentApi from "../../../../api/document";
 import ChildPageLayout from "../../../../../components/layouts/page/ChildPageLayout";
 import SuggestedJobs from "../../../../../components/dashboard/driver/suggested-jobs";
 import { ApplicantSuggestedJobEntity } from "../../../../../models/applicant/applicant-suggested-job.entity";
+import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 
 export default function ViewApplicant({ id }) {
     const router = useRouter();
@@ -120,6 +121,22 @@ export default function ViewApplicant({ id }) {
 
     const addNoteClick = () => {
         setAddNoteVisible(true);
+    }
+
+    const deleteNoteClick = async (noteId: number) => {
+        try {
+            const applicantApi = new ApplicantApi();
+
+            const response = await applicantApi.notes.remove(noteId);
+
+            if (response.affected) {
+                let notes = applicant.notes.filter(v => (v.id !== noteId))
+
+                setApplicant({ ...applicant, notes })
+            }
+        } catch (e) {
+            globalAjaxExceptionHandler(e, { t: t, defaultMessage: "UNABLE_TO_DELETE", toast: toast });
+        }
     }
 
     const onEditClick = async () => {
@@ -413,12 +430,13 @@ export default function ViewApplicant({ id }) {
                                 notes: "NOTES",
                                 user: "USER",
                                 date: "DATE",
-                                add: <a href="#" onClick={addNoteClick}><Plus /></a>
+                                action: <a className="font-weight-bold" role="button" onClick={addNoteClick}><PlusLg /></a>
                             }}
                             items={applicant?.notes?.map(v => ({
                                 notes: v.text,
                                 user: `${v.user.first_name} ${v.user.last_name}`,
-                                date: new Date(v.created_at).toDateString()
+                                date: new Date(v.created_at).toDateString(),
+                                action: <a className="font-weight-bold" role="button" onClick={() => { deleteNoteClick(v.id) }}><Trash /></a>
                             }))}
                         />
 

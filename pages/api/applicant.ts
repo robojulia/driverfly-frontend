@@ -63,17 +63,17 @@ class ApplicantApi extends BaseApi {
     }
 
     me = {
-        get: async () : Promise<ApplicantEntity> => {
+        get: async (): Promise<ApplicantEntity> => {
             const { data } = await this.get(this.baseUrl);
 
             return data;
         },
-        jobs: async () : Promise<ApplicantJobEntity[]> => {
+        jobs: async (): Promise<ApplicantJobEntity[]> => {
             const { data } = await this.get(this.baseUrl + "/jobs");
 
             return data;
         },
-        suggestedJobs: async(): Promise<ApplicantSuggestedJobEntity[]> => {
+        suggestedJobs: async (): Promise<ApplicantSuggestedJobEntity[]> => {
             const { data } = await this.get(this.baseUrl + "/suggested-jobs");
 
             return data;
@@ -86,7 +86,7 @@ class ApplicantApi extends BaseApi {
     }
 
     suggestedJobs = {
-        get: async (applicantId: number) : Promise<ApplicantSuggestedJobEntity[]> => {
+        get: async (applicantId: number): Promise<ApplicantSuggestedJobEntity[]> => {
             const { data } = await this.get(`${this.baseUrl}/${applicantId}/suggested-jobs`);
 
             return data;
@@ -106,6 +106,11 @@ class ApplicantApi extends BaseApi {
         baseUrl: (applicantId: number) => `${this.baseUrl}/${applicantId}/notes`,
         create: async (applicantId: number, dto: ApplicantNoteEntity): Promise<ApplicantNoteEntity> => {
             const { data } = await this.post(this.notes.baseUrl(applicantId), dto);
+
+            return data;
+        },
+        remove: async (noteId: number): Promise<any> => {
+            const { data } = await this.delete(`${this.baseUrl}/notes/${noteId}`);
 
             return data;
         }
