@@ -90,7 +90,7 @@ export class ApplicantEntity {
         preferred_location: yup.array(
           (yup.string() as any).enum(JobGeography)
         ).nullable(),
-        // license_restrictions: (yup.string() as any).enum(LicenseRestrictions).nullable(),
+
 
         license_restrictions: yup.array(
           (yup.string() as any).enum(LicenseRestrictions)

@@ -437,6 +437,11 @@ function ApplicantView(props: ViewProps) {
                         hidable: false,
                     },
                     {
+                        id: "member",
+                        name: "IS_MMEMBER",
+                        selector: applicant => !!!applicant.user?.id ? t('MMEMBER') : t('NON_MMEMBER'),
+                    },
+                    {
                         id: "city",
                         name: "CITY",
                         selector: applicant => applicant.city,
@@ -498,6 +503,11 @@ function ApplicantView(props: ViewProps) {
                                 name: "JOB",
                                 selector: aJob => aJob.job.title,
                                 hidable: false,
+                            },
+                            {
+                                id: "location",
+                                name: "LOCATION",
+                                selector: aJob => buildAddress(aJob.job.location),
                             },
                             {
                                 name: "DATE_APPLIED",
@@ -597,6 +607,12 @@ function JobView(props: ViewProps) {
         }}
         columns={[
             {
+                id: "Id",
+                name: "ID",
+                selector: job => job.id,
+                hidable: false,
+            },
+            {
                 id: "job",
                 name: "JOB",
                 selector: job => job.title,
@@ -644,6 +660,11 @@ function JobView(props: ViewProps) {
                             </Link>
                         ),
                         hidable: false,
+                    },
+                    {
+                        id: "member",
+                        name: "IS_MMEMBER",
+                        selector: aJob => !!!aJob.applicant.user?.id ? t('MMEMBER') : t('NON_MMEMBER'),
                     },
                     {
                         name: "CITY",

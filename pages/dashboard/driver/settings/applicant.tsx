@@ -168,6 +168,15 @@ export default function Applicant() {
                                         formik={form}
                                     />
                                 </Row>
+                                <BaseSelect
+                                    className="mt-1"
+                                    label="PREFERRED_LOCATION"
+                                    placeholder="PREFERRED_LOCATION"
+                                    name="preferred_location"
+                                    formik={form}
+                                    labelPrefix="JobGeography"
+                                    enumType={JobGeography}
+                                />
                             </Col>
                             <Col md="4" className="px-2">
                                 <BaseInput
@@ -211,7 +220,7 @@ export default function Applicant() {
                                     placeholder="years_cdl_experience"
                                     formik={form}
                                 />
-                                    <BaseCheckList
+                                <BaseCheckList
                                     className="col-12 p-1 "
                                     label="License_Restrictions"
                                     name="license_restrictions"

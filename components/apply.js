@@ -100,6 +100,10 @@ export default function JobApply({ job }) {
         setViewForm(false);
     }
 
+    if (apply_form.errors && Object.keys(apply_form.errors).length > 0)
+        console.error(apply_form.errors);
+    
+
     // uncomment this to go into form debugging mode
     // useEffect(async () => {
     //   console.log("apply_form", apply_form.values)

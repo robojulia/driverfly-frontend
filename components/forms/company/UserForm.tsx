@@ -46,7 +46,7 @@ export function UserForm(props: UserFormProps) {
     });
 
     useEffect(() => {
-        if (entity)
+        if (entity && !form.dirty)
             form.setValues(entity);
     }, [ entity ])
 

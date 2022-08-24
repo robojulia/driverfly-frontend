@@ -267,6 +267,21 @@
     display: none;
 }
 
+/* Show scrollbar on all datatables */
+
+.iXRfeU::-webkit-scrollbar {
+    display: block !important;
+}
+
+.iXRfeU::-webkit-scrollbar {
+    background: #f1f1f1;
+    display: block;
+}
+
+.iXRfeU::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
 /* Driver Dashboard  */
 
 .bg_yellow {
@@ -522,9 +537,11 @@ textarea {
     .profile-logo img {
         width: 20% !important;
     }
+
     .w-23 {
         width: 100% !important;
     }
+
     .account_tabs .react-tabs__tab {
         background-color: #1b4454 !important;
         color: #fff;
