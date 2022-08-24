@@ -54,16 +54,16 @@ export function VehicleForm(props: VehicleFormProps) {
             }
             catch (e) {
                 console.error("Unable to save entity", e);
-                globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: t("Forms.FAIL_{action}_{name}", { action: action, name: "VEHICLE" }, { translateProps: true })});
+                globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: t("Forms.FAIL_{action}_{name}", { action: action, name: "VEHICLE" }, { translateProps: true }) });
                 if (onSaveError) onSaveError(e);
             }
         },
     });
 
     useEffect(() => {
-        if (entity)
+        if (entity && !form.dirty)
             form.setValues(entity);
-    }, [ entity ]);
+    }, [entity]);
 
     // console.log("Rendering VehicleForm");
 
@@ -73,7 +73,7 @@ export function VehicleForm(props: VehicleFormProps) {
             onSubmit={form.handleSubmit}
             id={entity?.id}
             formik={form}
-            >
+        >
             <Row className="mt-2">
                 <BaseSelect
                     className={`col-${form.values.type === VehicleType.OTHER ? 3 : 6}`}
@@ -84,7 +84,7 @@ export function VehicleForm(props: VehicleFormProps) {
                     enumType={VehicleType}
                     labelPrefix="VehicleType"
                     formik={form}
-                    />
+                />
                 {
                     form.values.type === VehicleType.OTHER &&
                     <BaseInput
@@ -94,7 +94,7 @@ export function VehicleForm(props: VehicleFormProps) {
                         placeholder="TYPE"
                         required
                         formik={form}
-                        />
+                    />
                 }
                 <BaseSelect
                     className={`col-${form.values.trailer_type === VehicleTrailerType.OTHER ? 3 : 6}`}
@@ -104,7 +104,7 @@ export function VehicleForm(props: VehicleFormProps) {
                     enumType={VehicleTrailerType}
                     labelPrefix="VehicleTrailerType"
                     formik={form}
-                    />
+                />
                 {
                     form.values.trailer_type === VehicleTrailerType.OTHER &&
                     <BaseInput
@@ -114,7 +114,7 @@ export function VehicleForm(props: VehicleFormProps) {
                         placeholder="TRAILER_TYPE"
                         required
                         formik={form}
-                        />
+                    />
                 }
             </Row>
             <Row className="mt-2">
@@ -126,7 +126,7 @@ export function VehicleForm(props: VehicleFormProps) {
                     enumType={VehicleTransmissionType}
                     labelPrefix="VehicleTransmissionType"
                     formik={form}
-                    />
+                />
                 <BaseInput
                     className="col-3"
                     label="MAKE"
@@ -134,14 +134,14 @@ export function VehicleForm(props: VehicleFormProps) {
                     required
                     placeholder="MAKE"
                     formik={form}
-                    />
+                />
                 <BaseInput
                     className="col-3"
                     label="MODEL"
                     name="model"
                     placeholder="MODEL"
                     formik={form}
-                    />
+                />
                 <BaseInput
                     className="col-3"
                     label="YEAR"
@@ -149,7 +149,7 @@ export function VehicleForm(props: VehicleFormProps) {
                     type="int"
                     placeholder="YEAR"
                     formik={form}
-                    />
+                />
             </Row>
             <Row className="mt-2">
                 <FileInput
@@ -159,7 +159,8 @@ export function VehicleForm(props: VehicleFormProps) {
                     accept="image/*"
                     documentType={DocumentType.PHOTO}
                     formik={form}
-                    />
+                    allowedSizeInByte={3000000}
+                />
                 <BaseCheckList
                     className="col-4"
                     label="ACCESSORIES"
@@ -168,17 +169,17 @@ export function VehicleForm(props: VehicleFormProps) {
                     labelPrefix="VehicleAccessory"
                     enumType={VehicleAccessory}
                     formik={form}
-                    />
+                />
                 {
-                form.values.accessories.includes(VehicleAccessory.OTHER) &&
-                <BaseTextArea
-                    className="col-4"
-                    label="OTHER"
-                    name="accessory_other"
-                    required
-                    rows={3}
-                    placeholder="ACCESSORIES"
-                    formik={form}
+                    form.values.accessories.includes(VehicleAccessory.OTHER) &&
+                    <BaseTextArea
+                        className="col-4"
+                        label="OTHER"
+                        name="accessory_other"
+                        required
+                        rows={3}
+                        placeholder="ACCESSORIES"
+                        formik={form}
                     />
                 }
                 <Col xs="4">

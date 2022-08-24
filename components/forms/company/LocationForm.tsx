@@ -49,7 +49,7 @@ export function LocationForm(props: LocationFormProps) {
     });
 
     useEffect(() => {
-        if (entity)
+        if (entity && !form.dirty)
             form.setValues(entity);
     }, [ entity ]);
 
