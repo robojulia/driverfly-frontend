@@ -1145,6 +1145,9 @@
         "IF_YOU_ARE_ALREADY_A_USER_LOGIN": "If you are already a user, login"
     },
     "AND": "and",
+    "URGENT": "URGENT",
+    "RECENT_JOBS": "Recent Jobs",
+    "FEATURED_JOBS": "Featured Jobs",
     "ZIP_CODE_MIN_VALIDATION_MESSAGE": "Zip Code must be at least 5 digits",
     "ZIP_CODE_MAX_VALIDATION_MESSAGE": "Zip Code must be no more than 5 digits",
     "VERIFY_EMAIL": "Verify Email",
