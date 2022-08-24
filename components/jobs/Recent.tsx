@@ -42,7 +42,6 @@ export default function RecentJobs() {
                                             <div className="media align-items-center ">
                                                 <CompanyPhoto className="d-flex mr-4 truck-img border-0" job={job} company={job.company} />
                                                 <div className="media-body">
-                                                    <span className="urgent">{t("URGENT")}</span>
                                                     <h6>{t("RECENT_JOBS")}</h6>
                                                     <Link href={`/jobs/${job.id}/${job.slug}`}>
                                                         <a className='text-decoration-none '>
