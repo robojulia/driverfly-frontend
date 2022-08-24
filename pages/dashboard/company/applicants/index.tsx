@@ -505,6 +505,11 @@ function ApplicantView(props: ViewProps) {
                                 hidable: false,
                             },
                             {
+                                id: "location",
+                                name: "LOCATION",
+                                selector: aJob => buildAddress(aJob.job.location),
+                            },
+                            {
                                 name: "DATE_APPLIED",
                                 selector: aJob => new Date(aJob.created_at).toDateString(),
                                 hidable: false,
