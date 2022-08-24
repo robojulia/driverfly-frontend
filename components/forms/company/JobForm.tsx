@@ -68,6 +68,18 @@ export function JobForm(props: JobFormProps) {
 
     const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
 
+    const [ can, setCan ] = useState({
+        createLocation: false,
+        createVehicle: false
+    });
+
+    useEffect(() => {
+        setCan({
+            createLocation: hasPermission("CanCreateLocation"),
+            createVehicle: hasPermission("CanCreateVehicle"),
+        });
+    }, [ user ]);
+
     const form = useFormik({
         initialValues: new JobEntity(),
         validationSchema: JobEntity.yupSchema(),
@@ -77,7 +89,7 @@ export function JobForm(props: JobFormProps) {
     });
 
     useEffect(() => {
-        if (entity)
+        if (entity && !form.dirty)
             form.setValues(entity);
     }, [ entity ]);
 
@@ -421,7 +433,7 @@ export function JobForm(props: JobFormProps) {
                             valueKey="id"
                             createLabel={v => buildAddress(v)}
                             options={locations}
-                            append={<Button variant="outline-secondary create_btn" disabled={!hasPermission("CanCreateLocation")} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
+                            append={<Button variant="outline-secondary create_btn" disabled={!can.createLocation} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
                         />
                         <BaseInput
                             className="col-12"
@@ -763,7 +775,7 @@ export function JobForm(props: JobFormProps) {
                                         }}
                                         formik={form}
                                         append={<>
-                                            <Button variant="outline-secondary create_btn" disabled={!hasPermission("CanCreateVehicle")} onClick={() => setCreateVehicle(i)}><PlusCircle /> {t("CREATE")}</Button>
+                                            <Button variant="outline-secondary create_btn" disabled={!can.createVehicle} onClick={() => setCreateVehicle(i)}><PlusCircle /> {t("CREATE")}</Button>
                                         </>}
                                     />
                                 </BaseListRowControl>))

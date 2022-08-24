@@ -54,10 +54,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
     let { user, hasPermission } = useAuth();
 
-    const protectedFields = {
-        license_number: hasPermission("CanViewApplicant.license_number"),
-        social_security_number: hasPermission("CanViewApplicant.social_security_number"),
-    };
+    const [ protectedFields, setProtectedFields ] = useState({
+        license_number: false,
+        social_security_number: false
+    });
+
+    useEffect(() => {
+        setProtectedFields({
+            license_number: hasPermission("CanViewApplicant.license_number"),
+            social_security_number: hasPermission("CanViewApplicant.social_security_number"),
+        });
+    }, [ user ]);
 
     const form = useFormik({
         initialValues: new ApplicantEntity(),
@@ -118,7 +125,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
     }, [ user ]);
 
     useEffect(() => {
-        if (entity)
+        if (entity && !form.dirty)
             form.setValues(entity);
     }, [ entity ]);
 

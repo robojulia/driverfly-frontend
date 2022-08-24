@@ -61,7 +61,7 @@ export function VehicleForm(props: VehicleFormProps) {
     });
 
     useEffect(() => {
-        if (entity)
+        if (entity && !form.dirty)
             form.setValues(entity);
     }, [entity]);
 
