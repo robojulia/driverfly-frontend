@@ -647,6 +647,10 @@ function JobView(props: ViewProps) {
                 }}
                 columns={[
                     {
+                        name: "ID",
+                        selector: aJob => aJob.applicant.id,
+                    },
+                    {
                         name: "NAME",
                         selector: aJob => getApplicantName(aJob.applicant),
                         cell: aJob => (
