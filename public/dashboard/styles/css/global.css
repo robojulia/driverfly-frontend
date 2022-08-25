@@ -637,3 +637,6 @@ textarea {
     background-image: url("../../../img/arrowdown.svg");
 
 }
+.data_table_dropdown a{
+    color: #000 !important;
+}
