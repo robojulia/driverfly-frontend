@@ -5,7 +5,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 import { ArrowLeft, ArrowRight, Newspaper, PersonBadgeFill, QuestionCircle } from 'react-bootstrap-icons';
 import { useTranslation } from "../hooks/useTranslation";
-
+import React, { useRef } from 'react';
 import BaseInput from "../components/forms/BaseInput";
 import BaseTextArea from "../components/forms/BaseTextArea";
 import { useFormik } from "formik";
@@ -14,11 +14,11 @@ import { Row, Col } from "reactstrap"
 import { ToastContainer, toast } from 'react-toastify'
 import ContactApi from './api/contact';
 import { globalAjaxExceptionHandler } from '../utils/ajax';
-
+import {validateCaptcha} from './api/validate-captcha'
 export default function Contact() {
 
     const { t } = useTranslation();
-
+    const captchaRef = useRef(null)
     const form = useFormik({
         initialValues: new ContactFormDto(),
         validationSchema: ContactFormDto.yupSchema(),
@@ -36,8 +36,10 @@ export default function Contact() {
     });
 
 
-    function onChange(value) {
-        console.log("Captcha value:", value);
+    function onChange() {
+        const token = captchaRef.current.getValue();
+        captchaRef.current.reset();
+        validateCaptcha(token)
     }
     return (
         <>
@@ -105,6 +107,7 @@ export default function Contact() {
                                             <ReCAPTCHA
                                                 sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
                                                 onChange={onChange}
+                                                ref={captchaRef}
                                             />
                                             <button disabled={form.isSubmitting}
                                                 type="submit"
