@@ -37,6 +37,7 @@ import ChildPageLayout from "../../../../../components/layouts/page/ChildPageLay
 import SuggestedJobs from "../../../../../components/dashboard/driver/suggested-jobs";
 import { ApplicantSuggestedJobEntity } from "../../../../../models/applicant/applicant-suggested-job.entity";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
+import { jobGeography } from "../../../../../utils/jobs";
 
 export default function ViewApplicant({ id }) {
     const router = useRouter();
@@ -219,7 +220,7 @@ export default function ViewApplicant({ id }) {
                                         years_cdl_experience: applicant.years_cdl_experience,
                                         OWNER_OPERATOR: { text: applicant.is_owner_operator, default: t("UNKNOWN") },
                                         AUTHORIZED_TO_WORK_IN_THE_US: applicant.authorized_to_work_in_us,
-                                        PREFERRED_LOCATION: applicant.preferred_location ? t(`JobGeography.${applicant.preferred_location}`) : null,
+                                        PREFERRED_LOCATION: applicant.preferred_location?.map(v => t(`JobGeography.${v}`))
 
                                     }}
                                 />
