@@ -1,17 +1,13 @@
+import Head from "next/head";
 import Script from "next/script";
 
 export function ManyChatScript() {
     return (
-        <>
-        <script
-            defer
-            src={`//widget.manychat.com/108914868289684.js`}
-            />
-        <script
-            defer
-            src="https://mccdn.me/assets/js/widget.js"
-            />
-        </>
+        <Head>
+            {/* <!-- ManyChat --> */}
+            <script src="//widget.manychat.com/108914868289684.js" defer={true}></script>
+            <script src="https://mccdn.me/assets/js/widget.js" defer={true}></script>
+        </Head>
     );
 }
 

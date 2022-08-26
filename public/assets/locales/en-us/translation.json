@@ -896,6 +896,7 @@
     "CONSIDER_{name}_FOR": "Consider {{name}} for",
     "OTHER_ROLES": "Other Roles",
     "NOTES": "Notes",
+    "NOTE_DELETION_CONFIRMATION": "By submitting, I confirm to delete note.",
     "USER": "User",
     "DATE": "Date",
     "ADD_{name}": "Add {{name}}",
@@ -964,6 +965,7 @@
     "{name}_ALREADY_EXISTS": "{{name}} already exists and will be merged",
     "{name}_ALREADY_EXISTS_NO_MERGE": "{{name}} may be a user of DriverFly who has previously applied to a job with your company.",
     "UNABLE_TO_SAVE": "Unable to save",
+    "UNABLE_TO_DELETE": "Unable to delete",
     "CLEAR": "Clear",
     "IMPORT": "Import",
     "BASIC_DETAILS": "Basic Details",
@@ -1179,6 +1181,6 @@
     "GET_RESULTS": "Press enter to get results",
     "NO_RELATED_JOBS_YET": "No related jobs yet.",
     "JOB_CREATION_CONFIRMATION": "By submitting, I confirm that the details of this job are as honest and accurate to the best of my knowledge.",
-    "DON'T_HAVE_AN_ACCOUNT": "Don't have an account? Make one",
-    "ALREADY_EXISTS":"Already Exist"
+    "ALREADY_EXISTS": "Already Exist",
+    "DON'T_HAVE_AN_ACCOUNT": "Don't have an account? Make one"
 }
