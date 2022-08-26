@@ -96,10 +96,12 @@ export default function ViewApplicant({ id }) {
         }
     }
 
+    const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
+
     const addNoteForm = useFormik({
         initialValues: new ApplicantNoteEntity(),
         validationSchema: ApplicantNoteEntity.yupSchema(),
-        onSubmit: async (values) => {
+        onSubmit: async (values, { resetForm }) => {
             try {
                 const api = new ApplicantApi();
 
@@ -121,6 +123,7 @@ export default function ViewApplicant({ id }) {
                         note
                     ]
                 });
+                resetForm()
             } catch (e) {
                 globalAjaxExceptionHandler(e, { t: t, defaultMessage: "UNABLE_TO_SAVE", toast: toast });
             }
@@ -148,16 +151,28 @@ export default function ViewApplicant({ id }) {
     }
 
     const deleteNoteClick = async (noteId: number) => {
-        try {
-            const applicantApi = new ApplicantApi();
+        addNoteForm.setValues({ id: noteId });
+        setShowConfirmationModal(true);
+    }
 
+    const handleConfirmClick = async () => {
+        try {
+            const noteId = addNoteForm.values?.id
+            if (!!!noteId) {
+                setShowConfirmationModal(false);
+                return
+            }
+
+            const applicantApi = new ApplicantApi();
             const response = await applicantApi.notes.remove(noteId);
 
             if (response.affected) {
                 const notes = applicant.notes.filter(v => (v.id !== noteId))
-
                 setApplicant({ ...applicant, notes })
             }
+
+            setShowConfirmationModal(false);
+            addNoteForm.resetForm()
         } catch (e) {
             globalAjaxExceptionHandler(e, { t: t, defaultMessage: "UNABLE_TO_DELETE", toast: toast });
         }
@@ -493,7 +508,21 @@ export default function ViewApplicant({ id }) {
                 </form>
 
             </ViewModal>
-        </ChildPageLayout>);
+            <ViewModal
+                title="CONFIRMATION"
+                show={showConfirmationModal}
+                onCloseClick={() => setShowConfirmationModal(false)}
+                footer=
+                {
+                    <button type="button" className="btn btn-primary w-100 p-lg-3 p-5 mx-2" onClick={handleConfirmClick}>{t('CONFIRM')}</button>
+                }
+            >
+                <p className="m-3">
+                    {t('NOTE_DELETION_CONFIRMATION')}
+                </p>
+            </ViewModal>
+
+        </ChildPageLayout >);
 }
 
 ViewApplicant.getLayout = function getLayout(page) {

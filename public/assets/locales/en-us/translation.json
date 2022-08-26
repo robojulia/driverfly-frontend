@@ -896,6 +896,7 @@
     "CONSIDER_{name}_FOR": "Consider {{name}} for",
     "OTHER_ROLES": "Other Roles",
     "NOTES": "Notes",
+    "NOTE_DELETION_CONFIRMATION": "By submitting, I confirm to delete note.",
     "USER": "User",
     "DATE": "Date",
     "ADD_{name}": "Add {{name}}",
