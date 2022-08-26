@@ -172,16 +172,19 @@ export default function ViewApplicant({ id }) {
             {canEdit &&
                 <Row>
                     <Col>
-                        <div style={{ float: "right", marginBottom: "10px" }}>
+                        <div style={{ float: "right", marginBottom: "10px" }} className="assign_unassign">
                             <ButtonGroup size="sm">
-                                <Button type="button" className='theme-general-btn' variant='' onClick={onAssignClick}>
-                                    <BookmarkCheck /> {t("ASSIGN_TO_ME")}
-                                </Button>
+
+
                                 {
-                                    applicant?.assignedUser &&
-                                    <Button type="button" variant='danger' onClick={onUnassignClick}>
-                                        <BookmarkDash /> {t("UNASSIGN")}
-                                    </Button>
+                                    applicant?.assignedUser ?
+                                        <Button type="button" variant='danger' onClick={onUnassignClick}>
+                                            <BookmarkDash /> {t("UNASSIGN")}
+                                        </Button>
+                                        :
+                                        <Button type="button" className='theme-general-btn' variant='' onClick={onAssignClick}>
+                                            <BookmarkCheck /> {t("ASSIGN_TO_ME")}
+                                        </Button>
                                 }
                                 <Button type="button" onClick={onEditClick}>
                                     <Pencil /> {t("EDIT")}

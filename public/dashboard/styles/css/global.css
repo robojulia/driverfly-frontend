@@ -640,3 +640,7 @@ textarea {
 .data_table_dropdown a{
     color: #000 !important;
 }
+.assign_unassign .btn-danger:focus{
+    background-color: #dc3545 !important;
+    border: solid 1px #dc3545 !important;
+}
