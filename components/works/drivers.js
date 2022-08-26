@@ -3,7 +3,7 @@ import { FileEarmarkZip, Funnel, CheckSquare, Bell, Trophy, HandIndexThumb} from
 export default function Driver() {
     return (
         <>
-        <h3>How It Works</h3>
+        <h3 className='general-headings' style={{fontSize:' 40px'}}>How It Works</h3>
         <h3>Drivers</h3>
          <div className="row mb-4">
                    <div className="col-md-4">

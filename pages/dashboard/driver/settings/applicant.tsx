@@ -241,6 +241,14 @@ export default function Applicant() {
                                     name="authorized_to_work_in_us"
                                     formik={form}
                                 />
+                               <BaseCheckList
+                                    className="col-12 mt-2"
+                                    label="PREFERRED_LOCATION"
+                                    name="preferred_location"
+                                    formik={form}
+                                    labelPrefix="JobGeography"
+                                    enumType={JobGeography}
+                                />
                             </Col>
                             <Col md="4" className="px-2">
                                 <BaseCheckList

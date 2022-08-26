@@ -505,6 +505,11 @@ function ApplicantView(props: ViewProps) {
                                 hidable: false,
                             },
                             {
+                                id: "location",
+                                name: "LOCATION",
+                                selector: aJob => buildAddress(aJob.job.location),
+                            },
+                            {
                                 name: "DATE_APPLIED",
                                 selector: aJob => new Date(aJob.created_at).toDateString(),
                                 hidable: false,
@@ -605,7 +610,7 @@ function JobView(props: ViewProps) {
                 id: "Id",
                 name: "ID",
                 selector: job => job.id,
-                hidable: false,
+                hidable: true,
             },
             {
                 id: "job",
@@ -646,6 +651,10 @@ function JobView(props: ViewProps) {
                     },
                 }}
                 columns={[
+                    {
+                        name: "ID",
+                        selector: aJob => aJob.applicant.id,
+                    },
                     {
                         name: "NAME",
                         selector: aJob => getApplicantName(aJob.applicant),
