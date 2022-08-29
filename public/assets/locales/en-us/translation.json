@@ -1113,6 +1113,11 @@
     },
     "NO_NAME": "No Name",
     "SWITCH_COMPANY": "Switch Company",
+    "JobOrientation":{
+        "START_DATE":"start date",
+        "END_DATE":"end date"
+    },
+    "ORIENTATION_DETAILS":"Orienttation details",
     "CHANGE": "Change",
     "USER_NOT_ACTIVATED": "Check your email to activate your account",
     "ARE_YOU_SURE_YOU_WANT_TO_DELETE": "Are you sure you want to delete this record? This action is not reversable",
