@@ -108,22 +108,29 @@ export function JobForm(props: JobFormProps) {
     }, [ user ]);
 
     function handleMaxYearsForMvrRequirementType(e, idx) {
-        const { name, value } = e.target;
-        let mvr_requirements = form.values['mvr_requirements'];
-        mvr_requirements[idx].type = value;
-        switch (mvr_requirements[idx].type) {
+        const { value } = e.target;
+
+        const label = `mvr_requirements[${idx}]`;
+        const mvr_requirements = form.values[label];
+        let max_years = 5;
+
+        switch (value) {
             case MvrType.DUI:
-                mvr_requirements[idx].max_years = 2;
+                max_years = 2;
                 break;
             case MvrType.MOVING_VIOLATION_NOT_AT_FAULT:
-                mvr_requirements[idx].max_years = 3;
+                max_years = 3;
                 break;
             default:
-                mvr_requirements[idx].max_years = 5;
+                max_years = 5;
                 break;
         }
 
-        form.setFieldValue('mvr_requirements', mvr_requirements);
+        form.setFieldValue(label, {
+            ...mvr_requirements,
+            type: value,
+            max_years: max_years
+        });
     }
 
     function handlePayMethodUpdate(e) {
