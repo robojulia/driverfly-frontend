@@ -38,7 +38,7 @@ export default function JobDescription({ job }) {
                         }
                         <li className="row px-0">
                             <div className="col-md-3">
-                            {job.required_skills_other ?  t('OTHER') : ''}
+                            {job.required_skills_other ?  t('OTHER_SKILLS') : ''}
                             </div>
                             <div className="col-md-6">
                                 {job.required_skills_other}
