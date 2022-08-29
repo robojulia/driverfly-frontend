@@ -35,12 +35,12 @@ export default function Contact() {
         }
     });
 
-    const[disbableButton, setDisableButton] = React.useState(false)
+    const[enableButton, setEnableButton] = React.useState(false)
 
     function onChange() {
         const token = captchaRef.current.getValue();
         captchaRef.current.reset();
-        validateCaptcha(token, setDisableButton)
+        validateCaptcha(token, setEnableButton)
     }
     return (
         <>
@@ -110,7 +110,7 @@ export default function Contact() {
                                                 onChange={onChange}
                                                 ref={captchaRef}
                                             />
-                                            <button disabled={disbableButton == false}
+                                            <button disabled={enableButton == false}
                                                 type="submit"
                                                 className="btn contact-submit-btn float-right py-3 px-5 mb-4">
                                                 {t("submit")}  <ArrowRight />

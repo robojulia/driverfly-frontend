@@ -1,4 +1,4 @@
-export const validateCaptcha = (token,setDisableButton) => {
+export const validateCaptcha = (token,setEnableButton) => {
     return new Promise((resolve, reject) => {
       const secret_key = process.env.RECAPTCHA_SECRET
   
@@ -11,7 +11,7 @@ export const validateCaptcha = (token,setDisableButton) => {
         .then((google_response) => {
           if (google_response.success == true) {
             resolve(true)
-            setDisableButton(true)
+            setEnableButton(true)
           } else {
             resolve(false)
           }
