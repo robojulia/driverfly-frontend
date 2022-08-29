@@ -17,6 +17,7 @@ import { yupInit } from "../config/yup";
 import { chartJsInit } from "../config/chartjs";
 import { bootstrapInit } from "../config/bootstrap";
 
+
 import { AuthProvider } from "../components/auth/auth-provider";
 import { ManyChatScript } from "../components/scripts/manychat/manychat";
 
