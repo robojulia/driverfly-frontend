@@ -143,7 +143,7 @@ export function JobForm(props: JobFormProps) {
         let max_salary = getOrCurrent("max_salary");
         let min_weekly_pay = getOrCurrent("min_weekly_pay");
         let max_weekly_pay = getOrCurrent("max_weekly_pay");
-        debugger
+
         switch (form.values.pay_method) {
             case JobPayMethod.RATE_PER_MILE:
                 /**
