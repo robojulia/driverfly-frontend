@@ -45,7 +45,6 @@ export default function Applicant() {
 
     const form = useFormik({
         initialValues: new ApplicantEntity(),
-        // initialValues: applicant,
         validationSchema: ApplicantEntity.yupSchema(),
         onSubmit: async (values) => {
             if ("jobs" in values)
@@ -730,12 +729,22 @@ export default function Applicant() {
                                     />
                                     {
                                         form.values.tickets &&
-                                        <BaseTextArea
-                                            className="col-12 p-1  mt-2"
-                                            label="details"
-                                            name="tickets_details"
-                                            formik={form}
-                                        />
+                                        <>
+                                            <BaseInput
+                                                className="col-12 p-1  mt-2"
+                                                label="COUNT"
+                                                name="tickets_count"
+                                                type="int"
+                                                min="0"
+                                                formik={form}
+                                            />
+                                            <BaseTextArea
+                                                className="col-12 p-1  mt-2"
+                                                label="details"
+                                                name="tickets_details"
+                                                formik={form}
+                                            />
+                                        </>
                                     }
                                     <BaseCheck
                                         className="col-12 p-1  mt-2"
