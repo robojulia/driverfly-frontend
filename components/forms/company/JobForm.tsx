@@ -123,10 +123,7 @@ export function JobForm(props: JobFormProps) {
                 break;
         }
 
-        form.setValues({
-            ...form.values,
-            mvr_requirements: mvr_requirements
-        });
+        form.setFieldValue('mvr_requirements', mvr_requirements);
     }
 
     function handlePayMethodUpdate(e) {
