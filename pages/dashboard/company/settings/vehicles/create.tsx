@@ -17,10 +17,10 @@ export default function CreateVehicle() {
         <ChildPageLayout
             title={t("CREATE_{name}", { name: "VEHICLE" }, { translateProps: true })}
             backPath={backPath}
-            >
+        >
             <VehicleForm
                 onSaveComplete={goBack}
-                />
+            />
         </ChildPageLayout>
     );
 }

@@ -71,9 +71,10 @@ export default function MyNav() {
                         </NavDropdown>
                     </Nav>
                     <ul className="d-flex align-items-center mb-0">
-                        <li><a href="#" className="nav-link"> < Bell /></a></li>
+                       
                         {user ?
                             <>
+                                 <li><a href="#" className="nav-link"> < Bell /></a></li>
                                 <DashboardButton className="theme-secondary-btn mr-4" />
                                 <LogoutButton as={Button} className="theme-secondary-btn mr-4" />
                             </>

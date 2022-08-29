@@ -18,9 +18,10 @@ export interface FileInputProps extends BaseControlProps {
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     readOnly?: boolean;
-  }
-  
-  export default function FileInput({ documentType, formik, accept, required, className, label, handleBlur, placeholder, value, onChange, readOnly, name, touched, error, }: FileInputProps) {
+    allowedSizeInByte?: number;
+}
+
+export default function FileInput({ documentType, formik, accept, required, className, label, handleBlur, placeholder, value, onChange, readOnly, name, touched, error, allowedSizeInByte }: FileInputProps) {
     const { t } = useTranslation();
     if (formik) {
         const meta = formik.getFieldMeta(name);
@@ -32,9 +33,9 @@ export interface FileInputProps extends BaseControlProps {
         };
 
         if (meta) {
-          value = meta.value;
-          touched = meta.touched;
-          error = metas.name?.error || metas.mime_type?.error || metas.file_base64?.error || meta.error;
+            value = meta.value;
+            touched = meta.touched;
+            error = metas.name?.error || metas.mime_type?.error || metas.file_base64?.error || meta.error;
         }
         onChange = onChange || formik.handleChange
         handleBlur = handleBlur || formik.handleBlur;
@@ -54,6 +55,11 @@ export interface FileInputProps extends BaseControlProps {
     async function formattedOnChange(e) {
         if (!onChange) return;
 
+        if (!!allowedSizeInByte && e.target.files[0].size >= allowedSizeInByte) {
+            alert(t('FILE_MUST_BE_OF_{size}_{unit}', { size: allowedSizeInByte / 1000000, unit: "MB" }))
+            return;
+        }
+
         const { type } = e.target;
 
         let newValue = null;
@@ -65,7 +71,7 @@ export interface FileInputProps extends BaseControlProps {
                 };
                 break;
             case "file":
-                const { files: [ file ] } = e.target;
+                const { files: [file] } = e.target;
                 newValue = {
                     ...(value || {}),
                     type: documentType || value?.type,
@@ -85,7 +91,6 @@ export interface FileInputProps extends BaseControlProps {
                 value: newValue
             }
         });
-
     }
 
     function clear(e) {
@@ -110,7 +115,7 @@ export interface FileInputProps extends BaseControlProps {
         });
     }
 
-    const [ viewDoc, setViewDoc ] = useState("");
+    const [viewDoc, setViewDoc] = useState("");
 
     async function view(e) {
         console.log(value);
@@ -147,7 +152,7 @@ export interface FileInputProps extends BaseControlProps {
                         readOnly={readOnly}
                         name={name}
                         className={`form-control ${error ? "is-invalid" : ""}`}
-                        />
+                    />
                     {value?.name &&
                         <div className='input-group-append'>
                             <ButtonGroup>

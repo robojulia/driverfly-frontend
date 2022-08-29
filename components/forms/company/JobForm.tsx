@@ -55,7 +55,6 @@ import BasePercentInput from "../BasePercentInput";
 import BaseMilesInput from "../BaseMilesInput";
 import BaseHoursInput from "../BaseHoursInput";
 import { BaseListRowControl } from "../lists/BaseListRowControl";
-import { JobPreferredLocation } from "../../../enums/jobs/job-preferred-location.enum";
 
 export interface JobFormProps extends BaseFormProps<JobEntity> {
 
@@ -69,6 +68,18 @@ export function JobForm(props: JobFormProps) {
 
     const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
 
+    const [ can, setCan ] = useState({
+        createLocation: false,
+        createVehicle: false
+    });
+
+    useEffect(() => {
+        setCan({
+            createLocation: hasPermission("CanCreateLocation"),
+            createVehicle: hasPermission("CanCreateVehicle"),
+        });
+    }, [ user ]);
+
     const form = useFormik({
         initialValues: new JobEntity(),
         validationSchema: JobEntity.yupSchema(),
@@ -78,7 +89,7 @@ export function JobForm(props: JobFormProps) {
     });
 
     useEffect(() => {
-        if (entity)
+        if (entity && !form.dirty)
             form.setValues(entity);
     }, [ entity ]);
 
@@ -247,13 +258,12 @@ export function JobForm(props: JobFormProps) {
         });
     }
 
-    function removeRequiredSkill(e) {
+    function removeRequiredSkill(idx, e) {
         e.preventDefault();
 
-        const { name } = e.target;
         form.setValues({
             ...form.values,
-            required_skills: form.values.required_skills.filter((v, i) => i != name),
+            required_skills: form.values.required_skills.filter((v, i) => i != idx),
         });
     }
 
@@ -296,13 +306,12 @@ export function JobForm(props: JobFormProps) {
         });
     }
 
-    function removeMvrRequirement(e) {
+    function removeMvrRequirement(idx, e) {
         e.preventDefault();
 
-        const { name } = e.target;
         form.setValues({
             ...form.values,
-            mvr_requirements: form.values.mvr_requirements.filter((v, i) => i != name),
+            mvr_requirements: form.values.mvr_requirements.filter((v, i) => i != idx),
         });
     }
 
@@ -321,13 +330,12 @@ export function JobForm(props: JobFormProps) {
         });
     }
 
-    function removeCriminalHistoryRequirement(e) {
+    function removeCriminalHistoryRequirement(idx, e) {
         e.preventDefault();
 
-        const { name } = e.target;
         form.setValues({
             ...form.values,
-            criminal_history: form.values.criminal_history.filter((v, i) => i != name),
+            criminal_history: form.values.criminal_history.filter((v, i) => i != idx),
         });
     }
 
@@ -425,7 +433,7 @@ export function JobForm(props: JobFormProps) {
                             valueKey="id"
                             createLabel={v => buildAddress(v)}
                             options={locations}
-                            append={<Button variant="outline-secondary create_btn" disabled={!hasPermission("CanCreateLocation")} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
+                            append={<Button variant="outline-secondary create_btn" disabled={!can.createLocation} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
                         />
                         <BaseInput
                             className="col-12"
@@ -469,16 +477,7 @@ export function JobForm(props: JobFormProps) {
                                 formik={form}
                             />
                         }
-                        <BaseSelect
-                            className="col-12"
-                            label="PREFERRED_LOCATION"
-                            placeholder="PREFERRED_LOCATION"
-                            name="preferred_location"
-                            required
-                            formik={form}
-                            labelPrefix="JobPreferredLocation"
-                            enumType={JobPreferredLocation}
-                            />
+                        
                         <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                             <BaseSelect
                                 className={`col-${form.values.schedule === JobSchedule.OTHER ? 6 : 12}`}
@@ -606,7 +605,7 @@ export function JobForm(props: JobFormProps) {
                                     label="min_miles"
                                     name="min_miles"
                                     required
-                                    placeholder="50"
+                                    placeholder="1500"
                                     onChange={handlePayMethodUpdate}
                                     formik={form}
                                 />
@@ -615,7 +614,7 @@ export function JobForm(props: JobFormProps) {
                                     label="max_miles"
                                     name="max_miles"
                                     required
-                                    placeholder="100"
+                                    placeholder="3000"
                                     onChange={handlePayMethodUpdate}
                                     formik={form}
                                 />
@@ -653,7 +652,7 @@ export function JobForm(props: JobFormProps) {
                                     label="min_rate"
                                     name="min_rate"
                                     required
-                                    placeholder="1.50"
+                                    placeholder="0.50"
                                     onChange={handlePayMethodUpdate}
                                     formik={form}
                                 />
@@ -662,7 +661,7 @@ export function JobForm(props: JobFormProps) {
                                     label="max_rate"
                                     name="max_rate"
                                     required
-                                    placeholder="4.00"
+                                    placeholder="0.70"
                                     onChange={handlePayMethodUpdate}
                                     formik={form}
                                 />
@@ -776,7 +775,7 @@ export function JobForm(props: JobFormProps) {
                                         }}
                                         formik={form}
                                         append={<>
-                                            <Button variant="outline-secondary create_btn" disabled={!hasPermission("CanCreateVehicle")} onClick={() => setCreateVehicle(i)}><PlusCircle /> {t("CREATE")}</Button>
+                                            <Button variant="outline-secondary create_btn" disabled={!can.createVehicle} onClick={() => setCreateVehicle(i)}><PlusCircle /> {t("CREATE")}</Button>
                                         </>}
                                     />
                                 </BaseListRowControl>))
@@ -863,7 +862,7 @@ export function JobForm(props: JobFormProps) {
                                             <BaseListRowControl
                                                 key={i}
                                                 index={i}
-                                                onRemoveClick={(idx, e) => removeRequiredSkill(e)}
+                                                onRemoveClick={(idx, e) => removeRequiredSkill(idx, e)}
                                                 >
                                                 <BaseSelect
                                                     className="mx-1"
@@ -1020,7 +1019,7 @@ export function JobForm(props: JobFormProps) {
                                                     <BaseListRowControl
                                                         key={i}
                                                         index={i}
-                                                        onRemoveClick={(idx, e) => removeMvrRequirement(e)}
+                                                        onRemoveClick={(idx, e) => removeMvrRequirement(idx, e)}
                                                     >
                                                         <BaseSelect
                                                             className="mx-1"
@@ -1106,7 +1105,7 @@ export function JobForm(props: JobFormProps) {
                                                 <BaseListRowControl
                                                     key={i}
                                                     index={i}
-                                                    onRemoveClick={(idx, e) => removeCriminalHistoryRequirement}
+                                                    onRemoveClick={(idx, e) => removeCriminalHistoryRequirement(idx, e)}
                                                 >
                                                     <BaseSelect
                                                         className="mx-1"

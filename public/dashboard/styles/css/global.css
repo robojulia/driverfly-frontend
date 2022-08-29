@@ -269,16 +269,16 @@
 
 /* Show scrollbar on all datatables */
 
-.iXRfeU::-webkit-scrollbar {
+.sc-dmRaPn::-webkit-scrollbar {
     display: block !important;
 }
 
-.iXRfeU::-webkit-scrollbar {
+.sc-dmRaPn::-webkit-scrollbar {
     background: #f1f1f1;
     display: block;
 }
 
-.iXRfeU::-webkit-scrollbar-thumb {
+.sc-dmRaPn::-webkit-scrollbar-thumb {
     background: #888;
 }
 
@@ -636,4 +636,7 @@ textarea {
 .accordion-button:not(.collapsed)::after {
     background-image: url("../../../img/arrowdown.svg");
 
+}
+.data_table_dropdown a{
+    color: #000 !important;
 }
