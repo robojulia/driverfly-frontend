@@ -739,6 +739,31 @@ export default function Applicant() {
                                     }
                                     <BaseCheck
                                         className="col-12 p-1  mt-2"
+                                        label="HAS_HAD_INFRACTIONS_LAST_5_YEARS"
+                                        name="infractions"
+                                        formik={form}
+                                    />
+                                    {
+                                        form.values.infractions &&
+                                        <>
+                                            <BaseInput
+                                            className="col-12 p-1  mt-2"
+                                            label="COUNT"
+                                            name="infractions_count"
+                                            type="int"
+                                            min="0"
+                                            formik={form}
+                                            />
+                                            <BaseTextArea
+                                                className="col-12 p-1  mt-2"
+                                                label="details"
+                                                name="infractions_details"
+                                                formik={form}
+                                            />
+                                        </>
+                                    }
+                                    <BaseCheck
+                                        className="col-12 p-1  mt-2"
                                         label="has_had_positive_drug_test"
                                         name="positive_drug_test"
                                         formik={form}

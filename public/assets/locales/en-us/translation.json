@@ -1184,5 +1184,6 @@
     "DON'T_HAVE_AN_ACCOUNT": "Don't have an account? Make one",
     "OTHER_SKILLS":"Other Skills",
     "ALREADY_EXISTS": "Already Exists",
-    "DON'T_HAVE_AN_ACCOUNT": "Don't have an account? Make one"
+    "DON'T_HAVE_AN_ACCOUNT": "Don't have an account? Make one",
+    "HAS_HAD_INFRACTIONS_LAST_5_YEARS": "Have you had any infractions in the previous 5 years?"
 }
