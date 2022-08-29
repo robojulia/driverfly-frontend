@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 
 import { useEffect, useState } from "react";
-import { useFormik } from "formik";
+import { Formik, useFormik } from "formik";
 import { useTranslation } from "../../../hooks/useTranslation";
 import { useEffectAsync } from "../../../utils/react";
 import { useAuth } from "../../../hooks/useAuth";
@@ -107,6 +107,28 @@ export function JobForm(props: JobFormProps) {
         }
     }, [ user ]);
 
+    function handleMaxYearsForMvrRequirementType(e, idx) {
+        const { name, value } = e.target;
+        let mvr_requirements = form.values['mvr_requirements'];
+        mvr_requirements[idx].type = value;
+        switch (mvr_requirements[idx].type) {
+            case MvrType.DUI:
+                mvr_requirements[idx].max_years = 2;
+                break;
+            case MvrType.MOVING_VIOLATION_NOT_AT_FAULT:
+                mvr_requirements[idx].max_years = 3;
+                break;
+            default:
+                mvr_requirements[idx].max_years = 5;
+                break;
+        }
+
+        form.setValues({
+            ...form.values,
+            mvr_requirements: mvr_requirements
+        });
+    }
+
     function handlePayMethodUpdate(e) {
         const { name, value } = e.target;
         let min_miles = getOrCurrent("min_miles");
@@ -121,7 +143,7 @@ export function JobForm(props: JobFormProps) {
         let max_salary = getOrCurrent("max_salary");
         let min_weekly_pay = getOrCurrent("min_weekly_pay");
         let max_weekly_pay = getOrCurrent("max_weekly_pay");
-
+        debugger
         switch (form.values.pay_method) {
             case JobPayMethod.RATE_PER_MILE:
                 /**
@@ -1037,6 +1059,7 @@ export function JobForm(props: JobFormProps) {
                                                             required
                                                             labelPrefix="MvrType"
                                                             enumType={MvrType}
+                                                            onChange={(e) => handleMaxYearsForMvrRequirementType(e, i)}
                                                             formik={form}
                                                         />
                                                         <BaseSelect
