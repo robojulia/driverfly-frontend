@@ -30,6 +30,9 @@ export default function Index() {
     // }
     return (
         <>
+        <Head>
+        <meta name="google-site-verification" content="m9bfVuOGxtYDxi8eKLetXlJplLbdwnewUO37wDyw96I" />
+        </Head>
             <section className="hero-sec">
                 <div className="container ">
                     <div className="row mt-5">

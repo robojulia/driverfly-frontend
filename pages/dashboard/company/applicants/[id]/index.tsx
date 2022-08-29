@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 
 import { Button, ButtonGroup, Col, Row } from "react-bootstrap";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
-import { ArrowsExpand, BookmarkCheck, BookmarkDash, JournalPlus, Pencil, Plus, PlusLg, Trash } from "react-bootstrap-icons";
+import { ArrowsExpand, BookmarkCheck, BookmarkDash, Pencil, Plus, PlusLg, Trash } from "react-bootstrap-icons";
 
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
 
@@ -96,45 +96,83 @@ export default function ViewApplicant({ id }) {
         }
     }
 
+    const [showConfirmationModal, setShowConfirmationModal] = useState<boolean>(false);
+
     const addNoteForm = useFormik({
         initialValues: new ApplicantNoteEntity(),
         validationSchema: ApplicantNoteEntity.yupSchema(),
-        onSubmit: async (values) => {
-            const api = new ApplicantApi();
+        onSubmit: async (values, { resetForm }) => {
+            try {
+                const api = new ApplicantApi();
 
-            const note = await api.notes.create(applicant.id, values);
+                let note: ApplicantNoteEntity;
+                let notes: ApplicantNoteEntity[] = applicant.notes;
 
-            addNoteForm.setValues({
-                text: null
-            });
-            setAddNoteVisible(false);
-            setApplicant({
-                ...applicant,
-                notes: [
-                    ...applicant.notes,
-                    note
-                ]
-            });
+                if (values.id) {
+                    note = await api.notes.update(values.id, values);
+                    notes = applicant.notes.filter(v => (v.id !== note.id))
+                } else {
+                    note = await api.notes.create(applicant.id, values);
+                }
+
+                handleNoteModalClose()
+                setApplicant({
+                    ...applicant,
+                    notes: [
+                        ...notes,
+                        note
+                    ]
+                });
+                resetForm()
+            } catch (e) {
+                globalAjaxExceptionHandler(e, { t: t, defaultMessage: "UNABLE_TO_SAVE", toast: toast });
+            }
+
         }
     });
 
     const [addNoteVisible, setAddNoteVisible] = useState(false);
+    const showNoteModal = () => setAddNoteVisible(true)
+    const hideNoteModal = () => setAddNoteVisible(false)
 
-    const addNoteClick = () => {
-        setAddNoteVisible(true);
+    const handleNoteModalShow = () => {
+        addNoteForm.setValues({ text: null })
+        showNoteModal()
+    }
+    const handleNoteModalClose = () => {
+        addNoteForm.setValues({ text: null })
+        hideNoteModal()
+    }
+
+    const editNoteClick = (noteId: number) => {
+        let note = applicant.notes.find(v => (v.id === noteId))
+        addNoteForm.setValues({ id: noteId, text: note.text });
+        showNoteModal()
     }
 
     const deleteNoteClick = async (noteId: number) => {
-        try {
-            const applicantApi = new ApplicantApi();
+        addNoteForm.setValues({ id: noteId });
+        setShowConfirmationModal(true);
+    }
 
+    const handleConfirmClick = async () => {
+        try {
+            const noteId = addNoteForm.values?.id
+            if (!!!noteId) {
+                setShowConfirmationModal(false);
+                return
+            }
+
+            const applicantApi = new ApplicantApi();
             const response = await applicantApi.notes.remove(noteId);
 
             if (response.affected) {
-                let notes = applicant.notes.filter(v => (v.id !== noteId))
-
+                const notes = applicant.notes.filter(v => (v.id !== noteId))
                 setApplicant({ ...applicant, notes })
             }
+
+            setShowConfirmationModal(false);
+            addNoteForm.resetForm()
         } catch (e) {
             globalAjaxExceptionHandler(e, { t: t, defaultMessage: "UNABLE_TO_DELETE", toast: toast });
         }
@@ -172,16 +210,19 @@ export default function ViewApplicant({ id }) {
             {canEdit &&
                 <Row>
                     <Col>
-                        <div style={{ float: "right", marginBottom: "10px" }}>
+                        <div style={{ float: "right", marginBottom: "10px" }} className="assign_unassign">
                             <ButtonGroup size="sm">
-                                <Button type="button" className='theme-general-btn' variant='' onClick={onAssignClick}>
-                                    <BookmarkCheck /> {t("ASSIGN_TO_ME")}
-                                </Button>
+
+
                                 {
-                                    applicant?.assignedUser &&
-                                    <Button type="button" variant='danger' onClick={onUnassignClick}>
-                                        <BookmarkDash /> {t("UNASSIGN")}
-                                    </Button>
+                                    applicant?.assignedUser ?
+                                        <Button type="button" variant='danger' onClick={onUnassignClick}>
+                                            <BookmarkDash /> {t("UNASSIGN")}
+                                        </Button>
+                                        :
+                                        <Button type="button" className='theme-general-btn' variant='' onClick={onAssignClick}>
+                                            <BookmarkCheck /> {t("ASSIGN_TO_ME")}
+                                        </Button>
                                 }
                                 <Button type="button" onClick={onEditClick}>
                                     <Pencil /> {t("EDIT")}
@@ -431,13 +472,16 @@ export default function ViewApplicant({ id }) {
                                 notes: "NOTES",
                                 user: "USER",
                                 date: "DATE",
-                                action: <a className="font-weight-bold" role="button" onClick={addNoteClick}><PlusLg /></a>
+                                action: <a className="font-weight-bold" role="button" onClick={handleNoteModalShow}><PlusLg /></a>
                             }}
                             items={applicant?.notes?.map(v => ({
                                 notes: v.text,
                                 user: `${v.user.first_name} ${v.user.last_name}`,
                                 date: new Date(v.created_at).toDateString(),
-                                action: <a className="font-weight-bold" role="button" onClick={() => { deleteNoteClick(v.id) }}><Trash /></a>
+                                action: <>
+                                    <a className="mr-2 font-weight-bold" role="button" onClick={() => { editNoteClick(v.id) }}><Pencil /></a>
+                                    <a className="mr-2font-weight-bold" role="button" onClick={() => { deleteNoteClick(v.id) }}><Trash /></a>
+                                </>
                             }))}
                         />
 
@@ -445,7 +489,7 @@ export default function ViewApplicant({ id }) {
                 </Col>
             </Row>
             <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
-            <ViewModal title={t("ADD_{name}", { name: t("NOTE") })} show={addNoteVisible} onCloseClick={() => setAddNoteVisible(false)}>
+            <ViewModal title={t(addNoteForm.values?.id ? "EDIT_{name}" : "ADD_{name}", { name: t("NOTE") })} show={addNoteVisible} onCloseClick={handleNoteModalClose}>
                 <form onSubmit={addNoteForm.handleSubmit}>
                     <Row>
                         <Col>
@@ -459,7 +503,7 @@ export default function ViewApplicant({ id }) {
                         </Col>
                     </Row>
                     <Row className="mt-1">
-                        <Col xs="2" className="offset-10">
+                        <Col xs="2" className="">
                             <Button type="submit">{t("SAVE")}</Button>
                         </Col>
                     </Row>
@@ -467,7 +511,21 @@ export default function ViewApplicant({ id }) {
                 </form>
 
             </ViewModal>
-        </ChildPageLayout>);
+            <ViewModal
+                title="CONFIRMATION"
+                show={showConfirmationModal}
+                onCloseClick={() => setShowConfirmationModal(false)}
+                footer=
+                {
+                    <button type="button" className="btn btn-primary w-100 p-lg-3 p-5 mx-2" onClick={handleConfirmClick}>{t('CONFIRM')}</button>
+                }
+            >
+                <p className="m-3">
+                    {t('NOTE_DELETION_CONFIRMATION')}
+                </p>
+            </ViewModal>
+
+        </ChildPageLayout >);
 }
 
 ViewApplicant.getLayout = function getLayout(page) {

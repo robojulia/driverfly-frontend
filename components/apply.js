@@ -46,6 +46,7 @@ export default function JobApply({ job }) {
 
                 toast.success(t('job_applied_success_message'))
                 setViewForm(false);
+                apply_form.resetForm()
             }
             catch (e) {
 
