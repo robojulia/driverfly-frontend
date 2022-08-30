@@ -4,14 +4,27 @@ import { VehicleAccessory } from "../../enums/vehicles/vehicle-accessory.enum";
 import { VehicleTrailerType } from "../../enums/vehicles/vehicle-trailer-type.enum";
 import { VehicleType } from "../../enums/vehicles/vehicle-type.enum";
 import { useTranslation } from "../../hooks/useTranslation";
+import { JobEntity } from "../../models/job/job.entity";
 import DocumentApi from "../../pages/api/document";
 import ViewCard from "../viewDetails/viewCard";
 import VehiclePhoto from "./vehicle-photo";
+import { useAuth } from '../../hooks/useAuth'
+import { VehicleEntity } from "../../models/company/vehicle.entity";
 
-export default function JobVehicles({ job }) {
 
-    if (!!!job.vehicles || !!!job.vehicles?.length)
-        return <></>
+export interface ViewJobVehiclesProps {
+    job: JobEntity;
+}
+
+export default function JobVehicles({ job }: ViewJobVehiclesProps) {
+
+    const { user } = useAuth();
+
+    if (!!!job.vehicles || !!!job.vehicles?.length) return <></>
+
+    const vehicles: VehicleEntity[] = job.vehicles.filter((vehicle, i) => (user || (!user && vehicle.is_public)))
+      
+    if (!!!vehicles || !!!vehicles.length) return <></>
 
     const { t } = useTranslation();
 
@@ -20,7 +33,7 @@ export default function JobVehicles({ job }) {
             <ViewCard
                 title="vehicle_info"
             >
-                {job.vehicles && job.vehicles.map((vehicle, i) => (
+                {vehicles.map((vehicle, i) => (
                     <Row key={i} className="mb-3 shadow-sm">
                         <Col lg="2">
                             <VehiclePhoto vehicle={vehicle} className="img-thumbnail" style={{ maxWidth: "100px" }} />
