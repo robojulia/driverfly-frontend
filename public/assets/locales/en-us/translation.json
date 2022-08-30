@@ -471,7 +471,8 @@
         "DUI": "DUI",
         "MOVING_VIOLATION_NOT_AT_FAULT": "Moving violations, and not at fault",
         "INFRACTIONS": "Infractions",
-        "TICKETS": "Tickets"
+        "TICKETS": "Tickets",
+        "ACCIDENTS": "Accidents"
     },
     "dui": "DUI",
     "moving_violation_not_at_fault": "Moving violations, and not at fault",
