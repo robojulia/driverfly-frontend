@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 
 import { useEffect, useState } from "react";
-import { useFormik } from "formik";
+import { Formik, useFormik } from "formik";
 import { useTranslation } from "../../../hooks/useTranslation";
 import { useEffectAsync } from "../../../utils/react";
 import { useAuth } from "../../../hooks/useAuth";
@@ -106,6 +106,32 @@ export function JobForm(props: JobFormProps) {
             setVehicles(await vehicleApi.list());
         }
     }, [ user ]);
+
+    function handleMaxYearsForMvrRequirementType(e, idx) {
+        const { value } = e.target;
+
+        const label = `mvr_requirements[${idx}]`;
+        const mvr_requirements = form.values[label];
+        let max_years = 5;
+
+        switch (value) {
+            case MvrType.DUI:
+                max_years = 2;
+                break;
+            case MvrType.MOVING_VIOLATION_NOT_AT_FAULT:
+                max_years = 3;
+                break;
+            default:
+                max_years = 5;
+                break;
+        }
+
+        form.setFieldValue(label, {
+            ...mvr_requirements,
+            type: value,
+            max_years: max_years
+        });
+    }
 
     function handlePayMethodUpdate(e) {
         const { name, value } = e.target;
@@ -1037,6 +1063,7 @@ export function JobForm(props: JobFormProps) {
                                                             required
                                                             labelPrefix="MvrType"
                                                             enumType={MvrType}
+                                                            onChange={(e) => handleMaxYearsForMvrRequirementType(e, i)}
                                                             formik={form}
                                                         />
                                                         <BaseSelect
