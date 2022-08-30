@@ -7,7 +7,7 @@ import { Scripts } from "../../../scripts/scripts";
 import React, { useEffect, useRef } from "react";
 
 import { useTranslation } from "../../../../hooks/useTranslation";
-import { TelephoneFill, Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, CheckSquareFill, GiftFill, GearFill, EnvelopeFill, PeopleFill, Hospital, Receipt } from 'react-bootstrap-icons';
+import { TelephoneFill, Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, CheckSquareFill, GiftFill, GearFill, EnvelopeFill, PeopleFill, Hospital, Receipt, UmbrellaFill, PersonHearts } from 'react-bootstrap-icons';
 import CompanyProfileNav from "../header/CompanyProfileNav";
 import { useAuth } from "../../../../hooks/useAuth";
 
@@ -15,7 +15,9 @@ import { useAuth } from "../../../../hooks/useAuth";
 const FullLayout = ({ children }) => {
   const { t } = useTranslation();
 
-  const { user } = useAuth();
+  const { user, isSuperAdmin } = useAuth();
+
+  console.log("FullLayout", user, isSuperAdmin)
 
   if (!user?.company) {
     return <></>
@@ -103,6 +105,22 @@ const FullLayout = ({ children }) => {
           pathname: "/dashboard/company/settings/profile",
           icon: PersonFill,
           text: "MY_PROFILE",
+        },
+      ],
+    },
+
+    // superadmin panel
+    {
+      icon: UmbrellaFill,
+      text: "ADMIN",
+      visible: isSuperAdmin,
+      items: [
+        {
+          pathname: "/dashboard/company/admin/referral",
+          icon: PersonHearts,
+          text: "REFERRAL_SOURCES",
+          visible: isSuperAdmin,
+          startsWith: true,
         },
       ],
     },
