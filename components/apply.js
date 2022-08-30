@@ -144,13 +144,13 @@ export default function JobApply({ job }) {
                     </Row>
                     <Row>
                         <BaseInput
-                            readOnly={user?.email ? true : false}
+                            readOnly={user && !user.company ? true : false}
                             type="email"
                             className=" col-6 mt-3"
                             label="email"
                             placeholder="email"
                             name="email"
-                            formik={apply_form}
+                            formik={user?.company ? null : apply_form}
                         />
                         <BaseInputPhone
                             className=" col-6 mt-3"
