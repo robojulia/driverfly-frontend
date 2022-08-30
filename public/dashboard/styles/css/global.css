@@ -637,15 +637,16 @@ textarea {
     background-image: url("../../../img/arrowdown.svg");
 
 }
-<<<<<<< HEAD
-.my_chart canvas{
+
+.my_chart canvas {
     height: 270px;
-=======
-.data_table_dropdown a{
+}
+
+.data_table_dropdown a {
     color: #000 !important;
 }
-.assign_unassign .btn-danger:focus{
+
+.assign_unassign .btn-danger:focus {
     background-color: #dc3545 !important;
     border: solid 1px #dc3545 !important;
->>>>>>> e2d3a688317361d456178272a5265ec33fe244b5
 }
