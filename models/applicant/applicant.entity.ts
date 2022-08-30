@@ -64,6 +64,9 @@ export class ApplicantEntity {
   infractions?: boolean = false;
   infractions_count?: number;
   infractions_details?: string;
+  moving_violations?: boolean = false;
+  moving_violations_count?: number;
+  moving_violations_details?: string;
   positive_drug_test?: boolean = false;
   positive_drug_test_details?: string;
   equipment_experience?: ApplicantExperienceEntity[] = [];
@@ -134,6 +137,9 @@ export class ApplicantEntity {
         infractions: yup.bool().nullable(),
         infractions_count: yup.number().min(0).nullable(),
         infractions_details: yup.string().nullable(),
+        moving_violations: yup.bool().nullable(),
+        moving_violations_count: yup.number().min(0).nullable(),
+        moving_violations_details: yup.string().nullable(),
         positive_drug_test: yup.bool().nullable(),
         positive_drug_test_details: yup.string().nullable(),
         equipment_experience: (yup.array(
