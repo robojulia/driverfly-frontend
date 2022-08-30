@@ -7,6 +7,7 @@ import { globalAjaxExceptionHandler } from '../../../utils/ajax';
 import { toast } from 'react-toastify';
 import { useTranslation } from '../../../hooks/useTranslation';
 import { useEffectAsync } from "../../../utils/react";
+import Link from "next/link";
 
 export default function SuggestedJobs() {
 
@@ -50,7 +51,9 @@ export default function SuggestedJobs() {
                   {jobs.length > 0 && jobs.map((job, index) => (
                     <tr>
                       <td scope="row">{index + 1}</td>
-                      <td>{job.job?.title}</td>
+                      <td>
+                        <Link href={`/dashboard/driver/jobs/${job.job?.id}`}><a>{job.job?.title}</a></Link>
+                      </td>
                       <td>{t(`JobEmploymentType.${job.job?.employment_type}`)}</td>
                       <td>{job.job?.company?.name}</td>
                       <td>{new Date(job.job?.created_at).toDateString()}</td>

@@ -70,12 +70,12 @@ export default function CompanyProfileNav() {
                             if (!v.label) return <Dropdown.Divider key={i} />
 
                             return (
-                                <Dropdown.Item key={i} onClick={e => router.push(v.href || "#")}>{t(v.label)}</Dropdown.Item>
+                                <Dropdown.Item className="text-dark" key={i} onClick={e => router.push(v.href || "#")}>{t(v.label)}</Dropdown.Item>
                             );
                         })}
                         <Dropdown.Divider />
                         <Impersonate />
-                        <LogoutButton />
+                        <LogoutButton className="text-dark" />
                     </Dropdown.Menu>
                 </Dropdown>
             </div>

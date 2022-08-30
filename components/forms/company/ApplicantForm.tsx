@@ -43,6 +43,7 @@ import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
 import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
 import { ApplicantDocumentType } from "../../../enums/applicants/applicant-document-type.enum";
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
+import { JobGeography } from "../../../enums/jobs/job-geography.enum";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> {
 }
@@ -53,10 +54,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
     let { user, hasPermission } = useAuth();
 
-    const protectedFields = {
-        license_number: hasPermission("CanViewApplicant.license_number"),
-        social_security_number: hasPermission("CanViewApplicant.social_security_number"),
-    };
+    const [ protectedFields, setProtectedFields ] = useState({
+        license_number: false,
+        social_security_number: false
+    });
+
+    useEffect(() => {
+        setProtectedFields({
+            license_number: hasPermission("CanViewApplicant.license_number"),
+            social_security_number: hasPermission("CanViewApplicant.social_security_number"),
+        });
+    }, [ user ]);
 
     const form = useFormik({
         initialValues: new ApplicantEntity(),
@@ -117,7 +125,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
     }, [ user ]);
 
     useEffect(() => {
-        if (entity)
+        if (entity && !form.dirty)
             form.setValues(entity);
     }, [ entity ]);
 
@@ -267,6 +275,15 @@ export function ApplicantForm(props: ApplicantFormProps) {
                                     label="AUTHORIZED_TO_WORK_IN_THE_US"
                                     name="authorized_to_work_in_us"
                                     formik={form}
+                                />
+                                <BaseCheckList
+                                    className="col-12 mt-2"
+                                    label="PREFERRED_LOCATION"
+                                    name="preferred_location"
+                                    formik={form}
+                                    labelPrefix="JobGeography"
+                                    enumType={JobGeography}
+
                                 />
                             </Col>
                             <Col md="4" className="px-2">

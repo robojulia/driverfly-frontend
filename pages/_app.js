@@ -17,7 +17,9 @@ import { yupInit } from "../config/yup";
 import { chartJsInit } from "../config/chartjs";
 import { bootstrapInit } from "../config/bootstrap";
 
+
 import { AuthProvider } from "../components/auth/auth-provider";
+import { ManyChatScript } from "../components/scripts/manychat/manychat";
 
 function MyApp({ Component, pageProps }) {
 
@@ -25,10 +27,14 @@ function MyApp({ Component, pageProps }) {
   bootstrapInit();
 
   return (
-    <AuthProvider
-      Component={Component}
-      pageProps={pageProps}
-    />);
+    <>
+      <ManyChatScript />
+      <AuthProvider
+        Component={Component}
+        pageProps={pageProps}
+      />
+    </>
+  );
 }
 
 export default MyApp;

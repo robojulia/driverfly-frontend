@@ -14,6 +14,7 @@ import * as yup from "yup";
 import { VehicleTransmissionType } from '../../enums/vehicles/vehicle-transmission-type.enum';
 import { DriverEndorsement } from '../../enums/users/driver-endorsement.enum';
 import { ApplicantDocumentType } from '../../enums/applicants/applicant-document-type.enum';
+import { JobGeography } from '../../enums/jobs/job-geography.enum';
 
 export class ApplicantEntity {
   id?: number;
@@ -44,6 +45,7 @@ export class ApplicantEntity {
   endorsements?: DriverEndorsement[] = [];
   highest_degree?: EducationLevel;
   authorized_to_work_in_us?: boolean = true;
+  preferred_location?:JobGeography[] = [];
   emergency_contact_name?: string;
   emergency_contact_number?: string;
   emergency_contact_relationship?: string;
@@ -57,7 +59,14 @@ export class ApplicantEntity {
   psp_violations?: boolean = false;
   psp_violations_details?: string;
   tickets?: boolean = false;
+  tickets_count?: number;
   tickets_details?: string;
+  infractions?: boolean = false;
+  infractions_count?: number;
+  infractions_details?: string;
+  moving_violations?: boolean = false;
+  moving_violations_count?: number;
+  moving_violations_details?: string;
   positive_drug_test?: boolean = false;
   positive_drug_test_details?: string;
   equipment_experience?: ApplicantExperienceEntity[] = [];
@@ -85,7 +94,10 @@ export class ApplicantEntity {
         license_state: yup.string().nullable(),
         license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
         years_cdl_experience: yup.number().min(0).nullable(),
-        // license_restrictions: (yup.string() as any).enum(LicenseRestrictions).nullable(),
+        preferred_location: yup.array(
+          (yup.string() as any).enum(JobGeography)
+        ).nullable(),
+
 
         license_restrictions: yup.array(
           (yup.string() as any).enum(LicenseRestrictions)
@@ -120,7 +132,14 @@ export class ApplicantEntity {
         psp_violations: yup.bool().nullable(),
         psp_violations_details: yup.string().nullable(),
         tickets: yup.bool().nullable(),
+        tickets_count: yup.number().min(0).nullable(),
         tickets_details: yup.string().nullable(),
+        infractions: yup.bool().nullable(),
+        infractions_count: yup.number().min(0).nullable(),
+        infractions_details: yup.string().nullable(),
+        moving_violations: yup.bool().nullable(),
+        moving_violations_count: yup.number().min(0).nullable(),
+        moving_violations_details: yup.string().nullable(),
         positive_drug_test: yup.bool().nullable(),
         positive_drug_test_details: yup.string().nullable(),
         equipment_experience: (yup.array(

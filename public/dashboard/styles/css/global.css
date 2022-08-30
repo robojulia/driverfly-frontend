@@ -267,6 +267,21 @@
     display: none;
 }
 
+/* Show scrollbar on all datatables */
+
+.sc-dmRaPn::-webkit-scrollbar {
+    display: block !important;
+}
+
+.sc-dmRaPn::-webkit-scrollbar {
+    background: #f1f1f1;
+    display: block;
+}
+
+.sc-dmRaPn::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
 /* Driver Dashboard  */
 
 .bg_yellow {
@@ -522,9 +537,11 @@ textarea {
     .profile-logo img {
         width: 20% !important;
     }
+
     .w-23 {
         width: 100% !important;
     }
+
     .account_tabs .react-tabs__tab {
         background-color: #1b4454 !important;
         color: #fff;
@@ -620,6 +637,15 @@ textarea {
     background-image: url("../../../img/arrowdown.svg");
 
 }
+<<<<<<< HEAD
 .my_chart canvas{
     height: 270px;
+=======
+.data_table_dropdown a{
+    color: #000 !important;
+}
+.assign_unassign .btn-danger:focus{
+    background-color: #dc3545 !important;
+    border: solid 1px #dc3545 !important;
+>>>>>>> e2d3a688317361d456178272a5265ec33fe244b5
 }
