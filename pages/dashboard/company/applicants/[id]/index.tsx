@@ -103,16 +103,15 @@ export default function ViewApplicant({ id }) {
         validationSchema: ApplicantNoteEntity.yupSchema(),
         onSubmit: async (values, { resetForm }) => {
             try {
-                const api = new ApplicantApi();
-
+                const applicantApi = new ApplicantApi();
                 let note: ApplicantNoteEntity;
                 let notes: ApplicantNoteEntity[] = applicant.notes;
 
                 if (values.id) {
-                    note = await api.notes.update(values.id, values);
+                    note = await applicantApi.notes.update(applicant.id, values.id, values);
                     notes = applicant.notes.filter(v => (v.id !== note.id))
                 } else {
-                    note = await api.notes.create(applicant.id, values);
+                    note = await applicantApi.notes.create(applicant.id, values);
                 }
 
                 handleNoteModalClose()
@@ -164,7 +163,7 @@ export default function ViewApplicant({ id }) {
             }
 
             const applicantApi = new ApplicantApi();
-            const response = await applicantApi.notes.remove(noteId);
+            const response = await applicantApi.notes.remove(applicant.id, noteId);
 
             if (response.affected) {
                 const notes = applicant.notes.filter(v => (v.id !== noteId))
