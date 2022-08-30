@@ -124,11 +124,13 @@ export default function ReferralList({ host }: { host: string }) {
                         id: "id",
                         name: "ID",
                         selector: v => v.id,
+                        hidable: false,
                     },
                     {
                         id: "name",
                         name: "NAME",
                         selector: v => v.name,
+                        hidable: false,
                     },
                     {
                         id: "code",
