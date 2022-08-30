@@ -73,7 +73,10 @@ export default function ViewApplicant({ id }) {
                 return;
             }
 
-            setApplicant(data);
+            setApplicant({
+                ...data,
+                notes: data.notes.sort((a, b) => (b.id - a.id))
+            });
         } else {
             toast.error(t("UNABLE_TO_FIND_{name}", { name: "APPLICANT" }, { translateProps: true }));
             goBack();
@@ -113,14 +116,12 @@ export default function ViewApplicant({ id }) {
                 } else {
                     note = await applicantApi.notes.create(applicant.id, values);
                 }
+                notes.push(note)
 
                 handleNoteModalClose()
                 setApplicant({
                     ...applicant,
-                    notes: [
-                        ...notes,
-                        note
-                    ]
+                    notes: notes.sort((a, b) => (b.id - a.id))
                 });
                 resetForm()
             } catch (e) {
@@ -167,8 +168,13 @@ export default function ViewApplicant({ id }) {
 
             if (response.affected) {
                 const notes = applicant.notes.filter(v => (v.id !== noteId))
-                setApplicant({ ...applicant, notes })
+                setApplicant({
+                    ...applicant,
+                    notes: notes.sort((a, b) => (b.id - a.id))
+                })
             }
+
+            // applicant.notes.sort((a, b) => (a.id - b.id))
 
             setShowConfirmationModal(false);
             addNoteForm.resetForm()
