@@ -85,7 +85,7 @@ export class ApplicantEntity {
         license_number: yup.string().nullable(),
         license_expiry: yup.date().nullable(),
         license_state: yup.string().nullable(),
-        license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
+        license_type: (yup.string() as any).enum(DriverLicenseType).required().nullable(),
         years_cdl_experience: yup.number().min(0).required().nullable(),
         preferred_location: yup.array(
           (yup.string() as any).enum(JobGeography)
