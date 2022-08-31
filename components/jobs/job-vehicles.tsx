@@ -27,7 +27,7 @@ export default function JobVehicles({ job }: ViewJobVehiclesProps) {
     if (!!!vehicles || !!!vehicles.length)
         return <>
             <div className="shadow-lg single-job-items p-4 m-1 mb-5">
-                <p className="m-0"> {t("VEHICLE_INFORMATION_HIDDEN_BY_COMPANY")}</p>
+                <p className="m-0 blockquote"> {t("VEHICLE_INFORMATION_HIDDEN_BY_COMPANY")}</p>
             </div>
         </>
 
