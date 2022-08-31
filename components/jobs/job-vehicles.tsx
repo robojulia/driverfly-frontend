@@ -10,26 +10,32 @@ import ViewCard from "../viewDetails/viewCard";
 import VehiclePhoto from "./vehicle-photo";
 import { useAuth } from '../../hooks/useAuth'
 import { VehicleEntity } from "../../models/company/vehicle.entity";
-
-
+import { divide } from "lodash";
 export interface ViewJobVehiclesProps {
     job: JobEntity;
 }
 
 export default function JobVehicles({ job }: ViewJobVehiclesProps) {
+    const { t } = useTranslation();
 
     const { user } = useAuth();
 
     if (!!!job.vehicles || !!!job.vehicles?.length) return <></>
 
     const vehicles: VehicleEntity[] = job.vehicles.filter((vehicle, i) => (user || (!user && vehicle.is_public)))
-      
-    if (!!!vehicles || !!!vehicles.length) return <></>
 
-    const { t } = useTranslation();
+    if (!!!vehicles || !!!vehicles.length)
+        return <>
+            <div className="shadow-lg single-job-items p-4 m-1 mb-5">
+                <p className="m-0"> {t("VEHICLE_INFORMATION_HIDDEN_BY_COMPANY")}</p>
+            </div>
+        </>
+
 
     return <>
+
         <div className="job-deatails-inner mt-2">
+
             <ViewCard
                 title="vehicle_info"
             >
@@ -73,6 +79,8 @@ export default function JobVehicles({ job }: ViewJobVehiclesProps) {
                     </Row>
                 ))}
             </ViewCard>
+
         </div>
+
     </>
 }
