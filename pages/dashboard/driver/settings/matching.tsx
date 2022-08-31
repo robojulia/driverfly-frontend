@@ -147,6 +147,13 @@ export default function Matching() {
     return (<>
         <PageLayout title="JOB_MATCHING">
             <form onSubmit={form.handleSubmit}>
+            <Row className="mt-2">
+                    <Col className="text-end">
+                        <Button type="submit" variant="primary" disabled={form.isSubmitting || !form.isValid || !form.dirty}>
+                            {t("UPDATE")}
+                        </Button>
+                    </Col>
+                </Row>
                 <Row>
                     <BaseCheckList
                         className="col-12 mt-3"
@@ -216,13 +223,7 @@ export default function Matching() {
                         }))}
                     />
                 </Row>
-                <Row className="mt-2">
-                    <Col className="text-end">
-                        <Button type="submit" variant="primary" disabled={form.isSubmitting || !form.isValid || !form.dirty}>
-                            {t("UPDATE")}
-                        </Button>
-                    </Col>
-                </Row>
+               
             </form>
         </PageLayout>
     </>);
