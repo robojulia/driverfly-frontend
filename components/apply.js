@@ -29,10 +29,8 @@ import BaseInputPhone from './forms/BaseInputPhone'
 import { DriverLicenseType } from "../enums/users/driver-license-type.enum";
 
 export default function JobApply({ job }) {
-    console.log(job, 'job')
     const { user } = useAuth();
     const { t } = useTranslation();
-    console.log(user, 'user')
     const jobApi = new JobApi();
 
     const apply_form = useFormik({
@@ -40,8 +38,6 @@ export default function JobApply({ job }) {
         validationSchema: ApplicantEntity.yupSchema(),
         onSubmit: async (dto) => {
             console.log("apply_form.values", dto)
-
-
             try {
                 const applicant = await jobApi.apply(job.id, dto);
 
@@ -111,6 +107,8 @@ export default function JobApply({ job }) {
     //   console.log("apply_form", apply_form.values)
     // }, [apply_form])
 
+
+    
     return (
         <>
         
