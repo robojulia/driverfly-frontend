@@ -14,7 +14,8 @@ import { Row, Col } from "reactstrap"
 import { ToastContainer, toast } from 'react-toastify'
 import ContactApi from './api/contact';
 import { globalAjaxExceptionHandler } from '../utils/ajax';
-import {validateCaptcha} from './api/validate-captcha'
+import CaptchaApi from './api/captcha';
+// import {validateCaptcha} from './api/validate-captcha'
 export default function Contact() {
 
     const { t } = useTranslation();
@@ -35,12 +36,15 @@ export default function Contact() {
         }
     });
 
-    const[enableButton, setEnableButton] = React.useState(false)
+    const [enableButton, setEnableButton] = React.useState(false)
 
-    function onChange() {
+    const onChange = async () => {
         const token = captchaRef.current.getValue();
         captchaRef.current.reset();
-        validateCaptcha(token, setEnableButton)
+        const captchaApi = new CaptchaApi();
+        const data = await captchaApi.validateCaptcha(token)
+        console.log(data, "dadsadas")
+     
     }
     return (
         <>
@@ -54,7 +58,7 @@ export default function Contact() {
             </div>
 
             <div className="top-outer bg-white py-5"></div>
-              <div className="contact-form">
+            <div className="contact-form">
                 <div className="container">
                     <div className="row contact-inner bg-white">
                         <div className="col-sm-12 col-lg-5 pl-0">
