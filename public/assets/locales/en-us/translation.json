@@ -471,7 +471,8 @@
         "DUI": "DUI",
         "MOVING_VIOLATION_NOT_AT_FAULT": "Moving violations, and not at fault",
         "INFRACTIONS": "Infractions",
-        "TICKETS": "Tickets"
+        "TICKETS": "Tickets",
+        "ACCIDENTS": "Accidents"
     },
     "dui": "DUI",
     "moving_violation_not_at_fault": "Moving violations, and not at fault",
@@ -1086,6 +1087,8 @@
     "{number}_CHARACTERS_REMAINING": "{{number}} characters remaining",
     "GOVERNED_SPEED": "Governed speed",
     "MAX_SPEED": "Max speed",
+    "SHOW_VEHICLES_TO_PUBLIC_USERS":"Show Vehicles To Public Users",
+    "VEHICLE_INFORMATION_HIDDEN_BY_COMPANY":"Vehicle information is hidden by company! Please login to see vehicle information.",
     "HttpStatus": {
         "404": "The requested resource was not found",
         "401": "The user is not authorized to perform the requested action"
@@ -1117,7 +1120,7 @@
     "SWITCH_COMPANY": "Switch Company",
     "CHANGE": "Change",
     "USER_NOT_ACTIVATED": "Check your email to activate your account",
-    "ARE_YOU_SURE_YOU_WANT_TO_DELETE": "Are you sure you want to delete this record? This action is not reversable",
+    "ARE_YOU_SURE_YOU_WANT_TO_DELETE": "Are you sure you want to delete this record?",
     "CONFIRMATION": "Confirmation",
     "CONFIRM": "Confirm",
     "DELETE_CONFIRMATION": "Delete Confirmation",
@@ -1181,6 +1184,35 @@
     "GET_RESULTS": "Press enter to get results",
     "NO_RELATED_JOBS_YET": "No related jobs yet.",
     "JOB_CREATION_CONFIRMATION": "By submitting, I confirm that the details of this job are as honest and accurate to the best of my knowledge.",
-    "ALREADY_EXISTS": "Already Exist",
-    "DON'T_HAVE_AN_ACCOUNT": "Don't have an account? Make one"
+    "DON'T_HAVE_AN_ACCOUNT": "Don't have an account? Make one",
+    "OTHER_SKILLS":"Other Skills",
+    "ALREADY_EXISTS": "Already Exists",
+    "HAS_HAD_INFRACTIONS_LAST_5_YEARS": "Have you had any infractions in the previous 5 years?",
+    "HAS_HAD_MOVING_VIOLATIONS_LAST_3_YEARS": "Have you had any moving violations (not at fault) in the previous 3 years?",
+    "ADMIN": "Admin",
+    "REFERRAL_SOURCES": "Referral Sources",
+    "REFERRAL_CODE": "Referral Code",
+    "REFERRAL_SOURCE": "Referral Source",
+    "GENERATE": "Generate",
+    "URL": "Url",
+    "REFERRALS": "Referrals",
+    "CREATED_AT": "Created At",
+    "RESTORE_CONFIRMATION": "Restore Confirmation",
+    "DO_NOT_RESTORE": "Do Not Restore",
+    "ARE_YOU_SURE_YOU_WANT_TO_RESTORE": "Are you sure you want to restore this record?",
+    "HOW_DID_YOU_HEAR_ABOUT_US": "How did you hear about us?",
+    "utm_source": {
+        "ON_MY_OWN": "On my own",
+        "DRIVERFLY_REPRESENTATIVE": "Referral Code",
+        "FRIEND": "Friend",
+        "FACEBOOK": "Facebook Ad",
+        "GOOGLE": "Google Ad",
+        "OTHER": "Other"
+    },
+    "utm_campaign": {
+        "REFERRAL_CODE": "Referral Code (optional)"
+    },
+    "utm_content": {
+        "DETAILS_OPTIONAL": "Details (optional)"
+    }
 }

@@ -26,7 +26,7 @@ export interface ViewTableColumn<TElement> extends TableColumn<TElement> {
     hidable?: boolean;
 }
 
-export function getDataTableColumnKey(type: "company" | "driver", user: UserEntity, entity: string) {
+export function getDataTableColumnKey(type: "company" | "driver" | "admin", user: UserEntity, entity: string) {
     return `${type}.${user?.id || 0}.${entity}.columns`;
 }
 

@@ -4,23 +4,42 @@ import { VehicleAccessory } from "../../enums/vehicles/vehicle-accessory.enum";
 import { VehicleTrailerType } from "../../enums/vehicles/vehicle-trailer-type.enum";
 import { VehicleType } from "../../enums/vehicles/vehicle-type.enum";
 import { useTranslation } from "../../hooks/useTranslation";
+import { JobEntity } from "../../models/job/job.entity";
 import DocumentApi from "../../pages/api/document";
 import ViewCard from "../viewDetails/viewCard";
 import VehiclePhoto from "./vehicle-photo";
+import { useAuth } from '../../hooks/useAuth'
+import { VehicleEntity } from "../../models/company/vehicle.entity";
+import { divide } from "lodash";
+export interface ViewJobVehiclesProps {
+    job: JobEntity;
+}
 
-export default function JobVehicles({ job }) {
-
-    if (!!!job.vehicles || !!!job.vehicles?.length)
-        return <></>
-
+export default function JobVehicles({ job }: ViewJobVehiclesProps) {
     const { t } = useTranslation();
 
+    const { user } = useAuth();
+
+    if (!!!job.vehicles || !!!job.vehicles?.length) return <></>
+
+    const vehicles: VehicleEntity[] = job.vehicles.filter((vehicle, i) => (user || (!user && vehicle.is_public)))
+
+    if (!!!vehicles || !!!vehicles.length)
+        return <>
+            <div className="shadow-lg single-job-items p-4 m-1 mb-5">
+                <p className="m-0 blockquote"> {t("VEHICLE_INFORMATION_HIDDEN_BY_COMPANY")}</p>
+            </div>
+        </>
+
+
     return <>
+
         <div className="job-deatails-inner mt-2">
+
             <ViewCard
                 title="vehicle_info"
             >
-                {job.vehicles && job.vehicles.map((vehicle, i) => (
+                {vehicles.map((vehicle, i) => (
                     <Row key={i} className="mb-3 shadow-sm">
                         <Col lg="2">
                             <VehiclePhoto vehicle={vehicle} className="img-thumbnail" style={{ maxWidth: "100px" }} />
@@ -60,6 +79,8 @@ export default function JobVehicles({ job }) {
                     </Row>
                 ))}
             </ViewCard>
+
         </div>
+
     </>
 }

@@ -73,7 +73,10 @@ export default function ViewApplicant({ id }) {
                 return;
             }
 
-            setApplicant(data);
+            setApplicant({
+                ...data,
+                notes: data.notes.sort((a, b) => (b.id - a.id))
+            });
         } else {
             toast.error(t("UNABLE_TO_FIND_{name}", { name: "APPLICANT" }, { translateProps: true }));
             goBack();
@@ -103,25 +106,22 @@ export default function ViewApplicant({ id }) {
         validationSchema: ApplicantNoteEntity.yupSchema(),
         onSubmit: async (values, { resetForm }) => {
             try {
-                const api = new ApplicantApi();
-
+                const applicantApi = new ApplicantApi();
                 let note: ApplicantNoteEntity;
                 let notes: ApplicantNoteEntity[] = applicant.notes;
 
                 if (values.id) {
-                    note = await api.notes.update(values.id, values);
+                    note = await applicantApi.notes.update(applicant.id, values.id, values);
                     notes = applicant.notes.filter(v => (v.id !== note.id))
                 } else {
-                    note = await api.notes.create(applicant.id, values);
+                    note = await applicantApi.notes.create(applicant.id, values);
                 }
+                notes.push(note)
 
                 handleNoteModalClose()
                 setApplicant({
                     ...applicant,
-                    notes: [
-                        ...notes,
-                        note
-                    ]
+                    notes: notes.sort((a, b) => (b.id - a.id))
                 });
                 resetForm()
             } catch (e) {
@@ -164,12 +164,17 @@ export default function ViewApplicant({ id }) {
             }
 
             const applicantApi = new ApplicantApi();
-            const response = await applicantApi.notes.remove(noteId);
+            const response = await applicantApi.notes.remove(applicant.id, noteId);
 
             if (response.affected) {
                 const notes = applicant.notes.filter(v => (v.id !== noteId))
-                setApplicant({ ...applicant, notes })
+                setApplicant({
+                    ...applicant,
+                    notes: notes.sort((a, b) => (b.id - a.id))
+                })
             }
+
+            // applicant.notes.sort((a, b) => (a.id - b.id))
 
             setShowConfirmationModal(false);
             addNoteForm.resetForm()

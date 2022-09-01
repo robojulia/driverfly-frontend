@@ -38,15 +38,16 @@ export default function JobApply({ job }) {
         validationSchema: ApplicantEntity.yupSchema(),
         onSubmit: async (dto) => {
             console.log("apply_form.values", dto)
+
+
             try {
                 const applicant = await jobApi.apply(job.id, dto);
 
                 toast.success(t('job_applied_success_message'))
                 setViewForm(false);
-                apply_form.resetForm()
+                resetForm()
             }
             catch (e) {
-
                 globalAjaxExceptionHandler(e, { formik: apply_form, toast: toast, t: t });
                 if (e.response?.data?.message == "ApplicantJobService.APPLICANT_ALREADY_APPLIED") setViewForm(false)
             }
@@ -150,13 +151,12 @@ export default function JobApply({ job }) {
                     </Row>
                     <Row>
                         <BaseInput
-                            readOnly={user?.email ? true : false}
+                            readOnly={user && !user.company ? true : false}
                             type="email"
                             className=" col-6 mt-3"
                             label="email"
                             placeholder="email"
                             name="email"
-                            required
                             formik={apply_form}
                         />
                         <BaseInputPhone
