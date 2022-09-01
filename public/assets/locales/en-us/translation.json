@@ -469,13 +469,13 @@
     "within": "Within",
     "MvrType": {
         "DUI": "DUI",
-        "MOVING_VIOLATION_NOT_AT_FAULT": "Moving violations, and not at fault",
+        "MOVING_VIOLATION_NOT_AT_FAULT": "Moving violations (not at fault)",
         "INFRACTIONS": "Infractions",
         "TICKETS": "Tickets",
         "ACCIDENTS": "Accidents"
     },
     "dui": "DUI",
-    "moving_violation_not_at_fault": "Moving violations, and not at fault",
+    "moving_violation_not_at_fault": "Moving violations (not at fault)",
     "infractions": "Infractions",
     "tickets": "Tickets",
     "COUNT": "Count",
