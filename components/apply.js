@@ -36,10 +36,7 @@ export default function JobApply({ job }) {
     const apply_form = useFormik({
         initialValues: new ApplicantEntity(),
         validationSchema: ApplicantEntity.yupSchema(),
-        onSubmit: async (dto) => {
-            console.log("apply_form.values", dto)
-
-
+        onSubmit: async (dto, { resetForm }) => {
             try {
                 const applicant = await jobApi.apply(job.id, dto);
 
@@ -108,11 +105,9 @@ export default function JobApply({ job }) {
     //   console.log("apply_form", apply_form.values)
     // }, [apply_form])
 
-
-    
     return (
         <>
-        
+
             <div className="ort-btn mt-lg-4 mt-0">
                 <button type="button" className="btn theme-primary-btn" onClick={onApplyClick}> {t('APPLY_NOW')}<ArrowRight /></button>
                 {/* <button type="button" className="btn theme-general-btn"> <Star /> {t('shortlist')} </button> */}
@@ -157,7 +152,7 @@ export default function JobApply({ job }) {
                             label="email"
                             placeholder="email"
                             name="email"
-                            formik={apply_form}
+                                formik={user?.company ? null : apply_form}
                         />
                         <BaseInputPhone
                             className=" col-6 mt-3"
@@ -168,25 +163,25 @@ export default function JobApply({ job }) {
                         />
                     </Row>
                     <Row>
-                        {user !== null ? 
-                        <BaseSelect
-                            className="col-12 mt-3"
-                            label="highest_degree"
-                            placeholder="highest_degree"
-                            name="highest_degree"
-                            enumType={EducationLevel}
-                            labelPrefix="EducationLevel"
-                            formik={apply_form}
-                        /> : <BaseSelect
-                            className="col-12 mt-3"
-                            label="CDL_CLASS"
-                            name="license_type"
-                            placeholder="DriverLicenseType.NONE"
-                            labelPrefix="DriverLicenseType"
-                            required
-                            enumType={DriverLicenseType}
-                            formik={apply_form}
-                        />}
+                        {user !== null ?
+                            <BaseSelect
+                                className="col-12 mt-3"
+                                label="highest_degree"
+                                placeholder="highest_degree"
+                                name="highest_degree"
+                                enumType={EducationLevel}
+                                labelPrefix="EducationLevel"
+                                formik={apply_form}
+                            /> : <BaseSelect
+                                className="col-12 mt-3"
+                                label="CDL_CLASS"
+                                name="license_type"
+                                placeholder="DriverLicenseType.NONE"
+                                labelPrefix="DriverLicenseType"
+                                required
+                                enumType={DriverLicenseType}
+                                formik={apply_form}
+                            />}
                     </Row>
                     {/* Files Start */}
                     <Row>

@@ -59,7 +59,16 @@ export class ApplicantEntity {
     psp_violations?: boolean = false;
     psp_violations_details?: string;
     tickets?: boolean = false;
+
+    tickets_count?: number;
     tickets_details?: string;
+    infractions?: boolean = false;
+    infractions_count?: number;
+    infractions_details?: string;
+    moving_violations?: boolean = false;
+    moving_violations_count?: number;
+    moving_violations_details?: string;
+
     positive_drug_test?: boolean = false;
     positive_drug_test_details?: string;
     equipment_experience?: ApplicantExperienceEntity[] = [];
@@ -71,78 +80,84 @@ export class ApplicantEntity {
     created_at?: string;
     last_updated_at?: string;
 
-  static yupSchema() {
-    return yup.object({
-        first_name: yup.string().required().nullable(),
-        last_name: yup.string().required().nullable(),
-        phone: yup.string().nullable(),
-        email: yup.string().email().required().nullable(),
-        birthdate: yup.date().nullable(),
-        street: yup.string().nullable(),
-        city: yup.string().nullable(),
-        state: yup.string().nullable(),
-        zip_code: yup.string().nullable(),
-        license_number: yup.string().nullable(),
-        license_expiry: yup.date().nullable(),
-        license_state: yup.string().nullable(),
-        license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
-        years_cdl_experience: yup.number().min(0).nullable(),
-        preferred_location: yup.array(
-          (yup.string() as any).enum(JobGeography)
-        ).nullable(),
-
-
+    static yupSchema() {
+        return yup.object({
+            first_name: yup.string().required().nullable(),
+            last_name: yup.string().required().nullable(),
+            phone: yup.string().nullable(),
+            email: yup.string().email().required().nullable(),
+            birthdate: yup.date().nullable(),
+            street: yup.string().nullable(),
+            city: yup.string().nullable(),
+            state: yup.string().nullable(),
+            zip_code: yup.string().nullable(),
+            license_number: yup.string().nullable(),
+            license_expiry: yup.date().nullable(),
+            license_state: yup.string().nullable(),
+            license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
+            years_cdl_experience: yup.number().min(0).nullable(),
+            preferred_location: yup.array(
+                (yup.string() as any).enum(JobGeography)
+            ).nullable(),
             license_restrictions: yup.array(
                 (yup.string() as any).enum(LicenseRestrictions)
             ).nullable(),
+            can_pass_drug_test: yup.bool().nullable(),
+            is_owner_operator: yup.bool().nullable(),
+            transmission_type: yup.array(
+                (yup.string() as any).enum(VehicleTransmissionType)
+            ).nullable(),
+            endorsements: yup.array(
+                (yup.string() as any).enum(DriverEndorsement)
+            ).nullable(),
+            highest_degree: (yup.string() as any).enum(EducationLevel).nullable(),
+            authorized_to_work_in_us: yup.bool().nullable(),
+            emergency_contact_name: yup.string().nullable(),
+            emergency_contact_number: yup.string().nullable(),
+            emergency_contact_relationship: yup.string().nullable(),
+            has_past_dui: yup.bool().nullable(),
+            dui_years: yup.array(
+                yup
+                    .number()
+                    .min(new Date().getFullYear() - 5)
+                    .max(new Date().getFullYear())
+            ).nullable(),
+            criminal_history: yup.string().nullable(),
+            accident_count: yup.number().min(0).nullable(),
+            accident_details: yup.string().nullable(),
+            license_revoked: yup.bool().nullable(),
+            license_revoked_details: yup.string().nullable(),
+            psp_violations: yup.bool().nullable(),
+            psp_violations_details: yup.string().nullable(),
+            tickets: yup.bool().nullable(),
+
+            tickets_count: yup.number().min(0).nullable(),
+            tickets_details: yup.string().nullable(),
+            infractions: yup.bool().nullable(),
+            infractions_count: yup.number().min(0).nullable(),
+            infractions_details: yup.string().nullable(),
+            moving_violations: yup.bool().nullable(),
+            moving_violations_count: yup.number().min(0).nullable(),
+            moving_violations_details: yup.string().nullable(),
 
 
-        can_pass_drug_test: yup.bool().nullable(),
-        is_owner_operator: yup.bool().nullable(),
-        transmission_type: yup.array(
-          (yup.string() as any).enum(VehicleTransmissionType)
-        ).nullable(),
-        endorsements: yup.array(
-          (yup.string() as any).enum(DriverEndorsement)
-        ).nullable(),
-        highest_degree: (yup.string() as any).enum(EducationLevel).nullable(),
-        authorized_to_work_in_us: yup.bool().nullable(),
-        emergency_contact_name: yup.string().nullable(),
-        emergency_contact_number: yup.string().nullable(),
-        emergency_contact_relationship: yup.string().nullable(),
-        has_past_dui: yup.bool().nullable(),
-        dui_years: yup.array(
-          yup
-            .number()
-            .min(new Date().getFullYear() - 5)
-            .max(new Date().getFullYear())
-        ).nullable(),
-        criminal_history: yup.string().nullable(),
-        accident_count: yup.number().min(0).nullable(),
-        accident_details: yup.string().nullable(),
-        license_revoked: yup.bool().nullable(),
-        license_revoked_details: yup.string().nullable(),
-        psp_violations: yup.bool().nullable(),
-        psp_violations_details: yup.string().nullable(),
-        tickets: yup.bool().nullable(),
-        tickets_details: yup.string().nullable(),
-        positive_drug_test: yup.bool().nullable(),
-        positive_drug_test_details: yup.string().nullable(),
-        equipment_experience: (yup.array(
-          ApplicantExperienceEntity.yupSchema()
-        ) as any).unique("type", { mapper: ApplicantExperienceEntity.key }),
-        equipment_owned: (yup.array(
-          ApplicantEquipmentEntity.yupSchema()
-        ) as any).unique("type", { mapper: ApplicantEquipmentEntity.key }),
-        employers: yup.array(
-          ApplicantEmployerEntity.yupSchema()
-        ),
-        documents: (yup.array(
-          DocumentEntity.yupSchema(ApplicantDocumentType)
-        ) as any).unique("type"),
-        jobs: (yup.array(
-          ApplicantJobEntity.yupSchema()
-        ) as any).unique("job.id")
-    });
-  }
+            positive_drug_test: yup.bool().nullable(),
+            positive_drug_test_details: yup.string().nullable(),
+            equipment_experience: (yup.array(
+                ApplicantExperienceEntity.yupSchema()
+            ) as any).unique("type", { mapper: ApplicantExperienceEntity.key }),
+            equipment_owned: (yup.array(
+                ApplicantEquipmentEntity.yupSchema()
+            ) as any).unique("type", { mapper: ApplicantEquipmentEntity.key }),
+            employers: yup.array(
+                ApplicantEmployerEntity.yupSchema()
+            ),
+            documents: (yup.array(
+                DocumentEntity.yupSchema(ApplicantDocumentType)
+            ) as any).unique("type"),
+            jobs: (yup.array(
+                ApplicantJobEntity.yupSchema()
+            ) as any).unique("job.id")
+        });
+    }
 }
