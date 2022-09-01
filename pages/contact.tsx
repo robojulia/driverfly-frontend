@@ -15,7 +15,6 @@ import { ToastContainer, toast } from 'react-toastify'
 import ContactApi from './api/contact';
 import { globalAjaxExceptionHandler } from '../utils/ajax';
 import CaptchaApi from './api/captcha';
-// import {validateCaptcha} from './api/validate-captcha'
 export default function Contact() {
 
     const { t } = useTranslation();
@@ -43,8 +42,9 @@ export default function Contact() {
         captchaRef.current.reset();
         const captchaApi = new CaptchaApi();
         const data = await captchaApi.validateCaptcha(token)
-        console.log(data, "dadsadas")
-     
+        if (data.success == true) {
+            setEnableButton(true)
+          }
     }
     return (
         <>
