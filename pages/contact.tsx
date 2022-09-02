@@ -5,7 +5,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 import { ArrowLeft, ArrowRight, Newspaper, PersonBadgeFill, QuestionCircle } from 'react-bootstrap-icons';
 import { useTranslation } from "../hooks/useTranslation";
-
+import React, { useRef } from 'react';
 import BaseInput from "../components/forms/BaseInput";
 import BaseTextArea from "../components/forms/BaseTextArea";
 import { useFormik } from "formik";
@@ -14,11 +14,11 @@ import { Row, Col } from "reactstrap"
 import { ToastContainer, toast } from 'react-toastify'
 import ContactApi from './api/contact';
 import { globalAjaxExceptionHandler } from '../utils/ajax';
-
+import CaptchaApi from './api/captcha';
 export default function Contact() {
 
     const { t } = useTranslation();
-
+    const captchaRef = useRef(null)
     const form = useFormik({
         initialValues: new ContactFormDto(),
         validationSchema: ContactFormDto.yupSchema(),
@@ -35,9 +35,16 @@ export default function Contact() {
         }
     });
 
+    const [enableButton, setEnableButton] = React.useState(false)
 
-    function onChange(value) {
-        console.log("Captcha value:", value);
+    const onChange = async () => {
+        const token = captchaRef.current.getValue();
+        captchaRef.current.reset();
+        const captchaApi = new CaptchaApi();
+        const data = await captchaApi.validateCaptcha(token)
+        if (data.success == true) {
+            setEnableButton(true)
+          }
     }
     return (
         <>
@@ -51,7 +58,7 @@ export default function Contact() {
             </div>
 
             <div className="top-outer bg-white py-5"></div>
-              <div className="contact-form">
+            <div className="contact-form">
                 <div className="container">
                     <div className="row contact-inner bg-white">
                         <div className="col-sm-12 col-lg-5 pl-0">
@@ -105,8 +112,9 @@ export default function Contact() {
                                             <ReCAPTCHA
                                                 sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
                                                 onChange={onChange}
+                                                ref={captchaRef}
                                             />
-                                            <button disabled={form.isSubmitting}
+                                            <button disabled={enableButton == false}
                                                 type="submit"
                                                 className="btn contact-submit-btn float-right py-3 px-5 mb-4">
                                                 {t("submit")}  <ArrowRight />
