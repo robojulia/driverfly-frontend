@@ -39,6 +39,11 @@ export default function MyNav() {
                                     <a className="dropdown-item" href="/faq" >{t("FAQ")}</a>
                                 </Link>
                             </NavDropdown.Item>
+                            <NavDropdown.Item>
+                                <Link href="/free-resources">
+                                    <a className="dropdown-item" href="/free-resources" >{t("FREE_RESOURCES")}</a>
+                                </Link>
+                            </NavDropdown.Item>
                             <NavDropdown.Item >
                                 <Link href="/find-schools">
                                     <a className="dropdown-item" href="/">{t("GET_YOUR_CDL")} </a>
