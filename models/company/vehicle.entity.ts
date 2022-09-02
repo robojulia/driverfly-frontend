@@ -21,6 +21,7 @@ export class VehicleEntity {
     accessories?: string[] = [];
     accessory_other?: string;
     is_governed?: boolean = false;
+    is_public?: boolean = false;
     max_speed?: number;
     created_at: string | Date;
     last_updated_at?: string | Date;
@@ -53,6 +54,7 @@ export class VehicleEntity {
                 then: yup.string().required().nullable(),
             }).nullable(),
             is_governed: yup.boolean().required().nullable(),
+            is_public: yup.boolean().required().nullable(),
             max_speed: yup.number().min(0).nullable()
         });
     }
