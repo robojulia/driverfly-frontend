@@ -1088,7 +1088,8 @@
     "GOVERNED_SPEED": "Governed speed",
     "MAX_SPEED": "Max speed",
     "SHOW_VEHICLES_TO_PUBLIC_USERS":"Show Vehicles To Public Users",
-    "VEHICLE_INFORMATION_HIDDEN_BY_COMPANY":"Vehicle information is hidden by company! Please login to see vehicle information.",
+    "VEHICLE_INFORMATION_HIDDEN_BY_COMPANY":"Vehicle information is hidden by company! Please ",
+    "SEE_VEHICLE_INFORMATION":"to see vehicle information.",
     "HttpStatus": {
         "404": "The requested resource was not found",
         "401": "The user is not authorized to perform the requested action"
