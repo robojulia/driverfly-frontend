@@ -66,7 +66,7 @@ export default function Signup() {
       utm_campaign: `${utm_campaign || ""}`,
       utm_content: `${utm_content || ""}`
     })
-  }, [ ]);
+  }, []);
 
   return (
     <PublicPage
@@ -172,6 +172,12 @@ export default function Signup() {
                 placeholder
                 formik={form}
               />
+              <BaseCheck
+                className="col-6 mt-1"
+                label="PERSONAL_RECRUITER"
+                name="personal_recruiter"
+                formik={form}
+              />
               {
                 form.values.role === SignUpRole.COMPANY &&
                 <BaseInput
@@ -186,58 +192,58 @@ export default function Signup() {
               {
                 !isReferred &&
                 <>
-                <BaseSelect
-                  className="col-12 mt-1"
-                  label="HOW_DID_YOU_HEAR_ABOUT_US"
-                  name="utm_source"
-                  formik={form}
-                  options={[
-                    {
-                      label: t("utm_source.ON_MY_OWN"),
-                      value: ""
-                    },
-                    {
-                      label: t("utm_source.DRIVERFLY_REPRESENTATIVE"),
-                      value: "rep",
-                    },
-                    {
-                      label: t("utm_source.FRIEND"),
-                      value: "friend",
-                    },
-                    {
-                      label: t("utm_source.GOOGLE"),
-                      value: "google",
-                    },
-                    {
-                      label: t("utm_source.FACEBOOK"),
-                      value: "facebook",
-                    },
-                    {
-                      label: t("utm_source.OTHER"),
-                      value: "other",
-                    }
-                  ]}
+                  <BaseSelect
+                    className="col-12 mt-1"
+                    label="HOW_DID_YOU_HEAR_ABOUT_US"
+                    name="utm_source"
+                    formik={form}
+                    options={[
+                      {
+                        label: t("utm_source.ON_MY_OWN"),
+                        value: ""
+                      },
+                      {
+                        label: t("utm_source.DRIVERFLY_REPRESENTATIVE"),
+                        value: "rep",
+                      },
+                      {
+                        label: t("utm_source.FRIEND"),
+                        value: "friend",
+                      },
+                      {
+                        label: t("utm_source.GOOGLE"),
+                        value: "google",
+                      },
+                      {
+                        label: t("utm_source.FACEBOOK"),
+                        value: "facebook",
+                      },
+                      {
+                        label: t("utm_source.OTHER"),
+                        value: "other",
+                      }
+                    ]}
                   />
-                {
-                  form.values.utm_source === "rep" &&
-                  <BaseInput
-                    className="col-12 mt-1"
-                    label="utm_campaign.REFERRAL_CODE"
-                    name="utm_campaign"
-                    placeholder
-                    formik={form}
+                  {
+                    form.values.utm_source === "rep" &&
+                    <BaseInput
+                      className="col-12 mt-1"
+                      label="utm_campaign.REFERRAL_CODE"
+                      name="utm_campaign"
+                      placeholder
+                      formik={form}
                     />
-                }
-                {
-                  form.values.utm_source === "other" &&
-                  <BaseTextArea
-                    className="col-12 mt-1"
-                    label="utm_content.DETAILS_OPTIONAL"
-                    name="utm_content"
-                    placeholder
-                    formik={form}
+                  }
+                  {
+                    form.values.utm_source === "other" &&
+                    <BaseTextArea
+                      className="col-12 mt-1"
+                      label="utm_content.DETAILS_OPTIONAL"
+                      name="utm_content"
+                      placeholder
+                      formik={form}
                     />
-                }
+                  }
                 </>
               }
             </Row>
@@ -260,13 +266,13 @@ export default function Signup() {
 
             </Row>
             <div className="d-grid gap-2 my-4">
-                <Button disabled={form.isSubmitting} size="lg" type="submit">{t("REGISTER_NOW")}</Button>
-                <div className="my-1 w-100 text-center">
-                    <span>{t("OR")}</span>
-                </div>
-                <Link href="/login">
-                    <Button size="lg">{t("IF_YOURE_ALREADY_A_USER_LOGIN_HERE")}</Button>
-                </Link>
+              <Button disabled={form.isSubmitting} size="lg" type="submit">{t("REGISTER_NOW")}</Button>
+              <div className="my-1 w-100 text-center">
+                <span>{t("OR")}</span>
+              </div>
+              <Link href="/login">
+                <Button size="lg">{t("IF_YOURE_ALREADY_A_USER_LOGIN_HERE")}</Button>
+              </Link>
             </div>
           </form>
         </Col>
