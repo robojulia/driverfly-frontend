@@ -1087,8 +1087,8 @@
     "{number}_CHARACTERS_REMAINING": "{{number}} characters remaining",
     "GOVERNED_SPEED": "Governed speed",
     "MAX_SPEED": "Max speed",
-    "SHOW_VEHICLES_TO_PUBLIC_USERS":"Show Vehicles To Public Users",
-    "VEHICLE_INFORMATION_HIDDEN_BY_COMPANY":"Vehicle information is hidden by company! Please login to see vehicle information.",
+    "SHOW_VEHICLES_TO_PUBLIC_USERS": "Show Vehicles To Public Users",
+    "VEHICLE_INFORMATION_HIDDEN_BY_COMPANY": "Vehicle information is hidden by company! Please login to see vehicle information.",
     "HttpStatus": {
         "404": "The requested resource was not found",
         "401": "The user is not authorized to perform the requested action"
@@ -1116,19 +1116,19 @@
         "IN_PROCESS": "In Process",
         "HIRED": "Hired"
     },
-    "TotalApplicantsBarChartLabel": {
-        "JAN": "January",
-        "FEB": "February",
-        "MAR": "March",
-        "ARP":"April",
-        "MAY":"May",
-        "JUN":"June",
-        "JUL":"July",
-        "AUG":"August",
-        "SEP":"September",
-        "OCT":"October",
-        "NOV":"November",
-        "DEC":"December"
+    "MonthsLabel": {
+        "JANUARY": "January",
+        "FEBRUARY": "February",
+        "MARCH": "March",
+        "APRIL": "April",
+        "MAY": "May",
+        "JUNE": "June",
+        "JULY": "July",
+        "AUGUST": "August",
+        "SEPTEMBER": "September",
+        "OCTOBER": "October",
+        "NOVEMBER": "November",
+        "DECEMBER": "December"
     },
     "NO_NAME": "No Name",
     "SWITCH_COMPANY": "Switch Company",
@@ -1199,7 +1199,7 @@
     "NO_RELATED_JOBS_YET": "No related jobs yet.",
     "JOB_CREATION_CONFIRMATION": "By submitting, I confirm that the details of this job are as honest and accurate to the best of my knowledge.",
     "DON'T_HAVE_AN_ACCOUNT": "Don't have an account? Make one",
-    "OTHER_SKILLS":"Other Skills",
+    "OTHER_SKILLS": "Other Skills",
     "ALREADY_EXISTS": "Already Exists",
     "HAS_HAD_INFRACTIONS_LAST_5_YEARS": "Have you had any infractions in the previous 5 years?",
     "HAS_HAD_MOVING_VIOLATIONS_LAST_3_YEARS": "Have you had any moving violations (not at fault) in the previous 3 years?",
