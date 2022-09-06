@@ -22,7 +22,7 @@ export default function JobDetail({ jobDetail, relatedJobs }: JobDetailProps) {
             backPath="/dashboard/driver/jobs"
             title={jobDetail.title}
         >
-            <ToastContainer />
+            {/* <ToastContainer /> */}
             <StructuredData type="JobPosting" data={StructuredData.JobPosting(jobDetail, t)} />
             <ViewJobDetail
                 job={jobDetail}
