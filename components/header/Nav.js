@@ -20,38 +20,38 @@ export default function MyNav() {
                     <Nav className="mr-auto">
                         <Nav.Link className="nav-item ml-30">
                             <Link href="/">
-                                <div href="/" className="">{t("HOME")}</div >
+                                <div>{t("HOME")}</div >
                             </Link>
                         </Nav.Link>
                         <Nav.Link className="nav-item ml-30">
                             <Link href="/about">
-                                <div href="/about" className="">{t("ABOUT_US")}</div >
+                                <div>{t("ABOUT_US")}</div >
                             </Link>
                         </Nav.Link>
                         <Nav.Link className="nav-item ml-30">
                             <Link href="/find-jobs">
-                                <div href="/find-jobs" className="">{t("FIND_A_Job")}</div >
+                                <div>{t("FIND_A_Job")}</div >
                             </Link>
                         </Nav.Link >
                         <NavDropdown title="Driver Resources" id="collasible-nav-dropdown" >
                             <NavDropdown.Item>
                                 <Link href="/faq">
-                                    <a className="dropdown-item" href="/faq" >{t("FAQ")}</a>
+                                    <a className="dropdown-item">{t("FAQ")}</a>
                                 </Link>
                             </NavDropdown.Item>
                             <NavDropdown.Item>
-                                <Link href="/free-resources">
-                                    <a className="dropdown-item" href="/free-resources" >{t("FREE_RESOURCES")}</a>
+                                <Link href="resources">
+                                    <a className="dropdown-item">{t("RESOURCES")}</a>
                                 </Link>
                             </NavDropdown.Item>
                             <NavDropdown.Item >
                                 <Link href="/find-schools">
-                                    <a className="dropdown-item" href="/">{t("GET_YOUR_CDL")} </a>
+                                    <a className="dropdown-item">{t("GET_YOUR_CDL")} </a>
                                 </Link>
                             </NavDropdown.Item>
                             <NavDropdown.Item >
                                 <Link href="/owner-operators">
-                                    <a className="dropdown-item" href="/owner-operators"> {t("OWNER_OPERATORS")} </a>
+                                    <a className="dropdown-item"> {t("OWNER_OPERATORS")} </a>
                                 </Link>
                             </NavDropdown.Item>
                         </NavDropdown>

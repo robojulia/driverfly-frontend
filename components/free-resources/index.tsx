@@ -23,7 +23,7 @@ export default function FreeResources() {
 
     return (<>
         <Row>
-            <Col>
+            <Col lg="4" sm="12">
                 <ViewCard
                     title="vendor_discounts"
                     actions={renderLink("/third-party-resources")}
@@ -31,7 +31,7 @@ export default function FreeResources() {
                     {t("vendor_discounts_paragraph")}
                 </ViewCard>
             </Col>
-            <Col>
+            <Col lg="4" sm="12">
                 <ViewCard
                     title="salary_comparison_tool"
                     actions={renderLink("https://ctrecruiting.com/pay-calculator")}
@@ -39,7 +39,7 @@ export default function FreeResources() {
                     {t("salary_comparison_tool_paragraph")}
                 </ViewCard>
             </Col>
-            <Col>
+            <Col lg="4" sm="12">
                 <ViewCard
                     title="access_your_mvr"
                     actions={renderLink("/dashboard/driver/settings/applicant")}
@@ -49,7 +49,7 @@ export default function FreeResources() {
             </Col>
         </Row>
         <Row>
-            <Col>
+            <Col lg="4" sm="12">
                 <ViewCard
                     title="refer_a_friend_program"
                     actions={renderLink("https://ctrecruiting.com/referral")}
@@ -57,7 +57,7 @@ export default function FreeResources() {
                     {t("refer_a_friend_paragraph")}
                 </ViewCard>
             </Col>
-            <Col>
+            <Col lg="4" sm="12">
                 <ViewCard
                     title="enter_sweepstakes"
                 // actions={(
@@ -75,7 +75,7 @@ export default function FreeResources() {
                     {t("enter_sweepstakes_paragraph")}
                 </ViewCard>
             </Col>
-            <Col>
+            <Col lg="4" sm="12">
                 <ViewCard
                     title="become_your_own_boss"
                     actions={renderLink("https://drivergrowth.com/")}
@@ -85,7 +85,7 @@ export default function FreeResources() {
             </Col>
         </Row>
         <Row>
-            <Col>
+            <Col lg="4" sm="12">
                 <ViewCard
                     title="connect_with_our_community"
                 // actions={(
@@ -103,7 +103,7 @@ export default function FreeResources() {
                     {t("join_our_driverfly_community")}
                 </ViewCard>
             </Col>
-            <Col>
+            <Col lg="4" sm="12">
                 <ViewCard
                     title="follow_us"
                 // actions={(
@@ -128,7 +128,7 @@ export default function FreeResources() {
                     />
                 </ViewCard>
             </Col>
-            <Col>
+            <Col lg="4" sm="12">
                 <ViewCard
                     title="sign_up_for_newsletter"
                 // actions={(
