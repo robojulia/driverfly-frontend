@@ -8,53 +8,40 @@ import { DriverEndorsement } from "../../enums/users/driver-endorsement.enum";
 import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
 import { VehicleTransmissionType } from "../../enums/vehicles/vehicle-transmission-type.enum";
 import { MvrType } from "../../enums/users/mvr-type.enum";
+import { JobDatePosted } from "../../enums/jobs/job-date-posted.enum";
 
-interface JobSearchExclude {
-    jobId?: number
+export interface JobSearchExclude {
+    jobId: number
 }
 
-interface JobSearchLocation {
-    lat?: string,
-    long?: string,
+export interface JobSearchLocation {
+    lat?: string;
+    long?: string;
     range?: string
 }
 
 export interface SearchJobsDto {
 
-    exclude?: JobSearchExclude,
-
-    companyId?: number,
-
-    keywords?: string,
-
-    cdl_class?: DriverLicenseType,
-
-    areas_covered?: JobGeography,
-
-    employment_type?: JobEmploymentType,
-
-    delivery_type?: JobDeliveryType,
-
-    equipment_type?: JobEquipmentType,
-
-    transmission_type_experience?: VehicleTransmissionType,
-
-    schedule?: JobSchedule,
-
-    pay_structure?: JobPayMethod,
-
-    endoresements_type?: DriverEndorsement,
-
-    mvr_requirements?: MvrType,
-
-    date_created?: Date | string,
-
-    location?: JobSearchLocation,
-
-    order_by?: string,
-
-    take?: number,
-
-    page?: number,
+    exclude?: JobSearchExclude;
+    companyId?: number;
+    keywords?: string;
+    cdl_class?: DriverLicenseType;
+    areas_covered?: JobGeography;
+    employment_type?: JobEmploymentType;
+    delivery_type?: JobDeliveryType;
+    equipment_type?: JobEquipmentType;
+    transmission_type_experience?: VehicleTransmissionType;
+    schedule?: JobSchedule;
+    pay_structure?: JobPayMethod;
+    min_weekly_pay?: number;
+    max_weekly_pay?: number;
+    endoresements_type?: DriverEndorsement;
+    mvr_requirements?: MvrType;
+    date_created?: Date | string;
+    date_posted_label?: JobDatePosted;
+    location?: JobSearchLocation;
+    order_by?: string;
+    take?: number;
+    page?: number;
 
 }
