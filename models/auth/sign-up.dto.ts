@@ -17,6 +17,7 @@ export class SignUpDto {
   utm_medium?: string;
   utm_campaign?: string;
   utm_content?: string;
+  personal_recruiter?: boolean = false;
 
   static yupSchema() {
     return yup.object({
@@ -32,6 +33,7 @@ export class SignUpDto {
       password: yup.string().trim().required().nullable(),
       confirmPassword: yup.string().trim().oneOf([yup.ref("password")], "PASSWORDS_DO_NOT_MATCH").required().nullable(),
       accept_tos: yup.boolean().oneOf([true], "MUST_BE_CHECKED"),
+      personal_recruiter: yup.boolean().nullable(),
       utm_source: yup.string().trim().nullable(),
       utm_medium: yup.string().trim().nullable(),
       utm_campaign: yup.string().trim().nullable(),

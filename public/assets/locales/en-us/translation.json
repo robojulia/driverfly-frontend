@@ -1087,8 +1087,9 @@
     "{number}_CHARACTERS_REMAINING": "{{number}} characters remaining",
     "GOVERNED_SPEED": "Governed speed",
     "MAX_SPEED": "Max speed",
-    "SHOW_VEHICLES_TO_PUBLIC_USERS": "Show Vehicles To Public Users",
-    "VEHICLE_INFORMATION_HIDDEN_BY_COMPANY": "Vehicle information is hidden by company! Please login to see vehicle information.",
+    "SHOW_VEHICLES_TO_PUBLIC_USERS":"Show Vehicles To Public Users",
+    "VEHICLE_INFORMATION_HIDDEN_BY_COMPANY":"Vehicle information is hidden by company! Please ",
+    "SEE_VEHICLE_INFORMATION":"to see vehicle information.",
     "HttpStatus": {
         "404": "The requested resource was not found",
         "401": "The user is not authorized to perform the requested action"
@@ -1213,8 +1214,10 @@
     "CREATED_AT": "Created At",
     "RESTORE_CONFIRMATION": "Restore Confirmation",
     "DO_NOT_RESTORE": "Do Not Restore",
+    "PERSONAL_RECRUITER": "Personal Recruiter",
     "ARE_YOU_SURE_YOU_WANT_TO_RESTORE": "Are you sure you want to restore this record?",
     "HOW_DID_YOU_HEAR_ABOUT_US": "How did you hear about us?",
+    "RESOURCES":"Resources",
     "utm_source": {
         "ON_MY_OWN": "On my own",
         "DRIVERFLY_REPRESENTATIVE": "Referral Code",
