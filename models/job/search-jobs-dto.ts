@@ -17,7 +17,12 @@ export interface JobSearchExclude {
 export interface JobSearchLocation {
     lat?: string;
     long?: string;
-    range?: string
+    range?: string;
+}
+
+export interface JobSearchDatePosted {
+    value?: string | Date;
+    label?: JobDatePosted;
 }
 
 export interface SearchJobsDto {
@@ -37,8 +42,7 @@ export interface SearchJobsDto {
     max_weekly_pay?: number;
     endoresements_type?: DriverEndorsement;
     mvr_requirements?: MvrType;
-    date_created?: Date | string;
-    date_posted_label?: JobDatePosted;
+    date_created?: JobSearchDatePosted;
     location?: JobSearchLocation;
     order_by?: string;
     take?: number;
