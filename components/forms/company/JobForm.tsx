@@ -111,7 +111,7 @@ export function JobForm(props: JobFormProps) {
         const { value } = e.target;
 
         const label = `mvr_requirements[${idx}]`;
-        const mvr_requirements = form.values[label];
+        const mvr_requirements = form.values.mvr_requirements[idx];
         let max_years = 5;
 
         switch (value) {
