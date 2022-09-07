@@ -39,6 +39,7 @@
     "review": "Review",
     "save": "Save",
     "submit": "Submit",
+    "GET_REGISTERED_MESSAGE":"Congrats on applying! To get even more access to amazing jobs like this along with vendor perks and prizes, please register at",
     "SAVED_JOBS": "Saved Jobs",
     "DATE_SAVED": "Date Saved ",
     "SAVED": "Saved",
@@ -1218,6 +1219,7 @@
     "ARE_YOU_SURE_YOU_WANT_TO_RESTORE": "Are you sure you want to restore this record?",
     "HOW_DID_YOU_HEAR_ABOUT_US": "How did you hear about us?",
     "RESOURCES":"Resources",
+    "ALREADY_IN_CONVERSATION":"Driver is already in your Conversation",
     "utm_source": {
         "ON_MY_OWN": "On my own",
         "DRIVERFLY_REPRESENTATIVE": "Referral Code",

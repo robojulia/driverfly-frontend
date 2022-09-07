@@ -24,7 +24,7 @@ export default function Detail({ jobDetail, relatedJobs }) {
 
   return (
     <>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <StructuredData type="JobPosting" data={StructuredData.JobPosting(jobDetail, t)} />
       <ViewJobDetail
         job={jobDetail}

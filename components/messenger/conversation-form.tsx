@@ -28,6 +28,8 @@ export function ConversationForm(props: ConversationFormProps) {
     const { t } = useTranslation();
 
     const form = useFormik({
+        validateOnChange:false,
+        validateOnBlur:false,
         initialValues: new ConversationEntity.CreateDto(),
         validationSchema: ConversationEntity.CreateDto.yupSchema(),
         onSubmit: async (dto) => {
@@ -61,15 +63,15 @@ export function ConversationForm(props: ConversationFormProps) {
                     if (onCreated) onCreated(convo);
                 }
 
-               form.setValues({
-                   ...dto,
-                   message: null
-               }, false);
-           } catch (e) {
-               console.error("Unable to save convo info", e);
+                form.setValues({
+                    ...dto,
+                    message: null
+                }, false);
+            } catch (e) {
+                console.error("Unable to save convo info", e);
 
-               globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast });
-           }
+                globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast });
+            }
         }
     });
 
@@ -87,28 +89,28 @@ export function ConversationForm(props: ConversationFormProps) {
             message: null,
         });
 
-    }, [ entity ]);
+    }, [entity]);
 
-    const [ cancelTokenSource, setCancelTokenSource] = useState(null);
+    const [cancelTokenSource, setCancelTokenSource] = useState(null);
 
     const getOptionsProxy = async (query) => {
-       if (cancelTokenSource)
-           cancelTokenSource.cancel("New search results posted");
+        if (cancelTokenSource)
+            cancelTokenSource.cancel("New search results posted");
 
-       let tokenSource = axios.CancelToken.source();
-       setCancelTokenSource(tokenSource);
+        let tokenSource = axios.CancelToken.source();
+        setCancelTokenSource(tokenSource);
 
-       try {
-           return await getOptions(query, tokenSource);
-       }
-       catch (e) {
-           if (axios.isCancel(e)) {
-               console.warn("cancelled?", e);
-               return [];
-           }
+        try {
+            return await getOptions(query, tokenSource);
+        }
+        catch (e) {
+            if (axios.isCancel(e)) {
+                console.warn("cancelled?", e);
+                return [];
+            }
 
-           throw e;
-       }
+            throw e;
+        }
     };
 
     const onConversationToChangeProxy = e => {
@@ -122,53 +124,53 @@ export function ConversationForm(props: ConversationFormProps) {
         });
 
         if (onConversationToChange) onConversationToChange(form.values);
-   }
+    }
 
-   const lastMessage = React.createRef<HTMLLIElement>();
+    const lastMessage = React.createRef<HTMLLIElement>();
 
-   useEffect(() => lastMessage.current?.scrollIntoView({ behavior: "smooth" }), [lastMessage])
+    useEffect(() => lastMessage.current?.scrollIntoView({ behavior: "smooth" }), [lastMessage])
 
-   return (
-    <Card>
-        <Card.Header>
-            {(() => {
-                if (entity.id) return entity.chattable_name;
-                
-                if (canCreate) return (
-                    <>
-                    <ComboBox options={getOptionsProxy} onChange={onConversationToChangeProxy} minLength={3} />
-                    {typeof form.errors?.chattable_id === "string" &&
-                    <span className="text-danger small">{t(form.errors.chattable_id)}</span>
+    return (
+        <Card>
+            <Card.Header>
+                {(() => {
+                    if (entity.id) return entity.chattable_name;
+
+                    if (canCreate) return (
+                        <>
+                            <ComboBox options={getOptionsProxy} onChange={onConversationToChangeProxy} minLength={3} />
+                            {typeof form.errors?.chattable_id === "string" &&
+                                <span className="text-danger small">{t(form.errors.chattable_id)}</span>
+                            }
+                        </>
+                    );
+
+                    return t("NONE");
+                })()}
+            </Card.Header>
+            <Card.Body>
+                <ul className="list-unstyled" style={{ overflowY: "auto", height: "50vh" }}>
+                    {
+                        entity?.messages?.map((m, i, a) => (
+                            <Message key={m.id} conversation={entity} message={m} showHeader={m.direction !== a[i - 1]?.direction} lastMessageRef={i == entity.messages.length - 1 ? lastMessage : null} />
+                        ))
                     }
-                    </>
-                );
-
-                return t("NONE");
-            })()}
-        </Card.Header>
-        <Card.Body>
-            <ul className="list-unstyled" style={{ overflowY: "auto", height: "50vh" }}>
-                {
-                    entity?.messages?.map((m, i, a) => (
-                        <Message key={m.id} conversation={entity} message={m} showHeader={m.direction !== a[i - 1]?.direction} lastMessageRef={i == entity.messages.length - 1 ? lastMessage : null} />
-                    ))
-                }
-            </ul>
-        </Card.Body>
-        {
-            (entity.id || canCreate) && 
-            <Card.Footer>
-                <Form className="form-outline" onSubmit={form.handleSubmit}>
-                    <BaseTextArea
-                        name="message"
-                        formik={form}
-                        readOnly={!entity.id && !canCreate}
-                        required
-                        placeholder="MESSAGE" />
-                    <button type="submit" className="btn btn-info float-end">{t("SEND")}</button>
-                </Form>
-            </Card.Footer>
-        }
-    </Card>
+                </ul>
+            </Card.Body>
+            {
+                (entity.id || canCreate) &&
+                <Card.Footer>
+                    <Form className="form-outline" onSubmit={form.handleSubmit}>
+                        <BaseTextArea
+                            name="message"
+                            formik={form}
+                            readOnly={!entity.id && !canCreate}
+                            required
+                            placeholder="MESSAGE" />
+                        <button type="submit" className="btn btn-info float-end my-2">{t("SEND")}</button>
+                    </Form>
+                </Card.Footer>
+            }
+        </Card>
     );
 }
