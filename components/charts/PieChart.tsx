@@ -19,7 +19,7 @@ export function PieChart(props: PieChartProps): JSX.Element {
 
     const { user } = useAuth();
 
-    const [ data, setData ] = useState<number[]>([]);
+    const [data, setData] = useState<number[]>([]);
 
 
     const refreshData = async () => {
@@ -29,7 +29,7 @@ export function PieChart(props: PieChartProps): JSX.Element {
         setData(data);
     };
 
-    useEffectAsync(refreshData, [ user ]);
+    useEffectAsync(refreshData, []);
     return (
         <Doughnut
             options={{
@@ -51,7 +51,7 @@ export function PieChart(props: PieChartProps): JSX.Element {
                 }]
             }}
         />
-   
+
     );
 
 };
