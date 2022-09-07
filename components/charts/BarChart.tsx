@@ -21,7 +21,7 @@ export function BarChart(props: BarChartProps): JSX.Element {
 
     const { user } = useAuth();
 
-    const [ data, setData ] = useState<number[]>([]);
+    const [data, setData] = useState<number[]>([]);
 
 
     const refreshData = async () => {
@@ -31,7 +31,7 @@ export function BarChart(props: BarChartProps): JSX.Element {
         setData(data);
     };
 
-    useEffectAsync(refreshData, [ user ]);
+    useEffectAsync(refreshData, []);
 
     return (
         <Bar
@@ -58,6 +58,6 @@ export function BarChart(props: BarChartProps): JSX.Element {
                 }]
             }}
         />
-   
+
     );
 }
