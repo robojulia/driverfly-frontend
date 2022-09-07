@@ -3,6 +3,7 @@ import { Container } from "reactstrap";
 import Header from "./header/Header";
 import Sidebar from "./sidebars/Sidebar";
 import Head from "next/head";
+import {useRouter} from 'next/router';
 
 import { useTranslation } from "../../../hooks/useTranslation";
 import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, BellFill, SearchHeartFill, GiftFill, GearFill, ShareFill, EnvelopeFill, CardList } from 'react-bootstrap-icons';
@@ -15,6 +16,7 @@ import DriverProfileNav from "./header/DriverProfileNav";
 // driver layout
 const FullLayout = ({ children }) => {
     const { t } = useTranslation();
+    const router = useRouter()
 
     const { user } = useAuth();
 
