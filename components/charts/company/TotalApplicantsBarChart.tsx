@@ -1,36 +1,53 @@
 import { ApplicantApi } from "../../../pages/api/applicant";
-import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
-import { Badge } from "react-bootstrap";
 import { BarChart } from "../BarChart";
+import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
+import moment from "moment";
 
 export function TotalApplicantBarChart() {
+
+    const applicantApi = new ApplicantApi();
+
+    const labels: string[] = moment.months().map(v => `MonthsLabel.${v.toUpperCase()}`)
+    const yearToShow: number = (new Date()).getFullYear()
+
     const fetchData = async () => {
-        const api = new ApplicantApi();
 
-        let january = 0;
-        let february = 0;
-        let march = 0;
+        const months = moment.months().map(v => ({ name: v.toUpperCase(), count: 0 }))
+        const applicants: ApplicantEntity[] = await applicantApi.list();
 
-        const applicants = await api.list();
+        let counts: number[]
+        let data = []
 
-        applicants.forEach(v => {
-            v.jobs.forEach(j => {
-                if (!j.status) return;
-                if (j.status.startsWith("NEW_")) january++;
-                else if (j.status.startsWith("IN_PROCESS_")) february++;
-                else if (j.status.startsWith("COMPLETED_")) march++;
-            });
-        });
-        return [january, february, march];
-    };
+        applicants.map(applicant => applicant.jobs.map(applicantJob => {
+            if ((!applicantJob.status) || (!applicantJob.created_at)) return;
 
-    const labels = [ "JAN", "FEB", "MAR","ARP","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC" ].map(v => `TotalApplicantsBarChartLabel.${v}`);
+            const dateApplied = moment(applicantJob.created_at).format('YYYY-MMMM').split("-")
+            const year = parseInt(dateApplied[0])
+            const month = dateApplied[1].toUpperCase()
+
+            if (!data.some(v => v.year == year)) data.push({ year, months })
+
+            data.map(v => {
+                if (v.year != year) return;
+
+                v.months.map(m => { (m.name == month) && m.count++ })
+            })
+
+        }))
+
+        data.map(v => {
+            if (v.year == yearToShow) counts = v.months.map(v => v.count)
+        })
+
+        return counts
+    }
 
     return (
         <BarChart
+            yearToShow={yearToShow}
             title="APPLICANTS"
             labels={labels}
             fetchData={fetchData}
-            />
+        />
     );
 }
