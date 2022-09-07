@@ -5,12 +5,11 @@ import Sidebar from "./sidebars/Sidebar";
 import Head from "next/head";
 
 import { useTranslation } from "../../../hooks/useTranslation";
-import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, BellFill, SearchHeartFill, CheckSquareFill, GiftFill, GearFill, ShareFill, EnvelopeFill, CardList } from 'react-bootstrap-icons';
+import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, BellFill, SearchHeartFill, GiftFill, GearFill, ShareFill, EnvelopeFill, CardList } from 'react-bootstrap-icons';
 import { useAuth } from "../../../hooks/useAuth";
 
 import { Scripts } from "../../scripts/scripts";
 import DriverProfileNav from "./header/DriverProfileNav";
-import { ManyChatScript } from "../../scripts/manychat/manychat";
 
 
 // driver layout
@@ -94,7 +93,7 @@ const FullLayout = ({ children }) => {
 
     //  Code below is to set scroll to top on each child page
     const dashboardContainer = useRef(null)
-    const resetScrollEffect = ({ element: { current } }) => { current.scrollTop = 0 }
+    const resetScrollEffect = ({ element: { current } }) => {if(router.pathname == "/dashboard/driver/jobs/[id]")current.scrollTop = 0 }
     useEffect(() => resetScrollEffect({ element: dashboardContainer }), [children])
 
     return (
