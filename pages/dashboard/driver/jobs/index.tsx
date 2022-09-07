@@ -48,6 +48,8 @@ export default function FindJobs() {
     const handleReset = (): void => {
         setSearchQuery('')
         setFilters([])
+        setLocation(null)
+        setRange(null)
     }
 
     const [location, setLocation] = useState<any>(null);
