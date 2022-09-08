@@ -49,7 +49,7 @@ export default function Applicant() {
         onSubmit: async (values) => {
             if ("jobs" in values)
                 delete values.jobs;
-
+                
             try {
                 values = await api.me.update(values);
 
@@ -65,6 +65,13 @@ export default function Applicant() {
 
     useEffectAsync(async () => {
         const applicant = await api.me.get();
+
+        applicant.equipment_experience.forEach((equipmentExp) => {
+            if (!Number.isInteger(equipmentExp)) {
+                equipmentExp.months = Math.round((equipmentExp.years % 1) * 12);
+                equipmentExp.years = Math.floor(equipmentExp.years);
+            }
+        });
 
         form.setValues({
             ...form.values,
@@ -326,6 +333,7 @@ export default function Applicant() {
                                                 <Row className='d-sm-none d-md-flex'>
                                                     <Col><strong>{t("TYPE")}</strong></Col>
                                                     <Col><strong>{t("YEARS")}</strong></Col>
+                                                    <Col><strong>{t("MONTHS")}</strong></Col>
                                                 </Row>
                                                 {form.values
                                                     .equipment_experience
@@ -334,8 +342,9 @@ export default function Applicant() {
                                                             <Col xs="12" className='d-sm-flex d-md-none'>
                                                                 <Col><strong>{t("TYPE")}</strong></Col>
                                                                 <Col><strong>{t("YEARS")}</strong></Col>
+                                                                <Col><strong>{t("MONTHS")}</strong></Col>
                                                             </Col>
-                                                            <Col xs="6">
+                                                            <Col xs="4">
                                                                 <BaseSelect
                                                                     name={`equipment_experience[${i}].type`}
                                                                     placeholder="TYPE"
@@ -344,12 +353,22 @@ export default function Applicant() {
                                                                     formik={form}
                                                                 />
                                                             </Col>
-                                                            <Col xs="5">
+                                                            <Col xs="4">
                                                                 <BaseInput
                                                                     name={`equipment_experience[${i}].years`}
                                                                     placeholder="YEARS"
                                                                     type="int"
                                                                     min="1"
+                                                                    formik={form}
+                                                                />
+                                                            </Col>
+                                                            <Col xs="3">
+                                                                <BaseInput
+                                                                    name={`equipment_experience[${i}].months`}
+                                                                    placeholder="MONTHS"
+                                                                    type="int"
+                                                                    min="0"
+                                                                    max="11"
                                                                     formik={form}
                                                                 />
                                                             </Col>

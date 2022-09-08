@@ -6,6 +6,7 @@ export class ApplicantExperienceEntity {
     type?: JobEquipmentType;
     type_other?: string;
     years?: number;
+    months?: number;
 
     static yupSchema() {
         return yup.object({
@@ -14,7 +15,8 @@ export class ApplicantExperienceEntity {
                 is: JobEquipmentType.OTHER,
                 then: yup.string().required().nullable()
             }).nullable(),
-            years: yup.number().min(1).nullable()
+            years: yup.number().min(1).nullable(),
+            months: yup.number().min(0).max(11).nullable()
         });
     }
 
