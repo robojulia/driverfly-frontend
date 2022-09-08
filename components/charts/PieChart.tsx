@@ -1,36 +1,37 @@
-import React, { useState } from "react";
-import { Bar } from "react-chartjs-2";
+import React, { useEffect, useState } from 'react';
+import { Doughnut } from 'react-chartjs-2';
+import { Chart, ArcElement } from 'chart.js'
+Chart.register(ArcElement);
 import { useTranslation } from "../../hooks/useTranslation";
 import { useEffectAsync } from "../../utils/react";
 import { useAuth } from "../../hooks/useAuth";
 
-export interface BarChartProps {
+
+export interface PieChartProps {
     title: string;
-    yearToShow?: number;
     labels: string[];
     fetchData: () => Promise<number[]>;
 }
-
-export function BarChart(props: BarChartProps): JSX.Element {
-    const { title, yearToShow, labels, fetchData } = props;
+export function PieChart(props: PieChartProps): JSX.Element {
+    const { title, labels, fetchData } = props;
 
     const { t } = useTranslation();
+
     const { user } = useAuth();
 
     const [data, setData] = useState<number[]>([]);
-    const resetData = () => { setData([]) }
+
 
     const refreshData = async () => {
-        resetData()
+        setData([]);
         const data = await fetchData();
 
         setData(data);
     };
 
     useEffectAsync(refreshData, []);
-
     return (
-        <Bar
+        <Doughnut
             options={{
                 maintainAspectRatio: false,
                 responsive: true
@@ -38,17 +39,13 @@ export function BarChart(props: BarChartProps): JSX.Element {
             data={{
                 labels: labels.map(v => t(v)),
                 datasets: [{
-                    label: `${t(title)} - ${yearToShow}`,
+                    label: t(title),
                     data: data,
                     backgroundColor: [
                         'rgba(29, 67, 84)',
                         'rgba(92, 200, 196)',
                         'rgba(245, 192, 24)',
-                    ],
-                    borderColor: [
-                        'rgba(29, 67, 84)',
-                        'rgba(92, 200, 196)',
-                        'rgba(245, 192, 24)',
+
                     ],
                     borderWidth: 1
                 }]
@@ -56,4 +53,5 @@ export function BarChart(props: BarChartProps): JSX.Element {
         />
 
     );
-}
+
+};

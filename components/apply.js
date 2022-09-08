@@ -26,12 +26,11 @@ import { ApplicantDocumentType } from '../enums/applicants/applicant-document-ty
 import { DocumentEntity } from '../models/documents/document.entity'
 import { PlusCircle, DashCircle, ArrowRight, Star } from 'react-bootstrap-icons'
 import BaseInputPhone from './forms/BaseInputPhone'
+import { DriverLicenseType } from "../enums/users/driver-license-type.enum";
 
-export default function JobApply({ job }) {
-
+export default function JobApply({ job, setEncourageModal }) {
     const { user } = useAuth();
     const { t } = useTranslation();
-
     const jobApi = new JobApi();
 
     const apply_form = useFormik({
@@ -44,6 +43,7 @@ export default function JobApply({ job }) {
                 toast.success(t('job_applied_success_message'))
                 setViewForm(false);
                 resetForm()
+                setEncourageModal(true)
             }
             catch (e) {
                 globalAjaxExceptionHandler(e, { formik: apply_form, toast: toast, t: t });
@@ -108,6 +108,7 @@ export default function JobApply({ job }) {
 
     return (
         <>
+
             <div className="ort-btn mt-lg-4 mt-0">
                 <button type="button" className="btn theme-primary-btn" onClick={onApplyClick}> {t('APPLY_NOW')}<ArrowRight /></button>
                 {/* <button type="button" className="btn theme-general-btn"> <Star /> {t('shortlist')} </button> */}
@@ -132,6 +133,7 @@ export default function JobApply({ job }) {
                             label="first_name"
                             placeholder="first_name"
                             name="first_name"
+                            required
                             formik={apply_form}
                         />
                         <BaseInput
@@ -139,6 +141,7 @@ export default function JobApply({ job }) {
                             label="last_name"
                             placeholder="last_name"
                             name="last_name"
+                            required
                             formik={apply_form}
                         />
                     </Row>
@@ -150,7 +153,7 @@ export default function JobApply({ job }) {
                             label="email"
                             placeholder="email"
                             name="email"
-                            formik={user?.company ? null : apply_form}
+                                formik={user?.company ? null : apply_form}
                         />
                         <BaseInputPhone
                             className=" col-6 mt-3"
@@ -161,15 +164,25 @@ export default function JobApply({ job }) {
                         />
                     </Row>
                     <Row>
-                        <BaseSelect
-                            className="col-12 mt-3"
-                            label="highest_degree"
-                            placeholder="highest_degree"
-                            name="highest_degree"
-                            enumType={EducationLevel}
-                            labelPrefix="EducationLevel"
-                            formik={apply_form}
-                        />
+                        {user !== null ?
+                            <BaseSelect
+                                className="col-12 mt-3"
+                                label="highest_degree"
+                                placeholder="highest_degree"
+                                name="highest_degree"
+                                enumType={EducationLevel}
+                                labelPrefix="EducationLevel"
+                                formik={apply_form}
+                            /> : <BaseSelect
+                                className="col-12 mt-3"
+                                label="CDL_CLASS"
+                                name="license_type"
+                                placeholder="DriverLicenseType.NONE"
+                                labelPrefix="DriverLicenseType"
+                                required
+                                enumType={DriverLicenseType}
+                                formik={apply_form}
+                            />}
                     </Row>
                     {/* Files Start */}
                     <Row>
@@ -249,6 +262,7 @@ export default function JobApply({ job }) {
                             name="years_cdl_experience"
                             type="int"
                             min={0}
+                            required
                             formik={apply_form}
                         />
                         <BaseInput

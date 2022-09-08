@@ -11,6 +11,7 @@ import VehiclePhoto from "./vehicle-photo";
 import { useAuth } from '../../hooks/useAuth'
 import { VehicleEntity } from "../../models/company/vehicle.entity";
 import { divide } from "lodash";
+import Link from "next/link";
 export interface ViewJobVehiclesProps {
     job: JobEntity;
 }
@@ -27,7 +28,13 @@ export default function JobVehicles({ job }: ViewJobVehiclesProps) {
     if (!!!vehicles || !!!vehicles.length)
         return <>
             <div className="shadow-lg single-job-items p-4 m-1 mb-5">
-                <p className="m-0 blockquote"> {t("VEHICLE_INFORMATION_HIDDEN_BY_COMPANY")}</p>
+                <p className="m-0 blockquote">
+                    {t("VEHICLE_INFORMATION_HIDDEN_BY_COMPANY")}
+                    <Link href="/login">
+                        <a className="mx-1 primary" >{t("LOGIN")}</a>
+                    </Link>
+                    {t("SEE_VEHICLE_INFORMATION")}
+                </p>
             </div>
         </>
 

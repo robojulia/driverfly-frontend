@@ -1,165 +1,20 @@
 import FullLayout from "../../../components/dashboard/layouts/FullLayout";
-import { Row, Col, Button } from 'react-bootstrap';
-import Link from 'next/link';
-import { ArrowUpRightSquare } from 'react-bootstrap-icons';
-
-import { useTranslation } from '../../../hooks/useTranslation';
-import { SocialLinks } from '../../../components/social/social-links';
+import FreeResources from "../../../components/free-resources";
 import PageLayout from '../../../components/layouts/page/PageLayout';
-import ViewCard from '../../../components/viewDetails/viewCard';
 
-export default function FreeResources() {
 
-    const { t } = useTranslation();
-
-    function renderLink(url) {
-        return (
-            <Link href={url}>
-                <Button
-                    size="sm"
-                    variant="primary"
-                >
-                    <ArrowUpRightSquare />
-
-                </Button>
-            </Link>
-        );
-    }
-
+export default function DriverFreeResources() {
     return (
         <PageLayout
             title="FREE_RESOURCES"
         >
-            <Row>
-                <Col>
-                    <ViewCard
-                        title="vendor_discounts"
-                        actions={renderLink("/third-party-resources")}
-                    >
-                        {t("vendor_discounts_paragraph")}
-                    </ViewCard>
-                </Col>
-                <Col>
-                    <ViewCard
-                        title="salary_comparison_tool"
-                        actions={renderLink("https://ctrecruiting.com/pay-calculator")}
-                    >
-                        {t("salary_comparison_tool_paragraph")}
-                    </ViewCard>
-                </Col>
-                <Col>
-                    <ViewCard
-                        title="access_your_mvr"
-                        actions={renderLink("/dashboard/driver/settings/applicant")}
-                    >
-                        {t("access_your_mvr_paragraph")}
-                    </ViewCard>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <ViewCard
-                        title="refer_a_friend_program"
-                        actions={renderLink("https://ctrecruiting.com/referral")}
-                    >
-                        {t("refer_a_friend_paragraph")}
-                    </ViewCard>
-                </Col>
-                <Col>
-                    <ViewCard
-                        title="enter_sweepstakes"
-                        // actions={(
-                        //     <Link href="/dashboard/driver/settings/applicant">
-                        //         <Button
-                        //             size="sm"
-                        //             variant="primary"
-                        //         >
-                        //             <ArrowUpRightSquare />
+            <FreeResources />
 
-                        //         </Button>
-                        //     </Link>
-                        // )}
-                    >
-                        {t("enter_sweepstakes_paragraph")}
-                    </ViewCard>
-                </Col>
-                <Col>
-                    <ViewCard
-                        title="become_your_own_boss"
-                        actions={renderLink("https://drivergrowth.com/")}
-                    >
-                        {t("become_your_own_boss_paragraph")}
-                    </ViewCard>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <ViewCard
-                        title="connect_with_our_community"
-                        // actions={(
-                        //     <Link href="/dashboard/driver/settings/applicant">
-                        //         <Button
-                        //             size="sm"
-                        //             variant="primary"
-                        //         >
-                        //             <ArrowUpRightSquare />
-
-                        //         </Button>
-                        //     </Link>
-                        // )}
-                    >
-                        {t("join_our_driverfly_community")}
-                    </ViewCard>
-                </Col>
-                <Col>
-                    <ViewCard
-                        title="follow_us"
-                        // actions={(
-                        //     <Link href="/dashboard/driver/settings/applicant">
-                        //         <Button
-                        //             size="sm"
-                        //             variant="primary"
-                        //         >
-                        //             <ArrowUpRightSquare />
-
-                        //         </Button>
-                        //     </Link>
-                        // )}
-                    >
-                        {t("follow_us_paragraph")}
-                        <br />
-                        <br />
-                        <SocialLinks
-                            showText
-                            iconSize={25}
-                            breakComponent={<br />}
-                            />
-                    </ViewCard>
-                </Col>
-                <Col>
-                    <ViewCard
-                        title="sign_up_for_newsletter"
-                        // actions={(
-                        //     <Link href="https://drivergrowth.com/">
-                        //         <Button
-                        //             size="sm"
-                        //             variant="primary"
-                        //         >
-                        //             <ArrowUpRightSquare />
-
-                        //         </Button>
-                        //     </Link>
-                        // )}
-                        >
-                        {t("sign_up_for_newsletter_paragraph")}
-                    </ViewCard>
-                </Col>
-            </Row>
         </PageLayout>
     )
 };
 
-FreeResources.getLayout = function getLayout(page) {
+DriverFreeResources.getLayout = function getLayout(page) {
     return (
         <FullLayout>
             {page}
