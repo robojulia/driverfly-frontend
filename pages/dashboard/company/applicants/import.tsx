@@ -29,6 +29,8 @@ import { VehicleTransmissionType } from "../../../../enums/vehicles/vehicle-tran
 import { DriverEndorsement } from "../../../../enums/users/driver-endorsement.enum";
 import { EducationLevel } from "../../../../enums/users/education-level.enum";
 import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
+import { JobEquipmentType } from "../../../../enums/jobs/job-equipment-type.enum";
+import { ApplicantExperienceEntity } from "../../../../models/applicant/applicant-experience.entity";
 
 export default function Import() {
 
@@ -164,10 +166,17 @@ export default function Import() {
                             case "license_type":
                                 entity.license_type = matchEnum(entity.license_type, DriverLicenseType, "DriverLicenseType", t);
                                 break;
+                            case "equipment_experience":
+                                entity.equipment_experience = entity.equipment_experience.map(v => matchEnum(v.toString(), JobEquipmentType, "JobEquipmentType", t));
+                                entity.equipment_experience = entity.equipment_experience.map(v => {
+                                    const equipmentExperienceObject = new ApplicantExperienceEntity();
+                                    equipmentExperienceObject.type = v as JobEquipmentType;
+                                    return equipmentExperienceObject;
+                                });
+                                break;
                         }
                     }
             });
-
                 return entity;
             });
 
@@ -179,7 +188,6 @@ export default function Import() {
         .keys(schemaDescribe.fields)
         .filter(v => {
             switch (v) {
-                case "equipment_experience":
                 case "equipment_owned":
                 case "employers":
                 case "documents":
@@ -274,82 +282,92 @@ export default function Import() {
                                 <th className={style.frozen_col}><CheckCircle /></th>
                                 <th className={style.frozen_col}>#</th>
                                 {
-                                headers.map(k => {
-                                    const text = `${k}${(schemaDescribe.fields[k] as SchemaDescription).tests.some(v => v.name === "required") ? "*" : ""}`;
+                                    headers.map(k => {
+                                        const text = `${k}${(schemaDescribe.fields[k] as SchemaDescription).tests.some(v => v.name === "required") ? "*" : ""}`;
 
-                                    switch (k) {
-                                        case "license_restrictions":
-                                            return (
-                                                <th>
-                                                    <Dropdown>
-                                                        <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
-                                                        <Dropdown.Menu>
-                                                            {Object.values(LicenseRestrictions).map(v => {
-                                                                return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
-                                                            })}
-                                                        </Dropdown.Menu>
-                                                    </Dropdown>
-                                                </th>
-                                            );
-                                        case "transmission_type":
-                                            return (
-                                                <th>
-                                                    <Dropdown>
-                                                        <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
-                                                        <Dropdown.Menu>
-                                                            {Object.values(VehicleTransmissionType).map(v => {
-                                                                return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
-                                                            })}
-                                                        </Dropdown.Menu>
-                                                    </Dropdown>
-                                                </th>
-                                            );
-                                        case "endorsements":
-                                            return (
-                                                <th>
-                                                    <Dropdown>
-                                                        <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
-                                                        <Dropdown.Menu>
-                                                            {Object.values(DriverEndorsement).map(v => {
-                                                                return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
-                                                            })}
-                                                        </Dropdown.Menu>
-                                                    </Dropdown>
-                                                </th>
-                                            );
-                                            break;
-                                        case "highest_degree":
-                                            return (
-                                                <th>
-                                                    <Dropdown>
-                                                        <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
-                                                        <Dropdown.Menu>
-                                                            {Object.values(EducationLevel).map(v => {
-                                                                return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
-                                                            })}
-                                                        </Dropdown.Menu>
-                                                    </Dropdown>
-                                                </th>
-                                            );
-                                            break;
-                                        case "license_type":
-                                            return (
-                                                <th>
-                                                    <Dropdown>
-                                                        <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
-                                                        <Dropdown.Menu>
-                                                            {Object.values(DriverLicenseType).map(v => {
-                                                                return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
-                                                            })}
-                                                        </Dropdown.Menu>
-                                                    </Dropdown>
-                                                </th>
-                                            );
-                                            break;
-                                        default:
-                                            return (<th>{text}</th>);
-                                    }
-                                    
+                                        switch (k) {
+                                            case "license_restrictions":
+                                                return (
+                                                    <th>
+                                                        <Dropdown>
+                                                            <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
+                                                            <Dropdown.Menu>
+                                                                {Object.values(LicenseRestrictions).map(v => {
+                                                                    return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
+                                                                })}
+                                                            </Dropdown.Menu>
+                                                        </Dropdown>
+                                                    </th>
+                                                );
+                                            case "transmission_type":
+                                                return (
+                                                    <th>
+                                                        <Dropdown>
+                                                            <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
+                                                            <Dropdown.Menu>
+                                                                {Object.values(VehicleTransmissionType).map(v => {
+                                                                    return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
+                                                                })}
+                                                            </Dropdown.Menu>
+                                                        </Dropdown>
+                                                    </th>
+                                                );
+                                            case "endorsements":
+                                                return (
+                                                    <th>
+                                                        <Dropdown>
+                                                            <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
+                                                            <Dropdown.Menu>
+                                                                {Object.values(DriverEndorsement).map(v => {
+                                                                    return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
+                                                                })}
+                                                            </Dropdown.Menu>
+                                                        </Dropdown>
+                                                    </th>
+                                                );
+                                            case "highest_degree":
+                                                return (
+                                                    <th>
+                                                        <Dropdown>
+                                                            <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
+                                                            <Dropdown.Menu>
+                                                                {Object.values(EducationLevel).map(v => {
+                                                                    return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
+                                                                })}
+                                                            </Dropdown.Menu>
+                                                        </Dropdown>
+                                                    </th>
+                                                );
+                                            case "license_type":
+                                                return (
+                                                    <th>
+                                                        <Dropdown>
+                                                            <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
+                                                            <Dropdown.Menu>
+                                                                {Object.values(DriverLicenseType).map(v => {
+                                                                    return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
+                                                                })}
+                                                            </Dropdown.Menu>
+                                                        </Dropdown>
+                                                    </th>
+                                                );
+                                            case "equipment_experience":
+                                                return (
+                                                    <th>
+                                                        <Dropdown>
+                                                            <Dropdown.Toggle variant="light">{text}</Dropdown.Toggle>
+                                                            <Dropdown.Menu>
+                                                                {Object.values(JobEquipmentType).map(v => {
+                                                                    return (<Dropdown.ItemText>{v}</Dropdown.ItemText>);
+                                                                })}
+                                                            </Dropdown.Menu>
+                                                        </Dropdown>
+                                                    </th>
+                                                );
+                                            default:
+                                                return (<th>{text}</th>);
+                                        }
+                                        
                                     })
                                 }
                             </tr>
@@ -454,6 +472,16 @@ function guessControl(form: FormikInterface, schema, warnings: Record<string, st
                     const text = t(key);
                     if (key !== text) value = text;
                 }
+                break;
+            case "equipment_experience":
+                value = value
+                    .map(v => {
+                        const key = `JobEquipmentType.${v.type}`;
+                        const text = t(key);
+                        if (key === text) return v;
+
+                        return text;
+                    });
                 break;
         }
     }

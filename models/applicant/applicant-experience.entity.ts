@@ -14,7 +14,7 @@ export class ApplicantExperienceEntity {
                 is: JobEquipmentType.OTHER,
                 then: yup.string().required().nullable()
             }).nullable(),
-            years: yup.number().min(1).required().nullable()
+            years: yup.number().min(1).nullable()
         });
     }
 
