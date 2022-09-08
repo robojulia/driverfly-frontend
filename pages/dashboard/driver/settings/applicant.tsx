@@ -68,15 +68,10 @@ export default function Applicant() {
 
         applicant.equipment_experience.forEach((equipmentExp) => {
             if (!Number.isInteger(equipmentExp)) {
-                console.log(equipmentExp.years % 1);
                 equipmentExp.months = Math.round((equipmentExp.years % 1) * 12);
-                console.log(equipmentExp.months);
                 equipmentExp.years = Math.floor(equipmentExp.years);
-                console.log(equipmentExp.years);
             }
         });
-
-        console.log(applicant.equipment_experience);
 
         form.setValues({
             ...form.values,
