@@ -6,7 +6,7 @@ type authContextType = {
         pagingMeta: {},
         filters?: any,
         location?: any,
-        range?: number,
+        range?: string,
         searchQuery?: string
     },
     method: {

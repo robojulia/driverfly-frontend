@@ -20,6 +20,7 @@
     "preferred_min_pay_per_week": "Preferred Minimum Pay Per Week",
     "FIND_JOB": "Find Job",
     "FIND_JOBS": "Find Jobs",
+    "FIND_JOB_ERROR_GENERAL": "Could not search for job",
     "find_school": "Find School",
     "blog": "Blog",
     "contact": "Contact",
