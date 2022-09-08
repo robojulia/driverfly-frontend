@@ -90,6 +90,7 @@ export function JobForm(props: JobFormProps) {
 
     useEffect(() => {
         if (entity && !form.dirty)
+            console.log(entity);
             form.setValues(entity);
     }, [ entity ]);
 
@@ -111,7 +112,7 @@ export function JobForm(props: JobFormProps) {
         const { value } = e.target;
 
         const label = `mvr_requirements[${idx}]`;
-        const mvr_requirements = form.values[label];
+        const mvr_requirements = form.values.mvr_requirements[idx];
         let max_years = 5;
 
         switch (value) {
@@ -907,6 +908,17 @@ export function JobForm(props: JobFormProps) {
                                                     min="1"
                                                     type="int"
                                                     append={(<InputGroup.Text>yrs</InputGroup.Text>)}
+                                                    formik={form}
+                                                />
+                                                <BaseInput
+                                                    className="mr-1"
+                                                    placeholder="5"
+                                                    name={`required_skills.${i}.months`}
+                                                    required
+                                                    min="1"
+                                                    max="11"
+                                                    type="int"
+                                                    append={(<InputGroup.Text>mos</InputGroup.Text>)}
                                                     formik={form}
                                                 />
                                             </BaseListRowControl>)
