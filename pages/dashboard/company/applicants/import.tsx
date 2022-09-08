@@ -167,10 +167,9 @@ export default function Import() {
                                 entity.license_type = matchEnum(entity.license_type, DriverLicenseType, "DriverLicenseType", t);
                                 break;
                             case "equipment_experience":
-                                entity.equipment_experience = entity.equipment_experience.map(v => matchEnum(v.toString(), JobEquipmentType, "JobEquipmentType", t));
                                 entity.equipment_experience = entity.equipment_experience.map(v => {
                                     const equipmentExperienceObject = new ApplicantExperienceEntity();
-                                    equipmentExperienceObject.type = v as JobEquipmentType;
+                                    equipmentExperienceObject.type = matchEnum(v.toString(), JobEquipmentType, "JobEquipmentType", t);
                                     return equipmentExperienceObject;
                                 });
                                 break;
