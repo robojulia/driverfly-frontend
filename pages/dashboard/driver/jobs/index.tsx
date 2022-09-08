@@ -1,7 +1,7 @@
 import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
 import { Container, Row, Col } from 'react-bootstrap';
 import JobApi from '../../../api/job';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import jobsContext from "../../../../context/jobContext"
 import JobsList from "../../../../components/find-jobs/job-list";
 import ResultCount from "../../../../components/find-jobs/result-count"
@@ -13,25 +13,29 @@ import PageLayout from "../../../../components/layouts/page/PageLayout";
 import { JobEntity } from "../../../../models/job/job.entity";
 import { filtersInitialsValues, pagingMetaInitialValues, PagingMetaProps } from "../../../../utils/job-filter";
 import { JobSearchLocation, SearchJobsDto } from "../../../../models/job/search-jobs-dto";
+import { toast } from "react-toastify";
+import { useTranslation } from "../../../../hooks/useTranslation";
 
 export default function FindJobs() {
 
-    const jobApi = new JobApi();
+    const jobApi = new JobApi()
+    const { t } = useTranslation();
+
     const [jobs, setJobs] = useState<JobEntity[]>([])
 
     const [pagingMeta, setPagingMeta] = useState<PagingMetaProps>(pagingMetaInitialValues)
     const resetPagingMeta = (): void => setPagingMeta(pagingMetaInitialValues)
 
-    const [searchQuery, setSearchQuery] = useState<string>();
+    const [searchQuery, setSearchQuery] = useState<string>()
     const resetSearchQuery = (): void => setSearchQuery('')
 
     const [filters, setFilters] = useState<SearchJobsDto>(filtersInitialsValues)
     const resetFilters = (): void => setFilters(filtersInitialsValues)
 
-    const [location, setLocation] = useState<JobSearchLocation>(null);
+    const [location, setLocation] = useState<JobSearchLocation>(null)
     const resetLocation = (): void => setLocation(null)
 
-    const [range, setRange] = useState<string>(`${filters.location?.range || 50}`);
+    const [range, setRange] = useState<string>(`${filters.location?.range || 50}`)
     const resetRange = (): void => setRange(null)
 
     const handleReset = (): void => {
@@ -50,16 +54,19 @@ export default function FindJobs() {
         })
     }
 
-    const handleChange = ({ target: { name, value } }): void => setFiltersByKeyValue(name, value)
+    const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>): void => setFiltersByKeyValue(name, value)
 
     const fetchJobs = async (): Promise<void> => {
-        console.log("filters", filters);
-
-        await jobApi.search({ ...filters as any })
-            .then(({ items, meta }) => {
-                setJobs(items)
-                setPagingMeta(meta)
-            })
+        try {
+            await jobApi.search({ ...filters as any })
+                .then(({ items, meta }) => {
+                    setJobs(items)
+                    setPagingMeta(meta)
+                })
+        } catch (e) {
+            // console.error('exception is here: ', e);
+            toast.error(t('FIND_JOB_ERROR_GENERAL'))
+        }
     }
 
     useEffectAsync(fetchJobs, [filters]);
