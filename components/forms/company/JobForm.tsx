@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 
 import { useEffect, useState } from "react";
-import { useFormik } from "formik";
+import { Formik, useFormik } from "formik";
 import { useTranslation } from "../../../hooks/useTranslation";
 import { useEffectAsync } from "../../../utils/react";
 import { useAuth } from "../../../hooks/useAuth";
@@ -93,6 +93,10 @@ export function JobForm(props: JobFormProps) {
             form.setValues(entity);
     }, [entity]);
 
+    useEffect(() => {
+        console.log('errors', form.errors)
+        console.log('values', form.values)
+    }, [form.values, form.errors]);
     const [locations, setLocations] = useState<LocationEntity[]>([]);
     const [vehicles, setVehicles] = useState<VehicleEntity[]>([]);
 
@@ -106,6 +110,34 @@ export function JobForm(props: JobFormProps) {
             setVehicles(await vehicleApi.list());
         }
     }, [user]);
+
+
+
+    function handleMaxYearsForMvrRequirementType(e, idx) {
+        const { value } = e.target;
+
+        const label = `mvr_requirements[${idx}]`;
+        const mvr_requirements = form.values[label];
+        let max_years = 5;
+
+        switch (value) {
+            case MvrType.DUI:
+                max_years = 2;
+                break;
+            case MvrType.MOVING_VIOLATION_NOT_AT_FAULT:
+                max_years = 3;
+                break;
+            default:
+                max_years = 5;
+                break;
+        }
+
+        form.setFieldValue(label, {
+            ...mvr_requirements,
+            type: value,
+            max_years: max_years
+        });
+    }
 
     function handlePayMethodUpdate(e) {
         const { name, value } = e.target;
@@ -404,7 +436,23 @@ export function JobForm(props: JobFormProps) {
         }
     }
 
-    const[isOrientationNeeded, setIsOrientationNeeded] = useState<boolean>(false)
+    const [isOrientationNeeded, setIsOrientationNeeded] = useState<boolean>(false)
+
+    const onOrientationChange = (e) => {
+        const { name, value } = e.target;
+        form.setValues({
+            ...form.values,
+            orientation: {
+                ...form.values.orientation,
+                [name]: value
+            }
+        })
+
+        console.log(value, 'val')
+        console.log(name, 'name')
+
+    }
+
     return (
         <>
             <EntityForm
@@ -1164,13 +1212,13 @@ export function JobForm(props: JobFormProps) {
 
                                     <BaseCheck
                                         className="col-12 mt-2"
-                                        label="JobOrientation"
+                                        label="Job Orientation"
                                         name="is_orientation_needed"
                                         checked={isOrientationNeeded}
-                                        onChange={()=> setIsOrientationNeeded(!isOrientationNeeded)}                                        
+                                        onChange={() => setIsOrientationNeeded(!isOrientationNeeded)}
                                     />
                                     {
-                                      isOrientationNeeded  &&
+                                        isOrientationNeeded &&
                                         <Col className="mt-1" xs="12">
 
                                             <ViewCard
@@ -1185,7 +1233,7 @@ export function JobForm(props: JobFormProps) {
                                                             <BaseSelect
                                                                 className="col-12"
                                                                 label="location"
-                                                                name="location.id"
+                                                                name="orientation.locationId"
                                                                 required
                                                                 placeholder
                                                                 formik={form}
@@ -1200,22 +1248,24 @@ export function JobForm(props: JobFormProps) {
                                                         <BaseInput
                                                             className="col-6"
                                                             label="START_DATE"
-                                                            name="orientation.start_datetime"
+                                                            name="start_datetime"
                                                             placeholder="START_DATE"
                                                             type="date"
-                                                            formik={form}
-                                                            // value={form.values.orientation.start_datetime}
-                                                            min={new Date().toISOString().split("T")[0]}
+                                                            // formik={form}
+                                                            onChange={onOrientationChange}
+                                                            value={form.values.orientation.start_datetime}
+                                                        // min={new Date().toISOString().split("T")[0]}
                                                         />
                                                         <BaseInput
                                                             className="col-6"
                                                             label="END_DATE"
-                                                            name="orientation.end_date "
+                                                            name="end_datetime"
                                                             placeholder="END_DATE"
                                                             type="date"
-                                                            // value={form.orientation.end_datetime}
-                                                            formik={form}
-                                                            min={new Date().toISOString().split("T")[0]}
+                                                            onChange={onOrientationChange}
+                                                            value={form.values.orientation.end_datetime}
+                                                            // formik={form}
+                                                        // min={new Date().toISOString().split("T")[0]}
                                                         />
                                                     </div>
                                                 </div>

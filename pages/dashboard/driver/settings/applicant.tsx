@@ -45,7 +45,6 @@ export default function Applicant() {
 
     const form = useFormik({
         initialValues: new ApplicantEntity(),
-        // initialValues: applicant,
         validationSchema: ApplicantEntity.yupSchema(),
         onSubmit: async (values) => {
             if ("jobs" in values)
@@ -730,12 +729,72 @@ export default function Applicant() {
                                     />
                                     {
                                         form.values.tickets &&
-                                        <BaseTextArea
-                                            className="col-12 p-1  mt-2"
-                                            label="details"
-                                            name="tickets_details"
-                                            formik={form}
-                                        />
+                                        <>
+                                            <BaseInput
+                                                className="col-12 p-1  mt-2"
+                                                label="COUNT"
+                                                name="tickets_count"
+                                                type="int"
+                                                min="0"
+                                                formik={form}
+                                            />
+                                            <BaseTextArea
+                                                className="col-12 p-1  mt-2"
+                                                label="details"
+                                                name="tickets_details"
+                                                formik={form}
+                                            />
+                                        </>
+                                    }
+                                    <BaseCheck
+                                        className="col-12 p-1  mt-2"
+                                        label="HAS_HAD_INFRACTIONS_LAST_5_YEARS"
+                                        name="infractions"
+                                        formik={form}
+                                    />
+                                    {
+                                        form.values.infractions &&
+                                        <>
+                                            <BaseInput
+                                                className="col-12 p-1  mt-2"
+                                                label="COUNT"
+                                                name="infractions_count"
+                                                type="int"
+                                                min="0"
+                                                formik={form}
+                                            />
+                                            <BaseTextArea
+                                                className="col-12 p-1  mt-2"
+                                                label="details"
+                                                name="infractions_details"
+                                                formik={form}
+                                            />
+                                        </>
+                                    }
+                                    <BaseCheck
+                                        className="col-12 p-1  mt-2"
+                                        label="HAS_HAD_MOVING_VIOLATIONS_LAST_3_YEARS"
+                                        name="moving_violations"
+                                        formik={form}
+                                    />
+                                    {
+                                        form.values.moving_violations &&
+                                        <>
+                                            <BaseInput
+                                                className="col-12 p-1  mt-2"
+                                                label="COUNT"
+                                                name="moving_violations_count"
+                                                type="int"
+                                                min="0"
+                                                formik={form}
+                                            />
+                                            <BaseTextArea
+                                                className="col-12 p-1  mt-2"
+                                                label="details"
+                                                name="moving_violations_details"
+                                                formik={form}
+                                            />
+                                        </>
                                     }
                                     <BaseCheck
                                         className="col-12 p-1  mt-2"
