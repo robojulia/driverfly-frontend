@@ -6,7 +6,7 @@ import Head from "next/head";
 import {useRouter} from 'next/router';
 
 import { useTranslation } from "../../../hooks/useTranslation";
-import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, BellFill, SearchHeartFill, GiftFill, GearFill, ShareFill, EnvelopeFill, CardList } from 'react-bootstrap-icons';
+import { Search, ClockHistory, HouseFill, BagFill, PersonFill, FileEarmarkFill, BellFill, SearchHeartFill, GiftFill, GearFill, ShareFill, EnvelopeFill, CardList,QuestionFill, QuestionCircleFill} from 'react-bootstrap-icons';
 import { useAuth } from "../../../hooks/useAuth";
 
 import { Scripts } from "../../scripts/scripts";
@@ -88,6 +88,11 @@ const FullLayout = ({ children }) => {
                     pathname: "/dashboard/driver/settings/matching",
                     icon: SearchHeartFill,
                     text: "JOB_MATCHING",
+                },
+                {
+                    pathname: "/dashboard/driver/settings/support",
+                    icon: QuestionCircleFill,
+                    text: "SUPPORT",
                 },
             ],
         },
