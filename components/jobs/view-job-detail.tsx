@@ -121,12 +121,11 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                     </Row>
                 </Container>
             </div>
-            {user == null && encourageModal == true && 
+            {user == null && encourageModal == true &&
                 <ViewModal
                     show={true}
                     closeText="CANCEL"
-                    // onCloseClick={onCloseClick}
-                    title="apply_for_this_job"
+                    title="DRIVERFLY"
                 >
                     <Row>
                         <p>
