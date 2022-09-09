@@ -61,14 +61,6 @@ export default function Support() {
                     required
                     formik={form}
                 />
-                 <BaseInput
-                    className="col-6 mb-2"
-                    label="ip_address"
-                    name="ip_address"
-                    placeholder="ip_address"
-                    required
-                    formik={form}
-                />
             </Row>
             <Row>
                 <Col className="text-end">

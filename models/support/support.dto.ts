@@ -5,14 +5,12 @@ export class SupportDto {
     bug: string;
     operating_system: string;
     page_path_url: string;
-    ip_address: string;
 
     static yupSchema() {
         return yup.object({
             bug: yup.string().required().nullable(),
             operating_system: yup.string().required().nullable(),
             page_path_url: yup.string().required().nullable(),
-            ip_address: yup.string().required().nullable(),
 
         });
     }
