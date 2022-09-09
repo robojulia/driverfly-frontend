@@ -83,9 +83,10 @@ export class JobEntity {
     orientation?:JobOrientationEntity= new JobOrientationEntity();
     created_at?: string | Date;
     applicantsCount?: number;
-
+    isOrientationNeeded?:boolean;
     static yupSchema() {
         return yup.object({
+            isOrientationNeeded:yup.boolean().default(false),
             title: yup.string().required().max(100).nullable(),
             location: BasicEntity.yupSchema(),
             orientation: JobOrientationEntity.yupSchema(),

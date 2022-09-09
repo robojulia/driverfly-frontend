@@ -10,10 +10,26 @@ export class JobOrientationEntity {
 
     static yupSchema() {
         return yup.object({
-            jobId: yup.number().nullable(),
-            locationId: yup.number().required().nullable(),
-            start_datetime: yup.date().required().nullable(),
-            end_datetime: yup.date().required().nullable(),
+            jobId: yup.number().when('isOrientationNeeded', {
+                is: true ,
+                then: yup.number().required(),
+                otherwise: yup.number(),
+              }),
+            locationId: yup.number().when('isOrientationNeeded', {
+                is: true,
+                then: yup.number().required(),
+                otherwise: yup.number(),
+              }),
+            start_datetime: yup.date().when('isOrientationNeeded', {
+                is: true,
+                then: yup.date().required(),
+                otherwise: yup.date(),
+              }),
+            end_datetime: yup.date().when('isOrientationNeeded', {
+                is: true,
+                then: yup.date().required(),
+                otherwise: yup.date(),
+              }),
         });
     }
 }
