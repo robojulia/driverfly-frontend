@@ -20,6 +20,7 @@
     "preferred_min_pay_per_week": "Preferred Minimum Pay Per Week",
     "FIND_JOB": "Find Job",
     "FIND_JOBS": "Find Jobs",
+    "FIND_JOB_ERROR_GENERAL": "Could not search for job",
     "find_school": "Find School",
     "blog": "Blog",
     "contact": "Contact",
@@ -990,6 +991,7 @@
         "PHYSICAL": "DOT Long Form Physical"
     },
     "YEARS": "Years",
+    "MONTHS": "Months",
     "MY_ACCOUNT": "My Account",
     "APPLICANT_INFO_DESCRIPTION": "This is the information which will be submitted to a company when you apply to a job",
     "SchoolTrainingType": {
@@ -1220,6 +1222,7 @@
     "HOW_DID_YOU_HEAR_ABOUT_US": "How did you hear about us?",
     "RESOURCES":"Resources",
     "DRIVERFLY":"DriverFly",
+    "ALREADY_IN_CONVERSATION":"Driver is already in your Conversation",
     "utm_source": {
         "ON_MY_OWN": "On my own",
         "DRIVERFLY_REPRESENTATIVE": "Referral Code",

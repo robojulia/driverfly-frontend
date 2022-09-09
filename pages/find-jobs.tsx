@@ -1,53 +1,66 @@
 import 'bootstrap/dist/css/bootstrap.css'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from "react"
+import { ChangeEvent, useState } from "react"
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css'
 import FilterResult from '../components/filter-results/filter-results'
 import JobsList from '../components/jobslisting/jobslist'
 import { PublicLayout } from "../components/layouts/PublicLayout";
 import jobsContext from "../context/jobContext"
-import BaseApi from "./api/_baseApi"
 import JobApi from "./api/job"
 import Sort from "../components/find-jobs/sort"
 import ResultCount from "../components/find-jobs/result-count"
+import { JobEntity } from '../models/job/job.entity'
+import { filtersInitialsValues, pagingMetaInitialValues, PagingMetaProps } from '../utils/job-filter'
+import { JobSearchLocation, SearchJobsDto } from '../models/job/search-jobs-dto'
+import { useEffectAsync } from '../utils/react'
+import { GetServerSidePropsContext } from 'next'
+import { toast } from "react-toastify";
+import { useTranslation } from '../hooks/useTranslation'
 
 export default function FindJobs(props) {
 
     let { params } = props
 
-    const jobApi = new JobApi();
     const router = useRouter()
-    const [jobs, setJobs] = useState([])
-    const initialPagingMeta = {
-        currentPage: 1,
-        itemCount: 0,
-        itemsPerPage: 0,
-        totalItems: 0,
-        totalPages: 1
-    }
-    const [pagingMeta, setPagingMeta] = useState(initialPagingMeta)
-    const resetPagingMeta = () => setPagingMeta(initialPagingMeta)
+    const jobApi = new JobApi()
+    const { t } = useTranslation();
 
-    const [filters, setFilters] = useState({ ...params })
-    const setFiltersByKeyValue = (key, value) => {
+    const [jobs, setJobs] = useState<JobEntity[]>([])
+
+    const [pagingMeta, setPagingMeta] = useState<PagingMetaProps>(pagingMetaInitialValues)
+    const resetPagingMeta = (): void => setPagingMeta(pagingMetaInitialValues)
+
+    const [searchQuery, setSearchQuery] = useState<string>()
+    const resetSearchQuery = (): void => setSearchQuery('')
+
+    const [filters, setFilters] = useState<SearchJobsDto>({ ...params })
+    const resetFilters = (): void => setFilters(filtersInitialsValues)
+
+    const [location, setLocation] = useState<JobSearchLocation>(null)
+    const resetLocation = (): void => setLocation(null)
+
+    const [range, setRange] = useState<string>(`${filters.location?.range || 50}`)
+    const resetRange = (): void => setRange(null)
+
+    const handleReset = (): void => {
+        resetSearchQuery()
+        resetPagingMeta()
+        resetFilters()
+        resetLocation()
+        resetRange()
+    }
+
+    const setFiltersByKeyValue = (key: string, value: any): void => {
         setFilters({
             ...filters,
             page: 1,
             [key]: value
         })
     }
-    const handleReset = () => {
-        setSearchQuery('')
-        setFilters([])
-    }
 
-    const [searchQuery, setSearchQuery] = useState();
-    const [location, setLocation] = useState(null);
-    const [range, setRange] = useState(filters.location?.range || 50);
+    const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>): void => setFiltersByKeyValue(name, value)
 
-    const handleChange = ({ name, value }) => setFiltersByKeyValue(name, value)
-
-    const setNativeValue = (element, value) => {
+    const setNativeValue = (element: HTMLInputElement, value: any) => {
         if (!element) {
             return
         }
@@ -62,9 +75,9 @@ export default function FindJobs(props) {
         }
     }
 
-    const setFiltersForQuery = async () => {
+    const setFiltersForQuery = async (): Promise<void> => {
         Object.keys(params).map(key => {
-            let inputs = document.getElementsByName(key);
+            let inputs: any = document.getElementsByName(key)
             if (!inputs.length) {
                 return
             }
@@ -93,7 +106,7 @@ export default function FindJobs(props) {
         params = {}
     }
 
-    const fetchJobs = async () => {
+    const fetchJobs = async (): Promise<void> => {
         try {
             navigator.geolocation.getCurrentPosition(function (position) {
                 setFiltersByKeyValue("location", {
@@ -103,7 +116,7 @@ export default function FindJobs(props) {
                 });
             });
 
-            await jobApi.search({ ...filters })
+            await jobApi.search({ ...filters as any })
                 .then(({ items, meta }) => {
                     console.log({ items, meta, filters });
                     setJobs(items)
@@ -111,19 +124,19 @@ export default function FindJobs(props) {
                 })
         } catch (e) {
             // console.error('exception is here: ', e);
-            throw e
+            toast.error(t('FIND_JOB_ERROR_GENERAL'))
         }
     }
 
-    useEffect(fetchJobs, [filters])
-    useEffect(async () => {
+    useEffectAsync(fetchJobs, [filters])
+    useEffectAsync(async (): Promise<void> => {
         try {
             await setFiltersForQuery()
             await router.replace('find-jobs', undefined, { shallow: true });
             await fetchJobs()
         } catch (e) {
             // console.error('exception is here: ', e);
-            throw e
+            toast.error(t('FIND_JOB_ERROR_GENERAL'))
         }
     }, [])
 
@@ -139,14 +152,14 @@ export default function FindJobs(props) {
             },
             method: {
                 handleChange,
-                setPagingMeta,
                 setFilters,
                 setLocation,
                 setRange,
                 setFiltersByKeyValue,
                 applyFilters: fetchJobs,
                 setSearchQuery,
-                handleReset
+                handleReset,
+                handlePaging: setPagingMeta,
             },
         }}>
             <div className="filter-sec">
@@ -173,7 +186,7 @@ export default function FindJobs(props) {
     )
 }
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
     return {
         props: {
             params: context.query
