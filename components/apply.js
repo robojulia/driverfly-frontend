@@ -262,7 +262,6 @@ export default function JobApply({ job, setEncourageModal }) {
                             name="years_cdl_experience"
                             type="int"
                             min={0}
-                            required
                             formik={apply_form}
                         />
                         <BaseInput
