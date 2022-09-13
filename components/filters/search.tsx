@@ -43,8 +43,6 @@ export default function Search(props) {
     const optionChangehandler = (values: Title[]) => values.map(({ title }) => setSearchQuery(title))
 
     const focusBlurHandler = ({ target: { value } }: any) => {
-        console.log("value vvv", value);
-
         setClose()
 
         if (searchQuery != value) setSearchQuery(value)
