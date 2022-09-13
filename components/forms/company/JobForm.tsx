@@ -436,7 +436,7 @@ export function JobForm(props: JobFormProps) {
         }
     }
 
-    const [isOrientationNeeded, setIsOrientationNeeded] = useState<boolean>(false)
+    // const [isOrientationNeeded, setIsOrientationNeeded] = useState<boolean>(false)
 
     const onOrientationChange = (e) => {
         const { name, value } = e.target;
@@ -1214,64 +1214,61 @@ export function JobForm(props: JobFormProps) {
                                         className="col-12 mt-2"
                                         label="Job Orientation"
                                         name="is_orientation_needed"
-                                        checked={isOrientationNeeded}
-                                        onChange={() => setIsOrientationNeeded(!isOrientationNeeded)}
-                                    />
-                                    {
-                                        isOrientationNeeded &&
-                                        <Col className="mt-1" xs="12">
+                                        formik={form}
+                                    // checked={ form.values.isOrientationNeeded}
+                                    // onChange={onOrientationChange}
+                                    // onChange={() => setIsOrientationNeeded(!!!isOrientationNeeded)}  
 
-                                            <ViewCard
-                                                title="ORIENTATION_DETAILS"
-                                                titleAs="span"
-                                                variant="secondary"
-                                            >
-                                                <div className="col-12 mb-3">
-                                                    {/* <label>{t("ORIENTATION_DETAILS")}:</label> */}
-                                                    <div className="row ">
-                                                        <div className="col-md-12 ">
-                                                            <BaseSelect
-                                                                className="col-12"
-                                                                label="location"
-                                                                name="orientation.locationId"
-                                                                required
-                                                                placeholder
-                                                                formik={form}
-                                                                valueKey="id"
-                                                                createLabel={v => buildAddress(v)}
-                                                                options={locations}
-                                                                append={<Button variant="outline-secondary create_btn" disabled={!hasPermission("CanCreateLocation")} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div className="row m-2">
-                                                        <BaseInput
-                                                            className="col-6"
-                                                            label="START_DATE"
-                                                            name="start_datetime"
-                                                            placeholder="START_DATE"
-                                                            type="date"
-                                                            // formik={form}
-                                                            onChange={onOrientationChange}
-                                                            value={form.values.orientation.start_datetime}
-                                                        // min={new Date().toISOString().split("T")[0]}
-                                                        />
-                                                        <BaseInput
-                                                            className="col-6"
-                                                            label="END_DATE"
-                                                            name="end_datetime"
-                                                            placeholder="END_DATE"
-                                                            type="date"
-                                                            onChange={onOrientationChange}
-                                                            value={form.values.orientation.end_datetime}
-                                                            // formik={form}
-                                                        // min={new Date().toISOString().split("T")[0]}
+                                    />
+
+                                    <Col className="mt-1" xs="12">
+
+                                        <ViewCard
+                                            title="ORIENTATION_DETAILS"
+                                            titleAs="span"
+                                            variant="secondary"
+                                        >
+                                            <div className="col-12 mb-3">
+                                                {/* <label>{t("ORIENTATION_DETAILS")}:</label> */}
+                                                <div className="row ">
+                                                    <div className="col-md-12 ">
+                                                        <BaseSelect
+                                                            className="col-12"
+                                                            label="location"
+                                                            name="orientation.locationId"
+                                                            required
+                                                            placeholder
+                                                            formik={form}
+                                                            valueKey="id"
+                                                            createLabel={v => buildAddress(v)}
+                                                            options={locations}
+                                                            append={<Button variant="outline-secondary create_btn" disabled={!hasPermission("CanCreateLocation")} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
                                                         />
                                                     </div>
                                                 </div>
-                                            </ViewCard>
-                                        </Col>
-                                    }
+                                                <div className="row m-2">
+                                                    <BaseInput
+                                                        className="col-6"
+                                                        label="START_DATE"
+                                                        name="start_datetime"
+                                                        placeholder="START_DATE"
+                                                        type="date"
+                                                        onChange={onOrientationChange}
+                                                        value={form.values.orientation.start_datetime}
+                                                    />
+                                                    <BaseInput
+                                                        className="col-6"
+                                                        label="END_DATE"
+                                                        name="end_datetime"
+                                                        placeholder="END_DATE"
+                                                        type="date"
+                                                        onChange={onOrientationChange}
+                                                        value={form.values.orientation.end_datetime}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </ViewCard>
+                                    </Col>
                                 </Col>
                             </Row>
                         </ViewCard>
