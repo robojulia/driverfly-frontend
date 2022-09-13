@@ -24,7 +24,6 @@ export default function Contact() {
         validationSchema: ContactFormDto.yupSchema(),
         onSubmit: async (dto) => {
             const contactApi = new ContactApi();
-
             try {
                 await contactApi.sendMail(dto);
                 toast.success(t("THANKS_FOR_CONTACTING_US"));
@@ -41,7 +40,7 @@ export default function Contact() {
         const token = captchaRef.current.getValue();
         captchaRef.current.reset();
         const captchaApi = new CaptchaApi();
-        const data = await captchaApi.validateCaptcha(token)
+        const data = await captchaApi.validateCaptcha(token) 
         if (data.success == true) {
             setEnableButton(true)
           }
@@ -110,7 +109,7 @@ export default function Contact() {
                                                 />
                                             </Row>
                                             <ReCAPTCHA
-                                                sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+                                                sitekey="6Ldtl_EhAAAAADl8EmcEnJX_1DdWJD-MSBcSls1d"
                                                 onChange={onChange}
                                                 ref={captchaRef}
                                             />

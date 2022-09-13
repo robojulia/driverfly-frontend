@@ -5,7 +5,7 @@ export default class CaptchaApi extends BaseApi {
     }
 
     async validateCaptcha (token) {
-        const baseUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET}&response=${token}`
+        const baseUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${token}`
         const { data } = await this.get(baseUrl);
         return data;
     }
