@@ -41,6 +41,11 @@ export default class JobApi extends BaseApi {
         return data;
     }
 
+    async keywordSearchQuery(params: string): Promise<any> {
+        const { data } = await this.get(`${this.baseUrl}/keyword-search-query`, { params });
+        return data;
+    }
+
     async apply(jobId: number, body: ApplicantEntity): Promise<ApplicantEntity> {
         const { data } = await this.post(`${this.baseUrl}/${jobId}/apply`, body);
 
