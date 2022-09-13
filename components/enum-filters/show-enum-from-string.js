@@ -1,4 +1,4 @@
-import { OverlayTrigger, Popover, Tooltip } from "react-bootstrap";
+import { OverlayTrigger, Popover } from "react-bootstrap";
 import { useTranslation } from "../../hooks/useTranslation";
 
 export default function ShowEnumFromString(props) {

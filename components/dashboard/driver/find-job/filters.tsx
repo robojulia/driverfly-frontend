@@ -13,7 +13,7 @@ import Category from '../../../filters/category'
 import { useTranslation } from '../../../../hooks/useTranslation'
 import jobContext from '../../../../context/jobContext'
 import Search from '../../../filters/search'
-import { Container, Row, Col, Offcanvas, Button } from 'react-bootstrap';
+import { Row, Col, Offcanvas, Button } from 'react-bootstrap';
 import Sort from '../../../find-jobs/sort'
 import { Filter } from 'react-bootstrap-icons'
 import TransmissionType from '../../../filters/vehicle-transmission-type'

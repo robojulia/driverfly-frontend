@@ -4,7 +4,7 @@ import jobContext from "../../context/jobContext"
 import timeSince from "../../utils/timeSince"
 import { useTranslation } from "../../hooks/useTranslation"
 import CompanyPhoto from '../jobs/company-photo'
-import { GeoAltFill, CurrencyDollar } from 'react-bootstrap-icons';
+import { CurrencyDollar } from 'react-bootstrap-icons';
 import { buildAddress } from '../../utils/common'
 import Pagination from '../find-jobs/pagination'
 
@@ -49,10 +49,9 @@ export default function JobsList() {
                   {
                     job.location &&
                     <>
-                        {/* < GeoAltFill className='mr-1' /> */}
-                        <span className='mr-4'>
+                      <span className='mr-4'>
                         {buildAddress(job.location || {})}
-                        </span>
+                      </span>
                     </>
                   }
                   <p className='m-0'>

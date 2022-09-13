@@ -10,7 +10,7 @@ import { useTranslation } from "../../../../hooks/useTranslation";
 import { QuestionCircleFill, TelephoneFill, Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, GearFill, EnvelopeFill, PeopleFill, Hospital, UmbrellaFill, PersonHearts } from 'react-bootstrap-icons';
 import CompanyProfileNav from "../header/CompanyProfileNav";
 import { useAuth } from "../../../../hooks/useAuth";
-import {useRouter} from 'next/router';
+import { useRouter } from 'next/router';
 
 // company layout
 const FullLayout = ({ children }) => {
@@ -57,13 +57,6 @@ const FullLayout = ({ children }) => {
       text: "CALL",
       startsWith: true
     },
-    // {
-    //   pathname: "/dashboard/company/invoices",
-    //   icon: Receipt,
-    //   text: "Invoice",
-    //   startsWith: true
-    // },
-
     {
       pathname: "/dashboard/company/settings",
       icon: GearFill,
@@ -112,7 +105,7 @@ const FullLayout = ({ children }) => {
           pathname: "/dashboard/company/settings/support",
           icon: QuestionCircleFill,
           text: "SUPPORT",
-      },
+        },
       ],
     },
 
@@ -135,8 +128,8 @@ const FullLayout = ({ children }) => {
   ];
   //  Code below is to set scroll to top on each child page
   const dashboardContainer = useRef(null)
-  const resetScrollEffect = ({ element: { current } }) => {if(router.pathname == "/dashboard/company/jobs/[id]")current.scrollTop = 0 }
-  useEffect(() => resetScrollEffect({ element: dashboardContainer }),[children])
+  const resetScrollEffect = ({ element: { current } }) => { if (router.pathname == "/dashboard/company/jobs/[id]") current.scrollTop = 0 }
+  useEffect(() => resetScrollEffect({ element: dashboardContainer }), [children])
 
   return (
     <>

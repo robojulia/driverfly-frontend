@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Card, CardBody, CardTitle, CardSubtitle, Table } from "reactstrap";
+import { Card, CardBody, Table } from "reactstrap";
 import user1 from "../../../../public/dashboard/assets/images/users/user1.jpg";
 import user2 from "../../../../public/dashboard/assets/images/users/user2.jpg";
 import user3 from "../../../../public/dashboard/assets/images/users/user3.jpg";
@@ -58,7 +58,7 @@ const ProjectTables = () => {
   return (
     <Card>
       <CardBody>
-       
+
         <div className="table-responsive">
           <Table className="text-nowrap mt-3 align-middle" borderless>
             <thead>

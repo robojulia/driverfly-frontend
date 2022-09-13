@@ -74,7 +74,6 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                                         <ShowFormattedDate
                                             date={job.created_at}
                                             showTimeSince
-                                            // hideTime
                                             labelPrefix="POSTED"
                                             labelPostfix='AGO'
                                         />

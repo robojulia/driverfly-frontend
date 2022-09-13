@@ -1,4 +1,3 @@
-import Link from "next/link";
 import FollowUs from "./Follow-Us";
 import DriversNewsletter from "./Drivers-Newsletter";
 import ForDrivers from "./For-Drivers";
