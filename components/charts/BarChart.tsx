@@ -27,7 +27,7 @@ export function BarChart(props: BarChartProps): JSX.Element {
         setData(data);
     };
 
-    useEffectAsync(refreshData, [user]);
+    useEffectAsync(refreshData, []);
 
     return (
         <Bar

@@ -90,14 +90,8 @@ export function JobForm(props: JobFormProps) {
     });
 
     useEffect(() => {
-        if (entity && !form.dirty)
-            form.setValues(entity);
+        if (entity && !form.dirty) form.setValues(entity)
     }, [entity]);
-
-    // useEffect(() => {
-    //     console.log('errors', form.errors)
-    //     console.log('values', form.values)
-    // }, [form.values, form.errors]);
 
     const [locations, setLocations] = useState<LocationEntity[]>([]);
     const [vehicles, setVehicles] = useState<VehicleEntity[]>([]);
@@ -113,13 +107,16 @@ export function JobForm(props: JobFormProps) {
         }
     }, [user]);
 
-
+    // useEffect(() => {
+    //     console.log('errors', form.errors)
+    //     console.log('values', form.values)
+    // }, [form.values, form.errors]);
 
     function handleMaxYearsForMvrRequirementType(e, idx) {
         const { value } = e.target;
 
         const label = `mvr_requirements[${idx}]`;
-        const mvr_requirements = form.values[label];
+        const mvr_requirements = form.values.mvr_requirements[idx];
         let max_years = 5;
 
         switch (value) {
@@ -919,11 +916,23 @@ export function JobForm(props: JobFormProps) {
                                                             append={(<InputGroup.Text>yrs</InputGroup.Text>)}
                                                             formik={form}
                                                         />
-                                                    </BaseListRowControl>)
-                                                )}
+                                                        <BaseInput
+                                                            className="mr-1"
+                                                            placeholder="5"
+                                                            name={`required_skills.${i}.months`}
+                                                            required
+                                                            min="1"
+                                                            max="11"
+                                                            type="int"
+                                                            append={(<InputGroup.Text>mos</InputGroup.Text>)}
+                                                            formik={form}
+                                                        />
+                                                    </BaseListRowControl >)
+                                                )
+                                            }
 
-                                        </ViewCard>
-                                    </Col>
+                                        </ViewCard >
+                                    </Col >
                                     <BaseTextArea
                                         className="col-12"
                                         label="other_required_skills"
@@ -1000,7 +1009,7 @@ export function JobForm(props: JobFormProps) {
                                         enumType={VehicleTransmissionType}
                                         formik={form}
                                     />
-                                </Col>
+                                </Col >
 
                                 <Col md="6">
 
@@ -1073,6 +1082,7 @@ export function JobForm(props: JobFormProps) {
                                                                         required
                                                                         labelPrefix="MvrType"
                                                                         enumType={MvrType}
+                                                                        onChange={(e) => handleMaxYearsForMvrRequirementType(e, i)}
                                                                         formik={form}
                                                                     />
                                                                     <BaseSelect
@@ -1194,65 +1204,13 @@ export function JobForm(props: JobFormProps) {
                                         rows={1}
                                         formik={form}
                                     />
+                                </Col >
+                            </Row >
+                        </ViewCard >
+                    </Col >
+                </Row >
 
-                                    <BaseCheck
-                                        className="col-12 mt-2"
-                                        label="Job Orientation"
-                                        name="is_orientation_needed"
-                                        formik={form}
-                                    />
-
-                                    {form.values.is_orientation_needed &&
-                                        <Col className="mt-1" xs="12">
-                                            <ViewCard
-                                                title="ORIENTATION_DETAILS"
-                                                titleAs="span"
-                                                variant="secondary"
-                                            >
-                                                <Row className="m-1">
-                                                    <BaseSelect
-                                                        className="col-12"
-                                                        label="location"
-                                                        name="orientation.locationId"
-                                                        required
-                                                        placeholder
-                                                        formik={form}
-                                                        valueKey="id"
-                                                        createLabel={v => buildAddress(v)}
-                                                        options={locations}
-                                                        append={<Button variant="outline-secondary create_btn" disabled={!can.createLocation} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
-                                                    />
-                                                </Row>
-                                                <Row className="mx-1 my-3">
-                                                    <BaseInput
-                                                        className="col-6"
-                                                        label="START_DATE"
-                                                        name="orientation.start_datetime"
-                                                        placeholder
-                                                        type="date"
-                                                        min={new Date().toISOString().split("T")[0]}
-                                                        formik={form}
-                                                    />
-                                                    <BaseInput
-                                                        className="col-6"
-                                                        label="END_DATE"
-                                                        name="orientation.end_datetime"
-                                                        placeholder="END_DATE"
-                                                        type="date"
-                                                        min={new Date().toISOString().split("T")[0]}
-                                                        formik={form}
-                                                    />
-                                                </Row>
-                                            </ViewCard>
-                                        </Col>
-                                    }
-                                </Col>
-                            </Row>
-                        </ViewCard>
-                    </Col>
-                </Row>
-
-            </EntityForm>
+            </EntityForm >
             <ViewModal
                 title={t("CREATE_{name}", { name: "VEHICLE" }, { translateProps: true })}
                 show={typeof createVehicle === "number"}

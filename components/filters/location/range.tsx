@@ -6,7 +6,6 @@ import FindJobFilterAccordion from '../../find-jobs-accordion/find-job-filter-ac
 import MapboxApi from "../../../pages/api/mapbox"
 import { useTranslation } from '../../../hooks/useTranslation';
 import { TypeaheadMenuProps } from 'react-bootstrap-typeahead/types/components/TypeaheadMenu';
-import { Option } from 'react-bootstrap-typeahead/types/types';
 
 export default function Range(props: any) {
 
@@ -48,6 +47,10 @@ export default function Range(props: any) {
     }
 
     useEffect(handleTypeheadChange, [location, range])
+
+    useEffect(() => {
+        if (!!!filters) setOptions(null)
+    }, [filters])
 
     return (
         <>

@@ -19,8 +19,8 @@ export class CompanyEntity {
   static yupSchema() {
     const { t } = useTranslation()
     return yup.object({
-      name: yup.string().required().nullable(),
-      about: yup.string().nullable()
+      name: yup.string().required().nullable().max(255),
+      about: yup.string().nullable().max(255)
         .test({
           test: (value, context) => {
             const regex_number = `[0-9]{7,12}`

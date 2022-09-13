@@ -28,7 +28,7 @@ import { PlusCircle, DashCircle, ArrowRight, Star } from 'react-bootstrap-icons'
 import BaseInputPhone from './forms/BaseInputPhone'
 import { DriverLicenseType } from "../enums/users/driver-license-type.enum";
 
-export default function JobApply({ job }) {
+export default function JobApply({ job, setEncourageModal }) {
     const { user } = useAuth();
     const { t } = useTranslation();
     const jobApi = new JobApi();
@@ -43,6 +43,7 @@ export default function JobApply({ job }) {
                 toast.success(t('job_applied_success_message'))
                 setViewForm(false);
                 resetForm()
+                setEncourageModal(true)
             }
             catch (e) {
                 globalAjaxExceptionHandler(e, { formik: apply_form, toast: toast, t: t });
@@ -261,7 +262,6 @@ export default function JobApply({ job }) {
                             name="years_cdl_experience"
                             type="int"
                             min={0}
-                            required
                             formik={apply_form}
                         />
                         <BaseInput
