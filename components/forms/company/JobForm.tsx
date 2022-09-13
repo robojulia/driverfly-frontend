@@ -107,11 +107,6 @@ export function JobForm(props: JobFormProps) {
         }
     }, [user]);
 
-    // useEffect(() => {
-    //     console.log('errors', form.errors)
-    //     console.log('values', form.values)
-    // }, [form.values, form.errors]);
-
     function handleMaxYearsForMvrRequirementType(e, idx) {
         const { value } = e.target;
 
@@ -434,6 +429,12 @@ export function JobForm(props: JobFormProps) {
             if (onSaveError) onSaveError(e);
         }
     }
+
+    // useEffect(() => {
+    //     console.log('errors', form.errors)
+    //     console.log('values', form.values)
+    // }, [form.values, form.errors]);
+
 
     return (
         <>
@@ -1204,6 +1205,58 @@ export function JobForm(props: JobFormProps) {
                                         rows={1}
                                         formik={form}
                                     />
+                                    <BaseCheck
+                                        className="col-12 mt-2"
+                                        label="Job Orientation"
+                                        name="is_orientation_needed"
+                                        formik={form}
+                                    />
+
+                                    {form.values.is_orientation_needed &&
+                                        <Col className="mt-1" xs="12">
+                                            <ViewCard
+                                                title="ORIENTATION_DETAILS"
+                                                titleAs="span"
+                                                variant="secondary"
+                                            >
+                                                <Row className="m-1">
+                                                    <BaseSelect
+                                                        className="col-12"
+                                                        label="location"
+                                                        name="orientation.locationId"
+                                                        required
+                                                        placeholder
+                                                        formik={form}
+                                                        valueKey="id"
+                                                        createLabel={v => buildAddress(v)}
+                                                        options={locations}
+                                                        append={<Button variant="outline-secondary create_btn" disabled={!can.createLocation} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
+                                                    />
+                                                </Row>
+                                                <Row className="mx-1 my-3">
+                                                    <BaseInput
+                                                        className="col-6"
+                                                        label="START_DATE"
+                                                        name="orientation.start_datetime"
+                                                        placeholder
+                                                        type="date"
+                                                        min={new Date().toISOString().split("T")[0]}
+                                                        formik={form}
+                                                    />
+                                                    <BaseInput
+                                                        className="col-6"
+                                                        label="END_DATE"
+                                                        name="orientation.end_datetime"
+                                                        placeholder="END_DATE"
+                                                        type="date"
+                                                        min={new Date().toISOString().split("T")[0]}
+                                                        formik={form}
+                                                    />
+                                                </Row>
+                                            </ViewCard>
+                                        </Col>
+                                    }
+
                                 </Col >
                             </Row >
                         </ViewCard >
