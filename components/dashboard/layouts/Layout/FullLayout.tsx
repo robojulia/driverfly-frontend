@@ -7,7 +7,7 @@ import { Scripts } from "../../../scripts/scripts";
 import React, { useEffect, useRef } from "react";
 
 import { useTranslation } from "../../../../hooks/useTranslation";
-import { TelephoneFill, Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, GearFill, EnvelopeFill, PeopleFill, Hospital, UmbrellaFill, PersonHearts } from 'react-bootstrap-icons';
+import { QuestionCircleFill, TelephoneFill, Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, GearFill, EnvelopeFill, PeopleFill, Hospital, UmbrellaFill, PersonHearts } from 'react-bootstrap-icons';
 import CompanyProfileNav from "../header/CompanyProfileNav";
 import { useAuth } from "../../../../hooks/useAuth";
 import {useRouter} from 'next/router';
@@ -108,6 +108,11 @@ const FullLayout = ({ children }) => {
           icon: PersonFill,
           text: "MY_PROFILE",
         },
+        {
+          pathname: "/dashboard/company/settings/support",
+          icon: QuestionCircleFill,
+          text: "SUPPORT",
+      },
       ],
     },
 
