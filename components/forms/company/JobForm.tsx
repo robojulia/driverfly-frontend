@@ -55,6 +55,7 @@ import BasePercentInput from "../BasePercentInput";
 import BaseMilesInput from "../BaseMilesInput";
 import BaseHoursInput from "../BaseHoursInput";
 import { BaseListRowControl } from "../lists/BaseListRowControl";
+import { JobOrientationEntity } from "../../../models/job/job-orientation.entity";
 
 export interface JobFormProps extends BaseFormProps<JobEntity> {
 
@@ -93,10 +94,11 @@ export function JobForm(props: JobFormProps) {
             form.setValues(entity);
     }, [entity]);
 
-    useEffect(() => {
-        console.log('errors', form.errors)
-        console.log('values', form.values)
-    }, [form.values, form.errors]);
+    // useEffect(() => {
+    //     console.log('errors', form.errors)
+    //     console.log('values', form.values)
+    // }, [form.values, form.errors]);
+
     const [locations, setLocations] = useState<LocationEntity[]>([]);
     const [vehicles, setVehicles] = useState<VehicleEntity[]>([]);
 
@@ -434,23 +436,6 @@ export function JobForm(props: JobFormProps) {
             });
             if (onSaveError) onSaveError(e);
         }
-    }
-
-    // const [isOrientationNeeded, setIsOrientationNeeded] = useState<boolean>(false)
-
-    const onOrientationChange = (e) => {
-        const { name, value } = e.target;
-        form.setValues({
-            ...form.values,
-            orientation: {
-                ...form.values.orientation,
-                [name]: value
-            }
-        })
-
-        console.log(value, 'val')
-        console.log(name, 'name')
-
     }
 
     return (
@@ -1215,60 +1200,52 @@ export function JobForm(props: JobFormProps) {
                                         label="Job Orientation"
                                         name="is_orientation_needed"
                                         formik={form}
-                                    // checked={ form.values.isOrientationNeeded}
-                                    // onChange={onOrientationChange}
-                                    // onChange={() => setIsOrientationNeeded(!!!isOrientationNeeded)}  
-
                                     />
 
-                                    <Col className="mt-1" xs="12">
-
-                                        <ViewCard
-                                            title="ORIENTATION_DETAILS"
-                                            titleAs="span"
-                                            variant="secondary"
-                                        >
-                                            <div className="col-12 mb-3">
-                                                {/* <label>{t("ORIENTATION_DETAILS")}:</label> */}
-                                                <div className="row ">
-                                                    <div className="col-md-12 ">
-                                                        <BaseSelect
-                                                            className="col-12"
-                                                            label="location"
-                                                            name="orientation.locationId"
-                                                            required
-                                                            placeholder
-                                                            formik={form}
-                                                            valueKey="id"
-                                                            createLabel={v => buildAddress(v)}
-                                                            options={locations}
-                                                            append={<Button variant="outline-secondary create_btn" disabled={!hasPermission("CanCreateLocation")} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <div className="row m-2">
+                                    {form.values.is_orientation_needed &&
+                                        <Col className="mt-1" xs="12">
+                                            <ViewCard
+                                                title="ORIENTATION_DETAILS"
+                                                titleAs="span"
+                                                variant="secondary"
+                                            >
+                                                <Row className="m-1">
+                                                    <BaseSelect
+                                                        className="col-12"
+                                                        label="location"
+                                                        name="orientation.locationId"
+                                                        required
+                                                        placeholder
+                                                        formik={form}
+                                                        valueKey="id"
+                                                        createLabel={v => buildAddress(v)}
+                                                        options={locations}
+                                                        append={<Button variant="outline-secondary create_btn" disabled={!can.createLocation} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
+                                                    />
+                                                </Row>
+                                                <Row className="mx-1 my-3">
                                                     <BaseInput
                                                         className="col-6"
                                                         label="START_DATE"
-                                                        name="start_datetime"
-                                                        placeholder="START_DATE"
+                                                        name="orientation.start_datetime"
+                                                        placeholder
                                                         type="date"
-                                                        onChange={onOrientationChange}
-                                                        value={form.values.orientation.start_datetime}
+                                                        min={new Date().toISOString().split("T")[0]}
+                                                        formik={form}
                                                     />
                                                     <BaseInput
                                                         className="col-6"
                                                         label="END_DATE"
-                                                        name="end_datetime"
+                                                        name="orientation.end_datetime"
                                                         placeholder="END_DATE"
                                                         type="date"
-                                                        onChange={onOrientationChange}
-                                                        value={form.values.orientation.end_datetime}
+                                                        min={new Date().toISOString().split("T")[0]}
+                                                        formik={form}
                                                     />
-                                                </div>
-                                            </div>
-                                        </ViewCard>
-                                    </Col>
+                                                </Row>
+                                            </ViewCard>
+                                        </Col>
+                                    }
                                 </Col>
                             </Row>
                         </ViewCard>

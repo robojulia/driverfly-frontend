@@ -80,19 +80,19 @@ export class JobEntity {
     criminal_history?: JobCriminalEntity[] = [];
     max_moving_violations?: number;
     safety_requirements_other?: string;
+    is_orientation_needed: boolean = true;
     orientation?: JobOrientationEntity = new JobOrientationEntity();
     created_at?: string | Date;
     applicantsCount?: number;
-    isOrientationNeeded?: boolean;
     static yupSchema() {
         return yup.object({
             isOrientationNeeded: yup.boolean().default(false),
             title: yup.string().required().max(100).nullable(),
             location: BasicEntity.yupSchema(),
-            orientation: yup.mixed().when('isOrientationNeeded', {
-                is: v => !!v,
-                then: JobOrientationEntity.yupSchema()
-            }).optional(),
+            orientation: yup.mixed().when('is_orientation_needed', {
+                is: true,
+                then: JobOrientationEntity.yupSchema(),
+            }).nullable(),
             description: yup.string().max(1500).required().nullable(),
             drivers_needed: yup.number().min(0).nullable(),
             expiry_date: yup.date().nullable(),
