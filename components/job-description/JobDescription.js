@@ -52,24 +52,11 @@ export default function JobDescription({ job }) {
                     <div className=" p-3 mb-5  rounded mt-3">
                         <h3 className="border-bottom py-1 mb-4">{t('ORIENTATION')}</h3>
                         <ul className="p-0">
-                            {job.required_skills &&
-                                job.required_skills.map((item, index) => (
-                                    <li className="row px-0" key={index}>
-                                        <div className="col-md-3">
-                                            <ShowEnumFromString labelPrefix="JobEquipmentType" str={item.type} enumArray={JobEquipmentType} />
-                                        </div>
-                                        <div className="col-md-3">
-                                            {`${item.years} ${t('YEARS')} `}
-                                        </div>
-                                    </li>
-                                ))
-                            }
                             <li className="row px-0">
                                 <div className="col-md-3">
-                                    {job.required_skills_other ? t('START_DATE') : ''}
+                                    { t('START_DATE') }
                                 </div>
                                 <div className="col-md-6">
-
                                     <ShowFormattedDate
                                         hideTime
                                         date={job.orientation.start_datetime} />
@@ -77,10 +64,9 @@ export default function JobDescription({ job }) {
                             </li>
                             <li className="row px-0">
                                 <div className="col-md-3">
-                                    {job.required_skills_other ? t('END_DATE') : ''}
+                                    { t('END_DATE') }
                                 </div>
                                 <div className="col-md-6">
-
                                     <ShowFormattedDate
                                         hideTime
                                         date={job.orientation.end_datetime} />
@@ -88,7 +74,7 @@ export default function JobDescription({ job }) {
                             </li>
                             <li className="row px-0">
                                 <div className="col-md-3">
-                                    {job.required_skills_other ? t('location') : ''}
+                                    { t('location') }
                                 </div>
                                 <div className="col-md-6">
                                     {buildAddress(job.orientation.location)}
