@@ -4,9 +4,15 @@ export default class CaptchaApi extends BaseApi {
         super();
     }
 
-    async validateCaptcha (token) {
-        const baseUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${token}`
-        const { data } = await this.get(baseUrl);
-        return data;
+    async validateCaptcha(token) {
+        try {
+            const baseUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${token}`
+            const data = baseUrl;
+            return data;
+
+        } catch (error) {
+            console.log("error", error.message, error);
+
+        }
     }
 }

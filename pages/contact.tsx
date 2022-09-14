@@ -40,10 +40,11 @@ export default function Contact() {
         const token = captchaRef.current.getValue();
         captchaRef.current.reset();
         const captchaApi = new CaptchaApi();
-        const data = await captchaApi.validateCaptcha(token) 
-        if (data.success == true) {
+        const data = await captchaApi.validateCaptcha(token)
+
+        if (data) {
             setEnableButton(true)
-          }
+        }
     }
     return (
         <>
@@ -109,7 +110,7 @@ export default function Contact() {
                                                 />
                                             </Row>
                                             <ReCAPTCHA
-                                                sitekey="6Ldtl_EhAAAAADl8EmcEnJX_1DdWJD-MSBcSls1d"
+                                                sitekey={process.env.RECAPTCHA_SITE_KEY}
                                                 onChange={onChange}
                                                 ref={captchaRef}
                                             />
