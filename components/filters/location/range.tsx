@@ -1,5 +1,5 @@
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import RangeSlider from 'react-bootstrap-range-slider';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead'; // ES2015
 import FindJobFilterAccordion from '../../find-jobs-accordion/find-job-filter-accordion';
@@ -9,11 +9,13 @@ import { TypeaheadMenuProps } from 'react-bootstrap-typeahead/types/components/T
 
 export default function Range(props: any) {
 
+    const {
+        state: { filters, location, range },
+        method: { setFiltersByKeyValue, setLocation, setRange },
+    } = props
     const { t } = useTranslation();
-    const { state, method } = props
-    const { filters, location, range } = state
-    const { setFiltersByKeyValue, setLocation, setRange } = method
     const mapboxApi = new MapboxApi()
+    const typeaheadRef = useRef(null)
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [options, setOptions] = useState<any>([]);
@@ -43,6 +45,9 @@ export default function Range(props: any) {
                 range
             }
         }
+        else {
+            typeaheadRef.current.clear()
+        }
         setFiltersByKeyValue('location', val)
     }
 
@@ -57,7 +62,7 @@ export default function Range(props: any) {
             <FindJobFilterAccordion {...props} header={t("LOCATION")}>
                 <AsyncTypeahead
                     defaultInputValue={filters.place_name || filters.location?.place_name || ""}
-                    id="async-example"
+                    ref={typeaheadRef}
                     isLoading={isLoading}
                     labelKey="place_name"
                     minLength={1}
