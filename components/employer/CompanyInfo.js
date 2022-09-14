@@ -1,6 +1,5 @@
 import React from 'react'
-import Link from "next/link";
-import { Facebook, Twitter, Instagram, People, Eye, FilePost } from 'react-bootstrap-icons'
+import { Facebook, Twitter, Instagram, FilePost } from 'react-bootstrap-icons'
 import { useTranslation } from '../../hooks/useTranslation';
 
 export default function CompanyInfo({ company, jobCount }) {
@@ -15,25 +14,19 @@ export default function CompanyInfo({ company, jobCount }) {
                     <div className='social-profile-sec'>
                         <h6>{t('SOCIAL_PROFILE')}:</h6>
                         <div className="hvr-float-shadow mx-2 ">
-                            {/* <Link href=""> */}
                             <a target="_blank">
                                 < Facebook color=' #b6b6b6' size={25} />
                             </a>
-                            {/* </Link> */}
                         </div>
                         <div className="hvr-float-shadow mx-2">
-                            {/* <Link href=""> */}
                             <a target="_blank">
                                 < Twitter color=' #b6b6b6' size={25} />
                             </a>
-                            {/* </Link> */}
                         </div>
                         <div className="hvr-float-shadow mx-2">
-                            {/* <Link href=""> */}
                             <a target="_blank">
                                 < Instagram color=' #b6b6b6' size={25} />
                             </a>
-                            {/* </Link> */}
                         </div>
                     </div>
                     <div className='my-3'>
@@ -49,24 +42,6 @@ export default function CompanyInfo({ company, jobCount }) {
                         backgroundColor: '#fafafa',
                         padding: '25px'
                     }}>
-                        {/* <div className='d-flex align-items-center mb-3'>
-                            <div className='mr-2'>
-                                <People color='#2da2af' size={30} />
-                            </div>
-                            <div className='lh-base'>
-                                <p className='mb-0'>{t('TEAM_SIZE')}</p>
-                                <small className='text-muted'>1-50 Members</small>
-                            </div>
-                        </div> */}
-                        {/* <div className='d-flex align-items-center mb-3'>
-                            <div className='mr-2'>
-                                <Eye color='#2da2af' size={30} />
-                            </div>
-                            <div>
-                                <p className='mb-0'>{t('VIEWS')}</p>
-                                <small className='text-muted'>182</small>
-                            </div>
-                        </div> */}
                         <div className='d-flex align-items-center mb-3' >
                             <div className='mr-2'>
                                 <FilePost color='#2da2af' size={30} />

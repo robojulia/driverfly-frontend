@@ -1,8 +1,4 @@
-import { BarChart } from "../BarChart";
 import { ApplicantApi } from "../../../pages/api/applicant";
-import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
-import { Bar, Doughnut } from "react-chartjs-2";
-import { Badge } from "react-bootstrap";
 import { PieChart } from "../PieChart";
 
 export function ApplicantPieChart() {
@@ -26,13 +22,13 @@ export function ApplicantPieChart() {
         return [leads, inProcess, hired];
     };
 
-    const labels = [ "LEADS", "IN_PROCESS", "HIRED" ].map(v => `ApplicantPipelineChartLabel.${v}`);
+    const labels = ["LEADS", "IN_PROCESS", "HIRED"].map(v => `ApplicantPipelineChartLabel.${v}`);
 
     return (
         <PieChart
             title="APPLICANTS"
             labels={labels}
             fetchData={fetchData}
-            />
+        />
     );
 }

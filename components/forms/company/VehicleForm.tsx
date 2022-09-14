@@ -65,8 +65,6 @@ export function VehicleForm(props: VehicleFormProps) {
             form.setValues(entity);
     }, [entity]);
 
-    // console.log("Rendering VehicleForm");
-
     return (
         <EntityForm
             className={className}

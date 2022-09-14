@@ -1,4 +1,3 @@
-import { listItemTextClasses } from "@mui/material";
 import { useTranslation } from "../../hooks/useTranslation";
 import timeSince from "../../utils/timeSince";
 

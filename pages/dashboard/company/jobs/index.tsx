@@ -3,7 +3,7 @@ import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayo
 import { useEffect, useState } from "react";
 import React from "react";
 
-import { PenFill, TrashFill, Eye, EyeFill, Plus } from 'react-bootstrap-icons';
+import { PenFill, TrashFill, Plus } from 'react-bootstrap-icons';
 
 import PageLayout from "../../../../components/layouts/page/PageLayout";
 

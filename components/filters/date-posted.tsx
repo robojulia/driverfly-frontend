@@ -1,7 +1,6 @@
 import moment from "moment"
 import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
 import { JobDatePosted } from "../../enums/jobs/job-date-posted.enum"
-import ViewMoreRadioFilter from "./view-more-radio-filter";
 import { useTranslation } from "../../hooks/useTranslation";
 import { ChangeEvent } from "react";
 

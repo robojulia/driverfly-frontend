@@ -1,22 +1,9 @@
 import { useTranslation } from "../../hooks/useTranslation";
-import { JobGeography } from "../../enums/jobs/job-geography.enum"
-import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
-import { JobDeliveryType } from "../../enums/jobs/job-delivery-type.enum";
-import { JobEquipmentType } from "../../enums/jobs/job-equipment-type.enum";
-import { JobSchedule } from "../../enums/jobs/job-schedule.enum";
-import { JobPayMethod } from "../../enums/jobs/job-pay-method.enum";
 import { MvrType } from "../../enums/users/mvr-type.enum";
-import timeSince from "../../utils/timeSince";
 import ShowEnumFromString from "../../components/enum-filters/show-enum-from-string"
 import { useContext } from "react"
 import jobDetailContext from "../../context/jobDetailContext";
-import { ArrowRight, CurrencyDollar, GeoAltFill, FileEarmarkZip, Facebook, PersonFill, ClockFill, PersonWorkspace, Wallet, Wallet2, Truck, GearFill, PersonBadge, PersonBadgeFill, CashCoin, BlockquoteLeft, GearWideConnected, CollectionFill, ExplicitFill, Joystick, Calendar2, Calendar2EventFill, Calendar2Event, CalendarRange } from 'react-bootstrap-icons';
-import { JobPayFrequency } from "../../enums/jobs/job-pay-frequency.enum";
-import { JobTeamDriver } from "../../enums/jobs/job-team-driver.enum";
-import { JobBenefits } from "../../enums/jobs/job-benefits.enum";
-import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
-import { DriverEndorsement } from "../../enums/users/driver-endorsement.enum";
-import { VehicleTransmissionType } from "../../enums/vehicles/vehicle-transmission-type.enum";
+import { CurrencyDollar, GeoAltFill, ClockFill, PersonWorkspace, Wallet2, Truck, GearFill, PersonBadgeFill, CashCoin, BlockquoteLeft, GearWideConnected, CollectionFill, ExplicitFill, Joystick, CalendarRange } from 'react-bootstrap-icons';
 import ShowFormattedDate from "../jobs/show-formatted-date";
 
 export default function JonInformation({ job }) {

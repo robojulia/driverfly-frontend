@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { yupInit } from "../../config/yup";
 import { jwtExpiryTimeout, useAuth } from "../../hooks/useAuth";
-import { useEffectAsync } from "../../utils/react";
 import { Loading } from "../loading/loading";
 
 export interface UserGuardProps {
@@ -16,7 +15,7 @@ export function UserGuard({ permissions, children }: UserGuardProps) {
 
     const { user, hasPermission, loginGuard } = useAuth();
 
-    const [ timeoutId, setTimeoutId ] = useState(null);
+    const [timeoutId, setTimeoutId] = useState(null);
 
     function destructor() {
         if (timeoutId) window.clearTimeout(timeoutId);
@@ -39,26 +38,12 @@ export function UserGuard({ permissions, children }: UserGuardProps) {
             }
 
             if (user) {
-                // HF, temporarily disable this redirect until notification service is fixed
-                // if (user.emailTokenTimestamp) {
-                //     if (router.asPath.startsWith("/dashboard")) {
-                //         router.push("/login/verify-email");
-                //         return false;
-                //     }
-                // }
-
-                // if (user.phoneTokenTimestamp) {
-                //     if (router.asPath.startsWith("/dashboard")) {
-                //         router.push("/login/verify-phone");
-                //         return false;
-                //     }
-                // }
                 if (user.jwt?.exp) {
                     const msToExpiration = jwtExpiryTimeout(user.jwt);
                     console.log("Expires in ms: ", msToExpiration);
-    
+
                     const timeoutId = window.setTimeout(CheckAuth, msToExpiration);
-    
+
                     setTimeoutId(timeoutId);
                 }
             }
@@ -69,10 +54,10 @@ export function UserGuard({ permissions, children }: UserGuardProps) {
 
     return (<Loading
         fetch={CheckAuth}
-        triggers={[ user, router.asPath ]}
+        triggers={[user, router.asPath]}
         destructor={destructor}
         loadingText={"Checking authorization..."}
-        >
+    >
         {children}
     </Loading>);
 }

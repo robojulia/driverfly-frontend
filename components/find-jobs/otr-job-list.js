@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import timeSince from "../../utils/timeSince"
 import { useTranslation } from "../../hooks/useTranslation"
 import CompanyPhoto from '../jobs/company-photo'
-import { GeoAltFill, CurrencyDollar } from 'react-bootstrap-icons';
+import { CurrencyDollar } from 'react-bootstrap-icons';
 import { buildAddress } from '../../utils/common'
 import { JobGeography } from '../../enums/jobs/job-geography.enum'
 import JobApi from '../../pages/api/job'
@@ -87,7 +87,6 @@ export default function OtrJobsList() {
                                         job.location &&
                                         <>
                                             <p>
-                                                {/* < GeoAltFill className='mr-1' /> */}
                                                 <span className='mr-4'>
                                                     {buildAddress(job.location || {}, { street: false, zip_code: false })}
                                                 </span></p>

@@ -2,6 +2,8 @@ import { JobBenefits } from "../../enums/jobs/job-benefits.enum";
 import { JobEquipmentType } from "../../enums/jobs/job-equipment-type.enum";
 import { useTranslation } from "../../hooks/useTranslation";
 import ShowEnumFromString from "../enum-filters/show-enum-from-string";
+import ShowFormattedDate from "../jobs/show-formatted-date";
+import { buildAddress } from "../../utils/common";
 
 export default function JobDescription({ job }) {
     const { t } = useTranslation();
@@ -38,7 +40,7 @@ export default function JobDescription({ job }) {
                         }
                         <li className="row px-0">
                             <div className="col-md-3">
-                            {job.required_skills_other ?  t('OTHER_SKILLS') : ''}
+                                {job.required_skills_other ? t('OTHER_SKILLS') : ''}
                             </div>
                             <div className="col-md-6">
                                 {job.required_skills_other}
@@ -46,7 +48,44 @@ export default function JobDescription({ job }) {
                         </li>
                     </ul>
                 </div>
+                {job.orientation &&
+                    <div className=" p-3 mb-5  rounded mt-3">
+                        <h3 className="border-bottom py-1 mb-4">{t('ORIENTATION')}</h3>
+                        <ul className="p-0">
+                            <li className="row px-0">
+                                <div className="col-md-3">
+                                    { t('START_DATE') }
+                                </div>
+                                <div className="col-md-6">
+                                    <ShowFormattedDate
+                                        hideTime
+                                        date={job.orientation.start_datetime} />
+                                </div>
+                            </li>
+                            <li className="row px-0">
+                                <div className="col-md-3">
+                                    { t('END_DATE') }
+                                </div>
+                                <div className="col-md-6">
+                                    <ShowFormattedDate
+                                        hideTime
+                                        date={job.orientation.end_datetime} />
+                                </div>
+                            </li>
+                            <li className="row px-0">
+                                <div className="col-md-3">
+                                    { t('location') }
+                                </div>
+                                <div className="col-md-6">
+                                    {buildAddress(job.orientation.location)}
+                                </div>
+                            </li>
+                        </ul>
+
+                    </div>
+                }
             </div>
+
         </>
     )
 }

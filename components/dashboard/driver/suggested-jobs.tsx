@@ -1,7 +1,7 @@
 import FullLayout from "../../../components/dashboard/layouts/FullLayout";
 import { useAuth } from '../../../hooks/useAuth';
 import { useState } from "react"
-import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
+import { Row, Col, Table, Card, CardBody } from "reactstrap";
 import ApplicantApi from '../../../pages/api/applicant';
 import { globalAjaxExceptionHandler } from '../../../utils/ajax';
 import { toast } from 'react-toastify';
