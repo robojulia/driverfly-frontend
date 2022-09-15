@@ -651,6 +651,7 @@
     "USER_ALREADY_EXISTS": "The user is not logged in but already has an account based on the email address (user must log in)",
     "LOGIN_SUCCESSFULL": "Login successfully! ",
     "INVALID_CREDENTIALS": "Credentials invalid",
+    "INVALID_RECAPTCHA_TOKEN": "Could not verify",
     "USER_INVALID": "User account invalid",
     "USER_INACTIVE": "User account inactive",
     "EMAIL_ALREADY_EXISTS": "Email already exists",
