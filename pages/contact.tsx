@@ -36,14 +36,18 @@ export default function Contact() {
 
     const [enableButton, setEnableButton] = React.useState(false)
 
-    const onChange = async () => {
+    const onChange = async (value) => {
+        console.log(value,'vallll')
         const token = captchaRef.current.getValue();
         captchaRef.current.reset();
-        const captchaApi = new CaptchaApi();
-        const data = await captchaApi.validateCaptcha(token)
+        const contactApi = new ContactApi();
 
-        if (data) {
-            setEnableButton(true)
+        try{
+           const dta =  await contactApi.validateCaptcha(token)
+           alert(dta)
+        }
+        catch (e) {
+            alert('sadsadadsadsa')
         }
     }
     return (
@@ -114,7 +118,7 @@ export default function Contact() {
                                                 onChange={onChange}
                                                 ref={captchaRef}
                                             />
-                                            <button disabled={enableButton == false}
+                                            <button 
                                                 type="submit"
                                                 className="btn contact-submit-btn float-right py-3 px-5 mb-4">
                                                 {t("submit")}  <ArrowRight />

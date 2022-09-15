@@ -11,4 +11,8 @@ export default class ContactApi extends BaseApi {
         const { data } = await this.post(this.baseUrl, dto);
         return data;
     }
+
+    async validateCaptcha(token):Promise<any>{
+        const {data} = await this.post('contact-us/recaptcha', token)
+    }
 }
