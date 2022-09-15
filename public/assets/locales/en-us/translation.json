@@ -558,6 +558,8 @@
     "file_name":"File Name",
     "upload_date":"Upload Date",
     "DOWNLOAD":"Download",
+    "COMPIIANCE":"Compliance",
+    "FILE_TYPE":"File Type",
     "CALL": "Call",
     "MAKE_CALL": "Make Call",
     "VIEW_MISSED_CALLS": "View missed calls",
