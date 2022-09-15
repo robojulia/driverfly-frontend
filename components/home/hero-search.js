@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { GeoAlt, Search } from "react-bootstrap-icons";
+import { Search } from "react-bootstrap-icons";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
 import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
 import { DriverLicenseType } from "../../enums/users/driver-license-type.enum"
@@ -91,9 +91,6 @@ export default function HeroSearch(props) {
             </div>
 
             <div className="input-group">
-                {/* <div className="input-group-prepend">
-                    <GeoAlt color="#C5C5C5" />
-                </div> */}
                 <AsyncTypeahead
                     id="async-example"
                     name="location"

@@ -65,8 +65,6 @@ export function VehicleForm(props: VehicleFormProps) {
             form.setValues(entity);
     }, [entity]);
 
-    // console.log("Rendering VehicleForm");
-
     return (
         <EntityForm
             className={className}
@@ -184,7 +182,7 @@ export function VehicleForm(props: VehicleFormProps) {
                 }
                 <Col xs="4">
                     <BaseCheck
-                        className="col-12"
+                        className="col-12 p-0"
                         label="GOVERNED_SPEED"
                         name="is_governed"
                         formik={form}
@@ -202,6 +200,16 @@ export function VehicleForm(props: VehicleFormProps) {
                     }
 
                 </Col>
+                <Row>
+                    <Col xs="4">
+                        <BaseCheck
+                            className="col-12 p-0"
+                            label="SHOW_VEHICLES_TO_PUBLIC_USERS"
+                            name="is_public"
+                            formik={form}
+                        />
+                    </Col>
+                </Row>
             </Row>
         </EntityForm>
     );

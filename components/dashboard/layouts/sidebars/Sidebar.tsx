@@ -1,5 +1,4 @@
 import { Navbar, Container } from "react-bootstrap";
-
 import { Icon } from "react-bootstrap-icons";
 import { useRouter } from "next/router";
 import { TranslateInterface, useTranslation } from "../../../../hooks/useTranslation";
@@ -14,7 +13,7 @@ export interface SidebarProps {
 
 export interface SidebarItem {
     pathname?: string;
-    
+
     icon?: Icon;
     text?: string;
     startsWith?: boolean;
@@ -50,11 +49,11 @@ export default function Sidebar(props: SidebarProps) {
         <aside
             className={`sidebarArea ${!open ? "" : "showSidebar"}`}>
             <SidebarArea>
-                {props.items.map((v, i) => (<SidebarLink key={v.text} isMobile={isMobile} item={v} t={t} currentPath={router.asPath} />))}
+                {items.map((v, i) => (<SidebarLink key={v.text} isMobile={isMobile} item={v} t={t} currentPath={router.asPath} />))}
             </SidebarArea>
         </aside>
         {!isMobile && current?.items?.length > 0 &&
-        <Sidebar open={props.open} items={current.items} />
+            <Sidebar open={props.open} items={current.items} />
         }
     </>);
 }
@@ -62,15 +61,15 @@ export default function Sidebar(props: SidebarProps) {
 function SidebarArea({ children }) {
     return (
         <div className="side_bar">
-        <Navbar bg="light" expand="lg">
-          <Container className="p-0">
-            <Navbar.Toggle aria-controls="basic-navbar-nav " />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <ul>{children}</ul>
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
-      </div>
+            <Navbar bg="light" expand="lg">
+                <Container className="p-0">
+                    <Navbar.Toggle aria-controls="basic-navbar-nav " />
+                    <Navbar.Collapse id="basic-navbar-nav">
+                        <ul>{children}</ul>
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
+        </div>
     );
 }
 
@@ -100,7 +99,7 @@ function filterItems(values: SidebarItem[], hasPermission) {
         }
 
         return i;
-    }).filter(v => !!v);
+    }).filter(v => v != null);
 
 }
 
@@ -138,22 +137,22 @@ function SidebarLink(props: SidebarLinkProps) {
     if (!pathname && items) pathname = items[0]?.pathname;
 
     return (
-    <li className={IsSelected(props.item, currentPath) ? "active" : ""}>
-        <Link href={pathname}>
-            <a href="#">
-            {
-            Cmp &&
-            <span className="float-left">
-                < Cmp className="icon_left" />
-            </span>
+        <li className={IsSelected(props.item, currentPath) ? "active" : ""}>
+            <Link href={pathname}>
+                <a href="#">
+                    {
+                        Cmp &&
+                        <span className="float-left">
+                            < Cmp className="icon_left" />
+                        </span>
+                    }
+                    {t(text)}
+                </a>
+            </Link>
+            {isMobile && items &&
+                <ul>
+                    {items.map((v, i) => (<SidebarLink key={i} isMobile={isMobile} item={v} t={t} currentPath={currentPath} />))}
+                </ul>
             }
-            {t(text)}
-            </a>
-        </Link>
-        {isMobile && items &&
-            <ul>
-                {items.map((v, i) => (<SidebarLink key={i} isMobile={isMobile} item={v} t={t} currentPath={currentPath} />))}
-            </ul>
-        }
-    </li>);
+        </li>);
 }

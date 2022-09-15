@@ -1,20 +1,25 @@
-import React from "react";
+
 import { Container } from "reactstrap";
 import Header from "../header/Header";
 import Sidebar from "../sidebars/Sidebar";
 import Head from "next/head";
 import { Scripts } from "../../../scripts/scripts";
+import React, { useEffect, useRef } from "react";
 
 import { useTranslation } from "../../../../hooks/useTranslation";
-import {TelephoneFill,  Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, CheckSquareFill, GiftFill, GearFill, EnvelopeFill, PeopleFill, Hospital,Receipt } from 'react-bootstrap-icons';
+import { QuestionCircleFill, TelephoneFill, Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, GearFill, EnvelopeFill, PeopleFill, Hospital, UmbrellaFill, PersonHearts } from 'react-bootstrap-icons';
 import CompanyProfileNav from "../header/CompanyProfileNav";
 import { useAuth } from "../../../../hooks/useAuth";
+import { useRouter } from 'next/router';
 
 // company layout
 const FullLayout = ({ children }) => {
   const { t } = useTranslation();
+  const router = useRouter()
 
-  const { user } = useAuth();
+  const { user, isSuperAdmin } = useAuth();
+
+  console.log("FullLayout", user, isSuperAdmin)
 
   if (!user?.company) {
     return <></>
@@ -52,23 +57,16 @@ const FullLayout = ({ children }) => {
       text: "CALL",
       startsWith: true
     },
-    // {
-    //   pathname: "/dashboard/company/invoices",
-    //   icon: Receipt,
-    //   text: "Invoice",
-    //   startsWith: true
-    // },
-  
     {
       pathname: "/dashboard/company/settings",
       icon: GearFill,
       text: "SETTINGS",
       items: [
         {
-            pathname: "/dashboard/company/settings",
-            icon: Building,
-            text: "company",
-            permissions: "CanViewCompany",
+          pathname: "/dashboard/company/settings",
+          icon: Building,
+          text: "company",
+          permissions: "CanViewCompany",
         },
         {
           pathname: "/dashboard/company/settings/companies",
@@ -78,38 +76,62 @@ const FullLayout = ({ children }) => {
           startsWith: true
         },
         {
-            pathname: "/dashboard/company/settings/users",
-            icon: PeopleFill,
-            text: "USERS",
-            permissions: "CanViewUser",
-            startsWith: true
+          pathname: "/dashboard/company/settings/users",
+          icon: PeopleFill,
+          text: "USERS",
+          permissions: "CanViewUser",
+          startsWith: true
         },
         {
-            pathname: "/dashboard/company/settings/vehicles",
-            icon: CardImage,
-            text: "VEHICLES",
-            permissions: "CanViewVehicle",
-            startsWith: true
+          pathname: "/dashboard/company/settings/vehicles",
+          icon: CardImage,
+          text: "VEHICLES",
+          permissions: "CanViewVehicle",
+          startsWith: true
         },
         {
-            pathname: "/dashboard/company/settings/locations",
-            icon: GeoAltFill,
-            text: "TERMINALS",
-            permissions: "CanViewLocation",
-            startsWith: true
+          pathname: "/dashboard/company/settings/locations",
+          icon: GeoAltFill,
+          text: "TERMINALS",
+          permissions: "CanViewLocation",
+          startsWith: true
         },
         {
-            pathname: "/dashboard/company/settings/profile",
-            icon: PersonFill,
-            text: "MY_PROFILE",
+          pathname: "/dashboard/company/settings/profile",
+          icon: PersonFill,
+          text: "MY_PROFILE",
+        },
+        {
+          pathname: "/dashboard/company/settings/support",
+          icon: QuestionCircleFill,
+          text: "SUPPORT",
         },
       ],
     },
-  
+
+    // superadmin panel
+    {
+      icon: UmbrellaFill,
+      text: "ADMIN",
+      visible: isSuperAdmin,
+      items: [
+        {
+          pathname: "/dashboard/company/admin/referral",
+          icon: PersonHearts,
+          text: "REFERRAL_SOURCES",
+          visible: isSuperAdmin,
+          startsWith: true,
+        },
+      ],
+    },
+
   ];
+  //  Code below is to set scroll to top on each child page
+  const dashboardContainer = useRef(null)
+  const resetScrollEffect = ({ element: { current } }) => { if (router.pathname == "/dashboard/company/jobs/[id]") current.scrollTop = 0 }
+  useEffect(() => resetScrollEffect({ element: dashboardContainer }), [children])
 
-
-return (
+  return (
     <>
       <Head>
         <title>{t("DRIVERFLY_COMPANY_DASHBOARD")}</title>
@@ -121,30 +143,28 @@ return (
       </Head>
       <Scripts />
       <div className="header">
-            <div className="contentArea ">
-              {/********header**********/}
-              <Header>
-                <CompanyProfileNav />
-              </Header>
-            </div>
-            </div>
+        <div className="contentArea ">
+          {/********header**********/}
+          <Header>
+            <CompanyProfileNav />
+          </Header>
+        </div>
+      </div>
       <main className="maincontainer">
         < div className="dashboardsidebar">
           <div className="pageWrapper d-md-block d-lg-flex">
             {/******** Sidebar **********/}
             <Sidebar items={menuItems} />
             {/********Content Area**********/}
-            <div className="header">
-           
-
+            <div className="header" ref={dashboardContainer}>
               {/********Middle Content**********/}
               <Container className="p-4 wrapper" fluid>
                 <div>{children}</div>
               </Container>
             </div>
-            </div>
           </div>
-       
+        </div>
+
       </main>
     </>
   );

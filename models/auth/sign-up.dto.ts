@@ -13,6 +13,11 @@ export class SignUpDto {
   confirmPassword?: string;
   accept_tos?: boolean = false;
   invite_code?: string;
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_content?: string;
+  personal_recruiter?: boolean = false;
 
   static yupSchema() {
     return yup.object({
@@ -28,6 +33,11 @@ export class SignUpDto {
       password: yup.string().trim().required().nullable(),
       confirmPassword: yup.string().trim().oneOf([yup.ref("password")], "PASSWORDS_DO_NOT_MATCH").required().nullable(),
       accept_tos: yup.boolean().oneOf([true], "MUST_BE_CHECKED"),
+      personal_recruiter: yup.boolean().nullable(),
+      utm_source: yup.string().trim().nullable(),
+      utm_medium: yup.string().trim().nullable(),
+      utm_campaign: yup.string().trim().nullable(),
+      utm_content: yup.string().trim().nullable(),
       invite_code: yup.string().when("role", {
         is: SignUpRole.COMPANY,
         then: yup.string().trim().required().nullable(),

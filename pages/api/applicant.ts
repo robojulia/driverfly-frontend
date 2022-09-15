@@ -103,14 +103,19 @@ class ApplicantApi extends BaseApi {
     }
 
     notes = {
-        baseUrl: (applicantId: number) => `${this.baseUrl}/${applicantId}/notes`,
+        baseUrl: (applicantId: number, noteId?: number) => `${this.baseUrl}/${applicantId}/notes/${noteId || ''}`,
         create: async (applicantId: number, dto: ApplicantNoteEntity): Promise<ApplicantNoteEntity> => {
             const { data } = await this.post(this.notes.baseUrl(applicantId), dto);
 
             return data;
         },
-        remove: async (noteId: number): Promise<any> => {
-            const { data } = await this.delete(`${this.baseUrl}/notes/${noteId}`);
+        update: async (applicantId: number, noteId: number, dto: ApplicantNoteEntity): Promise<ApplicantNoteEntity> => {
+            const { data } = await this.put(this.notes.baseUrl(applicantId, noteId), dto);
+
+            return data;
+        },
+        remove: async (applicantId: number, noteId: number): Promise<any> => {
+            const { data } = await this.delete(this.notes.baseUrl(applicantId, noteId));
 
             return data;
         }

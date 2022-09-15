@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Dropdown, FormControl } from "react-bootstrap";
+import { Dropdown, FormControl } from "react-bootstrap";
 import { useTranslation } from "../../hooks/useTranslation";
 
 import style from "../../public/components/styles/css/ComboBox.module.css";
@@ -9,8 +9,8 @@ export interface ComboboxProps {
     label?: string;
     name?: string;
     minLength?: number;
-    onChange?: (e: React.ChangeEvent<HTMLInputElement>|any) => void;
-    options?: ComboboxItem[]|((search: string) => Promise<ComboboxItem[]>);
+    onChange?: (e: React.ChangeEvent<HTMLInputElement> | any) => void;
+    options?: ComboboxItem[] | ((search: string) => Promise<ComboboxItem[]>);
 }
 
 export interface ComboboxItem {
@@ -26,7 +26,7 @@ export default function Combobox(props: ComboboxProps) {
 
     const { t } = useTranslation();
 
-    const [ state, setState ] = useState({
+    const [state, setState] = useState({
         value: "",
         query: "",
         show: false,
@@ -39,7 +39,7 @@ export default function Combobox(props: ComboboxProps) {
         const query = value?.toLowerCase() || "";
 
         if (query.length >= minLength) {
-            let opts = typeof options === "function"  ? options(query) : options;
+            let opts = typeof options === "function" ? options(query) : options;
 
             if (opts instanceof Promise) opts = await opts;
 
@@ -52,7 +52,7 @@ export default function Combobox(props: ComboboxProps) {
                     ?.map(o => {
                         const { text, value } = o;
 
-                        const textStart = text.toLowerCase().indexOf( query );
+                        const textStart = text.toLowerCase().indexOf(query);
                         const textEnd = textStart + query.length;
 
                         if (textStart < 0) return null;
@@ -60,7 +60,7 @@ export default function Combobox(props: ComboboxProps) {
                         return {
                             text,
                             value,
-                            parts: [text.substring(0, textStart), text.substring(textStart, textEnd), text.substring(textEnd) ]
+                            parts: [text.substring(0, textStart), text.substring(textStart, textEnd), text.substring(textEnd)]
                         };
                     }).filter(o => !!o) || []
             });
@@ -103,7 +103,7 @@ export default function Combobox(props: ComboboxProps) {
      * 
      * @param {React.ChangeEvent<HTMLInputElement>} e 
      */
-     const onInputFocus = (e) => {
+    const onInputFocus = (e) => {
         const { value } = e.target;
 
         setState({
@@ -137,18 +137,18 @@ export default function Combobox(props: ComboboxProps) {
 
     return (
         <>
-        {label && <label htmlFor={name}>{t(label)}</label>}
-        <Dropdown className={style.form_combobox} show={state.show}>
-            <FormControl name={name} onChange={onInputChange} onFocus={onInputFocus} onBlur={onInputBlur} type="text" placeholder={t(minLength > 1 ? "TYPE_AT_LEAST_{num}_CHARACTERS_TO_SEE_OPTIONS" : "START_TYPING_TO_SEE_OPTIONS", { num: minLength.toString() })} value={state.query} autoComplete="off" />
-            <Dropdown.Menu className="w-100">
-                {state.options.length === 0 && <span className="text-warning small">{t("NO_MATCHING_RESULTS")}</span>}
-                {state.options.map((o, i) => 
+            {label && <label htmlFor={name}>{t(label)}</label>}
+            <Dropdown className={style.form_combobox} show={state.show}>
+                <FormControl name={name} onChange={onInputChange} onFocus={onInputFocus} onBlur={onInputBlur} type="text" placeholder={t(minLength > 1 ? "TYPE_AT_LEAST_{num}_CHARACTERS_TO_SEE_OPTIONS" : "START_TYPING_TO_SEE_OPTIONS", { num: minLength.toString() })} value={state.query} autoComplete="off" />
+                <Dropdown.Menu className="w-100">
+                    {state.options.length === 0 && <span className="text-warning small">{t("NO_MATCHING_RESULTS")}</span>}
+                    {state.options.map((o, i) =>
                     (o && <a key={i} href="#" className={`dropdown-item ${style.form_combobox_item}`} onClick={e => onOptionClick(e, o.value)}>
                         {o.parts[0]}<em>{o.parts[1]}</em>{o.parts[2]}
                     </a>)
-                )}
-            </Dropdown.Menu>
-        </Dropdown>
+                    )}
+                </Dropdown.Menu>
+            </Dropdown>
         </>
     );
 }
@@ -235,11 +235,11 @@ function createAuto (i, elem) {
         }
     });
 
-  	listItems.on('click', function(e) {
+        listItems.on('click', function(e) {
         var txt = $(this).text().replace(/^\s+|\s+$/g, "");  //remove leading and trailing whitespace
         input.val( txt );
         dropdown.removeClass('open').removeClass('in');
-		});
+        });
 
 }
 

@@ -1,6 +1,5 @@
 import { Dropdown } from "react-bootstrap";
 import React, { useEffect } from "react";
-import Image from "next/image";
 import LogoutButton from '../../../buttons/Logout';
 import { useTranslation } from "../../../../hooks/useTranslation";
 import Impersonate from "../../../impersonate/impersonate";

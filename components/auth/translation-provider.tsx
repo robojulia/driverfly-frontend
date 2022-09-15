@@ -22,8 +22,8 @@ export function TranslationProvider(props: TranslationProviderProps) {
             locale = user.language;
     }
 
-    const [ translationContext, setTranslationContext ] = useState({});
-    
+    const [translationContext, setTranslationContext] = useState({});
+
     async function fetchTranslations() {
         const locales = {
             "en": translations_EN_US,
@@ -39,26 +39,10 @@ export function TranslationProvider(props: TranslationProviderProps) {
 
         setTranslationContext(json);
     }
-
-    // const fetchTranslations = async (lang, ns) => {
-    //     let url = `/assets/locales/${lang}/${ns}.json`;
-
-    //     try {
-    //         const resp = await fetch(url);
-
-    //         const json = await resp.json();
-
-    //         return json;
-    //     }
-    //     catch (e) {
-    //         console.error("UNABLE TO FETCH TRANSLATIONS", e, url);
-    //     }
-
-    // }
     return (
-        <Loading fetch={fetchTranslations} triggers={[ locale ]}>
+        <Loading fetch={fetchTranslations} triggers={[locale]}>
             <TranslationContext.Provider value={translationContext}>
-            {children}
+                {children}
             </TranslationContext.Provider>
         </Loading>
     );

@@ -45,12 +45,11 @@ export default function Applicant() {
 
     const form = useFormik({
         initialValues: new ApplicantEntity(),
-        // initialValues: applicant,
         validationSchema: ApplicantEntity.yupSchema(),
         onSubmit: async (values) => {
             if ("jobs" in values)
                 delete values.jobs;
-
+                
             try {
                 values = await api.me.update(values);
 
@@ -66,6 +65,13 @@ export default function Applicant() {
 
     useEffectAsync(async () => {
         const applicant = await api.me.get();
+
+        applicant.equipment_experience.forEach((equipmentExp) => {
+            if (!Number.isInteger(equipmentExp)) {
+                equipmentExp.months = Math.round((equipmentExp.years % 1) * 12);
+                equipmentExp.years = Math.floor(equipmentExp.years);
+            }
+        });
 
         form.setValues({
             ...form.values,
@@ -327,6 +333,7 @@ export default function Applicant() {
                                                 <Row className='d-sm-none d-md-flex'>
                                                     <Col><strong>{t("TYPE")}</strong></Col>
                                                     <Col><strong>{t("YEARS")}</strong></Col>
+                                                    <Col><strong>{t("MONTHS")}</strong></Col>
                                                 </Row>
                                                 {form.values
                                                     .equipment_experience
@@ -335,8 +342,9 @@ export default function Applicant() {
                                                             <Col xs="12" className='d-sm-flex d-md-none'>
                                                                 <Col><strong>{t("TYPE")}</strong></Col>
                                                                 <Col><strong>{t("YEARS")}</strong></Col>
+                                                                <Col><strong>{t("MONTHS")}</strong></Col>
                                                             </Col>
-                                                            <Col xs="6">
+                                                            <Col xs="4">
                                                                 <BaseSelect
                                                                     name={`equipment_experience[${i}].type`}
                                                                     placeholder="TYPE"
@@ -345,12 +353,22 @@ export default function Applicant() {
                                                                     formik={form}
                                                                 />
                                                             </Col>
-                                                            <Col xs="5">
+                                                            <Col xs="4">
                                                                 <BaseInput
                                                                     name={`equipment_experience[${i}].years`}
                                                                     placeholder="YEARS"
                                                                     type="int"
                                                                     min="1"
+                                                                    formik={form}
+                                                                />
+                                                            </Col>
+                                                            <Col xs="3">
+                                                                <BaseInput
+                                                                    name={`equipment_experience[${i}].months`}
+                                                                    placeholder="MONTHS"
+                                                                    type="int"
+                                                                    min="0"
+                                                                    max="11"
                                                                     formik={form}
                                                                 />
                                                             </Col>
@@ -730,12 +748,72 @@ export default function Applicant() {
                                     />
                                     {
                                         form.values.tickets &&
-                                        <BaseTextArea
-                                            className="col-12 p-1  mt-2"
-                                            label="details"
-                                            name="tickets_details"
-                                            formik={form}
-                                        />
+                                        <>
+                                            <BaseInput
+                                                className="col-12 p-1  mt-2"
+                                                label="COUNT"
+                                                name="tickets_count"
+                                                type="int"
+                                                min="0"
+                                                formik={form}
+                                            />
+                                            <BaseTextArea
+                                                className="col-12 p-1  mt-2"
+                                                label="details"
+                                                name="tickets_details"
+                                                formik={form}
+                                            />
+                                        </>
+                                    }
+                                    <BaseCheck
+                                        className="col-12 p-1  mt-2"
+                                        label="HAS_HAD_INFRACTIONS_LAST_5_YEARS"
+                                        name="infractions"
+                                        formik={form}
+                                    />
+                                    {
+                                        form.values.infractions &&
+                                        <>
+                                            <BaseInput
+                                                className="col-12 p-1  mt-2"
+                                                label="COUNT"
+                                                name="infractions_count"
+                                                type="int"
+                                                min="0"
+                                                formik={form}
+                                            />
+                                            <BaseTextArea
+                                                className="col-12 p-1  mt-2"
+                                                label="details"
+                                                name="infractions_details"
+                                                formik={form}
+                                            />
+                                        </>
+                                    }
+                                    <BaseCheck
+                                        className="col-12 p-1  mt-2"
+                                        label="HAS_HAD_MOVING_VIOLATIONS_LAST_3_YEARS"
+                                        name="moving_violations"
+                                        formik={form}
+                                    />
+                                    {
+                                        form.values.moving_violations &&
+                                        <>
+                                            <BaseInput
+                                                className="col-12 p-1  mt-2"
+                                                label="COUNT"
+                                                name="moving_violations_count"
+                                                type="int"
+                                                min="0"
+                                                formik={form}
+                                            />
+                                            <BaseTextArea
+                                                className="col-12 p-1  mt-2"
+                                                label="details"
+                                                name="moving_violations_details"
+                                                formik={form}
+                                            />
+                                        </>
                                     }
                                     <BaseCheck
                                         className="col-12 p-1  mt-2"

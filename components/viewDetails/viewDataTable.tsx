@@ -26,7 +26,7 @@ export interface ViewTableColumn<TElement> extends TableColumn<TElement> {
     hidable?: boolean;
 }
 
-export function getDataTableColumnKey(type: "company" | "driver", user: UserEntity, entity: string) {
+export function getDataTableColumnKey(type: "company" | "driver" | "admin", user: UserEntity, entity: string) {
     return `${type}.${user?.id || 0}.${entity}.columns`;
 }
 
@@ -150,11 +150,11 @@ export default function ViewDataTable<TElement>(props: ViewTableProps<TElement>)
                                 <Dropdown.Toggle variant="" className="theme-general-btn">
                                     <Gear />
                                 </Dropdown.Toggle>
-                                <Dropdown.Menu className="select_dropdown">
+                                <Dropdown.Menu className="select_dropdown data_table_dropdown">
                                     {
                                         columns.filter(v => !!v.id).map((v, i) => (
                                             <Dropdown.Item disabled={!hideable.has(v.id)} key={i} onClick={() => onColumnHide(v)}>
-                                                {v.hide === 1 ? (<del>{typeof v.name === "string" ? t(v.name) : v.name}</del>) : (!hideable.has(v.id) ? (<i>{t(v.name as any)}</i>) : t(v.name as any))}
+                                                {v.hide === 1 ? (<del>{typeof v.name === "string" ? t(v.name) : v.name}</del>) : (!hideable.has(v.id) ? (<>{t(v.name as any)}</>) : t(v.name as any))}
                                             </Dropdown.Item>
                                         ))
                                     }

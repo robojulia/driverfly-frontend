@@ -1,14 +1,10 @@
 import { Dropdown } from "react-bootstrap";
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
-import Link from "next/link";
-import Image from "next/image";
 import LogoutButton from '../../../buttons/Logout';
-
 import { useTranslation } from "../../../../hooks/useTranslation";
 import { useAuth } from "../../../../hooks/useAuth";
 import Impersonate from "../../../impersonate/impersonate";
-import BaseSelect from "../../../forms/BaseSelect";
 import ChangeCompany from "../../../impersonate/change-company";
 
 export default function CompanyProfileNav() {
@@ -32,18 +28,6 @@ export default function CompanyProfileNav() {
             href: "/dashboard/company/settings",
             label: "COMPANY_SETTINGS"
         },
-        // {
-        //     href: "/dashboard/company/settings",
-        //     label: t("INTEGRATIONS")
-        // },
-        // {
-        //     href: "/dashboard/company/settings",
-        //     label: t("BILLING_AND_SUBSCRIPTIONS")
-        // },
-        // {
-        //     href: "/dashboard/company/settings",
-        //     label: t("MY_REFERRALS")
-        // },
         {}, // divider
         {
             href: "/dashboard/company/settings/profile",

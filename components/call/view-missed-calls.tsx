@@ -1,5 +1,5 @@
 import { useTranslation } from "../../hooks/useTranslation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
 import ViewModal from "../viewDetails/viewModal";
 import { useEffectAsync } from "../../utils/react";

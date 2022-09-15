@@ -15,6 +15,9 @@ import CompanyPhoto from './company-photo';
 import ShowFormattedDate from './show-formatted-date';
 import JobVehicles from './job-vehicles';
 import React from 'react';
+import ViewModal from '../viewDetails/viewModal';
+import { useAuth } from '../../hooks/useAuth'
+
 
 export interface ViewJobDetailProps {
     className?: string;
@@ -43,6 +46,8 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
         hideSocialLinks
     } = props
     const { t } = useTranslation();
+    const [encourageModal, setEncourageModal] = React.useState(false)
+    const { user } = useAuth();
 
     return (
         <section className={`${className} "top-links-sec ort-general"`}>
@@ -69,7 +74,6 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                                         <ShowFormattedDate
                                             date={job.created_at}
                                             showTimeSince
-                                            // hideTime
                                             labelPrefix="POSTED"
                                             labelPostfix='AGO'
                                         />
@@ -95,7 +99,7 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                         </div>
                     </Col>
                     <Col md={3}>
-                        {canApply && <JobApply job={job} />}
+                        {canApply && <JobApply setEncourageModal={setEncourageModal} job={job} />}
                         {canSave && <SaveJob job={job} />}
                     </Col>
                 </Row>
@@ -116,6 +120,22 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                     </Row>
                 </Container>
             </div>
+            {user == null && encourageModal == true &&
+                <ViewModal
+                    show={true}
+                    closeText="CANCEL"
+                    title="DRIVERFLY"
+                >
+                    <Row>
+                        <p>
+                            {t('GET_REGISTERED_MESSAGE')}
+                            <Link href="/signup">
+                                <a className='ml-1 primary '>{t("SIGN_UP")}</a>
+                            </Link>
+                        </p>
+                    </Row>
+                </ViewModal>
+            }
         </section>
     )
 }
