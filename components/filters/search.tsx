@@ -84,11 +84,10 @@ export default function Search(props) {
     return (
         <>
             <label className={labelClassName || "heading-label my-4"}>{label || t('SEARCH_KEYWORD')} </label>
-            {/* <small className='ml-1 mt-2 form-text get_result_text'>{t("GET_RESULTS")}</small>  */}
             <AsyncTypeahead
                 ref={typeaheadRef}
-                // {/* className={props.inputClassName || "form-control shadow-sm p-4"} */}
                 defaultInputValue={filters.keywords || searchQuery || ""}
+                id="keywords-typeahead"
                 open={!!isOpen}
                 isLoading={isLoading}
                 labelKey="title"

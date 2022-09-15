@@ -1,23 +1,23 @@
-import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
+import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
 import { useState } from "react";
 import React from "react";
 import { Plus } from 'react-bootstrap-icons';
-import PageLayout from "../../../../components/layouts/page/PageLayout";
-import JobApi from "../../../api/job";
-import { JobEntity } from "../../../../models/job/job.entity";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import PageLayout from "../../../../../components/layouts/page/PageLayout";
+import JobApi from "../../../../api/job";
+import { JobEntity } from "../../../../../models/job/job.entity";
+import { useTranslation } from "../../../../../hooks/useTranslation";
 import Router, { useRouter } from "next/router";
-import { buildAddress } from "../../../../utils/common";
-import ViewDataTable, { getDataTableColumnKey } from "../../../../components/viewDetails/viewDataTable";
-import OverlyPopover from "../../../../components/popover/overly-popover";
-import { useAuth } from "../../../../hooks/useAuth";
-import { useEffectAsync } from "../../../../utils/react";
+import { buildAddress } from "../../../../../utils/common";
+import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
+import OverlyPopover from "../../../../../components/popover/overly-popover";
+import { useAuth } from "../../../../../hooks/useAuth";
+import { useEffectAsync } from "../../../../../utils/react";
 import Link from "next/link";
 import { Button, Row } from "react-bootstrap";
-import ViewModal from "../../../../components/viewDetails/viewModal";
-import FileInput from "../../../../components/forms/FileInput";
-import BaseSelect from "../../../../components/forms/BaseSelect";
-import { JobPayMethod } from "../../../../enums/jobs/job-pay-method.enum";
+import ViewModal from "../../../../../components/viewDetails/viewModal";
+import FileInput from "../../../../../components/forms/FileInput";
+import BaseSelect from "../../../../../components/forms/BaseSelect";
+import { JobPayMethod } from "../../../../../enums/jobs/job-pay-method.enum";
 
 export default function StoredFiles() {
 
@@ -26,8 +26,7 @@ export default function StoredFiles() {
     const openFileUploadModel = () => setShowFileUploadModel(true)
     const closeFileUploadModel = () => setShowFileUploadModel(false)
 
-
-    const columnSettingKey = getDataTableColumnKey("company", user, "jobs");
+    const columnSettingKey = getDataTableColumnKey("company", user, "stored-files");
 
     const { t } = useTranslation();
     const router = useRouter()

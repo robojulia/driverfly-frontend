@@ -114,9 +114,15 @@ const FullLayout = ({ children }) => {
       text: "COMPIIANCE",
       items: [
         {
-          pathname: "/dashboard/company/stored-files",
+          pathname: "/dashboard/company/compliance/stored-files",
           icon: FileEarmarkImage,
           text: "STORED_FILES",
+          startsWith: true
+        },
+        {
+          pathname: "/dashboard/company/compliance/employee-directory",
+          icon: GeoAltFill,
+          text: "EMPLOYEE_DIRECTORY",
           startsWith: true
         },
       ],
