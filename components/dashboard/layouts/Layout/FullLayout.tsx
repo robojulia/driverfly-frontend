@@ -111,7 +111,7 @@ const FullLayout = ({ children }) => {
     },
     {
       icon: ShieldFillCheck,
-      text: "COMPIIANCE",
+      text: "COMPLIANCE",
       items: [
         {
           pathname: "/dashboard/company/compliance/stored-files",
