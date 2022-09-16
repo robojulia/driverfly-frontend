@@ -36,11 +36,11 @@ export default function StoredFiles() {
     const { t } = useTranslation();
     const router = useRouter()
     const [files, setFiles] = useState<DocumentEntity[]>([])
-    const api = new ComplianceApi();
+    const complianceAp = new ComplianceApi();
 
     useEffectAsync(async () => {
         console.log("refresh fired");
-        const v = await api.filesList();
+        const v = await complianceAp.filesList();
 
         setFiles(v);
     }, [user], () => {
@@ -54,10 +54,21 @@ export default function StoredFiles() {
     const form = useFormik({
         initialValues: new StoredFileDto(),
         validationSchema: StoredFileDto.yupSchema(),
-        onSubmit: async (data) => {
-            // setShowConfirmationModal(true);
-            window.alert('clicked')
+        onSubmit: async (data, { resetForm }) => {
+           try {
+            await complianceAp.createFile(data)
+            .then(( entity: DocumentEntity ) => { 
+                if( entity ) {
+                    files.push(entity)
+                    files.sort((a, b) => (b.id - a.id))
+                    resetForm()
+                    setShowFileUploadModel(false)
+                }
+            })
             console.log("data: ", data)
+           } catch (error) {
+            console.log(error)
+           }
         }
     });
       useEffectAsync(async () => {
@@ -127,11 +138,9 @@ export default function StoredFiles() {
                     onCloseClick={closeFileUploadModel}
                     closeText="CANCEL"
                     title="UPLOAD_NEW_FILE"
-                    footer={<button type="submit" className="btn btn-primary w-100 p-lg-3 p-5" >{t('submit')}</button>}
+                    // footer={<button type="submit" className="btn btn-primary w-100 p-lg-3 p-5" >{t('submit')}</button>}
                 >
                     <EntityForm
-                    //  className={className}
-                     onSubmit={form.handleSubmit}
                      formik={form}
                     >
                     <Row>

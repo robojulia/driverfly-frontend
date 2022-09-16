@@ -3,6 +3,7 @@ import BaseApi from "./_baseApi";
 import { ApplicantEntity } from "../../models/applicant/applicant.entity";
 import { SearchJobsDto } from "../../models/job/search-jobs-dto";
 import { DocumentEntity } from "../../models/documents/document.entity";
+import { StoredFileDto } from "../../models/compiance/stored-file.dto";
 
 export default class ComplianceApi extends BaseApi {
     baseUrl: string = "compliance";
@@ -13,7 +14,7 @@ export default class ComplianceApi extends BaseApi {
         const { data } = await this.get(`${this.baseUrl}/files`);
         return data;
     }
-    async createFile(entity: any): Promise<DocumentEntity> {
+    async createFile(entity: StoredFileDto): Promise<DocumentEntity> {
         const { data } = await this.post(`${this.baseUrl}/files`, entity);
 
         return data;
