@@ -7,6 +7,7 @@ import { useTranslation } from "../hooks/useTranslation";
 import React, { useRef } from 'react';
 import BaseInput from "../components/forms/BaseInput";
 import BaseTextArea from "../components/forms/BaseTextArea";
+import BaseReCapcha from "../components/forms/BaseReCapcha";
 import { useFormik } from "formik";
 import { ContactUsEntity } from "../models/contact/contact-us.entity";
 import { Row, Col } from "reactstrap"
@@ -36,7 +37,7 @@ export default function Contact() {
         }
     });
 
-    const onChange = (token: string) => form.setFieldValue('recaptchaValue', token || null)
+    const handleReCapchaChange = (token: string) => form.setFieldValue('recaptchaValue', token || null)
 
     return (
         <>
@@ -101,14 +102,14 @@ export default function Contact() {
                                                     formik={form}
                                                 />
                                             </Row>
-                                            <ReCAPTCHA
-                                                className={`${form.errors?.recaptchaValue ? "is-invalid" : ""}`}
-                                                sitekey={process.env.RECAPTCHA_SITE_KEY}
-                                                onChange={onChange}
-                                                ref={captchaRef}
-                                            />
-                                            {form.errors?.recaptchaValue && typeof form.errors?.recaptchaValue === "string" && <span className="text-danger small">{t(form.errors.recaptchaValue)}</span>}
+                                            <BaseReCapcha 
+                                                    className='col-12 my-4'
+                                                    name='recaptchaValue'
+                                                    formik={form}
+                                                    onChange={handleReCapchaChange}
+                                                    captchaRef={captchaRef}
 
+                                            />
                                             <button
                                                 disabled={form.isSubmitting || !form.isValid || !form.dirty}
                                                 type="submit"
