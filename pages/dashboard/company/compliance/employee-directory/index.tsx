@@ -1,22 +1,32 @@
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
 import { useState } from "react";
 import React from "react";
-import { EyeFill, PenFill, Plus, TrashFill } from 'react-bootstrap-icons';
+import { EyeFill, PenFill, TrashFill } from 'react-bootstrap-icons';
 import PageLayout from "../../../../../components/layouts/page/PageLayout";
 import JobApi from "../../../../api/job";
 import { JobEntity } from "../../../../../models/job/job.entity";
 import { useTranslation } from "../../../../../hooks/useTranslation";
 import Router, { useRouter } from "next/router";
-import { buildAddress } from "../../../../../utils/common";
 import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
-import OverlyPopover from "../../../../../components/popover/overly-popover";
 import { useAuth } from "../../../../../hooks/useAuth";
 import { useEffectAsync } from "../../../../../utils/react";
 import Link from "next/link";
-import { Button, Col, Row } from "react-bootstrap";
-
+import { Col, Row } from "react-bootstrap";
+import 'react-tabs/style/react-tabs.css';
+import { TabbedLayout } from "../../../../../components/layouts/page/TabbedLayout";
+import BackgroundTab from "../../../../../components/dashboard/employee-directory/background";
+import DaqTab from "../../../../../components/dashboard/employee-directory/daq";
+import DqfTab from "../../../../../components/dashboard/employee-directory/dqf";
+import VehicleInformationTab from "../../../../../components/dashboard/employee-directory/vehicle-information";
 export default function EmployeeDirectory() {
+    const tabs = {
+        Background: <BackgroundTab />,
+        DAQ: < DaqTab />,
+        DQF: < DqfTab />,
+        Vehicle: < VehicleInformationTab />
 
+
+    };
     const { user, hasPermission } = useAuth();
     const columnSettingKey = getDataTableColumnKey("company", user, "employee-directory");
 
@@ -34,39 +44,36 @@ export default function EmployeeDirectory() {
         console.log("unloading page...")
     });
 
-    const can = {
-        editJob: hasPermission("CanUpdateJob"),
-        deleteJob: hasPermission("CanDeleteJob"),
-    };
-
     return (
         <>
             <PageLayout
                 title="EMPLOYEE_DIRECTORY"
-                actions={<>
-                    <Row>
-                        <Col>
-                            <p className="mt-2 mb-2">
-                                {t("WANT_TO_ADD_TO_THIS_LIST")}
-                                <u className="ml-1">
-                                    <Link href="#">
-                                        <a>{t("HERE")}</a>
-                                    </Link>
-                                </u>
-                            </p>
-                            <button type="button" className="theme-secondary-btn mr-4">{t('FILTER_RESULT')}</button>
-                            <button type="button" className="btn theme-primary-btn">{t('MODIFY_FIELDS')}</button>
-                            <u>
-                                <p className="mt-2">
-                                    <Link href="#">
-                                        <a>{t("VIEW_PAST_HIRES")}</a>
-                                    </Link>
+                actions={
+                    <>
+                        <Row>
+                            <Col>
+                                <p className="mt-2 mb-2">
+                                    {t("WANT_TO_ADD_TO_THIS_LIST")}
+                                    <u className="ml-1">
+                                        <Link href="#">
+                                            <a>{t("HERE")}</a>
+                                        </Link>
+                                    </u>
                                 </p>
-                            </u>
-                        </Col>
-                    </Row>
+                                <button type="button" className="theme-secondary-btn mr-4">{t('FILTER_RESULT')}</button>
+                                <button type="button" className="btn theme-primary-btn">{t('MODIFY_FIELDS')}</button>
+                                <u>
+                                    <p className="mt-2">
+                                        <Link href="#">
+                                            <a>{t("VIEW_PAST_HIRES")}</a>
+                                        </Link>
+                                    </p>
+                                </u>
+                            </Col>
+                        </Row>
 
-                </>}
+                    </>
+                }
             >
                 <ViewDataTable<JobEntity>
                     columnSettingKey={columnSettingKey}
@@ -117,11 +124,6 @@ export default function EmployeeDirectory() {
                             selector: job => "OTR Driver"
                         },
                         {
-                            id: "date_employed",
-                            name: "date_employed",
-                            selector: j => j.expiry_date ? new Date(j.expiry_date).toDateString() : null,
-                        },
-                        {
                             id: "pay_rate",
                             name: "pay_rate",
                             selector: j => "$0.55 cpm",
@@ -159,6 +161,8 @@ export default function EmployeeDirectory() {
                         },
                     ])}
                 />
+                <TabbedLayout items={tabs} className="mt-5"></TabbedLayout>
+
             </PageLayout>
 
         </>

@@ -519,7 +519,7 @@ textarea {
 }
 
 .react-tabs__tab-panel {
-    height: 700px;
+    /* height: 700px; */
     overflow-x: auto;
 }
 
@@ -649,4 +649,8 @@ textarea {
 .assign_unassign .btn-danger:focus {
     background-color: #dc3545 !important;
     border: solid 1px #dc3545 !important;
+}
+.employee_directory_tabs{
+    background: #2ec8c438;
+    padding: 20px;
 }
