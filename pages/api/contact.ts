@@ -1,4 +1,5 @@
 import { ContactUsDto } from "../../models/contact/contact-us.dto";
+import { ContactUsEntity } from "../../models/contact/contact-us.entity";
 import BaseApi from "./_baseApi";
 
 export default class ContactApi extends BaseApi {
@@ -7,7 +8,7 @@ export default class ContactApi extends BaseApi {
         super();
     }
 
-    async sendMail(dto:ContactUsDto): Promise<any> {
+    async sendMail(dto: ContactUsEntity): Promise<ContactUsEntity> {
         const { data } = await this.post(this.baseUrl, dto);
         return data;
     }
