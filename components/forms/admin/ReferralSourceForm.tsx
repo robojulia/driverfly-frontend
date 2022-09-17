@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
 import { toast } from "react-toastify";
 import { formFailed, formSuccess } from "../../../utils/toast";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
@@ -24,11 +25,17 @@ export function ReferralSourceForm(props: ReferralSourceFormProps) {
 
     let { user, hasPermission } = useAuth();
 
+    // this field is used to validate the referral code
+    // during validation to prevent excessive API calls.
+    const referralCodeRef = useRef(null);
+
     const form = useFormik({
         initialValues: new ReferralSourceEntity(),
         validationSchema: ReferralSourceEntity.yupSchema(),
         validate: async (dto) => {
-            if (dto.code) {
+            if (dto.code && referralCodeRef.current != entity.code) {
+                referralCodeRef.current = entity.code;
+
                 const api = new ReferralSourceApi();
 
                 const existing = (await api.list()).find(v => v.code === dto.code);
@@ -61,8 +68,10 @@ export function ReferralSourceForm(props: ReferralSourceFormProps) {
     });
 
     useEffect(() => {
-        if (entity && !form.dirty)
+        if (entity && !form.dirty) {
+            referralCodeRef.current = entity.code;
             form.setValues(entity);
+        }
     }, [ entity ]);
 
     const [ generatingCode, setGeneratingCode ] = useState(false);
