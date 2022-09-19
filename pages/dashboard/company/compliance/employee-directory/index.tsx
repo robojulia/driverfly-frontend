@@ -111,17 +111,17 @@ export default function EmployeeDirectory() {
                         {
                             id: "email",
                             name: "email",
-                            selector: job => "test@gmail.com"
+                            selector: j => "test@gmail.com"
                         },
                         {
                             id: "status",
                             name: "STATUS",
-                            selector: job => "Employed"
+                            selector: j => "Employed"
                         },
                         {
                             id: "current_position",
                             name: "current_position",
-                            selector: job => "OTR Driver"
+                            selector: j => "OTR Driver"
                         },
                         {
                             id: "pay_rate",
@@ -136,30 +136,35 @@ export default function EmployeeDirectory() {
                         {
                             id: "source",
                             name: "source",
-                            selector: job => "Manual Upload"
+                            selector: j => "Manual Upload"
                         },
                         {
                             id: "equipment",
                             name: "equipment",
                             selector: job => "A09099"
                         },
+                        {
+                            cell: (j) => (
+                                <>
+                                    <div className="data_table_custom_action_button">
+                                        <Link href="" >
+                                            <a> <EyeFill className="view" /> </a>
+                                        </Link>
+                                        <Link href="" >
+                                            <a> < PenFill className="edit" /> </a>
+                                        </Link>
+                                        <Link href="" >
+                                            <a> < TrashFill className="delete" /> </a>
+                                        </Link>
+                                    </div>
+
+                                </>
+                            ),
+                        },
+
 
                     ]}
                     items={jobs}
-                    actions={j => ([
-                        {
-                            icon: EyeFill,
-                            label: "VIEW_DETAILS",
-                        },
-                        {
-                            icon: PenFill,
-                            label: "EDIT",
-                        },
-                        {
-                            icon: TrashFill,
-                            label: "DELETE",
-                        },
-                    ])}
                 />
                 <TabbedLayout items={tabs} className="mt-5"></TabbedLayout>
 
