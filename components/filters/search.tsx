@@ -79,6 +79,8 @@ export default function Search(props) {
 
         if (!!!searchQuery) typeaheadRef.current.clear()
 
+        setClose()
+
     }, [searchQuery])
 
     return (
@@ -102,7 +104,6 @@ export default function Search(props) {
                 placeholder={t("KEYWORD_PLACEHOLDER")}
                 renderMenu={renderMenu}
             />
-            <small className='ml-1 mt-2 form-text get_result_text'>{t("GET_RESULTS")}</small>
         </>
     )
 }
