@@ -650,3 +650,11 @@ textarea {
     background-color: #dc3545 !important;
     border: solid 1px #dc3545 !important;
 }
+
+.dropdown-item{
+    color: rgb(65, 60, 60) !important;
+}
+
+.dropdown-item:hover{
+    color: #000 !important;
+}
