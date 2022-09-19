@@ -16,14 +16,14 @@ export default function JobDescription({ job }) {
                     <p>{job.description_short}</p>
                     <p>{job.description}</p>
                 </div>
-                <div className=" p-3 mb-5  rounded mt-3">
+                {job.benefits.length > 0 && <div className=" p-3 mb-5  rounded mt-3">
                     <h3 className="border-bottom py-1 mb-4">{t('BENEFITS')}</h3>
                     <p>
                         <ShowEnumFromString labelPrefix="JobBenefits" str={job.benefits} enumArray={JobBenefits} />
                         , {job.benefits_other}
                     </p>
-                </div>
-                <div className=" p-3 mb-5  rounded mt-3">
+                </div>}
+                { (job.required_skills.length > 0 || job.required_skills_other) &&  <div className=" p-3 mb-5  rounded mt-3">
                     <h3 className="border-bottom py-1 mb-4">{t('REQUIRED_SKILLS')}</h3>
                     <ul className="p-0">
                         {job.required_skills &&
@@ -47,13 +47,13 @@ export default function JobDescription({ job }) {
                             </div>
                         </li>
                     </ul>
-                </div>
+                </div>}
                 {job.orientation &&
                     <div className=" p-3 mb-5  rounded mt-3">
                         <h3 className="border-bottom py-1 mb-4">{t('ORIENTATION')}</h3>
                         <ul className="p-0">
                             <li className="row px-0">
-                                <div className="col-md-3">
+                                <div className="col-md-3 font-weight-bold">
                                     { t('START_DATE') }
                                 </div>
                                 <div className="col-md-6">
@@ -63,7 +63,7 @@ export default function JobDescription({ job }) {
                                 </div>
                             </li>
                             <li className="row px-0">
-                                <div className="col-md-3">
+                                <div className="col-md-3 font-weight-bold">
                                     { t('END_DATE') }
                                 </div>
                                 <div className="col-md-6">
@@ -73,7 +73,7 @@ export default function JobDescription({ job }) {
                                 </div>
                             </li>
                             <li className="row px-0">
-                                <div className="col-md-3">
+                                <div className="col-md-3 font-weight-bold">
                                     { t('location') }
                                 </div>
                                 <div className="col-md-6">
