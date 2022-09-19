@@ -1005,7 +1005,10 @@
         "PHYSICAL": "DOT Long Form Physical"
     },
     "CompanyDocumentType":{
-        "TRAINING_DOCUMENTS": "Training Documents"
+        "TRAINING_DOCUMENTS": "Training Documents",
+        "COMPANY_POLICY": "Company Policy",
+        "SAFETY": "Safety",
+        "OTHER": "Others"
     },
     "DOCUMENT_UPLOAD_SUCCESS_MESSAGE": "Your document has been uploaded successfully",
     "YEARS": "Years",
