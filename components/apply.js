@@ -153,7 +153,7 @@ export default function JobApply({ job, setEncourageModal }) {
                             label="email"
                             placeholder="email"
                             name="email"
-                                formik={user?.company ? null : apply_form}
+                            formik={user?.company ? null : apply_form}
                         />
                         <BaseInputPhone
                             className=" col-6 mt-3"
@@ -283,58 +283,6 @@ export default function JobApply({ job, setEncourageModal }) {
                             formik={apply_form}
                         />
                     </Row>
-
-                    {/* //To Do - Either will be able to create new account or not
-          {
-            !user &&
-            <>
-              <Row>
-                <BaseCheck
-                  className="col-12 mt-2"
-                  label={t("create_driverfly_account")}
-                  name="createAccount"
-                  checked={apply_form.values.createAccount}
-                  onChange={apply_form.handleChange}
-                  handleBlur={apply_form.handleBlur}
-                  touched={apply_form.touched.createAccount}
-                  error={apply_form.errors.createAccount}
-                />
-                {
-                  apply_form.values.createAccount &&
-                  <>
-                    <BaseInput
-                      className="col-6 mt-1"
-                      label={t("PASSWORD")}
-                      required
-                      type="password"
-                      name="password"
-                      placeholder={t("PASSWORD")}
-                      value={apply_form.values.password}
-                      touched={apply_form.touched.password}
-                      error={apply_form.errors.password}
-                      onChange={apply_form.handleChange}
-                      handleBlur={apply_form.handleBlur}
-                    />
-                    <BaseInput
-                      className="col-6 mt-1"
-                      label={t("CONFIRM_PASSWORD")}
-                      required
-                      type="password"
-                      name="confirmPassword"
-                      placeholder={t("CONFIRM_PASSWORD")}
-                      value={apply_form.values.confirmPassword}
-                      touched={apply_form.touched.confirmPassword}
-                      error={apply_form.errors.confirmPassword}
-                      onChange={apply_form.handleChange}
-                      handleBlur={apply_form.handleBlur}
-                    />
-                  </>
-                }
-              </Row>
-            </>
-          }
-            */}
-
                     <Row>
                         <div className=" col-12">
                             <p className='mx-3 mt-5'>{t('i_accept_{terms_and_condition}', { terms_and_condition: t('terms_and_condition') })}</p>

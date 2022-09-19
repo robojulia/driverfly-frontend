@@ -1,4 +1,4 @@
-import { KeyboardEvent, ChangeEvent, useState, useEffect, KeyboardEventHandler, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { AsyncTypeahead, Highlighter, Menu, MenuItem } from "react-bootstrap-typeahead";
 import { RenderMenuProps } from "react-bootstrap-typeahead/types/components/Typeahead";
 import { Option, TypeaheadManagerChildProps } from "react-bootstrap-typeahead/types/types";
@@ -88,8 +88,8 @@ export default function Search(props) {
             <label className={labelClassName || "heading-label my-4"}>{label || t('SEARCH_KEYWORD')} </label>
             <AsyncTypeahead
                 ref={typeaheadRef}
-                // {/* className={props.inputClassName || "form-control shadow-sm p-4"} */}
                 defaultInputValue={filters.keywords || searchQuery || ""}
+                id="keywords-typeahead"
                 open={!!isOpen}
                 isLoading={isLoading}
                 labelKey="title"

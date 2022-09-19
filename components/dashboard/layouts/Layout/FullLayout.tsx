@@ -7,7 +7,7 @@ import { Scripts } from "../../../scripts/scripts";
 import React, { useEffect, useRef } from "react";
 
 import { useTranslation } from "../../../../hooks/useTranslation";
-import { QuestionCircleFill, TelephoneFill, Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, GearFill, EnvelopeFill, PeopleFill, Hospital, UmbrellaFill, PersonHearts } from 'react-bootstrap-icons';
+import { QuestionCircleFill, TelephoneFill, Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, GearFill, EnvelopeFill, PeopleFill, Hospital, UmbrellaFill, PersonHearts, FileEarmarkImage, ShieldFillCheck } from 'react-bootstrap-icons';
 import CompanyProfileNav from "../header/CompanyProfileNav";
 import { useAuth } from "../../../../hooks/useAuth";
 import { useRouter } from 'next/router';
@@ -105,6 +105,25 @@ const FullLayout = ({ children }) => {
           pathname: "/dashboard/company/settings/support",
           icon: QuestionCircleFill,
           text: "SUPPORT",
+        },
+      ],
+
+    },
+    {
+      icon: ShieldFillCheck,
+      text: "COMPLIANCE",
+      items: [
+        {
+          pathname: "/dashboard/company/compliance/stored-files",
+          icon: FileEarmarkImage,
+          text: "STORED_FILES",
+          startsWith: true
+        },
+        {
+          pathname: "/dashboard/company/compliance/employee-directory",
+          icon: GeoAltFill,
+          text: "EMPLOYEE_DIRECTORY",
+          startsWith: true
         },
       ],
     },
