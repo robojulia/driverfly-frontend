@@ -23,7 +23,7 @@ export default function JobDescription({ job }) {
                         , {job.benefits_other}
                     </p>
                 </div>}
-                {job.required_skills.length > 0 &&  <div className=" p-3 mb-5  rounded mt-3">
+                { (job.required_skills.length > 0 || job.required_skills_other) &&  <div className=" p-3 mb-5  rounded mt-3">
                     <h3 className="border-bottom py-1 mb-4">{t('REQUIRED_SKILLS')}</h3>
                     <ul className="p-0">
                         {job.required_skills &&
@@ -38,14 +38,14 @@ export default function JobDescription({ job }) {
                                 </li>
                             ))
                         }
-                        {job.required_skills_other.length > 0 && <li className="row px-0">
+                        <li className="row px-0">
                             <div className="col-md-3">
                                 {job.required_skills_other ? t('OTHER_SKILLS') : ''}
                             </div>
                             <div className="col-md-6">
                                 {job.required_skills_other}
                             </div>
-                        </li>}
+                        </li>
                     </ul>
                 </div>}
                 {job.orientation &&
