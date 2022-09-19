@@ -665,8 +665,31 @@ textarea {
     background: #2ec8c438;
     padding: 20px;
 }
-.download_file_btn a, .download_file_btn a:hover{
+
+.download_file_btn a,
+.download_file_btn a:hover {
     color: #fff;
     text-decoration: none;
 
+}
+
+.data_table_custom_action_button {
+    display: flex;
+}
+
+.data_table_custom_action_button svg {
+    margin: 0px 8px;
+}
+
+.data_table_custom_action_button .view {
+    color: #008000bd;
+
+}
+
+.data_table_custom_action_button .edit {
+    color: #2da2af;
+}
+
+.data_table_custom_action_button .delete {
+    color: #ff0000d9;
 }

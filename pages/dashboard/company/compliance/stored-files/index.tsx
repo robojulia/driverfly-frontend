@@ -1,7 +1,7 @@
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
 import { useState } from "react";
 import React from "react";
-import { Link, Plus } from 'react-bootstrap-icons';
+import { Plus } from 'react-bootstrap-icons';
 import PageLayout from "../../../../../components/layouts/page/PageLayout";
 import { useTranslation } from "../../../../../hooks/useTranslation";
 import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
