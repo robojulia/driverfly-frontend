@@ -1,7 +1,7 @@
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
 import { useState } from "react";
 import React from "react";
-import { Plus } from 'react-bootstrap-icons';
+import { Link, Plus } from 'react-bootstrap-icons';
 import PageLayout from "../../../../../components/layouts/page/PageLayout";
 import { useTranslation } from "../../../../../hooks/useTranslation";
 import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
@@ -14,11 +14,13 @@ import BaseSelect from "../../../../../components/forms/BaseSelect";
 import ComplianceApi from "../../../../api/compliance";
 import { DocumentEntity } from "../../../../../models/documents/document.entity";
 import { StoredFileDto } from "../../../../../models/compiance/stored-file.dto";
-import { Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 import { CompanyDocumentType } from "../../../../../enums/compliance/company-document-type.enum";
 import EntityForm from "../../../../../components/layouts/page/EntityForm";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import { toast } from 'react-toastify'
+import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
+import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
 
 export default function StoredFiles() {
 
@@ -106,20 +108,33 @@ export default function StoredFiles() {
                     {
                         id: "file_name",
                         name: "file_name",
-                        // cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.title}</a></Link>),
                         selector: file => file.name,
                         hidable: false
                     },
-                    // {
-                    //     id: "upload_date",
-                    //     name: "upload_date",
-                    //     selector: j => j.expiry_date ? new Date(j.expiry_date).toDateString() : null,
-                    // },
+                    {
+                        id: "type",
+                        name: "CATEGORY",
+                        cell: file =>
+                        (<ShowEnumFromString
+                            popover_header={t('CATEGORY')}
+                            labelPrefix="CompanyDocumentType"
+                            // popover={true}
+                            str={file.type}
+                            enumArray={CompanyDocumentType} />
+                        ),
+                        selector: file => t(`CompanyDocumentType.${file.type}`),
+                    },
+                    {
+                        id: "upload_date",
+                        name: "upload_date",
+                        selector: j => j.created_at,
+                        cell: j => j.created_at ? <ShowFormattedDate date={j.created_at} /> : null
+                    },
                     {
                         cell: (j) => (
                             <>
                                 <button type="button" className="theme-secondary-btn mr-4 p-2">{t('SEND')}</button>
-                                <button type="button" className="btn theme-primary-btn">{t('DOWNLOAD')}</button>
+                                <button type="button" className="btn theme-primary-btn download_file_btn"> <a href={j.path} download target="_blank">{t('DOWNLOAD')}</a></button>
                             </>
                         ),
                     },

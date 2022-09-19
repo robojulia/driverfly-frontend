@@ -654,3 +654,8 @@ textarea {
     background: #2ec8c438;
     padding: 20px;
 }
+.download_file_btn a, .download_file_btn a:hover{
+    color: #fff;
+    text-decoration: none;
+
+}
