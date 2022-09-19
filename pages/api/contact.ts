@@ -1,4 +1,3 @@
-import { ContactUsDto } from "../../models/contact/contact-us.dto";
 import { ContactUsEntity } from "../../models/contact/contact-us.entity";
 import BaseApi from "./_baseApi";
 

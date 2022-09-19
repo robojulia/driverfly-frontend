@@ -651,7 +651,17 @@ textarea {
     border: solid 1px #dc3545 !important;
 }
 
-.employee_directory_tabs {
+/* start Typeahead dropdown */
+.dropdown-item{
+    color: rgb(65, 60, 60) !important;
+}
+
+.dropdown-item:hover{
+    color: #000 !important;
+}
+/* end Typeahead dropdown */
+
+.employee_directory_tabs{
     background: #2ec8c438;
     padding: 20px;
 }
