@@ -21,28 +21,45 @@ import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import { toast } from 'react-toastify'
 import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
 import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
+import ApplicantApi from "../../../../api/applicant";
+import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 
 export default function StoredFiles() {
 
     const { user, hasPermission } = useAuth();
+    // showFileUploadModel 
     const [showFileUploadModel, setShowFileUploadModel] = useState(false);
     const openFileUploadModel = () => setShowFileUploadModel(true)
     const closeFileUploadModel = () => setShowFileUploadModel(false)
+
+
+    // showMailSendModel
+    const [showMailSendModel, setShowMailSendModel] = useState(false);
+    const openMailSendModel = () => setShowMailSendModel(true)
+    const closeMailSendModel = () => setShowMailSendModel(false)
 
     const columnSettingKey = getDataTableColumnKey("company", user, "stored-files");
 
     const { t } = useTranslation();
     const [files, setFiles] = useState<DocumentEntity[]>([])
+    const [applicant, setApplicant] = useState<ApplicantEntity[]>([])
+
     const complianceAp = new ComplianceApi();
+    const Applicant = new ApplicantApi();
+
 
     useEffectAsync(async () => {
         console.log("refresh fired");
         const v = await complianceAp.filesList();
+        const applicant = await Applicant.list();
 
+        setApplicant(applicant)
         setFiles(v);
     }, [user], () => {
         console.log("unloading page...")
     });
+
+
 
     // To Do
     // const can = {
@@ -78,7 +95,6 @@ export default function StoredFiles() {
         console.log("form", form.values)
         console.log("form", form.errors)
     }, [form])
-
     return (
         <PageLayout
             title="STORED_FILES"
@@ -133,7 +149,7 @@ export default function StoredFiles() {
                     {
                         cell: (j) => (
                             <>
-                                <button type="button" className="theme-secondary-btn mr-4 p-2">{t('SEND')}</button>
+                                <button type="button" className="theme-secondary-btn mr-4 p-2" onClick={openMailSendModel}>{t('SEND')}</button>
                                 <button type="button" className="btn theme-primary-btn download_file_btn"> <a href={j.path} download target="_blank">{t('DOWNLOAD')}</a></button>
                             </>
                         ),
@@ -143,6 +159,9 @@ export default function StoredFiles() {
                 ]}
                 items={files}
             />
+
+            {/* Model for Upload file */}
+
             <ViewModal
                 show={showFileUploadModel}
                 onCloseClick={closeFileUploadModel}
@@ -174,6 +193,63 @@ export default function StoredFiles() {
                         />
                     </Row>
                 </EntityForm>
+            </ViewModal>
+
+            {/* Model for send email */}
+
+            <ViewModal
+                show={showMailSendModel}
+                onCloseClick={closeMailSendModel}
+                closeText="CANCEL"
+                title="APPLICANTS"
+            >
+                <ViewDataTable<ApplicantEntity>
+                    columnSettingKey={columnSettingKey}
+                    customStyles={{
+                        headCells: {
+                            style: {
+                                background: "#5bb0b9",
+                                color: "white"
+                            },
+                        },
+                    }}
+                    columns={[
+                        {
+                            id: "id",
+                            name: "ID",
+                            selector: applicant => applicant.id,
+                            hidable: false
+                        },
+                        {
+                            id: "file_name",
+                            name: "first_name",
+                            selector: applicant => applicant.first_name,
+                            hidable: false
+                        },
+                        {
+                            id: "file_name",
+                            name: "last_name",
+                            selector: applicant => applicant.last_name,
+                            hidable: false
+                        },
+                        {
+                            id: "file_name",
+                            name: "email",
+                            selector: applicant => applicant.email,
+                            hidable: false
+                        },
+
+                        {
+                            cell: (j) => (
+                                <>
+                                    <button type="button" className="theme-secondary-btn mr-4 p-2">{t('SEND')}</button>                            </>
+                            ),
+                        },
+
+
+                    ]}
+                    items={applicant}
+                />
             </ViewModal>
         </PageLayout>
     )
