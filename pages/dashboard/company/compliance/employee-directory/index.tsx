@@ -36,7 +36,6 @@ export default function EmployeeDirectory() {
 
     const { t } = useTranslation();
     const router = useRouter()
-    const [jobs, setJobs] = useState<JobEntity[]>([])
     const [applicants, setApplicants] = useState<ReducedApplicantEntityType[]>([])
 
     const api = new JobApi();
@@ -48,9 +47,7 @@ export default function EmployeeDirectory() {
         const filteredApplicants: ApplicantEntity[] = filterHired(data)
         const reducedApplicants: ReducedApplicantEntityType[] = reduceSingleEntity(filteredApplicants)
 
-        console.log("applicants reducedApplicants", reducedApplicants);
         setApplicants(reducedApplicants)
-
 
     }, [user], () => {
         console.log("unloading page...")
@@ -87,7 +84,7 @@ export default function EmployeeDirectory() {
                     </>
                 }
             >
-                <ViewDataTable<JobEntity>
+                <ViewDataTable<ReducedApplicantEntityType>
                     columnSettingKey={columnSettingKey}
                     customStyles={{
                         headCells: {
@@ -101,62 +98,41 @@ export default function EmployeeDirectory() {
                         {
                             id: "id",
                             name: "ID",
-                            selector: j => j.id,
+                            selector: applicant => applicant?.applicant?.id,
                         },
                         {
                             id: "name",
                             name: "name",
-                            cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.title}</a></Link>),
-                            selector: job => job.title,
+                            selector: applicant => applicant?.applicant?.first_name + ' ' + applicant?.applicant?.last_name,
                             hidable: false
-                        },
-                        {
-                            id: "employee_id",
-                            name: "EMPLOYEE_ID",
-                            selector: j => j.id,
                         },
                         {
                             id: "phone",
                             name: "PHONE",
-                            selector: j => "03037976657",
+                            selector: applicant => applicant?.applicant?.phone,
                         },
                         {
                             id: "email",
                             name: "email",
-                            selector: j => "test@gmail.com"
+                            selector: applicant => applicant?.applicant?.email
+                        },
+                        {
+                            id: "jobTitle",
+                            name: "Job Title",
+                            selector: applicant => applicant?.applicantJob?.job?.title
+                        },
+                        {
+                            id: "dateHired",
+                            name: "Date Hired",
+                            selector: applicant => applicant?.applicant?.last_updated_at
                         },
                         {
                             id: "status",
                             name: "STATUS",
-                            selector: j => "Employed"
+                            selector: applicant => applicant?.applicantJob?.status
                         },
                         {
-                            id: "current_position",
-                            name: "current_position",
-                            selector: j => "OTR Driver"
-                        },
-                        {
-                            id: "pay_rate",
-                            name: "pay_rate",
-                            selector: j => "$0.55 cpm",
-                        },
-                        {
-                            id: "terminal",
-                            name: "TERMINAL",
-                            selector: job => "Atlanta"
-                        },
-                        {
-                            id: "source",
-                            name: "source",
-                            selector: j => "Manual Upload"
-                        },
-                        {
-                            id: "equipment",
-                            name: "equipment",
-                            selector: job => "A09099"
-                        },
-                        {
-                            cell: (j) => (
+                            cell: (applicant) => (
                                 <>
                                     <div className="data_table_custom_action_button">
                                         <Link href="" >
@@ -176,7 +152,7 @@ export default function EmployeeDirectory() {
 
 
                     ]}
-                    items={jobs}
+                    items={applicants}
                 />
                 <TabbedLayout items={tabs} className="mt-5"></TabbedLayout>
 
