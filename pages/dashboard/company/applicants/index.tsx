@@ -433,6 +433,11 @@ function ApplicantView(props: ViewProps) {
                         id: "name",
                         name: "NAME",
                         selector: applicant => getApplicantName(applicant),
+                        cell: applicant => (
+                            <Link href={`${router.pathname}/${applicant.id}`}>
+                                <a>{getApplicantName(applicant)}</a>
+                            </Link>
+                        ),
                         hidable: false,
                     },
                     {
