@@ -27,41 +27,36 @@ import { ApplicantEntity } from "../../../../../models/applicant/applicant.entit
 export default function StoredFiles() {
 
     const { user, hasPermission } = useAuth();
-    // showFileUploadModel 
-    const [showFileUploadModel, setShowFileUploadModel] = useState(false);
-    const openFileUploadModel = () => setShowFileUploadModel(true)
-    const closeFileUploadModel = () => setShowFileUploadModel(false)
-    const [documentId, setDocumentId] = useState<number>(null)
+    const { t } = useTranslation();
+    const complianceApi = new ComplianceApi();
+    const applicantApi = new ApplicantApi();
 
-    // showMailSendModel
-    const [showMailSendModel, setShowMailSendModel] = useState(false);
-    const openMailSendModel = (file) => {
-        setShowMailSendModel(true)
-        setDocumentId(file.id)
-    }
-    const closeMailSendModel = () => setShowMailSendModel(false)
+    // showFileUploadModel 
+    const [showFileUploadModel, setShowFileUploadModel] = useState<boolean>(false);
+    const openFileUploadModel = (): void => setShowFileUploadModel(true)
+    const closeFileUploadModel = (): void => setShowFileUploadModel(false)
+
+    const [documentId, setDocumentId] = useState<number>(null)
+    const resetDocumentId = (): void => setDocumentId(null)
 
     const columnSettingKey = getDataTableColumnKey("company", user, "stored-files");
 
-    const { t } = useTranslation();
     const [files, setFiles] = useState<DocumentEntity[]>([])
-    const [applicant, setApplicant] = useState<ApplicantEntity[]>([])
+    const [applicants, setApplicants] = useState<ApplicantEntity[]>([])
 
-    const complianceAp = new ComplianceApi();
-    const Applicant = new ApplicantApi();
 
 
     useEffectAsync(async () => {
-        console.log("refresh fired");
-        const v = await complianceAp.filesList();
-        const applicant = await Applicant.list();
 
-        setApplicant(applicant)
+        const v = await complianceApi.filesList();
         setFiles(v);
+
+        const data = await applicantApi.list();
+        setApplicants(data)
+
     }, [user], () => {
         console.log("unloading page...")
     });
-
 
 
     // To Do
@@ -75,46 +70,44 @@ export default function StoredFiles() {
         validationSchema: StoredFileDto.yupSchema(),
         onSubmit: async (data, { resetForm }) => {
             try {
-                await complianceAp.createFile(data)
+                await complianceApi.createFile(data)
                     .then((entity: DocumentEntity) => {
                         if (entity) {
                             files.push(entity)
                             files.sort((a, b) => (a.id - b.id))
                             resetForm()
-                            setShowFileUploadModel(false)
+                            closeFileUploadModel()
                             toast.success(t('DOCUMENT_UPLOAD_SUCCESS_MESSAGE'))
                         }
                     })
-                console.log("data: ", data)
             } catch (error) {
-                console.log(error)
                 globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
             }
         }
     });
 
-        const sendEmail = async (applicant) => {
-            const applicantId = applicant.id
-            try {
-                await complianceAp.sendComplianceFile(documentId, applicantId)
-                .then(res => {
-                    toast.success("Email sent Successfully")
-                    setDocumentId(null)
-                    setTimeout(() => {
-                        setShowMailSendModel(false)
-                    }, 1000)
-                })
-            } catch (error) {
-                toast.error('Failed to send Email')
-                console.log(error)
-            }
+    const sendEmail = async (applicant: ApplicantEntity): Promise<void> => {
+        try {
+            if (documentId)
+                await complianceApi.sendComplianceFile(documentId, applicant.id)
+                    .then(res => {
+                        toast.success(t('DOCUMENT_SENT_SUCCESS_MESSAGE'))
+                        setTimeout(() => {
+                            resetDocumentId()
+                        }, 1000)
+                    })
+        } catch (error) {
+            toast.error(t('DOCUMENT_SENT_FAILED_MESSAGE'))
+            // console.log(error)
         }
+    }
 
     //  Uncomment this in debugging mode
-    useEffectAsync(async () => {
-        console.log("form", form.values)
-        console.log("form", form.errors)
-    }, [form])
+    // useEffectAsync(async () => {
+    //     console.log("form", form.values)
+    //     console.log("form", form.errors)
+    // }, [form])
+
     return (
         <PageLayout
             title="STORED_FILES"
@@ -154,7 +147,6 @@ export default function StoredFiles() {
                         (<ShowEnumFromString
                             popover_header={t('CATEGORY')}
                             labelPrefix="CompanyDocumentType"
-                            // popover={true}
                             str={file.type}
                             enumArray={CompanyDocumentType} />
                         ),
@@ -169,7 +161,7 @@ export default function StoredFiles() {
                     {
                         cell: (file) => (
                             <>
-                                <button type="button" className="theme-secondary-btn mr-4 p-2" onClick={() => openMailSendModel(file)}>{t('SEND')}</button>
+                                <button type="button" className="theme-secondary-btn mr-4 p-2" onClick={() => setDocumentId(file.id)}>{t('SEND')}</button>
                                 <button type="button" className="btn theme-primary-btn download_file_btn"> <a href={file.path} download target="_blank">{t('DOWNLOAD')}</a></button>
                             </>
                         ),
@@ -218,8 +210,8 @@ export default function StoredFiles() {
             {/* Model for send email */}
 
             <ViewModal
-                show={showMailSendModel}
-                onCloseClick={closeMailSendModel}
+                show={!!documentId}
+                onCloseClick={resetDocumentId}
                 closeText="CANCEL"
                 title="APPLICANTS"
             >
@@ -241,19 +233,16 @@ export default function StoredFiles() {
                             hidable: false
                         },
                         {
-                          
                             name: "first_name",
                             selector: applicant => applicant.first_name,
                             hidable: false
                         },
                         {
-                          
                             name: "last_name",
                             selector: applicant => applicant.last_name,
                             hidable: false
                         },
                         {
-                          
                             name: "email",
                             selector: applicant => applicant.email,
                             hidable: false
@@ -262,14 +251,14 @@ export default function StoredFiles() {
                         {
                             cell: (applicant) => (
                                 <>
-                                    <button type="button" onClick={() => sendEmail(applicant)} className="theme-secondary-btn mr-4 p-2">{t('SEND')}</button>   
+                                    <button type="button" onClick={() => sendEmail(applicant)} className="theme-secondary-btn mr-4 p-2">{t('SEND')}</button>
                                 </>
                             ),
                         },
 
 
                     ]}
-                    items={applicant}
+                    items={applicants}
                 />
             </ViewModal>
         </PageLayout>
