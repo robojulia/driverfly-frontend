@@ -14,33 +14,50 @@ import BaseSelect from "../../../../../components/forms/BaseSelect";
 import ComplianceApi from "../../../../api/compliance";
 import { DocumentEntity } from "../../../../../models/documents/document.entity";
 import { StoredFileDto } from "../../../../../models/compiance/stored-file.dto";
-import { Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 import { CompanyDocumentType } from "../../../../../enums/compliance/company-document-type.enum";
 import EntityForm from "../../../../../components/layouts/page/EntityForm";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import { toast } from 'react-toastify'
+import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
+import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
+import ApplicantApi from "../../../../api/applicant";
+import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 
 export default function StoredFiles() {
 
     const { user, hasPermission } = useAuth();
-    const [showFileUploadModel, setShowFileUploadModel] = useState(false);
-    const openFileUploadModel = () => setShowFileUploadModel(true)
-    const closeFileUploadModel = () => setShowFileUploadModel(false)
+    const { t } = useTranslation();
+    const complianceApi = new ComplianceApi();
+    const applicantApi = new ApplicantApi();
+
+    // showFileUploadModel 
+    const [showFileUploadModel, setShowFileUploadModel] = useState<boolean>(false);
+    const openFileUploadModel = (): void => setShowFileUploadModel(true)
+    const closeFileUploadModel = (): void => setShowFileUploadModel(false)
+
+    const [documentId, setDocumentId] = useState<number>(null)
+    const resetDocumentId = (): void => setDocumentId(null)
 
     const columnSettingKey = getDataTableColumnKey("company", user, "stored-files");
 
-    const { t } = useTranslation();
     const [files, setFiles] = useState<DocumentEntity[]>([])
-    const complianceAp = new ComplianceApi();
+    const [applicants, setApplicants] = useState<ApplicantEntity[]>([])
+
+
 
     useEffectAsync(async () => {
-        console.log("refresh fired");
-        const v = await complianceAp.filesList();
 
+        const v = await complianceApi.filesList();
         setFiles(v);
+
+        const data = await applicantApi.list();
+        setApplicants(data)
+
     }, [user], () => {
         console.log("unloading page...")
     });
+
 
     // To Do
     // const can = {
@@ -53,29 +70,43 @@ export default function StoredFiles() {
         validationSchema: StoredFileDto.yupSchema(),
         onSubmit: async (data, { resetForm }) => {
             try {
-                await complianceAp.createFile(data)
+                await complianceApi.createFile(data)
                     .then((entity: DocumentEntity) => {
                         if (entity) {
                             files.push(entity)
                             files.sort((a, b) => (a.id - b.id))
                             resetForm()
-                            setShowFileUploadModel(false)
+                            closeFileUploadModel()
                             toast.success(t('DOCUMENT_UPLOAD_SUCCESS_MESSAGE'))
                         }
                     })
-                console.log("data: ", data)
             } catch (error) {
-                console.log(error)
                 globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
             }
         }
     });
 
+    const sendEmail = async (applicant: ApplicantEntity): Promise<void> => {
+        try {
+            if (documentId)
+                await complianceApi.sendComplianceFile(documentId, applicant.id)
+                    .then(res => {
+                        toast.success(t('DOCUMENT_SENT_SUCCESS_MESSAGE'))
+                        setTimeout(() => {
+                            resetDocumentId()
+                        }, 1000)
+                    })
+        } catch (error) {
+            toast.error(t('DOCUMENT_SENT_FAILED_MESSAGE'))
+            // console.log(error)
+        }
+    }
+
     //  Uncomment this in debugging mode
-    useEffectAsync(async () => {
-        console.log("form", form.values)
-        console.log("form", form.errors)
-    }, [form])
+    // useEffectAsync(async () => {
+    //     console.log("form", form.values)
+    //     console.log("form", form.errors)
+    // }, [form])
 
     return (
         <PageLayout
@@ -100,26 +131,38 @@ export default function StoredFiles() {
                     {
                         id: "id",
                         name: "ID",
-                        selector: j => j.id,
+                        selector: file => file.id,
                         hidable: false
                     },
                     {
                         id: "file_name",
                         name: "file_name",
-                        // cell: (j) => (<Link href={`${router.asPath}/${j.id}`} ><a>{j.title}</a></Link>),
                         selector: file => file.name,
                         hidable: false
                     },
-                    // {
-                    //     id: "upload_date",
-                    //     name: "upload_date",
-                    //     selector: j => j.expiry_date ? new Date(j.expiry_date).toDateString() : null,
-                    // },
                     {
-                        cell: (j) => (
+                        id: "type",
+                        name: "CATEGORY",
+                        cell: file =>
+                        (<ShowEnumFromString
+                            popover_header={t('CATEGORY')}
+                            labelPrefix="CompanyDocumentType"
+                            str={file.type}
+                            enumArray={CompanyDocumentType} />
+                        ),
+                        selector: file => t(`CompanyDocumentType.${file.type}`),
+                    },
+                    {
+                        id: "upload_date",
+                        name: "upload_date",
+                        selector: file => file.created_at,
+                        cell: file => file.created_at ? <ShowFormattedDate date={file.created_at} /> : null
+                    },
+                    {
+                        cell: (file) => (
                             <>
-                                <button type="button" className="theme-secondary-btn mr-4 p-2">{t('SEND')}</button>
-                                <button type="button" className="btn theme-primary-btn">{t('DOWNLOAD')}</button>
+                                <button type="button" className="theme-secondary-btn mr-4 p-2" onClick={() => setDocumentId(file.id)}>{t('SEND')}</button>
+                                <button type="button" className="btn theme-primary-btn download_file_btn"> <a href={file.path} download target="_blank">{t('DOWNLOAD')}</a></button>
                             </>
                         ),
                     },
@@ -128,6 +171,9 @@ export default function StoredFiles() {
                 ]}
                 items={files}
             />
+
+            {/* Model for Upload file */}
+
             <ViewModal
                 show={showFileUploadModel}
                 onCloseClick={closeFileUploadModel}
@@ -159,6 +205,61 @@ export default function StoredFiles() {
                         />
                     </Row>
                 </EntityForm>
+            </ViewModal>
+
+            {/* Model for send email */}
+
+            <ViewModal
+                show={!!documentId}
+                onCloseClick={resetDocumentId}
+                closeText="CANCEL"
+                title="APPLICANTS"
+            >
+                <ViewDataTable<ApplicantEntity>
+                    columnSettingKey={columnSettingKey}
+                    customStyles={{
+                        headCells: {
+                            style: {
+                                background: "#5bb0b9",
+                                color: "white"
+                            },
+                        },
+                    }}
+                    columns={[
+                        {
+                            id: "id",
+                            name: "ID",
+                            selector: applicant => applicant.id,
+                            hidable: false
+                        },
+                        {
+                            name: "first_name",
+                            selector: applicant => applicant.first_name,
+                            hidable: false
+                        },
+                        {
+                            name: "last_name",
+                            selector: applicant => applicant.last_name,
+                            hidable: false
+                        },
+                        {
+                            name: "email",
+                            selector: applicant => applicant.email,
+                            hidable: false
+                        },
+
+                        {
+                            cell: (applicant) => (
+                                <>
+                                    <button type="button" onClick={() => sendEmail(applicant)} className="theme-secondary-btn mr-4 p-2">{t('SEND')}</button>
+                                </>
+                            ),
+                        },
+
+
+                    ]}
+                    items={applicants}
+                />
             </ViewModal>
         </PageLayout>
     )

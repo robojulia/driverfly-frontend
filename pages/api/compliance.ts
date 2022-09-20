@@ -19,12 +19,12 @@ export default class ComplianceApi extends BaseApi {
 
         return data;
     }
-    async update(id: number, entity: JobEntity): Promise<JobEntity> {
-        const { data } = await this.put(`${this.baseUrl}/${id}`, entity);
-
-        return data;
-    }
     async remove(id: number): Promise<void> {
         await this.delete(`${this.baseUrl}/${id}`);
+    }
+    async sendComplianceFile(applicantId: number, documentId: number): Promise<void> {
+        const { data } = await this.get(`${this.baseUrl}/send-file/applicant/${applicantId}/document/${documentId}`);
+
+        return data;
     }
 }
