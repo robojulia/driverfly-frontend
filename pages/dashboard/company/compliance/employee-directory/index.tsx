@@ -18,6 +18,10 @@ import BackgroundTab from "../../../../../components/dashboard/employee-director
 import DaqTab from "../../../../../components/dashboard/employee-directory/daq";
 import DqfTab from "../../../../../components/dashboard/employee-directory/dqf";
 import VehicleInformationTab from "../../../../../components/dashboard/employee-directory/vehicle-information";
+import ApplicantApi from "../../../../api/applicant";
+import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
+import { filterHired, reduceSingleEntity } from "../../../../../utils/filter-applicants";
+import { ReducedApplicantEntityType } from "../../../../../types/applicant/reduced-applicant-entity.type";
 export default function EmployeeDirectory() {
     const tabs = {
         Background: <BackgroundTab />,
@@ -33,13 +37,21 @@ export default function EmployeeDirectory() {
     const { t } = useTranslation();
     const router = useRouter()
     const [jobs, setJobs] = useState<JobEntity[]>([])
+    const [applicants, setApplicants] = useState<ReducedApplicantEntityType[]>([])
+
     const api = new JobApi();
+    const applicantApi = new ApplicantApi();
 
     useEffectAsync(async () => {
-        console.log("refresh fired");
-        const v = await api.list();
 
-        setJobs(v);
+        const data = await applicantApi.list();
+        const filteredApplicants: ApplicantEntity[] = filterHired(data)
+        const reducedApplicants: ReducedApplicantEntityType[] = reduceSingleEntity(filteredApplicants)
+
+        console.log("applicants reducedApplicants", reducedApplicants);
+        setApplicants(reducedApplicants)
+
+
     }, [user], () => {
         console.log("unloading page...")
     });
