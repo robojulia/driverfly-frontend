@@ -31,11 +31,14 @@ export default function StoredFiles() {
     const [showFileUploadModel, setShowFileUploadModel] = useState(false);
     const openFileUploadModel = () => setShowFileUploadModel(true)
     const closeFileUploadModel = () => setShowFileUploadModel(false)
-
+    const [documentId, setDocumentId] = useState<number>(null)
 
     // showMailSendModel
     const [showMailSendModel, setShowMailSendModel] = useState(false);
-    const openMailSendModel = () => setShowMailSendModel(true)
+    const openMailSendModel = (file) => {
+        setShowMailSendModel(true)
+        setDocumentId(file.id)
+    }
     const closeMailSendModel = () => setShowMailSendModel(false)
 
     const columnSettingKey = getDataTableColumnKey("company", user, "stored-files");
@@ -89,7 +92,23 @@ export default function StoredFiles() {
             }
         }
     });
-    
+
+        const sendEmail = async (applicant) => {
+            const applicantId = applicant.id
+            try {
+                await complianceAp.sendComplianceFile(documentId, applicantId)
+                .then(res => {
+                    toast.success("Email sent Successfully")
+                    setDocumentId(null)
+                    setTimeout(() => {
+                        setShowMailSendModel(false)
+                    }, 1000)
+                })
+            } catch (error) {
+                toast.error('Failed to send Email')
+                console.log(error)
+            }
+        }
 
     //  Uncomment this in debugging mode
     useEffectAsync(async () => {
@@ -119,7 +138,7 @@ export default function StoredFiles() {
                     {
                         id: "id",
                         name: "ID",
-                        selector: j => j.id,
+                        selector: file => file.id,
                         hidable: false
                     },
                     {
@@ -144,14 +163,14 @@ export default function StoredFiles() {
                     {
                         id: "upload_date",
                         name: "upload_date",
-                        selector: j => j.created_at,
-                        cell: j => j.created_at ? <ShowFormattedDate date={j.created_at} /> : null
+                        selector: file => file.created_at,
+                        cell: file => file.created_at ? <ShowFormattedDate date={file.created_at} /> : null
                     },
                     {
-                        cell: (j) => (
+                        cell: (file) => (
                             <>
-                                <button type="button" className="theme-secondary-btn mr-4 p-2" onClick={openMailSendModel}>{t('SEND')}</button>
-                                <button type="button" className="btn theme-primary-btn download_file_btn"> <a href={j.path} download target="_blank">{t('DOWNLOAD')}</a></button>
+                                <button type="button" className="theme-secondary-btn mr-4 p-2" onClick={() => openMailSendModel(file)}>{t('SEND')}</button>
+                                <button type="button" className="btn theme-primary-btn download_file_btn"> <a href={file.path} download target="_blank">{t('DOWNLOAD')}</a></button>
                             </>
                         ),
                     },
@@ -241,9 +260,10 @@ export default function StoredFiles() {
                         },
 
                         {
-                            cell: (j) => (
+                            cell: (applicant) => (
                                 <>
-                                    <button type="button" className="theme-secondary-btn mr-4 p-2">{t('SEND')}</button>                            </>
+                                    <button type="button" onClick={() => sendEmail(applicant)} className="theme-secondary-btn mr-4 p-2">{t('SEND')}</button>   
+                                </>
                             ),
                         },
 

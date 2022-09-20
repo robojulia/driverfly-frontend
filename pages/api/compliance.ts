@@ -27,4 +27,9 @@ export default class ComplianceApi extends BaseApi {
     async remove(id: number): Promise<void> {
         await this.delete(`${this.baseUrl}/${id}`);
     }
+    async sendComplianceFile(applicantId: number, documentId:number): Promise<void> {
+        const { data } = await this.get(`${this.baseUrl}/send-file/applicant/${applicantId}/document/${documentId}`);
+        console.log("data", data)
+        return data;
+    }
 }
