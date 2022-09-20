@@ -89,6 +89,7 @@ export default function StoredFiles() {
             }
         }
     });
+    
 
     //  Uncomment this in debugging mode
     useEffectAsync(async () => {
@@ -221,19 +222,19 @@ export default function StoredFiles() {
                             hidable: false
                         },
                         {
-                            id: "file_name",
+                          
                             name: "first_name",
                             selector: applicant => applicant.first_name,
                             hidable: false
                         },
                         {
-                            id: "file_name",
+                          
                             name: "last_name",
                             selector: applicant => applicant.last_name,
                             hidable: false
                         },
                         {
-                            id: "file_name",
+                          
                             name: "email",
                             selector: applicant => applicant.email,
                             hidable: false
