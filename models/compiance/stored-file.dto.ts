@@ -9,7 +9,7 @@ export class StoredFileDto {
 
     static yupSchema() {
         return yup.object({
-            type: yup.string().required(),
+            type: yup.string().required().nullable(),
             file: DocumentEntity.yupSchema()
         });
     }
