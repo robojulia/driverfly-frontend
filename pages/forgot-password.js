@@ -40,7 +40,6 @@ export default function Forgot() {
         const response = e.response?.data;
 
         if (response) {
-          debugger
           toast.error(t(response.message));
         }
         else {
