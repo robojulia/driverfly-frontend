@@ -98,7 +98,6 @@ export default function StoredFiles() {
                     })
         } catch (error) {
             toast.error(t('DOCUMENT_SENT_FAILED_MESSAGE'))
-            // console.log(error)
         }
     }
 

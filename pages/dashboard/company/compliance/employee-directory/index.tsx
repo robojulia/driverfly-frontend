@@ -11,7 +11,7 @@ import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/
 import { useAuth } from "../../../../../hooks/useAuth";
 import { useEffectAsync } from "../../../../../utils/react";
 import Link from "next/link";
-import { Col, Row } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import 'react-tabs/style/react-tabs.css';
 import { TabbedLayout } from "../../../../../components/layouts/page/TabbedLayout";
 import BackgroundTab from "../../../../../components/dashboard/employee-directory/background";
@@ -22,9 +22,14 @@ import ApplicantApi from "../../../../api/applicant";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import { filterHired, reduceSingleEntity } from "../../../../../utils/filter-applicants";
 import { ReducedApplicantEntityType } from "../../../../../types/applicant/reduced-applicant-entity.type";
+import ViewModal from "../../../../../components/viewDetails/viewModal";
+import ViewApplicantDetail from "../../../../../components/applicants/view-applicant-details";
 export default function EmployeeDirectory() {
+    const [applicant, setApplicant] = useState<{}>()
+    const [applicants, setApplicants] = useState<ReducedApplicantEntityType[]>([])
+
     const tabs = {
-        Background: <BackgroundTab />,
+        Background: <ViewApplicantDetail applicant={applicant} />,
         DAQ: < DaqTab />,
         DQF: < DqfTab />,
         Vehicle: < VehicleInformationTab />
@@ -36,10 +41,14 @@ export default function EmployeeDirectory() {
 
     const { t } = useTranslation();
     const router = useRouter()
-    const [applicants, setApplicants] = useState<ReducedApplicantEntityType[]>([])
 
     const api = new JobApi();
     const applicantApi = new ApplicantApi();
+
+    const onEditClick = (id: number) => {
+        router.push(`/dashboard/company/applicants/${id}/edit`);
+    }
+
 
     useEffectAsync(async () => {
 
@@ -52,6 +61,9 @@ export default function EmployeeDirectory() {
     }, [user], () => {
         console.log("unloading page...")
     });
+    const someFunction = () => {
+        return 'yes'
+    }
 
     return (
         <>
@@ -102,48 +114,44 @@ export default function EmployeeDirectory() {
                         },
                         {
                             id: "name",
-                            name: "name",
-                            selector: applicant => applicant?.applicant?.first_name + ' ' + applicant?.applicant?.last_name,
-                            hidable: false
+                            name: 'NAME',
+                            cell: applicant => <span className="bg-priamry" onClick={() => setApplicant(applicant?.applicant)}>{applicant?.applicant?.first_name + ' ' + applicant?.applicant?.last_name}</span>,
                         },
                         {
                             id: "phone",
-                            name: "PHONE",
+                            name: 'PHONE',
                             selector: applicant => applicant?.applicant?.phone,
                         },
                         {
                             id: "email",
-                            name: "email",
+                            name: 'EMAIL',
                             selector: applicant => applicant?.applicant?.email
                         },
                         {
                             id: "jobTitle",
-                            name: "Job Title",
+                            name: 'job_title',
                             selector: applicant => applicant?.applicantJob?.job?.title
                         },
                         {
                             id: "dateHired",
-                            name: "Date Hired",
+                            name: 'DATE_HIRED',
                             selector: applicant => applicant?.applicant?.last_updated_at
                         },
                         {
                             id: "status",
-                            name: "STATUS",
+                            name: 'STATUS',
                             selector: applicant => applicant?.applicantJob?.status
                         },
                         {
                             cell: (applicant) => (
                                 <>
                                     <div className="data_table_custom_action_button">
-                                        <Link href="" >
-                                            <a> <EyeFill className="view" /> </a>
-                                        </Link>
-                                        <Link href="" >
-                                            <a> < PenFill className="edit" /> </a>
-                                        </Link>
-                                        <Link href="" >
-                                            <a> < TrashFill className="delete" /> </a>
-                                        </Link>
+                                        <div onClick={() => setApplicant(applicant?.applicant)} >
+                                           <EyeFill className="view" />
+                                        </div>
+                                        <div onClick={(e) => onEditClick(applicant?.applicant?.id)}>
+                                            < PenFill className="edit" /> 
+                                        </div>
                                     </div>
 
                                 </>
@@ -154,7 +162,9 @@ export default function EmployeeDirectory() {
                     ]}
                     items={applicants}
                 />
-                <TabbedLayout items={tabs} className="mt-5"></TabbedLayout>
+                <ViewModal show={!!applicant} >
+                    <TabbedLayout items={tabs} className="mt-5"></TabbedLayout>
+                </ViewModal>
 
             </PageLayout>
 

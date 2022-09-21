@@ -1,7 +1,7 @@
 import { Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/useTranslation";
 
-const BackgroundTab = () => {
+const BackgroundTab = ({ applicants }) => {
     const { t } = useTranslation();
 
     return (
@@ -9,7 +9,7 @@ const BackgroundTab = () => {
             <div className="employee_directory_tabs">
                 <Row className="mt-3">
                     <Col>
-                        <h5>Roger Atkins</h5>
+                        <h5>{applicants}</h5>
                     </Col>
                 </Row>
                 <Row className="mt-3">

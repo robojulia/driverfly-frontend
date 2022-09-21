@@ -13,7 +13,8 @@ export default function EditApplicant({ id }) {
     const router = useRouter();
     const { t } = useTranslation();
 
-    const backPath = `/dashboard/company/applicants/${id}`;
+    const backPath = `something`;
+    
 
     const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
 
@@ -39,7 +40,6 @@ export default function EditApplicant({ id }) {
     return (
         <ChildPageLayout
             title={t("EDIT_{name}", { name: "APPLICANT" }, { translateProps: true })}
-            backPath={backPath}
             >
             <ApplicantForm
                 entity={applicant}

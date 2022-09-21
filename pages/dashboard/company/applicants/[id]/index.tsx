@@ -38,7 +38,11 @@ import SuggestedJobs from "../../../../../components/dashboard/driver/suggested-
 import { ApplicantSuggestedJobEntity } from "../../../../../models/applicant/applicant-suggested-job.entity";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import { jobGeography } from "../../../../../utils/jobs";
-
+import ViewApplicantDetail from "../../../../../components/applicants/view-applicant-details";
+import WorkHistory from "../../../../../components/applicants/work-history";
+import SafetyBackground from "../../../../../components/applicants/safet-background";
+import JobsApplicant from "../../../../../components/applicants/jobs-applied";
+import ConsiderFor from "../../../../../components/applicants/consider-applicant-for";
 export default function ViewApplicant({ id }) {
     const router = useRouter();
 
@@ -240,213 +244,24 @@ export default function ViewApplicant({ id }) {
             }
             <Row>
                 <Col>
-                    <ViewCard title={`${applicant?.first_name} ${applicant?.last_name}`}>
-                        <Row>
-                            <Col md="4" className="px-2">
-                                <ViewDetails
-                                    default={t("NOT_ANSWERED")}
-                                    obj={{
-                                        ASSIGNED_TO: applicant.assignedUser?.name || t("NONE"),
-                                        PHONE: applicant.phone,
-                                        EMAIL: applicant.email,
-                                        STREET: applicant.street,
-                                        CITY: applicant.city,
-                                        STATE_AND_ZIP: `${applicant?.state || ""} ${applicant?.zip_code || ""}`.trim()
-                                    }}
-                                />
-                            </Col>
-                            <Col md="4" className="px-2">
-                                <ViewDetails
-                                    default={t("NOT_ANSWERED")}
-                                    obj={{
-                                        driver_license_number: protectedFields.license_number ? applicant.license_number : t("HIDDEN"),
-                                        expiration_date: applicant.license_expiry,
-                                        state_issued: applicant.license_state,
-                                        cdl_class_type: applicant.license_type ? t(`DriverLicenseType.${applicant.license_type}`) : null,
-                                        years_cdl_experience: applicant.years_cdl_experience,
-                                        OWNER_OPERATOR: { text: applicant.is_owner_operator, default: t("UNKNOWN") },
-                                        AUTHORIZED_TO_WORK_IN_THE_US: applicant.authorized_to_work_in_us,
-                                        PREFERRED_LOCATION: applicant.preferred_location?.map(v => t(`JobGeography.${v}`))
-
-                                    }}
-                                />
-                            </Col>
-                            <Col md="4" className="px-2">
-                                <ViewDetails
-                                    default={t("NOT_ANSWERED")}
-                                    obj={{
-                                        transmission_type: applicant.transmission_type?.map(v => t(`VehicleTransmissionType.${v}`)),
-                                        ENDORSEMENTS: applicant.endorsements?.map(v => t(`DriverEndorsement.${v}`)),
-                                        above_21: applicant.birthdate ? calculateAge(applicant.birthdate) >= 21 : null,
-                                        highest_degree: applicant.highest_degree ? t(`EducationLevel.${applicant.highest_degree}`) : null,
-                                        emergency_contact: applicant.emergency_contact_name,
-                                        phone: applicant.emergency_contact_number,
-                                        relationship: applicant.emergency_contact_relationship,
-                                    }}
-                                />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md="6">
-                                <ViewDetails
-                                    default={t("NONE")}
-                                    obj={{
-                                        equipment_experience: {
-                                            items: applicant.equipment_experience?.map(v => ({
-                                                type: v.type == JobEquipmentType.OTHER ? v.type_other : t(`JobEquipmentType.${v.type}`),
-                                                years: v.years
-                                            }))
-                                        },
-                                    }}
-                                />
-                            </Col>
-                            <Col md="6">
-                                {
-                                    applicant.is_owner_operator &&
-                                    <ViewDetails
-                                        default={t("NONE")}
-                                        obj={{
-                                            equipment_owned: {
-                                                show: applicant.is_owner_operator || false,
-                                                items: applicant.equipment_owned?.map(v => ({
-                                                    type: v.type == JobEquipmentType.OTHER ? v.type_other : t(`JobEquipmentType.${v.type}`),
-                                                    quantity: v.quantity
-                                                }))
-                                            }
-                                        }}
-                                    />
-                                }
-
-                            </Col>
-                        </Row>
-                    </ViewCard>
+                    <ViewApplicantDetail applicant={applicant} protectedFields={protectedFields}/>
                 </Col>
             </Row>
             <Row>
                 <Col md="4">
-                    <ViewCard title="WORK_HISTORY">
-                        {!applicant.employers?.length &&
-                            <>{t("NONE")}</>
-                        }
-                        {
-                            <>
-                                {applicant.employers?.map((e, i) => (
-                                    <Accordion
-                                        defaultExpanded={i === 0}
-                                    >
-                                        <AccordionSummary
-                                            expandIcon={<ArrowsExpand />}
-                                        >
-                                            {e.name || t("UNKNOWN")}
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                            <ViewDetails
-                                                key={i}
-                                                default={t("NOT_ANSWERED")}
-                                                obj={{
-                                                    NAME: e.name,
-                                                    DATES_EMPLOYED: dateRange(e.start_at, e.end_at, t("PRESENT")),
-                                                    TITLE: e.title,
-                                                    ADDRESS: buildAddress(e),
-                                                    PHONE: e.phone,
-                                                    MAY_CONTACT_COMPANY: e.can_contact,
-                                                    SUBJECT_TO_FMCSRS: e.is_subject_to_fmcsrs,
-                                                    JOB_DESIGNATED_AS_SATEFY_SENSITIVE: e.is_subject_to_drug_tests
-                                                }}
-                                            />
-                                        </AccordionDetails>
-                                    </Accordion>
-                                ))}</>}
-                    </ViewCard>
+                 <WorkHistory applicant={applicant}/>
                 </Col>
                 <Col md="8">
-                    <ViewCard title="SAFETY_BACKGROUND">
-                        <Row>
-                            <Col md="6">
-                                <ViewDetails
-                                    default={t("NOT_ANSWERED")}
-                                    obj={{
-                                        CAN_PASS_DRUG_TEST: applicant.can_pass_drug_test,
-                                        HAS_DUIS: applicant.has_past_dui,
-                                        years_of_past_duis: {
-                                            show: !!applicant.has_past_dui,
-                                            text: applicant.dui_years
-                                        },
-                                        criminal_history_last_3_years: applicant.criminal_history,
-                                        accidents_last_5_years: applicant.accident_count,
-                                        accident_details: {
-                                            show: applicant.accident_count > 0,
-                                            text: applicant.accident_details
-                                        }
-                                    }}
-                                />
-                            </Col>
-                            <Col md="6">
-                                <ViewDetails
-                                    default={t("NOT_ANSWERED")}
-                                    obj={{
-                                        has_had_license_revoked: applicant.license_revoked,
-                                        license_revoked_details: {
-                                            label: "details",
-                                            show: !!applicant.license_revoked,
-                                            text: applicant.license_revoked_details
-                                        },
-                                        has_had_psp_violations: applicant.psp_violations,
-                                        violations_details: {
-                                            label: "details",
-                                            show: !!applicant.psp_violations,
-                                            text: applicant.psp_violations_details
-                                        },
-                                        has_had_tickets_last_5_years: applicant.tickets,
-                                        tickets_details: {
-                                            label: "details",
-                                            show: !!applicant.tickets,
-                                            text: applicant.tickets_details
-                                        },
-                                        has_had_positive_drug_test: applicant.positive_drug_test,
-                                        failed_drug_test_details: {
-                                            label: "details",
-                                            show: !!applicant.positive_drug_test,
-                                            text: applicant.positive_drug_test_details
-                                        },
-                                    }}
-                                />
-                            </Col>
-                        </Row>
-                    </ViewCard>
+                 <SafetyBackground applicant={applicant} />
                 </Col>
             </Row>
             <Row>
                 <Col md="6">
-                    <ViewCard title="JOBS_APPLIED_TO_WITH_YOU">
-                        <ViewTable
-                            type="JOBS"
-                            headers={{
-                                title: "JOB",
-                                status: "STATUS",
-                                date_applied: "DATE_APPLIED"
-                            }}
-                            items={applicant?.jobs?.map(aJob => ({
-                                title: <Link href={`/jobs/${aJob.job.id}/${aJob.job.title}`}><a>{aJob.job.title}</a></Link>,
-                                status: <ShowEnumFromString skipLowerCase popover={true} str={aJob.status} labelPrefix="ApplicantStatus" enumArray={ApplicantStatus} />,
-                                date_applied: new Date(aJob.created_at).toDateString()
-                            }))}
-                        />
-                    </ViewCard>
+                  <JobsApplicant applicant={applicant}/>
                 </Col>
                 {applicant &&
                     <Col md="6">
-                        <ViewCard title={t("CONSIDER_{name}_FOR", { name: applicant?.first_name })}>
-                            <ViewTable
-                                type="OTHER_ROLES"
-                                headers={{
-                                    role: "ROLE"
-                                }}
-                                items={applicantSuggestedJobs.map(sJob => ({
-                                    role: <Link href={`/jobs/${sJob.job.id}/${sJob.job.title}`}><a>{sJob.job.title}</a></Link>
-                                }))}
-                            />
-                        </ViewCard>
+                        <ConsiderFor applicant={applicant} applicantSuggestedJobs={applicantSuggestedJobs}/>
                     </Col>
                 }
             </Row>
