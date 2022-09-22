@@ -652,11 +652,11 @@ textarea {
 }
 
 /* start Typeahead dropdown */
-.dropdown-item{
+.rbt .dropdown-item{
     color: rgb(65, 60, 60) !important;
 }
 
-.dropdown-item:hover{
+.rbt .dropdown-item:hover{
     color: #000 !important;
 }
 /* end Typeahead dropdown */

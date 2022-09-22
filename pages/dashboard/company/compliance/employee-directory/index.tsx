@@ -64,13 +64,11 @@ export default function EmployeeDirectory() {
                                 <p className="mt-2 mb-2">
                                     {t("WANT_TO_ADD_TO_THIS_LIST")}
                                     <u className="ml-1">
-                                        <Link href="#">
+                                        <Link href="/dashboard/company/compliance/employee-directory/import">
                                             <a>{t("HERE")}</a>
                                         </Link>
                                     </u>
                                 </p>
-                                <button type="button" className="theme-secondary-btn mr-4">{t('FILTER_RESULT')}</button>
-                                <button type="button" className="btn theme-primary-btn">{t('MODIFY_FIELDS')}</button>
                                 <u>
                                     <p className="mt-2">
                                         <Link href="#">
