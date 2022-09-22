@@ -1,35 +1,18 @@
 import { Col, Row } from 'react-bootstrap';
 import { useTranslation } from '../../hooks/useTranslation';
-import { JobEntity } from "../../models/job/job.entity";
 import React from 'react';
-import { useAuth } from '../../hooks/useAuth'
 import { JobEquipmentType } from '../../enums/jobs/job-equipment-type.enum';
 import { calculateAge } from '../../utils/date';
 import ViewCard from '../viewDetails/viewCard';
 import ViewDetails from '../viewDetails/viewDetails';
-import { ApplicantEntity } from '../../models/applicant/applicant.entity';
-
-export interface ProtectedFields{
-    license_number?: boolean | (() => boolean);
-    social_security_number?:  boolean | (() => boolean);
-}
-export interface ViewApplicantDetailProps {
-    applicant: ApplicantEntity;
-    protectedFields?: ProtectedFields;
-    
-
-}
+import { ViewApplicantDetailProps } from '../../types/applicant/view-application-detail-props.type';
 
 
 export default function ViewApplicantDetail({ applicant, protectedFields }: ViewApplicantDetailProps) {
 
     const { t } = useTranslation();
-    const [encourageModal, setEncourageModal] = React.useState(false)
-    const { user } = useAuth();
     
     return (
-        <section className="top-links-sec ort-general">
-            {console.log("licence number", applicant)}
             <ViewCard title={`${applicant?.first_name} ${applicant?.last_name}`}>
                 <Row>
                     <Col md="4" className="px-2">
@@ -110,6 +93,5 @@ export default function ViewApplicantDetail({ applicant, protectedFields }: View
                     </Col>
                 </Row>
             </ViewCard>
-        </section>
     )
 }

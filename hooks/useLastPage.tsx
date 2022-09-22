@@ -31,6 +31,8 @@ export default function useLastPage() {
   }, [ router.asPath ]);
 
   return {
-      previousPath: getItem(keys.PreviousPath)
+      previousPath: getItem(keys.PreviousPath),
+      setPreviousPath: (path) => setItem(keys.PreviousPath, path)
+
   };
 }

@@ -1,20 +1,17 @@
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
 import { useState } from "react";
 import React from "react";
-import { EyeFill, PenFill, TrashFill } from 'react-bootstrap-icons';
+import { EyeFill, PenFill } from 'react-bootstrap-icons';
 import PageLayout from "../../../../../components/layouts/page/PageLayout";
-import JobApi from "../../../../api/job";
-import { JobEntity } from "../../../../../models/job/job.entity";
 import { useTranslation } from "../../../../../hooks/useTranslation";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
 import { useAuth } from "../../../../../hooks/useAuth";
 import { useEffectAsync } from "../../../../../utils/react";
 import Link from "next/link";
-import { Button, Col, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import 'react-tabs/style/react-tabs.css';
 import { TabbedLayout } from "../../../../../components/layouts/page/TabbedLayout";
-import BackgroundTab from "../../../../../components/dashboard/employee-directory/background";
 import DaqTab from "../../../../../components/dashboard/employee-directory/daq";
 import DqfTab from "../../../../../components/dashboard/employee-directory/dqf";
 import VehicleInformationTab from "../../../../../components/dashboard/employee-directory/vehicle-information";
@@ -23,31 +20,30 @@ import { ApplicantEntity } from "../../../../../models/applicant/applicant.entit
 import { filterHired, reduceSingleEntity } from "../../../../../utils/filter-applicants";
 import { ReducedApplicantEntityType } from "../../../../../types/applicant/reduced-applicant-entity.type";
 import ViewModal from "../../../../../components/viewDetails/viewModal";
-import ViewApplicantDetail from "../../../../../components/applicants/view-applicant-details";
+import ViewApplicantDetail from "../../../../../components/applicants/applicant-view-details";
 export default function EmployeeDirectory() {
     const [applicant, setApplicant] = useState<{}>()
     const [applicants, setApplicants] = useState<ReducedApplicantEntityType[]>([])
 
+    const resetApplicant = () => setApplicant(null)
+
     const tabs = {
-        Background: <ViewApplicantDetail applicant={applicant} />,
+        Background: applicant && <ViewApplicantDetail applicant={applicant} />,
         DAQ: < DaqTab />,
         DQF: < DqfTab />,
         Vehicle: < VehicleInformationTab />
 
 
     };
-    const { user, hasPermission } = useAuth();
+    const { user } = useAuth();
     const columnSettingKey = getDataTableColumnKey("company", user, "employee-directory");
 
     const { t } = useTranslation();
     const router = useRouter()
 
-    const api = new JobApi();
     const applicantApi = new ApplicantApi();
 
-    const onEditClick = (id: number) => {
-        router.push(`/dashboard/company/applicants/${id}/edit`);
-    }
+    const onEditClick = (id: number) => router.push(`/dashboard/company/applicants/${id}/edit`)
 
 
     useEffectAsync(async () => {
@@ -61,9 +57,6 @@ export default function EmployeeDirectory() {
     }, [user], () => {
         console.log("unloading page...")
     });
-    const someFunction = () => {
-        return 'yes'
-    }
 
     return (
         <>
@@ -147,10 +140,10 @@ export default function EmployeeDirectory() {
                                 <>
                                     <div className="data_table_custom_action_button">
                                         <div onClick={() => setApplicant(applicant?.applicant)} >
-                                           <EyeFill className="view" />
+                                            <EyeFill className="view" />
                                         </div>
                                         <div onClick={(e) => onEditClick(applicant?.applicant?.id)}>
-                                            < PenFill className="edit" /> 
+                                            < PenFill className="edit" />
                                         </div>
                                     </div>
 
@@ -162,7 +155,7 @@ export default function EmployeeDirectory() {
                     ]}
                     items={applicants}
                 />
-                <ViewModal show={!!applicant} >
+                <ViewModal show={!!applicant} onCloseClick={resetApplicant} >
                     <TabbedLayout items={tabs} className="mt-5"></TabbedLayout>
                 </ViewModal>
 

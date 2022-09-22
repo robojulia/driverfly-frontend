@@ -19,10 +19,10 @@ export default function ChildPageLayout({ title, backPath, actions, children }: 
 
     const handleBack = (e) => {
         e.preventDefault();
-        if (backPath)
-            router.back();
-        else if (previousPath)
+        if (previousPath)
             router.push(previousPath);
+        else if (backPath)
+            router.push(backPath);
         else
             router.back();
     }

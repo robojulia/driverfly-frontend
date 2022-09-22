@@ -1,8 +1,7 @@
 import { toast } from "react-toastify";
 
 import { Button, ButtonGroup, Col, Row } from "react-bootstrap";
-import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
-import { ArrowsExpand, BookmarkCheck, BookmarkDash, Pencil, Plus, PlusLg, Trash } from "react-bootstrap-icons";
+import {  BookmarkCheck, BookmarkDash, Pencil, PlusLg, Trash } from "react-bootstrap-icons";
 
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
 
@@ -12,37 +11,26 @@ import { useFormik } from "formik";
 import { useTranslation } from "../../../../../hooks/useTranslation";
 import { useEffectAsync } from "../../../../../utils/react";
 import { useAuth } from "../../../../../hooks/useAuth";
-
-import { calculateAge, dateRange } from "../../../../../utils/date";
-import { buildAddress } from "../../../../../utils/common";
-
-import Link from "next/link";
-import ViewDetails from "../../../../../components/viewDetails/viewDetails";
 import ViewTable from "../../../../../components/viewDetails/viewTable";
 import BaseTextArea from "../../../../../components/forms/BaseTextArea";
 import ViewModal from "../../../../../components/viewDetails/viewModal";
 import ViewPdf from "../../../../../components/viewDetails/viewPdf";
 import ViewCard from "../../../../../components/viewDetails/viewCard";
-import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
 
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import { ApplicantNoteEntity } from "../../../../../models/applicant/applicant-note.entity";
 
-import { JobEquipmentType } from "../../../../../enums/jobs/job-equipment-type.enum";
-import { ApplicantStatus } from "../../../../../enums/applicants/applicant-status.enum";
 
 import ApplicantApi from "../../../../api/applicant";
 import DocumentApi from "../../../../api/document";
 import ChildPageLayout from "../../../../../components/layouts/page/ChildPageLayout";
-import SuggestedJobs from "../../../../../components/dashboard/driver/suggested-jobs";
 import { ApplicantSuggestedJobEntity } from "../../../../../models/applicant/applicant-suggested-job.entity";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
-import { jobGeography } from "../../../../../utils/jobs";
-import ViewApplicantDetail from "../../../../../components/applicants/view-applicant-details";
-import WorkHistory from "../../../../../components/applicants/work-history";
-import SafetyBackground from "../../../../../components/applicants/safet-background";
-import JobsApplicant from "../../../../../components/applicants/jobs-applied";
-import ConsiderFor from "../../../../../components/applicants/consider-applicant-for";
+import ViewApplicantDetail from "../../../../../components/applicants/applicant-view-details";
+import ApplicantWorkHistory from "../../../../../components/applicants/applicant-work-history";
+import ApplicantSafetyBackground from "../../../../../components/applicants/applicant-safet-background";
+import JobsApplicant from "../../../../../components/applicants/applicant-jobs-applied";
+import ApplicantConsiderFor from "../../../../../components/applicants/aplicant-consider-applicant-for";
 export default function ViewApplicant({ id }) {
     const router = useRouter();
 
@@ -178,8 +166,6 @@ export default function ViewApplicant({ id }) {
                 })
             }
 
-            // applicant.notes.sort((a, b) => (a.id - b.id))
-
             setShowConfirmationModal(false);
             addNoteForm.resetForm()
         } catch (e) {
@@ -249,19 +235,19 @@ export default function ViewApplicant({ id }) {
             </Row>
             <Row>
                 <Col md="4">
-                 <WorkHistory applicant={applicant}/>
+                 <ApplicantWorkHistory applicant={applicant}/>
                 </Col>
                 <Col md="8">
-                 <SafetyBackground applicant={applicant} />
+                 <ApplicantSafetyBackground applicant={applicant} />
                 </Col>
             </Row>
             <Row>
                 <Col md="6">
                   <JobsApplicant applicant={applicant}/>
                 </Col>
-                {applicant &&
+                {applicantSuggestedJobs &&
                     <Col md="6">
-                        <ConsiderFor applicant={applicant} applicantSuggestedJobs={applicantSuggestedJobs}/>
+                        <ApplicantConsiderFor applicant={applicant} applicantSuggestedJobs={applicantSuggestedJobs}/>
                     </Col>
                 }
             </Row>

@@ -2,19 +2,12 @@ import { Accordion } from 'react-bootstrap';
 import { useTranslation } from '../../hooks/useTranslation';
 import ViewCard from '../viewDetails/viewCard';
 import { buildAddress } from '../../utils/common';
-import { ApplicantEntity } from '../../models/applicant/applicant.entity';
+import { ViewApplicantDetailProps } from '../../types/applicant/view-application-detail-props.type';
 import { AccordionSummary, AccordionDetails } from '@mui/material';
 import React from 'react';
 import { ArrowsExpand } from 'react-bootstrap-icons';
 import { dateRange } from '../../utils/date';
 import ViewDetails from '../viewDetails/viewDetails';
-
-
-
-export interface ViewApplicantDetailProps {
-    applicant: ApplicantEntity;
-
-}
 
 export default function WorkHistory({ applicant }: ViewApplicantDetailProps) {
 
@@ -28,9 +21,7 @@ export default function WorkHistory({ applicant }: ViewApplicantDetailProps) {
             {
                 <>
                     {applicant.employers?.map((e, i) => (
-                        <Accordion
-                        // defaultExpanded={i === 0}
-                        >
+                        <Accordion>
                             <AccordionSummary
                                 expandIcon={<ArrowsExpand />}
                             >
