@@ -1,12 +1,10 @@
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
 import { useState } from "react";
 import React from "react";
-import { EyeFill, PenFill, TrashFill } from 'react-bootstrap-icons';
+import { EyeFill, PenFill } from 'react-bootstrap-icons';
 import PageLayout from "../../../../../components/layouts/page/PageLayout";
-import JobApi from "../../../../api/job";
-import { JobEntity } from "../../../../../models/job/job.entity";
 import { useTranslation } from "../../../../../hooks/useTranslation";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
 import { useAuth } from "../../../../../hooks/useAuth";
 import { useEffectAsync } from "../../../../../utils/react";
@@ -14,7 +12,6 @@ import Link from "next/link";
 import { Col, Row } from "react-bootstrap";
 import 'react-tabs/style/react-tabs.css';
 import { TabbedLayout } from "../../../../../components/layouts/page/TabbedLayout";
-import BackgroundTab from "../../../../../components/dashboard/employee-directory/background";
 import DaqTab from "../../../../../components/dashboard/employee-directory/daq";
 import DqfTab from "../../../../../components/dashboard/employee-directory/dqf";
 import VehicleInformationTab from "../../../../../components/dashboard/employee-directory/vehicle-information";
@@ -22,24 +19,31 @@ import ApplicantApi from "../../../../api/applicant";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import { filterHired, reduceSingleEntity } from "../../../../../utils/filter-applicants";
 import { ReducedApplicantEntityType } from "../../../../../types/applicant/reduced-applicant-entity.type";
+import ViewModal from "../../../../../components/viewDetails/viewModal";
+import ViewApplicantDetail from "../../../../../components/applicants/applicant-view-details";
+import useLastPage from "../../../../../hooks/useLastPage";
+import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
+import { ApplicantStatus } from "../../../../../enums/applicants/applicant-status.enum";
+import OverlyPopover from "../../../../../components/popover/overly-popover";
+import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
+
 export default function EmployeeDirectory() {
-    const tabs = {
-        Background: <BackgroundTab />,
-        DAQ: < DaqTab />,
-        DQF: < DqfTab />,
-        Vehicle: < VehicleInformationTab />
 
-
-    };
-    const { user, hasPermission } = useAuth();
+    const { user } = useAuth();
     const columnSettingKey = getDataTableColumnKey("company", user, "employee-directory");
 
     const { t } = useTranslation();
+    const applicantApi = new ApplicantApi();
     const router = useRouter()
+    const { setPreviousPath } = useLastPage();
+    setPreviousPath(router.asPath)
+
+    const [applicant, setApplicant] = useState<ApplicantEntity>()
+    const resetApplicant = (): void => setApplicant(null)
+
     const [applicants, setApplicants] = useState<ReducedApplicantEntityType[]>([])
 
-    const api = new JobApi();
-    const applicantApi = new ApplicantApi();
+    const onEditClick = (id: number) => router.push(`/dashboard/company/applicants/${id}/edit`)
 
     useEffectAsync(async () => {
 
@@ -52,6 +56,13 @@ export default function EmployeeDirectory() {
     }, [user], () => {
         console.log("unloading page...")
     });
+
+    const tabs = {
+        BACKGROUND: applicant && <ViewApplicantDetail applicant={applicant} />,
+        DAQ: < DaqTab />,
+        DQF: < DqfTab />,
+        VEHICLES: < VehicleInformationTab />
+    };
 
     return (
         <>
@@ -78,7 +89,6 @@ export default function EmployeeDirectory() {
                                 </u>
                             </Col>
                         </Row>
-
                     </>
                 }
             >
@@ -90,7 +100,7 @@ export default function EmployeeDirectory() {
                                 background: "#5bb0b9",
                                 color: "white"
                             },
-                        },
+                        }
                     }}
                     columns={[
                         {
@@ -100,48 +110,71 @@ export default function EmployeeDirectory() {
                         },
                         {
                             id: "name",
-                            name: "name",
-                            selector: applicant => applicant?.applicant?.first_name + ' ' + applicant?.applicant?.last_name,
-                            hidable: false
+                            name: 'NAME',
+                            cell: applicant => <span role="button" className="bg-priamry cursor-pointer enlarge-font" onClick={() => setApplicant(applicant?.applicant)}>{applicant?.applicant?.first_name + ' ' + applicant?.applicant?.last_name}</span>,
                         },
                         {
                             id: "phone",
-                            name: "PHONE",
+                            name: 'PHONE',
                             selector: applicant => applicant?.applicant?.phone,
+                            cell: applicant => (<OverlyPopover
+                                skipTranslate
+                                slice_at={10}
+                                str={applicant?.applicant?.phone}
+                            />),
                         },
                         {
                             id: "email",
-                            name: "email",
-                            selector: applicant => applicant?.applicant?.email
+                            name: 'EMAIL',
+                            selector: applicant => applicant?.applicant?.email,
+                            cell: applicant => (<OverlyPopover
+                                skipTranslate
+                                slice_at={40}
+                                str={applicant?.applicant?.email}
+                            />),
                         },
                         {
                             id: "jobTitle",
-                            name: "Job Title",
-                            selector: applicant => applicant?.applicantJob?.job?.title
+                            name: 'job_title',
+                            selector: applicant => applicant?.applicantJob?.job?.title,
+                            cell: applicant => (<OverlyPopover
+                                skipTranslate
+                                slice_at={40}
+                                str={applicant?.applicantJob?.job?.title}
+                            />),
                         },
                         {
                             id: "dateHired",
-                            name: "Date Hired",
-                            selector: applicant => applicant?.applicant?.last_updated_at
+                            name: 'DATE_HIRED',
+                            selector: applicant => applicant?.applicant?.last_updated_at,
+                            cell: applicant => <ShowFormattedDate
+                                date={applicant?.applicant?.last_updated_at}
+                                hideTime
+                            />
                         },
                         {
                             id: "status",
-                            name: "STATUS",
-                            selector: applicant => applicant?.applicantJob?.status
+                            name: 'STATUS',
+                            selector: applicant => applicant?.applicantJob?.status,
+                            cell: applicant =>
+                            (<ShowEnumFromString
+                                popover
+                                labelPrefix="ApplicantStatus"
+                                str={applicant?.applicantJob?.status}
+                                enumArray={ApplicantStatus} />
+                            ),
+
                         },
                         {
                             cell: (applicant) => (
                                 <>
                                     <div className="data_table_custom_action_button">
-                                        <Link href="" >
-                                            <a> <EyeFill className="view" /> </a>
-                                        </Link>
-                                        <Link href="" >
-                                            <a> < PenFill className="edit" /> </a>
-                                        </Link>
-                                        <Link href="" >
-                                            <a> < TrashFill className="delete" /> </a>
-                                        </Link>
+                                        <div onClick={() => setApplicant(applicant?.applicant)} >
+                                            <EyeFill className="view cursor-pointer enlarge-font" />
+                                        </div>
+                                        <div onClick={(e) => onEditClick(applicant?.applicant?.id)}>
+                                            < PenFill className="edit cursor-pointer enlarge-font" />
+                                        </div>
                                     </div>
 
                                 </>
@@ -152,7 +185,9 @@ export default function EmployeeDirectory() {
                     ]}
                     items={applicants}
                 />
-                <TabbedLayout items={tabs} className="mt-5"></TabbedLayout>
+                <ViewModal show={!!applicant} onCloseClick={resetApplicant} >
+                    <TabbedLayout items={tabs} className="mt-5"></TabbedLayout>
+                </ViewModal>
 
             </PageLayout>
 

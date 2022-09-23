@@ -98,7 +98,6 @@ export default function StoredFiles() {
                     })
         } catch (error) {
             toast.error(t('DOCUMENT_SENT_FAILED_MESSAGE'))
-            // console.log(error)
         }
     }
 
@@ -145,18 +144,18 @@ export default function StoredFiles() {
                         name: "CATEGORY",
                         cell: file =>
                         (<ShowEnumFromString
-                            popover_header={t('CATEGORY')}
+                            popover
                             labelPrefix="CompanyDocumentType"
                             str={file.type}
                             enumArray={CompanyDocumentType} />
                         ),
-                        selector: file => t(`CompanyDocumentType.${file.type}`),
+                        selector: file => file.type,
                     },
                     {
                         id: "upload_date",
                         name: "upload_date",
                         selector: file => file.created_at,
-                        cell: file => file.created_at ? <ShowFormattedDate date={file.created_at} /> : null
+                        cell: file => <ShowFormattedDate date={file.created_at} />
                     },
                     {
                         cell: (file) => (
