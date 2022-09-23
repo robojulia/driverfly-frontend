@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { BookmarkCheckFill, BookmarkPlus } from "react-bootstrap-icons"
 import { useAuth } from '../../../hooks/useAuth';
 import { useTranslation } from '../../../hooks/useTranslation';
@@ -69,11 +69,11 @@ export default function SaveJob({ job, wrapperClassName, spanClassName }: SaveJo
     }
 
     return (
-        <div className={wrapperClassName || "ort-btn mt-lg-4 mt-0 "}>
+        <div className={wrapperClassName || "ort-btn mt-3 "}>
             <button
                 disabled={isLoading}
                 onClick={handleClick}
-                className={spanClassName || "btn btn btn-danger px-5"}>
+                className={spanClassName || "btn theme-primary2-btn"}>
                 {
                     isSaved ?
                         <><BookmarkCheckFill /> {t('SAVED')}</>

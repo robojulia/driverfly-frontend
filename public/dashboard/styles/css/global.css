@@ -267,6 +267,21 @@
     display: none;
 }
 
+/* Show scrollbar on all datatables */
+
+.sc-dmRaPn::-webkit-scrollbar {
+    display: block !important;
+}
+
+.sc-dmRaPn::-webkit-scrollbar {
+    background: #f1f1f1;
+    display: block;
+}
+
+.sc-dmRaPn::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
 /* Driver Dashboard  */
 
 .bg_yellow {
@@ -504,7 +519,7 @@ textarea {
 }
 
 .react-tabs__tab-panel {
-    height: 700px;
+    /* height: 700px; */
     overflow-x: auto;
 }
 
@@ -522,9 +537,11 @@ textarea {
     .profile-logo img {
         width: 20% !important;
     }
+
     .w-23 {
         width: 100% !important;
     }
+
     .account_tabs .react-tabs__tab {
         background-color: #1b4454 !important;
         color: #fff;
@@ -619,4 +636,81 @@ textarea {
 .accordion-button:not(.collapsed)::after {
     background-image: url("../../../img/arrowdown.svg");
 
+}
+
+.my_chart canvas {
+    height: 270px;
+}
+
+.data_table_dropdown a {
+    color: #000 !important;
+}
+
+.assign_unassign .btn-danger:focus {
+    background-color: #dc3545 !important;
+    border: solid 1px #dc3545 !important;
+}
+
+/* start Typeahead dropdown */
+.rbt .dropdown-item {
+    color: rgb(65, 60, 60) !important;
+}
+
+.rbt .dropdown-item:hover {
+    color: #000 !important;
+}
+
+/* end Typeahead dropdown */
+
+.employee_directory_tabs {
+    background: #2ec8c438;
+    padding: 20px;
+}
+
+.download_file_btn a,
+.download_file_btn a:hover {
+    color: #fff;
+    text-decoration: none;
+
+}
+
+.data_table_custom_action_button {
+    display: flex;
+}
+
+.data_table_custom_action_button svg {
+    margin: 0px 8px;
+}
+
+.data_table_custom_action_button .view {
+    color: #008000bd;
+
+}
+
+.data_table_custom_action_button .edit {
+    color: #2da2af;
+}
+
+.data_table_custom_action_button .delete {
+    color: #ff0000d9;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.cursor-pointer:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.enlarge-font,
+.enlarge-font::after {
+    cursor: pointer;
+    transition: font-size .2s ease-in-out;
+}
+
+.enlarge-font:hover,
+.enlarge-font:hover::after {
+    font-size: 2vmin;
 }

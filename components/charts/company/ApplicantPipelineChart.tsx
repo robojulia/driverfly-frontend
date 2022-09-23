@@ -1,8 +1,7 @@
-import { BarChart } from "../BarChart";
 import { ApplicantApi } from "../../../pages/api/applicant";
-import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
+import { PieChart } from "../PieChart";
 
-export function ApplicantPipelineChart() {
+export function ApplicantPieChart() {
     const fetchData = async () => {
         const api = new ApplicantApi();
 
@@ -23,13 +22,13 @@ export function ApplicantPipelineChart() {
         return [leads, inProcess, hired];
     };
 
-    const labels = [ "LEADS", "IN_PROCESS", "HIRED" ].map(v => `ApplicantPipelineChartLabel.${v}`);
+    const labels = ["LEADS", "IN_PROCESS", "HIRED"].map(v => `ApplicantPipelineChartLabel.${v}`);
 
     return (
-        <BarChart
+        <PieChart
             title="APPLICANTS"
             labels={labels}
             fetchData={fetchData}
-            />
+        />
     );
 }

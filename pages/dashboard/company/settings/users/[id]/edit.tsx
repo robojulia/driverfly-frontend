@@ -20,8 +20,6 @@ export default function EditUser({ id }) {
 
     const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
 
-    const { company } = useAuth();
-
     const [ user, setUser ] = useState(new UserEntity());
 
     useEffectAsync(async () => {

@@ -1,5 +1,5 @@
 import { Dropdown } from "react-bootstrap";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "../../../../hooks/useTranslation";
 
 import { useAuth } from "../../../../hooks/useAuth";

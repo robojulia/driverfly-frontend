@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import timeSince from "../../utils/timeSince"
 import { useTranslation } from "../../hooks/useTranslation"
 import CompanyPhoto from '../jobs/company-photo'
-import { GeoAltFill, CurrencyDollar } from 'react-bootstrap-icons';
+import { CurrencyDollar } from 'react-bootstrap-icons';
 import { buildAddress } from '../../utils/common'
 import { JobGeography } from '../../enums/jobs/job-geography.enum'
 import JobApi from '../../pages/api/job'
@@ -61,7 +61,7 @@ export default function OtrJobsList() {
 
                         <CompanyPhoto className="d-flex mr-4 truck-img" company={job.company} />
                         <div className="media-body">
-                            <Link href={`/dashboard/driver/find-jobs/${job.id}`}>
+                            <Link href={`/dashboard/driver/jobs/${job.id}`}>
                                 <a className='text-decoration-none '>
                                     <h4 className="mt-0">
                                         {job.title}
@@ -87,9 +87,8 @@ export default function OtrJobsList() {
                                         job.location &&
                                         <>
                                             <p>
-                                                {/* < GeoAltFill className='mr-1' /> */}
                                                 <span className='mr-4'>
-                                                    {buildAddress(job.location || {},{ street: false, zip_code: false})}
+                                                    {buildAddress(job.location || {}, { street: false, zip_code: false })}
                                                 </span></p>
                                         </>
                                     }
@@ -103,7 +102,7 @@ export default function OtrJobsList() {
                             </div>
 
                         </div>
-                        <Link href={`/dashboard/driver/find-jobs/${job.id}`}>
+                        <Link href={`/dashboard/driver/jobs/${job.id}`}>
                             <button type="button" className="theme-primary-btn-outline">{t('view_job')}</button>
                         </Link>
 

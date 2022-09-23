@@ -1,22 +1,10 @@
 import { useTranslation } from "../../hooks/useTranslation";
-import { JobGeography } from "../../enums/jobs/job-geography.enum"
-import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
-import { JobDeliveryType } from "../../enums/jobs/job-delivery-type.enum";
-import { JobEquipmentType } from "../../enums/jobs/job-equipment-type.enum";
-import { JobSchedule } from "../../enums/jobs/job-schedule.enum";
-import { JobPayMethod } from "../../enums/jobs/job-pay-method.enum";
 import { MvrType } from "../../enums/users/mvr-type.enum";
-import timeSince from "../../utils/timeSince";
 import ShowEnumFromString from "../../components/enum-filters/show-enum-from-string"
 import { useContext } from "react"
 import jobDetailContext from "../../context/jobDetailContext";
-import { ArrowRight, CurrencyDollar, GeoAltFill, FileEarmarkZip, Facebook, PersonFill, ClockFill, PersonWorkspace, Wallet, Wallet2, Truck, GearFill, PersonBadge, PersonBadgeFill, CashCoin, BlockquoteLeft, GearWideConnected, CollectionFill, ExplicitFill, Joystick, Calendar2, Calendar2EventFill, Calendar2Event, CalendarRange } from 'react-bootstrap-icons';
-import { JobPayFrequency } from "../../enums/jobs/job-pay-frequency.enum";
-import { JobTeamDriver } from "../../enums/jobs/job-team-driver.enum";
-import { JobBenefits } from "../../enums/jobs/job-benefits.enum";
-import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
-import { DriverEndorsement } from "../../enums/users/driver-endorsement.enum";
-import { VehicleTransmissionType } from "../../enums/vehicles/vehicle-transmission-type.enum";
+import { CurrencyDollar, GeoAltFill, ClockFill, PersonWorkspace, Wallet2, Truck, GearFill, PersonBadgeFill, CashCoin, BlockquoteLeft, GearWideConnected, CollectionFill, ExplicitFill, Joystick, CalendarRange } from 'react-bootstrap-icons';
+import ShowFormattedDate from "../jobs/show-formatted-date";
 
 export default function JonInformation({ job }) {
 
@@ -26,12 +14,10 @@ export default function JonInformation({ job }) {
 
     return (
         <>
-            <div className="sidebar shadow-sm p-3 mb-5 bg-white rounded">
-                <h3>{t('job_information')}</h3>
-
-                <div className="sidebar-inner">
+            <div className="sidebar p-4  m-1 mb-5 shadow-lg single-job-items rounded">
+                <h3 className="border-bottom py-2">{t('job_information')}</h3>
+                <div className="sidebar-inner pt-1">
                     <ul className="list p-0">
-
                         {/* DATE POSTED START */}
                         <li>
                             <div className="icon">
@@ -40,8 +26,7 @@ export default function JonInformation({ job }) {
                             <div className="details">
                                 <div className="text">{t('POSTED')}</div>
                                 <div className="value text-muted">
-                                    <span className="text"><span className="number">{timeSince(job.created_at)}</span> {t('ago')}</span>
-
+                                    <ShowFormattedDate date={job.created_at} />
                                 </div>
                             </div>
                         </li>
@@ -53,7 +38,7 @@ export default function JonInformation({ job }) {
                             </div>
                             <div className="details">
                                 <div className="text">{t('OFFERED_SALARY')}</div>
-                                <div className="value text-muted"><CurrencyDollar /><span className="price-text">{job.min_weekly_pay}</span> - <CurrencyDollar /><span className="price-text">{job.max_weekly_pay}</span> {t('per_week')}</div>
+                                <div className="value text-muted"><CurrencyDollar /><span className="price-text">{job.min_weekly_pay || 0}</span> - <CurrencyDollar /><span className="price-text">{job.max_weekly_pay || 0}</span> {t('per_week')}</div>
                             </div>
                         </li>
 

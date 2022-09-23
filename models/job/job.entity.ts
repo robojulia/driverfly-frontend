@@ -25,7 +25,6 @@ import { BasicEntity } from '../BasicEntity.entity';
 import { JobPayFrequency } from '../../enums/jobs/job-pay-frequency.enum';
 import { JobDrugTestType } from '../../enums/jobs/job-drug-test-type.enum';
 import { numberRangeEnd, numberRangeStart } from '../../utils/yup';
-import { JobPreferredLocation } from '../../enums/jobs/job-preferred-location.enum';
 
 export class JobEntity {
     id?: number;
@@ -38,7 +37,6 @@ export class JobEntity {
     drivers_needed?: number;
     expiry_date?: string | Date;
     geography?: JobGeography;
-    preferred_location?:JobPreferredLocation;
     schedule?: JobSchedule;
     schedule_other?: string;
     employment_type?: JobEmploymentType;
@@ -81,18 +79,24 @@ export class JobEntity {
     criminal_history?: JobCriminalEntity[] = [];
     max_moving_violations?: number;
     safety_requirements_other?: string;
+    is_orientation_needed: boolean = true;
+    orientation_location: LocationEntity = new LocationEntity();
+    orientation_start_at?: Date;
+    orientation_end_at?: Date;
     created_at?: string | Date;
     applicantsCount?: number;
-
     static yupSchema() {
         return yup.object({
+            is_orientation_needed: yup.boolean().default(false),
             title: yup.string().required().max(100).nullable(),
             location: BasicEntity.yupSchema(),
+            orientation_location: BasicEntity.yupSchema(),
+            orientation_start_at: yup.date().nullable(),
+            orientation_end_at: yup.date().nullable(),
             description: yup.string().max(1500).required().nullable(),
             drivers_needed: yup.number().min(0).nullable(),
             expiry_date: yup.date().nullable(),
             geography: (yup.string() as any).enum(JobGeography).required().nullable(),
-            preferred_location: (yup.string() as any).enum(JobPreferredLocation).required().nullable(),
             max_applicant_radius: yup.number().min(1)
                 .when("geography", {
                     is: JobGeography.LOCAL,
@@ -186,6 +190,7 @@ export class JobEntity {
             required_equipment: (yup.array(
                 JobEquipmentEntity.yupSchema()
             ) as any).unique("type"),
+
             required_endorsement: yup.array(
                 (yup.string() as any).enum(DriverEndorsement)
             ),

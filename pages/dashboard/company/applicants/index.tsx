@@ -5,13 +5,12 @@ import { TranslateInterface, useTranslation } from "../../../../hooks/useTransla
 import { FormGroup, FormControlLabel, Switch } from '@mui/material';
 import { EyeFill, PencilFill } from 'react-bootstrap-icons';
 import ApplicantApi from "../../../api/applicant";
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { NextRouter, useRouter } from 'next/router';
 import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum';
 import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
 import { JobEntity } from '../../../../models/job/job.entity';
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
-import ShowEnumFromString from "../../../../components/enum-filters/show-enum-from-string";
 import * as numbers from "../../../../utils/number";
 import { Button, ButtonGroup } from "react-bootstrap";
 import PageLayout from "../../../../components/layouts/page/PageLayout";
@@ -434,7 +433,17 @@ function ApplicantView(props: ViewProps) {
                         id: "name",
                         name: "NAME",
                         selector: applicant => getApplicantName(applicant),
+                        cell: applicant => (
+                            <Link href={`${router.pathname}/${applicant.id}`}>
+                                <a>{getApplicantName(applicant)}</a>
+                            </Link>
+                        ),
                         hidable: false,
+                    },
+                    {
+                        id: "member",
+                        name: "IS_MMEMBER",
+                        selector: applicant => !!!applicant.user?.id ? t('MMEMBER') : t('NON_MMEMBER'),
                     },
                     {
                         id: "city",
@@ -498,6 +507,11 @@ function ApplicantView(props: ViewProps) {
                                 name: "JOB",
                                 selector: aJob => aJob.job.title,
                                 hidable: false,
+                            },
+                            {
+                                id: "location",
+                                name: "LOCATION",
+                                selector: aJob => buildAddress(aJob.job.location),
                             },
                             {
                                 name: "DATE_APPLIED",
@@ -597,6 +611,12 @@ function JobView(props: ViewProps) {
         }}
         columns={[
             {
+                id: "Id",
+                name: "ID",
+                selector: job => job.id,
+                hidable: true,
+            },
+            {
                 id: "job",
                 name: "JOB",
                 selector: job => job.title,
@@ -636,6 +656,10 @@ function JobView(props: ViewProps) {
                 }}
                 columns={[
                     {
+                        name: "ID",
+                        selector: aJob => aJob.applicant.id,
+                    },
+                    {
                         name: "NAME",
                         selector: aJob => getApplicantName(aJob.applicant),
                         cell: aJob => (
@@ -644,6 +668,11 @@ function JobView(props: ViewProps) {
                             </Link>
                         ),
                         hidable: false,
+                    },
+                    {
+                        id: "member",
+                        name: "IS_MMEMBER",
+                        selector: aJob => !!!aJob.applicant.user?.id ? t('MMEMBER') : t('NON_MMEMBER'),
                     },
                     {
                         name: "CITY",

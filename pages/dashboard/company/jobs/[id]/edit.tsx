@@ -32,6 +32,13 @@ export default function EditJob({ id }) {
 
             const entity = await api.getById(+id);
 
+            entity.required_skills.forEach((skill) => {
+                if (!Number.isInteger(skill.years)) {
+                    skill.months = Math.round((skill.years % 1) * 12);
+                    skill.years = Math.floor(skill.years);
+                }
+            });
+
             if (entity && entity.company.id === user.company?.id) setJob(entity);
             else {
                 toast.error(t("UNABLE_TO_FIND_{name}", { name: "JOB" }, { translateProps: true }));

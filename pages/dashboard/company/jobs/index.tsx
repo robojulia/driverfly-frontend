@@ -3,7 +3,7 @@ import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayo
 import { useEffect, useState } from "react";
 import React from "react";
 
-import { PenFill, TrashFill, Eye, EyeFill, Plus } from 'react-bootstrap-icons';
+import { PenFill, TrashFill, Plus } from 'react-bootstrap-icons';
 
 import PageLayout from "../../../../components/layouts/page/PageLayout";
 
@@ -54,20 +54,8 @@ export default function JobListing() {
         router.push(`${router.pathname}/create`);
     }
 
-    const onPreviewClick = (id: number, slug: string) => {
-        router.push(`/jobs/${id}/${slug}`);
-    }
-
-    const onViewApplicantsClick = (id: number) => {
-        router.push(`/dashboard/company/applicants?jobId=${id}`);
-    }
-
     const onEditClick = (id: number) => {
         router.push(`${router.pathname}/${id}/edit`);
-    }
-
-    const onViewClick = (id: number) => {
-        router.push(`${router.pathname}/${id}`);
     }
 
     const onDeleteClick = async (id: number) => {
@@ -90,7 +78,6 @@ export default function JobListing() {
                 </Button>
             }
         >
-
             <ViewDataTable<JobEntity>
                 columnSettingKey={columnSettingKey}
                 customStyles={{
@@ -101,7 +88,7 @@ export default function JobListing() {
                         },
                     },
                 }}
-                 columns={[
+                columns={[
                     {
                         id: "id",
                         name: "ID",
@@ -174,21 +161,7 @@ export default function JobListing() {
                     },
                 ]}
                 actions={j => ([
-                    {
-                        onClick: e => onViewApplicantsClick(j.id),
-                        icon: EyeFill,
-                        label: t("VIEW_{name}", { name: "APPLICANTS" }, { translateProps: true })
-                    },
-                    {
-                        onClick: e => onPreviewClick(j.id, j.slug),
-                        icon: Eye,
-                        label: t("VIEW_{name}", { name: "POST" }, { translateProps: true })
-                    },
-                    {
-                        onClick: e => onViewClick(j.id),
-                        icon: Eye,
-                        label: "VIEW"
-                    },
+
                     {
                         onClick: e => onEditClick(j.id),
                         icon: PenFill,
