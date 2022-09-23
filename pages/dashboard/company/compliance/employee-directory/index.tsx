@@ -57,10 +57,10 @@ export default function EmployeeDirectory() {
     });
 
     const tabs = {
-        Background: applicant && <ViewApplicantDetail applicant={applicant} />,
+        BACKGROUND: applicant && <ViewApplicantDetail applicant={applicant} />,
         DAQ: < DaqTab />,
         DQF: < DqfTab />,
-        Vehicle: < VehicleInformationTab />
+        VEHICLES: < VehicleInformationTab />
     };
 
     return (
@@ -88,7 +88,6 @@ export default function EmployeeDirectory() {
                                 </u>
                             </Col>
                         </Row>
-
                     </>
                 }
             >
@@ -111,7 +110,7 @@ export default function EmployeeDirectory() {
                         {
                             id: "name",
                             name: 'NAME',
-                            cell: applicant => <span className="bg-priamry" onClick={() => setApplicant(applicant?.applicant)}>{applicant?.applicant?.first_name + ' ' + applicant?.applicant?.last_name}</span>,
+                            cell: applicant => <span role="button" className="bg-priamry cursor-pointer" onClick={() => setApplicant(applicant?.applicant)}>{applicant?.applicant?.first_name + ' ' + applicant?.applicant?.last_name}</span>,
                         },
                         {
                             id: "phone",
