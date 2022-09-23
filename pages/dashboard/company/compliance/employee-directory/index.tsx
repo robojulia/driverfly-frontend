@@ -100,6 +100,11 @@ export default function EmployeeDirectory() {
                                 color: "white"
                             },
                         },
+                        rows: {
+                            highlightOnHoverStyle: {
+                                transform: "scale(1.01, 1.011)"
+                            }
+                        }
                     }}
                     columns={[
                         {
