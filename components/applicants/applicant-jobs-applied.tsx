@@ -6,8 +6,9 @@ import ShowEnumFromString from '../enum-filters/show-enum-from-string';
 import ViewTable from '../viewDetails/viewTable';
 import { ViewApplicantDetailProps } from '../../types/applicant/view-application-detail-props.type';
 
+interface ApplicantJobsAppliedProps extends ViewApplicantDetailProps { }
 
-export default function JobsApplicant({ applicant }: ViewApplicantDetailProps) {
+export default function ApplicantJobsApplied({ applicant }: ApplicantJobsAppliedProps) {
 
     return (
         <ViewCard title="JOBS_APPLIED_TO_WITH_YOU">

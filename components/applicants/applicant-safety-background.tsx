@@ -5,8 +5,9 @@ import ViewCard from '../viewDetails/viewCard';
 import ViewDetails from '../viewDetails/viewDetails';
 import { ViewApplicantDetailProps } from '../../types/applicant/view-application-detail-props.type';
 
+interface ApplicantSafetyBackgroundProps extends ViewApplicantDetailProps { }
 
-export default function SafetyBackground({ applicant }: ViewApplicantDetailProps) {
+export default function ApplicantSafetyBackground({ applicant }: ApplicantSafetyBackgroundProps) {
 
     const { t } = useTranslation();
 

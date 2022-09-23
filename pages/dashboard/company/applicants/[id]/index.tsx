@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 
 import { Button, ButtonGroup, Col, Row } from "react-bootstrap";
-import {  BookmarkCheck, BookmarkDash, Pencil, PlusLg, Trash } from "react-bootstrap-icons";
+import { BookmarkCheck, BookmarkDash, Pencil, PlusLg, Trash } from "react-bootstrap-icons";
 
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
 
@@ -28,9 +28,9 @@ import { ApplicantSuggestedJobEntity } from "../../../../../models/applicant/app
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import ViewApplicantDetail from "../../../../../components/applicants/applicant-view-details";
 import ApplicantWorkHistory from "../../../../../components/applicants/applicant-work-history";
-import ApplicantSafetyBackground from "../../../../../components/applicants/applicant-safet-background";
-import JobsApplicant from "../../../../../components/applicants/applicant-jobs-applied";
-import ApplicantConsiderFor from "../../../../../components/applicants/aplicant-consider-applicant-for";
+import ApplicantSafetyBackground from "../../../../../components/applicants/applicant-safety-background";
+import ApplicantJobsApplied from "../../../../../components/applicants/applicant-jobs-applied";
+import ApplicantConsiderFor from "../../../../../components/applicants/applicant-consider-for";
 export default function ViewApplicant({ id }) {
     const router = useRouter();
 
@@ -230,24 +230,24 @@ export default function ViewApplicant({ id }) {
             }
             <Row>
                 <Col>
-                    <ViewApplicantDetail applicant={applicant} protectedFields={protectedFields}/>
+                    <ViewApplicantDetail applicant={applicant} protectedFields={protectedFields} />
                 </Col>
             </Row>
             <Row>
                 <Col md="4">
-                 <ApplicantWorkHistory applicant={applicant}/>
+                    <ApplicantWorkHistory applicant={applicant} />
                 </Col>
                 <Col md="8">
-                 <ApplicantSafetyBackground applicant={applicant} />
+                    <ApplicantSafetyBackground applicant={applicant} />
                 </Col>
             </Row>
             <Row>
                 <Col md="6">
-                  <JobsApplicant applicant={applicant}/>
+                    <ApplicantJobsApplied applicant={applicant} />
                 </Col>
                 {applicantSuggestedJobs &&
                     <Col md="6">
-                        <ApplicantConsiderFor applicant={applicant} applicantSuggestedJobs={applicantSuggestedJobs}/>
+                        <ApplicantConsiderFor applicant={applicant} applicantSuggestedJobs={applicantSuggestedJobs} />
                     </Col>
                 }
             </Row>

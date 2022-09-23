@@ -14,11 +14,11 @@ export default function EditApplicant({ id }) {
     const { t } = useTranslation();
 
     const backPath = `/dashboard/company/applicants/${id}`;
-    
+
 
     const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
 
-    const [ applicant, setApplicant ] = useState(new ApplicantEntity());
+    const [applicant, setApplicant] = useState(new ApplicantEntity());
 
     useEffectAsync(async () => {
         if (id) {
@@ -35,16 +35,17 @@ export default function EditApplicant({ id }) {
             toast.error(t("UNABLE_TO_FIND_{name}", { name: "APPLICANT" }, { translateProps: true }));
             goBack();
         }
-    }, [ id ]);
+    }, [id]);
 
     return (
         <ChildPageLayout
             title={t("EDIT_{name}", { name: "APPLICANT" }, { translateProps: true })}
-            >
+            backPath={backPath}
+        >
             <ApplicantForm
                 entity={applicant}
                 onSaveComplete={goBack}
-                />
+            />
         </ChildPageLayout>
     );
 }

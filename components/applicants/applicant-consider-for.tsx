@@ -4,9 +4,13 @@ import ViewCard from '../viewDetails/viewCard';
 import { Link } from 'react-bootstrap-icons';
 import ViewTable from '../viewDetails/viewTable';
 import { ViewApplicantDetailProps } from '../../types/applicant/view-application-detail-props.type';
+import { ApplicantSuggestedJobEntity } from '../../models/applicant/applicant-suggested-job.entity';
 
+interface ApplicantConsiderForProps extends ViewApplicantDetailProps {
+    applicantSuggestedJobs?: ApplicantSuggestedJobEntity[];
+}
 
-export default function ConsiderFor({ applicant, applicantSuggestedJobs }: ViewApplicantDetailProps) {
+export default function ApplicantConsiderFor({ applicant, applicantSuggestedJobs }: ApplicantConsiderForProps) {
 
     const { t } = useTranslation();
 

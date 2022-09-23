@@ -2,14 +2,16 @@ import { Accordion } from 'react-bootstrap';
 import { useTranslation } from '../../hooks/useTranslation';
 import ViewCard from '../viewDetails/viewCard';
 import { buildAddress } from '../../utils/common';
-import { ViewApplicantDetailProps } from '../../types/applicant/view-application-detail-props.type';
 import { AccordionSummary, AccordionDetails } from '@mui/material';
 import React from 'react';
 import { ArrowsExpand } from 'react-bootstrap-icons';
 import { dateRange } from '../../utils/date';
 import ViewDetails from '../viewDetails/viewDetails';
+import { ViewApplicantDetailProps } from '../../types/applicant/view-application-detail-props.type';
 
-export default function WorkHistory({ applicant }: ViewApplicantDetailProps) {
+interface ApplicantWorkHistoryProps extends ViewApplicantDetailProps { }
+
+export default function ApplicantWorkHistory({ applicant }: ApplicantWorkHistoryProps) {
 
     const { t } = useTranslation();
 

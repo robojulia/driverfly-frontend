@@ -21,32 +21,30 @@ import { filterHired, reduceSingleEntity } from "../../../../../utils/filter-app
 import { ReducedApplicantEntityType } from "../../../../../types/applicant/reduced-applicant-entity.type";
 import ViewModal from "../../../../../components/viewDetails/viewModal";
 import ViewApplicantDetail from "../../../../../components/applicants/applicant-view-details";
+import useLastPage from "../../../../../hooks/useLastPage";
+
 export default function EmployeeDirectory() {
-    const [applicant, setApplicant] = useState<{}>()
-    const [applicants, setApplicants] = useState<ReducedApplicantEntityType[]>([])
-
-    const resetApplicant = () => setApplicant(null)
-
-    const tabs = {
-        Background: applicant && <ViewApplicantDetail applicant={applicant} />,
-        DAQ: < DaqTab />,
-        DQF: < DqfTab />,
-        Vehicle: < VehicleInformationTab />
 
 
-    };
     const { user } = useAuth();
     const columnSettingKey = getDataTableColumnKey("company", user, "employee-directory");
 
     const { t } = useTranslation();
-    const router = useRouter()
-
     const applicantApi = new ApplicantApi();
+    const router = useRouter()
+    const { setPreviousPath } = useLastPage();
+    setPreviousPath(router.asPath)
+
+    const [applicant, setApplicant] = useState<ApplicantEntity>()
+    const resetApplicant = (): void => setApplicant(null)
+
+    const [applicants, setApplicants] = useState<ReducedApplicantEntityType[]>([])
 
     const onEditClick = (id: number) => router.push(`/dashboard/company/applicants/${id}/edit`)
 
-
     useEffectAsync(async () => {
+        console.log("router.asPath", router.asPath);
+
 
         const data = await applicantApi.list();
         const filteredApplicants: ApplicantEntity[] = filterHired(data)
@@ -57,6 +55,13 @@ export default function EmployeeDirectory() {
     }, [user], () => {
         console.log("unloading page...")
     });
+
+    const tabs = {
+        Background: applicant && <ViewApplicantDetail applicant={applicant} />,
+        DAQ: < DaqTab />,
+        DQF: < DqfTab />,
+        Vehicle: < VehicleInformationTab />
+    };
 
     return (
         <>
