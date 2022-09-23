@@ -24,7 +24,7 @@ import { FlagInappropriateJob } from "../../enums/jobs/flag-inappropriate-job.en
 export default function DriverFlag({ jobId }) {
 
     const { user } = useAuth();
-    if(!!!user)return;
+    if (!!!user) return <></>;
 
     const { t } = useTranslation();
     const router = useRouter();
@@ -63,8 +63,6 @@ export default function DriverFlag({ jobId }) {
             >
 
                 <form onSubmit={form.handleSubmit}>
-                    <p>{jobId}</p>
-
                     <Row>
                         <BaseSelect
                             className="col"
