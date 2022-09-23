@@ -13,7 +13,7 @@ import JobApi from "../../pages/api/job";
 import { JobEntity } from "../../models/job/job.entity";
 import Link from "next/link";
 
-export default function RecentJobs() {
+export default function FeaturedJobs() {
     const [jobs, setJobs] = useState<JobEntity[]>([]);
     const { t } = useTranslation();
 
@@ -21,7 +21,7 @@ export default function RecentJobs() {
         const api = new JobApi();
 
         try {
-            const { items } = await api.search({ take: 6 });
+            const { items } = await api.search({ take: 6, order_by: "ASC" });
             setJobs(items);
         }
         catch (e) {
