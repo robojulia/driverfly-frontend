@@ -115,7 +115,7 @@ export default function EmployeeDirectory() {
                         {
                             id: "name",
                             name: 'NAME',
-                            cell: applicant => <span role="button" className="bg-priamry cursor-pointer" onClick={() => setApplicant(applicant?.applicant)}>{applicant?.applicant?.first_name + ' ' + applicant?.applicant?.last_name}</span>,
+                            cell: applicant => <span role="button" className="bg-priamry cursor-pointer-span" onClick={() => setApplicant(applicant?.applicant)}>{applicant?.applicant?.first_name + ' ' + applicant?.applicant?.last_name}</span>,
                         },
                         {
                             id: "phone",
@@ -147,10 +147,10 @@ export default function EmployeeDirectory() {
                                 <>
                                     <div className="data_table_custom_action_button">
                                         <div onClick={() => setApplicant(applicant?.applicant)} >
-                                            <EyeFill className="view" />
+                                            <EyeFill className="view cursor-pointer" />
                                         </div>
                                         <div onClick={(e) => onEditClick(applicant?.applicant?.id)}>
-                                            < PenFill className="edit" />
+                                            < PenFill className="edit cursor-pointer" />
                                         </div>
                                     </div>
 

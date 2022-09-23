@@ -694,14 +694,24 @@ textarea {
     color: #ff0000d9;
 }
 
-.cursor-pointer{
+.cursor-pointer svg{
     cursor: pointer;
+    font-size: 13px;
+    transition: font-size .2s ease-in-out;
+    
 }
-
 .cursor-pointer:hover{
-    text-decoration: underline;
     cursor: pointer;
-    transition: font-weight .4s ease-in-out;
+    font-size: 18px;
+}
+.cursor-pointer-span{
+    cursor: pointer;
+    font-size: 12px;
+    transition: font-size .2s ease-in-out;
+}
+.cursor-pointer-span:hover{
+    text-decoration: underline;
+    font-size: 16px;
 }
 
 .cursor-pointer > .be-bold {
