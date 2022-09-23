@@ -701,15 +701,20 @@ textarea {
 .driver-flag {
     background-color: #1d4354;
     width: 12%;
-    height: 70px;
+    height: 60px;
     border-radius: 0%;
     right: 0%;
     top: 50%;
     position: fixed;
     cursor: pointer;
+    z-index: 9999;
 
 }
-
+.driver-flag:hover{
+    box-shadow: 0 0rem 3rem rgb(0 0 0 / 20%);
+    transform: scale(1.1, 1.1);
+    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
 .driver-flag p {
     content: "Flag";
     position: relative;

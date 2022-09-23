@@ -38,6 +38,7 @@ import SuggestedJobs from "../../../../../components/dashboard/driver/suggested-
 import { ApplicantSuggestedJobEntity } from "../../../../../models/applicant/applicant-suggested-job.entity";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import { jobGeography } from "../../../../../utils/jobs";
+import CompanyFlag from "../../../../../components/company-flag/CompanyFlag";
 
 export default function ViewApplicant({ id }) {
     const router = useRouter();
@@ -238,6 +239,7 @@ export default function ViewApplicant({ id }) {
                     </Col>
                 </Row>
             }
+            < CompanyFlag  applicantId={id}/>
             <Row>
                 <Col>
                     <ViewCard title={`${applicant?.first_name} ${applicant?.last_name}`}>

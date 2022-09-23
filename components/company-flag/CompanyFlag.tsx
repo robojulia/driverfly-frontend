@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import FlagInappropriateJobApi from "../../pages/api/flag-inappropriate-job";
+import FlagInappropriateApplicantApi from "../../pages/api/flag-inappropriate-applicant";
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useRouter } from 'next/router'
@@ -12,70 +12,69 @@ import BaseInput from "../forms/BaseInput";
 // useAuth
 import { useAuth } from '../../hooks/useAuth'
 
-import { FlagInappropriateJobDto } from "../../models/flag-inappropriate-job/flag-inappropriate-job.dto";
-
 import { Row, Button, Col } from "react-bootstrap";
 import ViewModal from "../viewDetails/viewModal";
 import { FlagFill } from "react-bootstrap-icons";
 import { useState } from "react";
 import BaseSelect from "../forms/BaseSelect";
-import { FlagInappropriateJob } from "../../enums/jobs/flag-inappropriate-job.enum";
+import { FlagInappropriateApplicantDto } from "../../models/flag-inappropriate-applicant/flag-inappropriate-applicant.dto";
+import { FlagInappropriateApplicant } from "../../enums/jobs/flag-inappropriate-applicant.enum";
+import { useEffectAsync } from "../../utils/react";
 
-export default function DriverFlag({ jobId }) {
+export default function CompanyFlag({ applicantId }) {
 
     const { user } = useAuth();
-    if (!!!user) return <></>;
 
     const { t } = useTranslation();
     const router = useRouter();
     const form = useFormik({
-        initialValues: new FlagInappropriateJobDto(jobId),
-        validationSchema: FlagInappropriateJobDto.yupSchema(),
+        initialValues: new FlagInappropriateApplicantDto(applicantId),
+        validationSchema: FlagInappropriateApplicantDto.yupSchema(),
         onSubmit: async (dto) => {
-            const api = new FlagInappropriateJobApi();
+            const api = new FlagInappropriateApplicantApi();
 
             try {
-                await api.FlagInappropriateJob(dto);
-                toast.success(t("THANKS_FOR_KEEPING_A_WATCHFUL_EYE"));
+                await api.FlagInappropriateApplicantApi(dto);
+                toast.success(t("THANKS_FOR_KEEPING_A_WATCHFUL_EYE_TO_OUR_SAFETY"));
             }
             catch (e) {
                 globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SEND_EMAIL" });
             }
         }
     });
-    // showDriverFlagModel 
-    const [showDriverFlagModel, setShowDriverFlagModel] = useState<boolean>(false);
-    const openFileUploadModel = (): void => setShowDriverFlagModel(true)
-    const closeDriverFlagModel = (): void => setShowDriverFlagModel(false)
+    // showApplicantFlagModel 
+    const [showApplicantFlagModel, setShowApplicantFlagModel] = useState<boolean>(false);
+    const openApplicantFlagModel = (): void => setShowApplicantFlagModel(true)
+    const closeApplicantFlagModel = (): void => setShowApplicantFlagModel(false)
 
     return (
         <>
-            <div className="driver-flag" onClick={openFileUploadModel}>
+            <div className="driver-flag" onClick={openApplicantFlagModel}>
                 <p>
                     < FlagFill /> <span>{t("flag_inappropriate")} </span>
                 </p>
             </div>
             <ViewModal
-                show={showDriverFlagModel}
-                onCloseClick={closeDriverFlagModel}
+                show={showApplicantFlagModel}
+                onCloseClick={closeApplicantFlagModel}
                 closeText="CANCEL"
-                title="flag_inappropriate"
+                title="Flag_Inappropriate_Applicant"
             >
 
                 <form onSubmit={form.handleSubmit}>
                     <Row>
                         <BaseSelect
                             className="col"
-                            label="Flag_Inappropriate_Job"
-                            name="flag_inappropriate_job"
+                            label="Flag_Inappropriate_Applicant"
+                            name="flag_inappropriate_applicant"
                             required
                             placeholder
-                            labelPrefix="FlagInappropriateJob"
-                            enumType={FlagInappropriateJob}
+                            labelPrefix="FlagInappropriateApplicant"
+                            enumType={FlagInappropriateApplicant}
                             formik={form}
                         />
                         {
-                            form.values.flag_inappropriate_job === FlagInappropriateJob.OTHER &&
+                            form.values.flag_inappropriate_applicant === FlagInappropriateApplicant.OTHER &&
                             <BaseInput
                                 className="col-12 mt-3"
                                 label="other"
@@ -88,7 +87,7 @@ export default function DriverFlag({ jobId }) {
                     </Row>
                     <Row>
                         <Col className="text-end my-3">
-                            <Button disabled={form.values.flag_inappropriate_job == null} type="submit">{t("submit")}</Button>
+                            <Button disabled={form.values.flag_inappropriate_applicant == null} type="submit">{t("submit")}</Button>
                         </Col>
                     </Row>
                 </form>
