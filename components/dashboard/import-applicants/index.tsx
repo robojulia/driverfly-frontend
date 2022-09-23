@@ -57,12 +57,21 @@ const ImportApplicants = () => {
                 const applicant = values.items[i];
 
                 if (applicant.email) {
+                    const rowError: { email?: string, phone?: string } = {}
                     const matches = await api.list({ email: applicant.email })
 
-                    if (matches.some(v => v.company?.id != null)) errors[i] = { email: t("{name}_ALREADY_EXISTS", { name: "EMAIL" }, { translateProps: true }) };
-                    else if (matches.some(v => v.company == null)) errors[i] = { email: t("{name}_ALREADY_EXISTS_NO_MERGE", { name: "EMAIL" }, { translateProps: true }) };
+                    if (matches.some(v => v.company?.id != null)) rowError.email = t("{name}_ALREADY_EXISTS", { name: "EMAIL" }, { translateProps: true });
+                    else if (matches.some(v => v.company == null)) rowError.email = t("{name}_ALREADY_EXISTS_NO_MERGE", { name: "EMAIL" }, { translateProps: true });
 
+                    if (applicant.phone) {
+                        if (matches.some(v => v.company?.id != null)) rowError.phone = t("{name}_ALREADY_EXISTS", { name: "PHONE" }, { translateProps: true });
+                        else if (matches.some(v => v.company == null)) rowError.phone = t("{name}_ALREADY_EXISTS_NO_MERGE", { name: "PHONE" }, { translateProps: true });
+                    }
+                    if (rowError) {
+                        errors[i] = rowError
+                    }
                 }
+
 
                 let progress = Math.floor((i + 1) * 100 / values.items.length);
 
@@ -397,7 +406,9 @@ const ImportApplicants = () => {
         </>
     );
 };
+
 function guessControl(form: FormikInterface, schema, warnings: Record<string, string>, header: string, index: number, t: TranslateInterface) {
+
 
     const desc: SchemaObjectDescription = schema.fields[header];
     const name = `items.${index}.${header}`;

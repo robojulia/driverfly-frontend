@@ -722,4 +722,21 @@ textarea {
     left: 17%;
     color: #fff;
     margin: 0;
+    cursor: pointer;
+}
+
+.cursor-pointer:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.enlarge-font,
+.enlarge-font::after {
+    cursor: pointer;
+    transition: font-size .2s ease-in-out;
+}
+
+.enlarge-font:hover,
+.enlarge-font:hover::after {
+    font-size: 2vmin;
 }
