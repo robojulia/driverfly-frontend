@@ -4,12 +4,10 @@ import { ArrowRight, CurrencyDollar } from "react-bootstrap-icons"
 import { useTranslation } from '../../hooks/useTranslation';
 import { JobEntity } from "../../models/job/job.entity";
 import { buildAddress } from '../../utils/common';
-import timeSince from '../../utils/timeSince';
 import JobApply from '../apply';
 import SaveJob from '../dashboard/driver/save-job';
 import JobDescription from '../job-description/JobDescription';
 import JonInformation from '../job-information-sidebar/JobInformation';
-import RelatedJobs from '../related-jobs/Related-Jobs';
 import SocilShare from '../share-link/ShareLink';
 import CompanyPhoto from './company-photo';
 import ShowFormattedDate from './show-formatted-date';
@@ -17,6 +15,8 @@ import JobVehicles from './job-vehicles';
 import React from 'react';
 import ViewModal from '../viewDetails/viewModal';
 import { useAuth } from '../../hooks/useAuth'
+import DriverFlag from '../driver-flag/DriverFlag';
+
 
 
 export interface ViewJobDetailProps {
@@ -29,6 +29,7 @@ export interface ViewJobDetailProps {
     hideCompanyName?: boolean | (() => boolean);
     hideSocialLinks?: boolean | (() => boolean);
     viewAllJobsLink?: string;
+
 }
 
 
@@ -51,6 +52,9 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
 
     return (
         <section className={`${className} "top-links-sec ort-general"`}>
+
+            <DriverFlag jobId={job.id} />
+
             <Container>
                 <Row>
                     <Col md={9}>

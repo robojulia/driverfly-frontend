@@ -652,16 +652,17 @@ textarea {
 }
 
 /* start Typeahead dropdown */
-.rbt .dropdown-item{
+.rbt .dropdown-item {
     color: rgb(65, 60, 60) !important;
 }
 
-.rbt .dropdown-item:hover{
+.rbt .dropdown-item:hover {
     color: #000 !important;
 }
+
 /* end Typeahead dropdown */
 
-.employee_directory_tabs{
+.employee_directory_tabs {
     background: #2ec8c438;
     padding: 20px;
 }
@@ -692,4 +693,28 @@ textarea {
 
 .data_table_custom_action_button .delete {
     color: #ff0000d9;
+}
+
+
+/* driver-flag */
+
+.driver-flag {
+    background-color: #1d4354;
+    width: 12%;
+    height: 70px;
+    border-radius: 0%;
+    right: 0%;
+    top: 50%;
+    position: fixed;
+    cursor: pointer;
+
+}
+
+.driver-flag p {
+    content: "Flag";
+    position: relative;
+    top: 31%;
+    left: 17%;
+    color: #fff;
+    margin: 0;
 }

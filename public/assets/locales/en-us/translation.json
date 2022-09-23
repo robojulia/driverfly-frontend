@@ -868,7 +868,7 @@
     "INVALID_EMAIL_FORMAT": "Invalid email format",
     "NO_EMAIL_AND_NUMBER": "Email and Phone Numbers are not allowed",
     "USER_NOT_FOUND": "User with the email specified was not found.",
-    "USER_NOT_ACTIVE":"User with the email specified is not active.",
+    "USER_NOT_ACTIVE": "User with the email specified is not active.",
     "RESET_PASSWORD_EMAIL_SENT_RECENTLY": "A password reset email was recently sent, please check your email or try again after 15 minutes",
     "BACK_TO_LOGIN": "Back To Login",
     "UNABLE_TO_SEND_PASSWORD_RESET_EMAIL": "Unable to send password reset email",
@@ -1005,11 +1005,17 @@
         "MVR": "Motor Vehicle Record (MVR)",
         "PHYSICAL": "DOT Long Form Physical"
     },
-    "CompanyDocumentType":{
+    "CompanyDocumentType": {
         "TRAINING_DOCUMENTS": "Training Documents",
         "COMPANY_POLICY": "Company Policy",
         "SAFETY": "Safety",
         "OTHER": "Others"
+    },
+    "FlagInappropriateJob": {
+        "INAPPROPRIATE_OR_INACCURATE_PHOTOS": "Inappropriate Or Inaccurate Photo(s)",
+        "INAPPROPRIATE_WRITTEN_CONTENT": "Inappropriate Written Content",
+        "INAPPROPRIATE_JOB_DESCRIPTION_OR_COMPANY": "Inaccurate Job Description Or Company",
+        "OTHER": "Other"
     },
     "DOCUMENT_UPLOAD_SUCCESS_MESSAGE": "Your document has been uploaded successfully",
     "DOCUMENT_SENT_SUCCESS_MESSAGE": "Document ssnt successfully",
@@ -1296,5 +1302,8 @@
     "last_inspected": "Last Inspected:",
     "inspection_notes": "Inspection Notes:",
     "vehicle_maintenance_tracking_info": "Vehicle Maintenance Tracking Info:",
-    "view_applicant_profile": "View Applicant Profile"
+    "view_applicant_profile": "View Applicant Profile",
+    "flag_inappropriate": "Flag Inappropriate",
+    "Flag_Inappropriate_Job":"Flag Inappropriate Job",
+    "THANKS_FOR_KEEPING_A_WATCHFUL_EYE":"Thanks for keeping a watchful eye! Our team is on it and will resolve shortly."
 }
