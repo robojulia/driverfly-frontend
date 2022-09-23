@@ -22,9 +22,12 @@ import { ReducedApplicantEntityType } from "../../../../../types/applicant/reduc
 import ViewModal from "../../../../../components/viewDetails/viewModal";
 import ViewApplicantDetail from "../../../../../components/applicants/applicant-view-details";
 import useLastPage from "../../../../../hooks/useLastPage";
+import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
+import { ApplicantStatus } from "../../../../../enums/applicants/applicant-status.enum";
+import OverlyPopover from "../../../../../components/popover/overly-popover";
+import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
 
 export default function EmployeeDirectory() {
-
 
     const { user } = useAuth();
     const columnSettingKey = getDataTableColumnKey("company", user, "employee-directory");
@@ -43,8 +46,6 @@ export default function EmployeeDirectory() {
     const onEditClick = (id: number) => router.push(`/dashboard/company/applicants/${id}/edit`)
 
     useEffectAsync(async () => {
-        console.log("router.asPath", router.asPath);
-
 
         const data = await applicantApi.list();
         const filteredApplicants: ApplicantEntity[] = filterHired(data)
@@ -99,11 +100,6 @@ export default function EmployeeDirectory() {
                                 background: "#5bb0b9",
                                 color: "white"
                             },
-                        },
-                        rows: {
-                            highlightOnHoverStyle: {
-                                transform: "scale(1.01, 1.011)"
-                            }
                         }
                     }}
                     columns={[
@@ -115,42 +111,69 @@ export default function EmployeeDirectory() {
                         {
                             id: "name",
                             name: 'NAME',
-                            cell: applicant => <span role="button" className="bg-priamry cursor-pointer-span" onClick={() => setApplicant(applicant?.applicant)}>{applicant?.applicant?.first_name + ' ' + applicant?.applicant?.last_name}</span>,
+                            cell: applicant => <span role="button" className="bg-priamry cursor-pointer enlarge-font" onClick={() => setApplicant(applicant?.applicant)}>{applicant?.applicant?.first_name + ' ' + applicant?.applicant?.last_name}</span>,
                         },
                         {
                             id: "phone",
                             name: 'PHONE',
                             selector: applicant => applicant?.applicant?.phone,
+                            cell: applicant => (<OverlyPopover
+                                skipTranslate
+                                slice_at={10}
+                                str={applicant?.applicant?.phone}
+                            />),
                         },
                         {
                             id: "email",
                             name: 'EMAIL',
-                            selector: applicant => applicant?.applicant?.email
+                            selector: applicant => applicant?.applicant?.email,
+                            cell: applicant => (<OverlyPopover
+                                skipTranslate
+                                slice_at={40}
+                                str={applicant?.applicant?.email}
+                            />),
                         },
                         {
                             id: "jobTitle",
                             name: 'job_title',
-                            selector: applicant => applicant?.applicantJob?.job?.title
+                            selector: applicant => applicant?.applicantJob?.job?.title,
+                            cell: applicant => (<OverlyPopover
+                                skipTranslate
+                                slice_at={40}
+                                str={applicant?.applicantJob?.job?.title}
+                            />),
                         },
                         {
                             id: "dateHired",
                             name: 'DATE_HIRED',
-                            selector: applicant => applicant?.applicant?.last_updated_at
+                            selector: applicant => applicant?.applicant?.last_updated_at,
+                            cell: applicant => <ShowFormattedDate
+                                date={applicant?.applicant?.last_updated_at}
+                                hideTime
+                            />
                         },
                         {
                             id: "status",
                             name: 'STATUS',
-                            selector: applicant => applicant?.applicantJob?.status
+                            selector: applicant => applicant?.applicantJob?.status,
+                            cell: applicant =>
+                            (<ShowEnumFromString
+                                popover
+                                labelPrefix="ApplicantStatus"
+                                str={applicant?.applicantJob?.status}
+                                enumArray={ApplicantStatus} />
+                            ),
+
                         },
                         {
                             cell: (applicant) => (
                                 <>
                                     <div className="data_table_custom_action_button">
                                         <div onClick={() => setApplicant(applicant?.applicant)} >
-                                            <EyeFill className="view cursor-pointer" />
+                                            <EyeFill className="view cursor-pointer enlarge-font" />
                                         </div>
                                         <div onClick={(e) => onEditClick(applicant?.applicant?.id)}>
-                                            < PenFill className="edit cursor-pointer" />
+                                            < PenFill className="edit cursor-pointer enlarge-font" />
                                         </div>
                                     </div>
 

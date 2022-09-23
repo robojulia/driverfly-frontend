@@ -652,16 +652,17 @@ textarea {
 }
 
 /* start Typeahead dropdown */
-.rbt .dropdown-item{
+.rbt .dropdown-item {
     color: rgb(65, 60, 60) !important;
 }
 
-.rbt .dropdown-item:hover{
+.rbt .dropdown-item:hover {
     color: #000 !important;
 }
+
 /* end Typeahead dropdown */
 
-.employee_directory_tabs{
+.employee_directory_tabs {
     background: #2ec8c438;
     padding: 20px;
 }
@@ -694,28 +695,22 @@ textarea {
     color: #ff0000d9;
 }
 
-.cursor-pointer svg{
+.cursor-pointer {
     cursor: pointer;
-    font-size: 13px;
-    transition: font-size .2s ease-in-out;
-    
 }
-.cursor-pointer:hover{
+
+.cursor-pointer:hover {
     cursor: pointer;
-    font-size: 18px;
-}
-.cursor-pointer-span{
-    cursor: pointer;
-    font-size: 12px;
-    transition: font-size .2s ease-in-out;
-}
-.cursor-pointer-span:hover{
     text-decoration: underline;
-    font-size: 16px;
 }
 
-.cursor-pointer > .be-bold {
-    font-weight: 900;
+.enlarge-font,
+.enlarge-font::after {
     cursor: pointer;
+    transition: font-size .2s ease-in-out;
 }
 
+.enlarge-font:hover,
+.enlarge-font:hover::after {
+    font-size: 2vmin;
+}
