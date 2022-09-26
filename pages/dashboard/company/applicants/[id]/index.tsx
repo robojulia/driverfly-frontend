@@ -26,6 +26,9 @@ import DocumentApi from "../../../../api/document";
 import ChildPageLayout from "../../../../../components/layouts/page/ChildPageLayout";
 import { ApplicantSuggestedJobEntity } from "../../../../../models/applicant/applicant-suggested-job.entity";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
+import { jobGeography } from "../../../../../utils/jobs";
+import CompanyFlag from "../../../../../components/company-flag/CompanyFlag";
+
 import ViewApplicantDetail from "../../../../../components/applicants/applicant-view-details";
 import ApplicantWorkHistory from "../../../../../components/applicants/applicant-work-history";
 import ApplicantSafetyBackground from "../../../../../components/applicants/applicant-safety-background";
@@ -228,6 +231,7 @@ export default function ViewApplicant({ id }) {
                     </Col>
                 </Row>
             }
+            < CompanyFlag  applicantId={id}/>
             <Row>
                 <Col>
                     <ViewApplicantDetail applicant={applicant} protectedFields={protectedFields} />
