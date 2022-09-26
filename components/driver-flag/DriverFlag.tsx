@@ -45,12 +45,12 @@ export default function DriverFlag({ jobId }) {
     });
     // showDriverFlagModel 
     const [showDriverFlagModel, setShowDriverFlagModel] = useState<boolean>(false);
-    const openFileUploadModel = (): void => setShowDriverFlagModel(true)
+    const openDriverFlagModel = (): void => setShowDriverFlagModel(true)
     const closeDriverFlagModel = (): void => setShowDriverFlagModel(false)
 
     return (
         <>
-            <div className="driver-flag" onClick={openFileUploadModel}>
+            <div className="driver-flag" onClick={openDriverFlagModel}>
                 <p>
                     < FlagFill /> <span>{t("flag_inappropriate")} </span>
                 </p>
