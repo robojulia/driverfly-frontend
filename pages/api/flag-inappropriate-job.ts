@@ -1,7 +1,7 @@
 import { FlagInappropriateJobDto } from "../../models/flag-inappropriate-job/flag-inappropriate-job.dto";
 import BaseApi from "./_baseApi";
 export default class FlagInappropriateJobApi extends BaseApi {
-    baseUrl: string = "support/inappropriate-job";
+    baseUrl: string = "support/flag-inappropriate-job";
     constructor() {
         super();
     }

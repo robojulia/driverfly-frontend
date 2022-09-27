@@ -35,8 +35,9 @@ export default function DriverFlag({ jobId }) {
             const api = new FlagInappropriateJobApi();
 
             try {
-                await api.FlagInappropriateJob(dto);
+               const data =  await api.FlagInappropriateJob(dto);
                 toast.success(t("THANKS_FOR_KEEPING_A_WATCHFUL_EYE"));
+                console.log(data)
             }
             catch (e) {
                 globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SEND_EMAIL" });
