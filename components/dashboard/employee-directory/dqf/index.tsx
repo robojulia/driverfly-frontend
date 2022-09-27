@@ -23,12 +23,14 @@ import ShowFormattedDate from "../../../jobs/show-formatted-date";
 import { DocumentableType } from "../../../../enums/documents/documentable-type.enum";
 import EntityForm from "../../../layouts/page/EntityForm";
 import { ApplicantDocumentDto } from "../../../../models/applicant/applicant-document-dto";
-
+import Fade from 'react-reveal/Fade';
 
 export interface DqfTabProps extends ViewApplicantDetailProps { }
 
+
 const DqfTab = ({ applicant }: DqfTabProps) => {
 
+    
     const { t } = useTranslation();
     const { user } = useAuth();
     const applicantApi = new ApplicantApi();
@@ -113,28 +115,34 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                                                             {t(document ? `EDIT` : `CREATE`)}
                                                         </Button>
                                                     }
-                                                    {
-                                                        (form.values.document && form.values.document.type === value) &&
-                                                        <Form onSubmit={form.handleSubmit} >
-                                                            <FileInput
-                                                                name={`document`}
-                                                                accept="application/pdf"
-                                                                formik={form}
-                                                            />
-                                                            <div className="mt-2 d-flex w-100 ">
-                                                                <Button
-                                                                    className="mr-2 w-50 bg-success"
-                                                                    type="submit"
-                                                                >
-                                                                    {t(`SAVE`)}
-                                                                </Button>
 
-                                                                <Button type="button" className="mr-2 w-50 bg-danger" onClick={() => { form.resetForm() }}                                                            >
-                                                                    {t(`CANCEL`)}
-                                                                </Button>
-                                                            </div>
-                                                        </Form>
+                                                    {
+
+                                                        (form.values.document && form.values.document.type === value) &&
+                                                        <Fade top>
+                                                            <Form onSubmit={form.handleSubmit} >
+                                                                <FileInput
+                                                                    name={`document`}
+                                                                    accept="application/pdf"
+                                                                    formik={form}
+                                                                />
+                                                                <div className="mt-2 d-flex w-100 ">
+                                                                    <Button
+                                                                        className="mr-2 w-50 bg-success"
+                                                                        type="submit"
+                                                                    >
+                                                                        {t(`SAVE`)}
+                                                                    </Button>
+
+                                                                    <Button type="button" className="mr-2 w-50 bg-danger" onClick={() => { form.resetForm() }}                                                            >
+                                                                        {t(`CANCEL`)}
+                                                                    </Button>
+
+                                                                </div>
+                                                            </Form>
+                                                        </Fade>
                                                     }
+
                                                 </td>
                                             </tr>)
                                         })
