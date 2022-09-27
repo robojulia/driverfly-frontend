@@ -67,7 +67,7 @@ export default function DriverFlag({ jobId }) {
                         <BaseSelect
                             className="col"
                             label="Flag_Inappropriate_Job"
-                            name="flag_inappropriate_job"
+                            name="type"
                             required
                             placeholder
                             labelPrefix="FlagInappropriateJob"
@@ -75,7 +75,7 @@ export default function DriverFlag({ jobId }) {
                             formik={form}
                         />
                         {
-                            form.values.flag_inappropriate_job === FlagInappropriateJob.OTHER &&
+                            form.values.type === FlagInappropriateJob.OTHER &&
                             <BaseInput
                                 className="col-12 mt-3"
                                 label="other"
@@ -88,7 +88,7 @@ export default function DriverFlag({ jobId }) {
                     </Row>
                     <Row>
                         <Col className="text-end my-3">
-                            <Button disabled={form.values.flag_inappropriate_job == null} type="submit">{t("submit")}</Button>
+                            <Button disabled={form.values.type == null} type="submit">{t("submit")}</Button>
                         </Col>
                     </Row>
                 </form>
