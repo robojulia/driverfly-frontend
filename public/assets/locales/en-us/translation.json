@@ -54,6 +54,7 @@
     "truck": "Truck",
     "type": "Type",
     "update_status": "Update Status",
+    "UPDATED_AT": "Updated at",
     "view": "View",
     "view_all_jobs": "View all jobs",
     "browse_job": "Browse Job",

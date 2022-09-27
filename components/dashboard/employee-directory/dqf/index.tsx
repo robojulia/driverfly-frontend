@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { Button, Col, Row, Table } from "react-bootstrap";
+import { Button, Col, Form, Row, Table } from "react-bootstrap";
 import { useAuth } from "../../../../hooks/useAuth";
 import { JobEntity } from "../../../../models/job/job.entity";
 import JobApi from "../../../../pages/api/job";
@@ -19,6 +19,9 @@ import { ApplicantDocumentType } from '../../../../enums/applicants/applicant-do
 import { toast } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import { ApplicantJobsByStatusDto } from "../../../../models/job/applicant-jobs-by-status.dto";
+import ShowFormattedDate from "../../../jobs/show-formatted-date";
+import { DocumentableType } from "../../../../enums/documents/documentable-type.enum";
+import EntityForm from "../../../layouts/page/EntityForm";
 
 
 export interface DqfTabProps extends ViewApplicantDetailProps { }
@@ -32,11 +35,11 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
     const applicantApi = new ApplicantApi();
 
     const form = useFormik({
-        initialValues: new ApplicantEntity(),
-        validationSchema: ApplicantEntity.yupSchema(),
-        onSubmit: async (dto, { resetForm }) => {
+        initialValues: new DocumentEntity(),
+        validationSchema: DocumentEntity.yupSchema(),
+        onSubmit: async (values, { resetForm }) => {
             // try {
-            //     const applicantDocumentUpload = await jobApi.apply(job.id, dto);
+            // const applicantDocumentUpload = await applicantApi.documents.create(applicant.id, values)
 
             //     toast.success(t('job_applied_success_message'))
             //     resetForm()
@@ -45,9 +48,18 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
             //     globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t });
             //     // if (e.response?.data?.message == "ApplicantJobService.APPLICANT_ALREADY_APPLIED") setViewForm(false)
             // }
-            console.log("clickeeeeeeeeeeeeddddddddd", dto)
+            console.log("clickeeeeeeeeeeeeddddddddd", values)
         }
     });
+
+    const handleUpdateDocument = async (type: ApplicantDocumentType, documentId?: number) => {
+        console.log("document Indexxxxx", document, "applicant Id", applicant.id, "dto", type)
+
+        form.setFieldValue('type', type)
+        if (documentId) form.setFieldValue('id', documentId)
+
+    }
+
     const updateDocument = async (docIndex: number) => {
         // const upload = await applicantApi.documents.create(applicant.id, dto) 
         console.log("document Indexxxxx", docIndex, "applicant Id", applicant.id, "dto")
@@ -55,27 +67,97 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
     useEffectAsync(async () => {
         const v = await applicantApi.getById(applicant.id)
         applicant.documents = v.documents
-        form.setValues({ ...applicant })
+        // form.setValues({ ...applicant })
     }, [user], () => {
         console.log("unloading page...")
+        form.resetForm()
     });
     return (
         <>
             <div className="employee_directory_tabs">
-                <Row className="mt-3">
+                <Row>
+                    <Col>
+                        <ViewCard title="DOCUMENTS">
+
+                            <Table striped>
+                                <thead>
+                                    <tr>
+                                        <th>{t("TYPE")}</th>
+                                        <th>{t("UPDATED_AT")}</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {
+                                        Object.values(ApplicantDocumentType).map((value: ApplicantDocumentType, i) => {
+                                            const document: any = applicant?.documents?.filter(v => (v.type === value))
+                                            console.log("document", document[0])
+
+                                            return <tr key={i} className="testing_tr">
+                                                <td>
+                                                    {t(`ApplicantDocumentType.${value}`)}
+                                                </td>
+                                                <td>
+                                                    {document[0]?.last_updated_at ? <ShowFormattedDate date={document[0]?.last_updated_at} /> : null}
+                                                </td>
+                                                <td>
+                                                    {
+                                                        (!form.values.type || form.values.type !== value) &&
+                                                        <Button className="mr-2"
+                                                            onClick={() => { handleUpdateDocument(value, document[0]?.id) }}
+                                                        >
+                                                            {t(document[0] ? `EDIT` : `CREATE`)}
+                                                        </Button>
+                                                    }
+                                                    {
+                                                        (form.values.type && form.values.type === value) && <>
+                                                            <Form onSubmit={form.handleSubmit}>
+                                                                <FileInput
+                                                                    // className="col-12 my-3"
+                                                                    label={`pdf`}
+                                                                    name={`file`}
+                                                                    accept="application/pdf"
+                                                                    documentType={"PDF"}
+                                                                    formik={form}
+                                                                />
+                                                                <Button
+                                                                    className="mr-2"
+                                                                    type="submit"
+                                                                >
+                                                                    {t(`SAVE`)}
+                                                                </Button>
+                                                            </Form>
+                                                            <Button className="mr-2" onClick={() => { form.resetForm() }}                                                            >
+                                                                {t(`CANCEL`)}
+                                                            </Button>
+
+                                                        </>
+                                                    }
+
+                                                </td>
+                                            </tr>
+                                        })
+                                    }
+                                </tbody>
+                            </Table>
+                        </ViewCard>
+                    </Col>
+                </Row>
+                {/* <Row className="mt-3">
                     <Col>
                         <ViewCard
                             title="DOCUMENTS"
                             actions={
-                            <>
-                            <Button size='sm'
-                                disabled={form.values.documents?.length === Object.keys(ApplicantDocumentType).length}
-                                onClick={() => form.setValues({
-                                    ...form.values, documents: [...(form.values.documents || []), new DocumentEntity()]
-                                })}>
-                                <PlusCircle />{t("ADD")}
-                                </Button>
-                            </>
+                                <>
+                                    <Button size='sm'
+                                        disabled={form.values.documents?.length === Object.keys(ApplicantDocumentType).length}
+                                        onClick={() => form.setValues({
+                                            ...form.values, documents: [...(form.values.documents || []), new DocumentEntity()]
+                                        })}>
+                                        <PlusCircle />{t("ADD")}
+                                    </Button>
+                                </>
                             }>
                             {!form.values.documents?.length && t("NONE")}
                             {
@@ -126,7 +208,7 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                         <Button className="button_upload_document w-100 bg-success p-2" onClick={() => form.handleSubmit()}>{t("submit")}</Button>
 
                     </Col>
-                </Row>
+                </Row> */}
             </div>
         </>
     );
