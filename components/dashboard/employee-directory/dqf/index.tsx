@@ -22,27 +22,26 @@ import { ApplicantJobsByStatusDto } from "../../../../models/job/applicant-jobs-
 import ShowFormattedDate from "../../../jobs/show-formatted-date";
 import { DocumentableType } from "../../../../enums/documents/documentable-type.enum";
 import EntityForm from "../../../layouts/page/EntityForm";
+import { ApplicantDocumentDto } from "../../../../models/applicant/applicant-document-dto";
 
 
 export interface DqfTabProps extends ViewApplicantDetailProps { }
 
 const DqfTab = ({ applicant }: DqfTabProps) => {
+
     const { t } = useTranslation();
     const { user } = useAuth();
-    const router = useRouter()
-    const [jobs, setJobs] = useState<JobEntity[]>([])
-    const jobApi = new JobApi();
     const applicantApi = new ApplicantApi();
 
     const form = useFormik({
-        initialValues: new DocumentEntity(),
-        validationSchema: DocumentEntity.yupSchema(),
+        initialValues: new ApplicantDocumentDto(),
+        validationSchema: ApplicantDocumentDto.yupSchema(),
         onSubmit: async (values, { resetForm }) => {
-            debugger
-            console.log("clickeeeeeeeeeeeeddddddddd")
+            console.log("form clickeeeeeeeeeeeeddddddddd", values)
+            const { document } = values
 
             // try {
-            // const applicantDocumentUpload = await applicantApi.documents.create(applicant.id, values)
+            // const applicantDocumentUpload = await applicantApi.documents.create(applicant.id, document)
 
             //     toast.success(t('job_applied_success_message'))
             //     resetForm()
@@ -55,16 +54,10 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
     });
 
     const handleUpdateDocument = async (type: ApplicantDocumentType, documentId?: number) => {
-        console.log("document Indexxxxx", document, "applicant Id", applicant.id, "dto", type)
+        console.log("form document Indexxxxx", documentId, "applicant Id", applicant.id, "dto", type)
 
-        form.setFieldValue('type', type)
-        if (documentId) form.setFieldValue('id', documentId)
+        form.setFieldValue("document", { type: type, id: documentId || null })
 
-    }
-
-    const updateDocument = async (docIndex: number) => {
-        // const upload = await applicantApi.documents.create(applicant.id, dto) 
-        console.log("document Indexxxxx", docIndex, "applicant Id", applicant.id, "dto")
     }
 
     useEffectAsync(async () => {
@@ -75,6 +68,13 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
         console.log("unloading page...")
         form.resetForm()
     });
+
+    //  Uncomment this in debugging mode
+    // useEffectAsync(async () => {
+    //     console.log("form", form.values)
+    //     console.log("form", form.errors)
+    // }, [form])
+
     return (
         <>
             <div className="employee_directory_tabs">
@@ -94,41 +94,37 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                                 <tbody>
                                     {
                                         Object.values(ApplicantDocumentType).map((value: ApplicantDocumentType, i) => {
-                                            // debugger
-                                            const document: any = applicant?.documents?.filter(v => (v.type === value))
-                                            // console.log("document", document[0])
+
+                                            const [document]: any = applicant?.documents?.filter(v => (v.type === value))
 
                                             return <tr key={i} className="testing_tr">
                                                 <td>
                                                     {t(`ApplicantDocumentType.${value}`)}
                                                 </td>
                                                 <td>
-                                                    {document[0]?.last_updated_at ? <ShowFormattedDate date={document[0]?.last_updated_at} /> : <span className="text-danger font-italic">Not Available</span>}
+                                                    {document ? <ShowFormattedDate date={document.last_updated_at} /> : <span className="text-danger font-italic">Not Available</span>}
                                                 </td>
                                                 <td>
                                                     {
-                                                        (!form.values.type || form.values.type !== value) &&
+                                                        (!form.values.document?.type || form.values.document?.type !== value) &&
                                                         <Button className="mr-2 w-100"
-                                                            onClick={() => { handleUpdateDocument(value, document[0]?.id) }}
+                                                            onClick={() => { handleUpdateDocument(value, document?.id) }}
                                                         >
-                                                            {t(document[0] ? `EDIT` : `CREATE`)}
+                                                            {t(document ? `EDIT` : `CREATE`)}
                                                         </Button>
                                                     }
                                                     {
-                                                        (form.values.type && form.values.type === value) && <>
+                                                        (form.values.document && form.values.document.type === value) && <>
                                                             <Form onSubmit={form.handleSubmit} >
                                                                 <FileInput
-                                                                    name={`file`}
+                                                                    name={`document`}
                                                                     accept="application/pdf"
-                                                                    documentType={"PDF"}
                                                                     formik={form}
                                                                 />
                                                                 <div className="mt-2 d-flex w-100 ">
                                                                     <Button
                                                                         className="mr-2 w-50 bg-success"
                                                                         type="submit"
-                                                                    // formik={form}
-                                                                    // onClick={() => {form.handleSubmit}}
                                                                     >
                                                                         {t(`SAVE`)}
                                                                     </Button>
