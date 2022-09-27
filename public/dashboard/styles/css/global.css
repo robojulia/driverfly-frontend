@@ -714,3 +714,7 @@ textarea {
 .enlarge-font:hover::after {
     font-size: 2vmin;
 }
+
+.testing_tr{
+    /* border: 1px solid red; */
+}

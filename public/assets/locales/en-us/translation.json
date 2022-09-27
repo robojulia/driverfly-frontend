@@ -243,6 +243,7 @@
     "voilations_in_last_3_years": "Number of moving violations in the last 3 years",
     "pdf": "PDF",
     "UNRECOGNIZED_DOCUMENT_TYPE": "UNRECOGNIZED DOCUMENT TYPE",
+    "DOCUMENT_TYPE": "Document type",
     "successfully_saved_information": "Successfully saved your information",
     "unable_to_save_information": "Unable to save your information",
     "above_21": "Above 21?",
