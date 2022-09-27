@@ -95,9 +95,9 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                                     {
                                         Object.values(ApplicantDocumentType).map((value: ApplicantDocumentType, i) => {
 
-                                            const [document]: any = applicant?.documents?.filter(v => (v.type === value))
+                                            const document: any = applicant?.documents?.find(v => (v.type === value))
 
-                                            return <tr key={i} className="testing_tr">
+                                            return (<tr key={i} className="testing_tr">
                                                 <td>
                                                     {t(`ApplicantDocumentType.${value}`)}
                                                 </td>
@@ -114,31 +114,29 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                                                         </Button>
                                                     }
                                                     {
-                                                        (form.values.document && form.values.document.type === value) && <>
-                                                            <Form onSubmit={form.handleSubmit} >
-                                                                <FileInput
-                                                                    name={`document`}
-                                                                    accept="application/pdf"
-                                                                    formik={form}
-                                                                />
-                                                                <div className="mt-2 d-flex w-100 ">
-                                                                    <Button
-                                                                        className="mr-2 w-50 bg-success"
-                                                                        type="submit"
-                                                                    >
-                                                                        {t(`SAVE`)}
-                                                                    </Button>
+                                                        (form.values.document && form.values.document.type === value) &&
+                                                        <Form onSubmit={form.handleSubmit} >
+                                                            <FileInput
+                                                                name={`document`}
+                                                                accept="application/pdf"
+                                                                formik={form}
+                                                            />
+                                                            <div className="mt-2 d-flex w-100 ">
+                                                                <Button
+                                                                    className="mr-2 w-50 bg-success"
+                                                                    type="submit"
+                                                                >
+                                                                    {t(`SAVE`)}
+                                                                </Button>
 
-                                                                    <Button type="button" className="mr-2 w-50 bg-danger" onClick={() => { form.resetForm() }}                                                            >
-                                                                        {t(`CANCEL`)}
-                                                                    </Button>
-                                                                </div>
-                                                            </Form>
-                                                        </>
+                                                                <Button type="button" className="mr-2 w-50 bg-danger" onClick={() => { form.resetForm() }}                                                            >
+                                                                    {t(`CANCEL`)}
+                                                                </Button>
+                                                            </div>
+                                                        </Form>
                                                     }
-
                                                 </td>
-                                            </tr>
+                                            </tr>)
                                         })
                                     }
                                 </tbody>
