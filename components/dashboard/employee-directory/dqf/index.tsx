@@ -104,7 +104,7 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                                                     {t(`ApplicantDocumentType.${value}`)}
                                                 </td>
                                                 <td>
-                                                    {document ? <ShowFormattedDate date={document.last_updated_at} /> : <span className="text-danger font-italic">Not Available</span>}
+                                                    {document ? <ShowFormattedDate date={document.last_updated_at} /> : <span className="text-danger font-italic">{t("NOT_AVAILABLE")}</span>}
                                                 </td>
                                                 <td>
                                                     {
