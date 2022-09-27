@@ -21,7 +21,7 @@ export default function RecentJobs() {
         const api = new JobApi();
 
         try {
-            const { items } = await api.search({ take: 6 });
+            const { items } = await api.search({ take: 6, order_by: "DESC" });
             setJobs(items);
         }
         catch (e) {
