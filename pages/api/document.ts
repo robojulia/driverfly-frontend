@@ -1,5 +1,4 @@
-import { DocumentableType } from "../../enums/documents/documentable-type.enum";
-import { DocumentEntity, DocumentType } from "../../models/documents/document.entity";
+import { DocumentEntity } from "../../models/documents/document.entity";
 import BaseApi from "./_baseApi";
 
 export default class DocumentApi extends BaseApi {

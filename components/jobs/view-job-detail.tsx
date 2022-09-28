@@ -4,12 +4,10 @@ import { ArrowRight, CurrencyDollar } from "react-bootstrap-icons"
 import { useTranslation } from '../../hooks/useTranslation';
 import { JobEntity } from "../../models/job/job.entity";
 import { buildAddress } from '../../utils/common';
-import timeSince from '../../utils/timeSince';
 import JobApply from '../apply';
 import SaveJob from '../dashboard/driver/save-job';
 import JobDescription from '../job-description/JobDescription';
 import JonInformation from '../job-information-sidebar/JobInformation';
-import RelatedJobs from '../related-jobs/Related-Jobs';
 import SocilShare from '../share-link/ShareLink';
 import CompanyPhoto from './company-photo';
 import ShowFormattedDate from './show-formatted-date';
@@ -17,20 +15,8 @@ import JobVehicles from './job-vehicles';
 import React from 'react';
 import ViewModal from '../viewDetails/viewModal';
 import { useAuth } from '../../hooks/useAuth'
-
-
-export interface ViewJobDetailProps {
-    className?: string;
-    job: JobEntity;
-    relatedJobs?: React.ReactNode;
-    canApply?: boolean | (() => boolean);
-    canSave?: boolean | (() => boolean);
-    hideVehicles?: boolean | (() => boolean);
-    hideCompanyName?: boolean | (() => boolean);
-    hideSocialLinks?: boolean | (() => boolean);
-    viewAllJobsLink?: string;
-}
-
+import FlagJob from '../flag/flag-a-job';
+import { ViewJobDetailProps } from '../../types/job/view-job-detail-props.type';
 
 export default function ViewJobDetail(props: ViewJobDetailProps) {
 
@@ -50,12 +36,15 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
     const { user } = useAuth();
 
     return (
-        <section className={`${className} "top-links-sec ort-general"`}>
-            <Container>
+        <section className="top-links-sec ort-general p-3 vehicle-img">
+
+            <FlagJob jobId={job.id} />
+
+            <Container className='p-0'>
                 <Row>
                     <Col md={9}>
                         <div className="ort-inner ">
-                            <div className="media align-items-center bg-transparent border-0 p-0">
+                            <div className=" company_photo media align-items-center bg-transparent border-0 p-0">
                                 <span className="text-dark text-center text-decoration-none">
                                     <CompanyPhoto className="d-flex mr-4 truck-img mb-3" company={job.company} />
                                     {viewAllJobsLink &&
@@ -106,7 +95,7 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
             </Container>
 
             <div className="job-deatails-sec">
-                <Container>
+                <Container className='p-0'>
                     <Row>
                         <Col lg={8}>
                             < JobDescription job={job} />
