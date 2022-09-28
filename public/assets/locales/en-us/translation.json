@@ -842,6 +842,7 @@
     "CHANGE_STATUS": "Change status",
     "REASON_CODES": "Reason Codes",
     "REASONS": "Reasons",
+    "REASON": "Reason",
     "VIEW_{name}": "View {{name}}",
     "EDIT_{name}": "Edit {{name}}",
     "CREATE_{name}": "Create {{name}}",
@@ -1017,11 +1018,11 @@
         "INAPPROPRIATE_JOB_DESCRIPTION_OR_COMPANY": "Inaccurate job description or company",
         "OTHER": "Other"
     },
-  "FlagInappropriateApplicant": {
-        "DRIVER_IS_NOT_WHO_THEY_SAY_THEY_ARE" : "Driver Is not who they say they are",
+    "FlagInappropriateApplicant": {
+        "DRIVER_IS_NOT_WHO_THEY_SAY_THEY_ARE": "Driver Is not who they say they are",
         "DRIVER_IS_A_THREAT_TO_THEMSELVES_OR_OTHER": "Driver is a threat to themselves or others",
         "DRIVER_IS_BEHAVING_INAPPROPRIATELY": "Driver is behaving inappropriately",
-        "OTHER" : "Other"
+        "OTHER": "Other"
     },
     "DOCUMENT_UPLOAD_SUCCESS_MESSAGE": "Your document has been uploaded successfully",
     "DOCUMENT_SENT_SUCCESS_MESSAGE": "Document sent successfully",
@@ -1309,11 +1310,11 @@
     "inspection_notes": "Inspection Notes:",
     "vehicle_maintenance_tracking_info": "Vehicle Maintenance Tracking Info:",
     "view_applicant_profile": "View Applicant Profile",
-    "flag_inappropriate": "Flag Inappropriate",
-    "Inappropriate_Job":"Inappropriate Job",
-    "Flag_Inappropriate_Job":"Flag Inappropriate Job",
-    "THANKS_FOR_KEEPING_A_WATCHFUL_EYE":"Thanks for keeping a watchful eye! Our team is on it and will resolve shortly.",
-    "Flag_Inappropriate_Applicant":"Flag Inappropriate Applicant",
-    "Inappropriate_Applicant":"Inappropriate Applicant",
-    "THANKS_FOR_KEEPING_A_WATCHFUL_EYE_TO_OUR_SAFETY":"Thanks for keeping a watchful eye! This matter has been escalated to our safety team accordingly."
+    "FLAG_INAPPROPRIATE": "Flag Inappropriate",
+    "INAPPROPRIATE_JOB": "Inappropriate Job",
+    "FLAG_INAPPROPRIATE_JOB": "Flag Job as Inappropriate ",
+    "THANKS_FOR_KEEPING_A_WATCHFUL_EYE": "Thanks for keeping a watchful eye! Our team is on it and will resolve shortly.",
+    "FLAG_INAPPROPRIATE_APPLICANT": "Flag Inappropriate Applicant",
+    "INAPPROPRIATE_APPLICANT": "Inappropriate Applicant",
+    "THANKS_FOR_KEEPING_A_WATCHFUL_EYE_TO_OUR_SAFETY": "Thanks for keeping a watchful eye! This matter has been escalated to our safety team accordingly."
 }

@@ -15,23 +15,8 @@ import JobVehicles from './job-vehicles';
 import React from 'react';
 import ViewModal from '../viewDetails/viewModal';
 import { useAuth } from '../../hooks/useAuth'
-import DriverFlag from '../driver-flag/DriverFlag';
-
-
-
-export interface ViewJobDetailProps {
-    className?: string;
-    job: JobEntity;
-    relatedJobs?: React.ReactNode;
-    canApply?: boolean | (() => boolean);
-    canSave?: boolean | (() => boolean);
-    hideVehicles?: boolean | (() => boolean);
-    hideCompanyName?: boolean | (() => boolean);
-    hideSocialLinks?: boolean | (() => boolean);
-    viewAllJobsLink?: string;
-
-}
-
+import FlagJob from '../flag/flag-a-job';
+import { ViewJobDetailProps } from '../../types/job/view-job-detail-props.type';
 
 export default function ViewJobDetail(props: ViewJobDetailProps) {
 
@@ -53,7 +38,7 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
     return (
         <section className="top-links-sec ort-general p-3 vehicle-img">
 
-            <DriverFlag jobId={job.id} />
+            <FlagJob jobId={job.id} />
 
             <Container className='p-0'>
                 <Row>

@@ -1,8 +1,6 @@
 import { useFormik } from "formik";
-import FlagInappropriateJobApi from "../../pages/api/flag-inappropriate-job";
 import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import { useRouter } from 'next/router'
+// import 'react-toastify/dist/ReactToastify.css'
 import { globalAjaxExceptionHandler } from "../../utils/ajax";
 import { useTranslation } from "../../hooks/useTranslation";
 import BaseInput from "../forms/BaseInput";
@@ -14,54 +12,56 @@ import { FlagFill } from "react-bootstrap-icons";
 import { useState } from "react";
 import BaseSelect from "../forms/BaseSelect";
 import { FlagInappropriateJob } from "../../enums/jobs/flag-inappropriate-job.enum";
+import SupportApi from "../../pages/api/support";
 
-export default function DriverFlag({ jobId }) {
+export default function FlagJob({ jobId }) {
 
     const { user } = useAuth();
     if (!!!user || user.company !== null) return <></>;
 
     const { t } = useTranslation();
-    const router = useRouter();
+    const supportApi = new SupportApi();
+
     const form = useFormik({
         initialValues: new FlagInappropriateJobDto(jobId),
         validationSchema: FlagInappropriateJobDto.yupSchema(),
-        onSubmit: async (dto) => {
-            const api = new FlagInappropriateJobApi();
+        onSubmit: async (dto, { resetForm }) => {
 
             try {
-               const data =  await api.FlagInappropriateJob(dto);
+                const data = await supportApi.FlagInappropriateJob(dto);
                 toast.success(t("THANKS_FOR_KEEPING_A_WATCHFUL_EYE"));
-                console.log(data)
+                resetForm()
+                closeFlagJobModel()
             }
             catch (e) {
                 globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SEND_EMAIL" });
             }
         }
     });
-    // showDriverFlagModel 
-    const [showDriverFlagModel, setShowDriverFlagModel] = useState<boolean>(false);
-    const openDriverFlagModel = (): void => setShowDriverFlagModel(true)
-    const closeDriverFlagModel = (): void => setShowDriverFlagModel(false)
+
+    const [showFlagJobModel, setShowFlagJobModel] = useState<boolean>(false);
+    const openFlagJobModel = (): void => setShowFlagJobModel(true)
+    const closeFlagJobModel = (): void => setShowFlagJobModel(false)
 
     return (
         <>
-            <div className="driver-flag" onClick={openDriverFlagModel}>
+            <div className="driver-flag" onClick={openFlagJobModel}>
                 <p>
-                    < FlagFill /> <span>{t("flag_inappropriate")} </span>
+                    < FlagFill /> <span>{t("FLAG_INAPPROPRIATE")} </span>
                 </p>
             </div>
             <ViewModal
-                show={showDriverFlagModel}
-                onCloseClick={closeDriverFlagModel}
+                show={showFlagJobModel}
+                onCloseClick={closeFlagJobModel}
                 closeText="CANCEL"
-                title="Flag_Inappropriate_Job"
+                title="FLAG_INAPPROPRIATE_JOB"
             >
 
                 <form onSubmit={form.handleSubmit}>
                     <Row>
                         <BaseSelect
                             className="col"
-                            label="Inappropriate_Job"
+                            label="REASON"
                             name="type"
                             required
                             placeholder
