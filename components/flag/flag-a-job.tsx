@@ -1,11 +1,10 @@
 import { useFormik } from "formik";
 import { toast } from 'react-toastify'
-// import 'react-toastify/dist/ReactToastify.css'
 import { globalAjaxExceptionHandler } from "../../utils/ajax";
 import { useTranslation } from "../../hooks/useTranslation";
 import BaseInput from "../forms/BaseInput";
 import { useAuth } from '../../hooks/useAuth'
-import { FlagInappropriateJobDto } from "../../models/flag-inappropriate-job/flag-inappropriate-job.dto";
+import { FlagInappropriateJobDto } from "../../models/support/flag-inappropriate-job.dto";
 import { Row, Button, Col } from "react-bootstrap";
 import ViewModal from "../viewDetails/viewModal";
 import { FlagFill } from "react-bootstrap-icons";
@@ -22,6 +21,10 @@ export default function FlagJob({ jobId }) {
     const { t } = useTranslation();
     const supportApi = new SupportApi();
 
+    const [showFlagJobModel, setShowFlagJobModel] = useState<boolean>(false);
+    const openFlagJobModel = (): void => setShowFlagJobModel(true)
+    const closeFlagJobModel = (): void => setShowFlagJobModel(false)
+
     const form = useFormik({
         initialValues: new FlagInappropriateJobDto(jobId),
         validationSchema: FlagInappropriateJobDto.yupSchema(),
@@ -30,7 +33,6 @@ export default function FlagJob({ jobId }) {
             try {
                 const data = await supportApi.FlagInappropriateJob(dto);
                 toast.success(t("THANKS_FOR_KEEPING_A_WATCHFUL_EYE"));
-                resetForm()
                 closeFlagJobModel()
             }
             catch (e) {
@@ -38,10 +40,6 @@ export default function FlagJob({ jobId }) {
             }
         }
     });
-
-    const [showFlagJobModel, setShowFlagJobModel] = useState<boolean>(false);
-    const openFlagJobModel = (): void => setShowFlagJobModel(true)
-    const closeFlagJobModel = (): void => setShowFlagJobModel(false)
 
     return (
         <>

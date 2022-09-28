@@ -1,8 +1,5 @@
 import { useFormik } from "formik";
-import FlagInappropriateApplicantApi from "../../pages/api/flag-inappropriate-applicant";
 import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import { useRouter } from 'next/router'
 import { globalAjaxExceptionHandler } from "../../utils/ajax";
 import { useTranslation } from "../../hooks/useTranslation";
 import BaseInput from "../forms/BaseInput";
@@ -14,52 +11,54 @@ import { useState } from "react";
 import BaseSelect from "../forms/BaseSelect";
 import { FlagInappropriateApplicantDto } from "../../models/flag-inappropriate-applicant/flag-inappropriate-applicant.dto";
 import { FlagInappropriateApplicant } from "../../enums/jobs/flag-inappropriate-applicant.enum";
+import SupportApi from "../../pages/api/support";
 
-export default function CompanyFlag({ applicantId }) {
+export default function FlagApplicant({ applicantId }) {
 
     const { user } = useAuth();
+    if (!!!user || user.company === null) return <></>;
 
     const { t } = useTranslation();
-    const router = useRouter();
+    const supportApi = new SupportApi();
+
+    const [showFlagApplicantModel, setShowFlagApplicantModel] = useState<boolean>(false);
+    const openFlagApplicantModel = (): void => setShowFlagApplicantModel(true)
+    const closeFlagApplicantModel = (): void => setShowFlagApplicantModel(false)
+
     const form = useFormik({
         initialValues: new FlagInappropriateApplicantDto(applicantId),
         validationSchema: FlagInappropriateApplicantDto.yupSchema(),
-        onSubmit: async (dto) => {
-            const api = new FlagInappropriateApplicantApi();
-
+        onSubmit: async (dto, { resetForm }) => {
             try {
-                await api.FlagInappropriateApplicantApi(dto);
+                await supportApi.FlagInappropriateApplicantApi(dto);
                 toast.success(t("THANKS_FOR_KEEPING_A_WATCHFUL_EYE_TO_OUR_SAFETY"));
+                resetForm()
+                closeFlagApplicantModel()
             }
             catch (e) {
                 globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SEND_EMAIL" });
             }
         }
     });
-    // showApplicantFlagModel 
-    const [showApplicantFlagModel, setShowApplicantFlagModel] = useState<boolean>(false);
-    const openApplicantFlagModel = (): void => setShowApplicantFlagModel(true)
-    const closeApplicantFlagModel = (): void => setShowApplicantFlagModel(false)
 
     return (
         <>
-            <div className="driver-flag" onClick={openApplicantFlagModel}>
+            <div className="driver-flag" onClick={openFlagApplicantModel}>
                 <p>
-                    < FlagFill /> <span>{t("flag_inappropriate")} </span>
+                    < FlagFill /> <span>{t("FLAG_INAPPROPRIATE")} </span>
                 </p>
             </div>
             <ViewModal
-                show={showApplicantFlagModel}
-                onCloseClick={closeApplicantFlagModel}
+                show={showFlagApplicantModel}
+                onCloseClick={closeFlagApplicantModel}
                 closeText="CANCEL"
-                title="Flag_Inappropriate_Applicant"
+                title="FLAG_INAPPROPRIATE_APPLICANT"
             >
-
                 <form onSubmit={form.handleSubmit}>
                     <Row>
                         <BaseSelect
                             className="col"
-                            label="Inappropriate_Applicant"
+                            label="INAPPROPRIATE_APPLICANT"
                             name="type"
                             required
                             placeholder
@@ -86,7 +85,6 @@ export default function CompanyFlag({ applicantId }) {
                     </Row>
                 </form>
             </ViewModal>
-
         </>
     )
 }
