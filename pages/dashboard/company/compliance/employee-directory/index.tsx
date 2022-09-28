@@ -26,6 +26,7 @@ import ShowEnumFromString from "../../../../../components/enum-filters/show-enum
 import { ApplicantStatus } from "../../../../../enums/applicants/applicant-status.enum";
 import OverlyPopover from "../../../../../components/popover/overly-popover";
 import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
+import Background from "../../../../../components/dashboard/employee-directory/background";
 
 export default function EmployeeDirectory() {
 
@@ -35,6 +36,7 @@ export default function EmployeeDirectory() {
     const { t } = useTranslation();
     const applicantApi = new ApplicantApi();
     const router = useRouter()
+    
     const { setPreviousPath } = useLastPage();
     setPreviousPath(router.asPath)
 
@@ -44,8 +46,6 @@ export default function EmployeeDirectory() {
     const [applicants, setApplicants] = useState<ReducedApplicantEntityType[]>([])
 
     const onEditClick = (id: number) => router.push(`/dashboard/company/applicants/${id}/edit`)
-
-    const getApplicantData = async (applicantID: number) => { const data = await applicantApi.getById(applicantID).then(res => setApplicant(res)); }
 
     useEffectAsync(async () => {
 
@@ -60,7 +60,7 @@ export default function EmployeeDirectory() {
     });
 
     const tabs = {
-        BACKGROUND: applicant && <ViewApplicantDetail applicant={applicant} />,
+        BACKGROUND: <Background applicant={applicant} />,
         DAQ: < DaqTab />,
         DQF: < DqfTab applicant={applicant} />,
         VEHICLES: < VehicleInformationTab />
@@ -80,13 +80,6 @@ export default function EmployeeDirectory() {
                                 </Link>
                             </u>
                         </p>
-                        {/* <u>
-                            <p className="mt-2">
-                                <Link href="#">
-                                    <a>{t("VIEW_PAST_HIRES")}</a>
-                                </Link>
-                            </p>
-                        </u> */}
                     </Col>
                 </Row>
             }
@@ -110,7 +103,7 @@ export default function EmployeeDirectory() {
                     {
                         id: "name",
                         name: 'NAME',
-                        cell: data => <span role="button" className="bg-priamry cursor-pointer enlarge-font" onClick={() => getApplicantData(data?.applicant?.id)}>{data?.applicant?.first_name + ' ' + data?.applicant?.last_name}</span>,
+                        cell: data => <span role="button" className="bg-priamry cursor-pointer enlarge-font" onClick={() => setApplicant(data?.applicant)}>{data?.applicant?.first_name + ' ' + data?.applicant?.last_name}</span>,
                     },
                     {
                         id: "phone",
@@ -167,7 +160,7 @@ export default function EmployeeDirectory() {
                         cell: (data) => (
                             <>
                                 <div className="data_table_custom_action_button">
-                                    <div onClick={(e) => getApplicantData(data?.applicant?.id)}>
+                                    <div onClick={(e) => setApplicant(data?.applicant)}>
                                         <EyeFill className="view cursor-pointer enlarge-font" />
                                     </div>
                                     <div onClick={(e) => onEditClick(data?.applicant?.id)}>

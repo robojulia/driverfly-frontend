@@ -1,7 +1,7 @@
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
 import { useState } from "react";
 import React from "react";
-import { Plus } from 'react-bootstrap-icons';
+import { CloudArrowDown, Download, Plus, Send } from 'react-bootstrap-icons';
 import PageLayout from "../../../../../components/layouts/page/PageLayout";
 import { useTranslation } from "../../../../../hooks/useTranslation";
 import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
@@ -141,11 +141,11 @@ export default function StoredFiles() {
                     },
                     {
                         id: "type",
-                        name: "CATEGORY",
+                        name: "type",
                         cell: file =>
                         (<ShowEnumFromString
                             popover
-                            labelPrefix="CompanyDocumentType"
+                            // labelPrefix="CompanyDocumentType"
                             str={file.type}
                             enumArray={CompanyDocumentType} />
                         ),
@@ -160,8 +160,8 @@ export default function StoredFiles() {
                     {
                         cell: (file) => (
                             <>
-                                <button type="button" className="theme-secondary-btn mr-4 p-2" onClick={() => setDocumentId(file.id)}>{t('SEND')}</button>
-                                <button type="button" className="btn theme-primary-btn download_file_btn"> <a href={file.path} download target="_blank">{t('DOWNLOAD')}</a></button>
+                                <button type="button" className="theme-secondary-btn mr-2 px-4 py-2" onClick={() => setDocumentId(file.id)}><Send /></button>
+                                <button type="button" className="btn theme-primary-btn download_file_btn px-4"> <a href={file.path} download target="_blank"><CloudArrowDown/></a></button>
                             </>
                         ),
                     },
@@ -250,7 +250,7 @@ export default function StoredFiles() {
                         {
                             cell: (applicant) => (
                                 <>
-                                    <button type="button" onClick={() => sendEmail(applicant)} className="theme-secondary-btn mr-4 p-2">{t('SEND')}</button>
+                                    <Button type="button" onClick={() => sendEmail(applicant)} className="theme-secondary-btn mr-2 px-4 py-1"><Send/></Button>
                                 </>
                             ),
                         },

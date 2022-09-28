@@ -14,10 +14,14 @@ import ShowFormattedDate from "../../../jobs/show-formatted-date";
 import { ApplicantDocumentDto } from "../../../../models/applicant/applicant-document-dto";
 import Fade from 'react-reveal/Fade';
 import { CloudArrowDown, Pen } from "react-bootstrap-icons";
+import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
+import { useState } from "react";
 
 export interface DqfTabProps extends ViewApplicantDetailProps { }
 
 const DqfTab = ({ applicant }: DqfTabProps) => {
+     
+    const [applicantUser, setApplicantUser ] = useState<ApplicantEntity>(null)
 
     const { t } = useTranslation();
     const { user } = useAuth();
@@ -29,12 +33,12 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
         onSubmit: async ({ document }, { resetForm }) => {
 
             try {
-                const applicantDocumentUpload = await applicantApi.documents.create(applicant.id, document)
+                const applicantDocumentUpload = await applicantApi.documents.create(applicantUser.id, document)
 
                 if (document.id) {
-                    applicant.documents = applicant.documents.filter(v => (v.id !== applicantDocumentUpload.id))
+                    applicantUser.documents = applicantUser.documents.filter(v => (v.id !== applicantDocumentUpload.id))
                 }
-                applicant.documents.push(applicantDocumentUpload)
+                applicantUser.documents.push(applicantDocumentUpload)
                 toast.success(t('DOCUMENT_UPLOAD_SUCCESS_MESSAGE'))
                 resetForm()
             }
@@ -50,7 +54,7 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
 
     useEffectAsync(async () => {
         const v = await applicantApi.getById(applicant.id)
-        applicant.documents = v.documents
+        setApplicantUser(v)
     }, [user], () => {
         form.resetForm()
     });
@@ -74,7 +78,7 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                                 {
                                     Object.values(ApplicantDocumentType).map((value: ApplicantDocumentType, i) => {
 
-                                        const document: any = applicant?.documents?.find(v => (v.type === value))
+                                        const document: any = applicantUser?.documents?.find(v => (v.type === value))
                                         return (
                                             <tr key={i}>
                                                 <td colSpan={2}>
@@ -88,7 +92,7 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                                                         (!form.values.document?.type || form.values.document?.type !== value) &&
                                                         <div className="d-flex">
                                                             <Button className="mr-2 w-100" onClick={() => { handleUpdateDocument(value, document?.id) }}>
-                                                                {document ? <Pen /> : t('CREATE')}
+                                                                {document ? <Pen /> : t('ADD')}
                                                             </Button>
                                                             {document ? <a href={document?.path} role="button" className="btn theme-primary2-btn p-0 pt-1 mr-2" download><CloudArrowDown /></a> : null}
                                                         </div>
