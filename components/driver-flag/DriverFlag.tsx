@@ -61,7 +61,7 @@ export default function DriverFlag({ jobId }) {
                     <Row>
                         <BaseSelect
                             className="col"
-                            label="Flag_Inappropriate_Job"
+                            label="Inappropriate_Job"
                             name="type"
                             required
                             placeholder
@@ -75,7 +75,7 @@ export default function DriverFlag({ jobId }) {
                                 className="col-12 mt-3"
                                 label="other"
                                 required
-                                name="other_options"
+                                name="type_other"
                                 placeholder
                                 formik={form}
                             />

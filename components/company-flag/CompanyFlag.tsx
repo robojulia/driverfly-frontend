@@ -59,8 +59,8 @@ export default function CompanyFlag({ applicantId }) {
                     <Row>
                         <BaseSelect
                             className="col"
-                            label="Flag_Inappropriate_Applicant"
-                            name="flag_inappropriate_applicant"
+                            label="Inappropriate_Applicant"
+                            name="type"
                             required
                             placeholder
                             labelPrefix="FlagInappropriateApplicant"
@@ -68,12 +68,12 @@ export default function CompanyFlag({ applicantId }) {
                             formik={form}
                         />
                         {
-                            form.values.flag_inappropriate_applicant === FlagInappropriateApplicant.OTHER &&
+                            form.values.type === FlagInappropriateApplicant.OTHER &&
                             <BaseInput
                                 className="col-12 mt-3"
                                 label="other"
                                 required
-                                name="other_options"
+                                name="type_other"
                                 placeholder
                                 formik={form}
                             />
@@ -81,7 +81,7 @@ export default function CompanyFlag({ applicantId }) {
                     </Row>
                     <Row>
                         <Col className="text-end my-3">
-                            <Button disabled={form.values.flag_inappropriate_applicant == null} type="submit">{t("submit")}</Button>
+                            <Button disabled={form.values.type == null} type="submit">{t("submit")}</Button>
                         </Col>
                     </Row>
                 </form>
