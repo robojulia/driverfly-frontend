@@ -32,7 +32,6 @@ export default function FlagApplicant({ applicantId }) {
             try {
                 await supportApi.FlagInappropriateApplicantApi(dto);
                 toast.success(t("THANKS_FOR_KEEPING_A_WATCHFUL_EYE_TO_OUR_SAFETY"));
-                resetForm()
                 closeFlagApplicantModel()
             }
             catch (e) {
