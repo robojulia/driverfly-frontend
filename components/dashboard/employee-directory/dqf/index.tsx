@@ -1,76 +1,135 @@
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { Col, Row } from "react-bootstrap";
+import { Button, Col, Form, Row, Table } from "react-bootstrap";
 import { useAuth } from "../../../../hooks/useAuth";
-import { JobEntity } from "../../../../models/job/job.entity";
-import JobApi from "../../../../pages/api/job";
-import ViewDataTable,{ getDataTableColumnKey } from "../../../viewDetails/viewDataTable";
 import { useEffectAsync } from "../../../../utils/react";
 import { useTranslation } from "../../../../hooks/useTranslation";
-const DqfTab = () => {
-    const { t } = useTranslation();
-    const { user, hasPermission } = useAuth();
-    const columnSettingKey = getDataTableColumnKey("company", user, "daq");
-    const router = useRouter()
-    const [jobs, setJobs] = useState<JobEntity[]>([])
-    const api = new JobApi();
-    useEffectAsync(async () => {
-        console.log("refresh fired");
-        const v = await api.list();
+import { ViewApplicantDetailProps } from "../../../../types/applicant/view-application-detail-props.type";
+import { useFormik } from "formik";
+import ApplicantApi from "../../../../pages/api/applicant";
+import ViewCard from "../../../viewDetails/viewCard";
+import FileInput from '../../../forms/FileInput';
+import { ApplicantDocumentType } from '../../../../enums/applicants/applicant-document-type.enum';
+import { toast } from "react-toastify";
+import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
+import ShowFormattedDate from "../../../jobs/show-formatted-date";
+import { ApplicantDocumentDto } from "../../../../models/applicant/applicant-document-dto";
+import Fade from 'react-reveal/Fade';
+import { CloudArrowDown } from "react-bootstrap-icons";
+export interface DqfTabProps extends ViewApplicantDetailProps { }
 
-        setJobs(v);
-    }, [user], () => {
-        console.log("unloading page...")
+
+const DqfTab = ({ applicant }: DqfTabProps) => {
+
+
+    const { t } = useTranslation();
+    const { user } = useAuth();
+    const applicantApi = new ApplicantApi();
+
+    const form = useFormik({
+        initialValues: new ApplicantDocumentDto(),
+        validationSchema: ApplicantDocumentDto.yupSchema(),
+        onSubmit: async (values, { resetForm }) => {
+            const { document } = values
+
+            try {
+                const applicantDocumentUpload = await applicantApi.documents.create(applicant.id, document)
+
+                if (document.id) {
+                    applicant.documents = applicant.documents.filter(v => (v.id !== applicantDocumentUpload.id))
+                }
+                applicant.documents.push(applicantDocumentUpload)
+                toast.success(t('Document uploaded successfully'))
+                resetForm()
+            }
+            catch (e) {
+                globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t });
+            }
+        }
     });
+
+    const handleUpdateDocument = async (type: ApplicantDocumentType, documentId?: number) => {
+        form.setFieldValue("document", { type: type, id: documentId || null })
+    }
+
+    useEffectAsync(async () => {
+        const v = await applicantApi.getById(applicant.id)
+        applicant.documents = v.documents
+    }, [user], () => {
+        form.resetForm()
+    });
+
     return (
         <>
             <div className="employee_directory_tabs">
-            <Row className="mt-3">
-                <Col>
-            <ViewDataTable
-                    columnSettingKey={columnSettingKey}
-                    customStyles={{
-                        headCells: {
-                            style: {
-                                background: "#5bb0b9",
-                                color: "white"
-                            },
-                        },
-                    }}
-                    columns={[
-                        {
-                            id: "id",
-                            name: "ID",
-                            selector: j => j.id,
-                        },
-                        {
-                            id: "file_name",
-                            name: "file_name",
-                            selector: job => job.title,
-                            hidable: false
-                        },
-                        {
-                            id: "latest_upload",
-                            name: "latest_upload",
-                            selector: j => j.expiry_date ? new Date(j.expiry_date).toDateString() : null,
-                        },
-                        {
-                            cell: (j) => (
-                                <>
-                                    <button type="button" className="theme-secondary-btn mr-4 p-2">{t('UPDATE_RECORD')}</button>
-                                    <button type="button" className="btn theme-primary-btn">{t('DOWNLOAD')}</button>
-                                </>
+                <Row>
+                    <Col>
+                        <ViewCard title="DOCUMENTS">
 
-                            ),
-                        },
+                            <Table striped>
+                                <thead>
+                                    <tr>
+                                        <th colSpan={2}>{t("TYPE")}</th>
+                                        <th colSpan={2}>{t("UPDATED_AT")}</th>
+                                        <th colSpan={1}></th>
+                                    </tr>
+                                </thead>
 
+                                <tbody>
+                                    {
+                                        Object.values(ApplicantDocumentType).map((value: ApplicantDocumentType, i) => {
 
-                    ]}
-                    items={jobs}
+                                            const document: any = applicant?.documents?.find(v => (v.type === value))
+                                            return (
+                                                <tr key={i} className="testing_tr">
+                                                    <td colSpan={2}>
+                                                        {t(`ApplicantDocumentType.${value}`)}
+                                                    </td>
+                                                    <td colSpan={2}>
+                                                        {document ? <ShowFormattedDate date={document.last_updated_at} /> : <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>}
+                                                    </td>
+                                                    <td colSpan={1} >
+                                                        {
+                                                            (!form.values.document?.type || form.values.document?.type !== value) &&
+                                                            <div className="d-flex">
+                                                                <Button className="mr-2 w-100" onClick={() => { handleUpdateDocument(value, document?.id) }}>
+                                                                    {t(document ? `EDIT` : `CREATE`)}
+                                                                </Button>
+                                                                {document ? <a href={document?.path} role="button" className="btn theme-primary2-btn p-0 pt-1 mr-2" download><CloudArrowDown /></a> : null}
 
-                />
-                </Col>
-            </Row>
+                                                            </div>
+                                                        }
+
+                                                        {
+                                                            (form.values.document && form.values.document.type === value) &&
+                                                            <Fade top>
+                                                                <Form onSubmit={form.handleSubmit} >
+                                                                    <FileInput
+                                                                        name={`document`}
+                                                                        accept="application/pdf"
+                                                                        formik={form}
+                                                                    />
+                                                                    <div className="mt-2 d-flex w-100 ">
+                                                                        <Button className="mr-2 w-50 theme-primary-btn" type="submit">
+                                                                            {t(`SAVE`)}
+                                                                        </Button>
+                                                                        <Button type="button" className="mr-2 w-50 bg-danger" onClick={() => { form.resetForm() }}                                                            >
+                                                                            {t(`CANCEL`)}
+                                                                        </Button>
+
+                                                                    </div>
+                                                                </Form>
+                                                            </Fade>
+                                                        }
+
+                                                    </td>
+                                                </tr>
+                                            )
+                                        })
+                                    }
+                                </tbody>
+                            </Table>
+                        </ViewCard>
+                    </Col>
+                </Row>
             </div>
         </>
     );

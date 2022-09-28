@@ -45,6 +45,8 @@ export default function EmployeeDirectory() {
 
     const onEditClick = (id: number) => router.push(`/dashboard/company/applicants/${id}/edit`)
 
+    const getApplicantData = async (applicantID: number) => { const data = await applicantApi.getById(applicantID).then(res => setApplicant(res)); }
+
     useEffectAsync(async () => {
 
         const data = await applicantApi.list();
@@ -60,7 +62,7 @@ export default function EmployeeDirectory() {
     const tabs = {
         BACKGROUND: applicant && <ViewApplicantDetail applicant={applicant} />,
         DAQ: < DaqTab />,
-        DQF: < DqfTab />,
+        DQF: < DqfTab applicant={applicant} />,
         VEHICLES: < VehicleInformationTab />
     };
 
@@ -111,7 +113,7 @@ export default function EmployeeDirectory() {
                         {
                             id: "name",
                             name: 'NAME',
-                            cell: applicant => <span role="button" className="bg-priamry cursor-pointer enlarge-font" onClick={() => setApplicant(applicant?.applicant)}>{applicant?.applicant?.first_name + ' ' + applicant?.applicant?.last_name}</span>,
+                            cell: applicant => <span role="button" className="bg-priamry cursor-pointer enlarge-font" onClick={() => getApplicantData(applicant?.applicant?.id)}>{applicant?.applicant?.first_name + ' ' + applicant?.applicant?.last_name}</span>,
                         },
                         {
                             id: "phone",
@@ -169,7 +171,7 @@ export default function EmployeeDirectory() {
                             cell: (applicant) => (
                                 <>
                                     <div className="data_table_custom_action_button">
-                                        <div onClick={() => setApplicant(applicant?.applicant)} >
+                                        <div onClick={(e) => getApplicantData(applicant?.applicant?.id)}>
                                             <EyeFill className="view cursor-pointer enlarge-font" />
                                         </div>
                                         <div onClick={(e) => onEditClick(applicant?.applicant?.id)}>

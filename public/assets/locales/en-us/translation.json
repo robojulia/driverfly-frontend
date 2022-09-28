@@ -54,6 +54,7 @@
     "truck": "Truck",
     "type": "Type",
     "update_status": "Update Status",
+    "UPDATED_AT": "Updated at",
     "view": "View",
     "view_all_jobs": "View all jobs",
     "browse_job": "Browse Job",
@@ -243,6 +244,7 @@
     "voilations_in_last_3_years": "Number of moving violations in the last 3 years",
     "pdf": "PDF",
     "UNRECOGNIZED_DOCUMENT_TYPE": "UNRECOGNIZED DOCUMENT TYPE",
+    "DOCUMENT_TYPE": "Document type",
     "successfully_saved_information": "Successfully saved your information",
     "unable_to_save_information": "Unable to save your information",
     "above_21": "Above 21?",
@@ -1296,5 +1298,6 @@
     "last_inspected": "Last Inspected:",
     "inspection_notes": "Inspection Notes:",
     "vehicle_maintenance_tracking_info": "Vehicle Maintenance Tracking Info:",
-    "view_applicant_profile": "View Applicant Profile"
+    "view_applicant_profile": "View Applicant Profile",
+    "NOT_AVAILABLE": "Not Available"
 }
