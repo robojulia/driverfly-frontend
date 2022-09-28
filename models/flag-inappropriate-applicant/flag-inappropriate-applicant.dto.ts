@@ -8,15 +8,15 @@ export class FlagInappropriateApplicantDto {
 
     }
     applicantId: number;
-    flag_inappropriate_applicant: FlagInappropriateApplicant;
-    other_options?: string;
+    type: FlagInappropriateApplicant;
+    type_other?: string;
 
     static yupSchema() {
         return yup.object({
 
             applicantId: yup.number().nullable().required(),
-            flag_inappropriate_applicant: (yup.string() as any).enum(FlagInappropriateApplicant).nullable(),
-            other_options: yup.string().when("flag_inappropriate_applicant", {
+            type: (yup.string() as any).enum(FlagInappropriateApplicant).nullable(),
+            type_other: yup.string().when("other", {
                 is: v => v == FlagInappropriateApplicant.OTHER,
                 then: yup.string().nullable()
             }).nullable(),

@@ -51,15 +51,15 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
     const { user } = useAuth();
 
     return (
-        <section className={`${className} "top-links-sec ort-general"`}>
+        <section className="top-links-sec ort-general p-3 vehicle-img">
 
             <DriverFlag jobId={job.id} />
 
-            <Container>
+            <Container className='p-0'>
                 <Row>
                     <Col md={9}>
                         <div className="ort-inner ">
-                            <div className="media align-items-center bg-transparent border-0 p-0">
+                            <div className=" company_photo media align-items-center bg-transparent border-0 p-0">
                                 <span className="text-dark text-center text-decoration-none">
                                     <CompanyPhoto className="d-flex mr-4 truck-img mb-3" company={job.company} />
                                     {viewAllJobsLink &&
@@ -110,7 +110,7 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
             </Container>
 
             <div className="job-deatails-sec">
-                <Container>
+                <Container className='p-0'>
                     <Row>
                         <Col lg={8}>
                             < JobDescription job={job} />

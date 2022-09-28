@@ -4,14 +4,9 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useRouter } from 'next/router'
 import { globalAjaxExceptionHandler } from "../../utils/ajax";
-// hooks
 import { useTranslation } from "../../hooks/useTranslation";
-// inputs
 import BaseInput from "../forms/BaseInput";
-
-// useAuth
 import { useAuth } from '../../hooks/useAuth'
-
 import { Row, Button, Col } from "react-bootstrap";
 import ViewModal from "../viewDetails/viewModal";
 import { FlagFill } from "react-bootstrap-icons";
@@ -19,7 +14,6 @@ import { useState } from "react";
 import BaseSelect from "../forms/BaseSelect";
 import { FlagInappropriateApplicantDto } from "../../models/flag-inappropriate-applicant/flag-inappropriate-applicant.dto";
 import { FlagInappropriateApplicant } from "../../enums/jobs/flag-inappropriate-applicant.enum";
-import { useEffectAsync } from "../../utils/react";
 
 export default function CompanyFlag({ applicantId }) {
 
@@ -65,8 +59,8 @@ export default function CompanyFlag({ applicantId }) {
                     <Row>
                         <BaseSelect
                             className="col"
-                            label="Flag_Inappropriate_Applicant"
-                            name="flag_inappropriate_applicant"
+                            label="Inappropriate_Applicant"
+                            name="type"
                             required
                             placeholder
                             labelPrefix="FlagInappropriateApplicant"
@@ -74,12 +68,12 @@ export default function CompanyFlag({ applicantId }) {
                             formik={form}
                         />
                         {
-                            form.values.flag_inappropriate_applicant === FlagInappropriateApplicant.OTHER &&
+                            form.values.type === FlagInappropriateApplicant.OTHER &&
                             <BaseInput
                                 className="col-12 mt-3"
                                 label="other"
                                 required
-                                name="other_options"
+                                name="type_other"
                                 placeholder
                                 formik={form}
                             />
@@ -87,7 +81,7 @@ export default function CompanyFlag({ applicantId }) {
                     </Row>
                     <Row>
                         <Col className="text-end my-3">
-                            <Button disabled={form.values.flag_inappropriate_applicant == null} type="submit">{t("submit")}</Button>
+                            <Button disabled={form.values.type == null} type="submit">{t("submit")}</Button>
                         </Col>
                     </Row>
                 </form>

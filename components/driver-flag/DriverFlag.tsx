@@ -4,16 +4,10 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useRouter } from 'next/router'
 import { globalAjaxExceptionHandler } from "../../utils/ajax";
-// hooks
 import { useTranslation } from "../../hooks/useTranslation";
-// inputs
 import BaseInput from "../forms/BaseInput";
-
-// useAuth
 import { useAuth } from '../../hooks/useAuth'
-
 import { FlagInappropriateJobDto } from "../../models/flag-inappropriate-job/flag-inappropriate-job.dto";
-
 import { Row, Button, Col } from "react-bootstrap";
 import ViewModal from "../viewDetails/viewModal";
 import { FlagFill } from "react-bootstrap-icons";
@@ -24,7 +18,7 @@ import { FlagInappropriateJob } from "../../enums/jobs/flag-inappropriate-job.en
 export default function DriverFlag({ jobId }) {
 
     const { user } = useAuth();
-    if (!!!user) return <></>;
+    if (!!!user || user.company !== null) return <></>;
 
     const { t } = useTranslation();
     const router = useRouter();
@@ -46,12 +40,12 @@ export default function DriverFlag({ jobId }) {
     });
     // showDriverFlagModel 
     const [showDriverFlagModel, setShowDriverFlagModel] = useState<boolean>(false);
-    const openFileUploadModel = (): void => setShowDriverFlagModel(true)
+    const openDriverFlagModel = (): void => setShowDriverFlagModel(true)
     const closeDriverFlagModel = (): void => setShowDriverFlagModel(false)
 
     return (
         <>
-            <div className="driver-flag" onClick={openFileUploadModel}>
+            <div className="driver-flag" onClick={openDriverFlagModel}>
                 <p>
                     < FlagFill /> <span>{t("flag_inappropriate")} </span>
                 </p>
@@ -60,14 +54,14 @@ export default function DriverFlag({ jobId }) {
                 show={showDriverFlagModel}
                 onCloseClick={closeDriverFlagModel}
                 closeText="CANCEL"
-                title="flag_inappropriate"
+                title="Flag_Inappropriate_Job"
             >
 
                 <form onSubmit={form.handleSubmit}>
                     <Row>
                         <BaseSelect
                             className="col"
-                            label="Flag_Inappropriate_Job"
+                            label="Inappropriate_Job"
                             name="type"
                             required
                             placeholder
@@ -81,7 +75,7 @@ export default function DriverFlag({ jobId }) {
                                 className="col-12 mt-3"
                                 label="other"
                                 required
-                                name="other_options"
+                                name="type_other"
                                 placeholder
                                 formik={form}
                             />
