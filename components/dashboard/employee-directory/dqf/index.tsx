@@ -16,12 +16,13 @@ import Fade from 'react-reveal/Fade';
 import { CloudArrowDown, Pen } from "react-bootstrap-icons";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import { useState } from "react";
+import { ThreeCircles } from 'react-loader-spinner';
 
 export interface DqfTabProps extends ViewApplicantDetailProps { }
 
 const DqfTab = ({ applicant }: DqfTabProps) => {
-     
-    const [applicantUser, setApplicantUser ] = useState<ApplicantEntity>(null)
+
+    const [applicantUser, setApplicantUser] = useState<ApplicantEntity>(null)
 
     const { t } = useTranslation();
     const { user } = useAuth();
@@ -63,70 +64,84 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
         <div className="employee_directory_tabs">
             <Row>
                 <Col>
-                    <ViewCard title="DOCUMENTS">
+                    {!!applicantUser ? (
+                        <ViewCard title="DOCUMENTS">
 
-                        <Table striped>
-                            <thead>
-                                <tr>
-                                    <th colSpan={2}>{t("TYPE")}</th>
-                                    <th colSpan={2}>{t("UPDATED_AT")}</th>
-                                    <th colSpan={1}></th>
-                                </tr>
-                            </thead>
+                            <Table striped>
+                                <thead>
+                                    <tr>
+                                        <th colSpan={2}>{t("TYPE")}</th>
+                                        <th colSpan={2}>{t("UPDATED_AT")}</th>
+                                        <th colSpan={1}></th>
+                                    </tr>
+                                </thead>
 
-                            <tbody>
-                                {
-                                    Object.values(ApplicantDocumentType).map((value: ApplicantDocumentType, i) => {
+                                <tbody>
+                                    {
+                                        Object.values(ApplicantDocumentType).map((value: ApplicantDocumentType, i) => {
 
-                                        const document: any = applicantUser?.documents?.find(v => (v.type === value))
-                                        return (
-                                            <tr key={i}>
-                                                <td colSpan={2}>
-                                                    {t(`ApplicantDocumentType.${value}`)}
-                                                </td>
-                                                <td colSpan={2}>
-                                                    {document ? <ShowFormattedDate date={document.last_updated_at} /> : <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>}
-                                                </td>
-                                                <td colSpan={1} >
-                                                    {
-                                                        (!form.values.document?.type || form.values.document?.type !== value) &&
-                                                        <div className="d-flex">
-                                                            <Button className="mr-2 w-100" onClick={() => { handleUpdateDocument(value, document?.id) }}>
-                                                                {document ? <Pen /> : t('ADD')}
-                                                            </Button>
-                                                            {document ? <a href={document?.path} role="button" className="btn theme-primary2-btn p-0 pt-1 mr-2" download><CloudArrowDown /></a> : null}
-                                                        </div>
-                                                    }
+                                            const document: any = applicantUser?.documents?.find(v => (v.type === value))
+                                            return (
+                                                <tr key={i}>
+                                                    <td colSpan={2}>
+                                                        {t(`ApplicantDocumentType.${value}`)}
+                                                    </td>
+                                                    <td colSpan={2}>
+                                                        {document ? <ShowFormattedDate date={document.last_updated_at} /> : <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>}
+                                                    </td>
+                                                    <td colSpan={1} >
+                                                        {
+                                                            (!form.values.document?.type || form.values.document?.type !== value) &&
+                                                            <div className="d-flex">
+                                                                <Button className="mr-2 w-100" onClick={() => { handleUpdateDocument(value, document?.id) }}>
+                                                                    {document ? <Pen /> : t('ADD')}
+                                                                </Button>
+                                                                {document ? <a href={document?.path} role="button" className="btn theme-primary2-btn p-0 pt-1 mr-2" download><CloudArrowDown /></a> : null}
+                                                            </div>
+                                                        }
 
-                                                    {
-                                                        (form.values.document && form.values.document.type === value) &&
-                                                        <Fade top>
-                                                            <Form onSubmit={form.handleSubmit} >
-                                                                <FileInput
-                                                                    name={`document`}
-                                                                    accept="application/pdf"
-                                                                    formik={form}
-                                                                />
-                                                                <div className="mt-2 d-flex w-100 ">
-                                                                    <Button className="mr-2 w-50 theme-primary-btn" type="submit">
-                                                                        {t(`SAVE`)}
-                                                                    </Button>
-                                                                    <Button type="button" className="mr-2 w-50 bg-danger" onClick={() => { form.resetForm() }}                                                            >
-                                                                        {t(`CANCEL`)}
-                                                                    </Button>
-                                                                </div>
-                                                            </Form>
-                                                        </Fade>
-                                                    }
+                                                        {
+                                                            (form.values.document && form.values.document.type === value) &&
+                                                            <Fade top>
+                                                                <Form onSubmit={form.handleSubmit} >
+                                                                    <FileInput
+                                                                        name={`document`}
+                                                                        accept="application/pdf"
+                                                                        formik={form}
+                                                                    />
+                                                                    <div className="mt-2 d-flex w-100 ">
+                                                                        <Button className="mr-2 w-50 theme-primary-btn" type="submit">
+                                                                            {t(`SAVE`)}
+                                                                        </Button>
+                                                                        <Button type="button" className="mr-2 w-50 bg-danger" onClick={() => { form.resetForm() }}                                                            >
+                                                                            {t(`CANCEL`)}
+                                                                        </Button>
+                                                                    </div>
+                                                                </Form>
+                                                            </Fade>
+                                                        }
 
-                                                </td>
-                                            </tr>
-                                        )
-                                    })
-                                }
-                            </tbody>
-                        </Table>
-                    </ViewCard>
+                                                    </td>
+                                                </tr>
+                                            )
+                                        })
+                                    }
+                                </tbody>
+                            </Table>
+                        </ViewCard>
+                    ) : (
+                        <div className="d-flex justify-content-center align-items-center">
+                            <ThreeCircles
+                                height={50}
+                                width={50}        
+                                color="#5bb0b9"
+                                ariaLabel="ball-triangle-loading"
+                                visible={true}
+                            />
+                        </div>
+                    )}
+
+
                 </Col>
             </Row>
         </div>
