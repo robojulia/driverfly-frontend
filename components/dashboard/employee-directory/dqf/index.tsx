@@ -13,12 +13,11 @@ import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import ShowFormattedDate from "../../../jobs/show-formatted-date";
 import { ApplicantDocumentDto } from "../../../../models/applicant/applicant-document-dto";
 import Fade from 'react-reveal/Fade';
-import { CloudArrowDown } from "react-bootstrap-icons";
+import { CloudArrowDown, Pen } from "react-bootstrap-icons";
+
 export interface DqfTabProps extends ViewApplicantDetailProps { }
 
-
 const DqfTab = ({ applicant }: DqfTabProps) => {
-
 
     const { t } = useTranslation();
     const { user } = useAuth();
@@ -27,8 +26,7 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
     const form = useFormik({
         initialValues: new ApplicantDocumentDto(),
         validationSchema: ApplicantDocumentDto.yupSchema(),
-        onSubmit: async (values, { resetForm }) => {
-            const { document } = values
+        onSubmit: async ({ document }, { resetForm }) => {
 
             try {
                 const applicantDocumentUpload = await applicantApi.documents.create(applicant.id, document)
@@ -37,7 +35,7 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                     applicant.documents = applicant.documents.filter(v => (v.id !== applicantDocumentUpload.id))
                 }
                 applicant.documents.push(applicantDocumentUpload)
-                toast.success(t('Document uploaded successfully'))
+                toast.success(t('DOCUMENT_UPLOAD_SUCCESS_MESSAGE'))
                 resetForm()
             }
             catch (e) {
@@ -58,80 +56,76 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
     });
 
     return (
-        <>
-            <div className="employee_directory_tabs">
-                <Row>
-                    <Col>
-                        <ViewCard title="DOCUMENTS">
+        <div className="employee_directory_tabs">
+            <Row>
+                <Col>
+                    <ViewCard title="DOCUMENTS">
 
-                            <Table striped>
-                                <thead>
-                                    <tr>
-                                        <th colSpan={2}>{t("TYPE")}</th>
-                                        <th colSpan={2}>{t("UPDATED_AT")}</th>
-                                        <th colSpan={1}></th>
-                                    </tr>
-                                </thead>
+                        <Table striped>
+                            <thead>
+                                <tr>
+                                    <th colSpan={2}>{t("TYPE")}</th>
+                                    <th colSpan={2}>{t("UPDATED_AT")}</th>
+                                    <th colSpan={1}></th>
+                                </tr>
+                            </thead>
 
-                                <tbody>
-                                    {
-                                        Object.values(ApplicantDocumentType).map((value: ApplicantDocumentType, i) => {
+                            <tbody>
+                                {
+                                    Object.values(ApplicantDocumentType).map((value: ApplicantDocumentType, i) => {
 
-                                            const document: any = applicant?.documents?.find(v => (v.type === value))
-                                            return (
-                                                <tr key={i} className="testing_tr">
-                                                    <td colSpan={2}>
-                                                        {t(`ApplicantDocumentType.${value}`)}
-                                                    </td>
-                                                    <td colSpan={2}>
-                                                        {document ? <ShowFormattedDate date={document.last_updated_at} /> : <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>}
-                                                    </td>
-                                                    <td colSpan={1} >
-                                                        {
-                                                            (!form.values.document?.type || form.values.document?.type !== value) &&
-                                                            <div className="d-flex">
-                                                                <Button className="mr-2 w-100" onClick={() => { handleUpdateDocument(value, document?.id) }}>
-                                                                    {t(document ? `EDIT` : `CREATE`)}
-                                                                </Button>
-                                                                {document ? <a href={document?.path} role="button" className="btn theme-primary2-btn p-0 pt-1 mr-2" download><CloudArrowDown /></a> : null}
+                                        const document: any = applicant?.documents?.find(v => (v.type === value))
+                                        return (
+                                            <tr key={i}>
+                                                <td colSpan={2}>
+                                                    {t(`ApplicantDocumentType.${value}`)}
+                                                </td>
+                                                <td colSpan={2}>
+                                                    {document ? <ShowFormattedDate date={document.last_updated_at} /> : <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>}
+                                                </td>
+                                                <td colSpan={1} >
+                                                    {
+                                                        (!form.values.document?.type || form.values.document?.type !== value) &&
+                                                        <div className="d-flex">
+                                                            <Button className="mr-2 w-100" onClick={() => { handleUpdateDocument(value, document?.id) }}>
+                                                                {document ? <Pen /> : t('CREATE')}
+                                                            </Button>
+                                                            {document ? <a href={document?.path} role="button" className="btn theme-primary2-btn p-0 pt-1 mr-2" download><CloudArrowDown /></a> : null}
+                                                        </div>
+                                                    }
 
-                                                            </div>
-                                                        }
+                                                    {
+                                                        (form.values.document && form.values.document.type === value) &&
+                                                        <Fade top>
+                                                            <Form onSubmit={form.handleSubmit} >
+                                                                <FileInput
+                                                                    name={`document`}
+                                                                    accept="application/pdf"
+                                                                    formik={form}
+                                                                />
+                                                                <div className="mt-2 d-flex w-100 ">
+                                                                    <Button className="mr-2 w-50 theme-primary-btn" type="submit">
+                                                                        {t(`SAVE`)}
+                                                                    </Button>
+                                                                    <Button type="button" className="mr-2 w-50 bg-danger" onClick={() => { form.resetForm() }}                                                            >
+                                                                        {t(`CANCEL`)}
+                                                                    </Button>
+                                                                </div>
+                                                            </Form>
+                                                        </Fade>
+                                                    }
 
-                                                        {
-                                                            (form.values.document && form.values.document.type === value) &&
-                                                            <Fade top>
-                                                                <Form onSubmit={form.handleSubmit} >
-                                                                    <FileInput
-                                                                        name={`document`}
-                                                                        accept="application/pdf"
-                                                                        formik={form}
-                                                                    />
-                                                                    <div className="mt-2 d-flex w-100 ">
-                                                                        <Button className="mr-2 w-50 theme-primary-btn" type="submit">
-                                                                            {t(`SAVE`)}
-                                                                        </Button>
-                                                                        <Button type="button" className="mr-2 w-50 bg-danger" onClick={() => { form.resetForm() }}                                                            >
-                                                                            {t(`CANCEL`)}
-                                                                        </Button>
-
-                                                                    </div>
-                                                                </Form>
-                                                            </Fade>
-                                                        }
-
-                                                    </td>
-                                                </tr>
-                                            )
-                                        })
-                                    }
-                                </tbody>
-                            </Table>
-                        </ViewCard>
-                    </Col>
-                </Row>
-            </div>
-        </>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })
+                                }
+                            </tbody>
+                        </Table>
+                    </ViewCard>
+                </Col>
+            </Row>
+        </div>
     );
 };
 

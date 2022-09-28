@@ -67,134 +67,124 @@ export default function EmployeeDirectory() {
     };
 
     return (
-        <>
-            <PageLayout
-                title="EMPLOYEE_DIRECTORY"
-                actions={
-                    <>
-                        <Row>
-                            <Col>
-                                <p className="mt-2 mb-2">
-                                    {t("WANT_TO_ADD_TO_THIS_LIST")}
-                                    <u className="ml-1">
-                                        <Link href="/dashboard/company/compliance/employee-directory/import">
-                                            <a>{t("HERE")}</a>
-                                        </Link>
-                                    </u>
-                                </p>
-                                <u>
-                                    <p className="mt-2">
-                                        <Link href="#">
-                                            <a>{t("VIEW_PAST_HIRES")}</a>
-                                        </Link>
-                                    </p>
-                                </u>
-                            </Col>
-                        </Row>
-                    </>
-                }
-            >
-                <ViewDataTable<ReducedApplicantEntityType>
-                    columnSettingKey={columnSettingKey}
-                    customStyles={{
-                        headCells: {
-                            style: {
-                                background: "#5bb0b9",
-                                color: "white"
-                            },
-                        }
-                    }}
-                    columns={[
-                        {
-                            id: "id",
-                            name: "ID",
-                            selector: applicant => applicant?.applicant?.id,
+        <PageLayout
+            title="EMPLOYEE_DIRECTORY"
+            actions={
+                <Row>
+                    <Col>
+                        <p className="mt-2 mb-2">
+                            {t("WANT_TO_ADD_TO_THIS_LIST")}
+                            <u className="ml-1">
+                                <Link href="/dashboard/company/compliance/employee-directory/import">
+                                    <a>{t("HERE")}</a>
+                                </Link>
+                            </u>
+                        </p>
+                        {/* <u>
+                            <p className="mt-2">
+                                <Link href="#">
+                                    <a>{t("VIEW_PAST_HIRES")}</a>
+                                </Link>
+                            </p>
+                        </u> */}
+                    </Col>
+                </Row>
+            }
+        >
+            <ViewDataTable<ReducedApplicantEntityType>
+                columnSettingKey={columnSettingKey}
+                customStyles={{
+                    headCells: {
+                        style: {
+                            background: "#5bb0b9",
+                            color: "white"
                         },
-                        {
-                            id: "name",
-                            name: 'NAME',
-                            cell: applicant => <span role="button" className="bg-priamry cursor-pointer enlarge-font" onClick={() => getApplicantData(applicant?.applicant?.id)}>{applicant?.applicant?.first_name + ' ' + applicant?.applicant?.last_name}</span>,
-                        },
-                        {
-                            id: "phone",
-                            name: 'PHONE',
-                            selector: applicant => applicant?.applicant?.phone,
-                            cell: applicant => (<OverlyPopover
-                                skipTranslate
-                                slice_at={10}
-                                str={applicant?.applicant?.phone}
-                            />),
-                        },
-                        {
-                            id: "email",
-                            name: 'EMAIL',
-                            selector: applicant => applicant?.applicant?.email,
-                            cell: applicant => (<OverlyPopover
-                                skipTranslate
-                                slice_at={40}
-                                str={applicant?.applicant?.email}
-                            />),
-                        },
-                        {
-                            id: "jobTitle",
-                            name: 'job_title',
-                            selector: applicant => applicant?.applicantJob?.job?.title,
-                            cell: applicant => (<OverlyPopover
-                                skipTranslate
-                                slice_at={40}
-                                str={applicant?.applicantJob?.job?.title}
-                            />),
-                        },
-                        {
-                            id: "dateHired",
-                            name: 'DATE_HIRED',
-                            selector: applicant => applicant?.applicant?.last_updated_at,
-                            cell: applicant => <ShowFormattedDate
-                                date={applicant?.applicant?.last_updated_at}
-                                hideTime
-                            />
-                        },
-                        {
-                            id: "status",
-                            name: 'STATUS',
-                            selector: applicant => applicant?.applicantJob?.status,
-                            cell: applicant =>
-                            (<ShowEnumFromString
-                                popover
-                                labelPrefix="ApplicantStatus"
-                                str={applicant?.applicantJob?.status}
-                                enumArray={ApplicantStatus} />
-                            ),
-
-                        },
-                        {
-                            cell: (applicant) => (
-                                <>
-                                    <div className="data_table_custom_action_button">
-                                        <div onClick={(e) => getApplicantData(applicant?.applicant?.id)}>
-                                            <EyeFill className="view cursor-pointer enlarge-font" />
-                                        </div>
-                                        <div onClick={(e) => onEditClick(applicant?.applicant?.id)}>
-                                            < PenFill className="edit cursor-pointer enlarge-font" />
-                                        </div>
+                    }
+                }}
+                columns={[
+                    {
+                        id: "id",
+                        name: "ID",
+                        selector: data => data?.applicant?.id,
+                    },
+                    {
+                        id: "name",
+                        name: 'NAME',
+                        cell: data => <span role="button" className="bg-priamry cursor-pointer enlarge-font" onClick={() => getApplicantData(data?.applicant?.id)}>{data?.applicant?.first_name + ' ' + data?.applicant?.last_name}</span>,
+                    },
+                    {
+                        id: "phone",
+                        name: 'PHONE',
+                        selector: data => data?.applicant?.phone,
+                        cell: data => (<OverlyPopover
+                            skipTranslate
+                            slice_at={10}
+                            str={data?.applicant?.phone}
+                        />),
+                    },
+                    {
+                        id: "email",
+                        name: 'EMAIL',
+                        selector: data => data?.applicant?.email,
+                        cell: data => (<OverlyPopover
+                            skipTranslate
+                            slice_at={40}
+                            str={data?.applicant?.email}
+                        />),
+                    },
+                    {
+                        id: "jobTitle",
+                        name: 'job_title',
+                        selector: data => data?.applicantJob?.job?.title,
+                        cell: data => (<OverlyPopover
+                            skipTranslate
+                            slice_at={40}
+                            str={data?.applicantJob?.job?.title}
+                        />),
+                    },
+                    {
+                        id: "dateHired",
+                        name: 'DATE_HIRED',
+                        selector: data => data?.applicant?.last_updated_at,
+                        cell: data => <ShowFormattedDate
+                            date={data?.applicant?.last_updated_at}
+                            hideTime
+                        />
+                    },
+                    {
+                        id: "status",
+                        name: 'STATUS',
+                        selector: data => data?.applicantJob?.status,
+                        cell: data =>
+                        (<ShowEnumFromString
+                            popover
+                            labelPrefix="ApplicantStatus"
+                            str={data?.applicantJob?.status}
+                            enumArray={ApplicantStatus} />
+                        ),
+                    },
+                    {
+                        cell: (data) => (
+                            <>
+                                <div className="data_table_custom_action_button">
+                                    <div onClick={(e) => getApplicantData(data?.applicant?.id)}>
+                                        <EyeFill className="view cursor-pointer enlarge-font" />
                                     </div>
+                                    <div onClick={(e) => onEditClick(data?.applicant?.id)}>
+                                        < PenFill className="edit cursor-pointer enlarge-font" />
+                                    </div>
+                                </div>
+                            </>
+                        ),
+                    },
+                ]}
+                items={applicants}
+            />
+            <ViewModal show={!!applicant} onCloseClick={resetApplicant} >
+                <TabbedLayout items={tabs} className="mt-5"></TabbedLayout>
+            </ViewModal>
 
-                                </>
-                            ),
-                        },
-
-
-                    ]}
-                    items={applicants}
-                />
-                <ViewModal show={!!applicant} onCloseClick={resetApplicant} >
-                    <TabbedLayout items={tabs} className="mt-5"></TabbedLayout>
-                </ViewModal>
-
-            </PageLayout>
-
-        </>
-
+        </PageLayout>
     )
 
 };
