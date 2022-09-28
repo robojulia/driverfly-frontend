@@ -1,7 +1,7 @@
 import { FlagInappropriateApplicantDto } from "../../models/flag-inappropriate-applicant/flag-inappropriate-applicant.dto";
 import BaseApi from "./_baseApi";
 export default class FlagInappropriateApplicantApi extends BaseApi {
-    baseUrl: string = "support/inappropriate-applicant";
+    baseUrl: string = "support/flag-inappropriate-applicant";
     constructor() {
         super();
     }
