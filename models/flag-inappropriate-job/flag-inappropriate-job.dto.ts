@@ -7,15 +7,15 @@ export class FlagInappropriateJobDto {
         this.jobId = jobId
     }
     jobId: number;
-    flag_inappropriate_job: FlagInappropriateJob;
+    type: FlagInappropriateJob;
     other_options?: string;
 
     static yupSchema() {
         return yup.object({
 
             jobId: (yup.number().nullable().required()),
-            flag_inappropriate_job: (yup.string() as any).enum(FlagInappropriateJob).nullable(),
-            other_options: yup.string().when("flag_inappropriate_job", {
+            type: (yup.string() as any).enum(FlagInappropriateJob).nullable(),
+            other_options: yup.string().when("type", {
                 is: v => v == FlagInappropriateJob.OTHER,
                 then: yup.string().nullable()
             }).nullable(),
