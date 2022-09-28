@@ -718,6 +718,21 @@ textarea {
     transition: 1s;
 }
 
+.driver-flag span {
+
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s linear;
+
+
+}
+
+.driver-flag:hover span {
+    visibility: visible;
+    opacity: 1;
+
+}
+
 .driver-flag:hover svg {
     margin: 0;
     transition: 1s;
