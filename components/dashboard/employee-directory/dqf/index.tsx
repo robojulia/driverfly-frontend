@@ -30,7 +30,7 @@ export interface DqfTabProps extends ViewApplicantDetailProps { }
 
 const DqfTab = ({ applicant }: DqfTabProps) => {
 
-    
+
     const { t } = useTranslation();
     const { user } = useAuth();
     const applicantApi = new ApplicantApi();
@@ -42,16 +42,20 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
             console.log("form clickeeeeeeeeeeeeddddddddd", values)
             const { document } = values
 
-            // try {
-            // const applicantDocumentUpload = await applicantApi.documents.create(applicant.id, document)
+            try {
+                const applicantDocumentUpload = await applicantApi.documents.create(applicant.id, document)
 
-            //     toast.success(t('job_applied_success_message'))
-            //     resetForm()
-            // }
-            // catch (e) {
-            //     globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t });
-            //     // if (e.response?.data?.message == "ApplicantJobService.APPLICANT_ALREADY_APPLIED") setViewForm(false)
-            // }
+                if (document.id) {
+                    applicant.documents = applicant.documents.filter(v => (v.id !== applicantDocumentUpload.id))
+                }
+
+                applicant.documents.push(applicantDocumentUpload)
+                toast.success(t(''))
+                resetForm()
+            }
+            catch (e) {
+                globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t });
+            }
         }
     });
 
