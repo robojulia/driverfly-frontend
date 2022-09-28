@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { Col, Container, Row } from 'react-bootstrap';
 import { ArrowRight, CurrencyDollar } from "react-bootstrap-icons"
 import { useTranslation } from '../../hooks/useTranslation';
-import { JobEntity } from "../../models/job/job.entity";
 import { buildAddress } from '../../utils/common';
 import JobApply from '../apply';
 import SaveJob from '../dashboard/driver/save-job';
@@ -31,6 +30,7 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
         hideCompanyName,
         hideSocialLinks
     } = props
+
     const { t } = useTranslation();
     const [encourageModal, setEncourageModal] = React.useState(false)
     const { user } = useAuth();
