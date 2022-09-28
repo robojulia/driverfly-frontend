@@ -699,29 +699,36 @@ textarea {
 /* driver-flag */
 
 .driver-flag {
+    transition: 1s;
     background-color: #1d4354;
-    width: 12%;
-    height: 60px;
     border-radius: 0%;
     right: 0%;
     top: 50%;
     position: fixed;
     cursor: pointer;
     z-index: 9999;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    padding: 20px 15px;
+    text-align: center;
 
 }
-.driver-flag:hover{
-    box-shadow: 0 0rem 3rem rgb(0 0 0 / 20%);
-    transform: scale(1.1, 1.1);
-    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+.driver-flag:hover {
+    transition: 1s;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+    padding: 20px 30px;
+
 }
+
+.driver-flag:active {
+    opacity: .8;
+}
+
 .driver-flag p {
-    content: "Flag";
-    position: relative;
-    top: 31%;
-    left: 17%;
     color: #fff;
-    margin: 0;
+    margin-bottom: 0;
     cursor: pointer;
 }
 
@@ -739,4 +746,8 @@ textarea {
 .enlarge-font:hover,
 .enlarge-font:hover::after {
     font-size: 2vmin;
+}
+
+.dashboardsidebar .ort-general{
+    padding: 0 !important;
 }

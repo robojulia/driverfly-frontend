@@ -4,14 +4,9 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useRouter } from 'next/router'
 import { globalAjaxExceptionHandler } from "../../utils/ajax";
-// hooks
 import { useTranslation } from "../../hooks/useTranslation";
-// inputs
 import BaseInput from "../forms/BaseInput";
-
-// useAuth
 import { useAuth } from '../../hooks/useAuth'
-
 import { Row, Button, Col } from "react-bootstrap";
 import ViewModal from "../viewDetails/viewModal";
 import { FlagFill } from "react-bootstrap-icons";
@@ -19,7 +14,6 @@ import { useState } from "react";
 import BaseSelect from "../forms/BaseSelect";
 import { FlagInappropriateApplicantDto } from "../../models/flag-inappropriate-applicant/flag-inappropriate-applicant.dto";
 import { FlagInappropriateApplicant } from "../../enums/jobs/flag-inappropriate-applicant.enum";
-import { useEffectAsync } from "../../utils/react";
 
 export default function CompanyFlag({ applicantId }) {
 
