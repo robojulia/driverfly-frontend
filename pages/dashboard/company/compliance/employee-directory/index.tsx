@@ -12,7 +12,7 @@ import Link from "next/link";
 import { Col, Row } from "react-bootstrap";
 import 'react-tabs/style/react-tabs.css';
 import { TabbedLayout } from "../../../../../components/layouts/page/TabbedLayout";
-import DaqTab from "../../../../../components/dashboard/employee-directory/daq";
+import DAC from "../../../../../components/dashboard/employee-directory/dac";
 import DqfTab from "../../../../../components/dashboard/employee-directory/dqf";
 import VehicleInformationTab from "../../../../../components/dashboard/employee-directory/vehicle-information";
 import ApplicantApi from "../../../../api/applicant";
@@ -20,7 +20,6 @@ import { ApplicantEntity } from "../../../../../models/applicant/applicant.entit
 import { filterHired, reduceSingleEntity } from "../../../../../utils/filter-applicants";
 import { ReducedApplicantEntityType } from "../../../../../types/applicant/reduced-applicant-entity.type";
 import ViewModal from "../../../../../components/viewDetails/viewModal";
-import ViewApplicantDetail from "../../../../../components/applicants/applicant-view-details";
 import useLastPage from "../../../../../hooks/useLastPage";
 import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
 import { ApplicantStatus } from "../../../../../enums/applicants/applicant-status.enum";
@@ -36,7 +35,7 @@ export default function EmployeeDirectory() {
     const { t } = useTranslation();
     const applicantApi = new ApplicantApi();
     const router = useRouter()
-    
+
     const { setPreviousPath } = useLastPage();
     setPreviousPath(router.asPath)
 
@@ -61,7 +60,7 @@ export default function EmployeeDirectory() {
 
     const tabs = {
         BACKGROUND: <Background applicant={applicant} />,
-        DAQ: < DaqTab />,
+        DAC: < DAC applicant={applicant} />,
         DQF: < DqfTab applicant={applicant} />,
         VEHICLES: < VehicleInformationTab />
     };

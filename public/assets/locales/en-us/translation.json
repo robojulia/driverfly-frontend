@@ -749,6 +749,19 @@
     "APPLICATION_STATUS": "Application Status",
     "MY_APPLICATIONS": "My Applications",
     "NO_RECORDS_FOUND": "No Record Found",
+    "ApplicantDac": {
+        "PERIOD_OF_SERVICE": "period of service",
+        "EQUIPMENT_OPERATED": "equipment operated",
+        "LOADS_HAULED": "loads hauled",
+        "DRIVER_STATUS_AND_EXPERIENCE": "driving status and experience",
+        "REASON_FOR_LEAVING": "reason for leaving",
+        "REHIRE_ELIGIBILITY": "rehire eligibility",
+        "NUMBER_OF_ACCIDENTS": "number of accidents",
+        "ACCIDENT_DETAILS": "accident details",
+        "DRUG_AND_ALCOHOL_HISTORIES": "drug and alcohol histories",
+        "PRE_EMPLOYMENT_TEST_RESULTS": "pre employment test results",
+        "TRUCK_DRIVING_SCHOOL_PERFORMANCE_RECORDS": "truck driving school performance records"
+    },
     "ApplicantStatus": {
         "APPLIED": "Applied",
         "LEAD": "Lead",
@@ -870,7 +883,7 @@
     "INVALID_EMAIL_FORMAT": "Invalid email format",
     "NO_EMAIL_AND_NUMBER": "Email and Phone Numbers are not allowed",
     "USER_NOT_FOUND": "User with the email specified was not found.",
-    "USER_NOT_ACTIVE":"User with the email specified is not active.",
+    "USER_NOT_ACTIVE": "User with the email specified is not active.",
     "RESET_PASSWORD_EMAIL_SENT_RECENTLY": "A password reset email was recently sent, please check your email or try again after 15 minutes",
     "BACK_TO_LOGIN": "Back To Login",
     "UNABLE_TO_SEND_PASSWORD_RESET_EMAIL": "Unable to send password reset email",
@@ -1007,7 +1020,7 @@
         "MVR": "Motor Vehicle Record (MVR)",
         "PHYSICAL": "DOT Long Form Physical"
     },
-    "CompanyDocumentType":{
+    "CompanyDocumentType": {
         "TRAINING_DOCUMENTS": "Training Documents",
         "COMPANY_POLICY": "Company Policy",
         "SAFETY": "Safety",
