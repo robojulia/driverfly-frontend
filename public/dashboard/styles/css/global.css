@@ -702,7 +702,7 @@ textarea {
     transition: 1s;
     background-color: #1d4354;
     border-radius: 0%;
-    right: 0%;
+    right: -8%;
     top: 50%;
     position: fixed;
     cursor: pointer;
@@ -711,15 +711,23 @@ textarea {
     border-top-left-radius: 5px;
     padding: 20px 15px;
     text-align: center;
+}
 
+.driver-flag svg {
+    margin: 0 22px 0px 15px;
+    transition: 1s;
+}
+
+.driver-flag:hover svg {
+    margin: 0;
+    transition: 1s;
 }
 
 .driver-flag:hover {
     transition: 1s;
-    border-bottom-left-radius: 10px;
-    border-top-left-radius: 10px;
     padding: 20px 30px;
-
+    right: 0;
+    background-color: #2EC8C4;
 }
 
 .driver-flag:active {
@@ -748,6 +756,6 @@ textarea {
     font-size: 2vmin;
 }
 
-.dashboardsidebar .ort-general{
+.dashboardsidebar .ort-general {
     padding: 0 !important;
 }
