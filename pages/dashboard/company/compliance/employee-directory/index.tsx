@@ -173,7 +173,7 @@ export default function EmployeeDirectory() {
                 ]}
                 items={applicants}
             />
-            <ViewModal show={!!applicant} onCloseClick={resetApplicant} >
+            <ViewModal show={!!applicant} onCloseClick={resetApplicant} size='xl' >
                 <TabbedLayout items={tabs} className="mt-5"></TabbedLayout>
             </ViewModal>
 

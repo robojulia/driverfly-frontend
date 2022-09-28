@@ -1,4 +1,4 @@
-import { Col, Row } from 'react-bootstrap';
+import { Button, Col, Row } from 'react-bootstrap';
 import { useTranslation } from '../../../../hooks/useTranslation';
 import React from 'react';
 import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum';
@@ -6,16 +6,19 @@ import { calculateAge } from '../../../../utils/date';
 import ViewCard from '../../../viewDetails/viewCard';
 import ViewDetails from '../../../viewDetails/viewDetails';
 import { ViewApplicantDetailProps } from '../../../../types/applicant/view-application-detail-props.type';
+import { useRouter } from 'next/router';
 
 
 export default function Background({ applicant, protectedFields }: ViewApplicantDetailProps) {
-
+    const router = useRouter()
     const { t } = useTranslation();
+
+    const onViewProfileCLick = () => router.push(`/dashboard/company/applicants/${applicant?.id}`)
 
     return (
         <div className="employee_directory_tabs">
             {applicant && (
-                <ViewCard title={`${applicant?.first_name} ${applicant?.last_name}`}>
+                <ViewCard title={`${applicant?.first_name} ${applicant?.last_name}`} actions={<Button onClick={onViewProfileCLick}>{t(`view_applicant_profile`)}</Button>}>
                     <Row>
                         <Col md="4" className="px-2">
                             <ViewDetails

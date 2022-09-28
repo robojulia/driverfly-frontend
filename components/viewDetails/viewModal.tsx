@@ -9,6 +9,7 @@ export interface ViewModalProps {
     header?: string|JSX.Element|JSX.Element[];
     footer?: string|JSX.Element|JSX.Element[];
     closeText?: string;
+    size?: 'sm' | 'lg' | 'xl';
     onCloseClick?: () => void;
     readonly children?: React.ReactChildren | React.ReactChild;
 }
@@ -26,7 +27,7 @@ export default function ViewModal(props: ViewModalProps) {
     }
 
     return (
-    <Modal show={show} onHide={props.onCloseClick ?? hideModelHandler}>
+    <Modal show={show} size={props.size} onHide={props.onCloseClick ?? hideModelHandler}>
         <Modal.Header className="justify-content-between">
             {
                 props.title &&
