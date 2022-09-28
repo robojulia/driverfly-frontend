@@ -13,7 +13,6 @@ export default function ViewApplicantDetail({ applicant, protectedFields }: View
     const { t } = useTranslation();
 
     return (
-        <div className="employee_directory_tabs">
             <ViewCard title={`${applicant?.first_name} ${applicant?.last_name}`}>
                 <Row>
                     <Col md="4" className="px-2">
@@ -94,6 +93,5 @@ export default function ViewApplicantDetail({ applicant, protectedFields }: View
                     </Col>
                 </Row>
             </ViewCard>
-        </div>
     )
 }
