@@ -12,7 +12,6 @@ import { toast } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import ShowFormattedDate from "../../../jobs/show-formatted-date";
 import { ApplicantDocumentDto } from "../../../../models/applicant/applicant-document-dto";
-import Fade from 'react-reveal/Fade';
 import { CloudArrowDown, Pen } from "react-bootstrap-icons";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import { useState } from "react";
@@ -102,7 +101,6 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
 
                                                         {
                                                             (form.values?.document?.type === value) &&
-                                                            <Fade top>
                                                                 <Form onSubmit={form.handleSubmit} >
                                                                     <FileInput
                                                                         name={`document`}
@@ -118,7 +116,6 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                                                                         </Button>
                                                                     </div>
                                                                 </Form>
-                                                            </Fade>
                                                         }
 
                                                     </td>

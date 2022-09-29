@@ -10,7 +10,6 @@ import ApplicantApi from "../../../../pages/api/applicant";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import { toast } from "react-toastify";
 import BaseCheck from "../../../forms/BaseCheck";
-import Collapse from 'react-bootstrap/Collapse';
 
 export interface DacTabProps extends ViewApplicantDetailProps { }
 
@@ -53,24 +52,23 @@ const DAC = ({ applicant }: DacTabProps) => {
         form.setValues(data)
     }
     return (
-        <>
-            <div className="employee_directory_tabs">
+        <div className="employee_directory_tabs">
 
-                <ViewCard title={`${applicant?.first_name} ${applicant?.last_name}`}>
+            <ViewCard title={`${applicant?.first_name} ${applicant?.last_name}`}>
 
-                    <Table striped>
-                        <tbody>
-                            {
-                                Object.values(ApplicantDac).map((value: ApplicantDac, i) => {
-                                    const dac: ApplicantDacEntity = applicant?.dac?.find(v => (v.type === value))
-                                    return (
-                                        <tr key={i}>
-                                            <td> {t(`ApplicantDac.${value}`)}</td>
-                                            <td>
-                                                <div className="w-100">
-                                                    {
-                                                        (!form.values.type || form.values.type !== value) ? (
-                                                            <div className="d-flex justify-content-between">
+                <Table striped>
+                    <tbody>
+                        {
+                            Object.values(ApplicantDac).map((value: ApplicantDac, i) => {
+                                const dac: ApplicantDacEntity = applicant?.dac?.find(v => (v.type === value))
+                                return (
+                                    <tr key={i}>
+                                        <td> {t(`ApplicantDac.${value}`)}</td>
+                                        <td>
+                                            <div className="w-100">
+                                                {
+                                                    (form.values.type !== value) ? (
+                                                        <div className="d-flex justify-content-between">
                                                             <BaseCheck
                                                                 readOnly
                                                                 disabled
@@ -79,45 +77,41 @@ const DAC = ({ applicant }: DacTabProps) => {
                                                             <Button
                                                                 className="ml-2 w-50"
                                                                 onClick={() => { handleChangeClick(value, dac) }}
-                                                               
+
                                                             >
                                                                 {t('CHANGE')}
                                                             </Button>
                                                         </div>
-                                                        ) : (
-                                                            (form.values?.type === value) &&
-                                                            <Form onSubmit={form.handleSubmit} >
-                                                                <BaseCheck
-                                                                    name={`value`}
-                                                                    formik={form}
-                                                                />
-                                                                <Collapse in={form.values?.type === value} dimension="height">
-                                                                    <div className="d-flex justify-content-end w-100 " >
-                                                                        <Button className=" theme-primary-btn" type="submit">
-                                                                            {t(`SAVE`)}
-                                                                        </Button>
-                                                                        <Button type="button" className="ml-2 bg-danger" onClick={() => { form.resetForm() }}                                                            >
-                                                                            {t(`CANCEL`)}
-                                                                        </Button>
-                                                                    </div>
-                                                                </Collapse>
-                                                            </Form>
-                                                        )
-                                                      
-                                                    }
+                                                    ) : (
+                                                        <Form onSubmit={form.handleSubmit} >
+                                                            <BaseCheck
+                                                                name={`value`}
+                                                                formik={form}
+                                                            />
+                                                            <div className="d-flex justify-content-end w-100" >
+                                                                <Button className=" theme-primary-btn" type="submit">
+                                                                    {t(`SAVE`)}
+                                                                </Button>
+                                                                <Button type="button" className="ml-2 bg-danger" onClick={() => { form.resetForm() }}                                                            >
+                                                                    {t(`CANCEL`)}
+                                                                </Button>
+                                                            </div>
+                                                        </Form>
+                                                    )
 
-                                                </div>
-                                            </td>
+                                                }
 
-                                        </tr>
-                                    )
-                                })
-                            }
-                        </tbody>
-                    </Table>
-                </ViewCard>
-            </div>
-        </>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                </Table>
+            </ViewCard>
+        </div>
     );
 };
 
