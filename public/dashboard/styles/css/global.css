@@ -702,7 +702,7 @@ textarea {
     transition: 1s;
     background-color: #1d4354;
     border-radius: 0%;
-    right: -8%;
+    right: -1%;
     top: 50%;
     position: fixed;
     cursor: pointer;
@@ -720,16 +720,14 @@ textarea {
 
 .driver-flag span {
 
-    visibility: hidden;
-    opacity: 0;
-    transition: visibility 0s, opacity 0.5s linear;
-
+    font-size: 0px;
+    transition: font-size 1s;
 
 }
 
 .driver-flag:hover span {
-    visibility: visible;
-    opacity: 1;
+    font-size: 15px;
+    transition: font-size 1s;
 
 }
 
