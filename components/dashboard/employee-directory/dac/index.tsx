@@ -11,35 +11,50 @@ import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { Pen } from "react-bootstrap-icons";
+import BaseCheck from "../../../forms/BaseCheck";
 
 export interface DacTabProps extends ViewApplicantDetailProps { }
 
 const DAC = ({ applicant }: DacTabProps) => {
+
     const { t } = useTranslation();
     const applicantApi = new ApplicantApi();
     const [disableInput, setDisableInput] = useState<boolean>(true)
+
+    console.log("form valuesss applicant", applicant)
+
     const form = useFormik({
         initialValues: new ApplicantDacEntity(),
         validationSchema: ApplicantDacEntity.yupSchema(),
-        onSubmit: async ({ applicant }, { resetForm }) => {
+        onSubmit: async (values, { resetForm }) => {
 
             try {
-                // const applicantDocumentUpload = await applicantApi.dac.create(applicant.id)
-                console.log("form valuesss", applicant.id, form.values)
-                // if (document.id) {
-                //     applicantUser.documents = applicantUser.documents.filter(v => (v.id !== applicantDocumentUpload.id))
-                // }
-                // applicantUser.documents.push(applicantDocumentUpload)
-                // toast.success(t('DOCUMENT_UPLOAD_SUCCESS_MESSAGE'))
-                // resetForm()
+                let dac: ApplicantDacEntity;
+
+                if (values.id) {
+                    dac = await applicantApi.dac.update(applicant.id, values.id, values)
+                    applicant.dac = applicant.dac.filter(v => (v.id !== dac.id))
+                } else {
+                    dac = await applicantApi.dac.create(applicant.id, values)
+                }
+
+                applicant.dac.push(dac)
+                console.log("form valuesss", applicant, values, dac)
+                toast.success(t('DOCUMENT_UPLOAD_SUCCESS_MESSAGE'))
+                resetForm()
             }
             catch (e) {
                 globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t });
             }
         }
     });
-    const handleUpdateDocument = async (type: any, documentId?: number) => {
-        form.setFieldValue("document", { type: type, id: documentId || null })
+    const handleChangeClick = async (type: any, dac?: ApplicantDacEntity) => {
+        const data: ApplicantDacEntity = { type }
+        if (dac) {
+            data.id = dac.id
+            data.value = dac.value
+        }
+        form.setValues(data)
     }
     return (
         <>
@@ -51,6 +66,7 @@ const DAC = ({ applicant }: DacTabProps) => {
                         <tbody>
                             {
                                 Object.values(ApplicantDac).map((value: ApplicantDac, i) => {
+                                    const dac: ApplicantDacEntity = applicant?.dac?.find(v => (v.type === value))
                                     return (
                                         <tr key={i}>
                                             <td> {t(`ApplicantDac.${value}`)}</td>
@@ -59,19 +75,28 @@ const DAC = ({ applicant }: DacTabProps) => {
                                                     {
                                                         (!form.values.type || form.values.type !== value) &&
                                                         <div className="d-flex">
-                                                            <Button className="mr-2 w-100" onClick={() => { handleUpdateDocument(value) }}>
-                                                                {form.values.id ? <Pen /> : t('ADD')}
+                                                            <BaseCheck
+                                                                readOnly
+                                                                disabled
+                                                                className="col-md-12"
+                                                                checked={dac?.type && dac.type == value && dac.value}
+                                                            />
+                                                            <Button
+                                                                className="mr-2 w-100"
+                                                                onClick={() => { handleChangeClick(value, dac) }}
+                                                            >
+                                                                {t('CHANGE')}
                                                             </Button>
                                                         </div>
                                                     }
 
                                                     {
-                                                        (form.values.type && form.values.type === value) &&
+                                                        (form.values?.type === value) &&
                                                         <Form onSubmit={form.handleSubmit} >
-                                                            <input
-                                                                name={`document`}
-                                                                accept="application/pdf"
-                                                                // formik={form}
+                                                            <BaseCheck
+                                                                className="col-md-12"
+                                                                name={`value`}
+                                                                formik={form}
                                                             />
                                                             <div className="mt-2 d-flex w-100 ">
                                                                 <Button className="mr-2 w-50 theme-primary-btn" type="submit">

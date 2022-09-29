@@ -101,7 +101,7 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                                                         }
 
                                                         {
-                                                            (form.values.document && form.values.document.type === value) &&
+                                                            (form.values?.document?.type === value) &&
                                                             <Fade top>
                                                                 <Form onSubmit={form.handleSubmit} >
                                                                     <FileInput
@@ -133,7 +133,7 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                         <div className="d-flex justify-content-center align-items-center">
                             <ThreeCircles
                                 height={50}
-                                width={50}        
+                                width={50}
                                 color="#5bb0b9"
                                 ariaLabel="ball-triangle-loading"
                                 visible={true}
