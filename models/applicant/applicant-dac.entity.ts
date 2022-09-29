@@ -8,14 +8,14 @@ export class ApplicantDacEntity {
     applicant?: ApplicantEntity;
     company?: CompanyEntity;
     type?: ApplicantDac;
-    value?: string;
+    value?: boolean;
     created_at?: string;
     last_updated_at?: string;
 
     static yupSchema() {
         return yup.object({
-            // type: 
-            // value: 
+            type: (yup.string() as any).enum(ApplicantDac).required().nullable(),
+            value: yup.boolean().default(false)
         });
     }
 }
