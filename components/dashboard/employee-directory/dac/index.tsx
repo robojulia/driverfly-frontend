@@ -1,5 +1,5 @@
 
-import { Col, Row, Table } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/useTranslation";
 import { ApplicantDac } from "../../../../enums/applicants/applicant-dac.enum";
 import ViewCard from "../../../viewDetails/viewCard";
@@ -14,22 +14,10 @@ const DAC = ({ applicant }: DacTabProps) => {
     return (
         <>
             <div className="employee_directory_tabs">
-                <Row className="mt-3 mb-2">
-                    
-                    <Col className="text-right p-0">
-                        <button type="button" className="theme-primary-btn mr-3 py-2">{t("ORDER_DAC")}</button>
-                    </Col>
-                </Row>
-                <ViewCard title={`${applicant?.first_name} ${applicant?.last_name}`}>
+              
+                <ViewCard title={`${applicant?.first_name} ${applicant?.last_name}`} actions={<Button>Submit</Button>}>
 
                     <Table striped>
-                        <thead>
-                            <tr>
-                                <th ></th>
-                                <th ></th>
-                            </tr>
-                        </thead>
-
                         <tbody>
                             {
                                 Object.values(ApplicantDac).map((value: ApplicantDac, i) => {
