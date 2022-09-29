@@ -759,3 +759,6 @@ textarea {
 .dashboardsidebar .ort-general {
     padding: 0 !important;
 }
+.sort_by .custom-select{
+    height: 39px !important;
+}
