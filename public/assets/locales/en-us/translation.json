@@ -1312,5 +1312,6 @@
     "inspection_notes": "Inspection Notes:",
     "vehicle_maintenance_tracking_info": "Vehicle Maintenance Tracking Info:",
     "view_applicant_profile": "View Applicant Profile",
-    "NOT_AVAILABLE": "Not Available"
+    "NOT_AVAILABLE": "Not Available",
+    "SUCCESSFULLY_UPDATED_DAC": "Successfully updated DAC"
 }

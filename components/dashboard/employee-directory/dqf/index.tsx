@@ -12,7 +12,6 @@ import { toast } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import ShowFormattedDate from "../../../jobs/show-formatted-date";
 import { ApplicantDocumentDto } from "../../../../models/applicant/applicant-document-dto";
-import Fade from 'react-reveal/Fade';
 import { CloudArrowDown, Pen } from "react-bootstrap-icons";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import { useState } from "react";
@@ -101,8 +100,7 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                                                         }
 
                                                         {
-                                                            (form.values.document && form.values.document.type === value) &&
-                                                            <Fade top>
+                                                            (form.values?.document?.type === value) &&
                                                                 <Form onSubmit={form.handleSubmit} >
                                                                     <FileInput
                                                                         name={`document`}
@@ -118,7 +116,6 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                                                                         </Button>
                                                                     </div>
                                                                 </Form>
-                                                            </Fade>
                                                         }
 
                                                     </td>
@@ -133,7 +130,7 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                         <div className="d-flex justify-content-center align-items-center">
                             <ThreeCircles
                                 height={50}
-                                width={50}        
+                                width={50}
                                 color="#5bb0b9"
                                 ariaLabel="ball-triangle-loading"
                                 visible={true}
