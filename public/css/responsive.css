@@ -22,9 +22,10 @@
     }
 
     .driver-flag span {
-        visibility: visible !important;
-        opacity: 1 !important;
+        font-size: 14px !important;
+        transition: font-size 1s !important;
     }
+
     .driver-flag svg {
         margin: 0 !important;
     }
