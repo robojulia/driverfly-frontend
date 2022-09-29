@@ -16,6 +16,18 @@
     .Slider_box {
         width: 100%;
     }
+
+    .driver-flag {
+        right: 0% !important;
+    }
+
+    .driver-flag span {
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    .driver-flag svg {
+        margin: 0 !important;
+    }
 }
 
 @media (min-width:769px) and (max-width:990px) {
