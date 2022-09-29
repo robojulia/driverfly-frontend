@@ -34,8 +34,7 @@ const DAC = ({ applicant }: DacTabProps) => {
                 }
 
                 applicant.dac.push(dac)
-                console.log("form valuesss", applicant, values, dac)
-                toast.success(t('DOCUMENT_UPLOAD_SUCCESS_MESSAGE'))
+                toast.success(t('SUCCESSFULLY_UPDATED_DAC'))
                 resetForm()
             }
             catch (e) {
@@ -77,7 +76,6 @@ const DAC = ({ applicant }: DacTabProps) => {
                                                             <Button
                                                                 className="ml-2 w-50"
                                                                 onClick={() => { handleChangeClick(value, dac) }}
-
                                                             >
                                                                 {t('CHANGE')}
                                                             </Button>
