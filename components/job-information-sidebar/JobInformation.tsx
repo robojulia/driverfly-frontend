@@ -1,15 +1,16 @@
 import { useTranslation } from "../../hooks/useTranslation";
 import { MvrType } from "../../enums/users/mvr-type.enum";
-import ShowEnumFromString from "../../components/enum-filters/show-enum-from-string"
+import ShowEnumFromString from "../enum-filters/show-enum-from-string"
 import { useContext } from "react"
 import jobDetailContext from "../../context/jobDetailContext";
 import { CurrencyDollar, GeoAltFill, ClockFill, PersonWorkspace, Wallet2, Truck, GearFill, PersonBadgeFill, CashCoin, BlockquoteLeft, GearWideConnected, CollectionFill, ExplicitFill, Joystick, CalendarRange } from 'react-bootstrap-icons';
 import ShowFormattedDate from "../jobs/show-formatted-date";
+import { JobDetailProps } from "../../types/job/job-detail-props.type";
 
-export default function JonInformation({ job }) {
+export default function JonInformation({ job }: JobDetailProps) {
 
     const { t } = useTranslation();
-    const { state, method } = useContext(jobDetailContext)
+    const { method } = useContext(jobDetailContext)
     const { handleShowApplyModal } = method
 
     return (
