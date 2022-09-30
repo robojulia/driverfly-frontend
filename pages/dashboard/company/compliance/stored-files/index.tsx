@@ -44,8 +44,6 @@ export default function StoredFiles() {
     const [files, setFiles] = useState<DocumentEntity[]>([])
     const [applicants, setApplicants] = useState<ApplicantEntity[]>([])
 
-
-
     useEffectAsync(async () => {
 
         const v = await complianceApi.filesList();
@@ -58,12 +56,6 @@ export default function StoredFiles() {
         console.log("unloading page...")
     });
 
-
-    // To Do
-    // const can = {
-    //     editJob: hasPermission("CanUpdateJob"),
-    //     deleteJob: hasPermission("CanDeleteJob"),
-    // };
 
     const form = useFormik({
         initialValues: new StoredFileDto(),
@@ -145,7 +137,7 @@ export default function StoredFiles() {
                         cell: file =>
                         (<ShowEnumFromString
                             popover
-                            // labelPrefix="CompanyDocumentType"
+                            labelPrefix="CompanyDocumentType"
                             str={file.type}
                             enumArray={CompanyDocumentType} />
                         ),
@@ -161,7 +153,7 @@ export default function StoredFiles() {
                         cell: (file) => (
                             <>
                                 <button type="button" className="theme-secondary-btn mr-2 px-4 py-2" onClick={() => setDocumentId(file.id)}><Send /></button>
-                                <button type="button" className="btn theme-primary-btn download_file_btn px-4"> <a href={file.path} download target="_blank"><CloudArrowDown/></a></button>
+                                <button type="button" className="btn theme-primary-btn download_file_btn px-4"> <a href={file.path} download target="_blank"><CloudArrowDown /></a></button>
                             </>
                         ),
                     },
@@ -250,7 +242,7 @@ export default function StoredFiles() {
                         {
                             cell: (applicant) => (
                                 <>
-                                    <Button type="button" onClick={() => sendEmail(applicant)} className="theme-secondary-btn mr-2 px-4 py-1"><Send/></Button>
+                                    <Button type="button" onClick={() => sendEmail(applicant)} className="theme-secondary-btn mr-2 px-4 py-1"><Send /></Button>
                                 </>
                             ),
                         },

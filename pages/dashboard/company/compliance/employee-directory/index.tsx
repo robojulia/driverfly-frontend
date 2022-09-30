@@ -14,7 +14,6 @@ import 'react-tabs/style/react-tabs.css';
 import { TabbedLayout } from "../../../../../components/layouts/page/TabbedLayout";
 import DAC from "../../../../../components/dashboard/employee-directory/dac";
 import DqfTab from "../../../../../components/dashboard/employee-directory/dqf";
-import VehicleInformationTab from "../../../../../components/dashboard/employee-directory/vehicle-information";
 import ApplicantApi from "../../../../api/applicant";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import { filterHired, reduceSingleEntity } from "../../../../../utils/filter-applicants";
@@ -62,7 +61,7 @@ export default function EmployeeDirectory() {
         BACKGROUND: <Background applicant={applicant} />,
         DAC: < DAC applicant={applicant} />,
         DQF: < DqfTab applicant={applicant} />,
-        VEHICLES: < VehicleInformationTab />
+        // VEHICLES: < VehicleInformationTab />  //according to wireframe this tab (vehichled are pushed to phase 3)
     };
 
     return (
