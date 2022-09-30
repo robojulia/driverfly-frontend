@@ -3,13 +3,11 @@ import { toast } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../utils/ajax";
 import { buildAddress } from "../../utils/common";
 import CompanyPhoto from '../jobs/company-photo'
-
 import { useState } from "react"
 import { useTranslation } from "../../hooks/useTranslation";
 import { useEffectAsync } from "../../utils/react";
 
 import JobApi from "../../pages/api/job";
-
 import { JobEntity } from "../../models/job/job.entity";
 import Link from "next/link";
 
@@ -21,7 +19,7 @@ export default function RecentJobs() {
         const api = new JobApi();
 
         try {
-            const { items } = await api.search({ take: 6 });
+            const { items } = await api.search({ take: 6, order_by: "DESC" });
             setJobs(items);
         }
         catch (e) {

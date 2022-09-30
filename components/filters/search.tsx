@@ -1,4 +1,4 @@
-import { KeyboardEvent, ChangeEvent, useState, useEffect, KeyboardEventHandler, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { AsyncTypeahead, Highlighter, Menu, MenuItem } from "react-bootstrap-typeahead";
 import { RenderMenuProps } from "react-bootstrap-typeahead/types/components/Typeahead";
 import { Option, TypeaheadManagerChildProps } from "react-bootstrap-typeahead/types/types";
@@ -42,10 +42,11 @@ export default function Search(props) {
 
     const optionChangehandler = (values: Title[]) => values.map(({ title }) => setSearchQuery(title))
 
-    const focusBlurHandler = ({ target: { value } }: any) => {
+    const generalEventHandler = ({ target: { value, innerText } }: any) => {
         setClose()
 
-        if (searchQuery != value) setSearchQuery(value)
+        if (innerText) setSearchQuery(innerText)
+        else if (searchQuery != value) setSearchQuery(value)
     }
 
     const searchHandler = async (query: string): Promise<void> => {
@@ -66,7 +67,7 @@ export default function Search(props) {
     ): JSX.Element => (
         <Menu {...menuProps}>
             {results.map((result: Title, index) => (
-                <MenuItem option={result} position={index}>
+                <MenuItem onClick={generalEventHandler} option={result} position={index}>
                     <Highlighter search={state.text}>{result.title}</Highlighter>
                 </MenuItem>
             ))}
@@ -79,22 +80,22 @@ export default function Search(props) {
 
         if (!!!searchQuery) typeaheadRef.current.clear()
 
+        setClose()
     }, [searchQuery])
 
     return (
         <>
             <label className={labelClassName || "heading-label my-4"}>{label || t('SEARCH_KEYWORD')} </label>
-            {/* <small className='ml-1 mt-2 form-text get_result_text'>{t("GET_RESULTS")}</small>  */}
             <AsyncTypeahead
                 ref={typeaheadRef}
-                // {/* className={props.inputClassName || "form-control shadow-sm p-4"} */}
                 defaultInputValue={filters.keywords || searchQuery || ""}
+                id="keywords-typeahead"
                 open={!!isOpen}
                 isLoading={isLoading}
                 labelKey="title"
                 minLength={0}
-                onFocus={focusBlurHandler}
-                onBlur={focusBlurHandler}
+                onFocus={generalEventHandler}
+                onBlur={generalEventHandler}
                 onChange={optionChangehandler}
                 onInputChange={inputChangeHandler}
                 onKeyDown={keyDownHandler}
@@ -103,7 +104,6 @@ export default function Search(props) {
                 placeholder={t("KEYWORD_PLACEHOLDER")}
                 renderMenu={renderMenu}
             />
-            <small className='ml-1 mt-2 form-text get_result_text'>{t("GET_RESULTS")}</small>
         </>
     )
 }

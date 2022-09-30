@@ -5,13 +5,12 @@ import { TranslateInterface, useTranslation } from "../../../../hooks/useTransla
 import { FormGroup, FormControlLabel, Switch } from '@mui/material';
 import { EyeFill, PencilFill } from 'react-bootstrap-icons';
 import ApplicantApi from "../../../api/applicant";
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { NextRouter, useRouter } from 'next/router';
 import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum';
 import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
 import { JobEntity } from '../../../../models/job/job.entity';
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
-import ShowEnumFromString from "../../../../components/enum-filters/show-enum-from-string";
 import * as numbers from "../../../../utils/number";
 import { Button, ButtonGroup } from "react-bootstrap";
 import PageLayout from "../../../../components/layouts/page/PageLayout";
@@ -434,6 +433,11 @@ function ApplicantView(props: ViewProps) {
                         id: "name",
                         name: "NAME",
                         selector: applicant => getApplicantName(applicant),
+                        cell: applicant => (
+                            <Link href={`${router.pathname}/${applicant.id}`}>
+                                <a>{getApplicantName(applicant)}</a>
+                            </Link>
+                        ),
                         hidable: false,
                     },
                     {

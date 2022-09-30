@@ -3,17 +3,15 @@ import { toast } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../utils/ajax";
 import { buildAddress } from "../../utils/common";
 import CompanyPhoto from '../jobs/company-photo'
-
 import { useState } from "react"
 import { useTranslation } from "../../hooks/useTranslation";
 import { useEffectAsync } from "../../utils/react";
 
 import JobApi from "../../pages/api/job";
-
 import { JobEntity } from "../../models/job/job.entity";
 import Link from "next/link";
 
-export default function RecentJobs() {
+export default function FeaturedJobs() {
     const [jobs, setJobs] = useState<JobEntity[]>([]);
     const { t } = useTranslation();
 
@@ -21,7 +19,7 @@ export default function RecentJobs() {
         const api = new JobApi();
 
         try {
-            const { items } = await api.search({ take: 6 });
+            const { items } = await api.search({ take: 6, order_by: "ASC" });
             setJobs(items);
         }
         catch (e) {
@@ -42,7 +40,7 @@ export default function RecentJobs() {
                                         <div className="media align-items-center single-job-items ">
                                             <CompanyPhoto className="d-flex mr-4 truck-img border-0" job={job} company={job.company} />
                                             <div className="media-body">
-                                                <h6>{t("RECENT_JOBS")}</h6>
+                                                <h6>{t("FEATURED_JOBS")}</h6>
                                                 <Link href={`/jobs/${job.id}/${job.slug}`}>
                                                     <a className='text-decoration-none '>
                                                         <h4 className="mt-0"> {job.title.length > 30 ? job.title.slice(0, 30) + '...' : job.title}</h4>

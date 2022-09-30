@@ -1,51 +1,44 @@
-import Head from 'next/head';
 import Link from 'next/link';
 import { PublicLayout } from "../components/layouts/PublicLayout";
 import ReCAPTCHA from "react-google-recaptcha";
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
-import { ArrowLeft, ArrowRight, Newspaper, PersonBadgeFill, QuestionCircle } from 'react-bootstrap-icons';
+import { ArrowRight, Newspaper, PersonBadgeFill, QuestionCircle } from 'react-bootstrap-icons';
 import { useTranslation } from "../hooks/useTranslation";
 import React, { useRef } from 'react';
 import BaseInput from "../components/forms/BaseInput";
 import BaseTextArea from "../components/forms/BaseTextArea";
+import BaseReCapcha from "../components/forms/BaseReCapcha";
 import { useFormik } from "formik";
-import { ContactFormDto } from "../models/general/contact-form.dto";
+import { ContactUsEntity } from "../models/contact/contact-us.entity";
 import { Row, Col } from "reactstrap"
 import { ToastContainer, toast } from 'react-toastify'
 import ContactApi from './api/contact';
 import { globalAjaxExceptionHandler } from '../utils/ajax';
-import CaptchaApi from './api/captcha';
+
 export default function Contact() {
 
     const { t } = useTranslation();
+    const contactApi = new ContactApi();
     const captchaRef = useRef(null)
-    const form = useFormik({
-        initialValues: new ContactFormDto(),
-        validationSchema: ContactFormDto.yupSchema(),
-        onSubmit: async (dto) => {
-            const contactApi = new ContactApi();
 
+    const form = useFormik({
+        initialValues: new ContactUsEntity(),
+        validationSchema: ContactUsEntity.yupSchema(),
+        onSubmit: async (dto) => {
             try {
                 await contactApi.sendMail(dto);
                 toast.success(t("THANKS_FOR_CONTACTING_US"));
             }
             catch (e) {
+                if (e.response?.data?.recaptchaValue == "INVALID_RECAPTCHA_TOKEN") captchaRef.current.reset()
+
                 globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SEND_ME" });
             }
         }
     });
 
-    const [enableButton, setEnableButton] = React.useState(false)
+    const handleReCapchaChange = (token: string) => form.setFieldValue('recaptchaValue', token || null)
 
-    const onChange = async () => {
-        const token = captchaRef.current.getValue();
-        captchaRef.current.reset();
-        const captchaApi = new CaptchaApi();
-        const data = await captchaApi.validateCaptcha(token)
-        if (data.success == true) {
-            setEnableButton(true)
-          }
-    }
     return (
         <>
             <div className="top-links-sec">
@@ -109,12 +102,16 @@ export default function Contact() {
                                                     formik={form}
                                                 />
                                             </Row>
-                                            <ReCAPTCHA
-                                                sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-                                                onChange={onChange}
-                                                ref={captchaRef}
+                                            <BaseReCapcha 
+                                                    className='col-12 my-4'
+                                                    name='recaptchaValue'
+                                                    formik={form}
+                                                    onChange={handleReCapchaChange}
+                                                    captchaRef={captchaRef}
+
                                             />
-                                            <button disabled={enableButton == false}
+                                            <button
+                                                disabled={form.isSubmitting || !form.isValid || !form.dirty}
                                                 type="submit"
                                                 className="btn contact-submit-btn float-right py-3 px-5 mb-4">
                                                 {t("submit")}  <ArrowRight />

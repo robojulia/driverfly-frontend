@@ -519,7 +519,7 @@ textarea {
 }
 
 .react-tabs__tab-panel {
-    height: 700px;
+    /* height: 700px; */
     overflow-x: auto;
 }
 
@@ -649,4 +649,129 @@ textarea {
 .assign_unassign .btn-danger:focus {
     background-color: #dc3545 !important;
     border: solid 1px #dc3545 !important;
+}
+
+/* start Typeahead dropdown */
+.rbt .dropdown-item {
+    color: rgb(65, 60, 60) !important;
+}
+
+.rbt .dropdown-item:hover {
+    color: #000 !important;
+}
+
+/* end Typeahead dropdown */
+
+.employee_directory_tabs {
+    background: #2ec8c438;
+    padding: 20px;
+}
+
+.download_file_btn a,
+.download_file_btn a:hover {
+    color: #fff;
+    text-decoration: none;
+
+}
+
+.data_table_custom_action_button {
+    display: flex;
+}
+
+.data_table_custom_action_button svg {
+    margin: 0px 8px;
+}
+
+.data_table_custom_action_button .view {
+    color: #008000bd;
+
+}
+
+.data_table_custom_action_button .edit {
+    color: #2da2af;
+}
+
+.data_table_custom_action_button .delete {
+    color: #ff0000d9;
+}
+
+
+/* driver-flag */
+
+.driver-flag {
+    transition: 1s;
+    background-color: #1d4354;
+    border-radius: 0%;
+    right: -1%;
+    top: 50%;
+    position: fixed;
+    cursor: pointer;
+    z-index: 9999;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    padding: 20px 15px;
+    text-align: center;
+}
+
+.driver-flag svg {
+    margin: 0 22px 0px 15px;
+    transition: 1s;
+}
+
+.driver-flag span {
+
+    font-size: 0px;
+    transition: font-size 1s;
+
+}
+
+.driver-flag:hover span {
+    font-size: 15px;
+    transition: font-size 1s;
+
+}
+
+.driver-flag:hover svg {
+    margin: 0;
+    transition: 1s;
+}
+
+.driver-flag:hover {
+    transition: 1s;
+    padding: 20px 30px;
+    right: 0;
+    background-color: #2EC8C4;
+}
+
+.driver-flag:active {
+    opacity: .8;
+}
+
+.driver-flag p {
+    color: #fff;
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+.cursor-pointer:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.enlarge-font,
+.enlarge-font::after {
+    cursor: pointer;
+    transition: font-size .2s ease-in-out;
+}
+
+.enlarge-font:hover,
+.enlarge-font:hover::after {
+    font-size: 2vmin;
+}
+
+.dashboardsidebar .ort-general {
+    padding: 0 !important;
+}
+.sort_by .custom-select{
+    height: 39px !important;
 }

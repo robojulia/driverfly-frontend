@@ -273,7 +273,6 @@ export default function JobApply({ job, setEncourageModal }) {
                             formik={apply_form}
                         />
                     </Row>
-
                     <Row>
                         <div className=" col-12">
                             <p className='mx-3 mt-5'>{t('i_accept_{terms_and_condition}', { terms_and_condition: t('terms_and_condition') })}</p>

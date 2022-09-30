@@ -63,6 +63,7 @@ export default function Range(props: any) {
                 <AsyncTypeahead
                     defaultInputValue={filters.place_name || filters.location?.place_name || ""}
                     ref={typeaheadRef}
+                    id="location-typeahead"
                     isLoading={isLoading}
                     labelKey="place_name"
                     minLength={1}
