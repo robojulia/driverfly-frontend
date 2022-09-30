@@ -4,11 +4,11 @@ import { useAuth } from '../../../hooks/useAuth';
 import { useTranslation } from '../../../hooks/useTranslation';
 import SavedJobApi from '../../../pages/api/saved-job';
 import { toast } from 'react-toastify';
-import { JobEntity } from '../../../models/job/job.entity';
 import { useEffectAsync } from '../../../utils/react';
+import { JobDetailProps } from '../../../types/job/job-detail-props.type';
 
-export interface SaveJobProps {
-    job?: JobEntity;
+export interface SaveJobProps extends JobDetailProps {
+
     wrapperClassName?: string;
     spanClassName?: string;
 }

@@ -126,7 +126,6 @@ export default function FindJobs(props) {
                     setPagingMeta(meta)
                 })
         } catch (e) {
-            // console.error('exception is here: ', e);
             toast.error(t('FIND_JOB_ERROR_GENERAL'))
         }
     }
@@ -138,7 +137,6 @@ export default function FindJobs(props) {
             await router.replace('find-jobs', undefined, { shallow: true });
             await fetchJobs()
         } catch (e) {
-            // console.error('exception is here: ', e);
             toast.error(t('FIND_JOB_ERROR_GENERAL'))
         }
     }, [])

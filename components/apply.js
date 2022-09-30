@@ -7,7 +7,6 @@ import JobApi from '../pages/api/job'
 import BaseInput from './forms/BaseInput'
 import BaseSelect from './forms/BaseSelect'
 import FileInput from "./forms/FileInput";
-import { preventNegative } from "../utils/input"
 import BaseCheck from './forms/BaseCheck'
 import { Col, Row, Table } from 'react-bootstrap'
 import { EducationLevel } from '../enums/users/education-level.enum'
@@ -79,8 +78,6 @@ export default function JobApply({ job, setEncourageModal }) {
             }
             catch (e) {
                 if (e.response?.status === 401) {
-                    // swallow the error here if it's a 401
-                    // this is a mixed public & private page
                     return;
                 }
                 throw e;
@@ -100,18 +97,11 @@ export default function JobApply({ job, setEncourageModal }) {
     if (apply_form.errors && Object.keys(apply_form.errors).length > 0)
         console.error(apply_form.errors);
 
-
-    // uncomment this to go into form debugging mode
-    // useEffect(async () => {
-    //   console.log("apply_form", apply_form.values)
-    // }, [apply_form])
-
     return (
         <>
 
             <div className="ort-btn mt-lg-4 mt-0">
                 <button type="button" className="btn theme-primary-btn" onClick={onApplyClick}> {t('APPLY_NOW')}<ArrowRight /></button>
-                {/* <button type="button" className="btn theme-general-btn"> <Star /> {t('shortlist')} </button> */}
             </div>
 
             <ViewModal
@@ -153,7 +143,7 @@ export default function JobApply({ job, setEncourageModal }) {
                             label="email"
                             placeholder="email"
                             name="email"
-                                formik={user?.company ? null : apply_form}
+                            formik={user?.company ? null : apply_form}
                         />
                         <BaseInputPhone
                             className=" col-6 mt-3"
@@ -283,57 +273,6 @@ export default function JobApply({ job, setEncourageModal }) {
                             formik={apply_form}
                         />
                     </Row>
-
-                    {/* //To Do - Either will be able to create new account or not
-          {
-            !user &&
-            <>
-              <Row>
-                <BaseCheck
-                  className="col-12 mt-2"
-                  label={t("create_driverfly_account")}
-                  name="createAccount"
-                  checked={apply_form.values.createAccount}
-                  onChange={apply_form.handleChange}
-                  handleBlur={apply_form.handleBlur}
-                  touched={apply_form.touched.createAccount}
-                  error={apply_form.errors.createAccount}
-                />
-                {
-                  apply_form.values.createAccount &&
-                  <>
-                    <BaseInput
-                      className="col-6 mt-1"
-                      label={t("PASSWORD")}
-                      required
-                      type="password"
-                      name="password"
-                      placeholder={t("PASSWORD")}
-                      value={apply_form.values.password}
-                      touched={apply_form.touched.password}
-                      error={apply_form.errors.password}
-                      onChange={apply_form.handleChange}
-                      handleBlur={apply_form.handleBlur}
-                    />
-                    <BaseInput
-                      className="col-6 mt-1"
-                      label={t("CONFIRM_PASSWORD")}
-                      required
-                      type="password"
-                      name="confirmPassword"
-                      placeholder={t("CONFIRM_PASSWORD")}
-                      value={apply_form.values.confirmPassword}
-                      touched={apply_form.touched.confirmPassword}
-                      error={apply_form.errors.confirmPassword}
-                      onChange={apply_form.handleChange}
-                      handleBlur={apply_form.handleBlur}
-                    />
-                  </>
-                }
-              </Row>
-            </>
-          }
-            */}
 
                     <Row>
                         <div className=" col-12">
