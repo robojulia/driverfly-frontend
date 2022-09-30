@@ -26,11 +26,14 @@ import DocumentApi from "../../../../api/document";
 import ChildPageLayout from "../../../../../components/layouts/page/ChildPageLayout";
 import { ApplicantSuggestedJobEntity } from "../../../../../models/applicant/applicant-suggested-job.entity";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
+import FlagApplicant from "../../../../../components/flag/flag-a-applicant";
+
 import ViewApplicantDetail from "../../../../../components/applicants/applicant-view-details";
 import ApplicantWorkHistory from "../../../../../components/applicants/applicant-work-history";
 import ApplicantSafetyBackground from "../../../../../components/applicants/applicant-safety-background";
 import ApplicantJobsApplied from "../../../../../components/applicants/applicant-jobs-applied";
 import ApplicantConsiderFor from "../../../../../components/applicants/applicant-consider-for";
+
 export default function ViewApplicant({ id }) {
     const router = useRouter();
 
@@ -228,6 +231,7 @@ export default function ViewApplicant({ id }) {
                     </Col>
                 </Row>
             }
+            < FlagApplicant applicantId={id} />
             <Row>
                 <Col>
                     <ViewApplicantDetail applicant={applicant} protectedFields={protectedFields} />

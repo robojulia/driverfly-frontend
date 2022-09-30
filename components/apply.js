@@ -7,7 +7,6 @@ import JobApi from '../pages/api/job'
 import BaseInput from './forms/BaseInput'
 import BaseSelect from './forms/BaseSelect'
 import FileInput from "./forms/FileInput";
-import { preventNegative } from "../utils/input"
 import BaseCheck from './forms/BaseCheck'
 import { Col, Row, Table } from 'react-bootstrap'
 import { EducationLevel } from '../enums/users/education-level.enum'
@@ -79,8 +78,6 @@ export default function JobApply({ job, setEncourageModal }) {
             }
             catch (e) {
                 if (e.response?.status === 401) {
-                    // swallow the error here if it's a 401
-                    // this is a mixed public & private page
                     return;
                 }
                 throw e;
@@ -100,18 +97,11 @@ export default function JobApply({ job, setEncourageModal }) {
     if (apply_form.errors && Object.keys(apply_form.errors).length > 0)
         console.error(apply_form.errors);
 
-
-    // uncomment this to go into form debugging mode
-    // useEffect(async () => {
-    //   console.log("apply_form", apply_form.values)
-    // }, [apply_form])
-
     return (
         <>
 
             <div className="ort-btn mt-lg-4 mt-0">
                 <button type="button" className="btn theme-primary-btn" onClick={onApplyClick}> {t('APPLY_NOW')}<ArrowRight /></button>
-                {/* <button type="button" className="btn theme-general-btn"> <Star /> {t('shortlist')} </button> */}
             </div>
 
             <ViewModal

@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 
 import { useEffect, useState } from "react";
-import { Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 import { useTranslation } from "../../../hooks/useTranslation";
 import { useEffectAsync } from "../../../utils/react";
 import { useAuth } from "../../../hooks/useAuth";
@@ -10,7 +10,7 @@ import { BaseFormProps } from "./BaseFormProps";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { counts, year2Only, year3Only, year5Only, years } from "../../../utils/jobs";
 
-import { DashCircle, PlusCircle } from "react-bootstrap-icons";
+import { PlusCircle } from "react-bootstrap-icons";
 
 import { Button, Col, InputGroup, Row } from "react-bootstrap";
 import EntityForm from "../../layouts/page/EntityForm";
