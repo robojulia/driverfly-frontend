@@ -165,8 +165,10 @@ export default function Communication() {
                         name="receive_newsletter.value"
                         formik={form}
                     />
+                </Row>
+                <Row className="my-3">
                     <BaseCheck
-                        className="col-12 mt-3"
+                        className="col-3 my-1"
                         label="PREFERRED_HOURS"
                         onChange={handlePreferredHourChange}
                         checked={form.values.preferred_hours.value}
@@ -174,21 +176,22 @@ export default function Communication() {
                     {form.values.preferred_hours.value &&
                         <>
                             <BaseInput
-                                className="col-md-6"
+                                className="col-md-4"
                                 name="preferred_hours.value.start"
                                 type="time"
                                 formik={form}
                             />
                             <BaseInput
-                                className="col-md-6"
+                                className="col-md-4"
                                 name="preferred_hours.value.end"
                                 type="time"
                                 formik={form}
                             />
                         </>
                     }
+
                 </Row>
-                <Row className="mt-2">
+                <Row className="mt-3">
                     <Col className="text-end">
                         <Button type="submit" variant="primary" disabled={form.isSubmitting || !form.isValid || !form.dirty}>
                             {t("UPDATE")}
