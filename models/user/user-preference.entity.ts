@@ -13,9 +13,10 @@ import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
 import { JobTeamDriver } from "../../enums/jobs/job-team-driver.enum";
 import { JobPayMethod } from "../../enums/jobs/job-pay-method.enum";
 import { JobBenefits } from "../../enums/jobs/job-benefits.enum";
+import { UserPreferredHourDto } from "./user-preferred-hour.dto";
 
 export class UserPreferenceEntity {
-    constructor() {}
+    constructor() { }
     id?: number;
     user?: UserEntity;
     category?: UserPreferenceCategory;
@@ -26,7 +27,7 @@ export class UserPreferenceEntity {
         return yup.object({
             category: (yup.string().required().nullable() as any).enum(UserPreferenceCategory),
             label: yup.string().required().nullable()
-            // each category has a different enum
+                // each category has a different enum
                 .when("category", {
                     is: UserPreferenceCategory.COMMUNICATION,
                     then: (yup.string().required().nullable() as any).enum(UserPreferenceCommunicationLabel)
@@ -59,6 +60,10 @@ export class UserPreferenceEntity {
                         .when("label", {
                             is: UserPreferenceCommunicationLabel.PREFERRED_METHOD,
                             then: yup.array((yup.string() as any).enum(CommunicationMethod)).required().nullable()
+                        })
+                        .when("label", {
+                            is: UserPreferenceCommunicationLabel.PREFERRED_HOURS,
+                            then: UserPreferredHourDto.yupSchema().nullable()
                         })
                 })
                 .when("category", {
@@ -96,8 +101,7 @@ export class UserPreferenceEntity {
                             is: UserPreferenceMatchingLabel.BENEFITS,
                             then: yup.array((yup.string() as any).enum(JobBenefits)).nullable()
                         })
-            })
+                })
         });
     }
 }
-  
