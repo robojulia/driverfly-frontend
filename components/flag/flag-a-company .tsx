@@ -4,7 +4,6 @@ import { globalAjaxExceptionHandler } from "../../utils/ajax";
 import { useTranslation } from "../../hooks/useTranslation";
 import BaseInput from "../forms/BaseInput";
 import { useAuth } from '../../hooks/useAuth'
-import { FlagInappropriateJobDto } from "../../models/support/flag-inappropriate-job.dto";
 import { Row, Button, Col } from "react-bootstrap";
 import ViewModal from "../viewDetails/viewModal";
 import { FlagFill } from "react-bootstrap-icons";
@@ -12,8 +11,9 @@ import { useState } from "react";
 import BaseSelect from "../forms/BaseSelect";
 import { FlagInappropriateJob } from "../../enums/jobs/flag-inappropriate-job.enum";
 import SupportApi from "../../pages/api/support";
+import { FlagInappropriateJobDto } from "../../models/support/flag-inappropriate-job.dto";
 
-export default function FlagJob({ jobId }) {
+export default function FlagCompany({ companyId }) {
 
     const { user } = useAuth();
     if (!!!user || user.company !== null) return <></>;
@@ -21,19 +21,19 @@ export default function FlagJob({ jobId }) {
     const { t } = useTranslation();
     const supportApi = new SupportApi();
 
-    const [showFlagJobModel, setShowFlagJobModel] = useState<boolean>(false);
-    const openFlagJobModel = (): void => setShowFlagJobModel(true)
-    const closeFlagJobModel = (): void => setShowFlagJobModel(false)
+    const [showFlagCompanyModel, setShowFlagCompanyModel] = useState<boolean>(false);
+    const openFlagCompanyModel = (): void => setShowFlagCompanyModel(true)
+    const closeFlagCompanyModel = (): void => setShowFlagCompanyModel(false)
 
     const form = useFormik({
-        initialValues: new FlagInappropriateJobDto({ jobId }),
+        initialValues: new FlagInappropriateJobDto({ companyId }),
         validationSchema: FlagInappropriateJobDto.yupSchema(),
         onSubmit: async (dto, { resetForm }) => {
 
             try {
                 const data = await supportApi.FlagInappropriateJob(dto);
                 toast.success(t("THANKS_FOR_KEEPING_A_WATCHFUL_EYE"));
-                closeFlagJobModel()
+                closeFlagCompanyModel()
             }
             catch (e) {
                 globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SEND_EMAIL" });
@@ -43,16 +43,16 @@ export default function FlagJob({ jobId }) {
 
     return (
         <>
-            <div className="driver-flag" onClick={openFlagJobModel}>
+            <div className="driver-flag" onClick={openFlagCompanyModel}>
                 <p>
                     < FlagFill /> <span>{t("FLAG_INAPPROPRIATE")} </span>
                 </p>
             </div>
             <ViewModal
-                show={showFlagJobModel}
-                onCloseClick={closeFlagJobModel}
+                show={showFlagCompanyModel}
+                onCloseClick={closeFlagCompanyModel}
                 closeText="CANCEL"
-                title="FLAG_INAPPROPRIATE_JOB"
+                title="FLAG_INAPPROPRIATE_COMPANY"
             >
 
                 <form onSubmit={form.handleSubmit}>
