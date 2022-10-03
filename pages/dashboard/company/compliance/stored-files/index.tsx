@@ -153,7 +153,7 @@ export default function StoredFiles() {
                         cell: (file) => (
                             <>
                                 <button type="button" className="theme-secondary-btn mr-2 px-4 py-2" onClick={() => setDocumentId(file.id)}><Send /></button>
-                                <button type="button" className="btn theme-primary-btn download_file_btn px-4"> <a href={file.path} download target="_blank"><CloudArrowDown /></a></button>
+                                <button type="button" className="btn theme-primary-btn download_file_btn px-4"> <a  href={file.path} download target="_self"><CloudArrowDown /></a></button>
                             </>
                         ),
                     },

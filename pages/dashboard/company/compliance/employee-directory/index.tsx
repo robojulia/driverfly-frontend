@@ -162,7 +162,7 @@ export default function EmployeeDirectory() {
                                         <EyeFill className="view cursor-pointer enlarge-font" />
                                     </div>
                                     <div onClick={(e) => onEditClick(data?.applicant?.id)}>
-                                        < PenFill className="edit cursor-pointer enlarge-font" />
+                                        <PenFill className="edit cursor-pointer enlarge-font" />
                                     </div>
                                 </div>
                             </>
