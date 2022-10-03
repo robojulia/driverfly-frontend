@@ -81,7 +81,7 @@ export default function StoredFiles() {
     const sendEmail = async (applicant: ApplicantEntity): Promise<void> => {
         try {
             if (documentId)
-                await complianceApi.sendComplianceFile(documentId, applicant.id)
+                await complianceApi.sendComplianceFile(applicant.id, documentId)
                     .then(res => {
                         toast.success(t('DOCUMENT_SENT_SUCCESS_MESSAGE'))
                         setTimeout(() => {
