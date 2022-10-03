@@ -7,23 +7,35 @@ import { useAuth } from '../../hooks/useAuth'
 import { FlagInappropriateJobDto } from "../../models/support/flag-inappropriate-job.dto";
 import { Row, Button, Col } from "react-bootstrap";
 import ViewModal from "../viewDetails/viewModal";
-import { FlagFill } from "react-bootstrap-icons";
-import { useState } from "react";
+import { FlagFill, Link } from "react-bootstrap-icons";
+import React, { useEffect, useState } from "react";
 import BaseSelect from "../forms/BaseSelect";
 import { FlagInappropriateJob } from "../../enums/jobs/flag-inappropriate-job.enum";
 import SupportApi from "../../pages/api/support";
 
 export default function FlagJob({ jobId }) {
-
     const { user } = useAuth();
-    if (!!!user || user.company !== null) return <></>;
+    const [encourageModal, setEncourageModal] = useState<boolean>(false)
+    const closeEncourageModal = (): void => setEncourageModal(false)
 
-    const { t } = useTranslation();
-    const supportApi = new SupportApi();
 
     const [showFlagJobModel, setShowFlagJobModel] = useState<boolean>(false);
-    const openFlagJobModel = (): void => setShowFlagJobModel(true)
+    const openFlagJobModel = (): void => {
+        if (user == null) {
+            setEncourageModal(true)
+        }
+        else {
+            setShowFlagJobModel(true)
+        }
+    }
     const closeFlagJobModel = (): void => setShowFlagJobModel(false)
+    const { t } = useTranslation();
+
+
+
+    const supportApi = new SupportApi();
+
+
 
     const form = useFormik({
         initialValues: new FlagInappropriateJobDto({ jobId }),
@@ -43,50 +55,85 @@ export default function FlagJob({ jobId }) {
 
     return (
         <>
-            <div className="driver-flag" onClick={openFlagJobModel}>
-                <p>
-                    < FlagFill /> <span>{t("FLAG_INAPPROPRIATE")} </span>
-                </p>
-            </div>
-            <ViewModal
-                show={showFlagJobModel}
-                onCloseClick={closeFlagJobModel}
-                closeText="CANCEL"
-                title="FLAG_INAPPROPRIATE_JOB"
-            >
+            {(!!!user || !!!user?.company)
+                &&
+                <div className="driver-flag" onClick={openFlagJobModel}>
+                    <p>
+                        < FlagFill /> <span>{t("FLAG_INAPPROPRIATE")} </span>
+                    </p>
+                </div>
+            }
 
-                <form onSubmit={form.handleSubmit}>
-                    <Row>
-                        <BaseSelect
-                            className="col"
-                            label="REASON"
-                            name="type"
-                            required
-                            placeholder
-                            labelPrefix="FlagInappropriateJob"
-                            enumType={FlagInappropriateJob}
-                            formik={form}
-                        />
-                        {
-                            form.values.type === FlagInappropriateJob.OTHER &&
-                            <BaseInput
-                                className="col-12 mt-3"
-                                label="other"
+
+            {
+                (!!user && !!!user.company) &&
+                <ViewModal
+                    show={showFlagJobModel}
+                    onCloseClick={closeFlagJobModel}
+                    closeText="CANCEL"
+                    title="FLAG_INAPPROPRIATE_JOB"
+                >
+
+                    <form onSubmit={form.handleSubmit}>
+                        <Row>
+                            <BaseSelect
+                                className="col"
+                                label="REASON"
+                                name="type"
                                 required
-                                name="type_other"
                                 placeholder
+                                labelPrefix="FlagInappropriateJob"
+                                enumType={FlagInappropriateJob}
                                 formik={form}
                             />
-                        }
-                    </Row>
+                            {
+                                form.values.type === FlagInappropriateJob.OTHER &&
+                                <BaseInput
+                                    className="col-12 mt-3"
+                                    label="other"
+                                    required
+                                    name="type_other"
+                                    placeholder
+                                    formik={form}
+                                />
+                            }
+                        </Row>
+                        <Row>
+                            <Col className="text-end my-3">
+                                <Button disabled={form.values.type == null} type="submit">{t("submit")}</Button>
+                            </Col>
+                        </Row>
+                    </form>
+                </ViewModal>
+            }
+
+
+            {
+                !!!user
+                &&
+                <ViewModal
+                    show={encourageModal}
+                    onCloseClick={closeEncourageModal}
+                    closeText="CANCEL"
+                    title="DRIVERFLY"
+                >
                     <Row>
-                        <Col className="text-end my-3">
-                            <Button disabled={form.values.type == null} type="submit">{t("submit")}</Button>
-                        </Col>
+                        <p>
+                            {t('PLEASE_LOGIN_TO_INAPPROPRIATE_JOB_OR_COMPANY')}
+                            <Link href="/login">
+                                <a className='ml-1 primary '>{t("LOGIN")}</a>
+                            </Link>
+                        </p>
                     </Row>
-                </form>
-            </ViewModal>
+                </ViewModal>
+
+            }
+
+
 
         </>
     )
 }
+
+
+
