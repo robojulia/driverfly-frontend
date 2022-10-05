@@ -1222,7 +1222,7 @@ export function JobForm(props: JobFormProps) {
                                                     <BaseSelect
                                                         className="col-12"
                                                         label="location"
-                                                        name="orientation.location.id"
+                                                        name="orientation_location.id"
                                                         required
                                                         placeholder
                                                         formik={form}
@@ -1236,7 +1236,7 @@ export function JobForm(props: JobFormProps) {
                                                     <BaseInput
                                                         className="col-6"
                                                         label="START_DATE"
-                                                        name="orientation.start_datetime"
+                                                        name="orientation_start_at"
                                                         placeholder
                                                         type="date"
                                                         min={new Date().toISOString().split("T")[0]}
@@ -1245,7 +1245,7 @@ export function JobForm(props: JobFormProps) {
                                                     <BaseInput
                                                         className="col-6"
                                                         label="END_DATE"
-                                                        name="orientation.end_datetime"
+                                                        name="orientation_end_at"
                                                         placeholder="END_DATE"
                                                         type="date"
                                                         min={new Date().toISOString().split("T")[0]}

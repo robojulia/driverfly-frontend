@@ -96,7 +96,7 @@
     "communication_preferences_preferred_method": "How should employers contact you",
     "call": "Call",
     "text": "Text",
-    "preferred_hours": "Preferred hours",
+    "PREFERRED_HOURS": "Preferred hours",
     "receive_suggested_job_feeds": "Receive suggested job feeds?",
     "receive_newsletters": "Receive newsletters?",
     "SHARING_PREFERENCES": "Sharing Preferences",
@@ -933,7 +933,8 @@
     "yup": {
         "type": {
             "date": "date, it must be in the format MM/dd/yyyy (eg. 01/12/2014)",
-            "number": "number"
+            "number": "number",
+            "object": "value"
         },
         "string": {
             "length": "Text must be {{length}} characters",

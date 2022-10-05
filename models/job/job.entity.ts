@@ -25,7 +25,6 @@ import { BasicEntity } from '../BasicEntity.entity';
 import { JobPayFrequency } from '../../enums/jobs/job-pay-frequency.enum';
 import { JobDrugTestType } from '../../enums/jobs/job-drug-test-type.enum';
 import { numberRangeEnd, numberRangeStart } from '../../utils/yup';
-import { JobOrientationEntity } from './job-orientation.entity';
 
 export class JobEntity {
     id?: number;
@@ -81,18 +80,19 @@ export class JobEntity {
     max_moving_violations?: number;
     safety_requirements_other?: string;
     is_orientation_needed: boolean = true;
-    orientation?: JobOrientationEntity;
+    orientation_location: LocationEntity = new LocationEntity();
+    orientation_start_at?: Date;
+    orientation_end_at?: Date;
     created_at?: string | Date;
     applicantsCount?: number;
     static yupSchema() {
         return yup.object({
-            isOrientationNeeded: yup.boolean().default(false),
+            is_orientation_needed: yup.boolean().default(false),
             title: yup.string().required().max(100).nullable(),
             location: BasicEntity.yupSchema(),
-            orientation: yup.mixed().when('is_orientation_needed', {
-                is: true,
-                then: JobOrientationEntity.yupSchema(),
-            }).nullable(),
+            orientation_location: BasicEntity.yupSchema(),
+            orientation_start_at: yup.date().nullable(),
+            orientation_end_at: yup.date().nullable(),
             description: yup.string().max(1500).required().nullable(),
             drivers_needed: yup.number().min(0).nullable(),
             expiry_date: yup.date().nullable(),
