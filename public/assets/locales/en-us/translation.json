@@ -1276,6 +1276,7 @@
     "UNABLE_TO_SEND_EMAIL": "Unable to send email",
     "DRIVERFLY": "DriverFly",
     "ALREADY_IN_CONVERSATION": "Driver is already in your Conversation",
+    "PLEASE_LOGIN_TO_INAPPROPRIATE_JOB_OR_COMPANY":"Please login to inappropriate job or company profile.",
     "utm_source": {
         "ON_MY_OWN": "On my own",
         "DRIVERFLY_REPRESENTATIVE": "Referral Code",
