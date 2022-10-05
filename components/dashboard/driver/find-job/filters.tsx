@@ -39,7 +39,7 @@ export default function Filters() {
                         inputClassName="form-control shadow-sm p-4" labelClassName="text-secondary w-sm-25" />
                 </Col>
                 <Col md="2">
-                    <div className="filter-btn-groups">
+                    <div className="filter-btn-groups sort_by">
                         <Sort inputClassName="custom-select shadow-none mt-2" labelClassName="text-secondary w-sm-25" />
                     </div>
                 </Col>

@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 
 import { useEffect, useState } from "react";
-import { Formik, useFormik } from "formik";
+import { useFormik } from "formik";
 import { useTranslation } from "../../../hooks/useTranslation";
 import { useEffectAsync } from "../../../utils/react";
 import { useAuth } from "../../../hooks/useAuth";
@@ -10,7 +10,7 @@ import { BaseFormProps } from "./BaseFormProps";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { counts, year2Only, year3Only, year5Only, years } from "../../../utils/jobs";
 
-import { DashCircle, PlusCircle } from "react-bootstrap-icons";
+import { PlusCircle } from "react-bootstrap-icons";
 
 import { Button, Col, InputGroup, Row } from "react-bootstrap";
 import EntityForm from "../../layouts/page/EntityForm";
@@ -55,7 +55,6 @@ import BasePercentInput from "../BasePercentInput";
 import BaseMilesInput from "../BaseMilesInput";
 import BaseHoursInput from "../BaseHoursInput";
 import { BaseListRowControl } from "../lists/BaseListRowControl";
-import { JobOrientationEntity } from "../../../models/job/job-orientation.entity";
 
 export interface JobFormProps extends BaseFormProps<JobEntity> {
 
@@ -1223,7 +1222,7 @@ export function JobForm(props: JobFormProps) {
                                                     <BaseSelect
                                                         className="col-12"
                                                         label="location"
-                                                        name="orientation.locationId"
+                                                        name="orientation_location.id"
                                                         required
                                                         placeholder
                                                         formik={form}
@@ -1237,7 +1236,7 @@ export function JobForm(props: JobFormProps) {
                                                     <BaseInput
                                                         className="col-6"
                                                         label="START_DATE"
-                                                        name="orientation.start_datetime"
+                                                        name="orientation_start_at"
                                                         placeholder
                                                         type="date"
                                                         min={new Date().toISOString().split("T")[0]}
@@ -1246,7 +1245,7 @@ export function JobForm(props: JobFormProps) {
                                                     <BaseInput
                                                         className="col-6"
                                                         label="END_DATE"
-                                                        name="orientation.end_datetime"
+                                                        name="orientation_end_at"
                                                         placeholder="END_DATE"
                                                         type="date"
                                                         min={new Date().toISOString().split("T")[0]}

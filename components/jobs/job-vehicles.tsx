@@ -1,22 +1,16 @@
-import { useEffect, useState } from "react";
-import { Col, Row, Table } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { VehicleAccessory } from "../../enums/vehicles/vehicle-accessory.enum";
 import { VehicleTrailerType } from "../../enums/vehicles/vehicle-trailer-type.enum";
 import { VehicleType } from "../../enums/vehicles/vehicle-type.enum";
 import { useTranslation } from "../../hooks/useTranslation";
-import { JobEntity } from "../../models/job/job.entity";
-import DocumentApi from "../../pages/api/document";
 import ViewCard from "../viewDetails/viewCard";
 import VehiclePhoto from "./vehicle-photo";
 import { useAuth } from '../../hooks/useAuth'
 import { VehicleEntity } from "../../models/company/vehicle.entity";
-import { divide } from "lodash";
 import Link from "next/link";
-export interface ViewJobVehiclesProps {
-    job: JobEntity;
-}
+import { JobDetailProps } from "../../types/job/job-detail-props.type";
 
-export default function JobVehicles({ job }: ViewJobVehiclesProps) {
+export default function JobVehicles({ job }: JobDetailProps) {
     const { t } = useTranslation();
 
     const { user } = useAuth();
