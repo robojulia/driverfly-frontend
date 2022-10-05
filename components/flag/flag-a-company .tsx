@@ -16,23 +16,25 @@ import { FlagInappropriateJobDto } from "../../models/support/flag-inappropriate
 export default function FlagCompany({ companyId }) {
 
     const { user } = useAuth();
-    const [encourageModal, setEncourageModal] = useState<boolean>(false)
-    const closeEncourageModal = (): void => setEncourageModal(false)
-
-
-    const [showFlagCompanyModel, setShowFlagCompanyModel] = useState<boolean>(false);
-    const openFlagCompanyModel = (): void => {
-        if (user == null) {
-            setEncourageModal(true)
-        }
-        else {
-            setShowFlagCompanyModel(true)
-        }
-    }
-    const closeFlagCompanyModel = (): void => setShowFlagCompanyModel(false)
-
     const { t } = useTranslation();
     const supportApi = new SupportApi();
+
+    const [viewEncourageModal, setViewEncourageModal] = useState<boolean>(false)
+    const openEncourageModal = (): void => setViewEncourageModal(true)
+    const closeEncourageModal = (): void => setViewEncourageModal(false)
+
+    const [viewFlagCompanyModel, setViewFlagCompanyModel] = useState<boolean>(false);
+    const openFlagCompanyModel = (): void => setViewFlagCompanyModel(true)
+    const closeFlagCompanyModel = (): void => setViewFlagCompanyModel(false)
+
+    const handleFlagClick = (): void => {
+        if (user == null) {
+            openEncourageModal()
+        }
+        else {
+            openFlagCompanyModel()
+        }
+    }
 
     const form = useFormik({
         initialValues: new FlagInappropriateJobDto({ companyId }),
@@ -52,25 +54,23 @@ export default function FlagCompany({ companyId }) {
 
     return (
         <>
-            {(!!!user || !!!user?.company)
-                &&
-                <div className="driver-flag" onClick={openFlagCompanyModel}>
+            {
+                (!!!user || !!!user?.company) &&
+                <div className="driver-flag" onClick={handleFlagClick}>
                     <p>
                         < FlagFill /> <span>{t("FLAG_INAPPROPRIATE")} </span>
                     </p>
                 </div>
             }
+
             {
-
                 (!!user && !!!user.company) &&
-
                 <ViewModal
-                    show={showFlagCompanyModel}
+                    show={viewFlagCompanyModel}
                     onCloseClick={closeFlagCompanyModel}
                     closeText="CANCEL"
                     title="FLAG_INAPPROPRIATE_COMPANY"
                 >
-
                     <form onSubmit={form.handleSubmit}>
                         <Row>
                             <BaseSelect
@@ -104,13 +104,10 @@ export default function FlagCompany({ companyId }) {
                 </ViewModal>
             }
 
-
-
             {
-                !!!user
-                &&
+                (!!!user) &&
                 <ViewModal
-                    show={encourageModal}
+                    show={viewEncourageModal}
                     onCloseClick={closeEncourageModal}
                     closeText="CANCEL"
                     title="DRIVERFLY"
@@ -124,7 +121,6 @@ export default function FlagCompany({ companyId }) {
                         </p>
                     </Row>
                 </ViewModal>
-
             }
 
         </>

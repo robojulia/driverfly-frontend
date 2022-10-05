@@ -14,28 +14,28 @@ import { FlagInappropriateJob } from "../../enums/jobs/flag-inappropriate-job.en
 import SupportApi from "../../pages/api/support";
 
 export default function FlagJob({ jobId }) {
+
     const { user } = useAuth();
-    const [encourageModal, setEncourageModal] = useState<boolean>(false)
-    const closeEncourageModal = (): void => setEncourageModal(false)
+    const { t } = useTranslation();
+    const supportApi = new SupportApi();
+
+    const [viewEncourageModal, setViewEncourageModal] = useState<boolean>(false)
+    const openEncourageModal = (): void => setViewEncourageModal(true)
+    const closeEncourageModal = (): void => setViewEncourageModal(false)
 
 
     const [showFlagJobModel, setShowFlagJobModel] = useState<boolean>(false);
-    const openFlagJobModel = (): void => {
+    const openFlagJobModel = (): void => setShowFlagJobModel(true)
+    const closeFlagJobModel = (): void => setShowFlagJobModel(false)
+
+    const handleFlagClick = (): void => {
         if (user == null) {
-            setEncourageModal(true)
+            openEncourageModal()
         }
         else {
-            setShowFlagJobModel(true)
+            openFlagJobModel()
         }
     }
-    const closeFlagJobModel = (): void => setShowFlagJobModel(false)
-    const { t } = useTranslation();
-
-
-
-    const supportApi = new SupportApi();
-
-
 
     const form = useFormik({
         initialValues: new FlagInappropriateJobDto({ jobId }),
@@ -55,15 +55,14 @@ export default function FlagJob({ jobId }) {
 
     return (
         <>
-            {(!!!user || !!!user?.company)
-                &&
-                <div className="driver-flag" onClick={openFlagJobModel}>
+            {
+                (!!!user || !!!user?.company) &&
+                <div className="driver-flag" onClick={handleFlagClick}>
                     <p>
                         < FlagFill /> <span>{t("FLAG_INAPPROPRIATE")} </span>
                     </p>
                 </div>
             }
-
 
             {
                 (!!user && !!!user.company) &&
@@ -107,12 +106,10 @@ export default function FlagJob({ jobId }) {
                 </ViewModal>
             }
 
-
             {
-                !!!user
-                &&
+                (!!!user) &&
                 <ViewModal
-                    show={encourageModal}
+                    show={viewEncourageModal}
                     onCloseClick={closeEncourageModal}
                     closeText="CANCEL"
                     title="DRIVERFLY"
@@ -126,14 +123,8 @@ export default function FlagJob({ jobId }) {
                         </p>
                     </Row>
                 </ViewModal>
-
             }
-
-
 
         </>
     )
 }
-
-
-
