@@ -81,8 +81,8 @@ export class JobEntity {
     safety_requirements_other?: string;
     is_orientation_needed: boolean = true;
     orientation_location: LocationEntity = new LocationEntity();
-    orientation_start_at?: Date;
-    orientation_end_at?: Date;
+    orientation_start_at?: string | Date;
+    orientation_end_at?: string | Date;
     created_at?: string | Date;
     applicantsCount?: number;
     static yupSchema() {
