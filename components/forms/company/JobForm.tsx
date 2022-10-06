@@ -407,11 +407,17 @@ export function JobForm(props: JobFormProps) {
         try {
             const jobApi = new JobApi();
             let job = null;
+            const dto = {
+                ...form.values,
+            };
+            if (dto.expiry_date) dto.expiry_date = new Date(dto.expiry_date).toISOString();
+            if (dto.orientation_start_at) dto.orientation_start_at = new Date(dto.orientation_start_at).toISOString();
+            if (dto.orientation_end_at) dto.orientation_end_at = new Date(dto.orientation_end_at).toISOString();
             if (entity?.id) {
-                job = await jobApi.update(entity.id, form.values);
+                job = await jobApi.update(entity.id, dto);
             }
             else {
-                job = await jobApi.create(form.values);
+                job = await jobApi.create(dto);
             }
 
             setShowConfirmationModal(false);

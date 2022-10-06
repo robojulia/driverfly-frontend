@@ -89,8 +89,8 @@ export class JobEntity {
         return yup.object({
             is_orientation_needed: yup.boolean().default(false),
             title: yup.string().required().max(100).nullable(),
-            location: BasicEntity.yupSchema(),
-            orientation_location: BasicEntity.yupSchema(),
+            location: LocationEntity.yupConnectSchema(true),
+            orientation_location: LocationEntity.yupConnectSchema(),
             orientation_start_at: yup.date().nullable(),
             orientation_end_at: yup.date().nullable(),
             description: yup.string().max(1500).required().nullable(),
