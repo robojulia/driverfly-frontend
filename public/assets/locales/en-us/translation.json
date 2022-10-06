@@ -1276,6 +1276,7 @@
     "UNABLE_TO_SEND_EMAIL": "Unable to send email",
     "DRIVERFLY": "DriverFly",
     "ALREADY_IN_CONVERSATION": "Driver is already in your Conversation",
+    "PLEASE_LOGIN_TO_INAPPROPRIATE_JOB_OR_COMPANY":"Please login to inappropriate job or company profile.",
     "utm_source": {
         "ON_MY_OWN": "On my own",
         "DRIVERFLY_REPRESENTATIVE": "Referral Code",
@@ -1314,6 +1315,7 @@
     "FLAG_INAPPROPRIATE": "Flag Inappropriate",
     "INAPPROPRIATE_JOB": "Inappropriate Job",
     "FLAG_INAPPROPRIATE_JOB": "Flag Job as Inappropriate ",
+    "FLAG_INAPPROPRIATE_COMPANY": "Flag Company as Inappropriate ",
     "THANKS_FOR_KEEPING_A_WATCHFUL_EYE": "Thanks for keeping a watchful eye! Our team is on it and will resolve shortly.",
     "FLAG_INAPPROPRIATE_APPLICANT": "Flag Inappropriate Applicant",
     "INAPPROPRIATE_APPLICANT": "Inappropriate Applicant",
