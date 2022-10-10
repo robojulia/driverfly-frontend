@@ -2,10 +2,12 @@ import Head from 'next/head'
 import Footer from "./footer/Footer";
 import Header from "./header/Header";
 import Scripts from './scripts';
+import { ManyChatScript } from "../components/scripts/manychat/manychat";
 
 export default function Layout({ children }) {
     return (
         <>
+            <ManyChatScript />
             <Head>
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                 <meta http-equiv="x-ua-compatible" content="ie=edge" />
