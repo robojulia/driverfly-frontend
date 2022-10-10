@@ -3,12 +3,9 @@ import { PublicLayout } from "../components/layouts/PublicLayout";
 import { Accordion } from 'react-bootstrap';
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 
-
 export default function FAQ() {
     return (
         <>
-
-
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
@@ -85,7 +82,7 @@ export default function FAQ() {
                                             <p>Email them 🙂 </p>
                                         </Accordion.Body>
                                     </Accordion.Item><
-                                    Accordion.Item eventKey="5">
+                                        Accordion.Item eventKey="5">
                                         <Accordion.Header> <span className="btn-link"> I have several accounts, can they be purged or deleted?</span></Accordion.Header>
                                         <Accordion.Body>
                                             <p>Track your results on the local or global market , depending on your needs. You can track everything in the most popular search engines – Google, Bing, Yahoo and Yandex. Improve your search performance and increase traffic with our turn-key. </p>

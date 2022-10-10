@@ -3,7 +3,6 @@ import { PublicLayout } from "../components/layouts/PublicLayout";
 import Blog from '../public/css/Blog.module.css'
 import BlogSidebar from '../components/blog-sidebar/Blog-Sidebar';
 import { ArrowRight, Chat, Clock } from 'react-bootstrap-icons';
-// import Breadcrumbs from 'nextjs-breadcrumbs';
 import Breadcrumb from '../components/breadcrumbs/Breadcrumb';
 export default function Blogs() {
     return (

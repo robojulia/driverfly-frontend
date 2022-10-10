@@ -5,19 +5,13 @@ import Recent from "../components/jobs/Recent";
 import Drivers from "../components/works/drivers";
 import Companies from "../components/works/companies";
 import CompaniesSlider from '../components/featured-companies-slider/CompaniesSlider'
-import HomeSearch from "../components/megasearch/search";
 import Slider from "../components/testominial-slider/Slider";
-import Pric from "../public/css/Pricing.module.css";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import TrendingWords from "../components/trending-words/Trending";
 import { useTranslation } from "../hooks/useTranslation";
-import { DriverLicenseType } from "../enums/users/driver-license-type.enum";
-import { JobEmploymentType } from "../enums/jobs/job-employment-type.enum";
 import { useRouter } from "next/router";
-import { GeoAlt, Search } from "react-bootstrap-icons";
 import NewsletterSingup from "../components/newsletter-signup/NewsletterSingup";
 import HeroSearch from "../components/home/hero-search";
-import { features } from "process";
 export default function Index() {
 
     const router = useRouter();
@@ -25,14 +19,11 @@ export default function Index() {
 
     const [showTab, setShowTab] = useState('recent');
 
-    // const handleFeatureRecentClick = () => {
-    //     setShowTab()
-    // }
     return (
         <>
-        <Head>
-        <meta name="google-site-verification" content="m9bfVuOGxtYDxi8eKLetXlJplLbdwnewUO37wDyw96I" />
-        </Head>
+            <Head>
+                <meta name="google-site-verification" content="m9bfVuOGxtYDxi8eKLetXlJplLbdwnewUO37wDyw96I" />
+            </Head>
             <section className="hero-sec">
                 <div className="container ">
                     <div className="row mt-5">
@@ -98,13 +89,13 @@ export default function Index() {
 
             <section className="tab-sec">
                 <ul className="nav nav-tabs">
-                   
+
                     <li className="nav-item" key="recent">
                         <a
                             href="#profile"
-                            className={`nav-link ${showTab !== 'recent'? 'active' : '' }`}
+                            className={`nav-link ${showTab !== 'recent' ? 'active' : ''}`}
                             data-toggle="tab"
-                            onClick={ () =>{
+                            onClick={() => {
                                 setShowTab('recent')
                             }}
                         >
@@ -114,9 +105,9 @@ export default function Index() {
                     <li className="nav-item" key="feature">
                         <a
                             href="#profile"
-                            className={`nav-link ${showTab !== 'feature'? 'active' : '' }`}
+                            className={`nav-link ${showTab !== 'feature' ? 'active' : ''}`}
                             data-toggle="tab"
-                            onClick={ () =>{
+                            onClick={() => {
                                 setShowTab('feature')
                             }}
                         >

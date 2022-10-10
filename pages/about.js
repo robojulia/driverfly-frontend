@@ -1,8 +1,7 @@
-import Head from "next/head";
 import { PublicLayout } from "../components/layouts/PublicLayout";
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 import Slider from '../components/testominial-slider/Slider';
-import { FileEarmarkZip, Funnel, CheckSquare, Bell, Trophy, HandIndexThumb } from 'react-bootstrap-icons';
+import { FileEarmarkZip, Funnel, CheckSquare } from 'react-bootstrap-icons';
 
 
 export default function About() {

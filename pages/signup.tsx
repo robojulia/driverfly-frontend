@@ -1,13 +1,9 @@
-import Head from "next/head"
 import Link from "next/link"
-import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 import { PublicLayout } from "../components/layouts/PublicLayout";
 import SignupStyle from "../public/css/signup.module.css"
-import { useAuth } from '../hooks/useAuth';
 import { useRouter } from 'next/router'
-import { ToastContainer, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-
 
 import { useFormik } from "formik";
 
@@ -15,8 +11,6 @@ import BaseInput from "../components/forms/BaseInput";
 import BaseSelect from "../components/forms/BaseSelect";
 import BaseCheck from "../components/forms/BaseCheck";
 import BaseInputPhone from "../components/forms/BaseInputPhone";
-
-
 
 import AuthApi from "./api/auth";
 
