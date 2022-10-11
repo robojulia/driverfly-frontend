@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { PublicLayout } from "../components/layouts/PublicLayout";
-import ReCAPTCHA from "react-google-recaptcha";
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 import { ArrowRight, Newspaper, PersonBadgeFill, QuestionCircle } from 'react-bootstrap-icons';
 import { useTranslation } from "../hooks/useTranslation";

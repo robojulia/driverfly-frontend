@@ -2,12 +2,6 @@ import Link from 'next/link';
 import { PublicLayout } from "../components/layouts/PublicLayout";
 import BlogDetail from '../public/css/BlogDetail.module.css'
 import SocilShare from '../components/share-link/ShareLink';
-import JonInformation from '../components/job-information-sidebar/JobInformation';
-import JobDescription from '../components/job-description/JobDescription';
-import BlogSidebar from '../components/blog-sidebar/Blog-Sidebar';
-// import Breadcrumbs from 'nextjs-breadcrumbs';
-import Tags from '../components/tags/Tags';
-
 export default function TipsBlog() {
     return (
         <>
@@ -15,7 +9,6 @@ export default function TipsBlog() {
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
                         <h2>The DriverFly On The Wall Blog</h2>
-                       {/* <Breadcrumbs /> */}
                     </div>
                 </div>
             </div>
