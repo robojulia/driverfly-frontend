@@ -23,6 +23,8 @@ import ShowFormattedDate from "../../../../../components/jobs/show-formatted-dat
 import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
 import ApplicantApi from "../../../../api/applicant";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
+import ViewPdf from "../../../../../components/viewDetails/viewPdf";
+import DocumentApi from "../../../../api/document";
 
 export default function StoredFiles() {
 
@@ -43,7 +45,7 @@ export default function StoredFiles() {
 
     const [files, setFiles] = useState<DocumentEntity[]>([])
     const [applicants, setApplicants] = useState<ApplicantEntity[]>([])
-    
+
     useEffectAsync(async () => {
 
         const v = await complianceApi.filesList();
@@ -98,7 +100,20 @@ export default function StoredFiles() {
     //     console.log("form", form.values)
     //     console.log("form", form.errors)
     // }, [form])
+    const [pdf, setPdf] = useState({});
 
+    const viewDocumentClick = async (id, name) => {
+        const api = new DocumentApi();
+
+        const document = await api.getSignedUrl(id);
+
+        if (document) {
+            setPdf({
+                name: `${t(name)} (${document.name})`,
+                url: document.path
+            });
+        }
+    }
     return (
         <PageLayout
             title="STORED_FILES"
@@ -152,8 +167,8 @@ export default function StoredFiles() {
                     {
                         cell: (file) => (
                             <>
-                                <button type="button" className="theme-secondary-btn mr-2 px-4 py-2" onClick={() => setDocumentId(file.id)}><Send /></button>
-                                <a href={file?.path} role="button" className="theme-secondary-btn mr-2 px-4 py-2" target="_blank" download><CloudArrowDown /></a>
+                                <button type="button" className="theme-primary-btn mr-2 px-4 py-2" onClick={() => setDocumentId(file.id)}><Send /></button>
+                                <a onClick={() => viewDocumentClick(file.id, file.name)} href="#" role="button" className="theme-secondary-btn mr-2 px-4 py-2"><CloudArrowDown /></a>
                             </>
                         ),
                     },
@@ -162,6 +177,7 @@ export default function StoredFiles() {
                 ]}
                 items={files}
             />
+            <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
 
             {/* Model for Upload file */}
 

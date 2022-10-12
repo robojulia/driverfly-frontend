@@ -16,6 +16,8 @@ import { CloudArrowDown, Pen } from "react-bootstrap-icons";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import { useState } from "react";
 import { ThreeCircles } from 'react-loader-spinner';
+import DocumentApi from "../../../../pages/api/document";
+import ViewPdf from "../../../viewDetails/viewPdf";
 
 export interface DqfTabProps extends ViewApplicantDetailProps { }
 
@@ -47,6 +49,20 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
         }
     });
 
+    const [pdf, setPdf] = useState({});
+
+    const viewDocumentClick = async (id, name) => {
+        const api = new DocumentApi();
+
+        const document = await api.getSignedUrl(id);
+
+        if (document) {
+            setPdf({
+                name: `${t(name)} (${document.name})`,
+                url: document.path
+            });
+        }
+    }
     const handleUpdateDocument = async (type: ApplicantDocumentType, documentId?: number) => {
         form.setFieldValue("document", { type: type, id: documentId || null })
     }
@@ -94,7 +110,7 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                                                                 <Button className="mr-2 w-100" onClick={() => { handleUpdateDocument(value, document?.id) }}>
                                                                     {document ? <Pen /> : t('ADD')}
                                                                 </Button>
-                                                                {document ? <a href={document?.path} role="button" className="btn theme-primary2-btn p-0 pt-1 mr-2" download><CloudArrowDown /></a> : null}
+                                                                {document ? <a onClick={() => viewDocumentClick(document.id, document.name)} href='#' role="button" className="btn theme-primary2-btn p-0 pt-1 mr-2"><CloudArrowDown /></a> : null}
                                                             </div>
                                                         }
 
@@ -124,6 +140,8 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                                     }
                                 </tbody>
                             </Table>
+                            <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
+
                         </ViewCard>
                     ) : (
                         <div className="d-flex justify-content-center align-items-center">
