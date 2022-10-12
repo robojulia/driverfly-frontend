@@ -31,7 +31,6 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
         initialValues: new ApplicantDocumentDto(),
         validationSchema: ApplicantDocumentDto.yupSchema(),
         onSubmit: async ({ document }, { resetForm }) => {
-
             try {
                 const applicantDocumentUpload = await applicantApi.documents.create(applicantUser.id, document)
 
@@ -101,21 +100,21 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
 
                                                         {
                                                             (form.values?.document?.type === value) &&
-                                                                <Form onSubmit={form.handleSubmit} >
-                                                                    <FileInput
-                                                                        name={`document`}
-                                                                        accept="application/pdf"
-                                                                        formik={form}
-                                                                    />
-                                                                    <div className="mt-2 d-flex w-100 ">
-                                                                        <Button className="mr-2 w-50 theme-primary-btn" type="submit">
-                                                                            {t(`SAVE`)}
-                                                                        </Button>
-                                                                        <Button type="button" className="mr-2 w-50 bg-danger" onClick={() => { form.resetForm() }}                                                            >
-                                                                            {t(`CANCEL`)}
-                                                                        </Button>
-                                                                    </div>
-                                                                </Form>
+                                                            <Form onSubmit={form.handleSubmit} >
+                                                                <FileInput
+                                                                    name={`document`}
+                                                                    accept="application/pdf"
+                                                                    formik={form}
+                                                                />
+                                                                <div className="mt-2 d-flex w-100 ">
+                                                                    <Button disabled={form.isSubmitting || !form.isValid || form.isValidating} className="mr-2 w-50 theme-primary-btn" type="submit">
+                                                                        {t(`SAVE`)}
+                                                                    </Button>
+                                                                    <Button type="button" className="mr-2 w-50 bg-danger" onClick={() => { form.resetForm() }}                                                            >
+                                                                        {t(`CANCEL`)}
+                                                                    </Button>
+                                                                </div>
+                                                            </Form>
                                                         }
 
                                                     </td>

@@ -43,7 +43,7 @@ export default function StoredFiles() {
 
     const [files, setFiles] = useState<DocumentEntity[]>([])
     const [applicants, setApplicants] = useState<ApplicantEntity[]>([])
-
+    
     useEffectAsync(async () => {
 
         const v = await complianceApi.filesList();
@@ -153,7 +153,7 @@ export default function StoredFiles() {
                         cell: (file) => (
                             <>
                                 <button type="button" className="theme-secondary-btn mr-2 px-4 py-2" onClick={() => setDocumentId(file.id)}><Send /></button>
-                                <button type="button" className="btn theme-primary-btn download_file_btn px-4"> <a  href={file.path} download target="_self"><CloudArrowDown /></a></button>
+                                <a href={file?.path} role="button" className="theme-secondary-btn mr-2 px-4 py-2" target="_blank" download><CloudArrowDown /></a>
                             </>
                         ),
                     },
@@ -242,7 +242,7 @@ export default function StoredFiles() {
                         {
                             cell: (applicant) => (
                                 <>
-                                    <Button type="button" onClick={() => sendEmail(applicant)} className="theme-secondary-btn mr-2 px-4 py-1"><Send /></Button>
+                                    <Button type="button" disabled={form.isSubmitting || !form.isValid || form.isValidating} onClick={() => sendEmail(applicant)} className="theme-secondary-btn mr-2 px-4 py-1"><Send /></Button>
                                 </>
                             ),
                         },

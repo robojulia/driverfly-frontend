@@ -75,6 +75,7 @@ const DAC = ({ applicant }: DacTabProps) => {
                                                             />
                                                             <Button
                                                                 className="ml-2 w-50"
+                                                                disabled={form.isSubmitting || !form.isValid || form.isValidating}
                                                                 onClick={() => { handleChangeClick(value, dac) }}
                                                             >
                                                                 {t('CHANGE')}
@@ -87,7 +88,7 @@ const DAC = ({ applicant }: DacTabProps) => {
                                                                 formik={form}
                                                             />
                                                             <div className="d-flex justify-content-end w-100" >
-                                                                <Button className=" theme-primary-btn" type="submit">
+                                                                <Button disabled={form.isSubmitting || !form.isValid || form.isValidating} className=" theme-primary-btn" type="submit">
                                                                     {t(`SAVE`)}
                                                                 </Button>
                                                                 <Button type="button" className="ml-2 bg-danger" onClick={() => { form.resetForm() }}                                                            >
