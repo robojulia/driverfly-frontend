@@ -17,14 +17,14 @@ export default class SupportApi extends BaseApi {
 
     async FlagInappropriateJob(entity: FlagInappropriateJobDto): Promise<FlagInappropriateJobDto> {
 
-        const { data } = await this.post(`${this.baseUrl}/inappropriate-job-flag`, entity);
+        const { data } = await this.post(`${this.baseUrl}/inappropriate-flag`, entity);
 
         return data;
     }
 
     async FlagInappropriateApplicantApi(entity: FlagInappropriateApplicantDto): Promise<FlagInappropriateApplicantDto> {
 
-        const { data } = await this.post(`${this.baseUrl}/inappropriate-applicant-flag`, entity);
+        const { data } = await this.post(`${this.baseUrl}/inappropriate-flag`, entity);
 
         return data;
     }
