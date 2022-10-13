@@ -1,7 +1,7 @@
 import Head from "next/head";
+import Script from "next/script";
 
 export function ManyChatScript() {
-
     return (
         <Head>
             {/* <!-- ManyChat --> */}

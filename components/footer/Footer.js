@@ -1,4 +1,3 @@
-import Link from "next/link";
 import FollowUs from "./Follow-Us";
 import DriversNewsletter from "./Drivers-Newsletter";
 import ForDrivers from "./For-Drivers";
@@ -6,6 +5,7 @@ import ForEmployers from "./For-Employers";
 import QuickLinks from "./Quick-Links";
 import Logo from "./Logo";
 import CopyRight from "./Copy-Right";
+
 
 export default function Footer() {
     return (
@@ -43,7 +43,6 @@ export default function Footer() {
                     <div className="row">
                         <div className="col-md-12">
                             < CopyRight />
-                            <h1>test</h1>
                         </div>
                     </div>
                 </div>

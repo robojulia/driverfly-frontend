@@ -1,0 +1,7 @@
+export enum UserPreferenceSharingLabel {
+    MVR = "MVR",
+    DRIVERS_LICENSE = "DRIVERS_LICENSE",
+    MEDICAL_CARD = "MEDICAL_CARD",
+    EMPLOYMENT_HISTORY = "EMPLOYMENT_HISTORY",
+    PHYSICAL = "PHYSICAL"
+}

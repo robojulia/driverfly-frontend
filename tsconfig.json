@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "esnext",
     "lib": [
       "dom",
       "dom.iterable",
@@ -11,20 +11,24 @@
     "strict": false,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-    "incremental": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "incremental": true
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
-, "pages/dashboard/_middleware.js", "pages/dashboard/dashboard.js"  ],
+    "**/*.tsx",
+    "pages/dashboard/_middleware.js",
+    "pages/dashboard/dashboard.js",
+    "components/BaseInput.js"
+, "pages/_app.js"  ],
   "exclude": [
     "node_modules"
   ]
+  //  "incremental": true
 }

@@ -1,0 +1,16 @@
+.input_div {
+    display: inline-block;
+}
+
+.radius_slider {
+    width: 25%;
+}
+
+.school_table {
+    overflow-x: scroll;
+    margin: 1em;
+}
+
+.hovered_row {
+    background-color: lightgray;
+}

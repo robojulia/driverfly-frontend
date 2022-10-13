@@ -1,0 +1,6 @@
+export enum CompanyDocumentType {
+    TRAINING_DOCUMENTS = 'TRAINING_DOCUMENTS',
+    COMPANY_POLICY = 'COMPANY_POLICY',
+    SAFETY = 'SAFETY',
+    OTHER = 'OTHER',
+}

@@ -4,9 +4,12 @@ export default function Logo
     return (
         <>
             <div className="col-md-2 text-center">
-                <img src="img/driverfly-logo-square.png" alt="" className="footer-logo" />
+                <Link href="/">
+                    <a>
+                        <img src="/img/driverfly-logo-square.png" className="footer-logo" />
+                    </a>
+                </Link>
             </div>
-
         </>
     )
 }

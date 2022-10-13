@@ -1,5 +1,5 @@
 .banner{
-    background: linear-gradient(to bottom, hsl(180deg 51% 52% / 36%), #2ec8c438) , url(../img/signupbanner.png);
+    background: linear-gradient(to bottom, hsl(180deg 51% 52% / 36%), #2ec8c438) , url(../img/signupbanner1.png);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -7,14 +7,14 @@
     width: 100%;
     padding: 60px 40px;
     margin: 30px 0px;
-
 }
-.banner h1{
+
+.banner h1 {
     font-size: 59px;
     color: #fff;
     font-weight: 400;
 }
-.banner p{
+.banner p {
     color: #fff;
     font-weight: 400;
     margin-top: 25px;
@@ -25,27 +25,16 @@
     font-weight: 400;
     margin-top: 25px;
     text-decoration: underline;
-
 }
 .banner a:hover{
     color: #2da2af;
 }
-.link{
-  color: black;
-  font-weight: 600;
 
-}
-.link:hover {
-   color: #2da2af;
-   text-decoration: none;
-  
-  }
-  @media screen and (max-width: 767px) {
-    .banner{
+@media screen and (max-width: 767px) {
+    .banner {
         padding: 40px 0px;
     }
-   .banner h1{
-       font-size: 35px;
-      
-   }
-  }
+    .banner h1 {
+        font-size: 35px;
+    }
+}

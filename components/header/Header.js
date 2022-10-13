@@ -7,15 +7,12 @@ export default function Header() {
     return (
 
         <>
-          
+
             <header>
                 <div className="header-sec">
                     <div className="container-fluid">
-                        <nav className="navbar navbar-expand-lg navbar p-0">
-                            <Logo />
-                            <Nav />
-                        </nav>
-
+                        <Logo />
+                        <Nav />
                     </div>
                 </div>
             </header>

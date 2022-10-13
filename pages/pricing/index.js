@@ -1,10 +1,10 @@
 import Link from 'next/link';
-import Layout from "../../components/layouts";
+import { PublicLayout } from "../../components/layouts/PublicLayout";
 import Pric from '../../public/css/Pricing.module.css'
 import MonthlyPricing from '../../components/pricing/monthly'
 import YearlyPricing from '../../components/pricing/yearly'
 import React,{useState} from 'react';
-import Breadcrumbs from 'nextjs-breadcrumbs';
+// import Breadcrumbs from 'nextjs-breadcrumbs';
 export default function Pricing() {
 
 const [showMonthly, setShowMonthly] = useState(true);
@@ -23,7 +23,7 @@ return (
    <div className="container p-0">
         <div className="top-links-inner d-flex align-items-center justify-content-between">
             <h2>Pricing</h2>
-            < Breadcrumbs />
+            {/* < Breadcrumbs /> */}
         </div>
     </div>
 </div>
@@ -77,7 +77,12 @@ return (
                 </div>
             </div>
             <div className={Pric.offer}>
-                <h3 className="text-center my-5 text-secondary">Interested in a package? <a className={Pric.contactlink} href="#">Contact us for a quote!</a></h3>
+                <h3 className="text-center my-5 text-secondary">Interested in a package? 
+                <Link href="/contact">
+                <a className={Pric.contactlink} > Contact us for a quote!</a>
+                </Link>
+                 
+                </h3>
                 <h1 className={Pric.whatweoffer}>What We Offer</h1>
             </div>
             <div className="row">
@@ -118,8 +123,8 @@ return (
 }
 Pricing.getLayout = function getLayout(page){
 return (
-<Layout>
+<PublicLayout>
    {page}
-</Layout>
+</PublicLayout>
 )
 }

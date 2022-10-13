@@ -1,0 +1,43 @@
+import { DocumentEntity } from "../documents/document.entity";
+import * as yup from "yup";
+import { useTranslation } from "../../hooks/useTranslation";
+import { Status } from "../../enums/status.enum";
+
+export class CompanyEntity {
+
+  id?: number;
+  name?: string;
+  about?: string;
+  website?: string;
+  photo?: DocumentEntity;
+
+  status?: Status;
+
+  parent?: CompanyEntity;
+  children?: CompanyEntity[];
+
+  static yupSchema() {
+    const { t } = useTranslation()
+    return yup.object({
+      name: yup.string().required().nullable().max(255),
+      about: yup.string().nullable().max(255)
+        .test({
+          test: (value, context) => {
+            const regex_number = `[0-9]{7,12}`
+            let result = value?.match(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}/g);
+            
+            if (!result && !!!value?.match(regex_number)) return true;
+            return context.createError({
+              path: context.path,
+              message: t('NO_EMAIL_AND_NUMBER')
+            });
+          }
+        }),
+      website: yup.string().url().nullable(),
+      photo: yup.mixed().when({
+        is: v => !!v,
+        then: DocumentEntity.yupSchema()
+      }).optional(),
+    });
+  }
+}

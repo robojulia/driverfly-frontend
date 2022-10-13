@@ -2,11 +2,11 @@
 const jobBenefits = [
     {
         key: "SIGN_ON_BONUS",
-        label: "Sign-on Bonus"
+        label: "Sign-on bonus"
     },
     {
         key: "GUARANTEED_BASE_SALARY",
-        label: "Guaranteed Base Salary"
+        label: "Guaranteed base salary"
     },
     {
         key: "MEDICAL",
@@ -26,7 +26,7 @@ const jobBenefits = [
     },
     {
         key: "SAFETY_BONUS",
-        label: "Safety bonuses"
+        label: "Safety bonus"
     },
     {
         key: "EXTRA_PAY_MISC",
@@ -38,7 +38,7 @@ const jobBenefits = [
     },
     {
         key: "GUARANTEED_BASE_PAY",
-        label: "Gauranteed baseline pay"
+        label: "Guaranteed baseline pay"
     },
     {
         key: "NEW_EQUIPMENT",
@@ -72,10 +72,6 @@ const jobBenefits = [
         key: "PETS_ALLOWED",
         label: "Pets allowed"
     },
-    // {
-    //     key: "OTHER",
-    //     label: "Other"
-    // },
 ];
 
 const jobGeography = [
@@ -96,19 +92,19 @@ const jobGeography = [
 const jobType = [
     {
         key: "W2",
-        label: "Salaried (W2)"
+        label: "Salaried"
     },
     {
         key: "CONTRACT",
-        label: "Contractor (1099)"
+        label: "Contractor"
     },
     {
         key: "OWNER_OPERATOR",
-        label: "Owner-Operator"
+        label: "Owner operator"
     },
     {
         key: "PART_TIME",
-        label: "Part-Time"
+        label: "Part time"
     },
     {
         key: "SEASONAL",
@@ -116,7 +112,7 @@ const jobType = [
     },
     {
         key: "ONE_TIME_GIG",
-        label: "One Time Gig"
+        label: "One time gig"
     },
 ];
 
@@ -150,7 +146,7 @@ const jobPayMethod = [
     },
     {
         key: "SET_WEEKLY",
-        label: "Set Weekly"
+        label: "Set weekly"
     },
     {
         key: "SALARY",
@@ -162,7 +158,87 @@ const jobPayMethod = [
     },
 ];
 
+const counts = [
+    {
+        value: 0,
+        label: "None"
+    },
+    {
+        value: 1,
+        label: 1
+    },
+    {
+        value: 2,
+        label: 2
+    },
+    {
+        value: 3,
+        label: 3
+    },
+    {
+        value: 4,
+        label: 4
+    },
+    {
+        value: 5,
+        label: 5
+    },
+];
+
+const years = [
+    {
+        value: 0,
+        label: "Ever"
+    },
+    {
+        value: 1,
+        label: 1
+    },
+    {
+        value: 2,
+        label: 2
+    },
+    {
+        value: 3,
+        label: 3
+    },
+    {
+        value: 4,
+        label: 4
+    },
+    {
+        value: 5,
+        label: 5
+    },
+];
+
+const year2Only = [
+    {
+        value: 2,
+        label: 2
+    },
+];
+
+const year3Only = [
+    {
+        value: 3,
+        label: 3
+    },
+];
+
+const year5Only = [
+    {
+        value: 5,
+        label: 5
+    },
+];
+
 export {
+    counts,
+    years,
+    year2Only,
+    year3Only,
+    year5Only,
     jobBenefits,
     jobGeography,
     jobType,

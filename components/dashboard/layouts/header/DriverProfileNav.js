@@ -1,68 +1,38 @@
-import {
-  Navbar,
-  Collapse,
-  Nav,
-  NavItem,
-  NavbarBrand,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Dropdown,
-  Button,
-} from "reactstrap";
-import React from "react";
-import Link from "next/link";
-import Logo from "../logo/Logo";
-import Image from "next/image";
+import { Dropdown } from "react-bootstrap";
+import React, { useEffect } from "react";
 import LogoutButton from '../../../buttons/Logout';
-import useAuth from "../../../../hooks/useAuth";
-import { useRouter } from "next/router"
-import user1 from "../../../../public/dashboard/assets/images/users/user1.jpg";
+import { useTranslation } from "../../../../hooks/useTranslation";
+import Impersonate from "../../../impersonate/impersonate";
+import UserPhoto from "../../driver/user-photo"
+
+import { useAuth } from "../../../../hooks/useAuth";
+
+export default function DriverProfileNav() {
+
+    const { user } = useAuth();
+
+    const { t } = useTranslation();
+
+    const [dropdownOpen, setDropdownOpen] = React.useState(false);
+
+    const toggle = () => setDropdownOpen((prevState) => !prevState);
 
 
-export default function DriverProfileNav(props) {
-
-  const [dropdownOpen, setDropdownOpen] = React.useState(false);
-
-  const toggle = () => setDropdownOpen((prevState) => !prevState);
-
-
-  return (
-    <>
-      <div className="profile">
-        <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-          <DropdownToggle>
-
-            <div style={{ lineHeight: "0px" }}>
-
-              <Image
-                src={user1}
-                alt="profile"
-                className="rounded-circle"
-                width="30"
-                height="30"
-
-              />
-              <span>{props.user.name || "DriverFly User"}.</span>
-              <p></p>
+    return (
+        <>
+            <div className="profile profile-logo">
+                <Dropdown show={dropdownOpen} onToggle={toggle} >
+                    <Dropdown.Toggle variant="light">
+                        < UserPhoto className="rounded-circle" width="30" height="30" />
+                        <span>{user?.first_name}  {user?.last_name}</span>
+                    </Dropdown.Toggle >
+                    <Dropdown.Menu>
+                        <Impersonate />
+                        <LogoutButton className="text-dark" />
+                    </Dropdown.Menu>
+                </Dropdown>
             </div>
-
-          </DropdownToggle >
-          <DropdownMenu>
-            <Link href="/dashboard/driver/profile">
-              <DropdownItem>Profile</DropdownItem>
-            </Link>
-            <Link href="#">
-              <DropdownItem>My Referrals</DropdownItem>
-            </Link>
-            <DropdownItem divider />
-            <DropdownItem><LogoutButton /></DropdownItem>
-          </DropdownMenu>
-
-        </Dropdown>
-      </div>
-    </>
-  )
+        </>
+    )
 }
 

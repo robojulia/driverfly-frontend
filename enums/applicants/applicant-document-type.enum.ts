@@ -1,0 +1,7 @@
+export enum ApplicantDocumentType {
+  RESUME = 'RESUME',
+  MVR = 'MVR',
+  DRIVERS_LICENSE = 'DRIVERS_LICENSE',
+  MEDICAL_CARD = 'MEDICAL_CARD',
+  PHYSICAL = "PHYSICAL"
+}

@@ -1,0 +1,12 @@
+.view_table {
+    background-color: #e9fafa;
+}
+
+.view_table thead {
+    background-color: #5eccc4;
+    color: #fff;
+}
+
+.view_table  th {
+   border-right: solid 1px;
+}

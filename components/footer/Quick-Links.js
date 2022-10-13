@@ -6,19 +6,30 @@ export default function QuickLinks() {
                 <h2 className="widget-title font-weight-normal">Quick Links</h2>
                 <ul className="p-0">
                     <li className="nav-item">
-                        <a className="nav-link" href="#">Login</a>
+                        <Link href="/login">
+                            <a className="nav-link" >Login</a>
+                        </Link>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="#">Driver Recruiting</a>
+                        <Link href="https://ctrecruiting.com/">
+                            <a target="_blank" className="nav-link" >Driver Recruiting</a>
+                        </Link>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="#">Featured Employers</a>
+                        <Link href="/">
+                            <a className="nav-link">Featured Employers</a>
+                        </Link>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="#">FAQ</a>
+                        <Link href="/faq">
+                            <a className="nav-link" >FAQ</a>
+                        </Link>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="#">The DriverFly on the Wall Blog</a>
+                        <Link href="/blog">
+                            <a className="nav-link" target="_blank">The DriverFly on the Wall Blog</a>
+                        </Link>
+
                     </li>
                     <li className="nav-item">
                         <Link href="/contact">

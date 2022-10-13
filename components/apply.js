@@ -1,370 +1,288 @@
-import { useState } from 'react'
-import { useRouter } from "next/router"
-import axios from "axios"
-import useAuth from '../hooks/useAuth'
-import { ToastContainer, toast } from 'react-toastify'
+import { useEffect, useState } from 'react'
+import { useAuth } from '../hooks/useAuth'
+import { toast } from 'react-toastify'
+import { useFormik } from "formik"
+import { useTranslation } from "../hooks/useTranslation"
+import JobApi from '../pages/api/job'
+import BaseInput from './forms/BaseInput'
+import BaseSelect from './forms/BaseSelect'
+import FileInput from "./forms/FileInput";
+import BaseCheck from './forms/BaseCheck'
+import { Col, Row, Table } from 'react-bootstrap'
+import { EducationLevel } from '../enums/users/education-level.enum'
+import Button from "react-bootstrap/Button"
 
-export default function JobApply() {
+import { ApplicantEntity } from '../models/applicant/applicant.entity'
+import ApplicantApi from '../pages/api/applicant'
+import UserApi from '../pages/api/user';
+import { UserPreferenceCategory } from '../enums/users/user-preference-category.enum';
+import { SharePreference } from '../enums/users/share-preference.enum';
 
-  const { authCheck } = useAuth();
-  const user = authCheck()
+import ViewModal from "./viewDetails/viewModal";
+import { globalAjaxExceptionHandler } from "../utils/ajax";
+import ViewCard from './viewDetails/viewCard'
+import { ApplicantDocumentType } from '../enums/applicants/applicant-document-type.enum'
+import { DocumentEntity } from '../models/documents/document.entity'
+import { PlusCircle, DashCircle, ArrowRight, Star } from 'react-bootstrap-icons'
+import BaseInputPhone from './forms/BaseInputPhone'
+import { DriverLicenseType } from "../enums/users/driver-license-type.enum";
 
-  console.log('user auth', user)
+export default function JobApply({ job, setEncourageModal }) {
+    const { user } = useAuth();
+    const { t } = useTranslation();
+    const jobApi = new JobApi();
 
-  const router = useRouter()
+    const apply_form = useFormik({
+        initialValues: new ApplicantEntity(),
+        validationSchema: ApplicantEntity.yupSchema(),
+        onSubmit: async (dto, { resetForm }) => {
+            try {
+                const applicant = await jobApi.apply(job.id, dto);
 
-  const [inputValues, setInputValues] = useState({
-    userId: user.id ?? null,
-    first_name: user.first_name ?? "",
-    last_name: user.last_name ?? "",
-    phone: user.contact_number ?? "",
-    email: user.email ?? "",
-    qualifications: user.qualifications ?? "",
-    voilations: user.voilations ?? "",
-    // resume: "",
-    // commercial_driving_license: "",
-    // medical_card: "",
-    cdl_experience: user.cdl_experience ?? "",
-  })
+                toast.success(t('job_applied_success_message'))
+                setViewForm(false);
+                resetForm()
+                setEncourageModal(true)
+            }
+            catch (e) {
+                globalAjaxExceptionHandler(e, { formik: apply_form, toast: toast, t: t });
+                if (e.response?.data?.message == "ApplicantJobService.APPLICANT_ALREADY_APPLIED") setViewForm(false)
+            }
+        }
+    });
 
-  const inputDisabled = {
-    first_name: user.first_name ? true : false,
-    first_name: user.first_name ? true : false,
-    last_name: user.last_name ? true : false,
-    phone: user.contact_number ? true : false,
-    email: user.email ? true : false,
-    qualifications: user.qualifications ? true : false,
-    voilations: user.voilations ? true : false,
-    resume: user.resume ? true : false,
-    commercial_driving_license: user.commercial_driving_license ? true : false,
-    medical_card: user.medical_card ? true : false,
-    cdl_experience: user.cdl_experience ? true : false,
-  }
-  console.log('inputDisabled', inputDisabled)
+    useEffect(async () => {
+        if (user && user.id) {
+            const api = new ApplicantApi();
+            const userApi = new UserApi();
+            try {
+                if (!user.company) {
+                    const applicant = await api.getByUserId();
+                    if (applicant) {
+                        const preferences = await userApi.preferences.list(user.id, { category: UserPreferenceCategory.SHARING });
 
-  const [resume, setResume] = useState(null)
-  const [commercial_driving_license, setCommercial_driving_license] = useState(null)
-  const [medical_card, setMedical_card] = useState(null)
+                        if (preferences.length > 0) {
+                            applicant.documents = applicant.documents.filter(
+                                (document) => !preferences.some(
+                                    (preference) => preference.label === document.type && preference.value === SharePreference.NEVER
+                                )
+                            );
+                        } else applicant.documents = applicant.documents?.filter((document) => document.type === ApplicantDocumentType.RESUME);
 
-  const handleChange = e => {
-    const { name, value } = e.target
-    setInputValues(preValue => {
-      return {
-        ...preValue,
-        [name]: value
-      }
-    })
-  }
+                        apply_form.setValues({
+                            ...apply_form.values,
+                            ...applicant,
+                        });
+                    }
+                }
+            }
+            catch (e) {
+                if (e.response?.status === 401) {
+                    return;
+                }
+                throw e;
+            }
+        }
+    }, [])
 
-  function Upload(event) {
-    if (event.target.files && event.target.files[0]) {
-      const t = event.target.name
-      const file = event.target.files[0]
-      if (t == "cv") {
-        setResume(file)
-        console.log(file)
-      }
-      if (t == "card") {
-        setMedical_card(file)
-      }
-      if (t == "license") {
-        setCommercial_driving_license(file)
-      }
-    }
-  }
-
-
-  const [validation, setValidation] = useState()
-
-  const submitHandler = async (e) => {
-    e.preventDefault()
-    let errors = {}
-    if (!inputValues.first_name) {
-      errors.first_name = "First Name is required"
-    }
-    if (!inputValues.last_name) {
-      errors.last_name = "Last Name is required"
-    }
-
-    if (!inputValues.phone) {
-      errors.phone = "phone is required"
-    }
-
-    if (!inputValues.email) {
-      errors.email = "email is required"
+    const [viewForm, setViewForm] = useState(false);
+    const onApplyClick = (e) => {
+        setViewForm(!viewForm);
     }
 
-
-    if (!inputValues.qualifications) {
-      errors.qualifications = "qualifications is required"
+    const onCloseClick = (e) => {
+        setViewForm(false);
     }
 
-    if (!inputValues.voilations) {
-      errors.voilations = "voilations is required"
-    }
+    if (apply_form.errors && Object.keys(apply_form.errors).length > 0)
+        console.error(apply_form.errors);
 
-    if (!resume) {
-      errors.resume = "CV is required"
-    }
+    return (
+        <>
 
-    if (!commercial_driving_license) {
-      errors.commercial_driving_license = "Lisense is required"
-    }
-
-    if (!medical_card) {
-      errors.medical_card = "medical_card is required"
-    }
-
-    if (!inputValues.cdl_experience) {
-      errors.cdl_experience = "cdl_experience is required"
-    }
-
-    // if ( !inputValues.resume ) {
-    //   errors.resume = "CV File is required"
-    // }
-
-    // if ( !inputValues.medical_card ) {
-    //   errors.medical_card = "Card is required"
-    // }
-
-    // if ( !inputValues.commercial_driving_license ) {
-    //   errors.commercial_driving_license = "Liscense is required"
-    // }
-
-
-    setValidation(errors)
-
-    if (Object.keys(errors).length == 0) {
-      const drug_test = e.target.drugTest.value
-      const driverfly_account = e.target.createAccount.checked ? 1 : 0
-      // TODO api call to apply for job
-      // console.log(`${process.env.BASE_URL_API}/jobs/apply/${router.query.id}`);
-      const reqBody = {
-        ...inputValues,
-        drug_test,
-        driverfly_account
-      }
-      const formData = new FormData()
-      // const formData = serialize(reqBody)
-      for (const key in reqBody) {
-        formData.set(key, reqBody[key])
-      }
-      formData.append("resume", resume)
-      formData.append("commercial_driving_license", commercial_driving_license)
-      formData.append("medical_card", medical_card)
-
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`)
-      }
-
-      const headers = {
-        'Authorization': `Bearer ${user.token}`,
-        "content-type": "application/json; charset=utf-8"
-      };
-
-      await axios.post(`http://localhost:4000/api/jobs/apply/${router.query.id}`,
-        formData,
-        { headers }
-      )
-        .then(data => {
-          console.log("handle success", data)
-          if (data.status == 201) {
-            const closeButton = document.getElementsByClassName('close')
-            closeButton[0].click()
-          }
-          alert("Your application has been submitted successfully")
-
-        })
-        .catch(function (error) {
-          console.log("handle error", error)
-        }).then(function () {
-          console.log("always executed")
-        })
-    }
-
-  }
-
-  return (
-    <>
-      <ToastContainer />
-      <div className="modal fade p-0" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div className="modal-dialog" role="document">
-          <div className="modal-content">
-            <div className="modal-header border-0">
-              <h5 className="modal-title font-weight-normal" id="exampleModalLabel">Apply for this job</h5>
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+            <div className="ort-btn mt-lg-4 mt-0">
+                <button type="button" className="btn theme-primary-btn" onClick={onApplyClick}> {t('APPLY_NOW')}<ArrowRight /></button>
             </div>
-            <form onSubmit={submitHandler} className="modal-body">
-              {/* <div>{inputValues}</div> */}
-              <div className="row">
-                {/* First Name */}
-                <div className="col-lg-6 col-12">
-                  <label>*First Name</label>
-                  <input disabled={inputDisabled.first_name}
-                    onChange={(e) => handleChange(e)}
-                    value={inputValues.first_name}
-                    name="first_name"
-                    type="text"
-                    className="form-control"
-                    placeholder="First Name" />
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.first_name}</p>
-                </div>
-                {/* Last Name */}
-                <div className="col-lg-6 col-12">
-                  <label>*Last Name</label>
-                  <input disabled={inputDisabled.last_name}
-                    onChange={(e) => handleChange(e)}
-                    value={inputValues.last_name}
-                    name="last_name"
-                    type="text"
-                    className="form-control"
-                    placeholder="Last Name" />
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.last_name}</p>
-                </div>
-                <div className="col-12">
-                  <label>*Phone</label>
-                  <input disabled={inputDisabled.phone}
-                    onChange={(e) => handleChange(e)}
-                    value={inputValues.phone}
-                    type="text"
-                    name="phone"
-                    className="form-control"
-                    placeholder="Phone" />
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.phone}</p>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-12 mt-3">
-                  <label>*Email</label>
-                  <input disabled={inputDisabled.email}
-                    onChange={(e) => handleChange(e)}
-                    value={inputValues.email}
-                    type="email"
-                    name="email"
-                    className="form-control"
-                    placeholder="E-mail" />
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.email}</p>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-12 mt-3">
-                  <label>* Qualifications</label>
-                  <textarea disabled={inputDisabled.qualifications}
-                    onChange={(e) => handleChange(e)}
-                    value={inputValues.qualifications}
-                    name="qualifications"
-                    className="form-control"
-                    id="validationTextarea"
-                    placeholder="Qualifications"></textarea>
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.qualifications}</p>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-lg-6 col-12 mt-3">
-                  <label>Upload your CV</label>
-                  <input onChange={Upload} name="cv" type="file" className="form-control mt-lg-4 mt-0" />
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.resume}</p>
-                </div>
-                <div className="col-lg-6 col-12 mt-3">
-                  <label>Upload your Commercial Driver’s License</label>
-                  <input onChange={Upload} name="license" type="file" className="form-control" />
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.commercial_driving_license}</p>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-lg-6 col-12 mt-3">
-                  <label>Upload your Medical card</label>
-                  <input onChange={Upload} name="card" type="file" className="form-control mt-lg-4 mt-0" />
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.medical_card}</p>
-                </div>
-                <div className="col-lg-6 col-12 mt-3">
-                  <label>* Years of CDL Driving Experience</label>
-                  <select onChange={(e) => handleChange(e)} value={inputValues.cdl_experience} name="cdl_experience" className="form-select" aria-label="Default select example">
-                    <option >Select CDL Driving Experience</option>
-                    <option value="1-5 Months" selected={user?.cdl_experience == "1-5 Months" ? "selected" : ''}>
-                      1-5 Months
-                    </option>
-                    <option value="6-11 Months" selected={user?.cdl_experience == "1-5 Months" ? "selected" : ''}>
-                      6-11 Months
-                    </option>
-                    <option value="1 Year" selected={user?.cdl_experience == "1 Year" ? "selected" : ''}>
-                      1 Year
-                    </option>
-                    <option value="2 Years" selected={user?.cdl_experience == "2 Years" ? "selected" : ''}>
-                      2 Years
-                    </option>
-                    <option value="3 Years" selected={user?.cdl_experience == "3 Years" ? "selected" : ''}>
-                      3 Years
-                    </option>
-                    <option value="4 Years" selected={user?.cdl_experience == "4 Years" ? "selected" : ''}>
-                      4 Years
-                    </option>
-                    <option value="5+ Years" selected={user?.cdl_experience == "5+ Years" ? "selected" : ''}>
-                      5+ Years
-                    </option>
-                  </select>
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.cdl_experience}</p>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-lg-6 col-12 mt-3">
-                  <label>* Number of moving violations in the last 3 years</label>
-                  <select onChange={(e) => handleChange(e)} value={inputValues.voilations} name="voilations" className="form-select" aria-label="Default select example">
-                    <option selected>Select One</option>
-                    <option value="1">0</option>
-                    <option value="2">1</option>
-                    <option value="3">2</option>
-                    <option value="1">3</option>
-                    <option value="2">4</option>
-                    <option value="3">5</option>
-                    <option value="1">6</option>
-                    <option value="2">7</option>
-                    <option value="3">8</option>
-                    <option value="2">9</option>
-                    <option value="3">10+</option>
-                  </select>
-                  <p style={{ fontStyle: "italic", color: "red" }}>{validation?.voilations}</p>
-                </div>
-                <div className="col-lg-6 col-12 mt-3">
-                  <label>* Can you pass a drug & alcohol test</label>
-                  <div className="form-check">
-                    <input value='1' class="form-check-input" type="radio" name="drugTest" id="flexRadioDefault1" checked />
-                    <label class="form-check-label" for="flexRadioDefault1">
-                      Yes
-                    </label>
-                  </div>
-                  <div className="form-check">
-                    <input value='0' className="form-check-input" type="radio" name="drugTest" id="flexRadioDefault2" />
-                    <label className="form-check-label" for="flexRadioDefault2">
-                      No
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div className="row my-lg-4">
-                <div className="col-12 mt-3">
-                  <label>Create a DriverFly account?</label>
-                  <div className="form-check ">
-                    <input onChange={(e) => handleChange(e)} name="createAccount" className="form-check-input" type="checkbox" value="1" />
-                    <label className="form-check-label" htmlfor="inlineCheckbox2">Yes</label>
-                  </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className=" col-12">
-                  <p>By clicking the submit button below, I hereby agree to and accept the <br /> <a href="#"> terms and conditions</a></p>
-                </div>
-              </div>
-              {/* </form> */}
-              <div className="modal-footer">
-                <button type="submit" className="btn btn-primary w-100 p-lg-3 p-5">Submit</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </>
-  )
+
+            <ViewModal
+                show={viewForm}
+                closeText="CANCEL"
+                onCloseClick={onCloseClick}
+                title="apply_for_this_job"
+                footer={<button type="submit" className="btn btn-primary w-100 p-lg-3 p-5" onClick={apply_form.handleSubmit}>{t('submit')}</button>}
+            >
+                <form onSubmit={apply_form.handleSubmit}>
+                    {typeof apply_form.errors.job === "string" &&
+                        <Row>
+                            <span className='text-danger'>{apply_form.errors.job}</span>
+                        </Row>
+                    }
+                    <Row>
+                        <BaseInput
+                            className=" col-6 mt-3"
+                            label="first_name"
+                            placeholder="first_name"
+                            name="first_name"
+                            required
+                            formik={apply_form}
+                        />
+                        <BaseInput
+                            className="col-6 mt-3"
+                            label="last_name"
+                            placeholder="last_name"
+                            name="last_name"
+                            required
+                            formik={apply_form}
+                        />
+                    </Row>
+                    <Row>
+                        <BaseInput
+                            readOnly={user && !user.company ? true : false}
+                            type="email"
+                            className=" col-6 mt-3"
+                            label="email"
+                            placeholder="email"
+                            name="email"
+                            formik={user?.company ? null : apply_form}
+                        />
+                        <BaseInputPhone
+                            className=" col-6 mt-3"
+                            label="contact_number"
+                            placeholder="contact_number"
+                            name="phone"
+                            formik={apply_form}
+                        />
+                    </Row>
+                    <Row>
+                        {user !== null ?
+                            <BaseSelect
+                                className="col-12 mt-3"
+                                label="highest_degree"
+                                placeholder="highest_degree"
+                                name="highest_degree"
+                                enumType={EducationLevel}
+                                labelPrefix="EducationLevel"
+                                formik={apply_form}
+                            /> : <BaseSelect
+                                className="col-12 mt-3"
+                                label="CDL_CLASS"
+                                name="license_type"
+                                placeholder="DriverLicenseType.NONE"
+                                labelPrefix="DriverLicenseType"
+                                required
+                                enumType={DriverLicenseType}
+                                formik={apply_form}
+                            />}
+                    </Row>
+                    {/* Files Start */}
+                    <Row>
+                        <Col sm="12" className="mt-3">
+                            <ViewCard
+                                title="DOCUMENTS"
+                                actions={<Button size='sm'
+                                    disabled={apply_form.values.documents?.length === Object.keys(ApplicantDocumentType).length}
+                                    onClick={() => apply_form.setValues({
+                                        ...apply_form.values,
+                                        documents: [
+                                            ...(apply_form.values.documents || []),
+                                            new DocumentEntity()
+                                        ]
+                                    })}><PlusCircle /> {t("ADD")}</Button>}
+                            >
+                                {!apply_form.values.documents?.length &&
+                                    t("NONE")
+                                }
+                                {
+                                    apply_form.values.documents?.length > 0 &&
+
+                                    <Table striped>
+                                        <thead>
+                                            <tr>
+                                                <th>{t("TYPE")}</th>
+                                                <th>{t("DOCUMENT")}</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {apply_form.values
+                                                .documents
+                                                .map((entity, i) => (
+                                                    <tr key={i}>
+                                                        <td>
+                                                            <BaseSelect
+                                                                name={`documents[${i}].type`}
+                                                                required
+                                                                placeholder="TYPE"
+                                                                labelPrefix="ApplicantDocumentType"
+                                                                enumType={ApplicantDocumentType}
+                                                                readOnly={!!entity.id && !entity.file_base64}
+                                                                formik={apply_form}
+                                                            />
+                                                        </td>
+                                                        <td>
+                                                            <FileInput
+                                                                name={`documents[${i}]`}
+                                                                required
+                                                                accept="application/pdf"
+                                                                formik={apply_form}
+                                                            />
+                                                        </td>
+                                                        <td>
+                                                            <button onClick={() => apply_form.setValues({
+                                                                ...apply_form.values,
+                                                                documents: apply_form.values.documents.filter((v, idx) => i != idx)
+                                                            })}><DashCircle color="red" /></button>
+                                                        </td>
+
+                                                    </tr>
+                                                ))}
+                                        </tbody>
+                                    </Table>
+                                }
+                            </ViewCard>
+                        </Col>
+                    </Row>
+                    {/* Files End */}
+
+                    <Row>
+                        <BaseInput
+                            className=" col-6 mt-3"
+                            label="years_cdl_driving_experience"
+                            placeholder="years_cdl_driving_experience"
+                            name="years_cdl_experience"
+                            type="int"
+                            min={0}
+                            formik={apply_form}
+                        />
+                        <BaseInput
+                            className=" col-6 mt-3"
+                            label={t("voilations_in_last_3_years")}
+                            placeholder={t("voilations_in_last_3_years")}
+                            name="accident_count"
+                            type="int"
+                            min={0}
+                            formik={apply_form}
+                        />
+                    </Row>
+
+                    <Row>
+                        <BaseCheck
+                            className="col-6 mt-4"
+                            label="can_pass_drug_and_alcohol_test"
+                            name="can_pass_drug_test"
+                            formik={apply_form}
+                        />
+                    </Row>
+                    <Row>
+                        <div className=" col-12">
+                            <p className='mx-3 mt-5'>{t('i_accept_{terms_and_condition}', { terms_and_condition: t('terms_and_condition') })}</p>
+                        </div>
+                    </Row>
+                </form>
+
+
+            </ViewModal>
+
+        </>
+    )
 }

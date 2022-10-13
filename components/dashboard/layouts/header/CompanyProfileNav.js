@@ -1,74 +1,66 @@
-import {
-    Navbar,
-    Collapse,
-    Nav,
-    NavItem,
-    NavbarBrand,
-    UncontrolledDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    Dropdown,
-    Button,
-} from "reactstrap";
-import React from "react";
-import Link from "next/link";
-import Logo from "../logo/Logo";
-import Image from "next/image";
+import { Dropdown } from "react-bootstrap";
+import React, { useEffect } from "react";
+import { useRouter } from "next/router";
 import LogoutButton from '../../../buttons/Logout';
-import useAuth from "../../../../hooks/useAuth";
-import { useRouter } from "next/router"
-import user1 from "../../../../public/dashboard/assets/images/users/user1.jpg";
+import { useTranslation } from "../../../../hooks/useTranslation";
+import { useAuth } from "../../../../hooks/useAuth";
+import Impersonate from "../../../impersonate/impersonate";
+import ChangeCompany from "../../../impersonate/change-company";
 
+export default function CompanyProfileNav() {
 
-export default function CompanyProfileNav(props) {
+    const { getUser } = useAuth();
+
+    const user = getUser();
+
+    const { t } = useTranslation();
+
+    const router = useRouter();
 
     const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
-    const toggle = () => setDropdownOpen((prevState) => !prevState);
+    const toggle = (e) => {
+        setDropdownOpen(!dropdownOpen);
+    }
 
+    const menu_options = [
+        {
+            href: "/dashboard/company/settings",
+            label: "COMPANY_SETTINGS"
+        },
+        {}, // divider
+        {
+            href: "/dashboard/company/settings/profile",
+            label: "MY_PROFILE"
+        },
+    ];
 
     return (
         <>
-            <div className="profile">
-                <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-                    <DropdownToggle>
+            <div className="profile profile-logo btn-group">
+                <ChangeCompany />
+                <Dropdown show={dropdownOpen} onToggle={toggle} >
+                    <Dropdown.Toggle variant="light">
+                        <img src="/dashboard/assets/images/users/user1.jpg"
+                            alt="profile"
+                            className="rounded-circle"
+                            width="30"
+                            height="30"
+                        />
+                        <span> {user.first_name}    {user.last_name}</span>
+                    </Dropdown.Toggle >
+                    <Dropdown.Menu>
+                        {menu_options.map((v, i) => {
+                            if (!v.label) return <Dropdown.Divider key={i} />
 
-                        <div style={{ lineHeight: "0px" }}>
-
-                            <Image
-                                src={user1}
-                                alt="profile"
-                                className="rounded-circle"
-                                width="30"
-                                height="30"
-
-                            />
-                            <span>{props.user.name || "DriverFly User"}.</span>
-                            <p></p>
-                        </div>
-
-                    </DropdownToggle >
-                    <DropdownMenu>
-                        <Link href="/dashboard/company/company-settings">
-                            <DropdownItem >Company Settings</DropdownItem>
-                        </Link>
-                        <Link href="#">
-                            <DropdownItem>Integrations</DropdownItem>
-                        </Link>
-                        <Link href="#">
-                            <DropdownItem>Billing & Subscriptions</DropdownItem>
-                        </Link>
-                        <Link href="/dashboard/company/company-profile">
-                            <DropdownItem>Company Profile</DropdownItem>
-                        </Link>
-                        <Link href="#">
-                            <DropdownItem>My Referrals</DropdownItem>
-                        </Link>
-                        <DropdownItem divider />
-                        <DropdownItem><LogoutButton /></DropdownItem>
-                    </DropdownMenu>
-
+                            return (
+                                <Dropdown.Item className="text-dark" key={i} onClick={e => router.push(v.href || "#")}>{t(v.label)}</Dropdown.Item>
+                            );
+                        })}
+                        <Dropdown.Divider />
+                        <Impersonate />
+                        <LogoutButton className="text-dark" />
+                    </Dropdown.Menu>
                 </Dropdown>
             </div>
         </>
