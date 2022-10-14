@@ -211,7 +211,6 @@ export default function ViewApplicant({ id }) {
                         <div style={{ float: "right", marginBottom: "10px" }} className="assign_unassign">
                             <ButtonGroup size="sm">
 
-
                                 {
                                     applicant?.assignedUser ?
                                         <Button type="button" variant='danger' onClick={onUnassignClick}>

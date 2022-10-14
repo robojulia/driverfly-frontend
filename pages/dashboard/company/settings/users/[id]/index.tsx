@@ -23,7 +23,7 @@ export default function ViewUser({ id }) {
 
     const { t } = useTranslation();
 
-    const { hasPermission, company } = useAuth();
+    const { company, hasPermission } = useAuth();
 
     const [user, setUser] = useState(new UserEntity());
 

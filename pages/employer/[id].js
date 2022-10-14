@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import { StarFill, Link45deg, PhoneFlip, Mailbox2, Bell, ArrowRight } from 'react-bootstrap-icons';
+import { Bell, ArrowRight } from 'react-bootstrap-icons';
 import { PublicLayout } from "../../components/layouts/PublicLayout";
 import CompanyInfo from '../../components/employer/CompanyInfo';
 import CompanyJob from '../../components/employer/CompanyJob';
-import ContactForm from '../../components/employer/ContactForm';
-import ReviewForm from '../../components/employer/ReviewForm';
 import CompanyApi from "../api/company"
 import { useTranslation } from '../../hooks/useTranslation';
 import JobApi from '../api/job';
 import Link from 'next/link';
 import CompanyPhoto from '../../components/jobs/company-photo';
+import FlagCompany from "../../components/flag/flag-a-company "
 
 export default function CompanyDetail({ company, jobs, jobCount }) {
 
@@ -17,6 +15,8 @@ export default function CompanyDetail({ company, jobs, jobCount }) {
 
   return (
     <>
+      <FlagCompany companyId={company.id} />
+
       <section className='bg-light py-4 pt-5'>
         <div className='container'>
           <div className='row'>
@@ -30,20 +30,8 @@ export default function CompanyDetail({ company, jobs, jobCount }) {
                     <div className='d-flex align-items-center'>
                       <h1 className='custom-trucker-title mx-2'>{company.name}</h1>
                       <span data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">
-                        {/* <StarFill color='#2da2af' /> */}
                       </span>
                     </div>
-                    {/* <div className='d-flex my-3'>
-                      <a>
-                        <Link45deg color='#2da2af' className='mx-1' /> https://ctrecruiting.com
-                      </a>
-                      <a className='ml-5'>
-                        <PhoneFlip color='#2da2af' className='mx-1' /> (213) 915-8025
-                      </a>
-                    </div> */}
-                    {/* <a>
-                      <Mailbox2 color='#2da2af' className='mx-1' />info@ctrecruiting.com
-                    </a> */}
                   </div>
                 </div>
               </div>
@@ -80,10 +68,8 @@ export default function CompanyDetail({ company, jobs, jobCount }) {
                 </Link>
               }
               <CompanyJob jobs={jobs} />
-              {/* <ReviewForm /> */}
             </div>
             <div className='col-md-4 col-sm-12 col-lg-4'>
-              {/* <ContactForm /> */}
             </div>
           </div>
         </div>

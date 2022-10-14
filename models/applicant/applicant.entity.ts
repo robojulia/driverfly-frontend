@@ -15,6 +15,7 @@ import { VehicleTransmissionType } from '../../enums/vehicles/vehicle-transmissi
 import { DriverEndorsement } from '../../enums/users/driver-endorsement.enum';
 import { ApplicantDocumentType } from '../../enums/applicants/applicant-document-type.enum';
 import { JobGeography } from '../../enums/jobs/job-geography.enum';
+import { ApplicantDacEntity } from './applicant-dac.entity';
 
 export class ApplicantEntity {
     id?: number;
@@ -79,6 +80,8 @@ export class ApplicantEntity {
     documents?: DocumentEntity[] = [];
     created_at?: string;
     last_updated_at?: string;
+    dac?: ApplicantDacEntity[];
+
 
     static yupSchema() {
         return yup.object({
