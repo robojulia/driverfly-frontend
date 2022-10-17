@@ -54,6 +54,7 @@
     "truck": "Truck",
     "type": "Type",
     "update_status": "Update Status",
+    "UPDATED_AT": "Updated at",
     "view": "View",
     "view_all_jobs": "View all jobs",
     "browse_job": "Browse Job",
@@ -243,6 +244,7 @@
     "voilations_in_last_3_years": "Number of moving violations in the last 3 years",
     "pdf": "PDF",
     "UNRECOGNIZED_DOCUMENT_TYPE": "UNRECOGNIZED DOCUMENT TYPE",
+    "DOCUMENT_TYPE": "Document type",
     "successfully_saved_information": "Successfully saved your information",
     "unable_to_save_information": "Unable to save your information",
     "above_21": "Above 21?",
@@ -747,6 +749,19 @@
     "APPLICATION_STATUS": "Application Status",
     "MY_APPLICATIONS": "My Applications",
     "NO_RECORDS_FOUND": "No Record Found",
+    "ApplicantDac": {
+        "PERIOD_OF_SERVICE": "period of service",
+        "EQUIPMENT_OPERATED": "equipment operated",
+        "LOADS_HAULED": "loads hauled",
+        "DRIVER_STATUS_AND_EXPERIENCE": "driving status and experience",
+        "REASON_FOR_LEAVING": "reason for leaving",
+        "REHIRE_ELIGIBILITY": "rehire eligibility",
+        "NUMBER_OF_ACCIDENTS": "number of accidents",
+        "ACCIDENT_DETAILS": "accident details",
+        "DRUG_AND_ALCOHOL_HISTORIES": "drug and alcohol histories",
+        "PRE_EMPLOYMENT_TEST_RESULTS": "pre employment test results",
+        "TRUCK_DRIVING_SCHOOL_PERFORMANCE_RECORDS": "truck driving school performance records"
+    },
     "ApplicantStatus": {
         "APPLIED": "Applied",
         "LEAD": "Lead",
@@ -1312,6 +1327,8 @@
     "inspection_notes": "Inspection Notes:",
     "vehicle_maintenance_tracking_info": "Vehicle Maintenance Tracking Info:",
     "view_applicant_profile": "View Applicant Profile",
+    "NOT_AVAILABLE": "Not Available",
+    "SUCCESSFULLY_UPDATED_DAC": "Successfully updated DAC",
     "FLAG_INAPPROPRIATE": "Flag Inappropriate",
     "INAPPROPRIATE_JOB": "Inappropriate Job",
     "FLAG_INAPPROPRIATE_JOB": "Flag Job as Inappropriate ",
@@ -1319,5 +1336,6 @@
     "THANKS_FOR_KEEPING_A_WATCHFUL_EYE": "Thanks for keeping a watchful eye! Our team is on it and will resolve shortly.",
     "FLAG_INAPPROPRIATE_APPLICANT": "Flag Inappropriate Applicant",
     "INAPPROPRIATE_APPLICANT": "Inappropriate Applicant",
-    "THANKS_FOR_KEEPING_A_WATCHFUL_EYE_TO_OUR_SAFETY": "Thanks for keeping a watchful eye! This matter has been escalated to our safety team accordingly."
+    "THANKS_FOR_KEEPING_A_WATCHFUL_EYE_TO_OUR_SAFETY": "Thanks for keeping a watchful eye! This matter has been escalated to our safety team accordingly.",
+    "ACCOUNT_NOT_ACTIVATED": "Your account is not active."
 }

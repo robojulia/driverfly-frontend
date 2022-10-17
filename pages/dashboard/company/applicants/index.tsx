@@ -341,7 +341,7 @@ function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
             // since violation count isn't specific
             // we just want to pull the max number
             // and check against that
-            const mvr = job.mvr_requirements.reduce((p, c) => {
+            const mvr = job.mvr_requirements?.reduce((p, c) => {
                 if (p.max_count >= c.max_count) return p;
 
                 return c;
@@ -359,7 +359,7 @@ function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
         results.qualification_fail_reason.push("CANNOT_PASS_DRUG_TEST");
     }
 
-    job.required_skills.forEach(skill => {
+    job.required_skills?.forEach(skill => {
         // cannot process OTHER type
         if (skill.type !== JobEquipmentType.OTHER) {
             const experience = applicant.equipment_experience.find(v => v.type === skill.type);

@@ -81,16 +81,16 @@ export class JobEntity {
     safety_requirements_other?: string;
     is_orientation_needed: boolean = true;
     orientation_location: LocationEntity = new LocationEntity();
-    orientation_start_at?: Date;
-    orientation_end_at?: Date;
+    orientation_start_at?: string | Date;
+    orientation_end_at?: string | Date;
     created_at?: string | Date;
     applicantsCount?: number;
     static yupSchema() {
         return yup.object({
             is_orientation_needed: yup.boolean().default(false),
             title: yup.string().required().max(100).nullable(),
-            location: BasicEntity.yupSchema(),
-            orientation_location: BasicEntity.yupSchema(),
+            location: LocationEntity.yupConnectSchema(true),
+            orientation_location: LocationEntity.yupConnectSchema(),
             orientation_start_at: yup.date().nullable(),
             orientation_end_at: yup.date().nullable(),
             description: yup.string().max(1500).required().nullable(),
