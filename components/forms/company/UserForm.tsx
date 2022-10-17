@@ -11,6 +11,8 @@ import { toast } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { BaseFormProps } from "./BaseFormProps";
 import { useEffect } from "react";
+import { useAuth } from "../../../hooks/useAuth";
+import { RoleSelect } from "../entities/RoleSelect";
 
 
 export interface UserFormProps extends BaseFormProps<UserEntity> {
@@ -19,6 +21,8 @@ export interface UserFormProps extends BaseFormProps<UserEntity> {
 export function UserForm(props: UserFormProps) {
     const { t } = useTranslation();
     let { className, entity, onSaveComplete, onSaveError } = props;
+
+    const { company } = useAuth();
 
     const form = useFormik({
         initialValues: new UserEntity(),
@@ -48,7 +52,7 @@ export function UserForm(props: UserFormProps) {
     useEffect(() => {
         if (entity && !form.dirty)
             form.setValues(entity);
-    }, [ entity ])
+    }, [ entity ]);
 
     return (
         <EntityForm
@@ -95,6 +99,15 @@ export function UserForm(props: UserFormProps) {
                     placeholder
                     formik={form}
                 />
+                <RoleSelect
+                    className="col-12 mt-1"
+                    label="ROLE"
+                    name="roles[0]"
+                    required
+                    placeholder
+                    formik={form}
+                    />
+
                 {!entity?.id &&
                     <BaseInput
                         className="col-12 mt-1"

@@ -4,8 +4,9 @@ import { useTranslation } from "../../hooks/useTranslation";
 import ShowEnumFromString from "../enum-filters/show-enum-from-string";
 import ShowFormattedDate from "../jobs/show-formatted-date";
 import { buildAddress } from "../../utils/common";
+import { JobDetailProps } from "../../types/job/job-detail-props.type";
 
-export default function JobDescription({ job }) {
+export default function JobDescription({ job }:JobDetailProps) {
     const { t } = useTranslation();
 
     return (
@@ -48,7 +49,7 @@ export default function JobDescription({ job }) {
                         </li>
                     </ul>
                 </div>}
-                {job.orientation &&
+                {job.is_orientation_needed &&
                     <div className=" p-3 mb-5  rounded mt-3">
                         <h3 className="border-bottom py-1 mb-4">{t('ORIENTATION')}</h3>
                         <ul className="p-0">
@@ -59,7 +60,7 @@ export default function JobDescription({ job }) {
                                 <div className="col-md-6">
                                     <ShowFormattedDate
                                         hideTime
-                                        date={job.orientation.start_datetime} />
+                                        date={job.orientation_start_at} />
                                 </div>
                             </li>
                             <li className="row px-0">
@@ -69,7 +70,7 @@ export default function JobDescription({ job }) {
                                 <div className="col-md-6">
                                     <ShowFormattedDate
                                         hideTime
-                                        date={job.orientation.end_datetime} />
+                                        date={job.orientation_end_at} />
                                 </div>
                             </li>
                             <li className="row px-0">
@@ -77,7 +78,7 @@ export default function JobDescription({ job }) {
                                     { t('location') }
                                 </div>
                                 <div className="col-md-6">
-                                    {buildAddress(job.orientation.location)}
+                                    {buildAddress(job.orientation_location)}
                                 </div>
                             </li>
                         </ul>
