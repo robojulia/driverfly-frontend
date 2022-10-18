@@ -9,12 +9,11 @@ import ViewModal from "../viewDetails/viewModal";
 import { FlagFill, Link } from "react-bootstrap-icons";
 import { useState } from "react";
 import BaseSelect from "../forms/BaseSelect";
-import { FlagInappropriateJob } from "../../enums/support/flag-inappropriate-job.enum";
+import { InappropriateCompanyFlag } from "../../enums/support/inappropriate-company-flag.enum";
 import SupportApi from "../../pages/api/support";
-import { FlagInappropriateJobDto } from "../../models/support/flag-inappropriate-job.dto";
+import { FlagInappropriateCompanyDto } from "../../models/support/flag-inappropriate-company.dto";
 
 export default function FlagCompany({ companyId }) {
-
     const { user } = useAuth();
     const { t } = useTranslation();
     const supportApi = new SupportApi();
@@ -35,14 +34,12 @@ export default function FlagCompany({ companyId }) {
             openFlagCompanyModel()
         }
     }
-
     const form = useFormik({
-        initialValues: new FlagInappropriateJobDto({ companyId }),
-        validationSchema: FlagInappropriateJobDto.yupSchema(),
+        initialValues: new FlagInappropriateCompanyDto( companyId ),
+        validationSchema: FlagInappropriateCompanyDto.yupSchema(),
         onSubmit: async (dto, { resetForm }) => {
-
             try {
-                const data = await supportApi.FlagInappropriateJob(dto);
+                const data = await supportApi.FlagInappropriateCompany(dto);
                 toast.success(t("THANKS_FOR_KEEPING_A_WATCHFUL_EYE"));
                 closeFlagCompanyModel()
             }
@@ -79,12 +76,12 @@ export default function FlagCompany({ companyId }) {
                                 name="type"
                                 required
                                 placeholder
-                                labelPrefix="FlagInappropriateJob"
-                                enumType={FlagInappropriateJob}
+                                labelPrefix="InappropriateCompanyFlag"
+                                enumType={InappropriateCompanyFlag}
                                 formik={form}
                             />
                             {
-                                form.values.type === FlagInappropriateJob.OTHER &&
+                                form.values.type === InappropriateCompanyFlag.OTHER &&
                                 <BaseInput
                                     className="col-12 mt-3"
                                     label="other"

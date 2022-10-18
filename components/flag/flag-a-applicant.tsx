@@ -61,7 +61,7 @@ export default function FlagApplicant({ applicantId }) {
                             name="type"
                             required
                             placeholder
-                            labelPrefix="FlagInappropriateApplicant"
+                            labelPrefix="InappropriateApplicantFlag"
                             enumType={InappropriateApplicantFlag}
                             formik={form}
                         />
