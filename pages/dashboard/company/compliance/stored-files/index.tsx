@@ -1,7 +1,7 @@
 import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
 import { useState } from "react";
 import React from "react";
-import { Plus } from 'react-bootstrap-icons';
+import { CloudArrowDown, Download, Plus, Send } from 'react-bootstrap-icons';
 import PageLayout from "../../../../../components/layouts/page/PageLayout";
 import { useTranslation } from "../../../../../hooks/useTranslation";
 import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
@@ -23,6 +23,8 @@ import ShowFormattedDate from "../../../../../components/jobs/show-formatted-dat
 import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
 import ApplicantApi from "../../../../api/applicant";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
+import ViewPdf from "../../../../../components/viewDetails/viewPdf";
+import DocumentApi from "../../../../api/document";
 
 export default function StoredFiles() {
 
@@ -44,8 +46,6 @@ export default function StoredFiles() {
     const [files, setFiles] = useState<DocumentEntity[]>([])
     const [applicants, setApplicants] = useState<ApplicantEntity[]>([])
 
-
-
     useEffectAsync(async () => {
 
         const v = await complianceApi.filesList();
@@ -58,12 +58,6 @@ export default function StoredFiles() {
         console.log("unloading page...")
     });
 
-
-    // To Do
-    // const can = {
-    //     editJob: hasPermission("CanUpdateJob"),
-    //     deleteJob: hasPermission("CanDeleteJob"),
-    // };
 
     const form = useFormik({
         initialValues: new StoredFileDto(),
@@ -89,7 +83,7 @@ export default function StoredFiles() {
     const sendEmail = async (applicant: ApplicantEntity): Promise<void> => {
         try {
             if (documentId)
-                await complianceApi.sendComplianceFile(documentId, applicant.id)
+                await complianceApi.sendComplianceFile(applicant.id, documentId)
                     .then(res => {
                         toast.success(t('DOCUMENT_SENT_SUCCESS_MESSAGE'))
                         setTimeout(() => {
@@ -106,7 +100,20 @@ export default function StoredFiles() {
     //     console.log("form", form.values)
     //     console.log("form", form.errors)
     // }, [form])
+    const [pdf, setPdf] = useState({});
 
+    const viewDocumentClick = async (id, name) => {
+        const api = new DocumentApi();
+
+        const document = await api.getSignedUrl(id);
+
+        if (document) {
+            setPdf({
+                name: `${t(name)} (${document.name})`,
+                url: document.path
+            });
+        }
+    }
     return (
         <PageLayout
             title="STORED_FILES"
@@ -141,7 +148,7 @@ export default function StoredFiles() {
                     },
                     {
                         id: "type",
-                        name: "CATEGORY",
+                        name: "type",
                         cell: file =>
                         (<ShowEnumFromString
                             popover
@@ -160,8 +167,8 @@ export default function StoredFiles() {
                     {
                         cell: (file) => (
                             <>
-                                <button type="button" className="theme-secondary-btn mr-4 p-2" onClick={() => setDocumentId(file.id)}>{t('SEND')}</button>
-                                <button type="button" className="btn theme-primary-btn download_file_btn"> <a href={file.path} download target="_blank">{t('DOWNLOAD')}</a></button>
+                                <button type="button" className="theme-primary-btn mr-2 px-4 py-2" onClick={() => setDocumentId(file.id)}><Send /></button>
+                                <a onClick={() => viewDocumentClick(file.id, file.name)} href="#" role="button" className="theme-secondary-btn mr-2 px-4 py-2"><CloudArrowDown /></a>
                             </>
                         ),
                     },
@@ -170,6 +177,7 @@ export default function StoredFiles() {
                 ]}
                 items={files}
             />
+            <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
 
             {/* Model for Upload file */}
 
@@ -250,7 +258,7 @@ export default function StoredFiles() {
                         {
                             cell: (applicant) => (
                                 <>
-                                    <button type="button" onClick={() => sendEmail(applicant)} className="theme-secondary-btn mr-4 p-2">{t('SEND')}</button>
+                                    <Button type="button" disabled={form.isSubmitting || !form.isValid || form.isValidating} onClick={() => sendEmail(applicant)} className="theme-secondary-btn mr-2 px-4 py-1"><Send /></Button>
                                 </>
                             ),
                         },

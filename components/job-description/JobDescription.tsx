@@ -49,7 +49,7 @@ export default function JobDescription({ job }:JobDetailProps) {
                         </li>
                     </ul>
                 </div>}
-                {job.orientation &&
+                {job.is_orientation_needed &&
                     <div className=" p-3 mb-5  rounded mt-3">
                         <h3 className="border-bottom py-1 mb-4">{t('ORIENTATION')}</h3>
                         <ul className="p-0">
@@ -60,7 +60,7 @@ export default function JobDescription({ job }:JobDetailProps) {
                                 <div className="col-md-6">
                                     <ShowFormattedDate
                                         hideTime
-                                        date={job.orientation.start_datetime} />
+                                        date={job.orientation_start_at} />
                                 </div>
                             </li>
                             <li className="row px-0">
@@ -70,7 +70,7 @@ export default function JobDescription({ job }:JobDetailProps) {
                                 <div className="col-md-6">
                                     <ShowFormattedDate
                                         hideTime
-                                        date={job.orientation.end_datetime} />
+                                        date={job.orientation_end_at} />
                                 </div>
                             </li>
                             <li className="row px-0">
@@ -78,7 +78,7 @@ export default function JobDescription({ job }:JobDetailProps) {
                                     { t('location') }
                                 </div>
                                 <div className="col-md-6">
-                                    {buildAddress(job.orientation.location)}
+                                    {buildAddress(job.orientation_location)}
                                 </div>
                             </li>
                         </ul>
