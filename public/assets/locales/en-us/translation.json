@@ -1028,7 +1028,7 @@
         "SAFETY": "Safety",
         "OTHER": "Others"
     },
-    "FlagInappropriateJob": {
+    "InappropriateJobFlag": {
         "INAPPROPRIATE_OR_INACCURATE_PHOTOS": "Inappropriate or inaccurate photo(s)",
         "INAPPROPRIATE_WRITTEN_CONTENT": "Inappropriate written content",
         "INAPPROPRIATE_JOB_DESCRIPTION_OR_COMPANY": "Inaccurate job description or company",

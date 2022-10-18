@@ -15,7 +15,7 @@ export default class SupportApi extends BaseApi {
     }
 
     async FlagInappropriateJob(entity: FlagInappropriateJobDto): Promise<FlagInappropriateJobDto> {
-        const { data } = await this.post(`${this.baseUrl}/inappropriate-flag`, entity);
+        const { data } = await this.post(`${this.baseUrl}/flag-inappropriate-job`, entity);
         return data;
     }
 

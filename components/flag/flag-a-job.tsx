@@ -10,7 +10,7 @@ import ViewModal from "../viewDetails/viewModal";
 import { FlagFill, Link } from "react-bootstrap-icons";
 import React, { useEffect, useState } from "react";
 import BaseSelect from "../forms/BaseSelect";
-import { FlagInappropriateJob } from "../../enums/jobs/flag-inappropriate-job.enum";
+import { InappropriateJobFlag } from "../../enums/support/inappropriate-job-flag.enum";
 import SupportApi from "../../pages/api/support";
 
 export default function FlagJob({ jobId }) {
@@ -38,7 +38,7 @@ export default function FlagJob({ jobId }) {
     }
 
     const form = useFormik({
-        initialValues: new FlagInappropriateJobDto({ jobId }),
+        initialValues: new FlagInappropriateJobDto(jobId),
         validationSchema: FlagInappropriateJobDto.yupSchema(),
         onSubmit: async (dto, { resetForm }) => {
 
@@ -81,12 +81,12 @@ export default function FlagJob({ jobId }) {
                                 name="type"
                                 required
                                 placeholder
-                                labelPrefix="FlagInappropriateJob"
-                                enumType={FlagInappropriateJob}
+                                labelPrefix="InappropriateJobFlag"
+                                enumType={InappropriateJobFlag}
                                 formik={form}
                             />
                             {
-                                form.values.type === FlagInappropriateJob.OTHER &&
+                                form.values.type === InappropriateJobFlag.OTHER &&
                                 <BaseInput
                                     className="col-12 mt-3"
                                     label="other"
