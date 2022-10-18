@@ -9,7 +9,7 @@ import ViewModal from "../viewDetails/viewModal";
 import { FlagFill, Link } from "react-bootstrap-icons";
 import { useState } from "react";
 import BaseSelect from "../forms/BaseSelect";
-import { FlagInappropriateJob } from "../../enums/jobs/flag-inappropriate-job.enum";
+import { FlagInappropriateJob } from "../../enums/support/flag-inappropriate-job.enum";
 import SupportApi from "../../pages/api/support";
 import { FlagInappropriateJobDto } from "../../models/support/flag-inappropriate-job.dto";
 

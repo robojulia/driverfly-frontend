@@ -1034,7 +1034,7 @@
         "INAPPROPRIATE_JOB_DESCRIPTION_OR_COMPANY": "Inaccurate job description or company",
         "OTHER": "Other"
     },
-    "FlagInappropriateApplicant": {
+    "InappropriateApplicantFlag": {
         "DRIVER_IS_NOT_WHO_THEY_SAY_THEY_ARE": "Driver Is not who they say they are",
         "DRIVER_IS_A_THREAT_TO_THEMSELVES_OR_OTHER": "Driver is a threat to themselves or others",
         "DRIVER_IS_BEHAVING_INAPPROPRIATELY": "Driver is behaving inappropriately",

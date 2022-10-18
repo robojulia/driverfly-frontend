@@ -9,9 +9,9 @@ import ViewModal from "../viewDetails/viewModal";
 import { FlagFill } from "react-bootstrap-icons";
 import { useState } from "react";
 import BaseSelect from "../forms/BaseSelect";
-import { FlagInappropriateApplicantDto } from "../../models/flag-inappropriate-applicant/flag-inappropriate-applicant.dto";
-import { FlagInappropriateApplicant } from "../../enums/jobs/flag-inappropriate-applicant.enum";
+import { FlagInappropriateApplicantDto } from "../../models/support/flag-inappropriate-applicant.dto";
 import SupportApi from "../../pages/api/support";
+import { InappropriateApplicantFlag } from "../../enums/support/inappropriate-applicant-flag.enum"
 
 export default function FlagApplicant({ applicantId }) {
 
@@ -30,7 +30,7 @@ export default function FlagApplicant({ applicantId }) {
         validationSchema: FlagInappropriateApplicantDto.yupSchema(),
         onSubmit: async (dto, { resetForm }) => {
             try {
-                await supportApi.FlagInappropriateApplicantApi(dto);
+                await supportApi.FlagInappropriateApplicant(dto);
                 toast.success(t("THANKS_FOR_KEEPING_A_WATCHFUL_EYE_TO_OUR_SAFETY"));
                 closeFlagApplicantModel()
             }
@@ -62,11 +62,11 @@ export default function FlagApplicant({ applicantId }) {
                             required
                             placeholder
                             labelPrefix="FlagInappropriateApplicant"
-                            enumType={FlagInappropriateApplicant}
+                            enumType={InappropriateApplicantFlag}
                             formik={form}
                         />
                         {
-                            form.values.type === FlagInappropriateApplicant.OTHER &&
+                            form.values.type === InappropriateApplicantFlag.OTHER &&
                             <BaseInput
                                 className="col-12 mt-3"
                                 label="other"
@@ -79,7 +79,9 @@ export default function FlagApplicant({ applicantId }) {
                     </Row>
                     <Row>
                         <Col className="text-end my-3">
-                            <Button disabled={form.values.type == null} type="submit">{t("submit")}</Button>
+                            <Button
+                                disabled={form.isSubmitting || !form.isValid || form.isValidating}
+                                type="submit">{t("submit")}</Button>
                         </Col>
                     </Row>
                 </form>
