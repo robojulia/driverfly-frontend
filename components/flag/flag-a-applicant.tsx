@@ -81,7 +81,8 @@ export default function FlagApplicant({ applicantId }) {
                         <Col className="text-end my-3">
                             <Button
                                 disabled={form.isSubmitting || !form.isValid || form.isValidating}
-                                type="submit">{t("submit")}</Button>
+                                type="submit">{t("submit")}
+                            </Button>
                         </Col>
                     </Row>
                 </form>

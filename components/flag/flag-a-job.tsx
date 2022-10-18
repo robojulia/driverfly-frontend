@@ -99,7 +99,10 @@ export default function FlagJob({ jobId }) {
                         </Row>
                         <Row>
                             <Col className="text-end my-3">
-                                <Button disabled={form.values.type == null} type="submit">{t("submit")}</Button>
+                                <Button
+                                    disabled={form.isSubmitting || !form.isValid || form.isValidating}
+                                    type="submit">{t("submit")}
+                                </Button>
                             </Col>
                         </Row>
                     </form>

@@ -35,7 +35,7 @@ export default function FlagCompany({ companyId }) {
         }
     }
     const form = useFormik({
-        initialValues: new FlagInappropriateCompanyDto( companyId ),
+        initialValues: new FlagInappropriateCompanyDto(companyId),
         validationSchema: FlagInappropriateCompanyDto.yupSchema(),
         onSubmit: async (dto, { resetForm }) => {
             try {
@@ -94,7 +94,10 @@ export default function FlagCompany({ companyId }) {
                         </Row>
                         <Row>
                             <Col className="text-end my-3">
-                                <Button disabled={form.values.type == null} type="submit">{t("submit")}</Button>
+                                <Button
+                                    disabled={form.isSubmitting || !form.isValid || form.isValidating}
+                                    type="submit">{t("submit")}
+                                </Button>
                             </Col>
                         </Row>
                     </form>
