@@ -1240,9 +1240,9 @@ img.who-we-img.img-fluid {
 }
 
 .hero-sec {
-    background: linear-gradient(to bottom, #7a7a7a 0%, rgb(0 123 255 / 25%) 100%), url(/img/truck-on-windy-road-hero-min.jpg);
+    background: linear-gradient(180deg, #7a7a7a 0, rgba(0, 123, 255, .25)), url(/img/banner.png);
     background-color: #9f9b9b91;
-    background-position: center;
+    background-position: 50%;
     background-repeat: no-repeat;
     background-size: cover;
     background-blend-mode: multiply;
