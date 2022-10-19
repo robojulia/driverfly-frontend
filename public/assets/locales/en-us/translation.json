@@ -54,6 +54,7 @@
     "truck": "Truck",
     "type": "Type",
     "update_status": "Update Status",
+    "UPDATED_AT": "Updated at",
     "view": "View",
     "view_all_jobs": "View all jobs",
     "browse_job": "Browse Job",
@@ -243,6 +244,7 @@
     "voilations_in_last_3_years": "Number of moving violations in the last 3 years",
     "pdf": "PDF",
     "UNRECOGNIZED_DOCUMENT_TYPE": "UNRECOGNIZED DOCUMENT TYPE",
+    "DOCUMENT_TYPE": "Document type",
     "successfully_saved_information": "Successfully saved your information",
     "unable_to_save_information": "Unable to save your information",
     "above_21": "Above 21?",
@@ -747,6 +749,19 @@
     "APPLICATION_STATUS": "Application Status",
     "MY_APPLICATIONS": "My Applications",
     "NO_RECORDS_FOUND": "No Record Found",
+    "ApplicantDac": {
+        "PERIOD_OF_SERVICE": "period of service",
+        "EQUIPMENT_OPERATED": "equipment operated",
+        "LOADS_HAULED": "loads hauled",
+        "DRIVER_STATUS_AND_EXPERIENCE": "driving status and experience",
+        "REASON_FOR_LEAVING": "reason for leaving",
+        "REHIRE_ELIGIBILITY": "rehire eligibility",
+        "NUMBER_OF_ACCIDENTS": "number of accidents",
+        "ACCIDENT_DETAILS": "accident details",
+        "DRUG_AND_ALCOHOL_HISTORIES": "drug and alcohol histories",
+        "PRE_EMPLOYMENT_TEST_RESULTS": "pre employment test results",
+        "TRUCK_DRIVING_SCHOOL_PERFORMANCE_RECORDS": "truck driving school performance records"
+    },
     "ApplicantStatus": {
         "APPLIED": "Applied",
         "LEAD": "Lead",
@@ -933,7 +948,8 @@
     "yup": {
         "type": {
             "date": "date, it must be in the format MM/dd/yyyy (eg. 01/12/2014)",
-            "number": "number"
+            "number": "number",
+            "object": "value"
         },
         "string": {
             "length": "Text must be {{length}} characters",
@@ -1012,13 +1028,19 @@
         "SAFETY": "Safety",
         "OTHER": "Others"
     },
-    "FlagInappropriateJob": {
+    "InappropriateCompanyFlag": {
         "INAPPROPRIATE_OR_INACCURATE_PHOTOS": "Inappropriate or inaccurate photo(s)",
         "INAPPROPRIATE_WRITTEN_CONTENT": "Inappropriate written content",
         "INAPPROPRIATE_JOB_DESCRIPTION_OR_COMPANY": "Inaccurate job description or company",
         "OTHER": "Other"
     },
-    "FlagInappropriateApplicant": {
+    "InappropriateJobFlag": {
+        "INAPPROPRIATE_OR_INACCURATE_PHOTOS": "Inappropriate or inaccurate photo(s)",
+        "INAPPROPRIATE_WRITTEN_CONTENT": "Inappropriate written content",
+        "INAPPROPRIATE_JOB_DESCRIPTION_OR_COMPANY": "Inaccurate job description or company",
+        "OTHER": "Other"
+    },
+    "InappropriateApplicantFlag": {
         "DRIVER_IS_NOT_WHO_THEY_SAY_THEY_ARE": "Driver Is not who they say they are",
         "DRIVER_IS_A_THREAT_TO_THEMSELVES_OR_OTHER": "Driver is a threat to themselves or others",
         "DRIVER_IS_BEHAVING_INAPPROPRIATELY": "Driver is behaving inappropriately",
@@ -1275,6 +1297,7 @@
     "UNABLE_TO_SEND_EMAIL": "Unable to send email",
     "DRIVERFLY": "DriverFly",
     "ALREADY_IN_CONVERSATION": "Driver is already in your Conversation",
+    "PLEASE_LOGIN_TO_INAPPROPRIATE_JOB_OR_COMPANY":"Please login to inappropriate job or company profile.",
     "utm_source": {
         "ON_MY_OWN": "On my own",
         "DRIVERFLY_REPRESENTATIVE": "Referral Code",
@@ -1310,9 +1333,12 @@
     "inspection_notes": "Inspection Notes:",
     "vehicle_maintenance_tracking_info": "Vehicle Maintenance Tracking Info:",
     "view_applicant_profile": "View Applicant Profile",
+    "NOT_AVAILABLE": "Not Available",
+    "SUCCESSFULLY_UPDATED_DAC": "Successfully updated DAC",
     "FLAG_INAPPROPRIATE": "Flag Inappropriate",
     "INAPPROPRIATE_JOB": "Inappropriate Job",
     "FLAG_INAPPROPRIATE_JOB": "Flag Job as Inappropriate ",
+    "FLAG_INAPPROPRIATE_COMPANY": "Flag Company as Inappropriate ",
     "THANKS_FOR_KEEPING_A_WATCHFUL_EYE": "Thanks for keeping a watchful eye! Our team is on it and will resolve shortly.",
     "FLAG_INAPPROPRIATE_APPLICANT": "Flag Inappropriate Applicant",
     "INAPPROPRIATE_APPLICANT": "Inappropriate Applicant",

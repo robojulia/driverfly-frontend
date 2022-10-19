@@ -11,7 +11,7 @@ import { ViewApplicantDetailProps } from '../../types/applicant/view-application
 export default function ViewApplicantDetail({ applicant, protectedFields }: ViewApplicantDetailProps) {
 
     const { t } = useTranslation();
-    
+
     return (
             <ViewCard title={`${applicant?.first_name} ${applicant?.last_name}`}>
                 <Row>

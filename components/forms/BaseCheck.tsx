@@ -7,10 +7,11 @@ export interface BaseCheckProps extends BaseControlProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   readOnly?: boolean;
+  disabled?: boolean;
 
 }
 
-export default function BaseCheck ( { formik, required, className, label, checked, onChange, handleBlur, readOnly, name, touched, error, }: BaseCheckProps ) {
+export default function BaseCheck({ formik, required, className, label, checked, onChange, handleBlur, readOnly, name, touched, error, disabled }: BaseCheckProps) {
   const { t } = useTranslation();
 
   if (formik) {
@@ -42,13 +43,14 @@ export default function BaseCheck ( { formik, required, className, label, checke
         }
       });
     }
-    
+
   };
 
   return (
     <div className={className}>
       <div className='form-switch'>
         <input
+          disabled={disabled}
           id={name}
           type="checkbox"
           checked={checked}
@@ -56,9 +58,9 @@ export default function BaseCheck ( { formik, required, className, label, checke
           readOnly={readOnly}
           name={name}
           role="switch"
-          className={`form-check-input ${error ? "is-invalid" : ""}`} 
+          className={`form-check-input ${error ? "is-invalid" : ""}`}
         />
-        {label && <label htmlFor={name} style={{ marginLeft: ".5em"}} className="form-check-label">{t(label)}{required ? "*" : ""}</label>}
+        {label && <label htmlFor={name} style={{ marginLeft: ".5em" }} className="form-check-label">{t(label)}{required ? "*" : ""}</label>}
 
       </div>
       {touched && error && (typeof error === "string") ? <span className="text-danger small">{t(error)}</span> : null}

@@ -407,11 +407,17 @@ export function JobForm(props: JobFormProps) {
         try {
             const jobApi = new JobApi();
             let job = null;
+            const dto = {
+                ...form.values,
+            };
+            if (dto.expiry_date) dto.expiry_date = new Date(dto.expiry_date).toISOString();
+            if (dto.orientation_start_at) dto.orientation_start_at = new Date(dto.orientation_start_at).toISOString();
+            if (dto.orientation_end_at) dto.orientation_end_at = new Date(dto.orientation_end_at).toISOString();
             if (entity?.id) {
-                job = await jobApi.update(entity.id, form.values);
+                job = await jobApi.update(entity.id, dto);
             }
             else {
-                job = await jobApi.create(form.values);
+                job = await jobApi.create(dto);
             }
 
             setShowConfirmationModal(false);
@@ -1222,7 +1228,7 @@ export function JobForm(props: JobFormProps) {
                                                     <BaseSelect
                                                         className="col-12"
                                                         label="location"
-                                                        name="orientation.location.id"
+                                                        name="orientation_location.id"
                                                         required
                                                         placeholder
                                                         formik={form}
@@ -1236,7 +1242,7 @@ export function JobForm(props: JobFormProps) {
                                                     <BaseInput
                                                         className="col-6"
                                                         label="START_DATE"
-                                                        name="orientation.start_datetime"
+                                                        name="orientation_start_at"
                                                         placeholder
                                                         type="date"
                                                         min={new Date().toISOString().split("T")[0]}
@@ -1245,7 +1251,7 @@ export function JobForm(props: JobFormProps) {
                                                     <BaseInput
                                                         className="col-6"
                                                         label="END_DATE"
-                                                        name="orientation.end_datetime"
+                                                        name="orientation_end_at"
                                                         placeholder="END_DATE"
                                                         type="date"
                                                         min={new Date().toISOString().split("T")[0]}
