@@ -917,7 +917,6 @@ export function JobForm(props: JobFormProps) {
                                                             placeholder="5"
                                                             name={`required_skills.${i}.years`}
                                                             required
-                                                            min="1"
                                                             type="int"
                                                             append={(<InputGroup.Text>yrs</InputGroup.Text>)}
                                                             formik={form}
@@ -927,7 +926,6 @@ export function JobForm(props: JobFormProps) {
                                                             placeholder="5"
                                                             name={`required_skills.${i}.months`}
                                                             required
-                                                            min="1"
                                                             max="11"
                                                             type="int"
                                                             append={(<InputGroup.Text>mos</InputGroup.Text>)}
