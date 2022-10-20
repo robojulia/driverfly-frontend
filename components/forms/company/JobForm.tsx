@@ -435,11 +435,10 @@ export function JobForm(props: JobFormProps) {
         }
     }
 
-    useEffect(() => {
-        console.log('errors', form.errors)
-        console.log('values', form.values)
-        console.log('isValid', form.isValid)
-    }, [form, form.values, form.errors]);
+    // useEffect(() => {
+    //     console.log('errors', form.errors)
+    //     console.log('values', form.values)
+    // }, [form.values, form.errors]);
 
 
     return (
