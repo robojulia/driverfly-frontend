@@ -435,10 +435,11 @@ export function JobForm(props: JobFormProps) {
         }
     }
 
-    // useEffect(() => {
-    //     console.log('errors', form.errors)
-    //     console.log('values', form.values)
-    // }, [form.values, form.errors]);
+    useEffect(() => {
+        console.log('errors', form.errors)
+        console.log('values', form.values)
+        console.log('isValid', form.isValid)
+    }, [form, form.values, form.errors]);
 
 
     return (
@@ -917,7 +918,6 @@ export function JobForm(props: JobFormProps) {
                                                             placeholder="5"
                                                             name={`required_skills.${i}.years`}
                                                             required
-                                                            min="1"
                                                             type="int"
                                                             append={(<InputGroup.Text>yrs</InputGroup.Text>)}
                                                             formik={form}
@@ -927,7 +927,6 @@ export function JobForm(props: JobFormProps) {
                                                             placeholder="5"
                                                             name={`required_skills.${i}.months`}
                                                             required
-                                                            min="1"
                                                             max="11"
                                                             type="int"
                                                             append={(<InputGroup.Text>mos</InputGroup.Text>)}
