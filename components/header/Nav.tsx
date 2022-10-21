@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { useAuth } from '../../hooks/useAuth';
-import LoginButton from '../../components/buttons/Login';
-import SignupButton from '../../components/buttons/Signup';
-import LogoutButton from '../../components/buttons/Logout';
+import LoginButton from '../buttons/Login';
+import SignupButton from '../buttons/Signup';
+import LogoutButton from '../buttons/Logout';
 import DashboardButton from "../buttons/DashboardButton";
 import { useTranslation } from "../../hooks/useTranslation";
 import { Bell, List } from 'react-bootstrap-icons';

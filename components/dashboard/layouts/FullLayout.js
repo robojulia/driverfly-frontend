@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Container } from "reactstrap";
-import Header from "./header/Header";
+import Header from "./header/Header.tsx";
 import Sidebar from "./sidebars/Sidebar";
 import Head from "next/head";
 import { useRouter } from 'next/router';

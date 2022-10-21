@@ -8,7 +8,7 @@ import SaveJob from '../dashboard/driver/save-job';
 import JobDescription from '../job-description/JobDescription';
 import JonInformation from '../job-information-sidebar/JobInformation';
 import SocilShare from '../share-link/ShareLink';
-import CompanyPhoto from './company-photo';
+import CompanyPhoto from './company-photo.js';
 import ShowFormattedDate from './show-formatted-date';
 import JobVehicles from './job-vehicles';
 import React from 'react';

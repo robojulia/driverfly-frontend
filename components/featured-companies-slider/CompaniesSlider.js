@@ -2,7 +2,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import CompanyApi from '../../pages/api/company';
 import { useEffect, useState } from 'react'
-import CompanyPhoto from "../jobs/company-photo"
+import CompanyPhoto from "../jobs/company-photo.js"
 import CompanyJobsCount from '../employer/company-jobs-count';
 import { useTranslation } from '../../hooks/useTranslation';
 import Link from "next/link";

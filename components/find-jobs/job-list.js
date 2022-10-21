@@ -3,7 +3,7 @@ import { useContext } from "react"
 import jobContext from "../../context/jobContext"
 import timeSince from "../../utils/timeSince"
 import { useTranslation } from "../../hooks/useTranslation"
-import CompanyPhoto from '../jobs/company-photo'
+import CompanyPhoto from '../jobs/company-photo.js'
 import { CurrencyDollar } from 'react-bootstrap-icons';
 import Pagination from './pagination'
 import { buildAddress } from '../../utils/common'

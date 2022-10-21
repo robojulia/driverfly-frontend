@@ -9,7 +9,7 @@ import CompanySlider from "../components/testominial-slider/Slider";
 import React, { useState } from "react";
 import { useTranslation } from "../hooks/useTranslation";
 import { useRouter } from "next/router";
-import NewsletterSingup from "../components/newsletter-signup/NewsletterSingup";
+import NewsletterSingup from "../components/news-letter-signup"
 import HeroSection from "../components/home/hero-section";
 import MotorCarrier from "../components/home/motor-carrier";
 import OwnerOperators from "../components/home/owner-operators";

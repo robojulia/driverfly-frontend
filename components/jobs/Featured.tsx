@@ -2,7 +2,7 @@ import { Row, Col, Container } from "reactstrap";
 import { toast } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../utils/ajax";
 import { buildAddress } from "../../utils/common";
-import CompanyPhoto from '../jobs/company-photo'
+import CompanyPhoto from './company-photo.js'
 import { useState } from "react"
 import { useTranslation } from "../../hooks/useTranslation";
 import { useEffectAsync } from "../../utils/react";
