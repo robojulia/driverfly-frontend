@@ -1,9 +1,13 @@
+import { useTranslation } from "../../hooks/useTranslation";
+
 export default function TrendingWords() {
+    const { t } = useTranslation();
+
     return (
         <>
             <div className="content-trending ">
                 <ul className="trending-keywords">
-                    <li className="title">Trending Keywords:</li>
+                    <li className="title">{t("TRENDING_KEYWORDS")}</li>
                     <li className="item"><a href="#">Drivers,</a></li>
                     <li className="item"><a href="#">CDL Driver,</a></li>
                     <li className="item"><a href="#">Truck Drivers,</a></li>

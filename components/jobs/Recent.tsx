@@ -29,7 +29,7 @@ export default function RecentJobs() {
 
 
     return (
-        <section className="tab-sec">
+        <section className="mt-5">
             <Container>
                 <div className="bs-example">
                     <div className="tab-content">

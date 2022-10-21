@@ -46,38 +46,40 @@ export default function CompaniesSlider() {
         }
     };
     return (
-        <div className='my-3'>
-            <h3 className='my-3 text-center general-headings'>Featured Companies</h3>
-            <Carousel responsive={responsive}
-                swipeable={false}
-                draggable={false}
-                showDots={true}
-                arrows={false}
-                autoPlay={true}
-                infinite={true}
-                autoPlaySpeed={1000}
-                keyBoardControl={true}
-                itemClass="carousel-item-padding-40-px">
-                {companies.length > 0 && companies.map(company => (
-                    <>
-                        <Link href={`/employer/${company.id}`}>
-                            <a>
-                                <div style={{ margin: " 10px" }}>
-                                    <div className="card  featured-companies">
-                                        <CompanyPhoto className="card-img-top" style={{ height: '200px' }} company={company} />
-                                        <div className="card-body text-center">
-                                            <span className='my-3 card-title'>{company.name}</span>
-                                            <br />
-                                            <CompanyJobsCount companyId={company.id} label={`${t("JOBS")}`} className="btn btn-sm btn-primary my-3" />
+        <section className="container mb-5 company_slider">
+            <div className='my-3'>
+                <h3 className='my-3 text-center general-headings'>{t("FEATURED_COMPANIES")}</h3>
+                <Carousel responsive={responsive}
+                    swipeable={false}
+                    draggable={false}
+                    showDots={true}
+                    arrows={false}
+                    autoPlay={true}
+                    infinite={true}
+                    autoPlaySpeed={1000}
+                    keyBoardControl={true}
+                    itemClass="carousel-item-padding-40-px">
+                    {companies.length > 0 && companies.map(company => (
+                        <>
+                            <Link href={`/employer/${company.id}`}>
+                                <a>
+                                    <div style={{ margin: " 10px" }}>
+                                        <div className="card  featured-companies">
+                                            <CompanyPhoto className="card-img-top" style={{ height: '200px' }} company={company} />
+                                            <div className="card-body text-center">
+                                                <span className='my-3 card-title'>{company.name}</span>
+                                                <br />
+                                                <CompanyJobsCount companyId={company.id} label={`${t("JOBS")}`} className="btn btn-sm btn-primary my-3" />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </a>
-                        </Link>
-                    </>
-                ))}
-            </Carousel>
+                                </a>
+                            </Link>
+                        </>
+                    ))}
+                </Carousel>
 
-        </div>
+            </div>
+        </section>
     )
 }

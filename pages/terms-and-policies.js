@@ -1,14 +1,17 @@
 import Link from 'next/link';
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 import { PublicLayout } from "../components/layouts/PublicLayout";
+import { useTranslation } from '../hooks/useTranslation';
 
 export default function TermsAndPolicies() {
+
+    const { t } = useTranslation();
     return (
         <>
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
-                        <h2>Terms And Policies</h2>
+                        <h2>{t("TERMS_AND_POLICIES")}</h2>
                         < Breadcrumb />
                     </div>
                 </div>
@@ -157,18 +160,22 @@ export default function TermsAndPolicies() {
                 </ol>
                 <h5> III. User Rights and Responsibilities</h5>
                 <h5 className='py-3'>Privacy Policy</h5>
-                <p className="text-secondary">Your privacy is very important to us. Please read our <a href="/privacy-policy">Privacy Policy</a>, which governs your use of this Site. By using this Site, you agree that the terms of this policy are reasonable and satisfactory to you. You consent to the use of your personal information by DriverFly.co, digitalhiringapp.com, and/or any third party partners in accordance with the terms of this policy. DriverFly will not be responsible for any damages resulting from a lapse in compliance with the Privacy Policy.</p>
+                <p className="text-secondary">Your privacy is very important to us. Please read our
+                    <Link href="/privacy-policy">
+                        <a > Privacy Policy</a>
+                    </Link>
+                    , which governs your use of this Site. By using this Site, you agree that the terms of this policy are reasonable and satisfactory to you. You consent to the use of your personal information by DriverFly.co, digitalhiringapp.com, and/or any third party partners in accordance with the terms of this policy. DriverFly will not be responsible for any damages resulting from a lapse in compliance with the Privacy Policy.</p>
                 <h5 className=" py-3">Accounts, Security, Passwords</h5>
                 <p className="text-secondary">You may register to use this Site by completing the specified registration process and providing us with current, complete, and accurate information as requested by the online registration form. It is your responsibility to maintain the completeness and accuracy of your registration data, and any loss caused by your failure to do so is your responsibility. As part of the registration process, you will be asked to choose a security question. It is your responsibility to maintain the confidentiality of your security question and your account. You agree to notify DriverFly immediately of any unauthorized use of your account. DriverFly is not liable for any loss that you may incur as a result of someone else using your account, either with or without your knowledge.</p>
                 <h5 className=" py-3">Third Parties</h5>
                 <p className="text-secondary">Each User using this Site for or on behalf of a Third-party agrees to indemnify and hold each Covered Party harmless from and against any and all liabilities, losses, damages, suits and claims (including the costs of defense), relating to the Third-party’s or the User’s failure to fulfill any of its obligations as described above.</p>
-                <h5  className=" py-3">No Agency Relationship</h5>
+                <h5 className=" py-3">No Agency Relationship</h5>
                 <p className="text-secondary">DriverFly.co does not agree to act as your agent or recruiter in providing services through the Site.</p>
-                <h5  className=" py-3">Modification/Termination of Usage</h5>
+                <h5 className=" py-3">Modification/Termination of Usage</h5>
                 <p className="text-secondary">DriverFly solely reserves the right to modify, suspend, or terminate this Site and/or any portion thereof, including any service or product available through the Site, and/or your profile, account password, or use of the Site, at any time for any reason with or without notice to you. In the event of termination, you will still be bound by your obligations under this Agreement and any additional terms, including the warranties made by you, and by the disclaimers and limitations of liability. Additionally, DriverFly shall not be liable to you or any third-party for any termination of your access to this Site.</p>
-                <h5  className=" py-3">Links to Other Websites and Services</h5>
+                <h5 className=" py-3">Links to Other Websites and Services</h5>
                 <p className="text-secondary">To the extent this Site contains links to outside services and resources, or to the extent that third party websites link to this Site, any concerns regarding such services or resources should be directed to the particular outside service or resource provider. The presence of a link to a third-party site does not constitute or imply DriverFly’s endorsement or recommendation of the third-party, or of its content, products or services. If you choose to access any third-party site, you do so at your own risk.</p>
-                <h5  className=" py-3">User Comments, Feedback, and Other Submissions</h5>
+                <h5 className=" py-3">User Comments, Feedback, and Other Submissions</h5>
                 <ol>
                     <li>
                         <p>Certain portions of the Site may permit you to submit, post, transmit or upload content created by you, such as photographs, information, text, images, and/or communications with other Site users (“User Submissions”). User Submissions also include content you post on your own social media pages that you give DriverFly permission to use; or example, by your posting of a hashtag that DriverFly is promoting or by any other indication of your acceptance of this Agreement.</p>

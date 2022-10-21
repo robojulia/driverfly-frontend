@@ -2,14 +2,19 @@ import Link from 'next/link';
 import Breadcrumb from '../components/breadcrumbs/Breadcrumb';
 import { PublicLayout } from "../components/layouts/PublicLayout";
 import Terms from "../public/css/Terms.module.css"
+import { useTranslation } from '../hooks/useTranslation';
+import { useTransition } from 'react';
 
 export default function TermsOfService() {
+
+    const {t} = useTransition();
+    
     return (
         <>
           <div className="top-links-sec">
               <div className="container">
                   <div className="top-links-inner d-flex align-items-center justify-content-between">
-                      <h2>Terms Of Service</h2>
+                      <h2>{t("terms_of_services")}</h2>
                       < Breadcrumb />
                     </div>
                 </div>

@@ -1,18 +1,19 @@
-import Link from 'next/link';
 import { PublicLayout } from "../components/layouts/PublicLayout";
 import { Accordion } from 'react-bootstrap';
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
+import { useTranslation } from "../hooks/useTranslation";
 
 
 export default function FAQ() {
+
+    const { t } = useTranslation();
+
     return (
         <>
-
-
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
-                        <h2>FAQ</h2>
+                        <h2>{t("FAQ")}</h2>
                         < Breadcrumb />
                     </div>
                 </div>
@@ -85,7 +86,7 @@ export default function FAQ() {
                                             <p>Email them 🙂 </p>
                                         </Accordion.Body>
                                     </Accordion.Item><
-                                    Accordion.Item eventKey="5">
+                                        Accordion.Item eventKey="5">
                                         <Accordion.Header> <span className="btn-link"> I have several accounts, can they be purged or deleted?</span></Accordion.Header>
                                         <Accordion.Body>
                                             <p>Track your results on the local or global market , depending on your needs. You can track everything in the most popular search engines – Google, Bing, Yahoo and Yandex. Improve your search performance and increase traffic with our turn-key. </p>

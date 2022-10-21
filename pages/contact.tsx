@@ -44,7 +44,7 @@ export default function Contact() {
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
-                        <h2>{t("contact")}</h2>
+                        <h2>{t("CONTACT")}</h2>
                         < Breadcrumb />
                     </div>
                 </div>
