@@ -33,15 +33,18 @@ import BaseTextArea from "../../../../components/forms/BaseTextArea";
 import { useTranslation } from "../../../../hooks/useTranslation";
 
 import { useFormik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'
 import { useEffectAsync } from "../../../../utils/react";
 import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
+import DriverResume from "../../../../components/pdf/driver-resume";
 
 export default function Applicant() {
     const { t } = useTranslation();
     const api = new ApplicantApi();
+
+    const [applicant, setApplicant] = useState<ApplicantEntity>()
 
     const form = useFormik({
         initialValues: new ApplicantEntity(),
@@ -49,7 +52,7 @@ export default function Applicant() {
         onSubmit: async (values) => {
             if ("jobs" in values)
                 delete values.jobs;
-                
+
             try {
                 values = await api.me.update(values);
 
@@ -64,7 +67,7 @@ export default function Applicant() {
     });
 
     useEffectAsync(async () => {
-        const applicant = await api.me.get();
+        applicant = await api.me.get();
 
         applicant.equipment_experience.forEach((equipmentExp) => {
             if (!Number.isInteger(equipmentExp)) {
@@ -91,6 +94,7 @@ export default function Applicant() {
                 <Col xs="3">
                     <div style={{ float: "right" }}>
                         <Button variant="primary" type="submit">{t("SAVE")}</Button>
+                        <DriverResume />
                     </div>
                 </Col>
             </Row>
@@ -247,7 +251,7 @@ export default function Applicant() {
                                     name="authorized_to_work_in_us"
                                     formik={form}
                                 />
-                               <BaseCheckList
+                                <BaseCheckList
                                     className="col-12 mt-2"
                                     label="PREFERRED_LOCATION"
                                     name="preferred_location"
