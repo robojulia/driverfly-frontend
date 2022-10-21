@@ -1,11 +1,13 @@
 import React from 'react';
 import { ArrowLeft, ArrowRight, Quote } from 'react-bootstrap-icons';
-
+import { useTranslation } from '../../hooks/useTranslation';
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
 
-export default class extends React.Component {
-    render() {
+export default function CompanySlider() {
+
+    const { t } = useTranslation();
+
         return (
             <CarouselProvider
                 naturalSlideWidth={100}
@@ -18,40 +20,40 @@ export default class extends React.Component {
             >
                 <div className='Slider-container-bg'>
                     <Slider className='Slider__container'>
-                        <Slide index={0}>
+                        <Slide index={0}> <div className="Slider_item d-flex justify-content-center align-items-center">
                             <div className="Slider_item d-flex justify-content-center align-items-center">
                                 <div className="Slider_box">
                                     <Quote />
                                     <img src="img/Lydia-Driver2.jpg" alt="" className="" />
-                                    <h3>Lydia Wright</h3>
-                                    <span className="job text-theme">Team Driver - OTR</span>
-                                    <div className="description">This site is amazing. I found my team driver through here as well as my
-                                    first job out of CDL school.</div>
+                                    <h3>{t("LYDIA_WRIGHT")}</h3>
+                                    <span className="job text-theme">{t("TEAM_DRIVER_OTR")}</span>
+                                    <div className="description">{t("THIS_SITE_IS_AMAZING")}</div>
                                 </div>
                             </div>
+                        </div>
                         </Slide>
                         <Slide index={1}> <div className="Slider_item d-flex justify-content-center align-items-center">
-                        <div className="Slider_item d-flex justify-content-center align-items-center">
-                            <div className="Slider_box">
-                                <Quote/>
-                                <img src="img/Robert-Driver.jpg" alt=""/>
-                                <h3>Robert Richards</h3>
-                                <span className="job text-theme">Tanker Hauler</span>
-                                <div className="description">Thanks guys you're awesome. Got a job and got moving in less than a week.</div>
-                            </div>
-                        </div>
-                        </div>
-                        </Slide>
-                        <Slide index={2}>
                             <div className="Slider_item d-flex justify-content-center align-items-center">
                                 <div className="Slider_box">
                                     <Quote />
-                                    <h3>Bill Townson</h3>
-                                    <span className="job text-theme">OTR Driver</span>
-                                    <div className="description">This is the best job board I've used so far. It was easy to use and I
-                                    was able to get a job in just days. Love that it's specific to the trucking industry.</div>
+                                    <img src="img/Robert-Driver.jpg" alt="" />
+                                    <h3>{t("ROBERT_RICHARDS")}</h3>
+                                    <span className="job text-theme">{t("TANKER_HAULER")}</span>
+                                    <div className="description">{t("THANKS_YOU_ARE_AWESOME")}</div>
                                 </div>
                             </div>
+                        </div>
+                        </Slide>
+                        <Slide index={2}> <div className="Slider_item d-flex justify-content-center align-items-center">
+                            <div className="Slider_item d-flex justify-content-center align-items-center">
+                                <div className="Slider_box">
+                                    <Quote />
+                                    <h3>{t("BILL_TOWNSON")}</h3>
+                                    <span className="job text-theme">{t("OTR_DRIVER")}</span>
+                                    <div className="description">{t("THIS_IS_BEST_JOB_BOARD")}</div>
+                                </div>
+                            </div>
+                        </div>
                         </Slide>
                     </Slider>
                 </div>
@@ -62,4 +64,3 @@ export default class extends React.Component {
 
         );
     }
-}
