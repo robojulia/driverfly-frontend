@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
   },
   entryContainer: {
     marginBottom: 10,
+    borderLeft: '1px solid #2DA2AF',
   },
   date: {
     fontSize: 11,

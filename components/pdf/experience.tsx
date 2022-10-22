@@ -95,6 +95,7 @@ const Experience = ({ applicant }) => (
     {applicant.employers.map((workHistory, i) => (
       <ExperienceEntry workHistory={workHistory} />
     ))}
+    <Title>Safety Background</Title>
     <SafetyExperience style={styles} applicant={applicant} />
   </View>
 );

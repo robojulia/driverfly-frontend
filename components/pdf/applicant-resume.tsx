@@ -53,7 +53,7 @@ export default function ApplicantResume({ applicant, disabled, className }: Appl
         },
         leftColumn: {
             flexDirection: 'column',
-            width: 170,
+            width: '40%',
             paddingTop: 30,
             paddingRight: 15,
             '@media max-width: 400': {
