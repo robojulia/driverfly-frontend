@@ -250,6 +250,7 @@
     "above_21": "Above 21?",
     "basic": "Basic",
     "basic_details": "Basic Details",
+    "authorized_to_work_in_us":"authorized to work in us",
     "driver_license_number": "Driver License Number",
     "License_Restrictions": "License Restrictions",
     "expiration_date": "Expiration Date",
@@ -265,6 +266,12 @@
     "equipment_experience": "Equipment Experience",
     "remove": "Remove",
     "more": "More",
+    "Experience":"Experience",
+    "past_dui":"past dui",
+    "pass_drug_test":"pass drug test",
+    "positive_drug_test":"positive drug test:",
+    "license_revoked":"license revoked",
+    
     "past_employment": "Past Employment",
     "last_employer": "Last Employer",
     "dates_employed": "Dates Employed",
@@ -996,6 +1003,7 @@
         "notType": "Not a valid {{type}}",
         "defined": "Field must exist"
     },
+    "THIS_IS_THE_CANDIDATE_YOU_ARE_LOOKING_FOR":"This is the candidate you are looking for",
     "PLEASE_UPLOAD_A_FILE_WITH_AT_LEAST_ONE_ROW": "Please upload a file with at least one row in it",
     "{name}_ALREADY_EXISTS": "{{name}} already exists and will be merged",
     "{name}_ALREADY_EXISTS_NO_MERGE": "{{name}} may be a user of DriverFly who has previously applied to a job with your company.",
