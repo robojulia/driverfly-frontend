@@ -19,15 +19,14 @@ const styles = StyleSheet.create({
   },
   entryContainer: {
     marginBottom: 10,
-    borderLeft: '1px solid #2DA2AF',
   },
   date: {
     fontSize: 11,
     fontFamily: 'Lato Italic',
   },
-  detailContainer: {
-    flexDirection: 'row',
-  },
+  // detailContainer: {
+  //   flexDirection: 'row',
+  // },
   detailLeftColumn: {
     flexDirection: 'column',
     marginLeft: 10,
@@ -67,24 +66,24 @@ const styles = StyleSheet.create({
 });
 
 
-const SafetyExperience = ({ applicant }) => {
+const SafetyExperience = ({ t, applicant }) => {
 
   return (
     <View style={styles.entryContainer}>
       <List>
-        <Item style={styles.detailContainer}>
-          past dui: &nbsp;{applicant.has_past_dui && 'yes'}
+        <Item >
+          {t("has_past_duis")} &nbsp;{applicant.has_past_dui && t("yes")}
         </Item>
-        <Item style={styles.detailContainer}>
-          pass drug test: &nbsp;{applicant.can_pass_drug_test && 'yes'}
+        <Item >
+          {t("can_pass_drug_test")} &nbsp;{applicant.can_pass_drug_test && t("yes")}
         </Item>
-        <Item style={styles.detailContainer}>
-          positive drug test: &nbsp;{applicant.positive_drug_test_details && 'yes'}
+        <Item >
+          {t("positive_drug_test")}: &nbsp;{applicant.positive_drug_test_details && t("yes")}
         </Item>
-        <Item style={styles.detailContainer}>
-          license revoked:  &nbsp;{applicant.license_revoked && 'yes'}
+        <Item >
+          {t("license_revoked")}:  &nbsp;{applicant.license_revoked && t("yes")}
         </Item>
-        <Item style={styles.detailContainer}>
+        <Item >
           {applicant.license_revoked_details}
         </Item>
       </List>

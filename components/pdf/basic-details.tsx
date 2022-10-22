@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, StyleSheet } from '@react-pdf/renderer';
 import Title from './title';
+import { PlusCircle } from 'react-bootstrap-icons'
 
 const styles = StyleSheet.create({
   container: {
@@ -22,13 +23,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ({ applicant }) => (
+export default ({ applicant, t }) => (
   <View style={styles.container}>
-    <Title>Basic Details</Title>
-    <Text style={styles.degree}>{applicant?.phone}</Text>
+    <Title>{t("basic_details")}</Title>
+    <Text style={styles.degree}><PlusCircle />{applicant?.phone}</Text>
     <Text style={styles.degree}>{applicant?.city}</Text>
     <Text style={styles.degree}>{applicant?.highest_degree}</Text>
     <Text style={styles.degree}>{applicant?.state}</Text>
-    <Text style={styles.degree}>{applicant?.authorized_to_work_in_us && 'authorized to work in us'}</Text>
+    <Text style={styles.degree}>{applicant?.authorized_to_work_in_us && t("authorized_to_work_in_us")}</Text>
   </View>
 );

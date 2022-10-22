@@ -18,9 +18,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
-const SkillEntry = ({ applicant }) => (
+
+const SkillEntry = ({ applicant, t }) => (
   <View>
-    <Text style={styles.title}>Equipment Type | Years Of Experience</Text>
+    <Text style={styles.title}>{t("EQUIPMENT_TYPE_AND_YEAR")}</Text>
     <List>
       {applicant.equipment_experience.map((equipment, i) => (
         <>
@@ -28,7 +29,7 @@ const SkillEntry = ({ applicant }) => (
         </>
       ))}
     </List>
-    <Text style={styles.title}>Equipment Owned</Text>
+    <Text style={styles.title}>{t("EQUIPMENT_OWNED")}</Text>
     <List>
       {applicant.equipment_experience.map((equipment, i) => (
         <>
@@ -36,7 +37,7 @@ const SkillEntry = ({ applicant }) => (
         </>
       ))}
     </List>
-    <Text style={styles.title}>Endorsements/TWIC</Text>
+    <Text style={styles.title}>{t("ENDORSEMENTS")}</Text>
 
     <List>
       {applicant.endorsements.map((endorsement, i) => (
@@ -45,15 +46,15 @@ const SkillEntry = ({ applicant }) => (
         </>
       ))}
     </List>
-    <Text style={styles.title}>Transmission Experience</Text>
-    <Text style={styles.skills}>1{applicant.transmission_type[0]}</Text>
-    <Text style={styles.skills}>2{applicant.transmission_type[1]}</Text>
+    <Text style={styles.title}>{t("TRANSMISSION_EXPERIENCE")}</Text>
+    <Text style={styles.skills}>{applicant.transmission_type[0]}</Text>
+    <Text style={styles.skills}>{applicant.transmission_type[1]}</Text>
   </View>
 )
 
-const Skills = ({ applicant }) => (
+const Skills = ({ applicant, t }) => (
   <View>
-    <SkillEntry applicant={applicant} />
+    <SkillEntry t={t} applicant={applicant} />
   </View>
 );
 

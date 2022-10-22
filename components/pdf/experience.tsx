@@ -63,25 +63,25 @@ const styles = StyleSheet.create({
   },
 });
 
-const ExperienceEntry = ({ workHistory }) => {
+const ExperienceEntry = ({ workHistory, t }) => {
   return (
     <View style={styles.entryContainer}>
       <View style={styles.headerContainer}>
         <View style={styles.leftColumn}>
-          <Text style={styles.title}>Company | {workHistory.name}</Text>
+          <Text style={styles.title}> {t("company")} | {workHistory.name}</Text>
         </View>
       </View>
       <List>
-        <Item style={styles.detailContainer}>
+        <Item>
           {workHistory.phone}
         </Item>
-        <Item style={styles.detailContainer}>
+        <Item>
           {workHistory.start_at}
         </Item>
-        <Item style={styles.detailContainer}>
-          {workHistory.end_at || "present"}
+        <Item>
+          {workHistory.end_at || t("present")}
         </Item>
-        <Item style={styles.detailContainer}>
+        <Item>
           {workHistory.city}
         </Item>
       </List>
@@ -89,14 +89,14 @@ const ExperienceEntry = ({ workHistory }) => {
   );
 };
 
-const Experience = ({ applicant }) => (
+const Experience = ({ applicant, t }) => (
   <View style={styles.container}>
-    <Title>Experience</Title>
+    <Title>{t("Experience")}</Title>
     {applicant.employers.map((workHistory, i) => (
-      <ExperienceEntry workHistory={workHistory} />
+      <ExperienceEntry t={t} workHistory={workHistory} />
     ))}
-    <Title>Safety Background</Title>
-    <SafetyExperience style={styles} applicant={applicant} />
+    <Title>{t("safety_background")}</Title>
+    <SafetyExperience t={t} applicant={applicant} />
   </View>
 );
 

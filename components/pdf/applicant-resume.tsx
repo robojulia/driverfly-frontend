@@ -105,10 +105,10 @@ export default function ApplicantResume({ applicant, disabled, className }: Appl
                 <Header applicant={applicant} />
                 <View style={styles.container}>
                     <View style={styles.leftColumn}>
-                        <BasicDetails applicant={applicant} />
-                        <Skills applicant={applicant} />
+                        <BasicDetails t={t} applicant={applicant} />
+                        <Skills t={t} applicant={applicant} />
                     </View>
-                    <Experience applicant={applicant} />
+                    <Experience t={t} applicant={applicant} />
                 </View>
                 <Text style={styles.footer}>{t("THIS_IS_THE_CANDIDATE_YOU_ARE_LOOKING_FOR")}</Text>
             </Page>
