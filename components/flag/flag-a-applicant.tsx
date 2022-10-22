@@ -1,14 +1,14 @@
 import { useFormik } from "formik";
 import { toast } from 'react-toastify'
 import { globalAjaxExceptionHandler } from "../../utils/ajax";
-import { useTranslation } from "../../hooks/useTranslation";
-import BaseInput from "../forms/BaseInput";
-import { useAuth } from '../../hooks/useAuth'
+import { useTranslation } from "../../hooks/use-translation";
+import BaseInput from "../forms/base-input";
+import { useAuth } from '../../hooks/use-auth'
 import { Row, Button, Col } from "react-bootstrap";
-import ViewModal from "../viewDetails/viewModal";
+import ViewModal from "../view-details/view-modal";
 import { FlagFill } from "react-bootstrap-icons";
 import { useState } from "react";
-import BaseSelect from "../forms/BaseSelect";
+import BaseSelect from "../forms/base-select";
 import { FlagInappropriateApplicantDto } from "../../models/support/flag-inappropriate-applicant.dto";
 import SupportApi from "../../pages/api/support";
 import { InappropriateApplicantFlag } from "../../enums/support/inappropriate-applicant-flag.enum"

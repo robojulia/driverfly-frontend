@@ -1,6 +1,6 @@
 import { useState } from "react"
 import Collapse from 'react-bootstrap/Collapse'
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value";
 
 export default function ViewMoreRadioFilter(props) {

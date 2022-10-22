@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 
 export default function MotorCarrier() {
 

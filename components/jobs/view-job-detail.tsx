@@ -1,19 +1,19 @@
 import Link from 'next/link'
 import { Col, Container, Row } from 'react-bootstrap';
 import { ArrowRight, CurrencyDollar } from "react-bootstrap-icons"
-import { useTranslation } from '../../hooks/useTranslation';
+import { useTranslation } from '../../hooks/use-translation';
 import { buildAddress } from '../../utils/common';
 import JobApply from '../apply';
 import SaveJob from '../dashboard/driver/save-job';
-import JobDescription from '../job-description/JobDescription';
-import JonInformation from '../job-information-sidebar/JobInformation';
-import SocilShare from '../share-link/ShareLink';
-import CompanyPhoto from './company-photo.js';
+import JobDescription from '../job-description/job-description';
+import JonInformation from '../job-information-sidebar/job-information';
+import SocilShare from '../share-link/share-link';
+import CompanyPhoto from './company-photo';
 import ShowFormattedDate from './show-formatted-date';
 import JobVehicles from './job-vehicles';
 import React from 'react';
-import ViewModal from '../viewDetails/viewModal';
-import { useAuth } from '../../hooks/useAuth'
+import ViewModal from '../view-details/view-modal';
+import { useAuth } from '../../hooks/use-auth'
 import FlagJob from '../flag/flag-a-job';
 import { ViewJobDetailProps } from '../../types/job/view-job-detail-props.type';
 

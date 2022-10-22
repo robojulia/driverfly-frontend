@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { useTransition } from 'react';
-import Breadcrumb from "../../components/breadcrumbs/Breadcrumb";
-import { PublicLayout } from "../../components/layouts/PublicLayout";
-import { useTranslation } from '../../hooks/useTranslation';
+import Breadcrumb from "../../components/breadcrumbs/breadcrumb";
+import { PublicLayout } from "../../components/layouts/public-layout";
+import { useTranslation } from '../../hooks/use-translation';
+
 
 export default function TermsAndPolicies2() {
 

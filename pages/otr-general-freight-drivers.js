@@ -3,7 +3,7 @@ import { ArrowLeftRight } from "react-bootstrap-icons"
 import JobApply from "../components/apply"
 import JobDescription from '../components/job-description/JobDescription'
 import JonInformation from '../components/job-information-sidebar/JobInformation'
-import { PublicLayout } from "../components/layouts/PublicLayout";
+import { PublicLayout } from "../components/layouts/public-layout";
 import RelatedJobs from '../components/related-jobs/Related-Jobs'
 import SocilShare from '../components/share-link/ShareLink'
 import { ArrowRight } from 'react-bootstrap-icons';

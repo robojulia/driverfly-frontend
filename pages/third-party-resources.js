@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
-import { PublicLayout } from "../components/layouts/PublicLayout";
-import resource from '../public/css/ThirdPartyResources.module.css'
-import { useTranslation } from '../hooks/useTranslation';
+import Breadcrumb from "../components/breadcrumbs/breadcrumb";
+import { PublicLayout } from "../components/layouts/public-layout";
+import resource from '../public/css/third-party-resources.module.css'
+import { useTranslation } from '../hooks/use-translation';
 
 export default function ThirdPartyResources() {
 

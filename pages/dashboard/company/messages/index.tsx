@@ -1,8 +1,8 @@
 
-import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
+import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
 import React from "react";
 
-import PageLayout from "../../../../components/layouts/page/PageLayout";
+import PageLayout from "../../../../components/layouts/page/page-layout";
 
 import { ApplicantApi } from "../../../api/applicant";
 

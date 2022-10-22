@@ -6,13 +6,13 @@ import { Pencil } from "react-bootstrap-icons";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useEffectAsync } from "../../../../../../utils/react";
-import { useTranslation } from "../../../../../../hooks/useTranslation";
-import { useAuth } from "../../../../../../hooks/useAuth";
+import { useTranslation } from "../../../../../../hooks/use-translation";
+import { useAuth } from "../../../../../../hooks/use-auth";
 
-import FullLayout from "../../../../../../components/dashboard/layouts/Layout/FullLayout";
-import ChildPageLayout from "../../../../../../components/layouts/page/ChildPageLayout";
-import ViewDetails from "../../../../../../components/viewDetails/viewDetails";
-import { DeleteButton } from "../../../../../../components/buttons/DeleteButton";
+import FullLayout from "../../../../../../components/dashboard/layouts/layout/full-layout";
+import ChildPageLayout from "../../../../../../components/layouts/page/child-page-layout";
+import ViewDetails from "../../../../../../components/view-details/view-details";
+import { DeleteButton } from "../../../../../../components/buttons/delete-button";
 
 import { globalAjaxExceptionHandler } from "../../../../../../utils/ajax";
 

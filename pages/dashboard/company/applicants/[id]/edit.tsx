@@ -1,10 +1,10 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
-import { ApplicantForm } from "../../../../../components/forms/company/ApplicantForm";
-import ChildPageLayout from "../../../../../components/layouts/page/ChildPageLayout";
-import { useTranslation } from "../../../../../hooks/useTranslation";
+import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
+import { ApplicantForm } from "../../../../../components/forms/company/applicant-form";
+import ChildPageLayout from "../../../../../components/layouts/page/child-page-layout";
+import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import { useEffectAsync } from "../../../../../utils/react";
 import ApplicantApi from "../../../../api/applicant";

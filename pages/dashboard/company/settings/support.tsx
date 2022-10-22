@@ -1,5 +1,5 @@
-import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
-import PageLayout from "../../../../components/layouts/page/PageLayout";
+import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
+import PageLayout from "../../../../components/layouts/page/page-layout";
 import Supports from "../../../../components/support";
 
 export default function Support() {

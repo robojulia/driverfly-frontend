@@ -1,13 +1,13 @@
 import Head from "next/head";
-import { PublicLayout } from "../components/layouts/PublicLayout";
-import Featured from "../components/jobs/Featured";
-import Recent from "../components/jobs/Recent";
+import { PublicLayout } from "../components/layouts/public-layout";
+import Featured from "../components/jobs/featured";
+import Recent from "../components/jobs/recent";
 import Drivers from "../components/works/drivers";
 import Companies from "../components/works/companies";
-import CompaniesSlider from '../components/featured-companies-slider/CompaniesSlider'
-import CompanySlider from "../components/testominial-slider/Slider";
+import CompaniesSlider from '../components/featured-companies-slider/companies-slider'
+import CompanySlider from "../components/testominial-slider/slider";
 import React, { useState } from "react";
-import { useTranslation } from "../hooks/useTranslation";
+import { useTranslation } from "../hooks/use-translation";
 import { useRouter } from "next/router";
 import NewsletterSingup from "../components/news-letter-signup"
 import HeroSection from "../components/home/hero-section";

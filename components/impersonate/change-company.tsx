@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { Dropdown, Button, Row } from "react-bootstrap";
-import { useAuth } from "../../hooks/useAuth";
-import { useTranslation } from "../../hooks/useTranslation";
+import { useAuth } from "../../hooks/use-auth";
+import { useTranslation } from "../../hooks/use-translation";
 import AuthApi from "../../pages/api/auth";
 import { CompanyEntity } from "../../models/company/company.entity";
 

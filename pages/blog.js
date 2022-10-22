@@ -1,10 +1,10 @@
 import Link from 'next/link';
-import { PublicLayout } from "../components/layouts/PublicLayout";
-import Blog from '../public/css/Blog.module.css'
-import BlogSidebar from '../components/blog-sidebar/Blog-Sidebar';
+import { PublicLayout } from "../components/layouts/public-layout";
+import Blog from '../public/css/blog.module.css'
+import BlogSidebar from '../components/blog-sidebar/blog-sidebar';
 import { ArrowRight, Chat, Clock } from 'react-bootstrap-icons';
-import { useTranslation } from '../hooks/useTranslation';
-import Breadcrumb from '../components/breadcrumbs/Breadcrumb';
+import { useTranslation } from '../hooks/use-translation';
+import Breadcrumb from '../components/breadcrumbs/breadcrumb';
 export default function Blogs() {
 
     const { t } = useTranslation();

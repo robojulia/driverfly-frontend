@@ -1,9 +1,9 @@
 import Head from "next/head";
-import { PublicLayout } from "../components/layouts/PublicLayout";
-import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
-import Slider from '../components/testominial-slider/Slider';
+import { PublicLayout } from "../components/layouts/public-layout";
+import Breadcrumb from "../components/breadcrumbs/breadcrumb";
+import Slider from '../components/testominial-slider/slider';
 import { FileEarmarkZip, Funnel, CheckSquare, Bell, Trophy, HandIndexThumb } from 'react-bootstrap-icons';
-import { useTranslation } from "../hooks/useTranslation";
+import { useTranslation } from "../hooks/use-translation";
 
 
 export default function About() {

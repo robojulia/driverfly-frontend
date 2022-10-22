@@ -1,10 +1,10 @@
 import Link from 'next/link';
-import { PublicLayout } from "../components/layouts/PublicLayout";
+import { PublicLayout } from "../components/layouts/public-layout";
 import FilterResult from '../components/filter-results/filter-results'
-import Owneroperator from '../public/css/Owneroperator.module.css'
-import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
+import Owneroperator from '../public/css/owner-operator.module.css'
+import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import { useRouter } from 'next/router'
-import { useTranslation } from '../hooks/useTranslation';
+import { useTranslation } from '../hooks/use-translation';
 
 export default function Owneroperators() {
 

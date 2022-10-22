@@ -1,5 +1,6 @@
 import { FileEarmarkZip, Funnel, CheckSquare, Bell, Trophy, HandIndexThumb } from 'react-bootstrap-icons';
-import { useTranslation } from '../../hooks/useTranslation';
+import { useTranslation } from '../../hooks/use-translation';
+
 
 export default function Driver() {
 

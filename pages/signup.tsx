@@ -1,9 +1,9 @@
 import Head from "next/head"
 import Link from "next/link"
-import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
-import { PublicLayout } from "../components/layouts/PublicLayout";
+import Breadcrumb from "../components/breadcrumbs/breadcrumb";
+import { PublicLayout } from "../components/layouts/public-layout";
 import SignupStyle from "../public/css/signup.module.css"
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../hooks/use-auth';
 import { useRouter } from 'next/router'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -11,24 +11,24 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import { useFormik } from "formik";
 
-import BaseInput from "../components/forms/BaseInput";
-import BaseSelect from "../components/forms/BaseSelect";
-import BaseCheck from "../components/forms/BaseCheck";
-import BaseInputPhone from "../components/forms/BaseInputPhone";
+import BaseInput from "../components/forms/base-input";
+import BaseSelect from "../components/forms/base-select";
+import BaseCheck from "../components/forms/base-check";
+import BaseInputPhone from "../components/forms/base-input-phone";
 
 
 
 import AuthApi from "./api/auth";
 
-import { useTranslation } from "../hooks/useTranslation";
+import { useTranslation } from "../hooks/use-translation";
 import { SignUpRole } from "../enums/auth/sign-up-role.enum"
 import { Row, Col, Button } from "react-bootstrap"
 
 import { globalAjaxExceptionHandler } from "../utils/ajax";
 import { SignUpDto } from "../models/auth/sign-up.dto";
-import { PublicPage } from "../components/layouts/public/PublicPage";
+import { PublicPage } from "../components/layouts/public/public-page";
 import { useEffect } from "react";
-import BaseTextArea from "../components/forms/BaseTextArea";
+import BaseTextArea from "../components/forms/base-text-area";
 
 
 export default function Signup() {
@@ -77,7 +77,7 @@ export default function Signup() {
           <h1>{t("SignUp.DRIVERS_HAVE_ACCESS")}<br />{t("SignUp.TO_OVER_1000_JOBS")}</h1>
           <p>{t("SignUp.ARE_YOU_A_MOTOR_CARRIER")} {t("SignUp.VIEW_OUR_PACKAGES")}
             <Link href="http://go.driverfly.co/motor-carriers">
-              <a className="mx-1">{t("HERE")}</a>
+              <a className="mx-1" target="__blank">{t("HERE")}</a>
             </Link>
             {t("OR")}
             <Link href="/contact">

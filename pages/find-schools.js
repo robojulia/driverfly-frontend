@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import schoolContext from "../context/schoolContext"
+import schoolContext from "../context/school-context"
 import { Table } from "react-bootstrap";
-import { PublicLayout } from "../components/layouts/PublicLayout";
+import { PublicLayout } from "../components/layouts/public-layout";
 import FilterSchools from '../components/filter-schools/filter-schools'
-import CdlInfo from '../components/cdl-info/CdlInfo'
+import CdlInfo from '../components/cdl-info/cdlInfo'
 import SchoolApi from "./api/school"
-import { useTranslation } from "../hooks/useTranslation";
-import Breadcrumb from '../components/breadcrumbs/Breadcrumb';
+import { useTranslation } from "../hooks/use-translation";
+import Breadcrumb from '../components/breadcrumbs/breadcrumb';
 
 export default function FindSchools(props) {
 

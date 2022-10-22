@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { PublicLayout } from "../../components/layouts/PublicLayout";
+import { PublicLayout } from "../../components/layouts/public-layout";
 import Pric from '../../public/css/Pricing.module.css'
 import MonthlyPricing from '../../components/pricing/monthly'
 import YearlyPricing from '../../components/pricing/yearly'

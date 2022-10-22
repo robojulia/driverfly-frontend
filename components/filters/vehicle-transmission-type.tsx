@@ -1,7 +1,7 @@
 import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
 import { VehicleTransmissionType } from "../../enums/vehicles/vehicle-transmission-type.enum"
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 
 
 export default function TransmissionType(props: any) {

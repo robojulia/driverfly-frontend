@@ -1,10 +1,10 @@
 import { useRouter } from "next/router";
-import { ApplicantForm } from "../../../../components/forms/company/ApplicantForm";
+import { ApplicantForm } from "../../../../components/forms/company/applicant-form";
 
-import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
-import ChildPageLayout from "../../../../components/layouts/page/ChildPageLayout";
+import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
+import ChildPageLayout from "../../../../components/layouts/page/child-page-layout";
 
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 
 export default function CreateApplicant() {
     const router = useRouter();

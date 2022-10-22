@@ -1,6 +1,6 @@
 import React from 'react'
 import { ArrowRight } from 'react-bootstrap-icons'
-import { useTranslation } from '../../hooks/useTranslation';
+import { useTranslation } from '../../hooks/use-translation';
 export default function NewsletterSingup() {
 
     const { t } = useTranslation();

@@ -1,9 +1,9 @@
-import RelatedJobs from '../../../../components/related-jobs/Related-Jobs'
-import { useTranslation } from "../../../../hooks/useTranslation"
+import RelatedJobs from '../../../../components/related-jobs/related-jobs'
+import { useTranslation } from "../../../../hooks/use-translation"
 import JobApi from "../../../api/job"
-import StructuredData from "../../../../components/seo/StructuredData"
-import FullLayout from "../../../../components/dashboard/layouts/FullLayout"
-import ChildPageLayout from "../../../../components/layouts/page/ChildPageLayout"
+import StructuredData from "../../../../components/seo/structured-data"
+import FullLayout from "../../../../components/dashboard/layouts/full-layout"
+import ChildPageLayout from "../../../../components/layouts/page/child-page-layout"
 import ViewJobDetail from "../../../../components/jobs/view-job-detail";
 import { JobDetailProps } from '../../../../types/job/job-detail-props.type'
 

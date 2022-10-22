@@ -1,7 +1,7 @@
 import * as yup from "yup";
 import "../utils/yup";
 
-import { useTranslation } from "../hooks/useTranslation";
+import { useTranslation } from "../hooks/use-translation";
 
 export function yupInit() {
     const { t } = useTranslation();

@@ -3,17 +3,17 @@ import { toast } from "react-toastify";
 import { Button, ButtonGroup, Col, Row } from "react-bootstrap";
 import { Pencil } from "react-bootstrap-icons";
 
-import FullLayout from "../../../../../../components/dashboard/layouts/Layout/FullLayout";
-import ChildPageLayout from "../../../../../../components/layouts/page/ChildPageLayout";
-import ViewDetails from "../../../../../../components/viewDetails/viewDetails";
+import FullLayout from "../../../../../../components/dashboard/layouts/layout/full-layout";
+import ChildPageLayout from "../../../../../../components/layouts/page/child-page-layout";
+import ViewDetails from "../../../../../../components/view-details/view-details";
 
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useEffectAsync } from "../../../../../../utils/react";
-import { useTranslation } from "../../../../../../hooks/useTranslation";
-import { useAuth } from "../../../../../../hooks/useAuth";
+import { useTranslation } from "../../../../../../hooks/use-translation";
+import { useAuth } from "../../../../../../hooks/use-auth";
 
-import { DeleteButton } from "../../../../../../components/buttons/DeleteButton";
+import { DeleteButton } from "../../../../../../components/buttons/delete-button";
 import { CompanyEntity } from "../../../../../../models/company/company.entity";
 import CompanyApi from "../../../../../api/company";
 

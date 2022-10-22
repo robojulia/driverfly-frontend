@@ -12,8 +12,8 @@ import Equipment from '../filters/equipment'
 import SpecialEndorsementsRequired from '../filters/special-endorsements-required'
 import TypeOfDelivery from '../filters/type-of-delivery'
 import Range from "../filters/location/range"
-import { useTranslation } from '../../hooks/useTranslation'
-import jobContext from '../../context/jobContext'
+import { useTranslation } from '../../hooks/use-translation'
+import jobContext from '../../context/job-context'
 import TransmissionType from '../filters/vehicle-transmission-type'
 
 

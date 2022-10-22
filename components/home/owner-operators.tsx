@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 
 export default function OwnerOperators() {
     const router = useRouter();

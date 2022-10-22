@@ -1,6 +1,6 @@
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 import HeroSearch from "./hero-search";
-import TrendingWords from "../trending-words/Trending"
+import TrendingWords from "../trending-words/trending"
 
 export default function HeroSection() {
 

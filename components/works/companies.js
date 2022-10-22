@@ -1,5 +1,6 @@
 import { CheckSquare, Pencil, SearchHeart } from 'react-bootstrap-icons';
-import { useTranslation } from '../../hooks/useTranslation';
+import { useTranslation } from '../../hooks/use-translation';
+
 
 export default function Companies() {
     const { t } = useTranslation();

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { PublicLayout } from "../components/layouts/PublicLayout";
+import { PublicLayout } from "../components/layouts/public-layout";
 import BlogDetail from '../public/css/BlogDetail.module.css'
 import SocilShare from '../components/share-link/ShareLink';
 import JonInformation from '../components/job-information-sidebar/JobInformation';
@@ -15,7 +15,7 @@ export default function EldtBlog() {
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
                         <h2>The DriverFly On The Wall Blog</h2>
-                       {/* <Breadcrumbs /> */}
+                        {/* <Breadcrumbs /> */}
                     </div>
                 </div>
             </div>
@@ -40,7 +40,7 @@ export default function EldtBlog() {
                         </ul>
                         <h2 className='font-weight-normal my-4'>Attention all aspiring drivers!</h2>
                         <p>However, if you received or will receive your CLP/CDL/endorsement before February 7th, you do not have to complete any extra training before starting your next trucking job. If you haven’t found a job yet though, don’t worry!
-                        < Link href='/'><a > DriverFly</a></Link> can help match recent graduates with trucking jobs throughout the United States, all for free!</p>
+                            < Link href='/'><a > DriverFly</a></Link> can help match recent graduates with trucking jobs throughout the United States, all for free!</p>
                         <p>Besides drivers, training providers will also be affected. To be qualified as one, you must now meet all its eligibility requirements and then register to be listed on the Training Provider Registry. That means that if you’re a motor carrier not listed on the TPR, you’ll only be able to hire drivers who already have a CDL. If you’re having trouble finding drivers though, DriverFly can also be of help. Contact us to get your job listed on our job board and start getting qualified applicants now!</p>
                         <h2 className='font-weight-normal my-4'>Attention all aspiring drivers!</h2>
                         <p>If you have a CLP or will be getting one before the new regulations go into effect, make sure you get your CDL or endorsement before your permit expires. Anyone who gets a CLP after that date will have to go through the extra training.</p>

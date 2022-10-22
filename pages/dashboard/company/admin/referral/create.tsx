@@ -1,8 +1,8 @@
 import { useRouter } from "next/router";
-import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
-import { ReferralSourceForm } from "../../../../../components/forms/admin/ReferralSourceForm";
-import ChildPageLayout from "../../../../../components/layouts/page/ChildPageLayout";
-import { useTranslation } from "../../../../../hooks/useTranslation";
+import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
+import { ReferralSourceForm } from "../../../../../components/forms/admin/referral-source-form";
+import ChildPageLayout from "../../../../../components/layouts/page/child-page-layout";
+import { useTranslation } from "../../../../../hooks/use-translation";
 import { ReferralSourceEntity } from "../../../../../models/referral-source/referral-source.entity";
 
 export default function CreateReferral() {

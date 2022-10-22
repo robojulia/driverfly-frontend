@@ -1,5 +1,5 @@
-import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
-import BaseInputPhone from "../../../../components/forms/BaseInputPhone";
+import FullLayout from "../../../../components/dashboard/layouts/full-layout";
+import BaseInputPhone from "../../../../components/forms/base-input-phone";
 
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity"
 import { ApplicantEmployerEntity } from "../../../../models/applicant/applicant-employer.entity";
@@ -21,16 +21,16 @@ import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 
 import { Row, Col, Button, Table, Alert } from "react-bootstrap";
 import { PlusCircle, ChevronUp, XCircle, DashCircle } from "react-bootstrap-icons";
-import ViewCard from "../../../../components/viewDetails/viewCard";
-import BaseInput from "../../../../components/forms/BaseInput";
-import BaseSelect from "../../../../components/forms/BaseSelect";
-import StateSelect from "../../../../components/forms/StateSelect";
-import BaseCheck from "../../../../components/forms/BaseCheck";
-import BaseCheckList from "../../../../components/forms/BaseCheckList";
-import FileInput from "../../../../components/forms/FileInput";
-import BaseTextArea from "../../../../components/forms/BaseTextArea";
+import ViewCard from "../../../../components/view-details/view-card";
+import BaseInput from "../../../../components/forms/base-input";
+import BaseSelect from "../../../../components/forms/base-select";
+import StateSelect from "../../../../components/forms/state-select";
+import BaseCheck from "../../../../components/forms/base-check";
+import BaseCheckList from "../../../../components/forms/base-check-list";
+import FileInput from "../../../../components/forms/file-input";
+import BaseTextArea from "../../../../components/forms/base-text-area";
 
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 
 import { useFormik } from "formik";
 import { useEffect } from "react";

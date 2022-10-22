@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { BookmarkCheckFill, BookmarkPlus } from "react-bootstrap-icons"
-import { useAuth } from '../../../hooks/useAuth';
-import { useTranslation } from '../../../hooks/useTranslation';
+import { useAuth } from '../../../hooks/use-auth';
+import { useTranslation } from '../../../hooks/use-translation';
 import SavedJobApi from '../../../pages/api/saved-job';
 import { toast } from 'react-toastify';
 import { useEffectAsync } from '../../../utils/react';

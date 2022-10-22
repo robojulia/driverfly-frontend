@@ -2,16 +2,16 @@ import { toast } from "react-toastify";
 
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { useTranslation } from "../../../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../../../hooks/use-translation";
 import { useEffectAsync } from "../../../../../../utils/react";
 
-import FullLayout from "../../../../../../components/dashboard/layouts/Layout/FullLayout";
-import ChildPageLayout from "../../../../../../components/layouts/page/ChildPageLayout";
-import { VehicleForm } from "../../../../../../components/forms/company/VehicleForm";
+import FullLayout from "../../../../../../components/dashboard/layouts/layout/full-layout";
+import ChildPageLayout from "../../../../../../components/layouts/page/child-page-layout";
+import { VehicleForm } from "../../../../../../components/forms/company/vehicle-form";
 
 import { VehicleEntity } from "../../../../../../models/company/vehicle.entity";
 import VehicleApi from "../../../../../api/vehicle";
-import { useAuth } from "../../../../../../hooks/useAuth";
+import { useAuth } from "../../../../../../hooks/use-auth";
 
 export default function EditVehicle({ id }) {
     const router = useRouter();
