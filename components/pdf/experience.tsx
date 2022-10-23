@@ -64,6 +64,8 @@ const styles = StyleSheet.create({
 });
 
 const ExperienceEntry = ({ workHistory, t }) => {
+  const formattedStartDate = workHistory.start_at.replace("T00:00:00.000Z", "");
+  const formattedEndDate = workHistory.end_at?.replace("T00:00:00.000Z", "")
   return (
     <View style={styles.entryContainer}>
       <View style={styles.headerContainer}>
@@ -76,10 +78,7 @@ const ExperienceEntry = ({ workHistory, t }) => {
           {workHistory.phone}
         </Item>
         <Item>
-          {workHistory.start_at}
-        </Item>
-        <Item>
-          {workHistory.end_at || t("present")}
+          {formattedStartDate} - {formattedEndDate || t("present")}
         </Item>
         <Item>
           {workHistory.city}
