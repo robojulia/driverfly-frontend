@@ -268,10 +268,10 @@
     "more": "More",
     "Experience":"Experience",
     "past_dui":"past dui",
-    "pass_drug_test":"pass drug test",
-    "positive_drug_test":"positive drug test:",
+    "pass_drug_test":"Pass drug test",
+    "positive_drug_test":"Positive drug test:",
     "license_revoked":"license revoked",
-    
+    "license_revoked_details":"License revoked details",
     "past_employment": "Past Employment",
     "last_employer": "Last Employer",
     "dates_employed": "Dates Employed",

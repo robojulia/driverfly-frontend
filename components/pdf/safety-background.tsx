@@ -1,9 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 
 import React from 'react';
-import { Text, View, StyleSheet } from '@react-pdf/renderer';
-
-import Title from './title';
+import { View, StyleSheet } from '@react-pdf/renderer';
 import List, { Item } from './list';
 
 const styles = StyleSheet.create({
@@ -84,7 +82,7 @@ const SafetyExperience = ({ t, applicant }) => {
           {t("license_revoked")}:  &nbsp;{applicant.license_revoked && t("yes")}
         </Item>
         <Item >
-          {applicant.license_revoked_details}
+          {t("license_revoked_details")}:  &nbsp;{applicant.license_revoked_details}
         </Item>
       </List>
     </View>

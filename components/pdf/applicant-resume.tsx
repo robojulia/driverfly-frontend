@@ -1,6 +1,5 @@
-import { toast } from 'react-toastify'
 import { useTranslation } from "../../hooks/useTranslation";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useEffectAsync } from "../../utils/react";
 import { CloudArrowDownFill } from 'react-bootstrap-icons';
 import ReactPDF, {
@@ -19,8 +18,6 @@ import Header from './header';
 import Skills from './skills';
 import BasicDetails from './basic-details';
 import Experience from './experience';
-import { url } from 'inspector';
-
 export interface ApplicantResumeProps extends ViewApplicantDetailProps {
     disabled?: boolean | (() => boolean);
     className?: string;
