@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
 
 const ExperienceEntry = ({ workHistory, t }) => {
     const formattedStartDate = workHistory?.start_at.replace("T00:00:00.000Z", "");
-    const formattedEndDate = workHistory?.end_at.replace("T00:00:00.000Z", "")
+    const formattedEndDate = workHistory?.end_at?.replace("T00:00:00.000Z", "")
     return (
         <View style={styles.entryContainer}>
             <View style={styles.headerContainer}>
