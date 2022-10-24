@@ -121,7 +121,7 @@ export default function ApplicantResume({ applicant, disabled, className }: Appl
                     fileName="Resume.pdf"
                 >
                     {({ blob, url, loading, error }) =>
-                        <Button disabled={!!disabled} className='btn btn-outline-secondary'>
+                        <Button disabled={!!disabled || !!loading} className='btn btn-outline-secondary'>
                             {loading ? <span className="spinner-grow spinner-grow-sm"></span> : <CloudArrowDownFill />} {t("RESUME")}
                         </Button>
                     }
