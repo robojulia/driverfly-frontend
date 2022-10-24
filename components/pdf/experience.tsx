@@ -64,8 +64,8 @@ const styles = StyleSheet.create({
 });
 
 const ExperienceEntry = ({ workHistory, t }) => {
-    const formattedStartDate = workHistory?.start_at.replace("T00:00:00.000Z", "");
-    const formattedEndDate = workHistory?.end_at?.replace("T00:00:00.000Z", "")
+    const formattedStartDate = workHistory?.start_at?.replace("T00:00:00.000Z", "") || '';
+    const formattedEndDate = workHistory?.end_at?.replace("T00:00:00.000Z", "") || t("present")
     return (
         <View style={styles.entryContainer}>
             <View style={styles.headerContainer}>
@@ -78,7 +78,7 @@ const ExperienceEntry = ({ workHistory, t }) => {
                     {workHistory?.phone}
                 </Item>
                 <Item>
-                    {formattedStartDate} - {formattedEndDate || t("present")}
+                    {formattedStartDate} - {formattedEndDate}
                 </Item>
                 <Item>
                     {workHistory?.city}
@@ -91,7 +91,7 @@ const ExperienceEntry = ({ workHistory, t }) => {
 const Experience = ({ applicant, t }) => (
     <View style={styles.container}>
         <Title>{t("Experience")}</Title>
-        {applicant?.employers.map((workHistory) => (
+        {applicant?.employers?.map((workHistory) => (
             <ExperienceEntry t={t} workHistory={workHistory} />
         ))}
         <Title>{t("safety_background")}</Title>
