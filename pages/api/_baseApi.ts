@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-import { useToken } from '../../hooks/useAuth';
+import { useToken } from '../../hooks/use-auth';
 
 export default class BaseApi {
     private mergeRequestConfig(config?: AxiosRequestConfig): AxiosRequestConfig {

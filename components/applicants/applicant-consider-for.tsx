@@ -1,8 +1,8 @@
-import { useTranslation } from '../../hooks/useTranslation';
+import { useTranslation } from '../../hooks/use-translation';
 import React from 'react';
-import ViewCard from '../viewDetails/viewCard';
+import ViewCard from '../view-details/view-card';
 import { Link } from 'react-bootstrap-icons';
-import ViewTable from '../viewDetails/viewTable';
+import ViewTable from '../view-details/view-table';
 import { ViewApplicantDetailProps } from '../../types/applicant/view-application-detail-props.type';
 import { ApplicantSuggestedJobEntity } from '../../models/applicant/applicant-suggested-job.entity';
 

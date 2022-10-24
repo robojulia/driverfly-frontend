@@ -1,11 +1,11 @@
 import { useRouter } from "next/router";
-import { useTranslation } from "../../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../../hooks/use-translation";
 
-import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
-import ChildPageLayout from "../../../../../components/layouts/page/ChildPageLayout";
+import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
+import ChildPageLayout from "../../../../../components/layouts/page/child-page-layout";
 
 import { LocationEntity } from "../../../../../models/company/location.entity";
-import { LocationForm } from "../../../../../components/forms/company/LocationForm";
+import { LocationForm } from "../../../../../components/forms/company/location-form";
 
 export default function CreateLocation() {
     const router = useRouter();

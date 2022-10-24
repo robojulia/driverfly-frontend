@@ -1,13 +1,13 @@
 import Link from 'next/link';
-import { PublicLayout } from "../components/layouts/PublicLayout";
+import { PublicLayout } from "../components/layouts/public-layout";
 import ReCAPTCHA from "react-google-recaptcha";
-import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
+import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import { ArrowRight, Newspaper, PersonBadgeFill, QuestionCircle } from 'react-bootstrap-icons';
-import { useTranslation } from "../hooks/useTranslation";
+import { useTranslation } from "../hooks/use-translation";
 import React, { useRef } from 'react';
-import BaseInput from "../components/forms/BaseInput";
-import BaseTextArea from "../components/forms/BaseTextArea";
-import BaseReCapcha from "../components/forms/BaseReCapcha";
+import BaseInput from "../components/forms/base-input";
+import BaseTextArea from "../components/forms/base-text-area";
+import BaseReCapcha from "../components/forms/base-re-capcha";
 import { useFormik } from "formik";
 import { ContactUsEntity } from "../models/contact/contact-us.entity";
 import { Row, Col } from "reactstrap"
@@ -44,7 +44,7 @@ export default function Contact() {
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
-                        <h2>{t("contact")}</h2>
+                        <h2>{t("CONTACT")}</h2>
                         < Breadcrumb />
                     </div>
                 </div>
@@ -102,12 +102,12 @@ export default function Contact() {
                                                     formik={form}
                                                 />
                                             </Row>
-                                            <BaseReCapcha 
-                                                    className='col-12 my-4'
-                                                    name='recaptchaValue'
-                                                    formik={form}
-                                                    onChange={handleReCapchaChange}
-                                                    captchaRef={captchaRef}
+                                            <BaseReCapcha
+                                                className='col-12 my-4'
+                                                name='recaptchaValue'
+                                                formik={form}
+                                                onChange={handleReCapchaChange}
+                                                captchaRef={captchaRef}
 
                                             />
                                             <button

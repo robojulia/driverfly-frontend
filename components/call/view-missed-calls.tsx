@@ -1,10 +1,10 @@
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 import { useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
-import ViewModal from "../viewDetails/viewModal";
+import ViewModal from "../view-details/view-modal";
 import { useEffectAsync } from "../../utils/react";
 import TwilioApi from "../../pages/api/twilio";
-import ViewDataTable from "../viewDetails/viewDataTable";
+import ViewDataTable from "../view-details/view-data-table";
 
 export interface ViewMissedCallsProps {
     label: string;

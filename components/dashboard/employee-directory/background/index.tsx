@@ -1,5 +1,5 @@
 import { Button, Col, Row } from 'react-bootstrap';
-import { useTranslation } from '../../../../hooks/useTranslation';
+import { useTranslation } from '../../../../hooks/use-translation';
 import React from 'react';
 import { ViewApplicantDetailProps } from '../../../../types/applicant/view-application-detail-props.type';
 import { useRouter } from 'next/router';

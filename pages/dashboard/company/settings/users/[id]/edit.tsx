@@ -1,11 +1,11 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import FullLayout from "../../../../../../components/dashboard/layouts/Layout/FullLayout";
-import { UserForm } from "../../../../../../components/forms/company/UserForm";
-import ChildPageLayout from "../../../../../../components/layouts/page/ChildPageLayout";
-import { useAuth } from "../../../../../../hooks/useAuth";
-import { useTranslation } from "../../../../../../hooks/useTranslation";
+import FullLayout from "../../../../../../components/dashboard/layouts/layout/full-layout";
+import { UserForm } from "../../../../../../components/forms/company/user-form";
+import ChildPageLayout from "../../../../../../components/layouts/page/child-page-layout";
+import { useAuth } from "../../../../../../hooks/use-auth";
+import { useTranslation } from "../../../../../../hooks/use-translation";
 import { UserEntity } from "../../../../../../models/user/user.entity";
 import { useEffectAsync } from "../../../../../../utils/react";
 import UserApi from "../../../../../api/user";

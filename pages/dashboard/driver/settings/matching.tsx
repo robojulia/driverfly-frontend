@@ -1,12 +1,12 @@
 import { useFormik } from "formik";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
-import { useAuth } from "../../../../hooks/useAuth";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import FullLayout from "../../../../components/dashboard/layouts/full-layout";
+import { useAuth } from "../../../../hooks/use-auth";
+import { useTranslation } from "../../../../hooks/use-translation";
 import UserApi from "../../../api/user";
 import { Row, Col, Button } from "react-bootstrap";
-import PageLayout from "../../../../components/layouts/page/PageLayout";
+import PageLayout from "../../../../components/layouts/page/page-layout";
 import { UserPreferenceEntity } from "../../../../models/user/user-preference.entity"
 
 import * as yup from "yup";
@@ -15,17 +15,17 @@ import { UserPreferenceCategory } from "../../../../enums/users/user-preference-
 import { UserPreferenceCommunicationLabel } from "../../../../enums/users/user-preferences-communication-label.enum";
 import { SharePreference } from "../../../../enums/users/share-preference.enum";
 
-import BaseCheck from "../../../../components/forms/BaseCheck";
-import BaseCheckList from "../../../../components/forms/BaseCheckList";
-import BaseSelect from "../../../../components/forms/BaseSelect";
+import BaseCheck from "../../../../components/forms/base-check";
+import BaseCheckList from "../../../../components/forms/base-check-list";
+import BaseSelect from "../../../../components/forms/base-select";
 import { UserPreferenceSharingLabel } from "../../../../enums/users/user-preference-sharing-label.enum";
 import { UserPreferenceMatchingLabel } from "../../../../enums/users/user-preference-matching-label.enum";
 import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
 import { JobSchedule } from "../../../../enums/jobs/job-schedule.enum";
 import { JobEmploymentType } from "../../../../enums/jobs/job-employment-type.enum";
 import { JobTeamDriver } from "../../../../enums/jobs/job-team-driver.enum";
-import BaseInput from "../../../../components/forms/BaseInput";
-import BaseMoneyInput from "../../../../components/forms/BaseMoneyInput";
+import BaseInput from "../../../../components/forms/base-input";
+import BaseMoneyInput from "../../../../components/forms/base-money-input";
 import { preventNegative } from "../../../../utils/input";
 import { JobPayMethod } from "../../../../enums/jobs/job-pay-method.enum";
 import { JobBenefits } from "../../../../enums/jobs/job-benefits.enum";

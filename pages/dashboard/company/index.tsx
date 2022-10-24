@@ -1,12 +1,12 @@
-import FullLayout from "../../../components/dashboard/layouts/Layout/FullLayout";
+import FullLayout from "../../../components/dashboard/layouts/layout/full-layout";
 import { Col, Row } from "reactstrap";
-import PageLayout from "../../../components/layouts/page/PageLayout";
-import { ApplicantPieChart } from "../../../components/charts/company/ApplicantPipelineChart";
-import { ApplicantsPerRecruiterChart } from "../../../components/charts/company/ApplicantsPerRecruiterChart";
-import { TotalApplicantBarChart } from "../../../components/charts/company/TotalApplicantsBarChart";
+import PageLayout from "../../../components/layouts/page/page-layout";
+import { ApplicantPieChart } from "../../../components/charts/company/applicant-pipeline-chart";
+import { ApplicantsPerRecruiterChart } from "../../../components/charts/company/applicants-per-recruiter-chart";
+import { TotalApplicantBarChart } from "../../../components/charts/company/total-applicants-bar-chart";
 
-import { useAuth } from "../../../hooks/useAuth";
-import { PieChart } from "../../../components/charts/PieChart";
+import { useAuth } from "../../../hooks/use-auth";
+import { PieChart } from "../../../components/charts/pie-chart";
 
 export default function Dashboard() {
 

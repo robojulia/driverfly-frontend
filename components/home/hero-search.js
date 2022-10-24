@@ -4,7 +4,7 @@ import { Search } from "react-bootstrap-icons";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
 import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
 import { DriverLicenseType } from "../../enums/users/driver-license-type.enum"
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 import MapboxApi from "../../pages/api/mapbox";
 
 export default function HeroSearch(props) {

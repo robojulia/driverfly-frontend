@@ -1,5 +1,5 @@
 import React from "react";
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 
 export interface SwitchProps {
     className?: string;

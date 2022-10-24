@@ -1,8 +1,8 @@
-import { PublicLayout } from "../../../components/layouts/PublicLayout";
-import RelatedJobs from '../../../components/related-jobs/Related-Jobs'
-import { useTranslation } from "../../../hooks/useTranslation"
+import { PublicLayout } from "../../../components/layouts/public-layout";
+import RelatedJobs from '../../../components/related-jobs/related-jobs'
+import { useTranslation } from "../../../hooks/use-translation"
 import JobApi from "../../api/job"
-import StructuredData from "../../../components/seo/StructuredData"
+import StructuredData from "../../../components/seo/structured-data"
 import ViewJobDetail from "../../../components/jobs/view-job-detail";
 import { JobDetailProps } from "../../../types/job/job-detail-props.type";
 

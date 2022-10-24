@@ -1,137 +1,66 @@
 import Head from "next/head";
-import { PublicLayout } from "../components/layouts/PublicLayout";
-import Featured from "../components/jobs/Featured";
-import Recent from "../components/jobs/Recent";
+import { PublicLayout } from "../components/layouts/public-layout";
+import Featured from "../components/jobs/featured";
+import Recent from "../components/jobs/recent";
 import Drivers from "../components/works/drivers";
 import Companies from "../components/works/companies";
-import CompaniesSlider from '../components/featured-companies-slider/CompaniesSlider'
-import HomeSearch from "../components/megasearch/search";
-import Slider from "../components/testominial-slider/Slider";
-import Pric from "../public/css/Pricing.module.css";
-import React, { useState, useEffect } from "react";
-import TrendingWords from "../components/trending-words/Trending";
-import { useTranslation } from "../hooks/useTranslation";
-import { DriverLicenseType } from "../enums/users/driver-license-type.enum";
-import { JobEmploymentType } from "../enums/jobs/job-employment-type.enum";
+import CompaniesSlider from '../components/featured-companies-slider/companies-slider'
+import CompanySlider from "../components/testominial-slider/slider";
+import React, { useState } from "react";
+import { useTranslation } from "../hooks/use-translation";
 import { useRouter } from "next/router";
-import { GeoAlt, Search } from "react-bootstrap-icons";
-import NewsletterSingup from "../components/newsletter-signup/NewsletterSingup";
-import HeroSearch from "../components/home/hero-search";
-import { features } from "process";
+import NewsletterSingup from "../components/news-letter-signup"
+import HeroSection from "../components/home/hero-section";
+import MotorCarrier from "../components/home/motor-carrier";
+import OwnerOperators from "../components/home/owner-operators";
+import { Check } from 'react-bootstrap-icons';
+
+
 export default function Index() {
 
     const router = useRouter();
     const { t } = useTranslation();
 
-    const [showTab, setShowTab] = useState('recent');
+    const [showTab, setShowTab] = useState('feature');
 
-    // const handleFeatureRecentClick = () => {
-    //     setShowTab()
-    // }
     return (
         <>
-        <Head>
-        <meta name="google-site-verification" content="m9bfVuOGxtYDxi8eKLetXlJplLbdwnewUO37wDyw96I" />
-        </Head>
-            <section className="hero-sec">
-                <div className="container ">
-                    <div className="row mt-5">
-                        <div className="col-md-12">
-                            <div className="hero-inner">
-                                <h1>Find The Job That Fits Your Life</h1>
-                                <h2>
-                                    Choose from thousands of CDL and Non-CDL truck driving jobs.
-                                    Get hired fast. Start Searching.
-                                </h2>
-                            </div>
-                            <HeroSearch />
-                            <TrendingWords />
-                        </div>
-                    </div>
-                </div>
-            </section>
+            <Head>
+                <meta name="google-site-verification" content="m9bfVuOGxtYDxi8eKLetXlJplLbdwnewUO37wDyw96I" />
+            </Head>
+            <HeroSection />
+            <MotorCarrier />
             <section className="hire-driver-bg">
-                <div className="container d-flex justify-content-center hire-driver-section
-       ">
+                <div className="container d-flex justify-content-center hire-driver-section">
                     <div className="hire-driver-item hire-driver-left d-flex flex-column justify-content-around">
-                        <h1>Hire a Driver</h1>
-                        <p>
-                            Get exposed to qualified drivers throughout the United States.{" "}
-                        </p>
-                        <div>
-                            <button className="theme-bg-btn" type="button" onClick={() => router.push("signup")}>
-                                Post a Job
+                        <h1>{t("FIND_JOBS_+")}</h1>
+                        <p className="mb-4">{t("IT_COULD_NOT_BETTER_TIME")}</p>
+                        <p><Check />{t("TOP_PAYING_JOBS")}</p>
+                        <p><Check />{t("HOME_BEST_TIME")}</p>
+                        <p><Check />{t("FASTER_&_EASIER_HIRING")}</p>
+                        <div className="mt-4">
+                            <button className="theme-bg-btn mr-4" type="button" onClick={() => router.push("signup")}>
+                                {t("SIGN_UP")}
+                            </button>
+                            <button className="theme-bg-btn" type="button" onClick={() => router.push("find-jobs")}>
+                                {t("browse_job")}
                             </button>
                         </div>
                     </div>
                     <div className="hire-driver-item hire-driver-right d-flex flex-column justify-content-around">
-                        <h1>Find a Job</h1>
-                        <p>
-                            Search from hundreds of available CDL and non-CDL driver jobs
-                            across the US.
-                        </p>
-                        <div>
-                            <button className="white-bg-btn" type="button" onClick={() => router.push("find-jobs")}>
-                                Browse Jobs
+                        <h1>{t("HIRE_DRIVERS_+")}</h1>
+                        <p className="mb-4">{t("WE_WORK_WITH_SMALL_TO_MID_SIZE")}</p>
+                        <p><Check />{t("GREATER_REACH")}</p>
+                        <p><Check />{t("FASTER_HIRING")}</p>
+                        <p><Check />{t("HIGHER_RETENTION")}</p>
+                        <div className="mt-4">
+
+                            <button className="theme-bg-btn" type="button" onClick={() => router.push("find-jobs")}>
+                                {t("LEARN_MORE")}
                             </button>
                         </div>
                     </div>
                 </div>
-            </section>
-            <div className="opacity-overly">
-                <section className="owner-operator-bg">
-                    <div className="container text-center">
-                        <h1 className="owner-operator-title">Owner Operators</h1>
-                        <p className="owner-operatot-text">
-                            Are you looking to lease onto a motor carrier? We have
-                            opportunities for you too! Go to the job search page and select owner
-                            operator for employment type.
-                        </p>
-                        <button
-                            className="white-bg-btn"
-                            onClick={() => router.push({ pathname: 'find-jobs', query: { "employment_type": 'OWNER_OPERATOR' } })}>
-                            Lease onto a Carrier
-                        </button>
-                    </div>
-                </section>
-            </div>
-
-            <section className="tab-sec">
-                <ul className="nav nav-tabs">
-                   
-                    <li className="nav-item" key="recent">
-                        <a
-                            href="#profile"
-                            className={`nav-link ${showTab !== 'recent'? 'active' : '' }`}
-                            data-toggle="tab"
-                            onClick={ () =>{
-                                setShowTab('recent')
-                            }}
-                        >
-                            Recent Jobs{" "}
-                        </a>
-                    </li>
-                    <li className="nav-item" key="feature">
-                        <a
-                            href="#profile"
-                            className={`nav-link ${showTab !== 'feature'? 'active' : '' }`}
-                            data-toggle="tab"
-                            onClick={ () =>{
-                                setShowTab('feature')
-                            }}
-                        >
-                            Featured Jobs
-                        </a>
-                    </li>
-                </ul>
-                {
-                    showTab === 'feature' ? < Featured />
-                        :
-                        < Recent />
-                }
-            </section>
-            <section className="container">
-                <CompaniesSlider />
             </section>
             <section className="driver-sec">
                 <div className="container how-it-work-sec">
@@ -139,27 +68,80 @@ export default function Index() {
                     <Companies />
                 </div>
             </section>
-            <div className="opacity-overly">
-                <section className="get-feature-section">
-                    <div className="container text-center">
-                        <h1>POST A RESUME & GET FEATURED</h1>
-                        <p>
-                            Create your free account in just minutes to be featured in front of hundreds of motor carriers.
-                        </p>
-                        <button className="theme-bg-btn " onClick={() => router.push("signup")}>Create an Account</button>
+            <section>
+                <div className="d-lg-flex signup-driver-section d-md-block">
+                    <div className="signup-driver-item signup-driver-left d-flex flex-column justify-content-center text-center">
+                        <h1>{t("Getting a driver job has never been easier!")}</h1>
+                        <div>
+                            <button className="white-bg-btn mt-3" type="button" onClick={() => router.push("signup")}>
+                                {t("REGISTER_TODAY")}
+                            </button>
+                        </div>
                     </div>
-                </section>
-            </div>
-            <div className="testimonial-sec home-testominial">
-                <div className="container">
-                    <h2 className="text-center">What Drivers Say About Us</h2>
-                    <div className="custom-tst pb-5">
-                        <div className="row owl-carousel owl-theme d-block" id="owl-demo">
-                            <Slider />
+                    <div className="signup-driver-item signup-driver-right d-flex flex-column justify-content-around">
+                    </div>
+                </div>
+            </section>
+            <section className="tab-sec">
+                <ul className="nav nav-tabs">
+
+                    <li className="nav-item" key="feature">
+                        <a
+                            href="#profile"
+                            className={`nav-link ${showTab !== 'feature' ? 'active' : ''}`}
+                            data-toggle="tab"
+                            onClick={() => {
+                                setShowTab('feature')
+                            }}
+                        >
+                            {t("FEATURED_JOBS")}
+                        </a>
+                    </li>
+                    <li className="nav-item" key="recent">
+                        <a
+                            href="#profile"
+                            className={`nav-link ${showTab !== 'recent' ? 'active' : ''}`}
+                            data-toggle="tab"
+                            onClick={() => {
+                                setShowTab('recent')
+                            }}
+                        >
+                            {t("RECENT_JOBS")}{" "}
+                        </a>
+                    </li>
+
+                </ul>
+                {
+                    showTab === 'feature' ? < Featured />
+                        :
+                        < Recent />
+                }
+            </section>
+            < OwnerOperators />
+            <CompaniesSlider />
+            <section>
+                <div className="opacity-overly">
+                    <section className="get-feature-section">
+                        <div className="container text-center">
+                            <h1>{t("POST A RESUME & GET FEATURED")}</h1>
+                            <p>{t("CREATE_YOUR_FREE_ACCOUNT")}</p>
+                            <button className="theme-bg-btn " onClick={() => router.push("signup")}>{t("CREATE_AN_ACCOUNT")}</button>
+                        </div>
+                    </section>
+                </div>
+            </section>
+            <section>
+                <div className="testimonial-sec home-testominial">
+                    <div className="container">
+                        <h2 className="text-center">{t("WHAT_DRIVERS_SAY_ABOUT_US")}</h2>
+                        <div className="custom-tst pb-5">
+                            <div className="row owl-carousel owl-theme d-block" id="owl-demo">
+                                <CompanySlider />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
             <section className="news-letter-signup-sec">
                 <div className="container">
                     <NewsletterSingup />
