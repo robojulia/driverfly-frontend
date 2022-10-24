@@ -47,8 +47,10 @@ const SkillEntry = ({ applicant, t }) => (
             ))}
         </List>
         <Text style={styles.title}>{t("TRANSMISSION_EXPERIENCE")}</Text>
-        <Item>{applicant?.transmission_type[0] || ''}</Item>
-        <Item>{applicant?.transmission_type[1] || ''}</Item>
+        {applicant?.transmission_type?.length && <>
+            <Item>{applicant?.transmission_type[0] || ''}</Item>
+            <Item>{applicant?.transmission_type[1] || ''}</Item>
+        </>}
     </View>
 )
 
