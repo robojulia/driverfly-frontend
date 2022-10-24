@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { PublicLayout } from "../components/layouts/public-layout";
 import Blog from '../public/css/blog.module.css'
 import BlogSidebar from '../components/blog-sidebar/blog-sidebar';

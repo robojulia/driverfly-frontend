@@ -1,12 +1,7 @@
 import Link from 'next/link';
 import { PublicLayout } from "../components/layouts/public-layout";
-import BlogDetail from '../public/css/BlogDetail.module.css'
-import SocilShare from '../components/share-link/ShareLink';
-import JonInformation from '../components/job-information-sidebar/JobInformation';
-import JobDescription from '../components/job-description/JobDescription';
-import BlogSidebar from '../components/blog-sidebar/Blog-Sidebar';
-// import Breadcrumbs from 'nextjs-breadcrumbs';
-import Tags from '../components/tags/Tags';
+import BlogDetail from '../public/css/blog-detail.module.css'
+import SocilShare from '../components/share-link/share-link';
 
 export default function TipsBlog() {
     return (
