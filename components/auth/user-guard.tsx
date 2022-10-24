@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { yupInit } from "../../config/yup";
-import { jwtExpiryTimeout, useAuth } from "../../hooks/useAuth";
+import { jwtExpiryTimeout, useAuth } from "../../hooks/use-auth";
 import { Loading } from "../loading/loading";
 
 export interface UserGuardProps {

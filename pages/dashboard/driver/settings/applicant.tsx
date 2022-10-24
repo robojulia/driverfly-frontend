@@ -1,5 +1,5 @@
-import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
-import BaseInputPhone from "../../../../components/forms/BaseInputPhone";
+import FullLayout from "../../../../components/dashboard/layouts/full-layout";
+import BaseInputPhone from "../../../../components/forms/base-input-phone";
 
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity"
 import { ApplicantEmployerEntity } from "../../../../models/applicant/applicant-employer.entity";
@@ -21,27 +21,30 @@ import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
 
 import { Row, Col, Button, Table, Alert } from "react-bootstrap";
 import { PlusCircle, ChevronUp, XCircle, DashCircle } from "react-bootstrap-icons";
-import ViewCard from "../../../../components/viewDetails/viewCard";
-import BaseInput from "../../../../components/forms/BaseInput";
-import BaseSelect from "../../../../components/forms/BaseSelect";
-import StateSelect from "../../../../components/forms/StateSelect";
-import BaseCheck from "../../../../components/forms/BaseCheck";
-import BaseCheckList from "../../../../components/forms/BaseCheckList";
-import FileInput from "../../../../components/forms/FileInput";
-import BaseTextArea from "../../../../components/forms/BaseTextArea";
+import ViewCard from "../../../../components/view-details/view-card";
+import BaseInput from "../../../../components/forms/base-input";
+import BaseSelect from "../../../../components/forms/base-select";
+import StateSelect from "../../../../components/forms/state-select";
+import BaseCheck from "../../../../components/forms/base-check";
+import BaseCheckList from "../../../../components/forms/base-check-list";
+import FileInput from "../../../../components/forms/file-input";
+import BaseTextArea from "../../../../components/forms/base-text-area";
 
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 
 import { useFormik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'
 import { useEffectAsync } from "../../../../utils/react";
 import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
+import ApplicantResume from "../../../../components/pdf/applicant-resume";
 
 export default function Applicant() {
     const { t } = useTranslation();
     const api = new ApplicantApi();
+
+    const [applicant, setApplicant] = useState<ApplicantEntity>()
 
     const form = useFormik({
         initialValues: new ApplicantEntity(),
@@ -49,9 +52,10 @@ export default function Applicant() {
         onSubmit: async (values) => {
             if ("jobs" in values)
                 delete values.jobs;
-                
+
             try {
                 values = await api.me.update(values);
+                setApplicant(values)
 
                 toast.success(t("successfully_saved_information"));
 
@@ -64,9 +68,9 @@ export default function Applicant() {
     });
 
     useEffectAsync(async () => {
-        const applicant = await api.me.get();
+        const data = await api.me.get();
 
-        applicant.equipment_experience.forEach((equipmentExp) => {
+        data.equipment_experience.forEach((equipmentExp) => {
             if (!Number.isInteger(equipmentExp)) {
                 equipmentExp.months = Math.round((equipmentExp.years % 1) * 12);
                 equipmentExp.years = Math.floor(equipmentExp.years);
@@ -75,22 +79,27 @@ export default function Applicant() {
 
         form.setValues({
             ...form.values,
-            ...applicant,
+            ...data,
         });
+        setApplicant(data)
     }, []);
 
     return (<>
         <ToastContainer />
         <form onSubmit={form.handleSubmit}>
             <Row>
-                <Col>
+                <Col xs="8">
                     <Alert variant="info">
                         {t("APPLICANT_INFO_DESCRIPTION")}
                     </Alert>
                 </Col>
-                <Col xs="3">
+                <Col xs="4">
                     <div style={{ float: "right" }}>
-                        <Button variant="primary" type="submit">{t("SAVE")}</Button>
+                        <Button variant="primary" type="submit" disabled={form.isSubmitting || !form.isValid || form.isValidating}>{t("SAVE")}</Button>
+                        <ApplicantResume
+                            className={' ml-1'}
+                            applicant={applicant}
+                            disabled={form.isSubmitting || !form.isValid || form.isValidating} />
                     </div>
                 </Col>
             </Row>
@@ -247,7 +256,7 @@ export default function Applicant() {
                                     name="authorized_to_work_in_us"
                                     formik={form}
                                 />
-                               <BaseCheckList
+                                <BaseCheckList
                                     className="col-12 mt-2"
                                     label="PREFERRED_LOCATION"
                                     name="preferred_location"

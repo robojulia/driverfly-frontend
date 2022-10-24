@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useToken } from "../../hooks/useAuth";
+import { useToken } from "../../hooks/use-auth";
 
 import { UserContext } from "../../context/user-context";
 import { UserGuard } from "./user-guard";

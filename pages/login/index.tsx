@@ -3,13 +3,13 @@ import { Button, Col, Row } from 'react-bootstrap';
 import Link from 'next/link';
 import { toast } from 'react-toastify'
 
-import { PublicLayout } from "../../components/layouts/PublicLayout";
-import { PublicPage } from '../../components/layouts/public/PublicPage';
-import BaseInput from '../../components/forms/BaseInput';
+import { PublicLayout } from "../../components/layouts/public-layout";
+import { PublicPage } from '../../components/layouts/public/public-page';
+import BaseInput from '../../components/forms/base-input';
 
 import { useFormik } from "formik";
-import { useAuth } from '../../hooks/useAuth';
-import { useTranslation } from "../../hooks/useTranslation";
+import { useAuth } from '../../hooks/use-auth';
+import { useTranslation } from "../../hooks/use-translation";
 
 import AuthApi from "../api/auth";
 

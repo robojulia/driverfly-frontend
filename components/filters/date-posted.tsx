@@ -1,7 +1,7 @@
 import moment from "moment"
 import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
 import { JobDatePosted } from "../../enums/jobs/job-date-posted.enum"
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 import { ChangeEvent } from "react";
 
 

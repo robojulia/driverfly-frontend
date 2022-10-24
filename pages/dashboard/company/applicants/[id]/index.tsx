@@ -3,19 +3,19 @@ import { toast } from "react-toastify";
 import { Button, ButtonGroup, Col, Row } from "react-bootstrap";
 import { BookmarkCheck, BookmarkDash, Pencil, PlusLg, Trash } from "react-bootstrap-icons";
 
-import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
+import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useFormik } from "formik";
-import { useTranslation } from "../../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../../hooks/use-translation";
 import { useEffectAsync } from "../../../../../utils/react";
-import { useAuth } from "../../../../../hooks/useAuth";
-import ViewTable from "../../../../../components/viewDetails/viewTable";
-import BaseTextArea from "../../../../../components/forms/BaseTextArea";
-import ViewModal from "../../../../../components/viewDetails/viewModal";
-import ViewPdf from "../../../../../components/viewDetails/viewPdf";
-import ViewCard from "../../../../../components/viewDetails/viewCard";
+import { useAuth } from "../../../../../hooks/use-auth";
+import ViewTable from "../../../../../components/view-details/view-table";
+import BaseTextArea from "../../../../../components/forms/base-text-area";
+import ViewModal from "../../../../../components/view-details/view-modal";
+import ViewPdf from "../../../../../components/view-details/view-pdf";
+import ViewCard from "../../../../../components/view-details/view-card";
 
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import { ApplicantNoteEntity } from "../../../../../models/applicant/applicant-note.entity";
@@ -23,7 +23,7 @@ import { ApplicantNoteEntity } from "../../../../../models/applicant/applicant-n
 
 import ApplicantApi from "../../../../api/applicant";
 import DocumentApi from "../../../../api/document";
-import ChildPageLayout from "../../../../../components/layouts/page/ChildPageLayout";
+import ChildPageLayout from "../../../../../components/layouts/page/child-page-layout";
 import { ApplicantSuggestedJobEntity } from "../../../../../models/applicant/applicant-suggested-job.entity";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import FlagApplicant from "../../../../../components/flag/flag-a-applicant";

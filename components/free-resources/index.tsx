@@ -1,8 +1,8 @@
 import { Row, Col, Button } from 'react-bootstrap';
 import Link from 'next/link';
 import { SocialLinks } from '../social/social-links';
-import ViewCard from '../viewDetails/viewCard';
-import { useTranslation } from '../../hooks/useTranslation';
+import ViewCard from '../view-details/view-card';
+import { useTranslation } from '../../hooks/use-translation';
 import { ArrowUpRightSquare } from 'react-bootstrap-icons';
 
 export default function FreeResources() {

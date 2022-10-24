@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { useEffect, useState } from "react"
 import timeSince from "../../utils/timeSince"
-import { useTranslation } from "../../hooks/useTranslation"
+import { useTranslation } from "../../hooks/use-translation"
 import CompanyPhoto from '../jobs/company-photo'
 import { CurrencyDollar } from 'react-bootstrap-icons';
 import { buildAddress } from '../../utils/common'

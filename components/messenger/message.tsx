@@ -5,7 +5,7 @@ import { MessageDirection } from "../../enums/conversation/message-direction.enu
 
 import { ConversationMessageEntity } from "../../models/conversation/conversation-message.entity";
 import { ConversationEntity } from "../../models/conversation/conversation.entity";
-import When from "../viewDetails/when";
+import When from "../view-details/when";
 
 export interface MessageProps {
     conversation: ConversationEntity;

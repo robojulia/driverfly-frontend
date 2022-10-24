@@ -1,29 +1,29 @@
-import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
+import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 import { useState } from "react";
 import React from "react";
 import { CloudArrowDown, Download, Plus, Send } from 'react-bootstrap-icons';
-import PageLayout from "../../../../../components/layouts/page/PageLayout";
-import { useTranslation } from "../../../../../hooks/useTranslation";
-import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
-import { useAuth } from "../../../../../hooks/useAuth";
+import PageLayout from "../../../../../components/layouts/page/page-layout";
+import { useTranslation } from "../../../../../hooks/use-translation";
+import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/view-details/view-data-table";
+import { useAuth } from "../../../../../hooks/use-auth";
 import { useEffectAsync } from "../../../../../utils/react";
 import { Button, Row } from "react-bootstrap";
-import ViewModal from "../../../../../components/viewDetails/viewModal";
-import FileInput from "../../../../../components/forms/FileInput";
-import BaseSelect from "../../../../../components/forms/BaseSelect";
+import ViewModal from "../../../../../components/view-details/view-modal";
+import FileInput from "../../../../../components/forms/file-input";
+import BaseSelect from "../../../../../components/forms/base-select";
 import ComplianceApi from "../../../../api/compliance";
 import { DocumentEntity } from "../../../../../models/documents/document.entity";
 import { StoredFileDto } from "../../../../../models/compiance/stored-file.dto";
 import { useFormik } from "formik";
 import { CompanyDocumentType } from "../../../../../enums/compliance/company-document-type.enum";
-import EntityForm from "../../../../../components/layouts/page/EntityForm";
+import EntityForm from "../../../../../components/layouts/page/entity-form";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import { toast } from 'react-toastify'
 import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
 import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
 import ApplicantApi from "../../../../api/applicant";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
-import ViewPdf from "../../../../../components/viewDetails/viewPdf";
+import ViewPdf from "../../../../../components/view-details/view-pdf";
 import DocumentApi from "../../../../api/document";
 
 export default function StoredFiles() {

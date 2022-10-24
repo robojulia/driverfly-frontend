@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
-import { TranslateInterface, useTranslation } from '../../../hooks/useTranslation'
+import { TranslateInterface, useTranslation } from '../../../hooks/use-translation'
 import { Check, CheckCircle, ExclamationTriangle, XCircle } from "react-bootstrap-icons";
 import { useState } from "react";
 import FileDownload from 'js-file-download';

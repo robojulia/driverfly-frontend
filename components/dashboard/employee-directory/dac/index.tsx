@@ -1,15 +1,15 @@
 
 import { Button, Form, Table } from "react-bootstrap";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { ApplicantDac } from "../../../../enums/applicants/applicant-dac.enum";
-import ViewCard from "../../../viewDetails/viewCard";
+import ViewCard from "../../../view-details/view-card";
 import { ViewApplicantDetailProps } from "../../../../types/applicant/view-application-detail-props.type";
 import { useFormik } from "formik";
 import { ApplicantDacEntity } from "../../../../models/applicant/applicant-dac.entity";
 import ApplicantApi from "../../../../pages/api/applicant";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import { toast } from "react-toastify";
-import BaseCheck from "../../../forms/BaseCheck";
+import BaseCheck from "../../../forms/base-check";
 
 export interface DacTabProps extends ViewApplicantDetailProps { }
 

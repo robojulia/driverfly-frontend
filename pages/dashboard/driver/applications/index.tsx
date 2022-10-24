@@ -1,20 +1,20 @@
-import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
+import FullLayout from "../../../../components/dashboard/layouts/full-layout";
 import { Col, Row, Card, CardBody, Table } from "reactstrap";
-import { useAuth } from "../../../../hooks/useAuth";
+import { useAuth } from "../../../../hooks/use-auth";
 import { useState } from "react";
-import JobList from "../../../../public/dashboard/styles/css/JobList.module.css"
+import JobList from "../../../../public/dashboard/styles/css/job-list.module.css"
 import Link from 'next/link';
 import ApplicantApi from '../../../api/applicant';
 import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { CurrencyDollar } from 'react-bootstrap-icons';
 import ShowEnumFromString from '../../../../components/enum-filters/show-enum-from-string';
 import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
-import ViewDataTable, { getDataTableColumnKey } from '../../../../components/viewDetails/viewDataTable';
+import ViewDataTable, { getDataTableColumnKey } from '../../../../components/view-details/view-data-table';
 import { buildAddress } from '../../../../utils/common';
 import OverlyPopover from '../../../../components/popover/overly-popover';
 import { JobDeliveryType } from '../../../../enums/jobs/job-delivery-type.enum';
-import useStorage from "../../../../hooks/useStorage";
+import useStorage from "../../../../hooks/use-storage";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import { useEffectAsync } from "../../../../utils/react";
 import { ApplicantJobEntity } from "../../../../models/applicant/applicant-job.entity";

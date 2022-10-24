@@ -1,6 +1,6 @@
 import { useContext } from "react"
-import jobContext from "../../context/jobContext"
-import { useTranslation } from "../../hooks/useTranslation"
+import jobContext from "../../context/job-context"
+import { useTranslation } from "../../hooks/use-translation"
 
 export default function Sort(props) {
 

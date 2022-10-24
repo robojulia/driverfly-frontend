@@ -497,7 +497,7 @@ li:hover ul {
     color: #2da2af;
     font-size: 18px;
     margin: 7px 0px !important;
-    font-weight: 400;
+    font-weight: 600;
 }
 
 .job-date-author {
@@ -1096,7 +1096,7 @@ img.who-we-img.img-fluid {
 
 .testimonial-sec {
     background: #fafafa;
-    padding: 140px 0px 0px;
+    padding: 80px 0px 0px;
 }
 
 .custom-tst .item {
@@ -1105,8 +1105,8 @@ img.who-we-img.img-fluid {
 }
 
 .Slider_owl-next {
-    width: 60px;
-    height: 50px;
+    width: 65px;
+    height: 60px;
     line-height: 50px;
     background: white !important;
     font-size: 18px !important;
@@ -1372,12 +1372,14 @@ img.who-we-img.img-fluid {
 
 /******************************* TABS-SEC ***************************/
 .tab-sec {
-    padding: 60px 0px;
+    padding: 100px 0px 70px 0px;
 }
 
 .tab-content .media {
-    padding: 25px 80px 25px 20px;
+    padding: 45px 80px 40px 20px;
     border: 1px solid lightgrey;
+    background: rgb(250, 254, 255);
+    background: linear-gradient(127deg, rgba(250, 254, 255, 1) 61%, rgba(250, 254, 255, 1) 66%, rgb(115 231 255 / 56%) 91%, rgb(115 231 255 / 56%) 91%, rgb(0 212 255 / 34%) 97%);
 }
 
 .tab-content .media h4 {
@@ -1399,17 +1401,19 @@ img.who-we-img.img-fluid {
 }
 
 .tab-sec .nav-link.active {
-    background: #252834 !important;
-    color: white !important;
+    background: white !important;
+    color: #252834 !important;
+
+
 }
 
 .tab-sec .nav-link {
     border: none !important;
-    background: white !important;
-    color: #252834 !important;
+    background: #2ec8c4 !important;
+    color: rgb(255 255 255) !important;
     font-size: 16px;
     font-weight: 500;
-    padding: 12px 50px;
+    padding: 15px 50px;
     display: inline-block;
     border-radius: 4px;
 }
@@ -1420,7 +1424,7 @@ img.who-we-img.img-fluid {
     background: #252834 !important;
     width: 400px;
     margin: 0px auto;
-    padding: 6px 0px;
+    padding: 3px 0px;
     border-radius: 4px;
 }
 
@@ -1449,8 +1453,8 @@ img.who-we-img.img-fluid {
 }
 
 .Slider_owl-prev {
-    width: 60px;
-    height: 50px;
+    width: 65px;
+    height: 60px;
     line-height: 50px;
     background: white !important;
     font-size: 18px !important;
@@ -1870,7 +1874,6 @@ li.link-wrapper>a.active {
 .hire-driver-item {
     width: 50%;
     padding: 30px;
-    height: 300px;
     line-height: 1;
     transition: background 0.3s, border-radius 0.3s, opacity 0.3s;
 }
@@ -1881,7 +1884,6 @@ li.link-wrapper>a.active {
 
 .hire-driver-left {
     position: relative;
-    height: 300px;
 }
 
 .hire-driver-left::before {
@@ -1912,9 +1914,10 @@ li.link-wrapper>a.active {
 
 .hire-driver-item p {
     color: #fff;
-    font-size: 23px;
+    font-size: 18px;
     line-height: 30px;
     position: relative;
+    margin: 0;
 }
 
 .opacity-overly {
@@ -1975,6 +1978,7 @@ li.link-wrapper>a.active {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: 100px;
 }
 
 .get-feature-section::before {
@@ -2021,6 +2025,14 @@ li.link-wrapper>a.active {
 }
 
 /* muli crousal styling */
+.company_slider {
+    margin-top: 100px;
+}
+
+.company_slider a, .company_slider:hover a {
+    text-decoration: none;
+}
+
 .react-multi-carousel-dot button {
     border-color: #2EC8C4 !important;
     width: 15px !important;
@@ -2141,4 +2153,87 @@ input[type=checkbox] {
 
 .get_result_text {
     color: #5dcac4 !important;
+}
+
+/* .signup-driver-section{
+    margin: 100px 0px;
+} */
+
+.signup-driver-section .signup-driver-item {
+    width: 50%;
+    padding: 30px;
+    line-height: 1;
+    transition: background 0.3s, border-radius 0.3s, opacity 0.3s;
+}
+
+.signup-driver-right {
+    position: relative;
+    height: 475px;
+
+}
+
+.signup-driver-section .signup-driver-right::before {
+    background: linear-gradient(to bottom, #5db1bb59 0%, #5db1bb59 100%), url(/img/googleusercontent.png);
+    content: "";
+    background-size: cover;
+    position: absolute;
+    background-position: center center;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: -3px;
+}
+
+.signup-driver-section .signup-driver-left {
+    background-color: #5db1bb;
+
+    opacity: 1;
+    position: relative;
+    height: 475px;
+
+}
+
+.signup-driver-section .signup-driver-item h1 {
+    color: #fff;
+    font-size: 42px;
+    font-weight: 500;
+    position: relative;
+    padding: 0px 105px;
+
+}
+
+.signup-driver-section .signup-driver-item p {
+    color: #fff;
+    font-size: 23px;
+    line-height: 30px;
+    position: relative;
+}
+
+/*  Home motor carrier section css*/
+
+.motor-carrier-bg {
+    background: linear-gradient(to bottom, rgb(8 177 184 / 85%) 0%, rgb(8 177 184 / 85%) 100%), url(/img/motor-carrier.jpeg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.motor-carrier {
+    color: #fff;
+    font-weight: 700;
+
+}
+
+.motor-carrier-bg a {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+}
+
+.motor-carrier-bg:hover a {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
 }

@@ -1,17 +1,19 @@
-import Link from 'next/link';
-import { PublicLayout } from "../components/layouts/PublicLayout";
-import Blog from '../public/css/Blog.module.css'
-import BlogSidebar from '../components/blog-sidebar/Blog-Sidebar';
+import { PublicLayout } from "../components/layouts/public-layout";
+import Blog from '../public/css/blog.module.css'
+import BlogSidebar from '../components/blog-sidebar/blog-sidebar';
 import { ArrowRight, Chat, Clock } from 'react-bootstrap-icons';
-// import Breadcrumbs from 'nextjs-breadcrumbs';
-import Breadcrumb from '../components/breadcrumbs/Breadcrumb';
+import { useTranslation } from '../hooks/use-translation';
+import Breadcrumb from '../components/breadcrumbs/breadcrumb';
 export default function Blogs() {
+
+    const { t } = useTranslation();
+
     return (
         <>
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
-                        <h2>The DriverFly On The Wall Blog</h2>
+                        <h2>{t("BLOG")}</h2>
                         < Breadcrumb />
                     </div>
                 </div>
@@ -41,7 +43,7 @@ export default function Blogs() {
                                 </div>
                             </div>
                         </div>
-                      
+
                         <div className='my-3'>
                             <div className='row border-bottom pb-3'>
                                 <div className="col-lg-4 col-md-4 p-0  ">

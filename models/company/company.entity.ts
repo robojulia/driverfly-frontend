@@ -1,6 +1,6 @@
 import { DocumentEntity } from "../documents/document.entity";
 import * as yup from "yup";
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 import { Status } from "../../enums/status.enum";
 
 export class CompanyEntity {

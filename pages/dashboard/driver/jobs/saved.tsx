@@ -1,18 +1,18 @@
-import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
-import { useAuth } from "../../../../hooks/useAuth";
+import FullLayout from "../../../../components/dashboard/layouts/full-layout";
+import { useAuth } from "../../../../hooks/use-auth";
 import { useState } from "react";
 import Link from 'next/link';
 import SavedJobApi from '../../../api/saved-job';
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { CurrencyDollar } from 'react-bootstrap-icons';
 import ShowEnumFromString from '../../../../components/enum-filters/show-enum-from-string';
 import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
-import ViewDataTable, { getDataTableColumnKey } from '../../../../components/viewDetails/viewDataTable';
+import ViewDataTable, { getDataTableColumnKey } from '../../../../components/view-details/view-data-table';
 import { buildAddress } from '../../../../utils/common';
 import OverlyPopover from '../../../../components/popover/overly-popover';
 import { JobDeliveryType } from '../../../../enums/jobs/job-delivery-type.enum';
 import { useEffectAsync } from "../../../../utils/react";
-import PageLayout from "../../../../components/layouts/page/PageLayout";
+import PageLayout from "../../../../components/layouts/page/page-layout";
 import { SavedJobEntity } from "../../../../models/saved-jobs/saved-job.entity";
 
 export default function JobsSaved() {

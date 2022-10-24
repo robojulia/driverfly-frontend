@@ -1,12 +1,12 @@
 import { Button, Col, Form, Row, Table } from "react-bootstrap";
-import { useAuth } from "../../../../hooks/useAuth";
+import { useAuth } from "../../../../hooks/use-auth";
 import { useEffectAsync } from "../../../../utils/react";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { ViewApplicantDetailProps } from "../../../../types/applicant/view-application-detail-props.type";
 import { useFormik } from "formik";
 import ApplicantApi from "../../../../pages/api/applicant";
-import ViewCard from "../../../viewDetails/viewCard";
-import FileInput from '../../../forms/FileInput';
+import ViewCard from "../../../view-details/view-card";
+import FileInput from '../../../forms/file-input';
 import { ApplicantDocumentType } from '../../../../enums/applicants/applicant-document-type.enum';
 import { toast } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
@@ -17,7 +17,7 @@ import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import { useState } from "react";
 import { ThreeCircles } from 'react-loader-spinner';
 import DocumentApi from "../../../../pages/api/document";
-import ViewPdf from "../../../viewDetails/viewPdf";
+import ViewPdf from "../../../view-details/view-pdf";
 
 export interface DqfTabProps extends ViewApplicantDetailProps { }
 

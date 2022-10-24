@@ -2,16 +2,16 @@ import { toast } from "react-toastify";
 
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { useTranslation } from "../../../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../../../hooks/use-translation";
 import { useEffectAsync } from "../../../../../../utils/react";
 
-import FullLayout from "../../../../../../components/dashboard/layouts/Layout/FullLayout";
-import ChildPageLayout from "../../../../../../components/layouts/page/ChildPageLayout";
-import { CompanyForm } from "../../../../../../components/forms/company/CompanyForm";
+import FullLayout from "../../../../../../components/dashboard/layouts/layout/full-layout";
+import ChildPageLayout from "../../../../../../components/layouts/page/child-page-layout";
+import { CompanyForm } from "../../../../../../components/forms/company/company-form";
 
 import { CompanyEntity } from "../../../../../../models/company/company.entity";
 import CompanyApi from "../../../../../api/company";
-import { useAuth } from "../../../../../../hooks/useAuth";
+import { useAuth } from "../../../../../../hooks/use-auth";
 
 export default function EditCompany({ id }) {
     const router = useRouter();

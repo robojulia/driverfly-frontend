@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import { useContext } from "react"
-import jobContext from "../../context/jobContext"
+import jobContext from "../../context/job-context"
 import timeSince from "../../utils/timeSince"
-import { useTranslation } from "../../hooks/useTranslation"
+import { useTranslation } from "../../hooks/use-translation"
 import CompanyPhoto from '../jobs/company-photo'
 import { CurrencyDollar } from 'react-bootstrap-icons';
 import { buildAddress } from '../../utils/common'

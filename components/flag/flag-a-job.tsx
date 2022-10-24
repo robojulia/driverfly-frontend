@@ -1,15 +1,15 @@
 import { useFormik } from "formik";
 import { toast } from 'react-toastify'
 import { globalAjaxExceptionHandler } from "../../utils/ajax";
-import { useTranslation } from "../../hooks/useTranslation";
-import BaseInput from "../forms/BaseInput";
-import { useAuth } from '../../hooks/useAuth'
+import { useTranslation } from "../../hooks/use-translation";
+import BaseInput from "../forms/base-input";
+import { useAuth } from '../../hooks/use-auth'
 import { FlagInappropriateJobDto } from "../../models/support/flag-inappropriate-job.dto";
 import { Row, Button, Col } from "react-bootstrap";
-import ViewModal from "../viewDetails/viewModal";
+import ViewModal from "../view-details/view-modal";
 import { FlagFill, Link } from "react-bootstrap-icons";
 import React, { useEffect, useState } from "react";
-import BaseSelect from "../forms/BaseSelect";
+import BaseSelect from "../forms/base-select";
 import { InappropriateJobFlag } from "../../enums/support/inappropriate-job-flag.enum";
 import SupportApi from "../../pages/api/support";
 

@@ -1,4 +1,4 @@
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 
 interface EnumFilterProps {
     name: string;
