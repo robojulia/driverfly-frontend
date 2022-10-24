@@ -49,6 +49,7 @@ export function HighestLevelEducation(props: HighestLevelEducationProps){
                     placeholder="Click to choose"
                     label='Highest Level of Education'
                     formik={form}
+                    
                 />
             </Row>
 

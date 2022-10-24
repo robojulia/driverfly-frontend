@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../../../../styles/JotForm.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/useTranslation";
@@ -11,20 +11,14 @@ import BaseCheck from "../../BaseCheck";
 import { States } from "../../../../enums/users/us-states.enum";
 import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferences.enum";
 export interface EmploymentHistoryProps {
-  onNextClick: (values: any) => void;
+  onNextClick: (values?: any) => void;
   onBackClick: () => void;
 }
-// New Jotformf
-// New New JotForm
 export function EmploymentHistory(props: EmploymentHistoryProps) {
-  const [optionalView, setOptionalView] = useState<boolean>(false);
-  const onOptionChange = (e: any) => {
-    setOptionalView(e);
-  };
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: {
-      employed_type: null,
+      employed_type: false,
       current_company_manager_name: null,
       current_company_phone_number: null,
       current_company_email: null,
@@ -33,50 +27,50 @@ export function EmploymentHistory(props: EmploymentHistoryProps) {
       current_company_zipcode: null,
     },
     validationSchema: yup.object({
-      // employed_type: yup.boolean().when({
-      //     is: true,
-      //     then: yup.string().oneOf({
+      current_company_manager_name: yup
+        .string()
+        .when("employed_type", {
+          is: (v) => !!v,
+          then: yup.string().required().nullable(),
+          otherwise: yup.string().optional().nullable(),
+        })
+        .nullable(),
 
-      //     })
-      // }).nullable(),
-    // current_company_manager_name: optionalView ? yup.string().required().nullable() : null,
-    //   current_company_phone_number: optionalView ? yup.string().required().nullable(): null,
-    //   current_company_email: optionalView ? yup.string().required().nullable(): null,
-    //   current_company_street_address_line_1: optionalView ? yup.string().required().nullable(): null,
-    //   current_company_street_address_line_2: optionalView ? yup.string().required().nullable(): null,
-    //   current_company_zipcode: optionalView ? yup.string().required().nullable(): null,
+      current_company_email: yup
+        .string()
+        .when("employed_type", {
+          is: (v) => !!v,
+          then: yup.string().required().nullable(),
+          otherwise: yup.string().optional().nullable(),
+        })
+        .nullable(),
 
-    current_company_phone_number:  yup.string().required().nullable(),
-      current_company_email:  yup.string().required().nullable(),
-      current_company_street_address_line_1:  yup.string().required().nullable(),
-      current_company_street_address_line_2:  yup.string().required().nullable(),
-      current_company_zipcode:  yup.string().required().nullable(),
+      current_company_street_address_line_1: yup
+        .string()
+        .when("employed_type", {
+          is: (v) => !!v,
+          then: yup.string().required().nullable(),
+          otherwise: yup.string().optional().nullable(),
+        })
+        .nullable(),
 
+      current_company_street_address_line_2: yup
+        .string()
+        .when("employed_type", {
+          is: (v) => !!v,
+          then: yup.string().required().nullable(),
+          otherwise: yup.string().optional().nullable(),
+        })
+        .nullable(),
 
-      // current_company_manager_name: yup.string().when({
-      //     is:true,
-      //     then:yup.string().required().nullable()
-      // }),
-      // current_company_phone_number: yup.string().when({
-      //     is:true,
-      //     then:yup.string().required().nullable()
-      // }),
-      // current_company_email: yup.string().when({
-      //     is:true,
-      //     then:yup.string().required().nullable()
-      // }),
-      // current_company_street_address_line_1: yup.string().when({
-      //     is:true,
-      //     then:yup.string().required().nullable()
-      // }),
-      // current_company_street_address_line_2: yup.string().when({
-      //     is:true,
-      //     then:yup.string().required().nullable()
-      // }),
-      // current_company_zipcode: yup.string().when({
-      //     is:true,
-      //     then:yup.string().required().nullable()
-      // })
+      current_company_zipcode: yup
+        .string()
+        .when("employed_type", {
+          is: (v) => !!v,
+          then: yup.string().required().nullable(),
+          otherwise: yup.string().optional().nullable(),
+        })
+        .nullable(),
     }),
     onSubmit: (values) => {
       props.onNextClick(values);
@@ -85,30 +79,9 @@ export function EmploymentHistory(props: EmploymentHistoryProps) {
       props.onBackClick();
     },
   });
-  // function EmployedTypeChange(e: React.ChangeEvent<HTMLInputElement>) {
-  //     const employedType = e.target.value;
-  //     switch (employedType) {
-  //         case CurrentlyEmployedType.YES:
-  //             form.setValues({
-  //                 ...form.values,
-  //                 employed_type: employedType,
-  //                 current_company_manager_name: null,
-  //                 current_company_phone_number: null,
-  //                 current_company_email: null,
-  //                 current_company_street_address_line_1: null,
-  //                 current_company_street_address_line_2: null,
-  //                 current_company_zipcode: null,
-
-  //             })
-  //             break;
-  //         default:
-  //             form.setValues({
-  //                 ...form.values,
-  //                 employed_type: employedType
-  //             })
-
-  //     }
-  // }
+  useEffect(() => {
+    console.log("error", form.errors);
+  }, [form.values, form.errors]);
 
   return (
     <>
@@ -128,11 +101,10 @@ export function EmploymentHistory(props: EmploymentHistoryProps) {
             required
             name="employed_type"
             label="Are you currently employed?"
-            onChange={(e) => onOptionChange(e.target.value)}
+            formik={form}
           />
         </Row>
-        {/* {!!form.values.employed_type && ( */}
-        {optionalView ? (
+        {form.values.employed_type ? (
           <>
             <Row>
               <h6
@@ -310,7 +282,7 @@ export function EmploymentHistory(props: EmploymentHistoryProps) {
               </Col>
             </Row>
           </>
-        ) : 'null'}
+        ) : null}
 
         {/* )} */}
         <Row className="mt-5">
