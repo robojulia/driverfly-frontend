@@ -111,7 +111,6 @@ export default function ApplicantResume({ applicant, disabled, className }: Appl
             </Page>
         </Document>
     );
-console.log(applicant,'appp')
     return (
         <>
             {resume &&
