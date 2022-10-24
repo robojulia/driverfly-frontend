@@ -5,12 +5,12 @@ import { useEffect, useState } from "react";
 import { Card, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { ChattableType } from "../../enums/conversation/chattable-type.enum";
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 import { ConversationEntity, CreateConversationDto } from "../../models/conversation/conversation.entity";
 import { ConversationApi } from "../../pages/api/conversation";
 import { globalAjaxExceptionHandler } from "../../utils/ajax";
 import ComboBox, { ComboboxItem } from "../controls/combobox";
-import BaseTextArea from "../forms/BaseTextArea";
+import BaseTextArea from "../forms/base-text-area";
 import { Message } from "./message";
 
 export interface ConversationFormProps {

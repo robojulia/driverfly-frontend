@@ -1,9 +1,9 @@
 import React from 'react';
-import ViewCard from '../viewDetails/viewCard';
+import ViewCard from '../view-details/view-card';
 import { Link } from 'react-bootstrap-icons';
 import { ApplicantStatus } from '../../enums/applicants/applicant-status.enum';
 import ShowEnumFromString from '../enum-filters/show-enum-from-string';
-import ViewTable from '../viewDetails/viewTable';
+import ViewTable from '../view-details/view-table';
 import { ViewApplicantDetailProps } from '../../types/applicant/view-application-detail-props.type';
 
 interface ApplicantJobsAppliedProps extends ViewApplicantDetailProps { }

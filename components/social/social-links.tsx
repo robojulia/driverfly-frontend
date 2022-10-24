@@ -1,7 +1,7 @@
-import { FacebookLink } from "./links/FacebookLink";
-import { InstagramLink } from "./links/InstagramLink";
-import { LinkedinLink } from "./links/LinkedinLink";
-import { SocialLinkProps } from "./links/SocialLinkProps";
+import { FacebookLink } from "./links/facebook-link";
+import { InstagramLink } from "./links/instagram-link";
+import { LinkedinLink } from "./links/linkedin-link";
+import { SocialLinkProps } from "./links/social-link-props";
 
 export interface SocialLinksProps extends SocialLinkProps {
     breakComponent?: React.ReactChild;

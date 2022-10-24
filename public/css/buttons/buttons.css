@@ -35,10 +35,11 @@
     padding: 15px 40px 15px 40px;
     position: relative;
     transition: all ease-in-out 0.4s;
+    border-radius: 3px;
 }
 
 .theme-bg-btn:hover {
-    background-color: #1D4354;
+    background-color: #000000;
 }
 
 .white-bg-btn:hover {

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
-import PageLayout from "../../../../../components/layouts/page/PageLayout";
-import { TabbedLayout } from '../../../../../components/layouts/page/TabbedLayout';
-import { useAuth } from '../../../../../hooks/useAuth';
+import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
+import PageLayout from "../../../../../components/layouts/page/page-layout";
+import { TabbedLayout } from '../../../../../components/layouts/page/tabbed-layout';
+import { useAuth } from '../../../../../hooks/use-auth';
 import { useRouter } from "next/router"
-import { useTranslation } from "../../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../../hooks/use-translation";
 import { EyeFill, PenFill, TrashFill, ArrowCounterclockwise } from 'react-bootstrap-icons';
 import UserApi from "../../../../api/user";
-import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
+import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/view-details/view-data-table";
 import { Status } from '../../../../../enums/status.enum';
 import { UserEntity } from '../../../../../models/user/user.entity';
 import { useEffectAsync } from '../../../../../utils/react';

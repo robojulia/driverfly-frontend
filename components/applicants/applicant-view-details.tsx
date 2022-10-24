@@ -1,10 +1,10 @@
 import { Col, Row } from 'react-bootstrap';
-import { useTranslation } from '../../hooks/useTranslation';
+import { useTranslation } from '../../hooks/use-translation';
 import React from 'react';
 import { JobEquipmentType } from '../../enums/jobs/job-equipment-type.enum';
 import { calculateAge } from '../../utils/date';
-import ViewCard from '../viewDetails/viewCard';
-import ViewDetails from '../viewDetails/viewDetails';
+import ViewCard from '../view-details/view-card';
+import ViewDetails from '../view-details/view-details';
 import { ViewApplicantDetailProps } from '../../types/applicant/view-application-detail-props.type';
 
 

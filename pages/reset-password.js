@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
-import { PublicLayout } from "../components/layouts/PublicLayout";
-import Forgotpassword from '../public/css/Forgot.module.css'
+import Breadcrumb from "../components/breadcrumbs/breadcrumb";
+import { PublicLayout } from "../components/layouts/public-layout";
+import Forgotpassword from '../public/css/forgot.module.css'
 import ResetPasswordAPI from "./api/reset-account"
 import { ToastContainer, toast } from 'react-toastify'
 
-import { useTranslation } from "../hooks/useTranslation";
-import BaseInput from '../components/forms/BaseInput';
+import { useTranslation } from "../hooks/use-translation";
+import BaseInput from '../components/forms/base-input';
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { Col, Container, Row } from "react-bootstrap";

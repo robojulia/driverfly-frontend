@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { PublicLayout } from "../components/layouts/PublicLayout";
+import { PublicLayout } from "../components/layouts/public-layout";
 import { Accordion, Container } from 'react-bootstrap';
-import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
+import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import FreeResources from '../components/free-resources';
-import { useTranslation } from "../hooks/useTranslation";
+import { useTranslation } from "../hooks/use-translation";
 
 
 

@@ -1,23 +1,23 @@
 
-import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
+import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
 import { useEffect, useState } from "react";
 import React from "react";
 
 import { PenFill, TrashFill, Plus } from 'react-bootstrap-icons';
 
-import PageLayout from "../../../../components/layouts/page/PageLayout";
+import PageLayout from "../../../../components/layouts/page/page-layout";
 
 import JobApi from "../../../api/job";
 import { JobEntity } from "../../../../models/job/job.entity";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { JobDeliveryType } from "../../../../enums/jobs/job-delivery-type.enum";
 import Router, { useRouter } from "next/router";
 import ShowEnumFromString from "../../../../components/enum-filters/show-enum-from-string";
 
 import { buildAddress } from "../../../../utils/common";
-import ViewDataTable, { getDataTableColumnKey } from "../../../../components/viewDetails/viewDataTable";
+import ViewDataTable, { getDataTableColumnKey } from "../../../../components/view-details/view-data-table";
 import OverlyPopover from "../../../../components/popover/overly-popover";
-import { useAuth } from "../../../../hooks/useAuth";
+import { useAuth } from "../../../../hooks/use-auth";
 import { useEffectAsync } from "../../../../utils/react";
 import Link from "next/link";
 import { Button } from "react-bootstrap";

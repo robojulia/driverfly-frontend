@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Dropdown, FormControl } from "react-bootstrap";
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 
 import style from "../../public/components/styles/css/ComboBox.module.css";
 

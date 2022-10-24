@@ -1,12 +1,14 @@
 import Link from 'next/link';
-import { PublicLayout } from "../components/layouts/PublicLayout";
+import { PublicLayout } from "../components/layouts/public-layout";
 import FilterResult from '../components/filter-results/filter-results'
-import Owneroperator from '../public/css/Owneroperator.module.css'
-import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
+import Owneroperator from '../public/css/owner-operator.module.css'
+import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import { useRouter } from 'next/router'
+import { useTranslation } from '../hooks/use-translation';
 
 export default function Owneroperators() {
 
+    const { t } = useTranslation();
     const router = useRouter()
 
     const handleSubmit = (e) => {
@@ -21,7 +23,7 @@ export default function Owneroperators() {
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
-                        <h2>Owner Operators</h2>
+                        <h2>{t("OWNER_OPERATORS")}</h2>
                         < Breadcrumb />
                     </div>
                 </div>
@@ -44,7 +46,7 @@ export default function Owneroperators() {
 
 }
 
-Owneroperators.getLayout = function getLayout(page){
+Owneroperators.getLayout = function getLayout(page) {
     return (
         <PublicLayout title="OWNER_OPERATOR">
             {page}

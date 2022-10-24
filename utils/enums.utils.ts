@@ -1,4 +1,4 @@
-import { TranslateInterface } from "../hooks/useTranslation";
+import { TranslateInterface } from "../hooks/use-translation";
 
 export function matchEnum(str: string, enumObj: any, labelPrefix: string, t: TranslateInterface): any {
     const options = Object.entries(enumObj);

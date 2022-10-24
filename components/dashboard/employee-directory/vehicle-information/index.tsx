@@ -1,6 +1,6 @@
 import { Col, Row } from "react-bootstrap";
 import { PenFill } from 'react-bootstrap-icons';
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 
 const VehicleInformationTab = () => {
     const { t } = useTranslation();

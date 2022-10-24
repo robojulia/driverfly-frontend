@@ -1,16 +1,16 @@
 import Link from 'next/link'
-import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
-import Back from '../components/back-to-login/Back-Login'
-import { PublicLayout } from "../components/layouts/PublicLayout";
-import Forgotpassword from '../public/css/Forgot.module.css'
+import Breadcrumb from "../components/breadcrumbs/breadcrumb";
+import Back from '../components/back-to-login/back-login'
+import { PublicLayout } from "../components/layouts/public-layout";
+import Forgotpassword from '../public/css/forgot.module.css'
 import AuthApi from "./api/auth";
 import { ToastContainer, toast } from 'react-toastify'
 
-import { useTranslation } from "../hooks/useTranslation"
+import { useTranslation } from "../hooks/use-translation"
 import { useFormik } from "formik";
 import * as yup from "yup";
 
-import BaseInput from "../components/forms/BaseInput";
+import BaseInput from "../components/forms/base-input";
 
 export default function Forgot() {
   const { t } = useTranslation();

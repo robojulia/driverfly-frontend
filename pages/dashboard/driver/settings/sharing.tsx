@@ -1,12 +1,12 @@
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
-import { useAuth } from "../../../../hooks/useAuth";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import FullLayout from "../../../../components/dashboard/layouts/full-layout";
+import { useAuth } from "../../../../hooks/use-auth";
+import { useTranslation } from "../../../../hooks/use-translation";
 import UserApi from "../../../api/user";
 import { Row, Col, Button } from "react-bootstrap";
-import PageLayout from "../../../../components/layouts/page/PageLayout";
+import PageLayout from "../../../../components/layouts/page/page-layout";
 import { UserPreferenceEntity } from "../../../../models/user/user-preference.entity"
 
 import * as yup from "yup";
@@ -15,12 +15,12 @@ import { UserPreferenceCategory } from "../../../../enums/users/user-preference-
 import { UserPreferenceCommunicationLabel } from "../../../../enums/users/user-preferences-communication-label.enum";
 import { SharePreference } from "../../../../enums/users/share-preference.enum";
 
-import BaseCheck from "../../../../components/forms/BaseCheck";
-import BaseCheckList from "../../../../components/forms/BaseCheckList";
-import BaseSelect from "../../../../components/forms/BaseSelect";
+import BaseCheck from "../../../../components/forms/base-check";
+import BaseCheckList from "../../../../components/forms/base-check-list";
+import BaseSelect from "../../../../components/forms/base-select";
 import { UserPreferenceSharingLabel } from "../../../../enums/users/user-preference-sharing-label.enum";
 import { useEffectAsync } from "../../../../utils/react";
-import ViewModal from "../../../../components/viewDetails/viewModal";
+import ViewModal from "../../../../components/view-details/view-modal";
 
 export default function Sharing() {
     const { getUser } = useAuth();

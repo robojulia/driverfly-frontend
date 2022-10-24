@@ -1,6 +1,6 @@
-import FullLayout from "../../../components/dashboard/layouts/FullLayout";
+import FullLayout from "../../../components/dashboard/layouts/full-layout";
 import FreeResources from "../../../components/free-resources";
-import PageLayout from '../../../components/layouts/page/PageLayout';
+import PageLayout from '../../../components/layouts/page/page-layout';
 
 
 export default function DriverFreeResources() {
