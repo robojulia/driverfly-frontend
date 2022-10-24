@@ -14,7 +14,7 @@ export interface EmploymentHistoryProps {
     onNextClick: (any) => void;
     onBackClick: () => void;
 }
-
+// New Jotform
 export function EmploymentHistory(props: EmploymentHistoryProps) {
     const { t } = useTranslation();
     const form = useFormik({
