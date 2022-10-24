@@ -23,32 +23,32 @@ const SkillEntry = ({ applicant, t }) => (
     <View>
         <Text style={styles.title}>{t("EQUIPMENT_TYPE_AND_YEAR")}</Text>
         <List>
-            {applicant.equipment_experience.map((equipment, i) => (
+            {applicant?.equipment_experience.map((equipment, i) => (
                 <>
-                    <Item key={i}>{equipment.type_other ? equipment.type_other : equipment.type}   {equipment.years}</Item>
+                    <Item key={i}> {equipment?.type} &nbsp; {equipment.type_other} {equipment?.years}</Item>
                 </>
             ))}
         </List>
         <Text style={styles.title}>{t("EQUIPMENT_OWNED")}</Text>
         <List>
-            {applicant.equipment_experience.map((equipment, i) => (
+            {applicant?.equipment_experience.map((equipment, i) => (
                 <>
-                    <Item key={i}>{equipment.type_other ? equipment.type_other : equipment.type}  {equipment.quantity}</Item>
+                    <Item key={i}>{equipment?.type} &nbsp; {equipment?.type_other} {equipment?.quantity}</Item>
                 </>
             ))}
         </List>
         <Text style={styles.title}>{t("ENDORSEMENTS")}</Text>
 
         <List>
-            {applicant.endorsements.map((endorsement, i) => (
+            {applicant?.endorsements.map((endorsement, i) => (
                 <>
                     <Item key={i}>{endorsement}</Item>
                 </>
             ))}
         </List>
         <Text style={styles.title}>{t("TRANSMISSION_EXPERIENCE")}</Text>
-        <Item>{applicant.transmission_type[0]}</Item>
-        <Item>{applicant.transmission_type[1]}</Item>
+        <Item>{applicant?.transmission_type[0]}</Item>
+        <Item>{applicant?.transmission_type[1]}</Item>
     </View>
 )
 
