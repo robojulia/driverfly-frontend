@@ -1,4 +1,4 @@
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 import React, { useState } from "react";
 import { useEffectAsync } from "../../utils/react";
 import { CloudArrowDownFill } from 'react-bootstrap-icons';
