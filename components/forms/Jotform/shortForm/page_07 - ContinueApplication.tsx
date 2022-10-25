@@ -5,7 +5,7 @@ import { useFormik } from 'formik';
 import{Button,Col,Row} from "react-bootstrap"
 
 export interface SeventhPageProps{
-  onNextClick: (any) => void;
+  onNextClick: (values: any) => void;
 }
 
 export function SeventhPage(props: SeventhPageProps){
@@ -34,7 +34,7 @@ export function SeventhPage(props: SeventhPageProps){
           <Col>
             <Button className="float-middle"
               type="submit">
-              {t("CONTINUE APPLICATION")}    
+              {t("CONTINUE_APPLICATION")}    
             </Button>
           </Col>
         </Row>
