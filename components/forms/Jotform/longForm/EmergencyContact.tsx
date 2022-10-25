@@ -1,40 +1,42 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "../../../../styles/JotForm.module.css";
-import { Form,Button,Col,Row } from "react-bootstrap";
+import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/useTranslation";
 import { useFormik } from "formik";
 import BaseInput from "../../BaseInput";
 import BaseInputPhone from "../../BaseInputPhone";
 
-
-export interface EmergencyContactProps{
-    onNextClick: (any) => void;
-    onBackClick: () => void;
+export interface EmergencyContactProps {
+  onNextClick: (any) => void;
+  onBackClick: () => void;
+  applicant: any;
 }
 
-export function EmergencyContact(props: EmergencyContactProps){
-    const { t } = useTranslation();
-    const form = useFormik({
-        initialValues:{
-            EMERGENCY_CONTACT: null,
-            phone: null,
-            RELATIONSHIP: null
-        },
-        onSubmit: (values) => {
-            props.onNextClick(values);
-        },
-        onReset: (values) =>{
-            props.onBackClick();
-        }
-    })
+export function EmergencyContact(props: EmergencyContactProps) {
+  useEffect(() => {
+    if (props.applicant && !form.dirty) form.setValues(props.applicant);
+  }, [props.applicant]);
+  const { t } = useTranslation();
+  const form = useFormik({
+    initialValues: {
+      EMERGENCY_CONTACT: null,
+      phone: null,
+      RELATIONSHIP: null,
+    },
+    onSubmit: (values) => {
+      props.onNextClick(values);
+    },
+    onReset: (values) => {
+      props.onBackClick();
+    },
+  });
 
-    return(
-        <>
-            <Form onSubmit={ form.handleSubmit }
-                    onReset={ form.handleReset }>
-                <h4 className={ styles.carrierName__smaller }>
-                    Emergency Contact Details
-                </h4>  
+  return (
+    <>
+      <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+        <h4 className={styles.carrierName__smaller}>
+          Emergency Contact Details
+        </h4>
 
                 <Row className={styles.align__text_left}>
                     <BaseInput
@@ -66,22 +68,20 @@ export function EmergencyContact(props: EmergencyContactProps){
                     </Col>
                 </Row>    
 
-                <Row className="mt-4">
-                    <Col>
-                        <Button className="float-right"
-                        type="reset">
-                            {t("BACK")}
-                        </Button>
-                    </Col>
+        <Row className="mt-4">
+          <Col>
+            <Button className="float-right" type="reset">
+              {t("BACK")}
+            </Button>
+          </Col>
 
-                    <Col>
-                        <Button className='float-left'
-                        type="submit">
-                            {t("NEXT")}
-                        </Button>
-                    </Col>
-                </Row>      
-            </Form>
-        </>
-    )
+          <Col>
+            <Button className="float-left" type="submit">
+              {t("NEXT")}
+            </Button>
+          </Col>
+        </Row>
+      </Form>
+    </>
+  );
 }

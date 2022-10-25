@@ -5,6 +5,7 @@ import React from "react";
 import { Form, Button, Col, Row, Table } from "react-bootstrap";
 import BaseInput from "../../BaseInput";
 import BaseCheck from "../../BaseCheck";
+import { AcciedentViolationDto } from "../../../../models/jot-form/short-form/accident-violation.dto";
 
 export interface FifthPageProps{
     onNextClick: (any) => void;
@@ -14,16 +15,8 @@ export interface FifthPageProps{
 export function FifthPage(props: FifthPageProps){
     const {t} = useTranslation();
     const form = useFormik({
-        initialValues: {
-            can_pass_drug_test:false,
-            accidents_last_5_years:null,
-            voilations_in_last_3_years:null
-        },
-        validationSchema: yup.object({
-            can_pass_drug_test: yup.boolean().nullable(),
-            accidents_last_5_years: yup.number().required().nullable(),
-            voilations_in_last_3_years: yup.number().required().nullable()
-        }),
+        initialValues: new AcciedentViolationDto(),
+        validationSchema: AcciedentViolationDto.yupSchema(),
         onSubmit: (values) => {
             props.onNextClick(values);
         },

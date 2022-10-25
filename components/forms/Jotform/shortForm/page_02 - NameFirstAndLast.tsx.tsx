@@ -1,10 +1,10 @@
 import React from "react";
 import styles from "../../../../styles/Jotform.module.css";
-import * as yup from "yup";
 import { Button, Col, Row } from "react-bootstrap";
 import BaseInput from "../../BaseInput";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/useTranslation";
+import { NamesDto } from "../../../../models/jot-form/short-form/names.dto";
 
 export interface SecondPageProps {
   onNextClick: (values: any) => void;
@@ -14,22 +14,8 @@ export interface SecondPageProps {
 export function SecondPage(props: SecondPageProps) {
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: {
-      first_name: null,
-      last_name: null,
-    },
-    validationSchema: yup.object({
-      first_name: yup
-        .string()
-        .matches(/^[A-Za-z ]*$/, "Please enter valid name")
-        .required()
-        .nullable(),
-      last_name: yup
-        .string()
-        .matches(/^[A-Za-z ]*$/, "Please enter valid name")
-        .required()
-        .nullable(),
-    }),
+    initialValues: new NamesDto(),
+    validationSchema: NamesDto.yupSchema(),
     onSubmit: (values) => {
       props.onNextClick(values);
     },

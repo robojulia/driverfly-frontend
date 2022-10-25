@@ -1,14 +1,15 @@
-import React from 'react'
-import { Button, Col, Row } from 'react-bootstrap';
-import Form from 'react-bootstrap/Form';
-import { VehicleRouteType } from '../../../../enums/vehicles/vehicle-routes.enum';
-import { useTranslation } from '../../../../hooks/useTranslation';
-import BaseCheckList from '../../BaseCheckList';
-import { useFormik } from 'formik';
-import { OtherRequirement } from '../../../../enums/users/other-requirements.enum';
+import React, { useEffect } from "react";
+import { Button, Col, Row } from "react-bootstrap";
+import Form from "react-bootstrap/Form";
+import { VehicleRouteType } from "../../../../enums/vehicles/vehicle-routes.enum";
+import { useTranslation } from "../../../../hooks/useTranslation";
+import BaseCheckList from "../../BaseCheckList";
+import { useFormik } from "formik";
+import { OtherRequirement } from "../../../../enums/users/other-requirements.enum";
 export interface PreferenceProps {
-    onNextClick: (any) => void;
-    onBackClick: () => void;
+  onNextClick: (any) => void;
+  onBackClick: () => void;
+  applicant: any;
 }
 
 export function Preferences (props: PreferenceProps){

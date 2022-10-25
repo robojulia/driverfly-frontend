@@ -13,8 +13,12 @@ import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferenc
 export interface EmploymentHistoryProps {
   onNextClick: (values?: any) => void;
   onBackClick: () => void;
+  applicant: any;
 }
 export function EmploymentHistory(props: EmploymentHistoryProps) {
+  useEffect(() => {
+    if (props.applicant && !form.dirty) form.setValues(props.applicant);
+  }, [props.applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: {

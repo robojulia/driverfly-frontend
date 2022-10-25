@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import styles from "../../../../styles/Jotform.module.css";
-import * as yup from "yup";
 import { Button, Col, Row } from "react-bootstrap";
 import BaseInput from "../../BaseInput";
 import BaseInputPhone from "../../BaseInputPhone";
 import BaseSelect from "../../BaseSelect";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/useTranslation";
+import { ContactDto } from "../../../../models/jot-form/short-form/contact.dto";
 
 export interface ThirdPageProps {
   onNextClick: (values: any) => void;
@@ -17,19 +17,9 @@ export interface ThirdPageProps {
 export function ThirdPage(props: ThirdPageProps) {
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: {
-      email: null,
-      phone: null,
-      zip_code: null,
-    },
-    validationSchema: yup.object({
-      email: yup.string().email().required().nullable(),
-      phone: yup.string().required().nullable(),
-      zip_code: yup.string().required().nullable(),
-    }),
+    initialValues: new ContactDto(),
+    validationSchema: ContactDto.yupSchema(),
     onSubmit: (values) => {
-    console.log('values', values)
-
       props.onNextClick(values);
     },
     onReset: (values) => {

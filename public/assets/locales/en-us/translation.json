@@ -5,6 +5,7 @@
     "apply_with": "OR apply with",
     "apply_for_this_job": "Apply for this job",
     "job_applied_success_message": "Your application has been submitted successfully",
+    "SUCCESS": "Successfull",
     "job_applied_failure_message": "Your application can not be submitted",
     "create_driverfly_account": "Create a DriverFly account?",
     "terms_and_condition": "Terms and conditions",
@@ -1334,6 +1335,6 @@
     "PREVIOUS_COMPANY_EMAIL": "Previous Company email",
     "ROUTES_OPEN_TO":"Routes you're open to (select ALL that best apply): ",
     "OTHER_REQUIREMENTS":"Other absolutely 100% necessary requirements (select all that apply):",
-    "APPLIED_BEFORE": "Have you ever applied here before?",
-    "WORKED_BEFORE": "Have you ever worked for before?"
+    "INVALID_DATA": "Invalid Data - OPERATION FAILED",
+    "CONTINUE_APPLICATION": "CONTINUE APPLICATION"
 }

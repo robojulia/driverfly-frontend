@@ -28,50 +28,60 @@ import { FelonyConviction } from "../../components/forms/Jotform/longForm/Felony
 import { UnableForJob } from "../../components/forms/Jotform/longForm/UnableForJob";
 import { PastSuspensions } from "../../components/forms/Jotform/longForm/PastSuspensions";
 import { ViolationsLast3Years } from "../../components/forms/Jotform/longForm/ViolationsLast3Years";
+import ApplicantApi from "../api/applicant";
+import { toast } from "react-toastify";
+
 export default function jotFormLongForm() {
   const [steps, setSteps] = useState(0);
   const [applicant, setApplicant] = useState(new ApplicantEntity());
 
   function onNextClick(partialEntity) {
-    setApplicant({
-      ...applicant,
-      ...partialEntity,
-    });
+    setApplicant({ ...applicant, ...partialEntity });
+    console.log("valuessssssss 1 partial", partialEntity);
+
     setSteps(steps + 1);
+    console.log("valuessssssss 2", applicant);
   }
 
   function onBackClick() {
     setSteps(steps - 1);
   }
 
-  const getPageAccordingToStep = (step) => {
+  async function shortFormDataSent(params: any) {
+    try {
+      const api = new ApplicantApi();
+      const response = await api.create(applicant);
+
+      if (response) setApplicant(response);
+      setApplicant(response);
+      onNextClick(applicant);
+      //   toast.success(t("SUCCESS"));
+    } catch (error) {
+      toast("kkkk");
+
+      console.log(error);
+    }
+  }
+  const getPageAccordingToStep = (step, applicant) => {
     if (step == 0) return pageOne(onNextClick);
     if (step == 1) return pageTwo(onNextClick, onBackClick);
     if (step == 2) return pageThree(onNextClick, onBackClick);
     if (step == 3) return pageFour(onNextClick, onBackClick);
     if (step == 4) return pageFive(onNextClick, onBackClick);
     if (step == 5) return pageSix(onNextClick, onBackClick);
-    if (step == 6) return pageSeven(onNextClick, onBackClick);
-    if (step == 7) return pageEight(onNextClick, onBackClick);
-    if (step == 8) return pageNine(onNextClick, onBackClick);
-    if (step == 9) return pageTen(onNextClick, onBackClick);
-    if (step == 10) return pageEleven(onNextClick, onBackClick);
-    if (step == 11) return pageTwelve(onNextClick, onBackClick);
-    if (step == 12) return pageThirteen(onNextClick, onBackClick);
-    if (step == 13) return pageFourteen(onNextClick, onBackClick);
-    if (step == 14) return pageFifteen(onNextClick, onBackClick);
-    if (step == 15) return pageSixteen(onNextClick, onBackClick);
-    if (step == 16) return pageSeventeen(onNextClick, onBackClick);
-    if (step == 17) return pageEighteen(onNextClick, onBackClick);
-    if (step == 18) return pageNineteen(onNextClick, onBackClick);
-    if (step == 19) return pageTwenty(onNextClick, onBackClick);
-    if (step == 20) return pageTwentyOne(onNextClick, onBackClick);
-    if (step == 21) return pageTwentyTwo(onNextClick, onBackClick);
-    if (step == 22) return pageTwentyThree(onNextClick, onBackClick);
-    if (step == 23) return pageTwentyFour(onNextClick, onBackClick);
-    if (step == 24) return pageTwentyFive(onNextClick, onBackClick);
-    if (step == 25) return pageTwentySix(onNextClick, onBackClick);
-
+    if (step == 6)
+      return pageSeven(onNextClick, onBackClick, shortFormDataSent);
+    if (step == 7) return pageEight(onNextClick, applicant);
+    if (step == 8) return pageNine(onNextClick, onBackClick, applicant);
+    if (step == 9) return pageTen(onNextClick, onBackClick, applicant);
+    if (step == 10) return pageEleven(onNextClick, onBackClick, applicant);
+    if (step == 11) return pageTwelve(onNextClick, onBackClick, applicant);
+    if (step == 12) return pageThirteen(onNextClick, onBackClick, applicant);
+    if (step == 13) return pageFourteen(onNextClick, onBackClick, applicant);
+    if (step == 14) return pageFifteen(onNextClick, onBackClick, applicant);
+    if (step == 15) return pageSixteen(onNextClick, onBackClick, applicant);
+    if (step == 16) return pageSeventeen(onNextClick, onBackClick, applicant);
+    if (step == 17) return pageEighteen(onNextClick, onBackClick, applicant);
     else return <h1>Error</h1>;
   };
 
@@ -79,18 +89,14 @@ export default function jotFormLongForm() {
     <div className={styles.container}>
       <div className={styles.main}>
         <div className={styles.main_form}>
-          {getPageAccordingToStep(steps)}
-
-          {/* <button onClick={() => { setSteps(steps + 1) }}>increase</button> */}
+          {getPageAccordingToStep(steps, applicant)}
         </div>
       </div>
     </div>
   );
 }
-
 const pageOne = (onNextClick) => {
-  return <FirstPage onNextClick={onNextClick} />
- 
+  return <FirstPage onNextClick={onNextClick} />;
 };
 
 const pageTwo = (onNextClick, onBackClick) => {
@@ -129,102 +135,136 @@ const pageSix = (onNextClick, onBackClick) => {
   );
 };
 
-const pageSeven = (onNextClick, onBackClick) => {
+const pageSeven = (onNextClick, onBackClick, shortFormDataSent) => {
   return (
     <>
-      <SeventhPage onNextClick={onNextClick} />
+      <SeventhPage onNextClick={shortFormDataSent} />
     </>
   );
 };
 
-const pageEight = (onNextClick, onBackClick) => {
+const pageEight = (onNextClick, applicant) => {
   return (
     <>
-      <DriverApplication onNextClick={onNextClick} />
+      <DriverApplication onNextClick={onNextClick} applicant={applicant} />
     </>
   );
 };
 
-const pageNine = (onNextClick, onBackClick) => {
+const pageNine = (onNextClick, onBackClick, applicant) => {
   return (
     <>
       <HighestLevelEducation
         onNextClick={onNextClick}
         onBackClick={onBackClick}
+        applicant={applicant}
       />
     </>
   );
 };
 
-const pageTen = (onNextClick, onBackClick) => {
+const pageTen = (onNextClick, onBackClick, applicant) => {
   return (
     <>
-      <BackgroundInfo onNextClick={onNextClick} onBackClick={onBackClick} />
+      <BackgroundInfo
+        onNextClick={onNextClick}
+        onBackClick={onBackClick}
+        applicant={applicant}
+      />
     </>
   );
 };
 
-const pageEleven = (onNextClick, onBackClick) => {
+const pageEleven = (onNextClick, onBackClick, applicant) => {
   return (
     <>
-      <DrivingExp onNextClick={onNextClick} onBackClick={onBackClick} />
+      <DrivingExp
+        onNextClick={onNextClick}
+        onBackClick={onBackClick}
+        applicant={applicant}
+      />
     </>
   );
 };
 
-const pageTwelve = (onNextClick, onBackClick) => {
+const pageTwelve = (onNextClick, onBackClick, applicant) => {
   return (
     <>
-      <OtherQues onNextClick={onNextClick} onBackClick={onBackClick} />
+      <OtherQues
+        onNextClick={onNextClick}
+        onBackClick={onBackClick}
+        applicant={applicant}
+      />
     </>
   );
 };
 
-const pageThirteen = (onNextClick, onBackClick) => {
+const pageThirteen = (onNextClick, onBackClick, applicant) => {
   return (
     <>
-      <PhotoUpload onNextClick={onNextClick} onBackClick={onBackClick} />
+      <PhotoUpload
+        onNextClick={onNextClick}
+        onBackClick={onBackClick}
+        applicant={applicant}
+      />
     </>
   );
 };
 
-const pageFourteen = (onNextClick, onBackClick) => {
+const pageFourteen = (onNextClick, onBackClick, applicant) => {
   return (
     <>
-      <MedicalCardUpload onNextClick={onNextClick} onBackClick={onBackClick} />
+      <MedicalCardUpload
+        onNextClick={onNextClick}
+        onBackClick={onBackClick}
+        applicant={applicant}
+      />
     </>
   );
 };
 
-const pageFifteen = (onNextClick, onBackClick) => {
+const pageFifteen = (onNextClick, onBackClick, applicant) => {
   return (
     <>
-      <EmergencyContact onNextClick={onNextClick} onBackClick={onBackClick} />
+      <EmergencyContact
+        onNextClick={onNextClick}
+        onBackClick={onBackClick}
+        applicant={applicant}
+      />
     </>
   );
 };
 
-const pageSixteen = (onNextClick, onBackClick) => {
+const pageSixteen = (onNextClick, onBackClick, applicant) => {
   return (
     <>
-      <EmploymentHistory onNextClick={onNextClick} onBackClick={onBackClick} />
+      <EmploymentHistory
+        onNextClick={onNextClick}
+        onBackClick={onBackClick}
+        applicant={applicant}
+      />
     </>
   );
 };
-const pageSeventeen = (onNextClick, onBackClick) => {
+const pageSeventeen = (onNextClick, onBackClick, applicant) => {
   return (
     <>
       <PastEmploymentHistory
         onNextClick={onNextClick}
         onBackClick={onBackClick}
+        applicant={applicant}
       />
     </>
   );
 };
-const pageEighteen = (onNextClick, onBackClick) => {
+const pageEighteen = (onNextClick, onBackClick, applicant) => {
   return (
     <>
-      <Preferences onNextClick={onNextClick} onBackClick={onBackClick} />
+      <Preferences
+        onNextClick={onNextClick}
+        onBackClick={onBackClick}
+        applicant={applicant}
+      />
     </>
   );
 };
