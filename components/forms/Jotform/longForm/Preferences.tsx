@@ -66,6 +66,7 @@ export function Preferences (props: PreferenceProps){
                         />
                     </Col>
                 </Row>
+                <h1>Preferences</h1>
                 <Row className="mt-5">
                     <Col>
                         <Button

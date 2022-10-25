@@ -48,7 +48,7 @@ export function DriverApplication(props: DriverApplicationProps){
                 </p>
                 
                 
-                <Row>
+                <Row className={styles.align__text_left}>
                     <BaseInput
                         className='col-6'
                         required
@@ -58,7 +58,7 @@ export function DriverApplication(props: DriverApplicationProps){
                         formik={ form }
                     />
                 </Row>
-                <Row>    
+                <Row className={styles.align__text_left}>    
                     <BaseInput
                         className='col-6'
                         required
@@ -68,9 +68,9 @@ export function DriverApplication(props: DriverApplicationProps){
                         formik={ form }
                     />
                 </Row>
-                <Row>
+                <Row className={styles.align__text_left}>
                     <BaseInput
-                        className='col-3 mt-3'
+                        className='col-3 mt-3 mb-3'
                         required
                         type="date"
                         name='date'
@@ -79,13 +79,13 @@ export function DriverApplication(props: DriverApplicationProps){
                         formik={ form }
                     /> 
                 </Row>
-                <Row>
+                <Row className={styles.align__text_left}>
                     <Col>
                     <h6>Signature</h6>
                     <SignaturePad className ref={padRef} canvasProps={{width: 600, height: 200, style: { border: "1px solid black" }, className: "sigCanvas"}} />
                     </Col>
                 </Row>
-                <Row>
+                <Row className={styles.align__text_left}>
                     <Col>
                     <button onClick={clear}>Clear</button>
                     </Col>

@@ -22,7 +22,9 @@
 
 .main_form {
     min-height: 500px;
-    width: 800px;
+    /* width: 800px; */
+    min-width: 800px;
+    max-width: 1200px;
     /* height: 400px; */
     margin-top: 150px;
     margin-bottom: 150px;
@@ -69,7 +71,7 @@
 .paragraph{
     font-style: italic;
     color: rgb(90, 90, 90);
-    text-align: left;
+    /* text-align: left; */
 }
 /* .input{
     background-color: #CCFFFF;

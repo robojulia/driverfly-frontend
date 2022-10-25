@@ -36,7 +36,7 @@ export function EmergencyContact(props: EmergencyContactProps){
                     Emergency Contact Details
                 </h4>  
 
-                <Row>
+                <Row className={styles.align__text_left}>
                     <BaseInput
                         className='col-6 mt-3'
                         name="EMERGENCY_CONTACT"
@@ -45,7 +45,7 @@ export function EmergencyContact(props: EmergencyContactProps){
                         formik={ form }
                     />
                 </Row>
-                <Row>
+                <Row className={styles.align__text_left}>
                     <Col>
                         <BaseInputPhone
                             className='col-10 mt-3'

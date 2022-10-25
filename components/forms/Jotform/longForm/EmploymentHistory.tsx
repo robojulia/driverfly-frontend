@@ -95,7 +95,7 @@ export function EmploymentHistory(props: EmploymentHistoryProps) {
           Please be honest about your past employment as this helps speed up the
           hiring process.
         </p>
-        <Row>
+        <Row className={styles.align__text_left}>
           <BaseCheck
             className="mt-2 col-6 float-left"
             required

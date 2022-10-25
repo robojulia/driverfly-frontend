@@ -29,40 +29,53 @@ export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
             start_date:null,
             end_date: null
         },
-        //  validationSchema: yup.object({
-        //     employed_type: yup.boolean().when({
-        //         is: true,
-        //         then: yup.string().oneOf({
-            
-        //         })
-        //     }).nullable(),
-        //     // current_company_manager_name: yup.string().required().nullable(),
-        //     current_company_manager_name: yup.string().when({
-        //         is:true,
-        //         then:yup.string().required().nullable()
-        //     }),
-        //     current_company_phone_number: yup.string().when({
-        //         is:true,
-        //         then:yup.string().required().nullable()
-        //     }),
-        //     current_company_email: yup.string().when({
-        //         is:true,
-        //         then:yup.string().required().nullable()
-        //     }),
-        //     current_company_street_address_line_1: yup.string().when({
-        //         is:true,
-        //         then:yup.string().required().nullable()
-        //     }),
-        //     current_company_street_address_line_2: yup.string().when({
-        //         is:true,
-        //         then:yup.string().required().nullable()
-        //     }),
-        //     current_company_zipcode: yup.string().when({
-        //         is:true,
-        //         then:yup.string().required().nullable()
-        //     })
-            
-        // }),
+        validationSchema: yup.object({
+            previous_company_manager_name: yup
+              .string()
+              .when("employed_type", {
+                is: (v) => !!v,
+                then: yup.string().required().nullable(),
+                otherwise: yup.string().optional().nullable(),
+              })
+              .nullable(),
+      
+            previous_company_email: yup
+              .string()
+              .when("employed_type", {
+                is: (v) => !!v,
+                then: yup.string().required().nullable(),
+                otherwise: yup.string().optional().nullable(),
+              })
+              .nullable(),
+      
+            previous_company_street_address_line_1: yup
+              .string()
+              .when("employed_type", {
+                is: (v) => !!v,
+                then: yup.string().required().nullable(),
+                otherwise: yup.string().optional().nullable(),
+              })
+              .nullable(),
+      
+            previous_company_street_address_line_2: yup
+              .string()
+              .when("employed_type", {
+                is: (v) => !!v,
+                then: yup.string().required().nullable(),
+                otherwise: yup.string().optional().nullable(),
+              })
+              .nullable(),
+      
+            previous_company_zipcode: yup
+              .string()
+              .when("employed_type", {
+                is: (v) => !!v,
+                then: yup.string().required().nullable(),
+                otherwise: yup.string().optional().nullable(),
+              })
+              .nullable(),
+          }),
+        
         onSubmit: (values) => {
             props.onNextClick(values);
         },
@@ -70,33 +83,7 @@ export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
             props.onBackClick();
         }
     })
-    // function EmployedTypeChange(e: React.ChangeEvent<HTMLInputElement>) {
-    //     const employedType = e.target.value;
-    //     switch (employedType) {
-    //         case CurrentlyEmployedType.YES:
-    //             form.setValues({
-    //                 ...form.values,
-    //                 employed_type: employedType,
-    //                 current_company_manager_name: null,
-    //                 current_company_phone_number: null,
-    //                 current_company_email: null,
-    //                 current_company_street_address_line_1: null,
-    //                 current_company_street_address_line_2: null,
-    //                 current_company_zipcode: null,
-
-
-    //             })
-    //             break;
-    //         default:
-    //             form.setValues({
-    //                 ...form.values,
-    //                 employed_type: employedType
-    //             })
-
-
-
-    //     }
-    // }
+    
 
     return (
         <>
@@ -108,7 +95,7 @@ export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
                 <p className={styles.paragraph__left}>
                     Please be honest about your past employment as this helps speed up the hiring process.
                 </p>
-                <Row>
+                <Row className={styles.align__text_left}>
                     <BaseCheck
                         className='mt-2 col-6 float-left'
                         required

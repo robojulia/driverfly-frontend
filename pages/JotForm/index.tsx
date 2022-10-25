@@ -20,6 +20,14 @@ import { EmploymentHistory } from "../../components/forms/Jotform/longForm/Emplo
 import { ApplicantEntity } from "../../models/applicant/applicant.entity";
 import { PastEmploymentHistory } from "../../components/forms/Jotform/longForm/PastEmployerHistory";
 import { Preferences } from "../../components/forms/Jotform/longForm/Preferences";
+import { Halfway } from "../../components/forms/Jotform/longForm/Halfway";
+import { WorkedBefore } from "../../components/forms/Jotform/longForm/WorkedBefore";
+import { AccidentsLast5Years } from "../../components/forms/Jotform/longForm/AccidentsLast5Years";
+import { DrugTest } from "../../components/forms/Jotform/longForm/DrugTest";
+import { FelonyConviction } from "../../components/forms/Jotform/longForm/FelonyConvictions";
+import { UnableForJob } from "../../components/forms/Jotform/longForm/UnableForJob";
+import { PastSuspensions } from "../../components/forms/Jotform/longForm/PastSuspensions";
+import { ViolationsLast3Years } from "../../components/forms/Jotform/longForm/ViolationsLast3Years";
 export default function jotFormLongForm() {
   const [steps, setSteps] = useState(0);
   const [applicant, setApplicant] = useState(new ApplicantEntity());
@@ -55,6 +63,15 @@ export default function jotFormLongForm() {
     if (step == 15) return pageSixteen(onNextClick, onBackClick);
     if (step == 16) return pageSeventeen(onNextClick, onBackClick);
     if (step == 17) return pageEighteen(onNextClick, onBackClick);
+    if (step == 18) return pageNineteen(onNextClick, onBackClick);
+    if (step == 19) return pageTwenty(onNextClick, onBackClick);
+    if (step == 20) return pageTwentyOne(onNextClick, onBackClick);
+    if (step == 21) return pageTwentyTwo(onNextClick, onBackClick);
+    if (step == 22) return pageTwentyThree(onNextClick, onBackClick);
+    if (step == 23) return pageTwentyFour(onNextClick, onBackClick);
+    if (step == 24) return pageTwentyFive(onNextClick, onBackClick);
+    if (step == 25) return pageTwentySix(onNextClick, onBackClick);
+
     else return <h1>Error</h1>;
   };
 
@@ -211,13 +228,58 @@ const pageEighteen = (onNextClick, onBackClick) => {
     </>
   );
 };
+const pageNineteen = (onNextClick, onBackClick) => {
+    return (
+      <>
+        <Halfway onNextClick={onNextClick} onBackClick={onBackClick} />
+      </>
+    );
+  };
+const pageTwenty = (onNextClick, onBackClick) => {
+    return (
+      <>
+        <WorkedBefore onNextClick={onNextClick} onBackClick={onBackClick} />
+      </>
+    );
+};
+const pageTwentyOne = (onNextClick, onBackClick) => {
+    return (
+      <>
+        <AccidentsLast5Years onNextClick={onNextClick} onBackClick={onBackClick} />
+      </>
+    );
+};
+const pageTwentyTwo = (onNextClick, onBackClick) =>{
+    return(
+        <ViolationsLast3Years onNextClick={ onNextClick } onBackClick={ onBackClick }
+        />
+    )
+}
 
-// const CustomButton = ({ label, onClickHandler }) => {
-//     return (<button className={styles.customButton} onClick={onClickHandler}>{label}</button>)
-// }
+const pageTwentyThree = (onNextClick, onBackClick) =>{
+    return(
+        <PastSuspensions onNextClick={ onNextClick } onBackClick={ onBackClick }
+        />
+    )
+}
 
-// jotFormLongForm.getLayout = function getLayout(page) {
-//     return (
-//         <>{page}</>
-//     )
-// }
+const pageTwentyFour = (onNextClick, onBackClick) =>{
+    return(
+        <UnableForJob onNextClick={ onNextClick } onBackClick={ onBackClick }
+        />
+    )
+}
+
+const pageTwentyFive = (onNextClick, onBackClick) =>{
+    return(
+        <FelonyConviction onNextClick={ onNextClick } onBackClick={ onBackClick }
+        />
+    )
+}
+
+const pageTwentySix = (onNextClick, onBackClick) =>{
+    return(
+        <DrugTest onNextClick={ onNextClick } onBackClick={ onBackClick }
+        />
+    )
+}

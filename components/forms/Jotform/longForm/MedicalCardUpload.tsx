@@ -33,7 +33,7 @@ export function MedicalCardUpload(props: MedicalCardUploadprops){
                 <Row>
                     <h3 className='mb-4'>Medical Card Upload</h3>
                 </Row>
-                <Row>
+                <Row className={styles.align__text_left}>
                     <BaseInput
                         className='col-5 mt-1'
                         type="file"
