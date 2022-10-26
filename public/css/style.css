@@ -416,7 +416,7 @@ li:hover ul {
 }
 
 .results-count.mt-4 {
-    font-size: 20px;
+    font-size: 23px;
 }
 
 .filter-btn-groups {
@@ -2029,7 +2029,8 @@ li.link-wrapper>a.active {
     margin-top: 100px;
 }
 
-.company_slider a, .company_slider:hover a {
+.company_slider a,
+.company_slider:hover a {
     text-decoration: none;
 }
 
@@ -2236,4 +2237,8 @@ input[type=checkbox] {
 .motor-carrier-bg:hover a {
     color: rgb(255, 255, 255);
     text-decoration: none;
+}
+.job-list_sec{
+    max-width: 1400px;
+    margin: 0 auto;
 }

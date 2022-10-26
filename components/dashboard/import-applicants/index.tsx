@@ -221,7 +221,7 @@ const ImportApplicants = () => {
     return (
         <>
             <Row>
-                <Col>
+                <Col sm="6" className="my-3">
                     <InputGroup>
                         <div className="input-group-prepend">
                             <button type="button" onClick={onDownloadClick} className="btn btn-md btn-primary pl-3">{t("DOWNLOAD_TEMPLATE")}</button>
@@ -235,7 +235,7 @@ const ImportApplicants = () => {
                         }
                     </InputGroup>
                 </Col>
-                <Col>
+                <Col sm="6" className="my-3">
                     <div style={{ float: "right" }}>
                         <button type="button" disabled={!canImport} onClick={form.submitForm} className={`btn btn-md btn-primary`}>{t("IMPORT")}</button>
                     </div>

@@ -17,8 +17,8 @@ export default function JobsList() {
 
     return (
         <>
-            <div className='filter-sec'>
-                <div className="filter-outer mt-5">
+            <div className='filter-sec p-0'>
+                <div className="filter-outer mt-lg-5">
                     {jobs.length > 0 && jobs.map(job => (
                         <div key={job.id} className="media align-items-center shadow-sm">
 

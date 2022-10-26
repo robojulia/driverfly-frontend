@@ -90,27 +90,18 @@ export default function Dashboard() {
                         {stats.SHORTLISTED}
                     </h2>
                     <h3 className="font-weight-bolder">{t("ApplicantStatus.SHORTLISTED")}</h3>
-                    {/* <Link href="#">
-                        <button className={` mt-3 text-white ${style.btn_blue}`}>{t("view")}</button>
-                    </Link> */}
                 </div>
                 <div className={` py-5 bg_blue w-23   ${style.job_info_container}`} >
                     <h2 className={`font-weight-bolder  ${style.text_yellow}`}>
                         {stats.HIRED}
                     </h2>
                     <h3 className="font-weight-bolder text-white">{t("ApplicantStatus.HIRED")}</h3>
-                    {/* <Link href="#">
-                        <button className={` mt-3 text-dark ${style.btn_green}`}>{t("view")}</button>
-                    </Link> */}
                 </div>
                 <div className={` py-5 myrtlegreen w-23   ${style.job_info_container}`}>
                     <h2 className="text-white font-weight-bolder">
                         {stats.REJECTED}
                     </h2>
                     <h3 className={style.text_yellow}>{t("ApplicantStatus.REJECTED")}</h3>
-                    {/* <Link href="#">
-                        <button className={` mt-3 text-dark ${style.btn_green}`}>{t("view")}</button>
-                    </Link> */}
                 </div>
             </Row>
             <div className="table-responsive">
