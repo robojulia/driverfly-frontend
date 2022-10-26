@@ -1,11 +1,11 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import FullLayout from "../../../../../../components/dashboard/layouts/Layout/FullLayout";
-import { ReferralSourceForm } from "../../../../../../components/forms/admin/ReferralSourceForm";
-import ChildPageLayout from "../../../../../../components/layouts/page/ChildPageLayout";
-import { useAuth } from "../../../../../../hooks/useAuth";
-import { useTranslation } from "../../../../../../hooks/useTranslation";
+import FullLayout from "../../../../../../components/dashboard/layouts/layout/full-layout";
+import { ReferralSourceForm } from "../../../../../../components/forms/admin/referral-source-form";
+import ChildPageLayout from "../../../../../../components/layouts/page/child-page-layout";
+import { useAuth } from "../../../../../../hooks/use-auth";
+import { useTranslation } from "../../../../../../hooks/use-translation";
 import { ReferralSourceEntity } from "../../../../../../models/referral-source/referral-source.entity";
 import { useEffectAsync } from "../../../../../../utils/react";
 import { ReferralSourceApi } from "../../../../../api/referral-source";
@@ -27,14 +27,14 @@ export default function EditReferral({ id }) {
         router.push(backPath);
     }
 
-    const [ entity, setEntity ] = useState<ReferralSourceEntity>(new ReferralSourceEntity());
+    const [entity, setEntity] = useState<ReferralSourceEntity>(new ReferralSourceEntity());
 
     useEffectAsync(async () => {
         if (id) {
             const api = new ReferralSourceApi();
 
             let entity = null
-            
+
             try {
                 entity = await api.getById(+id);
             }
@@ -53,18 +53,18 @@ export default function EditReferral({ id }) {
             goBack();
         }
 
-    }, [ user, id ]);
+    }, [user, id]);
 
     return (
         <ChildPageLayout
             title={t("EDIT_{name}", { name: "REFERRAL_SOURCE" }, { translateProps: true })}
             backPath={backPath}
-            >
+        >
             <ReferralSourceForm
                 entity={entity}
                 onSaveComplete={() => goBack(true)}
-                // onSaveError={goBack}
-                />
+            // onSaveError={goBack}
+            />
         </ChildPageLayout>
     );
 }

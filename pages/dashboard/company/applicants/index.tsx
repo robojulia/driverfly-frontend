@@ -1,30 +1,29 @@
-import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
+import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
 import { Row, Col } from "react-bootstrap";
 import { toast } from "react-toastify";
-import { TranslateInterface, useTranslation } from "../../../../hooks/useTranslation";
+import { TranslateInterface, useTranslation } from "../../../../hooks/use-translation";
 import { FormGroup, FormControlLabel, Switch } from '@mui/material';
 import { EyeFill, PencilFill } from 'react-bootstrap-icons';
 import ApplicantApi from "../../../api/applicant";
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { NextRouter, useRouter } from 'next/router';
 import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum';
 import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
 import { JobEntity } from '../../../../models/job/job.entity';
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
-import ShowEnumFromString from "../../../../components/enum-filters/show-enum-from-string";
 import * as numbers from "../../../../utils/number";
 import { Button, ButtonGroup } from "react-bootstrap";
-import PageLayout from "../../../../components/layouts/page/PageLayout";
+import PageLayout from "../../../../components/layouts/page/page-layout";
 import { useEffectAsync } from "../../../../utils/react";
-import ViewDataTable from "../../../../components/viewDetails/viewDataTable";
+import ViewDataTable from "../../../../components/view-details/view-data-table";
 import { ApplicantJobEntity } from "../../../../models/applicant/applicant-job.entity";
-import { useAuth } from "../../../../hooks/useAuth";
-import BaseSelect from "../../../../components/forms/BaseSelect";
-import BaseTextArea from "../../../../components/forms/BaseTextArea";
+import { useAuth } from "../../../../hooks/use-auth";
+import BaseSelect from "../../../../components/forms/base-select";
+import BaseTextArea from "../../../../components/forms/base-text-area";
 import { buildAddress } from "../../../../utils/common";
-import ViewModal from "../../../../components/viewDetails/viewModal";
+import ViewModal from "../../../../components/view-details/view-modal";
 import { useFormik } from "formik";
-import BaseCheckList from "../../../../components/forms/BaseCheckList";
+import BaseCheckList from "../../../../components/forms/base-check-list";
 import { ApplicantReasonCodeFired, ApplicantReasonCodeNotInterested, ApplicantReasonCodeNotQualified, ApplicantReasonCodeQuit } from "../../../../enums/applicants/applicant-reason-codes.enum";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import OverlyPopover from "../../../../components/popover/overly-popover";
@@ -342,7 +341,7 @@ function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
             // since violation count isn't specific
             // we just want to pull the max number
             // and check against that
-            const mvr = job.mvr_requirements.reduce((p, c) => {
+            const mvr = job.mvr_requirements?.reduce((p, c) => {
                 if (p.max_count >= c.max_count) return p;
 
                 return c;
@@ -360,7 +359,7 @@ function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
         results.qualification_fail_reason.push("CANNOT_PASS_DRUG_TEST");
     }
 
-    job.required_skills.forEach(skill => {
+    job.required_skills?.forEach(skill => {
         // cannot process OTHER type
         if (skill.type !== JobEquipmentType.OTHER) {
             const experience = applicant.equipment_experience.find(v => v.type === skill.type);

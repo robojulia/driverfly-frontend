@@ -1,10 +1,10 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
-import { ApplicantForm } from "../../../../../components/forms/company/ApplicantForm";
-import ChildPageLayout from "../../../../../components/layouts/page/ChildPageLayout";
-import { useTranslation } from "../../../../../hooks/useTranslation";
+import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
+import { ApplicantForm } from "../../../../../components/forms/company/applicant-form";
+import ChildPageLayout from "../../../../../components/layouts/page/child-page-layout";
+import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import { useEffectAsync } from "../../../../../utils/react";
 import ApplicantApi from "../../../../api/applicant";
@@ -15,9 +15,10 @@ export default function EditApplicant({ id }) {
 
     const backPath = `/dashboard/company/applicants/${id}`;
 
+
     const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
 
-    const [ applicant, setApplicant ] = useState(new ApplicantEntity());
+    const [applicant, setApplicant] = useState(new ApplicantEntity());
 
     useEffectAsync(async () => {
         if (id) {
@@ -34,17 +35,17 @@ export default function EditApplicant({ id }) {
             toast.error(t("UNABLE_TO_FIND_{name}", { name: "APPLICANT" }, { translateProps: true }));
             goBack();
         }
-    }, [ id ]);
+    }, [id]);
 
     return (
         <ChildPageLayout
             title={t("EDIT_{name}", { name: "APPLICANT" }, { translateProps: true })}
             backPath={backPath}
-            >
+        >
             <ApplicantForm
                 entity={applicant}
                 onSaveComplete={goBack}
-                />
+            />
         </ChildPageLayout>
     );
 }

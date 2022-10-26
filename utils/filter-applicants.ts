@@ -8,7 +8,7 @@ export const filterHired = (applicants: ApplicantEntity[]): ApplicantEntity[] =>
     return applicants.filter((applicant: ApplicantEntity) => {
         const jobs = applicant.jobs.filter((applicantJob: ApplicantJobEntity) => {
             if (!applicantJob.status) return false;
-            else if (applicantJob.status.startsWith("COMPLETED_")) return true;
+            else if (applicantJob.status.startsWith("COMPLETED")) return true;
             else return false;
         })
         if (jobs.length) {

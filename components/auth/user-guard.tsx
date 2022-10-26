@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { yupInit } from "../../config/yup";
-import { jwtExpiryTimeout, useAuth } from "../../hooks/useAuth";
+import { jwtExpiryTimeout, useAuth } from "../../hooks/use-auth";
 import { Loading } from "../loading/loading";
 
 export interface UserGuardProps {
@@ -38,6 +38,21 @@ export function UserGuard({ permissions, children }: UserGuardProps) {
             }
 
             if (user) {
+                // HF, temporarily disable this redirect until notification service is fixed
+                if (false && user.emailTokenTimestamp) {
+                    if (router.asPath.startsWith("/dashboard")) {
+                        router.push("/login/verify-email");
+                        return false;
+                    }
+                }
+
+                // HF, temporarily disable phone verification until sms is online
+                if (false && user.phoneTokenTimestamp) {
+                    if (router.asPath.startsWith("/dashboard")) {
+                        router.push("/login/verify-phone");
+                        return false;
+                    }
+                }
                 if (user.jwt?.exp) {
                     const msToExpiration = jwtExpiryTimeout(user.jwt);
                     console.log("Expires in ms: ", msToExpiration);

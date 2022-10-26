@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import DocumentApi from "../../pages/api/document";
-import ViewModal from "../viewDetails/viewModal";
+import ViewModal from "../view-details/view-modal";
 
 export default function VehiclePhoto({ vehicle, style, className }) {
 

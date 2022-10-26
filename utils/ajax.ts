@@ -1,4 +1,4 @@
-import { TranslateInterface } from "../hooks/useTranslation";
+import { TranslateInterface } from "../hooks/use-translation";
 import { FormikInterface } from "./formik";
 import { ToastInterface } from "./toast";
 
@@ -10,12 +10,13 @@ interface AjaxError extends Error {
 
 interface ClassValidatorError {
     statusCode: number;
-    error: any;
+    error?: any;
     message: string | string[];
 }
 
 function isClassValidatorError(obj: unknown): obj is ClassValidatorError {
     return Object.prototype.hasOwnProperty.call(obj, "statusCode")
+        // && Object.prototype.hasOwnProperty.call(obj, "error")
         && Object.prototype.hasOwnProperty.call(obj, "message");
 }
 
@@ -65,7 +66,6 @@ function globalAjaxExceptionHandler(error: AjaxError, interfaces: { formik?: For
                     messages.forEach(v => toast.error(t(v)));
                     return true; // we consider this safely handled via toast
                 }
-    
             } else {
                 console.error(`globalAjaxExceptionHandler: encountered`, data, response, error);
 

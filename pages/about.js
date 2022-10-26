@@ -1,17 +1,21 @@
 import Head from "next/head";
-import { PublicLayout } from "../components/layouts/PublicLayout";
-import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
-import Slider from '../components/testominial-slider/Slider';
+import { PublicLayout } from "../components/layouts/public-layout";
+import Breadcrumb from "../components/breadcrumbs/breadcrumb";
+import Slider from '../components/testominial-slider/slider';
 import { FileEarmarkZip, Funnel, CheckSquare, Bell, Trophy, HandIndexThumb } from 'react-bootstrap-icons';
+import { useTranslation } from "../hooks/use-translation";
 
 
 export default function About() {
+
+    const { t } = useTranslation();
+
     return (
         <>
             <div className="top-links-sec">
                 <div className="container p-0">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
-                        <h2>About</h2>
+                        <h2>{t("ABOUT")}</h2>
                         < Breadcrumb />
                     </div>
                 </div>

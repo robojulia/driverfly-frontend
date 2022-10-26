@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { AsyncTypeahead, Highlighter, Menu, MenuItem } from "react-bootstrap-typeahead";
 import { RenderMenuProps } from "react-bootstrap-typeahead/types/components/Typeahead";
 import { Option, TypeaheadManagerChildProps } from "react-bootstrap-typeahead/types/types";
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 import JobApi from "../../pages/api/job";
 
 type Title = {

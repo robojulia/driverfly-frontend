@@ -25,7 +25,6 @@ import { BasicEntity } from '../BasicEntity.entity';
 import { JobPayFrequency } from '../../enums/jobs/job-pay-frequency.enum';
 import { JobDrugTestType } from '../../enums/jobs/job-drug-test-type.enum';
 import { numberRangeEnd, numberRangeStart } from '../../utils/yup';
-import { JobOrientationEntity } from './job-orientation.entity';
 
 export class JobEntity {
     id?: number;
@@ -64,6 +63,8 @@ export class JobEntity {
     vehicles?: VehicleEntity[] = [];
     cdl_class?: DriverLicenseType;
     min_years_experience?: number;
+    min_experience_in_months?: number;
+    min_experience_in_years?: number;
     min_degree?: EducationLevel;
     required_skills?: JobSkillEntity[] = [];
     required_skills_other?: string;
@@ -81,18 +82,19 @@ export class JobEntity {
     max_moving_violations?: number;
     safety_requirements_other?: string;
     is_orientation_needed: boolean = true;
-    orientation?: JobOrientationEntity = new JobOrientationEntity();
+    orientation_location: LocationEntity = new LocationEntity();
+    orientation_start_at?: string | Date;
+    orientation_end_at?: string | Date;
     created_at?: string | Date;
     applicantsCount?: number;
     static yupSchema() {
-        return yup.object({
-            isOrientationNeeded: yup.boolean().default(false),
+        return yup.object().shape({
+            is_orientation_needed: yup.boolean().default(false),
             title: yup.string().required().max(100).nullable(),
-            location: BasicEntity.yupSchema(),
-            orientation: yup.mixed().when('is_orientation_needed', {
-                is: true,
-                then: JobOrientationEntity.yupSchema(),
-            }).nullable(),
+            location: LocationEntity.yupConnectSchema(true),
+            orientation_location: LocationEntity.yupConnectSchema(),
+            orientation_start_at: yup.date().nullable(),
+            orientation_end_at: yup.date().nullable(),
             description: yup.string().max(1500).required().nullable(),
             drivers_needed: yup.number().min(0).nullable(),
             expiry_date: yup.date().nullable(),
@@ -182,6 +184,8 @@ export class JobEntity {
             ) as any).unique("id").nullable(),
             cdl_class: (yup.string() as any).enum(DriverLicenseType).nullable(),
             min_years_experience: yup.number().min(0).nullable(),
+            min_experience_in_months: yup.number().min(0).max(11).nullable(),
+            min_experience_in_years: yup.number().min(0).nullable(),
             min_degree: (yup.string() as any).enum(EducationLevel).nullable(),
             required_skills: (yup.array(
                 JobSkillEntity.yupSchema()
@@ -213,7 +217,7 @@ export class JobEntity {
             ) as any).unique("type"),
             max_moving_violations: yup.number().min(0).nullable(),
             safety_requirements_other: yup.string().max(250).nullable(),
-        });
+        }, [['min_experience_in_months', 'min_experience_in_years']]);
 
     }
 }

@@ -10,8 +10,8 @@ import SpecialEndorsementsRequired from '../../../filters/special-endorsements-r
 import TypeOfDelivery from '../../../filters/type-of-delivery'
 import Range from '../../../filters/location/range'
 import Category from '../../../filters/category'
-import { useTranslation } from '../../../../hooks/useTranslation'
-import jobContext from '../../../../context/jobContext'
+import { useTranslation } from '../../../../hooks/use-translation'
+import jobContext from '../../../../context/job-context'
 import Search from '../../../filters/search'
 import { Row, Col, Offcanvas, Button } from 'react-bootstrap';
 import Sort from '../../../find-jobs/sort'
@@ -39,7 +39,7 @@ export default function Filters() {
                         inputClassName="form-control shadow-sm p-4" labelClassName="text-secondary w-sm-25" />
                 </Col>
                 <Col md="2">
-                    <div className="filter-btn-groups">
+                    <div className="filter-btn-groups sort_by">
                         <Sort inputClassName="custom-select shadow-none mt-2" labelClassName="text-secondary w-sm-25" />
                     </div>
                 </Col>

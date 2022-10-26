@@ -626,11 +626,16 @@ textarea {
 }
 
 /* start Typeahead dropdown */
+
 .dropdown-item {
     color: rgb(65, 60, 60) !important;
 }
 
-.dropdown-item:hover {
+.rbt .dropdown-item {
+    color: rgb(65, 60, 60) !important;
+}
+
+.rbt .dropdown-item:hover {
     color: #000 !important;
 }
 
@@ -668,6 +673,99 @@ textarea {
 .data_table_custom_action_button .delete {
     color: #ff0000d9;
 }
-a.here_link{
+
+a.here_link {
     color: #0000FF;
+}
+
+/* driver-flag */
+
+.driver-flag {
+    transition: 1s;
+    background-color: #1d4354;
+    border-radius: 0%;
+    right: -1%;
+    top: 50%;
+    position: fixed;
+    cursor: pointer;
+    z-index: 9999;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    padding: 20px 15px;
+    text-align: center;
+}
+
+.driver-flag svg {
+    margin: 0 22px 0px 15px;
+    transition: 1s;
+}
+
+.driver-flag span {
+
+    font-size: 0px;
+    transition: font-size 1s;
+
+}
+
+.driver-flag:hover span {
+    font-size: 15px;
+    transition: font-size 1s;
+
+}
+
+.driver-flag:hover svg {
+    margin: 0;
+    transition: 1s;
+}
+
+.driver-flag:hover {
+    transition: 1s;
+    padding: 20px 30px;
+    right: 0;
+    background-color: #2EC8C4;
+}
+
+.driver-flag:active {
+    opacity: .8;
+}
+
+.driver-flag p {
+    color: #fff;
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+.cursor-pointer:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.enlarge-font,
+.enlarge-font::after {
+    cursor: pointer;
+    transition: font-size .2s ease-in-out;
+}
+
+.enlarge-font:hover,
+.enlarge-font:hover::after {
+    font-size: 2vmin;
+}
+
+.custom_input_style input[type="checkbox"] {
+    font: inherit;
+    color: currentColor;
+    width: 1.15em;
+    height: 1.15em;
+    border: 0.15em solid currentColor;
+    border-radius: 0.15em;
+    transform: translateY(-0.075em);
+
+}
+
+.dashboardsidebar .ort-general {
+    padding: 0 !important;
+}
+
+.sort_by .custom-select {
+    height: 39px !important;
 }

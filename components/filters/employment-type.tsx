@@ -1,5 +1,5 @@
 import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
 import ViewMoreRadioFilter from "./view-more-radio-filter";
 

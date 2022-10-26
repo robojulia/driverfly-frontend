@@ -4,16 +4,16 @@ import { useEffect, useState } from 'react'
 import { useFormik } from "formik";
 
 // layouts
-import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
-import PageLayout from "../../../../components/layouts/page/PageLayout";
+import FullLayout from "../../../../components/dashboard/layouts/full-layout";
+import PageLayout from "../../../../components/layouts/page/page-layout";
 
 // hooks
-import { useAuth } from '../../../../hooks/useAuth';
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useAuth } from '../../../../hooks/use-auth';
+import { useTranslation } from "../../../../hooks/use-translation";
 
 // inputs
-import BaseInputPhone from "../../../../components/forms/BaseInputPhone";
-import BaseInput from "../../../../components/forms/BaseInput";
+import BaseInputPhone from "../../../../components/forms/base-input-phone";
+import BaseInput from "../../../../components/forms/base-input";
 
 // api
 import UserApi from "../../../api/user";
@@ -23,8 +23,8 @@ import ApplicantApi from "../../../api/applicant";
 import { UserEntity } from "../../../../models/user/user.entity";
 
 import * as toast from "../../../../utils/toast";
-import EntityForm from "../../../../components/layouts/page/EntityForm";
-import FileInput from "../../../../components/forms/FileInput";
+import EntityForm from "../../../../components/layouts/page/entity-form";
+import FileInput from "../../../../components/forms/file-input";
 
 export default function Profile() {
   const { t } = useTranslation();

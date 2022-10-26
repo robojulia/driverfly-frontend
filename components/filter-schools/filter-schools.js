@@ -1,11 +1,10 @@
 import React, { useContext } from 'react'
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css'
-
-import TrainingType from '../school-filters/Training-Type'
-import LocationType from '../school-filters/Location-Type'
-import PrivateEnrollment from '../school-filters/Private-Enrollment'
-import Range from "../school-filters/Range"
-import schoolContext from '../../context/schoolContext'
+import TrainingType from '../school-filters/training-type'
+import LocationType from '../school-filters/location-type'
+import PrivateEnrollment from '../school-filters/private-enrollment'
+import Range from "../school-filters/range"
+import schoolContext from '../../context/school-context'
 
 export default function FilterSchools() {
 

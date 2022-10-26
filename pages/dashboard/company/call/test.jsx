@@ -1,7 +1,8 @@
-import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
-import { useEffect, useState } from 'react';
+import FullLayout from "../../../../components/dashboard/layouts/full-layout";
+import { useState } from 'react';
 import TwilioApi from "../../../api/twilio"
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
+
 
 export default function Test() {
 

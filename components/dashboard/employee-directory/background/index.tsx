@@ -1,38 +1,25 @@
-import { Col, Row } from "react-bootstrap";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { Button, Col, Row } from 'react-bootstrap';
+import { useTranslation } from '../../../../hooks/use-translation';
+import React from 'react';
+import { ViewApplicantDetailProps } from '../../../../types/applicant/view-application-detail-props.type';
+import { useRouter } from 'next/router';
+import ViewApplicantDetail from '../../../applicants/applicant-view-details';
 
-const BackgroundTab = () => {
+export default function Background({ applicant, protectedFields }: ViewApplicantDetailProps) {
+    const router = useRouter()
     const { t } = useTranslation();
 
-    return (
-        <>
-            <div className="employee_directory_tabs">
-                <Row className="mt-3">
-                    <Col>
-                        <h5>Roger Atkins</h5>
-                    </Col>
-                </Row>
-                <Row className="mt-3">
-                    <Col>
-                        <p>{t("MANAGER")} <span> Irfan</span></p>
-                    </Col>
-                    <Col>
-                        <p>{t("RECRUITER")} <span> Irfan</span></p>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <p>{t("mvr")} <span> Approved (5/2022)</span></p>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <button type="button" className="theme-primary-btn mr-4 py-2">{t("view_applicant_profile")}</button>
-                    </Col>
-                </Row>
-            </div>
-        </>
-    );
-};
+    const onViewProfileCLick = () => router.push(`/dashboard/company/applicants/${applicant?.id}`)
 
-export default BackgroundTab;
+    return (
+        <div className="employee_directory_tabs">
+            {applicant && (
+                <>
+                    <ViewApplicantDetail applicant={applicant} />
+                    <Button onClick={onViewProfileCLick}>{t(`view_applicant_profile`)}</Button>
+                </>
+            )}
+
+        </div>
+    )
+}

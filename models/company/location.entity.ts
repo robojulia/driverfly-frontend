@@ -24,4 +24,17 @@ export class LocationEntity {
             zip_code: zipCodeRegexValidation(),
         });
     }
+
+    static yupConnectSchema(required?: boolean) {
+        return yup.mixed().when({
+            is: v => v != null,
+            then: yup.object({
+                id: yup.number().when({
+                    is: v => required,
+                    then: yup.number().required()
+                }).nullable()
+            }),
+            otherwise: yup.mixed().optional()
+        })
+    }
 }

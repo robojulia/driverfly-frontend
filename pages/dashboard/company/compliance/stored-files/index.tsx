@@ -1,84 +1,119 @@
-import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
+import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 import { useState } from "react";
 import React from "react";
-import { Plus } from 'react-bootstrap-icons';
-import PageLayout from "../../../../../components/layouts/page/PageLayout";
-import { useTranslation } from "../../../../../hooks/useTranslation";
-import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
-import { useAuth } from "../../../../../hooks/useAuth";
+import { CloudArrowDown, Download, Plus, Send } from 'react-bootstrap-icons';
+import PageLayout from "../../../../../components/layouts/page/page-layout";
+import { useTranslation } from "../../../../../hooks/use-translation";
+import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/view-details/view-data-table";
+import { useAuth } from "../../../../../hooks/use-auth";
 import { useEffectAsync } from "../../../../../utils/react";
 import { Button, Row } from "react-bootstrap";
-import ViewModal from "../../../../../components/viewDetails/viewModal";
-import FileInput from "../../../../../components/forms/FileInput";
-import BaseSelect from "../../../../../components/forms/BaseSelect";
+import ViewModal from "../../../../../components/view-details/view-modal";
+import FileInput from "../../../../../components/forms/file-input";
+import BaseSelect from "../../../../../components/forms/base-select";
 import ComplianceApi from "../../../../api/compliance";
 import { DocumentEntity } from "../../../../../models/documents/document.entity";
 import { StoredFileDto } from "../../../../../models/compiance/stored-file.dto";
 import { useFormik } from "formik";
 import { CompanyDocumentType } from "../../../../../enums/compliance/company-document-type.enum";
-import EntityForm from "../../../../../components/layouts/page/EntityForm";
+import EntityForm from "../../../../../components/layouts/page/entity-form";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import { toast } from 'react-toastify'
 import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
 import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
+import ApplicantApi from "../../../../api/applicant";
+import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
+import ViewPdf from "../../../../../components/view-details/view-pdf";
+import DocumentApi from "../../../../api/document";
 
 export default function StoredFiles() {
 
     const { user, hasPermission } = useAuth();
-    const [showFileUploadModel, setShowFileUploadModel] = useState(false);
-    const openFileUploadModel = () => setShowFileUploadModel(true)
-    const closeFileUploadModel = () => setShowFileUploadModel(false)
+    const { t } = useTranslation();
+    const complianceApi = new ComplianceApi();
+    const applicantApi = new ApplicantApi();
+
+    // showFileUploadModel 
+    const [showFileUploadModel, setShowFileUploadModel] = useState<boolean>(false);
+    const openFileUploadModel = (): void => setShowFileUploadModel(true)
+    const closeFileUploadModel = (): void => setShowFileUploadModel(false)
+
+    const [documentId, setDocumentId] = useState<number>(null)
+    const resetDocumentId = (): void => setDocumentId(null)
 
     const columnSettingKey = getDataTableColumnKey("company", user, "stored-files");
 
-    const { t } = useTranslation();
     const [files, setFiles] = useState<DocumentEntity[]>([])
-    const complianceAp = new ComplianceApi();
+    const [applicants, setApplicants] = useState<ApplicantEntity[]>([])
 
     useEffectAsync(async () => {
-        console.log("refresh fired");
-        const v = await complianceAp.filesList();
 
+        const v = await complianceApi.filesList();
         setFiles(v);
+
+        const data = await applicantApi.list();
+        setApplicants(data)
+
     }, [user], () => {
         console.log("unloading page...")
     });
 
-    // To Do
-    // const can = {
-    //     editJob: hasPermission("CanUpdateJob"),
-    //     deleteJob: hasPermission("CanDeleteJob"),
-    // };
 
     const form = useFormik({
         initialValues: new StoredFileDto(),
         validationSchema: StoredFileDto.yupSchema(),
         onSubmit: async (data, { resetForm }) => {
             try {
-                await complianceAp.createFile(data)
+                await complianceApi.createFile(data)
                     .then((entity: DocumentEntity) => {
                         if (entity) {
                             files.push(entity)
                             files.sort((a, b) => (a.id - b.id))
                             resetForm()
-                            setShowFileUploadModel(false)
+                            closeFileUploadModel()
                             toast.success(t('DOCUMENT_UPLOAD_SUCCESS_MESSAGE'))
                         }
                     })
-                console.log("data: ", data)
             } catch (error) {
-                console.log(error)
                 globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
             }
         }
     });
 
-    //  Uncomment this in debugging mode
-    useEffectAsync(async () => {
-        console.log("form", form.values)
-        console.log("form", form.errors)
-    }, [form])
+    const sendEmail = async (applicant: ApplicantEntity): Promise<void> => {
+        try {
+            if (documentId)
+                await complianceApi.sendComplianceFile(applicant.id, documentId)
+                    .then(res => {
+                        toast.success(t('DOCUMENT_SENT_SUCCESS_MESSAGE'))
+                        setTimeout(() => {
+                            resetDocumentId()
+                        }, 1000)
+                    })
+        } catch (error) {
+            toast.error(t('DOCUMENT_SENT_FAILED_MESSAGE'))
+        }
+    }
 
+    //  Uncomment this in debugging mode
+    // useEffectAsync(async () => {
+    //     console.log("form", form.values)
+    //     console.log("form", form.errors)
+    // }, [form])
+    const [pdf, setPdf] = useState({});
+
+    const viewDocumentClick = async (id, name) => {
+        const api = new DocumentApi();
+
+        const document = await api.getSignedUrl(id);
+
+        if (document) {
+            setPdf({
+                name: `${t(name)} (${document.name})`,
+                url: document.path
+            });
+        }
+    }
     return (
         <PageLayout
             title="STORED_FILES"
@@ -102,7 +137,7 @@ export default function StoredFiles() {
                     {
                         id: "id",
                         name: "ID",
-                        selector: j => j.id,
+                        selector: file => file.id,
                         hidable: false
                     },
                     {
@@ -113,28 +148,27 @@ export default function StoredFiles() {
                     },
                     {
                         id: "type",
-                        name: "CATEGORY",
+                        name: "type",
                         cell: file =>
                         (<ShowEnumFromString
-                            popover_header={t('CATEGORY')}
+                            popover
                             labelPrefix="CompanyDocumentType"
-                            // popover={true}
                             str={file.type}
                             enumArray={CompanyDocumentType} />
                         ),
-                        selector: file => t(`CompanyDocumentType.${file.type}`),
+                        selector: file => file.type,
                     },
                     {
                         id: "upload_date",
                         name: "upload_date",
-                        selector: j => j.created_at,
-                        cell: j => j.created_at ? <ShowFormattedDate date={j.created_at} /> : null
+                        selector: file => file.created_at,
+                        cell: file => <ShowFormattedDate date={file.created_at} />
                     },
                     {
-                        cell: (j) => (
+                        cell: (file) => (
                             <>
-                                <button type="button" className="theme-secondary-btn mr-4 p-2">{t('SEND')}</button>
-                                <button type="button" className="btn theme-primary-btn download_file_btn"> <a href={j.path} download target="_blank">{t('DOWNLOAD')}</a></button>
+                                <button type="button" className="theme-primary-btn mr-2 px-4 py-2" onClick={() => setDocumentId(file.id)}><Send /></button>
+                                <a onClick={() => viewDocumentClick(file.id, file.name)} href="#" role="button" className="theme-secondary-btn mr-2 px-4 py-2"><CloudArrowDown /></a>
                             </>
                         ),
                     },
@@ -143,6 +177,10 @@ export default function StoredFiles() {
                 ]}
                 items={files}
             />
+            <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
+
+            {/* Model for Upload file */}
+
             <ViewModal
                 show={showFileUploadModel}
                 onCloseClick={closeFileUploadModel}
@@ -174,6 +212,61 @@ export default function StoredFiles() {
                         />
                     </Row>
                 </EntityForm>
+            </ViewModal>
+
+            {/* Model for send email */}
+
+            <ViewModal
+                show={!!documentId}
+                onCloseClick={resetDocumentId}
+                closeText="CANCEL"
+                title="APPLICANTS"
+            >
+                <ViewDataTable<ApplicantEntity>
+                    columnSettingKey={columnSettingKey}
+                    customStyles={{
+                        headCells: {
+                            style: {
+                                background: "#5bb0b9",
+                                color: "white"
+                            },
+                        },
+                    }}
+                    columns={[
+                        {
+                            id: "id",
+                            name: "ID",
+                            selector: applicant => applicant.id,
+                            hidable: false
+                        },
+                        {
+                            name: "first_name",
+                            selector: applicant => applicant.first_name,
+                            hidable: false
+                        },
+                        {
+                            name: "last_name",
+                            selector: applicant => applicant.last_name,
+                            hidable: false
+                        },
+                        {
+                            name: "email",
+                            selector: applicant => applicant.email,
+                            hidable: false
+                        },
+
+                        {
+                            cell: (applicant) => (
+                                <>
+                                    <Button type="button" disabled={form.isSubmitting || !form.isValid || form.isValidating} onClick={() => sendEmail(applicant)} className="theme-secondary-btn mr-2 px-4 py-1"><Send /></Button>
+                                </>
+                            ),
+                        },
+
+
+                    ]}
+                    items={applicants}
+                />
             </ViewModal>
         </PageLayout>
     )

@@ -1,11 +1,11 @@
-import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
-import { useAuth } from '../../../../hooks/useAuth';
+import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
+import { useAuth } from '../../../../hooks/use-auth';
 
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 
 import { CompanyEntity } from "../../../../models/company/company.entity";
-import PageLayout from "../../../../components/layouts/page/PageLayout";
-import { CompanyForm } from "../../../../components/forms/company/CompanyForm";
+import PageLayout from "../../../../components/layouts/page/page-layout";
+import { CompanyForm } from "../../../../components/forms/company/company-form";
 
 export default function Settings() {
   const { t } = useTranslation();
@@ -18,6 +18,7 @@ export default function Settings() {
       company: {
         ...user.company,
         name: c.name,
+        website: c.website,
         about: c.about,
         photo: c.photo
       }

@@ -6,10 +6,10 @@ import { useRouter } from 'next/router'
 import { globalAjaxExceptionHandler } from "../../utils/ajax";
 
 // hooks
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 
 // inputs
-import BaseInput from "../forms/BaseInput";
+import BaseInput from "../forms/base-input";
 
 import { SupportDto } from "../../models/support/support.dto";
 

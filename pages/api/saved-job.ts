@@ -19,7 +19,7 @@ export default class SavedJobApi extends BaseApi {
 
         return data;
     }
-    async remove(jobId: number) {
+    async remove(jobId: number): Promise<void> {
         await this.delete(`${this.baseUrl}/job/${jobId}`);
     }
 }

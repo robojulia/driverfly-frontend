@@ -1,26 +1,26 @@
-import { PublicLayout } from "../../../components/layouts/PublicLayout";
-import RelatedJobs from '../../../components/related-jobs/Related-Jobs'
-import { useTranslation } from "../../../hooks/useTranslation"
+import { PublicLayout } from "../../../components/layouts/public-layout";
+import RelatedJobs from '../../../components/related-jobs/related-jobs'
+import { useTranslation } from "../../../hooks/use-translation"
 import JobApi from "../../api/job"
-import StructuredData from "../../../components/seo/StructuredData"
+import StructuredData from "../../../components/seo/structured-data"
 import ViewJobDetail from "../../../components/jobs/view-job-detail";
+import { JobDetailProps } from "../../../types/job/job-detail-props.type";
 
-export default function Detail({ jobDetail, relatedJobs }) {
+export default function Detail({ job, relatedJobs }:JobDetailProps) {
 
   const { t } = useTranslation();
-  console.log(jobDetail);
 
   return (
     <>
-      <StructuredData type="JobPosting" data={StructuredData.JobPosting(jobDetail, t)} />
+      <StructuredData type="JobPosting" data={StructuredData.JobPosting(job, t)} />
       <ViewJobDetail
-        job={jobDetail}
+        job={job}
         relatedJobs={< RelatedJobs jobs={relatedJobs} jobLink="jobs" hideCompanyName={false} jobLinkSlugable={true} />}
         canApply={true}
         canSave={true}
         hideVehicles={false}
         hideCompanyName={false}
-        viewAllJobsLink={`/find-jobs?companyId=${jobDetail.company?.id}`}
+        viewAllJobsLink={`/find-jobs?companyId=${job.company?.id}`}
       />
     </>
   )
@@ -37,11 +37,11 @@ export async function getServerSideProps(context) {
 
     const { items } = await new JobApi().search({ exclude: { jobId: jobId }, companyId: job.company?.id, take: 3 });
     return {
-      props: { jobDetail: job, relatedJobs: items }
+      props: { job: job, relatedJobs: items }
     }
   } catch (error) {
     console.error("Exception is here:", error);
-    return { props: { jobDetail: [], relatedJobs: [] } }
+    return { props: { job: {}, relatedJobs: [] } }
   }
 }
 
