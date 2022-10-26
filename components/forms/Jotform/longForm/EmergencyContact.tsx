@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import styles from "../../../../styles/JotForm.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
-import BaseInput from "../../BaseInput";
-import BaseInputPhone from "../../BaseInputPhone";
+import BaseInput from "../../base-input";
+import BaseInputPhone from "../../base-input-phone";
+import { EmergencyContactDto } from "../../../../models/jot-form/long-form/emergency-contact.dto";
 
 export interface EmergencyContactProps {
   onNextClick: (any) => void;
@@ -18,11 +19,8 @@ export function EmergencyContact(props: EmergencyContactProps) {
   }, [props.applicant]);
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: {
-      EMERGENCY_CONTACT: null,
-      phone: null,
-      RELATIONSHIP: null,
-    },
+    initialValues: new EmergencyContactDto(),
+    // validationSchema: EmergencyContactDto.yupSchema(),
     onSubmit: (values) => {
       props.onNextClick(values);
     },

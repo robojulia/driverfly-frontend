@@ -2,11 +2,9 @@ import React, { useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import styles from "../../../../styles/Jotform.module.css";
 import { Button, Col, Row } from "react-bootstrap";
-import BaseInput from "../../BaseInput";
-import BaseSelect from "../../BaseSelect";
 import { useFormik } from "formik";
-import { useTranslation } from "../../../../hooks/useTranslation";
-import FileInput from "../../FileInput";
+import { useTranslation } from "../../../../hooks/use-translation";
+import FileInput from "../../file-input";
 
 // export interface PhotoUploadprops{
 //     onNextClick: (any) => void;

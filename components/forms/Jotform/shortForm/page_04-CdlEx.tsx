@@ -1,10 +1,10 @@
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { Form, Button, Col, Row, Table } from "react-bootstrap";
-import BaseInput from "../../BaseInput";
-import BaseSelect from "../../BaseSelect";
-import BaseCheck from "../../BaseCheck";
+import BaseInput from "../../base-input";
+import BaseSelect from "../../base-select";
+import BaseCheck from "../../base-check";
 import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
 
 

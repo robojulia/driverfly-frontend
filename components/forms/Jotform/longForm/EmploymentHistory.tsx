@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../../../styles/JotForm.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
-import BaseInput from "../../BaseInput";
-import BaseInputPhone from "../../BaseInputPhone";
-import BaseSelect from "../../BaseSelect";
+import BaseInput from "../../base-input";
+import BaseInputPhone from "../../base-input-phone";
+import BaseSelect from "../../base-select";
 import * as yup from "yup";
-import BaseCheck from "../../BaseCheck";
+import BaseCheck from "../../base-check";
 import { States } from "../../../../enums/users/us-states.enum";
 import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferences.enum";
+import { EmploymentHistoryDto } from "../../../../models/jot-form/long-form/employment-history.dto";
 export interface EmploymentHistoryProps {
   onNextClick: (values?: any) => void;
   onBackClick: () => void;
@@ -21,61 +22,8 @@ export function EmploymentHistory(props: EmploymentHistoryProps) {
   }, [props.applicant]);
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: {
-      employed_type: false,
-      current_company_manager_name: null,
-      current_company_phone_number: null,
-      current_company_email: null,
-      current_company_street_address_line_1: null,
-      current_company_street_address_line_2: null,
-      current_company_zipcode: null,
-    },
-    validationSchema: yup.object({
-      current_company_manager_name: yup
-        .string()
-        .when("employed_type", {
-          is: (v) => !!v,
-          then: yup.string().required().nullable(),
-          otherwise: yup.string().optional().nullable(),
-        })
-        .nullable(),
-
-      current_company_email: yup
-        .string()
-        .when("employed_type", {
-          is: (v) => !!v,
-          then: yup.string().required().nullable(),
-          otherwise: yup.string().optional().nullable(),
-        })
-        .nullable(),
-
-      current_company_street_address_line_1: yup
-        .string()
-        .when("employed_type", {
-          is: (v) => !!v,
-          then: yup.string().required().nullable(),
-          otherwise: yup.string().optional().nullable(),
-        })
-        .nullable(),
-
-      current_company_street_address_line_2: yup
-        .string()
-        .when("employed_type", {
-          is: (v) => !!v,
-          then: yup.string().required().nullable(),
-          otherwise: yup.string().optional().nullable(),
-        })
-        .nullable(),
-
-      current_company_zipcode: yup
-        .string()
-        .when("employed_type", {
-          is: (v) => !!v,
-          then: yup.string().required().nullable(),
-          otherwise: yup.string().optional().nullable(),
-        })
-        .nullable(),
-    }),
+    initialValues: new EmploymentHistoryDto(),
+    validationSchema: EmploymentHistoryDto.yupSchema(),
     onSubmit: (values) => {
       props.onNextClick(values);
     },

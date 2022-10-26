@@ -1,10 +1,10 @@
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 import React from "react";
 import { Form, Button, Col, Row, Table } from "react-bootstrap";
-import BaseInput from "../../BaseInput";
-import BaseCheck from "../../BaseCheck";
+import BaseInput from "../../base-input";
+import BaseCheck from "../../base-check";
 import { AcciedentViolationDto } from "../../../../models/jot-form/short-form/accident-violation.dto";
 
 export interface FifthPageProps{

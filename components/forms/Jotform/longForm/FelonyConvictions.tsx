@@ -1,11 +1,12 @@
 import { useFormik } from 'formik';
 import React from 'react'
 import { Button, Col, Row, Form } from 'react-bootstrap'
-import { useTranslation } from '../../../../hooks/useTranslation'
+import { useTranslation } from '../../../../hooks/use-translation'
 import * as yup from "yup";
-import BaseTextArea from '../../BaseTextArea';
-import BaseCheck from '../../BaseCheck';
+import BaseTextArea from '../../base-text-area';
+import BaseCheck from '../../base-check';
 import styles from "../../../../styles/JotForm.module.css";
+import { FelonyConvictionDto } from '../../../../models/jot-form/long-form/felony-conviction.dto';
 
 export interface FelonyConvictionProps{
     onNextClick: (any) => void;
@@ -15,19 +16,8 @@ export interface FelonyConvictionProps{
 export function FelonyConviction(props: FelonyConvictionProps){
     const{ t } = useTranslation();
     const form = useFormik({
-        initialValues: {
-            felony_declaration: false,
-            explanations: null
-        },
-        validationSchema: yup.object({
-            explanations: yup
-            .string()
-            .when("felony_declaration", {
-                is: (v) => !!v,
-                then: yup.string().required().nullable(),
-                otherwise: yup.string().optional().nullable()
-            })
-        }),
+        initialValues: new FelonyConvictionDto(),
+        validationSchema: FelonyConvictionDto.yupSchema(),
         onSubmit: (values) => {
             props.onNextClick(values);
         },

@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import styles from "../../../../styles/Jotform.module.css";
-import BaseInput from "../../BaseInput";
+import BaseInput from "../../base-input";
 import { Button, Col, Row } from "react-bootstrap";
 import { useFormik } from "formik";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 
 export interface MedicalCardUploadprops {
   onNextClick: (any) => void;

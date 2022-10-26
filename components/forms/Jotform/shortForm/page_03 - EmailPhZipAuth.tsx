@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import styles from "../../../../styles/Jotform.module.css";
 import { Button, Col, Row } from "react-bootstrap";
-import BaseInput from "../../BaseInput";
-import BaseInputPhone from "../../BaseInputPhone";
-import BaseSelect from "../../BaseSelect";
+import BaseInput from "../../base-input";
+import BaseInputPhone from "../../base-input-phone";
+import BaseSelect from "../../base-select";
 import { useFormik } from "formik";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { ContactDto } from "../../../../models/jot-form/short-form/contact.dto";
 
 export interface ThirdPageProps {

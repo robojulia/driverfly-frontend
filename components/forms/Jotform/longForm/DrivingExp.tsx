@@ -3,15 +3,16 @@ import Form from "react-bootstrap/Form";
 import styles from "../../../../styles/Jotform.module.css";
 import * as yup from "yup";
 import { Button, Col, Row } from "react-bootstrap";
-import BaseInput from "../../BaseInput";
-import BaseInputPhone from "../../BaseInputPhone";
-import BaseSelect from "../../BaseSelect";
+import BaseInput from "../../base-input";
+import BaseInputPhone from "../../base-input-phone";
+import BaseSelect from "../../base-select";
 import { useFormik } from "formik";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { Radio } from "@mui/material";
-import BaseCheck from "../../BaseCheck";
+import BaseCheck from "../../base-check";
 import moment from "moment";
 import { States } from "../../../../enums/users/us-states.enum";
+import { DrivingExperienceDto } from "../../../../models/jot-form/long-form/driving-experience.dto";
 
 export interface DrivingExpProps {
   onNextClick: (any) => void;
@@ -24,24 +25,8 @@ export function DrivingExp(props: DrivingExpProps) {
   }, [props.applicant]);
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: {
-      cdl_number: null,
-      state: null,
-      expiration_date: null,
-      state_issued: null,
-    },
-    validationSchema: yup.object({
-      expiration_date: yup
-        .date()
-        .typeError("INVALID_DATE")
-        .min(
-          moment().endOf("day").add(0.5, "years"),
-          "Your License should at least be valid for 6 more months"
-        ),
-      state: yup.string().required().nullable(),
-      cdl_number: yup.string().required().nullable(),
-      state_issued: yup.string().required().nullable(),
-    }),
+    initialValues: new DrivingExperienceDto(),
+    validationSchema: DrivingExperienceDto.yupSchema(),
     onSubmit: (values) => {
       props.onNextClick(values);
     },

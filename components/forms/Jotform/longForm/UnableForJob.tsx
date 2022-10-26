@@ -1,10 +1,10 @@
 import { useFormik } from 'formik';
 import React from 'react'
 import { Button, Col, Row, Form } from 'react-bootstrap'
-import { useTranslation } from '../../../../hooks/useTranslation'
+import { useTranslation } from '../../../../hooks/use-translation'
 import * as yup from "yup";
-import BaseTextArea from '../../BaseTextArea';
-import BaseCheck from '../../BaseCheck';
+import BaseTextArea from '../../base-text-area';
+import BaseCheck from '../../base-check';
 import styles from "../../../../styles/JotForm.module.css";
 
 

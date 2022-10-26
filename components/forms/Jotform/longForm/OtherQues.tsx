@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import styles from "../../../../styles/Jotform.module.css";
 import { Button, Col, Row } from "react-bootstrap";
-import BaseInput from "../../BaseInput";
-import BaseSelect from "../../BaseSelect";
+import BaseInput from "../../base-input";
+import BaseSelect from "../../base-select";
 import { useFormik } from "formik";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { DriverEndorsement } from "../../../../enums/users/driver-endorsement.enum";
 
 export interface OtherQuesProps {

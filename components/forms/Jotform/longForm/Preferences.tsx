@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import { VehicleRouteType } from "../../../../enums/vehicles/vehicle-routes.enum";
-import { useTranslation } from "../../../../hooks/useTranslation";
-import BaseCheckList from "../../BaseCheckList";
+import { useTranslation } from "../../../../hooks/use-translation";
+import BaseCheckList from "../../base-check-list";
 import { useFormik } from "formik";
 import { OtherRequirement } from "../../../../enums/users/other-requirements.enum";
 export interface PreferenceProps {

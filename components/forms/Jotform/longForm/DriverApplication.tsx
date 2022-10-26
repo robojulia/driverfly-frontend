@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../../../styles/JotForm.module.css";
 import { Form, Button, Col, Row, Table } from "react-bootstrap";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
-import BaseInput from "../../BaseInput";
+import BaseInput from "../../base-input";
 import * as yup from "yup";
 import SignaturePad from "react-signature-canvas";
 import SignatureCanvas from "react-signature-canvas";
-import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
+import { DriverApplicationDto } from "../../../../models/jot-form/long-form/driver-application.dto";
 
 export interface DriverApplicationProps {
   onNextClick: (values: any) => void;
@@ -21,28 +21,13 @@ export function DriverApplication(props: DriverApplicationProps) {
 
   const { t } = useTranslation();
   let padRef = React.useRef<SignatureCanvas>(null);
+  console.log("signatires", padRef, SignatureCanvas);
   const clear = () => {
     padRef.current?.clear();
   };
   const form = useFormik({
-    initialValues: {
-      first_name: null,
-      last_name: null,
-      date: null,
-    },
-    validationSchema: yup.object({
-      first_name: yup
-        .string()
-        .matches(/^[A-Za-z ]*$/, "Please enter valid name")
-        .required()
-        .nullable(),
-      last_name: yup
-        .string()
-        .matches(/^[A-Za-z ]*$/, "Please enter valid name")
-        .required()
-        .nullable(),
-      date: yup.date().required(),
-    }),
+    initialValues: new DriverApplicationDto(),
+    validationSchema: DriverApplicationDto.yupSchema(),
     onSubmit: (values) => {
       props.onNextClick(values);
     },

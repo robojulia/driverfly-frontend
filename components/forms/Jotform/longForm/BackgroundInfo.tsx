@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
 import styles from "../../../../styles/JotForm.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
-import BaseInput from "../../BaseInput";
+import BaseInput from "../../base-input";
 import * as yup from "yup";
-import BaseSelect from "../../BaseSelect";
+import BaseSelect from "../../base-select";
 import moment from "moment";
 import { States } from "../../../../enums/users/us-states.enum";
+import { BackgroundInfoDto } from "../../../../models/jot-form/long-form/background-info.dto";
 
 export interface BackgroundInfoProps {
   onNextClick: (any) => void;
@@ -21,24 +22,8 @@ export function BackgroundInfo(props: BackgroundInfoProps) {
   }, [props.applicant]);
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: {
-      birthdate: null,
-      address_line_1: null,
-      address_line_2: null,
-      city: null,
-      state: null,
-      zip_code: null,
-    },
-    validationSchema: yup.object({
-      birthdate: yup
-        .date()
-        .typeError("INVALID_DATE")
-        .max(moment().endOf("day").subtract(18, "years"), "TOO YOUNG TO DRIVE"),
-      address_line_1: yup.string().required().nullable(),
-      city: yup.string().required().nullable(),
-      state: yup.string().required().nullable(),
-      zip_code: yup.number().required(),
-    }),
+    initialValues: new BackgroundInfoDto(),
+    validationSchema: BackgroundInfoDto.yupSchema(),
     onSubmit: (values) => {
       props.onNextClick(values);
     },

@@ -1,12 +1,12 @@
 import { useFormik } from 'formik';
 import React from 'react'
 import { Button, Col, Row, Form } from 'react-bootstrap'
-import { useTranslation } from '../../../../hooks/useTranslation'
+import { useTranslation } from '../../../../hooks/use-translation'
 import * as yup from "yup";
-import BaseCheck from '../../BaseCheck';
-import BaseInput from '../../BaseInput';
-import BaseSelect from '../../BaseSelect';
+import BaseCheck from '../../base-check';
+import BaseInput from '../../base-input';
 import styles from "../../../../styles/JotForm.module.css";
+import { AccidentLastFiveYearsDto } from '../../../../models/jot-form/long-form/accident-last-5-years.dto';
 
 
 export interface AccidentsLast5YearsProps {
@@ -16,30 +16,7 @@ export interface AccidentsLast5YearsProps {
 export function AccidentsLast5Years(props: AccidentsLast5YearsProps) {
     const { t } = useTranslation();
     const form = useFormik({
-        initialValues: {
-            accidents_within_last_5_years: null,
-            date_of_accident_1: null,
-            date_of_accident_2: null,
-            date_of_accident_3: null,
-            nature_of_accident_1: null,
-            nature_of_accident_2: null,
-            nature_of_accident_3: null,
-            location_of_accident_1: null,
-            location_of_accident_2: null,
-            location_of_accident_3: null,
-            number_of_fatalaties_1: null,
-            number_of_fatalaties_2: null,
-            number_of_fatalaties_3: null,
-            number_of_injured_1: null,
-            number_of_injured_2: null,
-            number_of_injured_3: null,
-            dot_recordable_1: false,
-            dot_recordable_2: false,
-            dot_recordable_3: false,
-            at_fault_1: false,
-            at_fault_2: false,
-            at_fault_3: false
-        },
+        initialValues: AccidentLastFiveYearsDto,
         validationSchema: yup.object({
             // applied_before
             // from_date: yup.date().required(),

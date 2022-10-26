@@ -1,8 +1,8 @@
 import React from "react";
 import { Button, Col, Row } from "react-bootstrap";
-import BaseSelect from "../../BaseSelect";
+import BaseSelect from "../../base-select";
 import { useFormik } from "formik";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { HearAboutUsDto } from "../../../../models/jot-form/short-form/hear-about.dto";
 
 export interface SixthPageProps {
