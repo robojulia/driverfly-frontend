@@ -68,14 +68,14 @@ export default function EmployeeDirectory() {
                                     {t("WANT_TO_ADD_TO_THIS_LIST")}
                                     <u className="ml-1">
                                         <Link href="/dashboard/company/compliance/employee-directory/import">
-                                            <a>{t("HERE")}</a>
+                                            <a className="here_link">{t("HERE")}</a>
                                         </Link>
                                     </u>
                                 </p>
                                 <u>
                                     <p className="mt-2">
                                         <Link href="#">
-                                            <a>{t("VIEW_PAST_HIRES")}</a>
+                                            <a className="here_link">{t("VIEW_PAST_HIRES")}</a>
                                         </Link>
                                     </p>
                                 </u>

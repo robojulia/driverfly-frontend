@@ -148,12 +148,6 @@
     color: rgb(255, 255, 255) !important;
 }
 
-/* .nav-link:hover,
-.nav-link:focus {
-    background-color: rgb(255, 255, 255);
-    color: #000 !important;
-} */
-
 .space_35 {
     padding: 35px;
 }
@@ -204,10 +198,6 @@
     text-align: left;
 }
 
-
-
-
-
 .select_pading {
     padding: 14px;
     outline: #ced4da;
@@ -247,8 +237,6 @@
     margin-top: 3px;
     display: none;
 }
-
-
 
 .side_bar {
 
@@ -296,7 +284,6 @@
     background-color: #5cc8c4;
     border-radius: 5px;
     margin: 0% 1%;
-
 }
 
 .bg_blue {
@@ -304,7 +291,6 @@
     background-color: #1d4354;
     border-radius: 5px;
     margin: 0% 1%;
-
 }
 
 .myrtlegreen {
@@ -312,7 +298,6 @@
     background-color: #2A7869;
     border-radius: 5px;
     margin: 2% 1%;
-
 }
 
 .w-23 {
@@ -320,8 +305,6 @@
     display: inline-block;
     margin: 2% 1%;
 }
-
-
 
 textarea {
     height: 200px !important;
@@ -403,10 +386,6 @@ textarea {
     width: 30px;
 }
 
-/* .application_select {
-    padding: 12px;
-} */
-
 .mb-34 {
     margin-bottom: 34px;
 }
@@ -463,7 +442,6 @@ textarea {
 
 }
 
-
 /* JobListing Table*/
 
 .listing_head th {
@@ -491,12 +469,9 @@ textarea {
     background-color: #cdf3f2;
 }
 
-
-
 .account_tabs .react-tabs__tab {
     margin: 0px 25px;
 }
-
 
 .account_tabs .react-tabs__tab-list {
     background: #fff;
@@ -519,7 +494,6 @@ textarea {
 }
 
 .react-tabs__tab-panel {
-    /* height: 700px; */
     overflow-x: auto;
 }
 
@@ -652,16 +626,17 @@ textarea {
 }
 
 /* start Typeahead dropdown */
-.dropdown-item{
+.dropdown-item {
     color: rgb(65, 60, 60) !important;
 }
 
-.dropdown-item:hover{
+.dropdown-item:hover {
     color: #000 !important;
 }
+
 /* end Typeahead dropdown */
 
-.employee_directory_tabs{
+.employee_directory_tabs {
     background: #2ec8c438;
     padding: 20px;
 }
@@ -692,4 +667,7 @@ textarea {
 
 .data_table_custom_action_button .delete {
     color: #ff0000d9;
+}
+a.here_link{
+    color: #0000FF;
 }
