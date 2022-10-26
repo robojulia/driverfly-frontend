@@ -870,7 +870,7 @@ export function JobForm(props: JobFormProps) {
                                             <label>{t('MIN_YEARS_EXPERIENCE')}</label>
                                             <InputGroup className="flex-nowrap rounded d-block">
                                                 <BaseInput
-                                                    className="col-6 d-inline-block p-0 m-0"
+                                                    className="col-md-6 d-inline-block p-0 mb-2"
                                                     placeholder="5"
                                                     name={`min_experience_in_years`}
                                                     required
@@ -880,7 +880,7 @@ export function JobForm(props: JobFormProps) {
                                                     formik={form}
                                                 />
                                                 <BaseInput
-                                                    className="col-6 d-inline-block p-0"
+                                                    className="col-md-6 d-inline-block p-0"
                                                     placeholder="5"
                                                     name={`min_experience_in_months`}
                                                     required
