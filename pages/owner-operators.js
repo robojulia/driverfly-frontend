@@ -32,7 +32,9 @@ export default function Owneroperators() {
                         <h2 className="text-center text-white lg-pt-5 pt-3">{t("OWNER_OPERATORS")}</h2>
                         <p className="mt-5 text-white">{t("ARE_YOU_LOOKING_TO_LEASE_ONTO_MOTOR_CARRIER_FOR_JOB_TYPE")}</p>
                         <div className={Owneroperator.btn__custom}>
+
                             <button className=" form-control bt btn-lg mt-5 text-center" onClick={handleSubmit}>{t("LEASE_ONTO_A_CARRIER")}</button>
+
                         </div>
                     </div>
                 </div>
