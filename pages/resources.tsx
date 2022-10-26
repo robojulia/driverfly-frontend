@@ -5,8 +5,6 @@ import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import FreeResources from '../components/free-resources';
 import { useTranslation } from "../hooks/use-translation";
 
-
-
 export default function FreeResource() {
     const { t } = useTranslation();
     return (

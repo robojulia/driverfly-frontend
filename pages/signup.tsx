@@ -5,15 +5,12 @@ import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-
 import { useFormik } from "formik";
 
 import BaseInput from "../components/forms/base-input";
 import BaseSelect from "../components/forms/base-select";
 import BaseCheck from "../components/forms/base-check";
 import BaseInputPhone from "../components/forms/base-input-phone";
-
-
 
 import AuthApi from "./api/auth";
 

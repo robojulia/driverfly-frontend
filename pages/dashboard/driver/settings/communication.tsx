@@ -146,7 +146,6 @@ export default function Communication() {
                         labelPrefix="CommunicationMethod"
                         formik={form}
                     />
-                    {/** todo: add Preferred Hours */}
                     <BaseCheck
                         className="col-12 mt-3"
                         label="receive_suggested_job_feeds"
