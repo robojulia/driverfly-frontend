@@ -33,15 +33,18 @@ import BaseTextArea from "../../../../components/forms/base-text-area";
 import { useTranslation } from "../../../../hooks/use-translation";
 
 import { useFormik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'
 import { useEffectAsync } from "../../../../utils/react";
 import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
+import ApplicantResume from "../../../../components/pdf/applicant-resume";
 
 export default function Applicant() {
     const { t } = useTranslation();
     const api = new ApplicantApi();
+
+    const [applicant, setApplicant] = useState<ApplicantEntity>()
 
     const form = useFormik({
         initialValues: new ApplicantEntity(),
@@ -52,6 +55,7 @@ export default function Applicant() {
 
             try {
                 values = await api.me.update(values);
+                setApplicant(values)
 
                 toast.success(t("successfully_saved_information"));
 
@@ -64,9 +68,9 @@ export default function Applicant() {
     });
 
     useEffectAsync(async () => {
-        const applicant = await api.me.get();
+        const data = await api.me.get();
 
-        applicant.equipment_experience.forEach((equipmentExp) => {
+        data.equipment_experience.forEach((equipmentExp) => {
             if (!Number.isInteger(equipmentExp)) {
                 equipmentExp.months = Math.round((equipmentExp.years % 1) * 12);
                 equipmentExp.years = Math.floor(equipmentExp.years);
@@ -75,22 +79,27 @@ export default function Applicant() {
 
         form.setValues({
             ...form.values,
-            ...applicant,
+            ...data,
         });
+        setApplicant(data)
     }, []);
 
     return (<>
         <ToastContainer />
         <form onSubmit={form.handleSubmit}>
             <Row>
-                <Col>
+                <Col xs="8">
                     <Alert variant="info">
                         {t("APPLICANT_INFO_DESCRIPTION")}
                     </Alert>
                 </Col>
-                <Col xs="3">
+                <Col xs="4">
                     <div style={{ float: "right" }}>
-                        <Button variant="primary" type="submit">{t("SAVE")}</Button>
+                        <Button variant="primary" type="submit" disabled={form.isSubmitting || !form.isValid || form.isValidating}>{t("SAVE")}</Button>
+                        <ApplicantResume
+                            className={' ml-1'}
+                            applicant={applicant}
+                            disabled={form.isSubmitting || !form.isValid || form.isValidating} />
                     </div>
                 </Col>
             </Row>

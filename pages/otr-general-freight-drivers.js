@@ -1,16 +1,14 @@
-import axios from "axios"
-import { ArrowLeftRight } from "react-bootstrap-icons"
+
 import JobApply from "../components/apply"
-import JobDescription from '../components/job-description/JobDescription'
-import JonInformation from '../components/job-information-sidebar/JobInformation'
+import JobDescription from '../components/job-description/job-description'
+import JonInformation from '../components/job-information-sidebar/job-information'
 import { PublicLayout } from "../components/layouts/public-layout";
-import RelatedJobs from '../components/related-jobs/Related-Jobs'
-import SocilShare from '../components/share-link/ShareLink'
+import RelatedJobs from '../components/related-jobs/related-jobs'
+import SocilShare from '../components/share-link/share-link'
 import { ArrowRight } from 'react-bootstrap-icons';
 
 
-export default function Apply ( { data } ) {
-  // console.log(data);
+export default function Apply({ data }) {
   const jobDetail = data
 
   return (
@@ -21,7 +19,7 @@ export default function Apply ( { data } ) {
             <div className="col-md-9">
               <div className="ort-inner">
                 <div className="media align-items-center bg-transparent border-0 p-0">
-                  <a href="#" className="text-dark text-center text-decoration-none"> <img className="d-flex mr-4 truck-img mb-3" src="img/CTR-logo-cartoon.png" alt="" /> View all jobs <ArrowRight/></a>
+                  <a href="#" className="text-dark text-center text-decoration-none"> <img className="d-flex mr-4 truck-img mb-3" src="img/CTR-logo-cartoon.png" alt="" /> View all jobs <ArrowRight /></a>
                   <div className="media-body">
                     <h6>Solo</h6>
                     <h4 className="mt-0">{jobDetail.title} <span className="" data-toggle="tooltip"
@@ -68,7 +66,7 @@ export default function Apply ( { data } ) {
     </>
   )
 }
-export async function getServerSideProps () {
+export async function getServerSideProps() {
   // Fetch data from external API
   // const { data } = await axios.get( 'http://localhost:3000/job' )
   const data = {
@@ -105,7 +103,7 @@ export async function getServerSideProps () {
   return { props: { data } }
 }
 
-Apply.getLayout = function getLayout ( page ) {
+Apply.getLayout = function getLayout(page) {
   return (
     <PublicLayout>
       {page}
