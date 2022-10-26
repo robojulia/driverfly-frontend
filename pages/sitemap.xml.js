@@ -5,49 +5,35 @@ const Sitemap = () => { };
 
 export const getServerSideProps = async ({ res }) => {
 
-    const baseUrl = process.env.FRONTEND_BASE_URL;
-    const jobApi = new JobApi()
-    const jobs = await jobApi.sitemap()
+  const baseUrl = process.env.FRONTEND_BASE_URL;
+  const jobApi = new JobApi()
+  const jobs = await jobApi.sitemap()
 
-    // const staticPagesPath = fs
-    //     .readdirSync(process.cwd() + "/pages")
-    //     .filter((staticPage) => {
-    //         return ![
-    //             "_app.js",
-    //             "_document.js",
-    //             "_error.js",
-    //             "_middleware.ts",
-    //             "api",
-    //             "sitemap.xml.js",
-    //         ].includes(staticPage);
-    //     })
-    // .map((staticPagePath) => (`${baseUrl}/${staticPagePath}`))
-
-    const staticPagesPath = [
-        'about',
-        'blog-eldt',
-        'blog-tips',
-        'blog',
-        'contact',
-        'faq',
-        'find-jobs',
-        'find-schools',
-        'forgot-password',
-        'login',
-        'otr-general-freight-drivers',
-        'owner-operators',
-        'pricing',
-        'privacy-policy',
-        'reset-password',
-        'signup',
-        'terms-and-policies',
-        'terms-of-service',
-        'third-party-resources',
-        'verify-email-token',
-    ].map((staticPagePath) => (`${baseUrl}/${staticPagePath}`))
+  const staticPagesPath = [
+    'about',
+    'blog-eldt',
+    'blog-tips',
+    'blog',
+    'contact',
+    'faq',
+    'find-jobs',
+    'find-schools',
+    'forgot-password',
+    'login',
+    'otr-general-freight-drivers',
+    'owner-operators',
+    'pricing',
+    'privacy-policy',
+    'reset-password',
+    'signup',
+    'terms-and-policies',
+    'terms-of-service',
+    'third-party-resources',
+    'verify-email-token',
+  ].map((staticPagePath) => (`${baseUrl}/${staticPagePath}`))
 
 
-    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
       ${staticPagesPath.map((url) => (`
             <url>
@@ -57,7 +43,7 @@ export const getServerSideProps = async ({ res }) => {
               <priority>1.0</priority>
             </url>
           `))
-            .join("")}
+      .join("")}
       ${jobs.map(({ id, slug, last_updated_at }) => (`
             <url>
               <loc>${baseUrl}/jobs/${id}/${slug}</loc>
@@ -66,17 +52,17 @@ export const getServerSideProps = async ({ res }) => {
               <priority>1.0</priority>
             </url>
           `))
-            .join("")}
+      .join("")}
     </urlset>
   `;
 
-    res.setHeader("Content-Type", "text/xml");
-    res.write(sitemap);
-    res.end();
+  res.setHeader("Content-Type", "text/xml");
+  res.write(sitemap);
+  res.end();
 
-    return {
-        props: {},
-    };
+  return {
+    props: {},
+  };
 };
 
 export default Sitemap;

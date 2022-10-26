@@ -36,7 +36,7 @@ export default function Owneroperators() {
                             Go to the job search and select owner operator for job type.
                         </p>
                         <div className={Owneroperator.btn__custom}>
-                            <button className="form-control" className="bt btn-lg mt-5 text-center" onClick={handleSubmit}>Lease On To A Carrier</button>
+                            <button className="form-control bt btn-lg mt-5 text-center" onClick={handleSubmit}>Lease On To A Carrier</button>
                         </div>
                     </div>
                 </div>

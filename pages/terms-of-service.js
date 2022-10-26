@@ -29,22 +29,22 @@ export default function TermsOfService() {
                                     <li>
                                         <h4>Disputes and Arbitration</h4>
                                         <p>DriverFly is committed to customer satisfaction. If you
-                                        have a problem or dispute, we will try to resolve it. If we
-                                        are unsuccessful, you may pursue your claim as explained in
-                                        this section.</p>
+                                            have a problem or dispute, we will try to resolve it. If we
+                                            are unsuccessful, you may pursue your claim as explained in
+                                            this section.</p>
                                         <p>You agree to give us an opportunity to resolve any problem,
-                                        dispute, or claim relating in any way to the Sites and/or any
-                                        of its related applications or services; any dealings with DriverFly,
-                                        including with our marketing and customer service agents; the purchase,
-                                        use, or performance of any services or products available through
-                                        this Site; any representations made by DriverFly; or our Privacy
-                                        Policy (collectively, “Claims”) by providing Notice to Customer
-                                        Support. Unless prohibited by applicable law, any Claim must be brought
-                                        within two (2) years from the date on which such Claim arose or accrued.
-                                        If we are unable to resolve your Claims within 60 days of receipt, you may
-                                        seek relief through arbitration or small claims court, as set forth below.
-                                        This informal process is a condition precedent to your ability to initiate
-                                        a claim in arbitration or small claims court.</p>
+                                            dispute, or claim relating in any way to the Sites and/or any
+                                            of its related applications or services; any dealings with DriverFly,
+                                            including with our marketing and customer service agents; the purchase,
+                                            use, or performance of any services or products available through
+                                            this Site; any representations made by DriverFly; or our Privacy
+                                            Policy (collectively, “Claims”) by providing Notice to Customer
+                                            Support. Unless prohibited by applicable law, any Claim must be brought
+                                            within two (2) years from the date on which such Claim arose or accrued.
+                                            If we are unable to resolve your Claims within 60 days of receipt, you may
+                                            seek relief through arbitration or small claims court, as set forth below.
+                                            This informal process is a condition precedent to your ability to initiate
+                                            a claim in arbitration or small claims court.</p>
                                         <p>This Agreement shall be governed by the laws of the State of Delaware, United States of America, without regard to conflict of laws. All Claims or other matters in dispute between you or any Third- party and DriverFly, its subsidiaries or affiliates, or any third party partners or companies offering products or services through the Site, whether based upon contract, tort, statute, or otherwise, shall be governed by the laws of the State of Delaware, without regard to conflict of laws provisions that would result in the application of the laws of any other jurisdiction.</p>
                                     </li>
                                     <li>
@@ -77,7 +77,7 @@ export default function TermsOfService() {
 
 }
 
-TermsOfService.getLayout = function getLayout(page){
+TermsOfService.getLayout = function getLayout(page) {
     return (
         <PublicLayout title="terms_of_services">
             {page}
