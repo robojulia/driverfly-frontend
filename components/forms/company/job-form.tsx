@@ -413,6 +413,11 @@ export function JobForm(props: JobFormProps) {
             if (dto.expiry_date) dto.expiry_date = new Date(dto.expiry_date).toISOString();
             if (dto.orientation_start_at) dto.orientation_start_at = new Date(dto.orientation_start_at).toISOString();
             if (dto.orientation_end_at) dto.orientation_end_at = new Date(dto.orientation_end_at).toISOString();
+            if (dto.min_experience_in_months) {
+                dto.min_experience_in_years += dto.min_experience_in_months / 12;
+            }
+            dto.min_years_experience = dto.min_experience_in_years ? parseFloat(dto.min_experience_in_years?.toFixed(2)) : 0
+
             if (entity?.id) {
                 job = await jobApi.update(entity.id, dto);
             }
@@ -439,7 +444,6 @@ export function JobForm(props: JobFormProps) {
     //     console.log('errors', form.errors)
     //     console.log('values', form.values)
     // }, [form.values, form.errors]);
-
 
     return (
         <>
@@ -861,17 +865,33 @@ export function JobForm(props: JobFormProps) {
                                         enumType={DriverLicenseType}
                                         formik={form}
                                     />
-                                    <BaseInput
-                                        className="col-12"
-                                        label="MIN_YEARS_EXPERIENCE"
-                                        name="min_years_experience"
-                                        placeholder
-                                        step={0.01}
-                                        min={0}
-                                        type="number"
-                                        formik={form}
-                                        append={(<InputGroup.Text>yrs</InputGroup.Text>)}
-                                    />
+                                    <Row className="mt-1 p-3 ">
+                                        <Col>
+                                            <label>{t('MIN_YEARS_EXPERIENCE')}</label>
+                                            <InputGroup className="flex-nowrap rounded">
+                                                <BaseInput
+                                                    className="mr-1"
+                                                    placeholder="5"
+                                                    name={`min_experience_in_years`}
+                                                    required
+                                                    min="0"
+                                                    type="int"
+                                                    append={(<InputGroup.Text>{t('YEARS_SHORT')}</InputGroup.Text>)}
+                                                    formik={form}
+                                                />
+                                                <BaseInput
+                                                    placeholder="5"
+                                                    name={`min_experience_in_months`}
+                                                    required
+                                                    min="0"
+                                                    max="11"
+                                                    type="int"
+                                                    append={(<InputGroup.Text>{t('MONTHS_SHORT')}</InputGroup.Text>)}
+                                                    formik={form}
+                                                />
+                                            </InputGroup>
+                                        </Col>
+                                    </Row>
                                     <BaseSelect
                                         className="col-12"
                                         label="min_degree"
@@ -917,8 +937,9 @@ export function JobForm(props: JobFormProps) {
                                                             placeholder="5"
                                                             name={`required_skills.${i}.years`}
                                                             required
+                                                            min="0"
                                                             type="int"
-                                                            append={(<InputGroup.Text>yrs</InputGroup.Text>)}
+                                                            append={(<InputGroup.Text>{t('YEARS_SHORT')}</InputGroup.Text>)}
                                                             formik={form}
                                                         />
                                                         <BaseInput
@@ -926,9 +947,10 @@ export function JobForm(props: JobFormProps) {
                                                             placeholder="5"
                                                             name={`required_skills.${i}.months`}
                                                             required
+                                                            min="0"
                                                             max="11"
                                                             type="int"
-                                                            append={(<InputGroup.Text>mos</InputGroup.Text>)}
+                                                            append={(<InputGroup.Text>{t('MONTHS_SHORT')}</InputGroup.Text>)}
                                                             formik={form}
                                                         />
                                                     </BaseListRowControl >)
@@ -1101,7 +1123,7 @@ export function JobForm(props: JobFormProps) {
                                                                                 default: return year5Only;
                                                                             }
                                                                         })()}
-                                                                        append={<InputGroup.Text>yrs</InputGroup.Text>}
+                                                                        append={<InputGroup.Text>{t('YEARS_SHORT')}</InputGroup.Text>}
                                                                         formik={form}
                                                                     />
                                                                 </BaseListRowControl>
@@ -1179,7 +1201,7 @@ export function JobForm(props: JobFormProps) {
                                                                         name={`criminal_history.${i}.max_years`}
                                                                         required
                                                                         options={years}
-                                                                        append={form.getFieldMeta(`criminal_history.${i}.max_years`)?.value > 0 && <InputGroup.Text>yrs</InputGroup.Text>}
+                                                                        append={form.getFieldMeta(`criminal_history.${i}.max_years`)?.value > 0 && <InputGroup.Text>{t('YEARS_SHORT')}</InputGroup.Text>}
                                                                         formik={form}
                                                                     />
                                                                 </BaseListRowControl>
