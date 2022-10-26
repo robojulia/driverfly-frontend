@@ -455,7 +455,7 @@
     }
 
     .tab-sec .nav-link {
-        padding: 12px 25px;
+        padding: 12px 22px;
     }
 
     .top-links-sec h2 {
@@ -492,10 +492,12 @@
         padding: 5px 12px !important;
         font-size: 12px !important;
     }
-    .my_card_body{
+
+    .my_card_body {
         padding: 10px !important;
     }
-    .my_card_body .card-body strong{
+
+    .my_card_body .card-body strong {
         font-size: 13px;
     }
 }
