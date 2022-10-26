@@ -1,17 +1,17 @@
 import { useFormik } from "formik";
 import { toast } from 'react-toastify'
 import { globalAjaxExceptionHandler } from "../../utils/ajax";
-import { useTranslation } from "../../hooks/useTranslation";
-import BaseInput from "../forms/BaseInput";
-import { useAuth } from '../../hooks/useAuth'
+import { useTranslation } from "../../hooks/use-translation";
+import BaseInput from "../forms/base-input";
+import { useAuth } from '../../hooks/use-auth'
 import { Row, Button, Col } from "react-bootstrap";
-import ViewModal from "../viewDetails/viewModal";
+import ViewModal from "../view-details/view-modal";
 import { FlagFill } from "react-bootstrap-icons";
 import { useState } from "react";
-import BaseSelect from "../forms/BaseSelect";
-import { FlagInappropriateApplicantDto } from "../../models/flag-inappropriate-applicant/flag-inappropriate-applicant.dto";
-import { FlagInappropriateApplicant } from "../../enums/jobs/flag-inappropriate-applicant.enum";
+import BaseSelect from "../forms/base-select";
+import { FlagInappropriateApplicantDto } from "../../models/support/flag-inappropriate-applicant.dto";
 import SupportApi from "../../pages/api/support";
+import { InappropriateApplicantFlag } from "../../enums/support/inappropriate-applicant-flag.enum"
 
 export default function FlagApplicant({ applicantId }) {
 
@@ -30,7 +30,7 @@ export default function FlagApplicant({ applicantId }) {
         validationSchema: FlagInappropriateApplicantDto.yupSchema(),
         onSubmit: async (dto, { resetForm }) => {
             try {
-                await supportApi.FlagInappropriateApplicantApi(dto);
+                await supportApi.FlagInappropriateApplicant(dto);
                 toast.success(t("THANKS_FOR_KEEPING_A_WATCHFUL_EYE_TO_OUR_SAFETY"));
                 closeFlagApplicantModel()
             }
@@ -61,12 +61,12 @@ export default function FlagApplicant({ applicantId }) {
                             name="type"
                             required
                             placeholder
-                            labelPrefix="FlagInappropriateApplicant"
-                            enumType={FlagInappropriateApplicant}
+                            labelPrefix="InappropriateApplicantFlag"
+                            enumType={InappropriateApplicantFlag}
                             formik={form}
                         />
                         {
-                            form.values.type === FlagInappropriateApplicant.OTHER &&
+                            form.values.type === InappropriateApplicantFlag.OTHER &&
                             <BaseInput
                                 className="col-12 mt-3"
                                 label="other"
@@ -79,7 +79,10 @@ export default function FlagApplicant({ applicantId }) {
                     </Row>
                     <Row>
                         <Col className="text-end my-3">
-                            <Button disabled={form.values.type == null} type="submit">{t("submit")}</Button>
+                            <Button
+                                disabled={form.isSubmitting || !form.isValid || form.isValidating}
+                                type="submit">{t("submit")}
+                            </Button>
                         </Col>
                     </Row>
                 </form>

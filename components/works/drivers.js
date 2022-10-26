@@ -1,76 +1,72 @@
-import { FileEarmarkZip, Funnel, CheckSquare, Bell, Trophy, HandIndexThumb} from 'react-bootstrap-icons';
+import { FileEarmarkZip, Funnel, CheckSquare, Bell, Trophy, HandIndexThumb } from 'react-bootstrap-icons';
+import { useTranslation } from '../../hooks/use-translation';
+
 
 export default function Driver() {
+
+    const { t } = useTranslation();
+
     return (
         <>
-        <h3 className='general-headings' style={{fontSize:' 40px'}}>How It Works</h3>
-        <h3>Drivers</h3>
-         <div className="row mb-4">
-                   <div className="col-md-4">
-                       <div className="card">
-                           {/* <i className="fa fa-file-archive-o" aria-hidden="true"></i> */}
-                           < FileEarmarkZip />
-
-                           <div className="card-body px-0">
-                               <h5 className="card-title">Create An Account</h5>
-                               <p className="card-text">Take 5 minutes to quickly set up a profile and upload your CDL / Medical card if available.</p>
-                           </div>
-                       </div>
-                   </div>
-                   <div className="col-md-4">
-                       <div className="card">
-                           {/* <i className="fa fa-filter" aria-hidden="true"></i> */}
-                           <Funnel />
-                           <div className="card-body px-0">
-                               <h5 className="card-title">Filter & Search Driver Jobs</h5>
-                               <p className="card-text">Browse hundreds of jobs based on your specific criteria, including driver schedule & other parameters.</p>
-                           </div>
-                       </div>
-                   </div>
-                   <div className="col-md-4">
-                       <div className="card">
-                           {/* <i className="fa fa-paper-plane" aria-hidden="true"></i>
-                            */}
-                            < CheckSquare  />
-                           <div className="card-body px-0">
-                               <h5 className="card-title">Save & Apply</h5>
-                               <p className="card-text">Use the DriverFly platform to favorite jobs, forward to friends, and submit for application.</p>
-                           </div>
-                       </div>
-                   </div>
-                   <div className="col-md-4">
+            <h3 className='general-headings' style={{ fontSize: ' 40px' }}>{t("HOW_IT_WORKS")}</h3>
+            <h3>{t("DRIVERS")}</h3>
+            <div className="row mb-4">
+                <div className="col-md-4">
                     <div className="card">
-                        {/* <i className="fa fa-bell-o" aria-hidden="true"></i> */}
+                        < FileEarmarkZip />
+
+                        <div className="card-body px-0">
+                            <h5 className="card-title">{t("CREATE_AN_ACCOUNT")}</h5>
+                            <p className="card-text">{t("TAKE_5_MINUTES_TO_QUICKLY_SET_UP")}</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-4">
+                    <div className="card">
+                        <Funnel />
+                        <div className="card-body px-0">
+                            <h5 className="card-title">{t("FILTER_&_SEARCH_DRIVER_JOBS")}</h5>
+                            <p className="card-text">{t("BROWSE_HUNDREDS_OF_JOBS_ON_YOIR_SPECIFIC_CRITERIA")}</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-4">
+                    <div className="card">
+                        < CheckSquare />
+                        <div className="card-body px-0">
+                            <h5 className="card-title">{t("SAVE_&_APPLY")}</h5>
+                            <p className="card-text">{t("USE_THE_DRIVERFLY_PLATFORM_TO_FAVORITE_JOBS")}</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-4">
+                    <div className="card">
                         < Bell />
                         <div className="card-body px-0">
-                            <h5 className="card-title">Have Jobs Come To You</h5>
-                            <p className="card-text">You also have the ability to display your profile to prospective employers and set up push notifications (through RSS feeds) whenever a job matching your search criteria becomes available.</p>
+                            <h5 className="card-title">{t("HAVE_JOBS_COME_TO_YOU")}</h5>
+                            <p className="card-text">{t("YOU_ALSO_HAVE_THE_ABILITY_TO_DISPLAY_YOUR_PROFILE")}</p>
                         </div>
                     </div>
                 </div>
                 <div className="col-md-4">
                     <div className="card">
-                        {/* <i className="fa fa-trophy" aria-hidden="true"></i>
-                         */}
-                         < Trophy />
+                        < Trophy />
                         <div className="card-body px-0">
-                            <h5 className="card-title">Get Hired</h5>
-                            <p className="card-text">Employers will contact you directly to discuss their opportunities and unique hiring steps.</p>
+                            <h5 className="card-title">{t("GET_HIRED")}</h5>
+                            <p className="card-text">{t("EMPLOYERS_WILL_CONTACT_YOU")}</p>
                         </div>
                     </div>
                 </div>
                 <div className="col-md-4">
                     <div className="card">
-                        {/* <i className="fa fa-hand-peace-o" aria-hidden="true"></i>
-                         */}
-                         < HandIndexThumb />
+                        < HandIndexThumb />
                         <div className="card-body px-0">
-                            <h5 className="card-title">Review Your Employer</h5>
-                            <p className="card-text">Once you've landed your dream job, share your experience with the rest of the world.</p>
+                            <h5 className="card-title">{t("REVIEW_YOUR_EMPLOYER")}</h5>
+                            <p className="card-text">{t("ONCE_YOU'VE_LANDED_YOUR_DREAM_JOB")}</p>
                         </div>
                     </div>
                 </div>
-               </div>
+            </div>
         </>
     )
 }

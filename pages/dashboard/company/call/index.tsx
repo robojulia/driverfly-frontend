@@ -1,13 +1,13 @@
-import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
+import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
 import { Col, Row } from "reactstrap";
 import { useEffect, useState } from 'react';
 import TwilioApi from "../../../api/twilio"
 import ApplicantApi from "../../../api/applicant"
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
-import ViewDataTable from "../../../../components/viewDetails/viewDataTable";
+import ViewDataTable from "../../../../components/view-details/view-data-table";
 import { useEffectAsync } from "../../../../utils/react";
-import { TelephoneFill, TelephoneMinusFill, TelephoneOutboundFill, TelephonePlus, TelephonePlusFill, XCircleFill } from "react-bootstrap-icons";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { TelephoneFill, TelephoneMinusFill, TelephoneOutboundFill } from "react-bootstrap-icons";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { Container, Modal } from "react-bootstrap";
 import { toast } from 'react-toastify'
 import Spinner from 'react-bootstrap/Spinner'

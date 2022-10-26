@@ -1,4 +1,4 @@
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 import timeSince from "../../utils/timeSince";
 
 interface FormattedDateProps {

@@ -1,8 +1,8 @@
 import { Dropdown } from "react-bootstrap";
 import React, { useState } from "react";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 
-import { useAuth } from "../../../../hooks/useAuth";
+import { useAuth } from "../../../../hooks/use-auth";
 import { Bell } from "react-bootstrap-icons";
 
 export default function Notifications() {

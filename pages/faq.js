@@ -1,15 +1,19 @@
-import Link from 'next/link';
-import { PublicLayout } from "../components/layouts/PublicLayout";
+import { PublicLayout } from "../components/layouts/public-layout";
 import { Accordion } from 'react-bootstrap';
-import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
+import Breadcrumb from "../components/breadcrumbs/breadcrumb";
+import { useTranslation } from "../hooks/use-translation";
+import Link from "next/link";
 
 export default function FAQ() {
+
+    const { t } = useTranslation();
+
     return (
         <>
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
-                        <h2>FAQ</h2>
+                        <h2>{t("FAQ")}</h2>
                         < Breadcrumb />
                     </div>
                 </div>
@@ -32,16 +36,30 @@ export default function FAQ() {
                                     <div className="widget_list">
                                         <ul className="list_details">
                                             <li>
-                                                <a href="/contact">Is the career in trucking right for me?</a>
+                                                <Link href="/contact">
+                                                    <a>Is the career in trucking right for me?</a>
+                                                </Link>
                                             </li>
                                             <li>
-                                                <a href="/contact"> Can I work part time/ or weekends only?</a>
+                                                <Link href="/contact">
+                                                    <a href="/contact"> Can I work part time/ or weekends only?</a>
+                                                </Link>
                                             </li>
-                                            <li>   <a href="/contact">Should I get hired on as a 1099 or W2?</a></li>
                                             <li>
-                                                <a href="/contact"> How do I get a job in trucking?</a>
+                                                <Link href="/contact">
+                                                    <a href="/contact">Should I get hired on as a 1099 or W2?</a>
+                                                </Link>
                                             </li>
-                                            <li>  <a href="/contact">Should I get endorsements?</a></li>
+                                            <li>
+                                                <Link href="/contact">
+                                                    <a href="/contact"> How do I get a job in trucking?</a>
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link href="/contact">
+                                                    <a href="/contact">Should I get endorsements?</a>
+                                                </Link>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -64,7 +82,7 @@ export default function FAQ() {
                                         </Accordion.Body>
                                     </Accordion.Item>
                                     <Accordion.Item eventKey="2">
-                                        <Accordion.Header> <span className="btn-link">  Do your services cost money for drivers?</span></Accordion.Header>
+                                        <Accordion.Header> <span className="btn-link"> Do your services cost money for drivers?</span></Accordion.Header>
                                         <Accordion.Body>
                                             <p>No. Our services are absolutely free for drivers looking to find jobs. Moreover, by registering in our system, you can become eligible to work with a dedicated recruiter who will work to get you the best pay and home time possible.</p>
                                         </Accordion.Body>

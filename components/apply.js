@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
-import { useAuth } from '../hooks/useAuth'
+import { useAuth } from '../hooks/use-auth'
 import { toast } from 'react-toastify'
 import { useFormik } from "formik"
-import { useTranslation } from "../hooks/useTranslation"
+import { useTranslation } from "../hooks/use-translation"
 import JobApi from '../pages/api/job'
-import BaseInput from './forms/BaseInput'
-import BaseSelect from './forms/BaseSelect'
-import FileInput from "./forms/FileInput";
-import BaseCheck from './forms/BaseCheck'
+import BaseInput from './forms/base-input'
+import BaseSelect from './forms/base-select'
+import FileInput from "./forms/file-input";
+import BaseCheck from './forms/base-check'
 import { Col, Row, Table } from 'react-bootstrap'
 import { EducationLevel } from '../enums/users/education-level.enum'
 import Button from "react-bootstrap/Button"
@@ -18,13 +18,13 @@ import UserApi from '../pages/api/user';
 import { UserPreferenceCategory } from '../enums/users/user-preference-category.enum';
 import { SharePreference } from '../enums/users/share-preference.enum';
 
-import ViewModal from "./viewDetails/viewModal";
+import ViewModal from "./view-details/view-modal";
 import { globalAjaxExceptionHandler } from "../utils/ajax";
-import ViewCard from './viewDetails/viewCard'
+import ViewCard from './view-details/view-card'
 import { ApplicantDocumentType } from '../enums/applicants/applicant-document-type.enum'
 import { DocumentEntity } from '../models/documents/document.entity'
 import { PlusCircle, DashCircle, ArrowRight, Star } from 'react-bootstrap-icons'
-import BaseInputPhone from './forms/BaseInputPhone'
+import BaseInputPhone from './forms/base-input-phone'
 import { DriverLicenseType } from "../enums/users/driver-license-type.enum";
 
 export default function JobApply({ job, setEncourageModal }) {

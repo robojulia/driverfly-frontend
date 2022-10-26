@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { OverlayTrigger, Popover, Tooltip } from "react-bootstrap";
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 
 export interface OverlyPopoverProps {
     str?: string;

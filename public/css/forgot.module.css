@@ -1,0 +1,45 @@
+.formsec {
+    margin: 30px 0px;
+}
+
+.success_btn {
+    background: #2da2af;
+    padding: 10px 20px;
+    width: 47%;
+    color: #fff;
+}
+
+.danger_btn {
+    background: #e44343;
+    padding: 10px 20px;
+    width: 47%;
+    color: #fff;
+    margin-left: 6%;
+    margin-bottom: 20px;
+}
+
+.backlink {
+    text-decoration: underline;
+    margin-top: 20px;
+    color: #2da2af;
+
+}
+
+.backlink:hover {
+    color: #2da2af;
+
+}
+
+.mb {
+    margin-bottom: 50px;
+}
+
+@media screen and (max-width: 480px) {
+
+    .success_btn,
+    .danger_btn {
+        width: 100%;
+        margin: 0;
+        margin-top: 10px;
+    }
+}

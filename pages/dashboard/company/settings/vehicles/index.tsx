@@ -1,10 +1,10 @@
-import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
-import { useAuth } from '../../../../../hooks/useAuth';
+import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
+import { useAuth } from '../../../../../hooks/use-auth';
 import { useRouter } from "next/router"
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { useTranslation } from "../../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../../hooks/use-translation";
 
 import { EyeFill, PenFill, TrashFill} from 'react-bootstrap-icons';
 
@@ -14,9 +14,9 @@ import { VehicleType } from "../../../../../enums/vehicles/vehicle-type.enum";
 import { VehicleTrailerType } from "../../../../../enums/vehicles/vehicle-trailer-type.enum";
 import { VehicleAccessory } from "../../../../../enums/vehicles/vehicle-accessory.enum";
 import { VehicleEntity } from "../../../../../models/company/vehicle.entity";
-import PageLayout from "../../../../../components/layouts/page/PageLayout";
+import PageLayout from "../../../../../components/layouts/page/page-layout";
 import { ButtonGroup, Button, Col, Row, Table } from "react-bootstrap";
-import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
+import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/view-details/view-data-table";
 import { useEffectAsync } from "../../../../../utils/react";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import OverlyPopover from "../../../../../components/popover/overly-popover";

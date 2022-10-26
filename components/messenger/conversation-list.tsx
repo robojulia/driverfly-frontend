@@ -1,7 +1,7 @@
 import { XCircle } from "react-bootstrap-icons";
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 import { ConversationEntity } from "../../models/conversation/conversation.entity";
-import When from "../viewDetails/when";
+import When from "../view-details/when";
 
 export interface ConversationListProps {
     items?: ConversationEntity[];

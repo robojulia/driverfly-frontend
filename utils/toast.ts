@@ -1,5 +1,5 @@
 import { toast, ToastContent, ToastOptions } from 'react-toastify'
-import { TranslateInterface } from '../hooks/useTranslation';
+import { TranslateInterface } from '../hooks/use-translation';
 
 export interface ToastInterface {
     success: ToastMessageInterface;

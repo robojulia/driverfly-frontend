@@ -1,10 +1,10 @@
-import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
+import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 import { Col, Row, Table } from "reactstrap";
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { useTranslation } from "../../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../../hooks/use-translation";
 
 
 import {EyeFill, PenFill, TrashFill} from 'react-bootstrap-icons';
@@ -12,11 +12,11 @@ import {EyeFill, PenFill, TrashFill} from 'react-bootstrap-icons';
 
 import LocationApi from "../../../../api/location";
 import { LocationEntity } from "../../../../../models/company/location.entity";
-import { useAuth } from "../../../../../hooks/useAuth";
-import PageLayout from "../../../../../components/layouts/page/PageLayout";
+import { useAuth } from "../../../../../hooks/use-auth";
+import PageLayout from "../../../../../components/layouts/page/page-layout";
 import { useEffectAsync } from "../../../../../utils/react";
 import { Button, ButtonGroup } from "react-bootstrap";
-import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
+import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/view-details/view-data-table";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import Link from "next/link";
 

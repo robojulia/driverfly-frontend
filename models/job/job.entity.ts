@@ -63,6 +63,8 @@ export class JobEntity {
     vehicles?: VehicleEntity[] = [];
     cdl_class?: DriverLicenseType;
     min_years_experience?: number;
+    min_experience_in_months?: number;
+    min_experience_in_years?: number;
     min_degree?: EducationLevel;
     required_skills?: JobSkillEntity[] = [];
     required_skills_other?: string;
@@ -86,7 +88,7 @@ export class JobEntity {
     created_at?: string | Date;
     applicantsCount?: number;
     static yupSchema() {
-        return yup.object({
+        return yup.object().shape({
             is_orientation_needed: yup.boolean().default(false),
             title: yup.string().required().max(100).nullable(),
             location: LocationEntity.yupConnectSchema(true),
@@ -182,6 +184,8 @@ export class JobEntity {
             ) as any).unique("id").nullable(),
             cdl_class: (yup.string() as any).enum(DriverLicenseType).nullable(),
             min_years_experience: yup.number().min(0).nullable(),
+            min_experience_in_months: yup.number().min(0).max(11).nullable(),
+            min_experience_in_years: yup.number().min(0).nullable(),
             min_degree: (yup.string() as any).enum(EducationLevel).nullable(),
             required_skills: (yup.array(
                 JobSkillEntity.yupSchema()
@@ -213,7 +217,7 @@ export class JobEntity {
             ) as any).unique("type"),
             max_moving_violations: yup.number().min(0).nullable(),
             safety_requirements_other: yup.string().max(250).nullable(),
-        });
+        }, [['min_experience_in_months', 'min_experience_in_years']]);
 
     }
 }

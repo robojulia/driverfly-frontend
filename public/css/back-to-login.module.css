@@ -1,0 +1,14 @@
+.link {
+    color: #222;
+    list-style: none;
+}
+
+.link:hover {
+    color: #2da2af;
+
+
+}
+
+.back__to__login {
+    margin: 30px 0px;
+}

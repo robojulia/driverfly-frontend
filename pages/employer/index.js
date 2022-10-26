@@ -1,4 +1,4 @@
-import { PublicLayout } from "../../components/layouts/PublicLayout";
+import { PublicLayout } from "../../components/layouts/public-layout";
 
 export default function Index()
 {

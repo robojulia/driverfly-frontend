@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import schoolContext from "../context/schoolContext"
+import schoolContext from "../context/school-context"
 import { Table } from "react-bootstrap";
-import { PublicLayout } from "../components/layouts/PublicLayout";
+import { PublicLayout } from "../components/layouts/public-layout";
 import FilterSchools from '../components/filter-schools/filter-schools'
-import CdlInfo from '../components/cdl-info/CdlInfo'
+import CdlInfo from '../components/cdl-info/cdlInfo'
 import SchoolApi from "./api/school"
+import { useTranslation } from "../hooks/use-translation";
+import Breadcrumb from '../components/breadcrumbs/breadcrumb';
 
 export default function FindSchools(props) {
+
+  const { t } = useTranslation();
 
   let { params } = props
   const schoolApi = new SchoolApi();
@@ -132,11 +136,8 @@ export default function FindSchools(props) {
       <div className="top-links-sec">
         <div className="container">
           <div className="top-links-inner d-flex align-items-center justify-content-between">
-            <h2>Get Your CDL</h2>
-            <ul className="d-flex">
-              <li><a href="index.html" className="nav-link text-dark px-0">Home <i className="fa fa-caret-right px-2" aria-hidden="true"></i></a></li>
-              <li><a href="#" className="nav-link text-dark px-0">Get Your CDL</a></li>
-            </ul>
+            <h2>{t("FIND_SCHOOLS")}</h2>
+            < Breadcrumb />
           </div>
         </div>
       </div>

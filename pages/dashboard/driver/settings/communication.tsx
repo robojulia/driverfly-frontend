@@ -1,23 +1,23 @@
 import { useFormik } from "formik";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
-import { useAuth } from "../../../../hooks/useAuth";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import FullLayout from "../../../../components/dashboard/layouts/full-layout";
+import { useAuth } from "../../../../hooks/use-auth";
+import { useTranslation } from "../../../../hooks/use-translation";
 import UserApi from "../../../api/user";
 import { Row, Col, Button } from "react-bootstrap";
-import PageLayout from "../../../../components/layouts/page/PageLayout";
+import PageLayout from "../../../../components/layouts/page/page-layout";
 import { UserPreferenceEntity } from "../../../../models/user/user-preference.entity"
 
 import * as yup from "yup";
 import { CommunicationMethod } from "../../../../enums/users/communication-method.enum";
 import { UserPreferenceCategory } from "../../../../enums/users/user-preference-category.enum";
 import { UserPreferenceCommunicationLabel } from "../../../../enums/users/user-preferences-communication-label.enum";
-import BaseCheck from "../../../../components/forms/BaseCheck";
-import BaseCheckList from "../../../../components/forms/BaseCheckList";
+import BaseCheck from "../../../../components/forms/base-check";
+import BaseCheckList from "../../../../components/forms/base-check-list";
 import { useEffectAsync } from "../../../../utils/react";
 import { UserPreferredHourDto } from "../../../../models/user/user-preferred-hour.dto";
-import BaseInput from "../../../../components/forms/BaseInput";
+import BaseInput from "../../../../components/forms/base-input";
 
 export default function Communication() {
     const { user } = useAuth();

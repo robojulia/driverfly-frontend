@@ -1,11 +1,11 @@
-import FullLayout from "../../../components/dashboard/layouts/FullLayout";
+import FullLayout from "../../../components/dashboard/layouts/full-layout";
 import { Col, Row } from "react-bootstrap";
-import style from '../../../public/dashboard/styles/css/Driver/dashboard.module.css';
+import style from '../../../public/dashboard/styles/css/driver/dashboard.module.css';
 import { useState } from "react";
 import Link from 'next/link';
 
-import PageLayout from "../../../components/layouts/page/PageLayout";
-import { useTranslation } from "../../../hooks/useTranslation";
+import PageLayout from "../../../components/layouts/page/page-layout";
+import { useTranslation } from "../../../hooks/use-translation";
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
 import ApplicantApi from "../../api/applicant";
 import { useEffectAsync } from "../../../utils/react";

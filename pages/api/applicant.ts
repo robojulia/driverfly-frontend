@@ -1,5 +1,6 @@
 import { AxiosRequestConfig } from "axios";
 import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
+import { ApplicantDacEntity } from "../../models/applicant/applicant-dac.entity";
 import { ApplicantJobEntity } from "../../models/applicant/applicant-job.entity";
 import { ApplicantNoteEntity } from "../../models/applicant/applicant-note.entity";
 import { ApplicantSuggestedJobEntity } from "../../models/applicant/applicant-suggested-job.entity";
@@ -116,6 +117,25 @@ class ApplicantApi extends BaseApi {
         },
         remove: async (applicantId: number, noteId: number): Promise<any> => {
             const { data } = await this.delete(this.notes.baseUrl(applicantId, noteId));
+
+            return data;
+        }
+    }
+
+    dac = {
+        baseUrl: (applicantId: number, dacId?: number) => `${this.baseUrl}/${applicantId}/dac/${dacId || ''}`,
+        create: async (applicantId: number, dto: ApplicantDacEntity): Promise<ApplicantDacEntity> => {
+            const { data } = await this.post(this.dac.baseUrl(applicantId), dto);
+
+            return data;
+        },
+        update: async (applicantId: number, dacId: number, dto: ApplicantDacEntity): Promise<ApplicantDacEntity> => {
+            const { data } = await this.put(this.dac.baseUrl(applicantId, dacId), dto);
+
+            return data;
+        },
+        remove: async (applicantId: number, dacId: number): Promise<any> => {
+            const { data } = await this.delete(this.dac.baseUrl(applicantId, dacId));
 
             return data;
         }

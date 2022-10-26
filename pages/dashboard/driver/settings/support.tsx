@@ -1,6 +1,6 @@
 
-import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
-import PageLayout from "../../../../components/layouts/page/PageLayout";
+import FullLayout from "../../../../components/dashboard/layouts/full-layout";
+import PageLayout from "../../../../components/layouts/page/page-layout";
 import Supports from "../../../../components/support";
 
 
