@@ -1,5 +1,5 @@
 import { useFormik } from 'formik';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Col, Row, Form } from 'react-bootstrap'
 import { useTranslation } from '../../../../hooks/use-translation'
 import * as yup from "yup";
@@ -12,8 +12,12 @@ import { AccidentLastFiveYearsDto } from '../../../../models/jot-form/long-form/
 export interface AccidentsLast5YearsProps {
     onNextClick: (any) => void;
     onBackClick: () => void;
+    applicant: any;
 }
 export function AccidentsLast5Years(props: AccidentsLast5YearsProps) {
+    useEffect(() => {
+        if (props.applicant && !form.dirty) form.setValues(props.applicant);
+      }, [props.applicant]);
     const { t } = useTranslation();
     const form = useFormik({
         initialValues: AccidentLastFiveYearsDto,
