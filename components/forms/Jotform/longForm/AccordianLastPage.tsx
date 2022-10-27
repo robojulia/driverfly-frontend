@@ -10,8 +10,8 @@ import styles from "../../../../styles/JotForm.module.css";
 import Accordion from "react-bootstrap/Accordion";
 
 export interface BackgroundInfoProps {
-  onNextClick: (any) => void;
-  onBackClick: () => void;
+//   onNextClick: (any) => void;
+//   onBackClick: () => void;
 }
 
 export function AccordianLastPage() {
