@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import FullLayout from "../../../../components/dashboard/layouts/full-layout";
 import { useAuth } from "../../../../hooks/use-auth";
@@ -10,13 +10,9 @@ import PageLayout from "../../../../components/layouts/page/page-layout";
 import { UserPreferenceEntity } from "../../../../models/user/user-preference.entity"
 
 import * as yup from "yup";
-import { CommunicationMethod } from "../../../../enums/users/communication-method.enum";
 import { UserPreferenceCategory } from "../../../../enums/users/user-preference-category.enum";
-import { UserPreferenceCommunicationLabel } from "../../../../enums/users/user-preferences-communication-label.enum";
 import { SharePreference } from "../../../../enums/users/share-preference.enum";
 
-import BaseCheck from "../../../../components/forms/base-check";
-import BaseCheckList from "../../../../components/forms/base-check-list";
 import BaseSelect from "../../../../components/forms/base-select";
 import { UserPreferenceSharingLabel } from "../../../../enums/users/user-preference-sharing-label.enum";
 import { useEffectAsync } from "../../../../utils/react";
@@ -161,7 +157,7 @@ export default function Sharing() {
             <form onSubmit={form.handleSubmit}>
                 <Row>
                     <BaseSelect
-                        className="col-6 mt-3"
+                        className="col-sm-6 mt-3"
                         label="share_my_mvr"
                         name="mvr.value"
                         formik={form}
@@ -170,7 +166,7 @@ export default function Sharing() {
                         onChange={onChangeSharePreference}
                     />
                     <BaseSelect
-                        className="col-6 mt-3"
+                        className="col-sm-6 mt-3"
                         label="share_my_drivers_license"
                         name="drivers_license.value"
                         formik={form}
@@ -179,7 +175,7 @@ export default function Sharing() {
                         onChange={onChangeSharePreference}
                     />
                     <BaseSelect
-                        className="col-6 mt-3"
+                        className="col-sm-6 mt-3"
                         label="share_my_medical_card"
                         name="medical_card.value"
                         formik={form}
@@ -188,7 +184,7 @@ export default function Sharing() {
                         onChange={onChangeSharePreference}
                     />
                     <BaseSelect
-                        className="col-6 mt-3"
+                        className="col-sm-6 mt-3"
                         label="SHARE_PAST_EMPLOYMENT"
                         name="employment_history.value"
                         formik={form}
@@ -197,7 +193,7 @@ export default function Sharing() {
                         onChange={onChangeSharePreference}
                     />
                     <BaseSelect
-                        className="col-6 mt-3"
+                        className="col-sm-6 mt-3"
                         label="SHARE_MY_PHYSICALS"
                         name="physical.value"
                         formik={form}

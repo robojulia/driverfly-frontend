@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { PublicLayout } from "../components/layouts/public-layout";
-import ReCAPTCHA from "react-google-recaptcha";
 import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import { ArrowRight, Newspaper, PersonBadgeFill, QuestionCircle } from 'react-bootstrap-icons';
 import { useTranslation } from "../hooks/use-translation";
@@ -76,14 +75,14 @@ export default function Contact() {
                                         <form onSubmit={form.handleSubmit}>
                                             <Row>
                                                 <BaseInput
-                                                    className="col-6 mt-4"
+                                                    className="col-md-6 mt-4"
                                                     required
                                                     name="name"
                                                     placeholder
                                                     formik={form}
                                                 />
                                                 <BaseInput
-                                                    className="col-6 mt-4"
+                                                    className="col-md-6 mt-4"
                                                     required
                                                     name="email"
                                                     placeholder

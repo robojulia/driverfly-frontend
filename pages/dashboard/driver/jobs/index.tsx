@@ -96,10 +96,10 @@ export default function FindJobs() {
                     handleReset
                 },
             }}>
-                <Container fluid>
+                <div className="job-list_sec">
                     <Filters />
                     <Row className='mt-5'>
-                        <Col className='col-12 my-lg-0 my-4'>
+                        <Col className='col-12 my-lg-0 my-4 p-0'>
                             <ResultCount />
                             < JobsList />
                         </Col>
@@ -112,7 +112,7 @@ export default function FindJobs() {
                             </Col>
                         </Row>
                     }
-                </Container>
+                </div>
             </jobsContext.Provider>
         </PageLayout>
     )

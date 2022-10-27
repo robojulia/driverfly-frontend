@@ -2,7 +2,6 @@ import { CancelTokenSource } from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Navbar, Row } from "react-bootstrap";
 import { Plus } from "react-bootstrap-icons";
-import { ChattableType } from "../../enums/conversation/chattable-type.enum";
 import { useAuth } from "../../hooks/use-auth";
 import { useTranslation } from "../../hooks/use-translation";
 import { ConversationEntity, CreateConversationDto } from "../../models/conversation/conversation.entity";
@@ -34,10 +33,6 @@ export function Messenger(props) {
 
         setConversations(c);
     }, [ user ]);
-
-    // useEffect(() => {
-    //     if (!conversation.id && conversations.length > 0) onConversationClick(conversations[0]);
-    // }, [ conversations.length ]);
 
      const onCreateClick = (e) => {
          setConversation(new ConversationEntity());
@@ -106,7 +101,7 @@ export function Messenger(props) {
     <Row>
         <Col md="6" lg="5" xl="4">
             <Card>
-                <Card.Body>
+                <Card.Body className="p-2">
                     <Navbar expand="lg">
                         <Navbar.Toggle aria-controls="convo-navbar-nav " className="w-100">
                             {conversation &&
@@ -123,8 +118,6 @@ export function Messenger(props) {
                         </Navbar.Collapse>
                     </Navbar>
                     {canCreate && <Button className="w-100 mt-1" variant="primary" onClick={onCreateClick}><Plus /> {t("CREATE_NEW_MESSAGE")}</Button>}
-                    {/* <Button className="w-100 mt-2" variant="primary">+ Set Up SMS Campaign</Button>
-                    <Button className="w-100 mt-2" variant="primary">+ Create Report</Button> */}
                 </Card.Body>
             </Card>
         </Col>

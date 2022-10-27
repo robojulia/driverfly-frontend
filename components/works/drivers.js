@@ -8,7 +8,7 @@ export default function Driver() {
 
     return (
         <>
-            <h3 className='general-headings' style={{ fontSize: ' 40px' }}>{t("HOW_IT_WORKS")}</h3>
+            <h3 className='general-headings' style={{ fontSize: ' 40px' }}>{t("HOW_IT_WORK")}</h3>
             <h3>{t("DRIVERS")}</h3>
             <div className="row mb-4">
                 <div className="col-md-4">

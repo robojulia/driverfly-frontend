@@ -149,7 +149,7 @@ export default function FindSchools(props) {
             <div className="col-12 col-lg-3 lg-mt-0 mt-5">
               < FilterSchools />
             </div>
-            <div className="col-md-9 outer pl-4 ">
+            <div className="col-md-9 outer pl-4 table-responsive">
               <div className="filter-outer mt-5">
                 <Table striped bordered hover>
                   <thead>

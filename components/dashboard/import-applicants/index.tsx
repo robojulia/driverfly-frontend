@@ -91,6 +91,13 @@ const ImportApplicants = () => {
             for (let i = 0; i < values.items.length; i++) {
                 let dto = values.items[i];
 
+                if (!!dto.birthdate) {
+                    dto.birthdate = (new Date(dto.birthdate)).toISOString()
+                }
+                if (!!dto.license_expiry) {
+                    dto.license_expiry = (new Date(dto.license_expiry)).toISOString()
+                }
+
                 try {
                     await api.create(dto);
                 }
@@ -221,7 +228,7 @@ const ImportApplicants = () => {
     return (
         <>
             <Row>
-                <Col>
+                <Col sm="6" className="my-3">
                     <InputGroup>
                         <div className="input-group-prepend">
                             <button type="button" onClick={onDownloadClick} className="btn btn-md btn-primary pl-3">{t("DOWNLOAD_TEMPLATE")}</button>
@@ -235,7 +242,7 @@ const ImportApplicants = () => {
                         }
                     </InputGroup>
                 </Col>
-                <Col>
+                <Col sm="6" className="my-3">
                     <div style={{ float: "right" }}>
                         <button type="button" disabled={!canImport} onClick={form.submitForm} className={`btn btn-md btn-primary`}>{t("IMPORT")}</button>
                     </div>

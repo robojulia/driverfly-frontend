@@ -238,7 +238,6 @@ h2 {
     color: #aaa !important;
     font-size: 15px;
     line-height: 35px;
-    /* padding: 0px; */
 }
 
 .dropdown-item:hover {
@@ -416,7 +415,7 @@ li:hover ul {
 }
 
 .results-count.mt-4 {
-    font-size: 20px;
+    font-size: 23px;
 }
 
 .filter-btn-groups {
@@ -901,19 +900,15 @@ input[type='range']::-webkit-slider-thumb {
 
 .faq-sec .card-header {
     box-shadow: 1px 1px 4px rgb(0 0 0 / 9%);
-
 }
 
 .card-header {
     color: #6a6a6a;
     text-align: left;
-
-
 }
 
 .card-header:hover {
     color: #2da2af;
-
 }
 
 .faq_question_widget .widget_list {
@@ -1403,14 +1398,13 @@ img.who-we-img.img-fluid {
 .tab-sec .nav-link.active {
     background: white !important;
     color: #252834 !important;
-
-
 }
 
 .tab-sec .nav-link {
     border: none !important;
-    background: #2ec8c4 !important;
-    color: rgb(255 255 255) !important;
+    background: rgb(250, 254, 255);
+    background: linear-gradient(127deg, rgba(250, 254, 255, 1) 15%, rgba(45, 198, 194, 1) 200%) !important;
+    color: #252834 !important;
     font-size: 16px;
     font-weight: 500;
     padding: 15px 50px;
@@ -1421,8 +1415,7 @@ img.who-we-img.img-fluid {
 .tab-sec ul.nav.nav-tabs {
     justify-content: center;
     border: none;
-    background: #252834 !important;
-    width: 400px;
+    width: 450px;
     margin: 0px auto;
     padding: 3px 0px;
     border-radius: 4px;
@@ -1430,6 +1423,11 @@ img.who-we-img.img-fluid {
 
 .tab-sec ul.nav.nav-tabs li {
     padding: 1px;
+    border-top: solid 2px;
+    border-bottom: solid 2px;
+    border-left: solid 2px;
+    border-right: solid 1px;
+    border-radius: 4px;
 }
 
 /************************** DRIVER-SEC **********************/
@@ -1821,10 +1819,6 @@ li.link-wrapper>a.active {
     border-bottom: 1px solid #ced4da;
 }
 
-/* .ort-general a {
-    color: #000 !important;
-} */
-
 .ort-general p {
     margin: 0px;
     color: #6a6a87;
@@ -2029,7 +2023,8 @@ li.link-wrapper>a.active {
     margin-top: 100px;
 }
 
-.company_slider a, .company_slider:hover a {
+.company_slider a,
+.company_slider:hover a {
     text-decoration: none;
 }
 
@@ -2155,10 +2150,6 @@ input[type=checkbox] {
     color: #5dcac4 !important;
 }
 
-/* .signup-driver-section{
-    margin: 100px 0px;
-} */
-
 .signup-driver-section .signup-driver-item {
     width: 50%;
     padding: 30px;
@@ -2236,4 +2227,9 @@ input[type=checkbox] {
 .motor-carrier-bg:hover a {
     color: rgb(255, 255, 255);
     text-decoration: none;
+}
+
+.job-list_sec {
+    max-width: 1400px;
+    margin: 0 auto;
 }

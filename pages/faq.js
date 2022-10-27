@@ -4,7 +4,6 @@ import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import { useTranslation } from "../hooks/use-translation";
 import Link from "next/link";
 
-
 export default function FAQ() {
 
     const { t } = useTranslation();
