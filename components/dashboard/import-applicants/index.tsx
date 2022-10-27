@@ -91,6 +91,13 @@ const ImportApplicants = () => {
             for (let i = 0; i < values.items.length; i++) {
                 let dto = values.items[i];
 
+                if (!!dto.birthdate) {
+                    dto.birthdate = (new Date(dto.birthdate)).toISOString()
+                }
+                if (!!dto.license_expiry) {
+                    dto.license_expiry = (new Date(dto.license_expiry)).toISOString()
+                }
+
                 try {
                     await api.create(dto);
                 }

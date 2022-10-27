@@ -65,7 +65,6 @@ export default function Index() {
             <section className="driver-sec">
                 <div className="container how-it-work-sec">
                     <Drivers />
-                    <Companies />
                 </div>
             </section>
             <section>

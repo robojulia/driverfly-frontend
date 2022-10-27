@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import * as yup from "yup";
@@ -11,9 +11,13 @@ import { DrugTestDto } from "../../../../models/jot-form/long-form/drug-test.dto
 export interface DrugTestProps {
   onNextClick: (any) => void;
   onBackClick: () => void;
+  applicant: any;
 }
 
 export function DrugTest(props: DrugTestProps) {
+  useEffect(() => {
+    if (props.applicant && !form.dirty) form.setValues(props.applicant);
+  }, [props.applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new DrugTestDto(),

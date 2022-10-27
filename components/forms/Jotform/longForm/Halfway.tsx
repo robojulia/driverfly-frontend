@@ -1,13 +1,17 @@
 import { useFormik } from "formik";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 
 export interface HalfwayProps {
   onNextClick: (any) => void;
   onBackClick: () => void;
+  applicant:any;
 }
 export function Halfway(props: HalfwayProps) {
+  useEffect(() => {
+    if (props.applicant && !form.dirty) form.setValues(props.applicant);
+  }, [props.applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: {},
