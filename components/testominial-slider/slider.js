@@ -4,7 +4,7 @@ import { useTranslation } from '../../hooks/use-translation';
 import { CarouselProvider, Slider, Slide, ButtonBack, ButtonNext } from 'pure-react-carousel';
 import 'pure-react-carousel/dist/react-carousel.es.css';
 
-export default function CompanySlider() {
+export default function TestimonialSlider() {
 
     const { t } = useTranslation();
 

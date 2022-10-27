@@ -29,7 +29,7 @@ export default function ViewCard(props: ViewCardProps) {
                 </div>}
                 {actions && <div style={{float: "right"}}>{actions}</div>}
             </Card.Header>}
-            {children && <Card.Body>{children}</Card.Body>}
+            {children && <Card.Body className="my_card_body">{children}</Card.Body>}
         </Card>
     );
 

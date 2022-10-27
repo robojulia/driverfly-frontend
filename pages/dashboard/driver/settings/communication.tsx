@@ -117,12 +117,6 @@ export default function Communication() {
         });
     }
 
-    // uncomment this to go into form debugging mode
-    // useEffect(() => {
-    //     console.log("form values", form.values)
-    //     console.log("form errors", form.errors)
-    // }, [form])
-
     const handlePreferredHourChange = ({ target: { value } }) => {
 
         form.setValues({
@@ -152,7 +146,6 @@ export default function Communication() {
                         labelPrefix="CommunicationMethod"
                         formik={form}
                     />
-                    {/** todo: add Preferred Hours */}
                     <BaseCheck
                         className="col-12 mt-3"
                         label="receive_suggested_job_feeds"
@@ -176,13 +169,13 @@ export default function Communication() {
                     {form.values.preferred_hours.value &&
                         <>
                             <BaseInput
-                                className="col-md-4"
+                                className="col-md-4 mt-2"
                                 name="preferred_hours.value.start"
                                 type="time"
                                 formik={form}
                             />
                             <BaseInput
-                                className="col-md-4"
+                                className="col-md-4 mt-2"
                                 name="preferred_hours.value.end"
                                 type="time"
                                 formik={form}

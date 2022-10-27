@@ -38,7 +38,7 @@ const Breadcrumb = () => {
   return (
     <nav aria-label="breadcrumbs">
 
-      <ol>
+      <ol className='breadcrumb_sec'>
         <li>
           <Link href="/">
             <a>{t("HOME")}</a>

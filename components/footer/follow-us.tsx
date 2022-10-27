@@ -1,15 +1,17 @@
 import Link from "next/link";
 import { Facebook, Instagram } from 'react-bootstrap-icons';
+import { useTranslation } from "../../hooks/use-translation";
 
-export default function FollowUs
+export default function FollowUs() {
 
-    () {
+    const { t } = useTranslation();
+
     return (
         <>
             <div className="col-md-10 d-flex justify-content-lg-end
 justify-content-md-end justify-content-center  ">
                 <div className="footer-social-icons">
-                    <h6>Follow Us</h6>
+                    <h6>{t("FOLLOW_US")}</h6>
                     <div className="social">
                         <Link href="https://www.facebook.com/DriverFlyJobs/">
                             <a target="_blank">
