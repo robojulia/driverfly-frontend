@@ -1,26 +1,29 @@
-export default function DriversNewsletter
-    () {
+import { useTranslation } from "../../hooks/use-translation";
+
+export default function DriversNewsletter() {
+
+    const { t } = useTranslation();
+
     return (
         <div id="newsletter-section">
             <div className="footer-inner">
-                <h2 className="widget-title font-weight-normal">Driver Alerts</h2>
+                <h2 className="widget-title font-weight-normal">{t("DRIVER_ALERTS")}</h2>
                 <ul className="p-0">
-                    <p className="text-secondary mb-4">Subscribe to the DriverFly Newsletter to get the latest jobs feeds.</p>
+                    <p className="text-secondary mb-4">{t("SUBSCRIBE_TO_THE_DRIVERFLY_NEWSLETTER")}</p>
                     <form action="">
                         <input type="email" className="form-control" placeholder="Email Adress" />
-                        <button type="submit" className="theme-primary-btn btn-block mt-3">Submit</button>
+                        <button type="submit" className="theme-primary-btn btn-block mt-3">{t("submit")}</button>
                     </form>
                 </ul>
             </div>
             <div className="footer-inner">
-                <h2 className="widget-title font-weight-normal">
-                    Company Newsletter</h2>
-                <p className="text-secondary mb-4">Subscribe to the DriverFly Newsletter to get the latest <br /> discount codes & coupons, and major news headlines.</p>
+                <h2 className="widget-title font-weight-normal">{t("COMPANY_NEWSLETTER")}</h2>
+                <p className="text-secondary mb-4">{t("SUBSCRIBE_TO_THE_DRIVERFLY_NEWSLETTER_TO_GET_THE_LATEST")} <br /> {t("DISCOUNT_CODES_&_AOUPONS")}</p>
                 <ul className="p-0">
 
                     <form action="">
                         <input type="email" className="form-control" placeholder="Email Adress" />
-                        <button type="submit" className="theme-primary-btn btn-block mt-3">Submit</button>
+                        <button type="submit" className="theme-primary-btn btn-block mt-3">{t("submit")}</button>
                     </form>
                 </ul>
             </div>

@@ -5,7 +5,7 @@ import Recent from "../components/jobs/recent";
 import Drivers from "../components/works/drivers";
 import Companies from "../components/works/companies";
 import CompaniesSlider from '../components/featured-companies-slider/companies-slider'
-import CompanySlider from "../components/testominial-slider/slider";
+import TestimonialSlider from "../components/testominial-slider/slider";
 import React, { useState } from "react";
 import { useTranslation } from "../hooks/use-translation";
 import { useRouter } from "next/router";
@@ -42,7 +42,7 @@ export default function Index() {
                             <button className="theme-bg-btn mr-4" type="button" onClick={() => router.push("signup")}>
                                 {t("SIGN_UP")}
                             </button>
-                            <button className="theme-bg-btn" type="button" onClick={() => router.push("find-jobs")}>
+                            <button className="theme-bg-btn mt-4" type="button" onClick={() => router.push("find-jobs")}>
                                 {t("browse_job")}
                             </button>
                         </div>
@@ -65,7 +65,6 @@ export default function Index() {
             <section className="driver-sec">
                 <div className="container how-it-work-sec">
                     <Drivers />
-                    <Companies />
                 </div>
             </section>
             <section>
@@ -136,7 +135,7 @@ export default function Index() {
                         <h2 className="text-center">{t("WHAT_DRIVERS_SAY_ABOUT_US")}</h2>
                         <div className="custom-tst pb-5">
                             <div className="row owl-carousel owl-theme d-block" id="owl-demo">
-                                <CompanySlider />
+                                <TestimonialSlider />
                             </div>
                         </div>
                     </div>

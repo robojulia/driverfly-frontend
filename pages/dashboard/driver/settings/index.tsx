@@ -8,7 +8,7 @@ import FullLayout from "../../../../components/dashboard/layouts/full-layout";
 import PageLayout from "../../../../components/layouts/page/page-layout";
 
 // hooks
-import { useAuth } from '../../../../hooks/use-auth';
+import { useAuth } from "../../../../hooks/use-auth";
 import { useTranslation } from "../../../../hooks/use-translation";
 
 // inputs
@@ -76,7 +76,7 @@ export default function Profile() {
       >
         <Row>
           <BaseInput
-            className="col-6"
+            className="col-sm-6"
             label="first_name"
             name="first_name"
             placeholder="first_name"
@@ -84,7 +84,7 @@ export default function Profile() {
             formik={form}
           />
           <BaseInput
-            className="col-6"
+            className="col-sm-6"
             label="last_name"
             name="last_name"
             placeholder="last_name"
@@ -93,7 +93,7 @@ export default function Profile() {
           />
 
           <BaseInputPhone
-            className="col-6"
+            className="col-sm-6"
             label="phone"
             name="contact_number"
             placeholder="phone"
@@ -101,7 +101,7 @@ export default function Profile() {
             formik={form}
           />
           <BaseInputPhone
-            className="col-6"
+            className="col-sm-6"
             label="phone_cell"
             name="cell_number"
             placeholder="phone_cell"

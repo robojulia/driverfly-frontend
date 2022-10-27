@@ -1,8 +1,6 @@
 import Link from "next/link"
-import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import { PublicLayout } from "../components/layouts/public-layout";
 import SignupStyle from "../public/css/signup.module.css"
-import { useAuth } from '../hooks/use-auth';
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -246,7 +244,6 @@ export default function Signup() {
             <Row className="mt-2">
               <Col className="d-flex">
                 <BaseCheck
-                  // className="col-12 mt-2"
                   label="YOU_ACCEPT_OUR_TOS"
                   name="accept_tos"
                   formik={form}
@@ -261,7 +258,7 @@ export default function Signup() {
               </Col>
 
             </Row>
-            <div className="d-grid gap-2 my-4">
+            <div className="d-grid gap-2 my-4 sign_up_btns">
               <Button disabled={form.isSubmitting} size="lg" type="submit">{t("REGISTER_NOW")}</Button>
               <div className="my-1 w-100 text-center">
                 <span>{t("OR")}</span>
