@@ -1,5 +1,5 @@
 import { useFormik } from 'formik';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Col, Row, Form } from 'react-bootstrap'
 import { useTranslation } from '../../../../hooks/use-translation'
 import * as yup from "yup";
@@ -8,8 +8,12 @@ import BaseInput from '../../base-input';
 export interface ViolationsLast3YearsProps{
     onNextClick: (any) => void;
     onBackClick: () => void;
+    applicant: any;
 }
 export function ViolationsLast3Years(props: ViolationsLast3YearsProps) {
+    useEffect(() => {
+        if (props.applicant && !form.dirty) form.setValues(props.applicant);
+      }, [props.applicant]);
     const { t } = useTranslation();
     const form = useFormik({
         initialValues: {

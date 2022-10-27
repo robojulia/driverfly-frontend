@@ -29,6 +29,7 @@ import { UnableForJob } from "../../components/forms/Jotform/longForm/UnableForJ
 import { PastSuspensions } from "../../components/forms/Jotform/longForm/PastSuspensions";
 import { ViolationsLast3Years } from "../../components/forms/Jotform/longForm/ViolationsLast3Years";
 import ApplicantApi from "../api/applicant";
+import { AccordianLastPage } from "../../components/forms/Jotform/longForm/AccordianLastPage";
 import { toast } from "react-toastify";
 
 export default function jotFormLongForm() {
@@ -82,6 +83,16 @@ export default function jotFormLongForm() {
     if (step == 15) return pageSixteen(onNextClick, onBackClick, applicant);
     if (step == 16) return pageSeventeen(onNextClick, onBackClick, applicant);
     if (step == 17) return pageEighteen(onNextClick, onBackClick, applicant);
+    if (step == 18) return pageNineteen(onNextClick, onBackClick, applicant);
+    if (step == 19) return pageTwenty(onNextClick, onBackClick, applicant);
+    if (step == 20) return pageTwentyOne(onNextClick, onBackClick, applicant);
+    if (step == 21) return pageTwentyTwo(onNextClick, onBackClick, applicant);
+    if (step == 22) return pageTwentyThree(onNextClick, onBackClick, applicant);
+    if (step == 23) return pageTwentyFour(onNextClick, onBackClick, applicant);
+    if (step == 24) return pageTwentyFive(onNextClick, onBackClick, applicant);
+    if (step == 25) return pageTwentySix(onNextClick, onBackClick, applicant);
+    if (step == 26) return pageTwentySeven(onNextClick, onBackClick, applicant);
+
     else return <h1>Error</h1>;
   };
 
@@ -268,58 +279,94 @@ const pageEighteen = (onNextClick, onBackClick, applicant) => {
     </>
   );
 };
-const pageNineteen = (onNextClick, onBackClick) => {
-    return (
-      <>
-        <Halfway onNextClick={onNextClick} onBackClick={onBackClick} />
-      </>
-    );
-  };
-const pageTwenty = (onNextClick, onBackClick) => {
-    return (
-      <>
-        <WorkedBefore onNextClick={onNextClick} onBackClick={onBackClick} />
-      </>
-    );
+const pageNineteen = (onNextClick, onBackClick, applicant) => {
+  return (
+    <>
+      <Halfway
+        onNextClick={onNextClick}
+        onBackClick={onBackClick}
+        applicant={applicant}
+      />
+    </>
+  );
 };
-const pageTwentyOne = (onNextClick, onBackClick) => {
-    return (
-      <>
-        <AccidentsLast5Years onNextClick={onNextClick} onBackClick={onBackClick} />
-      </>
-    );
+const pageTwenty = (onNextClick, onBackClick, applicant) => {
+  return (
+    <>
+      <WorkedBefore
+        onNextClick={onNextClick}
+        onBackClick={onBackClick}
+        applicant={applicant}
+      />
+    </>
+  );
 };
-const pageTwentyTwo = (onNextClick, onBackClick) =>{
-    return(
-        <ViolationsLast3Years onNextClick={ onNextClick } onBackClick={ onBackClick }
-        />
-    )
-}
+const pageTwentyOne = (onNextClick, onBackClick, applicant) => {
+  return (
+    <>
+      <AccidentsLast5Years
+        onNextClick={onNextClick}
+        onBackClick={onBackClick}
+        applicant={applicant}
+      />
+    </>
+  );
+};
+const pageTwentyTwo = (onNextClick, onBackClick, applicant) => {
+  return (
+    <ViolationsLast3Years
+      onNextClick={onNextClick}
+      onBackClick={onBackClick}
+      applicant={applicant}
+    />
+  );
+};
 
-const pageTwentyThree = (onNextClick, onBackClick) =>{
-    return(
-        <PastSuspensions onNextClick={ onNextClick } onBackClick={ onBackClick }
-        />
-    )
-}
+const pageTwentyThree = (onNextClick, onBackClick, applicant) => {
+  return (
+    <PastSuspensions
+      onNextClick={onNextClick}
+      onBackClick={onBackClick}
+      applicant={applicant}
+    />
+  );
+};
 
-const pageTwentyFour = (onNextClick, onBackClick) =>{
-    return(
-        <UnableForJob onNextClick={ onNextClick } onBackClick={ onBackClick }
-        />
-    )
-}
+const pageTwentyFour = (onNextClick, onBackClick, applicant) => {
+  return (
+    <UnableForJob
+      onNextClick={onNextClick}
+      onBackClick={onBackClick}
+      applicant={applicant}
+    />
+  );
+};
 
-const pageTwentyFive = (onNextClick, onBackClick) =>{
-    return(
-        <FelonyConviction onNextClick={ onNextClick } onBackClick={ onBackClick }
-        />
-    )
-}
+const pageTwentyFive = (onNextClick, onBackClick, applicant) => {
+  return (
+    <FelonyConviction
+      onNextClick={onNextClick}
+      onBackClick={onBackClick}
+      applicant={applicant}
+    />
+  );
+};
 
-const pageTwentySix = (onNextClick, onBackClick) =>{
-    return(
-        <DrugTest onNextClick={ onNextClick } onBackClick={ onBackClick }
-        />
-    )
-}
+const pageTwentySix = (onNextClick, onBackClick, applicant) => {
+  return (
+    <DrugTest
+      onNextClick={onNextClick}
+      onBackClick={onBackClick}
+      applicant={applicant}
+    />
+  );
+};
+const pageTwentySeven = (onNextClick, onBackClick, applicant) => {
+  return (
+    <AccordianLastPage
+      onNextClick={onNextClick}
+      onBackClick={onBackClick}
+      applicant={applicant}
+    />
+  );
+};

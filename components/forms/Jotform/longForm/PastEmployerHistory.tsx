@@ -30,7 +30,9 @@ export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
         }
     })
 
-
+    useEffect(() => {
+        if (props.applicant && !form.dirty) form.setValues(props.applicant);
+      }, [props.applicant]);
     return (
         <>
             <Form onSubmit={form.handleSubmit}
