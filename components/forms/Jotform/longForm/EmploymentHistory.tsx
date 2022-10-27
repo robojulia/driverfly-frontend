@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "../../../../styles/JotForm.module.css";
+import styles from "../../../../styles/jotform.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
