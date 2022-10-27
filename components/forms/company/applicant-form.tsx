@@ -54,7 +54,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
     let { user, hasPermission } = useAuth();
 
-    const [ protectedFields, setProtectedFields ] = useState({
+    const [protectedFields, setProtectedFields] = useState({
         license_number: false,
         social_security_number: false
     });
@@ -64,7 +64,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
             license_number: hasPermission("CanViewApplicant.license_number"),
             social_security_number: hasPermission("CanViewApplicant.social_security_number"),
         });
-    }, [ user ]);
+    }, [user]);
 
     const form = useFormik({
         initialValues: new ApplicantEntity(),
@@ -103,31 +103,31 @@ export function ApplicantForm(props: ApplicantFormProps) {
                     }
                 }
 
-                formSuccess(t, entity?.id ? "update": "create", "APPLICANT");
+                formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
                 if (onSaveComplete) onSaveComplete(values);
             } catch (e) {
                 console.error("Unable to save applicant info", e);
                 if (!globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast }))
-                    formFailed(t, entity?.id ? "update": "create", "APPLICANT");
+                    formFailed(t, entity?.id ? "update" : "create", "APPLICANT");
 
                 if (onSaveError) onSaveError(e);
             }
         }
     });
 
-    const [ jobs, setJobs ] = useState<JobEntity[]>([]);
+    const [jobs, setJobs] = useState<JobEntity[]>([]);
 
     useEffectAsync(async () => {
         const api = new JobApi();
         const jobs = await api.list();
 
         setJobs(jobs);
-    }, [ user ]);
+    }, [user]);
 
     useEffect(() => {
         if (entity && !form.dirty)
             form.setValues(entity);
-    }, [ entity ]);
+    }, [entity]);
 
     return (
         <EntityForm
@@ -137,7 +137,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
             className={className}
         >
             <Row>
-                <Col>
+                <Col className="p-0 px-lg-2 mt-3">
                     <ViewCard title="BASIC_DETAILS">
                         <Row>
                             <Col md="4" className="px-2">
@@ -173,14 +173,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
                                     placeholder="PHONE"
                                     formik={form}
                                 />
-                                {/* <BaseInput
-                                    className="col-12"
-                                    label="PHONE"
-                                    type="tel"
-                                    name="phone"
-                                    placeholder="PHONE"
-                                    formik={form}
-                                /> */}
                                 <BaseInput
                                     className="col-12"
                                     label="EMAIL"
@@ -344,8 +336,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
                             </Col>
                         </Row>
                         <Row>
-                            <Col md="6">
-                                <Col xs="12"  className='p-2 mt-2' >
+                            <Col className="col-md-6">
+                                <Col xs="12" className='p-2 mt-2' >
                                     <ViewCard
                                         title="equipment_experience"
                                         actions={<Button size='sm' onClick={() => form.setValues({
@@ -359,19 +351,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
                                         {
                                             form.values.equipment_experience?.length > 0 &&
                                             <>
-                                                <Row className='d-sm-none d-md-flex'>
-                                                    <Col><strong>{t("TYPE")}</strong></Col>
-                                                    <Col><strong>{t("YEARS")}</strong></Col>
-                                                </Row>
                                                 {form.values
                                                     .equipment_experience
                                                     .map((entity, i) => (
                                                         <Row key={i}>
-                                                            <Col xs="12" className='d-sm-flex d-md-none'>
-                                                                <Col><strong>{t("TYPE")}</strong></Col>
-                                                                <Col><strong>{t("YEARS")}</strong></Col>
-                                                            </Col>
-                                                            <Col xs="6">
+                                                            <div className="col-md-6 mt-2">
+                                                                <Col className="p-0"><strong>{t("TYPE")}</strong></Col>
+
                                                                 <BaseSelect
                                                                     name={`equipment_experience[${i}].type`}
                                                                     placeholder="TYPE"
@@ -379,8 +365,10 @@ export function ApplicantForm(props: ApplicantFormProps) {
                                                                     enumType={JobEquipmentType}
                                                                     formik={form}
                                                                 />
-                                                            </Col>
-                                                            <Col xs="5">
+                                                            </div >
+                                                            <div className="col-md-5 mt-2">
+                                                                <Col className="p-0"><strong>{t("YEARS")}</strong></Col>
+
                                                                 <BaseInput
                                                                     name={`equipment_experience[${i}].years`}
                                                                     placeholder="YEARS"
@@ -388,26 +376,28 @@ export function ApplicantForm(props: ApplicantFormProps) {
                                                                     min="1"
                                                                     formik={form}
                                                                 />
-                                                            </Col>
+                                                            </div >
                                                             {
                                                                 entity.type === JobEquipmentType.OTHER &&
-                                                                <Col xs="11">
+                                                                <div >
                                                                     <BaseInput
+                                                                        className="my-2"
                                                                         name={`equipment_experience[${i}].type_other`}
                                                                         placeholder="TYPE"
                                                                         formik={form}
                                                                     />
-                                                                </Col>
+                                                                </div >
                                                             }
-                                                            <Col xs="1">
+                                                            <div className="pl-sm-1 pt-lg-2 col-lg-1 col-md-12">
+                                                            <Col className="mt-4"></Col>
                                                                 <a href="#" onClick={() => form.setValues({
                                                                     ...form.values,
                                                                     equipment_experience: form.values.equipment_experience.filter((v, idx) => i != idx)
                                                                 })}><DashCircle color="red" /></a>
-                                                            </Col>
-                                                            <Col xs="12">
+                                                            </div >
+                                                            <div className="12">
                                                                 <hr />
-                                                            </Col>
+                                                            </div >
 
                                                         </Row>
                                                     ))}
@@ -497,7 +487,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                 </Col>
             </Row>
             <Row>
-                <Col md="4">
+                <Col md="4" className="p-0 px-lg-2">
                     <ViewCard
                         title="WORK_HISTORY"
                         actions={<Button size='sm' onClick={() => form.setValues({
@@ -512,130 +502,130 @@ export function ApplicantForm(props: ApplicantFormProps) {
                             <>{t("NONE")}</>
                         }
                         {form.values.employers?.length > 0 &&
-                        <>
-                        {form.values.employers.map((e, i) => {
+                            <>
+                                {form.values.employers.map((e, i) => {
 
-                            const meta = form.getFieldMeta(`employers[${i}]`);
+                                    const meta = form.getFieldMeta(`employers[${i}]`);
 
-                            const hasError = Object.keys(e || {}).some(v => form.getFieldMeta(`employers[${i}].${v}`).error);
+                                    const hasError = Object.keys(e || {}).some(v => form.getFieldMeta(`employers[${i}].${v}`).error);
 
-                            return (
-                                <Accordion
-                                    key={i}
-                                    defaultExpanded={i === 0 || !meta.touched || hasError}
-                                    expanded={hasError || undefined}
-                                >
-                                    <AccordionSummary
-                                        expandIcon={<ChevronUp />}
-                                    >
-                                        <Button
-                                            type="button"
-                                            size="sm"
-                                            variant="danger"
-                                            onClick={v => form.setValues({
-                                                ...form.values,
-                                                employers: form.values.employers.filter((v, idx) => idx !== i),
-                                            })}
+                                    return (
+                                        <Accordion
+                                            key={i}
+                                            defaultExpanded={i === 0 || !meta.touched || hasError}
+                                            expanded={hasError || undefined}
                                         >
-                                            <XCircle /> {t("REMOVE")}
-                                        </Button>
-                                        <span style={{ marginLeft: "10px" }} >{e.name || t("NEW_EMPLOYER")}</span>
+                                            <AccordionSummary
+                                                expandIcon={<ChevronUp />}
+                                            >
+                                                <Button
+                                                    type="button"
+                                                    size="sm"
+                                                    variant="danger"
+                                                    onClick={v => form.setValues({
+                                                        ...form.values,
+                                                        employers: form.values.employers.filter((v, idx) => idx !== i),
+                                                    })}
+                                                >
+                                                    <XCircle /> {t("REMOVE")}
+                                                </Button>
+                                                <span style={{ marginLeft: "10px" }} >{e.name || t("NEW_EMPLOYER")}</span>
 
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                        <Row>
-                                            <BaseInput
-                                                className="col-12"
-                                                name={`employers[${i}].name`}
-                                                label="NAME"
-                                                required
-                                                placeholder="COMPANY_NAME"
-                                                formik={form}
-                                            />
-                                            <BaseInput
-                                                className="col-6"
-                                                name={`employers[${i}].start_at`}
-                                                label="DATES_EMPLOYED"
-                                                type="date"
-                                                formik={form}
-                                            />
-                                            <BaseInput
-                                                className="col-6"
-                                                name={`employers[${i}].end_at`}
-                                                label="THROUGH_OPTIONAL"
-                                                type="date"
-                                                formik={form}
-                                            />
-                                            <BaseInput
-                                                className="col-12"
-                                                name={`employers[${i}].title`}
-                                                label="TITLE"
-                                                placeholder="TITLE"
-                                                formik={form}
-                                            />
-                                            <BaseInput
-                                                className="col-12"
-                                                name={`employers[${i}].street`}
-                                                label="STREET"
-                                                placeholder="STREET"
-                                                formik={form}
-                                            />
-                                            <BaseInput
-                                                className="col-12"
-                                                name={`employers[${i}].city`}
-                                                label="CITY"
-                                                placeholder="CITY"
-                                                formik={form}
-                                            />
-                                            <StateSelect
-                                                className="col-6"
-                                                name={`employers[${i}].state`}
-                                                label="STATE"
-                                                placeholder="STATE"
-                                                formik={form}
-                                            />
-                                            <BaseInput
-                                                className="col-6"
-                                                name={`employers[${i}].zip_code`}
-                                                label="ZIP_CODE"
-                                                placeholder="ZIP_CODE"
-                                                formik={form}
-                                            />
-                                            <BaseInputPhone
-                                                className="col-12"
-                                                name={`employers[${i}].phone`}
-                                                label="PHONE"
-                                                placeholder="PHONE"
-                                                formik={form}
-                                            />
-                                            <BaseCheck
-                                                className="col-12 mt-2"
-                                                name={`employers[${i}].can_contact`}
-                                                label="MAY_CONTACT_COMPANY"
-                                                formik={form}
-                                            />
-                                            <BaseCheck
-                                                className="col-12 mt-2"
-                                                name={`employers[${i}].is_subject_to_fmcsrs`}
-                                                label="SUBJECT_TO_FMCSRS"
-                                                formik={form}
-                                            />
-                                            <BaseCheck
-                                                className="col-12 mt-2"
-                                                name={`employers[${i}].is_subject_to_drug_tests`}
-                                                label="JOB_DESIGNATED_AS_SATEFY_SENSITIVE"
-                                                formik={form}
-                                            />
-                                        </Row>
-                                    </AccordionDetails>
-                                </Accordion>
-                            );
-                        })}
-                        </>
+                                            </AccordionSummary>
+                                            <AccordionDetails>
+                                                <Row>
+                                                    <BaseInput
+                                                        className="col-12"
+                                                        name={`employers[${i}].name`}
+                                                        label="NAME"
+                                                        required
+                                                        placeholder="COMPANY_NAME"
+                                                        formik={form}
+                                                    />
+                                                    <BaseInput
+                                                        className="col-6"
+                                                        name={`employers[${i}].start_at`}
+                                                        label="DATES_EMPLOYED"
+                                                        type="date"
+                                                        formik={form}
+                                                    />
+                                                    <BaseInput
+                                                        className="col-6"
+                                                        name={`employers[${i}].end_at`}
+                                                        label="THROUGH_OPTIONAL"
+                                                        type="date"
+                                                        formik={form}
+                                                    />
+                                                    <BaseInput
+                                                        className="col-12"
+                                                        name={`employers[${i}].title`}
+                                                        label="TITLE"
+                                                        placeholder="TITLE"
+                                                        formik={form}
+                                                    />
+                                                    <BaseInput
+                                                        className="col-12"
+                                                        name={`employers[${i}].street`}
+                                                        label="STREET"
+                                                        placeholder="STREET"
+                                                        formik={form}
+                                                    />
+                                                    <BaseInput
+                                                        className="col-12"
+                                                        name={`employers[${i}].city`}
+                                                        label="CITY"
+                                                        placeholder="CITY"
+                                                        formik={form}
+                                                    />
+                                                    <StateSelect
+                                                        className="col-6"
+                                                        name={`employers[${i}].state`}
+                                                        label="STATE"
+                                                        placeholder="STATE"
+                                                        formik={form}
+                                                    />
+                                                    <BaseInput
+                                                        className="col-6"
+                                                        name={`employers[${i}].zip_code`}
+                                                        label="ZIP_CODE"
+                                                        placeholder="ZIP_CODE"
+                                                        formik={form}
+                                                    />
+                                                    <BaseInputPhone
+                                                        className="col-12"
+                                                        name={`employers[${i}].phone`}
+                                                        label="PHONE"
+                                                        placeholder="PHONE"
+                                                        formik={form}
+                                                    />
+                                                    <BaseCheck
+                                                        className="col-12 mt-2"
+                                                        name={`employers[${i}].can_contact`}
+                                                        label="MAY_CONTACT_COMPANY"
+                                                        formik={form}
+                                                    />
+                                                    <BaseCheck
+                                                        className="col-12 mt-2"
+                                                        name={`employers[${i}].is_subject_to_fmcsrs`}
+                                                        label="SUBJECT_TO_FMCSRS"
+                                                        formik={form}
+                                                    />
+                                                    <BaseCheck
+                                                        className="col-12 mt-2"
+                                                        name={`employers[${i}].is_subject_to_drug_tests`}
+                                                        label="JOB_DESIGNATED_AS_SATEFY_SENSITIVE"
+                                                        formik={form}
+                                                    />
+                                                </Row>
+                                            </AccordionDetails>
+                                        </Accordion>
+                                    );
+                                })}
+                            </>
                         }
                     </ViewCard>
                 </Col>
-                <Col md="8">
+                <Col md="8" className="p-0 px-lg-2">
                     <ViewCard title="SAFETY_BACKGROUND">
                         <Row>
                             <Col md="6">
@@ -797,7 +787,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                 </Col>
             </Row>
             <Row>
-                <Col md="5">
+                <Col md="5" className="p-0 px-lg-2">
                     <ViewCard
                         title="UPLOADED_DOCUMENTS"
                         actions={<Button size='sm'
@@ -862,7 +852,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
                         }
                     </ViewCard>
                 </Col>
-                <Col md="7">
+                <Col md="7" className="p-0 px-lg-2">
                     <ViewCard
                         title="JOBS_APPLIED_TO_WITH_YOU"
                         actions={<Button size='sm'

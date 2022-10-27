@@ -169,13 +169,13 @@ export default function Communication() {
                     {form.values.preferred_hours.value &&
                         <>
                             <BaseInput
-                                className="col-md-4"
+                                className="col-md-4 mt-2"
                                 name="preferred_hours.value.start"
                                 type="time"
                                 formik={form}
                             />
                             <BaseInput
-                                className="col-md-4"
+                                className="col-md-4 mt-2"
                                 name="preferred_hours.value.end"
                                 type="time"
                                 formik={form}

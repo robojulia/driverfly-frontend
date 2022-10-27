@@ -60,7 +60,7 @@ export function LocationForm(props: LocationFormProps) {
             id={entity?.id}
             formik={form}
             >
-            <Row className="mt-2">
+            <Row className="my-2">
                 <BaseInput
                     className="col-12"
                     label="STREET"
@@ -69,7 +69,7 @@ export function LocationForm(props: LocationFormProps) {
                     formik={form}
                     />
                 <BaseInput
-                    className="col-4"
+                    className="col-md-4 mt-3"
                     label="CITY"
                     name="city"
                     required
@@ -77,7 +77,7 @@ export function LocationForm(props: LocationFormProps) {
                     formik={form}
                     />
                 <StateSelect
-                    className="col-4"
+                    className="col-md-4 mt-3"
                     label="STATE"
                     name="state"
                     required
@@ -85,7 +85,7 @@ export function LocationForm(props: LocationFormProps) {
                     formik={form}
                     />
                 <BaseInput
-                    className="col-4"
+                    className="col-md-4 mt-3"
                     label="ZIP_CODE"
                     name="zip_code"
                     placeholder="ZIP_CODE"

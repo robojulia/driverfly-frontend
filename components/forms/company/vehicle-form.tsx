@@ -117,7 +117,7 @@ export function VehicleForm(props: VehicleFormProps) {
             </Row>
             <Row className="mt-2">
                 <BaseSelect
-                    className="col-3"
+                    className="col-md-3 mt-3"
                     name="transmission_type"
                     label="TRANSMISSION"
                     placeholder="TRANSMISSION"
@@ -126,7 +126,7 @@ export function VehicleForm(props: VehicleFormProps) {
                     formik={form}
                 />
                 <BaseInput
-                    className="col-3"
+                    className="col-md-3 mt-3"
                     label="MAKE"
                     name="make"
                     required
@@ -134,14 +134,14 @@ export function VehicleForm(props: VehicleFormProps) {
                     formik={form}
                 />
                 <BaseInput
-                    className="col-3"
+                    className="col-md-3 mt-3"
                     label="MODEL"
                     name="model"
                     placeholder="MODEL"
                     formik={form}
                 />
                 <BaseInput
-                    className="col-3"
+                    className="col-md-3 mt-3"
                     label="YEAR"
                     name="year"
                     type="int"
@@ -149,9 +149,9 @@ export function VehicleForm(props: VehicleFormProps) {
                     formik={form}
                 />
             </Row>
-            <Row className="mt-2">
+            <Row className="mt-md-2">
                 <FileInput
-                    className="col-4"
+                    className="col-md-4 pt-3"
                     label="photo"
                     name="photo"
                     accept="image/*"
@@ -160,7 +160,7 @@ export function VehicleForm(props: VehicleFormProps) {
                     allowedSizeInByte={3000000}
                 />
                 <BaseCheckList
-                    className="col-4"
+                    className="col-md-4 pt-3"
                     label="ACCESSORIES"
                     name="accessories"
                     cols={2}
@@ -171,7 +171,7 @@ export function VehicleForm(props: VehicleFormProps) {
                 {
                     form.values.accessories.includes(VehicleAccessory.OTHER) &&
                     <BaseTextArea
-                        className="col-4"
+                        className="col-md-3 mt-3"
                         label="OTHER"
                         name="accessory_other"
                         required
@@ -180,9 +180,9 @@ export function VehicleForm(props: VehicleFormProps) {
                         formik={form}
                     />
                 }
-                <Col xs="4">
+                <Col className="col-md-4">
                     <BaseCheck
-                        className="col-12 p-0"
+                        className="col-12 pt-3 p-0"
                         label="GOVERNED_SPEED"
                         name="is_governed"
                         formik={form}
@@ -190,7 +190,7 @@ export function VehicleForm(props: VehicleFormProps) {
                     {
                         form.values.is_governed &&
                         <BaseInput
-                            className="col-12 mt-2"
+                            className="col-12 mt-2 p-0"
                             label="MAX_SPEED"
                             name="max_speed"
                             type="int"
@@ -201,9 +201,9 @@ export function VehicleForm(props: VehicleFormProps) {
 
                 </Col>
                 <Row>
-                    <Col xs="4">
+                    <Col>
                         <BaseCheck
-                            className="col-12 p-0"
+                            className="col-12 pt-3 p-0"
                             label="SHOW_VEHICLES_TO_PUBLIC_USERS"
                             name="is_public"
                             formik={form}
