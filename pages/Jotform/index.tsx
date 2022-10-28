@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styles from "../../styles/JotForm.module.css";
+import styles from "../../styles/Jotform.module.css";
 import { FirstPage } from "../../components/forms/Jotform/shortForm/page_01 - SPlashPage";
 import { SecondPage } from "../../components/forms/Jotform/shortForm/page_02 - NameFirstAndLast.tsx";
 import { ThirdPage } from "../../components/forms/Jotform/shortForm/page_03 - EmailPhZipAuth";
@@ -364,9 +364,9 @@ const pageTwentySix = (onNextClick, onBackClick, applicant) => {
 const pageTwentySeven = (onNextClick, onBackClick, applicant) => {
   return (
     <AccordianLastPage
-      // onNextClick={onNextClick}
-      // onBackClick={onBackClick}
-      // applicant={applicant}
+    // onNextClick={onNextClick}
+    // onBackClick={onBackClick}
+    // applicant={applicant}
     />
   );
 };

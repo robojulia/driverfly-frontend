@@ -5,7 +5,7 @@ import { useTranslation } from '../../../../hooks/use-translation'
 import * as yup from "yup";
 import BaseCheck from '../../base-check';
 import BaseInput from '../../base-input';
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/Jotform.module.css";
 import { AccidentLastFiveYearsDto } from '../../../../models/jot-form/long-form/accident-last-5-years.dto';
 
 
