@@ -364,9 +364,9 @@ const pageTwentySix = (onNextClick, onBackClick, applicant) => {
 const pageTwentySeven = (onNextClick, onBackClick, applicant) => {
   return (
     <AccordianLastPage
-      // onNextClick={onNextClick}
-      // onBackClick={onBackClick}
-      // applicant={applicant}
+    // onNextClick={onNextClick}
+    // onBackClick={onBackClick}
+    // applicant={applicant}
     />
   );
 };
