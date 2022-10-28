@@ -183,7 +183,7 @@ export default function Applicant() {
                                         formik={form}
                                     />
                                 </Row>
-                                <BaseSelect
+                                {/* <BaseSelect
                                     className="mt-1"
                                     label="PREFERRED_LOCATION"
                                     placeholder="PREFERRED_LOCATION"
@@ -191,7 +191,7 @@ export default function Applicant() {
                                     formik={form}
                                     labelPrefix="JobGeography"
                                     enumType={JobGeography}
-                                />
+                                /> */}
                             </Col>
                             <Col md="4" className="px-2">
                                 <BaseInput
