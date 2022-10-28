@@ -413,6 +413,11 @@ export function JobForm(props: JobFormProps) {
             if (dto.expiry_date) dto.expiry_date = new Date(dto.expiry_date).toISOString();
             if (dto.orientation_start_at) dto.orientation_start_at = new Date(dto.orientation_start_at).toISOString();
             if (dto.orientation_end_at) dto.orientation_end_at = new Date(dto.orientation_end_at).toISOString();
+            if (dto.min_experience_in_months) {
+                dto.min_experience_in_years += dto.min_experience_in_months / 12;
+            }
+            dto.min_years_experience = dto.min_experience_in_years ? parseFloat(dto.min_experience_in_years?.toFixed(2)) : 0
+
             if (entity?.id) {
                 job = await jobApi.update(entity.id, dto);
             }
@@ -440,7 +445,6 @@ export function JobForm(props: JobFormProps) {
     //     console.log('values', form.values)
     // }, [form.values, form.errors]);
 
-
     return (
         <>
             <EntityForm
@@ -450,12 +454,12 @@ export function JobForm(props: JobFormProps) {
                 formik={form}
             >
                 <Row className="mt-1">
-                    <Col lg="6" xl="4">
+                    <Col lg="6" xl="4" className="p-0 px-lg-2">
                         <ViewCard
                             title="basic_details"
                         >
                             <BaseInput
-                                className="col-12"
+                                className="col-12 p-0 px-lg-2"
                                 label="title"
                                 required
                                 name="title"
@@ -463,7 +467,7 @@ export function JobForm(props: JobFormProps) {
                                 formik={form}
                             />
                             <BaseSelect
-                                className="col-12"
+                                className="col-12 p-0 px-lg-2"
                                 label="location"
                                 name="location.id"
                                 required
@@ -472,10 +476,10 @@ export function JobForm(props: JobFormProps) {
                                 valueKey="id"
                                 createLabel={v => buildAddress(v)}
                                 options={locations}
-                                append={<Button variant="outline-secondary create_btn" disabled={!can.createLocation} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
+                                append={<Button variant="btn create_btn" disabled={!can.createLocation} onClick={() => setCreateLocation(true)}><PlusCircle /> {t("CREATE")}</Button>}
                             />
                             <BaseInput
-                                className="col-12"
+                                className="col-12 p-0 px-lg-2"
                                 label="expiration_date"
                                 name="expiry_date"
                                 placeholder
@@ -484,7 +488,7 @@ export function JobForm(props: JobFormProps) {
                                 formik={form}
                             />
                             <BaseInput
-                                className="col-12"
+                                className="col-12 p-0 px-lg-2"
                                 label="drivers_needed"
                                 name="drivers_needed"
                                 placeholder
@@ -493,7 +497,7 @@ export function JobForm(props: JobFormProps) {
                                 formik={form}
                             />
                             <BaseSelect
-                                className="col-12"
+                                className="col-12 p-0 px-lg-2"
                                 label="GEOGRAPHY"
                                 placeholder
                                 name="geography"
@@ -506,7 +510,7 @@ export function JobForm(props: JobFormProps) {
                             {
                                 form.values.geography &&
                                 <BaseRange
-                                    className="col-12"
+                                    className="col-12 p-0 px-lg-2"
                                     label="max_applicant_radius"
                                     name="max_applicant_radius"
                                     valueSuffix="mi"
@@ -519,7 +523,7 @@ export function JobForm(props: JobFormProps) {
 
                             <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                 <BaseSelect
-                                    className={`col-${form.values.schedule === JobSchedule.OTHER ? 6 : 12}`}
+                                    className={`col-${form.values.schedule === JobSchedule.OTHER ? 6 : 12} p-0 px-lg-2`}
                                     label="SCHEDULE"
                                     name="schedule"
                                     required
@@ -541,7 +545,7 @@ export function JobForm(props: JobFormProps) {
                                 }
                             </Row>
                             <BaseSelect
-                                className="col-12"
+                                className="col-12 p-0 px-lg-2"
                                 label="EMPLOYMENT_TYPE"
                                 name="employment_type"
                                 required
@@ -551,7 +555,7 @@ export function JobForm(props: JobFormProps) {
                                 formik={form}
                             />
                             <BaseCheckList
-                                className="col-12"
+                                className="col-12 p-0 px-lg-2"
                                 label="EQUIPMENT_TYPE"
                                 name="equipment_type"
                                 cols={2}
@@ -562,7 +566,7 @@ export function JobForm(props: JobFormProps) {
                             {
                                 form.values.equipment_type.includes(JobEquipmentType.OTHER) &&
                                 <BaseInput
-                                    className="col-12"
+                                    className="col-12 p-0 px-lg-2"
                                     required
                                     label="other_equipment_type"
                                     name="equipment_type_other"
@@ -571,7 +575,7 @@ export function JobForm(props: JobFormProps) {
                                 />
                             }
                             <BaseCheckList
-                                className="col-12"
+                                className="col-12 p-0 px-lg-2"
                                 label="DELIVERY_TYPE"
                                 name="delivery_type"
                                 cols={2}
@@ -580,7 +584,7 @@ export function JobForm(props: JobFormProps) {
                                 formik={form}
                             />
                             <BaseSelect
-                                className="col-12"
+                                className="col-12 p-0 px-lg-2"
                                 label="TEAM_DRIVERS"
                                 name="team_drivers"
                                 labelPrefix="JobTeamDriver"
@@ -589,12 +593,12 @@ export function JobForm(props: JobFormProps) {
                             />
                         </ViewCard>
                     </Col>
-                    <Col lg="6" xl="4">
+                    <Col lg="6" xl="4" className="p-0 px-lg-2">
                         <ViewCard
                             title="BENEFITS"
                         >
                             <BaseSelect
-                                className="col-12 mb-2"
+                                className="col-12 p-0 px-lg-2 mb-2"
                                 label="PAY_FREQUENCY"
                                 name="pay_frequency"
                                 placeholder
@@ -603,7 +607,7 @@ export function JobForm(props: JobFormProps) {
                                 enumType={JobPayFrequency}
                             />
                             <BaseSelect
-                                className="col-12"
+                                className="col-12 p-0 px-lg-2"
                                 label="PAY_METHOD"
                                 name="pay_method"
                                 required
@@ -730,7 +734,7 @@ export function JobForm(props: JobFormProps) {
                             }
                             <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                 <BaseMoneyInput
-                                    className="col-6"
+                                    className="col-6 p-0 px-lg-2"
                                     label="min_weekly"
                                     name="min_weekly_pay"
                                     required
@@ -738,7 +742,7 @@ export function JobForm(props: JobFormProps) {
                                     formik={form}
                                 />
                                 <BaseMoneyInput
-                                    className="col-6"
+                                    className="col-6 p-0 px-lg-2"
                                     label="max_weekly"
                                     name="max_weekly_pay"
                                     required
@@ -748,7 +752,7 @@ export function JobForm(props: JobFormProps) {
                             </Row>
                             {/* todo: add job pay information */}
                             <BaseCheckList
-                                className="col-12"
+                                className="col-12 p-0 px-lg-2"
                                 label="BENEFITS"
                                 name="benefits"
                                 cols={2}
@@ -759,7 +763,7 @@ export function JobForm(props: JobFormProps) {
                             {
                                 form.values.benefits.includes(JobBenefits.OTHER) &&
                                 <BaseInput
-                                    className="col-12"
+                                    className="col-12 p-0 px-lg-2"
                                     label="additional_benefits"
                                     name="benefits_other"
                                     required
@@ -769,7 +773,7 @@ export function JobForm(props: JobFormProps) {
                             }
                         </ViewCard>
                     </Col>
-                    <Col lg="12" xl="4">
+                    <Col lg="12" xl="4" className="p-0 px-lg-2">
                         <ViewCard
                             title="vehicle_info"
                             actions={
@@ -814,7 +818,7 @@ export function JobForm(props: JobFormProps) {
                                             }}
                                             formik={form}
                                             append={<>
-                                                <Button variant="outline-secondary create_btn" disabled={!can.createVehicle} onClick={() => setCreateVehicle(i)}><PlusCircle /> {t("CREATE")}</Button>
+                                                <Button variant="btn create_btn" disabled={!can.createVehicle} onClick={() => setCreateVehicle(i)}><PlusCircle /> {t("CREATE")}</Button>
                                             </>}
                                         />
                                     </BaseListRowControl>))
@@ -825,7 +829,7 @@ export function JobForm(props: JobFormProps) {
                 </Row>
                 <hr />
                 <Row>
-                    <Col>
+                    <Col className="p-0 px-lg-2">
                         <ViewCard
                             title="DESCRIPTION"
                         >
@@ -845,7 +849,7 @@ export function JobForm(props: JobFormProps) {
                 </Row>
                 <hr />
                 <Row>
-                    <Col>
+                    <Col className="p-0 px-lg-2">
                         <ViewCard
                             title="requirements"
                         >
@@ -861,17 +865,34 @@ export function JobForm(props: JobFormProps) {
                                         enumType={DriverLicenseType}
                                         formik={form}
                                     />
-                                    <BaseInput
-                                        className="col-12"
-                                        label="MIN_YEARS_EXPERIENCE"
-                                        name="min_years_experience"
-                                        placeholder
-                                        step={0.01}
-                                        min={0}
-                                        type="number"
-                                        formik={form}
-                                        append={(<InputGroup.Text>yrs</InputGroup.Text>)}
-                                    />
+                                    <Row className="mt-1 p-3 ">
+                                        <Col>
+                                            <label>{t('MIN_YEARS_EXPERIENCE')}</label>
+                                            <InputGroup className="flex-nowrap rounded d-block">
+                                                <BaseInput
+                                                    className="col-md-6 d-inline-block p-0 mb-2"
+                                                    placeholder="5"
+                                                    name={`min_experience_in_years`}
+                                                    required
+                                                    min="0"
+                                                    type="int"
+                                                    append={(<InputGroup.Text>{t('YEARS_SHORT')}</InputGroup.Text>)}
+                                                    formik={form}
+                                                />
+                                                <BaseInput
+                                                    className="col-md-6 d-inline-block p-0"
+                                                    placeholder="5"
+                                                    name={`min_experience_in_months`}
+                                                    required
+                                                    min="0"
+                                                    max="11"
+                                                    type="int"
+                                                    append={(<InputGroup.Text>{t('MONTHS_SHORT')}</InputGroup.Text>)}
+                                                    formik={form}
+                                                />
+                                            </InputGroup>
+                                        </Col>
+                                    </Row>
                                     <BaseSelect
                                         className="col-12"
                                         label="min_degree"
@@ -917,8 +938,9 @@ export function JobForm(props: JobFormProps) {
                                                             placeholder="5"
                                                             name={`required_skills.${i}.years`}
                                                             required
+                                                            min="0"
                                                             type="int"
-                                                            append={(<InputGroup.Text>yrs</InputGroup.Text>)}
+                                                            append={(<InputGroup.Text>{t('YEARS_SHORT')}</InputGroup.Text>)}
                                                             formik={form}
                                                         />
                                                         <BaseInput
@@ -926,9 +948,10 @@ export function JobForm(props: JobFormProps) {
                                                             placeholder="5"
                                                             name={`required_skills.${i}.months`}
                                                             required
+                                                            min="0"
                                                             max="11"
                                                             type="int"
-                                                            append={(<InputGroup.Text>mos</InputGroup.Text>)}
+                                                            append={(<InputGroup.Text>{t('MONTHS_SHORT')}</InputGroup.Text>)}
                                                             formik={form}
                                                         />
                                                     </BaseListRowControl >)
@@ -1101,7 +1124,7 @@ export function JobForm(props: JobFormProps) {
                                                                                 default: return year5Only;
                                                                             }
                                                                         })()}
-                                                                        append={<InputGroup.Text>yrs</InputGroup.Text>}
+                                                                        append={<InputGroup.Text>{t('YEARS_SHORT')}</InputGroup.Text>}
                                                                         formik={form}
                                                                     />
                                                                 </BaseListRowControl>
@@ -1179,7 +1202,7 @@ export function JobForm(props: JobFormProps) {
                                                                         name={`criminal_history.${i}.max_years`}
                                                                         required
                                                                         options={years}
-                                                                        append={form.getFieldMeta(`criminal_history.${i}.max_years`)?.value > 0 && <InputGroup.Text>yrs</InputGroup.Text>}
+                                                                        append={form.getFieldMeta(`criminal_history.${i}.max_years`)?.value > 0 && <InputGroup.Text>{t('YEARS_SHORT')}</InputGroup.Text>}
                                                                         formik={form}
                                                                     />
                                                                 </BaseListRowControl>
@@ -1238,7 +1261,7 @@ export function JobForm(props: JobFormProps) {
                                                 </Row>
                                                 <Row className="mx-1 my-3">
                                                     <BaseInput
-                                                        className="col-6"
+                                                        className="col-md-6"
                                                         label="START_DATE"
                                                         name="orientation_start_at"
                                                         placeholder
@@ -1247,7 +1270,7 @@ export function JobForm(props: JobFormProps) {
                                                         formik={form}
                                                     />
                                                     <BaseInput
-                                                        className="col-6"
+                                                        className="col-md-6 mt-2 m-lg-0"
                                                         label="END_DATE"
                                                         name="orientation_end_at"
                                                         placeholder="END_DATE"

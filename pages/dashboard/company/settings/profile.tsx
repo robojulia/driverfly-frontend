@@ -54,7 +54,7 @@ export default function Profile() {
       >
         <Row>
           <BaseInput
-            className="col-6 mt-1"
+            className="col-sm-6 mt-1"
             label="FIRST_NAME"
             name="first_name"
             required
@@ -62,7 +62,7 @@ export default function Profile() {
             formik={form}
           />
           <BaseInput
-            className="col-6 mt-1"
+            className="col-sm-6 mt-1"
             label="LAST_NAME"
             name="last_name"
             required
@@ -71,7 +71,7 @@ export default function Profile() {
           />
 
           <BaseInputPhone
-            className="col-6 mt-1"
+            className="col-sm-6 mt-1"
             label="phone"
             name="contact_number"
             placeholder
@@ -79,7 +79,7 @@ export default function Profile() {
           />
 
           <BaseInputPhone
-            className="col-6 mt-1"
+            className="col-sm-6 mt-1"
             label="phone_cell"
             name="cell_number"
             placeholder
