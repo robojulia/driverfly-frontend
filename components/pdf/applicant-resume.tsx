@@ -25,6 +25,8 @@ export interface ApplicantResumeProps extends ViewApplicantDetailProps {
 
 export default function ApplicantResume({ applicant, disabled, className }: ApplicantResumeProps) {
 
+    if (!!!applicant) return <></>
+
     const { t } = useTranslation();
 
     const [resume, setResume] = useState<any>(null)
@@ -107,7 +109,7 @@ export default function ApplicantResume({ applicant, disabled, className }: Appl
                     </View>
                     <Experience t={t} applicant={applicant} />
                 </View>
-                <Text style={styles.footer}>{t("THIS_IS_THE_CANDIDATE_YOU_ARE_LOOKING_FOR")}</Text>
+                {/* <Text style={styles.footer}>{t("THIS_IS_THE_CANDIDATE_YOU_ARE_LOOKING_FOR")}</Text> */}
             </Page>
         </Document>
     );
