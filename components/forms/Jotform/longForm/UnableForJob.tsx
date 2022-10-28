@@ -5,7 +5,7 @@ import { useTranslation } from '../../../../hooks/use-translation'
 import * as yup from "yup";
 import BaseTextArea from '../../base-text-area';
 import BaseCheck from '../../base-check';
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/Jotform.module.css";
 
 
 export interface UnableForJobProps{

@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/Jotform.module.css";
 import { Button, Col, Row } from "react-bootstrap";
 import BaseInput from "../../base-input";
 import { useFormik } from "formik";
