@@ -46,7 +46,7 @@ export function FelonyConviction(props: FelonyConvictionProps){
                     <BaseTextArea
                         className='float-left mt-3'
                         name="explanations"
-                        label="Please explain past suspensions/revocations/denials:"
+                        label="Please explain past convictions (if any)"
                         formik={ form }
                     />
                 </Row>

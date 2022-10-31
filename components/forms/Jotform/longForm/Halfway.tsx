@@ -2,6 +2,7 @@ import { useFormik } from "formik";
 import React, { useEffect } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
+import giphy from "/Users/suvineetsingh/DriverFly/driverfly-frontend/giphy.gif"
 
 export interface HalfwayProps {
   onNextClick: (any) => void;
@@ -26,6 +27,7 @@ export function Halfway(props: HalfwayProps) {
     <>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
         <h1>Hard Questions</h1>
+        {/* <img src={giphy} alt="my-gif" /> */}
         <h3>Please answer the following questions honestly. </h3>
         <h4>
           Your answers will not automatically exclude you from consideration.

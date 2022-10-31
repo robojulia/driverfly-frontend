@@ -49,19 +49,21 @@ export default function jotFormLongForm() {
   }
 
   async function shortFormDataSent(params: any) {
-    try {
-      const api = new ApplicantApi();
-      const response = await api.create(applicant);
+    // try {
+    //   const api = new ApplicantApi();
+    //   const response = await api.create(applicant);
 
-      if (response) setApplicant(response);
-      setApplicant(response);
-      onNextClick(applicant);
-      //   toast.success(t("SUCCESS"));
-    } catch (error) {
-      toast("kkkk");
+    //   if (response) setApplicant(response);
+    //   setApplicant(response);
+    //   onNextClick(applicant);
+    //   //   toast.success(t("SUCCESS"));
+    // } catch (error) {
+    //   toast("kkkk");
 
-      console.log(error);
-    }
+    //   console.log(error);
+    // }
+    // setApplicant(response);
+    onNextClick(applicant);
   }
   const getPageAccordingToStep = (step, applicant) => {
     if (step == 0) return pageOne(onNextClick);

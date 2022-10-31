@@ -10,6 +10,7 @@ import { OtherRequirement } from "../../../../enums/users/other-requirements.enu
 import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferences.enum";
 import BaseInput from "../../base-input";
 import BaseSelect from "../../base-select";
+import * as yup from 'yup';
 export interface PreferenceProps {
   onNextClick: (any) => void;
   onBackClick: () => void;
@@ -23,6 +24,9 @@ export function Preferences(props: PreferenceProps) {
       routes_open_to: null,
       other_requirements: null,
     },
+  //   validationSchema: yup.object({
+  //     routes_open_to: yup.string().required().nullable()
+  // }),
     onSubmit: (values) => {
       props.onNextClick(values);
     },

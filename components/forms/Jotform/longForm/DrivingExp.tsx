@@ -20,6 +20,8 @@ export interface DrivingExpProps {
   applicant: any;
 }
 export function DrivingExp(props: DrivingExpProps) {
+  const [count, setCount] = useState(0);
+
   useEffect(() => {
     if (props.applicant && !form.dirty) form.setValues(props.applicant);
   }, [props.applicant]);
@@ -86,8 +88,24 @@ export function DrivingExp(props: DrivingExpProps) {
           />
         </Col>
       </Row>
-
-      <Row className="mt-2">
+      <Row>
+      {/* <Col>
+        <BaseInput
+          name="input"
+          label="child_component"
+          className="mb-3"
+        />
+      </Col>
+        <Col>
+          <Button className="float-right" onClick={() => setCount(count + 1)}>
+            {t("ADD")}
+          </Button>
+        </Col>
+        <Col>
+          <Button className="float-right" onClick={() => setCount(count - 1)}>
+            {t("DELETE")}
+          </Button>
+        </Col> */}
         <Col>
           <Button className="float-right" type="reset">
             {t("BACK")}

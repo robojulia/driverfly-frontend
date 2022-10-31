@@ -47,7 +47,7 @@ export function DrugTest(props: DrugTestProps) {
           <BaseTextArea
             className="float-left mt-3"
             name="explanations"
-            label="Please explain past suspensions/revocations/denials:"
+            label="Please explain"
             formik={form}
           />
         </Row>

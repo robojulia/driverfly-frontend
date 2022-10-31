@@ -9,11 +9,6 @@ import SignaturePad from "react-signature-canvas";
 import SignatureCanvas from "react-signature-canvas";
 import { DriverApplicationDto } from "../../../../models/jot-form/long-form/driver-application.dto";
 
-export interface DriverApplicationProps {
-  onNextClick: (values: any) => void;
-  applicant: any;
-}
-
 export function DriverApplication(props: DriverApplicationProps) {
   useEffect(() => {
     if (props.applicant && !form.dirty) form.setValues(props.applicant);
@@ -38,7 +33,7 @@ export function DriverApplication(props: DriverApplicationProps) {
       <Form onSubmit={form.handleSubmit}>
         <h6 className={styles.carrierName}>Nautilus Trucking</h6>
         <h6 className={styles.carrierName__smaller}>Driver Application</h6>
-        <p className={styles.paragraph}>
+        <p className={`${styles.paragraph} ${styles.align__text_left}`}>
           Submitting this application certifies that this form was completed by
           me and all entries and information on it are true and complete to the
           best of my knowledge. I authorize Nautilus Trucking to make
@@ -47,7 +42,7 @@ export function DriverApplication(props: DriverApplicationProps) {
           and PSP record for review as part of the hiring process.
         </p>
 
-        <Row>
+        <Row className={styles.align__text_left}>
           <BaseInput
             className="col-6"
             required
@@ -57,7 +52,7 @@ export function DriverApplication(props: DriverApplicationProps) {
             formik={form}
           />
         </Row>
-        <Row>
+        <Row className={styles.align__text_left}>
           <BaseInput
             className="col-6"
             required
@@ -67,9 +62,9 @@ export function DriverApplication(props: DriverApplicationProps) {
             formik={form}
           />
         </Row>
-        <Row>
+        <Row className={styles.align__text_left}>
           <BaseInput
-            className="col-3 mt-3"
+            className="col-3 mt-3 mb-3"
             required
             type="date"
             name="date"
@@ -78,14 +73,14 @@ export function DriverApplication(props: DriverApplicationProps) {
             formik={form}
           />
         </Row>
-        <Row>
+        <Row className={ styles.align__text_left}>
           <Col>
             <h6>Signature</h6>
             <SignaturePad
               className
               ref={padRef}
               canvasProps={{
-                width: 600,
+                width: 700,
                 height: 200,
                 style: { border: "1px solid black" },
                 className: "sigCanvas",
@@ -98,16 +93,20 @@ export function DriverApplication(props: DriverApplicationProps) {
             <button onClick={clear}>Clear</button>
           </Col>
         </Row>
-        <Row>
-          <Col className="mt-5">
-            <Button
-              type="submit"
-              onClick={() => console.log("clicked the button")}
-            >
-              {t("NEXT")}
-            </Button>
-          </Col>
-        </Row>
+        <Row className="mt-3">
+                  <Col>
+                      <Button className="float-right"
+                      type="reset">
+                          {t("BACK")}
+                      </Button>
+                  </Col>
+                  <Col>
+                      <Button className="float-left"
+                      type="submit">
+                          {t("NEXT")}
+                      </Button>
+                  </Col>
+              </Row>
       </Form>
     </>
   );
