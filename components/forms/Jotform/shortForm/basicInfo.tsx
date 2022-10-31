@@ -16,7 +16,7 @@ export interface ThirdPageProps {
   onNextClick: (values: any) => void;
   onBackClick: () => void;
 }
-
+//code merged
 export function ThirdPage(props: ThirdPageProps) {
   const {
     method: { setApplicant },
