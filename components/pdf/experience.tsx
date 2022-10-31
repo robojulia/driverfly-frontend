@@ -9,7 +9,6 @@ const styles = StyleSheet.create({
         width: 100,
         flex: 1,
         paddingTop: 30,
-        paddingLeft: 15,
         '@media max-width: 400': {
             paddingTop: 10,
             paddingLeft: 0,
@@ -90,10 +89,6 @@ const ExperienceEntry = ({ workHistory, t }) => {
 
 const Experience = ({ applicant, t }) => (
     <View style={styles.container}>
-        {/* <Title>{t("Experience")}</Title>
-        {applicant?.employers?.map((workHistory) => (
-            <ExperienceEntry t={t} workHistory={workHistory} />
-        ))} */}
         <Title>{t("safety_background")}</Title>
         <SafetyExperience t={t} applicant={applicant} />
     </View>
