@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
-import styles from "../../../../styles/Jotform.module.css";
+import styles from "../../../../styles/jotform.module.css";
 import Form from "react-bootstrap/Form";
 import { VehicleRouteType } from "../../../../enums/vehicles/vehicle-routes.enum";
 import { useTranslation } from "../../../../hooks/use-translation";
