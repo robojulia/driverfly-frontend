@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
-import styles from "../../../../styles/Jotform.module.css";
+import styles from "../../../../styles/jotform.module.css";
 import * as yup from "yup";
 import { Button, Col, Row } from "react-bootstrap";
 import BaseInput from "../../base-input";
