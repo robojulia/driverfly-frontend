@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import styles from "../../styles/JotForm.module.css";
-import { FirstPage } from "../../components/forms/Jotform/shortForm/page_01 - SPlashPage";
-import { SecondPage } from "../../components/forms/Jotform/shortForm/page_02 - NameFirstAndLast.tsx";
-import { ThirdPage } from "../../components/forms/Jotform/shortForm/page_03 - EmailPhZipAuth";
-import { FourthPage } from "../../components/forms/Jotform/shortForm/page_04-CdlEx";
-import { FifthPage } from "../../components/forms/Jotform/shortForm/page_05-AccidentsViolations";
-import { SixthPage } from "../../components/forms/Jotform/shortForm/page_06-HearAboutUs";
-import { SeventhPage } from "../../components/forms/Jotform/shortForm/page_07 - ContinueApplication";
+import React, { useEffect, useState } from "react";
+import styles from "../../styles/Jotform.module.css";
+import { FirstPage } from "../../components/forms/Jotform/shortForm/splashPage01";
+import { SecondPage } from "../../components/forms/Jotform/shortForm/names";
+import { ThirdPage } from "../../components/forms/Jotform/shortForm/basicInfo";
+import { FourthPage } from "../../components/forms/Jotform/shortForm/cdlExperience";
+import { FifthPage } from "../../components/forms/Jotform/shortForm/accidentViolation";
+import { SixthPage } from "../../components/forms/Jotform/shortForm/hearAbout";
+import { SeventhPage } from "../../components/forms/Jotform/shortForm/continueLongForm";
 
 import { DriverApplication } from "../../components/forms/Jotform/longForm/DriverApplication";
 import { BackgroundInfo } from "../../components/forms/Jotform/longForm/BackgroundInfo";
@@ -30,7 +30,8 @@ import { PastSuspensions } from "../../components/forms/Jotform/longForm/PastSus
 import { ViolationsLast3Years } from "../../components/forms/Jotform/longForm/ViolationsLast3Years";
 import ApplicantApi from "../api/applicant";
 import { AccordianLastPage } from "../../components/forms/Jotform/longForm/AccordianLastPage";
-import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import jotformContext from "../../context/jotform-context";
 
 export default function jotFormLongForm() {
   const [steps, setSteps] = useState(0);
@@ -38,19 +39,22 @@ export default function jotFormLongForm() {
 
   function onNextClick(partialEntity) {
     setApplicant({ ...applicant, ...partialEntity });
-    console.log("valuessssssss 1 partial", partialEntity);
-
-    setSteps(steps + 1);
     console.log("valuessssssss 2", applicant);
+    setSteps(steps + 1);
   }
 
   function onBackClick() {
     setSteps(steps - 1);
   }
 
+  // useEffect(() => {
+  //   toast.success(t("SUCCESS"));
+  // }, []);
   async function shortFormDataSent(params: any) {
+    onNextClick(applicant);
+
     // try {
-    //   const api = new ApplicantApi();
+    // const applicantApi = new ApplicantApi();
     //   const response = await api.create(applicant);
 
     //   if (response) setApplicant(response);
@@ -62,8 +66,6 @@ export default function jotFormLongForm() {
 
     //   console.log(error);
     // }
-    // setApplicant(response);
-    onNextClick(applicant);
   }
   const getPageAccordingToStep = (step, applicant) => {
     if (step == 0) return pageOne(onNextClick);
@@ -94,18 +96,28 @@ export default function jotFormLongForm() {
     if (step == 24) return pageTwentyFive(onNextClick, onBackClick, applicant);
     if (step == 25) return pageTwentySix(onNextClick, onBackClick, applicant);
     if (step == 26) return pageTwentySeven(onNextClick, onBackClick, applicant);
-
     else return <h1>Error</h1>;
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.main}>
-        <div className={styles.main_form}>
-          {getPageAccordingToStep(steps, applicant)}
+    <jotformContext.Provider
+      value={{
+        state: {
+          applicant,
+        },
+        method: {
+          setApplicant,
+        },
+      }}
+    >
+      <div className={styles.container}>
+        <div className={styles.main}>
+          <div className={styles.main_form}>
+            {getPageAccordingToStep(steps, applicant)}
+          </div>
         </div>
       </div>
-    </div>
+    </jotformContext.Provider>
   );
 }
 const pageOne = (onNextClick) => {
@@ -366,9 +378,12 @@ const pageTwentySix = (onNextClick, onBackClick, applicant) => {
 const pageTwentySeven = (onNextClick, onBackClick, applicant) => {
   return (
     <AccordianLastPage
-      onNextClick={onNextClick}
-      onBackClick={onBackClick}
-      applicant={applicant}
+    // onNextClick={onNextClick}
+    // onBackClick={onBackClick}
+    // applicant={applicant}
     />
   );
 };
+function t(arg0: string): import("react-toastify").ToastContent {
+  throw new Error("Function not implemented.");
+}

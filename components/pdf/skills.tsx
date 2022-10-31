@@ -5,6 +5,13 @@ import {
     StyleSheet
 } from '@react-pdf/renderer';
 import List, { Item } from './list';
+import { JobEquipmentType } from "../../enums/jobs/job-equipment-type.enum";
+import { DriverEndorsement } from "../../enums/users/driver-endorsement.enum";
+import { ApplicantExperienceEntity } from "../../models/applicant/applicant-experience.entity";
+import { ApplicantEquipmentEntity } from "../../models/applicant/applicant-equipment.entity";
+import { VehicleTransmissionType } from "../../enums/vehicles/vehicle-transmission-type.enum";
+import { JobGeography } from "../../enums/jobs/job-geography.enum";
+import Title from "./title";
 
 const styles = StyleSheet.create({
     title: {
@@ -21,35 +28,51 @@ const styles = StyleSheet.create({
 
 const SkillEntry = ({ applicant, t }) => (
     <View>
-        <Text style={styles.title}>{t("EQUIPMENT_TYPE_AND_YEAR")}</Text>
+        <Title>{t("EQUIPMENT_TYPE_AND_YEAR")}</Title>
         <List>
-            {applicant?.equipment_experience?.map((equipment) => (
-                <>
-                    <Item key={equipment.id}> {equipment.type_other ? equipment.type_other : equipment.type} {equipment?.years}</Item>
-                </>
+            {applicant?.equipment_experience?.map((v: ApplicantExperienceEntity, index) => (
+                <Item key={index}> {v.type == JobEquipmentType.OTHER ? v.type_other : t(`JobEquipmentType.${v.type}`)} ({`${v?.years} ${t('YEARS')}`})</Item>
             ))}
         </List>
-        <Text style={styles.title}>{t("EQUIPMENT_OWNED")}</Text>
-        <List>
-            {applicant?.equipment_owned?.map((equipment) => (
-                <>
-                    <Item key={equipment.id}>{equipment.type_other ? equipment.type_other : equipment.type} {equipment?.quantity}</Item>
-                </>
-            ))}
-        </List>
-        <Text style={styles.title}>{t("ENDORSEMENTS")}</Text>
 
+        {
+            applicant?.is_owner_operator &&
+            <>
+                <Title>{t("OWNER_OPERATOR")}</Title>
+                <Text style={styles.title}>
+                    {t("OWNER_OPERATOR")}? : {applicant?.is_owner_operator ? t('YES') : t("No")}
+                </Text>
+                <Text style={styles.title}>{t("EQUIPMENT_OWNED")}</Text>
+                <List>
+                    {applicant?.equipment_owned?.map((v: ApplicantEquipmentEntity, index) => (
+                        <Item key={index}>{v.type == JobEquipmentType.OTHER ? v.type_other : t(`JobEquipmentType.${v.type}`)} ({`${t('QUANTITY')} ${v?.quantity}`})</Item>
+                    ))}
+                </List>
+            </>
+        }
+
+        <Title>{t("ENDORSEMENTS")}</Title>
         <List>
-            {applicant?.endorsements?.map((endorsement, e) => (
-                <>
-                    <Item key={e}>{endorsement}</Item>
-                </>
+            {applicant?.endorsements?.map((v: DriverEndorsement, e) => (
+                <Item key={e}>{t(`DriverEndorsement.${v}`)}</Item>
             ))}
         </List>
-        <Text style={styles.title}>{t("TRANSMISSION_EXPERIENCE")}</Text>
-        <Item>{applicant?.transmission_type[0] || ''}</Item>
-        <Item>{applicant?.transmission_type[1] || ''}</Item>
-    </View>
+
+        <Title>{t("TRANSMISSION_EXPERIENCE")}</Title>
+        <List>
+            {applicant?.transmission_type?.map((v: VehicleTransmissionType, index) => (
+                <Item key={index}>{t(`VehicleTransmissionType.${v}`)}</Item>
+            ))}
+        </List>
+
+        <Title>{t("PREFERRED_LOCATION")}</Title>
+        <List>
+            {applicant?.preferred_location?.map((v: JobGeography, index) => (
+                <Item key={index}>{t(`JobGeography.${v}`)}</Item>
+            ))}
+        </List>
+
+    </View >
 )
 
 const Skills = ({ applicant, t }) => (

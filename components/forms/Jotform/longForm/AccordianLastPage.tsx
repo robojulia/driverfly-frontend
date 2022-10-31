@@ -6,7 +6,7 @@ import * as yup from "yup";
 import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
 import BaseSelect from "../../base-select";
-import styles from "../../../../styles/JotForm.module.css";
+import styles from "../../../../styles/jotform.module.css";
 import Accordion from "react-bootstrap/Accordion";
 import SignaturePad from "react-signature-canvas";
 import SignatureCanvas from "react-signature-canvas";
@@ -14,8 +14,8 @@ import SignatureCanvas from "react-signature-canvas";
 
 
 export interface BackgroundInfoProps {
-  onNextClick: (any) => void;
-  onBackClick: () => void;
+//   onNextClick: (any) => void;
+//   onBackClick: () => void;
 }
 
 export function AccordianLastPage() {
