@@ -418,7 +418,7 @@ export default function ThirdPartyResources() {
                 </div>
             </div>
 
-            <div className="container mt-5 mb-5 p-lg-2 p-0">
+            <div className="container mt-5 mb-5">
                 <div className="resource-audience-filter-sec">
                     <label>
                         Audience Type:

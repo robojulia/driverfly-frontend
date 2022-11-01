@@ -183,7 +183,7 @@ export default function Applicant() {
                                         formik={form}
                                     />
                                 </Row>
-                                <BaseSelect
+                                {/* <BaseSelect
                                     className="mt-1"
                                     label="PREFERRED_LOCATION"
                                     placeholder="PREFERRED_LOCATION"
@@ -191,7 +191,7 @@ export default function Applicant() {
                                     formik={form}
                                     labelPrefix="JobGeography"
                                     enumType={JobGeography}
-                                />
+                                /> */}
                             </Col>
                             <Col md="4" className="px-2">
                                 <BaseInput
@@ -339,19 +339,14 @@ export default function Applicant() {
                                         {
                                             form.values.equipment_experience?.length > 0 &&
                                             <>
-                                                <Row className='d-sm-none d-md-flex'>
-                                                    <Col><strong>{t("TYPE")}</strong></Col>
-                                                    <Col><strong>{t("YEARS")}</strong></Col>
-                                                    <Col><strong>{t("MONTHS")}</strong></Col>
-                                                </Row>
                                                 {form.values
                                                     .equipment_experience
                                                     .map((entity, i) => (
                                                         <Row key={i}>
-                                                            <Col xs="12" className='d-sm-flex d-md-none'>
-                                                                <Col><strong>{t("TYPE")}</strong></Col>
-                                                                <Col><strong>{t("YEARS")}</strong></Col>
-                                                                <Col><strong>{t("MONTHS")}</strong></Col>
+                                                            <Col xs="12" className='d-sm-flex'>
+                                                                <Col className="col-lg-4 col-4 d-inline-block"><strong>{t("TYPE")}</strong></Col>
+                                                                <Col className="col-lg-4 col-4 d-inline-block"><strong>{t("YEARS")}</strong></Col>
+                                                                <Col className="col-lg-4 col-4 d-inline-block"><strong>{t("MONTHS")}</strong></Col>
                                                             </Col>
                                                             <Col xs="4">
                                                                 <BaseSelect
@@ -718,7 +713,7 @@ export default function Applicant() {
                                 }
                             </Col>
                             <Col md="6">
-                                <Row>
+                                <Row className="m-lg-0 mx-2">
                                     <BaseCheck
                                         className="col-12 p-1  mt-2"
                                         label="has_had_license_revoked"
@@ -846,7 +841,7 @@ export default function Applicant() {
                 </Col>
             </Row>
             <Row>
-                <Col md="5">
+                <Col className="col-md-12 col-lg-6">
                     <ViewCard
                         title="UPLOADED_DOCUMENTS"
                         actions={<Button size='sm'
