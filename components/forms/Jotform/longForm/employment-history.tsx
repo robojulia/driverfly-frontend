@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "../../../../styles/Jotform.module.css";
+import styles from "../../../../styles/jotform.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
@@ -11,11 +11,14 @@ import BaseCheck from "../../base-check";
 import { States } from "../../../../enums/users/us-states.enum";
 import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferences.enum";
 import { EmploymentHistoryDto } from "../../../../models/jot-form/long-form/employment-history.dto";
-export interface EmploymentHistoryProps {
-  onNextClick: (values?: any) => void;
-  onBackClick: () => void;
+import { PageProps } from "../../../../types/jotform/page-props.type";
+
+export interface EmploymentHistoryProps extends PageProps {
+  // onNextClick: (values?: any) => void;
+  // onBackClick: () => void;
   applicant: any;
 }
+
 export function EmploymentHistory(props: EmploymentHistoryProps) {
   useEffect(() => {
     if (props.applicant && !form.dirty) form.setValues(props.applicant);

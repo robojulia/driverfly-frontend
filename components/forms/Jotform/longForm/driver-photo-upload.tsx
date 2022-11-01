@@ -5,6 +5,7 @@ import { Button, Col, Row } from "react-bootstrap";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import FileInput from "../../file-input";
+import { PageProps } from "../../../../types/jotform/page-props.type";
 
 // export interface PhotoUploadprops{
 //     onNextClick: (any) => void;
@@ -57,9 +58,9 @@ import FileInput from "../../file-input";
 //         </>
 //     )
 // }
-export interface PhotoUploadprops {
-  onNextClick: (any) => void;
-  onBackClick: () => void;
+export interface PhotoUploadprops extends PageProps {
+  // onNextClick: (any) => void;
+  // onBackClick: () => void;
   applicant: any;
 }
 

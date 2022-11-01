@@ -11,13 +11,10 @@ import { ContactDto } from "../../../../models/jot-form/short-form/contact.dto";
 import ApplicantApi from "../../../../pages/api/applicant";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import jotformContext from "../../../../context/jotform-context";
+import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface ThirdPageProps {
-  onNextClick: (values: any) => void;
-  onBackClick: () => void;
-}
-
-export function ThirdPage(props: ThirdPageProps) {
+export interface ThirdPageProps extends PageProps {}
+export function  ThirdPage({ onNextClick, onBackClick }: ThirdPageProps) {
   const {
     method: { setApplicant },
     state: { applicant },
@@ -28,25 +25,32 @@ export function ThirdPage(props: ThirdPageProps) {
     initialValues: new ContactDto(),
     validationSchema: ContactDto.yupSchema(),
     onSubmit: (values) => {
-      // setApplicant(values)
-      props.onNextClick(values);
-      
+      onNextClick(values);
     },
     onReset: (values) => {
-      props.onBackClick();
+      onBackClick();
     },
   });
+  const getInfoByPhone = async ({ target: { name, value } }) => {
+    const applicantApi = new ApplicantApi();
+    try {
+      const response = await applicantApi.search({ [name]: value });
+      console.log("response", response[0]);
+      form.setFieldValue(name, value);
+      setApplicant(response[0]);
+    } catch (error) {
+      console.log(error, "Error Occured");
+    }
+  };
   // useEffect(() => {
   //   const { email, phone, zip_code, options } = applicant;
-  //   form.setValues({ email, phone, zip_code, options });
-  // }, []);
-  const getInfoByPhone = ({ target: { name, value } }) => {
-    const applicantApi = new ApplicantApi();
-    const response = applicantApi.search({ [name]: value });
-    form.setFieldValue(name, value);
-    setApplicant(response[0]);
-    console.log("response", response);
-  };
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   return (
     <>
       <Form

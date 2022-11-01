@@ -12,7 +12,7 @@ export class BackgroundInfoDto {
   static yupSchema() {
     return yup.object({
       birthdate: yup
-        .date()
+        .date().required()
         .typeError("INVALID_DATE")
         .max(moment().endOf("day").subtract(18, "years"), "TOO YOUNG TO DRIVE"),
       address_line_1: yup.string().required().nullable(),

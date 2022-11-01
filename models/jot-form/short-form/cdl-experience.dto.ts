@@ -2,7 +2,7 @@ import * as yup from "yup";
 import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum";
 
 export class CdlDto {
-  license_type: null;
+  license_type: string;
   years_cdl_experience: number;
   is_owner_operator_question: boolean = false;
 

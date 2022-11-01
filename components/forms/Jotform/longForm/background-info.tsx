@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import styles from "../../../../styles/Jotform.module.css";
+import styles from "../../../../styles/jotform.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
@@ -9,10 +9,11 @@ import BaseSelect from "../../base-select";
 import moment from "moment";
 import { States } from "../../../../enums/users/us-states.enum";
 import { BackgroundInfoDto } from "../../../../models/jot-form/long-form/background-info.dto";
+import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface BackgroundInfoProps {
-  onNextClick: (any) => void;
-  onBackClick: () => void;
+export interface BackgroundInfoProps extends PageProps {
+  // onNextClick: (any) => void;
+  // onBackClick: () => void;
   applicant: any;
 }
 

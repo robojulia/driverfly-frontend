@@ -1,19 +1,18 @@
 import React from "react";
-import styles from "../../../../styles/Jotform.module.css";
+import styles from "../../../../styles/jotform.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
+import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface FirstPageProps {
-  onNextClick: () => void;
-}
+export interface FirstPageProps extends PageProps {}
 
-export function FirstPage(props: FirstPageProps) {
+export function FirstPage({ onNextClick }: FirstPageProps) {
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: {},
     onSubmit: (values) => {
-      props.onNextClick();
+      onNextClick();
     },
   });
 
