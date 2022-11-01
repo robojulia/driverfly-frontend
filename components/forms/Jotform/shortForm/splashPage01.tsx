@@ -3,9 +3,10 @@ import styles from "../../../../styles/Jotform.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
+import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface FirstPageProps {
-  onNextClick: () => void;
+export interface FirstPageProps extends PageProps {
+  // onNextClick: () => void;
 }
 
 export function FirstPage(props: FirstPageProps) {

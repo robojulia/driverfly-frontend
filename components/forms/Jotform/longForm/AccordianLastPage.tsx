@@ -8,10 +8,11 @@ import BaseInput from "../../base-input";
 import BaseSelect from "../../base-select";
 import styles from "../../../../styles/jotform.module.css";
 import Accordion from "react-bootstrap/Accordion";
+import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface BackgroundInfoProps {
-//   onNextClick: (any) => void;
-//   onBackClick: () => void;
+export interface BackgroundInfoProps extends PageProps {
+  //   onNextClick: (any) => void;
+  //   onBackClick: () => void;
 }
 
 export function AccordianLastPage() {

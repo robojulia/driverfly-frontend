@@ -6,10 +6,11 @@ import { useFormik } from "formik";
 import BaseInput from "../../base-input";
 import BaseInputPhone from "../../base-input-phone";
 import { EmergencyContactDto } from "../../../../models/jot-form/long-form/emergency-contact.dto";
+import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface EmergencyContactProps {
-  onNextClick: (any) => void;
-  onBackClick: () => void;
+export interface EmergencyContactProps extends PageProps {
+  // onNextClick: (any) => void;
+  // onBackClick: () => void;
   applicant: any;
 }
 
@@ -36,35 +37,35 @@ export function EmergencyContact(props: EmergencyContactProps) {
           Emergency Contact Details
         </h4>
 
-                <Row className={styles.align__text_left}>
-                    <BaseInput
-                        className='col-6 mt-3'
-                        name="EMERGENCY_CONTACT"
-                        placeholder="Emergency Contact"
-                        label="Emergency Contact Name"
-                        formik={ form }
-                    />
-                </Row>
-                <Row className={styles.align__text_left}>
-                    <Col>
-                        <BaseInputPhone
-                            className='col-10 mt-3'
-                            name="phone"
-                            placeholder="Phone Number"
-                            label="Phone Number"
-                            formik={ form }
-                        /> 
-                    </Col>
-                    <Col>
-                    <BaseInput
-                        className='col-6 mt-3'
-                        name="RELATIONSHIP"
-                        placeholder="Relationship"
-                        label="Relationship"
-                        formik={ form }
-                    />
-                    </Col>
-                </Row>    
+        <Row className={styles.align__text_left}>
+          <BaseInput
+            className='col-6 mt-3'
+            name="EMERGENCY_CONTACT"
+            placeholder="Emergency Contact"
+            label="Emergency Contact Name"
+            formik={form}
+          />
+        </Row>
+        <Row className={styles.align__text_left}>
+          <Col>
+            <BaseInputPhone
+              className='col-10 mt-3'
+              name="phone"
+              placeholder="Phone Number"
+              label="Phone Number"
+              formik={form}
+            />
+          </Col>
+          <Col>
+            <BaseInput
+              className='col-6 mt-3'
+              name="RELATIONSHIP"
+              placeholder="Relationship"
+              label="Relationship"
+              formik={form}
+            />
+          </Col>
+        </Row>
 
         <Row className="mt-4">
           <Col>

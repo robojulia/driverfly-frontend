@@ -6,18 +6,19 @@ import * as yup from "yup";
 import BaseTextArea from '../../base-text-area';
 import BaseCheck from '../../base-check';
 import styles from "../../../../styles/jotform.module.css";
+import { PageProps } from '../../../../types/jotform/page-props.type';
 
-export interface PastSuspensionsProps{
-    onNextClick: (values?: any) => void;
-    onBackClick: () => void;
+export interface PastSuspensionsProps extends PageProps {
+    // onNextClick: (values?: any) => void;
+    // onBackClick: () => void;
     applicant: any;
 }
 
-export function PastSuspensions(props: PastSuspensionsProps){
+export function PastSuspensions(props: PastSuspensionsProps) {
     useEffect(() => {
         if (props.applicant && !form.dirty) form.setValues(props.applicant);
-      }, [props.applicant]);
-    const{ t } = useTranslation();
+    }, [props.applicant]);
+    const { t } = useTranslation();
     const form = useFormik({
         initialValues: {
             license_suspension: false,
@@ -25,12 +26,12 @@ export function PastSuspensions(props: PastSuspensionsProps){
         },
         validationSchema: yup.object({
             explanations: yup
-            .string()
-            .when("license_suspension", {
-                is: (v) => !!v,
-                then: yup.string().required().nullable(),
-                otherwise: yup.string().optional().nullable()
-            })
+                .string()
+                .when("license_suspension", {
+                    is: (v) => !!v,
+                    then: yup.string().required().nullable(),
+                    otherwise: yup.string().optional().nullable()
+                })
         }),
         onSubmit: (values) => {
             props.onNextClick(values);
@@ -41,25 +42,25 @@ export function PastSuspensions(props: PastSuspensionsProps){
     });
 
 
-    return(
-        <Form onSubmit={ form.handleSubmit }
-            onReset={ form.handleReset }>
-             <Row className={ styles.paragraph__left }>
+    return (
+        <Form onSubmit={form.handleSubmit}
+            onReset={form.handleReset}>
+            <Row className={styles.paragraph__left}>
                 <BaseCheck
-                        className="float-left col-6"
-                        name="license_suspension"
-                        label="Have any of your license, permit or privileges to operate a CMV ever been suspended,
+                    className="float-left col-6"
+                    name="license_suspension"
+                    label="Have any of your license, permit or privileges to operate a CMV ever been suspended,
                          revoked, or denied for any reason?"
-                        formik={form}
-                    />
-            </Row>   
+                    formik={form}
+                />
+            </Row>
             {form.values.license_suspension ? (
                 <Row className={styles.align__text_left}>
                     <BaseTextArea
                         className='float-left mt-3'
                         name="explanations"
                         label="Please explain past suspensions/revocations/denials:"
-                        formik={ form }
+                        formik={form}
                     />
                 </Row>
             ) : null}

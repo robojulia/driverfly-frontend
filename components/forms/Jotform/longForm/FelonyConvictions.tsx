@@ -7,10 +7,11 @@ import BaseTextArea from "../../base-text-area";
 import BaseCheck from "../../base-check";
 import styles from "../../../../styles/jotform.module.css";
 import { FelonyConvictionDto } from "../../../../models/jot-form/long-form/felony-conviction.dto";
+import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface FelonyConvictionProps {
-  onNextClick: (any) => void;
-  onBackClick: () => void;
+export interface FelonyConvictionProps extends PageProps {
+  // onNextClick: (any) => void;
+  // onBackClick: () => void;
   applicant: any;
 }
 

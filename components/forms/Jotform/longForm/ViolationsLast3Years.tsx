@@ -4,16 +4,18 @@ import { Button, Col, Row, Form } from 'react-bootstrap'
 import { useTranslation } from '../../../../hooks/use-translation'
 import * as yup from "yup";
 import BaseInput from '../../base-input';
+import { PageProps } from '../../../../types/jotform/page-props.type';
 
-export interface ViolationsLast3YearsProps{
-    onNextClick: (any) => void;
-    onBackClick: () => void;
+export interface ViolationsLast3YearsProps extends PageProps {
+    // onNextClick: (any) => void;
+    // onBackClick: () => void;
     applicant: any;
 }
+
 export function ViolationsLast3Years(props: ViolationsLast3YearsProps) {
     useEffect(() => {
         if (props.applicant && !form.dirty) form.setValues(props.applicant);
-      }, [props.applicant]);
+    }, [props.applicant]);
     const { t } = useTranslation();
     const form = useFormik({
         initialValues: {
@@ -53,21 +55,21 @@ export function ViolationsLast3Years(props: ViolationsLast3YearsProps) {
             <Row>
                 <Col>
                     <BaseInput
-                    className="col-6 mt-3"
-                    name="violations_last_3_years"
-                    label="How many moving violations have you had in the past 3 years?"
-                    formik={ form }
+                        className="col-6 mt-3"
+                        name="violations_last_3_years"
+                        label="How many moving violations have you had in the past 3 years?"
+                        formik={form}
                     />
                 </Col>
             </Row>
             <Row>
                 <Col>
                     <BaseInput
-                        className = 'col-12 mt-3'
+                        className='col-12 mt-3'
                         name='date_of_violation_1'
                         label="Date of Violation"
                         type="date"
-                        formik={ form }
+                        formik={form}
                     />
                 </Col>
                 <Col>
@@ -75,34 +77,34 @@ export function ViolationsLast3Years(props: ViolationsLast3YearsProps) {
                         className='col-12 mt-3'
                         name='location_1'
                         label="Location"
-                        formik={ form }
+                        formik={form}
                     />
                 </Col>
                 <Col>
                     <BaseInput
-                        className= 'col-12 mt-3'
+                        className='col-12 mt-3'
                         name='charge_1'
                         label="Charge"
-                        formik={ form }
+                        formik={form}
                     />
                 </Col>
                 <Col>
                     <BaseInput
-                        className= 'col-12 mt-3'
+                        className='col-12 mt-3'
                         name='penalty_1'
                         label="Penalty"
-                        formik={ form }
+                        formik={form}
                     />
                 </Col>
             </Row>
             <Row>
                 <Col>
                     <BaseInput
-                        className = 'col-12 mt-3'
+                        className='col-12 mt-3'
                         name='date_of_violation_2'
                         label="Date of Violation"
                         type="date"
-                        formik={ form }
+                        formik={form}
                     />
                 </Col>
                 <Col>
@@ -110,23 +112,23 @@ export function ViolationsLast3Years(props: ViolationsLast3YearsProps) {
                         className='col-12 mt-3'
                         name='location_2'
                         label="Location"
-                        formik={ form }
+                        formik={form}
                     />
                 </Col>
                 <Col>
                     <BaseInput
-                        className= 'col-12 mt-3'
+                        className='col-12 mt-3'
                         name='charge_2'
                         label="Charge"
-                        formik={ form }
+                        formik={form}
                     />
                 </Col>
                 <Col>
                     <BaseInput
-                        className= 'col-12 mt-3'
+                        className='col-12 mt-3'
                         name='penalty_2'
                         label="Penalty"
-                        formik={ form }
+                        formik={form}
                     />
                 </Col>
             </Row>
@@ -134,11 +136,11 @@ export function ViolationsLast3Years(props: ViolationsLast3YearsProps) {
             <Row>
                 <Col>
                     <BaseInput
-                        className = 'col-12 mt-3'
+                        className='col-12 mt-3'
                         name='date_of_violation_3'
                         label="Date of Violation"
                         type="date"
-                        formik={ form }
+                        formik={form}
                     />
                 </Col>
                 <Col>
@@ -146,23 +148,23 @@ export function ViolationsLast3Years(props: ViolationsLast3YearsProps) {
                         className='col-12 mt-3'
                         name='location_3'
                         label="Location"
-                        formik={ form }
+                        formik={form}
                     />
                 </Col>
                 <Col>
                     <BaseInput
-                        className= 'col-12 mt-3'
+                        className='col-12 mt-3'
                         name='charge_3'
                         label="Charge"
-                        formik={ form }
+                        formik={form}
                     />
                 </Col>
                 <Col>
                     <BaseInput
-                        className= 'col-12 mt-3'
+                        className='col-12 mt-3'
                         name='penalty_3'
                         label="Penalty"
-                        formik={ form }
+                        formik={form}
                     />
                 </Col>
             </Row>

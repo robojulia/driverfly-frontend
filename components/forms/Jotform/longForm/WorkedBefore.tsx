@@ -5,16 +5,18 @@ import { useTranslation } from '../../../../hooks/use-translation'
 import * as yup from "yup";
 import BaseCheck from '../../base-check';
 import BaseInput from '../../base-input';
+import { PageProps } from '../../../../types/jotform/page-props.type';
 
-export interface WorkedBeforeProps {
-    onNextClick: (any) => void;
-    onBackClick: () => void;
+export interface WorkedBeforeProps extends PageProps {
+    // onNextClick: (any) => void;
+    // onBackClick: () => void;
     applicant: any;
 }
+
 export function WorkedBefore(props: WorkedBeforeProps) {
     useEffect(() => {
         if (props.applicant && !form.dirty) form.setValues(props.applicant);
-      }, [props.applicant]);
+    }, [props.applicant]);
     const { t } = useTranslation();
     const form = useFormik({
         initialValues: {
@@ -25,29 +27,29 @@ export function WorkedBefore(props: WorkedBeforeProps) {
 
         },
         validationSchema: yup.object({
-            worked_before:yup
-            .boolean()
-            .when("applied_before", {
-                is: (v) => !!v,
-                then:yup.boolean().required().nullable(),
-                otherwise: yup.boolean().optional().nullable(),
-            }),
-            from_date:yup
-            .date()
-            .when("worked_before",{
-                is: (v) => !!v,
-                then: yup.date().required().nullable(),
-                otherwise: yup.date().optional().nullable(),
-            }),
-            to_date:yup
-            .date()
-            .when("worked_before",{
-                is: (v) => !!v,
-                then: yup.date().required().nullable(),
-                otherwise: yup.date().optional().nullable(),
-            })
+            worked_before: yup
+                .boolean()
+                .when("applied_before", {
+                    is: (v) => !!v,
+                    then: yup.boolean().required().nullable(),
+                    otherwise: yup.boolean().optional().nullable(),
+                }),
+            from_date: yup
+                .date()
+                .when("worked_before", {
+                    is: (v) => !!v,
+                    then: yup.date().required().nullable(),
+                    otherwise: yup.date().optional().nullable(),
+                }),
+            to_date: yup
+                .date()
+                .when("worked_before", {
+                    is: (v) => !!v,
+                    then: yup.date().required().nullable(),
+                    otherwise: yup.date().optional().nullable(),
+                })
         }),
-        
+
         onSubmit: (values) => {
             props.onNextClick(values);
         },
@@ -91,8 +93,8 @@ export function WorkedBefore(props: WorkedBeforeProps) {
                                         name='from_date'
                                         placeholder="DATE"
                                         label="From"
-                                        formik={ form }
-                                    /> 
+                                        formik={form}
+                                    />
                                 </Col>
                                 <Col>
                                     <BaseInput
@@ -102,8 +104,8 @@ export function WorkedBefore(props: WorkedBeforeProps) {
                                         name='to_date'
                                         placeholder="DATE"
                                         label="To"
-                                        formik={ form }
-                                    /> 
+                                        formik={form}
+                                    />
                                 </Col>
                             </Row>
                         </>

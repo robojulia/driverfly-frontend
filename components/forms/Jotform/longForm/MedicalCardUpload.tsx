@@ -5,10 +5,11 @@ import BaseInput from "../../base-input";
 import { Button, Col, Row } from "react-bootstrap";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
+import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface MedicalCardUploadprops {
-  onNextClick: (any) => void;
-  onBackClick: () => void;
+export interface MedicalCardUploadprops extends PageProps {
+  // onNextClick: (any) => void;
+  // onBackClick: () => void;
   applicant: any;
 }
 
@@ -29,31 +30,31 @@ export function MedicalCardUpload(props: MedicalCardUploadprops) {
     },
   });
 
-    return(
-        <>
-            <Form
-                onSubmit={ form.handleSubmit }
-                onReset={ form.handleReset }>
-                <Row>
-                    <h3 className='mb-4'>Medical Card Upload</h3>
-                </Row>
-                <Row className={styles.align__text_left}>
-                    <BaseInput
-                        className='col-5 mt-1'
-                        type="file"
-                        name='photo'
-                        placeholder='Photo'
-                        label="Upload Your Medical Card"
-                        formik={ form }
-                    />
-                </Row>
-                <Row className="mt-4">
-                    <Col>
-                        <Button className="float-right"
-                        type="reset">
-                            {t("BACK")}
-                        </Button>
-                    </Col>
+  return (
+    <>
+      <Form
+        onSubmit={form.handleSubmit}
+        onReset={form.handleReset}>
+        <Row>
+          <h3 className='mb-4'>Medical Card Upload</h3>
+        </Row>
+        <Row className={styles.align__text_left}>
+          <BaseInput
+            className='col-5 mt-1'
+            type="file"
+            name='photo'
+            placeholder='Photo'
+            label="Upload Your Medical Card"
+            formik={form}
+          />
+        </Row>
+        <Row className="mt-4">
+          <Col>
+            <Button className="float-right"
+              type="reset">
+              {t("BACK")}
+            </Button>
+          </Col>
 
           <Col>
             <Button className="float-left" type="submit">

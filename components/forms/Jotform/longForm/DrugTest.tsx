@@ -7,10 +7,11 @@ import BaseTextArea from "../../base-text-area";
 import BaseCheck from "../../base-check";
 import styles from "../../../../styles/jotform.module.css";
 import { DrugTestDto } from "../../../../models/jot-form/long-form/drug-test.dto";
+import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface DrugTestProps {
-  onNextClick: (any) => void;
-  onBackClick: () => void;
+export interface DrugTestProps extends PageProps {
+  // onNextClick: (any) => void;
+  // onBackClick: () => void;
   applicant: any;
 }
 

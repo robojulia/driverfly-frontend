@@ -8,11 +8,12 @@ import BaseInputPhone from "../../base-input-phone";
 import BaseSelect from "../../base-select";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
+import { PageProps } from "../../../../types/jotform/page-props.type";
 
 
-export interface HighestLevelEducationProps {
-  onNextClick: (any) => void;
-  onBackClick: () => void;
+export interface HighestLevelEducationProps extends PageProps {
+  // onNextClick: (any) => void;
+  // onBackClick: () => void;
   applicant: any;
 }
 
