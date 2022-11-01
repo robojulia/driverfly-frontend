@@ -13,12 +13,8 @@ import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import jotformContext from "../../../../context/jotform-context";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface ThirdPageProps extends PageProps {
-  // onNextClick: (values: any) => void;
-  // onBackClick: () => void;
-}
-//code merged
-export function ThirdPage(props: ThirdPageProps) {
+export interface ThirdPageProps extends PageProps {}
+export function ThirdPage({ onNextClick, onBackClick }: ThirdPageProps) {
   const {
     method: { setApplicant },
     state: { applicant },
@@ -30,11 +26,10 @@ export function ThirdPage(props: ThirdPageProps) {
     validationSchema: ContactDto.yupSchema(),
     onSubmit: (values) => {
       // setApplicant(values)
-      props.onNextClick(values);
-
+      onNextClick(values);
     },
     onReset: (values) => {
-      props.onBackClick();
+      onBackClick();
     },
   });
   // useEffect(() => {

@@ -5,16 +5,14 @@ import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface FirstPageProps extends PageProps {
-  // onNextClick: () => void;
-}
+export interface FirstPageProps extends PageProps {}
 
-export function FirstPage(props: FirstPageProps) {
+export function FirstPage({ onNextClick }: FirstPageProps) {
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: {},
     onSubmit: (values) => {
-      props.onNextClick();
+      onNextClick();
     },
   });
 

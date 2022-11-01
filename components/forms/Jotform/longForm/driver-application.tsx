@@ -9,16 +9,16 @@ import SignaturePad from "react-signature-canvas";
 import SignatureCanvas from "react-signature-canvas";
 import { DriverApplicationDto } from "../../../../models/jot-form/long-form/driver-application.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 
 export interface DriverApplicationProps extends PageProps {
-  // onNextClick: (values: any) => void;
   applicant: any;
 }
 
-export function DriverApplication(props: DriverApplicationProps) {
+export function DriverApplication({onNextClick, onBackClick, applicant}: DriverApplicationProps) {
   useEffect(() => {
-    if (props.applicant && !form.dirty) form.setValues(props.applicant);
-  }, [props.applicant]);
+    if (applicant && !form.dirty) form.setValues(applicant);
+  }, [applicant]);
 
   const { t } = useTranslation();
   let padRef = React.useRef<SignatureCanvas>(null);
@@ -30,10 +30,9 @@ export function DriverApplication(props: DriverApplicationProps) {
     initialValues: new DriverApplicationDto(),
     validationSchema: DriverApplicationDto.yupSchema(),
     onSubmit: (values) => {
-      props.onNextClick(values);
+      onNextClick(values);
     },
   });
-  console.log("formmmmmmmm", props.onNextClick);
   return (
     <>
       <Form onSubmit={form.handleSubmit}>

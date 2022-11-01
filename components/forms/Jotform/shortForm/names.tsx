@@ -7,21 +7,18 @@ import { useTranslation } from "../../../../hooks/use-translation";
 import { NamesDto } from "../../../../models/jot-form/short-form/names";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface SecondPageProps extends PageProps {
-  // onNextClick: (values: any) => void;
-  // onBackClick: () => void;
-}
+export interface SecondPageProps extends PageProps {}
 
-export function SecondPage(props: SecondPageProps) {
+export function SecondPage({ onBackClick, onNextClick }: SecondPageProps) {
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new NamesDto(),
     validationSchema: NamesDto.yupSchema(),
     onSubmit: (values) => {
-      props.onNextClick(values);
+      onNextClick(values);
     },
     onReset: (values) => {
-      props.onBackClick();
+      onBackClick();
     },
   });
   return (
