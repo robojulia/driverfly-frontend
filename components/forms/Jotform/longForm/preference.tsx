@@ -11,7 +11,7 @@ import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferenc
 import BaseInput from "../../base-input";
 import BaseSelect from "../../base-select";
 import { PageProps } from "../../../../types/jotform/page-props.type";
-
+import * as yup from "yup";
 export interface PreferenceProps extends PageProps {
   // onNextClick: (any) => void;
   // onBackClick: () => void;
@@ -25,9 +25,13 @@ export function Preferences(props: PreferenceProps) {
       routes_open_to: null,
       other_requirements: null,
     },
-  //   validationSchema: yup.object({
-  //     routes_open_to: yup.string().required().nullable()
-  // }),
+    validationSchema: yup.object({
+      routes_open_to: yup
+        .array()
+        .min(1)
+        .typeError("Choose atleast one!")
+        .required(),
+    }),
     onSubmit: (values) => {
       props.onNextClick(values);
     },

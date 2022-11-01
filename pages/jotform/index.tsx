@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styles from "../../styles/Jotform.module.css";
+import styles from "../../styles/jotform.module.css";
 import { FirstPage } from "../../components/forms/jotform/shortForm/splash-page";
 import { SecondPage } from "../../components/forms/jotform/shortForm/names";
 import { ThirdPage } from "../../components/forms/jotform/shortForm/basic-info";
@@ -69,7 +69,6 @@ export default function jotFormLongForm() {
         //   console.log(error);
         // }
     }
-
     const getPageAccordingToStep = (step: number, applicant: ApplicantEntity) => {
         return {
             0: pageOne(onNextClick),
@@ -296,7 +295,7 @@ const pageTwentyOne = (onNextClick: PageProps["onNextClick"], onBackClick: PageP
         <AccidentsLast5Years
             onNextClick={onNextClick}
             onBackClick={onBackClick}
-            applicant={applicant}
+            // applicant={applicant}
         />
     );
 };
@@ -354,9 +353,9 @@ const pageTwentySix = (onNextClick: PageProps["onNextClick"], onBackClick: PageP
 const pageTwentySeven = (onNextClick: PageProps["onNextClick"], onBackClick: PageProps["onBackClick"], applicant: ApplicantEntity) => {
     return (
         <AccordianLastPage
-        // onNextClick={onNextClick}
-        // onBackClick={onBackClick}
-        // applicant={applicant}
+        onNextClick={onNextClick}
+        onBackClick={onBackClick}
+        applicant={applicant}
         />
     );
 };

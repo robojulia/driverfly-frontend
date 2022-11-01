@@ -21,7 +21,6 @@ export interface DrivingExpProps extends PageProps {
   applicant: any;
 }
 export function DrivingExp(props: DrivingExpProps) {
-  const [count, setCount] = useState(0);
 
   useEffect(() => {
     if (props.applicant && !form.dirty) form.setValues(props.applicant);
@@ -90,7 +89,7 @@ export function DrivingExp(props: DrivingExpProps) {
         </Col>
       </Row>
       <Row>
-      {/* <Col>
+      <Col>
         <BaseInput
           name="input"
           label="child_component"
@@ -98,15 +97,25 @@ export function DrivingExp(props: DrivingExpProps) {
         />
       </Col>
         <Col>
-          <Button className="float-right" onClick={() => setCount(count + 1)}>
+          {/* <Button className="float-right" onClick={() => setCount(count + 1)}>
             {t("ADD")}
-          </Button>
+          </Button> */}
+          {/* <ViewCard
+            title="Please list any other states you've had a CDL in for the past 5 years:"
+            actions={<Button size='sm' onClick={() => form.setValues({
+              ...form.values,
+              equipment_experience: []
+            })}}
+          >
+
+          </ViewCard> */}
+          
         </Col>
         <Col>
-          <Button className="float-right" onClick={() => setCount(count - 1)}>
+          {/* <Button className="float-right" onClick={() => setCount(count - 1)}>
             {t("DELETE")}
-          </Button>
-        </Col> */}
+          </Button> */}
+        </Col>
         <Col>
           <Button className="float-right" type="reset">
             {t("BACK")}

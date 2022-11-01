@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import styles from "../../../../styles/jotform.module.css";
 import { Button, Col, Row } from "react-bootstrap";
 import BaseInput from "../../base-input";
@@ -6,10 +6,14 @@ import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { NamesDto } from "../../../../models/jot-form/short-form/names";
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import jotformContext from "../../../../context/jotform-context";
 
 export interface SecondPageProps extends PageProps {}
 
 export function SecondPage({ onBackClick, onNextClick }: SecondPageProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new NamesDto(),
@@ -21,6 +25,15 @@ export function SecondPage({ onBackClick, onNextClick }: SecondPageProps) {
       onBackClick();
     },
   });
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   return (
     <>
       <h4 className={styles.align__text_left}>Name</h4>

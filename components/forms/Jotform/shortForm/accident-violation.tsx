@@ -1,16 +1,20 @@
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
-import React from "react";
+import React, { useContext } from "react";
 import { Form, Button, Col, Row, Table } from "react-bootstrap";
 import BaseInput from "../../base-input";
 import BaseCheck from "../../base-check";
 import { AcciedentViolationDto } from "../../../../models/jot-form/short-form/accident-violation.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import jotformContext from "../../../../context/jotform-context";
 
 export interface FifthPageProps extends PageProps {}
 
 export function FifthPage({ onNextClick, onBackClick }: FifthPageProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new AcciedentViolationDto(),
@@ -22,6 +26,15 @@ export function FifthPage({ onNextClick, onBackClick }: FifthPageProps) {
       onBackClick();
     },
   });
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   return (
     <>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>

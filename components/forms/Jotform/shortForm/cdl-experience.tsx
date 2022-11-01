@@ -7,35 +7,22 @@ import BaseSelect from "../../base-select";
 import BaseCheck from "../../base-check";
 import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import { CdlDto } from "../../../../models/jot-form/short-form/cdl-experience.dto";
+import jotformContext from "../../../../context/jotform-context";
+import { useContext } from "react";
 
 export interface FourthPageProps extends PageProps {}
 
 export function FourthPage({ onNextClick, onBackClick }: FourthPageProps) {
+  const {
+    method: { setApplicant },
+    state: { applicant },
+  } = useContext(jotformContext);
   const { t } = useTranslation();
 
   const form = useFormik({
-    initialValues: {
-      license_type: null,
-      years_cdl_experience: null,
-      is_owner_operator_question: false,
-    },
-    validationSchema: yup.object({
-      license_type: yup
-        .string()
-        .when({
-          is: (value) => !!value,
-          then: yup.string().oneOf(Object.values(DriverLicenseType)),
-        })
-        .nullable(),
-      years_cdl_experience: yup
-        .number()
-        .when("license_type", {
-          is: (value) => !!value,
-          then: yup.number().moreThan(0).required(),
-        })
-        .nullable(),
-      is_owner_operator_question: yup.boolean().nullable(),
-    }),
+    initialValues: new CdlDto(),
+    validationSchema: CdlDto.yupSchema(),
     onSubmit: (values) => {
       onNextClick(values);
     },
@@ -43,7 +30,15 @@ export function FourthPage({ onNextClick, onBackClick }: FourthPageProps) {
       onBackClick();
     },
   });
-
+ // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   function onLicenseTypeChange(e: React.ChangeEvent<HTMLSelectElement>) {
     const licenseType = e.target.value;
     switch (licenseType) {

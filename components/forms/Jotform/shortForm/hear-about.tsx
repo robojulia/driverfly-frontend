@@ -1,28 +1,38 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import BaseSelect from "../../base-select";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { HearAboutUsDto } from "../../../../models/jot-form/short-form/hear-about.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import jotformContext from "../../../../context/jotform-context";
 
-export interface SixthPageProps extends PageProps {
-  // onNextClick: (any) => void;
-  // onBackClick: () => void;
-}
+export interface SixthPageProps extends PageProps {}
 
-export function SixthPage(props: SixthPageProps) {
+export function SixthPage({ onNextClick, onBackClick }: SixthPageProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new HearAboutUsDto(),
     validationSchema: HearAboutUsDto.yupSchema(),
     onSubmit: (values) => {
-      props.onNextClick(values);
+      onNextClick(values);
     },
     onReset: (values) => {
-      props.onBackClick();
+      onBackClick();
     },
   });
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   return (
     <>
       <form onSubmit={form.handleSubmit} onReset={form.handleReset}>

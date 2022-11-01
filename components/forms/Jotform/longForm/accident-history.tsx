@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import * as yup from "yup";
@@ -8,24 +8,31 @@ import BaseInput from "../../base-input";
 import styles from "../../../../styles/jotform.module.css";
 import { AccidentLastFiveYearsDto } from "../../../../models/jot-form/long-form/accident-last-5-years.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import jotformContext from "../../../../context/jotform-context";
 
-export interface AccidentsLast5YearsProps extends PageProps {
-  applicant: any;
-}
+export interface AccidentsLast5YearsProps extends PageProps {}
 
-export function AccidentsLast5Years({onNextClick, onBackClick, applicant}: AccidentsLast5YearsProps) {
-  useEffect(() => {
-    
-    if (applicant && !form.dirty) form.setValues(applicant);
-  }, [applicant]);
+export function AccidentsLast5Years({
+  onNextClick,
+  onBackClick,
+}: AccidentsLast5YearsProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
+
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: AccidentLastFiveYearsDto,
-    validationSchema: yup.object({
-      // applied_before
-      // from_date: yup.date().required(),
-      // to_date: yup.date().required()
-    }),
+    initialValues: new AccidentLastFiveYearsDto(),
+    validationSchema: AccidentLastFiveYearsDto.yupSchema(),
     onSubmit: (values) => {
       onNextClick(values);
     },
