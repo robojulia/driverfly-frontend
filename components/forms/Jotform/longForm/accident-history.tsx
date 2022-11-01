@@ -42,14 +42,14 @@ export function AccidentsLast5Years({
   });
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <h6>Tell us more about your accidents(even if not at fault)</h6>
+      <h6>{t('MORE_ABOUT_ACCIDENTS')}</h6>
       <Row>
         <Col>
           <BaseInput
             className="col-6 mt-3"
             name="accidents_within_last_5_years"
             label="accidents_last_5_years"
-            placeholder="Enter number"
+            placeholder="PLACEHOLDER_FOR_DIGITS"
             formik={form}
           />
         </Col>
@@ -59,7 +59,7 @@ export function AccidentsLast5Years({
           <BaseInput
             className="col-12 mt-3"
             name="date_of_accident_1"
-            label="Date of Accident"
+            label="DATE"
             type="date"
             formik={form}
           />

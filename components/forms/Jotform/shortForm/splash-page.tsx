@@ -19,11 +19,9 @@ export function FirstPage({ onNextClick }: FirstPageProps) {
   return (
     <>
       <Form onSubmit={form.handleSubmit}>
-        <h1 className={styles.carrierName}>Suvineet Trucking</h1>
-        <h4 className={styles.Application}>Driver Application</h4>
-        <h6 className={styles.paragraph}>
-          Welcome we have been waiting for you!
-        </h6>
+        <h1 className={styles.carrierName}>{t("NAUTILIUS_TRUCKING")}</h1>
+        <h4 className={styles.Application}>{t("DRIVER_APPLICATION")}</h4>
+        <h6 className={styles.paragraph}>{t("JOTFORM_WELCOME")}</h6>
         <Row className="mt-5">
           <Col>
             <Button type="submit">{t("NEXT")}</Button>

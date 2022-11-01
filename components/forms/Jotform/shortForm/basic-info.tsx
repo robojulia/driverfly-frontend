@@ -63,8 +63,8 @@ export function  ThirdPage({ onNextClick, onBackClick }: ThirdPageProps) {
             className="col-6"
             required
             name="email"
-            label="E-mail"
-            placeholder="EMAIL"
+            label="email"
+            placeholder="email"
             formik={form}
           />
         </Row>
@@ -73,8 +73,7 @@ export function  ThirdPage({ onNextClick, onBackClick }: ThirdPageProps) {
             className="col-6"
             required
             name="phone"
-            label="Phone Number"
-            placeholder="PHONE_NUMBER"
+            label="phone"
             onChange={getInfoByPhone}
             formik={form}
           />
@@ -84,8 +83,8 @@ export function  ThirdPage({ onNextClick, onBackClick }: ThirdPageProps) {
             className="col-6"
             required
             name="zip_code"
-            label="Zip Code"
-            placeholder="ZIP_CODE"
+            label="zip_code"
+            placeholder="zip_code"
             formik={form}
           />
         </Row>
@@ -95,8 +94,8 @@ export function  ThirdPage({ onNextClick, onBackClick }: ThirdPageProps) {
             required
             options={["Yes", "No"]}
             name="options"
-            placeholder="Click to choose"
-            label="I authorize Nautilus Trucking and any applicable third parties associated with Nautilus Trucking the ability to send me SMS and email communications regarding job availabilities and other relevant resources."
+            placeholder="CHOOSE"
+            label="SMS_EMAIL_AUTHORIZATION_NAUTILIUS"
             formik={form}
           />
         </Row>

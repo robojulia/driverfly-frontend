@@ -14,7 +14,7 @@ export function SeventhPage({ onNextClick, onBackClick }: SeventhPageProps) {
   } = useContext(jotformContext);
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: null,
+    initialValues: {},
     onSubmit: (values) => {
       onNextClick(values);
     },
@@ -33,13 +33,12 @@ export function SeventhPage({ onNextClick, onBackClick }: SeventhPageProps) {
       <form onSubmit={form.handleSubmit}>
         <Row>
           <h4 className={styles.carrierName__smaller}>
-            Thanks for your submission to Nautilus Trucking.
+            {t("THANKS_BY_NAUTILIUS_TRUCKING")}
           </h4>
         </Row>
         <Row>
           <h6 className={`${styles.paragraph} ${styles.margin__top}`}>
-            Please note that Nautilus Trucking requires that you have your Class
-            A CDL to be employed here.
+            {t("THANKS_NOTE_BY_NAUTILIUS_TRUCKING")}
           </h6>
         </Row>
         <Row className="mt-3">

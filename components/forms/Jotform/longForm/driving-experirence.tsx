@@ -89,13 +89,6 @@ export function DrivingExp(props: DrivingExpProps) {
         </Col>
       </Row>
       <Row>
-      <Col>
-        <BaseInput
-          name="input"
-          label="child_component"
-          className="mb-3"
-        />
-      </Col>
         <Col>
           {/* <Button className="float-right" onClick={() => setCount(count + 1)}>
             {t("ADD")}
