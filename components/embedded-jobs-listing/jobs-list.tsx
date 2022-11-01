@@ -23,7 +23,7 @@ export default function JobsList() {
 
             <CompanyPhoto className="d-flex mr-4 truck-img" job={job} company={job.company} />
             <div className="media-body">
-              <Link href={`/embeded-jobs/${job.id}/${job.slug}`}>
+              <Link href={`/embedded-jobs/${job.id}/${job.slug}`}>
                 <a className='text-decoration-none '>
                   <h4 className="mt-0 text-blue">
                     {job.title}
