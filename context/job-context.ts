@@ -1,11 +1,14 @@
 import { createContext } from "react";
+import { JobEntity } from "../models/job/job.entity";
+import { JobSearchLocation, SearchJobsDto } from "../models/job/search-jobs-dto";
+import { pagingMetaInitialValues, PagingMetaProps } from "../utils/job-filter";
 
 type authContextType = {
     state: {
-        jobs?: any[],
-        pagingMeta: {},
-        filters?: any,
-        location?: any,
+        jobs?: JobEntity[],
+        pagingMeta: PagingMetaProps,
+        filters?: SearchJobsDto,
+        location?: JobSearchLocation,
         range?: string,
         searchQuery?: string
     },
@@ -17,7 +20,7 @@ type authContextType = {
         setLocation: (e?: any) => void,
         setRange: (e?: any) => void,
         setFiltersByKeyValue: (key?: any, value?: any) => void,
-        applyFilters: () => void,
+        applyFilters: () => Promise<void>,
         handleReset: () => void,
     }
 };
@@ -25,7 +28,7 @@ type authContextType = {
 const jobContext = createContext<authContextType>({
     state: {
         jobs: [],
-        pagingMeta: {},
+        pagingMeta: pagingMetaInitialValues(),
         filters: {},
         location: {},
         range: null,
@@ -39,7 +42,7 @@ const jobContext = createContext<authContextType>({
         setLocation: (e?: any) => { },
         setRange: (e?: any) => { },
         setFiltersByKeyValue: (key?: any, value?: any) => { },
-        applyFilters: () => { },
+        applyFilters: async () => { },
         handleReset: () => { }
     },
 })

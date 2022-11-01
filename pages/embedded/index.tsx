@@ -6,7 +6,6 @@ import JobApi from "../api/job"
 import { JobEntity } from '../../models/job/job.entity'
 import { filtersInitialsValues, pagingMetaInitialValues, PagingMetaProps } from '../../utils/job-filter'
 import { useEffectAsync } from '../../utils/react'
-import { GetServerSidePropsContext } from 'next'
 import { toast } from "react-toastify";
 import { useTranslation } from '../../hooks/use-translation'
 import PageLayout from '../../components/layouts/page/page-layout'
@@ -16,18 +15,18 @@ import ResultCount from "../../components/find-jobs/result-count"
 import Filters from "../../components/dashboard/driver/find-job/filters";
 import OtrJobsList from "../../components/find-jobs/otr-job-list";
 import { JobGeography } from "../../enums/jobs/job-geography.enum";
-import {Row, Col } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import JobsList from '../../components/embedded-jobs-listing/jobs-list'
 
 
-export default function Embedded(props) {
+export default function Embedded() {
 
     const jobApi = new JobApi()
     const { t } = useTranslation();
 
     const [jobs, setJobs] = useState<JobEntity[]>([])
 
-    const [pagingMeta, setPagingMeta] = useState<PagingMetaProps>(pagingMetaInitialValues)
+    const [pagingMeta, setPagingMeta] = useState<PagingMetaProps>(pagingMetaInitialValues())
     const resetPagingMeta = (): void => setPagingMeta(pagingMetaInitialValues)
 
     const [searchQuery, setSearchQuery] = useState<string>()
@@ -116,14 +115,6 @@ export default function Embedded(props) {
             </jobsContext.Provider>
         </PageLayout>
     )
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-    return {
-        props: {
-            params: context.query
-        }
-    }
 }
 
 Embedded.getLayout = function getLayout(page) {
