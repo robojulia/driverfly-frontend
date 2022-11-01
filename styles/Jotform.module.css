@@ -120,5 +120,12 @@
     width: 600px;
     border: 1px solid red;
 
-  }
+}
+.blur {
+	filter: blur(2px);
+}
+.highlight{
+    color: red;
+}
   
+

@@ -24,9 +24,9 @@ export function Preferences(props: PreferenceProps) {
       routes_open_to: null,
       other_requirements: null,
     },
-  //   validationSchema: yup.object({
-  //     routes_open_to: yup.string().required().nullable()
-  // }),
+    validationSchema: yup.object({
+      routes_open_to: yup.array().min(1).typeError("Choose atleast one!").required()
+  }),
     onSubmit: (values) => {
       props.onNextClick(values);
     },

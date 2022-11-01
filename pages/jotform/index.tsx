@@ -76,7 +76,7 @@ export default function jotFormLongForm() {
     if (step == 5) return pageSix(onNextClick, onBackClick);
     if (step == 6)
       return pageSeven(onNextClick, onBackClick, shortFormDataSent);
-    if (step == 7) return pageEight(onNextClick, applicant);
+    if (step == 7) return pageEight(onNextClick, onBackClick, applicant);
     if (step == 8) return pageNine(onNextClick, onBackClick, applicant);
     if (step == 9) return pageTen(onNextClick, onBackClick, applicant);
     if (step == 10) return pageEleven(onNextClick, onBackClick, applicant);
@@ -168,10 +168,10 @@ const pageSeven = (onNextClick, onBackClick, shortFormDataSent) => {
   );
 };
 
-const pageEight = (onNextClick, applicant) => {
+const pageEight = (onNextClick,onBackClick, applicant) => {
   return (
     <>
-      <DriverApplication onNextClick={onNextClick} applicant={applicant} />
+      <DriverApplication onNextClick={onNextClick} onBackClick={onBackClick} applicant={applicant} />
     </>
   );
 };
@@ -378,8 +378,8 @@ const pageTwentySix = (onNextClick, onBackClick, applicant) => {
 const pageTwentySeven = (onNextClick, onBackClick, applicant) => {
   return (
     <AccordianLastPage
-    // onNextClick={onNextClick}
-    // onBackClick={onBackClick}
+    onNextClick={onNextClick}
+    onBackClick={onBackClick}
     // applicant={applicant}
     />
   );
