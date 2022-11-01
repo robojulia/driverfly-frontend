@@ -8,10 +8,11 @@ import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { DriverEndorsement } from "../../../../enums/users/driver-endorsement.enum";
 import { States } from "../../../../enums/users/us-states.enum";
+import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface OtherQuesProps {
-  onNextClick: (any) => void;
-  onBackClick: () => void;
+export interface OtherQuesProps extends PageProps {
+  // onNextClick: (any) => void;
+  // onBackClick: () => void;
   applicant: any;
 }
 

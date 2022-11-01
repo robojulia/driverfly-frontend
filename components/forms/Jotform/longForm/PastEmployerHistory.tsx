@@ -11,9 +11,10 @@ import BaseCheck from "../../base-check";
 import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferences.enum";
 import { States } from "../../../../enums/users/us-states.enum";
 import { PastEmploymentHistoryDto } from "../../../../models/jot-form/long-form/past-employment-history.dto";
-export interface PastEmploymentHistoryProps {
-    onNextClick: (any) => void;
-    onBackClick: () => void;
+import { PageProps } from "../../../../types/jotform/page-props.type";
+export interface PastEmploymentHistoryProps extends PageProps {
+    // onNextClick: (any) => void;
+    // onBackClick: () => void;
     applicant: any;
 }
 
@@ -32,7 +33,7 @@ export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
 
     useEffect(() => {
         if (props.applicant && !form.dirty) form.setValues(props.applicant);
-      }, [props.applicant]);
+    }, [props.applicant]);
     return (
         <>
             <Form onSubmit={form.handleSubmit}

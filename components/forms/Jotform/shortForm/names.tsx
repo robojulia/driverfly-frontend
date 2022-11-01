@@ -5,10 +5,11 @@ import BaseInput from "../../base-input";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { NamesDto } from "../../../../models/jot-form/short-form/names";
+import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface SecondPageProps {
-  onNextClick: (values: any) => void;
-  onBackClick: () => void;
+export interface SecondPageProps extends PageProps {
+  // onNextClick: (values: any) => void;
+  // onBackClick: () => void;
 }
 
 export function SecondPage(props: SecondPageProps) {

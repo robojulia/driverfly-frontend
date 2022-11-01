@@ -3,12 +3,14 @@ import React, { useEffect } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import giphy from "/Users/suvineetsingh/DriverFly/driverfly-frontend/giphy.gif"
+import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface HalfwayProps {
-  onNextClick: (any) => void;
-  onBackClick: () => void;
-  applicant:any;
+export interface HalfwayProps extends PageProps {
+  // onNextClick: (any) => void;
+  // onBackClick: () => void;
+  applicant: any;
 }
+
 export function Halfway(props: HalfwayProps) {
   useEffect(() => {
     if (props.applicant && !form.dirty) form.setValues(props.applicant);

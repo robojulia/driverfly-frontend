@@ -11,10 +11,11 @@ import { ContactDto } from "../../../../models/jot-form/short-form/contact.dto";
 import ApplicantApi from "../../../../pages/api/applicant";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import jotformContext from "../../../../context/jotform-context";
+import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface ThirdPageProps {
-  onNextClick: (values: any) => void;
-  onBackClick: () => void;
+export interface ThirdPageProps extends PageProps {
+  // onNextClick: (values: any) => void;
+  // onBackClick: () => void;
 }
 //code merged
 export function ThirdPage(props: ThirdPageProps) {
@@ -30,7 +31,7 @@ export function ThirdPage(props: ThirdPageProps) {
     onSubmit: (values) => {
       // setApplicant(values)
       props.onNextClick(values);
-      
+
     },
     onReset: (values) => {
       props.onBackClick();

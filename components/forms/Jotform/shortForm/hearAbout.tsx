@@ -4,10 +4,11 @@ import BaseSelect from "../../base-select";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { HearAboutUsDto } from "../../../../models/jot-form/short-form/hear-about.dto";
+import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface SixthPageProps {
-  onNextClick: (any) => void;
-  onBackClick: () => void;
+export interface SixthPageProps extends PageProps {
+  // onNextClick: (any) => void;
+  // onBackClick: () => void;
 }
 
 export function SixthPage(props: SixthPageProps) {

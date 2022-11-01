@@ -13,10 +13,11 @@ import BaseCheck from "../../base-check";
 import moment from "moment";
 import { States } from "../../../../enums/users/us-states.enum";
 import { DrivingExperienceDto } from "../../../../models/jot-form/long-form/driving-experience.dto";
+import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface DrivingExpProps {
-  onNextClick: (any) => void;
-  onBackClick: () => void;
+export interface DrivingExpProps extends PageProps {
+  // onNextClick: (any) => void;
+  // onBackClick: () => void;
   applicant: any;
 }
 export function DrivingExp(props: DrivingExpProps) {

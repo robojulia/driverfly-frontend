@@ -9,10 +9,11 @@ import BaseSelect from "../../base-select";
 import moment from "moment";
 import { States } from "../../../../enums/users/us-states.enum";
 import { BackgroundInfoDto } from "../../../../models/jot-form/long-form/background-info.dto";
+import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface BackgroundInfoProps {
-  onNextClick: (any) => void;
-  onBackClick: () => void;
+export interface BackgroundInfoProps extends PageProps {
+  // onNextClick: (any) => void;
+  // onBackClick: () => void;
   applicant: any;
 }
 

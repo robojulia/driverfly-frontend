@@ -10,10 +10,11 @@ import { OtherRequirement } from "../../../../enums/users/other-requirements.enu
 import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferences.enum";
 import BaseInput from "../../base-input";
 import BaseSelect from "../../base-select";
-import * as yup from 'yup';
-export interface PreferenceProps {
-  onNextClick: (any) => void;
-  onBackClick: () => void;
+import { PageProps } from "../../../../types/jotform/page-props.type";
+
+export interface PreferenceProps extends PageProps {
+  // onNextClick: (any) => void;
+  // onBackClick: () => void;
   applicant: any;
 }
 

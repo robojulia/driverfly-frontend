@@ -8,6 +8,12 @@ import * as yup from "yup";
 import SignaturePad from "react-signature-canvas";
 import SignatureCanvas from "react-signature-canvas";
 import { DriverApplicationDto } from "../../../../models/jot-form/long-form/driver-application.dto";
+import { PageProps } from "../../../../types/jotform/page-props.type";
+
+export interface DriverApplicationProps extends PageProps {
+  // onNextClick: (values: any) => void;
+  applicant: any;
+}
 
 export function DriverApplication(props: DriverApplicationProps) {
   useEffect(() => {

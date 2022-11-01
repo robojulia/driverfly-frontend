@@ -12,10 +12,11 @@ import SignaturePad from "react-signature-canvas";
 import SignatureCanvas from "react-signature-canvas";
 
 
+import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface BackgroundInfoProps {
-//   onNextClick: (any) => void;
-//   onBackClick: () => void;
+export interface BackgroundInfoProps extends PageProps {
+  //   onNextClick: (any) => void;
+  //   onBackClick: () => void;
 }
 
 export function AccordianLastPage() {

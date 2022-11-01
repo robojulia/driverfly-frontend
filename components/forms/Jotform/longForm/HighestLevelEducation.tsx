@@ -9,6 +9,7 @@ import BaseSelect from "../../base-select";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { EducationLevel } from "../../../../enums/users/education-level.enum";
+import { PageProps } from "../../../../types/jotform/page-props.type";
 
 
 // export interface HighestLevelEducationProps {
@@ -75,9 +76,14 @@ import { EducationLevel } from "../../../../enums/users/education-level.enum";
 //     </>
 //   );
 // }
-export interface HighestLevelEducationProps {
-  onNextClick: (any) => void;
-  onBackClick: () => void;
+// export interface HighestLevelEducationProps {
+//   onNextClick: (any) => void;
+//   onBackClick: () => void;
+
+
+export interface HighestLevelEducationProps extends PageProps {
+  // onNextClick: (any) => void;
+  // onBackClick: () => void;
   applicant: any;
 }
 
