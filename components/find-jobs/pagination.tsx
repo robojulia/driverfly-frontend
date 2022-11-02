@@ -11,9 +11,9 @@ export default function Pagination() {
     const { t } = useTranslation();
 
     const pagingValues = {
-        current: pagingMeta.currentPage,
-        previous: pagingMeta.currentPage - 1,
-        next: pagingMeta.currentPage + 1,
+        current: pagingMeta?.currentPage,
+        previous: pagingMeta?.currentPage - 1,
+        next: pagingMeta?.currentPage + 1,
     }
     const [pageIndex, setPageIndex] = useState<any>(null)
 
@@ -25,11 +25,11 @@ export default function Pagination() {
     return (
         <div className="filter-outer mt-5">
             {
-                pagingMeta.totalPages !== 0 &&
+                (pagingMeta?.totalPages && pagingMeta.totalPages !== 0) &&
 
                 <ul className="pagination ">
                     {
-                        pageIndex.current > 2 &&
+                        pageIndex?.current > 2 &&
                         <>
                             <li onClick={() => handlePaging(1)}>
                                 <span className="next page-numbers " role="button" >
@@ -40,10 +40,10 @@ export default function Pagination() {
                     }
 
                     {
-                        pageIndex.current > 1 &&
-                        <li onClick={() => handlePaging(pageIndex.previous)} >
+                        pageIndex?.current > 1 &&
+                        <li onClick={() => handlePaging(pageIndex?.previous)} >
                             <span className="page-numbers " role="button" >
-                                {pageIndex.previous}
+                                {pageIndex?.previous}
                             </span>
                         </li>
                     }
@@ -51,23 +51,23 @@ export default function Pagination() {
                     {
                         <li >
                             <span className="page-numbers current active" role="button" >
-                                {pageIndex.current}
+                                {pageIndex?.current}
                             </span>
                         </li>
                     }
 
                     {
-                        pageIndex.current < pagingMeta.totalPages &&
-                        <li onClick={() => handlePaging(pageIndex.next)} >
+                        pageIndex?.current < pagingMeta?.totalPages &&
+                        <li onClick={() => handlePaging(pageIndex?.next)} >
                             <span className="page-numbers " role="button" >
-                                {pageIndex.next}
+                                {pageIndex?.next}
                             </span>
                         </li>
                     }
 
                     {
-                        pageIndex.current < pagingMeta.totalPages &&
-                        <li onClick={() => handlePaging(pagingMeta.totalPages)}>
+                        pageIndex?.current < pagingMeta?.totalPages &&
+                        <li onClick={() => handlePaging(pagingMeta?.totalPages)}>
                             <span className="next page-numbers " role="button" >
                                 {t('LAST_PAGE')}
                             </span>
