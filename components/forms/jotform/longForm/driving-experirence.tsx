@@ -21,7 +21,6 @@ export interface DrivingExpProps extends PageProps {
   applicant: any;
 }
 export function DrivingExp(props: DrivingExpProps) {
-
   useEffect(() => {
     if (props.applicant && !form.dirty) form.setValues(props.applicant);
   }, [props.applicant]);
@@ -46,8 +45,8 @@ export function DrivingExp(props: DrivingExpProps) {
             className="col-12 mt-3"
             required
             name="cdl_number"
-            placeholder="CDL License Number"
-            label="CDL NUMBER"
+            placeholder="CDL_LICENSE_PLACEHOLDER"
+            label="CDL_NUMBER"
             formik={form}
           />
         </Col>
@@ -57,8 +56,8 @@ export function DrivingExp(props: DrivingExpProps) {
             required
             enumType={States}
             name="state"
-            placeholder="State"
-            label="Current State"
+            placeholder="state"
+            label="CURRENT_STATE"
             formik={form}
           />
         </Col>
@@ -68,8 +67,8 @@ export function DrivingExp(props: DrivingExpProps) {
             required
             type="date"
             name="expiration_date"
-            placeholder="Expiration Date"
-            label="Expiration Date"
+            placeholder="expiration_date"
+            label="expiration_date"
             formik={form}
           />
         </Col>
@@ -80,9 +79,9 @@ export function DrivingExp(props: DrivingExpProps) {
           <BaseSelect
             className="col-4 mt-3"
             required
-            label="State Issued"
+            label="state_issued"
             name="state_issued"
-            placeholder="State of Issuance"
+            placeholder="ISSUANCE_STATE"
             enumType={States}
             formik={form}
           />
@@ -102,7 +101,6 @@ export function DrivingExp(props: DrivingExpProps) {
           >
 
           </ViewCard> */}
-          
         </Col>
         <Col>
           {/* <Button className="float-right" onClick={() => setCount(count - 1)}>

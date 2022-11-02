@@ -41,8 +41,8 @@ export function EmergencyContact(props: EmergencyContactProps) {
           <BaseInput
             className='col-6 mt-3'
             name="EMERGENCY_CONTACT"
-            placeholder="Emergency Contact"
-            label="Emergency Contact Name"
+            placeholder="emergency_contact"
+            label="EMERGENCY_CONTACT_NAME"
             formik={form}
           />
         </Row>
@@ -51,8 +51,8 @@ export function EmergencyContact(props: EmergencyContactProps) {
             <BaseInputPhone
               className='col-10 mt-3'
               name="phone"
-              placeholder="Phone Number"
-              label="Phone Number"
+              placeholder="phone"
+              label="phone"
               formik={form}
             />
           </Col>
@@ -60,8 +60,8 @@ export function EmergencyContact(props: EmergencyContactProps) {
             <BaseInput
               className='col-6 mt-3'
               name="RELATIONSHIP"
-              placeholder="Relationship"
-              label="Relationship"
+              placeholder="relationship"
+              label="relationship"
               formik={form}
             />
           </Col>

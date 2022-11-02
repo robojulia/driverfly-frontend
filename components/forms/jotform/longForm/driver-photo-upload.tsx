@@ -85,7 +85,7 @@ export function PhotoUpload(props: PhotoUploadprops) {
     <>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
         <Row>
-          <h3>Drivers License Photo</h3>
+          <h3>{t('DRIVER_LICENSE_PHOTO')}</h3>
         </Row>
         <Row className={styles.align__text_left}>
           <FileInput

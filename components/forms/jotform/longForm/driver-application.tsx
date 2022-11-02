@@ -81,7 +81,7 @@ export function DriverApplication({
         </Row>
         <Row className={styles.align__text_left}>
           <Col>
-            <h6>Signature</h6>
+            <h6>{t("SIGNATURE")}</h6>
             <SignaturePad
               className
               ref={padRef}

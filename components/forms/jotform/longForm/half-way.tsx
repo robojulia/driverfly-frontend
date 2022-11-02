@@ -27,12 +27,10 @@ export function Halfway(props: HalfwayProps) {
   return (
     <>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-        <h1>Hard Questions</h1>
+        <h1>{t("HARD_QUESTIONS")}</h1>
         {/* <img src={giphy} alt="my-gif" /> */}
-        <h3>Please answer the following questions honestly. </h3>
-        <h4>
-          Your answers will not automatically exclude you from consideration.
-        </h4>
+        <h3>{t("ANSWER_FOLLOWIN_QUESTIONS")}</h3>
+        <h4>{t("EXCLUDE_CONSIDERATION")}</h4>
         <Row className="mt-5">
           <Col>
             <Button className="float-right" type="reset">

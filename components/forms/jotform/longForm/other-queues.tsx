@@ -41,7 +41,7 @@ export interface OtherQuesProps extends PageProps {
 //             className="col-6 mb-3"
 //             options={["Yes", "No"]}
 //             name="manual_qualification"
-//             placeholder="Click to choose"
+//             placeholder="CHOOSE"
 //             label="Are you qualified to drive a manual transmission per your CDL in case requires it?"
 //             formik={form}
 //           />
@@ -51,7 +51,7 @@ export interface OtherQuesProps extends PageProps {
 //           <BaseSelect
 //             className="col-6 mb-3"
 //             label="DRIVER_ENDORSEMENT"
-//             placeholder="Click to choose"
+//             placeholder="CHOOSE"
 //             name="driver_endorsement"
 //             required
 //             labelPrefix="DriverEndorsement"
@@ -90,8 +90,8 @@ export interface OtherQuesProps extends PageProps {
 //                 "New Jersey",
 //               ]}
 //               name="state_1"
-//               placeholder="State of Issuance"
-//               label="Click to Choose"
+//               placeholder="ISSUANCE_STATE"
+//               label="CHOOSE"
 //               formik={form}
 //             />
 //           </Col>
@@ -100,7 +100,7 @@ export interface OtherQuesProps extends PageProps {
 //               className="col-12 mt-3"
 //               type="date"
 //               name="date_1"
-//               placeholder="Expiration Date"
+//               placeholder="expiration_date"
 //               label="DATE"
 //               formik={form}
 //             />
@@ -129,7 +129,7 @@ export interface OtherQuesProps extends PageProps {
 //               ]}
 //               name="state_2"
 //               placeholder="State of Issuance"
-//               label="Click to Choose"
+//               label="CHOOSE"
 //               formik={form}
 //             />
 //           </Col>
@@ -138,7 +138,7 @@ export interface OtherQuesProps extends PageProps {
 //               className="col-12 mt-3"
 //               type="date"
 //               name="date_2"
-//               placeholder="Expiration Date"
+//               placeholder="expiration_date"
 //               label="DATE"
 //               formik={form}
 //             />
@@ -167,7 +167,7 @@ export interface OtherQuesProps extends PageProps {
 //               ]}
 //               name="state_3"
 //               placeholder="State of Issuance"
-//               label="Click to Choose"
+//               label="CHOOSE"
 //               formik={form}
 //             />
 //           </Col>
@@ -176,7 +176,7 @@ export interface OtherQuesProps extends PageProps {
 //               className="col-12 mt-3"
 //               type="date"
 //               name="date_3"
-//               placeholder="Expiration Date"
+//               placeholder="expiration_date"
 //               label="DATE"
 //               formik={form}
 //             />
@@ -189,7 +189,7 @@ export interface OtherQuesProps extends PageProps {
 //                 {t("BACK")}
 //               </Button>
 //             </Col>
-    
+
 //             <Col>
 //               <Button className="float-left" type="submit">
 //                 {t("NEXT")}
@@ -218,149 +218,146 @@ export function OtherQues(props: OtherQuesProps) {
     },
   });
   return (
-    
-      <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-        <Row>
-          <BaseSelect
-            className="col-6 mb-3"
-            options={["Yes", "No"]}
-            name="manual_qualification"
-            placeholder="Click to choose"
-            label="Are you qualified to drive a manual transmission per your CDL in case requires it?"
+    <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+      <Row>
+        <BaseSelect
+          className="col-6 mb-3"
+          options={["Yes", "No"]}
+          name="manual_qualification"
+          placeholder="CHOOSE"
+          label="QUALIFIED_TO_MANUAL_DRIVING"
+          formik={form}
+        />
+      </Row>
+
+      <Row>
+        <BaseSelect
+          className="col-6 mb-3"
+          label="ENDORSEMENT"
+          placeholder="CHOOSE"
+          name="driver_endorsement"
+          labelPrefix="DriverEndorsement"
+          enumType={DriverEndorsement}
+          formik={form}
+        />
+      </Row>
+      <Row>
+        <p className={styles.paragraph__left}>
+          {t("THREE_EQUIPMENT_EXPERIMENT")}
+        </p>
+      </Row>
+      <Row>
+        <p className={styles.paragraph__left}>{t("FILL_FOLLOWING_RELEVENT")}</p>
+      </Row>
+      <Row>
+        <Col>
+          <BaseInput
+            className="col-12 mt-3"
+            name="cdl_number_1"
+            placeholder="CDL_NUMBER_1"
+            label="CDL_NUMBER"
             formik={form}
           />
-        </Row>
-
-        <Row>
+        </Col>
+        <Col>
           <BaseSelect
-            className="col-6 mb-3"
-            label="Tell us about your endorsements:"
-            placeholder="Click to choose"
-            name="driver_endorsement"
-            labelPrefix="DriverEndorsement"
-            enumType={DriverEndorsement}
+            className="col-12 mt-3"
+            enumType={States}
+            name="state_1"
+            placeholder="ISSUANCE_STATE"
+            label="CHOOSE"
             formik={form}
           />
-        </Row>
-        <Row>
-          <p className={styles.paragraph__left}>
-            Tell us upto 3 Equipment Experience(optional)
-          </p>
-        </Row>
-        <Row>
-          <p className={styles.paragraph__left}>
-            Fill in as many of the following as relevant.
-          </p>
-        </Row>
-        <Row>
-          <Col>
-            <BaseInput
-              className="col-12 mt-3"
-              name="cdl_number_1"
-              placeholder="CDL NUMBER 1"
-              label="CDL NUMBER"
-              formik={form}
-            />
-          </Col>
-          <Col>
-            <BaseSelect
-              className="col-12 mt-3"
-              enumType={ States }
-              name="state_1"
-              placeholder="State of Issuance"
-              label="Click to Choose"
-              formik={form}
-            />
-          </Col>
-          <Col>
-            <BaseInput
-              className="col-12 mt-3"
-              type="date"
-              name="date_1"
-              placeholder="Expiration Date"
-              label="DATE"
-              formik={form}
-            />
-          </Col>
-        </Row>
+        </Col>
+        <Col>
+          <BaseInput
+            className="col-12 mt-3"
+            type="date"
+            name="date_1"
+            placeholder="expiration_date"
+            label="DATE"
+            formik={form}
+          />
+        </Col>
+      </Row>
 
-        <Row>
-          <Col>
-            <BaseInput
-              className="col-12 mt-3"
-              name="cdl_number_2"
-              placeholder="CDL NUMBER 2"
-              label="CDL NUMBER"
-              formik={form}
-            />
-          </Col>
-          <Col>
-            <BaseSelect
-              className="col-12 mt-3"
-              enumType={ States }
-              name="state_2"
-              placeholder="State of Issuance"
-              label="Click to Choose"
-              formik={form}
-            />
-          </Col>
-          <Col>
-            <BaseInput
-              className="col-12 mt-3"
-              type="date"
-              name="date_2"
-              placeholder="Expiration Date"
-              label="DATE"
-              formik={form}
-            />
-          </Col>
-        </Row>
+      <Row>
+        <Col>
+          <BaseInput
+            className="col-12 mt-3"
+            name="cdl_number_2"
+            placeholder="CDL_NUMBER_2"
+            label="CDL_NUMBER"
+            formik={form}
+          />
+        </Col>
+        <Col>
+          <BaseSelect
+            className="col-12 mt-3"
+            enumType={States}
+            name="state_2"
+            placeholder="ISSUANCE_STATE"
+            label="CHOOSE"
+            formik={form}
+          />
+        </Col>
+        <Col>
+          <BaseInput
+            className="col-12 mt-3"
+            type="date"
+            name="date_2"
+            placeholder="expiration_date"
+            label="DATE"
+            formik={form}
+          />
+        </Col>
+      </Row>
 
-        <Row>
-          <Col>
-            <BaseInput
-              className="col-12 mt-3"
-              name="cdl_number_3"
-              placeholder="CDL NUMBER 3"
-              label="CDL NUMBER"
-              formik={form}
-            />
-          </Col>
-          <Col>
-            <BaseSelect
-              className="col-12 mt-3"
-              enumType={ States }
-              name="state_3"
-              placeholder="State of Issuance"
-              label="Click to Choose"
-              formik={form}
-            />
-          </Col>
-          <Col>
-            <BaseInput
-              className="col-12 mt-3"
-              type="date"
-              name="date_3"
-              placeholder="Expiration Date"
-              label="DATE"
-              formik={form}
-            />
-          </Col>
-        </Row>
+      <Row>
+        <Col>
+          <BaseInput
+            className="col-12 mt-3"
+            name="cdl_number_3"
+            placeholder="CDL_NUMBER_3"
+            label="CDL_NUMBER"
+            formik={form}
+          />
+        </Col>
+        <Col>
+          <BaseSelect
+            className="col-12 mt-3"
+            enumType={States}
+            name="state_3"
+            placeholder="ISSUANCE_STATE"
+            label="CHOOSE"
+            formik={form}
+          />
+        </Col>
+        <Col>
+          <BaseInput
+            className="col-12 mt-3"
+            type="date"
+            name="date_3"
+            placeholder="expiration_date"
+            label="DATE"
+            formik={form}
+          />
+        </Col>
+      </Row>
 
-        <Row className="mt-2">
-          <Col>
-            <Button className="float-right" type="reset">
-              {t("BACK")}
-            </Button>
-          </Col>
-  
-          <Col>
-            <Button className="float-left" type="submit">
-              {t("NEXT")}
-            </Button>
-          </Col>
-        </Row>
-      </Form>
-    );
-  }
+      <Row className="mt-2">
+        <Col>
+          <Button className="float-right" type="reset">
+            {t("BACK")}
+          </Button>
+        </Col>
+
+        <Col>
+          <Button className="float-left" type="submit">
+            {t("NEXT")}
+          </Button>
+        </Col>
+      </Row>
+    </Form>
+  );
+}

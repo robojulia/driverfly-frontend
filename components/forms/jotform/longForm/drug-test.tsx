@@ -37,9 +37,7 @@ export function DrugTest(props: DrugTestProps) {
         <BaseCheck
           className="float-left col-6"
           name="dot_declaration"
-          label="Have you tested positive, or refused to 
-                        test, on a pre-employment drug or alcohol test
-                         by an employer subject to DOT regulations?"
+          label="DRUG_TEST_TESTIMONY_QUESTION"
           formik={form}
         />
       </Row>
@@ -48,7 +46,7 @@ export function DrugTest(props: DrugTestProps) {
           <BaseTextArea
             className="float-left mt-3"
             name="explanations"
-            label="Please explain"
+            label="PLEASE_EXPLAIN"
             formik={form}
           />
         </Row>

@@ -42,7 +42,7 @@ export function BackgroundInfo(props: BackgroundInfoProps) {
           required
           type="date"
           name="birthdate"
-          placeholder="Date of Birth"
+          placeholder="birthdate"
           label="birthdate"
           formik={form}
         />
@@ -58,8 +58,8 @@ export function BackgroundInfo(props: BackgroundInfoProps) {
           className="col-6"
           required
           name="address_line_1"
-          placeholder="STREET ADDRESS LINE 1"
-          label="Address Line 1"
+          placeholder="ADDRESS_LINE_1"
+          label="ADDRESS_LINE_1"
           formik={form}
         />
       </Row>
@@ -68,8 +68,8 @@ export function BackgroundInfo(props: BackgroundInfoProps) {
           className="col-6 mt-3"
           required
           name="address_line_2"
-          placeholder="STREET ADDRESS LINE 2"
-          label="Address Line 2"
+          placeholder="ADDRESS_LINE_2"
+          label="ADDRESS_LINE_2"
           formik={form}
         />
       </Row>
@@ -80,8 +80,8 @@ export function BackgroundInfo(props: BackgroundInfoProps) {
             className="col-12 mt-2 float-left"
             required
             name="city"
-            placeholder="CITY"
-            label="City"
+            placeholder="city"
+            label="city"
             formik={form}
           />
         </Col>
@@ -91,8 +91,8 @@ export function BackgroundInfo(props: BackgroundInfoProps) {
             required
             enumType={States}
             name="state"
-            placeholder="CHOOSE STATE"
-            label="State"
+            placeholder="CHOOSE_STATE"
+            label="state"
             formik={form}
           />
         </Col>
@@ -102,8 +102,8 @@ export function BackgroundInfo(props: BackgroundInfoProps) {
           className="col-3 mt-2"
           required
           name="zip_code"
-          placeholder="POSTAL/ZIP CODE"
-          label="Zip Code"
+          placeholder="zip_code"
+          label="zip_code"
           formik={form}
         />
       </Row>

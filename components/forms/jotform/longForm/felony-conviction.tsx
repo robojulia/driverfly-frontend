@@ -31,27 +31,26 @@ export function FelonyConviction(props: FelonyConvictionProps) {
     },
   });
 
-    return(
-        <Form onSubmit={ form.handleSubmit }
-            onReset={ form.handleReset }>
-             <Row className={ styles.paragraph__left }>
-                <BaseCheck
-                        className="float-left col-6"
-                        name="felony_declaration"
-                        label="Have you ever been convicted of a felony?"
-                        formik={form}
-                    />
-            </Row>   
-            {form.values.felony_declaration ? (
-                <Row className={styles.align__text_left}>
-                    <BaseTextArea
-                        className='float-left mt-3'
-                        name="explanations"
-                        label="Please explain past convictions (if any)"
-                        formik={ form }
-                    />
-                </Row>
-            ) : null}
+  return (
+    <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+      <Row className={styles.paragraph__left}>
+        <BaseCheck
+          className="float-left col-6"
+          name="felony_declaration"
+          label="EVER_FELONY_QUESTION"
+          formik={form}
+        />
+      </Row>
+      {form.values.felony_declaration ? (
+        <Row className={styles.align__text_left}>
+          <BaseTextArea
+            className="float-left mt-3"
+            name="explanations"
+            label="PAST_CONVICTION"
+            formik={form}
+          />
+        </Row>
+      ) : null}
 
       <Row className="mt-5">
         <Col>

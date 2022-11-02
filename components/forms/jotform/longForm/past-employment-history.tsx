@@ -13,182 +13,195 @@ import { States } from "../../../../enums/users/us-states.enum";
 import { PastEmploymentHistoryDto } from "../../../../models/jot-form/long-form/past-employment-history.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 export interface PastEmploymentHistoryProps extends PageProps {
-    // onNextClick: (any) => void;
-    // onBackClick: () => void;
-    applicant: any;
+  // onNextClick: (any) => void;
+  // onBackClick: () => void;
+  applicant: any;
 }
 
 export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
-    const { t } = useTranslation();
-    const form = useFormik({
-        initialValues: new PastEmploymentHistoryDto(),
-        validationSchema: PastEmploymentHistoryDto.yupSchema(),
-        onSubmit: (values) => {
-            props.onNextClick(values);
-        },
-        onReset: (values) => {
-            props.onBackClick();
-        }
-    })
+  const { t } = useTranslation();
+  const form = useFormik({
+    initialValues: new PastEmploymentHistoryDto(),
+    validationSchema: PastEmploymentHistoryDto.yupSchema(),
+    onSubmit: (values) => {
+      props.onNextClick(values);
+    },
+    onReset: (values) => {
+      props.onBackClick();
+    },
+  });
 
-    useEffect(() => {
-        if (props.applicant && !form.dirty) form.setValues(props.applicant);
-    }, [props.applicant]);
-    return (
-        <>
-            <Form onSubmit={form.handleSubmit}
-                onReset={form.handleReset}>
-                <h4 className={`${styles.carrierName__smaller} ${styles.striped__border}`}>
-                    Past Employment History
-                </h4>
-                <p className={styles.paragraph__left}>
-                    Please be honest about your past employment as this helps speed up the hiring process.
-                </p>
-                <Row className={styles.align__text_left}>
-                    <BaseCheck
-                        className='mt-2 col-6 float-left'
-                        required
-                        name="employed_type"
-                        label='Were you previously employed?'
-                        formik={form}
-                    />
-                </Row>
-                {!!form.values.employed_type && (
-                    <>
-                        
-                        <Row className={`${styles.paragraph} ${styles.align__text_left}`}>
-                            <BaseCheck
-                                className="mt-3 col-6 float-left"
-                                name="authorize"
-                                label="Do you authorize us to contact this company?"
-                                formik={form} />
-                        </Row>
-                        <Row className={styles.align__text_left}>
-                            <BaseInput
-                                className="col-4 mt-3"
-                                name="previous_company_manager_name"
-                                label="PREVIOUS_MANAGER_NAME"
-                                formik={form} />
-                        </Row>
-                        <Row>
-                            <Col className={styles.align__text_left}>
-                                <BaseInputPhone
-                                    className="col-10 mt-3 mb-2"
-                                    name="previous_company_phone_number"
-                                    // placeholder="Phone Number"
-                                    label="PREVIOUS_COMPANY_PHONE_NUMBER"
-                                    formik={form} />
-                            </Col>
-                            <Col className={styles.align__text_left}>
-                                <BaseInput
-                                    className="col-10 mt-3 mb-2"
-                                    required
-                                    name="previous_company_email"
-                                    label="PREVIOUS_COMPANY_EMAIL"
-                                    // placeholder='EMAIL'
-                                    formik={form} />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <h6
-                                className={`${styles.align__text_left} ${styles.carrierName__smaller}`}
-                            >
-                                Address(Previous company)
-                            </h6>
-                        </Row>
-                        <Row>
-                            <Col className={styles.align__text_left}>
-                                <BaseInput
-                                    className="col-6 mt-3"
-                                    required
-                                    name="previous_company_street_address_line_1"
-                                    placeholder="Address Line 1"
-                                    label="Street Address Line 1 (Previous Company)"
-                                    formik={form} />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col className={styles.align__text_left}>
-                                <BaseInput
-                                    className="col-6 mt-3 mb-3"
-                                    required
-                                    name="previous_company_street_address_line_2"
-                                    placeholder="Address Line 2"
-                                    label="Street Address Line 2 (Previous Company)"
-                                    formik={form} />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col className={styles.align__text_left}>
-                                <BaseInput
-                                    className="col-12 mt-4"
-                                    required
-                                    name="previous_company_zipcode"
-                                    // placeholder='Zip Code'
-                                    label="Postal / Zip Code (Previous Company)"
-                                    formik={form} />
-                            </Col>
+  useEffect(() => {
+    if (props.applicant && !form.dirty) form.setValues(props.applicant);
+  }, [props.applicant]);
+  return (
+    <>
+      <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+        <h4
+          className={`${styles.carrierName__smaller} ${styles.striped__border}`}
+        >
+          Past Employment History
+        </h4>
+        <p className={styles.paragraph__left}>
+          Please be honest about your past employment as this helps speed up the
+          hiring process.
+        </p>
+        <Row className={styles.align__text_left}>
+          <BaseCheck
+            className="mt-2 col-6 float-left"
+            required
+            name="employed_type"
+            label="PREVIOUSLY_EMPLOYED"
+            formik={form}
+          />
+        </Row>
+        {!!form.values.employed_type && (
+          <>
+            <Row className={`${styles.paragraph} ${styles.align__text_left}`}>
+              <BaseCheck
+                className="mt-3 col-6 float-left"
+                name="authorize"
+                label="CONTACT_AUTHORIZATION"
+                formik={form}
+              />
+            </Row>
+            <Row className={styles.align__text_left}>
+              <BaseInput
+                className="col-4 mt-3"
+                name="previous_company_manager_name"
+                label="PREVIOUS_MANAGER_NAME"
+                formik={form}
+              />
+            </Row>
+            <Row>
+              <Col className={styles.align__text_left}>
+                <BaseInputPhone
+                  className="col-10 mt-3 mb-2"
+                  name="previous_company_phone_number"
+                  placeholder="phone"
+                  label="PREVIOUS_COMPANY_PHONE_NUMBER"
+                  formik={form}
+                />
+              </Col>
+              <Col className={styles.align__text_left}>
+                <BaseInput
+                  className="col-10 mt-3 mb-2"
+                  required
+                  name="previous_company_email"
+                  label="PREVIOUS_COMPANY_EMAIL"
+                  placeholder="email"
+                  formik={form}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <h6
+                className={`${styles.align__text_left} ${styles.carrierName__smaller}`}
+              >
+                Address(Previous company)
+              </h6>
+            </Row>
+            <Row>
+              <Col className={styles.align__text_left}>
+                <BaseInput
+                  className="col-6 mt-3"
+                  required
+                  name="previous_company_street_address_line_1"
+                  placeholder="ADDRESS_LINE_1"
+                  label="ADDRESS_LINE_1"
+                  formik={form}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col className={styles.align__text_left}>
+                <BaseInput
+                  className="col-6 mt-3 mb-3"
+                  required
+                  name="previous_company_street_address_line_2"
+                  placeholder="ADDRESS_LINE_2"
+                  label="ADDRESS_LINE_2"
+                  formik={form}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col className={styles.align__text_left}>
+                <BaseInput
+                  className="col-12 mt-4"
+                  required
+                  name="previous_company_zipcode"
+                  placeholder="zip_code"
+                  label="zip_code"
+                  formik={form}
+                />
+              </Col>
 
-                            <Col className={styles.align__text_left}>
-                                <BaseInput
-                                    className="col-12 mt-4"
-                                    required
-                                    name="city"
-                                    label="City"
-                                    formik={form} />
-                            </Col>
+              <Col className={styles.align__text_left}>
+                <BaseInput
+                  className="col-12 mt-4"
+                  required
+                  name="city"
+                  label="City"
+                  formik={form}
+                />
+              </Col>
 
-                            <Col className={styles.align__text_left}>
-                                <BaseSelect
-                                    className="col-12 mt-4"
-                                    required
-                                    enumType={States}
-                                    name="state"
-                                    placeholder="CHOOSE STATE"
-                                    label="State"
-                                    formik={form} />
-                            </Col>
-                        </Row>
-                        <Row className={`${styles.align__text_left} ${styles.paragraph}`}>
-                            <Col>
-                                <BaseSelect
-                                    className="col-6 mt-4"
-                                    required
-                                    enumType={BooleanPreferenceType}
-                                    name="fmcsr"
-                                    placeholder="Click to Choose"
-                                    label="Were you subject to the FMCSRs while employed here? (Current Company)"
-                                    formik={form} />
-                            </Col>
-                        </Row>
-                        <Row className={`${styles.align__text_left} ${styles.paragraph}`}>
-                            <Col>
-                                <BaseSelect
-                                    className="col-6 mt-4"
-                                    required
-                                    enumType={BooleanPreferenceType}
-                                    name="fmcsr"
-                                    placeholder="Click to Choose"
-                                    label="Was your job designated as a safety-sensitive function in any DOT-regulated mode subject to the drug and alcohol testing requirements of 49 CFR Part 40? (Current Company)"
-                                    formik={form} />
-                            </Col>
-                        </Row></>
-                )}
-                <Row className="mt-5">
-                    <Col>
-                        <Button className="float-right" type="reset">
-                            {t("BACK")}
-                        </Button>
-                    </Col>
-                    <Col>
-                        <Button className="float-left" type="submit">
-                            {t("NEXT")}
-                        </Button>
-                    </Col>
-                </Row>
-            </Form>
-        </>
-    );
+              <Col className={styles.align__text_left}>
+                <BaseSelect
+                  className="col-12 mt-4"
+                  required
+                  enumType={States}
+                  name="state"
+                  placeholder="CHOOSE_STATE"
+                  label="state"
+                  formik={form}
+                />
+              </Col>
+            </Row>
+            <Row className={`${styles.align__text_left} ${styles.paragraph}`}>
+              <Col>
+                <BaseSelect
+                  className="col-6 mt-4"
+                  required
+                  enumType={BooleanPreferenceType}
+                  name="fmcsr"
+                  placeholder="CHOOSE"
+                  label="FMCR_QUESTION"
+                  formik={form}
+                />
+              </Col>
+            </Row>
+            <Row className={`${styles.align__text_left} ${styles.paragraph}`}>
+              <Col>
+                <BaseSelect
+                  className="col-6 mt-4"
+                  required
+                  enumType={BooleanPreferenceType}
+                  name="fmcsr"
+                  placeholder="CHOOSE"
+                  label="JOB_DESIGNATED_CURRENT_COMPANY"
+                  formik={form}
+                />
+              </Col>
+            </Row>
+          </>
+        )}
+        <Row className="mt-5">
+          <Col>
+            <Button className="float-right" type="reset">
+              {t("BACK")}
+            </Button>
+          </Col>
+          <Col>
+            <Button className="float-left" type="submit">
+              {t("NEXT")}
+            </Button>
+          </Col>
+        </Row>
+      </Form>
+    </>
+  );
 }
 // export interface PastEmploymentHistoryProps {
 //     onNextClick: (values?: any) => void;
@@ -215,7 +228,7 @@ export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
 //             otherwise: yup.string().optional().nullable(),
 //           })
 //           .nullable(),
-  
+
 //         previous_company_email: yup
 //           .string()
 //           .when("employed_type", {
@@ -224,7 +237,7 @@ export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
 //             otherwise: yup.string().optional().nullable(),
 //           })
 //           .nullable(),
-  
+
 //         previous_company_street_address_line_1: yup
 //           .string()
 //           .when("employed_type", {
@@ -233,7 +246,7 @@ export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
 //             otherwise: yup.string().optional().nullable(),
 //           })
 //           .nullable(),
-  
+
 //         previous_company_street_address_line_2: yup
 //           .string()
 //           .when("employed_type", {
@@ -242,7 +255,7 @@ export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
 //             otherwise: yup.string().optional().nullable(),
 //           })
 //           .nullable(),
-  
+
 //         previous_company_zipcode: yup
 //           .string()
 //           .when("employed_type", {
@@ -262,7 +275,7 @@ export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
 //     useEffect(() => {
 //       console.log("error", form.errors);
 //     }, [form.values, form.errors]);
-  
+
 //     return (
 //       <>
 //         <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -314,7 +327,7 @@ export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
 //                   />
 //                 </Col>
 //               </Row>
-  
+
 //               <Row>
 //                 <Col className={styles.align__text_left}>
 //                   <BaseInput
@@ -326,7 +339,7 @@ export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
 //                     formik={form}
 //                   />
 //                 </Col>
-  
+
 //                 <Col className={styles.paragraph}>
 //                   <BaseCheck
 //                     className="mt-3 col-10 float-left"
@@ -337,7 +350,7 @@ export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
 //                   />
 //                 </Col>
 //               </Row>
-  
+
 //               <Row className={styles.align__text_left}>
 //                 <BaseInput
 //                   className="col-6 mt-3"
@@ -346,7 +359,7 @@ export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
 //                   formik={form}
 //                 />
 //               </Row>
-  
+
 //               <Row>
 //                 <Col>
 //                   <BaseInputPhone
@@ -410,7 +423,7 @@ export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
 //                     formik={form}
 //                   />
 //                 </Col>
-  
+
 //                 <Col className={styles.align__text_left}>
 //                   <BaseInput
 //                     className="col-12 mt-4"
@@ -420,7 +433,7 @@ export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
 //                     formik={form}
 //                   />
 //                 </Col>
-  
+
 //                 <Col className={styles.align__text_left}>
 //                   <BaseSelect
 //                     className="col-12 mt-4"
@@ -433,7 +446,7 @@ export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
 //                   />
 //                 </Col>
 //               </Row>
-  
+
 //               <Row className={`${styles.align__text_left} ${styles.paragraph}`}>
 //                 <Col>
 //                   <BaseSelect
@@ -441,13 +454,13 @@ export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
 //                     required
 //                     enumType={BooleanPreferenceType}
 //                     name="fmcsr"
-//                     placeholder="Click to Choose"
+//                     placeholder="CHOOSE"
 //                     label="Were you subject to the FMCSRs while employed here? (Current Company)"
 //                     formik={form}
 //                   />
 //                 </Col>
 //               </Row>
-  
+
 //               <Row className={`${styles.align__text_left} ${styles.paragraph}`}>
 //                 <Col>
 //                   <BaseSelect
@@ -455,7 +468,7 @@ export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
 //                     required
 //                     enumType={BooleanPreferenceType}
 //                     name="fmcsr"
-//                     placeholder="Click to Choose"
+//                     placeholder="CHOOSE"
 //                     label="Was your job designated as a safety-sensitive function in any DOT-regulated mode subject to the drug and alcohol testing requirements of 49 CFR Part 40? (Current Company)"
 //                     formik={form}
 //                   />
@@ -463,7 +476,7 @@ export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
 //               </Row>
 //             </>
 //           ) : null}
-  
+
 //           <Row className="mt-5">
 //             <Col>
 //               <Button className="float-right" type="reset">

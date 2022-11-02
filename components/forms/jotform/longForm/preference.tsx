@@ -45,9 +45,7 @@ export function Preferences(props: PreferenceProps) {
       <h1>Preferences</h1>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
         <Row className={styles.align__text_left}>
-          <p className={styles.paragraph}>
-            Routes you're open to (select ALL that best apply):{" "}
-          </p>
+          <p className={styles.paragraph}>{t("ROUTES_YOU_OPEN_FOR")}</p>
         </Row>
         <Row className={styles.align__text_left}>
           <Col>
@@ -55,33 +53,25 @@ export function Preferences(props: PreferenceProps) {
               className="col-3 mb-3"
               labelKey="ROUTES_OPEN_TO"
               name="routes_open_to"
-              // labelPrefix="JobEquipmentType"
               enumType={VehicleRouteType}
               formik={form}
             />
           </Col>
         </Row>
-        {/* <Row className={styles.align__text_left}>
-                    <p className={styles.paragraph}>Do you require W2 employment? </p>
-                </Row> */}
         <Row className={styles.align__text_left}>
           <Col className={styles.paragraph}>
             <BaseSelect
               className="col-3 mb-3"
               label="Do you require W2 employment?"
               name="requirement_W2"
-              placeholder="Click to choose"
-              // labelPrefix="JobEquipmentType"
+              placeholder="CHOOSE"
               enumType={BooleanPreferenceType}
               formik={form}
             />
           </Col>
         </Row>
         <Row className={styles.align__text_left}>
-          <p className={styles.paragraph}>
-            Other absolutely 100% necessary requirements (select all that
-            apply):{" "}
-          </p>
+          <p className={styles.paragraph}>{t("NECESSARY_REQUIREMENTS")}</p>
         </Row>
         <Row className={styles.align__text_left}>
           <Col>
@@ -89,7 +79,6 @@ export function Preferences(props: PreferenceProps) {
               className="col-3"
               labelKey="OTHER_REQUIREMENTS"
               name="other_requirements"
-              // labelPrefix="OtherRequirementType"
               enumType={OtherRequirement}
               formik={form}
             />

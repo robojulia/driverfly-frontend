@@ -32,26 +32,23 @@ export function MedicalCardUpload(props: MedicalCardUploadprops) {
 
   return (
     <>
-      <Form
-        onSubmit={form.handleSubmit}
-        onReset={form.handleReset}>
+      <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
         <Row>
-          <h3 className='mb-4'>Medical Card Upload</h3>
+          <h3 className="mb-4">Medical Card Upload</h3>
         </Row>
         <Row className={styles.align__text_left}>
           <BaseInput
-            className='col-5 mt-1'
+            className="col-5 mt-1"
             type="file"
-            name='photo'
-            placeholder='Photo'
-            label="Upload Your Medical Card"
+            name="photo"
+            placeholder="photo"
+            label="MEDICAL_CARD_UPLOAD"
             formik={form}
           />
         </Row>
         <Row className="mt-4">
           <Col>
-            <Button className="float-right"
-              type="reset">
+            <Button className="float-right" type="reset">
               {t("BACK")}
             </Button>
           </Col>
