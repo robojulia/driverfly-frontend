@@ -42,7 +42,7 @@ export function FifthPage({ onNextClick, onBackClick }: FifthPageProps) {
           <BaseCheck
             className="col-6 mb-3"
             name="can_pass_drug_test"
-            label="Can you pass a drug test?"
+            label="can_pass_drug_test"
             formik={form}
           />
         </Row>

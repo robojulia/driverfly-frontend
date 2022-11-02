@@ -13,6 +13,7 @@ import BaseSelect from "../../base-select";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import * as yup from "yup";
 import jotformContext from "../../../../context/jotform-context";
+import { PreferencesDto } from "../../../../models/jot-form/long-form/preferences.dto";
 export interface PreferenceProps extends PageProps {}
 
 export function Preferences({ onNextClick, onBackClick }: PreferenceProps) {
@@ -31,17 +32,8 @@ export function Preferences({ onNextClick, onBackClick }: PreferenceProps) {
   // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: {
-      routes_open_to: null,
-      other_requirements: null,
-    },
-    validationSchema: yup.object({
-      routes_open_to: yup
-        .array()
-        .min(1)
-        .typeError("Choose atleast one!")
-        .required(),
-    }),
+    initialValues: new PreferencesDto(),
+    validationSchema: PreferencesDto.yupSchema(),
     onSubmit: (values) => {
       onNextClick(values);
     },

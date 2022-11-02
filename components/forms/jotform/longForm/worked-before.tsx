@@ -7,6 +7,7 @@ import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
+import { WorkedBeforeDto } from "../../../../models/jot-form/long-form/worked-before.dto";
 
 export interface WorkedBeforeProps extends PageProps {}
 
@@ -26,29 +27,8 @@ export function WorkedBefore({ onNextClick, onBackClick }: WorkedBeforeProps) {
   // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: {
-      applied_before: false,
-      worked_before: false,
-      from_date: null,
-      to_date: null,
-    },
-    validationSchema: yup.object({
-      worked_before: yup.boolean().when("applied_before", {
-        is: (v) => !!v,
-        then: yup.boolean().required().nullable(),
-        otherwise: yup.boolean().optional().nullable(),
-      }),
-      from_date: yup.date().when("worked_before", {
-        is: (v) => !!v,
-        then: yup.date().required().nullable(),
-        otherwise: yup.date().optional().nullable(),
-      }),
-      to_date: yup.date().when("worked_before", {
-        is: (v) => !!v,
-        then: yup.date().required().nullable(),
-        otherwise: yup.date().optional().nullable(),
-      }),
-    }),
+    initialValues: new WorkedBeforeDto(),
+    validationSchema: WorkedBeforeDto.yupSchema(),
 
     onSubmit: (values) => {
       onNextClick(values);

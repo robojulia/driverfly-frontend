@@ -10,6 +10,7 @@ import { DriverEndorsement } from "../../../../enums/users/driver-endorsement.en
 import { States } from "../../../../enums/users/us-states.enum";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
+import { OtherQueuesDto } from "../../../../models/jot-form/long-form/other-queues.dto";
 
 export interface OtherQuesProps extends PageProps {}
 
@@ -213,10 +214,8 @@ export function OtherQues({ onNextClick, onBackClick }: OtherQuesProps) {
   // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: {
-      manual_qualification: null,
-      endorsements_twic: null,
-    },
+    initialValues: new OtherQueuesDto(),
+    validationSchema: OtherQueuesDto.yupSchema(),
     onSubmit: (values) => {
       onNextClick(values);
     },

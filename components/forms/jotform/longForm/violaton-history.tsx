@@ -6,6 +6,7 @@ import * as yup from "yup";
 import BaseInput from "../../base-input";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
+import { ViolationHistoryDto } from "../../../../models/jot-form/long-form/violation-history.dto";
 
 export interface ViolationsLast3YearsProps extends PageProps {}
 
@@ -28,26 +29,8 @@ export function ViolationsLast3Years({
   // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: {
-      violations_last_3_years: null,
-      date_of_violation_1: null,
-      location_1: null,
-      charge_1: null,
-      penalty_1: null,
-      date_of_violation_2: null,
-      location_2: null,
-      charge_2: null,
-      penalty_2: null,
-      date_of_violation_3: null,
-      location_3: null,
-      charge_3: null,
-      penalty_3: null,
-    },
-    validationSchema: yup.object({
-      // applied_before
-      // from_date: yup.date().required(),
-      // to_date: yup.date().required()
-    }),
+    initialValues: new ViolationHistoryDto(),
+    validationSchema: ViolationHistoryDto.yupSchema(),
     onSubmit: (values) => {
       onNextClick(values);
     },

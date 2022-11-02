@@ -11,6 +11,7 @@ import { useTranslation } from "../../../../hooks/use-translation";
 import { EducationLevel } from "../../../../enums/users/education-level.enum";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
+import { HighestLevelEducationDto } from "../../../../models/jot-form/long-form/highest-level-education.dto";
 
 // export interface HighestLevelEducationProps {
 //   onNextClick: (any) => void;
@@ -101,12 +102,8 @@ export function HighestLevelEducation({
   // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: {
-      education_level: null,
-    },
-    validationSchema: yup.object({
-      education_level: yup.string().required().nullable(),
-    }),
+    initialValues: new HighestLevelEducationDto(),
+    validationSchema: HighestLevelEducationDto.yupSchema(),
     onSubmit: (values) => {
       onNextClick(values);
     },
