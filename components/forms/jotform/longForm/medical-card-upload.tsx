@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import styles from "../../../../styles/jotform.module.css";
 import BaseInput from "../../base-input";
@@ -6,27 +6,37 @@ import { Button, Col, Row } from "react-bootstrap";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import jotformContext from "../../../../context/jotform-context";
 
-export interface MedicalCardUploadprops extends PageProps {
-  // onNextClick: (any) => void;
-  // onBackClick: () => void;
-  applicant: any;
-}
+export interface MedicalCardUploadprops extends PageProps {}
 
-export function MedicalCardUpload(props: MedicalCardUploadprops) {
-  useEffect(() => {
-    if (props.applicant && !form.dirty) form.setValues(props.applicant);
-  }, [props.applicant]);
+export function MedicalCardUpload({
+  onNextClick,
+  onBackClick,
+}: MedicalCardUploadprops) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
+
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: {
       photo: null,
     },
     onSubmit: (values) => {
-      props.onNextClick(values);
+      onNextClick(values);
     },
     onReset: (values) => {
-      props.onBackClick();
+      onBackClick();
     },
   });
 
@@ -34,7 +44,7 @@ export function MedicalCardUpload(props: MedicalCardUploadprops) {
     <>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
         <Row>
-          <h3 className="mb-4">Medical Card Upload</h3>
+          <h3 className="mb-4">{t("MEDICAL_CARD_UPLOAD_TITLE")}</h3>
         </Row>
         <Row className={styles.align__text_left}>
           <BaseInput

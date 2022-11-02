@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import styles from "../../../../styles/jotform.module.css";
 import Form from "react-bootstrap/Form";
@@ -12,13 +12,23 @@ import BaseInput from "../../base-input";
 import BaseSelect from "../../base-select";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import * as yup from "yup";
-export interface PreferenceProps extends PageProps {
-  // onNextClick: (any) => void;
-  // onBackClick: () => void;
-  applicant: any;
-}
+import jotformContext from "../../../../context/jotform-context";
+export interface PreferenceProps extends PageProps {}
 
-export function Preferences(props: PreferenceProps) {
+export function Preferences({ onNextClick, onBackClick }: PreferenceProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
+
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: {
@@ -33,16 +43,16 @@ export function Preferences(props: PreferenceProps) {
         .required(),
     }),
     onSubmit: (values) => {
-      props.onNextClick(values);
+      onNextClick(values);
     },
     onReset: (values) => {
-      props.onBackClick();
+      onBackClick();
     },
   });
   return (
     <>
       {" "}
-      <h1>Preferences</h1>
+      <h1>{t("PREFERENCES")}</h1>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
         <Row className={styles.align__text_left}>
           <p className={styles.paragraph}>{t("ROUTES_YOU_OPEN_FOR")}</p>

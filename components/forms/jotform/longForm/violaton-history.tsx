@@ -1,21 +1,31 @@
 import { useFormik } from "formik";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import * as yup from "yup";
 import BaseInput from "../../base-input";
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import jotformContext from "../../../../context/jotform-context";
 
-export interface ViolationsLast3YearsProps extends PageProps {
-  // onNextClick: (any) => void;
-  // onBackClick: () => void;
-  applicant: any;
-}
+export interface ViolationsLast3YearsProps extends PageProps {}
 
-export function ViolationsLast3Years(props: ViolationsLast3YearsProps) {
-  useEffect(() => {
-    if (props.applicant && !form.dirty) form.setValues(props.applicant);
-  }, [props.applicant]);
+export function ViolationsLast3Years({
+  onNextClick,
+  onBackClick,
+}: ViolationsLast3YearsProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
+
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: {
@@ -39,10 +49,10 @@ export function ViolationsLast3Years(props: ViolationsLast3YearsProps) {
       // to_date: yup.date().required()
     }),
     onSubmit: (values) => {
-      props.onNextClick(values);
+      onNextClick(values);
     },
     onReset: (values) => {
-      props.onBackClick();
+      onBackClick();
     },
   });
   return (

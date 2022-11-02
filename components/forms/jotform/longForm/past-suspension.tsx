@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import * as yup from "yup";
@@ -7,17 +7,27 @@ import BaseTextArea from "../../base-text-area";
 import BaseCheck from "../../base-check";
 import styles from "../../../../styles/jotform.module.css";
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import jotformContext from "../../../../context/jotform-context";
 
-export interface PastSuspensionsProps extends PageProps {
-  // onNextClick: (values?: any) => void;
-  // onBackClick: () => void;
-  applicant: any;
-}
+export interface PastSuspensionsProps extends PageProps {}
 
-export function PastSuspensions(props: PastSuspensionsProps) {
-  useEffect(() => {
-    if (props.applicant && !form.dirty) form.setValues(props.applicant);
-  }, [props.applicant]);
+export function PastSuspensions({
+  onNextClick,
+  onBackClick,
+}: PastSuspensionsProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
+
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: {
@@ -32,10 +42,10 @@ export function PastSuspensions(props: PastSuspensionsProps) {
       }),
     }),
     onSubmit: (values) => {
-      props.onNextClick(values);
+      onNextClick(values);
     },
     onReset: (values) => {
-      props.onBackClick();
+      onBackClick();
     },
   });
 

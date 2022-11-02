@@ -1,22 +1,29 @@
 import { useFormik } from "formik";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import * as yup from "yup";
 import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import jotformContext from "../../../../context/jotform-context";
 
-export interface WorkedBeforeProps extends PageProps {
-  // onNextClick: (any) => void;
-  // onBackClick: () => void;
-  applicant: any;
-}
+export interface WorkedBeforeProps extends PageProps {}
 
-export function WorkedBefore(props: WorkedBeforeProps) {
-  useEffect(() => {
-    if (props.applicant && !form.dirty) form.setValues(props.applicant);
-  }, [props.applicant]);
+export function WorkedBefore({ onNextClick, onBackClick }: WorkedBeforeProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
+
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: {
@@ -44,10 +51,10 @@ export function WorkedBefore(props: WorkedBeforeProps) {
     }),
 
     onSubmit: (values) => {
-      props.onNextClick(values);
+      onNextClick(values);
     },
     onReset: (values) => {
-      props.onBackClick();
+      onBackClick();
     },
   });
   return (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import styles from "../../../../styles/jotform.module.css";
 import * as yup from "yup";
@@ -10,6 +10,7 @@ import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { EducationLevel } from "../../../../enums/users/education-level.enum";
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import jotformContext from "../../../../context/jotform-context";
 
 // export interface HighestLevelEducationProps {
 //   onNextClick: (any) => void;
@@ -79,16 +80,25 @@ import { PageProps } from "../../../../types/jotform/page-props.type";
 //   onNextClick: (any) => void;
 //   onBackClick: () => void;
 
-export interface HighestLevelEducationProps extends PageProps {
-  // onNextClick: (any) => void;
-  // onBackClick: () => void;
-  applicant: any;
-}
+export interface HighestLevelEducationProps extends PageProps {}
 
-export function HighestLevelEducation(props: HighestLevelEducationProps) {
-  useEffect(() => {
-    if (props.applicant && !form.dirty) form.setValues(props.applicant);
-  }, [props.applicant]);
+export function HighestLevelEducation({
+  onNextClick,
+  onBackClick,
+}: HighestLevelEducationProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
+
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: {
@@ -98,10 +108,10 @@ export function HighestLevelEducation(props: HighestLevelEducationProps) {
       education_level: yup.string().required().nullable(),
     }),
     onSubmit: (values) => {
-      props.onNextClick(values);
+      onNextClick(values);
     },
     onReset: (values) => {
-      props.onBackClick();
+      onBackClick();
     },
   });
   return (
@@ -109,7 +119,7 @@ export function HighestLevelEducation(props: HighestLevelEducationProps) {
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
         <Row>
           <h6 className={styles.carrierName__smaller}>
-            Tell us about your Education
+            {t("TELL_ABOUT_YOUR_EDUCATION")}
           </h6>
         </Row>
         <Row className={styles.align__text_left}>

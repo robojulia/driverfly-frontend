@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import * as yup from "yup";
@@ -8,26 +8,33 @@ import BaseCheck from "../../base-check";
 import styles from "../../../../styles/jotform.module.css";
 import { DrugTestDto } from "../../../../models/jot-form/long-form/drug-test.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import jotformContext from "../../../../context/jotform-context";
 
-export interface DrugTestProps extends PageProps {
-  // onNextClick: (any) => void;
-  // onBackClick: () => void;
-  applicant: any;
-}
+export interface DrugTestProps extends PageProps {}
 
-export function DrugTest(props: DrugTestProps) {
-  useEffect(() => {
-    if (props.applicant && !form.dirty) form.setValues(props.applicant);
-  }, [props.applicant]);
+export function DrugTest({ onNextClick, onBackClick }: DrugTestProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
+
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new DrugTestDto(),
     validationSchema: DrugTestDto.yupSchema(),
     onSubmit: (values) => {
-      props.onNextClick(values);
+      onNextClick(values);
     },
     onReset: (values) => {
-      props.onBackClick();
+      onBackClick();
     },
   });
 

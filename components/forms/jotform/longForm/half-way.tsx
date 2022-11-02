@@ -4,24 +4,17 @@ import { Button, Col, Form, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 
-export interface HalfwayProps extends PageProps {
-  // onNextClick: (any) => void;
-  // onBackClick: () => void;
-  applicant: any;
-}
+export interface HalfwayProps extends PageProps {}
 
-export function Halfway(props: HalfwayProps) {
-  useEffect(() => {
-    if (props.applicant && !form.dirty) form.setValues(props.applicant);
-  }, [props.applicant]);
+export function Halfway({ onNextClick, onBackClick }: HalfwayProps) {
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: {},
     onSubmit: (values) => {
-      props.onNextClick(values);
+      onNextClick(values);
     },
     onReset: (values) => {
-      props.onBackClick();
+      onBackClick();
     },
   });
   return (

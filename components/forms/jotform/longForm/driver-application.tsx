@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "../../../../styles/jotform.module.css";
 import { Form, Button, Col, Row, Table } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
@@ -10,19 +10,27 @@ import SignatureCanvas from "react-signature-canvas";
 import { DriverApplicationDto } from "../../../../models/jot-form/long-form/driver-application.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
+import jotformContext from "../../../../context/jotform-context";
 
-export interface DriverApplicationProps extends PageProps {
-  applicant: any;
-}
+export interface DriverApplicationProps extends PageProps {}
 
 export function DriverApplication({
   onNextClick,
   onBackClick,
-  applicant,
 }: DriverApplicationProps) {
-  useEffect(() => {
-    if (applicant && !form.dirty) form.setValues(applicant);
-  }, [applicant]);
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
+
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
 
   const { t } = useTranslation();
   let padRef = React.useRef<SignatureCanvas>(null);

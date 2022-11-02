@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import styles from "../../../../styles/jotform.module.css";
 import { Button, Col, Row } from "react-bootstrap";
@@ -9,12 +9,9 @@ import { useTranslation } from "../../../../hooks/use-translation";
 import { DriverEndorsement } from "../../../../enums/users/driver-endorsement.enum";
 import { States } from "../../../../enums/users/us-states.enum";
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import jotformContext from "../../../../context/jotform-context";
 
-export interface OtherQuesProps extends PageProps {
-  // onNextClick: (any) => void;
-  // onBackClick: () => void;
-  applicant: any;
-}
+export interface OtherQuesProps extends PageProps {}
 
 // export function OtherQues(props: OtherQuesProps) {
 //   useEffect(() => {
@@ -200,10 +197,20 @@ export interface OtherQuesProps extends PageProps {
 //     </>
 //   );
 // }
-export function OtherQues(props: OtherQuesProps) {
-  useEffect(() => {
-    if (props.applicant && !form.dirty) form.setValues(props.applicant);
-  }, [props.applicant]);
+export function OtherQues({ onNextClick, onBackClick }: OtherQuesProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
+
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: {
@@ -211,10 +218,10 @@ export function OtherQues(props: OtherQuesProps) {
       endorsements_twic: null,
     },
     onSubmit: (values) => {
-      props.onNextClick(values);
+      onNextClick(values);
     },
     onReset: (values) => {
-      props.onBackClick();
+      onBackClick();
     },
   });
   return (

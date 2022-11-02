@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "../../../../styles/jotform.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
@@ -12,26 +12,36 @@ import { States } from "../../../../enums/users/us-states.enum";
 import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferences.enum";
 import { EmploymentHistoryDto } from "../../../../models/jot-form/long-form/employment-history.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import jotformContext from "../../../../context/jotform-context";
 
-export interface EmploymentHistoryProps extends PageProps {
-  // onNextClick: (values?: any) => void;
-  // onBackClick: () => void;
-  applicant: any;
-}
+export interface EmploymentHistoryProps extends PageProps {}
 
-export function EmploymentHistory(props: EmploymentHistoryProps) {
-  useEffect(() => {
-    if (props.applicant && !form.dirty) form.setValues(props.applicant);
-  }, [props.applicant]);
+export function EmploymentHistory({
+  onNextClick,
+  onBackClick,
+}: EmploymentHistoryProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
+
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new EmploymentHistoryDto(),
     validationSchema: EmploymentHistoryDto.yupSchema(),
     onSubmit: (values) => {
-      props.onNextClick(values);
+      onNextClick(values);
     },
     onReset: (values) => {
-      props.onBackClick();
+      onBackClick();
     },
   });
   useEffect(() => {

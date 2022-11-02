@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import styles from "../../../../styles/jotform.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
@@ -12,39 +12,48 @@ import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferenc
 import { States } from "../../../../enums/users/us-states.enum";
 import { PastEmploymentHistoryDto } from "../../../../models/jot-form/long-form/past-employment-history.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
-export interface PastEmploymentHistoryProps extends PageProps {
-  // onNextClick: (any) => void;
-  // onBackClick: () => void;
-  applicant: any;
-}
+import jotformContext from "../../../../context/jotform-context";
+export interface PastEmploymentHistoryProps extends PageProps {}
 
-export function PastEmploymentHistory(props: PastEmploymentHistoryProps) {
+export function PastEmploymentHistory({
+  onNextClick,
+  onBackClick,
+}: PastEmploymentHistoryProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
+
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new PastEmploymentHistoryDto(),
     validationSchema: PastEmploymentHistoryDto.yupSchema(),
     onSubmit: (values) => {
-      props.onNextClick(values);
+      onNextClick(values);
     },
     onReset: (values) => {
-      props.onBackClick();
+      onBackClick();
     },
   });
 
-  useEffect(() => {
-    if (props.applicant && !form.dirty) form.setValues(props.applicant);
-  }, [props.applicant]);
   return (
     <>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
         <h4
           className={`${styles.carrierName__smaller} ${styles.striped__border}`}
         >
-          Past Employment History
+          {t("PAST_EMPLOYMENT_HISTORY")}
         </h4>
         <p className={styles.paragraph__left}>
-          Please be honest about your past employment as this helps speed up the
-          hiring process.
+          {t("HONEST_ABOUT_PAST_EMPLOYMENT")}
         </p>
         <Row className={styles.align__text_left}>
           <BaseCheck

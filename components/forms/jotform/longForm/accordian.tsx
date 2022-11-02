@@ -1,25 +1,32 @@
 import { useFormik } from "formik";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
-import * as yup from "yup";
-import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
-import BaseSelect from "../../base-select";
 import styles from "../../../../styles/jotform.module.css";
 import Accordion from "react-bootstrap/Accordion";
 import SignaturePad from "react-signature-canvas";
 import SignatureCanvas from "react-signature-canvas";
 
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import jotformContext from "../../../../context/jotform-context";
 
-export interface AccordianLastPageProps extends PageProps {
-  //   onNextClick: (any) => void;
-  //   onBackClick: () => void;
-  applicant: any
-}
+export interface AccordianLastPageProps extends PageProps {}
 
 export function AccordianLastPage(props: AccordianLastPageProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
+
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   const { t } = useTranslation();
   let padRef = React.useRef<SignatureCanvas>(null);
   const clear = () => {
@@ -51,7 +58,9 @@ export function AccordianLastPage(props: AccordianLastPageProps) {
               <h3>{t("SECTION_I")}</h3>
             </Row>
             <Row className={styles.align__text_left}>
-              <p className={styles.paragraph}>{t("TO_BE_COMPLETED_BY_THE_NEW_EMPLOYER")}</p>
+              <p className={styles.paragraph}>
+                {t("TO_BE_COMPLETED_BY_THE_NEW_EMPLOYER")}
+              </p>
             </Row>
             <Row className={styles.align__text_left}>
               <h6>{t("EMPLOYEE_NAME_SUVINEET_SINGH")}</h6>
@@ -67,7 +76,9 @@ export function AccordianLastPage(props: AccordianLastPageProps) {
             </Row>
 
             <Row className={styles.align__text_left}>
-              <p className={styles.paragraph}>{t("I_HEREBY_AUTHORIZE_RELEASE_OF_BUSINESS")}</p>
+              <p className={styles.paragraph}>
+                {t("I_HEREBY_AUTHORIZE_RELEASE_OF_BUSINESS")}
+              </p>
             </Row>
             <Row className={styles.align__text_left}>
               <p className={styles.paragraph}>
@@ -129,14 +140,10 @@ export function AccordianLastPage(props: AccordianLastPageProps) {
               <p className={styles.paragraph}>{t("ADDRESS_MLK_BLVD")}</p>
               <p className={styles.paragraph}>{t("PHONE_#_(551)_430-1998")}</p>
               <p className={styles.paragraph}>Fax #: </p>
-              <p className={styles.paragraph}>
-                {t("DESIGNATED_EMPLOYER")}
-              </p>
+              <p className={styles.paragraph}>{t("DESIGNATED_EMPLOYER")}</p>
             </Row>
             <Row className={`${styles.align__text_left} ${styles.highlight}`}>
-              <h6>
-               {t("PLEASE_NOTE_THE_FOLLOWING_EMPLOYERS")}{" "}
-              </h6>
+              <h6>{t("PLEASE_NOTE_THE_FOLLOWING_EMPLOYERS")} </h6>
             </Row>
             <Row className={styles.align__text_left}>
               <h4 className="mt-3">I-B</h4>
@@ -144,12 +151,12 @@ export function AccordianLastPage(props: AccordianLastPageProps) {
               <p className={styles.paragraph}>{t("ADDRESS:")}</p>
               <p className={styles.paragraph}>{t("PHONE_#_:")}</p>
               <p className={styles.paragraph}>{t("FAX_#_:")}</p>
-              <p className={styles.paragraph}>{t("DESIGNATED_EMPLOYER_REPRESENTATIVE")} </p>
+              <p className={styles.paragraph}>
+                {t("DESIGNATED_EMPLOYER_REPRESENTATIVE")}{" "}
+              </p>
             </Row>
             <Row className={`${styles.align__text_left} ${styles.highlight}`}>
-              <h6>
-                {t("PLEASE_NOTE_THE_FOLLOWING")}{" "}
-              </h6>
+              <h6>{t("PLEASE_NOTE_THE_FOLLOWING")} </h6>
             </Row>
             <Row className={styles.blur}>
               <Row className={styles.align__text_left}>
@@ -158,9 +165,7 @@ export function AccordianLastPage(props: AccordianLastPageProps) {
                 </Col>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                  {t("TO_BE_COMPLETED")}
-                </p>
+                <p className={styles.paragraph}>{t("TO_BE_COMPLETED")}</p>
               </Row>
               <Row className={styles.align__text_left}>
                 <Col>
@@ -179,7 +184,7 @@ export function AccordianLastPage(props: AccordianLastPageProps) {
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                 {t("DID_HE/SHE_DRIVE_MOTOR_VEHICLE")}
+                  {t("DID_HE/SHE_DRIVE_MOTOR_VEHICLE")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
@@ -188,13 +193,12 @@ export function AccordianLastPage(props: AccordianLastPageProps) {
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                  {t("IF_THERE_IS_NO_SAFETY")}
-                </p>
+                <p className={styles.paragraph}>{t("IF_THERE_IS_NO_SAFETY")}</p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  {t("THE_APPLICANT_NAMED_ABOVE_WAS")}</p>
+                  {t("THE_APPLICANT_NAMED_ABOVE_WAS")}
+                </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
