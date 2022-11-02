@@ -25,7 +25,7 @@ export default function Pagination() {
     return (
         <div className="filter-outer mt-5">
             {
-                (pagingMeta?.totalPages && pagingMeta.totalPages !== 0) &&
+                pagingMeta.totalPages !== 0 &&
 
                 <ul className="pagination ">
                     {
