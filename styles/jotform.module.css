@@ -1,0 +1,131 @@
+.container {
+    background-color: darkblue;
+    flex-direction: column;
+    background-image: url("../public/form_bg.png");
+    background-position: center;
+    background-size: cover;
+}
+
+.nav {
+    background-color: white;
+    height: 60px;
+    padding: 10px 30px;
+}
+
+.main {
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.main_form {
+    min-height: 500px;
+    /* width: 800px; */
+    min-width: 800px;
+    max-width: 1200px;
+    /* height: 400px; */
+    margin-top: 150px;
+    margin-bottom: 150px;
+    padding: 40px;
+    border-radius: 14px;
+    background-color: #fff;
+    margin-bottom: 8rem;
+}
+
+.customButton{
+    background-color: #1d667e;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-right: 10px;
+    text-align: center;
+    margin-top: 2rem;
+}
+.logo{
+    text-align: center;
+    margin-bottom: 5rem;
+}
+.carrierName{
+    margin-top: 5rem;
+    text-align: center;
+    font-weight: 900;
+    color: rgb(90, 90, 90);
+    font-size: 36pt;
+}
+.carrierName__smaller{
+    margin-top: 1rem;
+    text-align: center;
+    font-weight: 900;
+    color: rgb(90, 90, 90);
+    font-size: 24pt;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+.Application{
+    text-align: center;
+    margin-top: 2rem;
+    color: rgb(90, 90, 90);
+    font-size: 24pt;
+}
+.paragraph{
+    font-style: italic;
+    color: rgb(90, 90, 90);
+    /* text-align: left; */
+}
+/* .input{
+    background-color: #CCFFFF;
+    color: black;
+    margin-left: 1rem;
+}
+.form1{
+    display: flex;
+    flex-direction: row;
+}
+.form1Name{
+    text-align: left;
+    margin-left: 1rem;
+}
+.form2{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+.input2{
+    background-color: #CCFFFF;
+    width: 10rem;
+    color: black;
+    margin-bottom: 5rem;
+} */
+.radio{
+    display: inline;
+    text-align: left;
+    left: 0;
+}
+.topicName{
+    text-align: cen;
+    font-weight: 900;
+}
+.main-radio{
+    margin-bottom: 5rem;
+}
+.CDL-experience{
+    margin-top: 4rem;
+}
+.align__text_left{
+    text-align: left;
+}
+
+.sigCanvas {
+    width: 600px;
+    border: 1px solid red;
+
+}
+.blur {
+	filter: blur(2px);
+}
+.highlight{
+    color: red;
+}
+  
+
