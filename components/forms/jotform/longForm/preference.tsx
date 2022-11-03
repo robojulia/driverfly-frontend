@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import styles from "../../../../styles/jotform.module.css";
 import Form from "react-bootstrap/Form";
@@ -12,42 +12,42 @@ import BaseInput from "../../base-input";
 import BaseSelect from "../../base-select";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import * as yup from "yup";
-export interface PreferenceProps extends PageProps {
-  // onNextClick: (any) => void;
-  // onBackClick: () => void;
-  applicant: any;
-}
+import jotformContext from "../../../../context/jotform-context";
+import { PreferencesDto } from "../../../../models/jot-form/long-form/preferences.dto";
+export interface PreferenceProps extends PageProps {}
 
-export function Preferences(props: PreferenceProps) {
+export function Preferences({ onNextClick, onBackClick }: PreferenceProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
+
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: {
-      routes_open_to: null,
-      other_requirements: null,
-    },
-    validationSchema: yup.object({
-      routes_open_to: yup
-        .array()
-        .min(1)
-        .typeError("Choose atleast one!")
-        .required(),
-    }),
+    initialValues: new PreferencesDto(),
+    validationSchema: PreferencesDto.yupSchema(),
     onSubmit: (values) => {
-      props.onNextClick(values);
+      onNextClick(values);
     },
     onReset: (values) => {
-      props.onBackClick();
+      onBackClick();
     },
   });
   return (
     <>
       {" "}
-      <h1>Preferences</h1>
+      <h1>{t("PREFERENCES")}</h1>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
         <Row className={styles.align__text_left}>
-          <p className={styles.paragraph}>
-            Routes you're open to (select ALL that best apply):{" "}
-          </p>
+          <p className={styles.paragraph}>{t("ROUTES_YOU_OPEN_FOR")}</p>
         </Row>
         <Row className={styles.align__text_left}>
           <Col>
@@ -55,33 +55,25 @@ export function Preferences(props: PreferenceProps) {
               className="col-3 mb-3"
               labelKey="ROUTES_OPEN_TO"
               name="routes_open_to"
-              // labelPrefix="JobEquipmentType"
               enumType={VehicleRouteType}
               formik={form}
             />
           </Col>
         </Row>
-        {/* <Row className={styles.align__text_left}>
-                    <p className={styles.paragraph}>Do you require W2 employment? </p>
-                </Row> */}
         <Row className={styles.align__text_left}>
           <Col className={styles.paragraph}>
             <BaseSelect
               className="col-3 mb-3"
               label="Do you require W2 employment?"
               name="requirement_W2"
-              placeholder="Click to choose"
-              // labelPrefix="JobEquipmentType"
+              placeholder="CHOOSE"
               enumType={BooleanPreferenceType}
               formik={form}
             />
           </Col>
         </Row>
         <Row className={styles.align__text_left}>
-          <p className={styles.paragraph}>
-            Other absolutely 100% necessary requirements (select all that
-            apply):{" "}
-          </p>
+          <p className={styles.paragraph}>{t("NECESSARY_REQUIREMENTS")}</p>
         </Row>
         <Row className={styles.align__text_left}>
           <Col>
@@ -89,7 +81,6 @@ export function Preferences(props: PreferenceProps) {
               className="col-3"
               labelKey="OTHER_REQUIREMENTS"
               name="other_requirements"
-              // labelPrefix="OtherRequirementType"
               enumType={OtherRequirement}
               formik={form}
             />

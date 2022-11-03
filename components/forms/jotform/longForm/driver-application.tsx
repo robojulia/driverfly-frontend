@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "../../../../styles/jotform.module.css";
 import { Form, Button, Col, Row, Table } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
@@ -10,15 +10,27 @@ import SignatureCanvas from "react-signature-canvas";
 import { DriverApplicationDto } from "../../../../models/jot-form/long-form/driver-application.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
+import jotformContext from "../../../../context/jotform-context";
 
-export interface DriverApplicationProps extends PageProps {
-  applicant: any;
-}
+export interface DriverApplicationProps extends PageProps {}
 
-export function DriverApplication({onNextClick, onBackClick, applicant}: DriverApplicationProps) {
-  useEffect(() => {
-    if (applicant && !form.dirty) form.setValues(applicant);
-  }, [applicant]);
+export function DriverApplication({
+  onNextClick,
+  onBackClick,
+}: DriverApplicationProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
+
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
 
   const { t } = useTranslation();
   let padRef = React.useRef<SignatureCanvas>(null);
@@ -37,14 +49,11 @@ export function DriverApplication({onNextClick, onBackClick, applicant}: DriverA
     <>
       <Form onSubmit={form.handleSubmit}>
         <h6 className={styles.carrierName}>Nautilus Trucking</h6>
-        <h6 className={styles.carrierName__smaller}>Driver Application</h6>
+        <h6 className={styles.carrierName__smaller}>
+          {t("DRIVER_APPLICATION")}
+        </h6>
         <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-          Submitting this application certifies that this form was completed by
-          me and all entries and information on it are true and complete to the
-          best of my knowledge. I authorize Nautilus Trucking to make
-          investigations and inquires of my driving history and past employment
-          records. I hereby authorize Nautilus Trucking to check my MVR from DMV
-          and PSP record for review as part of the hiring process.
+          {t("MVR_AND_DMV_AUTHORIZATION_TO_NAUTILIUS")}
         </p>
 
         <Row className={styles.align__text_left}>
@@ -53,7 +62,7 @@ export function DriverApplication({onNextClick, onBackClick, applicant}: DriverA
             required
             name="first_name"
             placeholder="FIRST_NAME"
-            label="First Name"
+            label="FIRST_NAME"
             formik={form}
           />
         </Row>
@@ -63,7 +72,7 @@ export function DriverApplication({onNextClick, onBackClick, applicant}: DriverA
             required
             name="last_name"
             placeholder="LAST_NAME"
-            label="Last Name"
+            label="FIRST_NAME"
             formik={form}
           />
         </Row>
@@ -74,13 +83,13 @@ export function DriverApplication({onNextClick, onBackClick, applicant}: DriverA
             type="date"
             name="date"
             placeholder="DATE"
-            label="Date"
+            label="DATE"
             formik={form}
           />
         </Row>
-        <Row className={ styles.align__text_left}>
+        <Row className={styles.align__text_left}>
           <Col>
-            <h6>Signature</h6>
+            <h6>{t("SIGNATURE")}</h6>
             <SignaturePad
               className
               ref={padRef}
@@ -99,19 +108,17 @@ export function DriverApplication({onNextClick, onBackClick, applicant}: DriverA
           </Col>
         </Row>
         <Row className="mt-3">
-                  <Col>
-                      <Button className="float-right"
-                      type="reset">
-                          {t("BACK")}
-                      </Button>
-                  </Col>
-                  <Col>
-                      <Button className="float-left"
-                      type="submit">
-                          {t("NEXT")}
-                      </Button>
-                  </Col>
-              </Row>
+          <Col>
+            <Button className="float-right" type="reset">
+              {t("BACK")}
+            </Button>
+          </Col>
+          <Col>
+            <Button className="float-left" type="submit">
+              {t("NEXT")}
+            </Button>
+          </Col>
+        </Row>
       </Form>
     </>
   );

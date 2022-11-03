@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import styles from "../../../../styles/jotform.module.css";
 import * as yup from "yup";
@@ -14,26 +14,32 @@ import moment from "moment";
 import { States } from "../../../../enums/users/us-states.enum";
 import { DrivingExperienceDto } from "../../../../models/jot-form/long-form/driving-experience.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import jotformContext from "../../../../context/jotform-context";
 
-export interface DrivingExpProps extends PageProps {
-  // onNextClick: (any) => void;
-  // onBackClick: () => void;
-  applicant: any;
-}
-export function DrivingExp(props: DrivingExpProps) {
+export interface DrivingExpProps extends PageProps {}
+export function DrivingExp({ onNextClick, onBackClick }: DrivingExpProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
 
-  useEffect(() => {
-    if (props.applicant && !form.dirty) form.setValues(props.applicant);
-  }, [props.applicant]);
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new DrivingExperienceDto(),
     validationSchema: DrivingExperienceDto.yupSchema(),
     onSubmit: (values) => {
-      props.onNextClick(values);
+      onNextClick(values);
     },
     onReset: (values) => {
-      props.onBackClick();
+      onBackClick();
     },
   });
 
@@ -46,8 +52,8 @@ export function DrivingExp(props: DrivingExpProps) {
             className="col-12 mt-3"
             required
             name="cdl_number"
-            placeholder="CDL License Number"
-            label="CDL NUMBER"
+            placeholder="CDL_LICENSE_PLACEHOLDER"
+            label="CDL_NUMBER"
             formik={form}
           />
         </Col>
@@ -57,8 +63,8 @@ export function DrivingExp(props: DrivingExpProps) {
             required
             enumType={States}
             name="state"
-            placeholder="State"
-            label="Current State"
+            placeholder="state"
+            label="CURRENT_STATE"
             formik={form}
           />
         </Col>
@@ -68,8 +74,8 @@ export function DrivingExp(props: DrivingExpProps) {
             required
             type="date"
             name="expiration_date"
-            placeholder="Expiration Date"
-            label="Expiration Date"
+            placeholder="expiration_date"
+            label="expiration_date"
             formik={form}
           />
         </Col>
@@ -80,22 +86,15 @@ export function DrivingExp(props: DrivingExpProps) {
           <BaseSelect
             className="col-4 mt-3"
             required
-            label="State Issued"
+            label="state_issued"
             name="state_issued"
-            placeholder="State of Issuance"
+            placeholder="ISSUANCE_STATE"
             enumType={States}
             formik={form}
           />
         </Col>
       </Row>
       <Row>
-      <Col>
-        <BaseInput
-          name="input"
-          label="child_component"
-          className="mb-3"
-        />
-      </Col>
         <Col>
           {/* <Button className="float-right" onClick={() => setCount(count + 1)}>
             {t("ADD")}
@@ -109,7 +108,6 @@ export function DrivingExp(props: DrivingExpProps) {
           >
 
           </ViewCard> */}
-          
         </Col>
         <Col>
           {/* <Button className="float-right" onClick={() => setCount(count - 1)}>

@@ -42,7 +42,7 @@ export function FifthPage({ onNextClick, onBackClick }: FifthPageProps) {
           <BaseCheck
             className="col-6 mb-3"
             name="can_pass_drug_test"
-            label="Can you pass a drug test?"
+            label="can_pass_drug_test"
             formik={form}
           />
         </Row>
@@ -53,8 +53,8 @@ export function FifthPage({ onNextClick, onBackClick }: FifthPageProps) {
             type="number"
             step={1}
             min={0}
-            label="Accidents within the last 5 years?"
-            placeholder="ex:2"
+            label="accidents_last_5_years"
+            placeholder="PLACEHOLDER_FOR_DIGITS"
             formik={form}
           />
         </Row>
@@ -65,8 +65,8 @@ export function FifthPage({ onNextClick, onBackClick }: FifthPageProps) {
             type="number"
             step={1}
             min={0}
-            label="Number of moving violations in the last 3 years?"
-            placeholder="ex:2"
+            label="voilations_in_last_3_years"
+            placeholder="PLACEHOLDER_FOR_DIGITS"
             formik={form}
           />
         </Row>
