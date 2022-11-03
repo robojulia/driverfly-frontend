@@ -31,17 +31,17 @@ export function  ThirdPage({ onNextClick, onBackClick }: ThirdPageProps) {
       onBackClick();
     },
   });
-  const getInfoByPhone = async ({ target: { name, value } }) => {
-    const applicantApi = new ApplicantApi();
-    try {
-      const response = await applicantApi.search({ [name]: value });
-      console.log("response", response[0]);
-      form.setFieldValue(name, value);
-      setApplicant(response[0]);
-    } catch (error) {
-      console.log(error, "Error Occured");
-    }
-  };
+  // const getInfoByPhone = async ({ target: { name, value } }) => {
+  //   const applicantApi = new ApplicantApi();
+  //   try {
+  //     const response = await applicantApi.search({ [name]: value });
+  //     console.log("response", response[0]);
+  //     form.setFieldValue(name, value);
+  //     setApplicant(response[0]);
+  //   } catch (error) {
+  //     console.log(error, "Error Occured");
+  //   }
+  // };
   // useEffect(() => {
   //   const { email, phone, zip_code, options } = applicant;
   //   form.setValues({
@@ -74,7 +74,7 @@ export function  ThirdPage({ onNextClick, onBackClick }: ThirdPageProps) {
             required
             name="phone"
             label="phone"
-            onChange={getInfoByPhone}
+            // onChange={getInfoByPhone}
             formik={form}
           />
         </Row>
