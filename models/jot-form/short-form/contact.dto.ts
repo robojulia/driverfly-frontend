@@ -1,17 +1,19 @@
 import * as yup from "yup";
+import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
+import { ApplicantExtrasEntity } from "../../applicant/applicant-extras.entity";
 
 export class ContactDto {
-  email: string;
-  phone: string;
-  zip_code: string;
-  options: string;
+    email: string;
+    phone: string;
+    zip_code: string;
+    AUTHORIZE_TO_COMMUNICATE: ApplicantExtrasEntity = new ApplicantExtrasEntity(ApplicantExtras.AUTHORIZE_TO_COMMUNICATE);
 
-  static yupSchema() {
-    return yup.object({
-      email: yup.string().email().required().nullable(),
-      phone: yup.string().required().nullable(),
-      zip_code: yup.string().required().nullable(),
-      options: yup.string().required().nullable(),
-    });
-  }
+    static yupSchema() {
+        return yup.object({
+            email: yup.string().email().required().nullable(),
+            phone: yup.string().required().nullable(),
+            zip_code: yup.string().required().nullable(),
+            AUTHORIZE_TO_COMMUNICATE: ApplicantExtrasEntity.yupSchema(),
+        });
+    }
 }
