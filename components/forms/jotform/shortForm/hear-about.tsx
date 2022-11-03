@@ -41,8 +41,8 @@ export function SixthPage({ onNextClick, onBackClick }: SixthPageProps) {
             className="mt-3 mb-3"
             options={["Referral", "Friends", "Job Board", "Social Media"]}
             name="hear_about_us"
-            placeholder="Click to choose"
-            label="How did you hear about us"
+            placeholder="CHOOSE"
+            label="HOW_DID_YOU_HEAR_ABOUT_US"
             formik={form}
           />
         </Row>

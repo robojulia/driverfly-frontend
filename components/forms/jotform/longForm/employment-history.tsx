@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "../../../../styles/jotform.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
@@ -12,26 +12,36 @@ import { States } from "../../../../enums/users/us-states.enum";
 import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferences.enum";
 import { EmploymentHistoryDto } from "../../../../models/jot-form/long-form/employment-history.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import jotformContext from "../../../../context/jotform-context";
 
-export interface EmploymentHistoryProps extends PageProps {
-  // onNextClick: (values?: any) => void;
-  // onBackClick: () => void;
-  applicant: any;
-}
+export interface EmploymentHistoryProps extends PageProps {}
 
-export function EmploymentHistory(props: EmploymentHistoryProps) {
-  useEffect(() => {
-    if (props.applicant && !form.dirty) form.setValues(props.applicant);
-  }, [props.applicant]);
+export function EmploymentHistory({
+  onNextClick,
+  onBackClick,
+}: EmploymentHistoryProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
+
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new EmploymentHistoryDto(),
     validationSchema: EmploymentHistoryDto.yupSchema(),
     onSubmit: (values) => {
-      props.onNextClick(values);
+      onNextClick(values);
     },
     onReset: (values) => {
-      props.onBackClick();
+      onBackClick();
     },
   });
   useEffect(() => {
@@ -55,7 +65,7 @@ export function EmploymentHistory(props: EmploymentHistoryProps) {
             className="mt-2 col-6 float-left"
             required
             name="employed_type"
-            label="Are you currently employed?"
+            label="CURRENTLY_EMPLYED_QUESTION"
             formik={form}
           />
         </Row>
@@ -76,7 +86,7 @@ export function EmploymentHistory(props: EmploymentHistoryProps) {
                 <BaseInput
                   className="col-12 mt-3"
                   name="current_company_name"
-                  label="Current Company Name"
+                  label="CURRENT_COMPANY_NAME"
                   formik={form}
                 />
               </Col>
@@ -84,7 +94,7 @@ export function EmploymentHistory(props: EmploymentHistoryProps) {
                 <BaseInput
                   className="col-12 mt-3"
                   name="current_company_position"
-                  label="Position(Current Company)"
+                  label="CURRENT_COMPANY_POSITION"
                   formik={form}
                 />
               </Col>
@@ -97,7 +107,7 @@ export function EmploymentHistory(props: EmploymentHistoryProps) {
                   required
                   type="date"
                   name="start_date"
-                  label="Start Date"
+                  label="START_DATE"
                   formik={form}
                 />
               </Col>
@@ -107,7 +117,7 @@ export function EmploymentHistory(props: EmploymentHistoryProps) {
                   className="mt-3 col-10 float-left"
                   required
                   name="authorize"
-                  label="Do you authorize us to contact this company?"
+                  label="CONATACT_AUTHORITY"
                   formik={form}
                 />
               </Col>
@@ -117,7 +127,7 @@ export function EmploymentHistory(props: EmploymentHistoryProps) {
               <BaseInput
                 className="col-6 mt-3"
                 name="current_company_manager_name"
-                label="Manager or Representative (Current Company)"
+                label="MANAGER_OR_REPRESENTATIVE"
                 formik={form}
               />
             </Row>
@@ -127,8 +137,8 @@ export function EmploymentHistory(props: EmploymentHistoryProps) {
                 <BaseInputPhone
                   className="col-10 mt-3 mb-2"
                   name="current_company_phone_number"
-                  // placeholder="Phone Number"
-                  label="Phone Number (Current Company)"
+                  placeholder="phone"
+                  label="CURRENT_COMPANY_NUMBER"
                   formik={form}
                 />
               </Col>
@@ -137,8 +147,8 @@ export function EmploymentHistory(props: EmploymentHistoryProps) {
                   className="col-10 mt-3 mb-2"
                   required
                   name="current_company_email"
-                  label="Email (Current Company)"
-                  // placeholder='EMAIL'
+                  label="CURRENT_COMPANY_EMAIL"
+                  placeholder="email"
                   formik={form}
                 />
               </Col>
@@ -156,8 +166,8 @@ export function EmploymentHistory(props: EmploymentHistoryProps) {
                   className="col-6 mt-3"
                   required
                   name="current_company_street_address_line_1"
-                  placeholder="Address Line 1"
-                  label="Street Address Line 1 (Current Company)"
+                  placeholder="ADDRESS_LINE_1"
+                  label="ADDRESS_LINE_1"
                   formik={form}
                 />
               </Col>
@@ -168,8 +178,8 @@ export function EmploymentHistory(props: EmploymentHistoryProps) {
                   className="col-6 mt-3"
                   required
                   name="current_company_street_address_line_2"
-                  placeholder="Address Line 2"
-                  label="Street Address Line 2 (Current Company)"
+                  placeholder="ADDRESS_LINE_2"
+                  label="ADDRESS_LINE_2"
                   formik={form}
                 />
               </Col>
@@ -180,8 +190,8 @@ export function EmploymentHistory(props: EmploymentHistoryProps) {
                   className="col-12 mt-2"
                   required
                   name="current_company_zipcode"
-                  // placeholder='Zip Code'
-                  label="Postal / Zip Code (Current Company)"
+                  placeholder="zip_code"
+                  label="zip_code"
                   formik={form}
                 />
               </Col>
@@ -201,9 +211,9 @@ export function EmploymentHistory(props: EmploymentHistoryProps) {
                   className="col-12 mt-4"
                   required
                   enumType={States}
-                  name="state"
-                  placeholder="CHOOSE STATE"
-                  label="State"
+                  name="STATE"
+                  placeholder="CHOOSE_STATE"
+                  label="STATE"
                   formik={form}
                 />
               </Col>
@@ -216,8 +226,8 @@ export function EmploymentHistory(props: EmploymentHistoryProps) {
                   required
                   enumType={BooleanPreferenceType}
                   name="fmcsr"
-                  placeholder="Click to Choose"
-                  label="Were you subject to the FMCSRs while employed here? (Current Company)"
+                  placeholder="CHOOSE"
+                  label="FMCR_QUESTION"
                   formik={form}
                 />
               </Col>
@@ -230,8 +240,8 @@ export function EmploymentHistory(props: EmploymentHistoryProps) {
                   required
                   enumType={BooleanPreferenceType}
                   name="fmcsr"
-                  placeholder="Click to Choose"
-                  label="Was your job designated as a safety-sensitive function in any DOT-regulated mode subject to the drug and alcohol testing requirements of 49 CFR Part 40? (Current Company)"
+                  placeholder="CHOOSE"
+                  label="JOB_DESIGNATED_CURRENT_COMPANY"
                   formik={form}
                 />
               </Col>
