@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import * as yup from "yup";
@@ -8,50 +8,59 @@ import BaseCheck from "../../base-check";
 import styles from "../../../../styles/jotform.module.css";
 import { FelonyConvictionDto } from "../../../../models/jot-form/long-form/felony-conviction.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import jotformContext from "../../../../context/jotform-context";
 
-export interface FelonyConvictionProps extends PageProps {
-  // onNextClick: (any) => void;
-  // onBackClick: () => void;
-  applicant: any;
-}
+export interface FelonyConvictionProps extends PageProps {}
 
-export function FelonyConviction(props: FelonyConvictionProps) {
-  useEffect(() => {
-    if (props.applicant && !form.dirty) form.setValues(props.applicant);
-  }, [props.applicant]);
+export function FelonyConviction({
+  onNextClick,
+  onBackClick,
+}: FelonyConvictionProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
+
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new FelonyConvictionDto(),
     validationSchema: FelonyConvictionDto.yupSchema(),
     onSubmit: (values) => {
-      props.onNextClick(values);
+      onNextClick(values);
     },
     onReset: (values) => {
-      props.onBackClick();
+      onBackClick();
     },
   });
 
-    return(
-        <Form onSubmit={ form.handleSubmit }
-            onReset={ form.handleReset }>
-             <Row className={ styles.paragraph__left }>
-                <BaseCheck
-                        className="float-left col-6"
-                        name="felony_declaration"
-                        label="Have you ever been convicted of a felony?"
-                        formik={form}
-                    />
-            </Row>   
-            {form.values.felony_declaration ? (
-                <Row className={styles.align__text_left}>
-                    <BaseTextArea
-                        className='float-left mt-3'
-                        name="explanations"
-                        label="Please explain past convictions (if any)"
-                        formik={ form }
-                    />
-                </Row>
-            ) : null}
+  return (
+    <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+      <Row className={styles.paragraph__left}>
+        <BaseCheck
+          className="float-left col-6"
+          name="felony_declaration"
+          label="EVER_FELONY_QUESTION"
+          formik={form}
+        />
+      </Row>
+      {form.values.felony_declaration ? (
+        <Row className={styles.align__text_left}>
+          <BaseTextArea
+            className="float-left mt-3"
+            name="explanations"
+            label="PAST_CONVICTION"
+            formik={form}
+          />
+        </Row>
+      ) : null}
 
       <Row className="mt-5">
         <Col>

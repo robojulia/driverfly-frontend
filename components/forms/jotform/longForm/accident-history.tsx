@@ -42,14 +42,14 @@ export function AccidentsLast5Years({
   });
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <h6>Tell us more about your accidents(even if not at fault)</h6>
+      <h6>{t('MORE_ABOUT_ACCIDENTS')}</h6>
       <Row>
         <Col>
           <BaseInput
             className="col-6 mt-3"
             name="accidents_within_last_5_years"
             label="accidents_last_5_years"
-            placeholder="Enter number"
+            placeholder="PLACEHOLDER_FOR_DIGITS"
             formik={form}
           />
         </Col>
@@ -59,7 +59,7 @@ export function AccidentsLast5Years({
           <BaseInput
             className="col-12 mt-3"
             name="date_of_accident_1"
-            label="Date of Accident"
+            label="DATE"
             type="date"
             formik={form}
           />
@@ -68,7 +68,7 @@ export function AccidentsLast5Years({
           <BaseInput
             className="col-12 mt-3"
             name="nature_of_accident_1"
-            label="Nature of Accident"
+            label="LABEL_ACCIDENT_NATURE"
             formik={form}
           />
         </Col>
@@ -76,7 +76,7 @@ export function AccidentsLast5Years({
           <BaseInput
             className="col-12 mt-3"
             name="location_of_accident_1"
-            label="Location of Accident"
+            label="LABEL_ACCIDENT_LOCATION"
             formik={form}
           />
         </Col>
@@ -84,7 +84,7 @@ export function AccidentsLast5Years({
           <BaseInput
             className="col-12 mt-3"
             name="number_of_fatalities_1"
-            label="Number of Fatalities"
+            label="LABEL_ACCIDENT_FATALITIES"
             formik={form}
           />
         </Col>
@@ -92,7 +92,7 @@ export function AccidentsLast5Years({
           <BaseInput
             className="col-12 mt-3"
             name="number_of_injured_1"
-            label="Number of Injured"
+            label="LABEL_ACCIDENT_INJURED"
             formik={form}
           />
         </Col>
@@ -100,14 +100,14 @@ export function AccidentsLast5Years({
           <BaseCheck
             className="col-12 mt-3"
             name="dot_recordable_1"
-            label="DOT Recordable?"
+            label="LABEL_ACCIDENT_DOT"
             formik={form}
           />
 
           <BaseCheck
             className="col-12 mt-3"
             name="at_fault_1"
-            label="At Fault?"
+            label="LABEL_ACCIDENT_FAULT"
             formik={form}
           />
         </Col>
@@ -117,7 +117,7 @@ export function AccidentsLast5Years({
           <BaseInput
             className="col-12 mt-3"
             name="date_of_accident_2"
-            label="Date of Accident"
+            label="LABEL_ACCIDENT_DATE"
             type="date"
             formik={form}
           />
@@ -126,7 +126,7 @@ export function AccidentsLast5Years({
           <BaseInput
             className="col-12 mt-3"
             name="nature_of_accident_2"
-            label="Nature of Accident"
+            label="LABEL_ACCIDENT_NATURE"
             formik={form}
           />
         </Col>
@@ -134,7 +134,7 @@ export function AccidentsLast5Years({
           <BaseInput
             className="col-12 mt-3"
             name="location_of_accident_2"
-            label="Location of Accident"
+            label="LABEL_ACCIDENT_LOCATION"
             formik={form}
           />
         </Col>
@@ -142,7 +142,7 @@ export function AccidentsLast5Years({
           <BaseInput
             className="col-12 mt-3"
             name="number_of_fatalities_2"
-            label="Number of Fatalities"
+            label="LABEL_ACCIDENT_FATALITIES"
             formik={form}
           />
         </Col>
@@ -150,7 +150,7 @@ export function AccidentsLast5Years({
           <BaseInput
             className="col-12 mt-3"
             name="number_of_injured_2"
-            label="Number of Injured"
+            label="LABEL_ACCIDENT_INJURED"
             formik={form}
           />
         </Col>
@@ -158,14 +158,14 @@ export function AccidentsLast5Years({
           <BaseCheck
             className="col-12 mt-3"
             name="dot_recordable_2"
-            label="DOT Recordable?"
+            label="LABEL_ACCIDENT_DOT"
             formik={form}
           />
 
           <BaseCheck
             className="col-12 mt-3"
             name="at_fault_2"
-            label="At Fault?"
+            label="LABEL_ACCIDENT_FAULT"
             formik={form}
           />
         </Col>
@@ -175,7 +175,7 @@ export function AccidentsLast5Years({
           <BaseInput
             className="col-12 mt-3"
             name="date_of_accident_3"
-            label="Date of Accident"
+            label="LABEL_ACCIDENT_DATE"
             type="date"
             formik={form}
           />
@@ -184,7 +184,7 @@ export function AccidentsLast5Years({
           <BaseInput
             className="col-12 mt-3"
             name="nature_of_accident_3"
-            label="Nature of Accident"
+            label="LABEL_ACCIDENT_NATURE"
             formik={form}
           />
         </Col>
@@ -192,7 +192,7 @@ export function AccidentsLast5Years({
           <BaseInput
             className="col-12 mt-3"
             name="location_of_accident_3"
-            label="Location of Accident"
+            label="LABEL_ACCIDENT_LOCATION"
             formik={form}
           />
         </Col>
@@ -200,7 +200,7 @@ export function AccidentsLast5Years({
           <BaseInput
             className="col-12 mt-3"
             name="number_of_fatalities_3"
-            label="Number of Fatalities"
+            label="LABEL_ACCIDENT_FATALITIES"
             formik={form}
           />
         </Col>
@@ -208,7 +208,7 @@ export function AccidentsLast5Years({
           <BaseInput
             className="col-12 mt-3"
             name="number_of_injured_3"
-            label="Number of Injured"
+            label="LABEL_ACCIDENT_INJURED"
             formik={form}
           />
         </Col>
@@ -216,14 +216,14 @@ export function AccidentsLast5Years({
           <BaseCheck
             className="col-12 mt-3"
             name="dot_recordable_3"
-            label="DOT Recordable?"
+            label="LABEL_ACCIDENT_DOT"
             formik={form}
           />
 
           <BaseCheck
             className="col-12 mt-3"
             name="at_fault_3"
-            label="At Fault?"
+            label="LABEL_ACCIDENT_FAULT"
             formik={form}
           />
         </Col>

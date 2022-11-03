@@ -1,25 +1,32 @@
 import { useFormik } from "formik";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
-import * as yup from "yup";
-import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
-import BaseSelect from "../../base-select";
 import styles from "../../../../styles/jotform.module.css";
 import Accordion from "react-bootstrap/Accordion";
 import SignaturePad from "react-signature-canvas";
 import SignatureCanvas from "react-signature-canvas";
 
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import jotformContext from "../../../../context/jotform-context";
 
-export interface AccordianLastPageProps extends PageProps {
-  //   onNextClick: (any) => void;
-  //   onBackClick: () => void;
-  applicant: any
-}
+export interface AccordianLastPageProps extends PageProps {}
 
 export function AccordianLastPage(props: AccordianLastPageProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
+
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   const { t } = useTranslation();
   let padRef = React.useRef<SignatureCanvas>(null);
   const clear = () => {
@@ -39,85 +46,71 @@ export function AccordianLastPage(props: AccordianLastPageProps) {
   });
   return (
     <Form>
-      <h1>Forms to Sign</h1>
-      <h6>
-        Please click each arrow to expand and complete the following forms
-        required for your application.
-      </h6>
+      <h1>{t("FORMS_TO_SIGNUP")}</h1>
+      <h6>{t("PLEASE_CLICK_EACH_ARROW")}</h6>
       <Accordion className="col-12">
         <Accordion.Item eventKey="0">
-          <Accordion.Header>VERIFICATION OF EMPLOYMENT</Accordion.Header>
+          <Accordion.Header>{t("VERIFICATION_OF_EMPLOYMENT")}</Accordion.Header>
           <Accordion.Body>
-            <h2>VERIFICATION OF EMPLOYMENT</h2>
-            <h6>SAFETY PERFORMANCE HISTORY RECORDS REQUEST</h6>
+            <h2>{t("VERIFICATION_OF_EMPLOYMENT")}</h2>
+            <h6>{t("SAFETY_PERFORMANCE_HISTORY_RECORDS_REQUEST")}</h6>
             <Row className={styles.align__text_left}>
-              <h3>Section I.</h3>
+              <h3>{t("SECTION_I")}</h3>
             </Row>
             <Row className={styles.align__text_left}>
               <p className={styles.paragraph}>
-                To be completed by the new employer, signed by the employee, and
-                transmitted to the previous employer:
+                {t("TO_BE_COMPLETED_BY_THE_NEW_EMPLOYER")}
               </p>
             </Row>
             <Row className={styles.align__text_left}>
-              <h6>Employee Name: Suvineet Singh</h6>
+              <h6>{t("EMPLOYEE_NAME_SUVINEET_SINGH")}</h6>
             </Row>
             <Row className={styles.align__text_left}>
               <Col>
                 <BaseInput
                   className="col-6 mb-3 mt-3"
                   name="BUSINESS_TAX_NUMBER"
-                  label="Employee SS or Business Tax ID Number"
+                  label="EMPLOYEE_SS_OR_BUSINESS"
                 />
               </Col>
             </Row>
 
             <Row className={styles.align__text_left}>
               <p className={styles.paragraph}>
-                I hereby authorize release of information from my Department of
-                Transportation regulated drug and alcohol testing records by my
-                previous employer(s), listed in Section I-B, to the employer
-                listed in Section I-A. This release is in accordance with DOT
-                Regulation 49 CFR Part 40, Section 40.25. I understand that
-                information to be released in Section II-B by my previous
-                employer(s), is limited to the following DOT-regulated testing
-                items:
+                {t("I_HEREBY_AUTHORIZE_RELEASE_OF_BUSINESS")}
               </p>
             </Row>
             <Row className={styles.align__text_left}>
               <p className={styles.paragraph}>
                 {" "}
-                1. Alcohol tests with a result of 0.04 or higher;
+                {t("ALCOHOL_TESTS_WITH_A_RESULT")}
               </p>
             </Row>
             <Row className={styles.align__text_left}>
               <p className={styles.paragraph}>
                 {" "}
-                2. Verified positive drug tests;
+                {t("VERIFY_POSITIVE_DRUG_TESTS")}
               </p>
             </Row>
             <Row className={styles.align__text_left}>
-              <p className={styles.paragraph}> 3. Refusals to be tested;</p>
+              <p className={styles.paragraph}> {t("REFUSALS_TO_BE_TESTED")}</p>
             </Row>
             <Row className={styles.align__text_left}>
               <p className={styles.paragraph}>
                 {" "}
-                4. Other violations of DOT agency drug and alcohol testing
-                regulations;
-              </p>
-            </Row>
-            <Row className={styles.align__text_left}>
-              <p className={styles.paragraph}>
-                {" "}
-                5. Information obtained from previous employers of a drug and
-                alcohol rule violation;
+                {t("OTHER_VIOLATIONS_OF_DOT")}
               </p>
             </Row>
             <Row className={styles.align__text_left}>
               <p className={styles.paragraph}>
                 {" "}
-                6. Documentation, if any, of completion of the return-to-duty
-                process following a rule violation.
+                {t("INFORMATION_OBTAINED_FROM_PREVIOUS")}
+              </p>
+            </Row>
+            <Row className={styles.align__text_left}>
+              <p className={styles.paragraph}>
+                {" "}
+                {t("DOCUMENTATION_IF_ANY_OF_COMPLETION")}
               </p>
             </Row>
             <Row className={styles.align__text_left}>
@@ -136,105 +129,80 @@ export function AccordianLastPage(props: AccordianLastPageProps) {
             </Row>
             <Row className={styles.align__text_left}>
               <Col>
-                <button onClick={clear}>Clear</button>
+                <button onClick={clear}>{t("CLEAR")}</button>
               </Col>
             </Row>
             <Row className={styles.align__text_left}>
               <h4 className="mt-3">I-A</h4>
               <p className={styles.paragraph}>
-                New Employer Name: Nautilus Trucking
+                {t("NEW_EMPLOYER_NAME_NAUTTLUS")}
               </p>
-              <p className={styles.paragraph}>Address: 323 MLK BLVD, Newark</p>
-              <p className={styles.paragraph}>Phone #: (551) 430-1998</p>
+              <p className={styles.paragraph}>{t("ADDRESS_MLK_BLVD")}</p>
+              <p className={styles.paragraph}>{t("PHONE_#_(551)_430-1998")}</p>
               <p className={styles.paragraph}>Fax #: </p>
-              <p className={styles.paragraph}>
-                Designated Employer Representative: Ansu Priyadarshi
-              </p>
+              <p className={styles.paragraph}>{t("DESIGNATED_EMPLOYER")}</p>
             </Row>
             <Row className={`${styles.align__text_left} ${styles.highlight}`}>
-              <h6>
-                Please note the following employers will be contacted roughly 24
-                hours from the time this application is filled for a
-                Verification of Employment. This will include the information
-                listed above along with any accident records.{" "}
-              </h6>
+              <h6>{t("PLEASE_NOTE_THE_FOLLOWING_EMPLOYERS")} </h6>
             </Row>
             <Row className={styles.align__text_left}>
               <h4 className="mt-3">I-B</h4>
-              <p className={styles.paragraph}>Current Company Name:</p>
-              <p className={styles.paragraph}>Address:</p>
-              <p className={styles.paragraph}>Phone #:</p>
-              <p className={styles.paragraph}>Fax #: </p>
+              <p className={styles.paragraph}>{t("CURRENT_COMPANY_NAME")}</p>
+              <p className={styles.paragraph}>{t("ADDRESS:")}</p>
+              <p className={styles.paragraph}>{t("PHONE_#_:")}</p>
+              <p className={styles.paragraph}>{t("FAX_#_:")}</p>
               <p className={styles.paragraph}>
-                Designated Employer Representative (if known):
+                {t("DESIGNATED_EMPLOYER_REPRESENTATIVE")}{" "}
               </p>
             </Row>
             <Row className={`${styles.align__text_left} ${styles.highlight}`}>
-              <h6>
-                Please note the following fields will be answered by the
-                employers you authorized above.{" "}
-              </h6>
+              <h6>{t("PLEASE_NOTE_THE_FOLLOWING")} </h6>
             </Row>
             <Row className={styles.blur}>
               <Row className={styles.align__text_left}>
                 <Col>
-                  <h3 className="mt-3">Section II</h3>
+                  <h3 className="mt-3">{t("SECTION_II")}</h3>
                 </Col>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                  To be completed by the previous employer and transmitted by
-                  mail or fax to the new employer:
-                </p>
+                <p className={styles.paragraph}>{t("TO_BE_COMPLETED")}</p>
               </Row>
               <Row className={styles.align__text_left}>
                 <Col>
-                  <h4>II-A. Accident History</h4>
+                  <h4>{t("II_A_ACCIDENT_HISTORY")}</h4>
                 </Col>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  The applicant named above was employed by us. Yes__ No__
+                  {t("THE_APPLICANT_NAMED_ABOVE")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  Employed as __________________________ from (m/y)
-                  ______________________ to (m/y) ______________________
+                  {t("EMPLOYES_AS___________________________")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  1. Did he/she drive motor vehicle for you? Yes__ No__. If yes,
-                  what type? Straight Truck__ Tractor-Semitrailer__ Bus__ Cargo
-                  Tank__ Doubles/Triples__ Other (Specify)
-                  _________________________
+                  {t("DID_HE/SHE_DRIVE_MOTOR_VEHICLE")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  2. Reason for leaving your employ: Discharged__ Resignation__
-                  Lay Off__ Military Duty___
+                  {t("REASON_FOR_LEAVING_YOUR_EMPLOY")}
+                </p>
+              </Row>
+              <Row className={styles.align__text_left}>
+                <p className={styles.paragraph}>{t("IF_THERE_IS_NO_SAFETY")}</p>
+              </Row>
+              <Row className={styles.align__text_left}>
+                <p className={styles.paragraph}>
+                  {t("THE_APPLICANT_NAMED_ABOVE_WAS")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  If there is no safety performance history to report, check
-                  here ___, sign below and return.
-                </p>
-              </Row>
-              <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                  The applicant named above was employed by us. Yes__ No__
-                </p>
-              </Row>
-              <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                  ACCIDENTS: Complete the following for any accidents included
-                  on your accident register (§390.15(b)) that involved the
-                  applicant in the 3 years prior to the application date shown
-                  above, or check here ______ if there is no accident register
-                  data for this driver.
+                  {t("ACCIDENTAL_COMPLETE_THE_FOLLOWING")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>

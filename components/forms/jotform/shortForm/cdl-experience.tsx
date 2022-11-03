@@ -92,8 +92,8 @@ export function FourthPage({ onNextClick, onBackClick }: FourthPageProps) {
                 step={0.1}
                 min={0.1}
                 name="years_cdl_experience"
-                label="Years of CDL Experience"
-                placeholder="ex:2.5"
+                label="years_cdl_experience"
+                placeholder="PLACEHOLDER_FOR_DIGITS"
                 formik={form}
               />
             </Row>
@@ -102,7 +102,7 @@ export function FourthPage({ onNextClick, onBackClick }: FourthPageProps) {
                 className="mt-3 mb-3"
                 required
                 name="is_owner_operator_question"
-                label="Are you an owner operator looking to be hired?"
+                label="is_owner_operator_question"
                 formik={form}
               />
             </Row>

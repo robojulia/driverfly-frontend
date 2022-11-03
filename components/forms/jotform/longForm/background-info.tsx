@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import styles from "../../../../styles/jotform.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
@@ -10,26 +10,36 @@ import moment from "moment";
 import { States } from "../../../../enums/users/us-states.enum";
 import { BackgroundInfoDto } from "../../../../models/jot-form/long-form/background-info.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import jotformContext from "../../../../context/jotform-context";
 
-export interface BackgroundInfoProps extends PageProps {
-  // onNextClick: (any) => void;
-  // onBackClick: () => void;
-  applicant: any;
-}
+export interface BackgroundInfoProps extends PageProps {}
 
-export function BackgroundInfo(props: BackgroundInfoProps) {
-  useEffect(() => {
-    if (props.applicant && !form.dirty) form.setValues(props.applicant);
-  }, [props.applicant]);
+export function BackgroundInfo({
+  onNextClick,
+  onBackClick,
+}: BackgroundInfoProps) {
+  const {
+    state: { applicant },
+  } = useContext(jotformContext);
+
+  // useEffect(() => {
+  //   const { email, phone, zip_code, options } = applicant;
+  //   form.setValues({
+  //     email: email || null,
+  //     phone: phone || null,
+  //     zip_code: zip_code || null,
+  //     options: options || null,
+  //   });
+  // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new BackgroundInfoDto(),
     validationSchema: BackgroundInfoDto.yupSchema(),
     onSubmit: (values) => {
-      props.onNextClick(values);
+      onNextClick(values);
     },
     onReset: (values) => {
-      props.onBackClick();
+      onBackClick();
     },
   });
 
@@ -42,7 +52,7 @@ export function BackgroundInfo(props: BackgroundInfoProps) {
           required
           type="date"
           name="birthdate"
-          placeholder="Date of Birth"
+          placeholder="birthdate"
           label="birthdate"
           formik={form}
         />
@@ -58,8 +68,8 @@ export function BackgroundInfo(props: BackgroundInfoProps) {
           className="col-6"
           required
           name="address_line_1"
-          placeholder="STREET ADDRESS LINE 1"
-          label="Address Line 1"
+          placeholder="ADDRESS_LINE_1"
+          label="ADDRESS_LINE_1"
           formik={form}
         />
       </Row>
@@ -68,8 +78,8 @@ export function BackgroundInfo(props: BackgroundInfoProps) {
           className="col-6 mt-3"
           required
           name="address_line_2"
-          placeholder="STREET ADDRESS LINE 2"
-          label="Address Line 2"
+          placeholder="ADDRESS_LINE_2"
+          label="ADDRESS_LINE_2"
           formik={form}
         />
       </Row>
@@ -80,8 +90,8 @@ export function BackgroundInfo(props: BackgroundInfoProps) {
             className="col-12 mt-2 float-left"
             required
             name="city"
-            placeholder="CITY"
-            label="City"
+            placeholder="city"
+            label="city"
             formik={form}
           />
         </Col>
@@ -91,8 +101,8 @@ export function BackgroundInfo(props: BackgroundInfoProps) {
             required
             enumType={States}
             name="state"
-            placeholder="CHOOSE STATE"
-            label="State"
+            placeholder="CHOOSE_STATE"
+            label="state"
             formik={form}
           />
         </Col>
@@ -102,8 +112,8 @@ export function BackgroundInfo(props: BackgroundInfoProps) {
           className="col-3 mt-2"
           required
           name="zip_code"
-          placeholder="POSTAL/ZIP CODE"
-          label="Zip Code"
+          placeholder="zip_code"
+          label="zip_code"
           formik={form}
         />
       </Row>
