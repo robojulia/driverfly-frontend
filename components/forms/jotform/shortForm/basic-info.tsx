@@ -74,7 +74,7 @@ export function  ThirdPage({ onNextClick, onBackClick }: ThirdPageProps) {
             required
             name="phone"
             label="phone"
-            onChange={getInfoByPhone}
+            // onChange={getInfoByPhone}
             formik={form}
           />
         </Row>
