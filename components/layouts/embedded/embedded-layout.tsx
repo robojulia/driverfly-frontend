@@ -1,6 +1,4 @@
 import Head from 'next/head'
-import Footer from "./footer/footer";
-import Header from "./header/header";
 import { Scripts } from '../../scripts/scripts';
 import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from '../../../hooks/use-translation'
@@ -22,10 +20,10 @@ export function EmbeddedLayout({ children, title }: EmbeddedLayoutProps) {
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                 <meta httpEquiv="x-ua-compatible" content="ie=edge" />
             </Head>
-            <Header />
+            {/* <Header /> */}
             <ToastContainer />
             <main>{children}</main>
-            <Footer />
+            {/* <Footer /> */}
             <Scripts />
         </>
     )
