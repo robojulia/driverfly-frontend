@@ -18,15 +18,7 @@ export function AccordianLastPage(props: AccordianLastPageProps) {
     state: { applicant },
   } = useContext(jotformContext);
 
-  // useEffect(() => {
-  //   const { email, phone, zip_code, options } = applicant;
-  //   form.setValues({
-  //     email: email || null,
-  //     phone: phone || null,
-  //     zip_code: zip_code || null,
-  //     options: options || null,
-  //   });
-  // }, [applicant]);
+  // new accordian
   const { t } = useTranslation();
   let padRef = React.useRef<SignatureCanvas>(null);
   const clear = () => {
