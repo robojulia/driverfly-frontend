@@ -10,30 +10,22 @@ import jotformContext from "../../../../context/jotform-context";
 
 export interface PhotoUploadprops extends PageProps {}
 
-export function PhotoUpload(props: PhotoUploadprops) {
+export function PhotoUpload() {
   const {
-    state: { applicant },
+    state: { steps },
+    method: { setSteps },
   } = useContext(jotformContext);
 
-  // useEffect(() => {
-  //   const { email, phone, zip_code, options } = applicant;
-  //   form.setValues({
-  //     email: email || null,
-  //     phone: phone || null,
-  //     zip_code: zip_code || null,
-  //     options: options || null,
-  //   });
-  // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: {
       photo: null,
     },
     onSubmit: (values) => {
-      props.onNextClick(values);
+      setSteps(steps+1);
     },
     onReset: (values) => {
-      props.onBackClick();
+      setSteps(steps-1);
     },
   });
 

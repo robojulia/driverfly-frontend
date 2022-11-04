@@ -13,20 +13,11 @@ import jotformContext from "../../../../context/jotform-context";
 
 export interface AccordianLastPageProps extends PageProps {}
 
-export function AccordianLastPage(props: AccordianLastPageProps) {
+export function AccordianLastPage() {
   const {
-    state: { applicant },
+    state: { steps },
+    method: { setSteps },
   } = useContext(jotformContext);
-
-  // useEffect(() => {
-  //   const { email, phone, zip_code, options } = applicant;
-  //   form.setValues({
-  //     email: email || null,
-  //     phone: phone || null,
-  //     zip_code: zip_code || null,
-  //     options: options || null,
-  //   });
-  // }, [applicant]);
   const { t } = useTranslation();
   let padRef = React.useRef<SignatureCanvas>(null);
   const clear = () => {
@@ -38,10 +29,10 @@ export function AccordianLastPage(props: AccordianLastPageProps) {
       //   endorsements_twic: null,
     },
     onSubmit: (values) => {
-      props.onNextClick(values);
+      setSteps(steps+1);
     },
     onReset: (values) => {
-      props.onBackClick();
+      setSteps(steps-1);
     },
   });
   return (

@@ -1,20 +1,25 @@
 import { useFormik } from "formik";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
+import jotformContext from "../../../../context/jotform-context";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 
 export interface HalfwayProps extends PageProps {}
 
-export function Halfway({ onNextClick, onBackClick }: HalfwayProps) {
+export function Halfway() {
+  const {
+    state: { steps },
+    method: { setSteps },
+  } = useContext(jotformContext);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: {},
     onSubmit: (values) => {
-      onNextClick(values);
+      setSteps(steps+1);
     },
     onReset: (values) => {
-      onBackClick();
+      setSteps(steps-1);
     },
   });
   return (

@@ -14,213 +14,21 @@ import { OtherQueuesDto } from "../../../../models/jot-form/long-form/other-queu
 
 export interface OtherQuesProps extends PageProps {}
 
-// export function OtherQues(props: OtherQuesProps) {
-//   useEffect(() => {
-//     if (props.applicant && !form.dirty) form.setValues(props.applicant);
-//   }, [props.applicant]);
-//   const { t } = useTranslation();
-//   const form = useFormik({
-//     initialValues: {
-//       manual_qualification: null,
-//       endorsements_twic: null,
-//     },
-//     onSubmit: (values) => {
-//       props.onNextClick(values);
-//     },
-//     onReset: (values) => {
-//       props.onBackClick();
-//     },
-//   });
-//   return (
-//     <>
-//       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-//         <Row>
-//           <BaseSelect
-//             className="col-6 mb-3"
-//             options={["Yes", "No"]}
-//             name="manual_qualification"
-//             placeholder="CHOOSE"
-//             label="Are you qualified to drive a manual transmission per your CDL in case requires it?"
-//             formik={form}
-//           />
-//         </Row>
-
-//         <Row>
-//           <BaseSelect
-//             className="col-6 mb-3"
-//             label="DRIVER_ENDORSEMENT"
-//             placeholder="CHOOSE"
-//             name="driver_endorsement"
-//             required
-//             labelPrefix="DriverEndorsement"
-//             enumType={DriverEndorsement}
-//             formik={form}
-//           />
-//         </Row>
-//         <Row>
-//           <p className={styles.paragraph__left}>
-//             Tell us upto 3 Equipment Experience(optional)
-//           </p>
-//         </Row>
-//         <Row>
-//           <p className={styles.paragraph__left}>
-//             Fill in as many of the following as relevant.
-//           </p>
-//         </Row>
-//         <Row>
-//           <Col>
-//             <BaseInput
-//               className="col-12 mt-3"
-//               name="cdl_number_1"
-//               placeholder="CDL NUMBER 1"
-//               label="CDL NUMBER"
-//               formik={form}
-//             />
-//           </Col>
-//           <Col>
-//             <BaseSelect
-//               className="col-12 mt-3"
-//               options={[
-//                 "Alabama",
-//                 "Alaska",
-//                 "Nebraska",
-//                 "California",
-//                 "New Jersey",
-//               ]}
-//               name="state_1"
-//               placeholder="ISSUANCE_STATE"
-//               label="CHOOSE"
-//               formik={form}
-//             />
-//           </Col>
-//           <Col>
-//             <BaseInput
-//               className="col-12 mt-3"
-//               type="date"
-//               name="date_1"
-//               placeholder="expiration_date"
-//               label="DATE"
-//               formik={form}
-//             />
-//           </Col>
-//         </Row>
-
-//         <Row>
-//           <Col>
-//             <BaseInput
-//               className="col-12 mt-3"
-//               name="cdl_number_2"
-//               placeholder="CDL NUMBER 2"
-//               label="CDL NUMBER"
-//               formik={form}
-//             />
-//           </Col>
-//           <Col>
-//             <BaseSelect
-//               className="col-12 mt-3"
-//               options={[
-//                 "Alabama",
-//                 "Alaska",
-//                 "Nebraska",
-//                 "California",
-//                 "New Jersey",
-//               ]}
-//               name="state_2"
-//               placeholder="State of Issuance"
-//               label="CHOOSE"
-//               formik={form}
-//             />
-//           </Col>
-//           <Col>
-//             <BaseInput
-//               className="col-12 mt-3"
-//               type="date"
-//               name="date_2"
-//               placeholder="expiration_date"
-//               label="DATE"
-//               formik={form}
-//             />
-//           </Col>
-//         </Row>
-
-//         <Row>
-//           <Col>
-//             <BaseInput
-//               className="col-12 mt-3"
-//               name="cdl_number_3"
-//               placeholder="CDL NUMBER 3"
-//               label="CDL NUMBER"
-//               formik={form}
-//             />
-//           </Col>
-//           <Col>
-//             <BaseSelect
-//               className="col-12 mt-3"
-//               options={[
-//                 "Alabama",
-//                 "Alaska",
-//                 "Nebraska",
-//                 "California",
-//                 "New Jersey",
-//               ]}
-//               name="state_3"
-//               placeholder="State of Issuance"
-//               label="CHOOSE"
-//               formik={form}
-//             />
-//           </Col>
-//           <Col>
-//             <BaseInput
-//               className="col-12 mt-3"
-//               type="date"
-//               name="date_3"
-//               placeholder="expiration_date"
-//               label="DATE"
-//               formik={form}
-//             />
-//           </Col>
-//         </Row>
-
-//         <Row className="mt-5">
-//             <Col>
-//               <Button className="float-right" type="reset">
-//                 {t("BACK")}
-//               </Button>
-//             </Col>
-
-//             <Col>
-//               <Button className="float-left" type="submit">
-//                 {t("NEXT")}
-//               </Button>
-//             </Col>
-//         </Row>
-//       </Form>
-//     </>
-//   );
-// }
-export function OtherQues({ onNextClick, onBackClick }: OtherQuesProps) {
+export function OtherQues() {
   const {
-    state: { applicant },
+    state: { steps },
+    method: { setSteps },
   } = useContext(jotformContext);
 
-  // useEffect(() => {
-  //   const { email, phone, zip_code, options } = applicant;
-  //   form.setValues({
-  //     email: email || null,
-  //     phone: phone || null,
-  //     zip_code: zip_code || null,
-  //     options: options || null,
-  //   });
-  // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new OtherQueuesDto(),
     validationSchema: OtherQueuesDto.yupSchema(),
     onSubmit: (values) => {
-      onNextClick(values);
+      setSteps(steps+1);
     },
     onReset: (values) => {
-      onBackClick();
+      setSteps(steps-1);
     },
   });
   return (
