@@ -15,12 +15,10 @@ import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 export interface PastEmploymentHistoryProps extends PageProps {}
 
-export function PastEmploymentHistory({
-  onNextClick,
-  onBackClick,
-}: PastEmploymentHistoryProps) {
+export function PastEmploymentHistory() {
   const {
-    state: { applicant },
+    state: { applicant, applicantExtras, steps },
+    method: { setApplicant, updateApplicantExtras, setSteps },
   } = useContext(jotformContext);
 
   // useEffect(() => {
@@ -37,10 +35,10 @@ export function PastEmploymentHistory({
     initialValues: new PastEmploymentHistoryDto(),
     validationSchema: PastEmploymentHistoryDto.yupSchema(),
     onSubmit: (values) => {
-      onNextClick(values);
+      setSteps(steps + 1);
     },
     onReset: (values) => {
-      onBackClick();
+      setSteps(steps - 1);
     },
   });
 

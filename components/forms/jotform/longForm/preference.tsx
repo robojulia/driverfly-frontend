@@ -16,9 +16,10 @@ import jotformContext from "../../../../context/jotform-context";
 import { PreferencesDto } from "../../../../models/jot-form/long-form/preferences.dto";
 export interface PreferenceProps extends PageProps {}
 
-export function Preferences({ onNextClick, onBackClick }: PreferenceProps) {
+export function Preferences() {
   const {
-    state: { applicant },
+    state: { applicant, applicantExtras, steps },
+    method: { setApplicant, updateApplicantExtras, setSteps },
   } = useContext(jotformContext);
 
   // useEffect(() => {
@@ -35,10 +36,10 @@ export function Preferences({ onNextClick, onBackClick }: PreferenceProps) {
     initialValues: new PreferencesDto(),
     validationSchema: PreferencesDto.yupSchema(),
     onSubmit: (values) => {
-      onNextClick(values);
+      setSteps(steps + 1);
     },
     onReset: (values) => {
-      onBackClick();
+      setSteps(steps - 1);
     },
   });
   return (

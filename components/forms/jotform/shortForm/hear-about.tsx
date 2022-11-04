@@ -9,19 +9,20 @@ import jotformContext from "../../../../context/jotform-context";
 
 export interface SixthPageProps extends PageProps {}
 
-export function SixthPage({ onNextClick, onBackClick }: SixthPageProps) {
+export function SixthPage() {
   const {
-    state: { applicant },
+    state: { applicant, applicantExtras, steps },
+    method: { setApplicant, updateApplicantExtras, setSteps },
   } = useContext(jotformContext);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new HearAboutUsDto(),
     validationSchema: HearAboutUsDto.yupSchema(),
     onSubmit: (values) => {
-      onNextClick(values);
+      setSteps(steps + 1);
     },
     onReset: (values) => {
-      onBackClick();
+      setSteps(steps - 1);
     },
   });
   // useEffect(() => {

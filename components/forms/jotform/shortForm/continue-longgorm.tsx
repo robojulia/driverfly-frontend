@@ -8,26 +8,18 @@ import jotformContext from "../../../../context/jotform-context";
 
 export interface SeventhPageProps extends PageProps {}
 
-export function SeventhPage({ onNextClick, onBackClick }: SeventhPageProps) {
+export function SeventhPage() {
   const {
-    state: { applicant },
+    state: { steps },
+    method: { setSteps },
   } = useContext(jotformContext);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: {},
-    onSubmit: (values) => {
-      onNextClick(values);
+    onSubmit: () => {
+      setSteps(steps + 1);
     },
   });
-  // useEffect(() => {
-  //   const { email, phone, zip_code, options } = applicant;
-  //   form.setValues({
-  //     email: email || null,
-  //     phone: phone || null,
-  //     zip_code: zip_code || null,
-  //     options: options || null,
-  //   });
-  // }, [applicant]);
   return (
     <>
       <form onSubmit={form.handleSubmit}>

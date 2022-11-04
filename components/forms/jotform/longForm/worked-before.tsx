@@ -11,9 +11,10 @@ import { WorkedBeforeDto } from "../../../../models/jot-form/long-form/worked-be
 
 export interface WorkedBeforeProps extends PageProps {}
 
-export function WorkedBefore({ onNextClick, onBackClick }: WorkedBeforeProps) {
+export function WorkedBefore() {
   const {
-    state: { applicant },
+    state: { applicant, applicantExtras, steps },
+    method: { setApplicant, updateApplicantExtras, setSteps },
   } = useContext(jotformContext);
 
   // useEffect(() => {
@@ -31,10 +32,10 @@ export function WorkedBefore({ onNextClick, onBackClick }: WorkedBeforeProps) {
     validationSchema: WorkedBeforeDto.yupSchema(),
 
     onSubmit: (values) => {
-      onNextClick(values);
+      setSteps(steps + 1);
     },
     onReset: (values) => {
-      onBackClick();
+      setSteps(steps + 1);
     },
   });
   return (

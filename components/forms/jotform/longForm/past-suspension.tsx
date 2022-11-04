@@ -12,12 +12,10 @@ import { PastSuspensionDto } from "../../../../models/jot-form/long-form/past-su
 
 export interface PastSuspensionsProps extends PageProps {}
 
-export function PastSuspensions({
-  onNextClick,
-  onBackClick,
-}: PastSuspensionsProps) {
+export function PastSuspensions() {
   const {
-    state: { applicant },
+    state: { applicant, applicantExtras, steps },
+    method: { setApplicant, updateApplicantExtras, setSteps },
   } = useContext(jotformContext);
 
   // useEffect(() => {
@@ -34,10 +32,10 @@ export function PastSuspensions({
     initialValues: new PastSuspensionDto(),
     validationSchema: PastSuspensionDto.yupSchema(),
     onSubmit: (values) => {
-      onNextClick(values);
+      setSteps(steps + 1);
     },
     onReset: (values) => {
-      onBackClick();
+      setSteps(steps - 1);
     },
   });
 

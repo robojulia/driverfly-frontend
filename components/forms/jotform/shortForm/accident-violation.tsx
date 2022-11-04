@@ -13,17 +13,18 @@ export interface FifthPageProps extends PageProps {}
 
 export function FifthPage({ onNextClick, onBackClick }: FifthPageProps) {
   const {
-    state: { applicant },
+    state: { applicant, applicantExtras, steps },
+    method: { setApplicant, updateApplicantExtras, setSteps },
   } = useContext(jotformContext);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new AcciedentViolationDto(),
     validationSchema: AcciedentViolationDto.yupSchema(),
     onSubmit: (values) => {
-      onNextClick(values);
+      setSteps(steps + 1);
     },
     onReset: (values) => {
-      onBackClick();
+      setSteps(steps - 1);
     },
   });
   // useEffect(() => {

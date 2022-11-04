@@ -4,7 +4,7 @@ import "../../../../utils/yup";
 export class AccidentHistoryEntity {
     date_of_accident?: string | Date;
     nature_of_accident?: string;
-    number_of_accident?: string;
+    number_of_injured?: string;
     location_of_accident?: string;
     number_of_fatalaties?: number;
     dot_recordable?: boolean = false;
