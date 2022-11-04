@@ -97,8 +97,8 @@ export default function Embedded() {
             }}>
                 <div className="job-list_sec container mt-5">
                     <Filters />
-                    <Row className='mt-5'>
-                        <Col className='col-12 my-lg-0 my-4 p-0'>
+                    <Row className='m-lg-0 mt-2'>
+                        <Col className='col-12 my-2 p-lg-0'>
                             <ResultCount />
                             < JobsList />
                         </Col>

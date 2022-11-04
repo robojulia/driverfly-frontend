@@ -9,7 +9,7 @@ export default function Sort(props) {
     const { t } = useTranslation();
 
     return (
-        <span className={props.labelClassName || "text-secondary w-sm-25"}>
+        <span className={props.labelClassName || "text-secondary"}>
             {t('SORT_BY')}:
             <select
                 name="order_by"
