@@ -13,6 +13,7 @@ import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import jotformContext from "../../../../context/jotform-context";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
 export interface ThirdPageProps extends PageProps { }
 
@@ -47,26 +48,15 @@ export function ThirdPage({ onNextClick, onBackClick }: ThirdPageProps) {
 
 				updateApplicantExtras(AUTHORIZE_TO_COMMUNICATE)
 
-				console.log("values", values);
 				setSteps(steps + 1)
-				// onNextClick(values);
 			} catch (error) {
 				console.log("error", error);
 			}
 		},
 		onReset: (values) => {
 			setSteps(steps - 1)
-			// onBackClick();
 		},
 	});
-	useEffect(() => {
-		console.log("applicantExtras", applicantExtras);
-
-	}, [])
-	useEffect(() => {
-		console.log("applicantExtras", applicantExtras);
-
-	}, [applicantExtras])
 
 	// const getInfoByPhone = async ({ target: { name, value } }) => {
 	//   const applicantApi = new ApplicantApi();
@@ -88,6 +78,15 @@ export function ThirdPage({ onNextClick, onBackClick }: ThirdPageProps) {
 	//     options: options || null,
 	//   });
 	// }, [applicant]);
+
+	useEffect(() => {
+		const apx = applicantExtras?.find(v => (v.type === ApplicantExtras.AUTHORIZE_TO_COMMUNICATE))
+		form.setValues({
+			...form.values,
+			AUTHORIZE_TO_COMMUNICATE: !!apx?.type ?
+				apx : new ApplicantExtrasEntity(ApplicantExtras.AUTHORIZE_TO_COMMUNICATE)
+		})
+	}, [applicantExtras]);
 
 	useEffect(() => {
 		console.log("form.values", form.values);

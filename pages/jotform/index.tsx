@@ -58,6 +58,7 @@ export default function jotFormLongForm() {
 	// useEffect(() => {
 	//   toast.success(t("SUCCESS"));
 	// }, []);
+
 	const shortFormDataSent: PageProps["shortFormDataSent"] = async (
 		params: any
 	) => {

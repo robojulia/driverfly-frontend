@@ -6,7 +6,7 @@ export class ContactDto {
     email: string;
     phone: string;
     zip_code: string;
-    AUTHORIZE_TO_COMMUNICATE: ApplicantExtrasEntity = new ApplicantExtrasEntity(ApplicantExtras.AUTHORIZE_TO_COMMUNICATE);
+    AUTHORIZE_TO_COMMUNICATE: ApplicantExtrasEntity;
 
     static yupSchema() {
         return yup.object({

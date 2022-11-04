@@ -1,5 +1,6 @@
 import * as yup from "yup";
 import { ApplicantExtras } from "../../enums/applicants/applicant-extras.enum";
+import { AccidentHistoryEntity } from "../jot-form/long-form/accident-last-5-years/index.dto";
 
 export class ApplicantExtrasEntity {
     constructor(type?: ApplicantExtras) {
@@ -18,8 +19,8 @@ export class ApplicantExtrasEntity {
                     then: yup.string().required().nullable()
                 })
                 .when("type", {
-                    is: ApplicantExtras.LINE_ADDRESS,
-                    then: yup.string().required().nullable()
+                    is: ApplicantExtras.ACCIDENT_DETAILS,
+                    then: yup.array(AccidentHistoryEntity.yupSchema()),
                 })
 
         });
