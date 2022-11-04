@@ -8,12 +8,14 @@ import BaseCheck from "../../base-check";
 import styles from "../../../../styles/jotform.module.css";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
+import { UnableForJobDto } from "../../../../models/jot-form/long-form/unable-for-job.dto";
 
 export interface UnableForJobProps extends PageProps {}
 
-export function UnableForJob({ onNextClick, onBackClick }: UnableForJobProps) {
+export function UnableForJob() {
   const {
-    state: { applicant },
+    state: { applicant, applicantExtras, steps },
+    method: { setApplicant, updateApplicantExtras, setSteps },
   } = useContext(jotformContext);
 
   // useEffect(() => {
@@ -27,22 +29,13 @@ export function UnableForJob({ onNextClick, onBackClick }: UnableForJobProps) {
   // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: {
-      unable_declaration: false,
-      explanations: null,
-    },
-    validationSchema: yup.object({
-      explanations: yup.string().when("unable_declaration", {
-        is: (v) => !!v,
-        then: yup.string().required().nullable(),
-        otherwise: yup.string().optional().nullable(),
-      }),
-    }),
+    initialValues: new UnableForJobDto(),
+    validationSchema: UnableForJobDto.yupSchema(),
     onSubmit: (values) => {
-      onNextClick(values);
+      setSteps(steps + 1);
     },
     onReset: (values) => {
-      onBackClick();
+      setSteps(steps - 1);
     },
   });
 

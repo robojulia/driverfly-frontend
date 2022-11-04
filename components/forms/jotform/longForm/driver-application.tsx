@@ -11,30 +11,20 @@ import { DriverApplicationDto } from "../../../../models/jot-form/long-form/driv
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import jotformContext from "../../../../context/jotform-context";
+import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
 export interface DriverApplicationProps extends PageProps {}
 
-export function DriverApplication({
-  onNextClick,
-  onBackClick,
-}: DriverApplicationProps) {
+export function DriverApplication() {
   const {
-    state: { applicant },
+    state: { applicant, steps, applicantExtras },
+    method: { setApplicant, setSteps, updateApplicantExtras },
   } = useContext(jotformContext);
-
-  // useEffect(() => {
-  //   const { email, phone, zip_code, options } = applicant;
-  //   form.setValues({
-  //     email: email || null,
-  //     phone: phone || null,
-  //     zip_code: zip_code || null,
-  //     options: options || null,
-  //   });
-  // }, [applicant]);
 
   const { t } = useTranslation();
   let padRef = React.useRef<SignatureCanvas>(null);
-  console.log("signatires", padRef, SignatureCanvas);
+
   const clear = () => {
     padRef.current?.clear();
   };
@@ -42,9 +32,39 @@ export function DriverApplication({
     initialValues: new DriverApplicationDto(),
     validationSchema: DriverApplicationDto.yupSchema(),
     onSubmit: (values) => {
-      onNextClick(values);
+      try {
+        const { first_name, last_name, APPLY_DATE } = values;
+
+        setApplicant({ ...applicant, first_name, last_name });
+        updateApplicantExtras(APPLY_DATE);
+        setSteps(steps + 1);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    onReset: () => {
+      setSteps(steps - 1);
     },
   });
+  useEffect(() => {
+    console.log("form.values", form.values)
+    console.log("form.errors", form.errors)
+    console.log("applicant", applicant)
+  }, [form.values, form.errors])
+  useEffect(() => {
+    const { first_name, last_name } = applicant;
+    const apx = applicantExtras?.find(
+      (v) => v.type === ApplicantExtras.AUTHORIZE_TO_COMMUNICATE
+    );
+    form.setValues({
+      ...form.values,
+      APPLY_DATE: !!apx?.type
+        ? apx
+        : new ApplicantExtrasEntity(ApplicantExtras.APPLY_DATE),
+      first_name: first_name || null,
+      last_name: last_name || null,
+    });
+  }, [applicant]);
   return (
     <>
       <Form onSubmit={form.handleSubmit}>
@@ -81,7 +101,7 @@ export function DriverApplication({
             className="col-3 mt-3 mb-3"
             required
             type="date"
-            name="date"
+            name="APPLY_DATE.value"
             placeholder="DATE"
             label="DATE"
             formik={form}

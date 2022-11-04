@@ -2,19 +2,21 @@ import { useFormik } from "formik";
 import React, { useContext, useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
-import * as yup from "yup";
 import BaseInput from "../../base-input";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
+import { ViolationHistoryDto } from "../../../../models/jot-form/long-form/violation-history.dto";
+import { DashCircle, PlusCircle } from "react-bootstrap-icons";
+import { VioalationExtrasEntity } from "../../../../models/jot-form/long-form/violaton-history/index.dto";
+import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 
 export interface ViolationsLast3YearsProps extends PageProps {}
 
-export function ViolationsLast3Years({
-  onNextClick,
-  onBackClick,
-}: ViolationsLast3YearsProps) {
+export function ViolationsLast3Years() {
   const {
-    state: { applicant },
+    state: { applicant, applicantExtras, steps },
+    method: { setApplicant, updateApplicantExtras, setSteps },
   } = useContext(jotformContext);
 
   // useEffect(() => {
@@ -28,33 +30,28 @@ export function ViolationsLast3Years({
   // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: {
-      violations_last_3_years: null,
-      date_of_violation_1: null,
-      location_1: null,
-      charge_1: null,
-      penalty_1: null,
-      date_of_violation_2: null,
-      location_2: null,
-      charge_2: null,
-      penalty_2: null,
-      date_of_violation_3: null,
-      location_3: null,
-      charge_3: null,
-      penalty_3: null,
-    },
-    validationSchema: yup.object({
-      // applied_before
-      // from_date: yup.date().required(),
-      // to_date: yup.date().required()
-    }),
+    initialValues: new ViolationHistoryDto(),
+    validationSchema: ViolationHistoryDto.yupSchema(),
     onSubmit: (values) => {
-      onNextClick(values);
+      setSteps(steps + 1);
     },
     onReset: (values) => {
-      onBackClick();
+      setSteps(steps - 1);
     },
   });
+
+
+  useEffect(() => {
+    const apx = applicantExtras?.find(
+      (v) => v.type === ApplicantExtras.VIOLATION_DETAILS
+    );
+    form.setValues({
+      ...form.values,
+      VIOLATION_DETAILS: !!apx?.type
+        ? apx
+        : new ApplicantExtrasEntity(ApplicantExtras.VIOLATION_DETAILS),
+    });
+  }, [applicantExtras]);
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
       <h6>{t("VIOLATIONS_LAST_3_YEARS")}</h6>
@@ -67,113 +64,90 @@ export function ViolationsLast3Years({
             formik={form}
           />
         </Col>
-      </Row>
-      <Row>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="date_of_violation_1"
-            label="VIOLATION_DATE"
-            type="date"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="location_1"
-            label="location"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="charge_1"
-            label="CHARGE"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="penalty_1"
-            label="PENALTY"
-            formik={form}
-          />
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="date_of_violation_2"
-            label="VIOLATION_DATE"
-            type="date"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="location_2"
-            label="location"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="charge_2"
-            label="CHARGE"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="penalty_2"
-            label="PENALTY"
-            formik={form}
-          />
-        </Col>
+        <div className="mt-4 float-left d-flex justify-left pl-4">
+          <Button
+            size="sm"
+            onClick={() =>
+              form.setValues({
+                ...form.values,
+                VIOLATION_DETAILS: {
+                  ...(form.values.VIOLATION_DETAILS || []),
+                  value: [
+                    ...(form.values.VIOLATION_DETAILS?.value || []),
+                    new VioalationExtrasEntity(),
+                  ],
+                },
+              })
+            }
+          >
+            <PlusCircle /> {t("TITLE_ADD_VIOLATION_DETAILS")}
+          </Button>
+        </div>
       </Row>
 
-      <Row>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="date_of_violation_3"
-            label="VIOLATION_DATE"
-            type="date"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="location_3"
-            label="location"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="charge_3"
-            label="CHARGE"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="penalty_3"
-            label="PENALTY"
-            formik={form}
-          />
-        </Col>
-      </Row>
+      {form.values.VIOLATION_DETAILS?.value?.length > 0 && (
+        <>
+          {form.values.VIOLATION_DETAILS.value.map((entity, i) => (
+            <Row key={i}>
+              <div className="col-md-12 mt-2">
+                <Row>
+                  <Col>
+                    <BaseInput
+                      className="col-12 mt-3"
+                      name={`VIOLATION_DETAILS.value[${i}].date_of_violation`}
+                      label="VIOLATION_DATE"
+                      type="date"
+                      formik={form}
+                    />
+                  </Col>
+                  <Col>
+                    <BaseInput
+                      className="col-12 mt-3"
+                      name={`VIOLATION_DETAILS.value[${i}].location`}
+                      label="location"
+                      formik={form}
+                    />
+                  </Col>
+                  <Col>
+                    <BaseInput
+                      className="col-12 mt-3"
+                      name={`VIOLATION_DETAILS.value[${i}].charge`}
+                      label="CHARGE"
+                      formik={form}
+                    />
+                  </Col>
+                  <Col>
+                    <BaseInput
+                      className="col-12 mt-3"
+                      name={`VIOLATION_DETAILS.value[${i}].penalty`}
+                      label="PENALTY"
+                      formik={form}
+                    />
+                  </Col>
+                  <Col>
+                    <a
+                      href="#"
+                      onClick={() =>
+                        form.setValues({
+                          ...form.values,
+                          VIOLATION_DETAILS: {
+                            ...(form.values.VIOLATION_DETAILS || []),
+                            value: form.values.VIOLATION_DETAILS?.value?.filter(
+                              (v, idx) => i != idx
+                            ),
+                          },
+                        })
+                      }
+                    >
+                      <DashCircle color="red" />
+                    </a>
+                  </Col>
+                </Row>
+              </div>
+            </Row>
+          ))}
+        </>
+      )}
 
       <Row className="mt-5">
         <Col>

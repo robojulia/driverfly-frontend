@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import BaseSelect from "../../base-select";
 import { useFormik } from "formik";
@@ -6,33 +6,40 @@ import { useTranslation } from "../../../../hooks/use-translation";
 import { HearAboutUsDto } from "../../../../models/jot-form/short-form/hear-about.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
+import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
 export interface SixthPageProps extends PageProps {}
 
-export function SixthPage({ onNextClick, onBackClick }: SixthPageProps) {
+export function SixthPage() {
   const {
-    state: { applicant },
+    state: { applicantExtras, steps },
+    method: { updateApplicantExtras, setSteps },
   } = useContext(jotformContext);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new HearAboutUsDto(),
     validationSchema: HearAboutUsDto.yupSchema(),
     onSubmit: (values) => {
-      onNextClick(values);
+      const { HEAR_ABOUT_US } = values;
+      updateApplicantExtras(HEAR_ABOUT_US);
+      setSteps(steps + 1);
     },
     onReset: (values) => {
-      onBackClick();
+      setSteps(steps - 1);
     },
   });
-  // useEffect(() => {
-  //   const { email, phone, zip_code, options } = applicant;
-  //   form.setValues({
-  //     email: email || null,
-  //     phone: phone || null,
-  //     zip_code: zip_code || null,
-  //     options: options || null,
-  //   });
-  // }, [applicant]);
+  useEffect(() => {
+    const apx = applicantExtras?.find(
+      (v) => v.type === ApplicantExtras.HEAR_ABOUT_US
+    );
+    form.setValues({
+      ...form.values,
+      HEAR_ABOUT_US: !!apx?.type
+        ? apx
+        : new ApplicantExtrasEntity(ApplicantExtras.HEAR_ABOUT_US),
+    });
+  }, [applicantExtras]);
   return (
     <>
       <form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -40,7 +47,7 @@ export function SixthPage({ onNextClick, onBackClick }: SixthPageProps) {
           <BaseSelect
             className="mt-3 mb-3"
             options={["Referral", "Friends", "Job Board", "Social Media"]}
-            name="hear_about_us"
+            name="HEAR_ABOUT_US.value"
             placeholder="CHOOSE"
             label="HOW_DID_YOU_HEAR_ABOUT_US"
             formik={form}

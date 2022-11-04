@@ -14,10 +14,7 @@ import jotformContext from "../../../../context/jotform-context";
 
 export interface BackgroundInfoProps extends PageProps {}
 
-export function BackgroundInfo({
-  onNextClick,
-  onBackClick,
-}: BackgroundInfoProps) {
+export function BackgroundInfo({onNextClick, onBackClick}: BackgroundInfoProps) {
   const {
     state: { applicant },
   } = useContext(jotformContext);
@@ -36,10 +33,10 @@ export function BackgroundInfo({
     initialValues: new BackgroundInfoDto(),
     validationSchema: BackgroundInfoDto.yupSchema(),
     onSubmit: (values) => {
-      onNextClick(values);
+     onNextClick(values);
     },
     onReset: (values) => {
-      onBackClick();
+     onBackClick();
     },
   });
 

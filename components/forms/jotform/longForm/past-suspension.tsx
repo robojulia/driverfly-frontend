@@ -8,15 +8,14 @@ import BaseCheck from "../../base-check";
 import styles from "../../../../styles/jotform.module.css";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
+import { PastSuspensionDto } from "../../../../models/jot-form/long-form/past-suspension.dto";
 
 export interface PastSuspensionsProps extends PageProps {}
 
-export function PastSuspensions({
-  onNextClick,
-  onBackClick,
-}: PastSuspensionsProps) {
+export function PastSuspensions() {
   const {
-    state: { applicant },
+    state: { applicant, applicantExtras, steps },
+    method: { setApplicant, updateApplicantExtras, setSteps },
   } = useContext(jotformContext);
 
   // useEffect(() => {
@@ -30,22 +29,13 @@ export function PastSuspensions({
   // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: {
-      license_suspension: false,
-      explanations: null,
-    },
-    validationSchema: yup.object({
-      explanations: yup.string().when("license_suspension", {
-        is: (v) => !!v,
-        then: yup.string().required().nullable(),
-        otherwise: yup.string().optional().nullable(),
-      }),
-    }),
+    initialValues: new PastSuspensionDto(),
+    validationSchema: PastSuspensionDto.yupSchema(),
     onSubmit: (values) => {
-      onNextClick(values);
+      setSteps(steps + 1);
     },
     onReset: (values) => {
-      onBackClick();
+      setSteps(steps - 1);
     },
   });
 

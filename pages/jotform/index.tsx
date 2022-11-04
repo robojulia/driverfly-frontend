@@ -33,12 +33,20 @@ import { AccordianLastPage } from "../../components/forms/jotform/longForm/accor
 import "react-toastify/dist/ReactToastify.css";
 import jotformContext from "../../context/jotform-context";
 import { PageProps } from "../../types/jotform/page-props.type";
+import { ApplicantExtrasEntity } from "../../models/applicant/applicant-extras.entity";
 
 export default function jotFormLongForm() {
   const [steps, setSteps] = useState<number>(0);
   const [applicant, setApplicant] = useState<ApplicantEntity>(
     new ApplicantEntity()
   );
+
+  const [applicantExtras, setApplicantExtras] =
+    useState<ApplicantExtrasEntity[]>();
+  const updateApplicantExtras = (value: ApplicantExtrasEntity) =>
+    setApplicantExtras((oldArray) =>
+      !!oldArray ? [...oldArray, { ...value }] : [{ ...value }]
+    );
 
   const onNextClick: PageProps["onNextClick"] = (partialEntity) => {
     setApplicant({ ...applicant, ...partialEntity });
@@ -50,9 +58,10 @@ export default function jotFormLongForm() {
     setSteps(steps - 1);
   };
 
-  // useEffect(() => {
-  //   toast.success(t("SUCCESS"));
-  // }, []);
+  useEffect(() => {
+    console.log("applicantextrasvalues", applicantExtras);
+  }, []);
+
   const shortFormDataSent: PageProps["shortFormDataSent"] = async (
     params: any
   ) => {
@@ -74,33 +83,33 @@ export default function jotFormLongForm() {
   };
   const getPageAccordingToStep = (step: number) => {
     return {
-      0: pageOne(onNextClick),
-      1: pageTwo(onNextClick, onBackClick),
-      2: pageThree(onNextClick, onBackClick),
-      3: pageFour(onNextClick, onBackClick),
-      4: pageFive(onNextClick, onBackClick),
-      5: pageSix(onNextClick, onBackClick),
-      6: pageSeven(onNextClick, onBackClick, shortFormDataSent),
-      7: pageEight(onNextClick),
-      8: pageNine(onNextClick, onBackClick),
-      9: pageTen(onNextClick, onBackClick),
-      10: pageEleven(onNextClick, onBackClick),
-      11: pageTwelve(onNextClick, onBackClick),
-      12: pageThirteen(onNextClick, onBackClick),
-      13: pageFourteen(onNextClick, onBackClick),
-      14: pageFifteen(onNextClick, onBackClick),
-      15: pageSixteen(onNextClick, onBackClick),
-      16: pageSeventeen(onNextClick, onBackClick),
-      17: pageEighteen(onNextClick, onBackClick),
-      18: pageNineteen(onNextClick, onBackClick),
-      19: pageTwenty(onNextClick, onBackClick),
-      20: pageTwentyOne(onNextClick, onBackClick),
-      21: pageTwentyTwo(onNextClick, onBackClick),
-      22: pageTwentyThree(onNextClick, onBackClick),
-      23: pageTwentyFour(onNextClick, onBackClick),
-      24: pageTwentyFive(onNextClick, onBackClick),
-      25: pageTwentySix(onNextClick, onBackClick),
-      26: pageTwentySeven(onNextClick, onBackClick),
+      0: pageOne(),
+      1: pageTwo(),
+      2: pageThree(),
+      3: pageFour(),
+      4: pageFive(),
+      5: pageSix(),
+      6: pageSeven(),
+      7: pageEight(),
+      8: pageNine(),
+      9: pageTen(),
+      10: pageEleven(),
+      11: pageTwelve(),
+      12: pageThirteen(),
+      13: pageFourteen(),
+      14: pageFifteen(),
+      15: pageSixteen(),
+      16: pageSeventeen(),
+      17: pageEighteen(),
+      18: pageNineteen(),
+      19: pageTwenty(),
+      20: pageTwentyOne(),
+      21: pageTwentyTwo(),
+      22: pageTwentyThree(),
+      23: pageTwentyFour(),
+      24: pageTwentyFive(),
+      25: pageTwentySix(),
+      26: pageTwentySeven(),
     }[step];
   };
 
@@ -109,9 +118,13 @@ export default function jotFormLongForm() {
       value={{
         state: {
           applicant,
+          applicantExtras,
+          steps,
         },
         method: {
           setApplicant,
+          updateApplicantExtras,
+          setSteps,
         },
       }}
     >
@@ -126,214 +139,112 @@ export default function jotFormLongForm() {
   );
 }
 
-const pageOne = (onNextClick: PageProps["onNextClick"]) => {
-  return <FirstPage onNextClick={onNextClick} />;
+const pageOne = () => {
+  return <FirstPage />;
 };
 
-const pageTwo = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <SecondPage onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageTwo = () => {
+  return <SecondPage />;
 };
 
-const pageThree = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <ThirdPage onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageThree = () => {
+  return <ThirdPage />;
 };
 
-const pageFour = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <FourthPage onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageFour = () => {
+  return <FourthPage />;
 };
 
-const pageFive = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <FifthPage onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageFive = () => {
+  return <FifthPage />;
 };
 
-const pageSix = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <SixthPage onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageSix = () => {
+  return <SixthPage />;
 };
 
-const pageSeven = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"],
-  shortFormDataSent: PageProps["onBackClick"]
-) => {
-  return <SeventhPage onNextClick={shortFormDataSent} />;
+const pageSeven = () => {
+  return <SeventhPage />;
 };
 
-const pageEight = (onNextClick: PageProps["onNextClick"]) => {
-  return <DriverApplication onNextClick={onNextClick} />;
+const pageEight = () => {
+  return <DriverApplication />;
 };
 
-const pageNine = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return (
-    <HighestLevelEducation
-      onNextClick={onNextClick}
-      onBackClick={onBackClick}
-    />
-  );
+const pageNine = () => {
+  return <HighestLevelEducation />;
 };
 
-const pageTen = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <BackgroundInfo onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageTen = () => {
+  return <BackgroundInfo />;
 };
 
-const pageEleven = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <DrivingExp onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageEleven = () => {
+  return <DrivingExp />;
 };
 
-const pageTwelve = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <OtherQues onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageTwelve = () => {
+  return <OtherQues />;
 };
 
-const pageThirteen = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <PhotoUpload onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageThirteen = () => {
+  return <PhotoUpload />;
 };
 
-const pageFourteen = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return (
-    <MedicalCardUpload onNextClick={onNextClick} onBackClick={onBackClick} />
-  );
+const pageFourteen = () => {
+  return <MedicalCardUpload />;
 };
 
-const pageFifteen = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return (
-    <EmergencyContact onNextClick={onNextClick} onBackClick={onBackClick} />
-  );
+const pageFifteen = () => {
+  return <EmergencyContact />;
 };
 
-const pageSixteen = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return (
-    <EmploymentHistory onNextClick={onNextClick} onBackClick={onBackClick} />
-  );
+const pageSixteen = () => {
+  return <EmploymentHistory />;
 };
 
-const pageSeventeen = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return (
-    <PastEmploymentHistory
-      onNextClick={onNextClick}
-      onBackClick={onBackClick}
-    />
-  );
+const pageSeventeen = () => {
+  return <PastEmploymentHistory />;
 };
 
-const pageEighteen = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <Preferences onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageEighteen = () => {
+  return <Preferences />;
 };
 
-const pageNineteen = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <Halfway onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageNineteen = () => {
+  return <Halfway />;
 };
 
-const pageTwenty = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <WorkedBefore onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageTwenty = () => {
+  return <WorkedBefore />;
 };
 
-const pageTwentyOne = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return (
-    <AccidentsLast5Years onNextClick={onNextClick} onBackClick={onBackClick} />
-  );
+const pageTwentyOne = () => {
+  return <AccidentsLast5Years />;
 };
 
-const pageTwentyTwo = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return (
-    <ViolationsLast3Years onNextClick={onNextClick} onBackClick={onBackClick} />
-  );
+const pageTwentyTwo = () => {
+  return <ViolationsLast3Years />;
 };
 
-const pageTwentyThree = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return (
-    <PastSuspensions onNextClick={onNextClick} onBackClick={onBackClick} />
-  );
+const pageTwentyThree = () => {
+  return <PastSuspensions />;
 };
 
-const pageTwentyFour = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <UnableForJob onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageTwentyFour = () => {
+  return <UnableForJob />;
 };
 
-const pageTwentyFive = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return (
-    <FelonyConviction onNextClick={onNextClick} onBackClick={onBackClick} />
-  );
+const pageTwentyFive = () => {
+  return <FelonyConviction />;
 };
 
-const pageTwentySix = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <DrugTest onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageTwentySix = () => {
+  return <DrugTest />;
 };
 
-const pageTwentySeven = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return (
-    <AccordianLastPage onNextClick={onNextClick} onBackClick={onBackClick} />
-  );
+const pageTwentySeven = () => {
+  return <AccordianLastPage />;
 };
 
 function t(arg0: string): import("react-toastify").ToastContent {

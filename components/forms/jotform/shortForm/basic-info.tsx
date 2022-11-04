@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import Form from "react-bootstrap/Form";
 import styles from "../../../../styles/jotform.module.css";
 import { Button, Col, Row } from "react-bootstrap";
@@ -12,12 +12,15 @@ import ApplicantApi from "../../../../pages/api/applicant";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import jotformContext from "../../../../context/jotform-context";
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
 export interface ThirdPageProps extends PageProps {}
-export function  ThirdPage({ onNextClick, onBackClick }: ThirdPageProps) {
+
+export function ThirdPage() {
   const {
-    method: { setApplicant },
-    state: { applicant },
+    state: { applicant, applicantExtras, steps },
+    method: { setApplicant, updateApplicantExtras, setSteps },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
@@ -25,32 +28,55 @@ export function  ThirdPage({ onNextClick, onBackClick }: ThirdPageProps) {
     initialValues: new ContactDto(),
     validationSchema: ContactDto.yupSchema(),
     onSubmit: (values) => {
-      onNextClick(values);
+      try {
+        console.log("values", values);
+        const { email, phone, zip_code, AUTHORIZE_TO_COMMUNICATE } = values;
+
+        setApplicant({
+          ...applicant,
+          email,
+          phone,
+          zip_code,
+        });
+
+        updateApplicantExtras(AUTHORIZE_TO_COMMUNICATE);
+
+        setSteps(steps + 1);
+      } catch (error) {
+        console.log("error", error);
+      }
     },
     onReset: (values) => {
-      onBackClick();
+      setSteps(steps - 1);
     },
   });
-  const getInfoByPhone = async ({ target: { name, value } }) => {
-    const applicantApi = new ApplicantApi();
-    try {
-      const response = await applicantApi.search({ [name]: value });
-      console.log("response", response[0]);
-      form.setFieldValue(name, value);
-      setApplicant(response[0]);
-    } catch (error) {
-      console.log(error, "Error Occured");
-    }
-  };
-  // useEffect(() => {
-  //   const { email, phone, zip_code, options } = applicant;
-  //   form.setValues({
-  //     email: email || null,
-  //     phone: phone || null,
-  //     zip_code: zip_code || null,
-  //     options: options || null,
-  //   });
-  // }, [applicant]);
+
+  // const getInfoByPhone = async ({ target: { name, value } }) => {
+  //   const applicantApi = new ApplicantApi();
+  //   try {
+  //     const response = await applicantApi.search({ [name]: value });
+  //     console.log("response", response[0]);
+  //     form.setFieldValue(name, value);
+  //     setApplicant(response[0]);
+  //   } catch (error) {
+  //     console.log(error, "Error Occured");
+  //   }
+  // };
+  useEffect(() => {
+    const apx = applicantExtras?.find(
+      (v) => v.type === ApplicantExtras.AUTHORIZE_TO_COMMUNICATE
+    );
+    form.setValues({
+      ...form.values,
+      AUTHORIZE_TO_COMMUNICATE: !!apx?.type
+        ? apx
+        : new ApplicantExtrasEntity(ApplicantExtras.AUTHORIZE_TO_COMMUNICATE),
+      email: applicant.email,
+      phone: applicant.phone,
+      zip_code: applicant.zip_code,
+    });
+  }, []);
+
   return (
     <>
       <Form
@@ -93,7 +119,7 @@ export function  ThirdPage({ onNextClick, onBackClick }: ThirdPageProps) {
             className="mt-3"
             required
             options={["Yes", "No"]}
-            name="options"
+            name="AUTHORIZE_TO_COMMUNICATE.value"
             placeholder="CHOOSE"
             label="SMS_EMAIL_AUTHORIZATION_NAUTILIUS"
             formik={form}

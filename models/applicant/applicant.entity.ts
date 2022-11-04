@@ -16,6 +16,7 @@ import { DriverEndorsement } from "../../enums/users/driver-endorsement.enum";
 import { ApplicantDocumentType } from "../../enums/applicants/applicant-document-type.enum";
 import { JobGeography } from "../../enums/jobs/job-geography.enum";
 import { ApplicantDacEntity } from "./applicant-dac.entity";
+import { ApplicantExtrasEntity } from "./applicant-extras.entity";
 
 export class ApplicantEntity {
   id?: number;
@@ -81,7 +82,7 @@ export class ApplicantEntity {
   created_at?: string;
   last_updated_at?: string;
   dac?: ApplicantDacEntity[];
-  options?: string;
+  applicantExtras?: ApplicantExtrasEntity[] = []
 
   static yupSchema() {
     return yup.object({
