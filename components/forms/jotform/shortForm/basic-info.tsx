@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import Form from "react-bootstrap/Form";
 import styles from "../../../../styles/jotform.module.css";
 import { Button, Col, Row } from "react-bootstrap";
@@ -62,17 +62,6 @@ export function ThirdPage() {
   //     console.log(error, "Error Occured");
   //   }
   // };
-//   useEffect(() => {
-//     console.log("applicamt values", applicant);
-//     console.log("applicant extra values", applicantExtras);
-
-//     form.setValues({
-//       email: applicant.email,
-//       phone: applicant.phone,
-//       zip_code: applicant.zip_code,
-//     });
-//   }, [applicant]);
-
   useEffect(() => {
     const apx = applicantExtras?.find(
       (v) => v.type === ApplicantExtras.AUTHORIZE_TO_COMMUNICATE
@@ -82,13 +71,11 @@ export function ThirdPage() {
       AUTHORIZE_TO_COMMUNICATE: !!apx?.type
         ? apx
         : new ApplicantExtrasEntity(ApplicantExtras.AUTHORIZE_TO_COMMUNICATE),
+      email: applicant.email,
+      phone: applicant.phone,
+      zip_code: applicant.zip_code,
     });
-  }, [applicantExtras]);
-
-  useEffect(() => {
-    console.log("form.values", form.values);
-    console.log("form.errors", form.errors);
-  }, [form.values, form.errors]);
+  }, []);
 
   return (
     <>

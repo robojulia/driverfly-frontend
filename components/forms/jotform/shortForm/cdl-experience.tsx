@@ -13,10 +13,10 @@ import { useContext, useEffect } from "react";
 
 export interface FourthPageProps extends PageProps {}
 
-export function FourthPage({ onNextClick, onBackClick }: FourthPageProps) {
+export function FourthPage() {
   const {
-    state: { applicant, applicantExtras, steps },
-    method: { setApplicant, updateApplicantExtras, setSteps },
+    state: { applicant,  steps },
+    method: { setApplicant, setSteps },
   } = useContext(jotformContext);
   const { t } = useTranslation();
 
@@ -24,27 +24,27 @@ export function FourthPage({ onNextClick, onBackClick }: FourthPageProps) {
     initialValues: new CdlDto(),
     validationSchema: CdlDto.yupSchema(),
     onSubmit: (values) => {
+      const { license_type, years_cdl_experience, is_owner_operator } = values;
+      setApplicant({
+        ...applicant,
+        license_type,
+        years_cdl_experience,
+        is_owner_operator,
+      });
       setSteps(steps + 1);
     },
     onReset: (values) => {
       setSteps(steps - 1);
     },
   });
-
   useEffect(() => {
-    console.log("applicant", applicant);
-    console.log("applicantExtras", applicantExtras);
+    const { license_type, years_cdl_experience, is_owner_operator } = applicant;
+    form.setValues({
+      license_type: license_type || null,
+      years_cdl_experience: years_cdl_experience || null,
+      is_owner_operator: is_owner_operator || null,
+    });
   }, []);
-
-  // useEffect(() => {
-  //   const { email, phone, zip_code, options } = applicant;
-  //   form.setValues({
-  //     email: email || null,
-  //     phone: phone || null,
-  //     zip_code: zip_code || null,
-  //     options: options || null,
-  //   });
-  // }, [applicant]);
 
   function onLicenseTypeChange(e: React.ChangeEvent<HTMLSelectElement>) {
     const licenseType = e.target.value;
@@ -53,14 +53,14 @@ export function FourthPage({ onNextClick, onBackClick }: FourthPageProps) {
         form.setValues({
           ...form.values,
           license_type: licenseType,
-          is_owner_operator_question: false,
+          is_owner_operator: false,
         });
         break;
       case null:
         form.setValues({
           ...form.values,
           license_type: licenseType,
-          is_owner_operator_question: false,
+          is_owner_operator: false,
           years_cdl_experience: null,
         });
         break;
@@ -108,7 +108,7 @@ export function FourthPage({ onNextClick, onBackClick }: FourthPageProps) {
               <BaseCheck
                 className="mt-3 mb-3"
                 required
-                name="is_owner_operator_question"
+                name="is_owner_operator"
                 label="is_owner_operator_question"
                 formik={form}
               />

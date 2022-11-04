@@ -1,11 +1,12 @@
 import * as yup from "yup";
+import { ApplicantExtrasEntity } from "../../applicant/applicant-extras.entity";
 
 export class HearAboutUsDto {
-  hear_about_us: string;
+  HEAR_ABOUT_US: ApplicantExtrasEntity;
 
   static yupSchema() {
     return yup.object({
-        hear_about_us: yup.string().required().nullable(),
+      HEAR_ABOUT_US: ApplicantExtrasEntity.yupSchema(),
     });
   }
 }

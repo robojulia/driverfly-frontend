@@ -83,12 +83,10 @@ import { HighestLevelEducationDto } from "../../../../models/jot-form/long-form/
 
 export interface HighestLevelEducationProps extends PageProps {}
 
-export function HighestLevelEducation({
-  onNextClick,
-  onBackClick,
-}: HighestLevelEducationProps) {
+export function HighestLevelEducation() {
   const {
-    state: { applicant },
+    state: { applicant, steps },
+    method: { setApplicant, setSteps },
   } = useContext(jotformContext);
 
   // useEffect(() => {
@@ -105,10 +103,10 @@ export function HighestLevelEducation({
     initialValues: new HighestLevelEducationDto(),
     validationSchema: HighestLevelEducationDto.yupSchema(),
     onSubmit: (values) => {
-      onNextClick(values);
+      setSteps(steps + 1);
     },
     onReset: (values) => {
-      onBackClick();
+      setSteps(steps - 1);
     },
   });
   return (
