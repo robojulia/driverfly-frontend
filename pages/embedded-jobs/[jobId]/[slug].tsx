@@ -12,15 +12,17 @@ export default function Detail({ job, relatedJobs }: JobDetailProps) {
 
   return (
     <>
-      <StructuredData type="JobPosting" data={StructuredData.JobPosting(job, t)} />
-      <ViewJobDetail
-        job={job}
-        relatedJobs={< RelatedJobs jobs={relatedJobs} jobLink="jobs" hideCompanyName={false} jobLinkSlugable={true} />}
-        canApply={true}
-        canSave={true}
-        hideVehicles={false}
-        hideCompanyName={true}
-      />
+      <div className="my-5">
+        <StructuredData type="JobPosting" data={StructuredData.JobPosting(job, t)} />
+        <ViewJobDetail
+          job={job}
+          relatedJobs={< RelatedJobs jobs={relatedJobs} jobLink="jobs" hideCompanyName={false} jobLinkSlugable={true} />}
+          canApply={true}
+          canSave={true}
+          hideVehicles={false}
+          hideCompanyName={true}
+        />
+      </div>
     </>
   )
 }
