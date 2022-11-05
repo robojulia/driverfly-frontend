@@ -10,6 +10,7 @@ import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import { VioalationExtrasEntity } from "../../../../models/jot-form/long-form/violaton-history/index.dto";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import styles from "../../../../styles/jotform.module.css";
 
 export interface ViolationsLast3YearsProps extends PageProps {}
 
@@ -54,9 +55,9 @@ export function ViolationsLast3Years() {
   }, [applicantExtras]);
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <h6>{t("VIOLATIONS_LAST_3_YEARS")}</h6>
+      <h6 className={ styles.carrierName__smaller }>{t("VIOLATIONS_LAST_3_YEARS")}</h6>
       <Row>
-        <Col>
+        <Col className={styles.paragraph}>
           <BaseInput
             className="col-6 mt-3"
             name="violations_last_3_years"
@@ -124,7 +125,7 @@ export function ViolationsLast3Years() {
                       formik={form}
                     />
                   </Col>
-                  <Col>
+                  <Col className="mt-4">
                     <a
                       href="#"
                       onClick={() =>

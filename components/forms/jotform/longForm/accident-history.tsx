@@ -79,11 +79,11 @@ export function AccidentsLast5Years() {
 
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <h6>{t("MORE_ABOUT_ACCIDENTS")}</h6>
+      <h6 className={ styles.carrierName__smaller }>{t("MORE_ABOUT_ACCIDENTS")}</h6>
       <Row>
-        <Col>
+        <Col className={styles.align__text_left}>
           <BaseInput
-            className="col-6 mt-3"
+            className="col-5 mt-3"
             name="accidents_within_last_5_years"
             label="accidents_last_5_years"
             placeholder="PLACEHOLDER_FOR_DIGITS"
@@ -173,7 +173,7 @@ export function AccidentsLast5Years() {
                       formik={form}
                     />
                   </Col>
-                  <Col>
+                  <Col className='mt-4'>
                     <a
                       href="#"
                       onClick={() =>
@@ -188,7 +188,7 @@ export function AccidentsLast5Years() {
                         })
                       }
                     >
-                      <DashCircle color="red" />
+                      <DashCircle className="mt-3" color="red" />
                     </a>
                   </Col>
                 </Row>
