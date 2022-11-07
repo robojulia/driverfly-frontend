@@ -57,15 +57,15 @@ export function ViolationsLast3Years() {
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
       <h6 className={ styles.carrierName__smaller }>{t("VIOLATIONS_LAST_3_YEARS")}</h6>
       <Row>
-        <Col className={styles.paragraph}>
+        <Col className={styles.align__items_left}>
           <BaseInput
-            className="col-6 mt-3"
+            className="col-6 mt-3 float-left pl-0"
             name="violations_last_3_years"
             label="HOW_MANY_VIOALTION_3_YEARS"
             formik={form}
           />
         </Col>
-        <div className="mt-4 float-left d-flex justify-left pl-4">
+        <div className="mt-4 float-left d-flex justify-left pl-3">
           <Button
             size="sm"
             onClick={() =>
@@ -90,7 +90,7 @@ export function ViolationsLast3Years() {
         <>
           {form.values.VIOLATION_DETAILS.value.map((entity, i) => (
             <Row key={i}>
-              <div className="col-md-12 mt-2">
+              <div className="col-md-12 mt-2 pl-0">
                 <Row>
                   <Col>
                     <BaseInput
@@ -125,7 +125,7 @@ export function ViolationsLast3Years() {
                       formik={form}
                     />
                   </Col>
-                  <Col className="mt-4">
+                  <Col className="mt-5">
                     <a
                       href="#"
                       onClick={() =>

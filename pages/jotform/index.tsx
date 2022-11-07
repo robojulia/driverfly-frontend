@@ -36,7 +36,7 @@ import { PageProps } from "../../types/jotform/page-props.type";
 import { ApplicantExtrasEntity } from "../../models/applicant/applicant-extras.entity";
 
 export default function jotFormLongForm() {
-  const [steps, setSteps] = useState<number>(20);
+  const [steps, setSteps] = useState<number>(21);
   const [applicant, setApplicant] = useState<ApplicantEntity>(
     new ApplicantEntity()
   );
