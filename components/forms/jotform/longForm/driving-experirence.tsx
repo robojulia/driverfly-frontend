@@ -17,29 +17,22 @@ import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 
 export interface DrivingExpProps extends PageProps {}
-export function DrivingExp({ onNextClick, onBackClick }: DrivingExpProps) {
+export function DrivingExp() {
   const {
-    state: { applicant },
+    state: { steps },
+    method: { setSteps },
   } = useContext(jotformContext);
 
-  // useEffect(() => {
-  //   const { email, phone, zip_code, options } = applicant;
-  //   form.setValues({
-  //     email: email || null,
-  //     phone: phone || null,
-  //     zip_code: zip_code || null,
-  //     options: options || null,
-  //   });
-  // }, [applicant]);
+  
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new DrivingExperienceDto(),
     validationSchema: DrivingExperienceDto.yupSchema(),
     onSubmit: (values) => {
-      onNextClick(values);
+      setSteps(steps+1);
     },
     onReset: (values) => {
-      onBackClick();
+      setSteps(steps-1);
     },
   });
 

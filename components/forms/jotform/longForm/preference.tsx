@@ -22,15 +22,6 @@ export function Preferences() {
     method: { setApplicant, updateApplicantExtras, setSteps },
   } = useContext(jotformContext);
 
-  // useEffect(() => {
-  //   const { email, phone, zip_code, options } = applicant;
-  //   form.setValues({
-  //     email: email || null,
-  //     phone: phone || null,
-  //     zip_code: zip_code || null,
-  //     options: options || null,
-  //   });
-  // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new PreferencesDto(),

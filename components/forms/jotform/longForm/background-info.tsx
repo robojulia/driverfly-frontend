@@ -14,29 +14,21 @@ import jotformContext from "../../../../context/jotform-context";
 
 export interface BackgroundInfoProps extends PageProps {}
 
-export function BackgroundInfo({onNextClick, onBackClick}: BackgroundInfoProps) {
+export function BackgroundInfo() {
   const {
-    state: { applicant },
+    state: { steps },
+    method: { setSteps },
   } = useContext(jotformContext);
 
-  // useEffect(() => {
-  //   const { email, phone, zip_code, options } = applicant;
-  //   form.setValues({
-  //     email: email || null,
-  //     phone: phone || null,
-  //     zip_code: zip_code || null,
-  //     options: options || null,
-  //   });
-  // }, [applicant]);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new BackgroundInfoDto(),
     validationSchema: BackgroundInfoDto.yupSchema(),
     onSubmit: (values) => {
-     onNextClick(values);
+     setSteps(steps + 1);
     },
     onReset: (values) => {
-     onBackClick();
+     setSteps(steps - 1);
     },
   });
 
