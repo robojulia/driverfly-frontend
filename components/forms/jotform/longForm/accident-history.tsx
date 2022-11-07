@@ -21,15 +21,7 @@ export function AccidentsLast5Years() {
     method: { setApplicant, updateApplicantExtras, setSteps },
   } = useContext(jotformContext);
 
-  // useEffect(() => {
-  //   const { email, phone, zip_code, options } = applicant;
-  //   form.setValues({
-  //     email: email || null,
-  //     phone: phone || null,
-  //     zip_code: zip_code || null,
-  //     options: options || null,
-  //   });
-  // }, [applicant]);
+  
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new AccidentLastFiveYearsDto(),
@@ -52,18 +44,13 @@ export function AccidentsLast5Years() {
       }
       console.log("applicantExtras", applicantExtras);
 
-    //   setSteps(steps + 1);
+    
     },
     onReset: (values) => {
       setSteps(steps - 1);
     },
   });
 
-//   useEffect(() => {
-//     console.log("form.values", form.values);
-//     console.log("form.errors", form.errors);
-//     console.log("applicantextrasvalues", applicantExtras);
-//   }, [form.values, form.errors]);
 
   useEffect(() => {
     const apx = applicantExtras?.find(
