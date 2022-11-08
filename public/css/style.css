@@ -173,6 +173,9 @@ h2 {
     background-color: transparent;
 
 }
+.header-sec .dropdown-item, .rbt .dropdown-item {
+    color: rgb(201, 192, 192)!important;
+}
 
 /************************** HEADER-SEC ***************************/
 .header-sec {

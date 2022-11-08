@@ -96,10 +96,10 @@ export default function Applicant() {
                 <Col xs="4">
                     <div style={{ float: "right" }}>
                         <Button variant="primary" type="submit" disabled={form.isSubmitting || !form.isValid || form.isValidating}>{t("SAVE")}</Button>
-                        {/* <ApplicantResume
+                        <ApplicantResume
                             className={' ml-1'}
                             applicant={applicant}
-                            disabled={form.isSubmitting || !form.isValid || form.isValidating} /> */}
+                            disabled={form.isSubmitting || !form.isValid || form.isValidating} />
                     </div>
                 </Col>
             </Row>
