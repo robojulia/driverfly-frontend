@@ -1626,7 +1626,8 @@
   "COLUMNS":"Date Location # Injuries # Fatalities Hazmat Spill",
   "something":"something",
   "TITLE_ADD_ACCIDENT_DETAILS":" Add accident details",
-  "TITLE_ADD_VIOLATION_DETAILS":"Add violation details"
+  "TITLE_ADD_VIOLATION_DETAILS":"Add violation details",
+  "LEGALLY_ELIGIBLE_IN_US":"Are you legally eligible to work in the US"
 }
 
 

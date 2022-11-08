@@ -41,7 +41,7 @@ export function SecondPage() {
   }, [applicant]);
   return (
     <>
-      <h4 className={`${styles.paragraph} ${styles.align__text_left}`}>{t("name")}</h4>
+      <h4 className={`${styles.align__text_left}`}>{t("name")}</h4>
       <form onSubmit={form.handleSubmit} onReset={form.handleReset}>
         <Row>
           <BaseInput

@@ -90,7 +90,7 @@ export function ThirdPage() {
             required
             name="email"
             label="email"
-            placeholder="email"
+            placeholder="example@example.com"
             formik={form}
           />
         </Row>
@@ -100,6 +100,7 @@ export function ThirdPage() {
             required
             name="phone"
             label="phone"
+            placeholder="xxx-xxx-xxxx"
             // onChange={getInfoByPhone}
             formik={form}
           />
