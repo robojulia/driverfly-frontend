@@ -15,7 +15,7 @@ export class ApplicantExtrasEntity {
 		if (!!type) this.type = type;
 	}
 	id?: number;
-	type?: ApplicantExtras;
+	type: ApplicantExtras;
 	value?: any;
 
 	static yupSchema() {
@@ -59,10 +59,10 @@ export class ApplicantExtrasEntity {
 					is: ApplicantExtras.CDL_NUMBER,
 					then: yup.array(CdlExtras.yupSchema()),
 				})
-				.when("type", {
-					is: ApplicantExtras.CURRENT_EMPLOYER,
-					then: EmploymentHistoryExtraDto.yupSchema(),
-				})
+				// .when("type", {
+				// 	is: ApplicantExtras.CURRENT_EMPLOYER,
+				// 	then: EmploymentHistoryExtraDto.yupSchema(),
+				// })
 				.when("type", {
 					is: ApplicantExtras.ROUTES,
 					then: yup

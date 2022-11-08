@@ -2,7 +2,7 @@ import * as yup from "yup";
 import "../../../../utils/yup";
 
 export class EmploymentHistoryExtraDto {
-    is_current_employed: boolean;
+    // is_current_employed: boolean;
     current_company_manager_name: string;
     start_date: string | Date;
     authorize: boolean | boolean = false;
@@ -18,104 +18,62 @@ export class EmploymentHistoryExtraDto {
 
     static yupSchema() {
         return yup.object({
-            is_current_employed: yup.boolean().optional().nullable(),
+            // is_current_employed: yup.boolean().optional().nullable(),
 
             current_company_manager_name: yup
                 .string()
-                .when("is_current_employed", {
-                    is: (v) => !!v,
-                    then: yup.string().required().nullable(),
-                    otherwise: yup.string().optional().nullable(),
-                })
+                .required()
                 .nullable(),
 
             city: yup
                 .string()
-                .when("is_current_employed", {
-                    is: (v) => !!v,
-                    then: yup.string().required().nullable(),
-                    otherwise: yup.string().optional().nullable(),
-                })
+                .required()
                 .nullable(),
 
             fmcsr: yup
                 .string()
-                .when("is_current_employed", {
-                    is: (v) => !!v,
-                    then: yup.string().required().nullable(),
-                    otherwise: yup.string().optional().nullable(),
-                })
+                .required()
                 .nullable(),
 
             fcr: yup
                 .string()
-                .when("is_current_employed", {
-                    is: (v) => !!v,
-                    then: yup.string().required().nullable(),
-                    otherwise: yup.string().optional().nullable(),
-                })
+                .required()
                 .nullable(),
 
             state: yup
                 .string()
-                .when("is_current_employed", {
-                    is: (v) => !!v,
-                    then: yup.string().required().nullable(),
-                    otherwise: yup.string().optional().nullable(),
-                })
+                .required()
                 .nullable(),
 
             current_company_email: yup
                 .string()
-                .when("is_current_employed", {
-                    is: (v) => !!v,
-                    then: yup.string().required().nullable(),
-                    otherwise: yup.string().optional().nullable(),
-                })
+                .required()
                 .nullable(),
+
             start_date: yup
                 .string()
-                .when("is_current_employed", {
-                    is: (v) => !!v,
-                    then: yup.string().required().nullable(),
-                    otherwise: yup.string().optional().nullable(),
-                })
+                .required()
                 .nullable(),
 
             authorize: yup
-                .string()
-                .when("is_current_employed", {
-                    is: (v) => !!v,
-                    then: yup.boolean().default(false).required().nullable(),
-                    otherwise: yup.boolean().default(false).optional().nullable(),
-                })
+                .boolean()
+                .default(false)
+                .required()
                 .nullable(),
 
             current_company_street_address_line_1: yup
                 .string()
-                .when("is_current_employed", {
-                    is: (v) => !!v,
-                    then: yup.string().required().nullable(),
-                    otherwise: yup.string().optional().nullable(),
-                })
+                .required()
                 .nullable(),
 
             current_company_street_address_line_2: yup
                 .string()
-                .when("is_current_employed", {
-                    is: (v) => !!v,
-                    then: yup.string().required().nullable(),
-                    otherwise: yup.string().optional().nullable(),
-                })
+                .required()
                 .nullable(),
 
             current_company_zipcode: yup
                 .string()
-                .when("is_current_employed", {
-                    is: (v) => !!v,
-                    then: yup.string().required().nullable(),
-                    otherwise: yup.string().optional().nullable(),
-                })
+                .required()
                 .nullable(),
         });
     }

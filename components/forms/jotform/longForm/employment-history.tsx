@@ -15,13 +15,14 @@ import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import { EmploymentHistoryExtraDto } from "../../../../models/jot-form/long-form/emplyment-history/index.dto";
 
 export interface EmploymentHistoryProps extends PageProps { }
 
 export function EmploymentHistory() {
     const {
         state: { steps, applicant, applicantExtras },
-        method: { setSteps },
+        method: { setSteps, updateApplicantExtras },
     } = useContext(jotformContext);
 
     const { t } = useTranslation();
@@ -29,43 +30,34 @@ export function EmploymentHistory() {
         initialValues: new EmploymentHistoryDto(),
         validationSchema: EmploymentHistoryDto.yupSchema(),
         onSubmit: (values) => {
+            const { CURRENT_EMPLOYER } = values
             setSteps(steps + 1);
+            updateApplicantExtras(CURRENT_EMPLOYER);
         },
         onReset: (values) => {
             setSteps(steps - 1);
         },
     });
-    // useEffect(() => {
-    //     console.log("values", form.values);
-    //     console.log("error", form.errors);
-    // }, [form.values, form.errors]);
 
     useEffect(() => {
         const apx = applicantExtras?.find(
             (v) => v.type === ApplicantExtras.CURRENT_EMPLOYER
         );
         form.setValues({
+            ...form.values,
             CURRENT_EMPLOYER: !!apx?.type
                 ? apx
                 : new ApplicantExtrasEntity(ApplicantExtras.CURRENT_EMPLOYER),
+            is_current_employed: !!apx?.value
         });
+
     }, [applicantExtras]);
 
+    useEffect(() => {
+        console.log("values", form.values);
+        console.log("error", form.errors);
+    }, [form.values, form.errors]);
 
-    const handleToggleChange = ({ target: { value } }) => {
-        alert(!!value)
-        // form.setValues({
-        //     CURRENT_EMPLOYER: {
-        //         ...form.values.CURRENT_EMPLOYER,
-        //         value: {
-        //             ...form.values.CURRENT_EMPLOYER?.value,
-        //             is_current_employed: !!value
-        //         }
-        //     }
-        // })
-        form.setFieldValue('CURRENT_EMPLOYER.value.is_current_employed', !!value)
-
-    }
 
     return (
         <>
@@ -83,14 +75,11 @@ export function EmploymentHistory() {
                     <BaseCheck
                         className="mt-2 col-6 float-left"
                         label="CURRENTLY_EMPLYED_QUESTION"
-                        onChange={(e) => { handleToggleChange(e) }}
-                    // checked={!!form.values?.CURRENT_EMPLOYER?.value?.is_current_employed}
-
-                    // name="CURRENT_EMPLOYER.value.is_current_employed"
-                    // formik={form}
+                        name="is_current_employed"
+                        formik={form}
                     />
                 </Row>
-                {!!form.values?.CURRENT_EMPLOYER?.value?.is_current_employed ? (
+                {!!form.values?.is_current_employed ? (
                     <>
                         <Row>
                             <h6
@@ -106,7 +95,7 @@ export function EmploymentHistory() {
                             <Col className={styles.align__text_left}>
                                 <BaseInput
                                     className="col-12 mt-3"
-                                    name="current_company_name"
+                                    name="CURRENT_EMPLOYER.value.current_company_name"
                                     label="CURRENT_COMPANY_NAME"
                                     formik={form}
                                 />
@@ -114,7 +103,7 @@ export function EmploymentHistory() {
                             <Col className={styles.align__text_left}>
                                 <BaseInput
                                     className="col-12 mt-3"
-                                    name="current_company_position"
+                                    name="CURRENT_EMPLOYER.value.current_company_position"
                                     label="CURRENT_COMPANY_POSITION"
                                     formik={form}
                                 />
@@ -127,7 +116,7 @@ export function EmploymentHistory() {
                                     className="col-10 mt-3"
                                     required
                                     type="date"
-                                    name="start_date"
+                                    name="CURRENT_EMPLOYER.value.start_date"
                                     label="START_DATE"
                                     formik={form}
                                 />
@@ -137,7 +126,7 @@ export function EmploymentHistory() {
                                 <BaseCheck
                                     className="mt-3 col-10 float-left"
                                     required
-                                    name="authorize"
+                                    name="CURRENT_EMPLOYER.value.authorize"
                                     label="CONATACT_AUTHORITY"
                                     formik={form}
                                 />
@@ -147,7 +136,7 @@ export function EmploymentHistory() {
                         <Row className={styles.align__text_left}>
                             <BaseInput
                                 className="col-6 mt-3"
-                                name="current_company_manager_name"
+                                name="CURRENT_EMPLOYER.value.current_company_manager_name"
                                 label="MANAGER_OR_REPRESENTATIVE"
                                 formik={form}
                             />
@@ -157,7 +146,7 @@ export function EmploymentHistory() {
                             <Col>
                                 <BaseInputPhone
                                     className="col-10 mt-3 mb-2"
-                                    name="current_company_phone_number"
+                                    name="CURRENT_EMPLOYER.value.current_company_phone_number"
                                     placeholder="phone"
                                     label="CURRENT_COMPANY_NUMBER"
                                     formik={form}
@@ -167,7 +156,7 @@ export function EmploymentHistory() {
                                 <BaseInput
                                     className="col-10 mt-3 mb-2"
                                     required
-                                    name="current_company_email"
+                                    name="CURRENT_EMPLOYER.value.current_company_email"
                                     label="CURRENT_COMPANY_EMAIL"
                                     placeholder="email"
                                     formik={form}
@@ -186,7 +175,7 @@ export function EmploymentHistory() {
                                 <BaseInput
                                     className="col-6 mt-3"
                                     required
-                                    name="current_company_street_address_line_1"
+                                    name="CURRENT_EMPLOYER.value.current_company_street_address_line_1"
                                     placeholder="ADDRESS_LINE_1"
                                     label="ADDRESS_LINE_1"
                                     formik={form}
@@ -198,7 +187,7 @@ export function EmploymentHistory() {
                                 <BaseInput
                                     className="col-6 mt-3"
                                     required
-                                    name="current_company_street_address_line_2"
+                                    name="CURRENT_EMPLOYER.value.current_company_street_address_line_2"
                                     placeholder="ADDRESS_LINE_2"
                                     label="ADDRESS_LINE_2"
                                     formik={form}
@@ -210,7 +199,7 @@ export function EmploymentHistory() {
                                 <BaseInput
                                     className="col-12 mt-2"
                                     required
-                                    name="current_company_zipcode"
+                                    name="CURRENT_EMPLOYER.value.current_company_zipcode"
                                     placeholder="zip_code"
                                     label="zip_code"
                                     formik={form}
@@ -221,7 +210,7 @@ export function EmploymentHistory() {
                                 <BaseInput
                                     className="col-12 mt-4"
                                     required
-                                    name="city"
+                                    name="CURRENT_EMPLOYER.value.city"
                                     label="City"
                                     formik={form}
                                 />
@@ -232,7 +221,7 @@ export function EmploymentHistory() {
                                     className="col-12 mt-4"
                                     required
                                     enumType={States}
-                                    name="STATE"
+                                    name="CURRENT_EMPLOYER.value.state"
                                     placeholder="CHOOSE_STATE"
                                     label="STATE"
                                     formik={form}
@@ -246,7 +235,7 @@ export function EmploymentHistory() {
                                     className="col-6 mt-4"
                                     required
                                     enumType={BooleanPreferenceType}
-                                    name="fmcsr"
+                                    name="CURRENT_EMPLOYER.value.fmcsr"
                                     placeholder="CHOOSE"
                                     label="FMCR_QUESTION"
                                     formik={form}
@@ -260,7 +249,7 @@ export function EmploymentHistory() {
                                     className="col-6 mt-4"
                                     required
                                     enumType={BooleanPreferenceType}
-                                    name="fmcsr"
+                                    name="CURRENT_EMPLOYER.value.fcr"
                                     placeholder="CHOOSE"
                                     label="JOB_DESIGNATED_CURRENT_COMPANY"
                                     formik={form}
