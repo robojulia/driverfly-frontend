@@ -65,12 +65,36 @@
 
 .dashboardsidebar li {
     padding: 16px 10px;
+}
 
+.dashboardsidebar li ul li {
+    padding: 16px 0px;
+}
 
+.dashboardsidebar li ul li:first-child {
+    padding: 30px 0px 11px 0px;
+}
+
+.navbar-light .navbar-toggler-icon {
+    background-color: white !important;
+    border-radius: 2px;
+}
+
+.navbar-light .navbar-toggler {
+    color: rgb(255 255 255) !important;
+    border-color: #fff !important;
+    background: #fff;
+}
+
+.messages_container .navbar button {
+    margin: 0;
+}
+.messages_container .fw-bold {
+    color: #000;
+    font-size: 15px;
 }
 
 .dashboardsidebar .active {
-
     background-color: #fff !important;
     color: #000 !important;
 }
@@ -768,4 +792,7 @@ a.here_link {
 
 .sort_by .custom-select {
     height: 39px !important;
+}
+.signup_toggle_btn {
+    display: flex;
 }

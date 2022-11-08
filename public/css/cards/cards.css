@@ -15,11 +15,13 @@
 
 .card-primary > .card-header h5 {
     color: #fff !important;
+    margin: 0;
 }
 
 .card-primary > .card-header {
     color: #5dcac4 !important;
     background-color: #2DA2AF !important;
+    padding: .75rem !important;
 }
 
 .card-primary > .card-body {
