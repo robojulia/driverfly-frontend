@@ -18,5 +18,6 @@ export enum ApplicantExtras {
 
   // talha's entities
   HEAR_ABOUT_US = "HEAR_ABOUT_US",
-  APPLY_DATE = "APPLY_DATE"
+  APPLY_DATE = "APPLY_DATE",
+  VIOLATION_COUNT = "VIOLATION_COUNT",
 }

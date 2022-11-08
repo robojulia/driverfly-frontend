@@ -11,13 +11,19 @@ import { States } from "../../../../enums/users/us-states.enum";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import { OtherQueuesDto } from "../../../../models/jot-form/long-form/other-queues.dto";
+import { DashCircle, PlusCircle } from "react-bootstrap-icons";
+import { AccidentHistoryEntity } from "../../../../models/jot-form/long-form/accident-last-5-years/index.dto";
+import { CdlExtras } from "../../../../models/jot-form/long-form/cdl-object/index.dto";
+import BaseCheckList from "../../base-check-list";
+import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
 export interface OtherQuesProps extends PageProps {}
 
 export function OtherQues() {
   const {
-    state: { steps },
-    method: { setSteps },
+    state: { steps, applicant, applicantExtras },
+    method: { setSteps, setApplicant, updateApplicantExtras },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
@@ -25,19 +31,57 @@ export function OtherQues() {
     initialValues: new OtherQueuesDto(),
     validationSchema: OtherQueuesDto.yupSchema(),
     onSubmit: (values) => {
-      setSteps(steps+1);
+      try {
+        console.log("valuesDTO", values);
+        const { endorsements, QUALIFIED_FOR_MANUAL_TRANSMISSION, CDL_NUMBER } =
+          values;
+
+        setApplicant({
+          ...applicant,
+          endorsements,
+        });
+
+        updateApplicantExtras(QUALIFIED_FOR_MANUAL_TRANSMISSION);
+        updateApplicantExtras(CDL_NUMBER);
+
+        setSteps(steps + 1);
+      } catch (error) {}
+      setSteps(steps + 1);
     },
     onReset: (values) => {
-      setSteps(steps-1);
+      setSteps(steps - 1);
     },
   });
+  useEffect(() => {
+    console.log("applicant extras", applicantExtras);
+    const { endorsements } = applicant;
+    const apx_qualified = applicantExtras?.find(
+      (v) => v.type === ApplicantExtras.QUALIFIED_FOR_MANUAL_TRANSMISSION
+    );
+    const apx_cdl = applicantExtras?.find(
+      (v) => v.type === ApplicantExtras.CDL_NUMBER
+    );
+    form.setValues({
+      ...form.values,
+      QUALIFIED_FOR_MANUAL_TRANSMISSION: !!apx_qualified?.type
+        ? apx_qualified
+        : new ApplicantExtrasEntity(
+            ApplicantExtras.QUALIFIED_FOR_MANUAL_TRANSMISSION
+          ),
+      CDL_NUMBER: !!apx_cdl?.type
+        ? apx_cdl
+        : new ApplicantExtrasEntity(ApplicantExtras.CDL_NUMBER),
+      endorsements: endorsements || null,
+    });
+  }, [applicant, applicantExtras]);
+  
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
       <Row>
         <BaseSelect
           className="col-6 mb-3"
           options={["Yes", "No"]}
-          name="manual_qualification"
+          name="QUALIFIED_FOR_MANUAL_TRANSMISSION.value"
           placeholder="CHOOSE"
           label="QUALIFIED_TO_MANUAL_DRIVING"
           formik={form}
@@ -45,119 +89,97 @@ export function OtherQues() {
       </Row>
 
       <Row>
-        <BaseSelect
-          className="col-6 mb-3"
-          label="ENDORSEMENT"
-          placeholder="CHOOSE"
-          name="driver_endorsement"
+        <BaseCheckList
+          className="col-6"
+          label="ENDORSEMENTS"
+          name="endorsements"
           labelPrefix="DriverEndorsement"
           enumType={DriverEndorsement}
           formik={form}
+          cols="2"
         />
       </Row>
       <Row>
-        <p className={styles.paragraph__left}>
-          {t("THREE_EQUIPMENT_EXPERIMENT")}
-        </p>
-      </Row>
-      <Row>
-        <p className={styles.paragraph__left}>{t("FILL_FOLLOWING_RELEVENT")}</p>
-      </Row>
-      <Row>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="cdl_number_1"
-            placeholder="CDL_NUMBER_1"
-            label="CDL_NUMBER"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseSelect
-            className="col-12 mt-3"
-            enumType={States}
-            name="state_1"
-            placeholder="ISSUANCE_STATE"
-            label="CHOOSE"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            type="date"
-            name="date_1"
-            placeholder="expiration_date"
-            label="DATE"
-            formik={form}
-          />
-        </Col>
+        <div className="mt-4 float-left d-flex justify-left pl-4">
+          <Button
+            size="sm"
+            onClick={() =>
+              form.setValues({
+                ...form.values,
+                CDL_NUMBER: {
+                  ...(form.values.CDL_NUMBER || []),
+                  value: [
+                    ...(form.values.CDL_NUMBER?.value || []),
+                    new CdlExtras(),
+                  ],
+                },
+              })
+            }
+          >
+            <PlusCircle /> {t("TITLE_ADD_CDL_DETAIL")}
+          </Button>
+        </div>
       </Row>
 
-      <Row>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="cdl_number_2"
-            placeholder="CDL_NUMBER_2"
-            label="CDL_NUMBER"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseSelect
-            className="col-12 mt-3"
-            enumType={States}
-            name="state_2"
-            placeholder="ISSUANCE_STATE"
-            label="CHOOSE"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            type="date"
-            name="date_2"
-            placeholder="expiration_date"
-            label="DATE"
-            formik={form}
-          />
-        </Col>
-      </Row>
-
-      <Row>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="cdl_number_3"
-            placeholder="CDL_NUMBER_3"
-            label="CDL_NUMBER"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseSelect
-            className="col-12 mt-3"
-            enumType={States}
-            name="state_3"
-            placeholder="ISSUANCE_STATE"
-            label="CHOOSE"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            type="date"
-            name="date_3"
-            placeholder="expiration_date"
-            label="DATE"
-            formik={form}
-          />
-        </Col>
-      </Row>
+      {form.values.CDL_NUMBER?.value?.length > 0 && (
+        <>
+          {form.values.CDL_NUMBER?.value?.map((entity, i) => (
+            <Row key={i}>
+              <div className="col-md-12 mt-2">
+                <Row>
+                  <Col>
+                    <BaseInput
+                      name={`CDL_NUMBER.value[${i}].license_number`}
+                      className="col-12 mt-3"
+                      placeholder="CDL_NUMBER_1"
+                      label="CDL_NUMBER"
+                      formik={form}
+                    />
+                  </Col>
+                  <Col>
+                    <BaseSelect
+                      className="col-12 mt-3"
+                      enumType={States}
+                      name={`CDL_NUMBER.value[${i}].state`}
+                      placeholder="ISSUANCE_STATE"
+                      label="CHOOSE"
+                      formik={form}
+                    />
+                  </Col>
+                  <Col>
+                    <BaseInput
+                      className="col-12 mt-3"
+                      type="date"
+                      name={`CDL_NUMBER.value[${i}].date`}
+                      placeholder="expiration_date"
+                      label="DATE"
+                      formik={form}
+                    />
+                  </Col>
+                  <Col>
+                    <a
+                      href="#"
+                      onClick={() =>
+                        form.setValues({
+                          ...form.values,
+                          CDL_NUMBER: {
+                            ...(form.values.CDL_NUMBER || []),
+                            value: form.values.CDL_NUMBER?.value?.filter(
+                              (v, idx) => i != idx
+                            ),
+                          },
+                        })
+                      }
+                    >
+                      <DashCircle color="red" />
+                    </a>
+                  </Col>
+                </Row>
+              </div>
+            </Row>
+          ))}
+        </>
+      )}
 
       <Row className="mt-2">
         <Col>

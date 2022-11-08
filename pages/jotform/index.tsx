@@ -36,7 +36,7 @@ import { PageProps } from "../../types/jotform/page-props.type";
 import { ApplicantExtrasEntity } from "../../models/applicant/applicant-extras.entity";
 
 export default function jotFormLongForm() {
-  const [steps, setSteps] = useState<number>(3);
+  const [steps, setSteps] = useState<number>(15);
   const [applicant, setApplicant] = useState<ApplicantEntity>(
     new ApplicantEntity()
   );
@@ -48,16 +48,6 @@ export default function jotFormLongForm() {
       !!oldArray ? [...oldArray, { ...value }] : [{ ...value }]
     );
 
-  const onNextClick: PageProps["onNextClick"] = (partialEntity) => {
-    setApplicant({ ...applicant, ...partialEntity });
-    console.log("valuessssssss 2", applicant);
-    setSteps(steps + 1);
-  };
-
-  const onBackClick: PageProps["onBackClick"] = () => {
-    setSteps(steps - 1);
-  };
-
   useEffect(() => {
     console.log("applicantextrasvalues", applicantExtras);
   }, []);
@@ -65,7 +55,6 @@ export default function jotFormLongForm() {
   const shortFormDataSent: PageProps["shortFormDataSent"] = async (
     params: any
   ) => {
-    onNextClick(applicant);
 
     // try {
     // const applicantApi = new ApplicantApi();

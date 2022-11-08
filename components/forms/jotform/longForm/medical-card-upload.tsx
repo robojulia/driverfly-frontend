@@ -7,28 +7,56 @@ import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
+import FileInput from "../../file-input";
+import { DocumentsDto } from "../../../../models/jot-form/long-form/documents.dto";
+import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-document-type.enum";
 
 export interface MedicalCardUploadprops extends PageProps {}
 
 export function MedicalCardUpload() {
   const {
-    state: { steps },
-    method: { setSteps },
+    state: { applicant, steps },
+    method: { setApplicant, setSteps },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: {
-      photo: null,
-    },
+    initialValues: new DocumentsDto(),
+    validationSchema: DocumentsDto.yupSchema(),
     onSubmit: (values) => {
-      setSteps(steps+1);
+      const { document } = values;
+      setApplicant((oldArray) =>{
+
+        return {...oldArray, documents: [...oldArray.documents, {...document}]}
+      }
+    );
+      setSteps(steps + 1);
+      setSteps(steps + 1);
     },
     onReset: (values) => {
-      setSteps(steps-1);
+      setSteps(steps - 1);
     },
   });
+  useEffect(() => {
+    // form.setFieldValue(
+    //   "driver_license.type", ApplicantDocumentType.MEDICAL_CARD
+    // )
+    console.log("form doc", ApplicantDocumentType);
+    
+    form.setValues({
+      document: {
+        ...form.values.document,
+        type: ApplicantDocumentType.MEDICAL_CARD,
+        name: applicant.documents[0].name
+      },
+    });
+  }, []);
+  useEffect(() => {
+console.log("form errors", form.errors)
+console.log("form valuez", form.values)
+console.log("form applicant", applicant)
 
+  }, [form.errors, form.values])
   return (
     <>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -36,12 +64,10 @@ export function MedicalCardUpload() {
           <h3 className="mb-4">{t("MEDICAL_CARD_UPLOAD_TITLE")}</h3>
         </Row>
         <Row className={styles.align__text_left}>
-          <BaseInput
-            className="col-5 mt-1"
-            type="file"
-            name="photo"
-            placeholder="photo"
-            label="MEDICAL_CARD_UPLOAD"
+        <FileInput
+            name="document"
+            required
+            accept="application/pdf"
             formik={form}
           />
         </Row>
