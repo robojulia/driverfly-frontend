@@ -47,7 +47,7 @@ export function MedicalCardUpload() {
       document: {
         ...form.values.document,
         type: ApplicantDocumentType.MEDICAL_CARD,
-        name: applicant.documents[0].name
+        // value: applicant.documents.find(v => v.type === ApplicantDocumentType.MEDICAL_CARD)
       },
     });
   }, []);
