@@ -93,7 +93,7 @@
   "update": "Update",
   "We_want_to_hear_form_you": "We want to hear form you!",
   "reset_all": "Reset All",
-  "PREFERENCES":"Preferences",
+  "PREFERENCES": "Preferences",
   "communication_preferences": "Communication Preferences",
   "communication_preferences_receive_driverfly": "Consent to receive text messages from DriverFly & any third parties of DriverFly",
   "communication_preferences_preferred_method": "How should employers contact you",
@@ -125,6 +125,22 @@
     "OTR": "OTR",
     "REGIONAL": "Regional",
     "LOCAL": "Local"
+  },
+  "RouteType": {
+    "LOCAL": "Local (home every night)",
+    "REGIONAL_NIGHT": "Regional (home every night)",
+    "REGIONAL_WEEKEND": "Regional (home every weekend)",
+    "REGIONAL_ROAD": "Regional (2+ weeks on the road)",
+    "OTR_WEEKEND": "OTR (home every weekend)",
+    "OTR_ROAD": "OTR (2+ weeks on the road)"
+  },
+  "OtherRequirementType": {
+    "LEASE_TO_OWN_PROGRAM": "LEASE_TO_OWN_PROGRAM",
+    "DROP_AND_HOOK_ONLY": "DROP_AND_HOOK_ONLY",
+    "CPM_PAYMENT": "CPM_PAYMENT",
+    "TEAM_DRIVERS": "TEAM_DRIVERS",
+    "PAID_TRAINING": "PAID_TRAINING",
+    "OTHERS": "OTHERS"
   },
   "preferred_schedule": "Preferred Schedule",
   "JobEmploymentType": {
@@ -1569,10 +1585,11 @@
   "WORKED_HERE_BEFORE": "Have you worked with this company before?",
   "FROM": "From",
   "TO": "To",
-  "TELL_ABOUT_YOUR_EDUCATION":"Tell us about your Education",
-  "MEDICAL_CARD_UPLOAD_TITLE":"Medical Card Upload",
-  "PAST_EMPLOYMENT_HISTORY":"Past Employment History",
-  "HONEST_ABOUT_PAST_EMPLOYMENT":"Please be honest about your past employment as this helps speed up the hiring process.",
-  "TITLE_ADD_ACCIDENT_DETAILS":" Add accident details",
-  "TITLE_ADD_VIOLATION_DETAILS":"Add violation details"
+  "TELL_ABOUT_YOUR_EDUCATION": "Tell us about your Education",
+  "MEDICAL_CARD_UPLOAD_TITLE": "Medical Card Upload",
+  "PAST_EMPLOYMENT_HISTORY": "Past Employment History",
+  "HONEST_ABOUT_PAST_EMPLOYMENT": "Please be honest about your past employment as this helps speed up the hiring process.",
+  "TITLE_ADD_ACCIDENT_DETAILS": " Add accident details",
+  "TITLE_ADD_VIOLATION_DETAILS": "Add violation details",
+  "TITLE_ADD_CDL_DETAIL": " Add CDL details"
 }

@@ -29,10 +29,10 @@ export function AccordianLastPage() {
       //   endorsements_twic: null,
     },
     onSubmit: (values) => {
-      setSteps(steps+1);
+      setSteps(steps + 1);
     },
     onReset: (values) => {
-      setSteps(steps-1);
+      setSteps(steps - 1);
     },
   });
   return (

@@ -1,13 +1,20 @@
 import * as yup from "yup";
+import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
+import { DriverEndorsement } from "../../../enums/users/driver-endorsement.enum";
+import { ApplicantExtrasEntity } from "../../applicant/applicant-extras.entity";
 
 export class OtherQueuesDto {
-  manual_qualification: string;
-  endorsements_twic: string;
-
+  QUALIFIED_FOR_MANUAL_TRANSMISSION?: ApplicantExtrasEntity;
+  endorsements?: DriverEndorsement[] = [];
+  CDL_NUMBER?: ApplicantExtrasEntity;
   static yupSchema() {
     return yup.object({
-      manual_qualification: yup.string().nullable(),
-      endorsements_twic: yup.string().nullable(),
+      QUALIFIED_FOR_MANUAL_TRANSMISSION: ApplicantExtrasEntity.yupSchema(),
+      endorsements: yup
+        .array((yup.string() as any).enum(DriverEndorsement))
+        .optional()
+        .nullable(),
+      CDL_NUMBER: ApplicantExtrasEntity.yupSchema(),
     });
   }
 }

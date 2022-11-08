@@ -21,7 +21,6 @@ export function AccidentsLast5Years() {
     method: { setApplicant, updateApplicantExtras, setSteps },
   } = useContext(jotformContext);
 
-  
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new AccidentLastFiveYearsDto(),
@@ -29,28 +28,25 @@ export function AccidentsLast5Years() {
     onSubmit: (values) => {
       try {
         console.log("valuesDTO", values);
-        const { accidents_within_last_5_years, ACCIDENT_DETAILS } = values;
+        const { accident_count, ACCIDENT_DETAILS } = values;
 
         setApplicant({
           ...applicant,
-          accidents_within_last_5_years,
+          accident_count,
         });
 
         updateApplicantExtras(ACCIDENT_DETAILS);
 
-        setSteps(steps + 1)
+        setSteps(steps + 1);
       } catch (error) {
         console.log("error", error);
       }
       console.log("applicantExtras", applicantExtras);
-
-    
     },
     onReset: (values) => {
       setSteps(steps - 1);
     },
   });
-
 
   useEffect(() => {
     const apx = applicantExtras?.find(
@@ -61,8 +57,9 @@ export function AccidentsLast5Years() {
       ACCIDENT_DETAILS: !!apx?.type
         ? apx
         : new ApplicantExtrasEntity(ApplicantExtras.ACCIDENT_DETAILS),
+      accident_count: applicant.accident_count || null,
     });
-  }, [applicantExtras]);
+  }, [applicant, applicantExtras]);
 
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -71,7 +68,7 @@ export function AccidentsLast5Years() {
         <Col>
           <BaseInput
             className="col-6 mt-3"
-            name="accidents_within_last_5_years"
+            name="accident_count"
             label="accidents_last_5_years"
             placeholder="PLACEHOLDER_FOR_DIGITS"
             formik={form}

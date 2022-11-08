@@ -7,28 +7,53 @@ import { useTranslation } from "../../../../hooks/use-translation";
 import FileInput from "../../file-input";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
+import { DocumentEntity } from "../../../../models/documents/document.entity";
+import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-document-type.enum";
+import { DocumentsDto } from "../../../../models/jot-form/long-form/documents.dto";
 
 export interface PhotoUploadprops extends PageProps {}
 
 export function PhotoUpload() {
   const {
-    state: { steps },
-    method: { setSteps },
+    state: { steps, applicant },
+    method: { setSteps, setApplicant },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: {
-      photo: null,
-    },
+    initialValues: new DocumentsDto(),
+    validationSchema: DocumentsDto.yupSchema(),
     onSubmit: (values) => {
-      setSteps(steps+1);
+      console.log("vallll", values);
+      const { document } = values;
+      setApplicant((oldArray) =>{
+
+        return {...oldArray, documents: [...oldArray.documents, {...document}]}
+      }
+    );
+      setSteps(steps + 1);
     },
     onReset: (values) => {
-      setSteps(steps-1);
+      setSteps(steps - 1);
     },
   });
 
+  useEffect(() => {
+    // form.setFieldValue(
+    //   "driver_license.type", ApplicantDocumentType.DRIVERS_LICENSE
+    // )
+    form.setValues({
+      document: {
+        ...form.values.document,
+        type: ApplicantDocumentType.DRIVERS_LICENSE,
+      },
+    });
+  }, []);
+  useEffect(() => {
+console.log("form errors", form.errors)
+console.log("form valuez", form.values)
+
+  }, [form.errors, form.values])
   return (
     <>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -37,11 +62,9 @@ export function PhotoUpload() {
         </Row>
         <Row className={styles.align__text_left}>
           <FileInput
-            className="col-5"
-            label={`photo`}
-            name={`photo`}
-            accept="image/*"
-            documentType={"PHOTO"}
+            name="document"
+            required
+            accept="application/pdf"
             formik={form}
           />
         </Row>

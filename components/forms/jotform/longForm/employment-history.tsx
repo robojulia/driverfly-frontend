@@ -27,10 +27,10 @@ export function EmploymentHistory() {
     initialValues: new EmploymentHistoryDto(),
     validationSchema: EmploymentHistoryDto.yupSchema(),
     onSubmit: (values) => {
-      setSteps(steps+1);
+      setSteps(steps + 1);
     },
     onReset: (values) => {
-      setSteps(steps-1);
+      setSteps(steps - 1);
     },
   });
   useEffect(() => {

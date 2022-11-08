@@ -46,11 +46,11 @@ export function DriverApplication() {
       setSteps(steps - 1);
     },
   });
-  useEffect(() => {
-    console.log("form.values", form.values)
-    console.log("form.errors", form.errors)
-    console.log("applicant", applicant)
-  }, [form.values, form.errors])
+  // useEffect(() => {
+  //   console.log("form.values", form.values)
+  //   console.log("form.errors", form.errors)
+  //   console.log("applicant", applicant)
+  // }, [form.values, form.errors])
   useEffect(() => {
     const { first_name, last_name } = applicant;
     const apx = applicantExtras?.find(

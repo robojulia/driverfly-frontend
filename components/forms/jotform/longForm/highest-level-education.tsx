@@ -17,8 +17,8 @@ export interface HighestLevelEducationProps extends PageProps {}
 
 export function HighestLevelEducation() {
   const {
-    state: { applicant, steps },
-    method: { setApplicant, setSteps },
+    state: { applicant, applicantExtras, steps },
+    method: { setApplicant, updateApplicantExtras, setSteps },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
@@ -26,12 +26,28 @@ export function HighestLevelEducation() {
     initialValues: new HighestLevelEducationDto(),
     validationSchema: HighestLevelEducationDto.yupSchema(),
     onSubmit: (values) => {
+      try {
+        const { highest_degree } = values;
+
+        setApplicant({
+          ...applicant,
+          highest_degree,
+        });
+        setSteps(steps + 1);
+      } catch (error) {}
       setSteps(steps + 1);
     },
     onReset: (values) => {
       setSteps(steps - 1);
     },
   });
+  useEffect(() => {
+    const { highest_degree } = applicant;
+    form.setValues({
+      ...form.values,
+      highest_degree: highest_degree || null,
+    });
+  }, [applicant]);
   return (
     <>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -45,7 +61,7 @@ export function HighestLevelEducation() {
             className="col-6"
             required
             enumType={EducationLevel}
-            name="education_level"
+            name="highest_degree"
             placeholder="CHOOSE"
             label="EDUCATION_HIGHEST_LEVEL"
             labelPrefix="EducationLevel"
