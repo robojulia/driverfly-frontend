@@ -56,7 +56,7 @@ export function AccordianLastPage() {
               </p>
             </Row>
             <Row className={styles.align__text_left}>
-              <h6>{t("EMPLOYEE_NAME_SUVINEET_SINGH")}</h6>
+              <h6>{t("EMPLOYEE_NAME_NAUTILUS")}</h6>
             </Row>
             <Row className={styles.align__text_left}>
               <Col>
@@ -397,7 +397,7 @@ export function AccordianLastPage() {
             </Row>
             <Row>
               <p className={styles.paragraph}>
-                {t("EMPLOYEE_NAME_SUVINEET_SINGH")}
+                {t("EMPLOYEE_NAME_NAUTILUS")}
                 </p>
             </Row>
             <Row>
@@ -519,7 +519,7 @@ export function AccordianLastPage() {
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                {t("APPLICANT_NAME_SUVINEET_SINGH")}
+                {t("APPLICANT_NAME_NAUTILUS")}
               </p>
             </Row>
             <Row className={styles.align__text_left}>
