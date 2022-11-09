@@ -8,6 +8,8 @@ import BaseInput from "../../base-input";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import { WorkedBeforeDto } from "../../../../models/jot-form/long-form/worked-before.dto";
+import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
 export interface WorkedBeforeProps extends PageProps {}
 
@@ -23,45 +25,73 @@ export function WorkedBefore() {
     validationSchema: WorkedBeforeDto.yupSchema(),
 
     onSubmit: (values) => {
+      const{ALREADY_APPLIED_TO_COMPANY, ALREADY_WORKED_TO_COMPANY} = values
+      updateApplicantExtras(ALREADY_APPLIED_TO_COMPANY)
+      updateApplicantExtras(ALREADY_WORKED_TO_COMPANY)
       setSteps(steps + 1);
     },
     onReset: (values) => {
       setSteps(steps + 1);
     },
   });
+
+  useEffect(() => {
+    const apx = applicantExtras?.find(
+      (v) => v.type === ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
+    );
+    const apx_worked_before = applicantExtras?.find(
+      (v) => v.type === ApplicantExtras.ALREADY_WORKED_TO_COMPANY
+    );
+    form.setValues({
+      ...form.values,
+      ALREADY_APPLIED_TO_COMPANY: !!apx?.type
+        ? apx
+        : new ApplicantExtrasEntity(ApplicantExtras.ALREADY_APPLIED_TO_COMPANY),
+        ALREADY_WORKED_TO_COMPANY: !!apx_worked_before?.type
+        ? apx_worked_before
+        : new ApplicantExtrasEntity(ApplicantExtras.ALREADY_WORKED_TO_COMPANY),
+        // apx_worked_before: !!apx_worked_before.value,
+        is_worked_before: !!apx?.value,
+    });
+  }, [applicantExtras]);
+
+  useEffect(() => {
+    console.log("values", form.values);
+    console.log("error", form.errors);
+  }, [form.values, form.errors]);
+
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
       <Row>
         <Col>
           <BaseCheck
             className="float-left col-6"
-            name="applied_before"
+            name="ALREADY_APPLIED_TO_COMPANY.value"
             label="APPLIED_HERE_BEFORE"
             formik={form}
           />
         </Col>
       </Row>
-      {form.values.applied_before ? (
+      {form.values?.ALREADY_APPLIED_TO_COMPANY?.value ? (
         <>
           <Row>
             <Col>
               <BaseCheck
                 className="mt-3 col-6 float-left"
-                name="worked_before"
+                name="is_worked_before"
                 label="WORKED_HERE_BEFORE"
                 formik={form}
               />
             </Col>
           </Row>
-          {form.values.worked_before ? (
+          {form.values.is_worked_before ? (
             <>
               <Row>
                 <Col>
                   <BaseInput
                     className="col-6 mt-3"
-                    required
                     type="date"
-                    name="from_date"
+                    name="ALREADY_WORKED_TO_COMPANY.value.start_date"
                     placeholder="DATE"
                     label="FROM"
                     formik={form}
@@ -70,9 +100,8 @@ export function WorkedBefore() {
                 <Col>
                   <BaseInput
                     className="col-6 mt-3"
-                    required
                     type="date"
-                    name="to_date"
+                    name="ALREADY_WORKED_TO_COMPANY.value.end_date"
                     placeholder="DATE"
                     label="TO"
                     formik={form}

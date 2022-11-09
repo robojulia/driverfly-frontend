@@ -34,7 +34,7 @@ export function DriverApplication() {
     onSubmit: (values) => {
       try {
         const { first_name, last_name, APPLY_DATE } = values;
-
+        // console.log("sign", values);
         setApplicant({ ...applicant, first_name, last_name });
         updateApplicantExtras(APPLY_DATE);
         setSteps(steps + 1);
@@ -46,21 +46,29 @@ export function DriverApplication() {
       setSteps(steps - 1);
     },
   });
-  // useEffect(() => {
-  //   console.log("form.values", form.values)
-  //   console.log("form.errors", form.errors)
-  //   console.log("applicant", applicant)
-  // }, [form.values, form.errors])
+  const signatureEnd = () => {
+    console.log(padRef.current.toDataURL().toString());
+    return padRef.current.toDataURL().toString();
+  };
+  useEffect(() => {
+    console.log("form.values", form.values);
+    console.log("form.errors", form.errors);
+    console.log("applicant", applicant);
+  }, [form.values, form.errors]);
   useEffect(() => {
     const { first_name, last_name } = applicant;
     const apx = applicantExtras?.find(
-      (v) => v.type === ApplicantExtras.AUTHORIZE_TO_COMMUNICATE
+      (v) => v.type === ApplicantExtras.APPLY_DATE
+    );
+    const apx_sign = applicantExtras?.find(
+      (v) => v.type === ApplicantExtras.SIGNATURE
     );
     form.setValues({
       ...form.values,
       APPLY_DATE: !!apx?.type
         ? apx
         : new ApplicantExtrasEntity(ApplicantExtras.APPLY_DATE),
+      // SIGNATURE: !!apx_sign?.type ? apx_sign : signatureEnd(),
       first_name: first_name || null,
       last_name: last_name || null,
     });
@@ -111,8 +119,9 @@ export function DriverApplication() {
           <Col>
             <h6>{t("SIGNATURE")}</h6>
             <SignaturePad
-              className
+              name="SIGNATURE.value"
               ref={padRef}
+              onEnd={signatureEnd}
               canvasProps={{
                 width: 700,
                 height: 200,

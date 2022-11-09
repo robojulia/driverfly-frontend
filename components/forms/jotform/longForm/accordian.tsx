@@ -15,7 +15,7 @@ export interface AccordianLastPageProps extends PageProps {}
 
 export function AccordianLastPage() {
   const {
-    state: { steps },
+    state: { steps, applicantExtras, applicant },
     method: { setSteps },
   } = useContext(jotformContext);
   const { t } = useTranslation();
@@ -32,9 +32,14 @@ export function AccordianLastPage() {
       setSteps(steps + 1);
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      setSteps(19);
     },
   });
+  useEffect(() => {
+    console.log("applicant extras", applicantExtras);
+    console.log("applicant", applicant);
+    
+  })
   return (
     <Form>
       <h1>{t("FORMS_TO_SIGNUP")}</h1>

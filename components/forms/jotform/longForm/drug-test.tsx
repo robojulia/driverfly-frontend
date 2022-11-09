@@ -24,6 +24,8 @@ export function DrugTest() {
     initialValues: new DrugTestDto(),
     validationSchema: DrugTestDto.yupSchema(),
     onSubmit: (values) => {
+      const {DOT_REGULATION} = values;
+      updateApplicantExtras(DOT_REGULATION)
       setSteps(steps + 1);
     },
     onReset: (values) => {

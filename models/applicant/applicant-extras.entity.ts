@@ -10,6 +10,7 @@ import { EmploymentHistoryExtraDto } from "../jot-form/long-form/emplyment-histo
 import { PreferencesExtraDto } from "../jot-form/long-form/preferences/index.dto";
 import { PastEmploymentHistoryExtraDto } from "../jot-form/long-form/previous-emplyment-history/index.dto";
 import { VioalationExtrasEntity } from "../jot-form/long-form/violaton-history/index.dto";
+import { WorkedBeforeExtrasDto } from "../jot-form/long-form/worked-before/index.dto";
 
 export class ApplicantExtrasEntity {
   constructor(type?: ApplicantExtras) {
@@ -43,6 +44,10 @@ export class ApplicantExtrasEntity {
         .when("type", {
           is: ApplicantExtras.APPLY_DATE,
           then: yup.date().required().nullable(),
+        })
+        .when("type", {
+          is: ApplicantExtras.SIGNATURE,
+          then: yup.string().required().nullable(),
         })
         .when("type", {
           is: ApplicantExtras.LINE_ADDRESS,
@@ -110,6 +115,14 @@ export class ApplicantExtrasEntity {
         .when("type", {
           is: ApplicantExtras.DOT_REGULATION,
           then: yup.string().required().nullable(),
+        })
+        .when("type", {
+          is: ApplicantExtras.ALREADY_APPLIED_TO_COMPANY,
+          then: yup.boolean().default(false).required().nullable(),
+        })
+        .when("type", {
+          is: ApplicantExtras.ALREADY_WORKED_TO_COMPANY,
+          then: WorkedBeforeExtrasDto.yupSchema(),
         }),
     });
   }

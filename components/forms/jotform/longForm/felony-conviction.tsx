@@ -25,6 +25,8 @@ export function FelonyConviction() {
     initialValues: new FelonyConvictionDto(),
     validationSchema: FelonyConvictionDto.yupSchema(),
     onSubmit: (values) => {
+      const { CONVICTED_OF_FELONY } = values;
+      updateApplicantExtras(CONVICTED_OF_FELONY);
       setSteps(steps + 1);
     },
     onReset: (values) => {

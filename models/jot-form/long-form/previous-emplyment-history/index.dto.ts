@@ -9,8 +9,12 @@ export class PastEmploymentHistoryExtraDto {
   previous_company_street_address_line_1: string;
   previous_company_street_address_line_2: string;
   previous_company_zipcode: number;
-  fmcsr: string;
-  fcr: string;
+  city: string;
+  state: string;
+  start_date: string;
+  end_date: string;
+  fmcsr: string | Date;
+  fcr: string | Date;
 
   static yupSchema() {
     return yup.object({
@@ -18,16 +22,16 @@ export class PastEmploymentHistoryExtraDto {
       previous_company_phone_number: yup.string().required().nullable(),
       city: yup.string().required().nullable(),
 
-      fmcsr: yup.string().required().nullable(),
+      fmcsr: yup.string().optional().nullable(),
 
-      fcr: yup.string().required().nullable(),
+      fcr: yup.string().optional().nullable(),
 
       state: yup.string().required().nullable(),
-
+      start_date: yup.date().required().nullable(),
+      end_date: yup.date().required().nullable(),
       previous_company_email: yup.string().required().nullable(),
 
-
-      authorize: yup.boolean().default(false).required().nullable(),
+      authorize: yup.boolean().default(false).optional().nullable(),
 
       previous_company_street_address_line_1: yup
         .string()
@@ -36,7 +40,7 @@ export class PastEmploymentHistoryExtraDto {
 
       previous_company_street_address_line_2: yup
         .string()
-        .required()
+        .optional()
         .nullable(),
 
       previous_company_zipcode: yup.string().required().nullable(),

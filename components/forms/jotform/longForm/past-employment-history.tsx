@@ -114,6 +114,28 @@ export function PastEmploymentHistory() {
               </Col>
             </Row>
             <Row>
+            <Col className={styles.align__text_left}>
+                <BaseInput
+                  className="col-10 mt-3"
+                  required
+                  type="date"
+                  name="PAST_EMPLOYER.value.start_date"
+                  label="START_DATE"
+                  formik={form}
+                />
+              </Col>
+              <Col className={styles.align__text_left}>
+                <BaseInput
+                  className="col-10 mt-3"
+                  required
+                  type="date"
+                  name="PAST_EMPLOYER.value.end_date"
+                  label="END_DATE"
+                  formik={form}
+                />
+              </Col>
+            </Row>
+            <Row>
               <h6
                 className={`${styles.align__text_left} ${styles.carrierName__smaller}`}
               >
