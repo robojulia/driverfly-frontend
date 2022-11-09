@@ -52,8 +52,7 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
         if (e.key === ".") {
           e.preventDefault();
         }
-        // if (e.key !== "-" && e.key !== "." && isNaN(+e.key)) e.preventDefault();
-        if (["e", "E", "+"].includes(e.key)) e.preventDefault();
+
       };
   }
   else if (type === "number") {
