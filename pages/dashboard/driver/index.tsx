@@ -77,7 +77,7 @@ export default function Dashboard() {
     return (
         <PageLayout
             title="DASHBOARD"
-            >
+        >
             <Row className='justify-content-center text-center d-flex'>
                 <div className={` py-5 bg_yellow w-23  ${style.job_info_container}`} >
                     <h2 className="text-white font-weight-bolder">
@@ -104,52 +104,34 @@ export default function Dashboard() {
                     <h3 className={style.text_yellow}>{t("ApplicantStatus.REJECTED")}</h3>
                 </div>
             </Row>
-            <div className="table-responsive">
-                <table className="table table-borderless ">
-                    <thead>
-                        <tr>
-                            <th scope="col w-100">
-                                {t("CDL_CLASS")}
-                            </th>
-                            <th scope="col">
-                                {t("years_cdl_experience")}
-                            </th>
-                            <th scope="col">
-                                {t("driver_license_number")}
-                            </th>
-                            <th scope="col"></th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                {driver.license_type || 'N/A'}
-                            </td>
-                            <td>
-                                {driver.years_cdl_experience || 0}
-                            </td>
-                            <td>
-                                {driver.license_number || "N/A"}
-                            </td>
-                            <td className="p-0">
-                                <Link href="/dashboard/driver/settings/applicant">
-                                    <button className={`text-white ${style.btn_blue}`}>{t("update_status")}</button>
-                                </Link>
-                            </td>
-                            <td className="p-0">
-                                <Link href="/dashboard/driver/jobs">
-                                    <button className={`text-white ${style.btn_blue}`}>{t("find_new_job")}</button>
-                                </Link>
-                            </td>
+            <Row className="mt-4">
+                <div className="col-lg-3 col-md-4 col-4 col-sm-4">
+                    <b>{t("CDL_CLASS")}</b>
+                    <p className="mt-3"> {driver.license_type || 'N/A'}</p>
+                </div>
+                <div className=" col-lg-3 col-md-4 col-4 col-sm-4 ">
+                    <b>{t("years_cdl_experience")}</b>
+                    <p className="mt-3">{driver.years_cdl_experience || 0}</p>
 
-                        </tr>
-
-
-                    </tbody>
-                </table>
+                </div>
+                <div className="col-lg-3 col-md-4 col-4 col-sm-4 ">
+                    <b>{t("driver_license_number")}</b>
+                    <p className="mt-3"> {driver.license_number || "N/A"} </p>
+                </div>
+                <div className="col-lg-3 col-md-12 col-12 col-sm-12">
+                    <p></p>
+                    <Link href="/dashboard/driver/settings/applicant">
+                        <button className={`text-white p-2 m-0 ${style.btn_blue}`}>{t("update_status")}</button>
+                    </Link>
+                    <Link href="/dashboard/driver/jobs">
+                        <button className={`text-white p-2 m-2 ${style.btn_blue}`}>{t("find_new_job")}</button>
+                    </Link>
+                </div>
+             
+            </Row>
+            <Row>
                 <SuggestedJobs />
-            </div>
+            </Row>
 
         </PageLayout>
     )

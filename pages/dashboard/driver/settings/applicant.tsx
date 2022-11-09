@@ -183,15 +183,6 @@ export default function Applicant() {
                                         formik={form}
                                     />
                                 </Row>
-                                {/* <BaseSelect
-                                    className="mt-1"
-                                    label="PREFERRED_LOCATION"
-                                    placeholder="PREFERRED_LOCATION"
-                                    name="preferred_location"
-                                    formik={form}
-                                    labelPrefix="JobGeography"
-                                    enumType={JobGeography}
-                                /> */}
                             </Col>
                             <Col md="4" className="px-2">
                                 <BaseInput
@@ -257,7 +248,7 @@ export default function Applicant() {
                                     formik={form}
                                 />
                                 <BaseCheckList
-                                    className="col-12 mt-2"
+                                    className="col-12 mt-2 preferred_location"
                                     label="PREFERRED_LOCATION"
                                     name="preferred_location"
                                     formik={form}
@@ -293,7 +284,7 @@ export default function Applicant() {
                                     labelPrefix="EducationLevel"
                                     enumType={EducationLevel}
                                 />
-                                <Col xs="12" className='mt-2'>
+                                <Col xs="12" className='mt-2 p-0'>
                                     <ViewCard title="EMERGENCY_CONTACT">
                                         <BaseInput
                                             className="col-12 p-1 "
@@ -386,7 +377,7 @@ export default function Applicant() {
                                                                     />
                                                                 </Col>
                                                             }
-                                                            <Col xs="1">
+                                                            <Col xs="1" className="p-0 mt-2">
                                                                 <a href="#" onClick={() => form.setValues({
                                                                     ...form.values,
                                                                     equipment_experience: form.values.equipment_experience.filter((v, idx) => i != idx)
@@ -403,12 +394,12 @@ export default function Applicant() {
                                     </ViewCard>
                                 </Col>
                             </Col>
-                            <Col md="6">
+                            <Col md="6" className="p-2">
                                 {
                                     form.values.is_owner_operator &&
-                                    <Col xs="12">
+                                    <Col xs="12" className="p-0">
                                         <ViewCard
-                                            title="equipment_owned"
+                                            title="EQUIPMENT_OWNED"
                                             actions={<Button size='sm' onClick={() => form.setValues({
                                                 ...form.values,
                                                 equipment_owned: [
@@ -428,10 +419,6 @@ export default function Applicant() {
                                                         .equipment_owned
                                                         .map((entity, i) => (
                                                             <Row key={i}>
-                                                                <Col xs="12" className='d-sm-flex d-md-none'>
-                                                                    <Col><strong>{t("TYPE")}</strong></Col>
-                                                                    <Col><strong>{t("QUANTITY")}</strong></Col>
-                                                                </Col>
                                                                 <Col xs="6">
                                                                     <BaseSelect
                                                                         name={`equipment_owned[${i}].type`}
@@ -460,7 +447,7 @@ export default function Applicant() {
                                                                         />
                                                                     </Col>
                                                                 }
-                                                                <Col xs="1">
+                                                                <Col xs="1" className="p-0 mt-2">
                                                                     <a href="#" onClick={() => form.setValues({
                                                                         ...form.values,
                                                                         equipment_owned: form.values.equipment_owned.filter((v, idx) => i != idx)
@@ -623,20 +610,20 @@ export default function Applicant() {
                         <Row>
                             <Col md="6">
                                 <BaseCheck
-                                    className="col-12 p-1  mt-2"
+                                    className="col-12 p-1 mt-2"
                                     label="CAN_PASS_DRUG_TEST"
                                     name="can_pass_drug_test"
                                     formik={form}
                                 />
                                 <BaseCheck
-                                    className="col-12 p-1  mt-2"
+                                    className="col-12 p-1 mt-2"
                                     label="HAS_DUIS"
                                     name="has_past_dui"
                                     formik={form}
                                 />
                                 {
                                     form.values.has_past_dui &&
-                                    <Col xs="12" className='mt-2'>
+                                    <Col xs="12" className='mt-2 p-0'>
                                         <ViewCard
                                             title="PAST_DUIS"
                                             actions={<Button size='sm' onClick={() => form.setValues({
@@ -705,7 +692,7 @@ export default function Applicant() {
                                 {
                                     form.values.accident_count > 0 &&
                                     <BaseTextArea
-                                        className="col-12 p-1  mt-2"
+                                        className="col-12 mt-2 p-0"
                                         label="accident_details"
                                         name="accident_details"
                                         formik={form}
@@ -713,9 +700,9 @@ export default function Applicant() {
                                 }
                             </Col>
                             <Col md="6">
-                                <Row className="m-lg-0 mx-2">
+                                <Row className="m-lg-0 m-0">
                                     <BaseCheck
-                                        className="col-12 p-1  mt-2"
+                                        className="col-12 p-1 mt-2"
                                         label="has_had_license_revoked"
                                         name="license_revoked"
                                         formik={form}
@@ -841,7 +828,7 @@ export default function Applicant() {
                 </Col>
             </Row>
             <Row>
-                <Col className="col-md-12 col-lg-6">
+                <Col className="col-md-12 col-lg-8">
                     <ViewCard
                         title="UPLOADED_DOCUMENTS"
                         actions={<Button size='sm'
@@ -859,21 +846,14 @@ export default function Applicant() {
                         }
                         {
                             form.values.documents?.length > 0 &&
-
-                            <Table striped>
-                                <thead>
-                                    <tr>
-                                        <th>{t("TYPE")}</th>
-                                        <th>{t("DOCUMENT")}</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+                            <>
+                                <Row className="p-1">
                                     {form.values
                                         .documents
                                         .map((entity, i) => (
-                                            <tr key={i}>
-                                                <td>
+                                            <Row key={i} className="my-2 pr-0">
+                                                <Col md="5" className="pr-0">
+                                                    {t("DOCUMENT")}
                                                     <BaseSelect
                                                         name={`documents[${i}].type`}
                                                         required
@@ -882,26 +862,32 @@ export default function Applicant() {
                                                         enumType={ApplicantDocumentType}
                                                         formik={form}
                                                     />
-                                                </td>
-                                                <td>
+                                                </Col>
+                                                <Col md="6" className="pr-0">
+                                                    {t("TYPE")}
                                                     <FileInput
                                                         name={`documents[${i}]`}
                                                         required
                                                         accept="application/pdf"
                                                         formik={form}
                                                     />
-                                                </td>
-                                                <td>
+                                                </Col>
+
+                                                <div className="col-md-1 mt-lg-4 mt-md-4 mt-2 text-right p-0">
                                                     <a href="#" onClick={() => form.setValues({
                                                         ...form.values,
                                                         documents: form.values.documents.filter((v, idx) => i != idx)
                                                     })}><DashCircle color="red" /></a>
-                                                </td>
+                                                </div>
 
-                                            </tr>
+                                                <Col xs="12">
+                                                    <hr />
+                                                </Col>
+                                            </Row>
                                         ))}
-                                </tbody>
-                            </Table>
+                                </Row>
+
+                            </>
                         }
                     </ViewCard>
                 </Col>
