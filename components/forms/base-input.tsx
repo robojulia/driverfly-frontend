@@ -52,6 +52,7 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
         if (e.key === ".") {
           e.preventDefault();
         }
+
       };
   }
   else if (type === "number") {
@@ -62,6 +63,8 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
       function (e) {
         // prevent negative if the min value is set to 0
         if (min != null && +min >= 0 && e.key === "-") e.preventDefault();
+        // if (e.key !== "-" && e.key !== "." && isNaN(+e.key)) e.preventDefault();
+        if (["e", "E", "+"].includes(e.key)) e.preventDefault();
       };
   }
 

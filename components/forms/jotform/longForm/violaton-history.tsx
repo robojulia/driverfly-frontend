@@ -11,6 +11,7 @@ import { VioalationExtrasEntity } from "../../../../models/jot-form/long-form/vi
 
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import styles from "../../../../styles/jotform.module.css";
 
 export interface ViolationsLast3YearsProps extends PageProps {}
 
@@ -66,9 +67,9 @@ export function ViolationsLast3Years() {
   }, [form.values, form.errors]);
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <h6>{t("VIOLATIONS_LAST_3_YEARS")}</h6>
+      <h6 className={ styles.carrierName__smaller }>{t("VIOLATIONS_LAST_3_YEARS")}</h6>
       <Row>
-        <Col>
+        <Col className={styles.align__items_left}>
           <BaseInput
             className="col-6 mt-3"
             name="VIOLATION_COUNT.value"
@@ -76,7 +77,7 @@ export function ViolationsLast3Years() {
             formik={form}
           />
         </Col>
-        <div className="mt-4 float-left d-flex justify-left pl-4">
+        <div className="mt-4 float-left d-flex justify-left pl-3">
           <Button
             size="sm"
             onClick={() =>
@@ -101,7 +102,7 @@ export function ViolationsLast3Years() {
         <>
           {form.values.VIOLATION_DETAILS.value.map((entity, i) => (
             <Row key={i}>
-              <div className="col-md-12 mt-2">
+              <div className="col-md-12 mt-2 pl-0">
                 <Row>
                   <Col>
                     <BaseInput
@@ -136,7 +137,7 @@ export function ViolationsLast3Years() {
                       formik={form}
                     />
                   </Col>
-                  <Col>
+                  <Col className="mt-5">
                     <a
                       href="#"
                       onClick={() =>

@@ -8,6 +8,7 @@ import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import styles from "../../../../styles/jotform.module.css";
 
 export interface SixthPageProps extends PageProps {}
 
@@ -43,10 +44,10 @@ export function SixthPage() {
   return (
     <>
       <form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-        <Row>
+        <Row className={styles.carrierName__smaller}> 
           <BaseSelect
             className="mt-3 mb-3"
-            options={["Referral", "Friends", "Job Board", "Social Media"]}
+            options={["Referral", "Friends", "Job Board", "Social Media","Email", "Print Ad", "Word of Mouth", "Other"]}
             name="HEAR_ABOUT_US.value"
             placeholder="CHOOSE"
             label="HOW_DID_YOU_HEAR_ABOUT_US"

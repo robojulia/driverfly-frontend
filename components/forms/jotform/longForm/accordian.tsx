@@ -18,6 +18,8 @@ export function AccordianLastPage() {
     state: { steps, applicantExtras, applicant },
     method: { setSteps },
   } = useContext(jotformContext);
+
+  // new accordian
   const { t } = useTranslation();
   let padRef = React.useRef<SignatureCanvas>(null);
   const clear = () => {
@@ -59,7 +61,7 @@ export function AccordianLastPage() {
               </p>
             </Row>
             <Row className={styles.align__text_left}>
-              <h6>{t("EMPLOYEE_NAME_SUVINEET_SINGH")}</h6>
+              <h6>{t("EMPLOYEE_NAME_NAUTILUS")}</h6>
             </Row>
             <Row className={styles.align__text_left}>
               <Col>
@@ -111,7 +113,9 @@ export function AccordianLastPage() {
             </Row>
             <Row className={styles.align__text_left}>
               <Col>
-                <h6>Signature</h6>
+                <h6>
+                  {t("SIGNATURE")}
+                </h6>
                 <SignaturePad
                   ref={padRef}
                   canvasProps={{
@@ -129,7 +133,9 @@ export function AccordianLastPage() {
               </Col>
             </Row>
             <Row className={styles.align__text_left}>
-              <h4 className="mt-3">I-A</h4>
+              <h4 className="mt-3">
+                {t("I_A")}
+              </h4>
               <p className={styles.paragraph}>
                 {t("NEW_EMPLOYER_NAME_NAUTTLUS")}
               </p>
@@ -142,7 +148,9 @@ export function AccordianLastPage() {
               <h6>{t("PLEASE_NOTE_THE_FOLLOWING_EMPLOYERS")} </h6>
             </Row>
             <Row className={styles.align__text_left}>
-              <h4 className="mt-3">I-B</h4>
+              <h4 className="mt-3">
+                {t("I-B")}
+              </h4>
               <p className={styles.paragraph}>{t("CURRENT_COMPANY_NAME")}</p>
               <p className={styles.paragraph}>{t("ADDRESS:")}</p>
               <p className={styles.paragraph}>{t("PHONE_#_:")}</p>
@@ -204,152 +212,149 @@ export function AccordianLastPage() {
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
                   {" "}
-                  Date Location # Injuries # Fatalities Hazmat Spill
-                </p>
-              </Row>
-              <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>1.</p>
-              </Row>
-              <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>2.</p>
-              </Row>
-              <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>3.</p>
-              </Row>
-              <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                  Please provide information concerning any other accidents
-                  involving the applicant that were reported to government
-                  agencies or insurers or retained under internal company
-                  policies:
+                  {t("COLUMNS")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  __________________________________________________________
+                  {t("1")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  __________________________________________________________
+                {t("2")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  __________________________________________________________
+                {t("3")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  __________________________________________________________
-                </p>
-              </Row>
-              <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>Any other remarks:</p>
-              </Row>
-              <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                  __________________________________________________________
+                  {t("INFORMATION_CONCERNING_OTHER_ACCIDENTS")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  __________________________________________________________
+                {t("BLANK_LINE")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  __________________________________________________________
+                {t("BLANK_LINE")} 
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  __________________________________________________________
-                </p>
-              </Row>
-              <Row className={styles.align__text_left}>
-                <Col>
-                  <h4>II-B. Drug and Alcohol History</h4>
-                </Col>
-              </Row>
-              <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                  In the two years prior to the date of the employee’s signature
-                  (in Section I), for DOT-regulated testing ~
+                {t("BLANK_LINE")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  1. Did the employee have alcohol tests with a result of 0.04
-                  or higher? YES ____ NO ____
+                {t("BLANK_LINE")}
+                </p>
+              </Row>
+              <Row className={styles.align__text_left}>
+                <p className={styles.paragraph}></p>
+              </Row>
+              <Row className={styles.align__text_left}>
+                <p className={styles.paragraph}>
+                {t("BLANK_LINE")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  2. Did the employee have verified positive drug tests? YES
-                  ____ NO ____
+                {t("BLANK_LINE")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  3. Did the employee refuse to be tested? YES ____ NO ____
+                {t("BLANK_LINE")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  4. Did the employee have other violations of DOT agency drug
-                  and alcohol testing regulations? YES ____ NO ____
-                </p>
-              </Row>
-              <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                  5. Did a previous employer report a drug and alcohol rule
-                  violation to you? YES ____ NO ____
-                </p>
-              </Row>
-              <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                  6. If you answered “yes” to any of the above items, did the
-                  employee complete the return-to-duty process? N/A ____ YES
-                  ____ NO ____
-                </p>
-              </Row>
-              <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                  NOTE: If you answered “yes” to item 5, you must provide the
-                  previous employer’s report. If you answered “yes” to item 6,
-                  you must also transmit the appropriate return-to-duty
-                  documentation (e.g., SAP report(s), follow-up testing record).
+                {t("BLANK_LINE")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <Col>
-                  <h4>II-C</h4>
+                  <h4>
+                    {t("II_B")}
+                  </h4>
                 </Col>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  Name of person providing information in Section II-A & II-B:
+                  {t("DOT_REGULATED_TESTING")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  _______________________________________________
+                  {t("QUESTION_ALCOHOL_TEST")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  Title: ___________________________________________
+                  {t("QUESTION_VERIFIED_DRUG_TEST")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  Phone #: ________________________________________
+                  {t("QUESTION_REFUSE_TESTED")}
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
-                  Date: ___________________________________________
+                  {t("QUESTION_OTHER_VIOLATIONS_DOT_AGENCY")}
+                </p>
+              </Row>
+              <Row className={styles.align__text_left}>
+                <p className={styles.paragraph}>
+                  {t("QUESTION_PREVIOUS_OWNER_REPORT_VIOLATION")}
+                </p>
+              </Row>
+              <Row className={styles.align__text_left}>
+                <p className={styles.paragraph}>
+                  {t("QUESTION_RETURN_TO_DUTY")}
+                </p>
+              </Row>
+              <Row className={styles.align__text_left}>
+                <p className={styles.paragraph}>
+                  {t("QUESTION_PREVIOUS_EMPLOYERS_REPORT")}
+                </p>
+              </Row>
+              <Row className={styles.align__text_left}>
+                <Col>
+                  <h4>
+                    {t("II_C")}
+                  </h4>
+                </Col>
+              </Row>
+              <Row className={styles.align__text_left}>
+                <p className={styles.paragraph}>
+                  {t("NAME_OF_PERSON_ABOVE")}
+                </p>
+              </Row>
+              <Row className={styles.align__text_left}>
+                <p className={styles.paragraph}>
+                 {t("BLANK_LINE")}
+                </p>
+              </Row>
+              <Row className={styles.align__text_left}>
+                <p className={styles.paragraph}>
+                  {t("BLANK_LINE_TITLE")}
+                </p>
+              </Row>
+              <Row className={styles.align__text_left}>
+                <p className={styles.paragraph}>
+                  {t("BLANK_LINE_PHONE")}
+                </p>
+              </Row>
+              <Row className={styles.align__text_left}>
+                <p className={styles.paragraph}>
+                  {t("BLANK_LINE_DATE")}
                 </p>
               </Row>
             </Row>
@@ -357,62 +362,54 @@ export function AccordianLastPage() {
         </Accordion.Item>
         <Accordion.Item eventKey="1">
           <Accordion.Header>
-            DISCLOSURE AND AUTHORIZATION REGARDING BACKGROUND INVESTIGATION FOR
-            EMPLOYMENT PURPOSES.{" "}
+            {t("DISCLOSURE_AUTHORIZATION")}
           </Accordion.Header>
           <Accordion.Body>
             <Row className="mb-3">
-              <h1>Nautilus Trucking</h1>
+              <h1>
+              {t("NEW_EMPLOYER_NAME_NAUTTLUS")}
+              </h1>
             </Row>
             <Row>
               <h3>
-                DISCLOSURE AND AUTHORIZATION REGARDING BACKGROUND INVESTIGATION
-                FOR EMPLOYMENT PURPOSES
+                {t("DISCLOSURE_AUTHORIZATION")}
               </h3>
             </Row>
             <Row className="mt-3 mb-3">
-              <h6>DISCLOSURE</h6>
+              <h6>
+                {t("DISCLOSURE")}
+              </h6>
             </Row>
             <Row>
               <p className={styles.paragraph}>
-                Nautilus Trucking (the “Company”) may request from a consumer
-                reporting agency and for employment-related purposes, a
-                “consumer report(s)” (commonly known as “background reports”)
-                containing background information about you in connection with
-                your employment, or application for employment, or engagement
-                for services (including independent contractor or volunteer
-                assignments, as applicable).
+                {t("REQUEST_BACKGROUND_REPORTS")}
               </p>
             </Row>
             <Row>
               <p className={styles.paragraph}>
-                The background report(s) may contain information concerning your
-                character, general reputation, personal characteristics, mode of
-                living, or credit standing. The types of background information
-                that may be obtained include, but are not limited to: criminal
-                history; litigation history; motor vehicle record and accident
-                history; social security number verification; address and alias
-                history; credit history; verification of your education,
-                employment and earnings history; professional licensing,
-                credential and certification checks; drug/alcohol testing
-                results and history; military service; and other information.
+                {t("BACKGROUND_REPORTS_CONTAINS")}
               </p>
             </Row>
             <Row>
-              <h6>AUTHORIZATION</h6>
+              <h6>
+                {t("AUTHORIZATION")}
+              </h6>
             </Row>
             <Row>
               <p className={styles.paragraph}>
-                I hereby authorize Nautilus Trucking to obtain the consumer
-                reports described above about me.
+                {t("AUTHORIZATION_NAUTILUS_TRUCKING")}
               </p>
             </Row>
             <Row>
-              <p className={styles.paragraph}>Applicant Name: Suvineet Singh</p>
+              <p className={styles.paragraph}>
+                {t("EMPLOYEE_NAME_NAUTILUS")}
+                </p>
             </Row>
             <Row>
               <Col>
-                <h6>Signature</h6>
+                <h6>
+                  {t("SIGNATURE")}
+                </h6>
                 <SignaturePad
                   className
                   ref={padRef}
@@ -427,7 +424,9 @@ export function AccordianLastPage() {
             </Row>
             <Row>
               <Col>
-                <button onClick={clear}>Clear</button>
+                <button onClick={clear}>
+                  {t("CLEAR")}
+                </button>
               </Col>
             </Row>
             <Row className={styles.align__text_left}>
@@ -445,175 +444,94 @@ export function AccordianLastPage() {
         </Accordion.Item>
         <Accordion.Item eventKey="2">
           <Accordion.Header>
-            IMPORTANT DISCLOSURE REGARDING BACKGROUND REPORTS FROM THE PSP
-            ONLINE SERVICE
+          {t("IMPORTANT_DISCLOSURE_BACKGROUND_PSP")}
           </Accordion.Header>
           <Accordion.Body>
             <Row>
-              <h1>Nautilus Trucking</h1>
+              <h1>
+              {t("NAUTILIUS_TRUCKING")}
+              </h1>
             </Row>
             <Row>
               <h3>
-                IMPORTANT DISCLOSURE REGARDING BACKGROUND REPORTS FROM THE PSP
-                ONLINE SERVICE
+              {t("IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")}
               </h3>
             </Row>
             <Row>
               <h5>
-                THE BELOW DISCLOSURE AND AUTHORIZATION LANGUAGE IS FOR MANDATORY
-                USE BY ALL ACCOUNT HOLDERS
+              {t("LANGUAGE_MANDATORY_USE")}
               </h5>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                In connection with your application for employment with Nautilus
-                Trucking (“Prospective Employer”), Prospective Employer, its
-                employees, agents or contractors may obtain one or more reports
-                regarding your driving, and safety inspection history from the
-                Federal Motor Carrier Safety Administration (FMCSA).
+              {t("PROSPECTIVE_FMCSA_PROSPECTIVE")}
               </p>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                When the application for employment is submitted in person, if
-                the Prospective Employer uses any information it obtains from
-                FMCSA in a decision to not hire you or to make any other adverse
-                employment decision regarding you, the Prospective Employer will
-                provide you with a copy of the report upon which its decision
-                was based and a written summary of your rights under the Fair
-                Credit Reporting Act before taking any final adverse action. If
-                any final adverse action is taken against you based upon your
-                driving history or safety report, the Prospective Employer will
-                notify you that the action has been taken and that the action
-                was based in part or in whole on this report.
+              {t("ADVERSE_NOTIFICATION_PROSPECTIVE")}
               </p>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                When the application for employment is submitted by mail,
-                telephone, computer, or other similar means, if the Prospective
-                Employer uses any information it obtains from FMCSA in a
-                decision to not hire you or to make any other adverse employment
-                decision regarding you, the Prospective Employer must provide
-                you within three business days of taking adverse action oral,
-                written or electronic notification: that adverse action has been
-                taken based in whole or in part on information obtained from
-                FMCSA; the name, address, and the toll free telephone number of
-                FMCSA; that the FMCSA did not make the decision to take the
-                adverse action and is unable to provide you the specific reasons
-                why the adverse action was taken; and that you may, upon
-                providing proper identification, request a free copy of the
-                report and may dispute with the FMCSA the accuracy or
-                completeness of any information or report. If you request a copy
-                of a driver’s record from the Prospective Employer who procured
-                the report, then, within 3 business days of receiving your
-                request, together with proper identification, the Prospective
-                Employer must send or provide to you a copy of your report and a
-                summary of your rights under the Fair Credit Reporting Act.
+              {t("ADVERSE_NOTIFICATION_PROSPECTIVE_II")}
               </p>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                Neither the Prospective Employer nor the FMCSA contractor
-                supplying the crash and safety information has the capability to
-                correct any safety data that appears to be incorrect. You may
-                challenge the accuracy of the data by submitting a request to
-                https://dataqs.fmcsa.dot.gov. If you challenge crash or
-                inspection information reported by a State, FMCSA cannot change
-                or correct this data. Your request will be forwarded by the
-                DataQs system to the appropriate State for adjudication.
+              {t("NO_INFO_SUPPLY")}
               </p>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                Any crash or inspection in which you were involved will display
-                on your PSP report. Since the PSP report does not report, or
-                assign, or imply fault, it will include all Commercial Motor
-                Vehicle (CMV) crashes where you were a driver or co-driver and
-                where those crashes were reported to FMCSA, regardless of fault.
-                Similarly, all inspections, with or without violations, appear
-                on the PSP report. State citations associated with Federal Motor
-                Carrier Safety Regulations (FMCSR) violations that have been
-                adjudicated by a court of law will also appear, and remain, on a
-                PSP report.
+              {t("CRASH_PSP_REPORT")}
               </p>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                The Prospective Employer cannot obtain background reports from
-                FMCSA without your authorization.
+              {t("FMCSA_AUTH")}
               </p>
             </Row>
             <Row>
               <h5 className={`${styles.paragraph} ${styles.align__text_left}`}>
-                AUTHORIZATION
+              {t("AUTHORIZATION")}
               </h5>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                If you agree that the Prospective Employer may obtain such
-                background reports, please read the following and sign below:
+              {t("PROSPECTIVE_BACKGROUND_REPORT")}
               </p>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                I authorize Nautilus Trucking (“Prospective Employer”) to access
-                the FMCSA Pre-Employment Screening Program (PSP) system to seek
-                information regarding my commercial driving safety record and
-                information regarding my safety inspection history. I understand
-                that I am authorizing the release of safety performance
-                information including crash data from the previous five (5)
-                years and inspection history from the previous three (3) years.
-                I understand and acknowledge that this release of information
-                may assist the Prospective Employer to decide regarding my
-                suitability as an employee.
+              {t("AUTH_PROSPECTIVE-FMCSA")}
               </p>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                I further understand that neither the Prospective Employer nor
-                the FMCSA contractor supplying the crash and safety information
-                has the capability to correct any safety data that appears to be
-                incorrect. I understand I may challenge the accuracy of the data
-                by submitting a request to https://dataqs.fmcsa.dot.gov. If I
-                challenge crash or inspection information reported by a State,
-                FMCSA cannot change or correct this data. I understand my
-                request will be forwarded by the DataQs system to the
-                appropriate State for adjudication.
+              {t("UNDERSTAND_FMCSA_SAFETY_DATA")}
               </p>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                I understand that any crash or inspection in which I was
-                involved will display on my PSP report. Since the PSP report
-                does not report, or assign, or imply fault, I acknowledge it
-                will include all CMV crashes where I was a driver or co-driver
-                and where those crashes were reported to FMCSA, regardless of
-                fault. Similarly, I understand all inspections, with or without
-                violations, will appear on my PSP report, and State citations
-                associated with FMCSR violations that have been adjudicated by a
-                court of law will also appear, and remain, on my PSP report.
+              {t("UNDERSTAND_PSP_VIOLATIONS")}
               </p>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                I have read the above Disclosure Regarding Background Reports
-                provided to me by Prospective Employer and I understand that if
-                I sign this Disclosure and Authorization, Prospective Employer
-                may obtain a report of my crash and inspection history. I hereby
-                authorize Prospective Employer and its employees, authorized
-                agents, and/or affiliates to obtain the information authorized
-                above.
+              {t("DISCLOSURE_BACKGROUND")}
               </p>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                Applicant Name: SUVINEET SINGH
+                {t("APPLICANT_NAME_NAUTILUS")}
               </p>
             </Row>
             <Row className={styles.align__text_left}>
               <Col>
-                <h6>Signature</h6>
+                <h6>
+                  {t("SIGNATURE")}
+                </h6>
                 <SignaturePad
                   className
                   ref={padRef}
@@ -628,7 +546,9 @@ export function AccordianLastPage() {
             </Row>
             <Row className={styles.align__text_left}>
               <Col>
-                <button onClick={clear}>Clear</button>
+                <button onClick={clear}>
+                  {t("CLEAR")}
+                </button>
               </Col>
             </Row>
             <Row className={styles.align__text_left}>
@@ -644,57 +564,35 @@ export function AccordianLastPage() {
             </Row>
             <Row className="mt-4">
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                NOTICE: This form is made available to monthly account holders
-                by NIC on behalf of the U.S. Department of Transportation,
-                Federal Motor Carrier Safety Administration (FMCSA). Account
-                holders are required by federal law to obtain an Applicant’s
-                written or electronic consent prior to accessing the Applicant’s
-                PSP report. Further, account holders are required by FMCSA to
-                use the language contained in this Disclosure and Authorization
-                form to obtain an Applicant’s consent. The language must be used
-                in whole, exactly as provided. Further, the language on this
-                form must exist as one stand-alone document. The language may
-                NOT be included with other consent forms or any other language.
+              {t("NOTICE_DISCLOSURE")}
               </p>
             </Row>
             <Row className="mt-4">
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                NOTICE: The prospective employment concept referenced in this
-                form contemplates the definition of “employee” contained at 49
-                C.F.R. 383.5. LAST UPDATED 12/22/2015
+              {t("EMPLOYEE_DEF_NOTICE")}
               </p>
             </Row>
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="3">
           <Accordion.Header>
-            GENERAL CONSENT FOR LIMITED QUERIES OF THE FMCSA DRUG AND ALCOHOL
-            CLEARINGHOUSE
+            {t("GENERAL_CONSENT_QUERIES")}
           </Accordion.Header>
           <Accordion.Body>
             <Row>
-              <h1>Nautilus Trucking</h1>
+              <h1>
+                {t("NEW_EMPLOYER_NAME_NAUTTLUS")}
+              </h1>
             </Row>
             <Row>
               <h3>
-                GENERAL CONSENT FOR LIMITED QUERIES OF THE FMCSA DRUG AND
-                ALCOHOL CLEARINGHOUSE
+                {t("GENERAL_CONSENT_QUERIES")}
               </h3>
             </Row>
 
             <Row>
               <p className={styles.paragraph}>
-                Instructions: Section 382.703(a) of the Title 49 CFR, states “No
-                employer may query the Clearinghouse to determine whether a
-                record exists for any particular driver without first obtaining
-                that driver’s written or electronic consent.” The type of
-                consent required depends on the type of query. For a limited
-                query, a general consent is required. This will be obtained
-                outside the Clearinghouse. Employers may obtain a multi-year
-                general consent from the driver for limited queries. For a full
-                query, the driver must provide specific consent to the employer
-                prior to each full query. This consent must be provided
-                electronically within the Clearinghouse.
+                {t("INSTRUCTIONS_CFR")}
               </p>
             </Row>
             <Row>
@@ -733,28 +631,14 @@ export function AccordianLastPage() {
             </Row>
             <Row className="mt-4">
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                I Suvineet Singh, hereby provide consent to Nautilus Trucking to
-                conduct a limited query of the FMCSA Commercial Driver’s License
-                Drug and Alcohol Clearinghouse (Clearinghouse) to determine
-                whether drug or alcohol violation information about me exists in
-                the Clearinghouse. My consent is for unlimited number of limited
-                queries for my employment application processing and the
-                duration of my employment with Nautilus Trucking. I understand
-                that if the limited query conducted by Nautilus Trucking
-                indicates that drug or alcohol violation information about me
-                exists in the Clearinghouse, FMCSA will not disclose that
-                information to Nautilus Trucking without first obtaining
-                additional specific consent from me. I further understand that
-                if I refuse to provide consent for Nautilus Trucking to conduct
-                a limited query of the Clearinghouse, Nautilus Trucking must
-                prohibit me from performing safety-sensitive functions,
-                including driving a commercial motor vehicle, as required by
-                FMCSA’s drug and alcohol program regulations.
+                {t("CONSENT_TO_CLEARINGHOUSE")}
               </p>
             </Row>
             <Row className={styles.align__text_left}>
               <Col>
-                <h6>Signature</h6>
+                <h6>
+                  {t("SIGNATURE")}
+                </h6>
                 <SignaturePad
                   className
                   ref={padRef}
@@ -769,7 +653,9 @@ export function AccordianLastPage() {
             </Row>
             <Row className={styles.align__text_left}>
               <Col>
-                <button onClick={clear}>Clear</button>
+                <button onClick={clear}>
+                  {t("CLEAR")}
+                </button>
               </Col>
             </Row>
             <Row className={styles.align__text_left}>
