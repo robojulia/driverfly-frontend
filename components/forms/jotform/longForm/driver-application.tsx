@@ -33,10 +33,11 @@ export function DriverApplication() {
     validationSchema: DriverApplicationDto.yupSchema(),
     onSubmit: (values) => {
       try {
-        const { first_name, last_name, APPLY_DATE } = values;
+        const { first_name, last_name, APPLY_DATE, SIGNATURE } = values;
         // console.log("sign", values);
         setApplicant({ ...applicant, first_name, last_name });
         updateApplicantExtras(APPLY_DATE);
+        updateApplicantExtras(SIGNATURE);
         setSteps(steps + 1);
       } catch (error) {
         console.log(error);
@@ -48,7 +49,9 @@ export function DriverApplication() {
   });
   const signatureEnd = () => {
     console.log(padRef.current.toDataURL().toString());
-    return padRef.current.toDataURL().toString();
+    const signatureValue = padRef.current.toDataURL().toString();
+    form.setFieldValue("SIGNATURE.value", signatureValue)
+    
   };
   useEffect(() => {
     console.log("form.values", form.values);
@@ -68,7 +71,7 @@ export function DriverApplication() {
       APPLY_DATE: !!apx?.type
         ? apx
         : new ApplicantExtrasEntity(ApplicantExtras.APPLY_DATE),
-      // SIGNATURE: !!apx_sign?.type ? apx_sign : signatureEnd(),
+      SIGNATURE: !!apx_sign?.type ? apx_sign : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
       first_name: first_name || null,
       last_name: last_name || null,
     });
@@ -119,7 +122,6 @@ export function DriverApplication() {
           <Col>
             <h6>{t("SIGNATURE")}</h6>
             <SignaturePad
-              name="SIGNATURE.value"
               ref={padRef}
               onEnd={signatureEnd}
               canvasProps={{

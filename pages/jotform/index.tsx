@@ -36,7 +36,7 @@ import { PageProps } from "../../types/jotform/page-props.type";
 import { ApplicantExtrasEntity } from "../../models/applicant/applicant-extras.entity";
 
 export default function jotFormLongForm() {
-  const [steps, setSteps] = useState<number>(0);
+  const [steps, setSteps] = useState<number>(7);
   const [applicant, setApplicant] = useState<ApplicantEntity>(
     new ApplicantEntity()
   );
@@ -55,7 +55,7 @@ export default function jotFormLongForm() {
   const shortFormDataSent: PageProps["shortFormDataSent"] = async (
     params: any
   ) => {
-
+    
     // try {
     // const applicantApi = new ApplicantApi();
     //   const response = await api.create(applicant);

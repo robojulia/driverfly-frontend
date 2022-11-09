@@ -47,7 +47,7 @@ export class ApplicantExtrasEntity {
         })
         .when("type", {
           is: ApplicantExtras.SIGNATURE,
-          then: yup.string().required().nullable(),
+          then: yup.string().optional().nullable(),
         })
         .when("type", {
           is: ApplicantExtras.LINE_ADDRESS,
