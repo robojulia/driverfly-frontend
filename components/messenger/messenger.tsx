@@ -99,7 +99,7 @@ export function Messenger(props) {
 
     return (
     <Row>
-        <Col md="6" lg="5" xl="4">
+        <Col md="6" lg="5" xl="4" className="messages_container">
             <Card>
                 <Card.Body className="p-2">
                     <Navbar expand="lg">
