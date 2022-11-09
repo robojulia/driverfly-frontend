@@ -12,6 +12,8 @@ type jotFormContextType = {
         setApplicant: (e?: any) => void;
         updateApplicantExtras: (e?: any) => void;
         setSteps: (e?: any) => void;
+        stepNext: () => void;
+        stepBack: () => void;
     };
 };
 
@@ -25,6 +27,8 @@ const jotformContext = createContext<jotFormContextType>({
         setApplicant: (e?: any) => { },
         updateApplicantExtras: (e?: any) => { },
         setSteps: (e?: any) => { },
+        stepNext: () => { },
+        stepBack: () => { },
     },
 });
 export default jotformContext;

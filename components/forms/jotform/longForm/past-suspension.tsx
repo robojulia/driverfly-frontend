@@ -9,6 +9,8 @@ import styles from "../../../../styles/jotform.module.css";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import { PastSuspensionDto } from "../../../../models/jot-form/long-form/past-suspension.dto";
+import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
 export interface PastSuspensionsProps extends PageProps {}
 
@@ -24,27 +26,45 @@ export function PastSuspensions() {
     validationSchema: PastSuspensionDto.yupSchema(),
     onSubmit: (values) => {
       setSteps(steps + 1);
+      const { PAST_LICENSE_SUSPENSION } = values;
+      updateApplicantExtras(PAST_LICENSE_SUSPENSION);
     },
     onReset: (values) => {
       setSteps(steps - 1);
     },
   });
+  useEffect(() => {
+    const apx = applicantExtras?.find(
+      (v) => v.type === ApplicantExtras.PAST_LICENSE_SUSPENSION
+    );
+    form.setValues({
+      ...form.values,
+      PAST_LICENSE_SUSPENSION: !!apx?.type
+        ? apx
+        : new ApplicantExtrasEntity(ApplicantExtras.PAST_LICENSE_SUSPENSION),
+      is_past_license_suspended: !!apx?.value,
+    });
+  }, [applicantExtras]);
 
+  useEffect(() => {
+    console.log("values", form.values);
+    console.log("error", form.errors);
+  }, [form.values, form.errors]);
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
       <Row className={styles.paragraph__left}>
         <BaseCheck
           className="float-left col-6"
-          name="license_suspension"
+          name="is_past_license_suspended"
           label="LICENSE_PREVILLAGES"
           formik={form}
         />
       </Row>
-      {form.values.license_suspension ? (
+      {form.values.is_past_license_suspended ? (
         <Row className={styles.align__text_left}>
           <BaseTextArea
             className="float-left mt-3"
-            name="explanations"
+            name="PAST_LICENSE_SUSPENSION.value"
             label="EXPLAIN_SUSPENSION"
             formik={form}
           />
