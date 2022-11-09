@@ -85,6 +85,14 @@ export function ThirdPage() {
 		});
 	}, []);
 
+	// useEffect(() => {
+	// 	console.log("form.values", form.values);
+	// }, [form.values]);
+
+	// useEffect(() => {
+	// 	console.log("applicantExtras", applicantExtras);
+	// }, [applicantExtras]);
+
 	return (
 		<>
 			<Form

@@ -37,15 +37,13 @@ import { ApplicantExtrasEntity } from "../../models/applicant/applicant-extras.e
 
 export default function jotFormLongForm() {
 
-	const [applicant, setApplicant] = useState<ApplicantEntity>();
+	const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
 	const [applicantExtras, setApplicantExtras] = useState<ApplicantExtrasEntity[]>([]);
-	const updateApplicantExtras = (applicantExtrasEntity: ApplicantExtrasEntity) => {
-		const apx = applicantExtras?.filter(v => v.type !== applicantExtrasEntity.type)
-
-		setApplicantExtras(() => (
-			!!apx ? [...apx, { ...applicantExtrasEntity }] : [{ ...applicantExtrasEntity }]
-		));
-	}
+	const updateApplicantExtras = (applicantExtrasEntity: ApplicantExtrasEntity) =>
+		setApplicantExtras((oldApx) => {
+			oldApx = oldApx?.filter(v => v.type !== applicantExtrasEntity.type)
+			return !!oldApx ? [...oldApx, { ...applicantExtrasEntity }] : [{ ...applicantExtrasEntity }]
+		})
 
 	const [steps, setSteps] = useState<number>(2);
 	const stepNext = (): void => setSteps(steps + 1)
