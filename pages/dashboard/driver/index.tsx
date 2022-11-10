@@ -79,29 +79,29 @@ export default function Dashboard() {
             title="DASHBOARD"
         >
             <Row className='justify-content-center text-center d-flex'>
-                <div className={` py-5 bg_yellow w-23  ${style.job_info_container}`} >
+                <div className={` py-5 cards__bg w-23 text-white  ${style.job_info_container}`} >
                     <h2 className="text-white font-weight-bolder">
                         {stats.APPLIED}
                     </h2>
-                    <h3 className="font-weight-bolder">{t("ApplicantStatus.APPLIED")}</h3>
+                    <h3 className="font-weight-bolder text-white">{t("ApplicantStatus.APPLIED")}</h3>
                 </div>
-                <div className={` py-5 bg_green w-23   ${style.job_info_container}`}>
-                    <h2 className={`font-weight-bolder  ${style.text_yellow}`}>
+                <div className={` py-5 bg_green cards__bg w-23   ${style.job_info_container}`}>
+                    <h2 className="font-weight-bolder text-white">
                         {stats.SHORTLISTED}
                     </h2>
-                    <h3 className="font-weight-bolder">{t("ApplicantStatus.SHORTLISTED")}</h3>
+                    <h3 className="font-weight-bolder text-white">{t("ApplicantStatus.SHORTLISTED")}</h3>
                 </div>
-                <div className={` py-5 bg_blue w-23   ${style.job_info_container}`} >
-                    <h2 className={`font-weight-bolder  ${style.text_yellow}`}>
+                <div className={` py-5 cards__bg w-23  text-white  ${style.job_info_container}`} >
+                    <h2 className="font-weight-bolder text-white ">
                         {stats.HIRED}
                     </h2>
                     <h3 className="font-weight-bolder text-white">{t("ApplicantStatus.HIRED")}</h3>
                 </div>
-                <div className={` py-5 myrtlegreen w-23   ${style.job_info_container}`}>
+                <div className={` py-5 cards__bg w-23   ${style.job_info_container}`}>
                     <h2 className="text-white font-weight-bolder">
                         {stats.REJECTED}
                     </h2>
-                    <h3 className={style.text_yellow}>{t("ApplicantStatus.REJECTED")}</h3>
+                    <h3 className="text-white">{t("ApplicantStatus.REJECTED")}</h3>
                 </div>
             </Row>
             <Row className="mt-4">
@@ -127,7 +127,7 @@ export default function Dashboard() {
                         <button className={`text-white p-2 m-2 ${style.btn_blue}`}>{t("find_new_job")}</button>
                     </Link>
                 </div>
-             
+
             </Row>
             <Row>
                 <SuggestedJobs />

@@ -82,9 +82,6 @@ export default function Call() {
             client.on("connect", (conn) => {
                 setConnected(true)
                 setStatus("Calling")
-                // if ("PhoneNumber" in conn.message) {
-                //     setStatus("In call with " + conn.message.PhoneNumber);
-                // }
             });
 
             client.on("disconnect", (conn) => {
@@ -147,14 +144,14 @@ export default function Call() {
                         label="VIEW_MISSED_CALLS"
                     />
                     <ViewDataTable
-                     customStyles={{
-                        headCells: {
-                            style: {
-                                background: "#5bb0b9",
-                                color: "white"
+                        customStyles={{
+                            headRow: {
+                                style: {
+                                    background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+                                    color: "white"
+                                },
                             },
-                        },
-                    }}
+                        }}
                         columns={[
                             {
                                 name: "id",
