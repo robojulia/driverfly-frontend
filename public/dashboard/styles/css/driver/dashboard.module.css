@@ -1,5 +1,3 @@
-
-
 .driver_appli_jobs {
 
     padding: 20px;
@@ -13,15 +11,18 @@
 .job_info_container h3 {
     font-weight: 900;
 }
-.text_yellow{
-    color: #f5c018;
-}
-.btn_blue{
+
+.btn_blue {
     padding: 8px 25px;
-    background: #1d4354;
+    background: linear-gradient(to bottom right, #2ec8c4, #1b4454);
     border-radius: 5px;
 }
-.btn_green{
+
+.btn_blue:hover {
+    background: linear-gradient(to bottom right, #1b4454, #2ec8c4);
+}
+
+.btn_green {
     padding: 8px 25px;
     background: #5cc8c4;
     border-radius: 5px;

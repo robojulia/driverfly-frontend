@@ -31,21 +31,21 @@ export default function OfferedJobs() {
             const data = await api.me.jobs();
             setApplicantJobs(data.filter(v => v.status === ApplicantStatus.IN_PROCESS_OFFERED_JOB));
         }
-    }, [ user ]);
+    }, [user]);
 
     return (
         <PageLayout
             title="JOBS_OFFERED"
-            >
+        >
             <ViewDataTable<ApplicantJobEntity>
-                    customStyles={{
-                        headCells: {
-                            style: {
-                                background: "#5bb0b9",
-                                color: "white"
-                            },
+                customStyles={{
+                    headRow: {
+                        style: {
+                            background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+                            color: "white"
                         },
-                    }}
+                    },
+                }}
                 columns={[
                     {
                         id: "id",

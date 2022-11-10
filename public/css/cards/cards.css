@@ -1,8 +1,9 @@
-.card > .card-header {
+.card>.card-header {
     border-bottom-left-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
 
 }
+
 .card-primary *,
 .card-secondary * {
     padding: 0px;
@@ -13,18 +14,17 @@
     border-color: #2EC8C4 !important;
 }
 
-.card-primary > .card-header h5 {
+.card-primary>.card-header h5 {
     color: #fff !important;
-    margin: 0;
 }
 
-.card-primary > .card-header {
+.card-primary>.card-header {
     color: #5dcac4 !important;
-    background-color: #2DA2AF !important;
-    padding: .75rem !important;
+    background: linear-gradient(to bottom right, #2ec8c4, #1b4454);
+
 }
 
-.card-primary > .card-body {
+.card-primary>.card-body {
     background: #F2F2F2 !important;
 }
 
@@ -34,19 +34,20 @@
     border-color: #1D4354 !important;
 }
 
-.card-secondary > .card-header h5 {
+.card-secondary>.card-header h5 {
     color: #1D4354 !important;
 }
 
-.card-secondary > .card-header {
+.card-secondary>.card-header {
     color: #1D4354 !important;
     background-color: #1d425445 !important;
 }
 
-.card-secondary > .card-body {
+.card-secondary>.card-body {
     background: #1d42540d !important;
 }
 
-.table-striped>tbody>tr:nth-child(even)>td, .table-striped>tbody>tr:nth-child(even)>th {
+.table-striped>tbody>tr:nth-child(even)>td,
+.table-striped>tbody>tr:nth-child(even)>th {
     background-color: #fff;
 }

@@ -27,12 +27,18 @@
 }
 
 .dashboardsidebar aside {
-    background-color: #1b4454;
-    height: 854px;
+    background: linear-gradient(to bottom right, #1b4454ba, #2ec8c4);
+    height: 891px;
+}
+.dashboardsidebar aside:hover {
+    background: linear-gradient(to bottom right, #1b4454 , #2ec8c4);
+    height: 891px;
+
 }
 
 .dashboardsidebar aside:nth-child(2) {
-    background-color: #2EC8C4;
+
+    background: linear-gradient(to bottom right, #2ec8c4, #1b4454ba);
 }
 
 .bg {
@@ -50,16 +56,18 @@
 .dashboardsidebar li a {
     text-decoration: none;
     display: block;
-    color: #5dcac4;
+    color: #fff;
     margin-left: 10px;
     font-weight: 500;
 }
 
 .dashboardsidebar aside:nth-child(2) li a {
+
     color: #1b4454;
 }
 
 .dashboardsidebar aside:nth-child(2) .icon_left {
+
     color: #1b4454;
 }
 
@@ -100,7 +108,8 @@
     color: #000 !important;
 }
 
-.dashboardsidebar .active a {
+.dashboardsidebar .active a,
+.dashboardsidebar .active .icon_left {
     color: #4ca7a8;
 }
 
@@ -297,39 +306,22 @@
 
 /* Driver Dashboard  */
 
-.bg_yellow {
-    background-color: #f5c018;
-    border-radius: 5px;
-    margin: 0% 1%;
-
-}
-
-.bg_green {
-
-    background-color: #5cc8c4;
-    border-radius: 5px;
-    margin: 0% 1%;
-}
-
-.bg_blue {
-
-    background-color: #1d4354;
-    border-radius: 5px;
-    margin: 0% 1%;
-}
-
-.myrtlegreen {
-
-    background-color: #2A7869;
-    border-radius: 5px;
-    margin: 2% 1%;
-}
-
 .w-23 {
     width: 23% !important;
     display: inline-block;
-    margin: 2% 1%;
+    margin: 2% 1% !important;
 }
+
+.cards__bg {
+    border-radius: 5px;
+    margin: 0% 1%;
+    background: linear-gradient(to bottom right, #2ec8c4, #1b4454);
+}
+.cards__bg:hover {
+    background: linear-gradient(to bottom right, #1b4454 , #2ec8c4);
+
+}
+
 
 textarea {
     height: 200px !important;
@@ -405,7 +397,7 @@ textarea {
 
 .icon_left {
     float: left;
-    color: #5dcac4;
+    color: #fff;
     margin-right: 20px;
     height: 25px;
     width: 30px;
@@ -569,8 +561,7 @@ textarea {
 
 @media screen and (max-width: 992px) {
 
-    .dashboardsidebar aside {
-        background-color: #1b4454;
+    .dashboardsidebar aside, .dashboardsidebar aside:hover {
         height: auto;
     }
 
@@ -747,7 +738,7 @@ a.here_link {
     transition: 1s;
     padding: 20px 30px;
     right: 0;
-    background-color: #2EC8C4;
+    background: linear-gradient(to bottom right, #1b4454, #2ec8c4) !important;
 }
 
 .driver-flag:active {
