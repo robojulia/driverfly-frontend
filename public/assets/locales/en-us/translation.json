@@ -1594,8 +1594,15 @@
   "TITLE_ADD_VIOLATION_DETAILS": "Add violation details",
   "TITLE_ADD_CDL_DETAIL": " Add CDL details",
   "PLACEHOLDER_FOR_EMAIL": "example@example.com",
-  "PLACEHOLDER_FOR_MOBILE_NO": "xxx-xxx-xxxx"
-
+  "PLACEHOLDER_FOR_MOBILE_NO": "xxx-xxx-xxxx",
+  "BACKGROUND_INFO": "Background Information",
+  "FULL_ADDRESS_QUES": "What is your full Address?",
+  "EMPLOYMENT_HISTORY":"Employment History",
+  "HONEST_ABOUT_PAST_EMP":"Please be honest about your past employment as this helps speed up the hiring process.",
+  "CURRENT_EMPLOYER":"Current Employer",
+  "NA":"Put NA for any fields unknown",
+  "ADDRESS_CURRENT_COMPANY":"Address (Current Company)",
+  "ADDRESS_PAST_COMPANY":"Address (Previous Company)"
 }
 
 

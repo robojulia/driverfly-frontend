@@ -66,7 +66,7 @@ export function BackgroundInfo() {
 
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <h4 className={styles.carrierName__smaller}>Background Information</h4>
+      <h4 className={styles.carrierName__smaller}>{t("BACKGROUND_INFO")}</h4>
       <Row className={styles.align__text_left}>
         <BaseInput
           className="col-3 mt-3 mb-3"
@@ -80,9 +80,8 @@ export function BackgroundInfo() {
       </Row>
       <p
         className={`${styles.carrierName__smaller} ${styles.align__text_left}
-            ${styles.paragraph}`}
-      >
-        What is your full Address?
+            ${styles.paragraph}`}>
+        {t("FULL_ADDRESS_QUES")}
       </p>
 
       <>

@@ -88,7 +88,7 @@ export function OtherQues() {
         />
       </Row>
 
-      <Row>
+      <Row className={`${styles.paragraph} ${styles.align__text_left}`}>
         <BaseCheckList
           className="col-6"
           label="ENDORSEMENTS"
