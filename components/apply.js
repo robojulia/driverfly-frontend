@@ -26,6 +26,7 @@ import { DocumentEntity } from '../models/documents/document.entity'
 import { PlusCircle, DashCircle, ArrowRight, Star } from 'react-bootstrap-icons'
 import BaseInputPhone from './forms/base-input-phone'
 import { DriverLicenseType } from "../enums/users/driver-license-type.enum";
+import { LoaderIcon } from './loading/loader-icon'
 
 export default function JobApply({ job, setEncourageModal }) {
     const { user } = useAuth();
@@ -41,7 +42,7 @@ export default function JobApply({ job, setEncourageModal }) {
 
                 toast.success(t('job_applied_success_message'))
                 setViewForm(false);
-                resetForm()
+                // resetForm()
                 setEncourageModal(true)
             }
             catch (e) {
@@ -94,8 +95,9 @@ export default function JobApply({ job, setEncourageModal }) {
         setViewForm(false);
     }
 
-    if (apply_form.errors && Object.keys(apply_form.errors).length > 0)
+    useEffect(()=>{
         console.error(apply_form.errors);
+    },[apply_form.errors])
 
     return (
         <>
@@ -109,7 +111,15 @@ export default function JobApply({ job, setEncourageModal }) {
                 closeText="CANCEL"
                 onCloseClick={onCloseClick}
                 title="apply_for_this_job"
-                footer={<button type="submit" className="btn btn-primary w-100 p-lg-3 p-5" onClick={apply_form.handleSubmit}>{t('submit')}</button>}
+                footer={
+                <button 
+                    disabled={!!apply_form.isSubmitting || !!!apply_form.isValid || !!apply_form.isValidating}
+                    type="submit" 
+                    className="btn btn-primary w-100 p-lg-3 p-5" 
+                    onClick={apply_form.handleSubmit}>
+                        <LoaderIcon isLoading={!!apply_form.isSubmitting} /> {t('submit')}
+                    </button>
+                }
             >
                 <form onSubmit={apply_form.handleSubmit}>
                     {typeof apply_form.errors.job === "string" &&
