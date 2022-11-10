@@ -418,7 +418,7 @@ function ApplicantView(props: ViewProps) {
                 customStyles={{
                     headRow: {
                         style: {
-                            background: "#5bb0b9",
+                            background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
                             color: "white"
                         },
                     },
@@ -489,9 +489,9 @@ function ApplicantView(props: ViewProps) {
                     <ViewDataTable<ConsolodatedApplicantJob>
                         noDataComponent={(<>{t("NO_APPLIED_JOBS_FOUND")}</>)}
                         customStyles={{
-                            headCells: {
+                            headRow: {
                                 style: {
-                                    background: "#98a3ad",
+                                    background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
                                     color: "white"
                                 },
                             },
@@ -604,7 +604,7 @@ function JobView(props: ViewProps) {
         customStyles={{
             headRow: {
                 style: {
-                    background: "#5bb0b9",
+                    background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
                     color: "white"
                 },
             },
@@ -647,9 +647,9 @@ function JobView(props: ViewProps) {
         expandableRowsComponent={({ data }) => (
             <ViewDataTable<ConsolodatedApplicantJob>
                 customStyles={{
-                    headCells: {
+                    headRow: {
                         style: {
-                            background: "#98a3ad",
+                            background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
                             color: "white"
                         },
                     },

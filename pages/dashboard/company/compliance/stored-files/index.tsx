@@ -126,9 +126,9 @@ export default function StoredFiles() {
             <ViewDataTable<DocumentEntity>
                 columnSettingKey={columnSettingKey}
                 customStyles={{
-                    headCells: {
+                    headRow: {
                         style: {
-                            background: "#5bb0b9",
+                            background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
                             color: "white"
                         },
                     },
@@ -204,8 +204,9 @@ export default function StoredFiles() {
                         />
                         <FileInput
                             className="col-12 my-3"
-                            label={`pdf`}
+                            label={`UPLOAD_FILE`}
                             name={`file`}
+                            required
                             accept="application/pdf"
                             documentType={"PDF"}
                             formik={form}
@@ -225,9 +226,9 @@ export default function StoredFiles() {
                 <ViewDataTable<ApplicantEntity>
                     columnSettingKey={columnSettingKey}
                     customStyles={{
-                        headCells: {
+                        headRow: {
                             style: {
-                                background: "#5bb0b9",
+                                background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
                                 color: "white"
                             },
                         },
