@@ -66,7 +66,7 @@
 @media screen and (max-width:992px) {
     .logo {
         width: 50% !important;
-        vertical-align: top;
+        vertical-align: middle;
     }
 
     .header-sec .navbar {
@@ -429,16 +429,20 @@
     .testimonial-sec {
         padding: 40px 0px;
     }
-    .checklist_toggle{
+
+    .checklist_toggle {
         display: inline-block;
     }
+
     .signup_toggle_btn {
         display: block !important;
     }
-    .preferred_location{
+
+    .preferred_location {
         padding: 0px 5px !important;
     }
-    .preferred_location span{
+
+    .preferred_location span {
         display: block;
     }
 
@@ -512,15 +516,17 @@
     .my_card_body .card-body strong {
         font-size: 13px;
     }
-    .messages_container .navbar{
+
+    .messages_container .navbar {
         display: block !important;
         padding: 0;
     }
 
-    .messages_container .navbar-collapse{
+    .messages_container .navbar-collapse {
         text-align: center;
-    } 
-    .preferred_geography span{
+    }
+
+    .preferred_geography span {
         width: 100%;
         display: block;
     }
@@ -528,12 +534,6 @@
 
 
 @media (max-width:1267px) {
-
-    .navbar-toggler {
-        background: #4aa2af;
-        color: #fff;
-        margin: 0px 25px 0px;
-    }
 
     .btn.btn-primary {
         padding: 3px 10px !important;
