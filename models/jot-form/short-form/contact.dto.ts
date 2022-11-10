@@ -12,7 +12,7 @@ export class ContactDto {
         return yup.object({
             email: yup.string().email().required().nullable(),
             phone: yup.string().required().nullable(),
-            zip_code: yup.string().required().nullable(),
+            zip_code: yup.string().length(5).required().nullable(),
             AUTHORIZE_TO_COMMUNICATE: ApplicantExtrasEntity.yupSchema(),
         });
     }

@@ -61,7 +61,6 @@ export class ApplicantEntity {
   psp_violations?: boolean = false;
   psp_violations_details?: string;
   tickets?: boolean = false;
-
   tickets_count?: number;
   tickets_details?: string;
   infractions?: boolean = false;

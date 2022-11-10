@@ -1,9 +1,9 @@
-export enum OtherRequirement{
-    LEASE_TO_OWN_PROGRAM= "Lease to own program",
-    DROP_AND_HOOK_ONLY = "Drop & hook only",
-    CPM_PAYMENT = "CPM payment",
-    TEAM_DRIVERS = "Team drivers",
-    PAID_TRAINING = "Paid training",
-    OTHERS = "Others"
+export enum OtherRequirementType{
+    LEASE_TO_OWN_PROGRAM= "LEASE_TO_OWN_PROGRAM",
+    DROP_AND_HOOK_ONLY = "DROP_AND_HOOK_ONLY",
+    CPM_PAYMENT = "CPM_PAYMENT",
+    TEAM_DRIVERS = "TEAM_DRIVERS",
+    PAID_TRAINING = "PAID_TRAINING",
+    OTHERS = "OTHERS"
 
 }

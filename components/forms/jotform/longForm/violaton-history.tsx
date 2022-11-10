@@ -8,15 +8,17 @@ import jotformContext from "../../../../context/jotform-context";
 import { ViolationHistoryDto } from "../../../../models/jot-form/long-form/violation-history.dto";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import { VioalationExtrasEntity } from "../../../../models/jot-form/long-form/violaton-history/index.dto";
+
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import styles from "../../../../styles/jotform.module.css";
 
 export interface ViolationsLast3YearsProps extends PageProps {}
 
 export function ViolationsLast3Years() {
   const {
     state: { applicant, applicantExtras, steps },
-    method: { setApplicant, updateApplicantExtras, setSteps },
+    method: { updateApplicantExtras, setSteps },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
@@ -24,6 +26,13 @@ export function ViolationsLast3Years() {
     initialValues: new ViolationHistoryDto(),
     validationSchema: ViolationHistoryDto.yupSchema(),
     onSubmit: (values) => {
+      const { VIOLATION_DETAILS, VIOLATION_COUNT } = values;
+      try {
+        updateApplicantExtras(VIOLATION_DETAILS);
+        updateApplicantExtras(VIOLATION_COUNT);
+      } catch (error) {
+        console.log(error);
+      }
       setSteps(steps + 1);
     },
     onReset: (values) => {
@@ -31,31 +40,44 @@ export function ViolationsLast3Years() {
     },
   });
 
-
   useEffect(() => {
-    const apx = applicantExtras?.find(
-      (v) => v.type === ApplicantExtras.VIOLATION_DETAILS
+    console.log("extrasss", applicantExtras);
+
+    const apx_detail = applicantExtras?.find(
+      (v) => v.type === ApplicantExtras.VIOLATION_DETAILS,
+
+    );
+    const apx_count = applicantExtras?.find(
+      (v) => v.type === ApplicantExtras.VIOLATION_COUNT
     );
     form.setValues({
       ...form.values,
-      VIOLATION_DETAILS: !!apx?.type
-        ? apx
+      VIOLATION_COUNT: !!apx_count?.type
+        ? apx_count
+        : new ApplicantExtrasEntity(ApplicantExtras.VIOLATION_COUNT),
+      VIOLATION_DETAILS: !!apx_detail?.type
+        ? apx_detail
         : new ApplicantExtrasEntity(ApplicantExtras.VIOLATION_DETAILS),
     });
-  }, [applicantExtras]);
+  }, [applicant, applicantExtras]);
+
+  useEffect(() => {
+    console.log("form values", form.values);
+    console.log("form error", form.errors);
+  }, [form.values, form.errors]);
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <h6>{t("VIOLATIONS_LAST_3_YEARS")}</h6>
+      <h6 className={ styles.carrierName__smaller }>{t("VIOLATIONS_LAST_3_YEARS")}</h6>
       <Row>
-        <Col>
+        <Col className={styles.align__items_left}>
           <BaseInput
             className="col-6 mt-3"
-            name="violations_last_3_years"
+            name="VIOLATION_COUNT.value"
             label="HOW_MANY_VIOALTION_3_YEARS"
             formik={form}
           />
         </Col>
-        <div className="mt-4 float-left d-flex justify-left pl-4">
+        <div className="mt-4 float-left d-flex justify-left pl-3">
           <Button
             size="sm"
             onClick={() =>
@@ -80,7 +102,7 @@ export function ViolationsLast3Years() {
         <>
           {form.values.VIOLATION_DETAILS.value.map((entity, i) => (
             <Row key={i}>
-              <div className="col-md-12 mt-2">
+              <div className="col-md-12 mt-2 pl-0">
                 <Row>
                   <Col>
                     <BaseInput
@@ -115,7 +137,7 @@ export function ViolationsLast3Years() {
                       formik={form}
                     />
                   </Col>
-                  <Col>
+                  <Col className="mt-5">
                     <a
                       href="#"
                       onClick={() =>

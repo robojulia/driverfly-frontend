@@ -2,11 +2,11 @@ import moment from "moment";
 import * as yup from "yup";
 
 export class HighestLevelEducationDto {
-  education_level: string;
+  highest_degree: string;
 
   static yupSchema() {
     return yup.object({
-      education_level: yup.string().nullable().required(),
+      highest_degree: yup.string().nullable().required(),
     });
   }
 }

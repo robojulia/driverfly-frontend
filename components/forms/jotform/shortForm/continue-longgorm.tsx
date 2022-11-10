@@ -28,7 +28,7 @@ export function SeventhPage() {
             {t("THANKS_BY_NAUTILIUS_TRUCKING")}
           </h4>
         </Row>
-        <Row>
+        <Row className="mt-3">
           <h6 className={`${styles.paragraph} ${styles.margin__top}`}>
             {t("THANKS_NOTE_BY_NAUTILIUS_TRUCKING")}
           </h6>

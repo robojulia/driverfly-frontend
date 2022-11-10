@@ -5,31 +5,62 @@ import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
 import BaseInput from "../../base-input";
 import BaseInputPhone from "../../base-input-phone";
-import { EmergencyContactDto } from "../../../../models/jot-form/long-form/emergency-contact.dto";
+
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
+import { EmergenyContactDto } from "../../../../models/jot-form/long-form/emergency-contact.dto";
 
 export interface EmergencyContactProps extends PageProps {}
 
 export function EmergencyContact() {
   const {
-    state: { steps },
-    method: { setSteps },
+    state: { steps, applicant },
+    method: { setSteps, setApplicant },
   } = useContext(jotformContext);
 
-  
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: new EmergencyContactDto(),
-    // validationSchema: EmergencyContactDto.yupSchema(),
+    initialValues: new EmergenyContactDto(),
+    validationSchema: EmergenyContactDto.yupSchema(),
+
     onSubmit: (values) => {
-      setSteps(steps+1);
+      try {
+        const {
+          emergency_contact_name,
+          emergency_contact_number,
+          emergency_contact_relationship
+        } = values;
+        setApplicant({
+          ...applicant,
+          emergency_contact_name,
+          emergency_contact_number,
+          emergency_contact_relationship,
+        });
+
+
+        setSteps(steps + 1);
+      } catch (error) {
+        console.log(error);
+      }
     },
     onReset: (values) => {
-      setSteps(steps-1);
+      setSteps(steps - 1);
     },
   });
+  useEffect(() => {
 
+    const {
+      emergency_contact_name,
+      emergency_contact_number,
+      emergency_contact_relationship,
+    } = applicant;
+    form.setValues({
+      ...form.values,
+      emergency_contact_name: emergency_contact_name || null,
+      emergency_contact_number: emergency_contact_number || null,
+      emergency_contact_relationship: emergency_contact_relationship || null,
+    });
+  }, [applicant]);
   return (
     <>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -39,8 +70,8 @@ export function EmergencyContact() {
 
         <Row className={styles.align__text_left}>
           <BaseInput
-            className='col-6 mt-3'
-            name="EMERGENCY_CONTACT"
+            className="col-6 mt-3"
+            name="emergency_contact_name"
             placeholder="emergency_contact"
             label="EMERGENCY_CONTACT_NAME"
             formik={form}
@@ -49,8 +80,8 @@ export function EmergencyContact() {
         <Row className={styles.align__text_left}>
           <Col>
             <BaseInputPhone
-              className='col-10 mt-3'
-              name="phone"
+              className="col-10 mt-3"
+              name="emergency_contact_number"
               placeholder="phone"
               label="phone"
               formik={form}
@@ -58,8 +89,8 @@ export function EmergencyContact() {
           </Col>
           <Col>
             <BaseInput
-              className='col-6 mt-3'
-              name="RELATIONSHIP"
+              className="col-6 mt-3"
+              name="emergency_contact_relationship"
               placeholder="relationship"
               label="relationship"
               formik={form}

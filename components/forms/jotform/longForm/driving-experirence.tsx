@@ -19,22 +19,44 @@ import jotformContext from "../../../../context/jotform-context";
 export interface DrivingExpProps extends PageProps {}
 export function DrivingExp() {
   const {
-    state: { steps },
-    method: { setSteps },
+    state: { steps, applicant },
+    method: { setSteps, setApplicant },
   } = useContext(jotformContext);
 
-  
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new DrivingExperienceDto(),
     validationSchema: DrivingExperienceDto.yupSchema(),
     onSubmit: (values) => {
-      setSteps(steps+1);
+      try {
+        const { license_number, state, license_expiry, license_state } = values;
+
+        setApplicant({
+          ...applicant,
+          license_number,
+          state,
+          license_expiry,
+          license_state,
+        });
+
+        setSteps(steps + 1);
+      } catch (error) {}
+      setSteps(steps + 1);
     },
     onReset: (values) => {
-      setSteps(steps-1);
+      setSteps(steps - 1);
     },
   });
+  useEffect(() => {
+    const { license_number, state, license_expiry, license_state } = applicant;
+
+    form.setValues({
+      license_number: license_number || null,
+      state: state || null,
+      license_expiry: license_expiry || null,
+      license_state: license_state || null,
+    });
+  }, []);
 
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -44,7 +66,7 @@ export function DrivingExp() {
           <BaseInput
             className="col-12 mt-3"
             required
-            name="cdl_number"
+            name="license_number"
             placeholder="CDL_LICENSE_PLACEHOLDER"
             label="CDL_NUMBER"
             formik={form}
@@ -66,7 +88,7 @@ export function DrivingExp() {
             className="col-12 mt-3"
             required
             type="date"
-            name="expiration_date"
+            name="license_expiry"
             placeholder="expiration_date"
             label="expiration_date"
             formik={form}
@@ -80,7 +102,7 @@ export function DrivingExp() {
             className="col-4 mt-3"
             required
             label="state_issued"
-            name="state_issued"
+            name="license_state"
             placeholder="ISSUANCE_STATE"
             enumType={States}
             formik={form}
@@ -88,25 +110,6 @@ export function DrivingExp() {
         </Col>
       </Row>
       <Row>
-        <Col>
-          {/* <Button className="float-right" onClick={() => setCount(count + 1)}>
-            {t("ADD")}
-          </Button> */}
-          {/* <ViewCard
-            title="Please list any other states you've had a CDL in for the past 5 years:"
-            actions={<Button size='sm' onClick={() => form.setValues({
-              ...form.values,
-              equipment_experience: []
-            })}}
-          >
-
-          </ViewCard> */}
-        </Col>
-        <Col>
-          {/* <Button className="float-right" onClick={() => setCount(count - 1)}>
-            {t("DELETE")}
-          </Button> */}
-        </Col>
         <Col>
           <Button className="float-right" type="reset">
             {t("BACK")}

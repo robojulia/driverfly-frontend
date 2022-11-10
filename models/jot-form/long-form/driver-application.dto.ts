@@ -6,7 +6,7 @@ export class DriverApplicationDto {
   first_name: string;
   last_name: string;
   APPLY_DATE: ApplicantExtrasEntity;
-
+  SIGNATURE: ApplicantExtrasEntity;
   static yupSchema() {
     return yup.object({
       first_name: yup
@@ -20,6 +20,7 @@ export class DriverApplicationDto {
         .required()
         .nullable(),
       APPLY_DATE: ApplicantExtrasEntity.yupSchema(),
+      SIGNATURE: ApplicantExtrasEntity.yupSchema(),
     });
   }
 }
