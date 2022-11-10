@@ -84,7 +84,7 @@ export function ThirdPage() {
         onSubmit={form.handleSubmit}
         onReset={form.handleReset}
       >
-        <Row>
+        <Row className={`${styles.paragraph} ${styles.align__text_left} ${styles.emboldenText}`}>
           <BaseInput
             className="col-6"
             required
