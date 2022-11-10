@@ -30,7 +30,7 @@ export default function EntityForm(props: EntityFormProps) {
             <Row>
                 <Col xs="12" className="text-end">
                     <Button type="submit" className="theme-secondary-btn" disabled={canSubmit == null || !!!canSubmit}>
-                        <LoaderIcon isLoading={!!formik.isSubmitting} /> {action}
+                        <LoaderIcon isLoading={!!formik?.isSubmitting} /> {action}
                     </Button>
                 </Col>
             </Row>

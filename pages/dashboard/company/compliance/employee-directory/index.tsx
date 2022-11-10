@@ -85,12 +85,12 @@ export default function EmployeeDirectory() {
             <ViewDataTable<ReducedApplicantEntityType>
                 columnSettingKey={columnSettingKey}
                 customStyles={{
-                    headCells: {
+                    headRow: {
                         style: {
-                            background: "#5bb0b9",
+                            background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
                             color: "white"
                         },
-                    }
+                    },
                 }}
                 columns={[
                     {
