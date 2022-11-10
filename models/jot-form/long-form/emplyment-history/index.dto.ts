@@ -5,7 +5,7 @@ export class EmploymentHistoryExtraDto {
   current_company_name: string;
   current_company_manager_name: string;
   start_date: string | Date;
-  authorize: boolean | boolean = false;
+  authorize?: boolean;
   current_company_phone_number: number;
   current_company_email: string;
   current_company_street_address_line_1: string;
@@ -33,7 +33,7 @@ export class EmploymentHistoryExtraDto {
 
       start_date: yup.date().required().nullable(),
 
-      authorize: yup.boolean().default(false).required().nullable(),
+      authorize: yup.boolean().default(false).optional().nullable(),
 
       current_company_street_address_line_1: yup.string().required().nullable(),
 

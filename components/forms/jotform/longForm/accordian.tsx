@@ -10,6 +10,7 @@ import SignatureCanvas from "react-signature-canvas";
 
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
+import ApplicantApi from "../../../../pages/api/applicant";
 
 export interface AccordianLastPageProps extends PageProps {}
 
@@ -30,8 +31,16 @@ export function AccordianLastPage() {
       //   manual_qualification: null,
       //   endorsements_twic: null,
     },
-    onSubmit: (values) => {
-      setSteps(steps + 1);
+    onSubmit: async (values) => {
+      const jotformApi = new ApplicantApi();
+      try {
+        const response = await jotformApi.jotform.create({applicant, applicantExtras})
+        console.log("response", response)
+        
+      } catch (error) {
+        console.log(error)
+      }
+      // setSteps(steps + 1);
     },
     onReset: (values) => {
       setSteps(19);
@@ -43,7 +52,7 @@ export function AccordianLastPage() {
     
   })
   return (
-    <Form>
+    <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
       <h1>{t("FORMS_TO_SIGNUP")}</h1>
       <h6>{t("PLEASE_CLICK_EACH_ARROW")}</h6>
       <Accordion className="col-12">
@@ -600,7 +609,7 @@ export function AccordianLastPage() {
                 className="col-6 mt-3"
                 name="name"
                 placeholder="FULL NAME"
-                formik={form}
+                // formik={form}
               />
             </Row>
 
@@ -609,7 +618,7 @@ export function AccordianLastPage() {
                 className="col-6 mt-3"
                 name="Employer's Name"
                 placeholder="EMPLOYER's NAME"
-                formik={form}
+                // formik={form}
               />
             </Row>
             <Row>
@@ -617,7 +626,7 @@ export function AccordianLastPage() {
                 className="col-6 mt-3"
                 name="cdl_license_number"
                 placeholder="CDL LICENSE NUMBER"
-                formik={form}
+                // formik={form}
               />
             </Row>
             <Row>
@@ -626,7 +635,7 @@ export function AccordianLastPage() {
                 name="expiration_date"
                 type="date"
                 placeholder="EXPIRATION DATE"
-                formik={form}
+                // formik={form}
               />
             </Row>
             <Row className="mt-4">

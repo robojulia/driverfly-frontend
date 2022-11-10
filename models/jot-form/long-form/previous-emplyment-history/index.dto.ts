@@ -3,7 +3,7 @@ import "../../../../utils/yup";
 
 export class PastEmploymentHistoryExtraDto {
   previous_company_manager_name: string;
-  authorize: boolean;
+  authorize?: boolean;
   previous_company_phone_number: number;
   previous_company_email: string;
   previous_company_street_address_line_1: string;
