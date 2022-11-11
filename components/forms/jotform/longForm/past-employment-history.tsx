@@ -139,7 +139,7 @@ export function PastEmploymentHistory() {
               <h6
                 className={`${styles.align__text_left} ${styles.carrierName__smaller}`}
               >
-                Address(Previous company)
+                {t("ADDRESS_PAST_COMPANY")}
               </h6>
             </Row>
             <Row>

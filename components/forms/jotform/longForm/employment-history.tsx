@@ -65,11 +65,10 @@ export function EmploymentHistory() {
         <h4
           className={`${styles.carrierName__smaller} ${styles.striped__border}`}
         >
-          Employment History
+          {t("EMPLOYMENT_HISTORY")}
         </h4>
-        <p className={styles.paragraph__left}>
-          Please be honest about your past employment as this helps speed up the
-          hiring process.
+        <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+          {t("HONEST_ABOUT_PAST_EMP")}
         </p>
         <Row className={styles.align__text_left}>
           <BaseCheck
@@ -85,10 +84,10 @@ export function EmploymentHistory() {
               <h6
                 className={`${styles.carrierName__smaller} ${styles.align__text_left}`}
               >
-                Current Employer
+                {t("CURRENT_EMPLOYER")}
               </h6>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                Put NA for any fields unknown
+                {t("NA")}
               </p>
             </Row>
             <Row>
@@ -167,7 +166,7 @@ export function EmploymentHistory() {
               <h6
                 className={`${styles.align__text_left} ${styles.carrierName__smaller}`}
               >
-                Address(current company)
+                {t("ADDRESS_CURRENT_COMPANY")}
               </h6>
             </Row>
             <Row>
