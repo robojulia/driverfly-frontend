@@ -23,7 +23,13 @@ export interface OtherQuesProps extends PageProps {}
 export function OtherQues() {
   const {
     state: { steps, applicant, applicantExtras },
-    method: { setSteps, setApplicant, updateApplicantExtras },
+    method: {
+      setSteps,
+      setApplicant,
+      updateApplicantExtras,
+      stepNext,
+      stepBack,
+    },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
@@ -43,13 +49,11 @@ export function OtherQues() {
 
         updateApplicantExtras(QUALIFIED_FOR_MANUAL_TRANSMISSION);
         updateApplicantExtras(CDL_NUMBER);
-
-        setSteps(steps + 1);
       } catch (error) {}
-      setSteps(steps + 1);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
   useEffect(() => {
@@ -74,7 +78,7 @@ export function OtherQues() {
       endorsements: endorsements || null,
     });
   }, [applicant, applicantExtras]);
-  
+
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
       <Row>

@@ -18,7 +18,13 @@ export interface AccidentsLast5YearsProps extends PageProps {}
 export function AccidentsLast5Years() {
   const {
     state: { applicant, applicantExtras, steps },
-    method: { setApplicant, updateApplicantExtras, setSteps },
+    method: {
+      setApplicant,
+      updateApplicantExtras,
+      setSteps,
+      stepNext,
+      stepBack,
+    },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
@@ -37,14 +43,13 @@ export function AccidentsLast5Years() {
 
         updateApplicantExtras(ACCIDENT_DETAILS);
 
-        setSteps(steps + 1);
+        stepNext();
       } catch (error) {
         console.log("error", error);
       }
-      console.log("applicantExtras", applicantExtras);
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
 
@@ -63,11 +68,14 @@ export function AccidentsLast5Years() {
 
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <h6 className={ styles.carrierName__smaller }>{t("MORE_ABOUT_ACCIDENTS")}</h6>
+      <h6 className={styles.carrierName__smaller}>
+        {t("MORE_ABOUT_ACCIDENTS")}
+      </h6>
       <Row>
         <Col className={styles.align__text_left}>
           <BaseInput
             className="col-6 mt-3"
+            type="number"
             name="accident_count"
             label="accidents_last_5_years"
             placeholder="PLACEHOLDER_FOR_DIGITS"
@@ -157,7 +165,7 @@ export function AccidentsLast5Years() {
                       formik={form}
                     />
                   </Col>
-                  <Col className='mt-5 pl-0'>
+                  <Col className="mt-5 pl-0">
                     <a
                       href="#"
                       onClick={() =>

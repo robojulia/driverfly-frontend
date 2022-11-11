@@ -19,7 +19,13 @@ export interface BackgroundInfoProps extends PageProps {}
 export function BackgroundInfo() {
   const {
     state: { steps, applicant, applicantExtras },
-    method: { setSteps, setApplicant, updateApplicantExtras },
+    method: {
+      setSteps,
+      setApplicant,
+      updateApplicantExtras,
+      stepNext,
+      stepBack,
+    },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
@@ -36,10 +42,10 @@ export function BackgroundInfo() {
       } catch (error) {
         console.log(error);
       }
-      setSteps(steps + 1);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
   useEffect(() => {
@@ -61,7 +67,6 @@ export function BackgroundInfo() {
   useEffect(() => {
     console.log("form values", form.values);
     console.log("form eror", form.errors);
-   
   }, [form.values, form.errors]);
 
   return (
@@ -80,7 +85,8 @@ export function BackgroundInfo() {
       </Row>
       <p
         className={`${styles.carrierName__smaller} ${styles.align__text_left}
-            ${styles.paragraph}`}>
+            ${styles.paragraph}`}
+      >
         {t("FULL_ADDRESS_QUES")}
       </p>
 

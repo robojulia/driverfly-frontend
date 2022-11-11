@@ -16,7 +16,13 @@ export interface WorkedBeforeProps extends PageProps {}
 export function WorkedBefore() {
   const {
     state: { applicant, applicantExtras, steps },
-    method: { setApplicant, updateApplicantExtras, setSteps },
+    method: {
+      setApplicant,
+      updateApplicantExtras,
+      setSteps,
+      stepNext,
+      stepBack,
+    },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
@@ -25,13 +31,13 @@ export function WorkedBefore() {
     validationSchema: WorkedBeforeDto.yupSchema(),
 
     onSubmit: (values) => {
-      const{ALREADY_APPLIED_TO_COMPANY, ALREADY_WORKED_TO_COMPANY} = values
-      updateApplicantExtras(ALREADY_APPLIED_TO_COMPANY)
-      updateApplicantExtras(ALREADY_WORKED_TO_COMPANY)
-      setSteps(steps + 1);
+      const { ALREADY_APPLIED_TO_COMPANY, ALREADY_WORKED_TO_COMPANY } = values;
+      updateApplicantExtras(ALREADY_APPLIED_TO_COMPANY);
+      updateApplicantExtras(ALREADY_WORKED_TO_COMPANY);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps + 1);
+      stepBack();
     },
   });
 
@@ -47,11 +53,11 @@ export function WorkedBefore() {
       ALREADY_APPLIED_TO_COMPANY: !!apx?.type
         ? apx
         : new ApplicantExtrasEntity(ApplicantExtras.ALREADY_APPLIED_TO_COMPANY),
-        ALREADY_WORKED_TO_COMPANY: !!apx_worked_before?.type
+      ALREADY_WORKED_TO_COMPANY: !!apx_worked_before?.type
         ? apx_worked_before
         : new ApplicantExtrasEntity(ApplicantExtras.ALREADY_WORKED_TO_COMPANY),
-        // apx_worked_before: !!apx_worked_before.value,
-        is_worked_before: !!apx?.value,
+      // apx_worked_before: !!apx_worked_before.value,
+      is_worked_before: !!apx?.value,
     });
   }, [applicantExtras]);
 

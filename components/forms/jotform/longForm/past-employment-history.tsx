@@ -20,7 +20,13 @@ export interface PastEmploymentHistoryProps extends PageProps {}
 export function PastEmploymentHistory() {
   const {
     state: { applicant, applicantExtras, steps },
-    method: { setApplicant, updateApplicantExtras, setSteps },
+    method: {
+      setApplicant,
+      updateApplicantExtras,
+      setSteps,
+      stepNext,
+      stepBack,
+    },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
@@ -30,10 +36,10 @@ export function PastEmploymentHistory() {
     onSubmit: (values) => {
       const { PAST_EMPLOYER } = values;
       updateApplicantExtras(PAST_EMPLOYER);
-      setSteps(steps + 1);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
 
@@ -114,7 +120,7 @@ export function PastEmploymentHistory() {
               </Col>
             </Row>
             <Row>
-            <Col className={styles.align__text_left}>
+              <Col className={styles.align__text_left}>
                 <BaseInput
                   className="col-10 mt-3"
                   required

@@ -13,7 +13,7 @@ export interface SecondPageProps extends PageProps {}
 export function SecondPage() {
   const {
     state: { applicant, steps },
-    method: { setSteps, setApplicant },
+    method: { setSteps, setApplicant, stepNext, stepBack },
   } = useContext(jotformContext);
   const { t } = useTranslation();
   const form = useFormik({
@@ -26,10 +26,10 @@ export function SecondPage() {
         first_name,
         last_name,
       });
-      setSteps(steps + 1);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
   useEffect(() => {

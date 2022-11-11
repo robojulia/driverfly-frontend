@@ -17,7 +17,7 @@ export interface FelonyConvictionProps extends PageProps {}
 export function FelonyConviction() {
   const {
     state: { steps, applicant, applicantExtras },
-    method: { setSteps, updateApplicantExtras },
+    method: { setSteps, updateApplicantExtras, stepNext, stepBack },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
@@ -27,10 +27,10 @@ export function FelonyConviction() {
     onSubmit: (values) => {
       const { CONVICTED_OF_FELONY } = values;
       updateApplicantExtras(CONVICTED_OF_FELONY);
-      setSteps(steps + 1);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
   useEffect(() => {

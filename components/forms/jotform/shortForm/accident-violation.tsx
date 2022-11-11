@@ -14,7 +14,13 @@ export interface FifthPageProps extends PageProps {}
 export function FifthPage() {
   const {
     state: { applicant, applicantExtras, steps },
-    method: { setApplicant, updateApplicantExtras, setSteps },
+    method: {
+      setApplicant,
+      updateApplicantExtras,
+      setSteps,
+      stepNext,
+      stepBack,
+    },
   } = useContext(jotformContext);
   const { t } = useTranslation();
   const form = useFormik({
@@ -29,11 +35,10 @@ export function FifthPage() {
         accident_count,
         moving_violations_count,
       });
-      setSteps(steps + 1);
-
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
   useEffect(() => {

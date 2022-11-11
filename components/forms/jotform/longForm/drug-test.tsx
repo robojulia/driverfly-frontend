@@ -17,19 +17,19 @@ export interface DrugTestProps extends PageProps {}
 export function DrugTest() {
   const {
     state: { steps, applicantExtras },
-    method: { setSteps, updateApplicantExtras },
+    method: { setSteps, updateApplicantExtras, stepNext, stepBack },
   } = useContext(jotformContext);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new DrugTestDto(),
     validationSchema: DrugTestDto.yupSchema(),
     onSubmit: (values) => {
-      const {DOT_REGULATION} = values;
-      updateApplicantExtras(DOT_REGULATION)
-      setSteps(steps + 1);
+      const { DOT_REGULATION } = values;
+      updateApplicantExtras(DOT_REGULATION);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
   useEffect(() => {
