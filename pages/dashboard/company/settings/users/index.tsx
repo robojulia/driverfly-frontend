@@ -25,7 +25,7 @@ export default function UserList() {
 
   const columnSettingKey = getDataTableColumnKey("company", user, "users");
 
-  const [ users, setUsers ] = useState([]);
+  const [users, setUsers] = useState([]);
 
   useEffectAsync(async () => {
     if (!user) return;
@@ -33,7 +33,7 @@ export default function UserList() {
     const api = new UserApi();
     const v = await api.list();
     setUsers(v);
-  }, [ user ]);
+  }, [user]);
 
   const can = {
     createUser: hasPermission("CanCreateUser"),
@@ -42,7 +42,7 @@ export default function UserList() {
     deleteUser: hasPermission("CanDeleteUser"),
   };
 
-   const onAddClick = (e: React.MouseEvent) => {
+  const onAddClick = (e: React.MouseEvent) => {
     e.preventDefault();
 
     router.push(`${router.pathname}/create`);
@@ -64,9 +64,9 @@ export default function UserList() {
 
       setUsers(users.map(v => {
         if (v.id === id) {
-          return {...v, status: Status.DELETED};
+          return { ...v, status: Status.DELETED };
         }
-      
+
         return v;
       }));
 
@@ -83,9 +83,9 @@ export default function UserList() {
 
       setUsers(users.map(v => {
         if (v.id === id) {
-          return {...v, status: Status.ACTIVE};
+          return { ...v, status: Status.ACTIVE };
         }
-      
+
         return v;
       }));
 
@@ -105,13 +105,13 @@ export default function UserList() {
       <ViewDataTable<UserEntity>
         columnSettingKey={columnSettingKey}
         customStyles={{
-          headCells: {
-              style: {
-                  background: "#5bb0b9",
-                  color: "white"
-              },
+          headRow: {
+            style: {
+              background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+              color: "white"
+            },
           },
-      }}
+        }}
         columns={[
           {
             id: "name",
@@ -172,20 +172,20 @@ export default function UserList() {
       />
     );
   }
-  
+
   return (
-    <PageLayout 
-    title="USERS" 
-    actions={
-      <>
-        {
-          can.createUser &&
+    <PageLayout
+      title="USERS"
+      actions={
+        <>
+          {
+            can.createUser &&
             <Button variant='primary' onClick={onAddClick}>
               + {t("CREATE")}
             </Button>
-        }
-      </>
-    }>
+          }
+        </>
+      }>
       <TabbedLayout items={tabs}></TabbedLayout>
     </PageLayout>
   )
