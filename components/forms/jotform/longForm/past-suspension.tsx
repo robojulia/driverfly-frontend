@@ -17,7 +17,13 @@ export interface PastSuspensionsProps extends PageProps {}
 export function PastSuspensions() {
   const {
     state: { applicant, applicantExtras, steps },
-    method: { setApplicant, updateApplicantExtras, setSteps },
+    method: {
+      setApplicant,
+      updateApplicantExtras,
+      setSteps,
+      stepNext,
+      stepBack,
+    },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
@@ -25,12 +31,12 @@ export function PastSuspensions() {
     initialValues: new PastSuspensionDto(),
     validationSchema: PastSuspensionDto.yupSchema(),
     onSubmit: (values) => {
-      setSteps(steps + 1);
       const { PAST_LICENSE_SUSPENSION } = values;
       updateApplicantExtras(PAST_LICENSE_SUSPENSION);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
   useEffect(() => {

@@ -22,7 +22,7 @@ export interface EmploymentHistoryProps extends PageProps {}
 export function EmploymentHistory() {
   const {
     state: { steps, applicant, applicantExtras },
-    method: { setSteps, updateApplicantExtras },
+    method: { setSteps, updateApplicantExtras, stepNext, stepBack },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
@@ -31,11 +31,11 @@ export function EmploymentHistory() {
     validationSchema: EmploymentHistoryDto.yupSchema(),
     onSubmit: (values) => {
       const { CURRENT_EMPLOYER } = values;
-      setSteps(steps + 1);
       updateApplicantExtras(CURRENT_EMPLOYER);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
 
@@ -53,8 +53,8 @@ export function EmploymentHistory() {
   }, [applicantExtras]);
 
   useEffect(() => {
-      console.log("applicant", applicantExtras);
-    
+    console.log("applicant", applicantExtras);
+
     console.log("values", form.values);
     console.log("error", form.errors);
   }, [form.values, form.errors]);

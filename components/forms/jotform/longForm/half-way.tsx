@@ -10,16 +10,16 @@ export interface HalfwayProps extends PageProps {}
 export function Halfway() {
   const {
     state: { steps },
-    method: { setSteps },
+    method: { setSteps, stepNext, stepBack },
   } = useContext(jotformContext);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: {},
     onSubmit: (values) => {
-      setSteps(steps+1);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps-1);
+      stepBack();
     },
   });
   return (

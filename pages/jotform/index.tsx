@@ -53,7 +53,7 @@ export default function jotFormLongForm() {
         : [{ ...applicantExtrasEntity }];
     });
 
-  const [steps, setSteps] = useState<number>(0);
+  const [steps, setSteps] = useState<number>(23);
   const stepNext = (): void => setSteps(steps + 1);
   const stepBack = (): void => setSteps(steps - 1);
 

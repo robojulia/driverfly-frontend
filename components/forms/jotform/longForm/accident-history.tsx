@@ -18,7 +18,13 @@ export interface AccidentsLast5YearsProps extends PageProps {}
 export function AccidentsLast5Years() {
   const {
     state: { applicant, applicantExtras, steps },
-    method: { setApplicant, updateApplicantExtras, setSteps },
+    method: {
+      setApplicant,
+      updateApplicantExtras,
+      setSteps,
+      stepNext,
+      stepBack,
+    },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
@@ -37,14 +43,13 @@ export function AccidentsLast5Years() {
 
         updateApplicantExtras(ACCIDENT_DETAILS);
 
-        setSteps(steps + 1);
+        stepNext();
       } catch (error) {
         console.log("error", error);
       }
-      console.log("applicantExtras", applicantExtras);
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
 

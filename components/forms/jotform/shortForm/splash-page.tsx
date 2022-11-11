@@ -11,13 +11,13 @@ export interface FirstPageProps extends PageProps {}
 export function FirstPage({ onNextClick }: FirstPageProps) {
   const {
     state: { steps },
-    method: { setSteps },
+    method: { setSteps, stepNext },
   } = useContext(jotformContext);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: {},
     onSubmit: (values) => {
-      setSteps(steps + 1);
+      stepNext()
     },
   });
 

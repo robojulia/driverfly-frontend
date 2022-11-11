@@ -20,7 +20,7 @@ export interface DrivingExpProps extends PageProps {}
 export function DrivingExp() {
   const {
     state: { steps, applicant },
-    method: { setSteps, setApplicant },
+    method: { setSteps, setApplicant, stepNext, stepBack },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
@@ -39,12 +39,12 @@ export function DrivingExp() {
           license_state,
         });
 
-        setSteps(steps + 1);
+        stepNext();
       } catch (error) {}
       setSteps(steps + 1);
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
   useEffect(() => {

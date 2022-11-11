@@ -15,8 +15,8 @@ export interface FourthPageProps extends PageProps {}
 
 export function FourthPage() {
   const {
-    state: { applicant,  steps },
-    method: { setApplicant, setSteps },
+    state: { applicant, steps },
+    method: { setApplicant, setSteps, stepNext, stepBack },
   } = useContext(jotformContext);
   const { t } = useTranslation();
 
@@ -31,10 +31,10 @@ export function FourthPage() {
         years_cdl_experience,
         is_owner_operator,
       });
-      setSteps(steps + 1);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
   useEffect(() => {

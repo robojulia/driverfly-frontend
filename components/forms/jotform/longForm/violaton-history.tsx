@@ -18,7 +18,7 @@ export interface ViolationsLast3YearsProps extends PageProps {}
 export function ViolationsLast3Years() {
   const {
     state: { applicant, applicantExtras, steps },
-    method: { updateApplicantExtras, setSteps },
+    method: { updateApplicantExtras, setSteps, stepBack, stepNext },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
@@ -33,10 +33,10 @@ export function ViolationsLast3Years() {
       } catch (error) {
         console.log(error);
       }
-      setSteps(steps + 1);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
 
@@ -44,8 +44,7 @@ export function ViolationsLast3Years() {
     console.log("extrasss", applicantExtras);
 
     const apx_detail = applicantExtras?.find(
-      (v) => v.type === ApplicantExtras.VIOLATION_DETAILS,
-
+      (v) => v.type === ApplicantExtras.VIOLATION_DETAILS
     );
     const apx_count = applicantExtras?.find(
       (v) => v.type === ApplicantExtras.VIOLATION_COUNT
@@ -67,11 +66,13 @@ export function ViolationsLast3Years() {
   }, [form.values, form.errors]);
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <h6 className={ styles.carrierName__smaller }>{t("VIOLATIONS_LAST_3_YEARS")}</h6>
+      <h6 className={styles.carrierName__smaller}>
+        {t("VIOLATIONS_LAST_3_YEARS")}
+      </h6>
       <Row>
         <Col className={styles.align__items_left}>
           <BaseInput
-          type="number"
+            type="number"
             className="col-6 mt-3"
             name="VIOLATION_COUNT.value"
             label="HOW_MANY_VIOALTION_3_YEARS"

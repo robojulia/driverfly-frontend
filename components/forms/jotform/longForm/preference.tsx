@@ -21,7 +21,13 @@ export interface PreferenceProps extends PageProps {}
 export function Preferences() {
   const {
     state: { applicant, applicantExtras, steps },
-    method: { setApplicant, updateApplicantExtras, setSteps },
+    method: {
+      setApplicant,
+      updateApplicantExtras,
+      setSteps,
+      stepNext,
+      stepBack,
+    },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
@@ -35,10 +41,10 @@ export function Preferences() {
       updateApplicantExtras(ROUTES);
       updateApplicantExtras(REQUIRE_W2_EMPLOYMENT);
       updateApplicantExtras(OTHER_ABSOLUTELY_REQUIREMENTS);
-      setSteps(steps + 1);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
   useEffect(() => {

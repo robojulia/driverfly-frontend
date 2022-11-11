@@ -16,7 +16,7 @@ export interface MedicalCardUploadprops extends PageProps {}
 export function MedicalCardUpload() {
   const {
     state: { applicant, steps },
-    method: { setApplicant, setSteps },
+    method: { setApplicant, setSteps, stepNext, stepBack },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
@@ -25,16 +25,16 @@ export function MedicalCardUpload() {
     validationSchema: DocumentsDto.yupSchema(),
     onSubmit: (values) => {
       const { document } = values;
-      setApplicant((oldArray) =>{
-
-        return {...oldArray, documents: [...oldArray.documents, {...document}]}
-      }
-    );
-      setSteps(steps + 1);
-      setSteps(steps + 1);
+      setApplicant((oldArray) => {
+        return {
+          ...oldArray,
+          documents: [...oldArray.documents, { ...document }],
+        };
+      });
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
   useEffect(() => {
@@ -42,7 +42,7 @@ export function MedicalCardUpload() {
     //   "driver_license.type", ApplicantDocumentType.MEDICAL_CARD
     // )
     console.log("form doc", ApplicantDocumentType);
-    
+
     form.setValues({
       document: {
         ...form.values.document,
@@ -52,11 +52,10 @@ export function MedicalCardUpload() {
     });
   }, []);
   useEffect(() => {
-console.log("form errors", form.errors)
-console.log("form valuez", form.values)
-console.log("form applicant", applicant)
-
-  }, [form.errors, form.values])
+    console.log("form errors", form.errors);
+    console.log("form valuez", form.values);
+    console.log("form applicant", applicant);
+  }, [form.errors, form.values]);
   return (
     <>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -64,12 +63,7 @@ console.log("form applicant", applicant)
           <h3 className="mb-4">{t("MEDICAL_CARD_UPLOAD_TITLE")}</h3>
         </Row>
         <Row className={styles.align__text_left}>
-        <FileInput
-            name="document"
-            required
-            accept="application/pdf"
-            formik={form}
-          />
+          <FileInput name="document" accept="application/pdf" formik={form} />
         </Row>
         <Row className="mt-4">
           <Col>

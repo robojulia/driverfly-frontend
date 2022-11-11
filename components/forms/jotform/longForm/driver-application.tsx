@@ -19,7 +19,13 @@ export interface DriverApplicationProps extends PageProps {}
 export function DriverApplication() {
   const {
     state: { applicant, steps, applicantExtras },
-    method: { setApplicant, setSteps, updateApplicantExtras },
+    method: {
+      setApplicant,
+      setSteps,
+      updateApplicantExtras,
+      stepNext,
+      stepBack,
+    },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
@@ -38,20 +44,19 @@ export function DriverApplication() {
         setApplicant({ ...applicant, first_name, last_name });
         updateApplicantExtras(APPLY_DATE);
         updateApplicantExtras(SIGNATURE);
-        setSteps(steps + 1);
+        stepNext();
       } catch (error) {
         console.log(error);
       }
     },
     onReset: () => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
   const signatureEnd = () => {
     console.log(padRef.current.toDataURL().toString());
     const signatureValue = padRef.current.toDataURL().toString();
-    form.setFieldValue("SIGNATURE.value", signatureValue)
-    
+    form.setFieldValue("SIGNATURE.value", signatureValue);
   };
   useEffect(() => {
     console.log("form.values", form.values);
@@ -71,7 +76,9 @@ export function DriverApplication() {
       APPLY_DATE: !!apx?.type
         ? apx
         : new ApplicantExtrasEntity(ApplicantExtras.APPLY_DATE),
-      SIGNATURE: !!apx_sign?.type ? apx_sign : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
+      SIGNATURE: !!apx_sign?.type
+        ? apx_sign
+        : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
       first_name: first_name || null,
       last_name: last_name || null,
     });
@@ -118,9 +125,9 @@ export function DriverApplication() {
         <Row className={styles.align__text_left}>
           <Col>
             <h6>{t("SIGNATURE")}</h6>
-            
+
             <SignaturePad
-            name="SIGNATURE.value"
+              name="SIGNATURE.value"
               ref={padRef}
               onEnd={signatureEnd}
               canvasProps={{

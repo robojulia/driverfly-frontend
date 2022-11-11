@@ -11,13 +11,13 @@ export interface SeventhPageProps extends PageProps {}
 export function SeventhPage() {
   const {
     state: { steps },
-    method: { setSteps },
+    method: { setSteps, stepNext },
   } = useContext(jotformContext);
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: {},
     onSubmit: () => {
-      setSteps(steps + 1);
+      stepNext();
     },
   });
   return (

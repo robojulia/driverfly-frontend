@@ -15,7 +15,7 @@ export interface SixthPageProps extends PageProps {}
 export function SixthPage() {
   const {
     state: { applicantExtras, steps },
-    method: { updateApplicantExtras, setSteps },
+    method: { updateApplicantExtras, setSteps, stepNext, stepBack },
   } = useContext(jotformContext);
   const { t } = useTranslation();
   const form = useFormik({
@@ -24,10 +24,10 @@ export function SixthPage() {
     onSubmit: (values) => {
       const { HEAR_ABOUT_US } = values;
       updateApplicantExtras(HEAR_ABOUT_US);
-      setSteps(steps + 1);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
   useEffect(() => {
@@ -44,10 +44,19 @@ export function SixthPage() {
   return (
     <>
       <form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-        <Row className={styles.carrierName__smaller}> 
+        <Row className={styles.carrierName__smaller}>
           <BaseSelect
             className="mt-3 mb-3"
-            options={["Referral", "Friends", "Job Board", "Social Media","Email", "Print Ad", "Word of Mouth", "Other"]}
+            options={[
+              "Referral",
+              "Friends",
+              "Job Board",
+              "Social Media",
+              "Email",
+              "Print Ad",
+              "Word of Mouth",
+              "Other",
+            ]}
             name="HEAR_ABOUT_US.value"
             placeholder="CHOOSE"
             label="HOW_DID_YOU_HEAR_ABOUT_US"
