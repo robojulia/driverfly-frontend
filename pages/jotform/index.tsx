@@ -126,12 +126,12 @@ export default function jotFormLongForm() {
       }}
     >
       <div className={styles.container}>
-			{/* <BaseInput type="number" onChange={({target : {value}}) => setSteps(value)} /> */}
         <div className={styles.main}>
-          <div className={styles.main_form}>
+          <div className={styles.main_form} style={{border: '1px solid red'}}>
             {getPageAccordingToStep(steps)}
           </div>
         </div>
+			{/* <input style={{border: '2px solid',zIndex:'999', marginLeft: '100px', background: 'red' }} type="number" onChange={(e) => setSteps(parseInt(e.target.value))} /> */}
       </div>
     </jotformContext.Provider>
   );

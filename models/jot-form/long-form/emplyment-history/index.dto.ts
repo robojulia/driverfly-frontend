@@ -18,9 +18,12 @@ export class EmploymentHistoryExtraDto {
 
   static yupSchema() {
     return yup.object({
-      current_company_name:yup.string().required().nullable(),
+      current_company_name: yup.string().required().nullable(),
+
       current_company_manager_name: yup.string().optional().nullable(),
+
       current_company_phone_number: yup.string().optional().nullable(),
+
       city: yup.string().required().nullable(),
 
       fmcsr: yup.string().optional().nullable(),

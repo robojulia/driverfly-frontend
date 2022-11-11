@@ -90,7 +90,6 @@ export function DriverApplication() {
         <Row className={styles.align__text_left}>
           <BaseInput
             className="col-6"
-            required
             name="first_name"
             placeholder="FIRST_NAME"
             label="FIRST_NAME"
@@ -100,7 +99,6 @@ export function DriverApplication() {
         <Row className={styles.align__text_left}>
           <BaseInput
             className="col-6"
-            required
             name="last_name"
             placeholder="LAST_NAME"
             label="FIRST_NAME"
@@ -110,7 +108,6 @@ export function DriverApplication() {
         <Row className={styles.align__text_left}>
           <BaseInput
             className="col-3 mt-3 mb-3"
-            required
             type="date"
             name="APPLY_DATE.value"
             placeholder="DATE"
@@ -121,7 +118,9 @@ export function DriverApplication() {
         <Row className={styles.align__text_left}>
           <Col>
             <h6>{t("SIGNATURE")}</h6>
+            
             <SignaturePad
+            name="SIGNATURE.value"
               ref={padRef}
               onEnd={signatureEnd}
               canvasProps={{

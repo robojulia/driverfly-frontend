@@ -11,13 +11,14 @@ import SignatureCanvas from "react-signature-canvas";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import ApplicantApi from "../../../../pages/api/applicant";
+import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
 export interface AccordianLastPageProps extends PageProps {}
 
 export function AccordianLastPage() {
   const {
     state: { steps, applicantExtras, applicant },
-    method: { setSteps },
+    method: { setSteps, stepBack },
   } = useContext(jotformContext);
 
   // new accordian
@@ -32,25 +33,30 @@ export function AccordianLastPage() {
       //   endorsements_twic: null,
     },
     onSubmit: async (values) => {
-      const jotformApi = new ApplicantApi();
+      const applicantApi = new ApplicantApi();
+      const filtered_extras = applicantExtras?.filter(
+        (v) => !!v.value
+      );
+      console.log("filtered_extras", filtered_extras)
       try {
-        const response = await jotformApi.jotform.create({applicant, applicantExtras})
-        console.log("response", response)
-        
+        const response = await applicantApi.jotform.create({
+          applicant,
+          applicantExtras: filtered_extras,
+        });
+        console.log("response", response);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
       // setSteps(steps + 1);
     },
     onReset: (values) => {
-      setSteps(19);
+      stepBack();
     },
   });
   useEffect(() => {
     console.log("applicant extras", applicantExtras);
     console.log("applicant", applicant);
-    
-  })
+  });
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
       <h1>{t("FORMS_TO_SIGNUP")}</h1>
@@ -122,9 +128,7 @@ export function AccordianLastPage() {
             </Row>
             <Row className={styles.align__text_left}>
               <Col>
-                <h6>
-                  {t("SIGNATURE")}
-                </h6>
+                <h6>{t("SIGNATURE")}</h6>
                 <SignaturePad
                   ref={padRef}
                   canvasProps={{
@@ -142,9 +146,7 @@ export function AccordianLastPage() {
               </Col>
             </Row>
             <Row className={styles.align__text_left}>
-              <h4 className="mt-3">
-                {t("I_A")}
-              </h4>
+              <h4 className="mt-3">{t("I_A")}</h4>
               <p className={styles.paragraph}>
                 {t("NEW_EMPLOYER_NAME_NAUTTLUS")}
               </p>
@@ -157,9 +159,7 @@ export function AccordianLastPage() {
               <h6>{t("PLEASE_NOTE_THE_FOLLOWING_EMPLOYERS")} </h6>
             </Row>
             <Row className={styles.align__text_left}>
-              <h4 className="mt-3">
-                {t("I-B")}
-              </h4>
+              <h4 className="mt-3">{t("I-B")}</h4>
               <p className={styles.paragraph}>{t("CURRENT_COMPANY_NAME")}</p>
               <p className={styles.paragraph}>{t("ADDRESS:")}</p>
               <p className={styles.paragraph}>{t("PHONE_#_:")}</p>
@@ -219,25 +219,16 @@ export function AccordianLastPage() {
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                  {" "}
-                  {t("COLUMNS")}
-                </p>
+                <p className={styles.paragraph}> {t("COLUMNS")}</p>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                  {t("1")}
-                </p>
+                <p className={styles.paragraph}>{t("1")}</p>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                {t("2")}
-                </p>
+                <p className={styles.paragraph}>{t("2")}</p>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                {t("3")}
-                </p>
+                <p className={styles.paragraph}>{t("3")}</p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
@@ -245,64 +236,42 @@ export function AccordianLastPage() {
                 </p>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                {t("BLANK_LINE")}
-                </p>
+                <p className={styles.paragraph}>{t("BLANK_LINE")}</p>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                {t("BLANK_LINE")} 
-                </p>
+                <p className={styles.paragraph}>{t("BLANK_LINE")}</p>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                {t("BLANK_LINE")}
-                </p>
+                <p className={styles.paragraph}>{t("BLANK_LINE")}</p>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                {t("BLANK_LINE")}
-                </p>
+                <p className={styles.paragraph}>{t("BLANK_LINE")}</p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}></p>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                {t("BLANK_LINE")}
-                </p>
+                <p className={styles.paragraph}>{t("BLANK_LINE")}</p>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                {t("BLANK_LINE")}
-                </p>
+                <p className={styles.paragraph}>{t("BLANK_LINE")}</p>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                {t("BLANK_LINE")}
-                </p>
+                <p className={styles.paragraph}>{t("BLANK_LINE")}</p>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                {t("BLANK_LINE")}
-                </p>
+                <p className={styles.paragraph}>{t("BLANK_LINE")}</p>
               </Row>
               <Row className={styles.align__text_left}>
                 <Col>
-                  <h4>
-                    {t("II_B")}
-                  </h4>
+                  <h4>{t("II_B")}</h4>
                 </Col>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                  {t("DOT_REGULATED_TESTING")}
-                </p>
+                <p className={styles.paragraph}>{t("DOT_REGULATED_TESTING")}</p>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                  {t("QUESTION_ALCOHOL_TEST")}
-                </p>
+                <p className={styles.paragraph}>{t("QUESTION_ALCOHOL_TEST")}</p>
               </Row>
               <Row className={styles.align__text_left}>
                 <p className={styles.paragraph}>
@@ -336,58 +305,38 @@ export function AccordianLastPage() {
               </Row>
               <Row className={styles.align__text_left}>
                 <Col>
-                  <h4>
-                    {t("II_C")}
-                  </h4>
+                  <h4>{t("II_C")}</h4>
                 </Col>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                  {t("NAME_OF_PERSON_ABOVE")}
-                </p>
+                <p className={styles.paragraph}>{t("NAME_OF_PERSON_ABOVE")}</p>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                 {t("BLANK_LINE")}
-                </p>
+                <p className={styles.paragraph}>{t("BLANK_LINE")}</p>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                  {t("BLANK_LINE_TITLE")}
-                </p>
+                <p className={styles.paragraph}>{t("BLANK_LINE_TITLE")}</p>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                  {t("BLANK_LINE_PHONE")}
-                </p>
+                <p className={styles.paragraph}>{t("BLANK_LINE_PHONE")}</p>
               </Row>
               <Row className={styles.align__text_left}>
-                <p className={styles.paragraph}>
-                  {t("BLANK_LINE_DATE")}
-                </p>
+                <p className={styles.paragraph}>{t("BLANK_LINE_DATE")}</p>
               </Row>
             </Row>
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="1">
-          <Accordion.Header>
-            {t("DISCLOSURE_AUTHORIZATION")}
-          </Accordion.Header>
+          <Accordion.Header>{t("DISCLOSURE_AUTHORIZATION")}</Accordion.Header>
           <Accordion.Body>
             <Row className="mb-3">
-              <h1>
-              {t("NEW_EMPLOYER_NAME_NAUTTLUS")}
-              </h1>
+              <h1>{t("NEW_EMPLOYER_NAME_NAUTTLUS")}</h1>
             </Row>
             <Row>
-              <h3>
-                {t("DISCLOSURE_AUTHORIZATION")}
-              </h3>
+              <h3>{t("DISCLOSURE_AUTHORIZATION")}</h3>
             </Row>
             <Row className="mt-3 mb-3">
-              <h6>
-                {t("DISCLOSURE")}
-              </h6>
+              <h6>{t("DISCLOSURE")}</h6>
             </Row>
             <Row>
               <p className={styles.paragraph}>
@@ -400,9 +349,7 @@ export function AccordianLastPage() {
               </p>
             </Row>
             <Row>
-              <h6>
-                {t("AUTHORIZATION")}
-              </h6>
+              <h6>{t("AUTHORIZATION")}</h6>
             </Row>
             <Row>
               <p className={styles.paragraph}>
@@ -410,15 +357,11 @@ export function AccordianLastPage() {
               </p>
             </Row>
             <Row>
-              <p className={styles.paragraph}>
-                {t("EMPLOYEE_NAME_NAUTILUS")}
-                </p>
+              <p className={styles.paragraph}>{t("EMPLOYEE_NAME_NAUTILUS")}</p>
             </Row>
             <Row>
               <Col>
-                <h6>
-                  {t("SIGNATURE")}
-                </h6>
+                <h6>{t("SIGNATURE")}</h6>
                 <SignaturePad
                   className
                   ref={padRef}
@@ -433,9 +376,7 @@ export function AccordianLastPage() {
             </Row>
             <Row>
               <Col>
-                <button onClick={clear}>
-                  {t("CLEAR")}
-                </button>
+                <button onClick={clear}>{t("CLEAR")}</button>
               </Col>
             </Row>
             <Row className={styles.align__text_left}>
@@ -453,82 +394,76 @@ export function AccordianLastPage() {
         </Accordion.Item>
         <Accordion.Item eventKey="2">
           <Accordion.Header>
-          {t("IMPORTANT_DISCLOSURE_BACKGROUND_PSP")}
+            {t("IMPORTANT_DISCLOSURE_BACKGROUND_PSP")}
           </Accordion.Header>
           <Accordion.Body>
             <Row>
-              <h1>
-              {t("NAUTILIUS_TRUCKING")}
-              </h1>
+              <h1>{t("NAUTILIUS_TRUCKING")}</h1>
             </Row>
             <Row>
-              <h3>
-              {t("IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")}
-              </h3>
+              <h3>{t("IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")}</h3>
             </Row>
             <Row>
-              <h5>
-              {t("LANGUAGE_MANDATORY_USE")}
-              </h5>
+              <h5>{t("LANGUAGE_MANDATORY_USE")}</h5>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-              {t("PROSPECTIVE_FMCSA_PROSPECTIVE")}
+                {t("PROSPECTIVE_FMCSA_PROSPECTIVE")}
               </p>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-              {t("ADVERSE_NOTIFICATION_PROSPECTIVE")}
+                {t("ADVERSE_NOTIFICATION_PROSPECTIVE")}
               </p>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-              {t("ADVERSE_NOTIFICATION_PROSPECTIVE_II")}
+                {t("ADVERSE_NOTIFICATION_PROSPECTIVE_II")}
               </p>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-              {t("NO_INFO_SUPPLY")}
+                {t("NO_INFO_SUPPLY")}
               </p>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-              {t("CRASH_PSP_REPORT")}
+                {t("CRASH_PSP_REPORT")}
               </p>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-              {t("FMCSA_AUTH")}
+                {t("FMCSA_AUTH")}
               </p>
             </Row>
             <Row>
               <h5 className={`${styles.paragraph} ${styles.align__text_left}`}>
-              {t("AUTHORIZATION")}
+                {t("AUTHORIZATION")}
               </h5>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-              {t("PROSPECTIVE_BACKGROUND_REPORT")}
+                {t("PROSPECTIVE_BACKGROUND_REPORT")}
               </p>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-              {t("AUTH_PROSPECTIVE-FMCSA")}
+                {t("AUTH_PROSPECTIVE-FMCSA")}
               </p>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-              {t("UNDERSTAND_FMCSA_SAFETY_DATA")}
+                {t("UNDERSTAND_FMCSA_SAFETY_DATA")}
               </p>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-              {t("UNDERSTAND_PSP_VIOLATIONS")}
+                {t("UNDERSTAND_PSP_VIOLATIONS")}
               </p>
             </Row>
             <Row>
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-              {t("DISCLOSURE_BACKGROUND")}
+                {t("DISCLOSURE_BACKGROUND")}
               </p>
             </Row>
             <Row>
@@ -538,9 +473,7 @@ export function AccordianLastPage() {
             </Row>
             <Row className={styles.align__text_left}>
               <Col>
-                <h6>
-                  {t("SIGNATURE")}
-                </h6>
+                <h6>{t("SIGNATURE")}</h6>
                 <SignaturePad
                   className
                   ref={padRef}
@@ -555,9 +488,7 @@ export function AccordianLastPage() {
             </Row>
             <Row className={styles.align__text_left}>
               <Col>
-                <button onClick={clear}>
-                  {t("CLEAR")}
-                </button>
+                <button onClick={clear}>{t("CLEAR")}</button>
               </Col>
             </Row>
             <Row className={styles.align__text_left}>
@@ -573,36 +504,28 @@ export function AccordianLastPage() {
             </Row>
             <Row className="mt-4">
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-              {t("NOTICE_DISCLOSURE")}
+                {t("NOTICE_DISCLOSURE")}
               </p>
             </Row>
             <Row className="mt-4">
               <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-              {t("EMPLOYEE_DEF_NOTICE")}
+                {t("EMPLOYEE_DEF_NOTICE")}
               </p>
             </Row>
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="3">
-          <Accordion.Header>
-            {t("GENERAL_CONSENT_QUERIES")}
-          </Accordion.Header>
+          <Accordion.Header>{t("GENERAL_CONSENT_QUERIES")}</Accordion.Header>
           <Accordion.Body>
             <Row>
-              <h1>
-                {t("NEW_EMPLOYER_NAME_NAUTTLUS")}
-              </h1>
+              <h1>{t("NEW_EMPLOYER_NAME_NAUTTLUS")}</h1>
             </Row>
             <Row>
-              <h3>
-                {t("GENERAL_CONSENT_QUERIES")}
-              </h3>
+              <h3>{t("GENERAL_CONSENT_QUERIES")}</h3>
             </Row>
 
             <Row>
-              <p className={styles.paragraph}>
-                {t("INSTRUCTIONS_CFR")}
-              </p>
+              <p className={styles.paragraph}>{t("INSTRUCTIONS_CFR")}</p>
             </Row>
             <Row>
               <BaseInput
@@ -645,9 +568,7 @@ export function AccordianLastPage() {
             </Row>
             <Row className={styles.align__text_left}>
               <Col>
-                <h6>
-                  {t("SIGNATURE")}
-                </h6>
+                <h6>{t("SIGNATURE")}</h6>
                 <SignaturePad
                   className
                   ref={padRef}
@@ -662,9 +583,7 @@ export function AccordianLastPage() {
             </Row>
             <Row className={styles.align__text_left}>
               <Col>
-                <button onClick={clear}>
-                  {t("CLEAR")}
-                </button>
+                <button onClick={clear}>{t("CLEAR")}</button>
               </Col>
             </Row>
             <Row className={styles.align__text_left}>

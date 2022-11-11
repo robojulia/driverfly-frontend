@@ -13,13 +13,13 @@ export class PastEmploymentHistoryExtraDto {
   state: string;
   start_date: string;
   end_date: string;
-  fmcsr: string | Date;
-  fcr: string | Date;
+  fmcsr: string;
+  fcr: string;
 
   static yupSchema() {
     return yup.object({
       previous_company_manager_name: yup.string().required().nullable(),
-      previous_company_phone_number: yup.string().required().nullable(),
+      previous_company_phone_number: yup.string().optional().nullable(),
       city: yup.string().required().nullable(),
 
       fmcsr: yup.string().optional().nullable(),

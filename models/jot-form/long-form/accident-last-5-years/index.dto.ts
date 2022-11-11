@@ -17,8 +17,8 @@ export class AccidentHistoryEntity {
             location_of_accident: yup.string().required().nullable(),
             number_of_fatalaties: yup.number().required().nullable(),
             number_of_injured: yup.number().required().nullable(),
-            dot_recordable: yup.boolean().default(false),
-            at_fault: yup.boolean().default(false),
+            dot_recordable: yup.boolean().default(false).optional(),
+            at_fault: yup.boolean().default(false).optional(),
         });
     }
 
