@@ -20,14 +20,15 @@ export default function EditUser({ id }) {
 
     const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
 
-    const [ user, setUser ] = useState(new UserEntity());
+    const [user, setUser] = useState(new UserEntity());
 
     useEffectAsync(async () => {
+        if (!user) return;
         if (id) {
             const api = new UserApi();
 
             let entity = null
-            
+
             try {
                 entity = await api.findById(+id);
             }
@@ -45,18 +46,19 @@ export default function EditUser({ id }) {
             toast.error(t("UNABLE_TO_FIND_{name}", { name: "USER" }, { translateProps: true }));
             goBack();
         }
-    }, [ company, id ]);
+    }, [user, id]);
+    // }, [ company, id ]);
 
     return (
         <ChildPageLayout
             title={t("EDIT_{name}", { name: "USER" }, { translateProps: true })}
             backPath={backPath}
-            >
+        >
             <UserForm
                 entity={user}
                 onSaveComplete={goBack}
-                // onSaveError={goBack}
-                />
+            // onSaveError={goBack}
+            />
         </ChildPageLayout>
     );
 }
