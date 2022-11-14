@@ -36,7 +36,7 @@ export default function ViewUser({ id }) {
             const api = new UserApi();
 
             let data = null
-            
+
             try {
                 data = await api.findById(+id);
             }
@@ -56,7 +56,8 @@ export default function ViewUser({ id }) {
             goBack();
         }
 
-    }, [ company, id ]);
+    }, [user, id]);
+    // }, [company, id]);
 
     const onEditClick = async () => {
         await router.push(router.asPath + `/edit`);
@@ -81,7 +82,7 @@ export default function ViewUser({ id }) {
                     {canDelete &&
                         <DeleteButton
                             onDelete={onDeleteClick}
-                            />
+                        />
                     }
                     {canEdit &&
                         <Button type="button" onClick={onEditClick}>
@@ -92,20 +93,20 @@ export default function ViewUser({ id }) {
                 )
             }
         >
-        <Row>
-            <Col>
-                <ViewDetails
-                    obj={{
-                        FIRST_NAME: user.first_name,
-                        LAST_NAME: user.last_name,
-                        EMAIL: user.email,
-                        phone: user.contact_number,
-                        phone_cell: user.cell_number,
-                    }}
+            <Row>
+                <Col>
+                    <ViewDetails
+                        obj={{
+                            FIRST_NAME: user.first_name,
+                            LAST_NAME: user.last_name,
+                            EMAIL: user.email,
+                            phone: user.contact_number,
+                            phone_cell: user.cell_number,
+                        }}
                     />
-            </Col>
-        </Row>
-    </ChildPageLayout>);
+                </Col>
+            </Row>
+        </ChildPageLayout>);
 }
 
 ViewUser.getLayout = function getLayout(page) {
