@@ -1602,7 +1602,15 @@
   "CURRENT_EMPLOYER":"Current Employer",
   "NA":"Put NA for any fields unknown",
   "ADDRESS_CURRENT_COMPANY":"Address (Current Company)",
-  "ADDRESS_PAST_COMPANY":"Address (Previous Company)"
+  "ADDRESS_PAST_COMPANY":"Address (Previous Company)",
+  "VOE_PARAGRAPH":"This is the Verification of Employment form for {name} to be completed by {voeCompany} for {company}.  If this link was  NOT accompanied with a PDF attachment containing employee's signature for approval, DO NOT COMPLETE.",
+  "EMPLOYED_BY_US":"Was Nautilus employed by us",
+  "EMPLOYMENT_VERIF":"Employment Verification",
+  "was_employed_as":"was employed as",
+  "POSITION":"Position",
+  "MM/YY":"mm/yyyy",
+  "ACCIDENT_HISTORY":"Accident History",
+  "VOE_DRIVER_QUES":"Did drive motor vehicle(s) for you?"
 }
 
 
