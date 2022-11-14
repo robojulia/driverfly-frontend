@@ -8,146 +8,145 @@ import BaseSelect from "../../base-select";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { ContactDto } from "../../../../models/jot-form/short-form/contact.dto";
-import ApplicantApi from "../../../../pages/api/applicant";
-import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import jotformContext from "../../../../context/jotform-context";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
-export interface ThirdPageProps extends PageProps {}
+export interface BasicInfoProps extends PageProps { }
 
-export function ThirdPage() {
-  const {
-    state: { applicant, applicantExtras },
-    method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
-  } = useContext(jotformContext);
+export function BasicInfo() {
 
-  const { t } = useTranslation();
+	const {
+		state: { applicant, applicantExtras },
+		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+	} = useContext(jotformContext);
 
-  const form = useFormik({
-    initialValues: new ContactDto(),
-    validationSchema: ContactDto.yupSchema(),
-    onSubmit: (values) => {
-      try {
-        console.log("values", values);
-        const { email, phone, zip_code, AUTHORIZE_TO_COMMUNICATE } = values;
+	const { t } = useTranslation();
 
-        setApplicant({
-          ...applicant,
-          email,
-          phone,
-          zip_code,
-        });
+	const form = useFormik({
+		initialValues: new ContactDto(),
+		validationSchema: ContactDto.yupSchema(),
+		onSubmit: (values) => {
+			try {
+				console.log("values", values);
+				const { email, phone, zip_code, AUTHORIZE_TO_COMMUNICATE } = values;
 
-        updateApplicantExtras(AUTHORIZE_TO_COMMUNICATE);
+				setApplicant({
+					...applicant,
+					email,
+					phone,
+					zip_code,
+				});
 
-        stepNext();
-      } catch (error) {
-        console.log("error", error);
-      }
-    },
-    onReset: (values) => {
-      stepBack();
-    },
-  });
+				updateApplicantExtras(AUTHORIZE_TO_COMMUNICATE);
 
-  // const getInfoByPhone = async ({ target: { name, value } }) => {
-  //   const applicantApi = new ApplicantApi();
-  //   try {
-  //     const response = await applicantApi.search({ [name]: value });
-  //     console.log("response", response[0]);
-  //     form.setFieldValue(name, value);
-  //     setApplicant(response[0]);
-  //   } catch (error) {
-  //     console.log(error, "Error Occured");
-  //   }
-  // };
-  useEffect(() => {
-    const apx = applicantExtras?.find(
-      (v) => v.type === ApplicantExtras.AUTHORIZE_TO_COMMUNICATE
-    );
-    form.setValues({
-      ...form.values,
-      AUTHORIZE_TO_COMMUNICATE: !!apx?.type
-        ? apx
-        : new ApplicantExtrasEntity(ApplicantExtras.AUTHORIZE_TO_COMMUNICATE),
-      email: applicant.email,
-      phone: applicant.phone,
-      zip_code: applicant.zip_code,
-    });
-  }, []);
+				stepNext();
+			} catch (error) {
+				console.log("error", error);
+			}
+		},
+		onReset: (values) => {
+			stepBack();
+		},
+	});
 
-  // useEffect(() => {
-  // 	console.log("form.values", form.values);
-  // }, [form.values]);
+	// const getInfoByPhone = async ({ target: { name, value } }) => {
+	//   const applicantApi = new ApplicantApi();
+	//   try {
+	//     const response = await applicantApi.search({ [name]: value });
+	//     console.log("response", response[0]);
+	//     form.setFieldValue(name, value);
+	//     setApplicant(response[0]);
+	//   } catch (error) {
+	//     console.log(error, "Error Occured");
+	//   }
+	// };
 
-  // useEffect(() => {
-  // 	console.log("applicantExtras", applicantExtras);
-  // }, [applicantExtras]);
+	useEffect(() => {
+		const apx = applicantExtras?.find(
+			(v) => v.type === ApplicantExtras.AUTHORIZE_TO_COMMUNICATE
+		);
+		form.setValues({
+			...form.values,
+			AUTHORIZE_TO_COMMUNICATE: !!apx?.type
+				? apx
+				: new ApplicantExtrasEntity(ApplicantExtras.AUTHORIZE_TO_COMMUNICATE),
+			email: applicant.email,
+			phone: applicant.phone,
+			zip_code: applicant.zip_code,
+		});
+	}, []);
 
-  return (
-    <>
-      <Form
-        className={styles.align__text_left}
-        onSubmit={form.handleSubmit}
-        onReset={form.handleReset}
-      >
-        <Row>
-          <BaseInput
-            className="col-6"
-            required
-            name="email"
-            label="email"
-            placeholder="email"
-            formik={form}
-          />
-        </Row>
-        <Row className="mt-3">
-          <BaseInputPhone
-            className="col-6"
-            required
-            name="phone"
-            label="phone"
-            // onChange={getInfoByPhone}
-            formik={form}
-          />
-        </Row>
-        <Row className="mt-3">
-          <BaseInput
-            className="col-6"
-            required
-            name="zip_code"
-            label="zip_code"
-            placeholder="zip_code"
-            formik={form}
-          />
-        </Row>
-        <Row>
-          <BaseSelect
-            className="mt-3"
-            required
-            options={["Yes", "No"]}
-            name="AUTHORIZE_TO_COMMUNICATE.value"
-            placeholder="CHOOSE"
-            label="SMS_EMAIL_AUTHORIZATION_NAUTILIUS"
-            formik={form}
-          />
-        </Row>
-        <Row className="mt-3">
-          <Col>
-            <Button className="float-right" type="reset">
-              {t("BACK")}
-            </Button>
-          </Col>
+	// useEffect(() => {
+	// 	console.log("form.values", form.values);
+	// }, [form.values]);
 
-          <Col>
-            <Button className="float-left theme-secondary-btn" type="submit">
-              {t("NEXT")}
-            </Button>
-          </Col>
-        </Row>
-      </Form>
-    </>
-  );
+	// useEffect(() => {
+	// 	console.log("applicantExtras", applicantExtras);
+	// }, [applicantExtras]);
+
+	return (
+		<>
+			<Form
+				className={styles.align__text_left}
+				onSubmit={form.handleSubmit}
+				onReset={form.handleReset}
+			>
+				<Row>
+					<BaseInput
+						className="col-6"
+						required
+						name="email"
+						label="email"
+						placeholder="email"
+						formik={form}
+					/>
+				</Row>
+				<Row className="mt-3">
+					<BaseInputPhone
+						className="col-6"
+						required
+						name="phone"
+						label="phone"
+						formik={form}
+					/>
+				</Row>
+				<Row className="mt-3">
+					<BaseInput
+						className="col-6"
+						required
+						name="zip_code"
+						label="zip_code"
+						placeholder="zip_code"
+						formik={form}
+					/>
+				</Row>
+				<Row>
+					<BaseSelect
+						className="mt-3"
+						required
+						options={["Yes", "No"]}
+						name="AUTHORIZE_TO_COMMUNICATE.value"
+						placeholder="CHOOSE"
+						label="SMS_EMAIL_AUTHORIZATION_NAUTILIUS"
+						formik={form}
+					/>
+				</Row>
+				<Row className="mt-3">
+					<Col>
+						<Button className="float-right" type="reset">
+							{t("BACK")}
+						</Button>
+					</Col>
+
+					<Col>
+						<Button className="float-left theme-secondary-btn" type="submit">
+							{t("NEXT")}
+						</Button>
+					</Col>
+				</Row>
+			</Form>
+		</>
+	);
 }
