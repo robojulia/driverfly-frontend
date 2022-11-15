@@ -1610,7 +1610,16 @@
   "POSITION":"Position",
   "MM/YY":"mm/yyyy",
   "ACCIDENT_HISTORY":"Accident History",
-  "VOE_DRIVER_QUES":"Did drive motor vehicle(s) for you?"
+  "VOE_DRIVER_QUES":"Did drive motor vehicle(s) for you?",
+  "TYPE_OF_VEHICLE":"What type of vehicle?",
+  "REASONS_FOR_LEAVING_EMPLOYMENT":"Reasons for leaving your employment",
+  "VOE_ACCIDENT_NOTE":"ACCIDENTS: Complete the following for any accidents included on your accident register (§390.15(b)) that involved the applicant in the 3 years prior to .",
+  "SAFETY_PERFORMANCE_REPORT":"Is there any safety performance history to report?",
+  "ACCIDENT_REGISTER_DATA":"Is there any accident register data for this driver?",
+  "#INJURIES":"# of Injuries",
+  "#FATALITIES":"# of Fatalities",
+  "#HAZMAT_SPILLS":"# of Hazmat Spills",
+  "OTHER_GOV_REPORTED_ACCIDENTS":"Please provide information concerning any other accidents involving the applicant that were reported to government agencies or insurers or retained under internal company policies:"
 }
 
 
