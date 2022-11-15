@@ -1,40 +1,52 @@
-import * as yup from "yup";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Form, Button, Col, Row, Table } from "react-bootstrap";
 import BaseInput from "../../base-input";
 import BaseCheck from "../../base-check";
-import { AcciedentViolationDto } from "../../../../models/jot-form/short-form/accident-violation.dto";
+import { AccidentViolationDto } from "../../../../models/jot-form/short-form/accident-violation.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
+import BaseSelect from "../../base-select";
+import { EligibleInUsa } from "../../../../enums/jotform/drug-test-eligible.enum";
 
-export interface FifthPageProps extends PageProps {}
+export interface AccidentViolationProps extends PageProps {}
 
-export function FifthPage({ onNextClick, onBackClick }: FifthPageProps) {
+export function AccidentViolation() {
   const {
-    state: { applicant },
+    state: { applicant, applicantExtras },
+    method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
   } = useContext(jotformContext);
+
   const { t } = useTranslation();
+
   const form = useFormik({
-    initialValues: new AcciedentViolationDto(),
-    validationSchema: AcciedentViolationDto.yupSchema(),
+    initialValues: new AccidentViolationDto(),
+    validationSchema: AccidentViolationDto.yupSchema(),
     onSubmit: (values) => {
-      onNextClick(values);
+      const { can_pass_drug_test, accident_count, moving_violations_count } =
+        values;
+      setApplicant({
+        ...applicant,
+        can_pass_drug_test,
+        accident_count,
+        moving_violations_count,
+      });
+      stepNext();
     },
     onReset: (values) => {
-      onBackClick();
+      stepBack();
     },
   });
-  // useEffect(() => {
-  //   const { email, phone, zip_code, options } = applicant;
-  //   form.setValues({
-  //     email: email || null,
-  //     phone: phone || null,
-  //     zip_code: zip_code || null,
-  //     options: options || null,
-  //   });
-  // }, [applicant]);
+  useEffect(() => {
+    const { can_pass_drug_test, accident_count, moving_violations_count } =
+      applicant;
+    form.setValues({
+      can_pass_drug_test: can_pass_drug_test || null,
+      accident_count: accident_count || null,
+      moving_violations_count: moving_violations_count || null,
+    });
+  }, []);
   return (
     <>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -49,7 +61,7 @@ export function FifthPage({ onNextClick, onBackClick }: FifthPageProps) {
         <Row>
           <BaseInput
             className="col-6 mt-3 mb-3"
-            name="accidents_last_5_years"
+            name="accident_count"
             type="number"
             step={1}
             min={0}
@@ -61,13 +73,22 @@ export function FifthPage({ onNextClick, onBackClick }: FifthPageProps) {
         <Row>
           <BaseInput
             className="col-6 mt-4"
-            name="voilations_in_last_3_years"
+            name="moving_violations_count"
             type="number"
             step={1}
             min={0}
             label="voilations_in_last_3_years"
             placeholder="PLACEHOLDER_FOR_DIGITS"
             formik={form}
+          />
+        </Row>
+        <Row>
+          <BaseSelect
+            className="col-6 mt-4"
+            name="ELIGIBLE_TO_WORK_IN_US"
+            label="ELIGIBLE_TO_WORK_IN_US"
+            labelPrefix="EligibleInUsa"
+            enumType={EligibleInUsa}
           />
         </Row>
         <Row className={"mt-3"}>

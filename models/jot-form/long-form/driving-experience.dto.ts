@@ -2,13 +2,13 @@ import moment from "moment";
 import * as yup from "yup";
 
 export class DrivingExperienceDto {
-  cdl_number: number;
+  license_number: string;
   state: string;
-  expiration_date: number;
-  state_issued: string;
+  license_expiry: string | Date;
+  license_state: string;
   static yupSchema() {
     return yup.object({
-      expiration_date: yup
+      license_expiry: yup
         .date()
         .typeError("INVALID_DATE")
         .min(
@@ -16,8 +16,8 @@ export class DrivingExperienceDto {
           "Your License should at least be valid for 6 more months"
         ),
       state: yup.string().required().nullable(),
-      cdl_number: yup.string().required().nullable(),
-      state_issued: yup.string().required().nullable(),
+      license_number: yup.string().required().nullable(),
+      license_state: yup.string().required().nullable(),
     });
   }
 }

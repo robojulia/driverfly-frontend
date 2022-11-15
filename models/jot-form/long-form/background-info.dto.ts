@@ -1,24 +1,25 @@
 import moment from "moment";
 import * as yup from "yup";
+import { ApplicantExtrasEntity } from "../../applicant/applicant-extras.entity";
 
 export class BackgroundInfoDto {
   birthdate: string;
-  address_line_1: string;
-  address_line_2: string;
+  LINE_ADDRESS?: ApplicantExtrasEntity;
   city: string;
   state: string;
-  zip_code: number;
+  zip_code: string;
 
   static yupSchema() {
     return yup.object({
       birthdate: yup
-        .date().required()
+        .date()
+        .required()
         .typeError("INVALID_DATE")
         .max(moment().endOf("day").subtract(18, "years"), "TOO YOUNG TO DRIVE"),
-      address_line_1: yup.string().required().nullable(),
+      LINE_ADDRESS: ApplicantExtrasEntity.yupSchema(),
       city: yup.string().required().nullable(),
       state: yup.string().required().nullable(),
-      zip_code: yup.number().required(),
+      zip_code: yup.string().required().nullable(),
     });
   }
 }
