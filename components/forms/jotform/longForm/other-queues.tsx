@@ -7,7 +7,6 @@ import BaseSelect from "../../base-select";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { DriverEndorsement } from "../../../../enums/users/driver-endorsement.enum";
-import { States } from "../../../../enums/users/us-states.enum";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import { OtherQueuesDto } from "../../../../models/jot-form/long-form/other-queues.dto";
@@ -16,6 +15,8 @@ import { CdlExtras } from "../../../../models/jot-form/long-form/cdl-object/inde
 import BaseCheckList from "../../base-check-list";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
+import StateSelect from "../../state-select";
 
 export interface OtherQueuesProps extends PageProps { }
 
@@ -80,7 +81,8 @@ export function OtherQueues() {
             <Row>
                 <BaseSelect
                     className="col-6 mb-3"
-                    options={["Yes", "No"]}
+                    labelPrefix="BooleanType"
+                    enumType={BooleanType}
                     name="QUALIFIED_FOR_MANUAL_TRANSMISSION.value"
                     placeholder="CHOOSE"
                     label="QUALIFIED_TO_MANUAL_DRIVING"
@@ -137,11 +139,10 @@ export function OtherQueues() {
                                         />
                                     </Col>
                                     <Col>
-                                        <BaseSelect
+                                        <StateSelect
                                             className="col-12 mt-3"
-                                            enumType={States}
                                             name={`CDL_NUMBER.value[${i}].state`}
-                                            placeholder="ISSUANCE_STATE"
+                                            placeholder="STATE"
                                             label="CHOOSE"
                                             formik={form}
                                         />

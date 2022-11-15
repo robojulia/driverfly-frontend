@@ -6,12 +6,12 @@ import BaseInput from "../../base-input";
 import BaseSelect from "../../base-select";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
-import { States } from "../../../../enums/users/us-states.enum";
 import { DrivingExperienceDto } from "../../../../models/jot-form/long-form/driving-experience.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
+import StateSelect from "../../state-select";
 
-export interface DrivingExperienceProps extends PageProps {}
+export interface DrivingExperienceProps extends PageProps { }
 
 export function DrivingExperience() {
   const {
@@ -71,13 +71,12 @@ export function DrivingExperience() {
           />
         </Col>
         <Col>
-          <BaseSelect
+          <StateSelect
             className="col-12 mt-3"
             required
-            enumType={States}
-            name="state"
-            placeholder="state"
             label="CURRENT_STATE"
+            name="state"
+            placeholder="STATE"
             formik={form}
           />
         </Col>
@@ -96,15 +95,14 @@ export function DrivingExperience() {
 
       <Row>
         <Col>
-          <BaseSelect
-            className="col-4 mt-3"
-            required
-            label="state_issued"
-            name="license_state"
-            placeholder="ISSUANCE_STATE"
-            enumType={States}
-            formik={form}
-          />
+          <StateSelect
+						className="col-4 mt-3"
+						required
+						label="state_issued"
+						name="license_state"
+						placeholder="ISSUANCE_STATE"
+						formik={form}
+					/>
         </Col>
       </Row>
       <Row>

@@ -98,6 +98,7 @@ export function Preferences() {
 							label="Do you require W2 employment?"
 							name="REQUIRE_W2_EMPLOYMENT.value"
 							placeholder="CHOOSE"
+							labelPrefix="BooleanPreferenceType"
 							enumType={BooleanPreferenceType}
 							formik={form}
 						/>

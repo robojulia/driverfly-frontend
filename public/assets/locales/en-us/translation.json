@@ -141,7 +141,7 @@
     "CPM_PAYMENT": "CPM payment",
     "TEAM_DRIVERS": "Team drivers",
     "PAID_TRAINING": "Paid training",
-    "OTHERS": "OTHERS"
+    "OTHERS": "Others"
   },
   "HearAboutUsType": {
     "REFERRAL": "Referral",
@@ -255,6 +255,20 @@
     "M": "M (only Class B and C passenger vehicle or school bus)",
     "N": "N (only Class C passenger vehicle or school bus)",
     "V": "V (medical variance)"
+  },
+  "BooleanType": {
+    "YES": "Yes",
+    "NO": "No"
+  },
+  "BooleanPreferenceType": {
+    "YES": "Yes",
+    "NO": "No",
+    "NOT_SURE": "Not Sure"
+  },
+  "EligibleInUsa": {
+    "YES": "Yes",
+    "NO": "No",
+    "OTHER": "Other"
   },
   "CDL_CLASS": "CDL Class",
   "CDL_CLASS_TYPE": "CDL Class Type",
@@ -1599,7 +1613,7 @@
   "": "",
   "ADDRESS_LINE_1": "Address Line 1",
   "ADDRESS_LINE_2": "Address Line 2",
-  "CHOOSE_STATE": "CHOOSE STATE",
+  "CHOOSE_STATE": "Choose State",
   "SIGNATURE": "Signature",
   "DRIVER_LICENSE_PHOTO": "Drivers License Photo",
   "CDL_LICENSE_PLACEHOLDER": "CDL License Number",

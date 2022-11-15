@@ -53,6 +53,7 @@ export function HearAbout() {
         <Row className={styles.carrierName__smaller}>
           <BaseSelect
             className="mt-3 mb-3"
+            labelPrefix="HearAboutUsType"
             enumType={HearAboutUsType}
             name="HEAR_ABOUT_US.value"
             placeholder="CHOOSE"

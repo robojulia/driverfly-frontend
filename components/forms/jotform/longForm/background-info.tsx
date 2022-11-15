@@ -5,12 +5,12 @@ import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
 import BaseInput from "../../base-input";
 import BaseSelect from "../../base-select";
-import { States } from "../../../../enums/users/us-states.enum";
 import { BackgroundInfoDto } from "../../../../models/jot-form/long-form/background-info.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import StateSelect from "../../state-select";
 
 export interface BackgroundInfoProps extends PageProps { }
 
@@ -113,7 +113,7 @@ export function BackgroundInfo() {
 			</>
 
 			<Row className={styles.align__text_left}>
-				<Col>
+				<Col className="p-0">
 					<BaseInput
 						className="col-12 mt-2 float-left"
 						required
@@ -124,13 +124,12 @@ export function BackgroundInfo() {
 					/>
 				</Col>
 				<Col>
-					<BaseSelect
+					<StateSelect
 						className="col-12 mt-2"
 						required
-						enumType={States}
 						name="state"
-						placeholder="CHOOSE_STATE"
 						label="state"
+						placeholder="CHOOSE_STATE"
 						formik={form}
 					/>
 				</Col>

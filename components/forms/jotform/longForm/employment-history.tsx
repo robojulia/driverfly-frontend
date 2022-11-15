@@ -14,6 +14,7 @@ import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import StateSelect from "../../state-select";
 
 export interface EmploymentHistoryProps extends PageProps { }
 
@@ -216,13 +217,12 @@ export function EmploymentHistory() {
 							</Col>
 
 							<Col className={styles.align__text_left}>
-								<BaseSelect
+								<StateSelect
 									className="col-12 mt-4"
 									required
-									enumType={States}
-									name="CURRENT_EMPLOYER.value.state"
-									placeholder="CHOOSE_STATE"
 									label="STATE"
+									name="CURRENT_EMPLOYER.value.state"
+									placeholder="STATE"
 									formik={form}
 								/>
 							</Col>
@@ -233,6 +233,7 @@ export function EmploymentHistory() {
 								<BaseSelect
 									className="col-6 mt-4"
 									required
+									labelPrefix="BooleanPreferenceType"
 									enumType={BooleanPreferenceType}
 									name="CURRENT_EMPLOYER.value.fmcsr"
 									placeholder="CHOOSE"
@@ -247,6 +248,7 @@ export function EmploymentHistory() {
 								<BaseSelect
 									className="col-6 mt-4"
 									required
+									labelPrefix="BooleanPreferenceType"
 									enumType={BooleanPreferenceType}
 									name="CURRENT_EMPLOYER.value.fcr"
 									placeholder="CHOOSE"
