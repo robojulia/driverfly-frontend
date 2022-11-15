@@ -45,7 +45,7 @@ export default function jotFormLongForm() {
 			return !!oldApx ? [...oldApx, { ...applicantExtrasEntity }] : [{ ...applicantExtrasEntity }]
 		})
 
-	const [steps, setSteps] = useState<number>(20);
+	const [steps, setSteps] = useState<number>(26);
 	const stepNext = (): void => setSteps(steps + 1)
 	const stepBack = (): void => setSteps(steps - 1)
 

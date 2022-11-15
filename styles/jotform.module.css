@@ -116,7 +116,15 @@
 .align__text_left{
     text-align: left;
 }
-
+.align__text_right{
+    text-align: right;
+}
+.display__inline{
+    display: inline;
+}
+.text__bold{
+    font-weight: bold;
+}
 .sigCanvas {
     width: 600px;
     border: 1px solid red;
