@@ -262,12 +262,12 @@ export default function Signup() {
 
             </Row>
             <div className="d-grid gap-2 my-4 sign_up_btns">
-              <Button disabled={form.isSubmitting} size="lg" type="submit">{t("REGISTER_NOW")}</Button>
+              <Button disabled={form.isSubmitting} size="lg" className="w-100" type="submit">{t("REGISTER_NOW")}</Button>
               <div className="my-1 w-100 text-center">
                 <span>{t("OR")}</span>
               </div>
               <Link href="/login">
-                <Button size="lg">{t("IF_YOURE_ALREADY_A_USER_LOGIN_HERE")}</Button>
+                <Button size="lg" className="w-100">{t("IF_YOURE_ALREADY_A_USER_LOGIN_HERE")}</Button>
               </Link>
             </div>
           </form>
