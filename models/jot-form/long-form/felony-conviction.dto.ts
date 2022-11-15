@@ -1,16 +1,21 @@
 import moment from "moment";
 import * as yup from "yup";
+import { ApplicantExtrasEntity } from "../../applicant/applicant-extras.entity";
 
 export class FelonyConvictionDto {
-  felony_declaration: boolean = false;
-  explanations: string;
+  is_convicted_felony: boolean;
+  CONVICTED_OF_FELONY: ApplicantExtrasEntity;
+
   static yupSchema() {
     return yup.object({
-      explanations: yup.string().when("felony_declaration", {
-        is: (v) => !!v,
-        then: yup.string().required().nullable(),
-        otherwise: yup.string().optional().nullable(),
-      }),
+      is_convicted_felony: yup.boolean().optional().nullable(),
+      CONVICTED_OF_FELONY: yup
+        .object()
+        .when("is_convicted_felony", {
+          is: (v) => !!v,
+          then: ApplicantExtrasEntity.yupSchema(),
+        })
+        .nullable(),
     });
   }
 }

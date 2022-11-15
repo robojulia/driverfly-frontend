@@ -1,15 +1,15 @@
 import * as yup from "yup";
 
-export class AcciedentViolationDto {
-  can_pass_drug_test: boolean = false;
-  accidents_last_5_years: number;
-  voilations_in_last_3_years: number;
+export class AccidentViolationDto {
+	can_pass_drug_test: boolean = false;
+	accident_count: number;
+	moving_violations_count: number;
 
-  static yupSchema() {
-    return yup.object({
-      can_pass_drug_test: yup.boolean().nullable(),
-      accidents_last_5_years: yup.number().required().nullable(),
-      voilations_in_last_3_years: yup.number().required().nullable(),
-    });
-  }
+	static yupSchema() {
+		return yup.object({
+			can_pass_drug_test: yup.boolean().nullable(),
+			accident_count: yup.number().required().nullable(),
+			moving_violations_count: yup.number().required().nullable(),
+		});
+	}
 }

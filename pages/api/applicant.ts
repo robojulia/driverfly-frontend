@@ -7,6 +7,7 @@ import { ApplicantSuggestedJobEntity } from "../../models/applicant/applicant-su
 import { ApplicantEntity } from "../../models/applicant/applicant.entity";
 import { DocumentEntity } from "../../models/documents/document.entity";
 import { ApplicantJobsByStatusDto } from "../../models/job/applicant-jobs-by-status.dto";
+import { UpsertApplicantJotformDto } from "../../models/jot-form/upsert-applicant-jotform.dto";
 import BaseApi from "./_baseApi";
 
 class ApplicantApi extends BaseApi {
@@ -98,6 +99,14 @@ class ApplicantApi extends BaseApi {
         baseUrl: (applicantId: number) => `${this.baseUrl}/${applicantId}/documents`,
         create: async (applicantId: number, dto: DocumentEntity): Promise<DocumentEntity> => {
             const { data } = await this.post(this.documents.baseUrl(applicantId), dto);
+
+            return data;
+        }
+    }
+    jotform = {
+        baseUrl: () => `${this.baseUrl}/applicant-jotform`,
+        create: async (dto: UpsertApplicantJotformDto): Promise<ApplicantEntity> => {
+            const { data } = await this.post(this.jotform.baseUrl(), dto);
 
             return data;
         }
