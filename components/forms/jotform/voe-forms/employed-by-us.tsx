@@ -11,23 +11,24 @@ export interface EmployedByUsProps extends PageProps {}
 
 export function EmployedByUs() {
     const{
-        state: { steps },
-        method: { setSteps },
+        // state: { steps },
+        method: { stepNext, stepBack },
     } = useContext(jotformContext);
+    // console.log(setSteps, steps);
     const { t } = useTranslation();
 
     const form = useFormik({
-        initialValues: {},
+        initialValues: {was_employed_by_us:false},
         onSubmit: (values) => {
-            setSteps( steps+1 );
+            stepNext();
         },
         onReset: (values) => {
-            setSteps( steps-1 );
-        }
+            stepBack();
+        },
     });
 
     return(
-        <Form onSubmit={ form.handleSubmit }>
+        <Form onSubmit={ form.handleSubmit } onReset={form.handleReset}>
             <h4 className = {`${styles.carrierName}`}>
                 {t("EMPLOYMENT_VERIF")}
             </h4>

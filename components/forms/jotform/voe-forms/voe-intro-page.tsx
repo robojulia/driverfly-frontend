@@ -32,8 +32,8 @@ export function IntroPage() {
                     {t("VOE_PARAGRAPH")}
                 </p>
             </Row>
-            <Row className='mt-5 float-middle'>
-                <Button size="lg" type="submit">
+            <Row className='mt-5 col-1'>
+                <Button type="submit">
                     {t("NEXT")}
                 </Button>
             </Row>

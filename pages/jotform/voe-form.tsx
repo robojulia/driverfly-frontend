@@ -9,6 +9,14 @@ import { AccidentHistory } from "../../components/forms/jotform/voe-forms/accide
 import { DrugHistory } from "../../components/forms/jotform/voe-forms/drug-alcohol-history";
 import { SubmissionDetails } from "../../components/forms/jotform/voe-forms/submission-details";
 
+const pages= [
+    IntroPage,
+    EmployedByUs,
+    AccidentHistory,
+    DrugHistory,
+    SubmissionDetails
+];
+
 export default function voeForm() {
     const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
 	const [applicantExtras, setApplicantExtras] = useState<ApplicantExtrasEntity[]>([]);
@@ -56,7 +64,8 @@ return(
 <div className={styles.container}>
 				<div className={styles.main}>
 					<div className={styles.main_form}>
-						{getPageAccordingToStep(steps)}
+						{/* {getPageAccordingToStep(steps)} */}
+                        <PageControl steps={steps} />
 					</div>
 				</div>
 			</div>
@@ -64,6 +73,10 @@ return(
 );
 }
 
+function PageControl({steps}:{steps:number}):JSX.Element{
+    const CurrentPage = pages[steps];
+    return (<CurrentPage />);
+}
 const pageOne = () => {
     return <IntroPage />;
 }

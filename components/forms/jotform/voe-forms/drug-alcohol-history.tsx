@@ -25,9 +25,11 @@ export function DrugHistory() {
     const { t } = useTranslation();
     const form = useFormik({
         initialValues: new DrugHistoryDto(),
-        validationSchema: DrugHistoryDto.yupSchema(),
+        // validationSchema: DrugHistoryDto.yupSchema(),
         onSubmit: (values) => {
-
+            const{SUBJECT_TO_TESTS_DOT} = values
+      updateApplicantExtras(SUBJECT_TO_TESTS_DOT)
+      updateApplicantExtras(SUBJECT_TO_TESTS_DOT)
             setSteps(steps+1);
         },
         onReset: (values) => {

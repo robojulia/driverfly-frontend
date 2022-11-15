@@ -49,7 +49,7 @@ const signatureEnd = () => {
   };
 
   return(
-    <Form onSubmit={ form.handleSubmit }>
+    <Form onSubmit={ form.handleSubmit } onReset={ form.handleReset }>
         <Row className={styles.align__text_left}>
           <Col>
             <h6>{t("SIGNATURE")}</h6>
