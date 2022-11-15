@@ -95,10 +95,7 @@ li {
     box-sizing: border-box;
     font-family: 'Arial, Helvetica, sans-serif', sans-serif;
 }
-a{
-    color: #fff;
-    text-decoration: none;
-}
+
 .general-headings {
     text-align: center;
     font-size: 40px;
@@ -187,6 +184,10 @@ h2 {
     background: #060606F7;
     min-height: 186px;
     position: relative;
+}
+.navbar-nav a a{
+    color: #fff !important;
+    text-decoration: none !important;
 }
 
 .header-sec .navbar {
