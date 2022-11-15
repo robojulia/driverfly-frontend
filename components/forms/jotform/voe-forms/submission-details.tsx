@@ -36,7 +36,7 @@ export function SubmissionDetails(){
         onSubmit: (values) => {
             setSteps(steps+1);
         },
-        onReset: () => {
+        onReset: (values) => {
             setSteps(steps-1);
         },
 });

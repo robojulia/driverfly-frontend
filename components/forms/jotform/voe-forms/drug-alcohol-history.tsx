@@ -33,7 +33,26 @@ export function DrugHistory() {
         onReset: (values) => {
             setSteps(steps-1);
         },
+        
     });
+
+    useEffect(() => {
+        const apx = applicantExtras?.find(
+          (v) => v.type === ApplicantExtras.SUBJECT_TO_TESTS_DOT
+        );
+        form.setValues({
+          ...form.values,
+          SUBJECT_TO_TESTS_DOT: !!apx?.type
+            ? apx
+            : new ApplicantExtrasEntity(ApplicantExtras.SUBJECT_TO_TESTS_DOT),
+          subject_to_tests_dot: !!apx?.value,
+        });
+      }, [applicantExtras]);
+    
+      useEffect(() => {
+        console.log("values", form.values);
+        console.log("error", form.errors);
+      }, [form.values, form.errors]);
 
     return(
         <Form onSubmit={ form.handleSubmit } onReset={ form.handleReset }>

@@ -18,7 +18,7 @@ export default function voeForm() {
 			return !!oldApx ? [...oldApx, { ...applicantExtrasEntity }] : [{ ...applicantExtrasEntity }]
 		})
 
-	const [steps, setSteps] = useState<number>(4);
+	const [steps, setSteps] = useState<number>(0);
 	const stepNext = (): void => setSteps(steps + 1)
 	const stepBack = (): void => setSteps(steps - 1)
 
