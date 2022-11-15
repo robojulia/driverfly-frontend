@@ -80,16 +80,10 @@ export function AccidentHistory() {
 					<Button
 						size="sm"
 						onClick={() =>
-							form.setValues({
-								...form.values,
-								ACCIDENT_DETAILS: {
-									...(form.values?.ACCIDENT_DETAILS || []),
-									value: [
-										...(form.values?.ACCIDENT_DETAILS?.value || []),
-										new AccidentHistoryEntity(),
-									],
-								},
-							})
+							form.setFieldValue('ACCIDENT_DETAILS.value', [
+								...(form.values?.ACCIDENT_DETAILS?.value || {}),
+								new AccidentHistoryEntity(),
+							])
 						}
 					>
 						<PlusCircle /> {t("TITLE_ADD_ACCIDENT_DETAILS")}
