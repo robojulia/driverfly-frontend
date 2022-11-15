@@ -18,8 +18,7 @@ export interface DrugHistoryProps extends PageProps {}
 
 export function DrugHistory() {
     const{
-        state: { applicant, applicantExtras, steps },
-        method: { setApplicant, updateApplicantExtras, setSteps},
+        method: { stepNext, stepBack },
     } = useContext(jotformContext);
 
     const { t } = useTranslation();
@@ -27,34 +26,13 @@ export function DrugHistory() {
         initialValues: new DrugHistoryDto(),
         // validationSchema: DrugHistoryDto.yupSchema(),
         onSubmit: (values) => {
-            const{SUBJECT_TO_TESTS_DOT} = values
-      updateApplicantExtras(SUBJECT_TO_TESTS_DOT)
-      updateApplicantExtras(SUBJECT_TO_TESTS_DOT)
-            setSteps(steps+1);
+            stepNext();
         },
         onReset: (values) => {
-            setSteps(steps-1);
+            stepBack();
         },
         
     });
-
-    useEffect(() => {
-        const apx = applicantExtras?.find(
-          (v) => v.type === ApplicantExtras.SUBJECT_TO_TESTS_DOT
-        );
-        form.setValues({
-          ...form.values,
-          SUBJECT_TO_TESTS_DOT: !!apx?.type
-            ? apx
-            : new ApplicantExtrasEntity(ApplicantExtras.SUBJECT_TO_TESTS_DOT),
-          subject_to_tests_dot: !!apx?.value,
-        });
-      }, [applicantExtras]);
-    
-      useEffect(() => {
-        console.log("values", form.values);
-        console.log("error", form.errors);
-      }, [form.values, form.errors]);
 
     return(
         <Form onSubmit={ form.handleSubmit } onReset={ form.handleReset }>
@@ -68,52 +46,51 @@ export function DrugHistory() {
                 <BaseCheck
                     className="float-left col-6 mt-3"
                     name="subject_to_tests_dot"
-                    label={t("SUBJECT_TO_TESTS_DOT")}
+                    label="SUBJECT_TO_TESTS_DOT"
                     formik={ form }
                 />    
             </Row>
             {form.values.subject_to_tests_dot? (
+                <>
                 <Row>
                     <Col>
                     <BaseCheck 
-                        className="float-left col-6 mt-3"
+                        className="float-left col-12 mt-3"
                         name="result_greater_than"
-                        label={t("RESULT_GREATER_THAN")}
+                        label="RESULT_GREATER_THAN"
                         formik={ form }
                     />
                     </Col>
                     <Col>
                     <BaseCheck 
-                        className="float-left col-6 mt-3"
+                        className="float-left col-12 mt-3"
                         name="verified_positive_drug_test"
-                        label={t("VERIFIED_POSITIVE_DRUG_TESTS")}
+                        label="VERIFIED_POSITIVE_DRUG_TESTS"
                         formik={ form }
                     />
                     </Col>
                     <Col>
                     <BaseCheck 
-                        className="float-left col-6 mt-3"
+                        className="float-left col-12 mt-3"
                         name="refusal_to_tested"
-                        label={t("REFUSAL_FOR_TEST")}
+                        label="REFUSAL_FOR_TEST"
                         formik={ form }
                     />
                     </Col>
                     <Col>
                     <BaseCheck 
-                        className="float-left col-6 mt-3"
+                        className="float-left col-12 mt-3"
                         name="other_dot_violations"
-                        label={t("OTHER_DOT_VIOLATIONS")}
+                        label="OTHER_DOT_VIOLATIONS"
                         formik={ form }
                     />
                     </Col>
                 </Row>
-            ): null}
-
-            <Row className={`${styles.paragraph} ${ styles.align__text_left }`}>
+                <Row className={`${styles.paragraph} ${ styles.align__text_left }`}>
                     <BaseCheck
                     className="float-left col-6 mt-3"
                     name="previous_employer_report"
-                    label={t("PREVIOUS_EMPLOYER_REPORT")}
+                    label="PREVIOUS_EMPLOYER_REPORT"
                     formik={form}
                     />
                 </Row>
@@ -122,17 +99,21 @@ export function DrugHistory() {
                     <BaseTextArea
                         className="float-left mt-3"
                         name="PREVIOUS_EMPLOYER__REPORT.value"
-                        label={t("PREVIOUS_EMPLOYER_REPORT_COMMENTS")}
+                        label="PREVIOUS_EMPLOYER_REPORT_COMMENTS"
                         formik={ form }
                     />
                     </Row>
                 ) :null}
 
+                 
+                </>
+            ): null}
+
                 <Row className={`${styles.paragraph} ${ styles.align__text_left }`}>
                     <BaseCheck
                     className="float-left col-6 mt-3"
                     name="return_to_duty_process"
-                    label={t("RETURN_TO_DUTY_PROCESS")}
+                    label="RETURN_TO_DUTY_PROCESS"
                     // enumType={ BooleanPreferenceType }
                     formik={form}
                     />
@@ -143,7 +124,7 @@ export function DrugHistory() {
                         className="float-left mt-3"
                         type="file"
                         name="RETURN_TO_DUTY_PROCESS.value"
-                        label={t("RETURN_TO_DUTY_DOC")}
+                        label="RETURN_TO_DUTY_DOC"
                         formik={ form }
                     />
                     </Row>
@@ -153,7 +134,7 @@ export function DrugHistory() {
                     <BaseTextArea 
                         className="float-left mt-3"
                         name="additional_comments"
-                        label={t("ADDITIONAL_COMMENTS")}
+                        label="ADDITIONAL_COMMENTS"
                         formik= { form }
                     />
                 </Row>       

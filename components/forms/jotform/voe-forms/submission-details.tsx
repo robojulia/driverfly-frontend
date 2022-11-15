@@ -21,8 +21,7 @@ export interface SubmissionDetailsProps extends PageProps {}
 
 export function SubmissionDetails(){
     const {
-        state: { applicant, steps, applicantExtras },
-        method: { setApplicant, setSteps, updateApplicantExtras },
+        method: { stepNext, stepBack },
       } = useContext(jotformContext);
     
       const { t } = useTranslation();
@@ -34,10 +33,10 @@ export function SubmissionDetails(){
       const form = useFormik({
         initialValues: new SubmissionDetailsDto(),
         onSubmit: (values) => {
-            setSteps(steps+1);
+            stepNext();
         },
         onReset: (values) => {
-            setSteps(steps-1);
+            stepBack();
         },
 });
 
@@ -69,14 +68,14 @@ const signatureEnd = () => {
             <Col>
             <BaseInput 
                 className="mt-3 float-left col-6"
-                label={t("FULL_NAME")}
+                label="FULL_NAME"
                 name="name"
             />
             </Col>
             <Col>
             <BaseInput 
                 className="mt-3 float-left col-6"
-                label={t("TITLE")}
+                label="TITLE"
                 name="title"
             />
             </Col>
@@ -86,14 +85,14 @@ const signatureEnd = () => {
             <Col>
             <BaseInput 
                 className="mt-3 float-left col-6"
-                label={t("PHONE")}
+                label="PHONE"
                 name="phone"
             />
             </Col>
             <Col>
             <BaseInput 
                 className="mt-3 float-left col-6"
-                label={t("EMAIL")}
+                label="EMAIL"
                 name="email"
             />
             </Col>
@@ -102,7 +101,7 @@ const signatureEnd = () => {
         <Row className={ styles.align__text_left }>
         <BaseInput 
                 className="mt-3 float-left col-6"
-                label={t("DATE")}
+                label="DATE"
                 name="date"
                 type="date"
             />

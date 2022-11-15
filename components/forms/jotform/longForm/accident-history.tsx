@@ -12,6 +12,7 @@ import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import { AccidentHistoryEntity } from "../../../../models/jot-form/long-form/accident-last-5-years/index.dto";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import { ApplicantVOEFormEnum } from "../../../../enums/applicants/applicant-voe-form.enum";
 
 export interface AccidentsLast5YearsProps extends PageProps {}
 

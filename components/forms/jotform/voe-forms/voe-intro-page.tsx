@@ -10,15 +10,14 @@ export interface IntroPageProps extends PageProps {}
 
 export function IntroPage() {
     const{
-        state: { steps },
-        method: { setSteps },
+        method: { stepNext },
     } = useContext(jotformContext);
     const { t } = useTranslation();
 
     const form = useFormik({
         initialValues: {},
         onSubmit: (values) => {
-            setSteps( steps+1 );
+            stepNext();
         },
     });
 

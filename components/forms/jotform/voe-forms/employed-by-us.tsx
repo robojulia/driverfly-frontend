@@ -11,10 +11,9 @@ export interface EmployedByUsProps extends PageProps {}
 
 export function EmployedByUs() {
     const{
-        // state: { steps },
         method: { stepNext, stepBack },
     } = useContext(jotformContext);
-    // console.log(setSteps, steps);
+    
     const { t } = useTranslation();
 
     const form = useFormik({

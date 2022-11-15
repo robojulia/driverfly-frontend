@@ -8,6 +8,7 @@ import BaseInput from "../../base-input";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import { AccidentHistoryDto } from "../../../../models/jot-form/voe-form/accident-history.dto";
+
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import styles from "../../../../styles/jotform.module.css";
@@ -19,42 +20,20 @@ export interface AccidentHistoryProps extends PageProps {}
 
 export function AccidentHistory() {
   const {
-    state: { applicant, applicantExtras, steps },
-    method: { setApplicant, updateApplicantExtras, setSteps },
+    method: { stepNext, stepBack },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new AccidentHistoryDto(),
-    validationSchema: AccidentHistoryDto.yupSchema(),
+    // validationSchema: AccidentHistoryDto.yupSchema(),
     onSubmit: (values) => {
-      const{TYPE_OF_VEHICLE} = values
-      updateApplicantExtras(TYPE_OF_VEHICLE)
-      updateApplicantExtras(TYPE_OF_VEHICLE)
-      setSteps(steps + 1);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
-
-  useEffect(() => {
-    const apx = applicantExtras?.find(
-      (v) => v.type === ApplicantExtras.TYPE_OF_VEHICLE
-    );
-    form.setValues({
-      ...form.values,
-      TYPE_OF_VEHICLE: !!apx?.type
-        ? apx
-        : new ApplicantExtrasEntity(ApplicantExtras.TYPE_OF_VEHICLE),
-      type_of_vehicle: !!apx?.value,
-    });
-  }, [applicantExtras]);
-
-  useEffect(() => {
-    console.log("values", form.values);
-    console.log("error", form.errors);
-  }, [form.values, form.errors]);
 
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -68,24 +47,25 @@ export function AccidentHistory() {
             <BaseInput
                 className="col-9 mt-3" 
                 name="was_employed_as"
-                label={t("was_employed_as")}
-                placeholder= {t("POSITION")}/>
+                label="was_employed_as"
+                placeholder= "POSITION"
+                />
             </Col>
             <Col className={ styles.align__text_left }>
             <BaseInput
                 className="col-9 mt-3" 
                 name="start_date"
-                label={t("START_DATE")}
+                label="START_DATE"
                 type="date"
-                placeholder= {t("mm/yy")}/>
+                placeholder= "mm/yy"/>
             </Col>
             <Col className={ styles.align__text_left }>
             <BaseInput
                 className="col-9 mt-3" 
                 name="end_date"
                 type="date"
-                label={t("END_DATE")}
-                placeholder= {t("mm/yy")}/>
+                label="END_DATE"
+                placeholder= "mm/yy"/>
             </Col>
         </Row>
 
@@ -93,7 +73,7 @@ export function AccidentHistory() {
         <BaseCheck
           className="float-left col-6 mt-3"
           name="type_of_vehicle"
-          label={t("VOE_DRIVER_QUES")}
+          label="VOE_DRIVER_QUES"
           formik={form}
         />
       </Row>
@@ -102,7 +82,7 @@ export function AccidentHistory() {
           <BaseTextArea
             className="float-left mt-3"
             name="TYPE_OF_VEHICLE.value"
-            label={t("TYPE_OF_VEHICLE")}
+            label="TYPE_OF_VEHICLE"
             formik={ form }
           />
         </Row>
@@ -112,7 +92,7 @@ export function AccidentHistory() {
         <BaseCheck
           className="float-left col-6 mt-3"
           name="safety_performance_history.value"
-          label={t("SAFETY_PERFORMANCE_REPORT")}
+          label="SAFETY_PERFORMANCE_REPORT"
           formik={ form }
         />
       </Row>
@@ -122,7 +102,7 @@ export function AccidentHistory() {
             <BaseCheck
               className="float-left col-6 mt-3"
               name="accident_register_data"
-              label={t("ACCIDENT_REGISTER_DATA")}
+              label="ACCIDENT_REGISTER_DATA"
               formik={ form }
             />
           </Row>
@@ -139,35 +119,35 @@ export function AccidentHistory() {
                     className="col-9 mt-3" 
                     name="first_date"
                     type="date"
-                    label={t("DATE")}
+                    label="DATE"
                     />
                   </Col>
                   <Col>
                     <BaseInput
                     className="col-9 mt-3" 
                     name="first_location"
-                    label={t("LOCATION")}
+                    label="LOCATION"
                     />
                   </Col>
                   <Col>
                     <BaseInput
                     className="col-9 mt-3" 
                     name="first_injuries"
-                    label={t("#INJURIES")}
+                    label="#INJURIES"
                     />
                   </Col>
                   <Col>
                     <BaseInput
                     className="col-9 mt-3" 
                     name="first_fatalities"
-                    label={t("#FATALITIES")}
+                    label="#FATALITIES"
                     />
                   </Col>
                   <Col>
                     <BaseInput
                     className="col-9 mt-3" 
                     name="first_spill"
-                    label={t("#HAZMAT_SPILLS")}
+                    label="#HAZMAT_SPILLS"
                     />
                   </Col>
               </Row>
@@ -178,35 +158,35 @@ export function AccidentHistory() {
                     className="col-9 mt-3" 
                     name="second_date"
                     type="date"
-                    label={t("DATE")}
+                    label="DATE"
                     />
                   </Col>
                   <Col>
                     <BaseInput
                     className="col-9 mt-3" 
                     name="second_location"
-                    label={t("LOCATION")}
+                    label="LOCATION"
                     />
                   </Col>
                   <Col>
                     <BaseInput
                     className="col-9 mt-3" 
                     name="second_injuries"
-                    label={t("#INJURIES")}
+                    label="#INJURIES"
                     />
                   </Col>
                   <Col>
                     <BaseInput
                     className="col-9 mt-3" 
                     name="second_fatalities"
-                    label={t("#FATALITIES")}
+                    label="#FATALITIES"
                     />
                   </Col>
                   <Col>
                     <BaseInput
                     className="col-9 mt-3" 
                     name="second_spill"
-                    label={t("#HAZMAT_SPILLS")}
+                    label="#HAZMAT_SPILLS"
                     />
                   </Col>
               </Row>
@@ -217,35 +197,35 @@ export function AccidentHistory() {
                     className="col-9 mt-3" 
                     name="third_date"
                     type="date"
-                    label={t("DATE")}
+                    label="DATE"
                     />
                   </Col>
                   <Col>
                     <BaseInput
                     className="col-9 mt-3" 
                     name="third_location"
-                    label={t("LOCATION")}
+                    label="LOCATION"
                     />
                   </Col>
                   <Col>
                     <BaseInput
                     className="col-9 mt-3" 
                     name="third_injuries"
-                    label={t("#INJURIES")}
+                    label="#INJURIES"
                     />
                   </Col>
                   <Col>
                     <BaseInput
                     className="col-9 mt-3" 
                     name="third_fatalities"
-                    label={t("#FATALITIES")}
+                    label="#FATALITIES"
                     />
                   </Col>
                   <Col>
                     <BaseInput
                     className="col-9 mt-3" 
                     name="third_spill"
-                    label={t("#HAZMAT_SPILLS")}
+                    label="#HAZMAT_SPILLS"
                     />
                   </Col>
               </Row>
@@ -254,7 +234,7 @@ export function AccidentHistory() {
                 <BaseTextArea
                   className="float-left col-6 mt-3"
                   name="other_reported_accidents"
-                  label={t("OTHER_GOV_REPORTED_ACCIDENTS")}
+                  label="OTHER_GOV_REPORTED_ACCIDENTS"
                   formik={ form }
                  />
               </Row>
@@ -270,8 +250,8 @@ export function AccidentHistory() {
             required
             enumType={ReasonsForLeavingEmployment}
             name="reasons_for_leaving_employment"
-            placeholder={t("CHOOSE")}
-            label={t("REASONS_FOR_LEAVING_EMPLOYMENT")}
+            placeholder="CHOOSE"
+            label="REASONS_FOR_LEAVING_EMPLOYMENT"
             formik={form}
           />
       </Row>

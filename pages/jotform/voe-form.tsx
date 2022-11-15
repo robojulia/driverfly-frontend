@@ -34,15 +34,6 @@ export default function voeForm() {
 		console.log("applicantextrasvalues", applicantExtras);
 	}, []);
 
-    // const getPageAccordingToStep = (step: number) => {
-    //     return{
-    //         0: pageOne(),
-    //         1: pageTwo(),
-    //         2: pageThree(),
-    //         3: pageFour(),
-    //         4: pageFive()
-    // }[step];
-
 
     return(
         <jotformContext.Provider
@@ -64,7 +55,6 @@ export default function voeForm() {
         <div className={styles.container}>
                         <div className={styles.main}>
                             <div className={styles.main_form}>
-                                {/* {getPageAccordingToStep(steps)} */}
                                 <PageControl steps={steps} />
                             </div>
                         </div>
@@ -77,22 +67,3 @@ function PageControl({steps}:{steps:number}):JSX.Element{
     const CurrentPage = pages[steps];
     return (<CurrentPage />);
 }
-// const pageOne = () => {
-//     return <IntroPage />;
-// }
-
-// const pageTwo = () => {
-//     return <EmployedByUs />;
-// }
-
-// const pageThree = () => {
-//     return <AccidentHistory />;
-// }
-
-// const pageFour = () => {
-//     return <DrugHistory/>
-// }
-
-// const pageFive = () => {
-//     return <SubmissionDetails />
-// }
