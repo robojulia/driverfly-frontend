@@ -2,107 +2,127 @@ import { useFormik } from "formik";
 import React, { useContext, useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
-import * as yup from "yup";
 import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import { WorkedBeforeDto } from "../../../../models/jot-form/long-form/worked-before.dto";
+import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
-export interface WorkedBeforeProps extends PageProps {}
+export interface WorkedBeforeProps extends PageProps { }
 
-export function WorkedBefore({ onNextClick, onBackClick }: WorkedBeforeProps) {
-  const {
-    state: { applicant },
-  } = useContext(jotformContext);
+export function WorkedBefore() {
+	const {
+		state: { applicant, applicantExtras },
+		method: { setApplicant, updateApplicantExtras, stepNext, stepBack, },
+	} = useContext(jotformContext);
 
-  // useEffect(() => {
-  //   const { email, phone, zip_code, options } = applicant;
-  //   form.setValues({
-  //     email: email || null,
-  //     phone: phone || null,
-  //     zip_code: zip_code || null,
-  //     options: options || null,
-  //   });
-  // }, [applicant]);
-  const { t } = useTranslation();
-  const form = useFormik({
-    initialValues: new WorkedBeforeDto(),
-    validationSchema: WorkedBeforeDto.yupSchema(),
+	const { t } = useTranslation();
+	const form = useFormik({
+		initialValues: new WorkedBeforeDto(),
+		validationSchema: WorkedBeforeDto.yupSchema(),
 
-    onSubmit: (values) => {
-      onNextClick(values);
-    },
-    onReset: (values) => {
-      onBackClick();
-    },
-  });
-  return (
-    <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <Row>
-        <Col>
-          <BaseCheck
-            className="float-left col-6"
-            name="applied_before"
-            label="APPLIED_HERE_BEFORE"
-            formik={form}
-          />
-        </Col>
-      </Row>
-      {form.values.applied_before ? (
-        <>
-          <Row>
-            <Col>
-              <BaseCheck
-                className="mt-3 col-6 float-left"
-                name="worked_before"
-                label="WORKED_HERE_BEFORE"
-                formik={form}
-              />
-            </Col>
-          </Row>
-          {form.values.worked_before ? (
-            <>
-              <Row>
-                <Col>
-                  <BaseInput
-                    className="col-6 mt-3"
-                    required
-                    type="date"
-                    name="from_date"
-                    placeholder="DATE"
-                    label="FROM"
-                    formik={form}
-                  />
-                </Col>
-                <Col>
-                  <BaseInput
-                    className="col-6 mt-3"
-                    required
-                    type="date"
-                    name="to_date"
-                    placeholder="DATE"
-                    label="TO"
-                    formik={form}
-                  />
-                </Col>
-              </Row>
-            </>
-          ) : null}
-        </>
-      ) : null}
-      <Row className="mt-5">
-        <Col>
-          <Button className="float-right" type="reset">
-            {t("BACK")}
-          </Button>
-        </Col>
-        <Col>
-          <Button className="float-left" type="submit">
-            {t("NEXT")}
-          </Button>
-        </Col>
-      </Row>
-    </Form>
-  );
+		onSubmit: (values) => {
+			const { ALREADY_APPLIED_TO_COMPANY, ALREADY_WORKED_TO_COMPANY } = values;
+			updateApplicantExtras(ALREADY_APPLIED_TO_COMPANY);
+			updateApplicantExtras(ALREADY_WORKED_TO_COMPANY);
+			stepNext();
+		},
+		onReset: (values) => {
+			stepBack();
+		},
+	});
+
+	useEffect(() => {
+		const apx = applicantExtras?.find(
+			(v) => v.type === ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
+		);
+		const apx_worked_before = applicantExtras?.find(
+			(v) => v.type === ApplicantExtras.ALREADY_WORKED_TO_COMPANY
+		);
+		form.setValues({
+			...form.values,
+			ALREADY_APPLIED_TO_COMPANY: !!apx?.type
+				? apx
+				: new ApplicantExtrasEntity(ApplicantExtras.ALREADY_APPLIED_TO_COMPANY),
+			ALREADY_WORKED_TO_COMPANY: !!apx_worked_before?.type
+				? apx_worked_before
+				: new ApplicantExtrasEntity(ApplicantExtras.ALREADY_WORKED_TO_COMPANY),
+			// apx_worked_before: !!apx_worked_before.value,
+			is_worked_before: !!apx?.value,
+		});
+	}, [applicantExtras]);
+
+	useEffect(() => {
+		console.log("values", form.values);
+		console.log("error", form.errors);
+	}, [form.values, form.errors]);
+
+	return (
+		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+			<Row>
+				<Col>
+					<BaseCheck
+						className="float-left col-6"
+						name="ALREADY_APPLIED_TO_COMPANY.value"
+						label="APPLIED_HERE_BEFORE"
+						formik={form}
+					/>
+				</Col>
+			</Row>
+			{form.values?.ALREADY_APPLIED_TO_COMPANY?.value ? (
+				<>
+					<Row>
+						<Col>
+							<BaseCheck
+								className="mt-3 col-6 float-left"
+								name="is_worked_before"
+								label="WORKED_HERE_BEFORE"
+								formik={form}
+							/>
+						</Col>
+					</Row>
+					{form.values.is_worked_before ? (
+						<>
+							<Row>
+								<Col>
+									<BaseInput
+										className="col-6 mt-3"
+										type="date"
+										name="ALREADY_WORKED_TO_COMPANY.value.start_date"
+										placeholder="DATE"
+										label="FROM"
+										formik={form}
+									/>
+								</Col>
+								<Col>
+									<BaseInput
+										className="col-6 mt-3"
+										type="date"
+										name="ALREADY_WORKED_TO_COMPANY.value.end_date"
+										placeholder="DATE"
+										label="TO"
+										formik={form}
+									/>
+								</Col>
+							</Row>
+						</>
+					) : null}
+				</>
+			) : null}
+			<Row className="mt-5">
+				<Col>
+					<Button className="float-right" type="reset">
+						{t("BACK")}
+					</Button>
+				</Col>
+				<Col>
+					<Button className="float-left" type="submit">
+						{t("NEXT")}
+					</Button>
+				</Col>
+			</Row>
+		</Form>
+	);
 }

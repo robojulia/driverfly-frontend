@@ -1,106 +1,108 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../styles/jotform.module.css";
-import { FirstPage } from "../../components/forms/jotform/shortForm/splash-page";
-import { SecondPage } from "../../components/forms/jotform/shortForm/names";
-import { ThirdPage } from "../../components/forms/jotform/shortForm/basic-info";
-import { FourthPage } from "../../components/forms/jotform/shortForm/cdl-experience";
-import { FifthPage } from "../../components/forms/jotform/shortForm/accident-violation";
-import { SixthPage } from "../../components/forms/jotform/shortForm/hear-about";
-import { SeventhPage } from "../../components/forms/jotform/shortForm/continue-longgorm";
+import { SplashPage } from "../../components/forms/jotform/shortForm/splash-page";
+import { Names } from "../../components/forms/jotform/shortForm/names";
+import { BasicInfo } from "../../components/forms/jotform/shortForm/basic-info";
+import { CdlExperience } from "../../components/forms/jotform/shortForm/cdl-experience";
+import { AccidentViolation } from "../../components/forms/jotform/shortForm/accident-violation";
+import { HearAbout } from "../../components/forms/jotform/shortForm/hear-about";
+import { ContinueLongForm } from "../../components/forms/jotform/shortForm/continue-longform";
 
 import { DriverApplication } from "../../components/forms/jotform/longForm/driver-application";
 import { BackgroundInfo } from "../../components/forms/jotform/longForm/background-info";
 import { HighestLevelEducation } from "../../components/forms/jotform/longForm/highest-level-education";
-import { DrivingExp } from "../../components/forms/jotform/longForm/driving-experirence";
-import { OtherQues } from "../../components/forms/jotform/longForm/other-queues";
-import { PhotoUpload } from "../../components/forms/jotform/longForm/driver-photo-upload";
-import { MedicalCardUpload } from "../../components/forms/jotform/longForm/medical-card-upload";
+import { DrivingExperience } from "../../components/forms/jotform/longForm/driving-experirence";
+import { OtherQueues } from "../../components/forms/jotform/longForm/other-queues";
+import { DriverLicense } from "../../components/forms/jotform/longForm/driver-license";
+import { MedicalCard } from "../../components/forms/jotform/longForm/medical-card";
 import { EmergencyContact } from "../../components/forms/jotform/longForm/emergency-contact";
 import { EmploymentHistory } from "../../components/forms/jotform/longForm/employment-history";
 import { ApplicantEntity } from "../../models/applicant/applicant.entity";
 import { PastEmploymentHistory } from "../../components/forms/jotform/longForm/past-employment-history";
 import { Preferences } from "../../components/forms/jotform/longForm/preference";
-import { Halfway } from "../../components/forms/jotform/longForm/half-way";
+import { HalfWay } from "../../components/forms/jotform/longForm/half-way";
 import { WorkedBefore } from "../../components/forms/jotform/longForm/worked-before";
-import { AccidentsLast5Years } from "../../components/forms/jotform/longForm/accident-history";
+import { AccidentHistory } from "../../components/forms/jotform/longForm/accident-history";
 import { DrugTest } from "../../components/forms/jotform/longForm/drug-test";
 import { FelonyConviction } from "../../components/forms/jotform/longForm/felony-conviction";
 import { UnableForJob } from "../../components/forms/jotform/longForm/unable-for-job";
-import { PastSuspensions } from "../../components/forms/jotform/longForm/past-suspension";
-import { ViolationsLast3Years } from "../../components/forms/jotform/longForm/violaton-history";
-import ApplicantApi from "../api/applicant";
-import { AccordianLastPage } from "../../components/forms/jotform/longForm/accordian";
+import { PastSuspension } from "../../components/forms/jotform/longForm/past-suspension";
+import { ViolationHistory } from "../../components/forms/jotform/longForm/violaton-history";
+import { AccordianPage } from "../../components/forms/jotform/longForm/accordian";
 import "react-toastify/dist/ReactToastify.css";
 import jotformContext from "../../context/jotform-context";
 import { PageProps } from "../../types/jotform/page-props.type";
+import { ApplicantExtrasEntity } from "../../models/applicant/applicant-extras.entity";
 
 export default function jotFormLongForm() {
-  const [steps, setSteps] = useState<number>(0);
   const [applicant, setApplicant] = useState<ApplicantEntity>(
     new ApplicantEntity()
   );
+  const [applicantExtras, setApplicantExtras] = useState<
+    ApplicantExtrasEntity[]
+  >([]);
+  const updateApplicantExtras = (
+    applicantExtrasEntity: ApplicantExtrasEntity
+  ) =>
+    setApplicantExtras((oldApx) => {
+      oldApx = oldApx?.filter((v) => v.type !== applicantExtrasEntity.type);
+      return !!oldApx
+        ? [...oldApx, { ...applicantExtrasEntity }]
+        : [{ ...applicantExtrasEntity }];
+    });
 
-  const onNextClick: PageProps["onNextClick"] = (partialEntity) => {
-    setApplicant({ ...applicant, ...partialEntity });
-    console.log("valuessssssss 2", applicant);
-    setSteps(steps + 1);
-  };
+  const [steps, setSteps] = useState<number>(0);
+  const stepNext = (): void => setSteps(steps + 1);
+  const stepBack = (): void => setSteps(steps - 1);
 
-  const onBackClick: PageProps["onBackClick"] = () => {
-    setSteps(steps - 1);
-  };
+  useEffect(() => {
+    console.log("applicantextrasvalues", applicantExtras);
+  }, []);
 
-  // useEffect(() => {
-  //   toast.success(t("SUCCESS"));
-  // }, []);
   const shortFormDataSent: PageProps["shortFormDataSent"] = async (
     params: any
   ) => {
-    onNextClick(applicant);
-
     // try {
     // const applicantApi = new ApplicantApi();
     //   const response = await api.create(applicant);
-
     //   if (response) setApplicant(response);
     //   setApplicant(response);
     //   onNextClick(applicant);
     //   //   toast.success(t("SUCCESS"));
     // } catch (error) {
     //   toast("kkkk");
-
     //   console.log(error);
     // }
   };
   const getPageAccordingToStep = (step: number) => {
     return {
-      0: pageOne(onNextClick),
-      1: pageTwo(onNextClick, onBackClick),
-      2: pageThree(onNextClick, onBackClick),
-      3: pageFour(onNextClick, onBackClick),
-      4: pageFive(onNextClick, onBackClick),
-      5: pageSix(onNextClick, onBackClick),
-      6: pageSeven(onNextClick, onBackClick, shortFormDataSent),
-      7: pageEight(onNextClick),
-      8: pageNine(onNextClick, onBackClick),
-      9: pageTen(onNextClick, onBackClick),
-      10: pageEleven(onNextClick, onBackClick),
-      11: pageTwelve(onNextClick, onBackClick),
-      12: pageThirteen(onNextClick, onBackClick),
-      13: pageFourteen(onNextClick, onBackClick),
-      14: pageFifteen(onNextClick, onBackClick),
-      15: pageSixteen(onNextClick, onBackClick),
-      16: pageSeventeen(onNextClick, onBackClick),
-      17: pageEighteen(onNextClick, onBackClick),
-      18: pageNineteen(onNextClick, onBackClick),
-      19: pageTwenty(onNextClick, onBackClick),
-      20: pageTwentyOne(onNextClick, onBackClick),
-      21: pageTwentyTwo(onNextClick, onBackClick),
-      22: pageTwentyThree(onNextClick, onBackClick),
-      23: pageTwentyFour(onNextClick, onBackClick),
-      24: pageTwentyFive(onNextClick, onBackClick),
-      25: pageTwentySix(onNextClick, onBackClick),
-      26: pageTwentySeven(onNextClick, onBackClick),
+      0: pageOne(),
+      1: pageTwo(),
+      2: pageThree(),
+      3: pageFour(),
+      4: pageFive(),
+      5: pageSix(),
+      6: pageSeven(),
+      7: pageEight(),
+      8: pageNine(),
+      9: pageTen(),
+      10: pageEleven(),
+      11: pageTwelve(),
+      12: pageThirteen(),
+      13: pageFourteen(),
+      14: pageFifteen(),
+      15: pageSixteen(),
+      16: pageSeventeen(),
+      17: pageEighteen(),
+      18: pageNineteen(),
+      19: pageTwenty(),
+      20: pageTwentyOne(),
+      21: pageTwentyTwo(),
+      22: pageTwentyThree(),
+      23: pageTwentyFour(),
+      24: pageTwentyFive(),
+      25: pageTwentySix(),
+      26: pageTwentySeven(),
     }[step];
   };
 
@@ -109,231 +111,136 @@ export default function jotFormLongForm() {
       value={{
         state: {
           applicant,
+          applicantExtras,
+          steps,
         },
         method: {
           setApplicant,
+          updateApplicantExtras,
+          setSteps,
+          stepNext,
+          stepBack,
         },
       }}
     >
       <div className={styles.container}>
         <div className={styles.main}>
-          <div className={styles.main_form}>
+          <div className={styles.main_form} style={{ border: "1px solid red" }}>
             {getPageAccordingToStep(steps)}
           </div>
         </div>
+        {/* <input style={{border: '2px solid',zIndex:'999', marginLeft: '100px', background: 'red' }} type="number" onChange={(e) => setSteps(parseInt(e.target.value))} /> */}
       </div>
     </jotformContext.Provider>
   );
 }
 
-const pageOne = (onNextClick: PageProps["onNextClick"]) => {
-  return <FirstPage onNextClick={onNextClick} />;
+const pageOne = () => {
+  return <SplashPage />;
 };
 
-const pageTwo = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <SecondPage onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageTwo = () => {
+  return <Names />;
 };
 
-const pageThree = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <ThirdPage onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageThree = () => {
+  return <BasicInfo />;
 };
 
-const pageFour = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <FourthPage onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageFour = () => {
+  return <CdlExperience />;
 };
 
-const pageFive = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <FifthPage onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageFive = () => {
+  return <AccidentViolation />;
 };
 
-const pageSix = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <SixthPage onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageSix = () => {
+  return <HearAbout />;
 };
 
-const pageSeven = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"],
-  shortFormDataSent: PageProps["onBackClick"]
-) => {
-  return <SeventhPage onNextClick={shortFormDataSent} />;
+const pageSeven = () => {
+  return <ContinueLongForm />;
 };
 
-const pageEight = (onNextClick: PageProps["onNextClick"]) => {
-  return <DriverApplication onNextClick={onNextClick} />;
+const pageEight = () => {
+  return <DriverApplication />;
 };
 
-const pageNine = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return (
-    <HighestLevelEducation
-      onNextClick={onNextClick}
-      onBackClick={onBackClick}
-    />
-  );
+const pageNine = () => {
+  return <BackgroundInfo />;
+};
+const pageTen = () => {
+  return <HighestLevelEducation />;
 };
 
-const pageTen = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <BackgroundInfo onNextClick={onNextClick} onBackClick={onBackClick} />;
+
+const pageEleven = () => {
+  return <DrivingExperience />;
 };
 
-const pageEleven = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <DrivingExp onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageTwelve = () => {
+  return <OtherQueues />;
 };
 
-const pageTwelve = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <OtherQues onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageThirteen = () => {
+  return <DriverLicense />;
 };
 
-const pageThirteen = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <PhotoUpload onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageFourteen = () => {
+  return <MedicalCard />;
 };
 
-const pageFourteen = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return (
-    <MedicalCardUpload onNextClick={onNextClick} onBackClick={onBackClick} />
-  );
+const pageFifteen = () => {
+  return <EmergencyContact />;
 };
 
-const pageFifteen = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return (
-    <EmergencyContact onNextClick={onNextClick} onBackClick={onBackClick} />
-  );
+const pageSixteen = () => {
+  return <EmploymentHistory />;
 };
 
-const pageSixteen = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return (
-    <EmploymentHistory onNextClick={onNextClick} onBackClick={onBackClick} />
-  );
+const pageSeventeen = () => {
+  return <PastEmploymentHistory />;
 };
 
-const pageSeventeen = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return (
-    <PastEmploymentHistory
-      onNextClick={onNextClick}
-      onBackClick={onBackClick}
-    />
-  );
+const pageEighteen = () => {
+  return <Preferences />;
 };
 
-const pageEighteen = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <Preferences onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageNineteen = () => {
+  return <HalfWay />;
 };
 
-const pageNineteen = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <Halfway onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageTwenty = () => {
+  return <WorkedBefore />;
 };
 
-const pageTwenty = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <WorkedBefore onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageTwentyOne = () => {
+  return <AccidentHistory />;
 };
 
-const pageTwentyOne = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return (
-    <AccidentsLast5Years onNextClick={onNextClick} onBackClick={onBackClick} />
-  );
+const pageTwentyTwo = () => {
+  return <ViolationHistory />;
 };
 
-const pageTwentyTwo = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return (
-    <ViolationsLast3Years onNextClick={onNextClick} onBackClick={onBackClick} />
-  );
+const pageTwentyThree = () => {
+  return <PastSuspension />;
 };
 
-const pageTwentyThree = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return (
-    <PastSuspensions onNextClick={onNextClick} onBackClick={onBackClick} />
-  );
+const pageTwentyFour = () => {
+  return <UnableForJob />;
 };
 
-const pageTwentyFour = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <UnableForJob onNextClick={onNextClick} onBackClick={onBackClick} />;
+const pageTwentyFive = () => {
+  return <FelonyConviction />;
 };
 
-const pageTwentyFive = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return (
-    <FelonyConviction onNextClick={onNextClick} onBackClick={onBackClick} />
-  );
+const pageTwentySix = () => {
+  return <DrugTest />;
 };
 
-const pageTwentySix = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return <DrugTest onNextClick={onNextClick} onBackClick={onBackClick} />;
-};
-
-const pageTwentySeven = (
-  onNextClick: PageProps["onNextClick"],
-  onBackClick: PageProps["onBackClick"]
-) => {
-  return (
-    <AccordianLastPage onNextClick={onNextClick} onBackClick={onBackClick} />
-  );
+const pageTwentySeven = () => {
+  return <AccordianPage />;
 };
 
 function t(arg0: string): import("react-toastify").ToastContent {

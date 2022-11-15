@@ -2,174 +2,180 @@ import { useFormik } from "formik";
 import React, { useContext, useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
-import * as yup from "yup";
 import BaseInput from "../../base-input";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import { ViolationHistoryDto } from "../../../../models/jot-form/long-form/violation-history.dto";
+import { DashCircle, PlusCircle } from "react-bootstrap-icons";
+import { VioalationExtrasEntity } from "../../../../models/jot-form/long-form/violaton-history/index.dto";
 
-export interface ViolationsLast3YearsProps extends PageProps {}
+import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import styles from "../../../../styles/jotform.module.css";
 
-export function ViolationsLast3Years({
-  onNextClick,
-  onBackClick,
-}: ViolationsLast3YearsProps) {
-  const {
-    state: { applicant },
-  } = useContext(jotformContext);
+export interface ViolationHistoryProps extends PageProps { }
 
-  // useEffect(() => {
-  //   const { email, phone, zip_code, options } = applicant;
-  //   form.setValues({
-  //     email: email || null,
-  //     phone: phone || null,
-  //     zip_code: zip_code || null,
-  //     options: options || null,
-  //   });
-  // }, [applicant]);
-  const { t } = useTranslation();
-  const form = useFormik({
-    initialValues: new ViolationHistoryDto(),
-    validationSchema: ViolationHistoryDto.yupSchema(),
-    onSubmit: (values) => {
-      onNextClick(values);
-    },
-    onReset: (values) => {
-      onBackClick();
-    },
-  });
-  return (
-    <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <h6>{t("VIOLATIONS_LAST_3_YEARS")}</h6>
-      <Row>
-        <Col>
-          <BaseInput
-            className="col-6 mt-3"
-            name="violations_last_3_years"
-            label="HOW_MANY_VIOALTION_3_YEARS"
-            formik={form}
-          />
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="date_of_violation_1"
-            label="VIOLATION_DATE"
-            type="date"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="location_1"
-            label="location"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="charge_1"
-            label="CHARGE"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="penalty_1"
-            label="PENALTY"
-            formik={form}
-          />
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="date_of_violation_2"
-            label="VIOLATION_DATE"
-            type="date"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="location_2"
-            label="location"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="charge_2"
-            label="CHARGE"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="penalty_2"
-            label="PENALTY"
-            formik={form}
-          />
-        </Col>
-      </Row>
+export function ViolationHistory() {
+	const {
+		state: { applicant, applicantExtras },
+		method: { updateApplicantExtras, stepBack, stepNext },
+	} = useContext(jotformContext);
 
-      <Row>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="date_of_violation_3"
-            label="VIOLATION_DATE"
-            type="date"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="location_3"
-            label="location"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="charge_3"
-            label="CHARGE"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            name="penalty_3"
-            label="PENALTY"
-            formik={form}
-          />
-        </Col>
-      </Row>
+	const { t } = useTranslation();
+	const form = useFormik({
+		initialValues: new ViolationHistoryDto(),
+		validationSchema: ViolationHistoryDto.yupSchema(),
+		onSubmit: (values) => {
+			const { VIOLATION_DETAILS, VIOLATION_COUNT } = values;
+			try {
+				updateApplicantExtras(VIOLATION_DETAILS);
+				updateApplicantExtras(VIOLATION_COUNT);
+			} catch (error) {
+				console.log(error);
+			}
+			stepNext();
+		},
+		onReset: (values) => {
+			stepBack();
+		},
+	});
 
-      <Row className="mt-5">
-        <Col>
-          <Button className="float-right" type="reset">
-            {t("BACK")}
-          </Button>
-        </Col>
-        <Col>
-          <Button className="float-left" type="submit">
-            {t("NEXT")}
-          </Button>
-        </Col>
-      </Row>
-    </Form>
-  );
+	useEffect(() => {
+		console.log("extrasss", applicantExtras);
+
+		const apx_detail = applicantExtras?.find(
+			(v) => v.type === ApplicantExtras.VIOLATION_DETAILS
+		);
+		const apx_count = applicantExtras?.find(
+			(v) => v.type === ApplicantExtras.VIOLATION_COUNT
+		);
+		form.setValues({
+			...form.values,
+			VIOLATION_COUNT: !!apx_count?.type
+				? apx_count
+				: new ApplicantExtrasEntity(ApplicantExtras.VIOLATION_COUNT),
+			VIOLATION_DETAILS: !!apx_detail?.type
+				? apx_detail
+				: new ApplicantExtrasEntity(ApplicantExtras.VIOLATION_DETAILS),
+		});
+	}, [applicant, applicantExtras]);
+
+	useEffect(() => {
+		console.log("form values", form.values);
+		console.log("form error", form.errors);
+	}, [form.values, form.errors]);
+	return (
+		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+			<h6 className={styles.carrierName__smaller}>
+				{t("VIOLATIONS_LAST_3_YEARS")}
+			</h6>
+			<Row>
+				<Col className={styles.align__items_left}>
+					<BaseInput
+						type="number"
+						className="col-6 mt-3"
+						name="VIOLATION_COUNT.value"
+						label="HOW_MANY_VIOALTION_3_YEARS"
+						formik={form}
+					/>
+				</Col>
+				<div className="mt-4 float-left d-flex justify-left pl-3">
+					<Button
+						size="sm"
+						onClick={() =>
+							form.setValues({
+								...form.values,
+								VIOLATION_DETAILS: {
+									...(form.values?.VIOLATION_DETAILS || []),
+									value: [
+										...(form.values?.VIOLATION_DETAILS?.value || []),
+										new VioalationExtrasEntity(),
+									],
+								},
+							})
+						}
+					>
+						<PlusCircle /> {t("TITLE_ADD_VIOLATION_DETAILS")}
+					</Button>
+				</div>
+			</Row>
+
+			{form.values.VIOLATION_DETAILS?.value?.length > 0 && (
+				<>
+					{form.values.VIOLATION_DETAILS.value.map((entity, i) => (
+						<Row key={i}>
+							<div className="col-md-12 mt-2 pl-0">
+								<Row>
+									<Col>
+										<BaseInput
+											className="col-12 mt-3"
+											name={`VIOLATION_DETAILS.value[${i}].date_of_violation`}
+											label="VIOLATION_DATE"
+											type="date"
+											formik={form}
+										/>
+									</Col>
+									<Col>
+										<BaseInput
+											className="col-12 mt-3"
+											name={`VIOLATION_DETAILS.value[${i}].location`}
+											label="location"
+											formik={form}
+										/>
+									</Col>
+									<Col>
+										<BaseInput
+											className="col-12 mt-3"
+											name={`VIOLATION_DETAILS.value[${i}].charge`}
+											label="CHARGE"
+											formik={form}
+										/>
+									</Col>
+									<Col>
+										<BaseInput
+											className="col-12 mt-3"
+											name={`VIOLATION_DETAILS.value[${i}].penalty`}
+											label="PENALTY"
+											formik={form}
+										/>
+									</Col>
+									<Col className="mt-5">
+										<a
+											href="#"
+											onClick={() =>
+												form.setValues({
+													...form.values,
+													VIOLATION_DETAILS: {
+														...form.values?.VIOLATION_DETAILS,
+														value: form.values?.VIOLATION_DETAILS?.value?.filter(
+															(v, idx) => i != idx
+														),
+													},
+												})
+											}
+										>
+											<DashCircle color="red" />
+										</a>
+									</Col>
+								</Row>
+							</div>
+						</Row>
+					))}
+				</>
+			)}
+
+			<Row className="mt-5">
+				<Col>
+					<Button className="float-right" type="reset">
+						{t("BACK")}
+					</Button>
+				</Col>
+				<Col>
+					<Button className="float-left" type="submit">
+						{t("NEXT")}
+					</Button>
+				</Col>
+			</Row>
+		</Form>
+	);
 }

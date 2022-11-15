@@ -4,7 +4,7 @@ import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum
 export class CdlDto {
   license_type: string;
   years_cdl_experience: number;
-  is_owner_operator_question: boolean = false;
+  is_owner_operator: boolean = false;
 
   static yupSchema() {
     return yup.object({
@@ -22,7 +22,7 @@ export class CdlDto {
           then: yup.number().moreThan(0).required(),
         })
         .nullable(),
-      is_owner_operator_question: yup.boolean().nullable(),
+        is_owner_operator: yup.boolean().nullable(),
     });
   }
 }

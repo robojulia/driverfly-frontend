@@ -1,4 +1,3 @@
-import * as yup from "yup";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { Form, Button, Col, Row, Table } from "react-bootstrap";
@@ -9,36 +8,44 @@ import { DriverLicenseType } from "../../../../enums/users/driver-license-type.e
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import { CdlDto } from "../../../../models/jot-form/short-form/cdl-experience.dto";
 import jotformContext from "../../../../context/jotform-context";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
-export interface FourthPageProps extends PageProps {}
+export interface CdlExperienceProps extends PageProps {}
 
-export function FourthPage({ onNextClick, onBackClick }: FourthPageProps) {
+export function CdlExperience() {
   const {
-    method: { setApplicant },
     state: { applicant },
+    method: { setApplicant, stepNext, stepBack },
   } = useContext(jotformContext);
+
   const { t } = useTranslation();
 
   const form = useFormik({
     initialValues: new CdlDto(),
     validationSchema: CdlDto.yupSchema(),
     onSubmit: (values) => {
-      onNextClick(values);
+      const { license_type, years_cdl_experience, is_owner_operator } = values;
+      setApplicant({
+        ...applicant,
+        license_type,
+        years_cdl_experience,
+        is_owner_operator,
+      });
+      stepNext();
     },
     onReset: (values) => {
-      onBackClick();
+      stepBack();
     },
   });
- // useEffect(() => {
-  //   const { email, phone, zip_code, options } = applicant;
-  //   form.setValues({
-  //     email: email || null,
-  //     phone: phone || null,
-  //     zip_code: zip_code || null,
-  //     options: options || null,
-  //   });
-  // }, [applicant]);
+  useEffect(() => {
+    const { license_type, years_cdl_experience, is_owner_operator } = applicant;
+    form.setValues({
+      license_type: license_type || null,
+      years_cdl_experience: years_cdl_experience || null,
+      is_owner_operator: is_owner_operator || null,
+    });
+  }, []);
+
   function onLicenseTypeChange(e: React.ChangeEvent<HTMLSelectElement>) {
     const licenseType = e.target.value;
     switch (licenseType) {
@@ -46,14 +53,14 @@ export function FourthPage({ onNextClick, onBackClick }: FourthPageProps) {
         form.setValues({
           ...form.values,
           license_type: licenseType,
-          is_owner_operator_question: false,
+          is_owner_operator: false,
         });
         break;
       case null:
         form.setValues({
           ...form.values,
           license_type: licenseType,
-          is_owner_operator_question: false,
+          is_owner_operator: false,
           years_cdl_experience: null,
         });
         break;
@@ -87,25 +94,26 @@ export function FourthPage({ onNextClick, onBackClick }: FourthPageProps) {
             <Row className="mt-3 mb-3">
               <BaseInput
                 className="col-6"
-                required
                 type="number"
                 step={0.1}
-                min={0.1}
+                min={0}
                 name="years_cdl_experience"
                 label="years_cdl_experience"
                 placeholder="PLACEHOLDER_FOR_DIGITS"
                 formik={form}
               />
             </Row>
-            <Row>
-              <BaseCheck
-                className="mt-3 mb-3"
-                required
-                name="is_owner_operator_question"
-                label="is_owner_operator_question"
-                formik={form}
-              />
-            </Row>
+            {form.values.license_type !== DriverLicenseType.CDL_CLASS_C && (
+              <Row>
+                <BaseCheck
+                  className="mt-3 mb-3"
+                  required
+                  name="is_owner_operator"
+                  label="is_owner_operator_question"
+                  formik={form}
+                />
+              </Row>
+            )}
           </>
         )}
 
