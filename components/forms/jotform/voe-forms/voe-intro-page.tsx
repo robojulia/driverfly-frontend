@@ -32,10 +32,13 @@ export function IntroPage() {
                     {t("VOE_PARAGRAPH")}
                 </p>
             </Row>
-            <Row className='mt-5 col-1'>
-                <Button type="submit">
-                    {t("NEXT")}
-                </Button>
+            <Row className='mt-5'>
+                <Col className='float-right'>
+                    <Button type="submit">
+                        {t("NEXT")}
+                    </Button>
+                </Col>
+                
             </Row>
         </Form>
     );
