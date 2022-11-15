@@ -86,9 +86,9 @@ export function ViolationHistory() {
 							form.setValues({
 								...form.values,
 								VIOLATION_DETAILS: {
-									...form.values?.VIOLATION_DETAILS,
+									...(form.values?.VIOLATION_DETAILS || []),
 									value: [
-										...form.values?.VIOLATION_DETAILS?.value,
+										...(form.values?.VIOLATION_DETAILS?.value || []),
 										new VioalationExtrasEntity(),
 									],
 								},

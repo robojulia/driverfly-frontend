@@ -83,9 +83,9 @@ export function AccidentHistory() {
 							form.setValues({
 								...form.values,
 								ACCIDENT_DETAILS: {
-									...form.values?.ACCIDENT_DETAILS,
+									...(form.values?.ACCIDENT_DETAILS || []),
 									value: [
-										...form.values?.ACCIDENT_DETAILS?.value,
+										...(form.values?.ACCIDENT_DETAILS?.value || []),
 										new AccidentHistoryEntity(),
 									],
 								},
