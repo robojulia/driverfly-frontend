@@ -6,6 +6,8 @@ import { ApplicantExtrasEntity } from "../../models/applicant/applicant-extras.e
 import { ApplicantEntity } from "../../models/applicant/applicant.entity";
 import { EmployedByUs } from "../../components/forms/jotform/voe-forms/employed-by-us";
 import { AccidentHistory } from "../../components/forms/jotform/voe-forms/accident-history";
+import { DrugHistory } from "../../components/forms/jotform/voe-forms/drug-alcohol-history";
+import { SubmissionDetails } from "../../components/forms/jotform/voe-forms/submission-details";
 
 export default function voeForm() {
     const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
@@ -16,7 +18,7 @@ export default function voeForm() {
 			return !!oldApx ? [...oldApx, { ...applicantExtrasEntity }] : [{ ...applicantExtrasEntity }]
 		})
 
-	const [steps, setSteps] = useState<number>(0);
+	const [steps, setSteps] = useState<number>(4);
 	const stepNext = (): void => setSteps(steps + 1)
 	const stepBack = (): void => setSteps(steps - 1)
 
@@ -28,7 +30,9 @@ export default function voeForm() {
         return{
             0: pageOne(),
             1: pageTwo(),
-            2: pageThree()
+            2: pageThree(),
+            3: pageFour(),
+            4: pageFive()
     }[step];
 };
 
@@ -70,4 +74,12 @@ const pageTwo = () => {
 
 const pageThree = () => {
     return <AccidentHistory />;
+}
+
+const pageFour = () => {
+    return <DrugHistory/>
+}
+
+const pageFive = () => {
+    return <SubmissionDetails />
 }

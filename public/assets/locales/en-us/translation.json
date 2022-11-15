@@ -1619,7 +1619,18 @@
   "#INJURIES":"# of Injuries",
   "#FATALITIES":"# of Fatalities",
   "#HAZMAT_SPILLS":"# of Hazmat Spills",
-  "OTHER_GOV_REPORTED_ACCIDENTS":"Please provide information concerning any other accidents involving the applicant that were reported to government agencies or insurers or retained under internal company policies:"
+  "OTHER_GOV_REPORTED_ACCIDENTS":"Please provide information concerning any other accidents involving the applicant that were reported to government agencies or insurers or retained under internal company policies:",
+  "DRUG_AND_ALCOHOL_HISTORY":"Drug & Alcohol History",
+  "SUBJECT_TO_TESTS_DOT":"Was subject to Department of Transportation testing requirements while employed?",
+  "RESULT_GREATER_THAN":"Did the employee have alcohol tests with a result of 0.04 or higher?",
+  "VERIFIED_POSITIVE_DRUG_TESTS":"Did the employee have verified positive drug tests?",
+  "REFUSAL_FOR_TEST":"Did the employee refuse to be tested?",
+  "PREVIOUS_EMPLOYER_REPORT":"Did a previous employer report a drug and alcohol rule violation to you?",
+  "RETURN_TO_DUTY_PROCESS":"Did the employee complete the return-to-duty process?",
+  "RETURN_TO_DUTY_DOC":"Please transmit the appropriate return-to-duty documentation (e.g., SAP report(s), follow-up testing record).",
+  "ADDITIONAL_COMMENTS":"Any additional remarks?",
+  "PREVIOUS_EMPLOYER_REPORT_COMMENTS":"Please copy and paste the previous employer's report",
+  "OTHER_DOT_VIOLATIONS":"Did the employee have other violations of DOT agency drug and alcohol testing regulations?"
 }
 
 

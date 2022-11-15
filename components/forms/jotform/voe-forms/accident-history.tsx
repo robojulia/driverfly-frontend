@@ -8,7 +8,6 @@ import BaseInput from "../../base-input";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import { AccidentHistoryDto } from "../../../../models/jot-form/voe-form/accident-history.dto";
-// import { WorkedBeforeDto } from "../../../../models/jot-form/long-form/worked-before.dto";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import styles from "../../../../styles/jotform.module.css";
@@ -65,14 +64,14 @@ export function AccidentHistory() {
             </h4>
         </Row>
         <Row>
-            <Col>
+            <Col className={ styles.align__text_left }>
             <BaseInput
                 className="col-9 mt-3" 
                 name="was_employed_as"
                 label={t("was_employed_as")}
                 placeholder= {t("POSITION")}/>
             </Col>
-            <Col>
+            <Col className={ styles.align__text_left }>
             <BaseInput
                 className="col-9 mt-3" 
                 name="start_date"
@@ -80,7 +79,7 @@ export function AccidentHistory() {
                 type="date"
                 placeholder= {t("mm/yy")}/>
             </Col>
-            <Col>
+            <Col className={ styles.align__text_left }>
             <BaseInput
                 className="col-9 mt-3" 
                 name="end_date"
@@ -129,7 +128,7 @@ export function AccidentHistory() {
           </Row>
           {form.values.accident_register_data ? (
             <>
-              <Row>
+              <Row className="mt-3">
                 <p className={ `${styles.paragraph } ${ styles.align__text_left }`}>
                   {t("VOE_ACCIDENT_NOTE")}
                 </p>
