@@ -35,214 +35,214 @@ import { PageProps } from "../../types/jotform/page-props.type";
 import { ApplicantExtrasEntity } from "../../models/applicant/applicant-extras.entity";
 
 export default function jotFormLongForm() {
-	const [applicant, setApplicant] = useState<ApplicantEntity>(
-		new ApplicantEntity()
-	);
-	const [applicantExtras, setApplicantExtras] = useState<
-		ApplicantExtrasEntity[]
-	>([]);
-	const updateApplicantExtras = (
-		applicantExtrasEntity: ApplicantExtrasEntity
-	) =>
-		setApplicantExtras((oldApx) => {
-			oldApx = oldApx?.filter((v) => v.type !== applicantExtrasEntity.type);
-			return !!oldApx
-				? [...oldApx, { ...applicantExtrasEntity }]
-				: [{ ...applicantExtrasEntity }];
-		});
+  const [applicant, setApplicant] = useState<ApplicantEntity>(
+    new ApplicantEntity()
+  );
+  const [applicantExtras, setApplicantExtras] = useState<
+    ApplicantExtrasEntity[]
+  >([]);
+  const updateApplicantExtras = (
+    applicantExtrasEntity: ApplicantExtrasEntity
+  ) =>
+    setApplicantExtras((oldApx) => {
+      oldApx = oldApx?.filter((v) => v.type !== applicantExtrasEntity.type);
+      return !!oldApx
+        ? [...oldApx, { ...applicantExtrasEntity }]
+        : [{ ...applicantExtrasEntity }];
+    });
 
-	const [steps, setSteps] = useState<number>(20);
-	const stepNext = (): void => setSteps(steps + 1);
-	const stepBack = (): void => setSteps(steps - 1);
+  const [steps, setSteps] = useState<number>(7);
+  const stepNext = (): void => setSteps(steps + 1);
+  const stepBack = (): void => setSteps(steps - 1);
 
-	useEffect(() => {
-		console.log("applicantextrasvalues", applicantExtras);
-	}, []);
+  useEffect(() => {
+    console.log("applicantextrasvalues", applicantExtras);
+  }, []);
 
-	const shortFormDataSent: PageProps["shortFormDataSent"] = async (
-		params: any
-	) => {
-		// try {
-		// const applicantApi = new ApplicantApi();
-		//   const response = await api.create(applicant);
-		//   if (response) setApplicant(response);
-		//   setApplicant(response);
-		//   onNextClick(applicant);
-		//   //   toast.success(t("SUCCESS"));
-		// } catch (error) {
-		//   toast("kkkk");
-		//   console.log(error);
-		// }
-	};
-	const getPageAccordingToStep = (step: number) => {
-		return {
-			0: pageOne(),
-			1: pageTwo(),
-			2: pageThree(),
-			3: pageFour(),
-			4: pageFive(),
-			5: pageSix(),
-			6: pageSeven(),
-			7: pageEight(),
-			8: pageNine(),
-			9: pageTen(),
-			10: pageEleven(),
-			11: pageTwelve(),
-			12: pageThirteen(),
-			13: pageFourteen(),
-			14: pageFifteen(),
-			15: pageSixteen(),
-			16: pageSeventeen(),
-			17: pageEighteen(),
-			18: pageNineteen(),
-			19: pageTwenty(),
-			20: pageTwentyOne(),
-			21: pageTwentyTwo(),
-			22: pageTwentyThree(),
-			23: pageTwentyFour(),
-			24: pageTwentyFive(),
-			25: pageTwentySix(),
-			26: pageTwentySeven(),
-		}[step];
-	};
+  const shortFormDataSent: PageProps["shortFormDataSent"] = async (
+    params: any
+  ) => {
+    // try {
+    // const applicantApi = new ApplicantApi();
+    //   const response = await api.create(applicant);
+    //   if (response) setApplicant(response);
+    //   setApplicant(response);
+    //   onNextClick(applicant);
+    //   //   toast.success(t("SUCCESS"));
+    // } catch (error) {
+    //   toast("kkkk");
+    //   console.log(error);
+    // }
+  };
+  const getPageAccordingToStep = (step: number) => {
+    return {
+      0: pageOne(),
+      1: pageTwo(),
+      2: pageThree(),
+      3: pageFour(),
+      4: pageFive(),
+      5: pageSix(),
+      6: pageSeven(),
+      7: pageEight(),
+      8: pageNine(),
+      9: pageTen(),
+      10: pageEleven(),
+      11: pageTwelve(),
+      12: pageThirteen(),
+      13: pageFourteen(),
+      14: pageFifteen(),
+      15: pageSixteen(),
+      16: pageSeventeen(),
+      17: pageEighteen(),
+      18: pageNineteen(),
+      19: pageTwenty(),
+      20: pageTwentyOne(),
+      21: pageTwentyTwo(),
+      22: pageTwentyThree(),
+      23: pageTwentyFour(),
+      24: pageTwentyFive(),
+      25: pageTwentySix(),
+      26: pageTwentySeven(),
+    }[step];
+  };
 
-	return (
-		<jotformContext.Provider
-			value={{
-				state: {
-					applicant,
-					applicantExtras,
-					steps,
-				},
-				method: {
-					setApplicant,
-					updateApplicantExtras,
-					setSteps,
-					stepNext,
-					stepBack,
-				},
-			}}
-		>
-			<div className={styles.container}>
-				<div className={styles.main}>
-					<div className={styles.main_form} style={{ border: '1px solid red' }}>
-						{getPageAccordingToStep(steps)}
-					</div>
-				</div>
-				{/* <input style={{border: '2px solid',zIndex:'999', marginLeft: '100px', background: 'red' }} type="number" onChange={(e) => setSteps(parseInt(e.target.value))} /> */}
-			</div>
-		</jotformContext.Provider>
-	);
+  return (
+    <jotformContext.Provider
+      value={{
+        state: {
+          applicant,
+          applicantExtras,
+          steps,
+        },
+        method: {
+          setApplicant,
+          updateApplicantExtras,
+          setSteps,
+          stepNext,
+          stepBack,
+        },
+      }}
+    >
+      <div className={styles.container}>
+        <div className={styles.main}>
+          <div className={styles.main_form} style={{ border: "1px solid red" }}>
+            {getPageAccordingToStep(steps)}
+          </div>
+        </div>
+        {/* <input style={{border: '2px solid',zIndex:'999', marginLeft: '100px', background: 'red' }} type="number" onChange={(e) => setSteps(parseInt(e.target.value))} /> */}
+      </div>
+    </jotformContext.Provider>
+  );
 }
 
 const pageOne = () => {
-	return <SplashPage />;
+  return <SplashPage />;
 };
 
 const pageTwo = () => {
-	return <Names />;
+  return <Names />;
 };
 
 const pageThree = () => {
-	return <BasicInfo />;
+  return <BasicInfo />;
 };
 
 const pageFour = () => {
-	return <CdlExperience />;
+  return <CdlExperience />;
 };
 
 const pageFive = () => {
-	return <AccidentViolation />;
+  return <AccidentViolation />;
 };
 
 const pageSix = () => {
-	return <HearAbout />;
+  return <HearAbout />;
 };
 
 const pageSeven = () => {
-	return <ContinueLongForm />;
+  return <ContinueLongForm />;
 };
 
 const pageEight = () => {
-	return <DriverApplication />;
+  return <DriverApplication />;
 };
 
 const pageNine = () => {
-	return <HighestLevelEducation />;
+  return <BackgroundInfo />;
+};
+const pageTen = () => {
+  return <HighestLevelEducation />;
 };
 
-const pageTen = () => {
-	return <BackgroundInfo />;
-};
 
 const pageEleven = () => {
-	return <DrivingExperience />;
+  return <DrivingExperience />;
 };
 
 const pageTwelve = () => {
-	return <OtherQueues />;
+  return <OtherQueues />;
 };
 
 const pageThirteen = () => {
-	return <DriverLicense />;
+  return <DriverLicense />;
 };
 
 const pageFourteen = () => {
-	return <MedicalCard />;
+  return <MedicalCard />;
 };
 
 const pageFifteen = () => {
-	return <EmergencyContact />;
+  return <EmergencyContact />;
 };
 
 const pageSixteen = () => {
-	return <EmploymentHistory />;
+  return <EmploymentHistory />;
 };
 
 const pageSeventeen = () => {
-	return <PastEmploymentHistory />;
+  return <PastEmploymentHistory />;
 };
 
 const pageEighteen = () => {
-	return <Preferences />;
+  return <Preferences />;
 };
 
 const pageNineteen = () => {
-	return <HalfWay />;
+  return <HalfWay />;
 };
 
 const pageTwenty = () => {
-	return <WorkedBefore />;
+  return <WorkedBefore />;
 };
 
 const pageTwentyOne = () => {
-	return <AccidentHistory />;
+  return <AccidentHistory />;
 };
 
 const pageTwentyTwo = () => {
-	return <ViolationHistory />;
+  return <ViolationHistory />;
 };
 
 const pageTwentyThree = () => {
-	return <PastSuspension />;
+  return <PastSuspension />;
 };
 
 const pageTwentyFour = () => {
-	return <UnableForJob />;
+  return <UnableForJob />;
 };
 
 const pageTwentyFive = () => {
-	return <FelonyConviction />;
+  return <FelonyConviction />;
 };
 
 const pageTwentySix = () => {
-	return <DrugTest />;
+  return <DrugTest />;
 };
 
 const pageTwentySeven = () => {
-	return <AccordianPage />;
+  return <AccordianPage />;
 };
 
 function t(arg0: string): import("react-toastify").ToastContent {
-	throw new Error("Function not implemented.");
+  throw new Error("Function not implemented.");
 }

@@ -257,7 +257,7 @@ export function AccordianPage() {
 									<p className={styles.paragraph}>{t("BLANK_LINE")}</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={styles.paragraph}></p>
+									<p className={styles.paragraph}>{t("ANY_OTHER_MARK")}</p>
 								</Row>
 								<Row className={styles.align__text_left}>
 									<p className={styles.paragraph}>{t("BLANK_LINE")}</p>
@@ -313,7 +313,7 @@ export function AccordianPage() {
 								</Row>
 								<Row className={styles.align__text_left}>
 									<p className={styles.paragraph}>
-										{t("QUESTION_PREVIOUS_EMPLOYERS_REPORT")}
+										{t("NOTE_PREVIOUS_EMPLOYER_REPORT")}
 									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
@@ -345,7 +345,9 @@ export function AccordianPage() {
 						<Accordion.Header>{t("DISCLOSURE_AUTHORIZATION")}</Accordion.Header>
 						<Accordion.Body>
 							<Row className="mb-3">
-								<h1>{t("NEW_EMPLOYER_NAME_NAUTTLUS")}</h1>
+								<h1>
+								{t('{COMPANY_NAME}', { COMPANY_NAME: 'talhatrucking' }, { translateProps: true })}
+								</h1>
 							</Row>
 							<Row>
 								<h3>{t("DISCLOSURE_AUTHORIZATION")}</h3>
@@ -355,7 +357,7 @@ export function AccordianPage() {
 							</Row>
 							<Row>
 								<p className={styles.paragraph}>
-									{t("REQUEST_BACKGROUND_REPORTS")}
+								{t('{COMPANY_NAME}_REQUEST_BACKGROUND_REPORTS', { COMPANY_NAME: 'talhatrucking' }, { translateProps: true })}
 								</p>
 							</Row>
 							<Row>
@@ -373,7 +375,7 @@ export function AccordianPage() {
 							</Row>
 							<Row>
 								<p className={styles.paragraph}>
-									{t("EMPLOYEE_NAME_NAUTILUS")}
+								<span>	{t("APPLICANT_NAME")} {t('{APPLICANT_NAME}', { APPLICANT_NAME: 'Talha Bhutta' }, { translateProps: true })}</span>
 								</p>
 							</Row>
 							<Row>
@@ -403,8 +405,7 @@ export function AccordianPage() {
 									type="date"
 									name="date"
 									placeholder="DATE"
-									label="Date"
-								// formik={form}
+									label="DATE"
 								/>
 							</Row>
 						</Accordion.Body>
@@ -415,42 +416,32 @@ export function AccordianPage() {
 						</Accordion.Header>
 						<Accordion.Body>
 							<Row>
-								<h1>{t("NAUTILIUS_TRUCKING")}</h1>
+								<h1>{t('{COMPANY_NAME}', { COMPANY_NAME: 'talhatrucking' }, { translateProps: true })}</h1>
 							</Row>
 							<Row>
 								<h3>{t("IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")}</h3>
 							</Row>
 							<Row>
-								<h5>{t("LANGUAGE_MANDATORY_USE")}</h5>
+								<h5>{t("WHEN_APPLICATION_SUBMITTED")}</h5>
 							</Row>
 							<Row>
 								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
-									{t("PROSPECTIVE_FMCSA_PROSPECTIVE")}
+									{t("WHEN_SUBMITTED_MAIL_PHONE_COMPUTER")}
 								</p>
 							</Row>
 							<Row>
 								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
-									{t("ADVERSE_NOTIFICATION_PROSPECTIVE")}
+									{t("NEITHER_EMPLYER_NOR_PROSPECTIVE_SUPPLYING")}
 								</p>
 							</Row>
 							<Row>
 								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
-									{t("ADVERSE_NOTIFICATION_PROSPECTIVE_II")}
+									{t("CRASH_OR_SUSPENSION_INVOLVED")}
 								</p>
 							</Row>
 							<Row>
 								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
-									{t("NO_INFO_SUPPLY")}
-								</p>
-							</Row>
-							<Row>
-								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
-									{t("CRASH_PSP_REPORT")}
-								</p>
-							</Row>
-							<Row>
-								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
-									{t("FMCSA_AUTH")}
+									{t("CANNOT_OBTAIN_BACKGRPUND")}
 								</p>
 							</Row>
 							<Row>
@@ -462,12 +453,12 @@ export function AccordianPage() {
 							</Row>
 							<Row>
 								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
-									{t("PROSPECTIVE_BACKGROUND_REPORT")}
+									{t("AGREE_WITH_EMPLOYER")}
 								</p>
 							</Row>
 							<Row>
 								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
-									{t("AUTH_PROSPECTIVE-FMCSA")}
+									{t("AUTHORIZE_COMPANY_TO_ACCESS")}
 								</p>
 							</Row>
 							<Row>
@@ -487,7 +478,7 @@ export function AccordianPage() {
 							</Row>
 							<Row>
 								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
-									{t("APPLICANT_NAME_NAUTILUS")}
+								<span>	{t("APPLICANT_NAME")} {t('{APPLICANT_NAME}', { APPLICANT_NAME: 'Talha Bhutta' }, { translateProps: true })}</span>
 								</p>
 							</Row>
 							<Row className={styles.align__text_left}>
@@ -502,7 +493,7 @@ export function AccordianPage() {
 											style: { border: "1px solid black" },
 											className: "sigCanvas",
 										}}
-									/>
+										/>
 								</Col>
 							</Row>
 							<Row className={styles.align__text_left}>
@@ -518,8 +509,8 @@ export function AccordianPage() {
 									name="date"
 									placeholder="DATE"
 									label="Date"
-								// formik={form}
-								/>
+									// formik={form}
+									/>
 							</Row>
 							<Row className="mt-4">
 								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
@@ -528,7 +519,13 @@ export function AccordianPage() {
 							</Row>
 							<Row className="mt-4">
 								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
-									{t("EMPLOYEE_DEF_NOTICE")}
+									 {t('EMPLOYEE_DEF_NOTICE_{number}', { number: '49' }, { translateProps: true })}
+								</p>
+								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									 {t('{license}', { license: 'C.F.R. 383.5.' }, { translateProps: true })}
+								</p>
+								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									 {t('LAST_UPDATED_{date}', { date: '12/22/2015' }, { translateProps: true })}
 								</p>
 							</Row>
 						</Accordion.Body>
@@ -537,7 +534,7 @@ export function AccordianPage() {
 						<Accordion.Header>{t("GENERAL_CONSENT_QUERIES")}</Accordion.Header>
 						<Accordion.Body>
 							<Row>
-								<h1>{t("NEW_EMPLOYER_NAME_NAUTTLUS")}</h1>
+								<h1>{t('{COMPANY_NAME}', { COMPANY_NAME: 'talhatrucking' }, { translateProps: true })}</h1>
 							</Row>
 							<Row>
 								<h3>{t("GENERAL_CONSENT_QUERIES")}</h3>
@@ -550,7 +547,7 @@ export function AccordianPage() {
 								<BaseInput
 									className="col-6 mt-3"
 									name="name"
-									placeholder="FULL NAME"
+									placeholder="FULL_NAME"
 								// formik={form}
 								/>
 							</Row>
@@ -559,7 +556,7 @@ export function AccordianPage() {
 								<BaseInput
 									className="col-6 mt-3"
 									name="Employer's Name"
-									placeholder="EMPLOYER's NAME"
+									placeholder="EMPLOYER_NAME"
 								// formik={form}
 								/>
 							</Row>
@@ -567,7 +564,7 @@ export function AccordianPage() {
 								<BaseInput
 									className="col-6 mt-3"
 									name="cdl_license_number"
-									placeholder="CDL LICENSE NUMBER"
+									placeholder="CDL_LICENSE_PLACEHOLDER"
 								// formik={form}
 								/>
 							</Row>
@@ -576,13 +573,28 @@ export function AccordianPage() {
 									className="col-6 mt-3"
 									name="expiration_date"
 									type="date"
-									placeholder="EXPIRATION DATE"
+									placeholder="expiration_date"
 								// formik={form}
 								/>
 							</Row>
 							<Row className="mt-4">
 								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
-									{t("CONSENT_TO_CLEARINGHOUSE")}
+									{t("CONSENT_TO_CLEARINGHOUSE_1")}
+								</p>
+							</Row>
+							<Row className="mt-4">
+								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									{t("CONSENT_TO_CLEARINGHOUSE_2")}
+								</p>
+							</Row>
+							<Row className="mt-4">
+								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									{t("CONSENT_TO_CLEARINGHOUSE_3")}
+								</p>
+							</Row>
+							<Row className="mt-4">
+								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									{t("CONSENT_TO_CLEARINGHOUSE_4")}
 								</p>
 							</Row>
 							<Row className={styles.align__text_left}>

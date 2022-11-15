@@ -80,7 +80,9 @@ export function DriverApplication() {
 	return (
 		<>
 			<Form onSubmit={form.handleSubmit}>
-				<h6 className={styles.carrierName}>Nautilus Trucking</h6>
+				<h6 className={styles.carrierName}>
+				<h1>{t('{COMPANY_NAME}', { COMPANY_NAME: 'talhatrucking' }, { translateProps: true })}</h1>
+				</h6>
 				<h6 className={styles.carrierName__smaller}>
 					{t("DRIVER_APPLICATION")}
 				</h6>
@@ -135,7 +137,7 @@ export function DriverApplication() {
 				</Row>
 				<Row>
 					<Col>
-						<button onClick={clearSignaturePad}>Clear</button>
+						<button onClick={clearSignaturePad}>{t("CLEAR")}</button>
 					</Col>
 				</Row>
 				<Row className="mt-3">
