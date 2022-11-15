@@ -185,6 +185,10 @@ h2 {
     min-height: 186px;
     position: relative;
 }
+.navbar-nav a a{
+    color: #fff !important;
+    text-decoration: none !important;
+}
 
 .header-sec .navbar {
     width: 80%;
