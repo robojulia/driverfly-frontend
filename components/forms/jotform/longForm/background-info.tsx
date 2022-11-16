@@ -69,7 +69,7 @@ export function BackgroundInfo() {
 			<h4 className={styles.carrierName__smaller}>{t("BACKGROUND_INFO")}</h4>
 			<Row className={styles.align__text_left}>
 				<BaseInput
-					className="col-3 mt-3 mb-3"
+					className="col mt-3 mb-3"
 					required
 					type="date"
 					name="birthdate"

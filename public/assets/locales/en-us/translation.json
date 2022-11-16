@@ -1506,7 +1506,7 @@
   "PARTNERS": "Partners",
   "WONEN_IN_LOGISTICS_AND_DELIVERY_SERVICES_(WILDS)": "Women in Logistics and Delivery Services (WILDS)",
   "DRIVERFLY_IS_A_PROUD_OF_WILDS": "DriverFly is a proud member of WILDS, helping women find opportunities in the male-oriented trucking industry. Learn more about what WILDS does here.",
-  "CONTINUE_APPLICATION": "continue application",
+  "CONTINUE_APPLICATION": "Continue Application",
   "NAUTILIUS_TRUCKING": "Nautilius Trucking",
   "JOTFORM_WELCOME": "Welcome we have been waiting for you!",
   "CHOOSE": "Click to choose",
@@ -1680,5 +1680,8 @@
   "ADDRESS_CURRENT_COMPANY": "Address (Current Company)",
   "ADDRESS_PAST_COMPANY": "Address (Previous Company)",
   "REFERRAL_NUMBER": "Refferal Code",
-  "ELIGIBLE_TO_WORK_IN_US": "Are you legally eligible to work in the US? "
+  "ELIGIBLE_TO_WORK_IN_US": "Are you legally eligible to work in the US? ",
+  "BACK":"Back",
+  "NEXT":"Next"
+
 }
