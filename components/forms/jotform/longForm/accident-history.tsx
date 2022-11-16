@@ -157,13 +157,18 @@ export function AccidentHistory() {
                   <Col className="mt-5 pl-0">
                     <a
                       href="#"
-                      onClick={() =>
-                        form.setFieldValue("ACCIDENT_DETAILS.value", [
-                          ...(form.values?.ACCIDENT_DETAILS?.value || {}),
-                          form.values.ACCIDENT_DETAILS?.value?.filter(
-                            (v, idx) => i != idx
-                          ),
-                        ])
+                      onClick={
+                        () =>
+                          form.setValues({
+                            ...form.values,
+                            ACCIDENT_DETAILS: {
+                              ...form.values?.ACCIDENT_DETAILS,
+                              value:
+                                form.values?.ACCIDENT_DETAILS?.value?.filter(
+                                  (v, idx) => i != idx
+                                ),
+                            },
+                          })
                       }
                     >
                       <DashCircle className="mt-3" color="red" />
