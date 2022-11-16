@@ -8,7 +8,7 @@ import { NamesDto } from "../../../../models/jot-form/short-form/names";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 
-export interface NamesProps extends PageProps {}
+export interface NamesProps extends PageProps { }
 
 export function Names() {
   const {
@@ -49,7 +49,7 @@ export function Names() {
       <form onSubmit={form.handleSubmit} onReset={form.handleReset}>
         <Row>
           <BaseInput
-            className="col-6 mb-4"
+            className="col-12 my-3"
             name="first_name"
             placeholder="FIRST_NAME"
             formik={form}
@@ -57,13 +57,13 @@ export function Names() {
         </Row>
         <Row>
           <BaseInput
-            className="col-6"
+            className="col-12 my-3"
             name="last_name"
             placeholder="LAST_NAME"
             formik={form}
           />
         </Row>
-        <Row className="mt-3">
+        <Row className="mt-5">
           <Col>
             <Button className="float-right" type="reset">
               {t("BACK")}

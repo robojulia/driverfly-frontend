@@ -30,7 +30,7 @@ export function SplashPage() {
                 <h1 className={styles.carrierName}>{t("NAUTILIUS_TRUCKING")}</h1>
                 <h4 className={styles.Application}>{t("DRIVER_APPLICATION")}</h4>
                 <h6 className={styles.paragraph}>{t("JOTFORM_WELCOME")}</h6>
-                <Row className="mt-5">
+                <Row className="mt-5 text-center">
                     <Col>
                         <Button type="submit">{t("NEXT")}</Button>
                     </Col>
