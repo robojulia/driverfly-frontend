@@ -88,6 +88,15 @@
     text-align: left;
 }
 
+.align__text_right{
+    text-align: right;
+}
+
+
+.align__text_center{
+    text-align: center;
+}
+
 .sigCanvas {
     width: 600px;
     border: 1px solid red;
@@ -98,6 +107,10 @@
 }
 .highlight{
     color: red;
+}
+
+.bold{
+    font-weight: bold;
 }
   
 

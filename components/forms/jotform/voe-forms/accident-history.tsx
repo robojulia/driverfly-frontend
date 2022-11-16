@@ -38,20 +38,20 @@ export function AccidentHistory() {
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
         <Row>
-            <h4 className={ styles.carrierName__smaller }>
+            <h4 className={ styles.carrierName }>
                 {t("ACCIDENT_HISTORY")}
             </h4>
         </Row>
         <Row>
-            <Col className={ styles.align__text_left }>
+            <Col className={ `${styles.align__text_left } ${styles.bold}`}>
             <BaseInput
-                className="col-9 mt-3" 
+                className="col-9 mt-3 pl-0" 
                 name="was_employed_as"
                 label="was_employed_as"
                 placeholder= "POSITION"
                 />
             </Col>
-            <Col className={ styles.align__text_left }>
+            <Col className={ `${styles.align__text_left } ${styles.bold}`}>
             <BaseInput
                 className="col-9 mt-3" 
                 name="start_date"
@@ -59,7 +59,7 @@ export function AccidentHistory() {
                 type="date"
                 placeholder= "mm/yy"/>
             </Col>
-            <Col className={ styles.align__text_left }>
+            <Col className={ `${styles.align__text_left } ${styles.bold}`}>
             <BaseInput
                 className="col-9 mt-3" 
                 name="end_date"
@@ -69,7 +69,7 @@ export function AccidentHistory() {
             </Col>
         </Row>
 
-        <Row className={`${styles.paragraph} ${ styles.align__text_left }`}>
+        <Row className={ `${styles.align__text_left } ${styles.bold}`}>
         <BaseCheck
           className="float-left col-6 mt-3"
           name="type_of_vehicle"
@@ -78,7 +78,7 @@ export function AccidentHistory() {
         />
       </Row>
       {form.values.type_of_vehicle ? (
-        <Row className={ styles.align__text_left }>
+        <Row className={ `${styles.align__text_left } ${styles.bold} ${ styles.paragraph }`}>
           <BaseTextArea
             className="float-left mt-3"
             name="TYPE_OF_VEHICLE.value"
@@ -88,7 +88,7 @@ export function AccidentHistory() {
         </Row>
       ) :null}
 
-      <Row>
+      <Row className={ `${styles.align__text_left } ${styles.bold}`}>
         <BaseCheck
           className="float-left col-6 mt-3"
           name="safety_performance_history.value"
@@ -98,7 +98,7 @@ export function AccidentHistory() {
       </Row>
       {form.values?.safety_performance_history?.valueOf ? (
         <>
-          <Row>
+          <Row className={ `${styles.align__text_left } ${styles.bold}`}>
             <BaseCheck
               className="float-left col-6 mt-3"
               name="accident_register_data"
@@ -113,7 +113,7 @@ export function AccidentHistory() {
                   {t("VOE_ACCIDENT_NOTE")}
                 </p>
               </Row>
-              <Row>
+              <Row className={ `${styles.align__text_left } ${styles.bold}`}>
                   <Col>
                     <BaseInput
                     className="col-9 mt-3" 
@@ -152,7 +152,7 @@ export function AccidentHistory() {
                   </Col>
               </Row>
 
-              <Row>
+              <Row className={ `${styles.align__text_left } ${styles.bold}`}>
                   <Col>
                     <BaseInput
                     className="col-9 mt-3" 
@@ -191,7 +191,7 @@ export function AccidentHistory() {
                   </Col>
               </Row>
 
-              <Row>
+              <Row className={ `${styles.align__text_left } ${styles.bold}`}>
                   <Col>
                     <BaseInput
                     className="col-9 mt-3" 
@@ -230,7 +230,7 @@ export function AccidentHistory() {
                   </Col>
               </Row>
 
-              <Row className={ styles.align__text_left }>
+              <Row className={ `${styles.align__text_left } ${styles.bold} ${ styles.paragraph }`}>
                 <BaseTextArea
                   className="float-left col-6 mt-3"
                   name="other_reported_accidents"
@@ -244,7 +244,7 @@ export function AccidentHistory() {
       ) : null}
 
 
-      <Row className={styles.align__text_left}>
+      <Row className={ `${styles.align__text_left } ${styles.bold}`}>
       <BaseSelect
             className="col-4 mt-3"
             required

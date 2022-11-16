@@ -26,7 +26,7 @@ export function SubmissionDetails(){
     
       const { t } = useTranslation();
       let padRef = React.useRef<SignatureCanvas>(null);
-    
+      const clearSignaturePad = () => padRef?.current?.clear();
       const clear = () => {
         padRef.current?.clear();
       };
@@ -49,14 +49,14 @@ const signatureEnd = () => {
 
   return(
     <Form onSubmit={ form.handleSubmit } onReset={ form.handleReset }>
-        <Row className={styles.align__text_left}>
+        <Row className={`${styles.align__text_left}`}>
           <Col>
-            <h6>{t("SIGNATURE")}</h6>
+            <h6 className={ styles.bold }>{t("SIGNATURE")}</h6>
             <SignaturePad
               ref={padRef}
               onEnd={signatureEnd}
               canvasProps={{
-                width: 700,
+                width: 720,
                 height: 200,
                 style: { border: "1px solid black" },
                 className: "sigCanvas",
@@ -64,10 +64,16 @@ const signatureEnd = () => {
             />
           </Col>
         </Row>
-        <Row className={styles.align__text_left}>
+
+        <Row>
+          <Col className={ styles.align__text_center }>
+            <button onClick={clearSignaturePad}>{t("CLEAR")}</button>
+          </Col>
+        </Row>
+        <Row className={`${styles.align__text_left} ${ styles.bold }`}>
             <Col>
             <BaseInput 
-                className="mt-3 float-left col-6"
+                className="mt-3 float-left col-6 pl-0"
                 label="FULL_NAME"
                 name="name"
             />
@@ -81,10 +87,10 @@ const signatureEnd = () => {
             </Col>
         </Row>
 
-        <Row className={styles.align__text_left}>
+        <Row className={`${styles.align__text_left} ${ styles.bold }`}>
             <Col>
             <BaseInput 
-                className="mt-3 float-left col-6"
+                className="mt-3 float-left col-6 pl-0"
                 label="PHONE"
                 name="phone"
             />
@@ -98,9 +104,9 @@ const signatureEnd = () => {
             </Col>
         </Row>
 
-        <Row className={ styles.align__text_left }>
+        <Row className={`${styles.align__text_left} ${ styles.bold }`}>
         <BaseInput 
-                className="mt-3 float-left col-6"
+                className="mt-3 float-left col-3"
                 label="DATE"
                 name="date"
                 type="date"

@@ -37,7 +37,7 @@ export function DrugHistory() {
     return(
         <Form onSubmit={ form.handleSubmit } onReset={ form.handleReset }>
             <Row>
-                <h4 className={ styles.carrierName__smaller}>
+                <h4 className={ styles.carrierName }>
                     {t("DRUG_AND_ALCOHOL_HISTORY")}
                 </h4>
             </Row>
@@ -55,7 +55,7 @@ export function DrugHistory() {
                 <Row>
                     <Col>
                     <BaseCheck 
-                        className="float-left col-12 mt-3"
+                        className="float-left col-12 mt-3 pl-0"
                         name="result_greater_than"
                         label="RESULT_GREATER_THAN"
                         formik={ form }
@@ -86,7 +86,7 @@ export function DrugHistory() {
                     />
                     </Col>
                 </Row>
-                <Row className={`${styles.paragraph} ${ styles.align__text_left }`}>
+                <Row className={`${ styles.align__text_left }`}>
                     <BaseCheck
                     className="float-left col-6 mt-3"
                     name="previous_employer_report"
@@ -95,7 +95,7 @@ export function DrugHistory() {
                     />
                 </Row>
                 {form.values.previous_employer_report ? (
-                    <Row className={ styles.align__text_left }>
+                    <Row className={ `${styles.align__text_left } ${styles.bold}`}>
                     <BaseTextArea
                         className="float-left mt-3"
                         name="PREVIOUS_EMPLOYER__REPORT.value"
@@ -109,7 +109,7 @@ export function DrugHistory() {
                 </>
             ): null}
 
-                <Row className={`${styles.paragraph} ${ styles.align__text_left }`}>
+                <Row className={`${ styles.align__text_left }`}>
                     <BaseCheck
                     className="float-left col-6 mt-3"
                     name="return_to_duty_process"
@@ -130,7 +130,7 @@ export function DrugHistory() {
                     </Row>
                 ) :null} 
 
-                <Row className={ styles.align__text_left }>
+                <Row className={ `${styles.align__text_left } ${styles.bold}`}>
                     <BaseTextArea 
                         className="float-left mt-3"
                         name="additional_comments"
