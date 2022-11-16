@@ -116,7 +116,7 @@ export default function Signup() {
                 />
               }
               <BaseInput
-                className="col-6 mt-1"
+                className="col-md-6 mt-1"
                 label="FIRST_NAME"
                 required
                 name="first_name"
@@ -124,7 +124,7 @@ export default function Signup() {
                 formik={form}
               />
               <BaseInput
-                className="col-6 mt-1"
+                className="col-md-6 mt-1"
                 label="LAST_NAME"
                 required
                 name="last_name"
@@ -149,7 +149,7 @@ export default function Signup() {
               />
 
               <BaseInput
-                className="col-6 mt-1"
+                className="col-md-6 mt-1"
                 label="PASSWORD"
                 required
                 type="password"
@@ -158,7 +158,7 @@ export default function Signup() {
                 formik={form}
               />
               <BaseInput
-                className="col-6 mt-1"
+                className="col-md-6 mt-1"
                 label="CONFIRM_PASSWORD"
                 required
                 type="password"
@@ -167,7 +167,7 @@ export default function Signup() {
                 formik={form}
               />
               <BaseCheck
-                className="col-6 mt-1"
+                className="col-12 mt-1 py-2"
                 label="PERSONAL_RECRUITER"
                 name="personal_recruiter"
                 formik={form}
@@ -242,15 +242,18 @@ export default function Signup() {
               }
             </Row>
             <Row className="mt-2">
-              <Col className="d-flex">
+              <Col className="signup_toggle_btn">
                 <BaseCheck
+                className="checklist_toggle"
                   label="YOU_ACCEPT_OUR_TOS"
                   name="accept_tos"
                   formik={form}
                 />
+                 <span>
                 <Link href="/terms-and-policies">
                   <a className="mx-1 primary" >{t("terms_and_condition")}</a>
                 </Link>
+                </span>
                 <span>{t("AND")}</span>
                 <Link href="/privacy-policy">
                   <a className="mx-1 primary">{t("privacy_policy")}</a>
@@ -259,12 +262,12 @@ export default function Signup() {
 
             </Row>
             <div className="d-grid gap-2 my-4 sign_up_btns">
-              <Button disabled={form.isSubmitting} size="lg" type="submit">{t("REGISTER_NOW")}</Button>
+              <Button disabled={form.isSubmitting} size="lg" className="w-100" type="submit">{t("REGISTER_NOW")}</Button>
               <div className="my-1 w-100 text-center">
                 <span>{t("OR")}</span>
               </div>
               <Link href="/login">
-                <Button size="lg">{t("IF_YOURE_ALREADY_A_USER_LOGIN_HERE")}</Button>
+                <Button size="lg" className="w-100">{t("IF_YOURE_ALREADY_A_USER_LOGIN_HERE")}</Button>
               </Link>
             </div>
           </form>

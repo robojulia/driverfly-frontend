@@ -14,11 +14,12 @@ export interface EmergencyContactProps extends PageProps {}
 
 export function EmergencyContact() {
   const {
-    state: { steps, applicant },
-    method: { setSteps, setApplicant },
+    state: { applicant },
+    method: { setApplicant, stepNext, stepBack },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
+
   const form = useFormik({
     initialValues: new EmergenyContactDto(),
     validationSchema: EmergenyContactDto.yupSchema(),
@@ -28,7 +29,7 @@ export function EmergencyContact() {
         const {
           emergency_contact_name,
           emergency_contact_number,
-          emergency_contact_relationship
+          emergency_contact_relationship,
         } = values;
         setApplicant({
           ...applicant,
@@ -37,18 +38,17 @@ export function EmergencyContact() {
           emergency_contact_relationship,
         });
 
-
-        setSteps(steps + 1);
+        stepNext();
       } catch (error) {
         console.log(error);
       }
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
-  useEffect(() => {
 
+  useEffect(() => {
     const {
       emergency_contact_name,
       emergency_contact_number,
@@ -61,11 +61,12 @@ export function EmergencyContact() {
       emergency_contact_relationship: emergency_contact_relationship || null,
     });
   }, [applicant]);
+
   return (
     <>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
         <h4 className={styles.carrierName__smaller}>
-          Emergency Contact Details
+          {t("EMERGENCY_CONTACT_DETAILS")}
         </h4>
 
         <Row className={styles.align__text_left}>

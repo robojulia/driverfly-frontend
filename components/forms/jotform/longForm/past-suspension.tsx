@@ -2,7 +2,6 @@ import { useFormik } from "formik";
 import React, { useContext, useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
-import * as yup from "yup";
 import BaseTextArea from "../../base-text-area";
 import BaseCheck from "../../base-check";
 import styles from "../../../../styles/jotform.module.css";
@@ -12,77 +11,80 @@ import { PastSuspensionDto } from "../../../../models/jot-form/long-form/past-su
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
-export interface PastSuspensionsProps extends PageProps {}
+export interface PastSuspensionProps extends PageProps { }
 
-export function PastSuspensions() {
-  const {
-    state: { applicant, applicantExtras, steps },
-    method: { setApplicant, updateApplicantExtras, setSteps },
-  } = useContext(jotformContext);
+export function PastSuspension() {
 
-  const { t } = useTranslation();
-  const form = useFormik({
-    initialValues: new PastSuspensionDto(),
-    validationSchema: PastSuspensionDto.yupSchema(),
-    onSubmit: (values) => {
-      setSteps(steps + 1);
-      const { PAST_LICENSE_SUSPENSION } = values;
-      updateApplicantExtras(PAST_LICENSE_SUSPENSION);
-    },
-    onReset: (values) => {
-      setSteps(steps - 1);
-    },
-  });
-  useEffect(() => {
-    const apx = applicantExtras?.find(
-      (v) => v.type === ApplicantExtras.PAST_LICENSE_SUSPENSION
-    );
-    form.setValues({
-      ...form.values,
-      PAST_LICENSE_SUSPENSION: !!apx?.type
-        ? apx
-        : new ApplicantExtrasEntity(ApplicantExtras.PAST_LICENSE_SUSPENSION),
-      is_past_license_suspended: !!apx?.value,
-    });
-  }, [applicantExtras]);
+	const {
+		state: { applicant, applicantExtras },
+		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+	} = useContext(jotformContext);
 
-  useEffect(() => {
-    console.log("values", form.values);
-    console.log("error", form.errors);
-  }, [form.values, form.errors]);
-  return (
-    <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <Row className={styles.paragraph__left}>
-        <BaseCheck
-          className="float-left col-6"
-          name="is_past_license_suspended"
-          label="LICENSE_PREVILLAGES"
-          formik={form}
-        />
-      </Row>
-      {form.values.is_past_license_suspended ? (
-        <Row className={styles.align__text_left}>
-          <BaseTextArea
-            className="float-left mt-3"
-            name="PAST_LICENSE_SUSPENSION.value"
-            label="EXPLAIN_SUSPENSION"
-            formik={form}
-          />
-        </Row>
-      ) : null}
+	const { t } = useTranslation();
+	const form = useFormik({
+		initialValues: new PastSuspensionDto(),
+		validationSchema: PastSuspensionDto.yupSchema(),
+		onSubmit: (values) => {
+			const { PAST_LICENSE_SUSPENSION } = values;
+			updateApplicantExtras(PAST_LICENSE_SUSPENSION);
+			stepNext();
+		},
+		onReset: (values) => {
+			stepBack();
+		},
+	});
 
-      <Row className="mt-5">
-        <Col>
-          <Button className="float-right" type="reset">
-            {t("BACK")}
-          </Button>
-        </Col>
-        <Col>
-          <Button className="float-left" type="submit">
-            {t("NEXT")}
-          </Button>
-        </Col>
-      </Row>
-    </Form>
-  );
+	useEffect(() => {
+		const apx = applicantExtras?.find(
+			(v) => v.type === ApplicantExtras.PAST_LICENSE_SUSPENSION
+		);
+		form.setValues({
+			...form.values,
+			PAST_LICENSE_SUSPENSION: !!apx?.type
+				? apx
+				: new ApplicantExtrasEntity(ApplicantExtras.PAST_LICENSE_SUSPENSION),
+			is_past_license_suspended: !!apx?.value,
+		});
+	}, [applicantExtras]);
+
+	useEffect(() => {
+		console.log("values", form.values);
+		console.log("error", form.errors);
+	}, [form.values, form.errors]);
+
+	return (
+		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+			<Row className={styles.paragraph__left}>
+				<BaseCheck
+					className="float-left col-6"
+					name="is_past_license_suspended"
+					label="LICENSE_PREVILLAGES"
+					formik={form}
+				/>
+			</Row>
+			{form.values.is_past_license_suspended ? (
+				<Row className={styles.align__text_left}>
+					<BaseTextArea
+						className="float-left mt-3"
+						name="PAST_LICENSE_SUSPENSION.value"
+						label="EXPLAIN_SUSPENSION"
+						formik={form}
+					/>
+				</Row>
+			) : null}
+
+			<Row className="mt-5">
+				<Col>
+					<Button className="float-right" type="reset">
+						{t("BACK")}
+					</Button>
+				</Col>
+				<Col>
+					<Button className="float-left" type="submit">
+						{t("NEXT")}
+					</Button>
+				</Col>
+			</Row>
+		</Form>
+	);
 }

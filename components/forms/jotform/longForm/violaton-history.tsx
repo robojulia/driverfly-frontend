@@ -13,12 +13,12 @@ import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-ex
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import styles from "../../../../styles/jotform.module.css";
 
-export interface ViolationsLast3YearsProps extends PageProps {}
+export interface ViolationHistoryProps extends PageProps {}
 
-export function ViolationsLast3Years() {
+export function ViolationHistory() {
   const {
-    state: { applicant, applicantExtras, steps },
-    method: { updateApplicantExtras, setSteps },
+    state: { applicant, applicantExtras },
+    method: { updateApplicantExtras, stepBack, stepNext },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
@@ -33,10 +33,10 @@ export function ViolationsLast3Years() {
       } catch (error) {
         console.log(error);
       }
-      setSteps(steps + 1);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
 
@@ -44,8 +44,7 @@ export function ViolationsLast3Years() {
     console.log("extrasss", applicantExtras);
 
     const apx_detail = applicantExtras?.find(
-      (v) => v.type === ApplicantExtras.VIOLATION_DETAILS,
-
+      (v) => v.type === ApplicantExtras.VIOLATION_DETAILS
     );
     const apx_count = applicantExtras?.find(
       (v) => v.type === ApplicantExtras.VIOLATION_COUNT
@@ -67,10 +66,13 @@ export function ViolationsLast3Years() {
   }, [form.values, form.errors]);
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <h6 className={ styles.carrierName__smaller }>{t("VIOLATIONS_LAST_3_YEARS")}</h6>
+      <h6 className={styles.carrierName__smaller}>
+        {t("VIOLATIONS_LAST_3_YEARS")}
+      </h6>
       <Row>
         <Col className={styles.align__items_left}>
           <BaseInput
+            type="number"
             className="col-6 mt-3"
             name="VIOLATION_COUNT.value"
             label="HOW_MANY_VIOALTION_3_YEARS"
@@ -81,16 +83,10 @@ export function ViolationsLast3Years() {
           <Button
             size="sm"
             onClick={() =>
-              form.setValues({
-                ...form.values,
-                VIOLATION_DETAILS: {
-                  ...(form.values.VIOLATION_DETAILS || []),
-                  value: [
-                    ...(form.values.VIOLATION_DETAILS?.value || []),
-                    new VioalationExtrasEntity(),
-                  ],
-                },
-              })
+              form.setFieldValue("VIOLATION_DETAILS.value", [
+                ...(form.values?.VIOLATION_DETAILS?.value || []),
+                new VioalationExtrasEntity(),
+              ])
             }
           >
             <PlusCircle /> {t("TITLE_ADD_VIOLATION_DETAILS")}
@@ -144,10 +140,11 @@ export function ViolationsLast3Years() {
                         form.setValues({
                           ...form.values,
                           VIOLATION_DETAILS: {
-                            ...(form.values.VIOLATION_DETAILS || []),
-                            value: form.values.VIOLATION_DETAILS?.value?.filter(
-                              (v, idx) => i != idx
-                            ),
+                            ...form.values?.VIOLATION_DETAILS,
+                            value:
+                              form.values?.VIOLATION_DETAILS?.value?.filter(
+                                (v, idx) => i != idx
+                              ),
                           },
                         })
                       }

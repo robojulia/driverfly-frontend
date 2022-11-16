@@ -6,36 +6,35 @@ import { useFormik } from "formik";
 import BaseInput from "../../base-input";
 import BaseInputPhone from "../../base-input-phone";
 import BaseSelect from "../../base-select";
-import * as yup from "yup";
 import BaseCheck from "../../base-check";
-import { States } from "../../../../enums/users/us-states.enum";
 import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferences.enum";
 import { EmploymentHistoryDto } from "../../../../models/jot-form/long-form/employment-history.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
-import { EmploymentHistoryExtraDto } from "../../../../models/jot-form/long-form/emplyment-history/index.dto";
+import StateSelect from "../../state-select";
 
 export interface EmploymentHistoryProps extends PageProps {}
 
 export function EmploymentHistory() {
   const {
-    state: { steps, applicant, applicantExtras },
-    method: { setSteps, updateApplicantExtras },
+    state: { applicant, applicantExtras },
+    method: { updateApplicantExtras, stepNext, stepBack },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
+
   const form = useFormik({
     initialValues: new EmploymentHistoryDto(),
     validationSchema: EmploymentHistoryDto.yupSchema(),
     onSubmit: (values) => {
       const { CURRENT_EMPLOYER } = values;
-      setSteps(steps + 1);
       updateApplicantExtras(CURRENT_EMPLOYER);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
 
@@ -53,8 +52,8 @@ export function EmploymentHistory() {
   }, [applicantExtras]);
 
   useEffect(() => {
-      console.log("applicant", applicantExtras);
-    
+    console.log("applicant", applicantExtras);
+
     console.log("values", form.values);
     console.log("error", form.errors);
   }, [form.values, form.errors]);
@@ -216,13 +215,12 @@ export function EmploymentHistory() {
               </Col>
 
               <Col className={styles.align__text_left}>
-                <BaseSelect
+                <StateSelect
                   className="col-12 mt-4"
                   required
-                  enumType={States}
-                  name="CURRENT_EMPLOYER.value.state"
-                  placeholder="CHOOSE_STATE"
                   label="STATE"
+                  name="CURRENT_EMPLOYER.value.state"
+                  placeholder="STATE"
                   formik={form}
                 />
               </Col>
@@ -233,6 +231,7 @@ export function EmploymentHistory() {
                 <BaseSelect
                   className="col-6 mt-4"
                   required
+                  labelPrefix="BooleanPreferenceType"
                   enumType={BooleanPreferenceType}
                   name="CURRENT_EMPLOYER.value.fmcsr"
                   placeholder="CHOOSE"
@@ -247,6 +246,7 @@ export function EmploymentHistory() {
                 <BaseSelect
                   className="col-6 mt-4"
                   required
+                  labelPrefix="BooleanPreferenceType"
                   enumType={BooleanPreferenceType}
                   name="CURRENT_EMPLOYER.value.fcr"
                   placeholder="CHOOSE"

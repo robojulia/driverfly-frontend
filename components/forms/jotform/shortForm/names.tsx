@@ -8,14 +8,16 @@ import { NamesDto } from "../../../../models/jot-form/short-form/names";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 
-export interface SecondPageProps extends PageProps {}
+export interface NamesProps extends PageProps { }
 
-export function SecondPage() {
+export function Names() {
   const {
-    state: { applicant, steps },
-    method: { setSteps, setApplicant },
+    state: { applicant },
+    method: { setApplicant, stepNext, stepBack },
   } = useContext(jotformContext);
+
   const { t } = useTranslation();
+
   const form = useFormik({
     initialValues: new NamesDto(),
     validationSchema: NamesDto.yupSchema(),
@@ -26,12 +28,13 @@ export function SecondPage() {
         first_name,
         last_name,
       });
-      setSteps(steps + 1);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
+
   useEffect(() => {
     const { first_name, last_name } = applicant;
     form.setValues({
@@ -39,14 +42,14 @@ export function SecondPage() {
       last_name: last_name || null,
     });
   }, [applicant]);
+
   return (
     <>
       <h4 className={`${styles.align__text_left}`}>{t("name")}</h4>
       <form onSubmit={form.handleSubmit} onReset={form.handleReset}>
         <Row>
           <BaseInput
-            className="col-6 mb-4"
-            required
+            className="col-12 my-3"
             name="first_name"
             placeholder="FIRST_NAME"
             formik={form}
@@ -54,15 +57,13 @@ export function SecondPage() {
         </Row>
         <Row>
           <BaseInput
-            className="col-6"
-            required
+            className="col-12 my-3"
             name="last_name"
             placeholder="LAST_NAME"
             formik={form}
           />
         </Row>
-
-        <Row className="mt-3">
+        <Row className="mt-5">
           <Col>
             <Button className="float-right" type="reset">
               {t("BACK")}

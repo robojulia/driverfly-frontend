@@ -3,7 +3,7 @@ import "../../../../utils/yup";
 
 export class PastEmploymentHistoryExtraDto {
   previous_company_manager_name: string;
-  authorize: boolean;
+  authorize?: boolean;
   previous_company_phone_number: number;
   previous_company_email: string;
   previous_company_street_address_line_1: string;
@@ -13,13 +13,13 @@ export class PastEmploymentHistoryExtraDto {
   state: string;
   start_date: string;
   end_date: string;
-  fmcsr: string | Date;
-  fcr: string | Date;
+  fmcsr: string;
+  fcr: string;
 
   static yupSchema() {
     return yup.object({
       previous_company_manager_name: yup.string().required().nullable(),
-      previous_company_phone_number: yup.string().required().nullable(),
+      previous_company_phone_number: yup.string().optional().nullable(),
       city: yup.string().required().nullable(),
 
       fmcsr: yup.string().optional().nullable(),

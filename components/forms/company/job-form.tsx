@@ -734,7 +734,7 @@ export function JobForm(props: JobFormProps) {
                             }
                             <Row style={{ paddingLeft: "15px", paddingRight: "15px" }}>
                                 <BaseMoneyInput
-                                    className="col-6 p-0 px-lg-2"
+                                    className="col-md-6 p-0 px-lg-2"
                                     label="min_weekly"
                                     name="min_weekly_pay"
                                     required
@@ -742,7 +742,7 @@ export function JobForm(props: JobFormProps) {
                                     formik={form}
                                 />
                                 <BaseMoneyInput
-                                    className="col-6 p-0 px-lg-2"
+                                    className="col-md-6 p-0 px-lg-2"
                                     label="max_weekly"
                                     name="max_weekly_pay"
                                     required
@@ -1239,7 +1239,7 @@ export function JobForm(props: JobFormProps) {
                                     />
 
                                     {form.values.is_orientation_needed &&
-                                        <Col className="mt-1" xs="12">
+                                        <Col className="mt-2" xs="12">
                                             <ViewCard
                                                 title="ORIENTATION_DETAILS"
                                                 titleAs="span"
@@ -1247,7 +1247,7 @@ export function JobForm(props: JobFormProps) {
                                             >
                                                 <Row className="m-1">
                                                     <BaseSelect
-                                                        className="col-12"
+                                                        className="col-12 p-0"
                                                         label="location"
                                                         name="orientation_location.id"
                                                         required
@@ -1261,7 +1261,7 @@ export function JobForm(props: JobFormProps) {
                                                 </Row>
                                                 <Row className="mx-1 my-3">
                                                     <BaseInput
-                                                        className="col-md-6"
+                                                        className="col-md-6 p-0"
                                                         label="START_DATE"
                                                         name="orientation_start_at"
                                                         placeholder
@@ -1270,7 +1270,7 @@ export function JobForm(props: JobFormProps) {
                                                         formik={form}
                                                     />
                                                     <BaseInput
-                                                        className="col-md-6 mt-2 m-lg-0"
+                                                        className="col-md-6 mt-2 m-lg-0 p-0"
                                                         label="END_DATE"
                                                         name="orientation_end_at"
                                                         placeholder="END_DATE"

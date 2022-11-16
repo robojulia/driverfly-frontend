@@ -43,7 +43,7 @@ export class ApplicantExtrasEntity {
         })
         .when("type", {
           is: ApplicantExtras.APPLY_DATE,
-          then: yup.date().required().nullable(),
+          then: yup.string().required().nullable(),
         })
         .when("type", {
           is: ApplicantExtras.SIGNATURE,
@@ -65,10 +65,6 @@ export class ApplicantExtrasEntity {
           is: ApplicantExtras.CDL_NUMBER,
           then: yup.array(CdlExtras.yupSchema()),
         })
-        // .when("type", {
-        // 	is: ApplicantExtras.CURRENT_EMPLOYER,
-        // 	then: EmploymentHistoryExtraDto.yupSchema(),
-        // })
         .when("type", {
           is: ApplicantExtras.ROUTES,
           then: yup
@@ -80,10 +76,7 @@ export class ApplicantExtrasEntity {
         })
         .when("type", {
           is: ApplicantExtras.REQUIRE_W2_EMPLOYMENT,
-          then: yup
-            .array((yup.string() as any).enum(BooleanPreferenceType))
-            .optional()
-            .nullable(),
+          then: yup.string().optional().nullable(),
         })
         .when("type", {
           is: ApplicantExtras.OTHER_ABSOLUTELY_REQUIREMENTS,
@@ -118,7 +111,7 @@ export class ApplicantExtrasEntity {
         })
         .when("type", {
           is: ApplicantExtras.ALREADY_APPLIED_TO_COMPANY,
-          then: yup.boolean().default(false).required().nullable(),
+          then: yup.boolean().default(false).optional().nullable(),
         })
         .when("type", {
           is: ApplicantExtras.ALREADY_WORKED_TO_COMPANY,

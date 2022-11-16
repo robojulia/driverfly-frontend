@@ -156,7 +156,7 @@ export default function Matching() {
                 </Row>
                 <Row>
                     <BaseCheckList
-                        className="col-12 mt-3"
+                        className="col-12 mt-3 preferred_geography"
                         label="preferred_geography"
                         name="geography.value"
                         formik={form}
@@ -194,7 +194,7 @@ export default function Matching() {
                         enumType={JobTeamDriver}
                     />
                     <BaseMoneyInput
-                        className="col-5 mt-3"
+                        className="col-md-5 mt-3"
                         label="preferred_min_pay_per_week"
                         name="min_pay.value"
                         onKeyDown={preventNegative}
