@@ -623,7 +623,7 @@ export function AccordianPage() {
 						</Accordion.Body>
 					</Accordion.Item>
 				</Accordion>
-				<Row className="mt-2">
+				<Row className="mt-5">
 					<Col>
 						<Button className="float-right" type="reset">
 							{t("BACK")}
