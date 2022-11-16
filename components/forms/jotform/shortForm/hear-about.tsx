@@ -9,27 +9,32 @@ import jotformContext from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import styles from "../../../../styles/jotform.module.css";
+import { HearAboutUsType } from "../../../../enums/jotform/hear-about-type.enum";
+import BaseInput from "../../base-input";
 
-export interface SixthPageProps extends PageProps {}
+export interface HearAboutProps extends PageProps {}
 
-export function SixthPage() {
+export function HearAbout() {
   const {
-    state: { applicantExtras, steps },
-    method: { updateApplicantExtras, setSteps },
+    state: { applicantExtras },
+    method: { updateApplicantExtras, stepNext, stepBack },
   } = useContext(jotformContext);
+
   const { t } = useTranslation();
+
   const form = useFormik({
     initialValues: new HearAboutUsDto(),
     validationSchema: HearAboutUsDto.yupSchema(),
     onSubmit: (values) => {
       const { HEAR_ABOUT_US } = values;
       updateApplicantExtras(HEAR_ABOUT_US);
-      setSteps(steps + 1);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
+
   useEffect(() => {
     const apx = applicantExtras?.find(
       (v) => v.type === ApplicantExtras.HEAR_ABOUT_US
@@ -41,20 +46,32 @@ export function SixthPage() {
         : new ApplicantExtrasEntity(ApplicantExtras.HEAR_ABOUT_US),
     });
   }, [applicantExtras]);
+
   return (
     <>
       <form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-        <Row className={styles.carrierName__smaller}> 
+        <Row className={styles.carrierName__smaller}>
           <BaseSelect
             className="mt-3 mb-3"
-            options={["Referral", "Friends", "Job Board", "Social Media","Email", "Print Ad", "Word of Mouth", "Other"]}
+            labelPrefix="HearAboutUsType"
+            enumType={HearAboutUsType}
             name="HEAR_ABOUT_US.value"
             placeholder="CHOOSE"
             label="HOW_DID_YOU_HEAR_ABOUT_US"
             formik={form}
           />
         </Row>
-
+        {form.values?.HEAR_ABOUT_US?.value === HearAboutUsType.REFERRAL && (
+          <Row>
+            <BaseInput
+              className="col-6 mb-4"
+              name="REFERRAL_NUMBER"
+              placeholder="REFERRAL_NUMBER"
+              label="REFERRAL_NUMBER"
+              formik={form}
+            />
+          </Row>
+        )}
         <Row className="mt-3">
           <Col>
             <Button className="float-right" type="reset">

@@ -6,33 +6,36 @@ import { useFormik } from "formik";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 
-export interface FirstPageProps extends PageProps {}
+export interface SplashPageProps extends PageProps { }
 
-export function FirstPage({ onNextClick }: FirstPageProps) {
-  const {
-    state: { steps },
-    method: { setSteps },
-  } = useContext(jotformContext);
-  const { t } = useTranslation();
-  const form = useFormik({
-    initialValues: {},
-    onSubmit: (values) => {
-      setSteps(steps + 1);
-    },
-  });
+export function SplashPage() {
 
-  return (
-    <>
-      <Form onSubmit={form.handleSubmit}>
-        <h1 className={styles.carrierName}>{t("NAUTILIUS_TRUCKING")}</h1>
-        <h4 className={styles.Application}>{t("DRIVER_APPLICATION")}</h4>
-        <h6 className={styles.paragraph}>{t("JOTFORM_WELCOME")}</h6>
-        <Row className="mt-5">
-          <Col>
-            <Button type="submit">{t("NEXT")}</Button>
-          </Col>
-        </Row>
-      </Form>
-    </>
-  );
+    const {
+        state: { applicant },
+        method: { stepNext },
+    } = useContext(jotformContext);
+
+    const { t } = useTranslation();
+
+    const form = useFormik({
+        initialValues: {},
+        onSubmit: (values) => {
+            stepNext()
+        },
+    });
+
+    return (
+        <>
+            <Form onSubmit={form.handleSubmit}>
+                <h1 className={styles.carrierName}>{t("NAUTILIUS_TRUCKING")}</h1>
+                <h4 className={styles.Application}>{t("DRIVER_APPLICATION")}</h4>
+                <h6 className={styles.paragraph}>{t("JOTFORM_WELCOME")}</h6>
+                <Row className="mt-5 text-center">
+                    <Col>
+                        <Button type="submit">{t("NEXT")}</Button>
+                    </Col>
+                </Row>
+            </Form>
+        </>
+    );
 }

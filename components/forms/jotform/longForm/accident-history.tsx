@@ -5,7 +5,7 @@ import { useTranslation } from "../../../../hooks/use-translation";
 import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
 import styles from "../../../../styles/jotform.module.css";
-import { AccidentLastFiveYearsDto } from "../../../../models/jot-form/long-form/accident-last-5-years.dto";
+import { AccidentHistoryDto } from "../../../../models/jot-form/long-form/accident-history.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
@@ -13,18 +13,18 @@ import { AccidentHistoryEntity } from "../../../../models/jot-form/long-form/acc
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
-export interface AccidentsLast5YearsProps extends PageProps {}
+export interface AccidentHistoryProps extends PageProps {}
 
-export function AccidentsLast5Years() {
+export function AccidentHistory() {
   const {
-    state: { applicant, applicantExtras, steps },
-    method: { setApplicant, updateApplicantExtras, setSteps },
+    state: { applicant, applicantExtras },
+    method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
   const form = useFormik({
-    initialValues: new AccidentLastFiveYearsDto(),
-    validationSchema: AccidentLastFiveYearsDto.yupSchema(),
+    initialValues: new AccidentHistoryDto(),
+    validationSchema: AccidentHistoryDto.yupSchema(),
     onSubmit: (values) => {
       try {
         console.log("valuesDTO", values);
@@ -37,14 +37,13 @@ export function AccidentsLast5Years() {
 
         updateApplicantExtras(ACCIDENT_DETAILS);
 
-        setSteps(steps + 1);
+        stepNext();
       } catch (error) {
         console.log("error", error);
       }
-      console.log("applicantExtras", applicantExtras);
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
 
@@ -63,11 +62,14 @@ export function AccidentsLast5Years() {
 
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <h6 className={ styles.carrierName__smaller }>{t("MORE_ABOUT_ACCIDENTS")}</h6>
+      <h6 className={styles.carrierName__smaller}>
+        {t("MORE_ABOUT_ACCIDENTS")}
+      </h6>
       <Row>
         <Col className={styles.align__text_left}>
           <BaseInput
             className="col-6 mt-3"
+            type="number"
             name="accident_count"
             label="accidents_last_5_years"
             placeholder="PLACEHOLDER_FOR_DIGITS"
@@ -78,16 +80,10 @@ export function AccidentsLast5Years() {
           <Button
             size="sm"
             onClick={() =>
-              form.setValues({
-                ...form.values,
-                ACCIDENT_DETAILS: {
-                  ...(form.values.ACCIDENT_DETAILS || []),
-                  value: [
-                    ...(form.values.ACCIDENT_DETAILS?.value || []),
-                    new AccidentHistoryEntity(),
-                  ],
-                },
-              })
+              form.setFieldValue("ACCIDENT_DETAILS.value", [
+                ...(form.values?.ACCIDENT_DETAILS?.value || []),
+                new AccidentHistoryEntity(),
+              ])
             }
           >
             <PlusCircle /> {t("TITLE_ADD_ACCIDENT_DETAILS")}
@@ -157,19 +153,16 @@ export function AccidentsLast5Years() {
                       formik={form}
                     />
                   </Col>
-                  <Col className='mt-5 pl-0'>
+                  <Col className="mt-5 pl-0">
                     <a
                       href="#"
                       onClick={() =>
-                        form.setValues({
-                          ...form.values,
-                          ACCIDENT_DETAILS: {
-                            ...(form.values.ACCIDENT_DETAILS || []),
-                            value: form.values.ACCIDENT_DETAILS?.value?.filter(
-                              (v, idx) => i != idx
-                            ),
-                          },
-                        })
+                        form.setFieldValue("ACCIDENT_DETAILS.value", [
+                          ...(form.values?.ACCIDENT_DETAILS?.value || {}),
+                          form.values.ACCIDENT_DETAILS?.value?.filter(
+                            (v, idx) => i != idx
+                          ),
+                        ])
                       }
                     >
                       <DashCircle className="mt-3" color="red" />

@@ -1,29 +1,26 @@
 import React, { useContext, useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import styles from "../../../../styles/jotform.module.css";
-import * as yup from "yup";
 import { Button, Col, Row } from "react-bootstrap";
 import BaseInput from "../../base-input";
-import BaseInputPhone from "../../base-input-phone";
 import BaseSelect from "../../base-select";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
-import { Radio } from "@mui/material";
-import BaseCheck from "../../base-check";
-import moment from "moment";
-import { States } from "../../../../enums/users/us-states.enum";
 import { DrivingExperienceDto } from "../../../../models/jot-form/long-form/driving-experience.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
+import StateSelect from "../../state-select";
 
-export interface DrivingExpProps extends PageProps {}
-export function DrivingExp() {
+export interface DrivingExperienceProps extends PageProps { }
+
+export function DrivingExperience() {
   const {
-    state: { steps, applicant },
-    method: { setSteps, setApplicant },
+    state: { applicant },
+    method: { setApplicant, stepNext, stepBack },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
+
   const form = useFormik({
     initialValues: new DrivingExperienceDto(),
     validationSchema: DrivingExperienceDto.yupSchema(),
@@ -38,15 +35,16 @@ export function DrivingExp() {
           license_expiry,
           license_state,
         });
-
-        setSteps(steps + 1);
-      } catch (error) {}
-      setSteps(steps + 1);
+      } catch (error) {
+        console.log(error);
+      }
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
+
   useEffect(() => {
     const { license_number, state, license_expiry, license_state } = applicant;
 
@@ -60,7 +58,7 @@ export function DrivingExp() {
 
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <h4 className={styles.carrierName__smaller}>Driving Experience</h4>
+      <h4 className={styles.carrierName__smaller}> {t("DRVING_EXPERIENCE")}</h4>
       <Row>
         <Col>
           <BaseInput
@@ -73,13 +71,12 @@ export function DrivingExp() {
           />
         </Col>
         <Col>
-          <BaseSelect
+          <StateSelect
             className="col-12 mt-3"
             required
-            enumType={States}
-            name="state"
-            placeholder="state"
             label="CURRENT_STATE"
+            name="state"
+            placeholder="STATE"
             formik={form}
           />
         </Col>
@@ -98,15 +95,14 @@ export function DrivingExp() {
 
       <Row>
         <Col>
-          <BaseSelect
-            className="col-4 mt-3"
-            required
-            label="state_issued"
-            name="license_state"
-            placeholder="ISSUANCE_STATE"
-            enumType={States}
-            formik={form}
-          />
+          <StateSelect
+						className="col-4 mt-3"
+						required
+						label="state_issued"
+						name="license_state"
+						placeholder="ISSUANCE_STATE"
+						formik={form}
+					/>
         </Col>
       </Row>
       <Row>

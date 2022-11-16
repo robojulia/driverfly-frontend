@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useTranslation } from "../../../hooks/use-translation";
 import { FormikInterface } from "../../../utils/formik";
+import { LoaderIcon } from "../../loading/loader-icon";
 
 export interface EntityFormProps {
     id?: number;
@@ -29,7 +30,7 @@ export default function EntityForm(props: EntityFormProps) {
             <Row>
                 <Col xs="12" className="text-end">
                     <Button type="submit" className="theme-secondary-btn" disabled={canSubmit == null || !!!canSubmit}>
-                        {action}
+                        <LoaderIcon isLoading={!!formik?.isSubmitting} /> {action}
                     </Button>
                 </Col>
             </Row>

@@ -3,7 +3,7 @@ import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum
 import { ApplicantExtrasEntity } from "../../applicant/applicant-extras.entity";
 import { AccidentHistoryEntity } from "./accident-last-5-years/index.dto";
 
-export class AccidentLastFiveYearsDto {
+export class AccidentHistoryDto {
   accident_count: number;
   // accident_detail?: AccidentHistoryEntity[] = [];
   // ACCIDENT_DETAILS?: ApplicantExtrasEntity = new ApplicantExtrasEntity(ApplicantExtras.ACCIDENT_DETAILS);

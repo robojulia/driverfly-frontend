@@ -94,12 +94,12 @@ export default function Login() {
                             </Col>
                         </Row>
                         <div className="d-grid gap-2 mt-4">
-                            <Button disabled={form.isSubmitting} size="lg" type="submit">{t("LOGIN")}</Button>
+                            <Button disabled={form.isSubmitting} className="w-100" size="lg" type="submit">{t("LOGIN")}</Button>
                             <div className="my-1 w-100 text-center">
                                 <span>{t("OR")}</span>
                             </div>
                             <Link href="/signup">
-                                <Button size="lg">{t("CREATE_AN_ACCOUNT")}</Button>
+                                <Button size="lg" className='w-100'>{t("CREATE_AN_ACCOUNT")}</Button>
                             </Link>
                         </div>
                     </form>

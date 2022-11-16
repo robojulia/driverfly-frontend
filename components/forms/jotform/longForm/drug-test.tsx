@@ -2,7 +2,6 @@ import { useFormik } from "formik";
 import React, { useContext, useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
-import * as yup from "yup";
 import BaseTextArea from "../../base-text-area";
 import BaseCheck from "../../base-check";
 import styles from "../../../../styles/jotform.module.css";
@@ -16,22 +15,24 @@ export interface DrugTestProps extends PageProps {}
 
 export function DrugTest() {
   const {
-    state: { steps, applicantExtras },
-    method: { setSteps, updateApplicantExtras },
+    state: { applicantExtras },
+    method: { updateApplicantExtras, stepNext, stepBack },
   } = useContext(jotformContext);
+
   const { t } = useTranslation();
   const form = useFormik({
     initialValues: new DrugTestDto(),
     validationSchema: DrugTestDto.yupSchema(),
     onSubmit: (values) => {
-      const {DOT_REGULATION} = values;
-      updateApplicantExtras(DOT_REGULATION)
-      setSteps(steps + 1);
+      const { DOT_REGULATION } = values;
+      updateApplicantExtras(DOT_REGULATION);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
+
   useEffect(() => {
     const apx = applicantExtras?.find(
       (v) => v.type === ApplicantExtras.DOT_REGULATION
@@ -49,6 +50,7 @@ export function DrugTest() {
     console.log("values", form.values);
     console.log("error", form.errors);
   }, [form.values, form.errors]);
+
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
       <Row className={styles.paragraph__left}>
@@ -69,7 +71,7 @@ export function DrugTest() {
           />
         </Row>
       ) : null}
-
+     
       <Row className="mt-5">
         <Col>
           <Button className="float-right" type="reset">

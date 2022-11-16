@@ -66,7 +66,7 @@
 @media screen and (max-width:992px) {
     .logo {
         width: 50% !important;
-        vertical-align: top;
+        vertical-align: middle;
     }
 
     .header-sec .navbar {
@@ -430,6 +430,22 @@
         padding: 40px 0px;
     }
 
+    .checklist_toggle {
+        display: inline-block;
+    }
+
+    .signup_toggle_btn {
+        display: block !important;
+    }
+
+    .preferred_location {
+        padding: 0px 5px !important;
+    }
+
+    .preferred_location span {
+        display: block;
+    }
+
 }
 
 @media screen and (max-width:1070px) {
@@ -500,16 +516,24 @@
     .my_card_body .card-body strong {
         font-size: 13px;
     }
+
+    .messages_container .navbar {
+        display: block !important;
+        padding: 0;
+    }
+
+    .messages_container .navbar-collapse {
+        text-align: center;
+    }
+
+    .preferred_geography span {
+        width: 100%;
+        display: block;
+    }
 }
 
 
 @media (max-width:1267px) {
-
-    .navbar-toggler {
-        background: #4aa2af;
-        color: #fff;
-        margin: 0px 15px 10px;
-    }
 
     .btn.btn-primary {
         padding: 3px 10px !important;

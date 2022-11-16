@@ -1,4 +1,3 @@
-import * as yup from "yup";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { Form, Button, Col, Row, Table } from "react-bootstrap";
@@ -11,13 +10,14 @@ import { CdlDto } from "../../../../models/jot-form/short-form/cdl-experience.dt
 import jotformContext from "../../../../context/jotform-context";
 import { useContext, useEffect } from "react";
 
-export interface FourthPageProps extends PageProps {}
+export interface CdlExperienceProps extends PageProps { }
 
-export function FourthPage() {
+export function CdlExperience() {
   const {
-    state: { applicant,  steps },
-    method: { setApplicant, setSteps },
+    state: { applicant },
+    method: { setApplicant, stepNext, stepBack },
   } = useContext(jotformContext);
+
   const { t } = useTranslation();
 
   const form = useFormik({
@@ -31,10 +31,10 @@ export function FourthPage() {
         years_cdl_experience,
         is_owner_operator,
       });
-      setSteps(steps + 1);
+      stepNext();
     },
     onReset: (values) => {
-      setSteps(steps - 1);
+      stepBack();
     },
   });
   useEffect(() => {
@@ -76,9 +76,9 @@ export function FourthPage() {
   return (
     <>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-        <Row className="mb-4">
+        <Row className="my-3">
           <BaseSelect
-            className="col-6"
+            className="col-12"
             label="CDL_CLASS"
             placeholder="DriverLicenseType.NONE"
             name="license_type"
@@ -91,32 +91,33 @@ export function FourthPage() {
         </Row>
         {!!form.values.license_type && (
           <>
-            <Row className="mt-3 mb-3">
+            <Row className="my-3">
               <BaseInput
-                className="col-6"
-                required
+                className="col-12"
                 type="number"
                 step={0.1}
-                min={0.1}
+                min={0}
                 name="years_cdl_experience"
                 label="years_cdl_experience"
                 placeholder="PLACEHOLDER_FOR_DIGITS"
                 formik={form}
               />
             </Row>
-            <Row>
-              <BaseCheck
-                className="mt-3 mb-3"
-                required
-                name="is_owner_operator"
-                label="is_owner_operator_question"
-                formik={form}
-              />
-            </Row>
+            {form.values.license_type !== DriverLicenseType.CDL_CLASS_C && (
+              <Row>
+                <BaseCheck
+                  className="my-3"
+                  required
+                  name="is_owner_operator"
+                  label="is_owner_operator_question"
+                  formik={form}
+                />
+              </Row>
+            )}
           </>
         )}
 
-        <Row className="mt-3">
+        <Row className="mt-5">
           <Col>
             <Button className="float-right" type="reset">
               {t("BACK")}
