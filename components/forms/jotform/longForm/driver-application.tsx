@@ -81,7 +81,7 @@ export function DriverApplication() {
 		<>
 			<Form onSubmit={form.handleSubmit}>
 				<h6 className={styles.carrierName}>
-				<h1>{t('{COMPANY_NAME}', { COMPANY_NAME: 'talhatrucking' }, { translateProps: true })}</h1>
+					<h1>{t('{COMPANY_NAME}', { COMPANY_NAME: 'talhatrucking' }, { translateProps: true })}</h1>
 				</h6>
 				<h6 className={styles.carrierName__smaller}>
 					{t("DRIVER_APPLICATION")}
@@ -92,25 +92,21 @@ export function DriverApplication() {
 
 				<Row className={styles.align__text_left}>
 					<BaseInput
-						className="col-6"
+						className="col-4"
 						name="first_name"
 						placeholder="FIRST_NAME"
 						label="FIRST_NAME"
 						formik={form}
 					/>
-				</Row>
-				<Row className={styles.align__text_left}>
 					<BaseInput
-						className="col-6"
+						className="col-4"
 						name="last_name"
 						placeholder="LAST_NAME"
 						label="FIRST_NAME"
 						formik={form}
 					/>
-				</Row>
-				<Row className={styles.align__text_left}>
 					<BaseInput
-						className="col-3 mt-3 mb-3"
+						className="col-4"
 						type="date"
 						name="APPLY_DATE.value"
 						placeholder="DATE"

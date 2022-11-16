@@ -52,7 +52,7 @@ export function AccidentViolation() {
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
         <Row>
           <BaseCheck
-            className="col-6 mb-3"
+            className="col-12 my-3"
             name="can_pass_drug_test"
             label="can_pass_drug_test"
             formik={form}
@@ -60,7 +60,7 @@ export function AccidentViolation() {
         </Row>
         <Row>
           <BaseInput
-            className="col-6 mt-3 mb-3"
+            className="col-12 my-3 "
             name="accident_count"
             type="number"
             step={1}
@@ -72,7 +72,7 @@ export function AccidentViolation() {
         </Row>
         <Row>
           <BaseInput
-            className="col-6 mt-4"
+            className="col-12 my-3"
             name="moving_violations_count"
             type="number"
             step={1}
@@ -84,7 +84,7 @@ export function AccidentViolation() {
         </Row>
         <Row>
           <BaseSelect
-            className="col-6 mt-4"
+            className="col-12 my-3"
             name="ELIGIBLE_TO_WORK_IN_US"
             label="ELIGIBLE_TO_WORK_IN_US"
             labelPrefix="EligibleInUsa"
