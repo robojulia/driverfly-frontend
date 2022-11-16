@@ -12,6 +12,7 @@ import jotformContext from "../../../../context/jotform-context";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 
 export interface BasicInfoProps extends PageProps { }
 
@@ -51,18 +52,6 @@ export function BasicInfo() {
 		},
 	});
 
-	// const getInfoByPhone = async ({ target: { name, value } }) => {
-	//   const applicantApi = new ApplicantApi();
-	//   try {
-	//     const response = await applicantApi.search({ [name]: value });
-	//     console.log("response", response[0]);
-	//     form.setFieldValue(name, value);
-	//     setApplicant(response[0]);
-	//   } catch (error) {
-	//     console.log(error, "Error Occured");
-	//   }
-	// };
-
 	useEffect(() => {
 		const apx = applicantExtras?.find(
 			(v) => v.type === ApplicantExtras.AUTHORIZE_TO_COMMUNICATE
@@ -95,45 +84,42 @@ export function BasicInfo() {
 			>
 				<Row>
 					<BaseInput
-						className="col-6"
+						className="col-6 my-3"
 						required
 						name="email"
 						label="email"
 						placeholder="email"
 						formik={form}
 					/>
-				</Row>
-				<Row className="mt-3">
 					<BaseInputPhone
-						className="col-6"
+						className="col-6 my-3"
 						required
 						name="phone"
 						label="phone"
 						formik={form}
 					/>
 				</Row>
-				<Row className="mt-3">
+				<Row>
 					<BaseInput
-						className="col-6"
+						className="col-12 my-3"
 						required
 						name="zip_code"
 						label="zip_code"
 						placeholder="zip_code"
 						formik={form}
 					/>
-				</Row>
-				<Row>
 					<BaseSelect
-						className="mt-3"
+						className="col-12 my-3"
 						required
-						options={["Yes", "No"]}
+						labelPrefix="BooleanPreferenceType"
+						enumType={BooleanType}
 						name="AUTHORIZE_TO_COMMUNICATE.value"
 						placeholder="CHOOSE"
 						label="SMS_EMAIL_AUTHORIZATION_NAUTILIUS"
 						formik={form}
 					/>
 				</Row>
-				<Row className="mt-3">
+				<Row className="mt-5">
 					<Col>
 						<Button className="float-right" type="reset">
 							{t("BACK")}

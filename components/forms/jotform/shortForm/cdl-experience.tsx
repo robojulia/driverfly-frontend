@@ -10,7 +10,7 @@ import { CdlDto } from "../../../../models/jot-form/short-form/cdl-experience.dt
 import jotformContext from "../../../../context/jotform-context";
 import { useContext, useEffect } from "react";
 
-export interface CdlExperienceProps extends PageProps {}
+export interface CdlExperienceProps extends PageProps { }
 
 export function CdlExperience() {
   const {
@@ -76,9 +76,9 @@ export function CdlExperience() {
   return (
     <>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-        <Row className="mb-4">
+        <Row className="my-3">
           <BaseSelect
-            className="col-6"
+            className="col-12"
             label="CDL_CLASS"
             placeholder="DriverLicenseType.NONE"
             name="license_type"
@@ -91,9 +91,9 @@ export function CdlExperience() {
         </Row>
         {!!form.values.license_type && (
           <>
-            <Row className="mt-3 mb-3">
+            <Row className="my-3">
               <BaseInput
-                className="col-6"
+                className="col-12"
                 type="number"
                 step={0.1}
                 min={0}
@@ -106,7 +106,7 @@ export function CdlExperience() {
             {form.values.license_type !== DriverLicenseType.CDL_CLASS_C && (
               <Row>
                 <BaseCheck
-                  className="mt-3 mb-3"
+                  className="my-3"
                   required
                   name="is_owner_operator"
                   label="is_owner_operator_question"
@@ -117,7 +117,7 @@ export function CdlExperience() {
           </>
         )}
 
-        <Row className="mt-3">
+        <Row className="mt-5">
           <Col>
             <Button className="float-right" type="reset">
               {t("BACK")}
