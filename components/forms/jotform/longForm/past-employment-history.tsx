@@ -8,7 +8,6 @@ import BaseInputPhone from "../../base-input-phone";
 import BaseSelect from "../../base-select";
 import BaseCheck from "../../base-check";
 import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferences.enum";
-import { States } from "../../../../enums/users/us-states.enum";
 import { PastEmploymentHistoryDto } from "../../../../models/jot-form/long-form/past-employment-history.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
