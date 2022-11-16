@@ -21,7 +21,7 @@ export interface SubmissionDetailsProps extends PageProps {}
 
 export function SubmissionDetails(){
     const {
-        method: { stepNext, stepBack },
+        method: { stepNext, stepBack, setSteps },
       } = useContext(jotformContext);
     
       const { t } = useTranslation();
@@ -33,7 +33,7 @@ export function SubmissionDetails(){
       const form = useFormik({
         initialValues: new SubmissionDetailsDto(),
         onSubmit: (values) => {
-            stepNext();
+            setSteps(0);
         },
         onReset: (values) => {
             stepBack();
