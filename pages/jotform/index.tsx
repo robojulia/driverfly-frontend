@@ -35,214 +35,86 @@ import { PageProps } from "../../types/jotform/page-props.type";
 import { ApplicantExtrasEntity } from "../../models/applicant/applicant-extras.entity";
 
 export default function jotFormLongForm() {
-  const [applicant, setApplicant] = useState<ApplicantEntity>(
-    new ApplicantEntity()
-  );
-  const [applicantExtras, setApplicantExtras] = useState<
-    ApplicantExtrasEntity[]
-  >([]);
-  const updateApplicantExtras = (
-    applicantExtrasEntity: ApplicantExtrasEntity
-  ) =>
-    setApplicantExtras((oldApx) => {
-      oldApx = oldApx?.filter((v) => v.type !== applicantExtrasEntity.type);
-      return !!oldApx
-        ? [...oldApx, { ...applicantExtrasEntity }]
-        : [{ ...applicantExtrasEntity }];
-    });
+	const [applicant, setApplicant] = useState<ApplicantEntity>(
+		new ApplicantEntity()
+	);
+	const [applicantExtras, setApplicantExtras] = useState<
+		ApplicantExtrasEntity[]
+	>([]);
+	const updateApplicantExtras = (
+		applicantExtrasEntity: ApplicantExtrasEntity
+	) =>
+		setApplicantExtras((oldApx) => {
+			oldApx = oldApx?.filter((v) => v.type !== applicantExtrasEntity.type);
+			return !!oldApx
+				? [...oldApx, { ...applicantExtrasEntity }]
+				: [{ ...applicantExtrasEntity }];
+		});
 
-  const [steps, setSteps] = useState<number>(20);
-  const stepNext = (): void => setSteps(steps + 1);
-  const stepBack = (): void => setSteps(steps - 1);
+	const [steps, setSteps] = useState<number>(0);
+	const stepNext = (): void => setSteps(steps + 1);
+	const stepBack = (): void => setSteps(steps - 1);
 
-  useEffect(() => {
-    console.log("applicantextrasvalues", applicantExtras);
-  }, []);
+	useEffect(() => {
+		console.log("applicantextrasvalues", applicantExtras);
+	}, []);
 
-  const shortFormDataSent: PageProps["shortFormDataSent"] = async (
-    params: any
-  ) => {
-    // try {
-    // const applicantApi = new ApplicantApi();
-    //   const response = await api.create(applicant);
-    //   if (response) setApplicant(response);
-    //   setApplicant(response);
-    //   onNextClick(applicant);
-    //   //   toast.success(t("SUCCESS"));
-    // } catch (error) {
-    //   toast("kkkk");
-    //   console.log(error);
-    // }
-  };
-  const getPageAccordingToStep = (step: number) => {
-    return {
-      0: pageOne(),
-      1: pageTwo(),
-      2: pageThree(),
-      3: pageFour(),
-      4: pageFive(),
-      5: pageSix(),
-      6: pageSeven(),
-      7: pageEight(),
-      8: pageNine(),
-      9: pageTen(),
-      10: pageEleven(),
-      11: pageTwelve(),
-      12: pageThirteen(),
-      13: pageFourteen(),
-      14: pageFifteen(),
-      15: pageSixteen(),
-      16: pageSeventeen(),
-      17: pageEighteen(),
-      18: pageNineteen(),
-      19: pageTwenty(),
-      20: pageTwentyOne(),
-      21: pageTwentyTwo(),
-      22: pageTwentyThree(),
-      23: pageTwentyFour(),
-      24: pageTwentyFive(),
-      25: pageTwentySix(),
-      26: pageTwentySeven(),
-    }[step];
-  };
+	const getPageAccordingToStep = (step: number) => (
+		{
+			0: <SplashPage />,
+			1: <Names />,
+			2: <BasicInfo />,
+			3: <CdlExperience />,
+			4: <AccidentViolation />,
+			5: <HearAbout />,
+			6: <ContinueLongForm />,
+			7: <DriverApplication />,
+			8: <BackgroundInfo />,
+			9: <HighestLevelEducation />,
+			10: <DrivingExperience />,
+			11: <OtherQueues />,
+			12: <DriverLicense />,
+			13: <MedicalCard />,
+			14: <EmergencyContact />,
+			15: <EmploymentHistory />,
+			16: <PastEmploymentHistory />,
+			17: <Preferences />,
+			18: <HalfWay />,
+			19: <WorkedBefore />,
+			20: <AccidentHistory />,
+			21: <ViolationHistory />,
+			22: <PastSuspension />,
+			23: <UnableForJob />,
+			24: <FelonyConviction />,
+			25: <DrugTest />,
+			26: <AccordianPage />,
+		}[step]
+	)
 
-  return (
-    <jotformContext.Provider
-      value={{
-        state: {
-          applicant,
-          applicantExtras,
-          steps,
-        },
-        method: {
-          setApplicant,
-          updateApplicantExtras,
-          setSteps,
-          stepNext,
-          stepBack,
-        },
-      }}
-    >
-      <div className={styles.container}>
-        <div className={styles.main}>
-          <div className={styles.main_form} style={{ border: "1px solid red" }}>
-            {getPageAccordingToStep(steps)}
-          </div>
-        </div>
-        {/* <input style={{border: '2px solid',zIndex:'999', marginLeft: '100px', background: 'red' }} type="number" onChange={(e) => setSteps(parseInt(e.target.value))} /> */}
-      </div>
-    </jotformContext.Provider>
-  );
-}
-
-const pageOne = () => {
-  return <SplashPage />;
-};
-
-const pageTwo = () => {
-  return <Names />;
-};
-
-const pageThree = () => {
-  return <BasicInfo />;
-};
-
-const pageFour = () => {
-  return <CdlExperience />;
-};
-
-const pageFive = () => {
-  return <AccidentViolation />;
-};
-
-const pageSix = () => {
-  return <HearAbout />;
-};
-
-const pageSeven = () => {
-  return <ContinueLongForm />;
-};
-
-const pageEight = () => {
-  return <DriverApplication />;
-};
-
-const pageNine = () => {
-  return <BackgroundInfo />;
-};
-const pageTen = () => {
-  return <HighestLevelEducation />;
-};
-
-
-const pageEleven = () => {
-  return <DrivingExperience />;
-};
-
-const pageTwelve = () => {
-  return <OtherQueues />;
-};
-
-const pageThirteen = () => {
-  return <DriverLicense />;
-};
-
-const pageFourteen = () => {
-  return <MedicalCard />;
-};
-
-const pageFifteen = () => {
-  return <EmergencyContact />;
-};
-
-const pageSixteen = () => {
-  return <EmploymentHistory />;
-};
-
-const pageSeventeen = () => {
-  return <PastEmploymentHistory />;
-};
-
-const pageEighteen = () => {
-  return <Preferences />;
-};
-
-const pageNineteen = () => {
-  return <HalfWay />;
-};
-
-const pageTwenty = () => {
-  return <WorkedBefore />;
-};
-
-const pageTwentyOne = () => {
-  return <AccidentHistory />;
-};
-
-const pageTwentyTwo = () => {
-  return <ViolationHistory />;
-};
-
-const pageTwentyThree = () => {
-  return <PastSuspension />;
-};
-
-const pageTwentyFour = () => {
-  return <UnableForJob />;
-};
-
-const pageTwentyFive = () => {
-  return <FelonyConviction />;
-};
-
-const pageTwentySix = () => {
-  return <DrugTest />;
-};
-
-const pageTwentySeven = () => {
-  return <AccordianPage />;
-};
-
-function t(arg0: string): import("react-toastify").ToastContent {
-  throw new Error("Function not implemented.");
+	return (
+		<jotformContext.Provider
+			value={{
+				state: {
+					applicant,
+					applicantExtras,
+					steps,
+				},
+				method: {
+					setApplicant,
+					updateApplicantExtras,
+					setSteps,
+					stepNext,
+					stepBack,
+				},
+			}}
+		>
+			<div className={styles.container}>
+				<div className={styles.main}>
+					<div className={styles.main_form} style={{ border: "1px solid red" }}>
+						{getPageAccordingToStep(steps)}
+					</div>
+				</div>
+			</div>
+		</jotformContext.Provider>
+	);
 }
