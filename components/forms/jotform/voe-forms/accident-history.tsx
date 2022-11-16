@@ -80,7 +80,7 @@ export function AccidentHistory() {
       {form.values.type_of_vehicle ? (
         <Row className={ `${styles.align__text_left } ${styles.bold} ${ styles.paragraph }`}>
           <BaseTextArea
-            className="float-left mt-3"
+            className="float-left mt-3 col-4"
             name="TYPE_OF_VEHICLE.value"
             label="TYPE_OF_VEHICLE"
             formik={ form }
