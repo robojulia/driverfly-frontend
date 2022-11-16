@@ -6,14 +6,12 @@ import { ApplicantExtrasEntity } from "../../models/applicant/applicant-extras.e
 import { ApplicantEntity } from "../../models/applicant/applicant.entity";
 import { EmployedByUs } from "../../components/forms/jotform/voe-forms/employed-by-us";
 import { AccidentHistory } from "../../components/forms/jotform/voe-forms/accident-history";
-import { DrugHistory } from "../../components/forms/jotform/voe-forms/drug-alcohol-history";
 import { SubmissionDetails } from "../../components/forms/jotform/voe-forms/submission-details";
 
 const pages = [
   IntroPage,
   EmployedByUs,
   AccidentHistory,
-  DrugHistory,
   SubmissionDetails,
 ];
 
@@ -61,7 +59,7 @@ export default function voeForm() {
     >
       <div className={styles.container}>
         <div className={styles.main}>
-          <div className={styles.main_form}>
+          <div className={styles.main__voe_form}>
             <PageControl steps={steps} />
           </div>
         </div>
