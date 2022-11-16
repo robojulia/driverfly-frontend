@@ -30,7 +30,6 @@ export function DriverApplication() {
 		onSubmit: (values) => {
 			try {
 				const { first_name, last_name, APPLY_DATE, SIGNATURE } = values;
-				// console.log("sign", values);
 				setApplicant({ ...applicant, first_name, last_name });
 				updateApplicantExtras(APPLY_DATE);
 				updateApplicantExtras(SIGNATURE);
@@ -45,7 +44,6 @@ export function DriverApplication() {
 	});
 
 	const handleSignatureEnd = () => {
-		console.log(padRef?.current?.toDataURL()?.toString());
 		const signatureValue = padRef?.current?.toDataURL()?.toString();
 		form.setFieldValue("SIGNATURE.value", signatureValue);
 	};
@@ -64,6 +62,12 @@ export function DriverApplication() {
 		const apx_sign = applicantExtras?.find(
 			(v) => v.type === ApplicantExtras.SIGNATURE
 		);
+
+		form.setFieldValue(
+			"SIGNATURE",
+			padRef?.current?.fromDataURL(apx_sign?.value)
+		);
+
 		form.setValues({
 			...form.values,
 			APPLY_DATE: !!apx?.type
@@ -81,7 +85,13 @@ export function DriverApplication() {
 		<>
 			<Form onSubmit={form.handleSubmit}>
 				<h6 className={styles.carrierName}>
-					<h1>{t('{COMPANY_NAME}', { COMPANY_NAME: 'talhatrucking' }, { translateProps: true })}</h1>
+					<h1>
+						{t(
+							"{COMPANY_NAME}",
+							{ COMPANY_NAME: "talhatrucking" },
+							{ translateProps: true }
+						)}
+					</h1>
 				</h6>
 				<h6 className={styles.carrierName__smaller}>
 					{t("DRIVER_APPLICATION")}
