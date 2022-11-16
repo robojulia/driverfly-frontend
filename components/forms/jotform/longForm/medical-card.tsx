@@ -61,10 +61,10 @@ export function MedicalCard() {
         <>
             <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
                 <Row>
-                    <h3 className="mb-4">{t("MEDICAL_CARD_UPLOAD_TITLE")}</h3>
+                    <h3>{t("MEDICAL_CARD_UPLOAD_TITLE")}</h3>
                 </Row>
                 <Row className={styles.align__text_left}>
-                    <FileInput name="document" accept="application/pdf" formik={form} />
+                    <FileInput className="my-3" name="document" accept="application/pdf" formik={form} />
                 </Row>
                 <Row className="mt-4">
                     <Col>

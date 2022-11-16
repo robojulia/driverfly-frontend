@@ -93,7 +93,7 @@ export function DriverApplication() {
 						)}
 					</h1>
 				</h6>
-				<h6 className={styles.carrierName__smaller}>
+				<h6 className={styles.heading__sty}>
 					{t("DRIVER_APPLICATION")}
 				</h6>
 				<p className={`${styles.paragraph} ${styles.align__text_left}`}>
