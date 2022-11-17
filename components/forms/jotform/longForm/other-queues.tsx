@@ -80,7 +80,7 @@ export function OtherQueues() {
         <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
             <Row>
                 <BaseSelect
-                    className="col-6 mb-3"
+                    className="col-12 my-3"
                     labelPrefix="BooleanType"
                     enumType={BooleanType}
                     name="QUALIFIED_FOR_MANUAL_TRANSMISSION.value"
@@ -88,11 +88,8 @@ export function OtherQueues() {
                     label="QUALIFIED_TO_MANUAL_DRIVING"
                     formik={form}
                 />
-            </Row>
-
-            <Row className={`${styles.paragraph} ${styles.align__text_left}`}>
                 <BaseCheckList
-                    className="col-6"
+                    className="col-12"
                     label="ENDORSEMENTS"
                     name="endorsements"
                     labelPrefix="DriverEndorsement"
@@ -101,8 +98,12 @@ export function OtherQueues() {
                     cols="2"
                 />
             </Row>
+
+            <Row className={`${styles.paragraph} ${styles.align__text_left}`}>
+
+            </Row>
             <Row>
-                <div className="mt-4 float-left d-flex justify-left pl-4">
+                <div className="mt-4 float-left d-flex justify-left">
                     <Button
                         size="sm"
                         onClick={() =>
@@ -127,62 +128,53 @@ export function OtherQueues() {
                 <>
                     {form.values.CDL_NUMBER?.value?.map((entity, i) => (
                         <Row key={i}>
-                            <div className="col-md-12 mt-2">
-                                <Row>
-                                    <Col>
-                                        <BaseInput
-                                            name={`CDL_NUMBER.value[${i}].license_number`}
-                                            className="col-12 mt-3"
-                                            placeholder="CDL_NUMBER_1"
-                                            label="CDL_NUMBER"
-                                            formik={form}
-                                        />
-                                    </Col>
-                                    <Col>
-                                        <StateSelect
-                                            className="col-12 mt-3"
-                                            name={`CDL_NUMBER.value[${i}].state`}
-                                            placeholder="STATE"
-                                            label="CHOOSE"
-                                            formik={form}
-                                        />
-                                    </Col>
-                                    <Col>
-                                        <BaseInput
-                                            className="col-12 mt-3"
-                                            type="date"
-                                            name={`CDL_NUMBER.value[${i}].date`}
-                                            placeholder="expiration_date"
-                                            label="DATE"
-                                            formik={form}
-                                        />
-                                    </Col>
-                                    <Col>
-                                        <a
-                                            href="#"
-                                            onClick={() =>
-                                                form.setValues({
-                                                    ...form.values,
-                                                    CDL_NUMBER: {
-                                                        ...form.values.CDL_NUMBER,
-                                                        value: form.values.CDL_NUMBER?.value?.filter(
-                                                            (v, idx) => i != idx
-                                                        ),
-                                                    },
-                                                })
-                                            }
-                                        >
-                                            <DashCircle color="red" />
-                                        </a>
-                                    </Col>
-                                </Row>
-                            </div>
+                            <Row>
+                                <BaseInput
+                                    name={`CDL_NUMBER.value[${i}].license_number`}
+                                    className="col-md-4 my-3"
+                                    placeholder="CDL_NUMBER_1"
+                                    label="CDL_NUMBER"
+                                    formik={form}
+                                />
+                                <StateSelect
+                                    className="col-md-3 my-3"
+                                    name={`CDL_NUMBER.value[${i}].state`}
+                                    placeholder="STATE"
+                                    label="CHOOSE"
+                                    formik={form}
+                                />
+                                <BaseInput
+                                    className="col-md-4 my-3"
+                                    type="date"
+                                    name={`CDL_NUMBER.value[${i}].date`}
+                                    placeholder="expiration_date"
+                                    label="DATE"
+                                    formik={form}
+                                />
+                                <a
+                                    className="text-right col-md-1 mt-md-5"
+                                    href="#"
+                                    onClick={() =>
+                                        form.setValues({
+                                            ...form.values,
+                                            CDL_NUMBER: {
+                                                ...form.values.CDL_NUMBER,
+                                                value: form.values.CDL_NUMBER?.value?.filter(
+                                                    (v, idx) => i != idx
+                                                ),
+                                            },
+                                        })
+                                    }
+                                >
+                                    <DashCircle color="red" />
+                                </a>
+                            </Row>
                         </Row>
                     ))}
                 </>
             )}
 
-            <Row className="mt-2">
+            <Row className="mt-3">
                 <Col>
                     <Button className="float-right" type="reset">
                         {t("BACK")}

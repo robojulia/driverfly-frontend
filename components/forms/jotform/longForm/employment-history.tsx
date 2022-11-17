@@ -15,7 +15,7 @@ import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.e
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import StateSelect from "../../state-select";
 
-export interface EmploymentHistoryProps extends PageProps {}
+export interface EmploymentHistoryProps extends PageProps { }
 
 export function EmploymentHistory() {
   const {
@@ -62,7 +62,7 @@ export function EmploymentHistory() {
     <>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
         <h4
-          className={`${styles.carrierName__smaller} ${styles.striped__border}`}
+          className={`${styles.heading__sty} ${styles.striped__border}`}
         >
           {t("EMPLOYMENT_HISTORY")}
         </h4>
@@ -71,7 +71,7 @@ export function EmploymentHistory() {
         </p>
         <Row className={styles.align__text_left}>
           <BaseCheck
-            className="mt-2 col-6 float-left"
+            className="mt-2 col"
             label="CURRENTLY_EMPLYED_QUESTION"
             name="is_current_employed"
             formik={form}
@@ -81,7 +81,7 @@ export function EmploymentHistory() {
           <>
             <Row>
               <h6
-                className={`${styles.carrierName__smaller} ${styles.align__text_left}`}
+                className={`${styles.heading__sty} ${styles.align__text_left}`}
               >
                 {t("CURRENT_EMPLOYER")}
               </h6>
@@ -90,170 +90,137 @@ export function EmploymentHistory() {
               </p>
             </Row>
             <Row>
-              <Col className={styles.align__text_left}>
-                <BaseInput
-                  className="col-12 mt-3"
-                  name="CURRENT_EMPLOYER.value.current_company_name"
-                  label="CURRENT_COMPANY_NAME"
-                  formik={form}
-                />
-              </Col>
-              <Col className={styles.align__text_left}>
-                <BaseInput
-                  className="col-12 mt-3"
-                  name="CURRENT_EMPLOYER.value.current_company_position"
-                  label="CURRENT_COMPANY_POSITION"
-                  formik={form}
-                />
-              </Col>
-            </Row>
-
-            <Row>
-              <Col className={styles.align__text_left}>
-                <BaseInput
-                  className="col-10 mt-3"
-                  required
-                  type="date"
-                  name="CURRENT_EMPLOYER.value.start_date"
-                  label="START_DATE"
-                  formik={form}
-                />
-              </Col>
-
-              <Col className={styles.paragraph}>
-                <BaseCheck
-                  className="mt-3 col-10 float-left"
-                  required
-                  name="CURRENT_EMPLOYER.value.authorize"
-                  label="CONATACT_AUTHORITY"
-                  formik={form}
-                />
-              </Col>
-            </Row>
-
-            <Row className={styles.align__text_left}>
               <BaseInput
-                className="col-6 mt-3"
-                name="CURRENT_EMPLOYER.value.current_company_manager_name"
-                label="MANAGER_OR_REPRESENTATIVE"
+                className="col-md-6 my-3"
+                name="CURRENT_EMPLOYER.value.current_company_name"
+                label="CURRENT_COMPANY_NAME"
+                formik={form}
+              />
+              <BaseInput
+                className="col-md-6 my-3"
+                name="CURRENT_EMPLOYER.value.current_company_position"
+                label="CURRENT_COMPANY_POSITION"
                 formik={form}
               />
             </Row>
 
             <Row>
-              <Col>
-                <BaseInputPhone
-                  className="col-10 mt-3 mb-2"
-                  name="CURRENT_EMPLOYER.value.current_company_phone_number"
-                  placeholder="phone"
-                  label="CURRENT_COMPANY_NUMBER"
-                  formik={form}
-                />
-              </Col>
-              <Col>
-                <BaseInput
-                  className="col-10 mt-3 mb-2"
-                  required
-                  name="CURRENT_EMPLOYER.value.current_company_email"
-                  label="CURRENT_COMPANY_EMAIL"
-                  placeholder="email"
-                  formik={form}
-                />
-              </Col>
+              <BaseInput
+                className="col-md-6 my-lg-2 my-3"
+                required
+                type="date"
+                name="CURRENT_EMPLOYER.value.start_date"
+                label="START_DATE"
+                formik={form}
+              />
+              <BaseCheck
+                className="mt-lg-5 my-3 col-md-6 float-left"
+                required
+                name="CURRENT_EMPLOYER.value.authorize"
+                label="CONATACT_AUTHORITY"
+                formik={form}
+              />
+            </Row>
+
+            <Row className={styles.align__text_left}>
+              <BaseInput
+                className="col-md-6 my-3"
+                name="CURRENT_EMPLOYER.value.current_company_manager_name"
+                label="MANAGER_OR_REPRESENTATIVE"
+                formik={form}
+              />
+              <BaseInputPhone
+                className="col-md-6 my-3"
+                name="CURRENT_EMPLOYER.value.current_company_phone_number"
+                placeholder="phone"
+                label="CURRENT_COMPANY_NUMBER"
+                formik={form}
+              />
+            </Row>
+
+            <Row>
+              <BaseInput
+                className="col my-3"
+                required
+                name="CURRENT_EMPLOYER.value.current_company_email"
+                label="CURRENT_COMPANY_EMAIL"
+                placeholder="email"
+                formik={form}
+              />
             </Row>
             <Row>
               <h6
-                className={`${styles.align__text_left} ${styles.carrierName__smaller}`}
-              >
+                className={`${styles.align__text_left} ${styles.heading__sty}`}>
                 {t("ADDRESS_CURRENT_COMPANY")}
               </h6>
             </Row>
             <Row>
-              <Col>
-                <BaseInput
-                  className="col-6 mt-3"
-                  required
-                  name="CURRENT_EMPLOYER.value.current_company_street_address_line_1"
-                  placeholder="ADDRESS_LINE_1"
-                  label="ADDRESS_LINE_1"
-                  formik={form}
-                />
-              </Col>
+              <BaseInput
+                className="col-md-6 my-3"
+                required
+                name="CURRENT_EMPLOYER.value.current_company_street_address_line_1"
+                placeholder="ADDRESS_LINE_1"
+                label="ADDRESS_LINE_1"
+                formik={form}
+              />
+              <BaseInput
+                className="col-md-6 my-3"
+                required
+                name="CURRENT_EMPLOYER.value.current_company_street_address_line_2"
+                placeholder="ADDRESS_LINE_2"
+                label="ADDRESS_LINE_2"
+                formik={form}
+              />
             </Row>
             <Row>
-              <Col>
-                <BaseInput
-                  className="col-6 mt-3"
-                  required
-                  name="CURRENT_EMPLOYER.value.current_company_street_address_line_2"
-                  placeholder="ADDRESS_LINE_2"
-                  label="ADDRESS_LINE_2"
-                  formik={form}
-                />
-              </Col>
+              <BaseInput
+                className="col-md-6 my-3"
+                required
+                name="CURRENT_EMPLOYER.value.current_company_zipcode"
+                placeholder="zip_code"
+                label="zip_code"
+                formik={form}
+              />
+              <BaseInput
+                className="col-md-6 my-3"
+                required
+                name="CURRENT_EMPLOYER.value.city"
+                label="City"
+                formik={form}
+              />
+              <StateSelect
+                className="col my-3"
+                required
+                label="STATE"
+                name="CURRENT_EMPLOYER.value.state"
+                placeholder="STATE"
+                formik={form}
+              />
+            </Row>
+
+            <Row>
+              <BaseSelect
+                className="col my-3"
+                required
+                labelPrefix="BooleanPreferenceType"
+                enumType={BooleanPreferenceType}
+                name="CURRENT_EMPLOYER.value.fmcsr"
+                placeholder="CHOOSE"
+                label="FMCR_QUESTION"
+                formik={form}
+              />
             </Row>
             <Row>
-              <Col className={styles.align__text_left}>
-                <BaseInput
-                  className="col-12 mt-2"
-                  required
-                  name="CURRENT_EMPLOYER.value.current_company_zipcode"
-                  placeholder="zip_code"
-                  label="zip_code"
-                  formik={form}
-                />
-              </Col>
-
-              <Col className={styles.align__text_left}>
-                <BaseInput
-                  className="col-12 mt-4"
-                  required
-                  name="CURRENT_EMPLOYER.value.city"
-                  label="City"
-                  formik={form}
-                />
-              </Col>
-
-              <Col className={styles.align__text_left}>
-                <StateSelect
-                  className="col-12 mt-4"
-                  required
-                  label="STATE"
-                  name="CURRENT_EMPLOYER.value.state"
-                  placeholder="STATE"
-                  formik={form}
-                />
-              </Col>
-            </Row>
-
-            <Row className={`${styles.align__text_left} ${styles.paragraph}`}>
-              <Col>
-                <BaseSelect
-                  className="col-6 mt-4"
-                  required
-                  labelPrefix="BooleanPreferenceType"
-                  enumType={BooleanPreferenceType}
-                  name="CURRENT_EMPLOYER.value.fmcsr"
-                  placeholder="CHOOSE"
-                  label="FMCR_QUESTION"
-                  formik={form}
-                />
-              </Col>
-            </Row>
-
-            <Row className={`${styles.align__text_left} ${styles.paragraph}`}>
-              <Col>
-                <BaseSelect
-                  className="col-6 mt-4"
-                  required
-                  labelPrefix="BooleanPreferenceType"
-                  enumType={BooleanPreferenceType}
-                  name="CURRENT_EMPLOYER.value.fcr"
-                  placeholder="CHOOSE"
-                  label="JOB_DESIGNATED_CURRENT_COMPANY"
-                  formik={form}
-                />
-              </Col>
+              <BaseSelect
+                className="col mt-4"
+                required
+                labelPrefix="BooleanPreferenceType"
+                enumType={BooleanPreferenceType}
+                name="CURRENT_EMPLOYER.value.fcr"
+                placeholder="CHOOSE"
+                label="JOB_DESIGNATED_CURRENT_COMPANY"
+                formik={form}
+              />
             </Row>
           </>
         ) : null}

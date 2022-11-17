@@ -55,7 +55,7 @@ export function DrugTest() {
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
       <Row className={styles.paragraph__left}>
         <BaseCheck
-          className="float-left col-6"
+          className="col"
           name="is_tested_positive"
           label="DRUG_TEST_TESTIMONY_QUESTION"
           formik={form}

@@ -66,10 +66,10 @@ export function BackgroundInfo() {
 
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-			<h4 className={styles.carrierName__smaller}>{t("BACKGROUND_INFO")}</h4>
+			<h4 className={styles.heading__sty}>{t("BACKGROUND_INFO")}</h4>
 			<Row className={styles.align__text_left}>
 				<BaseInput
-					className="col-3 mt-3 mb-3"
+					className="col mt-3 mb-3"
 					required
 					type="date"
 					name="birthdate"
@@ -79,28 +79,25 @@ export function BackgroundInfo() {
 				/>
 			</Row>
 			<p
-				className={`${styles.carrierName__smaller} ${styles.align__text_left}
-            ${styles.paragraph}`}
+				className={`${styles.heading__sty}`}
 			>
 				{t("FULL_ADDRESS_QUES")}
 			</p>
 
 			<>
 				<Row>
-					<div className="col-md-12 mt-2">
+					<div className="col-md-12 ">
 						<Row className={styles.align__text_left}>
 							<BaseInput
-								className="col-6"
+								className="col-md-6 my-3"
 								required
 								name={`LINE_ADDRESS.value.address_1`}
 								placeholder="ADDRESS_LINE_1"
 								label="ADDRESS_LINE_1"
 								formik={form}
 							/>
-						</Row>
-						<Row className={styles.align__text_left}>
 							<BaseInput
-								className="col-6"
+								className="col-md-6 my-3"
 								required
 								name={`LINE_ADDRESS.value.address_2`}
 								placeholder="ADDRESS_LINE_2"
@@ -113,30 +110,26 @@ export function BackgroundInfo() {
 			</>
 
 			<Row className={styles.align__text_left}>
-				<Col className="p-0">
-					<BaseInput
-						className="col-12 mt-2 float-left"
-						required
-						name="city"
-						placeholder="city"
-						label="city"
-						formik={form}
-					/>
-				</Col>
-				<Col>
-					<StateSelect
-						className="col-12 mt-2"
-						required
-						name="state"
-						label="state"
-						placeholder="CHOOSE_STATE"
-						formik={form}
-					/>
-				</Col>
+				<BaseInput
+					className="col-md-6 my-3"
+					required
+					name="city"
+					placeholder="city"
+					label="city"
+					formik={form}
+				/>
+				<StateSelect
+					className="col-md-6 my-3"
+					required
+					name="state"
+					label="state"
+					placeholder="CHOOSE_STATE"
+					formik={form}
+				/>
 			</Row>
 			<Row className={styles.align__text_left}>
 				<BaseInput
-					className="col-3 mt-2"
+					className="col my-3"
 					required
 					name="zip_code"
 					placeholder="zip_code"
@@ -144,7 +137,7 @@ export function BackgroundInfo() {
 					formik={form}
 				/>
 			</Row>
-			<Row className="mt-2">
+			<Row className="my-3">
 				<Col>
 					<Button className="float-right" type="reset">
 						{t("BACK")}

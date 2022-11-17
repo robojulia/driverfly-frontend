@@ -10,7 +10,7 @@ import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import { EmergenyContactDto } from "../../../../models/jot-form/long-form/emergency-contact.dto";
 
-export interface EmergencyContactProps extends PageProps {}
+export interface EmergencyContactProps extends PageProps { }
 
 export function EmergencyContact() {
   const {
@@ -65,41 +65,35 @@ export function EmergencyContact() {
   return (
     <>
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-        <h4 className={styles.carrierName__smaller}>
+        <h4 className={styles.heading__sty}>
           {t("EMERGENCY_CONTACT_DETAILS")}
         </h4>
 
         <Row className={styles.align__text_left}>
           <BaseInput
-            className="col-6 mt-3"
+            className="col-md-6 my-3"
             name="emergency_contact_name"
             placeholder="emergency_contact"
             label="EMERGENCY_CONTACT_NAME"
             formik={form}
           />
-        </Row>
-        <Row className={styles.align__text_left}>
-          <Col>
-            <BaseInputPhone
-              className="col-10 mt-3"
-              name="emergency_contact_number"
-              placeholder="phone"
-              label="phone"
-              formik={form}
-            />
-          </Col>
-          <Col>
-            <BaseInput
-              className="col-6 mt-3"
-              name="emergency_contact_relationship"
-              placeholder="relationship"
-              label="relationship"
-              formik={form}
-            />
-          </Col>
+          <BaseInputPhone
+            className="col-md-6 my-3"
+            name="emergency_contact_number"
+            placeholder="phone"
+            label="phone"
+            formik={form}
+          />
+          <BaseInput
+            className="col my-3"
+            name="emergency_contact_relationship"
+            placeholder="relationship"
+            label="relationship"
+            formik={form}
+          />
         </Row>
 
-        <Row className="mt-4">
+        <Row className="mt-3">
           <Col>
             <Button className="float-right" type="reset">
               {t("BACK")}

@@ -56,7 +56,7 @@ export function PastSuspension() {
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={styles.paragraph__left}>
 				<BaseCheck
-					className="float-left col-6"
+					className="float-left col"
 					name="is_past_license_suspended"
 					label="LICENSE_PREVILLAGES"
 					formik={form}
@@ -65,7 +65,7 @@ export function PastSuspension() {
 			{form.values.is_past_license_suspended ? (
 				<Row className={styles.align__text_left}>
 					<BaseTextArea
-						className="float-left mt-3"
+						className="mt-3"
 						name="PAST_LICENSE_SUSPENSION.value"
 						label="EXPLAIN_SUSPENSION"
 						formik={form}

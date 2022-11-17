@@ -50,14 +50,18 @@ export function HearAbout() {
   return (
     <>
       <form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-        <Row className={styles.carrierName__smaller}>
+        <Row>
+        <h4 className={styles.heading__sty}>
+						{t("HOW_DID_YOU_HEAR_ABOUT_US")}
+					</h4>
+        </Row>
+        <Row>
           <BaseSelect
-            className="mt-3 mb-3"
+            className="mt-3 mb-3 p-md-0"
             labelPrefix="HearAboutUsType"
             enumType={HearAboutUsType}
             name="HEAR_ABOUT_US.value"
             placeholder="CHOOSE"
-            label="HOW_DID_YOU_HEAR_ABOUT_US"
             formik={form}
           />
         </Row>
@@ -74,13 +78,13 @@ export function HearAbout() {
         )}
         <Row className="mt-3">
           <Col>
-            <Button className="float-right" type="reset">
+            <Button className="float-md-right" type="reset">
               {t("BACK")}
             </Button>
           </Col>
 
           <Col>
-            <Button className="float-left" type="submit">
+            <Button className="float-md-left float-right" type="submit">
               {t("CONTINUE_APPLICATION")}
             </Button>
           </Col>

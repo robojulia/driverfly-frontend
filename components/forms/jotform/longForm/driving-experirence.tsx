@@ -58,31 +58,26 @@ export function DrivingExperience() {
 
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <h4 className={styles.carrierName__smaller}> {t("DRVING_EXPERIENCE")}</h4>
+      <h4 className={styles.heading__sty}> {t("DRVING_EXPERIENCE")}</h4>
       <Row>
-        <Col>
           <BaseInput
-            className="col-12 mt-3"
+            className="col-md-6 my-3"
             required
             name="license_number"
             placeholder="CDL_LICENSE_PLACEHOLDER"
             label="CDL_NUMBER"
             formik={form}
           />
-        </Col>
-        <Col>
           <StateSelect
-            className="col-12 mt-3"
+            className="col-md-6 my-3"
             required
             label="CURRENT_STATE"
             name="state"
             placeholder="STATE"
             formik={form}
           />
-        </Col>
-        <Col>
           <BaseInput
-            className="col-12 mt-3"
+            className="col-md-6 my-3"
             required
             type="date"
             name="license_expiry"
@@ -90,22 +85,16 @@ export function DrivingExperience() {
             label="expiration_date"
             formik={form}
           />
-        </Col>
-      </Row>
-
-      <Row>
-        <Col>
           <StateSelect
-						className="col-4 mt-3"
+						className="col-md-6  my-3"
 						required
 						label="state_issued"
 						name="license_state"
 						placeholder="ISSUANCE_STATE"
 						formik={form}
 					/>
-        </Col>
       </Row>
-      <Row>
+      <Row className="mt-3">
         <Col>
           <Button className="float-right" type="reset">
             {t("BACK")}
