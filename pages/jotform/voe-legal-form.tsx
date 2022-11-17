@@ -84,9 +84,9 @@ export default function jotFormLongForm() {
 const pageOne = () => {
 	// return <BackgroundInfoAttachment />;
     // return <DisclosureAttachment/>
-	return <ConsentAlcoholDrug/>
+	// return <ConsentAlcoholDrug/>
 	// return <BackgroundReportsPsp/>
-	// return <AuthBackgroundInvestigation/>
+	return <AuthBackgroundInvestigation/>
 };
 function t(arg0: string): import("react-toastify").ToastContent {
 	throw new Error("Function not implemented.");
