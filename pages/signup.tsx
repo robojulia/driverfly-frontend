@@ -166,12 +166,15 @@ export default function Signup() {
                 placeholder
                 formik={form}
               />
-              <BaseCheck
-                className="col-12 mt-1 py-2"
-                label="PERSONAL_RECRUITER"
-                name="personal_recruiter"
-                formik={form}
-              />
+              {
+                form.values.role === SignUpRole.COMPANY &&
+                <BaseCheck
+                  className="col-12 mt-1 py-2"
+                  label="PERSONAL_RECRUITER"
+                  name="personal_recruiter"
+                  formik={form}
+                />
+              }
               {
                 form.values.role === SignUpRole.COMPANY &&
                 <BaseInput
@@ -244,15 +247,15 @@ export default function Signup() {
             <Row className="mt-2">
               <Col className="signup_toggle_btn">
                 <BaseCheck
-                className="checklist_toggle"
+                  className="checklist_toggle"
                   label="YOU_ACCEPT_OUR_TOS"
                   name="accept_tos"
                   formik={form}
                 />
-                 <span>
-                <Link href="/terms-and-policies">
-                  <a className="mx-1 primary" >{t("terms_and_condition")}</a>
-                </Link>
+                <span>
+                  <Link href="/terms-and-policies">
+                    <a className="mx-1 primary" >{t("terms_and_condition")}</a>
+                  </Link>
                 </span>
                 <span>{t("AND")}</span>
                 <Link href="/privacy-policy">
