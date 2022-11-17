@@ -75,17 +75,23 @@ export default function DisclosureAttachment() {
                 <p style={{ color: 'black', textAlign: 'left' }}>I have read the above Disclosure Regarding Background Reports provided to me by Prospective Employer and I understand that if I sign this Disclosure and Authorization, Prospective Employer may obtain a report of my crash and inspection history. I hereby authorize Prospective Employer and its employees, authorized agents, and/or affiliates to obtain the information authorized above.</p>
             </div>
 
-            <div className='Row' style={{ textAlign: 'center', marginBottom: '35px' }}>
-                <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>Applicant Name:</p>
-                <p style={{ color: 'black', display: 'inline' }}>Test Name</p>
+            <div className='Row' style={{ textAlign: 'left', marginBottom: '20px' }}>
+                <div className='Col'>
+                    <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>Name:</p>
+                    <p style={{ color: 'black', display: 'inline' }}>Test Name</p>
+                </div>
             </div>
-            <div className='Row' style={{ textAlign: 'center', marginBottom: '35px' }}>
-                <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>Signature:</p>
-                <p style={{ color: 'black', display: 'inline' }}>Signature goes here</p>
+            <div className='Row' style={{ textAlign: 'left', marginBottom: '20px' }}>
+                <div className='Col'>
+                    <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>Signature</p>
+                    <p style={{ color: 'black', display: 'inline' }}>Signature goes here</p>
+                </div>
             </div>
-            <div className='Row' style={{ textAlign: 'center', marginBottom: '35px' }}>
-                <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>Date:</p>
-                <p style={{ color: 'black', display: 'inline' }}>Saturday, October 15, 2022</p>
+            <div className='Row' style={{ textAlign: 'left', marginBottom: '20px' }}>
+                <div className='Col'>
+                    <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>Date:</p>
+                    <p style={{ color: 'black', display: 'inline' }}>Saturday, October 15, 2022</p>
+                </div>
             </div>
 
 

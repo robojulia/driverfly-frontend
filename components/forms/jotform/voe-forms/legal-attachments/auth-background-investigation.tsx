@@ -27,8 +27,8 @@ export default function AuthBackgroundInvestigation() {
         <div className='Row' style={{textAlign:'left',marginBottom:'20px'}}>
             <p style={{ color:'black',display:'inline'}}>The background report(s) may contain information concerning your character, general reputation, personal characteristics, mode of living, or credit standing. The types of background information that may be obtained include, but are not limited to: criminal history; litigation history; motor vehicle record and accident history; social security number verification; address and alias history; credit history; verification of your education, employment and earnings history; professional licensing, credential and certification checks; drug/alcohol testing results and history; military service; and other information.</p>
         </div>
-        <div className='Row' style={{textAlign:'left',marginBottom:'20px'}}>
-            <h4 style={{ color:'black',display:'inline'}}>AUTHORIZATION</h4>
+        <div className='Row' style={{textAlign:'center',marginBottom:'20px'}}>
+            <h4 style={{ color:'black',fontWeight:'bold'}}>AUTHORIZATION</h4>
         </div>
         <div className='Row' style={{textAlign:'left',marginBottom:'20px'}}>
             <p style={{ color:'black',display:'inline'}}>I hereby authorize Company to obtain the consumer reports described above about me.</p>
@@ -36,7 +36,7 @@ export default function AuthBackgroundInvestigation() {
         <div className='Row' style={{textAlign:'left',marginBottom:'20px'}}>
             <div className='Col'>
             <p style={{color:'black', fontWeight:'bold',display:'inline'}}>Name:</p>
-                <p style={{ color:'black',display:'inline'}}>Ansu Priyadarshi</p>
+                <p style={{ color:'black',display:'inline'}}>Test Name</p>
             </div>
         </div>
         <div className='Row' style={{textAlign:'left',marginBottom:'20px'}}>

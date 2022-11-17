@@ -210,45 +210,44 @@ export function BackgroundInfoAttachment() {
             </div>
             <div className="Row">
                 <div className='Col'>
-                    <p style={{textAlign:'left',color:'black',display:'inline',fontWeight:'bold',marginRight:'2.5rem'}}>How many accidents have you had in the last 5 years (even if it was not your fault)?</p>
+                    <p style={{textAlign:'left',color:'black',display:'inline',fontWeight:'bold',marginRight:'10.5rem',marginBottom:'10px'}}>How many accidents have you had in the last <br/> 5 years (even if it was not your fault)?</p>
                     <p style={{color:'black',display:'inline'}}>0</p>
                 </div>
             </div>
             
             <div className="Row">
                 <div className='Col'>
-                    <p style={{textAlign:'left',color:'black',display:'inline',fontWeight:'bold',marginRight:'2.5rem'}}>Have any of your license, permit or privilege to operate a CMV ever been suspended, revoked, or denied for any reason?</p>
+                    <p style={{textAlign:'left',color:'black',display:'inline',fontWeight:'bold',marginRight:'24.2rem', marginTop:'5px'}}>Have any of your license, permit or <br/> privilege to operate a CMV ever been <br/> suspended, revoked, or denied for any <br/> reason?</p>
                     <p style={{color:'black',display:'inline'}}>No</p>
                 </div>
             </div>
             <div className="Row">
                 <div className='Col'>
-                    <p style={{textAlign:'left',color:'black',display:'inline',fontWeight:'bold',marginRight:'2.5rem'}}>Is there any reason you might be unable to perform the functions of the job for which you have applied (as described in the job description)?</p>
+                    <p style={{textAlign:'left',color:'black',display:'inline',fontWeight:'bold',marginRight:'17.1rem'}}>Is there any reason you might be unable <br/> to perform the functions of the job for <br/> which you have applied (as described <br/> in the job description)?</p>
                     <p style={{color:'black',display:'inline'}}>No</p>
                 </div>
             </div>
         
             <div className="Row">
                 <div className='Col'>
-                    <p style={{textAlign:'left',color:'black',display:'inline',fontWeight:'bold',marginRight:'2.5rem'}}>Have you ever been convicted of a felony?</p>
+                    <p style={{textAlign:'left',color:'black',display:'inline',fontWeight:'bold',marginRight:'7.9rem'}}>Have you ever been convicted of a felony?</p>
                     <p style={{color:'black',display:'inline'}}>No</p>
                 </div>
             </div>
             
             <div className="Row">
                 <div className='Col'>
-                    <p style={{textAlign:'left',color:'black',display:'inline',fontWeight:'bold',marginRight:'20.5rem',width:"10px"}}>Have you tested positive, or refused to test, on a pre-employment drug or alcohol test by an employer subject to DOT regulations?</p>
+                    <p style={{textAlign:'left',color:'black',display:'inline',fontWeight:'bold',marginRight:'19.7rem',width:"10px"}}>Have you tested positive, or refused to <br/> test, on a pre-employment drug or <br/> alcohol test by an employer subject to <br/> DOT regulations?</p>
                     <p style={{color:'black',display:'inline'}}>No</p>
                 </div>
             </div>
             
             <div className="Row">
                 <div className='Col'>
-                    <p style={{textAlign:'left',color:'black',display:'inline',fontWeight:'bold',marginRight:'2.5rem'}}>How did you hear about us?</p>
+                    <p style={{textAlign:'left',color:'black',display:'inline',fontWeight:'bold',marginRight:'14.7rem'}}>How did you hear about us?</p>
                     <p style={{color:'black',display:'inline'}}>No</p>
                 </div>
             </div>
-            
 
         </form>
     )
