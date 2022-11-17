@@ -30,8 +30,9 @@
     background: linear-gradient(to bottom right, #1b4454ba, #2ec8c4);
     height: 891px;
 }
+
 .dashboardsidebar aside:hover {
-    background: linear-gradient(to bottom right, #1b4454 , #2ec8c4);
+    background: linear-gradient(to bottom right, #1b4454, #2ec8c4);
     height: 891px;
 
 }
@@ -93,6 +94,7 @@
 .messages_container .navbar button {
     margin: 0;
 }
+
 .messages_container .fw-bold {
     color: #000;
     font-size: 15px;
@@ -312,8 +314,9 @@
     margin: 0% 1%;
     background: linear-gradient(to bottom right, #2ec8c4, #1b4454);
 }
+
 .cards__bg:hover {
-    background: linear-gradient(to bottom right, #1b4454 , #2ec8c4);
+    background: linear-gradient(to bottom right, #1b4454, #2ec8c4);
 
 }
 
@@ -491,7 +494,6 @@ textarea {
     width: 100%;
     top: 0%;
     left: 230px;
-    /* padding: 30px 0px 0px 0px; */
     margin-bottom: 30px;
     z-index: 9999;
 }
@@ -556,7 +558,8 @@ textarea {
 
 @media screen and (max-width: 992px) {
 
-    .dashboardsidebar aside, .dashboardsidebar aside:hover {
+    .dashboardsidebar aside,
+    .dashboardsidebar aside:hover {
         height: auto;
     }
 
@@ -619,7 +622,7 @@ textarea {
 }
 
 .accordion-button:not(.collapsed)::after {
-    background-image: url("../../../img/arrowdown.svg");
+    background-image: url("../../../img/arrowdown.svg") !important;
 
 }
 
@@ -780,12 +783,15 @@ a.here_link {
 .sort_by .custom-select {
     height: 39px !important;
 }
+
 .signup_toggle_btn {
     display: flex;
 }
+
 .form-check-inline {
     align-items: flex-start !important;
 }
+
 .form-check-input {
     margin-top: 3px !important;
 }
