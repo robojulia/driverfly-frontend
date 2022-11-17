@@ -4,6 +4,7 @@ import { Button, Col, Form, Row } from "react-bootstrap";
 import jotformContext from "../../../../context/jotform-context";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { PageProps } from "../../../../types/jotform/page-props.type";
+import styles from "../../../../styles/jotform.module.css";
 
 export interface HalfWayProps extends PageProps { }
 
@@ -27,11 +28,10 @@ export function HalfWay() {
 	return (
 		<>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<h1>{t("HARD_QUESTIONS")}</h1>
-				{/* <img src={giphy} alt="my-gif" /> */}
-				<h3>{t("ANSWER_FOLLOWIN_QUESTIONS")}</h3>
-				<h4>{t("EXCLUDE_CONSIDERATION")}</h4>
-				<Row className="mt-5">
+				<h1 className={styles.heading__sty}>{t("HARD_QUESTIONS")}</h1>
+				<h3 className="text-center">{t("ANSWER_FOLLOWIN_QUESTIONS")}</h3>
+				<p className={`${styles.paragraph} my-4`}>{t("EXCLUDE_CONSIDERATION")}</p>
+				<Row className="mt-4">
 					<Col>
 						<Button className="float-right" type="reset">
 							{t("BACK")}

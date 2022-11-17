@@ -51,9 +51,9 @@ export default function jotFormLongForm() {
 				: [{ ...applicantExtrasEntity }];
 		});
 
-	const [steps, setSteps] = useState<number>(0);
-	const stepNext = (): void => setSteps(steps + 1);
-	const stepBack = (): void => setSteps(steps - 1);
+  const [steps, setSteps] = useState<number>(0);
+  const stepNext = (): void => setSteps(steps + 1);
+  const stepBack = (): void => setSteps(steps - 1);
 
 	useEffect(() => {
 		console.log("applicantextrasvalues", applicantExtras);

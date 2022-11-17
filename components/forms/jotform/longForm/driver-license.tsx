@@ -64,10 +64,10 @@ export function DriverLicense() {
                     <h3>{t("DRIVER_LICENSE_PHOTO")}</h3>
                 </Row>
                 <Row className={styles.align__text_left}>
-                    <FileInput name="document" accept="application/pdf" formik={form} />
+                    <FileInput className="my-3" name="document" accept="application/pdf" formik={form} />
                 </Row>
 
-                <Row className="mt-4">
+                <Row className="mt-3">
                     <Col>
                         <Button className="float-right" type="reset">
                             {t("BACK")}

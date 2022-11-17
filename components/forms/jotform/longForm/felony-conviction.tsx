@@ -55,7 +55,7 @@ export function FelonyConviction() {
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={styles.paragraph__left}>
 				<BaseCheck
-					className="float-left col-6"
+					className="col"
 					name="is_convicted_felony"
 					label="EVER_FELONY_QUESTION"
 					formik={form}

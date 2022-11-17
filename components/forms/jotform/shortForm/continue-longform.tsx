@@ -28,7 +28,7 @@ export function ContinueLongForm() {
 		<>
 			<form onSubmit={form.handleSubmit}>
 				<Row>
-					<h4 className={styles.carrierName__smaller}>
+					<h4 className={styles.heading__sty}>
 						{t("THANKS_BY_NAUTILIUS_TRUCKING")}
 					</h4>
 				</Row>

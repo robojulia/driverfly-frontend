@@ -84,7 +84,7 @@ export function BasicInfo() {
 			>
 				<Row>
 					<BaseInput
-						className="col-6 my-3"
+						className="col-md-6 my-3"
 						required
 						name="email"
 						label="email"
@@ -92,7 +92,7 @@ export function BasicInfo() {
 						formik={form}
 					/>
 					<BaseInputPhone
-						className="col-6 my-3"
+						className="col-md-6 my-3"
 						required
 						name="phone"
 						label="phone"

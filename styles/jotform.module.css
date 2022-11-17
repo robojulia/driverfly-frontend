@@ -22,12 +22,11 @@
 .main_form {
     min-height: 500px;
     min-width: 800px;
-    max-width: 1600px;
-    margin-top: 150px;
+    max-width: 800px;
     padding: 40px;
     border-radius: 14px;
     background-color: #fff;
-    margin-bottom: 8rem;
+    margin: 8rem 1rem;
 }
 
 .customButton{
@@ -48,14 +47,14 @@
     color: rgb(90, 90, 90);
     font-size: 36pt;
 }
-.carrierName__smaller{
-    margin-top: 1rem;
-    text-align: center;
+.heading__sty{
+    font-size: 30px;
     font-weight: 900;
-    color: rgb(90, 90, 90);
-    font-size: 24pt;
-    font-weight: bold;
-    margin-bottom: 4px;
+    text-align: center;
+    display: block;
+    margin: 0;
+    margin: 2rem 0rem;
+    color: #000;
 }
 .Application{
     text-align: center;
@@ -64,7 +63,6 @@
     font-size: 24pt;
 }
 .paragraph{
-    font-style: italic;
     color: rgb(90, 90, 90);
     text-align: center;
 }
@@ -99,5 +97,28 @@
 .highlight{
     color: red;
 }
-  
+@media screen and (max-width: 800px) {
+    .main_form {
+        min-height: 400px;
+        min-width: 400px;
+    }
+  }
 
+  @media screen and (max-width: 600px) {
+    .main_form {
+        min-width: 450px;
+        padding: 15px;
+    }
+    .carrierName{
+        font-size: 22pt;
+    }
+    .heading__sty{
+        font-size: 22px;
+    }
+  }
+  @media screen and (max-width: 460px) {
+    .main_form {
+        min-width: 310px;
+        min-height: 300px;
+    }
+  }
