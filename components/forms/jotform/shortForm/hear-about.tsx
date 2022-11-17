@@ -12,7 +12,7 @@ import styles from "../../../../styles/jotform.module.css";
 import { HearAboutUsType } from "../../../../enums/jotform/hear-about-type.enum";
 import BaseInput from "../../base-input";
 
-export interface HearAboutProps extends PageProps {}
+export interface HearAboutProps extends PageProps { }
 
 export function HearAbout() {
   const {
@@ -51,9 +51,9 @@ export function HearAbout() {
     <>
       <form onSubmit={form.handleSubmit} onReset={form.handleReset}>
         <Row>
-        <h4 className={styles.heading__sty}>
-						{t("HOW_DID_YOU_HEAR_ABOUT_US")}
-					</h4>
+          <h4 className={styles.heading__sty}>
+            {t("HOW_DID_YOU_HEAR_ABOUT_US")}
+          </h4>
         </Row>
         <Row>
           <BaseSelect
@@ -68,7 +68,7 @@ export function HearAbout() {
         {form.values?.HEAR_ABOUT_US?.value === HearAboutUsType.REFERRAL && (
           <Row>
             <BaseInput
-              className="col-6 mb-4"
+              className="col p-0 mb-4"
               name="REFERRAL_NUMBER"
               placeholder="REFERRAL_NUMBER"
               label="REFERRAL_NUMBER"

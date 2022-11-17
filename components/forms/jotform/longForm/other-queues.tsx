@@ -98,10 +98,6 @@ export function OtherQueues() {
                     cols="2"
                 />
             </Row>
-
-            <Row className={`${styles.paragraph} ${styles.align__text_left}`}>
-
-            </Row>
             <Row>
                 <div className="mt-4 float-left d-flex justify-left">
                     <Button
@@ -128,47 +124,45 @@ export function OtherQueues() {
                 <>
                     {form.values.CDL_NUMBER?.value?.map((entity, i) => (
                         <Row key={i}>
-                            <Row>
-                                <BaseInput
-                                    name={`CDL_NUMBER.value[${i}].license_number`}
-                                    className="col-md-4 my-3"
-                                    placeholder="CDL_NUMBER_1"
-                                    label="CDL_NUMBER"
-                                    formik={form}
-                                />
-                                <StateSelect
-                                    className="col-md-3 my-3"
-                                    name={`CDL_NUMBER.value[${i}].state`}
-                                    placeholder="STATE"
-                                    label="CHOOSE"
-                                    formik={form}
-                                />
-                                <BaseInput
-                                    className="col-md-4 my-3"
-                                    type="date"
-                                    name={`CDL_NUMBER.value[${i}].date`}
-                                    placeholder="expiration_date"
-                                    label="DATE"
-                                    formik={form}
-                                />
-                                <a
-                                    className="text-right col-md-1 mt-md-5"
-                                    href="#"
-                                    onClick={() =>
-                                        form.setValues({
-                                            ...form.values,
-                                            CDL_NUMBER: {
-                                                ...form.values.CDL_NUMBER,
-                                                value: form.values.CDL_NUMBER?.value?.filter(
-                                                    (v, idx) => i != idx
-                                                ),
-                                            },
-                                        })
-                                    }
-                                >
-                                    <DashCircle color="red" />
-                                </a>
-                            </Row>
+                            <BaseInput
+                                name={`CDL_NUMBER.value[${i}].license_number`}
+                                className="col-md-4 my-3"
+                                placeholder="CDL_NUMBER_1"
+                                label="CDL_NUMBER"
+                                formik={form}
+                            />
+                            <StateSelect
+                                className="col-md-3 my-3"
+                                name={`CDL_NUMBER.value[${i}].state`}
+                                placeholder="STATE"
+                                label="CHOOSE"
+                                formik={form}
+                            />
+                            <BaseInput
+                                className="col-md-4 my-3"
+                                type="date"
+                                name={`CDL_NUMBER.value[${i}].date`}
+                                placeholder="expiration_date"
+                                label="DATE"
+                                formik={form}
+                            />
+                            <a
+                                className="text-right col-md-1 mt-md-5"
+                                href="#"
+                                onClick={() =>
+                                    form.setValues({
+                                        ...form.values,
+                                        CDL_NUMBER: {
+                                            ...form.values.CDL_NUMBER,
+                                            value: form.values.CDL_NUMBER?.value?.filter(
+                                                (v, idx) => i != idx
+                                            ),
+                                        },
+                                    })
+                                }
+                            >
+                                <DashCircle color="red" />
+                            </a>
                         </Row>
                     ))}
                 </>
