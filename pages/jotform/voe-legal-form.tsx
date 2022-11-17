@@ -82,9 +82,9 @@ export default function jotFormLongForm() {
 }
 
 const pageOne = () => {
-	return <BackgroundInfoAttachment />;
+	// return <BackgroundInfoAttachment />;
     // return <DisclosureAttachment/>
-	// return <ConsentAlcoholDrug/>
+	return <ConsentAlcoholDrug/>
 	// return <BackgroundReportsPsp/>
 	// return <AuthBackgroundInvestigation/>
 };
