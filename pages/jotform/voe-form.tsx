@@ -8,12 +8,7 @@ import { EmployedByUs } from "../../components/forms/jotform/voe-forms/employed-
 import { AccidentHistory } from "../../components/forms/jotform/voe-forms/accident-history";
 import { SubmissionDetails } from "../../components/forms/jotform/voe-forms/submission-details";
 
-const pages = [
-  IntroPage,
-  EmployedByUs,
-  AccidentHistory,
-  SubmissionDetails,
-];
+const pages = [IntroPage, EmployedByUs, AccidentHistory, SubmissionDetails];
 
 export default function voeForm() {
   const [applicant, setApplicant] = useState<ApplicantEntity>(
@@ -61,6 +56,7 @@ export default function voeForm() {
         <div className={styles.main}>
           <div className={styles.main__voe_form}>
             <PageControl steps={steps} />
+            //some updates
           </div>
         </div>
       </div>
