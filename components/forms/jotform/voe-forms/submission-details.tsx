@@ -73,16 +73,18 @@ const signatureEnd = () => {
         <Row className={`${styles.align__text_left} ${ styles.bold }`}>
             <Col>
             <BaseInput 
-                className="mt-3 float-left col-6 pl-0"
+                className="mt-3 float-left col-9 pl-0"
                 label="FULL_NAME"
                 name="name"
+                formik={ form }
             />
             </Col>
             <Col>
             <BaseInput 
-                className="mt-3 float-left col-6"
+                className="mt-3 float-left col-9"
                 label="TITLE"
                 name="title"
+                formik={ form }
             />
             </Col>
         </Row>
@@ -90,26 +92,29 @@ const signatureEnd = () => {
         <Row className={`${styles.align__text_left} ${ styles.bold }`}>
             <Col>
             <BaseInput 
-                className="mt-3 float-left col-6 pl-0"
+                className="mt-3 float-left col-9 pl-0"
                 label="PHONE"
                 name="phone"
+                formik={ form }
             />
             </Col>
             <Col>
             <BaseInput 
-                className="mt-3 float-left col-6"
+                className="mt-3 float-left col-9"
                 label="EMAIL"
                 name="email"
+                formik={ form }
             />
             </Col>
         </Row>
 
         <Row className={`${styles.align__text_left} ${ styles.bold }`}>
         <BaseInput 
-                className="mt-3 float-left col-3"
+                className="mt-3 float-left col-4"
                 label="DATE"
                 name="date"
                 type="date"
+                formik={ form }
             />
         </Row>
 

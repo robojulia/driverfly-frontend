@@ -49,6 +49,7 @@ export function AccidentHistory() {
                 name="was_employed_as"
                 label="was_employed_as"
                 placeholder= "POSITION"
+                formik={ form }
                 />
             </Col>
             <Col className={ `${styles.align__text_left } ${styles.bold}`}>
@@ -57,6 +58,7 @@ export function AccidentHistory() {
                 name="start_date"
                 label="START_DATE"
                 type="date"
+                formik={ form }
                 placeholder= "mm/yy"/>
             </Col>
             <Col className={ `${styles.align__text_left } ${styles.bold}`}>
@@ -65,6 +67,7 @@ export function AccidentHistory() {
                 name="end_date"
                 type="date"
                 label="END_DATE"
+                formik={ form }
                 placeholder= "mm/yy"/>
             </Col>
         </Row>
@@ -80,7 +83,7 @@ export function AccidentHistory() {
       {form.values.type_of_vehicle ? (
         <Row className={ `${styles.align__text_left } ${styles.bold} ${ styles.paragraph }`}>
           <BaseTextArea
-            className="float-left mt-3 col-4"
+            className="float-left mt-3 col-6"
             name="TYPE_OF_VEHICLE.value"
             label="TYPE_OF_VEHICLE"
             formik={ form }
@@ -120,6 +123,7 @@ export function AccidentHistory() {
                     name="first_date"
                     type="date"
                     label="DATE"
+                    formik={ form }
                     />
                   </Col>
                   <Col>
@@ -127,6 +131,7 @@ export function AccidentHistory() {
                     className="col-9 mt-3" 
                     name="first_location"
                     label="LOCATION"
+                    formik={ form }
                     />
                   </Col>
                   <Col>
@@ -134,6 +139,7 @@ export function AccidentHistory() {
                     className="col-9 mt-3" 
                     name="first_injuries"
                     label="#INJURIES"
+                    formik={ form }
                     />
                   </Col>
                   <Col>
@@ -141,6 +147,7 @@ export function AccidentHistory() {
                     className="col-9 mt-3" 
                     name="first_fatalities"
                     label="#FATALITIES"
+                    formik={ form }
                     />
                   </Col>
                   <Col>
@@ -148,6 +155,7 @@ export function AccidentHistory() {
                     className="col-9 mt-3" 
                     name="first_spill"
                     label="#HAZMAT_SPILLS"
+                    formik={ form }
                     />
                   </Col>
               </Row>
@@ -159,6 +167,7 @@ export function AccidentHistory() {
                     name="second_date"
                     type="date"
                     label="DATE"
+                    formik={ form }
                     />
                   </Col>
                   <Col>
@@ -166,6 +175,7 @@ export function AccidentHistory() {
                     className="col-9 mt-3" 
                     name="second_location"
                     label="LOCATION"
+                    formik={ form }
                     />
                   </Col>
                   <Col>
@@ -173,6 +183,7 @@ export function AccidentHistory() {
                     className="col-9 mt-3" 
                     name="second_injuries"
                     label="#INJURIES"
+                    formik={ form }
                     />
                   </Col>
                   <Col>
@@ -180,6 +191,7 @@ export function AccidentHistory() {
                     className="col-9 mt-3" 
                     name="second_fatalities"
                     label="#FATALITIES"
+                    formik={ form }
                     />
                   </Col>
                   <Col>
@@ -187,6 +199,7 @@ export function AccidentHistory() {
                     className="col-9 mt-3" 
                     name="second_spill"
                     label="#HAZMAT_SPILLS"
+                    formik={ form }
                     />
                   </Col>
               </Row>
@@ -198,6 +211,7 @@ export function AccidentHistory() {
                     name="third_date"
                     type="date"
                     label="DATE"
+                    formik={ form }
                     />
                   </Col>
                   <Col>
@@ -205,6 +219,7 @@ export function AccidentHistory() {
                     className="col-9 mt-3" 
                     name="third_location"
                     label="LOCATION"
+                    formik={ form }
                     />
                   </Col>
                   <Col>
@@ -212,6 +227,7 @@ export function AccidentHistory() {
                     className="col-9 mt-3" 
                     name="third_injuries"
                     label="#INJURIES"
+                    formik={ form }
                     />
                   </Col>
                   <Col>
@@ -219,6 +235,7 @@ export function AccidentHistory() {
                     className="col-9 mt-3" 
                     name="third_fatalities"
                     label="#FATALITIES"
+                    formik={ form }
                     />
                   </Col>
                   <Col>
@@ -226,6 +243,7 @@ export function AccidentHistory() {
                     className="col-9 mt-3" 
                     name="third_spill"
                     label="#HAZMAT_SPILLS"
+                    formik={ form }
                     />
                   </Col>
               </Row>
