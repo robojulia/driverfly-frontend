@@ -33,88 +33,101 @@ import "react-toastify/dist/ReactToastify.css";
 import jotformContext from "../../context/jotform-context";
 import { PageProps } from "../../types/jotform/page-props.type";
 import { ApplicantExtrasEntity } from "../../models/applicant/applicant-extras.entity";
+import { ApplicantVoeFormEntity } from "../../models/applicant/applicant-voe-form.entity";
 
 export default function jotFormLongForm() {
-	const [applicant, setApplicant] = useState<ApplicantEntity>(
-		new ApplicantEntity()
-	);
-	const [applicantExtras, setApplicantExtras] = useState<
-		ApplicantExtrasEntity[]
-	>([]);
-	const updateApplicantExtras = (
-		applicantExtrasEntity: ApplicantExtrasEntity
-	) =>
-		setApplicantExtras((oldApx) => {
-			oldApx = oldApx?.filter((v) => v.type !== applicantExtrasEntity.type);
-			return !!oldApx
-				? [...oldApx, { ...applicantExtrasEntity }]
-				: [{ ...applicantExtrasEntity }];
-		});
+  const [applicant, setApplicant] = useState<ApplicantEntity>(
+    new ApplicantEntity()
+  );
+  const [applicantExtras, setApplicantExtras] = useState<
+    ApplicantExtrasEntity[]
+  >([]);
+  const updateApplicantExtras = (
+    applicantExtrasEntity: ApplicantExtrasEntity
+  ) =>
+    setApplicantExtras((oldApx) => {
+      oldApx = oldApx?.filter((v) => v.type !== applicantExtrasEntity.type);
+      return !!oldApx
+        ? [...oldApx, { ...applicantExtrasEntity }]
+        : [{ ...applicantExtrasEntity }];
+    });
 
-	const [steps, setSteps] = useState<number>(0);
-	const stepNext = (): void => setSteps(steps + 1);
-	const stepBack = (): void => setSteps(steps - 1);
+  const [applicantVoe, setApplicantVoe] = useState<ApplicantVoeFormEntity[]>(
+    []
+  );
+  const updateApplicantVoe = (applicantVoeEntity: ApplicantVoeFormEntity) =>
+    setApplicantVoe((oldApx) => {
+      oldApx = oldApx?.filter((v) => v.type !== applicantVoeEntity.type);
+      return !!oldApx
+        ? [...oldApx, { ...applicantVoeEntity }]
+        : [{ ...applicantVoeEntity }];
+    });
 
-	useEffect(() => {
-		console.log("applicantextrasvalues", applicantExtras);
-	}, []);
+  const [steps, setSteps] = useState<number>(0);
+  const stepNext = (): void => setSteps(steps + 1);
+  const stepBack = (): void => setSteps(steps - 1);
 
-	const getPageAccordingToStep = (step: number) => (
-		{
-			0: <SplashPage />,
-			1: <Names />,
-			2: <BasicInfo />,
-			3: <CdlExperience />,
-			4: <AccidentViolation />,
-			5: <HearAbout />,
-			6: <ContinueLongForm />,
-			7: <DriverApplication />,
-			8: <BackgroundInfo />,
-			9: <HighestLevelEducation />,
-			10: <DrivingExperience />,
-			11: <OtherQueues />,
-			12: <DriverLicense />,
-			13: <MedicalCard />,
-			14: <EmergencyContact />,
-			15: <EmploymentHistory />,
-			16: <PastEmploymentHistory />,
-			17: <Preferences />,
-			18: <HalfWay />,
-			19: <WorkedBefore />,
-			20: <AccidentHistory />,
-			21: <ViolationHistory />,
-			22: <PastSuspension />,
-			23: <UnableForJob />,
-			24: <FelonyConviction />,
-			25: <DrugTest />,
-			26: <AccordianPage />,
-		}[step]
-	)
+  useEffect(() => {
+    console.log("applicantextrasvalues", applicantExtras);
+  }, []);
 
-	return (
-		<jotformContext.Provider
-			value={{
-				state: {
-					applicant,
-					applicantExtras,
-					steps,
-				},
-				method: {
-					setApplicant,
-					updateApplicantExtras,
-					setSteps,
-					stepNext,
-					stepBack,
-				},
-			}}
-		>
-			<div className={styles.container}>
-				<div className={styles.main}>
-					<div className={styles.main_form} style={{ border: "1px solid red" }}>
-						{getPageAccordingToStep(steps)}
-					</div>
-				</div>
-			</div>
-		</jotformContext.Provider>
-	);
+  const getPageAccordingToStep = (step: number) =>
+    ({
+      0: <SplashPage />,
+      1: <Names />,
+      2: <BasicInfo />,
+      3: <CdlExperience />,
+      4: <AccidentViolation />,
+      5: <HearAbout />,
+      6: <ContinueLongForm />,
+      7: <DriverApplication />,
+      8: <BackgroundInfo />,
+      9: <HighestLevelEducation />,
+      10: <DrivingExperience />,
+      11: <OtherQueues />,
+      12: <DriverLicense />,
+      13: <MedicalCard />,
+      14: <EmergencyContact />,
+      15: <EmploymentHistory />,
+      16: <PastEmploymentHistory />,
+      17: <Preferences />,
+      18: <HalfWay />,
+      19: <WorkedBefore />,
+      20: <AccidentHistory />,
+      21: <ViolationHistory />,
+      22: <PastSuspension />,
+      23: <UnableForJob />,
+      24: <FelonyConviction />,
+      25: <DrugTest />,
+      26: <AccordianPage />,
+    }[step]);
+
+  return (
+    <jotformContext.Provider
+      value={{
+        state: {
+          applicant,
+          applicantExtras,
+          applicantVoe,
+          steps,
+        },
+        method: {
+          setApplicant,
+          updateApplicantExtras,
+          updateApplicantVoe,
+          setSteps,
+          stepNext,
+          stepBack,
+        },
+      }}
+    >
+      <div className={styles.container}>
+        <div className={styles.main}>
+          <div className={styles.main_form} style={{ border: "1px solid red" }}>
+            {getPageAccordingToStep(steps)}
+          </div>
+        </div>
+      </div>
+    </jotformContext.Provider>
+  );
 }

@@ -7,6 +7,7 @@ import { ApplicantEntity } from "../../models/applicant/applicant.entity";
 import { EmployedByUs } from "../../components/forms/jotform/voe-forms/employed-by-us";
 import { AccidentHistory } from "../../components/forms/jotform/voe-forms/accident-history";
 import { SubmissionDetails } from "../../components/forms/jotform/voe-forms/submission-details";
+import { ApplicantVoeFormEntity } from "../../models/applicant/applicant-voe-form.entity";
 
 const pages = [IntroPage, EmployedByUs, AccidentHistory, SubmissionDetails];
 
@@ -27,6 +28,16 @@ export default function voeForm() {
         : [{ ...applicantExtrasEntity }];
     });
 
+  const [applicantVoe, setApplicantVoe] = useState<ApplicantVoeFormEntity[]>(
+    []
+  );
+  const updateApplicantVoe = (applicantVoeEntity: ApplicantVoeFormEntity) =>
+    setApplicantVoe((oldApx) => {
+      oldApx = oldApx?.filter((v) => v.type !== applicantVoeEntity.type);
+      return !!oldApx
+        ? [...oldApx, { ...applicantVoeEntity }]
+        : [{ ...applicantVoeEntity }];
+    });
   const [steps, setSteps] = useState<number>(0);
   const stepNext = (): void => setSteps(steps + 1);
   const stepBack = (): void => setSteps(steps - 1);
@@ -41,11 +52,13 @@ export default function voeForm() {
         state: {
           applicant,
           applicantExtras,
+          applicantVoe,
           steps,
         },
         method: {
           setApplicant,
           updateApplicantExtras,
+          updateApplicantVoe,
           setSteps,
           stepNext,
           stepBack,
@@ -56,7 +69,6 @@ export default function voeForm() {
         <div className={styles.main}>
           <div className={styles.main__voe_form}>
             <PageControl steps={steps} />
-            //some updates
           </div>
         </div>
       </div>

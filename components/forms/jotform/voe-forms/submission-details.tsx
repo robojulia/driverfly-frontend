@@ -2,134 +2,126 @@ import { useFormik } from "formik";
 import React, { useContext, useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
-import * as yup from "yup";
-import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
-import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
-import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import styles from "../../../../styles/jotform.module.css";
-import { ReasonsForLeavingEmployment } from "../../../../enums/users/reasons-for-leaving-employment";
-import BaseSelect from "../../base-select";
-import BaseTextArea from "../../base-text-area";
 import SignaturePad from "react-signature-canvas";
 import SignatureCanvas from "react-signature-canvas";
 import { SubmissionDetailsDto } from "../../../../models/jot-form/voe-form/submission-details.dto";
 
 export interface SubmissionDetailsProps extends PageProps {}
 
-export function SubmissionDetails(){
-    const {
-        method: { stepNext, stepBack, setSteps },
-      } = useContext(jotformContext);
-    
-      const { t } = useTranslation();
-      let padRef = React.useRef<SignatureCanvas>(null);
-      const clearSignaturePad = () => padRef?.current?.clear();
-      const clear = () => {
-        padRef.current?.clear();
-      };
-      const form = useFormik({
-        initialValues: new SubmissionDetailsDto(),
-        onSubmit: (values) => {
-            setSteps(0);
-        },
-        onReset: (values) => {
-            stepBack();
-        },
-});
+export function SubmissionDetails() {
+  const {
+    method: { stepNext, stepBack, setSteps },
+  } = useContext(jotformContext);
 
-const signatureEnd = () => {
+  const { t } = useTranslation();
+  let padRef = React.useRef<SignatureCanvas>(null);
+  const clearSignaturePad = () => padRef?.current?.clear();
+  const clear = () => {
+    padRef.current?.clear();
+  };
+  const form = useFormik({
+    initialValues: new SubmissionDetailsDto(),
+    onSubmit: (values) => {
+      setSteps(0);
+    },
+    onReset: (values) => {
+      stepBack();
+    },
+  });
+
+  const signatureEnd = () => {
     console.log(padRef.current.toDataURL().toString());
     const signatureValue = padRef.current.toDataURL().toString();
-    form.setFieldValue("SIGNATURE.value", signatureValue)
-    
+    form.setFieldValue("SIGNATURE.value", signatureValue);
   };
 
-  return(
-    <Form onSubmit={ form.handleSubmit } onReset={ form.handleReset }>
-        <Row className={`${styles.align__text_left}`}>
-          <Col>
-            <h6 className={ styles.bold }>{t("SIGNATURE")}</h6>
-            <SignaturePad
-              ref={padRef}
-              onEnd={signatureEnd}
-              canvasProps={{
-                width: 720,
-                height: 200,
-                style: { border: "1px solid black" },
-                className: "sigCanvas",
-              }}
-            />
-          </Col>
-        </Row>
+  return (
+    <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+      <Row className={`${styles.align__text_left}`}>
+        <Col>
+          <h6 className={styles.bold}>{t("SIGNATURE")}</h6>
+          <SignaturePad
+            ref={padRef}
+            onEnd={signatureEnd}
+            canvasProps={{
+              width: 720,
+              height: 200,
+              style: { border: "1px solid black" },
+              className: "sigCanvas",
+            }}
+          />
+        </Col>
+      </Row>
 
-        <Row>
-          <Col className={ styles.align__text_center }>
-            <button onClick={clearSignaturePad}>{t("CLEAR")}</button>
-          </Col>
-        </Row>
-        <Row className={`${styles.align__text_left} ${ styles.bold }`}>
-            <Col>
-            <BaseInput 
-                className="mt-3 float-left col-9 pl-0"
-                label="FULL_NAME"
-                name="name"
-                formik={ form }
-            />
-            </Col>
-            <Col>
-            <BaseInput 
-                className="mt-3 float-left col-9"
-                label="TITLE"
-                name="title"
-                formik={ form }
-            />
-            </Col>
-        </Row>
+      <Row>
+        <Col className={styles.align__text_center}>
+          <button onClick={clearSignaturePad}>{t("CLEAR")}</button>
+        </Col>
+      </Row>
+      <Row className={`${styles.align__text_left} ${styles.bold}`}>
+        <Col>
+          <BaseInput
+            className="mt-3 float-left col-9 pl-0"
+            label="FULL_NAME"
+            name="name"
+            formik={form}
+          />
+        </Col>
+        <Col>
+          <BaseInput
+            className="mt-3 float-left col-9"
+            label="TITLE"
+            name="title"
+            formik={form}
+          />
+        </Col>
+      </Row>
 
-        <Row className={`${styles.align__text_left} ${ styles.bold }`}>
-            <Col>
-            <BaseInput 
-                className="mt-3 float-left col-9 pl-0"
-                label="PHONE"
-                name="phone"
-                formik={ form }
-            />
-            </Col>
-            <Col>
-            <BaseInput 
-                className="mt-3 float-left col-9"
-                label="EMAIL"
-                name="email"
-                formik={ form }
-            />
-            </Col>
-        </Row>
+      <Row className={`${styles.align__text_left} ${styles.bold}`}>
+        <Col>
+          <BaseInput
+            className="mt-3 float-left col-9 pl-0"
+            label="PHONE"
+            name="phone"
+            formik={form}
+          />
+        </Col>
+        <Col>
+          <BaseInput
+            className="mt-3 float-left col-9"
+            label="EMAIL"
+            name="email"
+            formik={form}
+          />
+        </Col>
+      </Row>
 
-        <Row className={`${styles.align__text_left} ${ styles.bold }`}>
-        <BaseInput 
-                className="mt-3 float-left col-4"
-                label="DATE"
-                name="date"
-                type="date"
-                formik={ form }
-            />
-        </Row>
+      <Row className={`${styles.align__text_left} ${styles.bold}`}>
+        <BaseInput
+          className="mt-3 float-left col-4"
+          label="DATE"
+          name="date"
+          type="date"
+          formik={form}
+        />
+      </Row>
 
-        <Row className="mt-3">
-          <Col>
-            <Button className="float-right" type="reset">
-              {t("BACK")}
-            </Button>
-          </Col>
-          <Col>
-            <Button className="float-left" type="submit">
-              {t("SUBMIT")}
-            </Button>
-          </Col>
-        </Row>
+      <Row className="mt-3">
+        <Col>
+          <Button className="float-right" type="reset">
+            {t("BACK")}
+          </Button>
+        </Col>
+        <Col>
+          <Button className="float-left" type="submit">
+            {t("SUBMIT")}
+          </Button>
+        </Col>
+      </Row>
     </Form>
   );
 }

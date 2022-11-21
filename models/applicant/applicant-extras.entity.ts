@@ -116,12 +116,7 @@ export class ApplicantExtrasEntity {
         .when("type", {
           is: ApplicantExtras.ALREADY_WORKED_TO_COMPANY,
           then: WorkedBeforeExtrasDto.yupSchema(),
-        })
-        .when("type", {
-          is: ApplicantExtras.TYPE_OF_VEHICLE,
-          then: yup.string().required().nullable(),
-        })
-        
+        }),
     });
   }
 }
