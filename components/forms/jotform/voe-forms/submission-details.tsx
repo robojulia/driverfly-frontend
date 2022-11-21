@@ -9,24 +9,31 @@ import styles from "../../../../styles/jotform.module.css";
 import SignaturePad from "react-signature-canvas";
 import SignatureCanvas from "react-signature-canvas";
 import { SubmissionDetailsDto } from "../../../../models/jot-form/voe-form/submission-details.dto";
+import { ApplicantVoeFormEnum } from "../../../../enums/applicants/applicant-voe-form.enum";
+import { ApplicantVoeFormEntity } from "../../../../models/applicant/applicant-voe-form.entity";
+import BaseInputPhone from "../../base-input-phone";
 
 export interface SubmissionDetailsProps extends PageProps {}
 
 export function SubmissionDetails() {
   const {
-    method: { stepNext, stepBack, setSteps },
+    state: { applicantVoe },
+    method: { updateApplicantVoe, stepBack, setSteps },
   } = useContext(jotformContext);
 
   const { t } = useTranslation();
   let padRef = React.useRef<SignatureCanvas>(null);
   const clearSignaturePad = () => padRef?.current?.clear();
-  const clear = () => {
-    padRef.current?.clear();
-  };
+
   const form = useFormik({
     initialValues: new SubmissionDetailsDto(),
+    validationSchema: SubmissionDetailsDto.yupSchema(),
     onSubmit: (values) => {
-      setSteps(0);
+      const { SIGNATURE_VOE, SENDER_INFO } = values;
+      updateApplicantVoe(SIGNATURE_VOE);
+      updateApplicantVoe(SENDER_INFO);
+
+      // setSteps(0);
     },
     onReset: (values) => {
       stepBack();
@@ -34,10 +41,38 @@ export function SubmissionDetails() {
   });
 
   const signatureEnd = () => {
-    console.log(padRef.current.toDataURL().toString());
     const signatureValue = padRef.current.toDataURL().toString();
-    form.setFieldValue("SIGNATURE.value", signatureValue);
+    form.setFieldValue("SIGNATURE_VOE.value", signatureValue);
   };
+  useEffect(() => {
+    const apx_sign = applicantVoe?.find(
+      (v) => v.type === ApplicantVoeFormEnum.SIGNATURE_VOE
+    );
+    const apx_sender_info = applicantVoe?.find(
+      (v) => v.type === ApplicantVoeFormEnum.SENDER_INFO
+    );
+
+    form.setFieldValue(
+      "SIGNATURE_VOE",
+      padRef?.current?.fromDataURL(apx_sign?.value)
+    );
+
+    form.setValues({
+      ...form.values,
+      SIGNATURE_VOE: !!apx_sign?.type
+        ? apx_sign
+        : new ApplicantVoeFormEntity(ApplicantVoeFormEnum.SIGNATURE_VOE),
+
+      SENDER_INFO: !!apx_sender_info?.type
+        ? apx_sender_info
+        : new ApplicantVoeFormEntity(ApplicantVoeFormEnum.SENDER_INFO),
+    });
+  }, [applicantVoe]);
+
+  useEffect(() => {
+    console.log("form values", form.values);
+    console.log("form eror", form.errors);
+  }, [form.values, form.errors]);
 
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -45,6 +80,7 @@ export function SubmissionDetails() {
         <Col>
           <h6 className={styles.bold}>{t("SIGNATURE")}</h6>
           <SignaturePad
+            name="SIGNATURE_VOE.value"
             ref={padRef}
             onEnd={signatureEnd}
             canvasProps={{
@@ -67,7 +103,7 @@ export function SubmissionDetails() {
           <BaseInput
             className="mt-3 float-left col-9 pl-0"
             label="FULL_NAME"
-            name="name"
+            name="SENDER_INFO.value.name"
             formik={form}
           />
         </Col>
@@ -75,7 +111,7 @@ export function SubmissionDetails() {
           <BaseInput
             className="mt-3 float-left col-9"
             label="TITLE"
-            name="title"
+            name="SENDER_INFO.value.title"
             formik={form}
           />
         </Col>
@@ -83,10 +119,10 @@ export function SubmissionDetails() {
 
       <Row className={`${styles.align__text_left} ${styles.bold}`}>
         <Col>
-          <BaseInput
+          <BaseInputPhone
             className="mt-3 float-left col-9 pl-0"
             label="PHONE"
-            name="phone"
+            name="SENDER_INFO.value.phone"
             formik={form}
           />
         </Col>
@@ -94,7 +130,7 @@ export function SubmissionDetails() {
           <BaseInput
             className="mt-3 float-left col-9"
             label="EMAIL"
-            name="email"
+            name="SENDER_INFO.value.email"
             formik={form}
           />
         </Col>
@@ -104,7 +140,7 @@ export function SubmissionDetails() {
         <BaseInput
           className="mt-3 float-left col-4"
           label="DATE"
-          name="date"
+          name="SENDER_INFO.value.date"
           type="date"
           formik={form}
         />

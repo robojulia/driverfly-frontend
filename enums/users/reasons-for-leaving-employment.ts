@@ -1,8 +1,7 @@
 export enum ReasonsForLeavingEmployment {
-    DISCHARGED = 'Discharged',
-    RESIGNATION = 'Resignation',
-    LAY_OFF = 'Lay Off',
-    MILITARY_DUTY = 'Military Duty',
-    OTHER = 'Other',
-  }
-  
+  DISCHARGED = "DISCHARGED",
+  RESIGNATION = "RESIGNATION",
+  LAY_OFF = "LAY_OFF",
+  MILITARY_DUTY = "MILITARY_DUTY",
+  OTHER = "OTHER¸",
+}

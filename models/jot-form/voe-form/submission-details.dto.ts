@@ -1,25 +1,15 @@
 import * as yup from "yup";
 import { ApplicantExtrasEntity } from "../../applicant/applicant-extras.entity";
+import { ApplicantVoeFormEntity } from "../../applicant/applicant-voe-form.entity";
 
 export class SubmissionDetailsDto {
-  name: string;
-//   last_name: string;
-//   APPLY_DATE: ApplicantExtrasEntity;
-  SIGNATURE: ApplicantExtrasEntity;
+  SIGNATURE_VOE: ApplicantVoeFormEntity;
+  SENDER_INFO: ApplicantVoeFormEntity;
+  
   static yupSchema() {
     return yup.object({
-      name: yup
-        .string()
-        .matches(/^[A-Za-z ]*$/, "Please enter valid name")
-        .required()
-        .nullable(),
-    //   last_name: yup
-    //     .string()
-    //     .matches(/^[A-Za-z ]*$/, "Please enter valid name")
-    //     .required()
-    //     .nullable(),
-    //   APPLY_DATE: ApplicantExtrasEntity.yupSchema(),
-      SIGNATURE: ApplicantExtrasEntity.yupSchema(),
+        SIGNATURE_VOE: ApplicantVoeFormEntity.yupSchema(),
+        SENDER_INFO: ApplicantVoeFormEntity.yupSchema(),
     });
   }
 }

@@ -1,24 +1,33 @@
 import moment from "moment";
 import * as yup from "yup";
-import { ApplicantExtrasEntity } from "../../applicant/applicant-extras.entity";
+import { ApplicantVoeFormEntity } from "../../applicant/applicant-voe-form.entity";
 
 export class AccidentHistoryDto {
-  type_of_vehicle: boolean;
-  TYPE_OF_VEHICLE: ApplicantExtrasEntity;
-  safety_performance_history: boolean;
-  accident_register_data: boolean;
+  WAS_EMPLOYED_AS: ApplicantVoeFormEntity;
+  did_drive_check: boolean;
+  DID_DRIVE_FOR_YOU: ApplicantVoeFormEntity;
+  SAFETY_PERFORMANCE_HISTROY_REPORT: ApplicantVoeFormEntity;
+  registered_accidents_check: boolean;
+  REGISTERED_ACCIDENTS_DETAILS: ApplicantVoeFormEntity;
+  ACCIDENT_REPORTED_TO_GOVERNMENT: ApplicantVoeFormEntity;
+  REASON_TO_LEAVE_EMPLOYMENT: ApplicantVoeFormEntity;
 
   static yupSchema() {
     return yup.object({
-        type_of_vehicle: yup.boolean().required().nullable(),
-        TYPE_OF_VEHICLE: yup
+      WAS_EMPLOYED_AS: ApplicantVoeFormEntity.yupSchema(),
+      DID_DRIVE_FOR_YOU: yup.object().when("did_drive_check", {
+        is: (v) => !!v,
+        then: ApplicantVoeFormEntity.yupSchema(),
+      }),
+      SAFETY_PERFORMANCE_HISTROY_REPORT: ApplicantVoeFormEntity.yupSchema(),
+      REGISTERED_ACCIDENTS_DETAILS: yup
         .object()
-        .when("type_of_vehicle", {
+        .when("registered_accidents_check", {
           is: (v) => !!v,
-          then: ApplicantExtrasEntity.yupSchema(),
-        })
-        .nullable(),
-
+          then: ApplicantVoeFormEntity.yupSchema(),
+        }),
+      ACCIDENT_REPORTED_TO_GOVERNMENT: ApplicantVoeFormEntity.yupSchema(),
+      REASON_TO_LEAVE_EMPLOYMENT: ApplicantVoeFormEntity.yupSchema(),
     });
   }
 }
