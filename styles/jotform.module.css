@@ -31,8 +31,9 @@
 }
 
 .main__voe_form {
-    height: fit-content;
-    width:fit-content;
+    height: max-content;
+    min-width: 700px;
+    max-width: 1200px;
     margin-top: 150px;
     padding: 40px;
     border-radius: 14px;

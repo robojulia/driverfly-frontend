@@ -229,7 +229,7 @@ export function AccidentHistory() {
 												</Col>
 												<Col>
 													<BaseInput
-														className="col-9 mt-3"
+														className="col-9 mt-3 pl-0"
 														name={`REGISTERED_ACCIDENTS_DETAILS.value[${i}].number_of_injuries`}
 														label="NUMBER_OF_INJURIES"
 														formik={form}
@@ -237,7 +237,7 @@ export function AccidentHistory() {
 												</Col>
 												<Col>
 													<BaseInput
-														className="col-9 mt-3"
+														className="col-12 mt-3 pl-0"
 														name={`REGISTERED_ACCIDENTS_DETAILS.value[${i}].number_of_fatalities`}
 														label="NUMBER_OF_FATALITIES"
 														formik={form}
@@ -245,7 +245,7 @@ export function AccidentHistory() {
 												</Col>
 												<Col>
 													<BaseInput
-														className="col-9 mt-3"
+														className="col-13 mt-3 pl-0"
 														name={`REGISTERED_ACCIDENTS_DETAILS.value[${i}].number_of_hazmat_spills`}
 														label="NUMBER_OF_HAZMAT_SPILLS"
 														formik={form}
