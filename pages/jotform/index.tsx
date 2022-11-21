@@ -7,7 +7,6 @@ import { CdlExperience } from "../../components/forms/jotform/shortForm/cdl-expe
 import { AccidentViolation } from "../../components/forms/jotform/shortForm/accident-violation";
 import { HearAbout } from "../../components/forms/jotform/shortForm/hear-about";
 import { ContinueLongForm } from "../../components/forms/jotform/shortForm/continue-longform";
-
 import { DriverApplication } from "../../components/forms/jotform/longForm/driver-application";
 import { BackgroundInfo } from "../../components/forms/jotform/longForm/background-info";
 import { HighestLevelEducation } from "../../components/forms/jotform/longForm/highest-level-education";
@@ -31,7 +30,6 @@ import { ViolationHistory } from "../../components/forms/jotform/longForm/violat
 import { AccordianPage } from "../../components/forms/jotform/longForm/accordian";
 import "react-toastify/dist/ReactToastify.css";
 import jotformContext from "../../context/jotform-context";
-import { PageProps } from "../../types/jotform/page-props.type";
 import { ApplicantExtrasEntity } from "../../models/applicant/applicant-extras.entity";
 
 export default function jotFormLongForm() {
@@ -51,9 +49,9 @@ export default function jotFormLongForm() {
 				: [{ ...applicantExtrasEntity }];
 		});
 
-  const [steps, setSteps] = useState<number>(0);
-  const stepNext = (): void => setSteps(steps + 1);
-  const stepBack = (): void => setSteps(steps - 1);
+	const [steps, setSteps] = useState<number>(0);
+	const stepNext = (): void => setSteps(steps + 1);
+	const stepBack = (): void => setSteps(steps - 1);
 
 	useEffect(() => {
 		console.log("applicantextrasvalues", applicantExtras);
