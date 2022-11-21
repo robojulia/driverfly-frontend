@@ -4,7 +4,7 @@ import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import BaseInput from "../../base-input";
 import { PageProps } from "../../../../types/jotform/page-props.type";
-import jotformContext from "../../../../context/jotform-context";
+import voeFormContextType from "../../../../context/voeform-context";
 import styles from "../../../../styles/jotform.module.css";
 import SignaturePad from "react-signature-canvas";
 import SignatureCanvas from "react-signature-canvas";
@@ -18,8 +18,8 @@ export interface SubmissionDetailsProps extends PageProps {}
 export function SubmissionDetails() {
   const {
     state: { applicantVoe },
-    method: { updateApplicantVoe, stepBack, setSteps },
-  } = useContext(jotformContext);
+    method: { updateApplicantVoe, stepBack, stepNext },
+  } = useContext(voeFormContextType);
 
   const { t } = useTranslation();
   let padRef = React.useRef<SignatureCanvas>(null);
@@ -33,7 +33,7 @@ export function SubmissionDetails() {
       updateApplicantVoe(SIGNATURE_VOE);
       updateApplicantVoe(SENDER_INFO);
 
-      // setSteps(0);
+      stepNext();
     },
     onReset: (values) => {
       stepBack();

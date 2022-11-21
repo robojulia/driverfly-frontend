@@ -3,5 +3,5 @@ export enum ReasonsForLeavingEmployment {
   RESIGNATION = "RESIGNATION",
   LAY_OFF = "LAY_OFF",
   MILITARY_DUTY = "MILITARY_DUTY",
-  OTHER = "OTHER¸",
+  OTHER = "OTHER",
 }

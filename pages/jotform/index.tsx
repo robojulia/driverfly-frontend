@@ -52,17 +52,6 @@ export default function jotFormLongForm() {
         : [{ ...applicantExtrasEntity }];
     });
 
-  const [applicantVoe, setApplicantVoe] = useState<ApplicantVoeFormEntity[]>(
-    []
-  );
-  const updateApplicantVoe = (applicantVoeEntity: ApplicantVoeFormEntity) =>
-    setApplicantVoe((oldApx) => {
-      oldApx = oldApx?.filter((v) => v.type !== applicantVoeEntity.type);
-      return !!oldApx
-        ? [...oldApx, { ...applicantVoeEntity }]
-        : [{ ...applicantVoeEntity }];
-    });
-
   const [steps, setSteps] = useState<number>(0);
   const stepNext = (): void => setSteps(steps + 1);
   const stepBack = (): void => setSteps(steps - 1);
@@ -108,14 +97,11 @@ export default function jotFormLongForm() {
         state: {
           applicant,
           applicantExtras,
-          applicantVoe,
           steps,
         },
         method: {
           setApplicant,
           updateApplicantExtras,
-          updateApplicantVoe,
-          setSteps,
           stepNext,
           stepBack,
         },

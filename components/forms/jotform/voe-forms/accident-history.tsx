@@ -2,15 +2,11 @@ import { useFormik } from "formik";
 import React, { useContext, useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
-import * as yup from "yup";
 import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
 import { PageProps } from "../../../../types/jotform/page-props.type";
-import jotformContext from "../../../../context/jotform-context";
+import voeFormContextType from "../../../../context/voeform-context";
 import { AccidentHistoryDto } from "../../../../models/jot-form/voe-form/accident-history.dto";
-
-import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
-import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import styles from "../../../../styles/jotform.module.css";
 import { ReasonsForLeavingEmployment } from "../../../../enums/users/reasons-for-leaving-employment";
 import BaseSelect from "../../base-select";
@@ -25,7 +21,7 @@ export function AccidentHistory() {
   const {
     state: { applicantVoe },
     method: { stepNext, stepBack, updateApplicantVoe },
-  } = useContext(jotformContext);
+  } = useContext(voeFormContextType);
 
   const { t } = useTranslation();
   const form = useFormik({
@@ -118,7 +114,7 @@ export function AccidentHistory() {
           <BaseInput
             className="col-9 mt-3 pl-0"
             name="WAS_EMPLOYED_AS.value.position"
-            label="was_employed_as"
+            label="WAS_EMPLOYED_AS"
             placeholder="POSITION"
             formik={form}
           />
@@ -130,7 +126,7 @@ export function AccidentHistory() {
             label="START_DATE"
             type="date"
             formik={form}
-            placeholder="mm/yy"
+            placeholder="MM/YY"
           />
         </Col>
         <Col className={`${styles.align__text_left} ${styles.bold}`}>
@@ -140,7 +136,7 @@ export function AccidentHistory() {
             type="date"
             label="END_DATE"
             formik={form}
-            placeholder="mm/yy"
+            placeholder="MM/YY"
           />
         </Col>
       </Row>
@@ -234,7 +230,7 @@ export function AccidentHistory() {
                           <BaseInput
                             className="col-9 mt-3"
                             name={`REGISTERED_ACCIDENTS_DETAILS.value[${i}].number_of_injuries`}
-                            label="#INJURIES"
+                            label="NUMBER_OF_INJURIES"
                             formik={form}
                           />
                         </Col>
@@ -242,7 +238,7 @@ export function AccidentHistory() {
                           <BaseInput
                             className="col-9 mt-3"
                             name={`REGISTERED_ACCIDENTS_DETAILS.value[${i}].number_of_fatalities`}
-                            label="#FATALITIES"
+                            label="NUMBER_OF_FATALITIES"
                             formik={form}
                           />
                         </Col>
@@ -250,7 +246,7 @@ export function AccidentHistory() {
                           <BaseInput
                             className="col-9 mt-3"
                             name={`REGISTERED_ACCIDENTS_DETAILS.value[${i}].number_of_hazmat_spills`}
-                            label="#HAZMAT_SPILLS"
+                            label="NUMBER_OF_HAZMAT_SPILLS"
                             formik={form}
                           />
                         </Col>
@@ -297,6 +293,7 @@ export function AccidentHistory() {
         <BaseSelect
           className="col-4 mt-3"
           required
+          labelPrefix="ReasonsForLeavingEmployment"
           enumType={ReasonsForLeavingEmployment}
           name="REASON_TO_LEAVE_EMPLOYMENT.value"
           placeholder="CHOOSE"

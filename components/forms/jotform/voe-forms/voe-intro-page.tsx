@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { PageProps } from "../../../../types/jotform/page-props.type";
-import jotformContext from "../../../../context/jotform-context";
+import voeFormContextType from "../../../../context/voeform-context";
 import { useContext, useEffect } from "react";
 import styles from "../../../../styles/jotform.module.css";
 
@@ -11,7 +11,7 @@ export interface IntroPageProps extends PageProps {}
 export function IntroPage() {
   const {
     method: { stepNext },
-  } = useContext(jotformContext);
+  } = useContext(voeFormContextType);
   const { t } = useTranslation();
 
   const form = useFormik({
