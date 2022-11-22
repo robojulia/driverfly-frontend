@@ -449,9 +449,6 @@ export function AccordianPage() {
 								<h3>{t("IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")}</h3>
 							</Row>
 							<Row>
-								<h5>{t("WHEN_APPLICATION_SUBMITTED")}</h5>
-							</Row>
-							<Row>
 								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
 									{t("WHEN_SUBMITTED_MAIL_PHONE_COMPUTER")}
 								</p>
