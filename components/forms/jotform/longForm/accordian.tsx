@@ -15,6 +15,8 @@ import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import { AccordianDto } from "../../../../models/jot-form/long-form/accordian.dto";
 
 export interface AccordianPageProps extends PageProps { }
 
@@ -31,7 +33,8 @@ export function AccordianPage() {
 	const clearSignaturePad = () => padRef?.current?.clear();
 
 	const form = useFormik({
-		initialValues: {},
+		initialValues: new AccordianDto(),
+		validationSchema: AccordianDto.yupSchema(),
 		onSubmit: async (values) => {
 			const applicantApi = new ApplicantApi();
 			const filtered_extras = applicantExtras?.filter((v) => !!v.value);
@@ -63,11 +66,18 @@ export function AccordianPage() {
 			(v) => v.type === ApplicantExtras.SIGNATURE
 		);
 
-		// form.setFieldValue(
-		// 	"SIGNATURE",
-		// 	padRef?.current?.fromDataURL(apx_sign?.value)
-		// );
-	});
+		form.setFieldValue(
+			"SIGNATURE",
+			padRef?.current?.fromDataURL(apx_sign?.value)
+		  );
+
+		form.setValues({
+			...form.values,
+			SIGNATURE: !!apx_sign?.type
+			  ? apx_sign
+			  : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE)
+		  });
+	}, [applicant]);
 
 	return (
 		<>
@@ -573,7 +583,7 @@ export function AccordianPage() {
 							<Row>
 								<BaseInput
 									className="col-6 mt-3"
-									name="Employer's Name"
+									name="employer_name"
 									placeholder="EMPLOYER_NAME"
 								// formik={form}
 								/>
