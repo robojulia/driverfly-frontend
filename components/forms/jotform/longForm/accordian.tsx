@@ -14,6 +14,7 @@ import ApplicantApi from "../../../../pages/api/applicant";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
+import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 
 export interface AccordianPageProps extends PageProps { }
 
@@ -50,9 +51,22 @@ export function AccordianPage() {
 		},
 	});
 
+	const handleSignatureEnd = () => {
+		const signatureValue = padRef?.current?.toDataURL()?.toString();
+		form.setFieldValue("SIGNATURE.value", signatureValue);
+	  };
+
 	useEffect(() => {
 		console.log("applicant extras", applicantExtras);
 		console.log("applicant", applicant);
+		const apx_sign = applicantExtras?.find(
+			(v) => v.type === ApplicantExtras.SIGNATURE
+		);
+
+		// form.setFieldValue(
+		// 	"SIGNATURE",
+		// 	padRef?.current?.fromDataURL(apx_sign?.value)
+		// );
 	});
 
 	return (
@@ -135,6 +149,8 @@ export function AccordianPage() {
 								<Col>
 									<h6>{t("SIGNATURE")}</h6>
 									<SignaturePad
+										name="SIGNATURE.value"
+										onEnd={handleSignatureEnd}
 										ref={padRef}
 										canvasProps={{
 											width: 600,
@@ -382,7 +398,8 @@ export function AccordianPage() {
 								<Col>
 									<h6>{t("SIGNATURE")}</h6>
 									<SignaturePad
-										className
+										name="SIGNATURE.value"
+										onEnd={handleSignatureEnd}
 										ref={padRef}
 										canvasProps={{
 											width: 600,
@@ -485,15 +502,16 @@ export function AccordianPage() {
 								<Col>
 									<h6>{t("SIGNATURE")}</h6>
 									<SignaturePad
-										className
+										name="SIGNATURE.value"
+										onEnd={handleSignatureEnd}
 										ref={padRef}
 										canvasProps={{
-											width: 700,
+											width: 600,
 											height: 200,
 											style: { border: "1px solid black" },
 											className: "sigCanvas",
 										}}
-										/>
+									/>
 								</Col>
 							</Row>
 							<Row className={styles.align__text_left}>
@@ -601,7 +619,8 @@ export function AccordianPage() {
 								<Col>
 									<h6>{t("SIGNATURE")}</h6>
 									<SignaturePad
-										className
+										name="SIGNATURE.value"
+										onEnd={handleSignatureEnd}
 										ref={padRef}
 										canvasProps={{
 											width: 600,
@@ -616,17 +635,6 @@ export function AccordianPage() {
 								<Col>
 									<button onClick={clearSignaturePad}>{t("CLEAR")}</button>
 								</Col>
-							</Row>
-							<Row className={styles.align__text_left}>
-								<BaseInput
-									className="col-3 mt-3 mb-3"
-									required
-									type="date"
-									name="date"
-									placeholder="DATE"
-									label="Date"
-								// formik={form}
-								/>
 							</Row>
 						</Accordion.Body>
 					</Accordion.Item>
