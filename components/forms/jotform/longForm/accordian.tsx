@@ -18,101 +18,145 @@ import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.e
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import { AccordianDto } from "../../../../models/jot-form/long-form/accordian.dto";
 
-export interface AccordianPageProps extends PageProps { }
+export interface AccordianPageProps extends PageProps {}
 
 export function AccordianPage() {
+  const {
+    state: { applicantExtras, applicant },
+    method: { stepBack, updateApplicantExtras },
+  } = useContext(jotformContext);
 
-	const {
-		state: { applicantExtras, applicant },
-		method: { stepBack },
-	} = useContext(jotformContext);
+  // new accordian
+  const { t } = useTranslation();
+  let padRef = React.useRef<SignatureCanvas>(null);
+  const clearSignaturePad = () => padRef?.current?.clear();
 
-	// new accordian
-	const { t } = useTranslation();
-	let padRef = React.useRef<SignatureCanvas>(null);
-	const clearSignaturePad = () => padRef?.current?.clear();
+  const form = useFormik({
+    initialValues: new AccordianDto(),
+    validationSchema: AccordianDto.yupSchema(),
+    onSubmit: async (values) => {
+      const {
+        EMPLOYEE_SS_OR_ID,
+        DISCLOSURE_AND_AUTHORIZATION_DATE,
+        IMPORTANT_DISCLOSURE_BACKGROUND_DATE,
+        GENERAL_CONSENT,
+        SIGNATURE,
+      } = values;
+      updateApplicantExtras(EMPLOYEE_SS_OR_ID);
+      updateApplicantExtras(DISCLOSURE_AND_AUTHORIZATION_DATE);
+      updateApplicantExtras(IMPORTANT_DISCLOSURE_BACKGROUND_DATE);
+      updateApplicantExtras(GENERAL_CONSENT);
+      updateApplicantExtras(SIGNATURE);
+      //   const applicantApi = new ApplicantApi();
+      //   const filtered_extras = applicantExtras?.filter((v) => !!v.value);
+      // try {
+      // 	const response = await applicantApi.jotform.create({
+      // 		applicant,
+      // 		applicantExtras: filtered_extras,
+      // 	});
+      // 	toast.success(t("successfully_saved_information"));
+      // } catch (error) {
+      // 	console.log(error);
+      // 	globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
+      // }
+    },
+    onReset: (values) => {
+      stepBack();
+    },
+  });
 
-	const form = useFormik({
-		initialValues: new AccordianDto(),
-		validationSchema: AccordianDto.yupSchema(),
-		onSubmit: async (values) => {
-			const applicantApi = new ApplicantApi();
-			const filtered_extras = applicantExtras?.filter((v) => !!v.value);
-			try {
-				const response = await applicantApi.jotform.create({
-					applicant,
-					applicantExtras: filtered_extras,
-				});
-				toast.success(t("successfully_saved_information"));
-			} catch (error) {
-				console.log(error);
-				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
-			}
-		},
-		onReset: (values) => {
-			stepBack();
-		},
-	});
+  const handleSignatureEnd = () => {
+    const signatureValue = padRef?.current?.toDataURL()?.toString();
+    form.setFieldValue("SIGNATURE.value", signatureValue);
+  };
 
-	const handleSignatureEnd = () => {
-		const signatureValue = padRef?.current?.toDataURL()?.toString();
-		form.setFieldValue("SIGNATURE.value", signatureValue);
-	  };
+  useEffect(() => {
+    console.log("applicant extras", applicantExtras);
+    console.log("applicant", applicant);
+    const apx_sign = applicantExtras?.find(
+      (v) => v.type === ApplicantExtras.SIGNATURE
+    );
+    const apx_ss_id = applicantExtras?.find(
+      (v) => v.type === ApplicantExtras.EMPLOYEE_SS_OR_ID
+    );
+    const apx_disclosure_date = applicantExtras?.find(
+      (v) => v.type === ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE
+    );
+    const apx_background_date = applicantExtras?.find(
+      (v) => v.type === ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
+    );
+    const apx_general_consent = applicantExtras?.find(
+      (v) => v.type === ApplicantExtras.GENERAL_CONSENT
+    );
 
-	useEffect(() => {
-		console.log("applicant extras", applicantExtras);
-		console.log("applicant", applicant);
-		const apx_sign = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.SIGNATURE
-		);
+    form.setFieldValue(
+      "SIGNATURE",
+      padRef?.current?.fromDataURL(apx_sign?.value)
+    );
 
-		form.setFieldValue(
-			"SIGNATURE",
-			padRef?.current?.fromDataURL(apx_sign?.value)
-		  );
+    form.setValues({
+      ...form.values,
+      SIGNATURE: !!apx_sign?.type
+        ? apx_sign
+        : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
+      EMPLOYEE_SS_OR_ID: !!apx_ss_id?.type
+        ? apx_ss_id
+        : new ApplicantExtrasEntity(ApplicantExtras.EMPLOYEE_SS_OR_ID),
+      DISCLOSURE_AND_AUTHORIZATION_DATE: !!apx_disclosure_date?.type
+        ? apx_disclosure_date
+        : new ApplicantExtrasEntity(
+            ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE
+          ),
+      IMPORTANT_DISCLOSURE_BACKGROUND_DATE: !!apx_background_date?.type
+        ? apx_background_date
+        : new ApplicantExtrasEntity(
+            ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
+          ),
+      GENERAL_CONSENT: !!apx_general_consent?.type
+        ? apx_general_consent
+        : new ApplicantExtrasEntity(ApplicantExtras.GENERAL_CONSENT),
+    });
+  }, [applicant]);
 
-		form.setValues({
-			...form.values,
-			SIGNATURE: !!apx_sign?.type
-			  ? apx_sign
-			  : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE)
-		  });
-	}, [applicant]);
-
-	return (
-		<>
-			<ToastContainer />
-			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<h1>{t("FORMS_TO_SIGNUP")}</h1>
-				<h6>{t("PLEASE_CLICK_EACH_ARROW")}</h6>
-				<Accordion className="col-12">
-					<Accordion.Item eventKey="0">
-						<Accordion.Header>
-							{t("VERIFICATION_OF_EMPLOYMENT")}
-						</Accordion.Header>
-						<Accordion.Body>
-							<h2>{t("VERIFICATION_OF_EMPLOYMENT")}</h2>
-							<h6>{t("SAFETY_PERFORMANCE_HISTORY_RECORDS_REQUEST")}</h6>
-							<Row className={styles.align__text_left}>
-								<h3>{t("SECTION_I")}</h3>
-							</Row>
-							<Row className={styles.align__text_left}>
-								<p className={styles.paragraph}>
-									{t("TO_BE_COMPLETED_BY_THE_NEW_EMPLOYER")}
-								</p>
-							</Row>
-							<Row className={styles.align__text_left}>
-								<h6>{t("EMPLOYEE_NAME_NAUTILUS")}</h6>
-							</Row>
-							<Row className={styles.align__text_left}>
-								<Col>
-									<BaseInput
-										className="col-6 mb-3 mt-3"
-										name="BUSINESS_TAX_NUMBER"
-										label="EMPLOYEE_SS_OR_BUSINESS"
-									/>
-								</Col>
-							</Row>
+  useEffect(() => {
+    console.log("form values", form.values);
+    console.log("form errors", form.errors);
+  }, [form.values, form.errors]);
+  return (
+    <>
+      <ToastContainer />
+      <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+        <h1>{t("FORMS_TO_SIGNUP")}</h1>
+        <h6>{t("PLEASE_CLICK_EACH_ARROW")}</h6>
+        <Accordion className="col-12">
+          <Accordion.Item eventKey="0">
+            <Accordion.Header>
+              {t("VERIFICATION_OF_EMPLOYMENT")}
+            </Accordion.Header>
+            <Accordion.Body>
+              <h2>{t("VERIFICATION_OF_EMPLOYMENT")}</h2>
+              <h6>{t("SAFETY_PERFORMANCE_HISTORY_RECORDS_REQUEST")}</h6>
+              <Row className={styles.align__text_left}>
+                <h3>{t("SECTION_I")}</h3>
+              </Row>
+              <Row className={styles.align__text_left}>
+                <p className={styles.paragraph}>
+                  {t("TO_BE_COMPLETED_BY_THE_NEW_EMPLOYER")}
+                </p>
+              </Row>
+              <Row className={styles.align__text_left}>
+                <h6>{t("EMPLOYEE_NAME_NAUTILUS")}</h6>
+              </Row>
+              <Row className={styles.align__text_left}>
+                <Col>
+                  <BaseInput
+                    className="col-6 mb-3 mt-3"
+                    name="EMPLOYEE_SS_OR_ID.value"
+                    label="EMPLOYEE_SS_OR_BUSINESS"
+                    formik={form}
+                  />
+                </Col>
+              </Row>
 
 							<Row className={styles.align__text_left}>
 								<p className={styles.paragraph}>
@@ -448,6 +492,9 @@ export function AccordianPage() {
 							<Row>
 								<h3>{t("IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")}</h3>
 							</Row>
+							{/* <Row>
+								<h5>{t("WHEN_APPLICATION_SUBMITTED")}</h5>
+							</Row> */}
 							<Row>
 								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
 									{t("WHEN_SUBMITTED_MAIL_PHONE_COMPUTER")}
@@ -565,101 +612,101 @@ export function AccordianPage() {
 								<h3>{t("GENERAL_CONSENT_QUERIES")}</h3>
 							</Row>
 
-							<Row>
-								<p className={styles.paragraph}>{t("INSTRUCTIONS_CFR")}</p>
-							</Row>
-							<Row>
-								<BaseInput
-									className="col-6 mt-3"
-									name="name"
-									placeholder="FULL_NAME"
-								// formik={form}
-								/>
-							</Row>
+              <Row>
+                <p className={styles.paragraph}>{t("INSTRUCTIONS_CFR")}</p>
+              </Row>
+              <Row>
+                <BaseInput
+                  className="col-6 mt-3"
+                  name="GENERAL_CONSENT.value.name"
+                  placeholder="FULL_NAME"
+                  formik={form}
+                />
+              </Row>
 
-							<Row>
-								<BaseInput
-									className="col-6 mt-3"
-									name="employer_name"
-									placeholder="EMPLOYER_NAME"
-								// formik={form}
-								/>
-							</Row>
-							<Row>
-								<BaseInput
-									className="col-6 mt-3"
-									name="cdl_license_number"
-									placeholder="CDL_LICENSE_PLACEHOLDER"
-								// formik={form}
-								/>
-							</Row>
-							<Row>
-								<BaseInput
-									className="col-6 mt-3"
-									name="expiration_date"
-									type="date"
-									placeholder="expiration_date"
-								// formik={form}
-								/>
-							</Row>
-							<Row className="mt-4">
-								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
-									{t("CONSENT_TO_CLEARINGHOUSE_1")}
-								</p>
-							</Row>
-							<Row className="mt-4">
-								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
-									{t("CONSENT_TO_CLEARINGHOUSE_2")}
-								</p>
-							</Row>
-							<Row className="mt-4">
-								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
-									{t("CONSENT_TO_CLEARINGHOUSE_3")}
-								</p>
-							</Row>
-							<Row className="mt-4">
-								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
-									{t("CONSENT_TO_CLEARINGHOUSE_4")}
-								</p>
-							</Row>
-							<Row className={styles.align__text_left}>
-								<Col>
-									<h6>{t("SIGNATURE")}</h6>
-									<SignaturePad
-										name="SIGNATURE.value"
-										onEnd={handleSignatureEnd}
-										ref={padRef}
-										canvasProps={{
-											width: 600,
-											height: 200,
-											style: { border: "1px solid black" },
-											className: "sigCanvas",
-										}}
-									/>
-								</Col>
-							</Row>
-							<Row className={styles.align__text_left}>
-								<Col>
-									<button onClick={clearSignaturePad}>{t("CLEAR")}</button>
-								</Col>
-							</Row>
-						</Accordion.Body>
-					</Accordion.Item>
-				</Accordion>
-				<Row className="mt-2">
-					<Col>
-						<Button className="float-right" type="reset">
-							{t("BACK")}
-						</Button>
-					</Col>
+              <Row>
+                <BaseInput
+                  className="col-6 mt-3"
+                  name="GENERAL_CONSENT.value.employer_name"
+                  placeholder="EMPLOYER_NAME"
+                  formik={form}
+                />
+              </Row>
+              <Row>
+                <BaseInput
+                  className="col-6 mt-3"
+                  name="GENERAL_CONSENT.value.cdl_license_number"
+                  placeholder="CDL_LICENSE_PLACEHOLDER"
+                  formik={form}
+                />
+              </Row>
+              <Row>
+                <BaseInput
+                  className="col-6 mt-3"
+                  name="GENERAL_CONSENT.value.expiration_date"
+                  type="date"
+                  placeholder="expiration_date"
+                  formik={form}
+                />
+              </Row>
+              <Row className="mt-4">
+                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                  {t("CONSENT_TO_CLEARINGHOUSE_1")}
+                </p>
+              </Row>
+              <Row className="mt-4">
+                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                  {t("CONSENT_TO_CLEARINGHOUSE_2")}
+                </p>
+              </Row>
+              <Row className="mt-4">
+                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                  {t("CONSENT_TO_CLEARINGHOUSE_3")}
+                </p>
+              </Row>
+              <Row className="mt-4">
+                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                  {t("CONSENT_TO_CLEARINGHOUSE_4")}
+                </p>
+              </Row>
+              <Row className={styles.align__text_left}>
+                <Col>
+                  <h6>{t("SIGNATURE")}</h6>
+                  <SignaturePad
+                    name="SIGNATURE.value"
+                    onEnd={handleSignatureEnd}
+                    ref={padRef}
+                    canvasProps={{
+                      width: 600,
+                      height: 200,
+                      style: { border: "1px solid black" },
+                      className: "sigCanvas",
+                    }}
+                  />
+                </Col>
+              </Row>
+              <Row className={styles.align__text_left}>
+                <Col>
+                  <button onClick={clearSignaturePad}>{t("CLEAR")}</button>
+                </Col>
+              </Row>
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
+        <Row className="mt-2">
+          <Col>
+            <Button className="float-right" type="reset">
+              {t("BACK")}
+            </Button>
+          </Col>
 
-					<Col>
-						<Button className="float-left" type="submit">
-							{t("SUBMIT")}
-						</Button>
-					</Col>
-				</Row>
-			</Form>
-		</>
-	);
+          <Col>
+            <Button className="float-left" type="submit">
+              {t("SUBMIT")}
+            </Button>
+          </Col>
+        </Row>
+      </Form>
+    </>
+  );
 }
