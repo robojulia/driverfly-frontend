@@ -176,12 +176,12 @@ export function AccidentHistory() {
 				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 					<BaseCheck
 						className="float-left col-6 mt-3"
-						name="registered_accidents_check"
+						name="REGISTERED_ACCIDENTS_DETAILS.value"
 						label="ACCIDENT_REGISTER_DATA"
 						formik={form}
 					/>
 				</Row>
-				<Row>
+				{/* <Row>
 					{form.values.registered_accidents_check ? (
 						<>
 							<Row className="mt-3">
@@ -277,7 +277,7 @@ export function AccidentHistory() {
 							)}
 						</>
 					) : null}
-				</Row>
+				</Row> */}
 
 				<Row
 					className={`${styles.align__text_left} ${styles.bold} ${styles.paragraph}`}

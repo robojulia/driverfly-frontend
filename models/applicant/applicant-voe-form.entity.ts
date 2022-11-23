@@ -5,7 +5,6 @@ import { RefisteredAccidentDetailsDto } from "../jot-form/voe-form/registered_ac
 import { SenderInfoDto } from "../jot-form/voe-form/sender_info/index.dto";
 import { WasEmployedAsDto } from "../jot-form/voe-form/was-employed-as/index.dto.";
 
-
 export class ApplicantVoeFormEntity {
   constructor(type?: ApplicantVoeFormEnum) {
     if (!!type) this.type = type;
@@ -39,7 +38,7 @@ export class ApplicantVoeFormEntity {
         })
         .when("type", {
           is: ApplicantVoeFormEnum.REGISTERED_ACCIDENTS_DETAILS,
-          then: yup.array(RefisteredAccidentDetailsDto.yupSchema()),
+          then: yup.boolean().default(false).required().nullable(),
         })
         .when("type", {
           is: ApplicantVoeFormEnum.ACCIDENT_REPORTED_TO_GOVERNMENT,
