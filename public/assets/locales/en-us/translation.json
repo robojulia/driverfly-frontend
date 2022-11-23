@@ -1716,5 +1716,7 @@
     "MILITARY_DUTY": "Military Duty",
     "OTHER": "Other"
   },
-  "DRUG_TEST_DOT":"Please be honest as Nautilius carrier WILL require you to take a drug test, and as per DOT regulations, you WILL be required to go through SAP training if you fail it"
+  "DRUG_TEST_DOT":"Please be honest as Nautilius carrier WILL require you to take a drug test, and as per DOT regulations, you WILL be required to go through SAP training if you fail it",
+  "TYPE_CDL_CLASS":"CDL Class Type",
+  "{name}_carrier":"{{name}} Carrier"
 }

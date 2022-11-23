@@ -119,6 +119,10 @@
     color: red;
 }
 
+.highlight__black{
+    color:black;
+}
+
 .bold{
     font-weight: bold;
 }
