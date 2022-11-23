@@ -73,6 +73,7 @@ export function ViolationHistory() {
         <Col className={styles.align__items_left}>
           <BaseInput
             type="number"
+            required
             className="col-6 mt-3"
             name="VIOLATION_COUNT.value"
             label="HOW_MANY_VIOALTION_3_YEARS"
