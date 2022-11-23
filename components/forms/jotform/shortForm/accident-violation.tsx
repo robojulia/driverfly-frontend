@@ -9,6 +9,7 @@ import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import BaseSelect from "../../base-select";
 import { EligibleInUsa } from "../../../../enums/jotform/drug-test-eligible.enum";
+import styles from "../../../../styles/jotform.module.css";
 
 export interface AccidentViolationProps extends PageProps {}
 
@@ -52,13 +53,19 @@ export function AccidentViolation() {
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
         <Row>
           <BaseCheck
-            className="col-12 my-3"
+            className="col-12 my-3 pl-0"
+            required
             name="can_pass_drug_test"
             label="can_pass_drug_test"
             formik={form}
           />
         </Row>
-        <Row>
+        <Row className='pl-0'>
+          <p className={`${ styles.paragraph } ${ styles.align__text_left }`}>
+            {t("DRUG_TEST_DOT")}
+          </p>
+        </Row>
+        {/* <Row>
           <BaseInput
             className="col-12 my-3 "
             name="accident_count"
@@ -69,10 +76,11 @@ export function AccidentViolation() {
             placeholder="PLACEHOLDER_FOR_DIGITS"
             formik={form}
           />
-        </Row>
+        </Row> */}
         <Row>
           <BaseInput
-            className="col-12 my-3"
+            className="col-5 my-3 pl-0"
+            required
             name="moving_violations_count"
             type="number"
             step={1}
@@ -84,7 +92,7 @@ export function AccidentViolation() {
         </Row>
         <Row>
           <BaseSelect
-            className="col-12 my-3"
+            className="col-5 my-3 pl-0"
             name="ELIGIBLE_TO_WORK_IN_US"
             label="ELIGIBLE_TO_WORK_IN_US"
             labelPrefix="EligibleInUsa"

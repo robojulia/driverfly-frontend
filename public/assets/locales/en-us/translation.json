@@ -1715,5 +1715,6 @@
     "LAY_OFF": "Lay off",
     "MILITARY_DUTY": "Military Duty",
     "OTHER": "Other"
-  }
+  },
+  "DRUG_TEST_DOT":"Please be honest as Nautilius carrier WILL require you to take a drug test, and as per DOT regulations, you WILL be required to go through SAP training if you fail it"
 }
