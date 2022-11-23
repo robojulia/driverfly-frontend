@@ -204,6 +204,7 @@ export function AccordianPage() {
 									<h6>{t("SIGNATURE")}</h6>
 									<SignaturePad
 										name="SIGNATURE.value"
+										required
 										onEnd={handleSignatureEnd}
 										ref={padRef}
 										canvasProps={{
@@ -453,6 +454,7 @@ export function AccordianPage() {
 									<h6>{t("SIGNATURE")}</h6>
 									<SignaturePad
 										name="SIGNATURE.value"
+										required
 										onEnd={handleSignatureEnd}
 										ref={padRef}
 										canvasProps={{
@@ -557,6 +559,7 @@ export function AccordianPage() {
 									<h6>{t("SIGNATURE")}</h6>
 									<SignaturePad
 										name="SIGNATURE.value"
+										required
 										onEnd={handleSignatureEnd}
 										ref={padRef}
 										canvasProps={{
@@ -674,6 +677,7 @@ export function AccordianPage() {
                   <h6>{t("SIGNATURE")}</h6>
                   <SignaturePad
                     name="SIGNATURE.value"
+					required
                     onEnd={handleSignatureEnd}
                     ref={padRef}
                     canvasProps={{
