@@ -25,12 +25,11 @@ export function AccidentViolation() {
     initialValues: new AccidentViolationDto(),
     validationSchema: AccidentViolationDto.yupSchema(),
     onSubmit: (values) => {
-      const { can_pass_drug_test, accident_count, moving_violations_count } =
+      const { can_pass_drug_test, moving_violations_count } =
         values;
       setApplicant({
         ...applicant,
         can_pass_drug_test,
-        accident_count,
         moving_violations_count,
       });
       stepNext();
@@ -44,7 +43,7 @@ export function AccidentViolation() {
       applicant;
     form.setValues({
       can_pass_drug_test: can_pass_drug_test || null,
-      accident_count: accident_count || null,
+      // accident_count: accident_count || null,
       moving_violations_count: moving_violations_count || null,
     });
   }, []);
