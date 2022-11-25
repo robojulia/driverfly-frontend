@@ -47,18 +47,18 @@ export function AccordianPage() {
       updateApplicantExtras(IMPORTANT_DISCLOSURE_BACKGROUND_DATE);
       updateApplicantExtras(GENERAL_CONSENT);
       updateApplicantExtras(SIGNATURE);
-      //   const applicantApi = new ApplicantApi();
-      //   const filtered_extras = applicantExtras?.filter((v) => !!v.value);
-      // try {
-      // 	const response = await applicantApi.jotform.create({
-      // 		applicant,
-      // 		applicantExtras: filtered_extras,
-      // 	});
-      // 	toast.success(t("successfully_saved_information"));
-      // } catch (error) {
-      // 	console.log(error);
-      // 	globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
-      // }
+        const applicantApi = new ApplicantApi();
+        const filtered_extras = applicantExtras?.filter((v) => !!v.value);
+      try {
+      	const response = await applicantApi.jotform.create({
+      		applicant,
+      		applicantExtras: filtered_extras,
+      	});
+      	toast.success(t("successfully_saved_information"));
+      } catch (error) {
+      	console.log(error);
+      	globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
+      }
     },
     onReset: (values) => {
       stepBack();

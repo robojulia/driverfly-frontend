@@ -91,6 +91,11 @@ export default function jotFormLongForm() {
       26: <AccordianPage />,
     }[step]);
 
+    const getStyleAccordingToStep=(step)=>{
+      if(step==2){
+      return { width: "50%" }}
+    }
+
   return (
     <jotformContext.Provider
       value={{
@@ -109,7 +114,7 @@ export default function jotFormLongForm() {
     >
       <div className={styles.container}>
         <div className={styles.main}>
-          <div className={styles.main_form} style={{ border: "1px solid red" }}>
+          <div className={styles.main_form} style={getStyleAccordingToStep(steps)}>
             {getPageAccordingToStep(steps)}
           </div>
         </div>

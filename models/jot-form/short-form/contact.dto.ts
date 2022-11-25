@@ -12,7 +12,11 @@ export class ContactDto {
         return yup.object({
             email: yup.string().email().required().nullable(),
             phone: yup.string().required().nullable(),
-            zip_code: yup.string().length(5).required().nullable(),
+            zip_code: yup.string()
+            .required()
+            .matches(/^[0-9]+$/, "Must be only digits")
+            .min(5, 'Must be exactly 5 digits')
+            .max(5, 'Must be exactly 5 digits'),
             AUTHORIZE_TO_COMMUNICATE: ApplicantExtrasEntity.yupSchema(),
         });
     }

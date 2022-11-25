@@ -13,6 +13,7 @@ import { PageProps } from "../../../../types/jotform/page-props.type";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
+import { BooleanTypeExtra } from "../../../../enums/jotform/bool-and-not-sure.enum";
 
 export interface BasicInfoProps extends PageProps { }
 
@@ -108,11 +109,13 @@ export function BasicInfo() {
 						placeholder="zip_code"
 						formik={form}
 					/>
-					<BaseSelect
+				</Row>
+				<Row className={styles.align__text_left}>
+				<BaseSelect
 						className="col-12 my-3"
 						required
-						labelPrefix="BooleanPreferenceType"
-						enumType={BooleanType}
+						// labelPrefix="BooleanPreferenceType"
+						enumType={BooleanTypeExtra}
 						name="AUTHORIZE_TO_COMMUNICATE.value"
 						placeholder="CHOOSE"
 						label="SMS_EMAIL_AUTHORIZATION_NAUTILIUS"

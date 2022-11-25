@@ -80,6 +80,7 @@ export function PastEmploymentHistory() {
 						<Row className={`${styles.paragraph} ${styles.align__text_left}`}>
 							<BaseCheck
 								className="mt-3 col-6 float-left"
+								required
 								name="PAST_EMPLOYER.value.authorize"
 								label="CONTACT_AUTHORIZATION"
 								formik={form}
@@ -159,7 +160,6 @@ export function PastEmploymentHistory() {
 							<Col className={styles.align__text_left}>
 								<BaseInput
 									className="col-6 mt-3 mb-3"
-									required
 									name="PAST_EMPLOYER.value.previous_company_street_address_line_2"
 									placeholder="ADDRESS_LINE_2"
 									label="ADDRESS_LINE_2"

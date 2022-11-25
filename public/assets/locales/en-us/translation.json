@@ -1716,5 +1716,8 @@
     "MILITARY_DUTY": "Military Duty",
     "OTHER": "Other"
   },
-  "IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS":"IMPORTANT DISCLOSURE REGARDING BACKGROUND REPORTS FROM THE PSP ONLINE SERVICE"
+  "IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS":"IMPORTANT DISCLOSURE REGARDING BACKGROUND REPORTS FROM THE PSP ONLINE SERVICE",
+  "DRUG_TEST_DOT":"Please be honest as Nautilius carrier WILL require you to take a drug test, and as per DOT regulations, you WILL be required to go through SAP training if you fail it",
+  "TYPE_CDL_CLASS":"CDL Class Type",
+  "{name}_carrier":"{{name}} Carrier"
 }

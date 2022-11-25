@@ -20,12 +20,7 @@ export class AccidentHistoryDto {
         then: ApplicantVoeFormEntity.yupSchema(),
       }),
       SAFETY_PERFORMANCE_HISTROY_REPORT: ApplicantVoeFormEntity.yupSchema(),
-      REGISTERED_ACCIDENTS_DETAILS: yup
-        .object()
-        .when("registered_accidents_check", {
-          is: (v) => !!v,
-          then: ApplicantVoeFormEntity.yupSchema(),
-        }),
+      REGISTERED_ACCIDENTS_DETAILS: ApplicantVoeFormEntity.yupSchema(),
       ACCIDENT_REPORTED_TO_GOVERNMENT: ApplicantVoeFormEntity.yupSchema(),
       REASON_TO_LEAVE_EMPLOYMENT: ApplicantVoeFormEntity.yupSchema(),
     });

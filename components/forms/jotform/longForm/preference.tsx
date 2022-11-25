@@ -76,13 +76,14 @@ export function Preferences() {
 			{" "}
 			<h1>{t("PREFERENCES")}</h1>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<Row className={styles.align__text_left}>
-					<p className={styles.paragraph}>{t("ROUTES_YOU_OPEN_FOR")}</p>
+				<Row>
+					<p className={`${styles.paragraph} ${ styles.align__text_left}`}>{t("ROUTES_YOU_OPEN_FOR")}</p>
 				</Row>
 				<Row className={styles.align__text_left}>
 					<Col>
 						<BaseCheckList
 							className="col-3 mb-3"
+							required
 							labelKey="ROUTES_OPEN_TO"
 							name="ROUTES.value"
 							labelPrefix="RouteType"

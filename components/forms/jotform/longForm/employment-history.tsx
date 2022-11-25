@@ -72,6 +72,7 @@ export function EmploymentHistory() {
         <Row className={styles.align__text_left}>
           <BaseCheck
             className="mt-2 col-6 float-left"
+            required
             label="CURRENTLY_EMPLYED_QUESTION"
             name="is_current_employed"
             formik={form}
@@ -93,6 +94,7 @@ export function EmploymentHistory() {
               <Col className={styles.align__text_left}>
                 <BaseInput
                   className="col-12 mt-3"
+                  required
                   name="CURRENT_EMPLOYER.value.current_company_name"
                   label="CURRENT_COMPANY_NAME"
                   formik={form}
@@ -184,7 +186,6 @@ export function EmploymentHistory() {
               <Col>
                 <BaseInput
                   className="col-6 mt-3"
-                  required
                   name="CURRENT_EMPLOYER.value.current_company_street_address_line_2"
                   placeholder="ADDRESS_LINE_2"
                   label="ADDRESS_LINE_2"

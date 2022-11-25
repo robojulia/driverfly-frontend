@@ -12,7 +12,6 @@ import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import { AccidentHistoryEntity } from "../../../../models/jot-form/long-form/accident-last-5-years/index.dto";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
-import { ApplicantVOEFormEnum } from "../../../../enums/applicants/applicant-voe-form.enum";
 
 export interface AccidentHistoryProps extends PageProps {}
 
@@ -70,6 +69,7 @@ export function AccidentHistory() {
         <Col className={styles.align__text_left}>
           <BaseInput
             className="col-6 mt-3"
+            required
             type="number"
             name="accident_count"
             label="accidents_last_5_years"

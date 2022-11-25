@@ -4,10 +4,12 @@ import { ApplicantVoeFormEntity } from "../models/applicant/applicant-voe-form.e
 type voeFormContextType = {
   state: {
     applicantVoe: ApplicantVoeFormEntity[];
+    uuidVoeToken: any;
     steps: number;
   };
   method: {
     updateApplicantVoe: (e?: any) => void;
+    updateUuidVoeToken: (e?: any) => void;
     stepNext: () => void;
     stepBack: () => void;
   };
@@ -16,10 +18,12 @@ type voeFormContextType = {
 const jotformContext = createContext<voeFormContextType>({
   state: {
     applicantVoe: [],
+    uuidVoeToken: '',
     steps: 0,
   },
   method: {
     updateApplicantVoe: (e?: any) => {},
+    updateUuidVoeToken: (e?: any) => {},
     stepNext: () => {},
     stepBack: () => {},
   },
