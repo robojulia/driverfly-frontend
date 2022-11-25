@@ -46,13 +46,13 @@ export default function jotFormLongForm() {
     applicantExtrasEntity: ApplicantExtrasEntity
   ) =>
     setApplicantExtras((oldApx) => {
-      oldApx = oldApx?.filter((v) => v.type !== applicantExtrasEntity.type);
+      oldApx = oldApx?.filter((v) => v.type !== applicantExtrasEntity?.type);
       return !!oldApx
         ? [...oldApx, { ...applicantExtrasEntity }]
         : [{ ...applicantExtrasEntity }];
     });
 
-  const [steps, setSteps] = useState<number>(26);
+  const [steps, setSteps] = useState<number>(23);
   const stepNext = (): void => setSteps(steps + 1);
   const stepBack = (): void => setSteps(steps - 1);
 
@@ -109,6 +109,7 @@ export default function jotFormLongForm() {
           updateApplicantExtras,
           stepNext,
           stepBack,
+          setSteps
         },
       }}
     >
