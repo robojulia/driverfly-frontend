@@ -20,12 +20,12 @@ import { globalAjaxExceptionHandler } from "../utils/ajax";
 import { FbLeadsDto } from "../models/fb-leads.dto";
 import { PublicPage } from "../components/layouts/public/public-page";
 import FbLeadsApi from "./api/fb-leads";
+import { useEffectAsync } from "../utils/react";
 
 
 export default function Signup() {
 
     const router = useRouter();
-
 
     const { t } = useTranslation();
 
@@ -45,6 +45,11 @@ export default function Signup() {
             }
         }
     });
+    //   Uncomment this in debugging mode
+    useEffectAsync(async () => {
+        console.log("form", form.values)
+        console.log("form", form.errors)
+    }, [form])
 
     return (
         <PublicPage
@@ -86,18 +91,18 @@ export default function Signup() {
                                 placeholder
                                 formik={form}
                             />
-                            <BaseInput
+                            {/* <BaseInput
                                 className="col-12 mt-1"
                                 label="privacy_policy"
                                 required
                                 name="privacy_policy"
                                 placeholder
                                 formik={form}
-                            />
+                            /> */}
 
                         </Row>
                         <div className="d-grid gap-2 my-4 sign_up_btns">
-                            <Button disabled={form.isSubmitting} size="lg" type="submit">{t("SUBMIT")}</Button>
+                            <Button disabled={form.isSubmitting} size="lg" type="submit">{t("submit")}</Button>
                         </div>
                     </form>
                 </Col>

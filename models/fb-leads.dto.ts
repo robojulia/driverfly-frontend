@@ -6,7 +6,7 @@ export class FbLeadsDto {
   follow_up_action_url: string;
   questions: string;
   legal_content_id: string;
-  privacy_policy: string;
+  // privacy_policy: string;
 
 
 
@@ -16,7 +16,7 @@ export class FbLeadsDto {
       follow_up_action_url: yup.string().trim().required().nullable(),
       questions: yup.string().trim().required().nullable(),
       legal_content_id: yup.string().trim().required().nullable(),
-      privacy_policy: yup.string().trim().required().nullable(),
+      // privacy_policy: yup.string().trim().required().nullable(),
 
     });
   }
