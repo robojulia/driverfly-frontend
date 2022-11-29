@@ -63,18 +63,13 @@ export function DriverApplication() {
       (v) => v.type === ApplicantExtras.SIGNATURE
     );
 
-    form.setFieldValue(
-      "SIGNATURE",
-      padRef?.current?.fromDataURL(apx_sign?.value)
-    );
-
     form.setValues({
       ...form.values,
       APPLY_DATE: !!apx?.type
         ? apx
         : new ApplicantExtrasEntity(ApplicantExtras.APPLY_DATE),
       SIGNATURE: !!apx_sign?.type
-        ? apx_sign
+        ? padRef?.current?.fromDataURL(apx_sign?.value)
         : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
       first_name: first_name || null,
       last_name: last_name || null,
@@ -133,7 +128,7 @@ export function DriverApplication() {
 
             <SignaturePad
               name="SIGNATURE.value"
-              className='mt-2'
+              className="mt-2"
               required
               ref={padRef}
               onEnd={handleSignatureEnd}

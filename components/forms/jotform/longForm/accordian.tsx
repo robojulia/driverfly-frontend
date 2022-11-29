@@ -83,15 +83,10 @@ export function AccordianPage() {
       (v) => v.type === ApplicantExtras.GENERAL_CONSENT
     );
 
-    form.setFieldValue(
-      "SIGNATURE",
-      padRef?.current?.fromDataURL(apx_sign?.value)
-    );
-
     form.setValues({
       ...form.values,
       SIGNATURE: !!apx_sign?.type
-        ? apx_sign
+        ? padRef?.current?.fromDataURL(apx_sign?.value)
         : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
       EMPLOYEE_SS_OR_ID: !!apx_ss_id?.type
         ? apx_ss_id

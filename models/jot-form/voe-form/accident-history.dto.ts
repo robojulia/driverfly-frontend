@@ -1,4 +1,3 @@
-import moment from "moment";
 import * as yup from "yup";
 import { ApplicantVoeFormEntity } from "../../applicant/applicant-voe-form.entity";
 

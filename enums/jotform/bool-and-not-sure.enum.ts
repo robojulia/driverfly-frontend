@@ -1,6 +1,5 @@
 export enum BooleanTypeExtra {
-    YES = "YES",
-    NO = "NO",
-    NOT_SURE = "NOT SURE"
-  }
-  
+  YES = "YES",
+  NO = "NO",
+  NOT_SURE = "NOT_SURE",
+}

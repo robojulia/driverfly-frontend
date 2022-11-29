@@ -20,7 +20,7 @@ export interface SubmissionDetailsProps extends PageProps {}
 
 export function SubmissionDetails() {
   const {
-    state: { applicantVoe,uuidVoeToken },
+    state: { applicantVoe, uuidVoeToken },
     method: { updateApplicantVoe, stepBack, stepNext },
   } = useContext(voeFormContextType);
 
@@ -67,15 +67,10 @@ export function SubmissionDetails() {
       (v) => v.type === ApplicantVoeFormEnum.SENDER_INFO
     );
 
-    form.setFieldValue(
-      "SIGNATURE_VOE",
-      padRef?.current?.fromDataURL(apx_sign?.value)
-    );
-
     form.setValues({
       ...form.values,
       SIGNATURE_VOE: !!apx_sign?.type
-        ? apx_sign
+        ? padRef?.current?.fromDataURL(apx_sign?.value)
         : new ApplicantVoeFormEntity(ApplicantVoeFormEnum.SIGNATURE_VOE),
 
       SENDER_INFO: !!apx_sender_info?.type
