@@ -57,7 +57,6 @@ export function AccidentViolation() {
   useEffect(() => {
     console.log("values", form.values);
     console.log("error", form.errors);
-    console.log("applicant", applicant);
   }, [form.values, form.errors]);
 
   return (

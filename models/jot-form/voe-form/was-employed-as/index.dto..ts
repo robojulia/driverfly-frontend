@@ -8,9 +8,9 @@ export class WasEmployedAsDto {
 
   static yupSchema() {
     return yup.object({
-      position: yup.string().optional().nullable(),
-      start_date: yup.date().optional().nullable(),
-      end_date: yup.date().optional().nullable(),
+      position: yup.string().required().nullable(),
+      start_date: yup.date().required().nullable(),
+      end_date: yup.date().required().nullable(),
     });
   }
 }

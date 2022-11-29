@@ -32,13 +32,12 @@ export default function voeForm({ slug }) {
     let key = slugKey;
     setUuidVoeToken(key);
   };
-  
+
   useEffect(() => {
-    let key = router.query.slug
-    updateUuidVoeToken(key)
+    let key = router.query.slug;
+    updateUuidVoeToken(key);
     console.log("from index", key);
-    
-})
+  });
   return (
     <voeFormContextType.Provider
       value={{
