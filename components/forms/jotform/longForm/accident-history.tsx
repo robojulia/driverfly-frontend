@@ -69,6 +69,7 @@ export function AccidentHistory() {
         <Col className={styles.align__text_left}>
           <BaseInput
             className="col-6 mt-3"
+            required
             type="number"
             name="accident_count"
             label="accidents_last_5_years"

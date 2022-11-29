@@ -103,6 +103,7 @@ export function DriverApplication() {
         <Row className={styles.align__text_left}>
           <BaseInput
             className="col-4"
+            required
             name="first_name"
             placeholder="FIRST_NAME"
             label="FIRST_NAME"
@@ -110,13 +111,15 @@ export function DriverApplication() {
           />
           <BaseInput
             className="col-4"
+            required
             name="last_name"
             placeholder="LAST_NAME"
-            label="FIRST_NAME"
+            label="LAST_NAME"
             formik={form}
           />
           <BaseInput
             className="col-4"
+            required
             type="date"
             name="APPLY_DATE.value"
             placeholder="DATE"
@@ -130,6 +133,8 @@ export function DriverApplication() {
 
             <SignaturePad
               name="SIGNATURE.value"
+              className='mt-2'
+              required
               ref={padRef}
               onEnd={handleSignatureEnd}
               canvasProps={{

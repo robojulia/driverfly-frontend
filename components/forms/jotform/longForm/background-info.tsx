@@ -101,7 +101,6 @@ export function BackgroundInfo() {
 						<Row className={styles.align__text_left}>
 							<BaseInput
 								className="col-6"
-								required
 								name={`LINE_ADDRESS.value.address_2`}
 								placeholder="ADDRESS_LINE_2"
 								label="ADDRESS_LINE_2"
