@@ -115,7 +115,7 @@ export function WorkedBefore() {
 					) : null}
 				</>
 			) : null}
-			<Row className="mt-5">
+			<Row className="mt-3">
 				<Col>
 					<Button className="float-right" type="reset">
 						{t("BACK")}

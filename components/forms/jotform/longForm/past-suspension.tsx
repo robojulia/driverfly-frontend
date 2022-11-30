@@ -66,7 +66,7 @@ export function PastSuspension() {
 			{form.values.is_past_license_suspended ? (
 				<Row className={styles.align__text_left}>
 					<BaseTextArea
-						className="float-left mt-3"
+						className="mt-3"
 						name="PAST_LICENSE_SUSPENSION.value"
 						label="EXPLAIN_SUSPENSION"
 						formik={form}

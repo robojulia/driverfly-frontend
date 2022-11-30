@@ -12,56 +12,56 @@ import jotformContext from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
-export interface DriverApplicationProps extends PageProps {}
+export interface DriverApplicationProps extends PageProps { }
 
 export function DriverApplication() {
-  const {
-    state: { applicant, applicantExtras },
-    method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
-  } = useContext(jotformContext);
+	const {
+		state: { applicant, applicantExtras },
+		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+	} = useContext(jotformContext);
 
-  const { t } = useTranslation();
-  let padRef = React.useRef<SignatureCanvas>(null);
-  const clearSignaturePad = () => padRef?.current?.clear();
+	const { t } = useTranslation();
+	let padRef = React.useRef<SignatureCanvas>(null);
+	const clearSignaturePad = () => padRef?.current?.clear();
 
-  const form = useFormik({
-    initialValues: new DriverApplicationDto(),
-    validationSchema: DriverApplicationDto.yupSchema(),
-    onSubmit: (values) => {
-      try {
-        const { first_name, last_name, APPLY_DATE, SIGNATURE } = values;
-        setApplicant({ ...applicant, first_name, last_name });
-        updateApplicantExtras(APPLY_DATE);
-        updateApplicantExtras(SIGNATURE);
-        stepNext();
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    onReset: () => {
-      stepBack();
-    },
-  });
+	const form = useFormik({
+		initialValues: new DriverApplicationDto(),
+		validationSchema: DriverApplicationDto.yupSchema(),
+		onSubmit: (values) => {
+			try {
+				const { first_name, last_name, APPLY_DATE, SIGNATURE } = values;
+				setApplicant({ ...applicant, first_name, last_name });
+				updateApplicantExtras(APPLY_DATE);
+				updateApplicantExtras(SIGNATURE);
+				stepNext();
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		onReset: () => {
+			stepBack();
+		},
+	});
 
-  const handleSignatureEnd = () => {
-    const signatureValue = padRef?.current?.toDataURL()?.toString();
-    form.setFieldValue("SIGNATURE.value", signatureValue);
-  };
+	const handleSignatureEnd = () => {
+		const signatureValue = padRef?.current?.toDataURL()?.toString();
+		form.setFieldValue("SIGNATURE.value", signatureValue);
+	};
 
-  useEffect(() => {
-    console.log("form.values", form.values);
-    console.log("form.errors", form.errors);
-    console.log("applicant", applicant);
-  }, [form.values, form.errors]);
+	useEffect(() => {
+		console.log("form.values", form.values);
+		console.log("form.errors", form.errors);
+		console.log("applicant", applicant);
+	}, [form.values, form.errors]);
 
-  useEffect(() => {
-    const { first_name, last_name } = applicant;
-    const apx = applicantExtras?.find(
-      (v) => v.type === ApplicantExtras.APPLY_DATE
-    );
-    const apx_sign = applicantExtras?.find(
-      (v) => v.type === ApplicantExtras.SIGNATURE
-    );
+	useEffect(() => {
+		const { first_name, last_name } = applicant;
+		const apx = applicantExtras?.find(
+			(v) => v.type === ApplicantExtras.APPLY_DATE
+		);
+		const apx_sign = applicantExtras?.find(
+			(v) => v.type === ApplicantExtras.SIGNATURE
+		);
 
     form.setValues({
       ...form.values,
@@ -76,24 +76,24 @@ export function DriverApplication() {
     });
   }, [applicant]);
 
-  return (
-    <>
-      <Form onSubmit={form.handleSubmit}>
-        <h6 className={styles.carrierName}>
-          <h1>
-            {t(
-              "{COMPANY_NAME}",
-              { COMPANY_NAME: "talhatrucking" },
-              { translateProps: true }
-            )}
-          </h1>
-        </h6>
-        <h6 className={styles.carrierName__smaller}>
-          {t("DRIVER_APPLICATION")}
-        </h6>
-        <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-          {t("MVR_AND_DMV_AUTHORIZATION_TO_NAUTILIUS")}
-        </p>
+	return (
+		<>
+			<Form onSubmit={form.handleSubmit}>
+				<h6 className={styles.carrierName}>
+					<h1>
+						{t(
+							"{COMPANY_NAME}",
+							{ COMPANY_NAME: "talhatrucking" },
+							{ translateProps: true }
+						)}
+					</h1>
+				</h6>
+				<h6 className={styles.heading__sty}>
+					{t("DRIVER_APPLICATION")}
+				</h6>
+				<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+					{t("MVR_AND_DMV_AUTHORIZATION_TO_NAUTILIUS")}
+				</p>
 
         <Row className={styles.align__text_left}>
           <BaseInput

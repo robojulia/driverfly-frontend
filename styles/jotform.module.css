@@ -4,6 +4,7 @@
     background-image: url("../public/form_bg.png");
     background-position: center;
     background-size: cover;
+    min-height: 100vh;
 }
 
 .nav {
@@ -17,17 +18,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    min-height: 100vh;
 }
 
 .main_form {
     min-height: 500px;
     min-width: 800px;
-    max-width: 1600px;
-    margin-top: 150px;
+    max-width: 800px;
     padding: 40px;
     border-radius: 14px;
     background-color: #fff;
-    margin-bottom: 8rem;
+    margin: 3rem 1rem;
 }
 
 .main__voe_form {
@@ -48,53 +49,61 @@
     text-align: center;
     margin-top: 2rem;
 }
-.logo{
+
+.logo {
     text-align: center;
     margin-bottom: 5rem;
 }
-.carrierName{
+
+.carrierName {
     text-align: center;
     font-weight: 900;
     color: rgb(90, 90, 90);
     font-size: 36pt;
 }
-.carrierName__smaller{
-    margin-top: 1rem;
-    text-align: center;
+
+.heading__sty {
+    font-size: 30px;
     font-weight: 900;
-    color: rgb(90, 90, 90);
-    font-size: 24pt;
-    font-weight: bold;
-    margin-bottom: 4px;
+    text-align: center;
+    display: block;
+    margin: 0;
+    margin: 2rem 0rem;
+    color: #000;
 }
-.Application{
+
+.Application {
     text-align: center;
     margin-top: 2rem;
     color: rgb(90, 90, 90);
     font-size: 24pt;
 }
-.paragraph{
-    font-style: italic;
+
+.paragraph {
     color: rgb(90, 90, 90);
     text-align: center;
 }
 
-.radio{
+.radio {
     display: inline;
     text-align: left;
     left: 0;
 }
-.topicName{
+
+.topicName {
     text-align: cen;
     font-weight: 900;
 }
-.main-radio{
+
+.main-radio {
     margin-bottom: 5rem;
 }
-.CDL-experience{
+
+.CDL-experience {
     margin-top: 4rem;
 }
-.align__text_left{
+
+.align__text_left {
     text-align: left;
 }
 
@@ -112,10 +121,12 @@
     border: 1px solid red;
 
 }
+
 .blur {
-	filter: blur(2px);
+    filter: blur(2px);
 }
-.highlight{
+
+.highlight {
     color: red;
 }
 
@@ -128,3 +139,31 @@
 }
   
 
+@media screen and (max-width: 800px) {
+    .main_form {
+        min-height: 400px;
+        min-width: 400px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .main_form {
+        min-width: 450px;
+        padding: 20px;
+    }
+
+    .carrierName {
+        font-size: 22pt;
+    }
+
+    .heading__sty {
+        font-size: 22px;
+    }
+}
+
+@media screen and (max-width: 460px) {
+    .main_form {
+        min-width: 310px;
+        min-height: 300px;
+    }
+}

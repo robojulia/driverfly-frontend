@@ -1511,7 +1511,7 @@
   "PARTNERS": "Partners",
   "WONEN_IN_LOGISTICS_AND_DELIVERY_SERVICES_(WILDS)": "Women in Logistics and Delivery Services (WILDS)",
   "DRIVERFLY_IS_A_PROUD_OF_WILDS": "DriverFly is a proud member of WILDS, helping women find opportunities in the male-oriented trucking industry. Learn more about what WILDS does here.",
-  "CONTINUE_APPLICATION": "continue application",
+  "CONTINUE_APPLICATION": "Continue Application",
   "NAUTILIUS_TRUCKING": "Nautilius Trucking",
   "JOTFORM_WELCOME": "Welcome we have been waiting for you!",
   "CHOOSE": "Click to choose",
@@ -1622,7 +1622,7 @@
   "SIGNATURE": "Signature",
   "DRIVER_LICENSE_PHOTO": "Drivers License Photo",
   "CDL_LICENSE_PLACEHOLDER": "CDL License Number",
-  "CDL_NUMBER": "CDL NUMBER",
+  "CDL_NUMBER": "CDL Number",
   "CURRENT_STATE": "Current State",
   "ISSUANCE_STATE": "State of Issuance",
   "DRUG_TEST_TESTIMONY_QUESTION": "Have you tested positive, or refused to test, on a pre-employment drug or alcohol test by an employer subject to DOT regulations?",
@@ -1646,8 +1646,8 @@
   "ENDORSEMENT": "Tell us about your endorsements:",
   "THREE_EQUIPMENT_EXPERIMENT": "Tell us upto 3 Equipment Experience(optional)",
   "FILL_FOLLOWING_RELEVENT": "Fill in as many of the following as relevant.",
-  "CDL_NUMBER_1": "CDL NUMBER 1",
-  "CDL_NUMBER_2": "CDL NUMBER 2",
+  "CDL_NUMBER_1": "CDL Number 1",
+  "CDL_NUMBER_2": "CDL Number 2",
   "PREVIOUSLY_EMPLOYED": "Were you previously employed?",
   "CONTACT_AUTHORIZATION": "Do you authorize us to contact this company?",
   "PREVIOUS_MANAGER_NAME": "Previous Manager Name",
@@ -1724,5 +1724,7 @@
   "IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS": "IMPORTANT DISCLOSURE REGARDING BACKGROUND REPORTS FROM THE PSP ONLINE SERVICE",
   "DRUG_TEST_DOT": "Please be honest as Nautilius carrier WILL require you to take a drug test, and as per DOT regulations, you WILL be required to go through SAP training if you fail it",
   "TYPE_CDL_CLASS": "CDL Class Type",
-  "{name}_carrier": "{{name}} Carrier"
+  "{name}_carrier": "{{name}} Carrier",
+  "BACK": "Back",
+  "NEXT": "Next"
 }

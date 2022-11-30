@@ -74,52 +74,43 @@ export function Preferences() {
 	return (
 		<>
 			{" "}
-			<h1>{t("PREFERENCES")}</h1>
+			<h1 className={`${styles.heading__sty}`}>{t("PREFERENCES")}</h1>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<Row>
-					<p className={`${styles.paragraph} ${ styles.align__text_left}`}>{t("ROUTES_YOU_OPEN_FOR")}</p>
+				<Row className={styles.align__text_left}>
+					<p className={`${styles.paragraph}  ${styles.align__text_left}`}>{t("ROUTES_YOU_OPEN_FOR")}</p>
+				</Row>
+				<Row className={`${styles.align__text_left}  other_req `}>
+					<BaseCheckList
+						className="mb-3"
+						labelKey="ROUTES_OPEN_TO"
+						name="ROUTES.value"
+						labelPrefix="RouteType"
+						enumType={RouteType}
+						formik={form}
+					/>
 				</Row>
 				<Row className={styles.align__text_left}>
-					<Col>
-						<BaseCheckList
-							className="col-3 mb-3"
-							required
-							labelKey="ROUTES_OPEN_TO"
-							name="ROUTES.value"
-							labelPrefix="RouteType"
-							enumType={RouteType}
-							formik={form}
-						/>
-					</Col>
+					<BaseSelect
+						className="col mb-3"
+						label="Do you require W2 employment?"
+						name="REQUIRE_W2_EMPLOYMENT.value"
+						placeholder="CHOOSE"
+						labelPrefix="BooleanPreferenceType"
+						enumType={BooleanPreferenceType}
+						formik={form}
+					/>
 				</Row>
 				<Row className={styles.align__text_left}>
-					<Col className={styles.paragraph}>
-						<BaseSelect
-							className="col-3 mb-3"
-							label="Do you require W2 employment?"
-							name="REQUIRE_W2_EMPLOYMENT.value"
-							placeholder="CHOOSE"
-							labelPrefix="BooleanPreferenceType"
-							enumType={BooleanPreferenceType}
-							formik={form}
-						/>
-					</Col>
+					<p className={`${styles.paragraph}  ${styles.align__text_left}`}>{t("NECESSARY_REQUIREMENTS")}</p>
 				</Row>
-				<Row className={styles.align__text_left}>
-					<p className={styles.paragraph}>{t("NECESSARY_REQUIREMENTS")}</p>
-				</Row>
-				<Row className={styles.align__text_left}>
-					<Col>
-						<BaseCheckList
-							className="col-3"
-							labelPrefix="OtherRequirementType"
-							name="OTHER_ABSOLUTELY_REQUIREMENTS.value"
-							enumType={OtherRequirementType}
-							formik={form}
-						/>
-					</Col>
-				</Row>
-				<Row className="mt-5">
+				<BaseCheckList
+					className={`${styles.paragraph}  ${styles.align__text_left} other_req p-0` }
+					labelPrefix="OtherRequirementType"
+					name="OTHER_ABSOLUTELY_REQUIREMENTS.value"
+					enumType={OtherRequirementType}
+					formik={form}
+				/>
+				<Row className="mt-3">
 					<Col>
 						<Button className="float-right" type="reset">
 							{t("BACK")}

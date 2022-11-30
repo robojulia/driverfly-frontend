@@ -185,7 +185,8 @@ h2 {
     min-height: 186px;
     position: relative;
 }
-.navbar-nav a a{
+
+.navbar-nav a a {
     color: #fff !important;
     text-decoration: none !important;
 }
@@ -195,6 +196,7 @@ h2 {
     display: inline-block;
     text-align: end;
 }
+
 .header-sec .navbar-dark .navbar-toggler {
     background: #183745;
 }
@@ -505,7 +507,7 @@ li:hover ul {
 }
 
 .media h4 {
-    color: #2da2af;
+    color: #2da2af !important;
     font-size: 18px;
     margin: 7px 0px !important;
     font-weight: 600;
@@ -575,14 +577,14 @@ span.urgent {
 }
 
 .page-numbers:hover {
-    background: #357694 !important;
+    background: linear-gradient(to bottom right, #1b4454, #2ec8c4) !important;
     transition: all 0.3s;
     text-decoration: none;
     color: white !important;
 }
 
 .page-numbers.current.active {
-    background: #1D4354 !important;
+    background: linear-gradient(to bottom right, #2ec8c4, #1b4454) !important;
     color: white !important;
 }
 
@@ -1437,7 +1439,9 @@ img.who-we-img.img-fluid {
 .tab-sec ul.nav.nav-tabs li {
     padding: 0px;
 }
-.nav-tabs .nav-link:hover, .nav-tabs .nav-link:focus{
+
+.nav-tabs .nav-link:hover,
+.nav-tabs .nav-link:focus {
     isolation: auto !important;
 }
 
@@ -2021,7 +2025,7 @@ li.link-wrapper>a.active {
     justify-content: center;
     align-items: center;
     position: relative;
-    background-image: linear-gradient(180deg,#1e1e1ca8,rgb(0 0 0 / 25%)),url(/img/truck-on-windy-road-hero-min.jpg);
+    background-image: linear-gradient(180deg, #1e1e1ca8, rgb(0 0 0 / 25%)), url(/img/truck-on-windy-road-hero-min.jpg);
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -2029,6 +2033,7 @@ li.link-wrapper>a.active {
 
 
 }
+
 /* .news-letter-signup-sec::before {
     content: "";
     background-size: cover;
@@ -2262,4 +2267,17 @@ input[type=checkbox] {
 .job-list_sec {
     max-width: 1400px;
     margin: 0 auto;
+}
+input[type='radio']:checked:after {
+    width: 16px;
+    height: 16px;
+    border-radius: 15px;
+    top: 0px;
+    left: 8px;
+    position: relative;
+    background: linear-gradient(to bottom right, #2ec8c4, #1b4454) !important;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid white;
 }
