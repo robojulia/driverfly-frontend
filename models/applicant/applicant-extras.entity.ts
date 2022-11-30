@@ -4,6 +4,7 @@ import { BooleanPreferenceType } from "../../enums/users/boolean-preferences.enu
 import { OtherRequirementType } from "../../enums/users/other-requirements.enum";
 import { RouteType } from "../../enums/vehicles/routes-type.enum";
 import { AccidentHistoryEntity } from "../jot-form/long-form/accident-last-5-years/index.dto";
+import { AccordianExtras } from "../jot-form/long-form/accordian-info/index.dto";
 import { BackgroundInfoLineAddress } from "../jot-form/long-form/backgorund-info/index.dto";
 import { CdlExtras } from "../jot-form/long-form/cdl-object/index.dto";
 import { EmploymentHistoryExtraDto } from "../jot-form/long-form/emplyment-history/index.dto";
@@ -116,6 +117,23 @@ export class ApplicantExtrasEntity {
         .when("type", {
           is: ApplicantExtras.ALREADY_WORKED_TO_COMPANY,
           then: WorkedBeforeExtrasDto.yupSchema(),
+        })
+        //for accordian
+        .when("type", {
+          is: ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE,
+          then: yup.date().optional().nullable(),
+        })
+        .when("type", {
+          is: ApplicantExtras.EMPLOYEE_SS_OR_ID,
+          then: yup.string().optional().nullable(),
+        })
+        .when("type", {
+          is: ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE,
+          then: yup.date().optional().nullable(),
+        })
+        .when("type", {
+          is: ApplicantExtras.GENERAL_CONSENT,
+          then: AccordianExtras.yupSchema(),
         }),
     });
   }

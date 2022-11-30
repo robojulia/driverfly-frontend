@@ -1367,6 +1367,11 @@
   "utm_content": {
     "DETAILS_OPTIONAL": "Details (optional)"
   },
+  "BooleanTypeExtra": {
+    "YES": "YES",
+    "NO": "NO",
+    "NOT_SURE": "NOT SURE"
+  },
   "period_of_service": "Period Of Service",
   "equipment_operated": "Equipment Operated",
   "loads_hauled": "Loads Hauled",
@@ -1716,7 +1721,8 @@
     "MILITARY_DUTY": "Military Duty",
     "OTHER": "Other"
   },
-  "DRUG_TEST_DOT":"Please be honest as Nautilius carrier WILL require you to take a drug test, and as per DOT regulations, you WILL be required to go through SAP training if you fail it",
-  "TYPE_CDL_CLASS":"CDL Class Type",
-  "{name}_carrier":"{{name}} Carrier"
+  "IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS": "IMPORTANT DISCLOSURE REGARDING BACKGROUND REPORTS FROM THE PSP ONLINE SERVICE",
+  "DRUG_TEST_DOT": "Please be honest as Nautilius carrier WILL require you to take a drug test, and as per DOT regulations, you WILL be required to go through SAP training if you fail it",
+  "TYPE_CDL_CLASS": "CDL Class Type",
+  "{name}_carrier": "{{name}} Carrier"
 }

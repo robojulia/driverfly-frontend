@@ -46,7 +46,7 @@ export default function jotFormLongForm() {
     applicantExtrasEntity: ApplicantExtrasEntity
   ) =>
     setApplicantExtras((oldApx) => {
-      oldApx = oldApx?.filter((v) => v.type !== applicantExtrasEntity.type);
+      oldApx = oldApx?.filter((v) => v.type !== applicantExtrasEntity?.type);
       return !!oldApx
         ? [...oldApx, { ...applicantExtrasEntity }]
         : [{ ...applicantExtrasEntity }];
@@ -91,10 +91,11 @@ export default function jotFormLongForm() {
       26: <AccordianPage />,
     }[step]);
 
-    const getStyleAccordingToStep=(step)=>{
-      if(step==2){
-      return { width: "50%" }}
+  const getStyleAccordingToStep = (step) => {
+    if (step == 2) {
+      return { width: "50%" };
     }
+  };
 
   return (
     <jotformContext.Provider
@@ -114,7 +115,10 @@ export default function jotFormLongForm() {
     >
       <div className={styles.container}>
         <div className={styles.main}>
-          <div className={styles.main_form} style={getStyleAccordingToStep(steps)}>
+          <div
+            className={styles.main_form}
+            style={getStyleAccordingToStep(steps)}
+          >
             {getPageAccordingToStep(steps)}
           </div>
         </div>
