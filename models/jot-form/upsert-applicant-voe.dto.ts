@@ -5,12 +5,12 @@ import { ApplicantEntity } from "../applicant/applicant.entity";
 
 export class UpsertApplicantVoeformDto {
   uuid_voe_token: string;
-  applicantVoeFormTypes: ApplicantVoeFormEntity[];
+  applicantVoeFormData: ApplicantVoeFormEntity[];
 
   static yupSchema(enumType?: object) {
     return yup.object({
       uuid_voe_token: yup.string().nullable().required(),
-      applicantVoeFormTypes: ApplicantVoeFormEntity.yupSchema(),
+      applicantVoeFormData: ApplicantVoeFormEntity.yupSchema(),
     });
   }
 }

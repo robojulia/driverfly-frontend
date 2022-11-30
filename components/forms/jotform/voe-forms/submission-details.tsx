@@ -41,7 +41,7 @@ export function SubmissionDetails() {
       try {
         const response = await applicantApi.voeform.create({
           uuid_voe_token: uuidVoeToken,
-          applicantVoeFormTypes: applicantVoe,
+          applicantVoeFormData: applicantVoe,
         });
         toast.success(t(response.msg));
       } catch (error) {
