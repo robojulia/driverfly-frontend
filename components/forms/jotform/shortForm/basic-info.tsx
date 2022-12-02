@@ -12,7 +12,6 @@ import jotformContext from "../../../../context/jotform-context";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
-import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 import { BooleanTypeExtra } from "../../../../enums/jotform/bool-and-not-sure.enum";
 
 export interface BasicInfoProps extends PageProps {}

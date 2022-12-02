@@ -1,7 +1,6 @@
 import * as yup from "yup";
 import { ApplicantVoeFormEnum } from "../../enums/applicants/applicant-voe-form.enum";
 import { ReasonsForLeavingEmployment } from "../../enums/users/reasons-for-leaving-employment";
-import { RefisteredAccidentDetailsDto } from "../jot-form/voe-form/registered_accident_details/index.dto";
 import { SenderInfoDto } from "../jot-form/voe-form/sender_info/index.dto";
 import { WasEmployedAsDto } from "../jot-form/voe-form/was-employed-as/index.dto.";
 

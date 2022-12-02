@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../../styles/jotform.module.css";
 import { IntroPage } from "../../../components/forms/jotform/voe-forms/voe-intro-page";
-
 import { EmployedByUs } from "../../../components/forms/jotform/voe-forms/employed-by-us";
 import { AccidentHistory } from "../../../components/forms/jotform/voe-forms/accident-history";
 import { SubmissionDetails } from "../../../components/forms/jotform/voe-forms/submission-details";

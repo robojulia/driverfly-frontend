@@ -31,7 +31,6 @@ import { AccordianPage } from "../../components/forms/jotform/longForm/accordian
 import "react-toastify/dist/ReactToastify.css";
 import jotformContext from "../../context/jotform-context";
 import { ApplicantExtrasEntity } from "../../models/applicant/applicant-extras.entity";
-import { ApplicantVoeFormEntity } from "../../models/applicant/applicant-voe-form.entity";
 
 export default function jotFormLongForm() {
   const [applicant, setApplicant] = useState<ApplicantEntity>(
@@ -50,7 +49,7 @@ export default function jotFormLongForm() {
         : [{ ...applicantExtrasEntity }];
     });
 
-  const [steps, setSteps] = useState<number>(0);
+  const [steps, setSteps] = useState<number>(7);
   const stepNext = (): void => setSteps(steps + 1);
   const stepBack = (): void => setSteps(steps - 1);
 
