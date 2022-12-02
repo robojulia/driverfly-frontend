@@ -13,7 +13,7 @@ import { AccidentHistoryEntity } from "../../../../models/jot-form/long-form/acc
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
-export interface AccidentHistoryProps extends PageProps {}
+export interface AccidentHistoryProps extends PageProps { }
 
 export function AccidentHistory() {
   const {
@@ -62,13 +62,14 @@ export function AccidentHistory() {
 
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <h6 className={styles.carrierName__smaller}>
+      <h6 className={styles.heading__sty}>
         {t("MORE_ABOUT_ACCIDENTS")}
       </h6>
       <Row>
         <Col className={styles.align__text_left}>
           <BaseInput
             className="col-6 mt-3"
+            required
             type="number"
             name="accident_count"
             label="accidents_last_5_years"
@@ -97,72 +98,65 @@ export function AccidentHistory() {
             <Row className="pl-0" key={i}>
               <div className="col-md-12 mt-2">
                 <Row>
-                  <Col>
-                    <BaseInput
-                      className="col-12 mt-3 pl-0"
-                      name={`ACCIDENT_DETAILS.value[${i}].date_of_accident`}
-                      label="DATE"
-                      type="date"
-                      formik={form}
-                    />
-                  </Col>
-                  <Col sm={2}>
-                    <BaseInput
-                      className="col-12 mt-3 pl-0"
-                      name={`ACCIDENT_DETAILS.value[${i}].nature_of_accident`}
-                      label="LABEL_ACCIDENT_NATURE"
-                      formik={form}
-                    />
-                  </Col>
-                  <Col sm={2}>
-                    <BaseInput
-                      className="col-12 mt-3 pl-0"
-                      name={`ACCIDENT_DETAILS.value[${i}].location_of_accident`}
-                      label="LABEL_ACCIDENT_LOCATION"
-                      formik={form}
-                    />
-                  </Col>
-                  <Col sm={2}>
-                    <BaseInput
-                      className="col-12 mt-3 pl-0"
-                      name={`ACCIDENT_DETAILS.value[${i}].number_of_fatalaties`}
-                      label="LABEL_ACCIDENT_FATALITIES"
-                      formik={form}
-                    />
-                  </Col>
-                  <Col sm={2}>
-                    <BaseInput
-                      className="col-12 mt-3 pl-0"
-                      name={`ACCIDENT_DETAILS.value[${i}].number_of_injured`}
-                      label="LABEL_ACCIDENT_INJURED"
-                      formik={form}
-                    />
-                  </Col>
-                  <Col className={styles.align__text_left}>
+                  <BaseInput
+                    className="col-md-4 mt-3"
+                    name={`ACCIDENT_DETAILS.value[${i}].date_of_accident`}
+                    label="DATE"
+                    type="date"
+                    formik={form}
+                  />
+                  <BaseInput
+                    className="col-md-4 mt-3"
+                    name={`ACCIDENT_DETAILS.value[${i}].nature_of_accident`}
+                    label="LABEL_ACCIDENT_NATURE"
+                    formik={form}
+                  />
+                  <BaseInput
+                    className="col-md-4 mt-3"
+                    name={`ACCIDENT_DETAILS.value[${i}].location_of_accident`}
+                    label="LABEL_ACCIDENT_LOCATION"
+                    formik={form}
+                  />
+                  <BaseInput
+                    className="col-md-4 mt-3"
+                    name={`ACCIDENT_DETAILS.value[${i}].number_of_fatalaties`}
+                    label="LABEL_ACCIDENT_FATALITIES"
+                    formik={form}
+                  />
+                  <BaseInput
+                    className="col-md-4 mt-3"
+                    name={`ACCIDENT_DETAILS.value[${i}].number_of_injured`}
+                    label="LABEL_ACCIDENT_INJURED"
+                    formik={form}
+                  />
                     <BaseCheck
-                      className="col-12 mt-3 pl-0"
+                      className="col-md-4 mt-5"
                       name={`ACCIDENT_DETAILS.value[${i}].dot_recordable`}
                       label="LABEL_ACCIDENT_DOT"
                       formik={form}
                     />
 
                     <BaseCheck
-                      className="col-12 mt-3 pl-0"
+                      className="col-md-4 mt-4 p-lg-0"
                       name={`ACCIDENT_DETAILS.value[${i}].at_fault`}
                       label="LABEL_ACCIDENT_FAULT"
                       formik={form}
                     />
-                  </Col>
-                  <Col className="mt-5 pl-0">
+                  <Col className="mt-4 p-lg-0">
                     <a
                       href="#"
-                      onClick={() =>
-                        form.setFieldValue("ACCIDENT_DETAILS.value", [
-                          ...(form.values?.ACCIDENT_DETAILS?.value || {}),
-                          form.values.ACCIDENT_DETAILS?.value?.filter(
-                            (v, idx) => i != idx
-                          ),
-                        ])
+                      onClick={
+                        () =>
+                          form.setValues({
+                            ...form.values,
+                            ACCIDENT_DETAILS: {
+                              ...form.values?.ACCIDENT_DETAILS,
+                              value:
+                                form.values?.ACCIDENT_DETAILS?.value?.filter(
+                                  (v, idx) => i != idx
+                                ),
+                            },
+                          })
                       }
                     >
                       <DashCircle className="mt-3" color="red" />

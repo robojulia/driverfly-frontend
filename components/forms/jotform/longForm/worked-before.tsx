@@ -65,6 +65,7 @@ export function WorkedBefore() {
 				<Col>
 					<BaseCheck
 						className="float-left col-6"
+						required
 						name="ALREADY_APPLIED_TO_COMPANY.value"
 						label="APPLIED_HERE_BEFORE"
 						formik={form}
@@ -77,6 +78,7 @@ export function WorkedBefore() {
 						<Col>
 							<BaseCheck
 								className="mt-3 col-6 float-left"
+								required
 								name="is_worked_before"
 								label="WORKED_HERE_BEFORE"
 								formik={form}
@@ -89,6 +91,7 @@ export function WorkedBefore() {
 								<Col>
 									<BaseInput
 										className="col-6 mt-3"
+										required
 										type="date"
 										name="ALREADY_WORKED_TO_COMPANY.value.start_date"
 										placeholder="DATE"
@@ -99,6 +102,7 @@ export function WorkedBefore() {
 								<Col>
 									<BaseInput
 										className="col-6 mt-3"
+										required
 										type="date"
 										name="ALREADY_WORKED_TO_COMPANY.value.end_date"
 										placeholder="DATE"
@@ -111,7 +115,7 @@ export function WorkedBefore() {
 					) : null}
 				</>
 			) : null}
-			<Row className="mt-5">
+			<Row className="mt-3">
 				<Col>
 					<Button className="float-right" type="reset">
 						{t("BACK")}

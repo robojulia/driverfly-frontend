@@ -8,12 +8,11 @@ import jotformContext from "../../../../context/jotform-context";
 import { ViolationHistoryDto } from "../../../../models/jot-form/long-form/violation-history.dto";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import { VioalationExtrasEntity } from "../../../../models/jot-form/long-form/violaton-history/index.dto";
-
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import styles from "../../../../styles/jotform.module.css";
 
-export interface ViolationHistoryProps extends PageProps {}
+export interface ViolationHistoryProps extends PageProps { }
 
 export function ViolationHistory() {
   const {
@@ -66,13 +65,14 @@ export function ViolationHistory() {
   }, [form.values, form.errors]);
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <h6 className={styles.carrierName__smaller}>
+      <h6 className={styles.heading__sty}>
         {t("VIOLATIONS_LAST_3_YEARS")}
       </h6>
       <Row>
         <Col className={styles.align__items_left}>
           <BaseInput
             type="number"
+            required
             className="col-6 mt-3"
             name="VIOLATION_COUNT.value"
             label="HOW_MANY_VIOALTION_3_YEARS"
@@ -98,60 +98,50 @@ export function ViolationHistory() {
         <>
           {form.values.VIOLATION_DETAILS.value.map((entity, i) => (
             <Row key={i}>
-              <div className="col-md-12 mt-2 pl-0">
-                <Row>
-                  <Col>
-                    <BaseInput
-                      className="col-12 mt-3"
-                      name={`VIOLATION_DETAILS.value[${i}].date_of_violation`}
-                      label="VIOLATION_DATE"
-                      type="date"
-                      formik={form}
-                    />
-                  </Col>
-                  <Col>
-                    <BaseInput
-                      className="col-12 mt-3"
-                      name={`VIOLATION_DETAILS.value[${i}].location`}
-                      label="location"
-                      formik={form}
-                    />
-                  </Col>
-                  <Col>
-                    <BaseInput
-                      className="col-12 mt-3"
-                      name={`VIOLATION_DETAILS.value[${i}].charge`}
-                      label="CHARGE"
-                      formik={form}
-                    />
-                  </Col>
-                  <Col>
-                    <BaseInput
-                      className="col-12 mt-3"
-                      name={`VIOLATION_DETAILS.value[${i}].penalty`}
-                      label="PENALTY"
-                      formik={form}
-                    />
-                  </Col>
-                  <Col className="mt-5">
-                    <a
-                      href="#"
-                      onClick={() =>
-                        form.setValues({
-                          ...form.values,
-                          VIOLATION_DETAILS: {
-                            ...form.values?.VIOLATION_DETAILS,
-                            value:
-                              form.values?.VIOLATION_DETAILS?.value?.filter(
-                                (v, idx) => i != idx
-                              ),
-                          },
-                        })
-                      }
-                    >
-                      <DashCircle color="red" />
-                    </a>
-                  </Col>
+              <div className="col-md-12 mt-2 p-0">
+                <Row className="p-2">
+                  <BaseInput
+                    className="col-md-3 mt-3"
+                    name={`VIOLATION_DETAILS.value[${i}].date_of_violation`}
+                    label="VIOLATION_DATE"
+                    type="date"
+                    formik={form}
+                  />
+                  <BaseInput
+                    className="col-md-3 mt-3"
+                    name={`VIOLATION_DETAILS.value[${i}].location`}
+                    label="location"
+                    formik={form}
+                  />
+                  <BaseInput
+                    className="col-md-3 mt-3"
+                    name={`VIOLATION_DETAILS.value[${i}].charge`}
+                    label="CHARGE"
+                    formik={form}
+                  />
+                  <BaseInput
+                    className="col mt-3"
+                    name={`VIOLATION_DETAILS.value[${i}].penalty`}
+                    label="PENALTY"
+                    formik={form}
+                  />
+                  <a className="text-right mt-2"
+                    href="#"
+                    onClick={() =>
+                      form.setValues({
+                        ...form.values,
+                        VIOLATION_DETAILS: {
+                          ...form.values?.VIOLATION_DETAILS,
+                          value:
+                            form.values?.VIOLATION_DETAILS?.value?.filter(
+                              (v, idx) => i != idx
+                            ),
+                        },
+                      })
+                    }
+                  >
+                    <DashCircle color="red" />
+                  </a>
                 </Row>
               </div>
             </Row>
@@ -159,7 +149,7 @@ export function ViolationHistory() {
         </>
       )}
 
-      <Row className="mt-5">
+      <Row className="mt-3">
         <Col>
           <Button className="float-right" type="reset">
             {t("BACK")}
