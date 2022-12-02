@@ -66,14 +66,17 @@ export function AccidentHistory() {
         {t("MORE_ABOUT_ACCIDENTS")}
       </h6>
       <Row>
-        <BaseInput
-          className="col my-3"
-          type="number"
-          name="accident_count"
-          label="accidents_last_5_years"
-          placeholder="PLACEHOLDER_FOR_DIGITS"
-          formik={form}
-        />
+        <Col className={styles.align__text_left}>
+          <BaseInput
+            className="col-6 mt-3"
+            required
+            type="number"
+            name="accident_count"
+            label="accidents_last_5_years"
+            placeholder="PLACEHOLDER_FOR_DIGITS"
+            formik={form}
+          />
+        </Col>
         <div className="mt-4 float-left d-flex justify-left pl-3">
           <Button
             size="sm"
@@ -142,13 +145,18 @@ export function AccidentHistory() {
                   <Col className="mt-4 p-lg-0">
                     <a
                       href="#"
-                      onClick={() =>
-                        form.setFieldValue("ACCIDENT_DETAILS.value", [
-                          ...(form.values?.ACCIDENT_DETAILS?.value || {}),
-                          form.values.ACCIDENT_DETAILS?.value?.filter(
-                            (v, idx) => i != idx
-                          ),
-                        ])
+                      onClick={
+                        () =>
+                          form.setValues({
+                            ...form.values,
+                            ACCIDENT_DETAILS: {
+                              ...form.values?.ACCIDENT_DETAILS,
+                              value:
+                                form.values?.ACCIDENT_DETAILS?.value?.filter(
+                                  (v, idx) => i != idx
+                                ),
+                            },
+                          })
                       }
                     >
                       <DashCircle className="mt-3" color="red" />

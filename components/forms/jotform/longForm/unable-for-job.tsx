@@ -58,7 +58,8 @@ export function UnableForJob() {
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={styles.paragraph__left}>
 				<BaseCheck
-					className="col"
+					className="float-left col-6"
+					required
 					name="is_unable_to_perform"
 					label="REASON_UNABLE_TO_PERFORM"
 					formik={form}
