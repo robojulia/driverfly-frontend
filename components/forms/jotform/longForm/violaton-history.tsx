@@ -8,7 +8,6 @@ import jotformContext from "../../../../context/jotform-context";
 import { ViolationHistoryDto } from "../../../../models/jot-form/long-form/violation-history.dto";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import { VioalationExtrasEntity } from "../../../../models/jot-form/long-form/violaton-history/index.dto";
-
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import styles from "../../../../styles/jotform.module.css";
@@ -69,15 +68,18 @@ export function ViolationHistory() {
       <h6 className={styles.heading__sty}>
         {t("VIOLATIONS_LAST_3_YEARS")}
       </h6>
-      <Row className="p-2">
-        <BaseInput
-          type="number"
-          className="col my-3 p-0"
-          name="VIOLATION_COUNT.value"
-          label="HOW_MANY_VIOALTION_3_YEARS"
-          formik={form}
-        />
-        <div className="mt-4 float-left d-flex justify-left p-0">
+      <Row>
+        <Col className={styles.align__items_left}>
+          <BaseInput
+            type="number"
+            required
+            className="col-6 mt-3"
+            name="VIOLATION_COUNT.value"
+            label="HOW_MANY_VIOALTION_3_YEARS"
+            formik={form}
+          />
+        </Col>
+        <div className="mt-4 float-left d-flex justify-left pl-3">
           <Button
             size="sm"
             onClick={() =>

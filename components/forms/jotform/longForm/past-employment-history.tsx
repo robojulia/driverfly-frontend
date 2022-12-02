@@ -79,7 +79,8 @@ export function PastEmploymentHistory() {
 					<>
 						<Row>
 							<BaseCheck
-								className="my-3 mt-lg-5 col-md-6"
+								className="mt-3 col-6 float-left"
+								required
 								name="PAST_EMPLOYER.value.authorize"
 								label="CONTACT_AUTHORIZATION"
 								formik={form}
@@ -133,6 +134,39 @@ export function PastEmploymentHistory() {
 							</h6>
 						</Row>
 						<Row>
+							<Col className={styles.align__text_left}>
+								<BaseInput
+									className="col-6 mt-3"
+									required
+									name="PAST_EMPLOYER.value.previous_company_street_address_line_1"
+									placeholder="ADDRESS_LINE_1"
+									label="ADDRESS_LINE_1"
+									formik={form}
+								/>
+							</Col>
+						</Row>
+						<Row>
+							<Col className={styles.align__text_left}>
+								<BaseInput
+									className="col-6 mt-3 mb-3"
+									name="PAST_EMPLOYER.value.previous_company_street_address_line_2"
+									placeholder="ADDRESS_LINE_2"
+									label="ADDRESS_LINE_2"
+									formik={form}
+								/>
+							</Col>
+						</Row>
+						<Row>
+							<Col className={styles.align__text_left}>
+								<BaseInput
+									className="col-12 mt-4"
+									required
+									name="PAST_EMPLOYER.value.previous_company_zipcode"
+									placeholder="zip_code"
+									label="zip_code"
+									formik={form}
+								/>
+							</Col>
 
 							<BaseInput
 								className="col-md-6 my-3"

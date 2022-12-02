@@ -4,7 +4,6 @@ import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
 import BaseInput from "../../base-input";
-import BaseSelect from "../../base-select";
 import { BackgroundInfoDto } from "../../../../models/jot-form/long-form/background-info.dto";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
