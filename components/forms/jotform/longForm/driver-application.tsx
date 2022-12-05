@@ -63,18 +63,18 @@ export function DriverApplication() {
 			(v) => v.type === ApplicantExtras.SIGNATURE
 		);
 
-    form.setValues({
-      ...form.values,
-      APPLY_DATE: !!apx?.type
-        ? apx
-        : new ApplicantExtrasEntity(ApplicantExtras.APPLY_DATE),
-      SIGNATURE: !!apx_sign?.type
-        ? padRef?.current?.fromDataURL(apx_sign?.value)
-        : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
-      first_name: first_name || null,
-      last_name: last_name || null,
-    });
-  }, [applicant]);
+		form.setValues({
+			...form.values,
+			APPLY_DATE: !!apx?.type
+				? apx
+				: new ApplicantExtrasEntity(ApplicantExtras.APPLY_DATE),
+			SIGNATURE: !!apx_sign?.type
+				? padRef?.current?.fromDataURL(apx_sign?.value)
+				: new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
+			first_name: first_name || null,
+			last_name: last_name || null,
+		});
+	}, [applicant]);
 
 	return (
 		<>
@@ -95,70 +95,68 @@ export function DriverApplication() {
 					{t("MVR_AND_DMV_AUTHORIZATION_TO_NAUTILIUS")}
 				</p>
 
-        <Row className={styles.align__text_left}>
-          <BaseInput
-            className="col-4"
-            required
-            name="first_name"
-            placeholder="FIRST_NAME"
-            label="FIRST_NAME"
-            formik={form}
-          />
-          <BaseInput
-            className="col-4"
-            required
-            name="last_name"
-            placeholder="LAST_NAME"
-            label="LAST_NAME"
-            formik={form}
-          />
-          <BaseInput
-            className="col-4"
-            required
-            type="date"
-            name="APPLY_DATE.value"
-            placeholder="DATE"
-            label="DATE"
-            formik={form}
-          />
-        </Row>
-        <Row className={styles.align__text_left}>
-          <Col>
-            <h6>{t("SIGNATURE")}</h6>
+				<Row className={styles.align__text_left}>
+					<BaseInput
+						className="col-md-6 my-3"
+						required
+						name="first_name"
+						placeholder="FIRST_NAME"
+						label="FIRST_NAME"
+						formik={form}
+					/>
+					<BaseInput
+						className="col-md-6 my-3"
+						required
+						name="last_name"
+						placeholder="LAST_NAME"
+						label="LAST_NAME"
+						formik={form}
+					/>
+					<BaseInput
+						className="col-md-12 my-3"
+						required
+						type="date"
+						name="APPLY_DATE.value"
+						placeholder="DATE"
+						label="DATE"
+						formik={form}
+					/>
+				</Row>
+				<Row className={styles.align__text_left}>
+					<Col className="my-3">
+						<h6>{t("SIGNATURE")}</h6>
 
-            <SignaturePad
-              name="SIGNATURE.value"
-              className="mt-2"
-              required
-              ref={padRef}
-              onEnd={handleSignatureEnd}
-              canvasProps={{
-                width: 700,
-                height: 200,
-                style: { border: "1px solid black" },
-                className: "sigCanvas",
-              }}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <button onClick={clearSignaturePad}>{t("CLEAR")}</button>
-          </Col>
-        </Row>
-        <Row className="mt-3">
-          <Col>
-            <Button className="float-right" type="reset">
-              {t("BACK")}
-            </Button>
-          </Col>
-          <Col>
-            <Button className="float-left" type="submit">
-              {t("NEXT")}
-            </Button>
-          </Col>
-        </Row>
-      </Form>
-    </>
-  );
+						<SignaturePad
+							name="SIGNATURE.value"
+							className="mt-2"
+							required
+							ref={padRef}
+							onEnd={handleSignatureEnd}
+							canvasProps={{
+								style: { border: "1px solid black" },
+								className: "sigCanvas",
+							}}
+						/>
+					</Col>
+				</Row>
+				<Row>
+					<Col>
+						<button className="theme-secondary-btn " onClick={clearSignaturePad}>{t("CLEAR")}</button>
+					</Col>
+				</Row>
+				<Row className="mt-3">
+					<Col>
+						<Button className="float-right" type="reset">
+							{t("BACK")}
+						</Button>
+					</Col>
+					<Col>
+						<Button className="float-left" type="submit">
+							{t("NEXT")}
+						</Button>
+					</Col>
+				</Row>
+			</Form>
+		</>
+	);
 }
