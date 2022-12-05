@@ -64,7 +64,7 @@ export function AccidentViolation() {
       <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
         <Row>
           <BaseCheck
-            className="col-12 my-3 pl-0"
+            className="col my-3 pl-0"
             required
             name="can_pass_drug_test"
             label="can_pass_drug_test"
@@ -76,21 +76,9 @@ export function AccidentViolation() {
             {t("DRUG_TEST_DOT")}
           </p>
         </Row>
-        {/* <Row>
-          <BaseInput
-            className="col-12 my-3 "
-            name="accident_count"
-            type="number"
-            step={1}
-            min={0}
-            label="accidents_last_5_years"
-            placeholder="PLACEHOLDER_FOR_DIGITS"
-            formik={form}
-          />
-        </Row> */}
         <Row>
           <BaseInput
-            className="col-5 my-3 pl-0"
+            className="col my-3 pl-0"
             required
             name="moving_violations_count"
             type="number"
@@ -103,11 +91,9 @@ export function AccidentViolation() {
         </Row>
         <Row>
           <BaseCheck
-            className="col-5 my-3 pl-0"
+            className="col my-3 pl-0"
             name="authorized_to_work_in_us"
             label="ELIGIBLE_TO_WORK_IN_US"
-            // labelPrefix="EligibleInUsa"
-            // enumType={EligibleInUsa}
             formik={form}
           />
         </Row>

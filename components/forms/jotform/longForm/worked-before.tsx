@@ -62,22 +62,20 @@ export function WorkedBefore() {
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row>
-				<Col>
-					<BaseCheck
-						className="float-left col-6"
-						required
-						name="ALREADY_APPLIED_TO_COMPANY.value"
-						label="APPLIED_HERE_BEFORE"
-						formik={form}
-					/>
-				</Col>
+				<BaseCheck
+					className="float-left col"
+					required
+					name="ALREADY_APPLIED_TO_COMPANY.value"
+					label="APPLIED_HERE_BEFORE"
+					formik={form}
+				/>
 			</Row>
 			{form.values?.ALREADY_APPLIED_TO_COMPANY?.value ? (
 				<>
 					<Row>
 						<Col>
 							<BaseCheck
-								className="mt-3 col-6 float-left"
+								className="my-3 col float-left p-0"
 								required
 								name="is_worked_before"
 								label="WORKED_HERE_BEFORE"
@@ -88,28 +86,23 @@ export function WorkedBefore() {
 					{form.values.is_worked_before ? (
 						<>
 							<Row>
-								<Col>
-									<BaseInput
-										className="col-6 mt-3"
-										required
-										type="date"
-										name="ALREADY_WORKED_TO_COMPANY.value.start_date"
-										placeholder="DATE"
-										label="FROM"
-										formik={form}
-									/>
-								</Col>
-								<Col>
-									<BaseInput
-										className="col-6 mt-3"
-										required
-										type="date"
-										name="ALREADY_WORKED_TO_COMPANY.value.end_date"
-										placeholder="DATE"
-										label="TO"
-										formik={form}
-									/>
-								</Col>
+								<BaseInput
+									className="col-md-6 my-3"
+									type="date"
+									name="ALREADY_WORKED_TO_COMPANY.value.start_date"
+									placeholder="DATE"
+									label="FROM"
+									formik={form}
+								/>
+								<BaseInput
+									className="col-md-6 my-3"
+									type="date"
+									name="ALREADY_WORKED_TO_COMPANY.value.end_date"
+									placeholder="DATE"
+									label="TO"
+									formik={form}
+								/>
+
 							</Row>
 						</>
 					) : null}

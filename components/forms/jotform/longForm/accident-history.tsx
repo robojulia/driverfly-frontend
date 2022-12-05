@@ -66,17 +66,15 @@ export function AccidentHistory() {
         {t("MORE_ABOUT_ACCIDENTS")}
       </h6>
       <Row>
-        <Col className={styles.align__text_left}>
-          <BaseInput
-            className="col-6 mt-3"
-            required
-            type="number"
-            name="accident_count"
-            label="accidents_last_5_years"
-            placeholder="PLACEHOLDER_FOR_DIGITS"
-            formik={form}
-          />
-        </Col>
+        <BaseInput
+          className="col my-3"
+          type="number"
+          name="accident_count"
+          label="accidents_last_5_years"
+          placeholder="PLACEHOLDER_FOR_DIGITS"
+          formik={form}
+        />
+
         <div className="mt-4 float-left d-flex justify-left pl-3">
           <Button
             size="sm"
@@ -129,19 +127,19 @@ export function AccidentHistory() {
                     label="LABEL_ACCIDENT_INJURED"
                     formik={form}
                   />
-                    <BaseCheck
-                      className="col-md-4 mt-5"
-                      name={`ACCIDENT_DETAILS.value[${i}].dot_recordable`}
-                      label="LABEL_ACCIDENT_DOT"
-                      formik={form}
-                    />
+                  <BaseCheck
+                    className="col-md-4 mt-5"
+                    name={`ACCIDENT_DETAILS.value[${i}].dot_recordable`}
+                    label="LABEL_ACCIDENT_DOT"
+                    formik={form}
+                  />
 
-                    <BaseCheck
-                      className="col-md-4 mt-4 p-lg-0"
-                      name={`ACCIDENT_DETAILS.value[${i}].at_fault`}
-                      label="LABEL_ACCIDENT_FAULT"
-                      formik={form}
-                    />
+                  <BaseCheck
+                    className="col-md-4 mt-4 p-lg-0"
+                    name={`ACCIDENT_DETAILS.value[${i}].at_fault`}
+                    label="LABEL_ACCIDENT_FAULT"
+                    formik={form}
+                  />
                   <Col className="mt-4 p-lg-0">
                     <a
                       href="#"

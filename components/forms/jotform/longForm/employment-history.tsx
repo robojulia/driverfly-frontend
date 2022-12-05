@@ -71,7 +71,7 @@ export function EmploymentHistory() {
         </p>
         <Row className={styles.align__text_left}>
           <BaseCheck
-            className="mt-2 col-6 float-left"
+            className="mt-2 col float-left"
             required
             label="CURRENTLY_EMPLYED_QUESTION"
             name="is_current_employed"
@@ -90,49 +90,6 @@ export function EmploymentHistory() {
                 {t("NA")}
               </p>
             </Row>
-            <Row>
-              <Col className={styles.align__text_left}>
-                <BaseInput
-                  className="col-12 mt-3"
-                  required
-                  name="CURRENT_EMPLOYER.value.current_company_name"
-                  label="CURRENT_COMPANY_NAME"
-                  formik={form}
-                />
-              </Col>
-              <Col className={styles.align__text_left}>
-                <BaseInput
-                  className="col-12 mt-3"
-                  name="CURRENT_EMPLOYER.value.current_company_position"
-                  label="CURRENT_COMPANY_POSITION"
-                  formik={form}
-                />
-              </Col>
-            </Row>
-
-            <Row>
-              <Col className={styles.align__text_left}>
-                <BaseInput
-                  className="col-10 mt-3"
-                  required
-                  type="date"
-                  name="CURRENT_EMPLOYER.value.start_date"
-                  label="START_DATE"
-                  formik={form}
-                />
-              </Col>
-
-              <Col className={styles.paragraph}>
-                <BaseCheck
-                  className="mt-3 col-10 float-left"
-                  required
-                  name="CURRENT_EMPLOYER.value.authorize"
-                  label="CONATACT_AUTHORITY"
-                  formik={form}
-                />
-              </Col>
-            </Row>
-
             <Row className={styles.align__text_left}>
               <BaseInput
                 className="col-md-6 my-3"

@@ -97,7 +97,7 @@ export function DriverApplication() {
 
         <Row className={styles.align__text_left}>
           <BaseInput
-            className="col-4"
+						className="col-md-6 my-3"
             required
             name="first_name"
             placeholder="FIRST_NAME"
@@ -105,7 +105,7 @@ export function DriverApplication() {
             formik={form}
           />
           <BaseInput
-            className="col-4"
+						className="col-md-6 my-3"
             required
             name="last_name"
             placeholder="LAST_NAME"
@@ -113,7 +113,7 @@ export function DriverApplication() {
             formik={form}
           />
           <BaseInput
-            className="col-4"
+						className="col-md-12 my-3"
             required
             type="date"
             name="APPLY_DATE.value"
@@ -123,7 +123,7 @@ export function DriverApplication() {
           />
         </Row>
         <Row className={styles.align__text_left}>
-          <Col>
+        <Col className="my-3">
             <h6>{t("SIGNATURE")}</h6>
 
             <SignaturePad
@@ -133,8 +133,6 @@ export function DriverApplication() {
               ref={padRef}
               onEnd={handleSignatureEnd}
               canvasProps={{
-                width: 700,
-                height: 200,
                 style: { border: "1px solid black" },
                 className: "sigCanvas",
               }}
@@ -143,7 +141,7 @@ export function DriverApplication() {
         </Row>
         <Row>
           <Col>
-            <button onClick={clearSignaturePad}>{t("CLEAR")}</button>
+            <button className="theme-secondary-btn " onClick={clearSignaturePad}>{t("CLEAR")}</button>
           </Col>
         </Row>
         <Row className="mt-3">
