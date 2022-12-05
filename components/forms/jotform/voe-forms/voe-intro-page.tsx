@@ -6,34 +6,34 @@ import voeFormContextType from "../../../../context/voeform-context";
 import { useContext, useEffect } from "react";
 import styles from "../../../../styles/jotform.module.css";
 
-export interface IntroPageProps extends PageProps {}
+export interface IntroPageProps extends PageProps { }
 
 export function IntroPage() {
-  const {
-    method: { stepNext },
-  } = useContext(voeFormContextType);
-  const { t } = useTranslation();
+	const {
+		method: { stepNext },
+	} = useContext(voeFormContextType);
+	const { t } = useTranslation();
 
-  const form = useFormik({
-    initialValues: {},
-    onSubmit: (values) => {
-      stepNext();
-    },
-  });
+	const form = useFormik({
+		initialValues: {},
+		onSubmit: (values) => {
+			stepNext();
+		},
+	});
 
-  return (
-    <Form onSubmit={form.handleSubmit}>
-      <h1 className={styles.carrierName}>{t("VERIFICATION_OF_EMPLOYMENT")}</h1>
-      <Row className="mt-3">
-        <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-          {t("VOE_PARAGRAPH")}
-        </p>
-      </Row>
-      <Row className="mt-3 col-6">
-        <Col className={styles.align__text_right}>
-          <Button type="submit">{t("NEXT")}</Button>
-        </Col>
-      </Row>
-    </Form>
-  );
+	return (
+		<Form onSubmit={form.handleSubmit}>
+			<h1 className={styles.carrierName}>{t("VERIFICATION_OF_EMPLOYMENT")}</h1>
+			<Row className="mt-3">
+				<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+					{t("VOE_PARAGRAPH")}
+				</p>
+			</Row>
+			<Row className="mt-3">
+				<Col className="text-center">
+					<Button type="submit">{t("NEXT")}</Button>
+				</Col>
+			</Row>
+		</Form>
+	);
 }
