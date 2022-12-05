@@ -79,7 +79,7 @@ export function CdlExperience() {
         <Row className="my-3">
           <BaseSelect
             className="col-12"
-            label="CDL_CLASS"
+            label="TYPE_CDL_CLASS"
             placeholder="DriverLicenseType.NONE"
             name="license_type"
             required

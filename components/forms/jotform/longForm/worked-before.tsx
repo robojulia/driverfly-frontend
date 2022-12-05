@@ -62,21 +62,21 @@ export function WorkedBefore() {
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row>
-				<Col>
-					<BaseCheck
-						className="float-left col"
-						name="ALREADY_APPLIED_TO_COMPANY.value"
-						label="APPLIED_HERE_BEFORE"
-						formik={form}
-					/>
-				</Col>
+				<BaseCheck
+					className="float-left col"
+					required
+					name="ALREADY_APPLIED_TO_COMPANY.value"
+					label="APPLIED_HERE_BEFORE"
+					formik={form}
+				/>
 			</Row>
 			{form.values?.ALREADY_APPLIED_TO_COMPANY?.value ? (
 				<>
 					<Row>
 						<Col>
 							<BaseCheck
-								className="my-3 col float-left"
+								className="my-3 col float-left p-0"
+								required
 								name="is_worked_before"
 								label="WORKED_HERE_BEFORE"
 								formik={form}
@@ -102,6 +102,7 @@ export function WorkedBefore() {
 									label="TO"
 									formik={form}
 								/>
+
 							</Row>
 						</>
 					) : null}

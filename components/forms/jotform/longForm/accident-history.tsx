@@ -74,6 +74,7 @@ export function AccidentHistory() {
           placeholder="PLACEHOLDER_FOR_DIGITS"
           formik={form}
         />
+
         <div className="mt-4 float-left d-flex justify-left pl-3">
           <Button
             size="sm"
@@ -126,29 +127,34 @@ export function AccidentHistory() {
                     label="LABEL_ACCIDENT_INJURED"
                     formik={form}
                   />
-                    <BaseCheck
-                      className="col-md-4 mt-5"
-                      name={`ACCIDENT_DETAILS.value[${i}].dot_recordable`}
-                      label="LABEL_ACCIDENT_DOT"
-                      formik={form}
-                    />
+                  <BaseCheck
+                    className="col-md-4 mt-5"
+                    name={`ACCIDENT_DETAILS.value[${i}].dot_recordable`}
+                    label="LABEL_ACCIDENT_DOT"
+                    formik={form}
+                  />
 
-                    <BaseCheck
-                      className="col-md-4 mt-4 p-lg-0"
-                      name={`ACCIDENT_DETAILS.value[${i}].at_fault`}
-                      label="LABEL_ACCIDENT_FAULT"
-                      formik={form}
-                    />
+                  <BaseCheck
+                    className="col-md-4 mt-4 p-lg-0"
+                    name={`ACCIDENT_DETAILS.value[${i}].at_fault`}
+                    label="LABEL_ACCIDENT_FAULT"
+                    formik={form}
+                  />
                   <Col className="mt-4 p-lg-0">
                     <a
                       href="#"
-                      onClick={() =>
-                        form.setFieldValue("ACCIDENT_DETAILS.value", [
-                          ...(form.values?.ACCIDENT_DETAILS?.value || {}),
-                          form.values.ACCIDENT_DETAILS?.value?.filter(
-                            (v, idx) => i != idx
-                          ),
-                        ])
+                      onClick={
+                        () =>
+                          form.setValues({
+                            ...form.values,
+                            ACCIDENT_DETAILS: {
+                              ...form.values?.ACCIDENT_DETAILS,
+                              value:
+                                form.values?.ACCIDENT_DETAILS?.value?.filter(
+                                  (v, idx) => i != idx
+                                ),
+                            },
+                          })
                       }
                     >
                       <DashCircle className="mt-3" color="red" />

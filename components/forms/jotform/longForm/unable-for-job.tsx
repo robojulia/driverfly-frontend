@@ -59,6 +59,7 @@ export function UnableForJob() {
 			<Row className={styles.paragraph__left}>
 				<BaseCheck
 					className="col"
+					required
 					name="is_unable_to_perform"
 					label="REASON_UNABLE_TO_PERFORM"
 					formik={form}
@@ -67,7 +68,7 @@ export function UnableForJob() {
 			{form.values.is_unable_to_perform ? (
 				<Row className={styles.align__text_left}>
 					<BaseTextArea
-						className="float-left mt-3"
+						className="mt-3"
 						name="REASON_FOR_UNABLE_TO_PERFORM_JOB.value"
 						label="EXPLAIN_SUSPENSION"
 						formik={form}

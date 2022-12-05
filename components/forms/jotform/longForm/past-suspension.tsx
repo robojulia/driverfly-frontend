@@ -57,6 +57,7 @@ export function PastSuspension() {
 			<Row className={styles.paragraph__left}>
 				<BaseCheck
 					className="float-left col"
+					required
 					name="is_past_license_suspended"
 					label="LICENSE_PREVILLAGES"
 					formik={form}

@@ -1,7 +1,7 @@
 .container {
     background-color: darkblue;
     flex-direction: column;
-    background-image: url("../public/form_bg.png");
+    background-image: url("/form_bg.png");
     background-position: center;
     background-size: cover;
     min-height: 100vh;
@@ -31,7 +31,17 @@
     margin: 3rem 1rem;
 }
 
-.customButton {
+.main__voe_form {
+    height: max-content;
+    min-width: 700px;
+    max-width: 1200px;
+    margin-top: 150px;
+    padding: 40px;
+    border-radius: 14px;
+    background-color: #fff;
+    margin-bottom: 8rem;
+}
+.customButton{
     background-color: #1d667e;
     padding: 10px 15px;
     border-radius: 8px;
@@ -97,6 +107,15 @@
     text-align: left;
 }
 
+.align__text_right{
+    text-align: right;
+}
+
+
+.align__text_center{
+    text-align: center;
+}
+
 .sigCanvas {
     width: 600px;
     border: 1px solid red;
@@ -110,6 +129,15 @@
 .highlight {
     color: red;
 }
+
+.highlight__black{
+    color:black;
+}
+
+.bold{
+    font-weight: bold;
+}
+  
 
 @media screen and (max-width: 800px) {
     .main_form {

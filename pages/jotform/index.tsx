@@ -31,19 +31,15 @@ import { AccordianPage } from "../../components/forms/jotform/longForm/accordian
 import "react-toastify/dist/ReactToastify.css";
 import jotformContext from "../../context/jotform-context";
 import { ApplicantExtrasEntity } from "../../models/applicant/applicant-extras.entity";
+import BaseInput from "../../components/forms/base-input";
+import BaseRange from "../../components/forms/base-range";
 
 export default function jotFormLongForm() {
-	const [applicant, setApplicant] = useState<ApplicantEntity>(
-		new ApplicantEntity()
-	);
-	const [applicantExtras, setApplicantExtras] = useState<
-		ApplicantExtrasEntity[]
-	>([]);
-	const updateApplicantExtras = (
-		applicantExtrasEntity: ApplicantExtrasEntity
-	) =>
+	const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
+	const [applicantExtras, setApplicantExtras] = useState<ApplicantExtrasEntity[]>([]);
+	const updateApplicantExtras = (applicantExtrasEntity: ApplicantExtrasEntity) =>
 		setApplicantExtras((oldApx) => {
-			oldApx = oldApx?.filter((v) => v.type !== applicantExtrasEntity.type);
+			oldApx = oldApx?.filter((v) => v.type !== applicantExtrasEntity?.type);
 			return !!oldApx
 				? [...oldApx, { ...applicantExtrasEntity }]
 				: [{ ...applicantExtrasEntity }];
@@ -57,37 +53,38 @@ export default function jotFormLongForm() {
 		console.log("applicantextrasvalues", applicantExtras);
 	}, []);
 
-	const getPageAccordingToStep = (step: number) => (
-		{
-			0: <SplashPage />,
-			1: <Names />,
-			2: <BasicInfo />,
-			3: <CdlExperience />,
-			4: <AccidentViolation />,
-			5: <HearAbout />,
-			6: <ContinueLongForm />,
-			7: <DriverApplication />,
-			8: <BackgroundInfo />,
-			9: <HighestLevelEducation />,
-			10: <DrivingExperience />,
-			11: <OtherQueues />,
-			12: <DriverLicense />,
-			13: <MedicalCard />,
-			14: <EmergencyContact />,
-			15: <EmploymentHistory />,
-			16: <PastEmploymentHistory />,
-			17: <Preferences />,
-			18: <HalfWay />,
-			19: <WorkedBefore />,
-			20: <AccidentHistory />,
-			21: <ViolationHistory />,
-			22: <PastSuspension />,
-			23: <UnableForJob />,
-			24: <FelonyConviction />,
-			25: <DrugTest />,
-			26: <AccordianPage />,
-		}[step]
-	)
+	const getPageAccordingToStep = (step: number) =>
+	({
+		0: <SplashPage />,
+		1: <Names />,
+		2: <BasicInfo />,
+		3: <CdlExperience />,
+		4: <AccidentViolation />,
+		5: <HearAbout />,
+		6: <ContinueLongForm />,
+		7: <DriverApplication />,
+		8: <BackgroundInfo />,
+		9: <HighestLevelEducation />,
+		10: <DrivingExperience />,
+		11: <OtherQueues />,
+		12: <DriverLicense />,
+		13: <MedicalCard />,
+		14: <EmergencyContact />,
+		15: <EmploymentHistory />,
+		16: <PastEmploymentHistory />,
+		17: <Preferences />,
+		18: <HalfWay />,
+		19: <WorkedBefore />,
+		20: <AccidentHistory />,
+		21: <ViolationHistory />,
+		22: <PastSuspension />,
+		23: <UnableForJob />,
+		24: <FelonyConviction />,
+		25: <DrugTest />,
+		26: <AccordianPage />,
+	}[step]);
+
+	const getStyleAccordingToStep = (step: number) => (step === 2 ? { width: "50%" } : {})
 
 	return (
 		<jotformContext.Provider
@@ -95,20 +92,29 @@ export default function jotFormLongForm() {
 				state: {
 					applicant,
 					applicantExtras,
-					steps,
+					steps
 				},
 				method: {
 					setApplicant,
 					updateApplicantExtras,
-					setSteps,
 					stepNext,
-					stepBack,
-				},
+					stepBack
+				}
 			}}
 		>
 			<div className={styles.container}>
 				<div className={styles.main}>
-					<div className={styles.main_form} style={{ border: "1px solid red" }}>
+					<div
+						className={styles.main_form}
+						style={getStyleAccordingToStep(steps)}
+					>
+						{/* uncomment this during development */}
+						{/* <BaseInput
+							value={steps}
+							min={0}
+							max={26}
+							type="number"
+							onChange={({ target: { value } }) => setSteps(parseInt(value))} /> */}
 						{getPageAccordingToStep(steps)}
 					</div>
 				</div>
