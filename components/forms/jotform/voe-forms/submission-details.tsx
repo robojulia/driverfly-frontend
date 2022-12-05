@@ -105,68 +105,68 @@ export function SubmissionDetails() {
 					</Col>
 				</Row>
 
-        <Row>
-          <Col>
-            <button className="theme-secondary-btn" onClick={clearSignaturePad}>{t("CLEAR")}</button>
-          </Col>
-        </Row>
+				<Row>
+					<Col>
+						<button className="theme-secondary-btn" onClick={clearSignaturePad}>{t("CLEAR")}</button>
+					</Col>
+				</Row>
 
-        <Row className={`${styles.align__text_left} ${styles.bold}`}>
+				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 
-          <BaseInput
-            className="my-3 float-left col-md-6"
-            label="FULL_NAME"
-            name="SENDER_INFO.value.name"
-            formik={form}
-          />
-          <BaseInput
-            className="my-3 float-left col-md-6"
-            label="TITLE"
-            name="SENDER_INFO.value.title"
-            formik={form}
-          />
+					<BaseInput
+						className="my-3 float-left col-md-6"
+						label="FULL_NAME"
+						name="SENDER_INFO.value.name"
+						formik={form}
+					/>
+					<BaseInput
+						className="my-3 float-left col-md-6"
+						label="TITLE"
+						name="SENDER_INFO.value.title"
+						formik={form}
+					/>
 
-        </Row>
-        <Row className={`${styles.align__text_left} ${styles.bold}`}>
+				</Row>
+				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 
-          <BaseInputPhone
-            className="my-3 float-left col-md-6"
-            label="PHONE"
-            name="SENDER_INFO.value.phone"
-            formik={form}
-          />
-          <BaseInput
-            className="my-3 float-left col-md-6"
-            label="EMAIL"
-            name="SENDER_INFO.value.email"
-            formik={form}
-          />
+					<BaseInputPhone
+						className="my-3 float-left col-md-6"
+						label="PHONE"
+						name="SENDER_INFO.value.phone"
+						formik={form}
+					/>
+					<BaseInput
+						className="my-3 float-left col-md-6"
+						label="EMAIL"
+						name="SENDER_INFO.value.email"
+						formik={form}
+					/>
 
-        </Row>
+				</Row>
 
-        <Row className={`${styles.align__text_left} ${styles.bold}`}>
-          <BaseInput
-            className="my-3 float-left col"
-            label="DATE"
-            name="SENDER_INFO.value.date"
-            type="date"
-            formik={form}
-          />
-        </Row>
+				<Row className={`${styles.align__text_left} ${styles.bold}`}>
+					<BaseInput
+						className="my-3 float-left col"
+						label="DATE"
+						name="SENDER_INFO.value.date"
+						type="date"
+						formik={form}
+					/>
+				</Row>
 
-        <Row className="my-3">
-          <Col>
-            <Button className="float-right" type="reset">
-              {t("BACK")}
-            </Button>
-          </Col>
-          <Col>
-            <Button className="float-left" type="submit">
-              {t("SUBMIT")}
-            </Button>
-          </Col>
-        </Row>
-      </Form>
-    </>
-  );
+				<Row className="my-3">
+					<Col>
+						<Button className="float-right" type="reset">
+							{t("BACK")}
+						</Button>
+					</Col>
+					<Col>
+						<Button className="float-left" type="submit">
+							{t("SUBMIT")}
+						</Button>
+					</Col>
+				</Row>
+			</Form>
+		</>
+	);
 }

@@ -50,30 +50,30 @@ export function EmployedByUs() {
 		console.log("form eror", form.errors);
 	}, [form.values, form.errors]);
 
-  return (
-    <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <h4 className={`${styles.carrierName}`}>{t("EMPLOYMENT_VERIF")}</h4>
-      <Row>
-        <BaseCheck
-          className="mt-3 mb-3"
-          required
-          name="EMPLOYED_BY_US.value"
-          label="EMPLOYED_BY_US"
-          formik={form}
-        />
-      </Row>
-      <Row className="mt-3">
-        <Col>
-          <Button className="float-right" type="reset">
-            {t("BACK")}
-          </Button>
-        </Col>
-        <Col>
-          <Button className="float-left" type="submit">
-            {t("NEXT")}
-          </Button>
-        </Col>
-      </Row>
-    </Form>
-  );
+	return (
+		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+			<h4 className={`${styles.carrierName}`}>{t("EMPLOYMENT_VERIF")}</h4>
+			<Row>
+				<BaseCheck
+					className="mt-3 mb-3"
+					required
+					name="EMPLOYED_BY_US.value"
+					label="EMPLOYED_BY_US"
+					formik={form}
+				/>
+			</Row>
+			<Row className="mt-3">
+				<Col>
+					<Button className="float-right" type="reset">
+						{t("BACK")}
+					</Button>
+				</Col>
+				<Col>
+					<Button className="float-left" type="submit">
+						{t("NEXT")}
+					</Button>
+				</Col>
+			</Row>
+		</Form>
+	);
 }
