@@ -11,79 +11,79 @@ import jotformContext from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
-export interface DrugTestProps extends PageProps {}
+export interface DrugTestProps extends PageProps { }
 
 export function DrugTest() {
-  const {
-    state: { applicantExtras },
-    method: { updateApplicantExtras, stepNext, stepBack },
-  } = useContext(jotformContext);
+	const {
+		state: { applicantExtras },
+		method: { updateApplicantExtras, stepNext, stepBack },
+	} = useContext(jotformContext);
 
-  const { t } = useTranslation();
-  const form = useFormik({
-    initialValues: new DrugTestDto(),
-    validationSchema: DrugTestDto.yupSchema(),
-    onSubmit: (values) => {
-      const { DOT_REGULATION } = values;
-      updateApplicantExtras(DOT_REGULATION);
-      stepNext();
-    },
-    onReset: (values) => {
-      stepBack();
-    },
-  });
+	const { t } = useTranslation();
+	const form = useFormik({
+		initialValues: new DrugTestDto(),
+		validationSchema: DrugTestDto.yupSchema(),
+		onSubmit: (values) => {
+			const { DOT_REGULATION } = values;
+			updateApplicantExtras(DOT_REGULATION);
+			stepNext();
+		},
+		onReset: (values) => {
+			stepBack();
+		},
+	});
 
-  useEffect(() => {
-    const apx = applicantExtras?.find(
-      (v) => v.type === ApplicantExtras.DOT_REGULATION
-    );
-    form.setValues({
-      ...form.values,
-      DOT_REGULATION: !!apx?.type
-        ? apx
-        : new ApplicantExtrasEntity(ApplicantExtras.DOT_REGULATION),
-      is_tested_positive: !!apx?.value,
-    });
-  }, [applicantExtras]);
+	useEffect(() => {
+		const apx = applicantExtras?.find(
+			(v) => v.type === ApplicantExtras.DOT_REGULATION
+		);
+		form.setValues({
+			...form.values,
+			DOT_REGULATION: !!apx?.type
+				? apx
+				: new ApplicantExtrasEntity(ApplicantExtras.DOT_REGULATION),
+			is_tested_positive: !!apx?.value,
+		});
+	}, [applicantExtras]);
 
-  useEffect(() => {
-    console.log("values", form.values);
-    console.log("error", form.errors);
-  }, [form.values, form.errors]);
+	useEffect(() => {
+		console.log("values", form.values);
+		console.log("error", form.errors);
+	}, [form.values, form.errors]);
 
-  return (
-    <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <Row className={styles.paragraph__left}>
-        <BaseCheck
-          className="col"
-          name="is_tested_positive"
-          label="DRUG_TEST_TESTIMONY_QUESTION"
-          formik={form}
-        />
-      </Row>
-      {form.values.is_tested_positive ? (
-        <Row className={styles.align__text_left}>
-          <BaseTextArea
-            className="float-left mt-3"
-            name="DOT_REGULATION.value"
-            label="PLEASE_EXPLAIN"
-            formik={form}
-          />
-        </Row>
-      ) : null}
-     
-      <Row className="mt-5">
-        <Col>
-          <Button className="float-right" type="reset">
-            {t("BACK")}
-          </Button>
-        </Col>
-        <Col>
-          <Button className="float-left" type="submit">
-            {t("NEXT")}
-          </Button>
-        </Col>
-      </Row>
-    </Form>
-  );
+	return (
+		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+			<Row className={styles.paragraph__left}>
+				<BaseCheck
+					className="col"
+					name="is_tested_positive"
+					label="DRUG_TEST_TESTIMONY_QUESTION"
+					formik={form}
+				/>
+			</Row>
+			{form.values.is_tested_positive ? (
+				<Row className={styles.align__text_left}>
+					<BaseTextArea
+						className="float-left mt-3"
+						name="DOT_REGULATION.value"
+						label="PLEASE_EXPLAIN"
+						formik={form}
+					/>
+				</Row>
+			) : null}
+
+			<Row className="mt-5">
+				<Col>
+					<Button className="float-right" type="reset">
+						{t("BACK")}
+					</Button>
+				</Col>
+				<Col>
+					<Button className="float-left" type="submit">
+						{t("NEXT")}
+					</Button>
+				</Col>
+			</Row>
+		</Form>
+	);
 }
