@@ -1,10 +1,10 @@
 import { useContext } from "react"
-import jobContext from "../../context/job-context"
+import JobContext from "../../context/job-context"
 import { useTranslation } from "../../hooks/use-translation"
 
 export default function Sort(props) {
 
-    const { state, method } = useContext(jobContext)
+    const { state, method } = useContext(JobContext)
     const { handleChange } = method
     const { t } = useTranslation();
 

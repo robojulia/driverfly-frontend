@@ -1,11 +1,11 @@
 import { useContext } from "react"
-import jobContext from "../../context/job-context"
+import JobContext from "../../context/job-context"
 import { useTranslation } from "../../hooks/use-translation"
 
 
 export default function ResultCount() {
 
-    const { state } = useContext(jobContext)
+    const { state } = useContext(JobContext)
     const { pagingMeta } = state
     const { t } = useTranslation();
 

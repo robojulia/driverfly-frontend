@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import styles from "../../../../styles/jotform.module.css";
 import { Button, Col, Row } from "react-bootstrap";
 import BaseInput from "../../base-input";
