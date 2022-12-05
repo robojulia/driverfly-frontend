@@ -29,8 +29,8 @@ export function IntroPage() {
 					{t("VOE_PARAGRAPH")}
 				</p>
 			</Row>
-			<Row className="mt-3 col-6">
-				<Col className={styles.align__text_right}>
+			<Row className="mt-3">
+				<Col className="text-center">
 					<Button type="submit">{t("NEXT")}</Button>
 				</Col>
 			</Row>

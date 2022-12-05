@@ -62,7 +62,6 @@ export function EmployedByUs() {
 					formik={form}
 				/>
 			</Row>
-
 			<Row className="mt-3">
 				<Col>
 					<Button className="float-right" type="reset">
