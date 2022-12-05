@@ -68,18 +68,16 @@ export function ViolationHistory() {
       <h6 className={styles.heading__sty}>
         {t("VIOLATIONS_LAST_3_YEARS")}
       </h6>
-      <Row>
-        <Col className={styles.align__items_left}>
-          <BaseInput
-            type="number"
-            required
-            className="col-6 mt-3"
-            name="VIOLATION_COUNT.value"
-            label="HOW_MANY_VIOALTION_3_YEARS"
-            formik={form}
-          />
-        </Col>
-        <div className="mt-4 float-left d-flex justify-left pl-3">
+      <Row className="p-2">
+        <BaseInput
+          type="number"
+          className="col my-3 p-0"
+          name="VIOLATION_COUNT.value"
+          label="HOW_MANY_VIOALTION_3_YEARS"
+          formik={form}
+        />
+        <div className="mt-4 float-left d-flex justify-left p-0">
+
           <Button
             size="sm"
             onClick={() =>

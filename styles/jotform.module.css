@@ -1,7 +1,7 @@
 .container {
     background-color: darkblue;
     flex-direction: column;
-    background-image: url("../public/form_bg.png");
+    background-image: url("/form_bg.png");
     background-position: center;
     background-size: cover;
     min-height: 100vh;

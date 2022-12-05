@@ -9,17 +9,17 @@ import styles from "../../../../styles/jotform.module.css";
 export interface IntroPageProps extends PageProps { }
 
 export function IntroPage() {
-  const {
-    method: { stepNext },
-  } = useContext(voeFormContextType);
-  const { t } = useTranslation();
+	const {
+		method: { stepNext },
+	} = useContext(voeFormContextType);
+	const { t } = useTranslation();
 
-  const form = useFormik({
-    initialValues: {},
-    onSubmit: (values) => {
-      stepNext();
-    },
-  });
+	const form = useFormik({
+		initialValues: {},
+		onSubmit: (values) => {
+			stepNext();
+		},
+	});
 
   return (
     <Form onSubmit={form.handleSubmit}>
