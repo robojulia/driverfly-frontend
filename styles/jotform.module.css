@@ -32,14 +32,13 @@
 }
 
 .main__voe_form {
-    height: max-content;
-    min-width: 700px;
-    max-width: 1200px;
-    margin-top: 150px;
+    min-height: 500px;
+    min-width: 800px;
+    max-width: 800px;
     padding: 40px;
     border-radius: 14px;
     background-color: #fff;
-    margin-bottom: 8rem;
+    margin: 3rem 1rem;
 }
 .customButton{
     background-color: #1d667e;
@@ -140,14 +139,14 @@
   
 
 @media screen and (max-width: 800px) {
-    .main_form {
+    .main_form, .main__voe_form {
         min-height: 400px;
         min-width: 400px;
     }
 }
 
 @media screen and (max-width: 600px) {
-    .main_form {
+    .main_form, .main__voe_form {
         min-width: 450px;
         padding: 20px;
     }
@@ -162,7 +161,7 @@
 }
 
 @media screen and (max-width: 460px) {
-    .main_form {
+    .main_form, .main__voe_form {
         min-width: 310px;
         min-height: 300px;
     }

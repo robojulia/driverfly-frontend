@@ -10,7 +10,7 @@ import { EmployedByUsDto } from "../../../../models/jot-form/voe-form/employed-b
 import { ApplicantVoeFormEnum } from "../../../../enums/applicants/applicant-voe-form.enum";
 import { ApplicantVoeFormEntity } from "../../../../models/applicant/applicant-voe-form.entity";
 
-export interface EmployedByUsProps extends PageProps {}
+export interface EmployedByUsProps extends PageProps { }
 
 export function EmployedByUs() {
   const {
@@ -62,7 +62,6 @@ export function EmployedByUs() {
           formik={form}
         />
       </Row>
-
       <Row className="mt-3">
         <Col>
           <Button className="float-right" type="reset">

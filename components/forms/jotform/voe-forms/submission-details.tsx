@@ -16,7 +16,7 @@ import ApplicantApi from "../../../../pages/api/applicant";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-export interface SubmissionDetailsProps extends PageProps {}
+export interface SubmissionDetailsProps extends PageProps { }
 
 export function SubmissionDetails() {
   const {
@@ -106,51 +106,47 @@ export function SubmissionDetails() {
         </Row>
 
         <Row>
-          <Col className={styles.align__text_center}>
-            <button onClick={clearSignaturePad}>{t("CLEAR")}</button>
-          </Col>
-        </Row>
-        <Row className={`${styles.align__text_left} ${styles.bold}`}>
           <Col>
-            <BaseInput
-              className="mt-3 float-left col-9 pl-0"
-              label="FULL_NAME"
-              name="SENDER_INFO.value.name"
-              formik={form}
-            />
-          </Col>
-          <Col>
-            <BaseInput
-              className="mt-3 float-left col-9"
-              label="TITLE"
-              name="SENDER_INFO.value.title"
-              formik={form}
-            />
+            <button className="theme-secondary-btn" onClick={clearSignaturePad}>{t("CLEAR")}</button>
           </Col>
         </Row>
 
         <Row className={`${styles.align__text_left} ${styles.bold}`}>
-          <Col>
-            <BaseInputPhone
-              className="mt-3 float-left col-9 pl-0"
-              label="PHONE"
-              name="SENDER_INFO.value.phone"
-              formik={form}
-            />
-          </Col>
-          <Col>
-            <BaseInput
-              className="mt-3 float-left col-9"
-              label="EMAIL"
-              name="SENDER_INFO.value.email"
-              formik={form}
-            />
-          </Col>
+
+          <BaseInput
+            className="my-3 float-left col-md-6"
+            label="FULL_NAME"
+            name="SENDER_INFO.value.name"
+            formik={form}
+          />
+          <BaseInput
+            className="my-3 float-left col-md-6"
+            label="TITLE"
+            name="SENDER_INFO.value.title"
+            formik={form}
+          />
+
+        </Row>
+        <Row className={`${styles.align__text_left} ${styles.bold}`}>
+
+          <BaseInputPhone
+            className="my-3 float-left col-md-6"
+            label="PHONE"
+            name="SENDER_INFO.value.phone"
+            formik={form}
+          />
+          <BaseInput
+            className="my-3 float-left col-md-6"
+            label="EMAIL"
+            name="SENDER_INFO.value.email"
+            formik={form}
+          />
+
         </Row>
 
         <Row className={`${styles.align__text_left} ${styles.bold}`}>
           <BaseInput
-            className="mt-3 float-left col-4"
+            className="my-3 float-left col"
             label="DATE"
             name="SENDER_INFO.value.date"
             type="date"
@@ -158,7 +154,7 @@ export function SubmissionDetails() {
           />
         </Row>
 
-        <Row className="mt-3">
+        <Row className="my-3">
           <Col>
             <Button className="float-right" type="reset">
               {t("BACK")}

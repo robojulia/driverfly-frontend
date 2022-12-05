@@ -16,7 +16,7 @@ import { ApplicantVoeFormEntity } from "../../../../models/applicant/applicant-v
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import { RefisteredAccidentDetailsDto } from "../../../../models/jot-form/voe-form/registered_accident_details/index.dto";
 
-export interface AccidentHistoryProps extends PageProps {}
+export interface AccidentHistoryProps extends PageProps { }
 
 export function AccidentHistory() {
   const {
@@ -80,23 +80,23 @@ export function AccidentHistory() {
       SAFETY_PERFORMANCE_HISTROY_REPORT: !!apx_safety_performance?.type
         ? apx_safety_performance
         : new ApplicantVoeFormEntity(
-            ApplicantVoeFormEnum.SAFETY_PERFORMANCE_HISTROY_REPORT
-          ),
+          ApplicantVoeFormEnum.SAFETY_PERFORMANCE_HISTROY_REPORT
+        ),
       REGISTERED_ACCIDENTS_DETAILS: !!apx_accident_details?.type
         ? apx_accident_details
         : new ApplicantVoeFormEntity(
-            ApplicantVoeFormEnum.REGISTERED_ACCIDENTS_DETAILS
-          ),
+          ApplicantVoeFormEnum.REGISTERED_ACCIDENTS_DETAILS
+        ),
       ACCIDENT_REPORTED_TO_GOVERNMENT: !!apx_report_to_govt?.type
         ? apx_report_to_govt
         : new ApplicantVoeFormEntity(
-            ApplicantVoeFormEnum.ACCIDENT_REPORTED_TO_GOVERNMENT
-          ),
+          ApplicantVoeFormEnum.ACCIDENT_REPORTED_TO_GOVERNMENT
+        ),
       REASON_TO_LEAVE_EMPLOYMENT: !!apx_reason_to_leave?.type
         ? apx_reason_to_leave
         : new ApplicantVoeFormEntity(
-            ApplicantVoeFormEnum.REASON_TO_LEAVE_EMPLOYMENT
-          ),
+          ApplicantVoeFormEnum.REASON_TO_LEAVE_EMPLOYMENT
+        ),
     });
   }, [applicantVoe]);
 
@@ -111,40 +111,40 @@ export function AccidentHistory() {
         <h4 className={styles.carrierName}>{t("ACCIDENT_HISTORY")}</h4>
       </Row>
       <Row>
-        <Col className={`${styles.align__text_left} ${styles.bold}`}>
+        <div className={`${styles.align__text_left} ${styles.bold}`}>
           <BaseInput
-            className="col-9 mt-3 pl-0"
+            className="col my-3 p-0"
             name="WAS_EMPLOYED_AS.value.position"
             label="WAS_EMPLOYED_AS"
             placeholder="POSITION"
             formik={form}
           />
-        </Col>
-        <Col className={`${styles.align__text_left} ${styles.bold}`}>
+        </div>
+        <div className={`${styles.align__text_left} ${styles.bold}`}>
           <BaseInput
-            className="col-9 mt-3"
+            className="col my-3 p-0"
             name="WAS_EMPLOYED_AS.value.start_date"
             label="START_DATE"
             type="date"
             formik={form}
             placeholder="MM/YY"
           />
-        </Col>
-        <Col className={`${styles.align__text_left} ${styles.bold}`}>
+        </div>
+        <div className={`${styles.align__text_left} ${styles.bold}`}>
           <BaseInput
-            className="col-9 mt-3"
+            className="col my-3 p-0"
             name="WAS_EMPLOYED_AS.value.end_date"
             type="date"
             label="END_DATE"
             formik={form}
             placeholder="MM/YY"
           />
-        </Col>
+        </div>
       </Row>
 
       <Row className={`${styles.align__text_left} ${styles.bold}`}>
         <BaseCheck
-          className="float-left col-6 mt-3"
+          className="float-left col my-3"
           name="did_drive_check"
           label="VOE_DRIVER_QUES"
           formik={form}
@@ -156,7 +156,7 @@ export function AccidentHistory() {
           className={`${styles.align__text_left} ${styles.bold} ${styles.paragraph}`}
         >
           <BaseTextArea
-            className="float-left mt-3 col-6"
+            className="float-left my-2 col"
             name="DID_DRIVE_FOR_YOU.value"
             label="TYPE_OF_VEHICLE"
             formik={form}
@@ -166,7 +166,7 @@ export function AccidentHistory() {
 
       <Row className={`${styles.align__text_left} ${styles.bold}`}>
         <BaseCheck
-          className="float-left col-6 mt-3"
+          className="float-left col my-2"
           name="SAFETY_PERFORMANCE_HISTROY_REPORT.value"
           label="SAFETY_PERFORMANCE_REPORT"
           formik={form}
@@ -175,7 +175,7 @@ export function AccidentHistory() {
       <>
         <Row className={`${styles.align__text_left} ${styles.bold}`}>
           <BaseCheck
-            className="float-left col-6 mt-3"
+            className="float-left col my-2"
             name="REGISTERED_ACCIDENTS_DETAILS.value"
             label="ACCIDENT_REGISTER_DATA"
             formik={form}
@@ -210,48 +210,48 @@ export function AccidentHistory() {
 											<Row
 												className={`${styles.align__text_left} ${styles.bold}`}
 											>
-												<Col>
+												<div>
 													<BaseInput
-														className="col-9 mt-3"
+														className="col-md-6 my-3"
 														name={`REGISTERED_ACCIDENTS_DETAILS.value[${i}].date`}
 														type="date"
 														label="DATE"
 														formik={form}
 													/>
-												</Col>
-												<Col>
+												</div>
+												<div>
 													<BaseInput
-														className="col-9 mt-3"
+														className="col-md-6 my-3"
 														name={`REGISTERED_ACCIDENTS_DETAILS.value[${i}].location`}
 														label="LOCATION"
 														formik={form}
 													/>
-												</Col>
-												<Col>
+												</div>
+												<div>
 													<BaseInput
-														className="col-9 mt-3 pl-0"
+														className="col-md-6 my-3 pl-0"
 														name={`REGISTERED_ACCIDENTS_DETAILS.value[${i}].number_of_injuries`}
 														label="NUMBER_OF_INJURIES"
 														formik={form}
 													/>
-												</Col>
-												<Col>
+												</div>
+												<div>
 													<BaseInput
 														className="col-12 mt-3 pl-0"
 														name={`REGISTERED_ACCIDENTS_DETAILS.value[${i}].number_of_fatalities`}
 														label="NUMBER_OF_FATALITIES"
 														formik={form}
 													/>
-												</Col>
-												<Col>
+												</div>
+												<div>
 													<BaseInput
 														className="col-13 mt-3 pl-0"
 														name={`REGISTERED_ACCIDENTS_DETAILS.value[${i}].number_of_hazmat_spills`}
 														label="NUMBER_OF_HAZMAT_SPILLS"
 														formik={form}
 													/>
-												</Col>
-												<Col className="mt-5">
+												</div>
+												<div className="mt-5">
 													<a
 														href="#"
 														onClick={() =>
@@ -269,7 +269,7 @@ export function AccidentHistory() {
 													>
 														<DashCircle color="red" />
 													</a>
-												</Col>
+												</div>
 											</Row>
 										)
 									)}
@@ -283,7 +283,7 @@ export function AccidentHistory() {
           className={`${styles.align__text_left} ${styles.bold} ${styles.paragraph}`}
         >
           <BaseTextArea
-            className="float-left col-6 mt-3"
+            className="float-left col my-3"
             name="ACCIDENT_REPORTED_TO_GOVERNMENT.value"
             label="OTHER_GOV_REPORTED_ACCIDENTS"
             formik={form}
@@ -292,7 +292,7 @@ export function AccidentHistory() {
       </>
       <Row className={`${styles.align__text_left} ${styles.bold}`}>
         <BaseSelect
-          className="col-4 mt-3"
+          className="col my-3"
           required
           labelPrefix="ReasonsForLeavingEmployment"
           enumType={ReasonsForLeavingEmployment}
