@@ -12,8 +12,6 @@ import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-ex
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import styles from "../../../../styles/jotform.module.css";
 
-export interface ViolationHistoryProps extends PageProps { }
-
 export function ViolationHistory() {
 	const {
 		state: { applicant, applicantExtras },

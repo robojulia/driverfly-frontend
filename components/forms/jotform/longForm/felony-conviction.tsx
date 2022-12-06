@@ -11,8 +11,6 @@ import jotformContext from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
-export interface FelonyConvictionProps extends PageProps { }
-
 export function FelonyConviction() {
 	const {
 		state: { applicant, applicantExtras },

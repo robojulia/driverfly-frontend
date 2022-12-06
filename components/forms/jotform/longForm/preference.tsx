@@ -15,8 +15,6 @@ import { PreferencesDto } from "../../../../models/jot-form/long-form/preference
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
-export interface PreferenceProps extends PageProps { }
-
 export function Preferences() {
 	const {
 		state: { applicant, applicantExtras },
@@ -104,7 +102,7 @@ export function Preferences() {
 					<p className={`${styles.paragraph}  ${styles.align__text_left}`}>{t("NECESSARY_REQUIREMENTS")}</p>
 				</Row>
 				<BaseCheckList
-					className={`${styles.paragraph}  ${styles.align__text_left} other_req p-0` }
+					className={`${styles.paragraph}  ${styles.align__text_left} other_req p-0`}
 					labelPrefix="OtherRequirementType"
 					name="OTHER_ABSOLUTELY_REQUIREMENTS.value"
 					enumType={OtherRequirementType}

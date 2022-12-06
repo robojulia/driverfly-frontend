@@ -18,8 +18,6 @@ import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.e
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import { AccordianDto } from "../../../../models/jot-form/long-form/accordian.dto";
 
-export interface AccordianPageProps extends PageProps { }
-
 export function AccordianPage() {
 	const {
 		state: { applicantExtras, applicant },

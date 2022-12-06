@@ -4,13 +4,11 @@ import { Form, Button, Col, Row } from "react-bootstrap";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import voeFormContextType from "../../../../context/voeform-context";
 import { useContext, useEffect } from "react";
-import styles from "../../../../styles/jotform.module.css";
-
-export interface IntroPageProps extends PageProps { }
+import styles from "../../../../styles/voe.module.css";
 
 export function IntroPage() {
 	const {
-		method: { stepNext },
+		method: { stepNext }
 	} = useContext(voeFormContextType);
 	const { t } = useTranslation();
 

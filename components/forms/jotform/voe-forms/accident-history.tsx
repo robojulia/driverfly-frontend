@@ -7,7 +7,7 @@ import BaseInput from "../../base-input";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import voeFormContextType from "../../../../context/voeform-context";
 import { AccidentHistoryDto } from "../../../../models/jot-form/voe-form/accident-history.dto";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/voe.module.css";
 import { ReasonsForLeavingEmployment } from "../../../../enums/users/reasons-for-leaving-employment";
 import BaseSelect from "../../base-select";
 import BaseTextArea from "../../base-text-area";
@@ -15,8 +15,6 @@ import { ApplicantVoeFormEnum } from "../../../../enums/applicants/applicant-voe
 import { ApplicantVoeFormEntity } from "../../../../models/applicant/applicant-voe-form.entity";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import { RefisteredAccidentDetailsDto } from "../../../../models/jot-form/voe-form/registered_accident_details/index.dto";
-
-export interface AccidentHistoryProps extends PageProps { }
 
 export function AccidentHistory() {
 	const {

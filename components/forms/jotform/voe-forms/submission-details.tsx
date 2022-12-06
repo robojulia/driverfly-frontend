@@ -5,7 +5,7 @@ import { useTranslation } from "../../../../hooks/use-translation";
 import BaseInput from "../../base-input";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import voeFormContextType from "../../../../context/voeform-context";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/voe.module.css";
 import SignaturePad from "react-signature-canvas";
 import SignatureCanvas from "react-signature-canvas";
 import { SubmissionDetailsDto } from "../../../../models/jot-form/voe-form/submission-details.dto";
@@ -16,12 +16,11 @@ import ApplicantApi from "../../../../pages/api/applicant";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-export interface SubmissionDetailsProps extends PageProps { }
 
 export function SubmissionDetails() {
 	const {
-		state: { applicantVoe, uuidVoeToken },
-		method: { updateApplicantVoe, stepBack, stepNext },
+		state: { applicantVoe, applicant },
+		method: { updateApplicantVoe, stepBack, stepNext }
 	} = useContext(voeFormContextType);
 
 	const { t } = useTranslation();
@@ -40,7 +39,7 @@ export function SubmissionDetails() {
 			// const filtered_voe = applicantVoe?.filter((v) => !!v.value);
 			try {
 				const response = await applicantApi.voeform.create({
-					uuid_voe_token: uuidVoeToken,
+					uuid_token: applicant.uuid_token,
 					applicantVoeFormData: applicantVoe,
 				});
 				toast.success(t(response.msg));

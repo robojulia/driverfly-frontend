@@ -18,8 +18,6 @@ import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-ex
 import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 import StateSelect from "../../state-select";
 
-export interface OtherQueuesProps extends PageProps { }
-
 export function OtherQueues() {
 
     const {

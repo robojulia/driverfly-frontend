@@ -11,8 +11,6 @@ import { UnableForJobDto } from "../../../../models/jot-form/long-form/unable-fo
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
-export interface UnableForJobProps extends PageProps { }
-
 export function UnableForJob() {
 
 	const {

@@ -10,8 +10,6 @@ import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import { HighestLevelEducationDto } from "../../../../models/jot-form/long-form/highest-level-education.dto";
 
-export interface HighestLevelEducationProps extends PageProps { }
-
 export function HighestLevelEducation() {
 
 	const {

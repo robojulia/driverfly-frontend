@@ -11,8 +11,6 @@ import { DocumentsDto } from "../../../../models/jot-form/long-form/documents.dt
 import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-document-type.enum";
 import { DocumentEntity } from "../../../../models/documents/document.entity";
 
-export interface MedicalCardProps extends PageProps { }
-
 export function MedicalCard() {
     const {
         state: { applicant },

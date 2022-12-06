@@ -4,13 +4,11 @@ import { Form, Button, Col, Row } from "react-bootstrap";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import voeFormContextType from "../../../../context/voeform-context";
 import { useContext, useEffect } from "react";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/voe.module.css";
 import BaseCheck from "../../base-check";
 import { EmployedByUsDto } from "../../../../models/jot-form/voe-form/employed-by-us.dto";
 import { ApplicantVoeFormEnum } from "../../../../enums/applicants/applicant-voe-form.enum";
 import { ApplicantVoeFormEntity } from "../../../../models/applicant/applicant-voe-form.entity";
-
-export interface EmployedByUsProps extends PageProps { }
 
 export function EmployedByUs() {
 	const {

@@ -11,8 +11,6 @@ import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import StateSelect from "../../state-select";
 
-export interface DrivingExperienceProps extends PageProps { }
-
 export function DrivingExperience() {
 	const {
 		state: { applicant },
