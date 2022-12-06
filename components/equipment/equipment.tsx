@@ -3,11 +3,11 @@ import { useTranslation } from "../../hooks/use-translation";
 import ViewMoreRadioFilter from '../find-jobs/filters/view-more-radio-filter';
 import { JobEquipmentType } from '../../enums/jobs/job-equipment-type.enum';
 import { useContext } from 'react';
-import jobContext from '../../context/job-context';
+import JobContext from '../../context/job-context';
 
 export default function Equipment() {
   const { t } = useTranslation();
-  const { state, method } = useContext(jobContext)
+  const { state, method } = useContext(JobContext)
   const { filters } = state
   const { handleChange } = method
 

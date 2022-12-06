@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react"
-import jobContext from "../../context/job-context"
+import JobContext from "../../context/job-context"
 import { useTranslation } from "../../hooks/use-translation"
 
 
 export default function Pagination() {
 
-    const { state, method } = useContext(jobContext)
+    const { state, method } = useContext(JobContext)
     const { pagingMeta } = state
     const { setFiltersByKeyValue } = method
     const { t } = useTranslation();
