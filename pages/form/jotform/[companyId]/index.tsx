@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import styles from "../../../styles/jotform.module.css";
+import styles from "../../../../styles/jotform.module.css";
 import "react-toastify/dist/ReactToastify.css";
-import { ApplicantEntity, ApplicantExtrasEntity } from "../../../models/applicant";
-import JotformContext from "../../../context/jotform-context";
-import { getFullFormPages, getFullFormStyle } from "../../../components/forms/jotform/jotform-pages";
-import CompanyApi from "../../api/company";
-import { Status } from "../../../enums/status.enum";
-import { CompanyEntity } from "../../../models/company/company.entity";
+import { ApplicantEntity, ApplicantExtrasEntity } from "../../../../models/applicant";
+import JotformContext from "../../../../context/jotform-context";
+import { getFullFormPages, getFullFormStyle } from "../../../../components/forms/jotform/jotform-pages";
+import CompanyApi from "../../../api/company";
+import { Status } from "../../../../enums/status.enum";
+import { CompanyEntity } from "../../../../models/company/company.entity";
 
 export interface FullFormProps {
 	employer: CompanyEntity
