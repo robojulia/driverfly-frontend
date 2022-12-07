@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import styles from "../../../../styles/jotform.module.css";
 import { Button, Col, Row } from "react-bootstrap";
@@ -16,8 +16,8 @@ export function MedicalCard() {
 		method: { setApplicant, stepNext, stepBack },
 	}: JotFormContextType = useContext(JotformContext);
 
-	const isMedicalCard = (v: DocumentEntity): boolean =>
-		v.type === ApplicantDocumentType.MEDICAL_CARD;
+	const isMedicalCard = (v: DocumentEntity): boolean => v.type == ApplicantDocumentType.MEDICAL_CARD;
+	const isNotMedicalCard = (v: DocumentEntity): boolean => v.type != ApplicantDocumentType.MEDICAL_CARD;
 
 	const { t } = useTranslation();
 	const form = useFormik({
@@ -27,9 +27,10 @@ export function MedicalCard() {
 			const { document } = values;
 
 			if (!!document.file_base64) {
+				const documents: DocumentEntity[] = applicant.documents?.filter(isNotMedicalCard)
 				setApplicant({
 					...applicant,
-					documents: [...applicant.documents, { ...document }],
+					documents: [...documents, { ...document }],
 				});
 			}
 
@@ -38,53 +39,52 @@ export function MedicalCard() {
 		},
 		onReset: (values) => {
 			stepBack();
-		},
+		}
 	});
+
 	useEffect(() => {
-		const doc = applicant?.documents?.find(isMedicalCard);
+		const doc: DocumentEntity = applicant?.documents?.find(isMedicalCard);
 
 		form.setValues({
 			document: doc ?? {
-				...new DocumentEntity(),
+				...(new DocumentEntity()),
 				type: ApplicantDocumentType.MEDICAL_CARD,
 			},
 		});
 	}, [applicant]);
 
-	useEffect(() => {
-		console.log("form errors", form.errors);
-		console.log("form valuez", form.values);
-		console.log("form applicant", applicant);
-	}, [form.errors, form.values]);
+	// useEffect(() => {
+	// 	console.log("form errors", form.errors);
+	// 	console.log("form valuez", form.values);
+	// 	console.log("form applicant", applicant);
+	// }, [form.errors, form.values]);
 
 	return (
-		<>
-			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<Row>
-					<h3>{t("MEDICAL_CARD_UPLOAD_TITLE")}</h3>
-				</Row>
-				<Row className={styles.align__text_left}>
-					<FileInput
-						className="my-3"
-						name="document"
-						accept="application/pdf"
-						formik={form}
-					/>
-				</Row>
-				<Row className="mt-4">
-					<Col>
-						<Button className="float-right" type="reset">
-							{t("BACK")}
-						</Button>
-					</Col>
+		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+			<Row>
+				<h3>{t("MEDICAL_CARD_UPLOAD_TITLE")}</h3>
+			</Row>
+			<Row className={styles.align__text_left}>
+				<FileInput
+					className="my-3"
+					name="document"
+					accept="application/pdf"
+					formik={form}
+				/>
+			</Row>
+			<Row className="mt-4">
+				<Col>
+					<Button className="float-right" type="reset">
+						{t("BACK")}
+					</Button>
+				</Col>
 
-					<Col>
-						<Button className="float-left" type="submit">
-							{t("NEXT")}
-						</Button>
-					</Col>
-				</Row>
-			</Form>
-		</>
-	);
+				<Col>
+					<Button className="float-left" type="submit">
+						{t("NEXT")}
+					</Button>
+				</Col>
+			</Row>
+		</Form>
+	)
 }
