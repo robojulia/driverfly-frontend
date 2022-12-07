@@ -13,8 +13,6 @@ import { AccidentHistoryEntity } from "../../../../models/jot-form/long-form/acc
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
-export interface AccidentHistoryProps extends PageProps { }
-
 export function AccidentHistory() {
 	const {
 		state: { applicant, applicantExtras },

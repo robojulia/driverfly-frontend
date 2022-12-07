@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
-import styles from "../../styles/jotform.module.css";
+import styles from "../../../styles/jotform.module.css";
 import "react-toastify/dist/ReactToastify.css";
-import { ApplicantEntity, ApplicantExtrasEntity } from "../../models/applicant";
-import JotformContext from "../../context/jotform-context";
-import { getPageAccordingToStep, getStyleAccordingToStep } from "../../components/forms/jotform/jotform-pages";
+import { ApplicantEntity, ApplicantExtrasEntity } from "../../../models/applicant";
+import JotformContext from "../../../context/jotform-context";
+import { getFullFormPages, getFullFormStyle } from "../../../components/forms/jotform/jotform-pages";
+import CompanyApi from "../../api/company";
+import { Status } from "../../../enums/status.enum";
+import { CompanyEntity } from "../../../models/company/company.entity";
 
-export default function jotFormLongForm() {
+export interface FullFormProps {
+	employer: CompanyEntity
+}
+export default function FullForm({ employer }: FullFormProps) {
+
 	const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
 	const [applicantExtras, setApplicantExtras] = useState<ApplicantExtrasEntity[]>([]);
 	const updateApplicantExtras = (applicantExtrasEntity: ApplicantExtrasEntity) =>
@@ -21,8 +28,8 @@ export default function jotFormLongForm() {
 	const stepBack = (): void => setSteps(steps - 1);
 
 	useEffect(() => {
-		console.log("applicantextrasvalues", applicantExtras);
-	}, []);
+		setApplicant(oldValues => ({ ...oldValues, company: employer }))
+	}, [employer]);
 
 	return (
 		<JotformContext.Provider
@@ -44,7 +51,7 @@ export default function jotFormLongForm() {
 				<div className={styles.main}>
 					<div
 						className={styles.main_form}
-						style={getStyleAccordingToStep(steps)}
+						style={getFullFormStyle(steps)}
 					>
 						{/* uncomment this during development */}
 						{/* <BaseInput
@@ -53,10 +60,27 @@ export default function jotFormLongForm() {
 							max={26}
 							type="number"
 							onChange={({ target: { value } }) => setSteps(parseInt(value))} /> */}
-						{getPageAccordingToStep(steps)}
+						{getFullFormPages(steps)}
 					</div>
 				</div>
 			</div>
 		</JotformContext.Provider>
 	);
+}
+
+export async function getServerSideProps({ query }) {
+	try {
+		const { companyId } = query || {};
+
+		if (!!!companyId || isNaN(companyId)) return { notFound: true }
+
+		const companyApi = new CompanyApi()
+		const employer: CompanyEntity = await companyApi.employer.getById(parseInt(companyId as string))
+
+		if (employer?.status !== Status.ACTIVE) return { notFound: true }
+
+		return { props: { employer } }
+	} catch (error) {
+		return { notFound: true }
+	}
 }

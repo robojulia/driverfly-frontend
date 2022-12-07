@@ -10,8 +10,6 @@ import { WorkedBeforeDto } from "../../../../models/jot-form/long-form/worked-be
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
-export interface WorkedBeforeProps extends PageProps { }
-
 export function WorkedBefore() {
 	const {
 		state: { applicant, applicantExtras },

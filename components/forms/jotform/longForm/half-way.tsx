@@ -6,8 +6,6 @@ import { useTranslation } from "../../../../hooks/use-translation";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import styles from "../../../../styles/jotform.module.css";
 
-export interface HalfWayProps extends PageProps { }
-
 export function HalfWay() {
 
 	const {

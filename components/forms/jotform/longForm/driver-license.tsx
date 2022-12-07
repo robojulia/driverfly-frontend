@@ -11,8 +11,6 @@ import { DocumentEntity } from "../../../../models/documents/document.entity";
 import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-document-type.enum";
 import { DocumentsDto } from "../../../../models/jot-form/long-form/documents.dto";
 
-export interface DriverLicenseProps extends PageProps { }
-
 export function DriverLicense() {
     const {
         state: { applicant },

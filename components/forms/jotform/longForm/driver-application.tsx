@@ -12,8 +12,6 @@ import jotformContext from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
-export interface DriverApplicationProps extends PageProps { }
-
 export function DriverApplication() {
 	const {
 		state: { applicant, applicantExtras },

@@ -11,8 +11,6 @@ import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.e
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import StateSelect from "../../state-select";
 
-export interface BackgroundInfoProps extends PageProps { }
-
 export function BackgroundInfo() {
 
 	const {

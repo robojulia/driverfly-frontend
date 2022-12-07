@@ -18,8 +18,6 @@ import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.e
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import { AccordianDto } from "../../../../models/jot-form/long-form/accordian.dto";
 
-export interface AccordianPageProps extends PageProps {}
-
 export function AccordianPage() {
   const {
     state: { applicantExtras, applicant },
@@ -38,7 +36,7 @@ export function AccordianPage() {
 
       try {
         const filtered_extras = applicantExtras?.filter((v) => !!v.value);
-        const response = await applicantApi.jotform.create({
+        const response = await applicantApi.jotform.update(applicant.id, {
           applicant,
           applicantExtras: filtered_extras,
         });
@@ -147,7 +145,7 @@ export function AccordianPage() {
               <Row className={styles.align__text_left}>
                 <BaseInput
                   className="col my-3"
-                  name="BUSINESS_TAX_NUMBER.value"
+                  name="EMPLOYEE_SS_OR_ID.value"
                   label="EMPLOYEE_SS_OR_BUSINESS"
                   formik={form}
                 />

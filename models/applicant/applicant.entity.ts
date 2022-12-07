@@ -83,7 +83,8 @@ export class ApplicantEntity {
 	created_at?: string;
 	last_updated_at?: string;
 	dac?: ApplicantDacEntity[];
-	applicantExtras?: ApplicantExtrasEntity[] = []
+	extras?: ApplicantExtrasEntity[] = []
+	uuid_token?: string;
 
 	static yupSchema() {
 		return yup.object({

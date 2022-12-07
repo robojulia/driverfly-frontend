@@ -2,7 +2,7 @@ import { CSSProperties } from "react";
 import { AccidentHistory, AccordianPage, BackgroundInfo, DriverApplication, DriverLicense, DrivingExperience, DrugTest, EmergencyContact, EmploymentHistory, FelonyConviction, HalfWay, HighestLevelEducation, MedicalCard, OtherQueues, PastEmploymentHistory, PastSuspension, Preferences, UnableForJob, ViolationHistory, WorkedBefore } from "./longForm";
 import { AccidentViolation, BasicInfo, CdlExperience, ContinueLongForm, HearAbout, Names, SplashPage } from "./shortForm";
 
-export const JotformPages = {
+const getFullFormPages = (step: number): JSX.Element => ({
     0: <SplashPage />,
     1: <Names />,
     2: <BasicInfo />,
@@ -30,12 +30,40 @@ export const JotformPages = {
     24: <FelonyConviction />,
     25: <DrugTest />,
     26: <AccordianPage />,
-}
+}[step]);
 
-export const getPageAccordingToStep = (step: number): JSX.Element => (JotformPages[step]);
-
-export const JotformStyles = {
+const getFullFormStyle = (step: number): CSSProperties | undefined => ({
     2: { width: "50%" }
-}
+}[step])
 
-export const getStyleAccordingToStep = (step: number): CSSProperties | undefined => (JotformStyles[step])
+const getLongFormPages = (step: number): JSX.Element => ({
+    0: <DriverApplication />,
+    1: <BackgroundInfo />,
+    2: <HighestLevelEducation />,
+    3: <DrivingExperience />,
+    4: <OtherQueues />,
+    5: <DriverLicense />,
+    6: <MedicalCard />,
+    7: <EmergencyContact />,
+    8: <EmploymentHistory />,
+    9: <PastEmploymentHistory />,
+    10: <Preferences />,
+    11: <HalfWay />,
+    12: <WorkedBefore />,
+    13: <AccidentHistory />,
+    14: <ViolationHistory />,
+    15: <PastSuspension />,
+    16: <UnableForJob />,
+    17: <FelonyConviction />,
+    18: <DrugTest />,
+    19: <AccordianPage />,
+}[step]);
+
+const getLongFormStyle = (step: number): CSSProperties | undefined => ({}[step])
+
+export {
+    getFullFormPages,
+    getFullFormStyle,
+    getLongFormPages,
+    getLongFormStyle
+}

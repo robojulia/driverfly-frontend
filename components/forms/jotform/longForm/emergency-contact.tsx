@@ -10,8 +10,6 @@ import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import { EmergenyContactDto } from "../../../../models/jot-form/long-form/emergency-contact.dto";
 
-export interface EmergencyContactProps extends PageProps { }
-
 export function EmergencyContact() {
 	const {
 		state: { applicant },

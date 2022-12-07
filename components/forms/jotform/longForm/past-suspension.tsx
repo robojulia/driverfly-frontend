@@ -11,8 +11,6 @@ import { PastSuspensionDto } from "../../../../models/jot-form/long-form/past-su
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
-export interface PastSuspensionProps extends PageProps { }
-
 export function PastSuspension() {
 
 	const {
