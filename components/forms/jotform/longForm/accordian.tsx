@@ -18,17 +18,15 @@ import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.e
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import { AccordianDto } from "../../../../models/jot-form/long-form/accordian.dto";
 
-export interface AccordianPageProps extends PageProps { }
-
 export function AccordianPage() {
 	const {
 		state: { applicantExtras, applicant },
-		method: { stepBack, updateApplicantExtras }
+		method: { stepBack, updateApplicantExtras },
 	} = useContext(jotformContext);
 
 	const { t } = useTranslation();
 	let padRef = React.useRef<SignatureCanvas[]>([null, null, null, null]);
-	const clearSignaturePad = () => padRef?.current?.map((el) => el?.clear())
+	const clearSignaturePad = () => padRef?.current?.map((el) => el?.clear());
 
 	const form = useFormik({
 		initialValues: new AccordianDto(),
@@ -38,7 +36,7 @@ export function AccordianPage() {
 
 			try {
 				const filtered_extras = applicantExtras?.filter((v) => !!v.value);
-				const response = await applicantApi.jotform.create({
+				const response = await applicantApi.jotform.update(applicant.id, {
 					applicant,
 					applicantExtras: filtered_extras,
 				});
@@ -56,10 +54,10 @@ export function AccordianPage() {
 		const signatureValue = padRef?.current[index]?.toDataURL();
 		padRef?.current.map((el, key) => {
 			if (key != index) {
-				el?.clear()
-				el?.fromDataURL(signatureValue)
+				el?.clear();
+				el?.fromDataURL(signatureValue);
 			}
-		})
+		});
 		form.setFieldValue("SIGNATURE.value", signatureValue?.toString());
 	};
 	useEffect(() => {
@@ -73,12 +71,23 @@ export function AccordianPage() {
 		console.log("applicant extras", applicantExtras);
 		console.log("applicant", applicant);
 
-		const apx_ss_id = applicantExtras?.find(v => v.type === ApplicantExtras.EMPLOYEE_SS_OR_ID);
-		const apx_disclosure_date = applicantExtras?.find(v => v.type === ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE);
-		const apx_background_date = applicantExtras?.find(v => v.type === ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE);
-		const apx_general_consent = applicantExtras?.find(v => v.type === ApplicantExtras.GENERAL_CONSENT);
-		const apx_sign = applicantExtras?.find(v => v.type === ApplicantExtras.SIGNATURE);
-		if (apx_sign?.value) padRef?.current?.map((el, index) => el?.fromDataURL(apx_sign?.value))
+		const apx_ss_id = applicantExtras?.find(
+			(v) => v.type === ApplicantExtras.EMPLOYEE_SS_OR_ID
+		);
+		const apx_disclosure_date = applicantExtras?.find(
+			(v) => v.type === ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE
+		);
+		const apx_background_date = applicantExtras?.find(
+			(v) => v.type === ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
+		);
+		const apx_general_consent = applicantExtras?.find(
+			(v) => v.type === ApplicantExtras.GENERAL_CONSENT
+		);
+		const apx_sign = applicantExtras?.find(
+			(v) => v.type === ApplicantExtras.SIGNATURE
+		);
+		if (apx_sign?.value)
+			padRef?.current?.map((el, index) => el?.fromDataURL(apx_sign?.value));
 
 		form.setValues({
 			...form.values,
@@ -136,8 +145,9 @@ export function AccordianPage() {
 							<Row className={styles.align__text_left}>
 								<BaseInput
 									className="col my-3"
-									name="BUSINESS_TAX_NUMBER"
+									name="EMPLOYEE_SS_OR_ID.value"
 									label="EMPLOYEE_SS_OR_BUSINESS"
+									formik={form}
 								/>
 							</Row>
 
@@ -188,8 +198,10 @@ export function AccordianPage() {
 									<SignaturePad
 										name="SIGNATURE.value"
 										required
-										onEnd={() => { handleSignatureEnd(0) }}
-										ref={el => padRef.current[0] = el}
+										onEnd={() => {
+											handleSignatureEnd(0);
+										}}
+										ref={(el) => (padRef.current[0] = el)}
 										canvasProps={{
 											style: { border: "1px solid black" },
 											className: "sigCanvas",
@@ -199,7 +211,13 @@ export function AccordianPage() {
 							</Row>
 							<Row className={styles.align__text_left}>
 								<Col>
-									<button className="theme-secondary-btn" type="button" onClick={clearSignaturePad}>{t("CLEAR")}</button>
+									<button
+										className="theme-secondary-btn"
+										type="button"
+										onClick={clearSignaturePad}
+									>
+										{t("CLEAR")}
+									</button>
 								</Col>
 							</Row>
 							<Row className={styles.align__text_left}>
@@ -207,22 +225,36 @@ export function AccordianPage() {
 								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
 									{t("NEW_EMPLOYER_NAME_NAUTTLUS")}
 								</p>
-								<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("ADDRESS_MLK_BLVD")}</p>
+								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									{t("ADDRESS_MLK_BLVD")}
+								</p>
 								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
 									{t("PHONE_#_(551)_430-1998")}
 								</p>
-								<p className={`${styles.paragraph} ${styles.align__text_left}`}>Fax #: </p>
-								<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("DESIGNATED_EMPLOYER")}</p>
+								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									Fax #:{" "}
+								</p>
+								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									{t("DESIGNATED_EMPLOYER")}
+								</p>
 							</Row>
 							<Row className={`${styles.align__text_left} ${styles.highlight}`}>
 								<h6>{t("PLEASE_NOTE_THE_FOLLOWING_EMPLOYERS")} </h6>
 							</Row>
 							<Row className={styles.align__text_left}>
 								<h4 className="mt-3">{t("I-B")}</h4>
-								<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("CURRENT_COMPANY_NAME")}</p>
-								<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("ADDRESS:")}</p>
-								<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("PHONE_#_:")}</p>
-								<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("FAX_#_:")}</p>
+								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									{t("CURRENT_COMPANY_NAME")}
+								</p>
+								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									{t("ADDRESS:")}
+								</p>
+								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									{t("PHONE_#_:")}
+								</p>
+								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									{t("FAX_#_:")}
+								</p>
 								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
 									{t("DESIGNATED_EMPLOYER_REPRESENTATIVE")}{" "}
 								</p>
@@ -237,7 +269,11 @@ export function AccordianPage() {
 									</Col>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("TO_BE_COMPLETED")}</p>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
+										{t("TO_BE_COMPLETED")}
+									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
 									<Col>
@@ -245,83 +281,152 @@ export function AccordianPage() {
 									</Col>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
 										{t("THE_APPLICANT_NAMED_ABOVE")}
 									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
 										{t("EMPLOYES_AS___________________________")}
 									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
 										{t("DID_HE/SHE_DRIVE_MOTOR_VEHICLE")}
 									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
 										{t("REASON_FOR_LEAVING_YOUR_EMPLOY")}
 									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
 										{t("IF_THERE_IS_NO_SAFETY")}
 									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
 										{t("THE_APPLICANT_NAMED_ABOVE_WAS")}
 									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
 										{t("ACCIDENTAL_COMPLETE_THE_FOLLOWING")}
 									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}> {t("COLUMNS")}</p>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
+										{" "}
+										{t("COLUMNS")}
+									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("1")}</p>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
+										{t("1")}
+									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("2")}</p>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
+										{t("2")}
+									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("3")}</p>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
+										{t("3")}
+									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
 										{t("INFORMATION_CONCERNING_OTHER_ACCIDENTS")}
 									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("BLANK_LINE")}</p>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
+										{t("BLANK_LINE")}
+									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("BLANK_LINE")}</p>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
+										{t("BLANK_LINE")}
+									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("BLANK_LINE")}</p>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
+										{t("BLANK_LINE")}
+									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("BLANK_LINE")}</p>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
+										{t("BLANK_LINE")}
+									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("ANY_OTHER_MARK")}</p>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
+										{t("ANY_OTHER_MARK")}
+									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("BLANK_LINE")}</p>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
+										{t("BLANK_LINE")}
+									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("BLANK_LINE")}</p>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
+										{t("BLANK_LINE")}
+									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("BLANK_LINE")}</p>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
+										{t("BLANK_LINE")}
+									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("BLANK_LINE")}</p>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
+										{t("BLANK_LINE")}
+									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
 									<Col>
@@ -329,42 +434,58 @@ export function AccordianPage() {
 									</Col>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
 										{t("DOT_REGULATED_TESTING")}
 									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
 										{t("QUESTION_ALCOHOL_TEST")}
 									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
 										{t("QUESTION_VERIFIED_DRUG_TEST")}
 									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
 										{t("QUESTION_REFUSE_TESTED")}
 									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
 										{t("QUESTION_OTHER_VIOLATIONS_DOT_AGENCY")}
 									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
 										{t("QUESTION_PREVIOUS_OWNER_REPORT_VIOLATION")}
 									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
 										{t("QUESTION_RETURN_TO_DUTY")}
 									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
 										{t("NOTE_PREVIOUS_EMPLOYER_REPORT")}
 									</p>
 								</Row>
@@ -374,21 +495,39 @@ export function AccordianPage() {
 									</Col>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
 										{t("NAME_OF_PERSON_ABOVE")}
 									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("BLANK_LINE")}</p>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
+										{t("BLANK_LINE")}
+									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("BLANK_LINE_TITLE")}</p>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
+										{t("BLANK_LINE_TITLE")}
+									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("BLANK_LINE_PHONE")}</p>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
+										{t("BLANK_LINE_PHONE")}
+									</p>
 								</Row>
 								<Row className={styles.align__text_left}>
-									<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("BLANK_LINE_DATE")}</p>
+									<p
+										className={`${styles.paragraph} ${styles.align__text_left}`}
+									>
+										{t("BLANK_LINE_DATE")}
+									</p>
 								</Row>
 							</Row>
 						</Accordion.Body>
@@ -398,7 +537,11 @@ export function AccordianPage() {
 						<Accordion.Body>
 							<Row className="mb-3">
 								<h1>
-									{t('{COMPANY_NAME}', { COMPANY_NAME: 'talhatrucking' }, { translateProps: true })}
+									{t(
+										"{COMPANY_NAME}",
+										{ COMPANY_NAME: "talhatrucking" },
+										{ translateProps: true }
+									)}
 								</h1>
 							</Row>
 							<Row>
@@ -448,8 +591,10 @@ export function AccordianPage() {
 									<SignaturePad
 										name="SIGNATURE.value"
 										required
-										onEnd={() => { handleSignatureEnd(1) }}
-										ref={el => padRef.current[1] = el}
+										onEnd={() => {
+											handleSignatureEnd(1);
+										}}
+										ref={(el) => (padRef.current[1] = el)}
 										canvasProps={{
 											style: { border: "1px solid black" },
 											className: "sigCanvas",
@@ -459,7 +604,13 @@ export function AccordianPage() {
 							</Row>
 							<Row>
 								<Col>
-									<button className="theme-secondary-btn" type="button" onClick={clearSignaturePad}>{t("CLEAR")}</button>
+									<button
+										className="theme-secondary-btn"
+										type="button"
+										onClick={clearSignaturePad}
+									>
+										{t("CLEAR")}
+									</button>
 								</Col>
 							</Row>
 							<Row className={styles.align__text_left}>
@@ -566,8 +717,10 @@ export function AccordianPage() {
 									<SignaturePad
 										name="SIGNATURE.value"
 										required
-										onEnd={() => { handleSignatureEnd(2) }}
-										ref={el => padRef.current[2] = el}
+										onEnd={() => {
+											handleSignatureEnd(2);
+										}}
+										ref={(el) => (padRef.current[2] = el)}
 										canvasProps={{
 											style: { border: "1px solid black" },
 											className: "sigCanvas",
@@ -577,7 +730,13 @@ export function AccordianPage() {
 							</Row>
 							<Row className={styles.align__text_left}>
 								<Col>
-									<button className="theme-secondary-btn" type="button" onClick={clearSignaturePad}>{t("CLEAR")}</button>
+									<button
+										className="theme-secondary-btn"
+										type="button"
+										onClick={clearSignaturePad}
+									>
+										{t("CLEAR")}
+									</button>
 								</Col>
 							</Row>
 							<Row className={styles.align__text_left}>
@@ -638,7 +797,9 @@ export function AccordianPage() {
 							</Row>
 
 							<Row>
-								<p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("INSTRUCTIONS_CFR")}</p>
+								<p className={`${styles.paragraph} ${styles.align__text_left}`}>
+									{t("INSTRUCTIONS_CFR")}
+								</p>
 							</Row>
 							<Row>
 								<BaseInput
@@ -700,8 +861,10 @@ export function AccordianPage() {
 									<SignaturePad
 										name="SIGNATURE.value"
 										required
-										onEnd={() => { handleSignatureEnd(3) }}
-										ref={el => padRef.current[3] = el}
+										onEnd={() => {
+											handleSignatureEnd(3);
+										}}
+										ref={(el) => (padRef.current[3] = el)}
 										canvasProps={{
 											style: { border: "1px solid black" },
 											className: "sigCanvas",
@@ -711,7 +874,13 @@ export function AccordianPage() {
 							</Row>
 							<Row className={styles.align__text_left}>
 								<Col>
-									<button className="theme-secondary-btn" type="button" onClick={clearSignaturePad}>{t("CLEAR")}</button>
+									<button
+										className="theme-secondary-btn"
+										type="button"
+										onClick={clearSignaturePad}
+									>
+										{t("CLEAR")}
+									</button>
 								</Col>
 							</Row>
 						</Accordion.Body>
