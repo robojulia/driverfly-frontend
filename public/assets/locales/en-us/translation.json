@@ -1514,6 +1514,7 @@
   "CONTINUE_APPLICATION": "Continue Application",
   "NAUTILIUS_TRUCKING": "Nautilius Trucking",
   "JOTFORM_WELCOME": "Welcome we have been waiting for you!",
+  "JOTFORM_URL": "Jotform URL",
   "CHOOSE": "Click to choose",
   "SMS_EMAIL_AUTHORIZATION_NAUTILIUS": "I authorize Nautilius Trucking and any applicable third parties associated with Nautilius Trucking the ability to send me SMS and email communications regarding job availabilities and other relevant resources.",
   "PLACEHOLDER_FOR_DIGITS": "ex:2",
@@ -1726,5 +1727,6 @@
   "TYPE_CDL_CLASS": "CDL Class Type",
   "{name}_carrier": "{{name}} Carrier",
   "BACK": "Back",
-  "NEXT": "Next"
+  "NEXT": "Next",
+  "CLICK_TO_COPY": "Click to copy"
 }
