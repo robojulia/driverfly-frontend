@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styles from "../../../styles/voe.module.css";
+import styles from "../../../../styles/voe.module.css";
 import VoeFormContext from "../../../../context/voeform-context";
 import { VoeFormPageControl } from "../../../../components/forms/jotform/voe-form-pages";
 import ApplicantApi from "../../../api/applicant";

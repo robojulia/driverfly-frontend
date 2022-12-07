@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styles from "../../../styles/jotform.module.css";
+import styles from "../../../../styles/jotform.module.css";
 import { ApplicantEntity, ApplicantExtrasEntity } from "../../../../models/applicant";
 import JotformContext from "../../../../context/jotform-context";
 import { getLongFormPages, getLongFormStyle } from "../../../../components/forms/jotform/jotform-pages";
