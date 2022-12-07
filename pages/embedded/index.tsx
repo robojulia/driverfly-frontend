@@ -17,22 +17,29 @@ import OtrJobsList from "../../components/find-jobs/otr-job-list";
 import { JobGeography } from "../../enums/jobs/job-geography.enum";
 import { Row, Col } from 'react-bootstrap';
 import JobsList from '../../components/embedded-jobs-listing/jobs-list'
+import { GetServerSidePropsContext } from 'next'
+import { useRouter } from 'next/router'
+import EmbeddedFilters from '../../components/embedded-filters/embedded-filters'
+import { EmbeddedFilterTypes } from '../../enums/embedded/embedded-filter-types.enum'
+import { DriverLicense } from '../../components/forms/jotform/longForm'
+import { DriverLicenseType } from '../../enums/users/driver-license-type.enum'
 
 
-export default function Embedded() {
+export default function Embedded({ filterType }) {
 
+    const router = useRouter()
     const jobApi = new JobApi()
     const { t } = useTranslation();
 
     const [jobs, setJobs] = useState<JobEntity[]>([])
 
-    const [pagingMeta, setPagingMeta] = useState<PagingMetaProps>(pagingMetaInitialValues())
+    const [pagingMeta, setPagingMeta] = useState<PagingMetaProps>(pagingMetaInitialValues)
     const resetPagingMeta = (): void => setPagingMeta(pagingMetaInitialValues)
 
     const [searchQuery, setSearchQuery] = useState<string>()
     const resetSearchQuery = (): void => setSearchQuery('')
 
-    const [filters, setFilters] = useState<SearchJobsDto>(filtersInitialsValues)
+    const [filters, setFilters] = useState<SearchJobsDto>({})
     const resetFilters = (): void => setFilters(filtersInitialsValues)
 
     const [location, setLocation] = useState<JobSearchLocation>(null)
@@ -59,10 +66,51 @@ export default function Embedded() {
 
     const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>): void => setFiltersByKeyValue(name, value)
 
+    const setNativeValue = (element: HTMLInputElement, value: any) => {
+        if (!element) {
+            return
+        }
+        const valueSetter = Object.getOwnPropertyDescriptor(element, 'value').set;
+        const prototype = Object.getPrototypeOf(element);
+        const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, 'value').set;
+
+        if (valueSetter && valueSetter !== prototypeValueSetter) {
+            prototypeValueSetter.call(element, value);
+        } else {
+            valueSetter.call(element, value);
+        }
+    }
+
+    const setFiltersForQuery = async (): Promise<void> => {
+        switch (filterType) {
+            case EmbeddedFilterTypes.CDL_SCHOOLS:
+                setFiltersByKeyValue("cdl_class", DriverLicenseType.CDL_CLASS_A)
+                break;
+            case EmbeddedFilterTypes.HEAVY_HAUL:
+                setFiltersByKeyValue("cdl_class", DriverLicenseType.CDL_CLASS_A)
+                break;
+            case EmbeddedFilterTypes.OWNER_OPERATOR:
+                setFiltersByKeyValue("cdl_class", DriverLicenseType.CDL_CLASS_A)
+                break;
+            default:
+                break;
+        }
+
+    }
+
     const fetchJobs = async (): Promise<void> => {
         try {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                setFiltersByKeyValue("location", {
+                    "lat": position.coords.latitude,
+                    "long": position.coords.longitude,
+                    "range": 1500
+                });
+            });
+
             await jobApi.search({ ...filters as any })
                 .then(({ items, meta }) => {
+                    console.log({ items, meta, filters });
                     setJobs(items)
                     setPagingMeta(meta)
                 })
@@ -71,7 +119,16 @@ export default function Embedded() {
         }
     }
 
-    useEffectAsync(fetchJobs, [filters]);
+    useEffectAsync(fetchJobs, [filters])
+    useEffectAsync(async (): Promise<void> => {
+        try {
+            await setFiltersForQuery();
+            // await router.replace('embedded', undefined, { shallow: true });
+            await fetchJobs()
+        } catch (e) {
+            toast.error(t('FIND_JOB_ERROR_GENERAL'))
+        }
+    }, [])
     return (
         <PageLayout>
             <JobContext.Provider value={{
@@ -96,7 +153,7 @@ export default function Embedded() {
                 },
             }}>
                 <div className="job-list_sec container mt-5">
-                    <Filters />
+                    <EmbeddedFilters filterType />
                     <Row className='m-lg-0 mt-2'>
                         <Col className='col-12 my-2 p-lg-0'>
                             <ResultCount />
@@ -116,7 +173,17 @@ export default function Embedded() {
         </PageLayout>
     )
 }
+export async function getServerSideProps({ query }: GetServerSidePropsContext) {
 
+    const { filterType } = query || {};
+
+    if (!!!filterType) return { notFound: true }
+    return {
+        props: {
+            filterType
+        }
+    }
+}
 Embedded.getLayout = function getLayout(page) {
     return (
         <EmbeddedLayout>

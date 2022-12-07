@@ -649,6 +649,14 @@
     "MANUAL": "Manual",
     "AUTOMATIC": "Automatic"
   },
+  "EmbeddedFilterTypes": {
+    "CDL_SCHOOLS": "CDL School",
+    "HEAVY_HAUL": "Heavy Haul",
+    "OWNER_OPERATOR": "Owner Operator",
+    "NEW_HIRES": "New Hires",
+    "TEAM_DRIVERS": "Team Drivers",
+    "OTR_JOBS": "OTR Jobs"
+  },
   "VehicleTrailerType": {
     "REGULAR": "Regular",
     "CAR_CARRIER": "Car Carrier",
