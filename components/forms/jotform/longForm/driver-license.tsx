@@ -5,8 +5,7 @@ import { Button, Col, Row } from "react-bootstrap";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import FileInput from "../../file-input";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import jotformContext from "../../../../context/jotform-context";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { DocumentEntity } from "../../../../models/documents/document.entity";
 import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-document-type.enum";
 import { DocumentsDto } from "../../../../models/jot-form/long-form/documents.dto";
@@ -15,21 +14,25 @@ export function DriverLicense() {
     const {
         state: { applicant },
         method: { setApplicant, stepNext, stepBack },
-    } = useContext(jotformContext);
+    }: JotFormContextType = useContext(JotformContext);
+
+    const isDriverLicense = (v: DocumentEntity): boolean => v.type === ApplicantDocumentType.DRIVERS_LICENSE;
 
     const { t } = useTranslation();
     const form = useFormik({
         initialValues: new DocumentsDto(),
         validationSchema: DocumentsDto.yupSchema(),
         onSubmit: (values) => {
-            console.log("vallll", values);
+            // console.log("vallll", values);
             const { document } = values;
-            setApplicant((oldArray) => {
-                return {
-                    ...oldArray,
-                    documents: [...oldArray.documents, { ...document }],
-                };
-            });
+
+            if (document.file_base64) {
+                setApplicant({
+                    ...applicant,
+                    documents: [...applicant.documents, { ...document }],
+                });
+            }
+
             stepNext();
         },
         onReset: (values) => {
@@ -38,12 +41,10 @@ export function DriverLicense() {
     });
 
     useEffect(() => {
-        const doc = applicant?.documents.find(
-            (v) => v.type === ApplicantDocumentType.DRIVERS_LICENSE
-        );
+        const doc = applicant?.documents?.find(isDriverLicense)
 
         form.setValues({
-            document: doc ? doc : {
+            document: doc ?? {
                 ...(new DocumentEntity()),
                 type: ApplicantDocumentType.DRIVERS_LICENSE,
             },
@@ -53,6 +54,7 @@ export function DriverLicense() {
     useEffect(() => {
         console.log("form errors", form.errors);
         console.log("form valuez", form.values);
+        console.log("form applicant", applicant);
     }, [form.errors, form.values]);
 
     return (
