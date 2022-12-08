@@ -3,7 +3,7 @@ import { JobEntity } from "../models/job/job.entity";
 import { JobSearchLocation, SearchJobsDto } from "../models/job/search-jobs-dto";
 import { pagingMetaInitialValues, PagingMetaProps } from "../utils/job-filter";
 
-type authContextType = {
+type JobContextType = {
     state: {
         jobs?: JobEntity[],
         pagingMeta: PagingMetaProps,
@@ -25,7 +25,7 @@ type authContextType = {
     }
 };
 
-const jobContext = createContext<authContextType>({
+const JobContext = createContext<JobContextType>({
     state: {
         jobs: [],
         pagingMeta: pagingMetaInitialValues(),
@@ -46,4 +46,4 @@ const jobContext = createContext<authContextType>({
         handleReset: () => { }
     },
 })
-export default jobContext
+export default JobContext

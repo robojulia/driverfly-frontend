@@ -11,8 +11,6 @@ import jotformContext from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
-export interface FelonyConvictionProps extends PageProps { }
-
 export function FelonyConviction() {
 	const {
 		state: { applicant, applicantExtras },
@@ -55,7 +53,7 @@ export function FelonyConviction() {
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={styles.paragraph__left}>
 				<BaseCheck
-					className="float-left col-6"
+					className="col"
 					name="is_convicted_felony"
 					label="EVER_FELONY_QUESTION"
 					formik={form}

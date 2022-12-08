@@ -13,7 +13,7 @@ import SpecialEndorsementsRequired from '../filters/special-endorsements-require
 import TypeOfDelivery from '../filters/type-of-delivery'
 import Range from "../filters/location/range"
 import { useTranslation } from '../../hooks/use-translation'
-import jobContext from '../../context/job-context'
+import JobContext from '../../context/job-context'
 import TransmissionType from '../filters/vehicle-transmission-type'
 
 
@@ -21,7 +21,7 @@ import TransmissionType from '../filters/vehicle-transmission-type'
 export default function FilterResults() {
 
   const { t } = useTranslation();
-  const { state, method } = useContext(jobContext)
+  const { state, method } = useContext(JobContext)
 
   const { handleReset } = method
 

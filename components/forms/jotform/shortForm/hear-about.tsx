@@ -12,80 +12,84 @@ import styles from "../../../../styles/jotform.module.css";
 import { HearAboutUsType } from "../../../../enums/jotform/hear-about-type.enum";
 import BaseInput from "../../base-input";
 
-export interface HearAboutProps extends PageProps {}
+export interface HearAboutProps extends PageProps { }
 
 export function HearAbout() {
-  const {
-    state: { applicantExtras },
-    method: { updateApplicantExtras, stepNext, stepBack },
-  } = useContext(jotformContext);
+	const {
+		state: { applicantExtras },
+		method: { updateApplicantExtras, stepNext, stepBack },
+	} = useContext(jotformContext);
 
-  const { t } = useTranslation();
+	const { t } = useTranslation();
 
-  const form = useFormik({
-    initialValues: new HearAboutUsDto(),
-    validationSchema: HearAboutUsDto.yupSchema(),
-    onSubmit: (values) => {
-      const { HEAR_ABOUT_US } = values;
-      updateApplicantExtras(HEAR_ABOUT_US);
-      stepNext();
-    },
-    onReset: (values) => {
-      stepBack();
-    },
-  });
+	const form = useFormik({
+		initialValues: new HearAboutUsDto(),
+		validationSchema: HearAboutUsDto.yupSchema(),
+		onSubmit: (values) => {
+			const { HEAR_ABOUT_US } = values;
+			updateApplicantExtras(HEAR_ABOUT_US);
+			stepNext();
+		},
+		onReset: (values) => {
+			stepBack();
+		},
+	});
 
-  useEffect(() => {
-    const apx = applicantExtras?.find(
-      (v) => v.type === ApplicantExtras.HEAR_ABOUT_US
-    );
-    form.setValues({
-      ...form.values,
-      HEAR_ABOUT_US: !!apx?.type
-        ? apx
-        : new ApplicantExtrasEntity(ApplicantExtras.HEAR_ABOUT_US),
-    });
-  }, [applicantExtras]);
+	useEffect(() => {
+		const apx = applicantExtras?.find(
+			(v) => v.type === ApplicantExtras.HEAR_ABOUT_US
+		);
+		form.setValues({
+			...form.values,
+			HEAR_ABOUT_US: !!apx?.type
+				? apx
+				: new ApplicantExtrasEntity(ApplicantExtras.HEAR_ABOUT_US),
+		});
+	}, [applicantExtras]);
 
-  return (
-    <>
-      <form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-        <Row className={styles.carrierName__smaller}>
-          <BaseSelect
-            className="mt-3 mb-3"
-            labelPrefix="HearAboutUsType"
-            enumType={HearAboutUsType}
-            name="HEAR_ABOUT_US.value"
-            placeholder="CHOOSE"
-            label="HOW_DID_YOU_HEAR_ABOUT_US"
-            formik={form}
-          />
-        </Row>
-        {form.values?.HEAR_ABOUT_US?.value === HearAboutUsType.REFERRAL && (
-          <Row>
-            <BaseInput
-              className="col-6 mb-4"
-              name="REFERRAL_NUMBER"
-              placeholder="REFERRAL_NUMBER"
-              label="REFERRAL_NUMBER"
-              formik={form}
-            />
-          </Row>
-        )}
-        <Row className="mt-3">
-          <Col>
-            <Button className="float-right" type="reset">
-              {t("BACK")}
-            </Button>
-          </Col>
+	return (
+		<>
+			<form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+				<Row>
+					<h4 className={styles.heading__sty}>
+						{t("HOW_DID_YOU_HEAR_ABOUT_US")}
+					</h4>
+				</Row>
+				<Row>
+					<BaseSelect
+						className="mt-3 mb-3 p-md-0"
+						labelPrefix="HearAboutUsType"
+						enumType={HearAboutUsType}
+						name="HEAR_ABOUT_US.value"
+						placeholder="CHOOSE"
+						formik={form}
+					/>
+				</Row>
+				{form.values?.HEAR_ABOUT_US?.value === HearAboutUsType.REFERRAL && (
+					<Row>
+						<BaseInput
+							className="col p-0 mb-4"
+							name="REFERRAL_NUMBER"
+							placeholder="REFERRAL_NUMBER"
+							label="REFERRAL_NUMBER"
+							formik={form}
+						/>
+					</Row>
+				)}
+				<Row className="mt-3">
+					<Col>
+						<Button className="float-md-right" type="reset">
+							{t("BACK")}
+						</Button>
+					</Col>
 
-          <Col>
-            <Button className="float-left" type="submit">
-              {t("CONTINUE_APPLICATION")}
-            </Button>
-          </Col>
-        </Row>
-      </form>
-    </>
-  );
+					<Col>
+						<Button className="float-md-left float-right" type="submit">
+							{t("CONTINUE_APPLICATION")}
+						</Button>
+					</Col>
+				</Row>
+			</form>
+		</>
+	);
 }

@@ -10,8 +10,6 @@ import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import { HighestLevelEducationDto } from "../../../../models/jot-form/long-form/highest-level-education.dto";
 
-export interface HighestLevelEducationProps extends PageProps { }
-
 export function HighestLevelEducation() {
 
 	const {
@@ -52,13 +50,13 @@ export function HighestLevelEducation() {
 		<>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row>
-					<h6 className={styles.carrierName__smaller}>
+					<h6 className={styles.heading__sty}>
 						{t("TELL_ABOUT_YOUR_EDUCATION")}
 					</h6>
 				</Row>
 				<Row className={styles.align__text_left}>
 					<BaseSelect
-						className="col-6"
+						className="col my-3"
 						required
 						enumType={EducationLevel}
 						name="highest_degree"

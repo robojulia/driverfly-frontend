@@ -11,7 +11,7 @@ import TypeOfDelivery from '../../../filters/type-of-delivery'
 import Range from '../../../filters/location/range'
 import Category from '../../../filters/category'
 import { useTranslation } from '../../../../hooks/use-translation'
-import jobContext from '../../../../context/job-context'
+import JobContext from '../../../../context/job-context'
 import Search from '../../../filters/search'
 import { Row, Col, Offcanvas, Button } from 'react-bootstrap';
 import Sort from '../../../find-jobs/sort'
@@ -21,7 +21,7 @@ import TransmissionType from '../../../filters/vehicle-transmission-type'
 export default function Filters() {
 
     const { t } = useTranslation();
-    const { state, method } = useContext(jobContext)
+    const { state, method } = useContext(JobContext)
 
     const [showFilters, setShowFilters] = useState<boolean>(false);
     const handleCloseFilters = () => setShowFilters(false);

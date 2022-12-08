@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { useContext } from "react"
-import jobContext from "../../context/job-context"
+import JobContext from "../../context/job-context"
 import timeSince from "../../utils/timeSince"
 import { useTranslation } from "../../hooks/use-translation"
 import CompanyPhoto from '../jobs/company-photo'
@@ -11,7 +11,7 @@ import { buildAddress } from '../../utils/common'
 
 export default function JobsList() {
 
-    const { state, method } = useContext(jobContext)
+    const { state, method } = useContext(JobContext)
     const { jobs } = state
     const { t } = useTranslation();
 

@@ -12,12 +12,11 @@ import jotformContext from "../../../../context/jotform-context";
 import { PageProps } from "../../../../types/jotform/page-props.type";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
-import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
+import { BooleanTypeExtra } from "../../../../enums/jotform/bool-and-not-sure.enum";
 
 export interface BasicInfoProps extends PageProps { }
 
 export function BasicInfo() {
-
 	const {
 		state: { applicant, applicantExtras },
 		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
@@ -67,14 +66,6 @@ export function BasicInfo() {
 		});
 	}, []);
 
-	// useEffect(() => {
-	// 	console.log("form.values", form.values);
-	// }, [form.values]);
-
-	// useEffect(() => {
-	// 	console.log("applicantExtras", applicantExtras);
-	// }, [applicantExtras]);
-
 	return (
 		<>
 			<Form
@@ -84,7 +75,7 @@ export function BasicInfo() {
 			>
 				<Row>
 					<BaseInput
-						className="col-6 my-3"
+						className="col-md-6 my-3"
 						required
 						name="email"
 						label="email"
@@ -92,7 +83,7 @@ export function BasicInfo() {
 						formik={form}
 					/>
 					<BaseInputPhone
-						className="col-6 my-3"
+						className="col-md-6 my-3"
 						required
 						name="phone"
 						label="phone"
@@ -108,11 +99,13 @@ export function BasicInfo() {
 						placeholder="zip_code"
 						formik={form}
 					/>
+				</Row>
+				<Row className={styles.align__text_left}>
 					<BaseSelect
 						className="col-12 my-3"
 						required
 						labelPrefix="BooleanPreferenceType"
-						enumType={BooleanType}
+						enumType={BooleanTypeExtra}
 						name="AUTHORIZE_TO_COMMUNICATE.value"
 						placeholder="CHOOSE"
 						label="SMS_EMAIL_AUTHORIZATION_NAUTILIUS"

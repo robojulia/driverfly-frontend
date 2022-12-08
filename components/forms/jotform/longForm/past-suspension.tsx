@@ -11,8 +11,6 @@ import { PastSuspensionDto } from "../../../../models/jot-form/long-form/past-su
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
-export interface PastSuspensionProps extends PageProps { }
-
 export function PastSuspension() {
 
 	const {
@@ -56,7 +54,8 @@ export function PastSuspension() {
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={styles.paragraph__left}>
 				<BaseCheck
-					className="float-left col-6"
+					className="float-left col"
+					required
 					name="is_past_license_suspended"
 					label="LICENSE_PREVILLAGES"
 					formik={form}
@@ -65,7 +64,7 @@ export function PastSuspension() {
 			{form.values.is_past_license_suspended ? (
 				<Row className={styles.align__text_left}>
 					<BaseTextArea
-						className="float-left mt-3"
+						className="mt-3"
 						name="PAST_LICENSE_SUSPENSION.value"
 						label="EXPLAIN_SUSPENSION"
 						formik={form}

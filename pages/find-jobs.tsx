@@ -5,7 +5,7 @@ import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css'
 import FilterResult from '../components/filter-results/filter-results'
 import JobsList from '../components/jobslisting/jobslist'
 import { PublicLayout } from "../components/layouts/public-layout";
-import jobsContext from "../context/job-context"
+import JobContext from "../context/job-context"
 import JobApi from "./api/job"
 import Sort from "../components/find-jobs/sort"
 import ResultCount from "../components/find-jobs/result-count"
@@ -142,7 +142,7 @@ export default function FindJobs(props) {
     }, [])
 
     return (
-        <jobsContext.Provider value={{
+        <JobContext.Provider value={{
             state: {
                 jobs,
                 pagingMeta,
@@ -183,7 +183,7 @@ export default function FindJobs(props) {
                     </div>
                 </div>
             </div>
-        </jobsContext.Provider>
+        </JobContext.Provider>
     )
 }
 

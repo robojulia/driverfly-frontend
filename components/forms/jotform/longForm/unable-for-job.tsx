@@ -11,8 +11,6 @@ import { UnableForJobDto } from "../../../../models/jot-form/long-form/unable-fo
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
-export interface UnableForJobProps extends PageProps { }
-
 export function UnableForJob() {
 
 	const {
@@ -58,7 +56,8 @@ export function UnableForJob() {
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={styles.paragraph__left}>
 				<BaseCheck
-					className="float-left col-6"
+					className="col"
+					required
 					name="is_unable_to_perform"
 					label="REASON_UNABLE_TO_PERFORM"
 					formik={form}
@@ -67,7 +66,7 @@ export function UnableForJob() {
 			{form.values.is_unable_to_perform ? (
 				<Row className={styles.align__text_left}>
 					<BaseTextArea
-						className="float-left mt-3"
+						className="mt-3"
 						name="REASON_FOR_UNABLE_TO_PERFORM_JOB.value"
 						label="EXPLAIN_SUSPENSION"
 						formik={form}

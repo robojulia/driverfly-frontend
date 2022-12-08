@@ -11,113 +11,100 @@ import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import StateSelect from "../../state-select";
 
-export interface DrivingExperienceProps extends PageProps { }
-
 export function DrivingExperience() {
-  const {
-    state: { applicant },
-    method: { setApplicant, stepNext, stepBack },
-  } = useContext(jotformContext);
+	const {
+		state: { applicant },
+		method: { setApplicant, stepNext, stepBack },
+	} = useContext(jotformContext);
 
-  const { t } = useTranslation();
+	const { t } = useTranslation();
 
-  const form = useFormik({
-    initialValues: new DrivingExperienceDto(),
-    validationSchema: DrivingExperienceDto.yupSchema(),
-    onSubmit: (values) => {
-      try {
-        const { license_number, state, license_expiry, license_state } = values;
+	const form = useFormik({
+		initialValues: new DrivingExperienceDto(),
+		validationSchema: DrivingExperienceDto.yupSchema(),
+		onSubmit: (values) => {
+			try {
+				const { license_number, state, license_expiry, license_state } = values;
 
-        setApplicant({
-          ...applicant,
-          license_number,
-          state,
-          license_expiry,
-          license_state,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-      stepNext();
-    },
-    onReset: (values) => {
-      stepBack();
-    },
-  });
+				setApplicant({
+					...applicant,
+					license_number,
+					state,
+					license_expiry,
+					license_state,
+				});
+			} catch (error) {
+				console.log(error);
+			}
+			stepNext();
+		},
+		onReset: (values) => {
+			stepBack();
+		},
+	});
 
-  useEffect(() => {
-    const { license_number, state, license_expiry, license_state } = applicant;
+	useEffect(() => {
+		const { license_number, state, license_expiry, license_state } = applicant;
 
-    form.setValues({
-      license_number: license_number || null,
-      state: state || null,
-      license_expiry: license_expiry || null,
-      license_state: license_state || null,
-    });
-  }, []);
+		form.setValues({
+			license_number: license_number || null,
+			state: state || null,
+			license_expiry: license_expiry || null,
+			license_state: license_state || null,
+		});
+	}, []);
 
-  return (
-    <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <h4 className={styles.carrierName__smaller}> {t("DRVING_EXPERIENCE")}</h4>
-      <Row>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            required
-            name="license_number"
-            placeholder="CDL_LICENSE_PLACEHOLDER"
-            label="CDL_NUMBER"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <StateSelect
-            className="col-12 mt-3"
-            required
-            label="CURRENT_STATE"
-            name="state"
-            placeholder="STATE"
-            formik={form}
-          />
-        </Col>
-        <Col>
-          <BaseInput
-            className="col-12 mt-3"
-            required
-            type="date"
-            name="license_expiry"
-            placeholder="expiration_date"
-            label="expiration_date"
-            formik={form}
-          />
-        </Col>
-      </Row>
+	return (
+		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+			<h4 className={styles.heading__sty}> {t("DRVING_EXPERIENCE")}</h4>
+			<Row>
+				<BaseInput
+					className="col-md-6 my-3"
+					required
+					name="license_number"
+					placeholder="CDL_LICENSE_PLACEHOLDER"
+					label="CDL_NUMBER"
+					formik={form}
+				/>
+				<StateSelect
+					className="col-md-6 my-3"
+					required
+					label="CURRENT_STATE"
+					name="state"
+					placeholder="STATE"
+					formik={form}
+				/>
+				<BaseInput
+					className="col-md-6 my-3"
+					required
+					type="date"
+					name="license_expiry"
+					placeholder="expiration_date"
+					label="expiration_date"
+					formik={form}
+				/>
+				<StateSelect
+					className="col-md-6  my-3"
+					required
+					label="state_issued"
+					name="license_state"
+					placeholder="ISSUANCE_STATE"
+					formik={form}
+				/>
+			</Row>
+			<Row className="mt-3">
+				<Col>
+					<Button className="float-right" type="reset">
+						{t("BACK")}
+					</Button>
+				</Col>
 
-      <Row>
-        <Col>
-          <StateSelect
-						className="col-4 mt-3"
-						required
-						label="state_issued"
-						name="license_state"
-						placeholder="ISSUANCE_STATE"
-						formik={form}
-					/>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Button className="float-right" type="reset">
-            {t("BACK")}
-          </Button>
-        </Col>
-
-        <Col>
-          <Button className="float-left" type="submit">
-            {t("NEXT")}
-          </Button>
-        </Col>
-      </Row>
-    </Form>
-  );
+				<Col>
+					<Button className="float-left" type="submit">
+						{t("NEXT")}
+					</Button>
+				</Col>
+			</Row>
+		</Form>
+	);
 }
