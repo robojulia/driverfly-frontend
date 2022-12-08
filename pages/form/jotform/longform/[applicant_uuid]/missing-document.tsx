@@ -19,12 +19,12 @@ export default function LongForm({ entity }: LongFormProps) {
   const [applicant, setApplicant] = useState<ApplicantEntity>(entity);
   const [applicantExtras, setApplicantExtras] = useState<
     ApplicantExtrasEntity[]
-  >(entity.extras);
+  >(entity?.extras);
   const updateApplicantExtras = (
     applicantExtrasEntity: ApplicantExtrasEntity
   ) =>
     setApplicantExtras((oldApx) => {
-      oldApx = oldApx?.filter((v) => v.type !== applicantExtrasEntity?.type);
+      oldApx = oldApx?.filter((v) => v?.type !== applicantExtrasEntity?.type);
       return !!oldApx
         ? [...oldApx, { ...applicantExtrasEntity }]
         : [{ ...applicantExtrasEntity }];
@@ -33,11 +33,6 @@ export default function LongForm({ entity }: LongFormProps) {
   const [steps, setSteps] = useState<number>(0);
   const stepNext = (): void => setSteps(steps + 1);
   const stepBack = (): void => setSteps(steps - 1);
-
-  useEffect(() => {
-    console.log("from index applicant", applicant);
-    console.log("from index applicantExtras", applicantExtras);
-  }, []);
 
   return (
     <JotformContext.Provider

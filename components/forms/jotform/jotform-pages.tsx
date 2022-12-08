@@ -21,6 +21,7 @@ import {
   ViolationHistory,
   WorkedBefore,
 } from "./longForm";
+import { SubmitMissingDocuments } from "./longForm/submit-missing-document";
 import {
   AccidentViolation,
   BasicInfo,
@@ -95,6 +96,7 @@ const getMissingDocumentsPages = (step: number): JSX.Element =>
   ({
     0: <DriverLicense />,
     1: <MedicalCard />,
+    2: <SubmitMissingDocuments />,
   }[step]);
 const getLongFormStyle = (step: number): CSSProperties | undefined =>
   ({}[step]);

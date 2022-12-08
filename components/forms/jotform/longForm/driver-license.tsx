@@ -32,7 +32,7 @@ export function DriverLicense() {
 
       if (!!document.file_base64) {
         const documents: DocumentEntity[] =
-          applicant.documents?.filter(isNotDriverLicense);
+          applicant?.documents?.filter(isNotDriverLicense);
         setApplicant({
           ...applicant,
           documents: [...documents, { ...document }],
@@ -58,11 +58,11 @@ export function DriverLicense() {
     });
   }, [applicant]);
 
-  // useEffect(() => {
-  //     console.log("form errors", form.errors);
-  //     console.log("form valuez", form.values);
-  //     console.log("form applicant", applicant);
-  // }, [form.errors, form.values]);
+  useEffect(() => {
+      console.log("form errors", form.errors);
+      console.log("form valuez", form.values);
+      console.log("form applicant", applicant);
+  }, [form.errors, form.values]);
 
   return (
     <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
