@@ -92,6 +92,15 @@ export default function Embedded({ filterType }) {
             case EmbeddedFilterTypes.OWNER_OPERATOR:
                 setFiltersByKeyValue("cdl_class", DriverLicenseType.CDL_CLASS_A)
                 break;
+            case EmbeddedFilterTypes.NEW_HIRES:
+                setFiltersByKeyValue("cdl_class", DriverLicenseType.CDL_CLASS_A)
+                break;
+            case EmbeddedFilterTypes.TEAM_DRIVERS:
+                setFiltersByKeyValue("cdl_class", DriverLicenseType.CDL_CLASS_A)
+                break;
+            case EmbeddedFilterTypes.OTR_JOBS:
+                setFiltersByKeyValue("cdl_class", DriverLicenseType.CDL_CLASS_A)
+                break;
             default:
                 break;
         }
@@ -152,22 +161,20 @@ export default function Embedded({ filterType }) {
                     handleReset
                 },
             }}>
-                <div className="job-list_sec container mt-5">
-                    <EmbeddedFilters filterType />
-                    <Row className='m-lg-0 mt-2'>
-                        <Col className='col-12 my-2 p-lg-0'>
-                            <ResultCount />
-                            < JobsList />
-                        </Col>
-                    </Row>
-                    {
-                        (!!filters.location && !!filters.areas_covered && filters.areas_covered == JobGeography.OTR) &&
-                        <Row className='mt-5'>
-                            <Col className='col-12 my-lg-0 my-4'>
-                                < OtrJobsList />
-                            </Col>
-                        </Row>
-                    }
+                <div className="filter-sec">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-12 col-lg-3 lg-mt-0 mt-5">
+                                <EmbeddedFilters filterType />
+                            </div>
+                            <div className="col-md-9 outer pl-4 ">
+
+                                <ResultCount />
+                                < JobsList />
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </JobContext.Provider>
         </PageLayout>
