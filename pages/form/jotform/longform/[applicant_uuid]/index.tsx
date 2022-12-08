@@ -68,15 +68,17 @@ export default function LongForm({ entity }: LongFormProps) {
 }
 
 export async function getServerSideProps({ query }) {
+	console.log("entered func")
 	try {
-		const { uuid } = query || {};
+		const { applicant_uuid } = query || {};
 
-		if (!!!uuid) return { notFound: true }
+		if (!!!applicant_uuid) return { notFound: true }
 
 		const applicantApi = new ApplicantApi()
-		const entity: ApplicantEntity = await applicantApi.getByUuidToken(uuid)
+		const entity: ApplicantEntity = await applicantApi.getByUuidToken(applicant_uuid)
 
 		if (!!!entity) return { notFound: true }
+		console.log("api hit", entity)
 
 		return { props: { entity } }
 	} catch (error) {
