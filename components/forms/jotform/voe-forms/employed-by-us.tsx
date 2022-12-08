@@ -12,7 +12,7 @@ import { ApplicantVoeFormEntity } from "../../../../models/applicant/applicant-v
 
 export function EmployedByUs() {
 	const {
-		state: { applicantVoe },
+		state: { applicantVoe, applicant },
 		method: { stepNext, stepBack, updateApplicantVoe },
 	} = useContext(voeFormContextType);
 
@@ -56,7 +56,13 @@ export function EmployedByUs() {
 					className="mt-3 mb-3"
 					required
 					name="EMPLOYED_BY_US.value"
-					label="EMPLOYED_BY_US"
+					label={t(
+						"{applicantName}_EMPLOYED_BY_US",
+						{
+						  applicantName: `${applicant?.first_name} ${applicant?.last_name}`
+						},
+						{ translateProps: true }
+					  )}
 					formik={form}
 				/>
 			</Row>

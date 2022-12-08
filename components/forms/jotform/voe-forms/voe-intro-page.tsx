@@ -7,31 +7,39 @@ import { useContext, useEffect } from "react";
 import styles from "../../../../styles/voe.module.css";
 
 export function IntroPage() {
-	const {
-		method: { stepNext }
-	} = useContext(voeFormContextType);
-	const { t } = useTranslation();
+  const {
+    state: { applicant, applicantVoe },
+    method: { stepNext },
+  } = useContext(voeFormContextType);
+  const { t } = useTranslation();
 
-	const form = useFormik({
-		initialValues: {},
-		onSubmit: (values) => {
-			stepNext();
-		},
-	});
+  const form = useFormik({
+    initialValues: {},
+    onSubmit: (values) => {
+      stepNext();
+    },
+  });
 
-	return (
-		<Form onSubmit={form.handleSubmit}>
-			<h1 className={styles.carrierName}>{t("VERIFICATION_OF_EMPLOYMENT")}</h1>
-			<Row className="mt-3">
-				<p className={`${styles.paragraph} ${styles.align__text_left}`}>
-					{t("VOE_PARAGRAPH")}
-				</p>
-			</Row>
-			<Row className="mt-3">
-				<Col className="text-center">
-					<Button type="submit">{t("NEXT")}</Button>
-				</Col>
-			</Row>
-		</Form>
-	);
+  return (
+    <Form onSubmit={form.handleSubmit}>
+      <h1 className={styles.carrierName}>{t("VERIFICATION_OF_EMPLOYMENT")}</h1>
+      <Row className="mt-3">
+        <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+          {t(
+            "VOE_PARAGRAPH_{applicantName}_{companyName}",
+            {
+              applicantName: `${applicant?.first_name} ${applicant?.last_name}`,
+              companyName: `${applicant?.company?.name}`,
+            },
+            { translateProps: true }
+          )}
+        </p>
+      </Row>
+      <Row className="mt-3">
+        <Col className="text-center">
+          <Button type="submit">{t("NEXT")}</Button>
+        </Col>
+      </Row>
+    </Form>
+  );
 }
