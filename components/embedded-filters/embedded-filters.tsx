@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import { useContext, useState } from 'react'
 import AreasCovered from '../filters/areas-covered'
 import EmploymentType from '../filters/employment-type'
 import MvrRequirement from '../filters/mvr-requirements'
