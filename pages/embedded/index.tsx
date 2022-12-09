@@ -12,16 +12,11 @@ import PageLayout from '../../components/layouts/page/page-layout'
 import JobContext from "../../context/job-context"
 import { JobSearchLocation, SearchJobsDto } from "../../models/job/search-jobs-dto";
 import ResultCount from "../../components/find-jobs/result-count"
-import Filters from "../../components/dashboard/driver/find-job/filters";
-import OtrJobsList from "../../components/find-jobs/otr-job-list";
-import { JobGeography } from "../../enums/jobs/job-geography.enum";
-import { Row, Col } from 'react-bootstrap';
 import JobsList from '../../components/embedded-jobs-listing/jobs-list'
 import { GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/router'
 import EmbeddedFilters from '../../components/embedded-filters/embedded-filters'
 import { EmbeddedFilterTypes } from '../../enums/embedded/embedded-filter-types.enum'
-import { DriverLicense } from '../../components/forms/jotform/longForm'
 import { DriverLicenseType } from '../../enums/users/driver-license-type.enum'
 
 

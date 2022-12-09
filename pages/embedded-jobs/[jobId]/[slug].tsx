@@ -1,5 +1,4 @@
 import { EmbeddedLayout } from "../../../components/layouts/embedded/embedded-layout";
-import RelatedJobs from '../../../components/related-jobs/related-jobs'
 import { useTranslation } from "../../../hooks/use-translation"
 import JobApi from "../../api/job"
 import StructuredData from "../../../components/seo/structured-data"
