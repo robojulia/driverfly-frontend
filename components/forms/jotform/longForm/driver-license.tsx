@@ -34,12 +34,10 @@ export function DriverLicense() {
       if (!!document?.file_base64) {
         const documents: DocumentEntity[] =
           applicant?.documents?.filter(isNotDriverLicense) || [];
-        console.log("5");
         setApplicant({
           ...applicant,
           documents: [...documents, { ...document }],
         });
-        console.log("66");
       }
 
       // resetForm();
