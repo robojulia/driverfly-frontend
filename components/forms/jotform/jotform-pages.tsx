@@ -94,7 +94,7 @@ const getLongFormPages = (step: number): JSX.Element =>
 
 const getMissingDocumentsPages = (step: number): JSX.Element =>
   ({
-    0: <DriverLicense />,
+	0: <DriverLicense />,
     1: <MedicalCard />,
     2: <SubmitMissingDocuments />,
   }[step]);

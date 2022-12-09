@@ -19,9 +19,10 @@ export function DriverLicense() {
   }: JotFormContextType = useContext(JotformContext);
 
   const isDriverLicense = (v: DocumentEntity): boolean =>
-    v.type == ApplicantDocumentType.DRIVERS_LICENSE;
+    v?.type == ApplicantDocumentType.DRIVERS_LICENSE;
+
   const isNotDriverLicense = (v: DocumentEntity): boolean =>
-    v.type != ApplicantDocumentType.DRIVERS_LICENSE;
+    v?.type != ApplicantDocumentType.DRIVERS_LICENSE;
 
   const { t } = useTranslation();
   const form = useFormik({
@@ -30,16 +31,18 @@ export function DriverLicense() {
     onSubmit: (values, { resetForm }) => {
       const { document } = values;
 
-      if (!!document.file_base64) {
+      if (!!document?.file_base64) {
         const documents: DocumentEntity[] =
-          applicant?.documents?.filter(isNotDriverLicense);
+          applicant?.documents?.filter(isNotDriverLicense) || [];
+        console.log("5");
         setApplicant({
           ...applicant,
           documents: [...documents, { ...document }],
         });
+        console.log("66");
       }
 
-      resetForm();
+      // resetForm();
       stepNext();
     },
     onReset: (values) => {
@@ -59,9 +62,9 @@ export function DriverLicense() {
   }, [applicant]);
 
   useEffect(() => {
-      console.log("form errors", form.errors);
-      console.log("form valuez", form.values);
-      console.log("form applicant", applicant);
+    console.log("form errors", form.errors);
+    console.log("form valuez", form.values);
+    console.log("form applicant", applicant);
   }, [form.errors, form.values]);
 
   return (
