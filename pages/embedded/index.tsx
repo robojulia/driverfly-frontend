@@ -34,7 +34,23 @@ export default function Embedded({ filterType }) {
     const [searchQuery, setSearchQuery] = useState<string>()
     const resetSearchQuery = (): void => setSearchQuery('')
 
-    const [filters, setFilters] = useState<SearchJobsDto>({})
+    const filtersForQuery = (type: EmbeddedFilterTypes): SearchJobsDto => ({
+        [EmbeddedFilterTypes.CDL_SCHOOLS]: setFiltersForCdlSchools(),
+        [EmbeddedFilterTypes.HEAVY_HAUL]: setFiltersForHeavyHaul(),
+        [EmbeddedFilterTypes.OWNER_OPERATOR]: setFiltersForOwnerOperator(),
+        [EmbeddedFilterTypes.NEW_HIRES]: setFiltersForNewHires(),
+        [EmbeddedFilterTypes.TEAM_DRIVERS]: setFiltersForTeamDrivers(),
+        [EmbeddedFilterTypes.OTR_JOBS]: setFiltersForOtrJobs(),
+    }[type])
+
+    const setFiltersForCdlSchools = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A })
+    const setFiltersForHeavyHaul = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A })
+    const setFiltersForOwnerOperator = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A })
+    const setFiltersForNewHires = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A })
+    const setFiltersForTeamDrivers = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A })
+    const setFiltersForOtrJobs = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A })
+
+    const [filters, setFilters] = useState<SearchJobsDto>(filtersForQuery(filterType))
     const resetFilters = (): void => setFilters(filtersInitialsValues)
 
     const [location, setLocation] = useState<JobSearchLocation>(null)
@@ -61,47 +77,6 @@ export default function Embedded({ filterType }) {
 
     const handleChange = ({ target: { name, value } }: ChangeEvent<HTMLInputElement>): void => setFiltersByKeyValue(name, value)
 
-    const setNativeValue = (element: HTMLInputElement, value: any) => {
-        if (!element) {
-            return
-        }
-        const valueSetter = Object.getOwnPropertyDescriptor(element, 'value').set;
-        const prototype = Object.getPrototypeOf(element);
-        const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, 'value').set;
-
-        if (valueSetter && valueSetter !== prototypeValueSetter) {
-            prototypeValueSetter.call(element, value);
-        } else {
-            valueSetter.call(element, value);
-        }
-    }
-
-    const setFiltersForQuery = async (): Promise<void> => {
-        switch (filterType) {
-            case EmbeddedFilterTypes.CDL_SCHOOLS:
-                setFiltersByKeyValue("cdl_class", DriverLicenseType.CDL_CLASS_A)
-                break;
-            case EmbeddedFilterTypes.HEAVY_HAUL:
-                setFiltersByKeyValue("cdl_class", DriverLicenseType.CDL_CLASS_A)
-                break;
-            case EmbeddedFilterTypes.OWNER_OPERATOR:
-                setFiltersByKeyValue("cdl_class", DriverLicenseType.CDL_CLASS_A)
-                break;
-            case EmbeddedFilterTypes.NEW_HIRES:
-                setFiltersByKeyValue("cdl_class", DriverLicenseType.CDL_CLASS_A)
-                break;
-            case EmbeddedFilterTypes.TEAM_DRIVERS:
-                setFiltersByKeyValue("cdl_class", DriverLicenseType.CDL_CLASS_A)
-                break;
-            case EmbeddedFilterTypes.OTR_JOBS:
-                setFiltersByKeyValue("cdl_class", DriverLicenseType.CDL_CLASS_A)
-                break;
-            default:
-                break;
-        }
-
-    }
-
     const fetchJobs = async (): Promise<void> => {
         try {
             navigator.geolocation.getCurrentPosition(function (position) {
@@ -126,7 +101,7 @@ export default function Embedded({ filterType }) {
     useEffectAsync(fetchJobs, [filters])
     useEffectAsync(async (): Promise<void> => {
         try {
-            await setFiltersForQuery();
+            // await setFiltersForQuery();
             // await router.replace('embedded', undefined, { shallow: true });
             await fetchJobs()
         } catch (e) {
