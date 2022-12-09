@@ -37,7 +37,7 @@ export default function MinimumYearsExperience(props) {
             minExperience = minimumExperience.years;
         }
 
-        setFiltersByKeyValue('min_years_experience', minExperience)
+        setFiltersByKeyValue('min_years_experience', minExperience.toFixed(2))
 
     }, [minimumExperience])
 
