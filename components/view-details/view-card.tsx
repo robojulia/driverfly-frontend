@@ -21,7 +21,7 @@ export default function ViewCard(props: ViewCardProps) {
     }
 
     return (
-        <Card className={`card-${variant || "primary"}`}
+        <Card className={`card-${variant || "primary"} `}
         >
             {(title || actions) && <Card.Header>
                 {title && <div style={{float: "left"}}>
