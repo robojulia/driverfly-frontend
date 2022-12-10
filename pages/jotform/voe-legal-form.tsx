@@ -41,7 +41,6 @@ export default function jotFormLongForm() {
 				method: {
 					setApplicant,
 					updateApplicantExtras,
-					setSteps,
 					stepNext,
 					stepBack
 				},
