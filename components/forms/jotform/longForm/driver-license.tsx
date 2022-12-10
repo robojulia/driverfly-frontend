@@ -5,7 +5,7 @@ import { Button, Col, Row } from "react-bootstrap";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import JotformContext, {
-  JotFormContextType,
+	JotFormContextType,
 } from "../../../../context/jotform-context";
 import FileInput from "../../file-input";
 import { DocumentEntity } from "../../../../models/documents/document.entity";
@@ -13,84 +13,85 @@ import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-do
 import { DocumentsDto } from "../../../../models/jot-form/long-form/documents.dto";
 
 export function DriverLicense() {
-  const {
-    state: { applicant },
-    method: { setApplicant, stepNext, stepBack },
-  }: JotFormContextType = useContext(JotformContext);
+	const {
+		state: { applicant },
+		method: { setApplicant, stepNext, stepBack },
+	}: JotFormContextType = useContext(JotformContext);
 
-  const isDriverLicense = (v: DocumentEntity): boolean =>
-    v.type == ApplicantDocumentType.DRIVERS_LICENSE;
-  const isNotDriverLicense = (v: DocumentEntity): boolean =>
-    v.type != ApplicantDocumentType.DRIVERS_LICENSE;
+	const isDriverLicense = (v: DocumentEntity): boolean =>
+		v?.type == ApplicantDocumentType.DRIVERS_LICENSE;
 
-  const { t } = useTranslation();
-  const form = useFormik({
-    initialValues: new DocumentsDto(),
-    validationSchema: DocumentsDto.yupSchema(),
-    onSubmit: (values, { resetForm }) => {
-      const { document } = values;
+	const isNotDriverLicense = (v: DocumentEntity): boolean =>
+		v?.type != ApplicantDocumentType.DRIVERS_LICENSE;
 
-      if (!!document.file_base64) {
-        const documents: DocumentEntity[] =
-          applicant.documents?.filter(isNotDriverLicense);
-        setApplicant({
-          ...applicant,
-          documents: [...documents, { ...document }],
-        });
-      }
+	const { t } = useTranslation();
+	const form = useFormik({
+		initialValues: new DocumentsDto(),
+		validationSchema: DocumentsDto.yupSchema(),
+		onSubmit: (values, { resetForm }) => {
+			const { document } = values;
 
-      resetForm();
-      stepNext();
-    },
-    onReset: (values) => {
-      stepBack();
-    },
-  });
+			if (!!document?.file_base64) {
+				const documents: DocumentEntity[] =
+					applicant?.documents?.filter(isNotDriverLicense) || [];
+				setApplicant({
+					...applicant,
+					documents: [...documents, { ...document }],
+				});
+			}
 
-  useEffect(() => {
-    const doc: DocumentEntity = applicant?.documents?.find(isDriverLicense);
+			// resetForm();
+			stepNext();
+		},
+		onReset: (values) => {
+			stepBack();
+		},
+	});
 
-    form.setValues({
-      document: doc ?? {
-        ...new DocumentEntity(),
-        type: ApplicantDocumentType.DRIVERS_LICENSE,
-      },
-    });
-  }, [applicant]);
+	useEffect(() => {
+		const doc: DocumentEntity = applicant?.documents?.find(isDriverLicense);
 
-  // useEffect(() => {
-  //     console.log("form errors", form.errors);
-  //     console.log("form valuez", form.values);
-  //     console.log("form applicant", applicant);
-  // }, [form.errors, form.values]);
+		form.setValues({
+			document: doc ?? {
+				...new DocumentEntity(),
+				type: ApplicantDocumentType.DRIVERS_LICENSE,
+			},
+		});
+	}, [applicant]);
 
-  return (
-    <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-      <Row>
-        <h3>{t("DRIVER_LICENSE_PHOTO")}</h3>
-      </Row>
-      <Row className={styles.align__text_left}>
-        <FileInput
-          className="my-3"
-          name="document"
-          accept="application/pdf"
-          formik={form}
-        />
-      </Row>
+	useEffect(() => {
+		console.log("form errors", form.errors);
+		console.log("form valuez", form.values);
+		console.log("form applicant", applicant);
+	}, [form.errors, form.values]);
 
-      <Row className="mt-3">
-        <Col>
-          <Button className="float-right" type="reset">
-            {t("BACK")}
-          </Button>
-        </Col>
+	return (
+		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+			<Row>
+				<h3>{t("DRIVER_LICENSE_PHOTO")}</h3>
+			</Row>
+			<Row className={styles.align__text_left}>
+				<FileInput
+					className="my-3"
+					name="document"
+					accept="application/pdf"
+					formik={form}
+				/>
+			</Row>
 
-        <Col>
-          <Button className="float-left" type="submit">
-            {t("NEXT")}
-          </Button>
-        </Col>
-      </Row>
-    </Form>
-  );
+			<Row className="mt-3">
+				<Col>
+					<Button className="float-right" type="reset">
+						{t("BACK")}
+					</Button>
+				</Col>
+
+				<Col>
+					<Button className="float-left" type="submit">
+						{t("NEXT")}
+					</Button>
+				</Col>
+			</Row>
+		</Form>
+	);
 }

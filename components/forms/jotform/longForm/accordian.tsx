@@ -8,7 +8,6 @@ import Accordion from "react-bootstrap/Accordion";
 import SignaturePad from "react-signature-canvas";
 import SignatureCanvas from "react-signature-canvas";
 
-import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import ApplicantApi from "../../../../pages/api/applicant";
 import { toast } from "react-toastify";

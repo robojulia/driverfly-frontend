@@ -1,7 +1,7 @@
 import { createContext } from "react";
 import { ApplicantEntity, ApplicantVoeFormEntity } from "../models/applicant";
 
-type VoeFormContextType = {
+export type VoeFormContextType = {
 	state: {
 		applicant: ApplicantEntity;
 		applicantVoe: ApplicantVoeFormEntity[];

@@ -1,8 +1,7 @@
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { Form, Button, Col, Row } from "react-bootstrap";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import voeFormContextType from "../../../../context/voeform-context";
+import VoeFormContext, { VoeFormContextType } from "../../../../context/voeform-context";
 import { useContext, useEffect } from "react";
 import styles from "../../../../styles/voe.module.css";
 import BaseCheck from "../../base-check";
@@ -14,7 +13,7 @@ export function EmployedByUs() {
 	const {
 		state: { applicantVoe, applicant },
 		method: { stepNext, stepBack, updateApplicantVoe },
-	} = useContext(voeFormContextType);
+	}: VoeFormContextType = useContext(VoeFormContext);
 
 	const { t } = useTranslation();
 
@@ -59,10 +58,10 @@ export function EmployedByUs() {
 					label={t(
 						"{applicantName}_EMPLOYED_BY_US",
 						{
-						  applicantName: `${applicant?.first_name} ${applicant?.last_name}`
+							applicantName: `${applicant?.first_name} ${applicant?.last_name}`
 						},
 						{ translateProps: true }
-					  )}
+					)}
 					formik={form}
 				/>
 			</Row>

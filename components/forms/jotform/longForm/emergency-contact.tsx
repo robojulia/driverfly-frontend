@@ -1,20 +1,18 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import styles from "../../../../styles/jotform.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
 import BaseInput from "../../base-input";
 import BaseInputPhone from "../../base-input-phone";
-
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import jotformContext from "../../../../context/jotform-context";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { EmergenyContactDto } from "../../../../models/jot-form/long-form/emergency-contact.dto";
 
 export function EmergencyContact() {
 	const {
 		state: { applicant },
 		method: { setApplicant, stepNext, stepBack },
-	} = useContext(jotformContext);
+	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 
