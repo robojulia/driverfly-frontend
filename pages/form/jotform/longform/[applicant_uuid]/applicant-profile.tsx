@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { Container, Col, Row } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Row } from "reactstrap";
 import ApplicantSafetyBackground from "../../../../../components/applicants/applicant-safety-background";
 import ViewApplicantDetail from "../../../../../components/applicants/applicant-view-details";
-import ApplicantWorkHistory from "../../../../../components/applicants/applicant-work-history";
+import ApplicantExtrasDetails from "../../../../../components/applicants/jotform/applicant-profile";
 import PageLayout from "../../../../../components/layouts/page/page-layout";
 import ViewCard from "../../../../../components/view-details/view-card";
 import ViewPdf from "../../../../../components/view-details/view-pdf";
@@ -31,52 +31,49 @@ export default function Dashboard({ entity }: LongFormProps) {
 			});
 		}
 	};
+	useEffect(() => {
+		console.log("applicant values", entity);
+	}, []);
 	return (
 		<div className="pt-4 ">
 			<PageLayout>
-				<Container>
-					<Row className="text-center">
-						<h1>{t("APPLICANT_PROFILE")}</h1>
-					</Row>
-					<Row >
-						<ViewApplicantDetail applicant={entity} />
-					</Row>
-					<Row className="p-0">
-						<Col md="4" className="pl-0">
-							<ApplicantWorkHistory applicant={entity} />
-						</Col>
-						<Col md="8" className="pr-0">
-							<ApplicantSafetyBackground applicant={entity} />
-						</Col>
-					</Row>
-					<Row>
-						<ViewCard title="UPLOADED_DOCUMENTS">
-							<ViewTable
-								type="DOCUMENTS"
-								headers={{
-									type: "TYPE",
-									document: "DOCUMENT",
-									date_added: "DATE_ADDED",
-								}}
-								items={entity?.documents?.map((document) => ({
-									type: t(`ApplicantDocumentType.${document.type}`),
-									document: (
-										<a
-											onClick={() =>
-												viewDocumentClick(document.id, document.name)
-											}
-											href="#"
-										>
-											{document.name}
-										</a>
-									),
-									date_added: new Date(document.created_at).toDateString(),
-								}))}
-							/>
-						</ViewCard>
-						<ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
-					</Row>
-				</Container>
+				<Row className="text-center">
+					<h1>{t("APPLICANT_PROFILE")}</h1>
+				</Row>
+				<Row>
+					<ViewApplicantDetail applicant={entity} />
+				</Row>
+				<Row className="p-0">
+					<ApplicantSafetyBackground applicant={entity} />
+				</Row>
+				<Row>
+					<ViewCard title="UPLOADED_DOCUMENTS">
+						<ViewTable
+							type="DOCUMENTS"
+							headers={{
+								type: "TYPE",
+								document: "DOCUMENT",
+								date_added: "DATE_ADDED",
+							}}
+							items={entity?.documents?.map((document) => ({
+								type: t(`ApplicantDocumentType.${document.type}`),
+								document: (
+									<a
+										onClick={() =>
+											viewDocumentClick(document.id, document.name)
+										}
+										href="#"
+									>
+										{document.name}
+									</a>
+								),
+								date_added: new Date(document.created_at).toDateString(),
+							}))}
+						/>
+					</ViewCard>
+					<ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
+					<ApplicantExtrasDetails applicant={entity} />
+				</Row>
 			</PageLayout>
 		</div>
 	);
