@@ -8,19 +8,17 @@ import BaseSelect from "../../base-select";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { ContactDto } from "../../../../models/jot-form/short-form/contact.dto";
-import jotformContext from "../../../../context/jotform-context";
-import { PageProps } from "../../../../types/jotform/page-props.type";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import { BooleanTypeExtra } from "../../../../enums/jotform/bool-and-not-sure.enum";
 
-export interface BasicInfoProps extends PageProps { }
 
 export function BasicInfo() {
 	const {
 		state: { applicant, applicantExtras },
 		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
-	} = useContext(jotformContext);
+	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 

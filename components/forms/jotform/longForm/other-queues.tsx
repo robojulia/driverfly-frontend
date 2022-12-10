@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import styles from "../../../../styles/jotform.module.css";
 import { Button, Col, Row } from "react-bootstrap";
@@ -7,8 +7,7 @@ import BaseSelect from "../../base-select";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { DriverEndorsement } from "../../../../enums/users/driver-endorsement.enum";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import jotformContext from "../../../../context/jotform-context";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { OtherQueuesDto } from "../../../../models/jot-form/long-form/other-queues.dto";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import { CdlExtras } from "../../../../models/jot-form/long-form/cdl-object/index.dto";
@@ -18,14 +17,12 @@ import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-ex
 import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 import StateSelect from "../../state-select";
 
-export interface OtherQueuesProps extends PageProps { }
-
 export function OtherQueues() {
 
     const {
         state: { applicant, applicantExtras },
         method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
-    } = useContext(jotformContext);
+    }: JotFormContextType = useContext(JotformContext);
 
     const { t } = useTranslation();
 

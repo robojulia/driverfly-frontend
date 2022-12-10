@@ -9,7 +9,7 @@ import { useEffectAsync } from '../../utils/react'
 import { toast } from "react-toastify";
 import { useTranslation } from '../../hooks/use-translation'
 import PageLayout from '../../components/layouts/page/page-layout'
-import jobsContext from "../../context/job-context"
+import JobContext from "../../context/job-context"
 import { JobSearchLocation, SearchJobsDto } from "../../models/job/search-jobs-dto";
 import ResultCount from "../../components/find-jobs/result-count"
 import Filters from "../../components/dashboard/driver/find-job/filters";
@@ -74,7 +74,7 @@ export default function Embedded() {
     useEffectAsync(fetchJobs, [filters]);
     return (
         <PageLayout>
-            <jobsContext.Provider value={{
+            <JobContext.Provider value={{
                 state: {
                     jobs,
                     pagingMeta,
@@ -112,7 +112,7 @@ export default function Embedded() {
                         </Row>
                     }
                 </div>
-            </jobsContext.Provider>
+            </JobContext.Provider>
         </PageLayout>
     )
 }

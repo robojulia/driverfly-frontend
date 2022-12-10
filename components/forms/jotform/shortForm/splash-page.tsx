@@ -1,19 +1,15 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import styles from "../../../../styles/jotform.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import jotformContext from "../../../../context/jotform-context";
-import Dropdown from "react-bootstrap/Dropdown";
-
-export interface SplashPageProps extends PageProps { }
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 
 export function SplashPage() {
 	const {
 		state: { applicant },
 		method: { stepNext }
-	} = useContext(jotformContext);
+	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 

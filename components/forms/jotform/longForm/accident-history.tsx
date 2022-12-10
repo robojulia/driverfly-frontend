@@ -6,20 +6,17 @@ import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
 import styles from "../../../../styles/jotform.module.css";
 import { AccidentHistoryDto } from "../../../../models/jot-form/long-form/accident-history.dto";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import jotformContext from "../../../../context/jotform-context";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import { AccidentHistoryEntity } from "../../../../models/jot-form/long-form/accident-last-5-years/index.dto";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
-export interface AccidentHistoryProps extends PageProps { }
-
 export function AccidentHistory() {
 	const {
 		state: { applicant, applicantExtras },
 		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
-	} = useContext(jotformContext);
+	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 	const form = useFormik({

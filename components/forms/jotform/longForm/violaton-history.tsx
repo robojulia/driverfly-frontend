@@ -1,10 +1,9 @@
 import { useFormik } from "formik";
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import BaseInput from "../../base-input";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import jotformContext from "../../../../context/jotform-context";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { ViolationHistoryDto } from "../../../../models/jot-form/long-form/violation-history.dto";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import { VioalationExtrasEntity } from "../../../../models/jot-form/long-form/violaton-history/index.dto";
@@ -12,13 +11,11 @@ import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-ex
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import styles from "../../../../styles/jotform.module.css";
 
-export interface ViolationHistoryProps extends PageProps { }
-
 export function ViolationHistory() {
 	const {
 		state: { applicant, applicantExtras },
 		method: { updateApplicantExtras, stepBack, stepNext },
-	} = useContext(jotformContext);
+	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 	const form = useFormik({
