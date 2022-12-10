@@ -232,7 +232,7 @@ export function AccordianPage() {
                   {t("PHONE_#_(551)_430-1998")}
                 </p>
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                  Fax #:{" "}
+                  {t("FAX_#_:")}
                 </p>
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                   {t("DESIGNATED_EMPLOYER")}
