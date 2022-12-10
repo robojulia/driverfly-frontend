@@ -1729,5 +1729,6 @@
   "BACK": "Back",
   "NEXT": "Next",
   "CLICK_TO_COPY": "Click to copy",
-  "APPLICANT_PROFILE":"Applicant Profile"
+  "APPLICANT_PROFILE": "Applicant Profile",
+  "SUBMIT_THIS_FORM": "Submit this form"
 }
