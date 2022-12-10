@@ -1,28 +1,23 @@
 import { useFormik } from "formik";
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import voeFormContextType from "../../../../context/voeform-context";
+import VoeFormContext, { VoeFormContextType } from "../../../../context/voeform-context";
 import { AccidentHistoryDto } from "../../../../models/jot-form/voe-form/accident-history.dto";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/voe.module.css";
 import { ReasonsForLeavingEmployment } from "../../../../enums/users/reasons-for-leaving-employment";
 import BaseSelect from "../../base-select";
 import BaseTextArea from "../../base-text-area";
 import { ApplicantVoeFormEnum } from "../../../../enums/applicants/applicant-voe-form.enum";
 import { ApplicantVoeFormEntity } from "../../../../models/applicant/applicant-voe-form.entity";
-import { DashCircle, PlusCircle } from "react-bootstrap-icons";
-import { RefisteredAccidentDetailsDto } from "../../../../models/jot-form/voe-form/registered_accident_details/index.dto";
-
-export interface AccidentHistoryProps extends PageProps { }
 
 export function AccidentHistory() {
 	const {
-		state: { applicantVoe },
+		state: { applicantVoe, applicant },
 		method: { stepNext, stepBack, updateApplicantVoe },
-	} = useContext(voeFormContextType);
+	}: VoeFormContextType = useContext(VoeFormContext);
 
 	const { t } = useTranslation();
 	const form = useFormik({
@@ -115,7 +110,13 @@ export function AccidentHistory() {
 					<BaseInput
 						className="col my-3 p-0"
 						name="WAS_EMPLOYED_AS.value.position"
-						label="WAS_EMPLOYED_AS"
+						label={t(
+							"{applicantName}_WAS_EMPLOYED_AS",
+							{
+								applicantName: `${applicant?.first_name} ${applicant?.last_name}`,
+							},
+							{ translateProps: true }
+						)}
 						placeholder="POSITION"
 						formik={form}
 					/>

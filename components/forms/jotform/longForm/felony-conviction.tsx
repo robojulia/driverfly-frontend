@@ -1,23 +1,20 @@
 import { useFormik } from "formik";
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import BaseTextArea from "../../base-text-area";
 import BaseCheck from "../../base-check";
 import styles from "../../../../styles/jotform.module.css";
 import { FelonyConvictionDto } from "../../../../models/jot-form/long-form/felony-conviction.dto";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import jotformContext from "../../../../context/jotform-context";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
-
-export interface FelonyConvictionProps extends PageProps { }
 
 export function FelonyConviction() {
 	const {
 		state: { applicant, applicantExtras },
 		method: { updateApplicantExtras, stepNext, stepBack },
-	} = useContext(jotformContext);
+	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 	const form = useFormik({

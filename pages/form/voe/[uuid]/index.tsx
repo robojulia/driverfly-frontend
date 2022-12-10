@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
-import styles from "../../../styles/jotform.module.css";
-import { ApplicantVoeFormEntity } from "../../../models/applicant/applicant-voe-form.entity";
-import voeFormContextType from "../../../context/voeform-context";
-import { VoeFormPageControl } from "../../../components/forms/jotform/voe-form-pages";
+import styles from "../../../../styles/voe.module.css";
+import VoeFormContext from "../../../../context/voeform-context";
+import { VoeFormPageControl } from "../../../../components/forms/jotform/voe-form-pages";
+import ApplicantApi from "../../../api/applicant";
+import { ApplicantEntity, ApplicantVoeFormEntity } from "../../../../models/applicant";
 
-export default function voeForm({ uuid }) {
+export interface VoeFormProps {
+	applicant: ApplicantEntity
+}
+
+export default function VoeForm({ applicant }: VoeFormProps) {
 
 	const [applicantVoe, setApplicantVoe] = useState<ApplicantVoeFormEntity[]>([])
-	const [uuidVoeToken, setUuidVoeToken] = useState<any>(uuid)
-	const updateUuidVoeToken = (uuid: any) => setUuidVoeToken(uuid);
 
 	const updateApplicantVoe = (applicantVoeEntity: ApplicantVoeFormEntity) =>
 		setApplicantVoe((oldApx) => {
@@ -23,20 +26,19 @@ export default function voeForm({ uuid }) {
 	const stepBack = (): void => setSteps(steps - 1);
 
 	useEffect(() => {
-		console.log("from index", uuidVoeToken);
+		console.log("from index", applicant);
 	}, []);
 
 	return (
-		<voeFormContextType.Provider
+		<VoeFormContext.Provider
 			value={{
 				state: {
+					applicant,
 					applicantVoe,
 					steps,
-					uuidVoeToken,
 				},
 				method: {
 					updateApplicantVoe,
-					updateUuidVoeToken,
 					stepNext,
 					stepBack,
 				},
@@ -49,14 +51,23 @@ export default function voeForm({ uuid }) {
 					</div>
 				</div>
 			</div>
-		</voeFormContextType.Provider>
+		</VoeFormContext.Provider>
 	);
 }
 
 export async function getServerSideProps({ query }) {
-	const { uuid } = query || {};
+	try {
+		const { uuid } = query || {};
 
-	if (!!!uuid) return { notFound: true }
+		if (!!!uuid) return { notFound: true }
 
-	return { props: { uuid } }
+		const applicantApi = new ApplicantApi()
+		const applicant: ApplicantEntity = await applicantApi.getByUuidToken(uuid)
+
+		if (!!!applicant) return { notFound: true }
+
+		return { props: { applicant } }
+	} catch (error) {
+		return { notFound: true }
+	}
 }
