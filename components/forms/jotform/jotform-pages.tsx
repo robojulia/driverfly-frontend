@@ -1,8 +1,39 @@
 import { CSSProperties } from "react";
-import { AccidentHistory, AccordianPage, BackgroundInfo, DriverApplication, DriverLicense, DrivingExperience, DrugTest, EmergencyContact, EmploymentHistory, FelonyConviction, HalfWay, HighestLevelEducation, MedicalCard, OtherQueues, PastEmploymentHistory, PastSuspension, Preferences, UnableForJob, ViolationHistory, WorkedBefore } from "./longForm";
-import { AccidentViolation, BasicInfo, CdlExperience, ContinueLongForm, HearAbout, Names, SplashPage } from "./shortForm";
+import {
+  AccidentHistory,
+  AccordianPage,
+  BackgroundInfo,
+  DriverApplication,
+  DriverLicense,
+  DrivingExperience,
+  DrugTest,
+  EmergencyContact,
+  EmploymentHistory,
+  FelonyConviction,
+  HalfWay,
+  HighestLevelEducation,
+  MedicalCard,
+  OtherQueues,
+  PastEmploymentHistory,
+  PastSuspension,
+  Preferences,
+  UnableForJob,
+  ViolationHistory,
+  WorkedBefore,
+} from "./longForm";
+import { SubmitMissingDocuments } from "./longForm/submit-missing-document";
+import {
+  AccidentViolation,
+  BasicInfo,
+  CdlExperience,
+  ContinueLongForm,
+  HearAbout,
+  Names,
+  SplashPage,
+} from "./shortForm";
 
-const getFullFormPages = (step: number): JSX.Element => ({
+const getFullFormPages = (step: number): JSX.Element =>
+  ({
     0: <SplashPage />,
     1: <Names />,
     2: <BasicInfo />,
@@ -30,13 +61,15 @@ const getFullFormPages = (step: number): JSX.Element => ({
     24: <FelonyConviction />,
     25: <DrugTest />,
     26: <AccordianPage />,
-}[step]);
+  }[step]);
 
-const getFullFormStyle = (step: number): CSSProperties | undefined => ({
-    2: { width: "50%" }
-}[step])
+const getFullFormStyle = (step: number): CSSProperties | undefined =>
+  ({
+    2: { width: "50%" },
+  }[step]);
 
-const getLongFormPages = (step: number): JSX.Element => ({
+const getLongFormPages = (step: number): JSX.Element =>
+  ({
     0: <DriverApplication />,
     1: <BackgroundInfo />,
     2: <HighestLevelEducation />,
@@ -57,13 +90,21 @@ const getLongFormPages = (step: number): JSX.Element => ({
     17: <FelonyConviction />,
     18: <DrugTest />,
     19: <AccordianPage />,
-}[step]);
+  }[step]);
 
-const getLongFormStyle = (step: number): CSSProperties | undefined => ({}[step])
+const getMissingDocumentsPages = (step: number): JSX.Element =>
+  ({
+	0: <DriverLicense />,
+    1: <MedicalCard />,
+    2: <SubmitMissingDocuments />,
+  }[step]);
+const getLongFormStyle = (step: number): CSSProperties | undefined =>
+  ({}[step]);
 
 export {
-    getFullFormPages,
-    getFullFormStyle,
-    getLongFormPages,
-    getLongFormStyle
-}
+  getFullFormPages,
+  getFullFormStyle,
+  getLongFormPages,
+  getLongFormStyle,
+  getMissingDocumentsPages,
+};

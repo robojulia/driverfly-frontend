@@ -1728,5 +1728,6 @@
   "{name}_carrier": "{{name}} Carrier",
   "BACK": "Back",
   "NEXT": "Next",
-  "CLICK_TO_COPY": "Click to copy"
+  "CLICK_TO_COPY": "Click to copy",
+  "SUBMIT_THIS_FORM": "Submit this form"
 }
