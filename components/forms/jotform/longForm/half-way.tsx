@@ -1,9 +1,8 @@
 import { useFormik } from "formik";
-import React, { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
-import jotformContext from "../../../../context/jotform-context";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { useTranslation } from "../../../../hooks/use-translation";
-import { PageProps } from "../../../../types/jotform/page-props.type";
 import styles from "../../../../styles/jotform.module.css";
 
 export function HalfWay() {
@@ -11,7 +10,8 @@ export function HalfWay() {
 	const {
 		state: { applicant },
 		method: { stepNext, stepBack },
-	} = useContext(jotformContext);
+	}: JotFormContextType = useContext(JotformContext);
+
 	const { t } = useTranslation();
 	const form = useFormik({
 		initialValues: {},

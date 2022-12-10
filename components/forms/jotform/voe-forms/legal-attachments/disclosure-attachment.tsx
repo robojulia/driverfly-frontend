@@ -1,9 +1,6 @@
-import React from 'react'
 import { Col, Row } from 'react-bootstrap'
-import { PageProps } from '../../../../../types/jotform/page-props.type'
 import styles from "../../../../../styles/jotform.module.css";
 
-export interface DisclosureAttachmentProps extends PageProps { }
 
 export default function DisclosureAttachment() {
     return (

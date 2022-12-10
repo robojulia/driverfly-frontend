@@ -16,10 +16,12 @@ export interface LongFormProps {
 }
 
 export default function LongForm({ entity }: LongFormProps) {
+
 	const [applicant, setApplicant] = useState<ApplicantEntity>(entity);
 	const [applicantExtras, setApplicantExtras] = useState<
 		ApplicantExtrasEntity[]
 	>(entity.extras);
+
 	const updateApplicantExtras = (
 		applicantExtrasEntity: ApplicantExtrasEntity
 	) =>

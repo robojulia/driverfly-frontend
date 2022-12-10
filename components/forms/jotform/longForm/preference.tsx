@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import styles from "../../../../styles/jotform.module.css";
 import Form from "react-bootstrap/Form";
@@ -9,8 +9,7 @@ import { useFormik } from "formik";
 import { OtherRequirementType } from "../../../../enums/users/other-requirements.enum";
 import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferences.enum";
 import BaseSelect from "../../base-select";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import jotformContext from "../../../../context/jotform-context";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { PreferencesDto } from "../../../../models/jot-form/long-form/preferences.dto";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
@@ -19,7 +18,7 @@ export function Preferences() {
 	const {
 		state: { applicant, applicantExtras },
 		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
-	} = useContext(jotformContext);
+	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 	const form = useFormik({

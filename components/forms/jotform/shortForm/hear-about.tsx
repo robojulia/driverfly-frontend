@@ -4,21 +4,19 @@ import BaseSelect from "../../base-select";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { HearAboutUsDto } from "../../../../models/jot-form/short-form/hear-about.dto";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import jotformContext from "../../../../context/jotform-context";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import styles from "../../../../styles/jotform.module.css";
 import { HearAboutUsType } from "../../../../enums/jotform/hear-about-type.enum";
 import BaseInput from "../../base-input";
 
-export interface HearAboutProps extends PageProps { }
 
 export function HearAbout() {
 	const {
 		state: { applicantExtras },
 		method: { updateApplicantExtras, stepNext, stepBack },
-	} = useContext(jotformContext);
+	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 
