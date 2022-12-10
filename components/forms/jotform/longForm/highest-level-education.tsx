@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import styles from "../../../../styles/jotform.module.css";
 import { Button, Col, Row } from "react-bootstrap";
@@ -6,8 +6,7 @@ import BaseSelect from "../../base-select";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { EducationLevel } from "../../../../enums/users/education-level.enum";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import jotformContext from "../../../../context/jotform-context";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { HighestLevelEducationDto } from "../../../../models/jot-form/long-form/highest-level-education.dto";
 
 export function HighestLevelEducation() {
@@ -15,7 +14,7 @@ export function HighestLevelEducation() {
 	const {
 		state: { applicant, applicantExtras },
 		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
-	} = useContext(jotformContext);
+	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 	const form = useFormik({

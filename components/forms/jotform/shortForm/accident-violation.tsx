@@ -5,19 +5,15 @@ import { Form, Button, Col, Row, Table } from "react-bootstrap";
 import BaseInput from "../../base-input";
 import BaseCheck from "../../base-check";
 import { AccidentViolationDto } from "../../../../models/jot-form/short-form/accident-violation.dto";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import jotformContext from "../../../../context/jotform-context";
-import BaseSelect from "../../base-select";
-import { EligibleInUsa } from "../../../../enums/jotform/drug-test-eligible.enum";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import styles from "../../../../styles/jotform.module.css";
 
-export interface AccidentViolationProps extends PageProps { }
 
 export function AccidentViolation() {
 	const {
 		state: { applicant },
 		method: { setApplicant, stepNext, stepBack },
-	} = useContext(jotformContext);
+	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 

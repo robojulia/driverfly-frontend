@@ -7,8 +7,6 @@ import { CompanyEntity } from "../../../../models/company/company.entity";
 import PageLayout from "../../../../components/layouts/page/page-layout";
 import { CompanyForm } from "../../../../components/forms/company/company-form";
 import BaseClickToCopyInput from "../../../../components/forms/base-click-to-copy-input";
-import { Clipboard } from "react-bootstrap-icons";
-import { InputGroup, OverlayTrigger, Tooltip } from "react-bootstrap";
 
 export default function Settings() {
 	const { t } = useTranslation();

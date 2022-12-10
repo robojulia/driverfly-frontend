@@ -5,18 +5,16 @@ import BaseInput from "../../base-input";
 import BaseSelect from "../../base-select";
 import BaseCheck from "../../base-check";
 import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
-import { PageProps } from "../../../../types/jotform/page-props.type";
 import { CdlDto } from "../../../../models/jot-form/short-form/cdl-experience.dto";
-import jotformContext from "../../../../context/jotform-context";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { useContext, useEffect } from "react";
 
-export interface CdlExperienceProps extends PageProps { }
 
 export function CdlExperience() {
 	const {
 		state: { applicant },
 		method: { setApplicant, stepNext, stepBack },
-	} = useContext(jotformContext);
+	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 

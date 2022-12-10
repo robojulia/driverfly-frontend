@@ -1,5 +1,5 @@
-import { useContext, useEffect, useRef } from "react";
-import { Button, Col, Row, Form } from "react-bootstrap";
+import { useRef } from "react";
+import { Col, Row } from "react-bootstrap";
 import BaseInput from "../../../base-input";
 import Accordion from "react-bootstrap/Accordion";
 import SignatureCanvas from "react-signature-canvas";

@@ -4,7 +4,6 @@ import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
-import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import { WorkedBeforeDto } from "../../../../models/jot-form/long-form/worked-before.dto";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
