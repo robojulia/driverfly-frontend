@@ -1,19 +1,28 @@
 import { useEffect, useState } from "react";
 import styles from "../../../../../styles/jotform.module.css";
-import { ApplicantEntity, ApplicantExtrasEntity } from "../../../../../models/applicant";
+import {
+	ApplicantEntity,
+	ApplicantExtrasEntity,
+} from "../../../../../models/applicant";
 import JotformContext from "../../../../../context/jotform-context";
-import { getLongFormPages, getLongFormStyle } from "../../../../../components/forms/jotform/jotform-pages";
+import {
+	getLongFormPages,
+	getLongFormStyle,
+} from "../../../../../components/forms/jotform/jotform-pages";
 import ApplicantApi from "../../../../api/applicant";
 
 export interface LongFormProps {
-	entity: ApplicantEntity
+	entity: ApplicantEntity;
 }
 
 export default function LongForm({ entity }: LongFormProps) {
-
 	const [applicant, setApplicant] = useState<ApplicantEntity>(entity);
-	const [applicantExtras, setApplicantExtras] = useState<ApplicantExtrasEntity[]>(entity.extras);
-	const updateApplicantExtras = (applicantExtrasEntity: ApplicantExtrasEntity) =>
+	const [applicantExtras, setApplicantExtras] = useState<
+		ApplicantExtrasEntity[]
+	>(entity.extras);
+	const updateApplicantExtras = (
+		applicantExtrasEntity: ApplicantExtrasEntity
+	) =>
 		setApplicantExtras((oldApx) => {
 			oldApx = oldApx?.filter((v) => v.type !== applicantExtrasEntity?.type);
 			return !!oldApx
@@ -36,22 +45,19 @@ export default function LongForm({ entity }: LongFormProps) {
 				state: {
 					applicant,
 					applicantExtras,
-					steps
+					steps,
 				},
 				method: {
 					setApplicant,
 					updateApplicantExtras,
 					stepNext,
-					stepBack
-				}
+					stepBack,
+				},
 			}}
 		>
 			<div className={styles.container}>
 				<div className={styles.main}>
-					<div
-						className={styles.main_form}
-						style={getLongFormStyle(steps)}
-					>
+					<div className={styles.main_form} style={getLongFormStyle(steps)}>
 						{/* uncomment this during development */}
 						{/* <BaseInput
 							value={steps}
@@ -69,17 +75,19 @@ export default function LongForm({ entity }: LongFormProps) {
 
 export async function getServerSideProps({ query }) {
 	try {
-		const { uuid } = query || {};
+		const { applicant_uuid } = query || {};
 
-		if (!!!uuid) return { notFound: true }
+		if (!!!applicant_uuid) return { notFound: true };
 
-		const applicantApi = new ApplicantApi()
-		const entity: ApplicantEntity = await applicantApi.getByUuidToken(uuid)
+		const applicantApi = new ApplicantApi();
+		const entity: ApplicantEntity = await applicantApi.getByUuidToken(
+			applicant_uuid
+		);
 
-		if (!!!entity) return { notFound: true }
+		if (!!!entity) return { notFound: true };
 
-		return { props: { entity } }
+		return { props: { entity } };
 	} catch (error) {
-		return { notFound: true }
+		return { notFound: true };
 	}
 }
