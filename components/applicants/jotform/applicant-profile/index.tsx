@@ -86,9 +86,6 @@ export default function ApplicantExtrasDetails({
   const general_consent = applicant.extras.find(
     (ex) => ex?.type === ApplicantExtras.GENERAL_CONSENT
   );
-
-  console.log("applicant extra values", applicant.extras);
-  console.log("vioaltion values", employee_ss_id?.value);
   return (
     <>
       <Row>
@@ -98,11 +95,11 @@ export default function ApplicantExtrasDetails({
               <ViewDetails
                 default={t("NOT_ANSWERED")}
                 obj={{
-                  Authorize_to_Communicate: authToCommunicate.value,
-                  hear_about_us: hear_about_us.value,
-                  job_apply_date: job_apply_date.value,
+                  Authorize_to_Communicate: authToCommunicate?.value,
+                  hear_about_us: hear_about_us?.value,
+                  job_apply_date: job_apply_date?.value,
                   qualified_for_manual_transmission:
-                    qualified_for_manual_transmission.value,
+                    qualified_for_manual_transmission?.value,
                 }}
               />
             </Row>
@@ -114,10 +111,10 @@ export default function ApplicantExtrasDetails({
               <ViewDetails
                 default={t("NOT_ANSWERED")}
                 obj={{
-                  past_license_suspension: past_license_suspension.value,
-                  unable_to_perform_job: unable_to_perform_job.value,
-                  convicted_of_felony: convicted_of_felony.value,
-                  dot_regulation: dot_regulation.value,
+                  past_license_suspension: past_license_suspension?.value,
+                  unable_to_perform_job: unable_to_perform_job?.value,
+                  convicted_of_felony: convicted_of_felony?.value,
+                  dot_regulation: dot_regulation?.value,
                 }}
               />
             </Row>
@@ -130,8 +127,8 @@ export default function ApplicantExtrasDetails({
             <ViewDetails
               default={t("NOT_ANSWERED")}
               obj={{
-                adress_1: lineAdress.value.address_1,
-                adress_2: lineAdress.value.address_2,
+                adress_1: lineAdress?.value?.address_1,
+                adress_2: lineAdress?.value?.address_2,
               }}
             />
           </Row>
@@ -146,33 +143,35 @@ export default function ApplicantExtrasDetails({
               date: "DATE",
               state: "STATE",
             }}
-            items={cdl_details.value.map((cdl) => ({
-              license_number: cdl.license_number,
-              date: cdl.date,
-              state: cdl.state,
+            items={cdl_details?.value?.map((cdl) => ({
+              license_number: cdl?.license_number,
+              date: cdl?.date,
+              state: cdl?.state,
             }))}
           />
         </ViewCard>
       </Row>
       <Row>
-        <ViewCard title="SAFETY_BACKGROUND">
+        <ViewCard title="PREFERENCES">
           <Row>
             <ViewDetails
               default={t("NOT_ANSWERED")}
               obj={{
-                ROUTES: routes.value,
+                ROUTES: routes?.value,
               }}
             />
             <ViewDetails
               default={t("NOT_ANSWERED")}
               obj={{
-                OTHER_ABSOLUTELY_REQUIREMENTS: other_requirement.value,
+                OTHER_ABSOLUTE_REQUIREMENTS: other_requirement?.value?.map(
+                  (other) => other
+                ),
               }}
             />
             <ViewDetails
               default={t("NOT_ANSWERED")}
               obj={{
-                REQUIRE_W2_EMPLOYMENT: w2_employment.value,
+                W2_requirements: w2_employment?.value,
               }}
             />
           </Row>
@@ -192,13 +191,15 @@ export default function ApplicantExtrasDetails({
               number_of_injured: "number_of_injured",
             }}
             items={accident_details.value.map((a) => ({
-              at_fault: !!a.at_fault ? `${t("YES")}` : `${t("NO")}`,
-              date_of_accident: a.date_of_accident,
-              dot_recordable: !!a.dot_recordable ? `${t("YES")}` : `${t("NO")}`,
-              location_of_accident: a.location_of_accident,
-              nature_of_accident: a.nature_of_accident,
-              number_of_fatalaties: a.number_of_fatalaties,
-              number_of_injured: a.number_of_injured,
+              at_fault: !!a?.at_fault ? `${t("YES")}` : `${t("NO")}`,
+              date_of_accident: a?.date_of_accident,
+              dot_recordable: !!a?.dot_recordable
+                ? `${t("YES")}`
+                : `${t("NO")}`,
+              location_of_accident: a?.location_of_accident,
+              nature_of_accident: a?.nature_of_accident,
+              number_of_fatalaties: a?.number_of_fatalaties,
+              number_of_injured: a?.number_of_injured,
             }))}
           />
         </ViewCard>
@@ -211,11 +212,11 @@ export default function ApplicantExtrasDetails({
               location: "location",
               penalty: "penalty",
             }}
-            items={violation_details.value.map((v) => ({
-              charge: v.charge,
-              date_of_violation: v.date_of_violation,
-              location: v.location,
-              penalty: v.penalty,
+            items={violation_details?.value.map((v) => ({
+              charge: v?.charge,
+              date_of_violation: v?.date_of_violation,
+              location: v?.location,
+              penalty: v?.penalty,
             }))}
           />
         </ViewCard>
@@ -226,27 +227,29 @@ export default function ApplicantExtrasDetails({
             <ViewDetails
               default={t("NOT_ANSWERED")}
               obj={{
-                authorize: current_employer.value.authorize,
-                city: current_employer.value.city,
+                authorize: current_employer?.value?.authorize,
+                city: current_employer?.value?.city,
                 CURRENT_COMPANY_EMAIL:
-                  current_employer.value.current_company_email,
+                  current_employer?.value?.current_company_email,
                 CURRENT_COMPANY_MANAGER_NAME:
-                  current_employer.value.current_company_manager_name,
+                  current_employer?.value?.current_company_manager_name,
                 CURRENT_COMPANY_NAME:
-                  current_employer.value.current_company_name,
+                  current_employer?.value?.current_company_name,
                 CURRENT_COMPANY_PHONE_NUMBER:
-                  current_employer.value.current_company_phone_number,
+                  current_employer?.value?.current_company_phone_number,
                 CURRENT_COMPANY_POSITION:
-                  current_employer.value.current_company_position,
+                  current_employer?.value?.current_company_position,
                 CURRENT_COMPANY_STREET_ADDRESS_LINE_1:
-                  current_employer.value.current_company_street_address_line_1,
+                  current_employer?.value
+                    ?.current_company_street_address_line_1,
                 CURRENT_COMPANY_STREET_ADDRESS_LINE_2:
-                  current_employer.value.current_company_street_address_line_2,
-                zip_code: current_employer.value.current_company_zipcode,
-                fcr: current_employer.value.fcr,
-                fmcsr: current_employer.value.fmcsr,
-                START_DATE: current_employer.value.start_date,
-                state: current_employer.value.state,
+                  current_employer?.value
+                    ?.current_company_street_address_line_2,
+                zip_code: current_employer?.value?.current_company_zipcode,
+                fcr: current_employer?.value?.fcr,
+                fmcsr: current_employer?.value?.fmcsr,
+                START_DATE: current_employer?.value?.start_date,
+                state: current_employer?.value?.state,
               }}
             />
           </ViewCard>
@@ -256,24 +259,23 @@ export default function ApplicantExtrasDetails({
             <ViewDetails
               default={t("NOT_ANSWERED")}
               obj={{
-                authorize: past_employer.value.authorize,
-                city: past_employer.value.city,
-                END_DATE: past_employer.value.end_date,
-                fcr: past_employer.value.fcr,
-                fmcsr: past_employer.value.authorize,
-                PREVIOUS_COMPANY_EMAIL: past_employer.value.fmcsr,
+                authorize: past_employer?.value?.authorize,
+                city: past_employer?.value?.city,
+                END_DATE: past_employer?.value?.end_date,
+                fcr: past_employer?.value?.fcr,
+                fmcsr: past_employer?.value?.authorize,
+                PREVIOUS_COMPANY_EMAIL: past_employer?.value.fmcsr,
                 PREVIOUS_MANAGER_NAME:
-                  past_employer.value.previous_company_email,
+                  past_employer?.value?.previous_company_email,
                 PREVIOUS_COMPANY_PHONE_NUMBER:
-                  past_employer.value
-                    .auprevious_company_manager_nametprevious_company_phone_numberhorize,
+                  past_employer?.value?.previous_company_phone_number,
                 PREVIOUS_COMPANY_ADDRESS_1:
-                  past_employer.value.previous_company_street_address_line_1,
+                  past_employer?.value?.previous_company_street_address_line_1,
                 PREVIOUS_COMPANY_ADDRESS_2:
-                  past_employer.value.previous_company_street_address_line_2,
-                zip_code: past_employer.value.previous_company_zipcode,
-                START_DATE: past_employer.value.start_date,
-                state: past_employer.value.state,
+                  past_employer?.value?.previous_company_street_address_line_2,
+                zip_code: past_employer?.value?.previous_company_zipcode,
+                START_DATE: past_employer?.value?.start_date,
+                state: past_employer?.value?.state,
               }}
             />
           </ViewCard>
@@ -287,12 +289,12 @@ export default function ApplicantExtrasDetails({
               <ViewDetails
                 default={t("NOT_ANSWERED")}
                 obj={{
-                  ALREADY_APPLIED_HERE: already_applied.value,
-                  ALREADY_WORKED_HERE: !!already_worked_here.value.start_date
+                  ALREADY_APPLIED_HERE: already_applied?.value,
+                  ALREADY_WORKED_HERE: !!already_worked_here?.value?.start_date
                     ? `${t("YES")}`
                     : `${t("NO")}`,
-                  START_DATE: already_worked_here.value.start_date,
-                  END_DATE: already_worked_here.value.end_date,
+                  START_DATE: already_worked_here?.value?.start_date,
+                  END_DATE: already_worked_here?.value?.end_date,
                 }}
               />
             </Row>
