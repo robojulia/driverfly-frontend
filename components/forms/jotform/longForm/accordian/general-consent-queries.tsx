@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useContext, useRef } from "react";
 import { Col, Row } from "react-bootstrap";
 import BaseInput from "../../../base-input";
 import Accordion from "react-bootstrap/Accordion";
@@ -6,8 +6,13 @@ import SignatureCanvas from "react-signature-canvas";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import styles from "../../../../../styles/jotform.module.css";
 import { AccordianProps } from "../../../../../types/jotform/accordian.type";
+import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
 
 export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
+    const {
+        state: { applicant, applicantExtras },
+        method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+    }: JotFormContextType = useContext(JotformContext);
     const { t } = useTranslation();
 
     const canvasRef = useRef<SignatureCanvas>();
@@ -28,7 +33,7 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                     <h1>
                         {t(
                             "{COMPANY_NAME}",
-                            { COMPANY_NAME: "talhatrucking" },
+                            { COMPANY_NAME: applicant?.company?.name },
                             { translateProps: true }
                         )}
                     </h1>
@@ -78,22 +83,38 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                 </Row>
                 <Row className="mt-4">
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                        {t("CONSENT_TO_CLEARINGHOUSE_1")}
+                        {t(
+                            "{APPLICANT_NAME}_CONSENT_TO_CLEARINGHOUSE_1_{COMPANY_NAME}",
+                            { COMPANY_NAME: applicant?.company?.name, APPLICANT_NAME: `${applicant?.first_name} ${applicant?.last_name}` },
+                            { translateProps: true }
+                        )}
                     </p>
                 </Row>
                 <Row className="mt-4">
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                        {t("CONSENT_TO_CLEARINGHOUSE_2")}
+                        {t(
+                            "CONSENT_TO_CLEARINGHOUSE_2_{COMPANY_NAME}",
+                            { COMPANY_NAME: applicant?.company?.name},
+                            { translateProps: true }
+                        )}
                     </p>
                 </Row>
                 <Row className="mt-4">
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                        {t("CONSENT_TO_CLEARINGHOUSE_3")}
+                        {t(
+                            "CONSENT_TO_CLEARINGHOUSE_3_{COMPANY_NAME}",
+                            { COMPANY_NAME: applicant?.company?.name},
+                            { translateProps: true }
+                        )}
                     </p>
                 </Row>
                 <Row className="mt-4">
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                        {t("CONSENT_TO_CLEARINGHOUSE_4")}
+                        {t(
+                            "CONSENT_TO_CLEARINGHOUSE_4_{COMPANY_NAME}",
+                            { COMPANY_NAME: applicant?.company?.name},
+                            { translateProps: true }
+                        )}
                     </p>
                 </Row>
                 <Row className={styles.align__text_left}>

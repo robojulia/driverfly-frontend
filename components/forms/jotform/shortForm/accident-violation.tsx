@@ -69,7 +69,7 @@ export function AccidentViolation() {
 				</Row>
 				<Row className="pl-0">
 					<p className={`${styles.paragraph} ${styles.align__text_left}`}>
-						{t("DRUG_TEST_DOT")}
+						{t("{company_name}_DRUG_TEST_DOT", { company_name: applicant?.company?.name }, { translateProps: true })}
 					</p>
 				</Row>
 				<Row>

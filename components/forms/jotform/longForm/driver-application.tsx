@@ -80,7 +80,7 @@ export function DriverApplication() {
 					<h1>
 						{t(
 							"{COMPANY_NAME}",
-							{ COMPANY_NAME: "talhatrucking" },
+							{ COMPANY_NAME: applicant?.company?.name },
 							{ translateProps: true }
 						)}
 					</h1>
@@ -89,7 +89,11 @@ export function DriverApplication() {
 					{t("DRIVER_APPLICATION")}
 				</h6>
 				<p className={`${styles.paragraph} ${styles.align__text_left}`}>
-					{t("MVR_AND_DMV_AUTHORIZATION_TO_NAUTILIUS")}
+					{t(
+							"{COMPANY_NAME}_MVR_AND_DMV_AUTHORIZATION",
+							{ COMPANY_NAME: applicant?.company?.name },
+							{ translateProps: true }
+						)}
 				</p>
 
 				<Row className={styles.align__text_left}>

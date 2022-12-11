@@ -57,7 +57,7 @@ export function SplashPage() {
 				</div> */}
 
 				<h1 className={styles.carrierName}>
-					{t("{name}_carrier", { name: "Nautilus" }, { translateProps: true })}
+					{t("{name}_carrier", { name: applicant?.company?.name }, { translateProps: true })}
 				</h1>
 				<h4 className={styles.Application}>{t("DRIVER_APPLICATION")}</h4>
 				<h6 className={styles.paragraph}>{t("JOTFORM_WELCOME")}</h6>

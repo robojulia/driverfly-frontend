@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useContext, useRef } from "react";
 import { Col, Row } from "react-bootstrap";
 import BaseInput from "../../../base-input";
 import Accordion from "react-bootstrap/Accordion";
@@ -6,8 +6,13 @@ import SignatureCanvas from "react-signature-canvas";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import styles from "../../../../../styles/jotform.module.css";
 import { AccordianProps } from "../../../../../types/jotform/accordian.type";
+import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
 
 export function DisclosureAuthorization({ eventKey, form }: AccordianProps) {
+    const {
+        state: { applicant, applicantExtras },
+        method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+    }: JotFormContextType = useContext(JotformContext);
     const { t } = useTranslation();
 
     const canvasRef = useRef<SignatureCanvas>(null);
@@ -27,7 +32,7 @@ export function DisclosureAuthorization({ eventKey, form }: AccordianProps) {
                     <h1>
                         {t(
                             "{COMPANY_NAME}",
-                            { COMPANY_NAME: "talhatrucking" },
+                            { COMPANY_NAME: applicant?.company?.name},
                             { translateProps: true }
                         )}
                     </h1>
@@ -42,7 +47,7 @@ export function DisclosureAuthorization({ eventKey, form }: AccordianProps) {
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                         {t(
                             "{COMPANY_NAME}_REQUEST_BACKGROUND_REPORTS",
-                            { COMPANY_NAME: "talhatrucking" },
+                            { COMPANY_NAME: applicant?.company?.name },
                             { translateProps: true }
                         )}
                     </p>
@@ -57,7 +62,11 @@ export function DisclosureAuthorization({ eventKey, form }: AccordianProps) {
                 </Row>
                 <Row>
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                        {t("AUTHORIZATION_NAUTILUS_TRUCKING")}
+                        {t(
+                            "{COMPANY_NAME}_AUTHORIZATION_NAUTILUS_TRUCKINGS",
+                            { COMPANY_NAME: applicant?.company?.name },
+                            { translateProps: true }
+                        )}
                     </p>
                 </Row>
                 <Row>
@@ -67,7 +76,7 @@ export function DisclosureAuthorization({ eventKey, form }: AccordianProps) {
                             {t("APPLICANT_NAME")}{" "}
                             {t(
                                 "{APPLICANT_NAME}",
-                                { APPLICANT_NAME: "Talha Bhutta" },
+                                { APPLICANT_NAME: `${applicant?.first_name} ${applicant?.last_name}` },
                                 { translateProps: true }
                             )}
                         </span>

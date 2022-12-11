@@ -2,7 +2,6 @@ import { useFormik } from "formik";
 import { useContext, useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../../hooks/use-translation";
-import styles from "../../../../../styles/jotform.module.css";
 import Accordion from "react-bootstrap/Accordion";
 import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
 import ApplicantApi from "../../../../../pages/api/applicant";

@@ -50,12 +50,12 @@ export function ContinueLongForm() {
 			<form onSubmit={form.handleSubmit}>
 				<Row>
 					<h4 className={styles.heading__sty}>
-						{t("THANKS_BY_NAUTILIUS_TRUCKING")}
+						{t("{company_name}_THANKS", { company_name: applicant?.company?.name }, { translateProps: true })}
 					</h4>
 				</Row>
 				<Row className="mt-3">
 					<h6 className={`${styles.paragraph} ${styles.margin__top}`}>
-						{t("THANKS_NOTE_BY_NAUTILIUS_TRUCKING")}
+						{t("{company_name}_THANKS_NOTE", { company_name: applicant?.company?.name }, { translateProps: true })}
 					</h6>
 				</Row>
 				<Row className="mt-3">
