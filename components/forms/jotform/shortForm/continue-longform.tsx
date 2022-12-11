@@ -32,9 +32,8 @@ export function ContinueLongForm() {
 					...applicant,
 					id: response.id,
 				});
-				if (!!response) {
 					toast.success(t("successfully_saved_information"));
-				}
+				
 			} catch (error) {
 				console.log(error);
 				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });

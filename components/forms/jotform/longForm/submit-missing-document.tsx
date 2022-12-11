@@ -12,7 +12,9 @@ import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-do
 import { DocumentsDto } from "../../../../models/jot-form/long-form/documents.dto";
 import ApplicantApi from "../../../../pages/api/applicant";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 export function SubmitMissingDocuments() {
 	const {
@@ -35,9 +37,8 @@ export function SubmitMissingDocuments() {
 			try {
 				const filtered_extras = applicantExtras?.filter((v) => !!v.value);
 				const response = await applicantApi.jotform.update(applicant.id, {
-					applicant,
-					applicantExtras: filtered_extras,
-				});
+					applicant
+				})
 				toast.success(t("successfully_saved_information"));
 			} catch (error) {
 				console.log(error);
@@ -60,30 +61,27 @@ export function SubmitMissingDocuments() {
 		});
 	}, [applicant]);
 
-	// useEffect(() => {
-	//     console.log("form errors", form.errors);
-	//     console.log("form valuez", form.values);
-	//     console.log("form applicant", applicant);
-	// }, [form.errors, form.values]);
-
 	return (
-		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-			<Row>
-				<h3>{t("SUBMIT_THIS_FORM")}</h3>
-			</Row>
-			<Row className="mt-3">
-				<Col>
-					<Button className="float-right" type="reset">
-						{t("BACK")}
-					</Button>
-				</Col>
+		<>
+			<ToastContainer />
+			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+				<Row>
+					<h3>{t("SUBMIT_THIS_FORM")}</h3>
+				</Row>
+				<Row className="mt-3">
+					<Col>
+						<Button className="float-right" type="reset">
+							{t("BACK")}
+						</Button>
+					</Col>
 
-				<Col>
-					<Button className="float-left" type="submit">
-						{t("SUBMIT")}
-					</Button>
-				</Col>
-			</Row>
-		</Form>
+					<Col>
+						<Button className="float-left" type="submit">
+							{t("SUBMIT")}
+						</Button>
+					</Col>
+				</Row>
+			</Form>
+		</>
 	);
 }

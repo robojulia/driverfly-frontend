@@ -3,7 +3,7 @@ import { useContext, useEffect, useRef } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import BaseInput from "../../base-input";
-import VoeFormContext, { VoeFormContextType } from "../../../../context/voeform-context";
+import VoeFormContext, {VoeFormContextType} from "../../../../context/voeform-context";
 import styles from "../../../../styles/voe.module.css";
 import SignatureCanvas from "react-signature-canvas";
 import { SubmissionDetailsDto } from "../../../../models/jot-form/voe-form/submission-details.dto";
@@ -40,7 +40,7 @@ export function SubmissionDetails() {
 					uuid_token: applicant.uuid_token,
 					applicantVoeFormData: filtered_voe,
 				});
-				toast.success(t(response.msg));
+				toast.success(t("successfully_saved_information"));
 			} catch (error) {
 				console.log(error);
 				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });

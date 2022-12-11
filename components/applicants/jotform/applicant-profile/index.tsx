@@ -157,21 +157,19 @@ export default function ApplicantExtrasDetails({
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
 							obj={{
-								ROUTES: routes?.value,
+								ROUTES: routes?.value && routes?.value?.map(route => t(`RouteType.${route}`))
 							}}
 						/>
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
 							obj={{
-								OTHER_ABSOLUTE_REQUIREMENTS: other_requirement?.value?.map(
-									(other) => other
-								),
+								OTHER_ABSOLUTE_REQUIREMENTS: other_requirement?.value && other_requirement?.value?.map(other => t(`OtherRequirementType.${other}`))
 							}}
 						/>
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
 							obj={{
-								W2_requirements: w2_employment?.value,
+								W2_requirements: w2_employment?.value && t(`BooleanPreferenceType.${w2_employment.value}`)
 							}}
 						/>
 					</Row>
