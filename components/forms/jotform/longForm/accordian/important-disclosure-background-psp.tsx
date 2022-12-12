@@ -15,13 +15,13 @@ export function ImportantDisclosureBackgroundPsp({ eventKey, form }: AccordianPr
     }: JotFormContextType = useContext(JotformContext);
     const { t } = useTranslation();
 
-    const canvasRef = useRef<SignatureCanvas>();
-    const clearSignatureCanvas = () => canvasRef.current.clear();
+    // const canvasRef = useRef<SignatureCanvas>();
+    // const clearSignatureCanvas = () => canvasRef.current.clear();
 
-    const handleSignatureEnd = () => {
-        const signatureValue = canvasRef?.current?.toDataURL()?.toString();
-        form.setFieldValue("SIGNATURE.value", signatureValue);
-    };
+    // const handleSignatureEnd = () => {
+    //     const signatureValue = canvasRef?.current?.toDataURL()?.toString();
+    //     form.setFieldValue("SIGNATURE.value", signatureValue);
+    // };
 
     return (
         //eventKey="2"
@@ -114,7 +114,7 @@ export function ImportantDisclosureBackgroundPsp({ eventKey, form }: AccordianPr
                         </span>
                     </p>
                 </Row>
-                <Row className={styles.align__text_left}>
+                {/* <Row className={styles.align__text_left}>
                     <Col>
                         <h6>{t("SIGNATURE")}</h6>
                         <SignatureCanvas
@@ -139,7 +139,7 @@ export function ImportantDisclosureBackgroundPsp({ eventKey, form }: AccordianPr
                             {t("CLEAR")}
                         </button>
                     </Col>
-                </Row>
+                </Row> */}
                 <Row className={styles.align__text_left}>
                     <BaseInput
                         className="col my-3"

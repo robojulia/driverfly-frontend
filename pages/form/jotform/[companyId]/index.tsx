@@ -7,6 +7,7 @@ import { getFullFormPages, getFullFormStyle } from "../../../../components/forms
 import CompanyApi from "../../../api/company";
 import { Status } from "../../../../enums/status.enum";
 import { CompanyEntity } from "../../../../models/company/company.entity";
+import BaseInput from "../../../../components/forms/base-input";
 
 export interface FullFormProps {
 	employer: CompanyEntity

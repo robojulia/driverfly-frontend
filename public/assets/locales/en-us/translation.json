@@ -962,7 +962,6 @@
   "ADDRESS": "Address",
   "CURENNT_COMPANY_{address}": "Address: {{address}}",
   "CURENNT_COMPANY_{phone}": "Phone: {{phone}}",
-
   "MAY_CONTACT_COMPANY": "You may contact this company",
   "SUBJECT_TO_FMCSRS": "Subject to the FMCSRs",
   "JOB_DESIGNATED_AS_SATEFY_SENSITIVE": "Job designated as a safety-sensitive function in any DOT- regulated mode subject to the drug and alcohol testing requirements of 49 CFR Part 40",
@@ -1633,6 +1632,7 @@
   "PLEASE_EXPLAIN": "Please explain",
   "EMERGENCY_CONTACT_NAME": "Emergency Contact Name",
   "CURRENTLY_EMPLYED_QUESTION": "Are you currently employed?",
+  "CURRENT_COMPANY_NAME": "Current Company",
   "CURRENT_COMPANY_POSITION": "Position in Current Company",
   "CONATACT_AUTHORITY": "Do you authorize us to contact this company?",
   "MANAGER_OR_REPRESENTATIVE": "Manager or Representative (Current Company)",

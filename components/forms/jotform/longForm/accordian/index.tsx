@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import Accordion from "react-bootstrap/Accordion";
@@ -14,6 +14,8 @@ import { VerificationOfEmployment } from "./verification-of-employment";
 import { DisclosureAuthorization } from "./disclosure-authorization";
 import { ImportantDisclosureBackgroundPsp } from "./important-disclosure-background-psp";
 import { GeneralConsentQueries } from "./general-consent-queries";
+import SignatureCanvas from "react-signature-canvas";
+import styles from "../../../../../styles/jotform.module.css";
 
 export function AccordianPage() {
 
@@ -23,6 +25,14 @@ export function AccordianPage() {
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
+
+	let padRef = useRef<SignatureCanvas>(null);
+	const clearSignatureCanvas = () => padRef?.current?.clear();
+
+	const handleSignatureEnd = () => {
+		const signatureValue = padRef?.current?.toDataURL()?.toString();
+		form.setFieldValue("SIGNATURE.value", signatureValue);
+	};
 
 	const form = useFormik({
 		initialValues: new AccordianDto(),
@@ -75,7 +85,7 @@ export function AccordianPage() {
 			(v) => v.type === ApplicantExtras.SIGNATURE
 		);
 
-		// padRef?.current?.fromDataURL(apx_sign?.value)
+		if (apx_sign) padRef?.current?.fromDataURL(apx_sign?.value)
 
 		form.setValues({
 			...form.values,
@@ -129,6 +139,30 @@ export function AccordianPage() {
 						form={form}
 					/>
 				</Accordion>
+				<Row className={styles.align__text_left}>
+					<Col className="my-3">
+						<h6>{t("SIGNATURE")}</h6>
+						<SignatureCanvas
+							name="SIGNATURE.value"
+							className="mt-2"
+							required
+							ref={padRef}
+							onEnd={handleSignatureEnd}
+							canvasProps={{
+								style: { border: "1px solid black" },
+								className: "sigCanvas",
+							}}
+						/>
+					</Col>
+				</Row>
+				<Row>
+					<Col>
+						<button
+							className="theme-secondary-btn "
+							onClick={clearSignatureCanvas}
+						>{t("CLEAR")}</button>
+					</Col>
+				</Row>
 				<Row className="mt-2">
 					<Col>
 						<Button className="float-right" type="reset">

@@ -2,7 +2,7 @@ import { useContext, useRef } from "react";
 import { Col, Row } from "react-bootstrap";
 import BaseInput from "../../../base-input";
 import Accordion from "react-bootstrap/Accordion";
-import SignatureCanvas from "react-signature-canvas";
+// import SignatureCanvas from "react-signature-canvas";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import styles from "../../../../../styles/jotform.module.css";
 import { AccordianProps } from "../../../../../types/jotform/accordian.type";
@@ -15,13 +15,13 @@ export function DisclosureAuthorization({ eventKey, form }: AccordianProps) {
     }: JotFormContextType = useContext(JotformContext);
     const { t } = useTranslation();
 
-    const canvasRef = useRef<SignatureCanvas>(null);
-    const clearSignatureCanvas = () => canvasRef?.current?.clear();
+    // const canvasRef = useRef<SignatureCanvas>(null);
+    // const clearSignatureCanvas = () => canvasRef?.current?.clear();
 
-    const handleSignatureEnd = () => {
-        const signatureValue = canvasRef?.current?.toDataURL()?.toString();
-        form.setFieldValue("SIGNATURE.value", signatureValue);
-    };
+    // const handleSignatureEnd = () => {
+    //     const signatureValue = canvasRef?.current?.toDataURL()?.toString();
+    //     form.setFieldValue("SIGNATURE.value", signatureValue);
+    // };
 
     return (
         //eventKey="1"
@@ -32,7 +32,7 @@ export function DisclosureAuthorization({ eventKey, form }: AccordianProps) {
                     <h1>
                         {t(
                             "{COMPANY_NAME}",
-                            { COMPANY_NAME: applicant?.company?.name},
+                            { COMPANY_NAME: applicant?.company?.name },
                             { translateProps: true }
                         )}
                     </h1>
@@ -82,7 +82,7 @@ export function DisclosureAuthorization({ eventKey, form }: AccordianProps) {
                         </span>
                     </p>
                 </Row>
-                <Row>
+                {/* <Row>
                     <Col>
                         <h6>{t("SIGNATURE")}</h6>
                         <SignatureCanvas
@@ -107,7 +107,7 @@ export function DisclosureAuthorization({ eventKey, form }: AccordianProps) {
                             {t("CLEAR")}
                         </button>
                     </Col>
-                </Row>
+                </Row> */}
                 <Row className={styles.align__text_left}>
                     <BaseInput
                         className="col my-3"

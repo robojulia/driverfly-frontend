@@ -15,13 +15,13 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
     }: JotFormContextType = useContext(JotformContext);
     const { t } = useTranslation();
 
-    const canvasRef = useRef<SignatureCanvas>();
-    const clearSignatureCanvas = () => canvasRef?.current?.clear();
+    // const canvasRef = useRef<SignatureCanvas>();
+    // const clearSignatureCanvas = () => canvasRef?.current?.clear();
 
-    const handleSignatureEnd = () => {
-        const signatureValue = canvasRef?.current?.toDataURL()?.toString();
-        form.setFieldValue("SIGNATURE.value", signatureValue);
-    };
+    // const handleSignatureEnd = () => {
+    //     const signatureValue = canvasRef?.current?.toDataURL()?.toString();
+    //     form.setFieldValue("SIGNATURE.value", signatureValue);
+    // };
 
     return (
         //  eventKey="3"
@@ -94,7 +94,7 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                         {t(
                             "CONSENT_TO_CLEARINGHOUSE_2_{COMPANY_NAME}",
-                            { COMPANY_NAME: applicant?.company?.name},
+                            { COMPANY_NAME: applicant?.company?.name },
                             { translateProps: true }
                         )}
                     </p>
@@ -103,7 +103,7 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                         {t(
                             "CONSENT_TO_CLEARINGHOUSE_3_{COMPANY_NAME}",
-                            { COMPANY_NAME: applicant?.company?.name},
+                            { COMPANY_NAME: applicant?.company?.name },
                             { translateProps: true }
                         )}
                     </p>
@@ -112,12 +112,12 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                         {t(
                             "CONSENT_TO_CLEARINGHOUSE_4_{COMPANY_NAME}",
-                            { COMPANY_NAME: applicant?.company?.name},
+                            { COMPANY_NAME: applicant?.company?.name },
                             { translateProps: true }
                         )}
                     </p>
                 </Row>
-                <Row className={styles.align__text_left}>
+                {/* <Row className={styles.align__text_left}>
                     <Col>
                         <h6>{t("SIGNATURE")}</h6>
                         <SignatureCanvas
@@ -142,7 +142,7 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                             {t("CLEAR")}
                         </button>
                     </Col>
-                </Row>
+                </Row> */}
             </Accordion.Body>
         </Accordion.Item>
     )

@@ -32,14 +32,15 @@ export function ContinueLongForm() {
 					...applicant,
 					id: response.id,
 				});
-					toast.success(t("successfully_saved_information"));
-				
+				toast.success(t("successfully_saved_information"));
+
+				stepNext();
+
 			} catch (error) {
 				console.log(error);
 				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
 			}
 
-			stepNext();
 		},
 	});
 

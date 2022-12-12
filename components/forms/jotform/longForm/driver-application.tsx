@@ -4,7 +4,6 @@ import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
 import BaseInput from "../../base-input";
-import SignaturePad from "react-signature-canvas";
 import SignatureCanvas from "react-signature-canvas";
 import { DriverApplicationDto } from "../../../../models/jot-form/long-form/driver-application.dto";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
@@ -19,7 +18,7 @@ export function DriverApplication() {
 
 	const { t } = useTranslation();
 	let padRef = useRef<SignatureCanvas>(null);
-	const clearSignaturePad = () => padRef?.current?.clear();
+	const clearSignatureCanvas = () => padRef?.current?.clear();
 
 	const form = useFormik({
 		initialValues: new DriverApplicationDto(),
@@ -60,13 +59,15 @@ export function DriverApplication() {
 			(v) => v.type === ApplicantExtras.SIGNATURE
 		);
 
+		if (apx_sign) padRef?.current?.fromDataURL(apx_sign?.value)
+
 		form.setValues({
 			...form.values,
 			APPLY_DATE: !!apx?.type
 				? apx
 				: new ApplicantExtrasEntity(ApplicantExtras.APPLY_DATE),
 			SIGNATURE: !!apx_sign?.type
-				? padRef?.current?.fromDataURL(apx_sign?.value)
+				? apx_sign
 				: new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
 			first_name: first_name || null,
 			last_name: last_name || null,
@@ -90,10 +91,10 @@ export function DriverApplication() {
 				</h6>
 				<p className={`${styles.paragraph} ${styles.align__text_left}`}>
 					{t(
-							"{COMPANY_NAME}_MVR_AND_DMV_AUTHORIZATION",
-							{ COMPANY_NAME: applicant?.company?.name },
-							{ translateProps: true }
-						)}
+						"{COMPANY_NAME}_MVR_AND_DMV_AUTHORIZATION",
+						{ COMPANY_NAME: applicant?.company?.name },
+						{ translateProps: true }
+					)}
 				</p>
 
 				<Row className={styles.align__text_left}>
@@ -126,8 +127,7 @@ export function DriverApplication() {
 				<Row className={styles.align__text_left}>
 					<Col className="my-3">
 						<h6>{t("SIGNATURE")}</h6>
-
-						<SignaturePad
+						<SignatureCanvas
 							name="SIGNATURE.value"
 							className="mt-2"
 							required
@@ -142,15 +142,18 @@ export function DriverApplication() {
 				</Row>
 				<Row>
 					<Col>
-						<button className="theme-secondary-btn " onClick={clearSignaturePad}>{t("CLEAR")}</button>
+						<button
+							className="theme-secondary-btn "
+							onClick={clearSignatureCanvas}
+						>{t("CLEAR")}</button>
 					</Col>
 				</Row>
 				<Row className="mt-3">
-					<Col>
+					{/* <Col>
 						<Button className="float-right" type="reset">
 							{t("BACK")}
 						</Button>
-					</Col>
+					</Col> */}
 					<Col>
 						<Button className="float-left" type="submit">
 							{t("NEXT")}
