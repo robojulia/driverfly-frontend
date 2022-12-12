@@ -201,9 +201,9 @@ export default function ApplicantExtrasDetails({
 						}))}
 					/>
 				</ViewCard>
-				<ViewCard title="VIOALATION_DETAIL">
+				<ViewCard title="VIOLATION_DETAILS">
 					<ViewTable
-						type="VIOALATION_DETAILS"
+						type="VIOLATION_DETAILS"
 						headers={{
 							charge: "charge",
 							date_of_violation: "DATE",
