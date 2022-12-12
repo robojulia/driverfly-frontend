@@ -106,7 +106,7 @@ export function BasicInfo() {
 						enumType={BooleanTypeExtra}
 						name="AUTHORIZE_TO_COMMUNICATE.value"
 						placeholder="CHOOSE"
-						label="SMS_EMAIL_AUTHORIZATION_NAUTILIUS"
+						label={t("{company_name}_SMS_EMAIL_AUTHORIZATION_NAUTILIUS", { company_name: applicant?.company?.name }, { translateProps: true })}
 						formik={form}
 					/>
 				</Row>

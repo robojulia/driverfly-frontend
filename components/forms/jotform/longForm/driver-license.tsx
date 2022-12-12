@@ -14,7 +14,7 @@ import { DocumentsDto } from "../../../../models/jot-form/long-form/documents.dt
 
 export function DriverLicense() {
 	const {
-		state: { applicant },
+		state: { applicant, steps },
 		method: { setApplicant, stepNext, stepBack },
 	}: JotFormContextType = useContext(JotformContext);
 
@@ -80,11 +80,14 @@ export function DriverLicense() {
 			</Row>
 
 			<Row className="mt-3">
-				<Col>
-					<Button className="float-right" type="reset">
-						{t("BACK")}
-					</Button>
-				</Col>
+				{
+					!!steps &&
+					<Col>
+						<Button className="float-right" type="reset">
+							{t("BACK")}
+						</Button>
+					</Col>
+				}
 
 				<Col>
 					<Button className="float-left" type="submit">

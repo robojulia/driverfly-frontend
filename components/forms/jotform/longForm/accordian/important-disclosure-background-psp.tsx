@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useContext, useRef } from "react";
 import { Col, Row } from "react-bootstrap";
 import BaseInput from "../../../base-input";
 import Accordion from "react-bootstrap/Accordion";
@@ -6,17 +6,22 @@ import SignatureCanvas from "react-signature-canvas";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import styles from "../../../../../styles/jotform.module.css";
 import { AccordianProps } from "../../../../../types/jotform/accordian.type";
+import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
 
 export function ImportantDisclosureBackgroundPsp({ eventKey, form }: AccordianProps) {
+    const {
+        state: { applicant, applicantExtras },
+        method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+    }: JotFormContextType = useContext(JotformContext);
     const { t } = useTranslation();
 
-    const canvasRef = useRef<SignatureCanvas>();
-    const clearSignatureCanvas = () => canvasRef.current.clear();
+    // const canvasRef = useRef<SignatureCanvas>();
+    // const clearSignatureCanvas = () => canvasRef.current.clear();
 
-    const handleSignatureEnd = () => {
-        const signatureValue = canvasRef?.current?.toDataURL()?.toString();
-        form.setFieldValue("SIGNATURE.value", signatureValue);
-    };
+    // const handleSignatureEnd = () => {
+    //     const signatureValue = canvasRef?.current?.toDataURL()?.toString();
+    //     form.setFieldValue("SIGNATURE.value", signatureValue);
+    // };
 
     return (
         //eventKey="2"
@@ -29,7 +34,7 @@ export function ImportantDisclosureBackgroundPsp({ eventKey, form }: AccordianPr
                     <h1>
                         {t(
                             "{COMPANY_NAME}",
-                            { COMPANY_NAME: "talhatrucking" },
+                            { COMPANY_NAME: applicant?.company?.name },
                             { translateProps: true }
                         )}
                     </h1>
@@ -74,7 +79,11 @@ export function ImportantDisclosureBackgroundPsp({ eventKey, form }: AccordianPr
                 </Row>
                 <Row>
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                        {t("AUTHORIZE_COMPANY_TO_ACCESS")}
+                        {t(
+                            "{COMPANY_NAME}_AUTHORIZE_COMPANY_TO_ACCESS",
+                            { COMPANY_NAME: applicant?.company?.name },
+                            { translateProps: true }
+                        )}
                     </p>
                 </Row>
                 <Row>
@@ -99,13 +108,13 @@ export function ImportantDisclosureBackgroundPsp({ eventKey, form }: AccordianPr
                             {t("APPLICANT_NAME")}{" "}
                             {t(
                                 "{APPLICANT_NAME}",
-                                { APPLICANT_NAME: "Talha Bhutta" },
+                                { APPLICANT_NAME: `${applicant?.first_name} ${applicant?.last_name}` },
                                 { translateProps: true }
                             )}
                         </span>
                     </p>
                 </Row>
-                <Row className={styles.align__text_left}>
+                {/* <Row className={styles.align__text_left}>
                     <Col>
                         <h6>{t("SIGNATURE")}</h6>
                         <SignatureCanvas
@@ -130,7 +139,7 @@ export function ImportantDisclosureBackgroundPsp({ eventKey, form }: AccordianPr
                             {t("CLEAR")}
                         </button>
                     </Col>
-                </Row>
+                </Row> */}
                 <Row className={styles.align__text_left}>
                     <BaseInput
                         className="col my-3"

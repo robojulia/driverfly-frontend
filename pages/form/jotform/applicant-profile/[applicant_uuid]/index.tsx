@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Row } from "reactstrap";
+import { Row } from "react-bootstrap";
 import ApplicantSafetyBackground from "../../../../../components/applicants/applicant-safety-background";
 import ViewApplicantDetail from "../../../../../components/applicants/applicant-view-details";
 import ApplicantExtrasDetails from "../../../../../components/applicants/jotform/applicant-profile";
