@@ -34,6 +34,8 @@ export function SubmitMissingDocuments() {
 		onSubmit: async (values, { resetForm }) => {
 			const applicantApi = new ApplicantApi();
 
+			console.log("applicant.id", applicant.id);
+
 			try {
 				const filtered_extras = applicantExtras?.filter((v) => !!v.value);
 				const response = await applicantApi.jotform.update(applicant.id, {

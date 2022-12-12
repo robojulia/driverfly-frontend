@@ -11,11 +11,11 @@ import {
 } from "../../../../../components/forms/jotform/jotform-pages";
 import ApplicantApi from "../../../../api/applicant";
 
-export interface LongFormProps {
+export interface MissingDocumentsProps {
 	entity: ApplicantEntity;
 }
 
-export default function LongForm({ entity }: LongFormProps) {
+export default function MissingDocuments({ entity }: MissingDocumentsProps) {
 	const [applicant, setApplicant] = useState<ApplicantEntity>(entity);
 	const [applicantExtras, setApplicantExtras] = useState<
 		ApplicantExtrasEntity[]
@@ -61,14 +61,14 @@ export default function LongForm({ entity }: LongFormProps) {
 	);
 }
 
-export async function getServerSidePropsForMissingDocuments({ query }) {
+export async function getServerSideProps({ query }) {
 	try {
-		const { uuid } = query || {};
+		const { applicant_uuid } = query || {};
 
-		if (!!!uuid) return { notFound: true };
+		if (!!!applicant_uuid) return { notFound: true };
 
 		const applicantApi = new ApplicantApi();
-		const entity: ApplicantEntity = await applicantApi.getByUuidToken(uuid);
+		const entity: ApplicantEntity = await applicantApi.getByUuidToken(applicant_uuid);
 
 		if (!!!entity) return { notFound: true };
 
