@@ -1,5 +1,4 @@
 import { EmbeddedLayout } from "../../../components/layouts/embedded/embedded-layout";
-import RelatedJobs from '../../../components/related-jobs/related-jobs'
 import { useTranslation } from "../../../hooks/use-translation"
 import JobApi from "../../api/job"
 import StructuredData from "../../../components/seo/structured-data"
@@ -16,7 +15,6 @@ export default function Detail({ job, relatedJobs }: JobDetailProps) {
         <StructuredData type="JobPosting" data={StructuredData.JobPosting(job, t)} />
         <ViewJobDetail
           job={job}
-          relatedJobs={< RelatedJobs jobs={relatedJobs} jobLink="jobs" hideCompanyName={false} jobLinkSlugable={true} />}
           canApply={true}
           canSave={true}
           hideVehicles={false}
