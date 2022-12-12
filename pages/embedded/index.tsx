@@ -41,7 +41,7 @@ export default function Embedded({ filterType }) {
         [EmbeddedFilterTypes.NEW_HIRES]: setFiltersForNewHires(),
         [EmbeddedFilterTypes.TEAM_DRIVERS]: setFiltersForTeamDrivers(),
         [EmbeddedFilterTypes.OTR_JOBS]: setFiltersForOtrJobs(),
-    }[type])
+    }[type] || {})
 
     const setFiltersForCdlSchools = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A })
     const setFiltersForHeavyHaul = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A })
@@ -101,7 +101,6 @@ export default function Embedded({ filterType }) {
     useEffectAsync(fetchJobs, [filters])
     useEffectAsync(async (): Promise<void> => {
         try {
-            // await setFiltersForQuery();
             // await router.replace('embedded', undefined, { shallow: true });
             await fetchJobs()
         } catch (e) {
@@ -135,13 +134,11 @@ export default function Embedded({ filterType }) {
                     <div className="container">
                         <div className="row">
                             <div className="col-12 col-lg-3 lg-mt-0 mt-5">
-                                <EmbeddedFilters filterType />
+                                <EmbeddedFilters filterType={filterType} />
                             </div>
                             <div className="col-md-9 outer pl-4 ">
-
                                 <ResultCount />
                                 < JobsList />
-
                             </div>
                         </div>
                     </div>
@@ -155,11 +152,8 @@ export async function getServerSideProps({ query }: GetServerSidePropsContext) {
     const { filterType } = query || {};
 
     if (!!!filterType) return { notFound: true }
-    return {
-        props: {
-            filterType
-        }
-    }
+
+    return { props: { filterType } }
 }
 Embedded.getLayout = function getLayout(page) {
     return (
