@@ -27,7 +27,10 @@ export default function VoeForm({ applicant }: VoeFormProps) {
 
 	useEffect(() => {
 		console.log("from index", applicant);
-	}, []);
+
+		if (applicant.voeData) setApplicantVoe(applicant.voeData)
+
+	}, [applicant]);
 
 	return (
 		<VoeFormContext.Provider

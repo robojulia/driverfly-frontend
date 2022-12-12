@@ -19,6 +19,7 @@ import {
 	ApplicantDacEntity,
 	ApplicantExtrasEntity
 } from "./index"
+import { ApplicantVoeFormEntity } from "./applicant-voe-form.entity";
 
 export class ApplicantEntity {
 	id?: number;
@@ -84,6 +85,7 @@ export class ApplicantEntity {
 	last_updated_at?: string;
 	dac?: ApplicantDacEntity[];
 	extras?: ApplicantExtrasEntity[] = []
+	voeData?: ApplicantVoeFormEntity[] = []
 	uuid_token?: string;
 
 	static yupSchema() {
