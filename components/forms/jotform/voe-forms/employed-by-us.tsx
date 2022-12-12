@@ -1,22 +1,19 @@
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { Form, Button, Col, Row } from "react-bootstrap";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import voeFormContextType from "../../../../context/voeform-context";
+import VoeFormContext, { VoeFormContextType } from "../../../../context/voeform-context";
 import { useContext, useEffect } from "react";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/voe.module.css";
 import BaseCheck from "../../base-check";
 import { EmployedByUsDto } from "../../../../models/jot-form/voe-form/employed-by-us.dto";
 import { ApplicantVoeFormEnum } from "../../../../enums/applicants/applicant-voe-form.enum";
 import { ApplicantVoeFormEntity } from "../../../../models/applicant/applicant-voe-form.entity";
 
-export interface EmployedByUsProps extends PageProps { }
-
 export function EmployedByUs() {
 	const {
-		state: { applicantVoe },
+		state: { applicantVoe, applicant },
 		method: { stepNext, stepBack, updateApplicantVoe },
-	} = useContext(voeFormContextType);
+	}: VoeFormContextType = useContext(VoeFormContext);
 
 	const { t } = useTranslation();
 
@@ -58,7 +55,13 @@ export function EmployedByUs() {
 					className="mt-3 mb-3"
 					required
 					name="EMPLOYED_BY_US.value"
-					label="EMPLOYED_BY_US"
+					label={t(
+						"{applicantName}_EMPLOYED_BY_US",
+						{
+							applicantName: `${applicant?.first_name} ${applicant?.last_name}`
+						},
+						{ translateProps: true }
+					)}
 					formik={form}
 				/>
 			</Row>

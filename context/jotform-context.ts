@@ -2,7 +2,7 @@ import { createContext } from "react";
 import { ApplicantExtrasEntity } from "../models/applicant/applicant-extras.entity";
 import { ApplicantEntity } from "../models/applicant/applicant.entity";
 
-type JotFormContextType = {
+export type JotFormContextType = {
 	state: {
 		applicant: ApplicantEntity;
 		applicantExtras: ApplicantExtrasEntity[];

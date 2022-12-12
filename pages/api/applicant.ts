@@ -69,6 +69,12 @@ class ApplicantApi extends BaseApi {
 		return data;
 	}
 
+	async getByUuidToken(uuid_token: string): Promise<ApplicantEntity> {
+		const { data } = await this.get(this.buildUrl(this.baseUrl + `/fetch/${uuid_token}`));
+
+		return data;
+	}
+
 	// user specific actions
 	async getByUserId(): Promise<ApplicantEntity> {
 		const { data } = await this.get(this.baseUrl);
@@ -131,7 +137,7 @@ class ApplicantApi extends BaseApi {
 		create: async (
 			dto: UpsertApplicantJotformDto
 		): Promise<ApplicantEntity> => {
-			const { data } = await this.post(this.jotform.baseUrl(), dto);
+			const { data } = await this.post(`${this.jotform.baseUrl()}?companyId=${dto?.applicant?.company?.id}`, dto);
 			return data;
 		},
 		update: async (
