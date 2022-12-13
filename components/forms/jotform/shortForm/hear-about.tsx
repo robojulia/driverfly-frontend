@@ -10,12 +10,15 @@ import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-ex
 import styles from "../../../../styles/jotform.module.css";
 import { HearAboutUsType } from "../../../../enums/jotform/hear-about-type.enum";
 import BaseInput from "../../base-input";
+import ApplicantApi from "../../../../pages/api/applicant";
+import { toast, ToastContainer } from "react-toastify";
+import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 
 
 export function HearAbout() {
 	const {
-		state: { applicantExtras },
-		method: { updateApplicantExtras, stepNext, stepBack },
+		state: { applicantExtras, applicant },
+		method: { updateApplicantExtras, stepNext, stepBack, setApplicant },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
@@ -23,10 +26,27 @@ export function HearAbout() {
 	const form = useFormik({
 		initialValues: new HearAboutUsDto(),
 		validationSchema: HearAboutUsDto.yupSchema(),
-		onSubmit: (values) => {
+		onSubmit: async (values) => {
+			const applicantApi = new ApplicantApi();
 			const { HEAR_ABOUT_US } = values;
 			updateApplicantExtras(HEAR_ABOUT_US);
-			stepNext();
+			try {
+				const filtered_extras = applicantExtras?.filter((v) => !!v.value);
+				const response = await applicantApi.jotform.create({
+					applicant,
+					applicantExtras: filtered_extras,
+				});
+				setApplicant({
+					...applicant,
+					id: response.id,
+				});
+				
+				stepNext();
+
+			} catch (error) {
+				console.log(error);
+				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
+			}
 		},
 		onReset: (values) => {
 			stepBack();
@@ -47,6 +67,7 @@ export function HearAbout() {
 
 	return (
 		<>
+			
 			<form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row>
 					<h4 className={styles.heading__sty}>
