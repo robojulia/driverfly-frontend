@@ -120,6 +120,7 @@ export function DriverApplication() {
 						type="date"
 						name="APPLY_DATE.value"
 						placeholder="DATE"
+						min={new Date().toISOString().split("T")[0]}
 						label="DATE"
 						formik={form}
 					/>
