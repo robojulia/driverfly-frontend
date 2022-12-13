@@ -144,7 +144,9 @@ export function DriverApplication() {
 						<button
 							className="theme-secondary-btn "
 							onClick={clearSignatureCanvas}
-						>{t("CLEAR")}</button>
+						>
+							{t("CLEAR")}
+						</button>
 					</Col>
 				</Row>
 				<Row className="mt-3">
@@ -153,8 +155,8 @@ export function DriverApplication() {
 							{t("BACK")}
 						</Button>
 					</Col> */}
-					<Col>
-						<Button className="float-left" type="submit">
+					<Col className="text-center">
+						<Button type="submit">
 							{t("NEXT")}
 						</Button>
 					</Col>

@@ -9,8 +9,8 @@ import { toast, ToastContainer } from "react-toastify";
 
 export function ContinueLongForm() {
 	const {
-		state: { applicant,  },
-		method: { stepNext,  },
+		state: { applicant },
+		method: { stepNext },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
@@ -21,13 +21,13 @@ export function ContinueLongForm() {
 			stepNext();
 		}
 	});
-useEffect(()=>{
-	toast.success(t("successfully_saved_information"));
+	useEffect(() => {
+		toast.success(t("successfully_saved_information"));
 
-},[])
+	}, [])
 	return (
 		<>
-		<ToastContainer />
+			<ToastContainer />
 			<form onSubmit={form.handleSubmit}>
 				<Row>
 					<h4 className={styles.heading__sty}>
@@ -40,8 +40,8 @@ useEffect(()=>{
 					</h6>
 				</Row>
 				<Row className="mt-3">
-					<Col>
-						<Button className="float-middle" type="submit">
+					<Col className="text-center" >
+						<Button type="submit">
 							{t("CONTINUE_APPLICATION")}
 						</Button>
 					</Col>
