@@ -3,7 +3,7 @@ import { useContext, useEffect, useRef } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import BaseInput from "../../base-input";
-import VoeFormContext, {VoeFormContextType} from "../../../../context/voeform-context";
+import VoeFormContext, { VoeFormContextType } from "../../../../context/voeform-context";
 import styles from "../../../../styles/voe.module.css";
 import SignatureCanvas from "react-signature-canvas";
 import { SubmissionDetailsDto } from "../../../../models/jot-form/voe-form/submission-details.dto";
@@ -37,15 +37,14 @@ export function SubmissionDetails() {
 			const filtered_voe = applicantVoe?.filter((v) => !!v.value);
 			try {
 				const response = await applicantApi.voeform.create({
-					uuid_token: applicant.uuid_token,
+					uuid_token: applicant?.uuid_token,
 					applicantVoeFormData: filtered_voe,
 				});
-				toast.success(t("successfully_saved_information"));
+				stepNext()
 			} catch (error) {
 				console.log(error);
 				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
 			}
-			// stepNext();
 		},
 		onReset: (values) => {
 			stepBack();
@@ -86,7 +85,7 @@ export function SubmissionDetails() {
 			<ToastContainer />
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row className={`${styles.align__text_left}`}>
-					<Col>
+					<Col md="9">
 						<h6 className={styles.bold}>{t("SIGNATURE")}</h6>
 						<SignatureCanvas
 							name="SIGNATURE_VOE.value"
@@ -100,16 +99,12 @@ export function SubmissionDetails() {
 							}}
 						/>
 					</Col>
-				</Row>
-
-				<Row>
-					<Col>
+					<Col md="3" className="d-flex align-self-center justify-content-center">
 						<button className="theme-secondary-btn" onClick={clearSignatureCanvas}>
 							{t("CLEAR")}
 						</button>
 					</Col>
 				</Row>
-
 				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 					<BaseInput
 						className="my-3 float-left col-md-6"

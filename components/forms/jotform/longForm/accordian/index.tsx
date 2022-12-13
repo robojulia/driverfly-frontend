@@ -21,7 +21,7 @@ export function AccordianPage() {
 
 	const {
 		state: { applicantExtras, applicant },
-		method: { stepBack, updateApplicantExtras },
+		method: { stepBack, updateApplicantExtras, stepNext },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
@@ -46,7 +46,7 @@ export function AccordianPage() {
 					applicant,
 					applicantExtras: filtered_extras,
 				});
-				toast.success(t("successfully_saved_information"));
+				stepNext()
 			} catch (error) {
 				console.log(error);
 				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
@@ -66,9 +66,6 @@ export function AccordianPage() {
 	}, [form.values]);
 
 	useEffect(() => {
-		console.log("applicant extras", applicantExtras);
-		console.log("applicant", applicant);
-
 		const apx_ss_id = applicantExtras?.find(
 			(v) => v.type === ApplicantExtras.EMPLOYEE_SS_OR_ID
 		);
@@ -140,7 +137,7 @@ export function AccordianPage() {
 					/>
 				</Accordion>
 				<Row className={styles.align__text_left}>
-					<Col className="my-3">
+					<Col md="9" className="my-3">
 						<h6>{t("SIGNATURE")}</h6>
 						<SignatureCanvas
 							name="SIGNATURE.value"
@@ -154,9 +151,7 @@ export function AccordianPage() {
 							}}
 						/>
 					</Col>
-				</Row>
-				<Row>
-					<Col>
+					<Col md="3" className="d-flex align-self-center justify-content-center">
 						<button
 							className="theme-secondary-btn "
 							onClick={clearSignatureCanvas}

@@ -31,6 +31,7 @@ import {
 	Names,
 	SplashPage,
 } from "./shortForm";
+import { ThankyouPage } from "./thankyou-screen";
 
 const getFullFormPages = (step: number): JSX.Element =>
 ({
@@ -61,6 +62,7 @@ const getFullFormPages = (step: number): JSX.Element =>
 	24: <FelonyConviction />,
 	25: <DrugTest />,
 	26: <AccordianPage />,
+	27: <ThankyouPage />
 }[step]);
 
 const getFullFormStyle = (step: number): CSSProperties | undefined =>
@@ -90,6 +92,7 @@ const getLongFormPages = (step: number): JSX.Element =>
 	17: <FelonyConviction />,
 	18: <DrugTest />,
 	19: <AccordianPage />,
+	27: <ThankyouPage />
 }[step]);
 
 const getMissingDocumentsPages = (step: number): JSX.Element =>
@@ -97,6 +100,7 @@ const getMissingDocumentsPages = (step: number): JSX.Element =>
 	0: <DriverLicense />,
 	1: <MedicalCard />,
 	2: <SubmitMissingDocuments />,
+	3: <ThankyouPage />
 }[step]);
 const getLongFormStyle = (step: number): CSSProperties | undefined =>
 	({}[step]);

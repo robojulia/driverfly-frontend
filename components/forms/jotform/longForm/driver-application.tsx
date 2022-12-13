@@ -125,7 +125,7 @@ export function DriverApplication() {
 					/>
 				</Row>
 				<Row className={styles.align__text_left}>
-					<Col className="my-3">
+					<Col md="9" className="my-3">
 						<h6>{t("SIGNATURE")}</h6>
 						<SignatureCanvas
 							name="SIGNATURE.value"
@@ -139,9 +139,7 @@ export function DriverApplication() {
 							}}
 						/>
 					</Col>
-				</Row>
-				<Row>
-					<Col>
+					<Col md="3" className="d-flex align-self-center justify-content-center">
 						<button
 							className="theme-secondary-btn "
 							onClick={clearSignatureCanvas}

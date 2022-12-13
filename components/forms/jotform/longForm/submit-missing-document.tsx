@@ -18,8 +18,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 export function SubmitMissingDocuments() {
 	const {
-		state: { applicant, applicantExtras },
-		method: { setApplicant, stepNext, stepBack },
+		state: { applicant },
+		method: { stepNext, stepBack },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const isDriverLicense = (v: DocumentEntity): boolean =>
@@ -37,11 +37,11 @@ export function SubmitMissingDocuments() {
 			console.log("applicant.id", applicant.id);
 
 			try {
-				const filtered_extras = applicantExtras?.filter((v) => !!v.value);
 				const response = await applicantApi.jotform.update(applicant.id, {
 					applicant
 				})
-				toast.success(t("successfully_saved_information"));
+
+				stepNext()
 			} catch (error) {
 				console.log(error);
 				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
