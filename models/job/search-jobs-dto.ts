@@ -9,6 +9,7 @@ import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
 import { VehicleTransmissionType } from "../../enums/vehicles/vehicle-transmission-type.enum";
 import { MvrType } from "../../enums/users/mvr-type.enum";
 import { JobDatePosted } from "../../enums/jobs/job-date-posted.enum";
+import { JobTeamDriver } from "../../enums/jobs/job-team-driver.enum";
 
 export interface JobSearchExclude {
     jobId: number
@@ -47,5 +48,7 @@ export interface SearchJobsDto {
     order_by?: string;
     take?: number;
     page?: number;
+    min_years_experience?: number;
+    team_drivers?: JobTeamDriver;
 
 }

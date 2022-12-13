@@ -510,7 +510,7 @@ export function JobForm(props: JobFormProps) {
                             {
                                 form.values.geography &&
                                 <BaseRange
-                                    className="col-12 p-0 px-lg-2"
+                                    className="col-12 p-0 px-lg-2 fire-fox-cls"
                                     label="max_applicant_radius"
                                     name="max_applicant_radius"
                                     valueSuffix="mi"
