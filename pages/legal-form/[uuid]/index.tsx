@@ -72,11 +72,11 @@ export default function jotFormLongForm({ entity }: LegalFormProps) {
 }
 
 const pageOne = () => {
-	// return <BackgroundInfoAttachment />;
+	// return <BackgroundInfoAttachment />; No need as per Talha
 	// return <DisclosureAttachment/>
-	return <ConsentAlcoholDrug/>
-	// return <BackgroundReportsPsp/>
-	// return <AuthBackgroundInvestigation />
+	// return <ConsentAlcoholDrug/>
+	// return <BackgroundReportsPsp/> Duplicated page
+	return <AuthBackgroundInvestigation />
 };
 function t(arg0: string): import("react-toastify").ToastContent {
 	throw new Error("Function not implemented.");
