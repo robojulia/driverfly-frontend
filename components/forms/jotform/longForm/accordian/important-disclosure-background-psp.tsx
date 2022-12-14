@@ -1,8 +1,7 @@
-import { useContext, useRef } from "react";
-import { Col, Row } from "react-bootstrap";
+import { useContext } from "react";
+import { Row } from "react-bootstrap";
 import BaseInput from "../../../base-input";
 import Accordion from "react-bootstrap/Accordion";
-import SignatureCanvas from "react-signature-canvas";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import styles from "../../../../../styles/jotform.module.css";
 import { AccordianProps } from "../../../../../types/jotform/accordian.type";
@@ -42,9 +41,6 @@ export function ImportantDisclosureBackgroundPsp({ eventKey, form }: AccordianPr
                 <Row>
                     <h3>{t("IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")}</h3>
                 </Row>
-                {/* <Row>
-                <h5>{t("WHEN_APPLICATION_SUBMITTED")}</h5>
-            </Row> */}
                 <Row>
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                         {t("WHEN_SUBMITTED_MAIL_PHONE_COMPUTER")}
@@ -114,32 +110,6 @@ export function ImportantDisclosureBackgroundPsp({ eventKey, form }: AccordianPr
                         </span>
                     </p>
                 </Row>
-                {/* <Row className={styles.align__text_left}>
-                    <Col>
-                        <h6>{t("SIGNATURE")}</h6>
-                        <SignatureCanvas
-                            name="SIGNATURE.value"
-                            required
-                            onEnd={handleSignatureEnd}
-                            ref={canvasRef}
-                            canvasProps={{
-                                style: { border: "1px solid black" },
-                                className: "sigCanvas",
-                            }}
-                        />
-                    </Col>
-                </Row>
-                <Row className={styles.align__text_left}>
-                    <Col>
-                        <button
-                            className="theme-secondary-btn"
-                            type="button"
-                            onClick={clearSignatureCanvas}
-                        >
-                            {t("CLEAR")}
-                        </button>
-                    </Col>
-                </Row> */}
                 <Row className={styles.align__text_left}>
                     <BaseInput
                         className="col my-3"
