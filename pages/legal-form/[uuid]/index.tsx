@@ -80,7 +80,7 @@ const pageOne = () => {
 	// return <VerificationOfEmploymentSection1/>
 	return <VerificationOfEmploymentSection2/>
 	// return <BackgroundReportsPsp/> Duplicated page
-	// return <AuthBackgroundInvestigation />
+	// return <AuthBackgroundInvestigation /> 
 };
 function t(arg0: string): import("react-toastify").ToastContent {
 	throw new Error("Function not implemented.");

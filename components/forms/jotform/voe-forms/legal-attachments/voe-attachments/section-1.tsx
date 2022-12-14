@@ -1,13 +1,9 @@
-import { useContext, useRef } from "react";
-import { Col, Row } from "react-bootstrap";
-import Accordion from "react-bootstrap/Accordion";
-import SignatureCanvas from "react-signature-canvas";
+import { useContext } from "react";
+import { Row } from "react-bootstrap";
 import JotformContext, { JotFormContextType } from "../../../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../../../enums/applicants/applicant-extras.enum";
 import { useTranslation } from "../../../../../../hooks/use-translation";
 import styles from "../../../../../../styles/jotform.module.css";
-import BaseInput from "../../../../base-input";
-
 export function VerificationOfEmploymentSection1() {
 
     const {
@@ -18,6 +14,8 @@ export function VerificationOfEmploymentSection1() {
     const current_employer = applicantExtras?.find(
         (v) => v.type == ApplicantExtras.CURRENT_EMPLOYER
     );
+    const date = applicantExtras?.find(d => d?.type === ApplicantExtras?.EMPLOYEE_SS_OR_ID)
+
     return (
         <>
             <Row>
@@ -37,19 +35,19 @@ export function VerificationOfEmploymentSection1() {
                 </p>
             </Row>
             <Row className={styles.align__text_left}>
-                <h6>
-                    {t("EMPLOYEE_NAME_NAUTILUS_{employee_name}", { employee_name: `${applicant?.first_name} ${applicant?.last_name}` }, { translateProps: true })}
-                </h6>
-
-            </Row>
-            <Row className={styles.align__text_left}>
-                <BaseInput
-                    className="col my-3"
-                    name="EMPLOYEE_SS_OR_ID.value"
-                    label="EMPLOYEE_SS_OR_BUSINESS"
-                />
+                <div className='Col'>
+                    <h6>
+                        {t("EMPLOYEE_NAME_NAUTILUS_{employee_name}", { employee_name: `${applicant?.first_name} ${applicant?.last_name}` }, { translateProps: true })}
+                    </h6>
+                </div>
             </Row>
 
+            <div className='Row' style={{ textAlign: 'left', marginBottom: '20px' }}>
+                <div className='Col'>
+                    <p style={{ color: 'black', fontWeight: '100', display: 'inline' }}>{t("EMPLOYEE_SS_OR_ID:")}</p>
+                    <p style={{ color: 'black', display: 'inline' }}>{date?.value ? date?.value : ` ${t("NULL")}`}</p>
+                </div>
+            </div>
             <Row className={styles.align__text_left}>
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                     {t("I_HEREBY_AUTHORIZE_RELEASE_OF_BUSINESS")}
@@ -86,30 +84,6 @@ export function VerificationOfEmploymentSection1() {
                     {t("DOCUMENTATION_IF_ANY_OF_COMPLETION")}
                 </p>
             </Row>
-            {/* <Row className={styles.align__text_left}>
-                    <Col>
-                        <h6>{t("SIGNATURE")}</h6>
-                        <SignatureCanvas
-                            onEnd={handleSignatureEnd}
-                            ref={canvasRef}
-                            canvasProps={{
-                                style: { border: "1px solid black" },
-                                className: "sigCanvas",
-                            }}
-                        />
-                    </Col>
-                </Row>
-                <Row className={styles.align__text_left}>
-                    <Col>
-                        <button
-                            className="theme-secondary-btn"
-                            type="button"
-                            onClick={clearSignatureCanvas}
-                        >
-                            {t("CLEAR")}
-                        </button>
-                    </Col>
-                </Row> */}
             <Row className={styles.align__text_left}>
                 <h4 className="mt-3">{t("I_A")}</h4>
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
@@ -119,10 +93,6 @@ export function VerificationOfEmploymentSection1() {
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                     {t("WEBSITE_{company_web}", { company_web: applicant?.company?.website }, { translateProps: true })}
                 </p>
-                {/* <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                    {t("WEBSITE_{company_web}", {company_web: applicant?.company?.website}, { translateProps: true })}
-                        {t("DESIGNATED_EMPLOYER")}
-                    </p> */}
             </Row>
             <Row className={`${styles.align__text_left} ${styles.highlight}`}>
                 <h6>{t("PLEASE_NOTE_THE_FOLLOWING_EMPLOYERS")} </h6>
@@ -146,7 +116,7 @@ export function VerificationOfEmploymentSection1() {
             <Row className={`${styles.align__text_left} ${styles.highlight}`}>
                 <h6>{t("PLEASE_NOTE_THE_FOLLOWING")} </h6>
             </Row>
-            
+
         </>
     )
 }

@@ -1,12 +1,9 @@
-import { useContext, useRef } from "react";
+import { useContext } from "react";
 import { Col, Row } from "react-bootstrap";
-import Accordion from "react-bootstrap/Accordion";
-import SignatureCanvas from "react-signature-canvas";
 import JotformContext, { JotFormContextType } from "../../../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../../../enums/applicants/applicant-extras.enum";
 import { useTranslation } from "../../../../../../hooks/use-translation";
 import styles from "../../../../../../styles/jotform.module.css";
-import BaseInput from "../../../../base-input";
 
 export function VerificationOfEmploymentSection2() {
 
