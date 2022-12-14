@@ -304,8 +304,8 @@ export default function ApplicantExtrasDetails({
 							<ViewDetails
 								default={t("NOT_ANSWERED")}
 								obj={{
-									EMPLOYEE_SS_OR_BUSINESS: employee_ss_id?.value,
-									DISCLOSURE_AND_AUTHROIZE_DATE: disclosure_date?.value,
+									// EMPLOYEE_SS_OR_BUSINESS: employee_ss_id?.value,
+									// DISCLOSURE_AND_AUTHROIZE_DATE: disclosure_date?.value,
 									IMPOERANT_BACKGROUND_DATE: important_background_date?.value,
 
 									name: general_consent?.value?.name,
