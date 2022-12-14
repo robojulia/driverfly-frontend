@@ -7,6 +7,7 @@ import { ApplicantExtrasEntity } from "../../../models/applicant/applicant-extra
 import AuthBackgroundInvestigation from "../../../components/forms/jotform/voe-forms/legal-attachments/auth-background-investigation";
 import { BackgroundInfoAttachment } from "../../../components/forms/jotform/voe-forms/legal-attachments/background-info-attachement";
 import ApplicantApi from "../../api/applicant";
+import DisclosureAttachment from "../../../components/forms/jotform/voe-forms/legal-attachments/disclosure-attachment";
 
 
 export interface LegalFormProps {
@@ -39,7 +40,8 @@ export default function jotFormLongForm({ entity }: LegalFormProps) {
 	};
 	useEffect(() => {
 		console.log("applicant from server side props", entity)
-	},)
+		setApplicant(entity)
+	},[])
 	return (
 		<jotformContext.Provider
 			value={{
@@ -68,11 +70,11 @@ export default function jotFormLongForm({ entity }: LegalFormProps) {
 }
 
 const pageOne = () => {
-	return <BackgroundInfoAttachment />;
-	// return <DisclosureAttachment/>
+	// return <BackgroundInfoAttachment />;
+	return <DisclosureAttachment/>
 	// return <ConsentAlcoholDrug/>
 	// return <BackgroundReportsPsp/>
-	return <AuthBackgroundInvestigation />
+	// return <AuthBackgroundInvestigation />
 };
 function t(arg0: string): import("react-toastify").ToastContent {
 	throw new Error("Function not implemented.");

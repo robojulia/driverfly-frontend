@@ -1,13 +1,27 @@
+import { useContext } from 'react';
 import { Col, Row } from 'react-bootstrap'
+import JotformContext, { JotFormContextType } from '../../../../../context/jotform-context';
+import { useTranslation } from '../../../../../hooks/use-translation';
 import styles from "../../../../../styles/jotform.module.css";
 
 
 export default function DisclosureAttachment() {
+    const {
+        state: { applicantExtras, applicant }
+    }: JotFormContextType = useContext(JotformContext);
+
+    const { t } = useTranslation();
     return (
         <form>
             <div className="Row">
                 <div className='Col'>
-                    <h1 style={{ fontWeight: 'bold', textAlign: "center" }}>Nautilus Trucking</h1>
+                    <h1 style={{ fontWeight: 'bold', textAlign: "center" }}>
+                        {t(
+                            "{COMPANY_NAME}",
+                            { COMPANY_NAME: applicant?.company?.name },
+                            { translateProps: true }
+                        )}
+                    </h1>
                 </div>
             </div>
 
