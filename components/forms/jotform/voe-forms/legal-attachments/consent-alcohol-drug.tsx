@@ -1,5 +1,3 @@
-import styles from "../../../../../styles/jotform.module.css";
-import { Col, Row } from 'react-bootstrap';
 import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
 import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
