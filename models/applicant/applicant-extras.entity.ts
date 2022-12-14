@@ -90,7 +90,7 @@ export class ApplicantExtrasEntity {
 				})
 				.when("type", {
 					is: ApplicantExtras.PAST_EMPLOYER,
-					then: PastEmploymentHistoryExtraDto.yupSchema(),
+					then: yup.array(PastEmploymentHistoryExtraDto.yupSchema()),
 				})
 				.when("type", {
 					is: ApplicantExtras.PAST_LICENSE_SUSPENSION,
