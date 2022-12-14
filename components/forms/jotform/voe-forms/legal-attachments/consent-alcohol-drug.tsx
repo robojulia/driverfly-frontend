@@ -10,7 +10,9 @@ export default function ConsentAlcoholDrug() {
     const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE)
     const generalConsent = applicant?.extras?.find(consent => consent?.type === ApplicantExtras.GENERAL_CONSENT)
     const { t } = useTranslation();
-    const date = applicantExtras?.find(d => d?.type === ApplicantExtras?.IMPORTANT_DISCLOSURE_BACKGROUND_DATE)
+    const date =  applicant?.extras?.find(
+        (v) => v.type == ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
+    );
 
     return (
         <form>

@@ -12,7 +12,7 @@ export function VerificationOfEmploymentSection2() {
         method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
     }: JotFormContextType = useContext(JotformContext);
     const { t } = useTranslation();
-    const current_employer = applicantExtras?.find(
+    const current_employer =  applicant?.extras?.find(
         (v) => v.type == ApplicantExtras.CURRENT_EMPLOYER
     );
     return (

@@ -10,7 +10,7 @@ export default function AuthBackgroundInvestigation() {
     }: JotFormContextType = useContext(JotformContext);
     const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE)
     const { t } = useTranslation();
-    const date = applicantExtras?.find(d => d?.type === ApplicantExtras?.DISCLOSURE_AND_AUTHORIZATION_DATE)
+    const date =applicant?.extras?.find(d => d?.type === ApplicantExtras?.DISCLOSURE_AND_AUTHORIZATION_DATE)
 
     return (
         <form>

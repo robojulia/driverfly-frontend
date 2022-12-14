@@ -77,10 +77,10 @@ const pageOne = () => {
 	// return <BackgroundInfoAttachment />; No need as per Talha
 	// return <DisclosureAttachment/>
 	// return <ConsentAlcoholDrug/>
-	return <VerificationOfEmploymentSection1/>
+	// return <VerificationOfEmploymentSection1/>
 	// return <VerificationOfEmploymentSection2/>
 	// return <BackgroundReportsPsp/> Duplicated page
-	// return <AuthBackgroundInvestigation /> 
+	return <AuthBackgroundInvestigation /> 
 };
 function t(arg0: string): import("react-toastify").ToastContent {
 	throw new Error("Function not implemented.");
