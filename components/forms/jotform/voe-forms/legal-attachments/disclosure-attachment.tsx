@@ -11,7 +11,7 @@ export default function DisclosureAttachment() {
     const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE)
 
     const { t } = useTranslation();
-    const date = applicantExtras?.find(d => d?.type === ApplicantExtras?.DISCLOSURE_AND_AUTHORIZATION_DATE)
+    const date = applicantExtras?.find(d => d?.type === ApplicantExtras?.IMPORTANT_DISCLOSURE_BACKGROUND_DATE)
     return (
         <form>
             <div className="Row">
