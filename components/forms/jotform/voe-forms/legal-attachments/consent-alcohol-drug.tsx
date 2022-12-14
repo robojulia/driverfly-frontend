@@ -10,6 +10,7 @@ export default function ConsentAlcoholDrug() {
         state: { applicantExtras, applicant }
     }: JotFormContextType = useContext(JotformContext);
     const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE)
+    const generalConsent = applicant?.extras?.find(consent => consent?.type === ApplicantExtras.GENERAL_CONSENT)
     const { t } = useTranslation();
     return (
         <form>
@@ -26,25 +27,25 @@ export default function ConsentAlcoholDrug() {
             <div className="Row" style={{ textAlign: 'left', marginBottom: '20px' }}>
                 <div className="Col">
                     <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>Name:</p>
-                    <p style={{ color: 'black', display: 'inline' }}>Test name</p>
+                    <p style={{ color: 'black', display: 'inline' }}>{` ${applicant?.first_name} ${applicant?.last_name}`}</p>
                 </div>
             </div>
             <div className="Row" style={{ textAlign: 'left', marginBottom: '20px' }}>
                 <div className="Col">
                     <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>Employer's Name:</p>
-                    <p style={{ color: 'black', display: 'inline' }}>Nautilus Trucking</p>
+                    <p style={{ color: 'black', display: 'inline' }}>{` ${generalConsent?.value?.employer_name}`}</p>
                 </div>
             </div>
             <div className="Row" style={{ textAlign: 'left', marginBottom: '20px' }}>
                 <div className="Col">
                     <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>CDL License Number:</p>
-                    <p style={{ color: 'black', display: 'inline' }}>12133445</p>
+                    <p style={{ color: 'black', display: 'inline' }}>{` ${generalConsent?.value?.cdl_license_number}`}</p>
                 </div>
             </div>
             <div className="Row" style={{ textAlign: 'left', marginBottom: '20px' }}>
                 <div className="Col">
                     <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>Expiration Date:</p>
-                    <p style={{ color: 'black', display: 'inline' }}>Friday, October 21, 2022</p>
+                    <p style={{ color: 'black', display: 'inline' }}>{` ${generalConsent?.value?.expiration_date}`}</p>
                 </div>
             </div>
             <div className="Row">
