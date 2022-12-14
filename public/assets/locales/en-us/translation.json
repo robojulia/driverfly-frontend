@@ -1781,6 +1781,7 @@
   "SUBMIT_THIS_FORM": "Submit this form",
   "ROUTES": "Routes",
   "THANK_YOU": "THANK YOU!",
-  "SUBMITTED_YOUR_FORM": "Your Form has been submitted successfully."
+  "SUBMITTED_YOUR_FORM": "Your Form has been submitted successfully.",
+  "cdl_number_details":"CDL details"
 
 }

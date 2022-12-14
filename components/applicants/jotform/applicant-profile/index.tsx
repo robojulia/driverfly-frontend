@@ -95,7 +95,7 @@ export default function ApplicantExtrasDetails({
 							<ViewDetails
 								default={t("NOT_ANSWERED")}
 								obj={{
-									Authorize_to_Communicate: authToCommunicate?.value,
+									Authorize_to_Communicate: authToCommunicate?.value && t(`BooleanPreferenceType.${authToCommunicate?.value}`),
 									hear_about_us: hear_about_us?.value,
 									job_apply_date: job_apply_date?.value,
 									qualified_for_manual_transmission:
@@ -169,7 +169,7 @@ export default function ApplicantExtrasDetails({
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
 							obj={{
-								W2_requirements: w2_employment?.value && t(`BooleanPreferenceType.${w2_employment.value}`)
+								W2_requirements: w2_employment?.value && t(`BooleanPreferenceType.${w2_employment?.value}`)
 							}}
 						/>
 					</Row>
@@ -188,7 +188,7 @@ export default function ApplicantExtrasDetails({
 							number_of_fatalaties: "number_of_fatalaties",
 							number_of_injured: "number_of_injured",
 						}}
-						items={accident_details.value.map((a) => ({
+						items={accident_details?.value?.map((a) => ({
 							at_fault: !!a?.at_fault ? `${t("YES")}` : `${t("NO")}`,
 							date_of_accident: a?.date_of_accident,
 							dot_recordable: !!a?.dot_recordable
@@ -225,7 +225,7 @@ export default function ApplicantExtrasDetails({
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
 							obj={{
-								authorize: current_employer?.value?.authorize,
+								// authorize: current_employer?.value?.authorize,
 								city: current_employer?.value?.city,
 								CURRENT_COMPANY_EMAIL:
 									current_employer?.value?.current_company_email,
@@ -244,8 +244,8 @@ export default function ApplicantExtrasDetails({
 									current_employer?.value
 										?.current_company_street_address_line_2,
 								zip_code: current_employer?.value?.current_company_zipcode,
-								fcr: current_employer?.value?.fcr,
-								fmcsr: current_employer?.value?.fmcsr,
+								fcr: current_employer?.value?.fcr && t(`BooleanPreferenceType.${current_employer?.value?.fcr}`) ,
+								fmcsr: current_employer?.value?.fmcsr && t(`BooleanPreferenceType.${current_employer?.value?.fmcsr}`) ,
 								START_DATE: current_employer?.value?.start_date,
 								state: current_employer?.value?.state,
 							}}
@@ -257,11 +257,11 @@ export default function ApplicantExtrasDetails({
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
 							obj={{
-								authorize: past_employer?.value?.authorize,
+								// authorize: past_employer?.value?.authorize,
 								city: past_employer?.value?.city,
 								END_DATE: past_employer?.value?.end_date,
-								fcr: past_employer?.value?.fcr,
-								fmcsr: past_employer?.value?.authorize,
+								fcr: past_employer?.value?.fcr && t(`BooleanPreferenceType.${past_employer?.value?.fcr}`) ,
+								fmcsr: past_employer?.value?.fmcsr  && t(`BooleanPreferenceType.${past_employer?.value?.fmcsr}`) ,
 								PREVIOUS_COMPANY_EMAIL: past_employer?.value.fmcsr,
 								PREVIOUS_MANAGER_NAME:
 									past_employer?.value?.previous_company_email,
