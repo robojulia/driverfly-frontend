@@ -77,8 +77,8 @@ const pageOne = () => {
 	// return <BackgroundInfoAttachment />; No need as per Talha
 	// return <DisclosureAttachment/>
 	// return <ConsentAlcoholDrug/>
-	// return <VerificationOfEmploymentSection1/>
-	return <VerificationOfEmploymentSection2/>
+	return <VerificationOfEmploymentSection1/>
+	// return <VerificationOfEmploymentSection2/>
 	// return <BackgroundReportsPsp/> Duplicated page
 	// return <AuthBackgroundInvestigation /> 
 };

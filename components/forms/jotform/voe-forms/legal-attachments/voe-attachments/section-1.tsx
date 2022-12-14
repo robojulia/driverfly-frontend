@@ -11,10 +11,10 @@ export function VerificationOfEmploymentSection1() {
         method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
     }: JotFormContextType = useContext(JotformContext);
     const { t } = useTranslation();
-    const current_employer = applicantExtras?.find(
+    const current_employer = applicant?.extras?.find(
         (v) => v.type == ApplicantExtras.CURRENT_EMPLOYER
     );
-    const date = applicantExtras?.find(d => d?.type === ApplicantExtras?.EMPLOYEE_SS_OR_ID)
+    const social_security_number = applicantExtras?.find(d => d?.type === ApplicantExtras?.EMPLOYEE_SS_OR_ID)
 
     return (
         <>
@@ -45,7 +45,7 @@ export function VerificationOfEmploymentSection1() {
             <div className='Row' style={{ textAlign: 'left', marginBottom: '20px' }}>
                 <div className='Col'>
                     <p style={{ color: 'black', fontWeight: '100', display: 'inline' }}>{t("EMPLOYEE_SS_OR_ID:")}</p>
-                    <p style={{ color: 'black', display: 'inline' }}>{date?.value ? date?.value : ` ${t("NULL")}`}</p>
+                    <p style={{ color: 'black', display: 'inline' }}>{social_security_number?.value ? social_security_number?.value : ` ${t("NULL")}`}</p>
                 </div>
             </div>
             <Row className={styles.align__text_left}>
