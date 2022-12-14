@@ -8,6 +8,8 @@ import AuthBackgroundInvestigation from "../../../components/forms/jotform/voe-f
 import { BackgroundInfoAttachment } from "../../../components/forms/jotform/voe-forms/legal-attachments/background-info-attachement";
 import ApplicantApi from "../../api/applicant";
 import DisclosureAttachment from "../../../components/forms/jotform/voe-forms/legal-attachments/disclosure-attachment";
+import ConsentAlcoholDrug from "../../../components/forms/jotform/voe-forms/legal-attachments/consent-alcohol-drug";
+import BackgroundReportsPsp from "../../../components/forms/jotform/voe-forms/legal-attachments/background-reports-psp";
 
 
 export interface LegalFormProps {
@@ -70,11 +72,11 @@ export default function jotFormLongForm({ entity }: LegalFormProps) {
 }
 
 const pageOne = () => {
-	// return <BackgroundInfoAttachment />;
-	return <DisclosureAttachment/>
+	// return <BackgroundInfoAttachment />; No need as per Talha
+	// return <DisclosureAttachment/>
 	// return <ConsentAlcoholDrug/>
-	// return <BackgroundReportsPsp/>
-	// return <AuthBackgroundInvestigation />
+	// return <BackgroundReportsPsp/> Duplicated page
+	return <AuthBackgroundInvestigation />
 };
 function t(arg0: string): import("react-toastify").ToastContent {
 	throw new Error("Function not implemented.");

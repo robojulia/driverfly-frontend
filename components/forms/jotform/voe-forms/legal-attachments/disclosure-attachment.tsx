@@ -8,6 +8,7 @@ export default function DisclosureAttachment() {
     const {
         state: { applicantExtras, applicant }
     }: JotFormContextType = useContext(JotformContext);
+    const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE)
 
     const { t } = useTranslation();
     const date = applicantExtras?.find(d => d?.type === ApplicantExtras?.DISCLOSURE_AND_AUTHORIZATION_DATE)
@@ -118,7 +119,10 @@ export default function DisclosureAttachment() {
             <div className='Row' style={{ textAlign: 'left', marginBottom: '20px' }}>
                 <div className='Col'>
                     <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>{t("SIGNATURE:")}</p>
-                    <p style={{ color: 'black', display: 'inline' }}>Signature goes here</p>
+                </div>
+                <div className="Row" style={{ marginTop: '10px', marginBottom: '30px' }}>
+                    <img src={signature?.value} style={{ width: '300px', height: '200px', border: '1px solid black' }} alt="image" />
+
                 </div>
             </div>
             <div className='Row' style={{ textAlign: 'left', marginBottom: '20px' }}>

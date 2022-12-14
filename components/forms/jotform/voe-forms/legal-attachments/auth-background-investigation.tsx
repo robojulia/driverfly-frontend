@@ -1,6 +1,15 @@
+import { useContext } from "react";
+import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
+import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
+import { useTranslation } from "../../../../../hooks/use-translation";
 
 
 export default function AuthBackgroundInvestigation() {
+    const {
+        state: { applicantExtras, applicant }
+    }: JotFormContextType = useContext(JotformContext);
+    const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE)
+    const { t } = useTranslation();
     return (
         <form>
             <div className='Row'>
@@ -37,7 +46,10 @@ export default function AuthBackgroundInvestigation() {
             <div className='Row' style={{ textAlign: 'left', marginBottom: '20px' }}>
                 <div className='Col'>
                     <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>Signature</p>
-                    <p style={{ color: 'black', display: 'inline' }}>Signature goes here</p>
+                </div>
+                <div className="Row" style={{ marginTop: '10px', marginBottom: '30px' }}>
+                    <img src={signature?.value} style={{ width: '300px', height: '200px', border: '1px solid black' }} alt="image" />
+
                 </div>
             </div>
             <div className='Row' style={{ textAlign: 'left', marginBottom: '20px' }}>
