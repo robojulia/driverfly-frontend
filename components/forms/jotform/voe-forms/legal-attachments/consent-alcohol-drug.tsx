@@ -1,7 +1,16 @@
 import styles from "../../../../../styles/jotform.module.css";
 import { Col, Row } from 'react-bootstrap';
+import { useTranslation } from "../../../../../hooks/use-translation";
+import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
+import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
+import { useContext } from "react";
 
 export default function ConsentAlcoholDrug() {
+    const {
+        state: { applicantExtras, applicant }
+    }: JotFormContextType = useContext(JotformContext);
+    const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE)
+    const { t } = useTranslation();
     return (
         <form>
             <div className="Row">
@@ -50,8 +59,9 @@ export default function ConsentAlcoholDrug() {
             <div className="Row" style={{ marginTop: '30px' }}>
                 <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>Employee Signature</p>
             </div>
-            <div className="Row" style={{ marginTop: '100px', marginBottom: '30px' }}>
-                <p style={{ color: 'black', display: 'inline' }}>Signature goes here</p>
+            <div className="Row" style={{ marginTop: '10px', marginBottom: '30px' }}>
+                <img src={signature?.value} style={{ width: '300px', height: '200px', border: '1px solid black' }} alt="image" />
+
             </div>
             <div className="Row" style={{ textAlign: 'left', marginBottom: '20px' }}>
                 <div className="Col">
