@@ -61,9 +61,9 @@ export default function jotFormLongForm({ entity }: LegalFormProps) {
 				},
 			}}
 		>
-			<div className={styles.container}>
+			<div>
 				<div className={styles.main}>
-					<div className={styles.main_form}>
+					<div style={{ padding: '30px' }}>
 						{getPageAccordingToStep(steps)}
 					</div>
 				</div>
