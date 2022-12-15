@@ -78,25 +78,27 @@ export function PastEmploymentHistory() {
 				</Row>
 				{!!form?.values?.is_previous_employed && (
 					<>
-						<div className="mt-4 float-left d-flex justify-left pl-3">
-							<Button
-								size="sm"
-								onClick={() =>
-									form.setFieldValue("PAST_EMPLOYER.value", [
-										...(form.values?.PAST_EMPLOYER?.value || []),
-										new PastEmploymentHistoryExtraDto(),
-									])
-								}
-							>
-								<PlusCircle /> {t("TITLE_ADD_ACCIDENT_DETAILS")}
-							</Button>
-						</div>
+						<Row className="mt-4 pl-3">
+							<Col className="p-0">
+								<Button
+									size="sm"
+									onClick={() =>
+										form.setFieldValue("PAST_EMPLOYER.value", [
+											...(form.values?.PAST_EMPLOYER?.value || []),
+											new PastEmploymentHistoryExtraDto(),
+										])
+									}
+								>
+									<PlusCircle /> {t("ADD_PAST_EMPLOYMENT_HISTORY")}
+								</Button>
+							</Col>
+						</Row>
 
 						{form?.values?.PAST_EMPLOYER?.value?.length > 0 &&
 							<>
 								{form?.values?.PAST_EMPLOYER?.value?.map((entity, i) => (
 									<Row key={i}>
-										<div >
+										<div className="py-3">
 											<Row>
 												<BaseCheck
 													className="mt-3 col-md-6 float-left"
@@ -241,6 +243,7 @@ export function PastEmploymentHistory() {
 										>
 											<DashCircle className="mt-3" color="red" />
 										</a>
+										<div className='Row' style={{ height: '3px', borderBottom: 'solid 2px #8d8c8c', marginTop: '15px' }}></div >
 									</Row>
 								))}
 							</>
