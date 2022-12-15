@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
-import styles from "../../../styles/jotform.module.css";
-import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
+import styles from "../../../../styles/jotform.module.css";
+import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import "react-toastify/dist/ReactToastify.css";
-import jotformContext from "../../../context/jotform-context";
-import { ApplicantExtrasEntity } from "../../../models/applicant/applicant-extras.entity";
-import AuthBackgroundInvestigation from "../../../components/forms/jotform/voe-forms/legal-attachments/auth-background-investigation";
-import { BackgroundInfoAttachment } from "../../../components/forms/jotform/voe-forms/legal-attachments/background-info-attachement";
-import ApplicantApi from "../../api/applicant";
-import DisclosureAttachment from "../../../components/forms/jotform/voe-forms/legal-attachments/disclosure-attachment";
-import ConsentAlcoholDrug from "../../../components/forms/jotform/voe-forms/legal-attachments/consent-alcohol-drug";
-import BackgroundReportsPsp from "../../../components/forms/jotform/voe-forms/legal-attachments/background-reports-psp";
-import { VerificationOfEmploymentSection1 } from "../../../components/forms/jotform/voe-forms/legal-attachments/voe-attachments/section-1";
-import { VerificationOfEmploymentSection2 } from "../../../components/forms/jotform/voe-forms/legal-attachments/voe-attachments/section-2";
+import jotformContext from "../../../../context/jotform-context";
+import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import AuthBackgroundInvestigation from "../../../../components/forms/jotform/voe-forms/legal-attachments/auth-background-investigation";
+import { BackgroundInfoAttachment } from "../../../../components/forms/jotform/voe-forms/legal-attachments/background-info-attachement";
+import ApplicantApi from "../../../api/applicant";
+import DisclosureAttachment from "../../../../components/forms/jotform/voe-forms/legal-attachments/disclosure-attachment";
+import ConsentAlcoholDrug from "../../../../components/forms/jotform/voe-forms/legal-attachments/consent-alcohol-drug";
+import { VerificationOfEmploymentSection1 } from "../../../../components/forms/jotform/voe-forms/legal-attachments/voe-attachments/section-1";
+import { VerificationOfEmploymentSection2 } from "../../../../components/forms/jotform/voe-forms/legal-attachments/voe-attachments/section-2";
 
 
 export interface LegalFormProps {
@@ -75,12 +74,11 @@ export default function jotFormLongForm({ entity }: LegalFormProps) {
 
 const pageOne = () => {
 	// return <BackgroundInfoAttachment />; No need as per Talha
-	// return <DisclosureAttachment/>
+	return <DisclosureAttachment/>
 	// return <ConsentAlcoholDrug/>
 	// return <VerificationOfEmploymentSection1/>
-	return <VerificationOfEmploymentSection2 />
-	// return <BackgroundReportsPsp/> Duplicated page
-	// return <AuthBackgroundInvestigation /> 
+	// return <VerificationOfEmploymentSection2/>
+	// return <AuthBackgroundInvestigation />
 };
 function t(arg0: string): import("react-toastify").ToastContent {
 	throw new Error("Function not implemented.");
