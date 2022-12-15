@@ -45,7 +45,7 @@ export default function jotFormLongForm({ entity }: LegalFormProps) {
 	useEffect(() => {
 		console.log("applicant from server side props", entity)
 		setApplicant(entity)
-	},[])
+	}, [])
 	return (
 		<jotformContext.Provider
 			value={{
@@ -62,9 +62,9 @@ export default function jotFormLongForm({ entity }: LegalFormProps) {
 				},
 			}}
 		>
-			<div className={styles.container}>
+			<div>
 				<div className={styles.main}>
-					<div className={styles.main_form}>
+					<div style={{ padding: '30px' }}>
 						{getPageAccordingToStep(steps)}
 					</div>
 				</div>
@@ -78,9 +78,9 @@ const pageOne = () => {
 	// return <DisclosureAttachment/>
 	// return <ConsentAlcoholDrug/>
 	// return <VerificationOfEmploymentSection1/>
-	// return <VerificationOfEmploymentSection2/>
+	return <VerificationOfEmploymentSection2 />
 	// return <BackgroundReportsPsp/> Duplicated page
-	return <AuthBackgroundInvestigation /> 
+	// return <AuthBackgroundInvestigation /> 
 };
 function t(arg0: string): import("react-toastify").ToastContent {
 	throw new Error("Function not implemented.");
