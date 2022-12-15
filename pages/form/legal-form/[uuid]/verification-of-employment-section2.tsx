@@ -4,21 +4,14 @@ import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import "react-toastify/dist/ReactToastify.css";
 import jotformContext from "../../../../context/jotform-context";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
-import AuthBackgroundInvestigation from "../../../../components/forms/jotform/voe-forms/legal-attachments/auth-background-investigation";
-import { BackgroundInfoAttachment } from "../../../../components/forms/jotform/voe-forms/legal-attachments/background-info-attachement";
 import ApplicantApi from "../../../api/applicant";
-import DisclosureAttachment from "../../../../components/forms/jotform/voe-forms/legal-attachments/disclosure-attachment";
-import ConsentAlcoholDrug from "../../../../components/forms/jotform/voe-forms/legal-attachments/consent-alcohol-drug";
-import { VerificationOfEmploymentSection1 } from "../../../../components/forms/jotform/voe-forms/legal-attachments/voe-attachments/section-1";
 import { VerificationOfEmploymentSection2 } from "../../../../components/forms/jotform/voe-forms/legal-attachments/voe-attachments/section-2";
-
 
 export interface LegalFormProps {
 	entity: ApplicantEntity
 }
 
-
-export default function jotFormLongForm({ entity }: LegalFormProps) {
+export default function VerificationOfEmploymentSection2Page({ entity }: LegalFormProps) {
 
 	const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
 	const [applicantExtras, setApplicantExtras] = useState<ApplicantExtrasEntity[]>([]);
@@ -73,12 +66,7 @@ export default function jotFormLongForm({ entity }: LegalFormProps) {
 }
 
 const pageOne = () => {
-	// return <BackgroundInfoAttachment />; No need as per Talha
-	return <DisclosureAttachment/>
-	// return <ConsentAlcoholDrug/>
-	// return <VerificationOfEmploymentSection1/>
-	// return <VerificationOfEmploymentSection2/>
-	// return <AuthBackgroundInvestigation />
+	return <VerificationOfEmploymentSection2 />
 };
 function t(arg0: string): import("react-toastify").ToastContent {
 	throw new Error("Function not implemented.");
