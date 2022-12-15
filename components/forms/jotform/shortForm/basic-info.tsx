@@ -12,6 +12,8 @@ import JotformContext, { JotFormContextType } from "../../../../context/jotform-
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import { BooleanTypeExtra } from "../../../../enums/jotform/bool-and-not-sure.enum";
+import ApplicantApi from "../../../../pages/api/applicant";
+import { LoaderIcon } from "../../../loading/loader-icon";
 
 
 export function BasicInfo() {
@@ -25,21 +27,27 @@ export function BasicInfo() {
 	const form = useFormik({
 		initialValues: new ContactDto(),
 		validationSchema: ContactDto.yupSchema(),
-		onSubmit: (values) => {
+		onSubmit: async (values, { setErrors }) => {
+			console.log("values", values);
 			try {
-				console.log("values", values);
 				const { email, phone, zip_code, AUTHORIZE_TO_COMMUNICATE } = values;
+				const applicantApi = new ApplicantApi()
+				const applicantExists = await applicantApi.searchByPublic({ email })
 
-				setApplicant({
-					...applicant,
-					email,
-					phone,
-					zip_code,
-				});
+				if (applicantExists) {
+					setErrors({ email: 'EMAIL_ALREADY_EXISTS' })
+				} else {
+					setApplicant({
+						...applicant,
+						email,
+						phone,
+						zip_code,
+					});
 
-				updateApplicantExtras(AUTHORIZE_TO_COMMUNICATE);
+					updateApplicantExtras(AUTHORIZE_TO_COMMUNICATE);
 
-				stepNext();
+					stepNext();
+				}
 			} catch (error) {
 				console.log("error", error);
 			}
@@ -118,8 +126,12 @@ export function BasicInfo() {
 					</Col>
 
 					<Col>
-						<Button className="float-left theme-secondary-btn" type="submit">
-							{t("NEXT")}
+						<Button
+							disabled={form.isValidating || form.isSubmitting || !form.isValid}
+							className="float-left theme-secondary-btn"
+							type="submit"
+						>
+							{t("NEXT")} <LoaderIcon isLoading={!!form?.isSubmitting} />
 						</Button>
 					</Col>
 				</Row>
