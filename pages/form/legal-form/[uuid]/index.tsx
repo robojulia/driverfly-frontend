@@ -74,8 +74,8 @@ export default function jotFormLongForm({ entity }: LegalFormProps) {
 
 const pageOne = () => {
 	// return <BackgroundInfoAttachment />; No need as per Talha
-	return <DisclosureAttachment/>
-	// return <ConsentAlcoholDrug/>
+	// return <DisclosureAttachment/>
+	return <ConsentAlcoholDrug/>
 	// return <VerificationOfEmploymentSection1/>
 	// return <VerificationOfEmploymentSection2/>
 	// return <AuthBackgroundInvestigation />
