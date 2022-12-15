@@ -32,10 +32,13 @@ export function BasicInfo() {
 			try {
 				const { email, phone, zip_code, AUTHORIZE_TO_COMMUNICATE } = values;
 				const applicantApi = new ApplicantApi()
-				const applicantExists = await applicantApi.searchByPublic({ email })
+				const applicantEmailExists = await applicantApi.searchByPublic({ email })
+				const applicantPhoneExists = await applicantApi.searchByPublic({ phone })
 
-				if (applicantExists) {
+				if (applicantEmailExists) {
 					setErrors({ email: 'EMAIL_ALREADY_EXISTS' })
+				} else if (applicantPhoneExists) {
+					setErrors({ phone: 'ALREADY_EXISTS' })
 				} else {
 					setApplicant({
 						...applicant,
