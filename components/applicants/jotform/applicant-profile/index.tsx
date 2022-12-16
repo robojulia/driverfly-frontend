@@ -1,6 +1,6 @@
 import { Col, Row } from "react-bootstrap";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "../../../../hooks/use-translation";
 import ViewDetails from "../../../view-details/view-details";
 import ViewCard from "../../../view-details/view-card";
@@ -86,6 +86,10 @@ export default function ApplicantExtrasDetails({
 	const general_consent = applicant.extras.find(
 		(ex) => ex?.type === ApplicantExtras.GENERAL_CONSENT
 	);
+	useEffect(() => {
+		past_employer.value.map(v => console.log("lksjdkasjdas", v))
+	}, [])
+
 	return (
 		<>
 			<Row>
@@ -296,18 +300,19 @@ export default function ApplicantExtrasDetails({
 							state: "state"
 						}}
 						items={past_employer?.value.map((v) => ({
-							city: v?.past_employer?.value?.city,
-							END_DATE: v?.past_employer?.value?.end_date,
-							fcr: v?.past_employer?.value?.fcr && t(`BooleanPreferenceType.${past_employer?.value?.fcr}`),
-							fmcsr: v?.past_employer?.value?.fmcsr && t(`BooleanPreferenceType.${past_employer?.value?.fmcsr}`),
-							PREVIOUS_COMPANY_EMAIL: v?.past_employer?.value.fmcsr,
-							PREVIOUS_MANAGER_NAME: v?.past_employer?.value?.previous_company_email,
-							PREVIOUS_COMPANY_PHONE_NUMBER: v?.past_employer?.value?.previous_company_phone_number,
-							PREVIOUS_COMPANY_ADDRESS_1: v?.past_employer?.value?.previous_company_street_address_line_1,
-							PREVIOUS_COMPANY_ADDRESS_2: v?.past_employer?.value?.previous_company_street_address_line_2,
-							zip_code: v?.past_employer?.value?.previous_company_zipcode,
-							START_DATE: v?.past_employer?.value?.start_date,
-							state: v?.past_employer?.value?.state,
+							city: v?.city,
+							END_DATE: v?.end_date,
+							fcr: v?.fcr && t(`BooleanPreferenceType.${v.fcr}`),
+							fmcsr: v?.fmcsr && t(`BooleanPreferenceType.${v.fmcsr}`),
+							PREVIOUS_COMPANY_EMAIL: v?.previous_company_email,
+							PREVIOUS_MANAGER_NAME: v?.previous_company_manager_name,
+							PREVIOUS_COMPANY_PHONE_NUMBER: v?.previous_company_phone_number,
+							PREVIOUS_COMPANY_ADDRESS_1: v?.previous_company_street_address_line_1,
+							PREVIOUS_COMPANY_ADDRESS_2: v?.previous_company_street_address_line_2,
+							zip_code: v?.previous_company_zipcode,
+							START_DATE: v?.start_date,
+							state: v?.state,
+
 						}))}
 					/>
 				</ViewCard>
