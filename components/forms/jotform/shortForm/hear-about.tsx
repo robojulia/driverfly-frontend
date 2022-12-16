@@ -13,6 +13,7 @@ import BaseInput from "../../base-input";
 import ApplicantApi from "../../../../pages/api/applicant";
 import { toast, ToastContainer } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
+import { LoaderIcon } from "../../../loading/loader-icon";
 
 
 export function HearAbout() {
@@ -32,15 +33,15 @@ export function HearAbout() {
 			updateApplicantExtras(HEAR_ABOUT_US);
 			try {
 				const filtered_extras = applicantExtras?.filter((v) => !!v.value);
-				const response = await applicantApi.jotform.create({
+				const { id } = await applicantApi.jotform.create({
 					applicant,
 					applicantExtras: filtered_extras,
 				});
 				setApplicant({
 					...applicant,
-					id: response.id,
+					id,
 				});
-				
+
 				stepNext();
 
 			} catch (error) {
@@ -67,7 +68,7 @@ export function HearAbout() {
 
 	return (
 		<>
-			
+
 			<form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row>
 					<h4 className={styles.heading__sty}>
@@ -103,8 +104,12 @@ export function HearAbout() {
 					</Col>
 
 					<Col>
-						<Button className="float-md-left float-right" type="submit">
-							{t("CONTINUE_APPLICATION")}
+						<Button
+							disabled={form.isValidating || form.isSubmitting || !form.isValid}
+							className="float-md-left float-right"
+							type="submit"
+						>
+							{t("SUBMIT")} <LoaderIcon isLoading={!!form?.isSubmitting} />
 						</Button>
 					</Col>
 				</Row>

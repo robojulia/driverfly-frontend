@@ -14,6 +14,7 @@ import ApplicantApi from "../../../../pages/api/applicant";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { LoaderIcon } from "../../../loading/loader-icon";
 
 
 export function SubmitMissingDocuments() {
@@ -78,8 +79,12 @@ export function SubmitMissingDocuments() {
 					</Col>
 
 					<Col>
-						<Button className="float-left" type="submit">
-							{t("SUBMIT")}
+						<Button
+							disabled={form.isValidating || form.isSubmitting || !form.isValid}
+							className="float-left"
+							type="submit"
+						>
+							{t("SUBMIT")} <LoaderIcon isLoading={!!form?.isSubmitting} />
 						</Button>
 					</Col>
 				</Row>

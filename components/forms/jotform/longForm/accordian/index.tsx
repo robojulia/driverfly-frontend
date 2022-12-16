@@ -16,6 +16,7 @@ import { ImportantDisclosureBackgroundPsp } from "./important-disclosure-backgro
 import { GeneralConsentQueries } from "./general-consent-queries";
 import SignatureCanvas from "react-signature-canvas";
 import styles from "../../../../../styles/jotform.module.css";
+import { LoaderIcon } from "../../../../loading/loader-icon";
 
 export function AccordianPage() {
 
@@ -166,8 +167,12 @@ export function AccordianPage() {
 					</Col>
 
 					<Col>
-						<Button className="float-left" type="submit">
-							{t("SUBMIT")}
+						<Button
+							disabled={form.isValidating || form.isSubmitting || !form.isValid}
+							className="float-left"
+							type="submit"
+						>
+							{t("SUBMIT")}<LoaderIcon isLoading={!!form?.isSubmitting} />
 						</Button>
 					</Col>
 				</Row>
