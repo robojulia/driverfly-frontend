@@ -220,7 +220,7 @@ export default function ApplicantExtrasDetails({
 				</ViewCard>
 			</Row>
 			<Row>
-				<Col md="6">
+				<Col md="12">
 					<ViewCard title="CURRENT_EMPLOYER">
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
@@ -244,15 +244,15 @@ export default function ApplicantExtrasDetails({
 									current_employer?.value
 										?.current_company_street_address_line_2,
 								zip_code: current_employer?.value?.current_company_zipcode,
-								fcr: current_employer?.value?.fcr && t(`BooleanPreferenceType.${current_employer?.value?.fcr}`) ,
-								fmcsr: current_employer?.value?.fmcsr && t(`BooleanPreferenceType.${current_employer?.value?.fmcsr}`) ,
+								fcr: current_employer?.value?.fcr && t(`BooleanPreferenceType.${current_employer?.value?.fcr}`),
+								fmcsr: current_employer?.value?.fmcsr && t(`BooleanPreferenceType.${current_employer?.value?.fmcsr}`),
 								START_DATE: current_employer?.value?.start_date,
 								state: current_employer?.value?.state,
 							}}
 						/>
 					</ViewCard>
 				</Col>
-				<Col md="6">
+				{/* <Col md="6">
 					<ViewCard title="PAST_EMPLOYER">
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
@@ -260,8 +260,8 @@ export default function ApplicantExtrasDetails({
 								// authorize: past_employer?.value?.authorize,
 								city: past_employer?.value?.city,
 								END_DATE: past_employer?.value?.end_date,
-								fcr: past_employer?.value?.fcr && t(`BooleanPreferenceType.${past_employer?.value?.fcr}`) ,
-								fmcsr: past_employer?.value?.fmcsr  && t(`BooleanPreferenceType.${past_employer?.value?.fmcsr}`) ,
+								fcr: past_employer?.value?.fcr && t(`BooleanPreferenceType.${past_employer?.value?.fcr}`),
+								fmcsr: past_employer?.value?.fmcsr && t(`BooleanPreferenceType.${past_employer?.value?.fmcsr}`),
 								PREVIOUS_COMPANY_EMAIL: past_employer?.value.fmcsr,
 								PREVIOUS_MANAGER_NAME:
 									past_employer?.value?.previous_company_email,
@@ -277,7 +277,40 @@ export default function ApplicantExtrasDetails({
 							}}
 						/>
 					</ViewCard>
-				</Col>
+				</Col> */}
+				<ViewCard title="PAST_EMPLOYER">
+					<ViewTable
+						type="PAST_EMPLOYER"
+						headers={{
+							city: "city",
+							END_DATE: "END_DATE",
+							fcr: "fcr",
+							fmcsr: "fmcsr",
+							PREVIOUS_COMPANY_EMAIL: "PREVIOUS_COMPANY_EMAIL",
+							PREVIOUS_MANAGER_NAME: "PREVIOUS_MANAGER_NAME",
+							PREVIOUS_COMPANY_PHONE_NUMBER: "PREVIOUS_COMPANY_PHONE_NUMBER",
+							PREVIOUS_COMPANY_ADDRESS_1: "PREVIOUS_COMPANY_ADDRESS_1",
+							PREVIOUS_COMPANY_ADDRESS_2: "PREVIOUS_COMPANY_ADDRESS_2",
+							zip_code: "zip_code",
+							START_DATE: "START_DATE",
+							state: "state"
+						}}
+						items={past_employer?.value.map((v) => ({
+							city: v?.past_employer?.value?.city,
+							END_DATE: v?.past_employer?.value?.end_date,
+							fcr: v?.past_employer?.value?.fcr && t(`BooleanPreferenceType.${past_employer?.value?.fcr}`),
+							fmcsr: v?.past_employer?.value?.fmcsr && t(`BooleanPreferenceType.${past_employer?.value?.fmcsr}`),
+							PREVIOUS_COMPANY_EMAIL: v?.past_employer?.value.fmcsr,
+							PREVIOUS_MANAGER_NAME: v?.past_employer?.value?.previous_company_email,
+							PREVIOUS_COMPANY_PHONE_NUMBER: v?.past_employer?.value?.previous_company_phone_number,
+							PREVIOUS_COMPANY_ADDRESS_1: v?.past_employer?.value?.previous_company_street_address_line_1,
+							PREVIOUS_COMPANY_ADDRESS_2: v?.past_employer?.value?.previous_company_street_address_line_2,
+							zip_code: v?.past_employer?.value?.previous_company_zipcode,
+							START_DATE: v?.past_employer?.value?.start_date,
+							state: v?.past_employer?.value?.state,
+						}))}
+					/>
+				</ViewCard>
 			</Row>
 
 			<Row>
