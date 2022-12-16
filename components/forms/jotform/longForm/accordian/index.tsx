@@ -28,9 +28,13 @@ export function AccordianPage() {
 	const { t } = useTranslation();
 
 	let padRef = useRef<SignatureCanvas>(null);
-	const clearSignatureCanvas = () => padRef?.current?.clear();
 
-	const handleSignatureEnd = () => {
+	const clearSignatureCanvas = (): void => {
+		padRef?.current?.clear();
+		form.setFieldValue("SIGNATURE.value", null);
+	}
+
+	const handleSignatureEnd = (): void => {
 		const signatureValue = padRef?.current?.toDataURL()?.toString();
 		form.setFieldValue("SIGNATURE.value", signatureValue);
 	};
@@ -47,7 +51,8 @@ export function AccordianPage() {
 					applicant,
 					applicantExtras: filtered_extras,
 				});
-				stepNext()
+
+				// if (response) stepNext()
 			} catch (error) {
 				console.log(error);
 				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
@@ -153,10 +158,11 @@ export function AccordianPage() {
 						/>
 					</Col>
 					<Col md="3" className="d-flex align-self-center justify-content-center">
-						<button
+						<Button
+							type="button"
 							className="theme-secondary-btn "
 							onClick={clearSignatureCanvas}
-						>{t("CLEAR")}</button>
+						>{t("CLEAR")}</Button>
 					</Col>
 				</Row>
 				<Row className="mt-2">

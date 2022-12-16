@@ -13,12 +13,16 @@ import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-ex
 export function DriverApplication() {
 	const {
 		state: { applicant, applicantExtras },
-		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+		method: { setApplicant, updateApplicantExtras, stepNext },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 	let padRef = useRef<SignatureCanvas>(null);
-	const clearSignatureCanvas = () => padRef?.current?.clear();
+
+	const clearSignatureCanvas = (): void => {
+		padRef?.current?.clear();
+		form.setFieldValue("SIGNATURE.value", null);
+	}
 
 	const form = useFormik({
 		initialValues: new DriverApplicationDto(),
@@ -33,9 +37,6 @@ export function DriverApplication() {
 			} catch (error) {
 				console.log(error);
 			}
-		},
-		onReset: () => {
-			stepBack();
 		},
 	});
 
@@ -142,6 +143,7 @@ export function DriverApplication() {
 					</Col>
 					<Col md="3" className="d-flex align-self-center justify-content-center">
 						<button
+							type="button"
 							className="theme-secondary-btn "
 							onClick={clearSignatureCanvas}
 						>
@@ -150,11 +152,6 @@ export function DriverApplication() {
 					</Col>
 				</Row>
 				<Row className="mt-3">
-					{/* <Col>
-						<Button className="float-right" type="reset">
-							{t("BACK")}
-						</Button>
-					</Col> */}
 					<Col className="text-center">
 						<Button type="submit">
 							{t("NEXT")}

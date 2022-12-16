@@ -92,7 +92,7 @@ const getLongFormPages = (step: number): JSX.Element =>
 	17: <FelonyConviction />,
 	18: <DrugTest />,
 	19: <AccordianPage />,
-	27: <ThankyouPage />
+	20: <ThankyouPage />
 }[step]);
 
 const getMissingDocumentsPages = (step: number): JSX.Element =>
