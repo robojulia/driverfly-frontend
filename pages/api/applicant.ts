@@ -53,6 +53,18 @@ class ApplicantApi extends BaseApi {
 		return data;
 	}
 
+	async searchByPublic(
+		params: ApplicantEntity,
+		config?: AxiosRequestConfig
+	): Promise<any> {
+		const { data } = await this.get(
+			this.buildUrl(this.baseUrl + "/public-search", params),
+			config
+		);
+
+		return data;
+	}
+
 	async list(params?: {
 		jobId?: number;
 		email?: string;

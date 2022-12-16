@@ -14,12 +14,13 @@ import ApplicantApi from "../../../../pages/api/applicant";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { LoaderIcon } from "../../../loading/loader-icon";
 
 
 export function SubmitMissingDocuments() {
 	const {
-		state: { applicant, applicantExtras },
-		method: { setApplicant, stepNext, stepBack },
+		state: { applicant },
+		method: { stepNext, stepBack },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const isDriverLicense = (v: DocumentEntity): boolean =>
@@ -37,11 +38,11 @@ export function SubmitMissingDocuments() {
 			console.log("applicant.id", applicant.id);
 
 			try {
-				const filtered_extras = applicantExtras?.filter((v) => !!v.value);
 				const response = await applicantApi.jotform.update(applicant.id, {
 					applicant
 				})
-				toast.success(t("successfully_saved_information"));
+
+				stepNext()
 			} catch (error) {
 				console.log(error);
 				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
@@ -78,8 +79,12 @@ export function SubmitMissingDocuments() {
 					</Col>
 
 					<Col>
-						<Button className="float-left" type="submit">
-							{t("SUBMIT")}
+						<Button
+							disabled={form.isValidating || form.isSubmitting || !form.isValid}
+							className="float-left"
+							type="submit"
+						>
+							{t("SUBMIT")} <LoaderIcon isLoading={!!form?.isSubmitting} />
 						</Button>
 					</Col>
 				</Row>

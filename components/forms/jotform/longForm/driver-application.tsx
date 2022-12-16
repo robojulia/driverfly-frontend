@@ -13,12 +13,16 @@ import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-ex
 export function DriverApplication() {
 	const {
 		state: { applicant, applicantExtras },
-		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+		method: { setApplicant, updateApplicantExtras, stepNext },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 	let padRef = useRef<SignatureCanvas>(null);
-	const clearSignatureCanvas = () => padRef?.current?.clear();
+
+	const clearSignatureCanvas = (): void => {
+		padRef?.current?.clear();
+		form.setFieldValue("SIGNATURE.value", null);
+	}
 
 	const form = useFormik({
 		initialValues: new DriverApplicationDto(),
@@ -33,9 +37,6 @@ export function DriverApplication() {
 			} catch (error) {
 				console.log(error);
 			}
-		},
-		onReset: () => {
-			stepBack();
 		},
 	});
 
@@ -120,12 +121,13 @@ export function DriverApplication() {
 						type="date"
 						name="APPLY_DATE.value"
 						placeholder="DATE"
+						min={new Date().toISOString().split("T")[0]}
 						label="DATE"
 						formik={form}
 					/>
 				</Row>
 				<Row className={styles.align__text_left}>
-					<Col className="my-3">
+					<Col md="9" className="my-3">
 						<h6>{t("SIGNATURE")}</h6>
 						<SignatureCanvas
 							name="SIGNATURE.value"
@@ -139,23 +141,19 @@ export function DriverApplication() {
 							}}
 						/>
 					</Col>
-				</Row>
-				<Row>
-					<Col>
+					<Col md="3" className="d-flex align-self-center justify-content-center">
 						<button
+							type="button"
 							className="theme-secondary-btn "
 							onClick={clearSignatureCanvas}
-						>{t("CLEAR")}</button>
+						>
+							{t("CLEAR")}
+						</button>
 					</Col>
 				</Row>
 				<Row className="mt-3">
-					{/* <Col>
-						<Button className="float-right" type="reset">
-							{t("BACK")}
-						</Button>
-					</Col> */}
-					<Col>
-						<Button className="float-left" type="submit">
+					<Col className="text-center">
+						<Button type="submit">
 							{t("NEXT")}
 						</Button>
 					</Col>

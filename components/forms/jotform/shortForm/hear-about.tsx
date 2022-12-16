@@ -10,12 +10,16 @@ import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-ex
 import styles from "../../../../styles/jotform.module.css";
 import { HearAboutUsType } from "../../../../enums/jotform/hear-about-type.enum";
 import BaseInput from "../../base-input";
+import ApplicantApi from "../../../../pages/api/applicant";
+import { toast, ToastContainer } from "react-toastify";
+import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
+import { LoaderIcon } from "../../../loading/loader-icon";
 
 
 export function HearAbout() {
 	const {
-		state: { applicantExtras },
-		method: { updateApplicantExtras, stepNext, stepBack },
+		state: { applicantExtras, applicant },
+		method: { updateApplicantExtras, stepNext, stepBack, setApplicant },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
@@ -23,10 +27,27 @@ export function HearAbout() {
 	const form = useFormik({
 		initialValues: new HearAboutUsDto(),
 		validationSchema: HearAboutUsDto.yupSchema(),
-		onSubmit: (values) => {
+		onSubmit: async (values) => {
+			const applicantApi = new ApplicantApi();
 			const { HEAR_ABOUT_US } = values;
 			updateApplicantExtras(HEAR_ABOUT_US);
-			stepNext();
+			try {
+				const filtered_extras = applicantExtras?.filter((v) => !!v.value);
+				const { id } = await applicantApi.jotform.create({
+					applicant,
+					applicantExtras: filtered_extras,
+				});
+				setApplicant({
+					...applicant,
+					id,
+				});
+
+				stepNext();
+
+			} catch (error) {
+				console.log(error);
+				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
+			}
 		},
 		onReset: (values) => {
 			stepBack();
@@ -47,6 +68,7 @@ export function HearAbout() {
 
 	return (
 		<>
+
 			<form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row>
 					<h4 className={styles.heading__sty}>
@@ -82,8 +104,12 @@ export function HearAbout() {
 					</Col>
 
 					<Col>
-						<Button className="float-md-left float-right" type="submit">
-							{t("CONTINUE_APPLICATION")}
+						<Button
+							disabled={form.isValidating || form.isSubmitting || !form.isValid}
+							className="float-md-left float-right"
+							type="submit"
+						>
+							{t("SUBMIT")} <LoaderIcon isLoading={!!form?.isSubmitting} />
 						</Button>
 					</Col>
 				</Row>

@@ -1,49 +1,30 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import styles from "../../../../styles/jotform.module.css";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
 import { Button, Col, Row } from "react-bootstrap";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { toast, ToastContainer } from "react-toastify";
-import ApplicantApi from "../../../../pages/api/applicant";
-import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 
 
 export function ContinueLongForm() {
 	const {
-		state: { applicant, applicantExtras },
-		method: { stepNext, setApplicant },
+		state: { applicant },
+		method: { stepNext },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 
 	const form = useFormik({
 		initialValues: {},
-		onSubmit: async () => {
-			const applicantApi = new ApplicantApi();
-
-			try {
-				const filtered_extras = applicantExtras?.filter((v) => !!v.value);
-				const response = await applicantApi.jotform.create({
-					applicant,
-					applicantExtras: filtered_extras,
-				});
-				setApplicant({
-					...applicant,
-					id: response.id,
-				});
-				toast.success(t("successfully_saved_information"));
-
-				stepNext();
-
-			} catch (error) {
-				console.log(error);
-				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
-			}
-
-		},
+		onSubmit: () => {
+			stepNext();
+		}
 	});
+	useEffect(() => {
+		toast.success(t("successfully_saved_information"));
 
+	}, [])
 	return (
 		<>
 			<ToastContainer />
@@ -59,8 +40,8 @@ export function ContinueLongForm() {
 					</h6>
 				</Row>
 				<Row className="mt-3">
-					<Col>
-						<Button className="float-middle" type="submit">
+					<Col className="text-center" >
+						<Button type="submit">
 							{t("CONTINUE_APPLICATION")}
 						</Button>
 					</Col>

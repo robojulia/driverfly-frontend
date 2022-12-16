@@ -16,20 +16,25 @@ import { ImportantDisclosureBackgroundPsp } from "./important-disclosure-backgro
 import { GeneralConsentQueries } from "./general-consent-queries";
 import SignatureCanvas from "react-signature-canvas";
 import styles from "../../../../../styles/jotform.module.css";
+import { LoaderIcon } from "../../../../loading/loader-icon";
 
 export function AccordianPage() {
 
 	const {
 		state: { applicantExtras, applicant },
-		method: { stepBack, updateApplicantExtras },
+		method: { stepBack, updateApplicantExtras, stepNext },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 
 	let padRef = useRef<SignatureCanvas>(null);
-	const clearSignatureCanvas = () => padRef?.current?.clear();
 
-	const handleSignatureEnd = () => {
+	const clearSignatureCanvas = (): void => {
+		padRef?.current?.clear();
+		form.setFieldValue("SIGNATURE.value", null);
+	}
+
+	const handleSignatureEnd = (): void => {
 		const signatureValue = padRef?.current?.toDataURL()?.toString();
 		form.setFieldValue("SIGNATURE.value", signatureValue);
 	};
@@ -46,7 +51,8 @@ export function AccordianPage() {
 					applicant,
 					applicantExtras: filtered_extras,
 				});
-				toast.success(t("successfully_saved_information"));
+
+				// if (response) stepNext()
 			} catch (error) {
 				console.log(error);
 				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
@@ -66,9 +72,6 @@ export function AccordianPage() {
 	}, [form.values]);
 
 	useEffect(() => {
-		console.log("applicant extras", applicantExtras);
-		console.log("applicant", applicant);
-
 		const apx_ss_id = applicantExtras?.find(
 			(v) => v.type === ApplicantExtras.EMPLOYEE_SS_OR_ID
 		);
@@ -140,7 +143,7 @@ export function AccordianPage() {
 					/>
 				</Accordion>
 				<Row className={styles.align__text_left}>
-					<Col className="my-3">
+					<Col md="9" className="my-3">
 						<h6>{t("SIGNATURE")}</h6>
 						<SignatureCanvas
 							name="SIGNATURE.value"
@@ -154,13 +157,12 @@ export function AccordianPage() {
 							}}
 						/>
 					</Col>
-				</Row>
-				<Row>
-					<Col>
-						<button
+					<Col md="3" className="d-flex align-self-center justify-content-center">
+						<Button
+							type="button"
 							className="theme-secondary-btn "
 							onClick={clearSignatureCanvas}
-						>{t("CLEAR")}</button>
+						>{t("CLEAR")}</Button>
 					</Col>
 				</Row>
 				<Row className="mt-2">
@@ -171,8 +173,12 @@ export function AccordianPage() {
 					</Col>
 
 					<Col>
-						<Button className="float-left" type="submit">
-							{t("SUBMIT")}
+						<Button
+							disabled={form.isValidating || form.isSubmitting || !form.isValid}
+							className="float-left"
+							type="submit"
+						>
+							{t("SUBMIT")}<LoaderIcon isLoading={!!form?.isSubmitting} />
 						</Button>
 					</Col>
 				</Row>

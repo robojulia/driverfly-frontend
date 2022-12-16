@@ -1,49 +1,89 @@
+import { useContext } from "react";
+import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
+import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
+import { useTranslation } from "../../../../../hooks/use-translation";
 
 
 export default function AuthBackgroundInvestigation() {
+    const {
+        state: { applicantExtras, applicant }
+    }: JotFormContextType = useContext(JotformContext);
+    const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE)
+    const { t } = useTranslation();
+    const date =applicant?.extras?.find(d => d?.type === ApplicantExtras?.DISCLOSURE_AND_AUTHORIZATION_DATE)
+
     return (
         <form>
             <div className='Row'>
                 <div>
-                    <h1 style={{ fontWeight: 'bold', textAlign: "center" }}>Nautilus Trucking</h1>
+                    <h1 style={{ fontWeight: 'bold', textAlign: "center" }}>
+                        {t(
+                            "{COMPANY_NAME}",
+                            { COMPANY_NAME: applicant?.company?.name },
+                            { translateProps: true }
+                        )}
+                    </h1>
                 </div>
             </div>
             <div className='Row'>
                 <div>
-                    <h4 style={{ fontWeight: 'bold', textAlign: "center" }}>DISCLOSURE AND AUTHORIZATION REGARDING BACKGROUND INVESTIGATION FOR EMPLOYMENT PURPOSES</h4>
+                    <h4 style={{ fontWeight: 'bold', textAlign: "center" }}>
+                        {t("DISCLOSURE_AUTHORIZATION")}
+                    </h4>
                 </div>
             </div>
             <div className='Row'>
-                <h4 style={{ fontWeight: 'bold', textAlign: "center" }}>DISCLOSURE</h4>
+                <h4 style={{ fontWeight: 'bold', textAlign: "center" }}>
+                    {t("DISCLOSURE")}
+                </h4>
             </div>
             <div className='Row' style={{ textAlign: 'left', marginBottom: '20px' }}>
-                <p style={{ color: 'black', display: 'inline' }}>Nautilus Trucking (the “Company”) may request from a consumer reporting agency and for employment-related purposes, a “consumer report(s)” (commonly known as “background reports”) containing background information about you in connection with your employment, or application for employment, or engagement for services (including independent contractor or volunteer assignments, as applicable).</p>
+                <p style={{ color: 'black', display: 'inline' }}>
+                    {t(
+                        "{COMPANY_NAME}_REQUEST_BACKGROUND_REPORTS",
+                        { COMPANY_NAME: applicant?.company?.name },
+                        { translateProps: true }
+                    )}
+                </p>
             </div>
             <div className='Row' style={{ textAlign: 'left', marginBottom: '20px' }}>
-                <p style={{ color: 'black', display: 'inline' }}>The background report(s) may contain information concerning your character, general reputation, personal characteristics, mode of living, or credit standing. The types of background information that may be obtained include, but are not limited to: criminal history; litigation history; motor vehicle record and accident history; social security number verification; address and alias history; credit history; verification of your education, employment and earnings history; professional licensing, credential and certification checks; drug/alcohol testing results and history; military service; and other information.</p>
+                <p style={{ color: 'black', display: 'inline' }}>
+                    {t("BACKGROUND_REPORTS_CONTAINS")}
+                </p>
             </div>
             <div className='Row' style={{ textAlign: 'center', marginBottom: '20px' }}>
-                <h4 style={{ color: 'black', fontWeight: 'bold' }}>AUTHORIZATION</h4>
+                <h4 style={{ color: 'black', fontWeight: 'bold' }}>
+                    {t("AUTHORIZATION")}
+                </h4>
             </div>
             <div className='Row' style={{ textAlign: 'left', marginBottom: '20px' }}>
-                <p style={{ color: 'black', display: 'inline' }}>I hereby authorize Company to obtain the consumer reports described above about me.</p>
+                <p style={{ color: 'black', display: 'inline' }}>
+                    {t(
+                        "{COMPANY_NAME}_AUTHORIZATION_NAUTILUS_TRUCKINGS",
+                        { COMPANY_NAME: applicant?.company?.name },
+                        { translateProps: true }
+                    )}
+                </p>
             </div>
             <div className='Row' style={{ textAlign: 'left', marginBottom: '20px' }}>
                 <div className='Col'>
-                    <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>Name:</p>
-                    <p style={{ color: 'black', display: 'inline' }}>Test Name</p>
+                    <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>{t("NAME:")}</p>
+                    <p style={{ color: 'black', display: 'inline' }}>{` ${applicant?.first_name} ${applicant?.last_name}`}</p>
                 </div>
             </div>
             <div className='Row' style={{ textAlign: 'left', marginBottom: '20px' }}>
                 <div className='Col'>
-                    <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>Signature</p>
-                    <p style={{ color: 'black', display: 'inline' }}>Signature goes here</p>
+                    <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>{t("SIGNATURE")}</p>
+                </div>
+                <div className="Row" style={{ marginTop: '10px', marginBottom: '30px' }}>
+                    <img src={signature?.value} style={{ width: '300px', height: '200px', border: '1px solid black' }} alt="image" />
+
                 </div>
             </div>
             <div className='Row' style={{ textAlign: 'left', marginBottom: '20px' }}>
                 <div className='Col'>
-                    <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>Date:</p>
-                    <p style={{ color: 'black', display: 'inline' }}>Saturday, October 15, 2022</p>
+                    <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>{"DATE:"}</p>
+                    <p style={{ color: 'black', display: 'inline' }}>{date?.value ? date?.value : ` ${t("NULL")}`}</p>
                 </div>
             </div>
 
