@@ -99,7 +99,7 @@ export default function ViewApplicantDetail({
 						<ViewDetails
 							default={t("NONE")}
 							obj={{
-								equipment_owned: {
+								EQUIPMENT_OWNED: {
 									show: applicant.is_owner_operator || false,
 									items: applicant.equipment_owned?.map((v) => ({
 										type:
