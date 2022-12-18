@@ -100,7 +100,7 @@ export default function ApplicantExtrasDetails({
 								default={t("NOT_ANSWERED")}
 								obj={{
 									Authorize_to_Communicate: authToCommunicate?.value && t(`BooleanPreferenceType.${authToCommunicate?.value}`),
-									hear_about_us: hear_about_us?.value,
+									hear_about_us: hear_about_us?.value && t(`HearAboutUsType.${hear_about_us?.value}`),
 									job_apply_date: job_apply_date?.value,
 									qualified_for_manual_transmission:
 										qualified_for_manual_transmission?.value,
