@@ -86,9 +86,6 @@ export default function ApplicantExtrasDetails({
 	const general_consent = applicant.extras.find(
 		(ex) => ex?.type === ApplicantExtras.GENERAL_CONSENT
 	);
-	useEffect(() => {
-		past_employer.value.map(v => console.log("lksjdkasjdas", v))
-	}, [])
 
 	return (
 		<>
@@ -256,32 +253,6 @@ export default function ApplicantExtrasDetails({
 						/>
 					</ViewCard>
 				</Col>
-				{/* <Col md="6">
-					<ViewCard title="PAST_EMPLOYER">
-						<ViewDetails
-							default={t("NOT_ANSWERED")}
-							obj={{
-								// authorize: past_employer?.value?.authorize,
-								city: past_employer?.value?.city,
-								END_DATE: past_employer?.value?.end_date,
-								fcr: past_employer?.value?.fcr && t(`BooleanPreferenceType.${past_employer?.value?.fcr}`),
-								fmcsr: past_employer?.value?.fmcsr && t(`BooleanPreferenceType.${past_employer?.value?.fmcsr}`),
-								PREVIOUS_COMPANY_EMAIL: past_employer?.value.fmcsr,
-								PREVIOUS_MANAGER_NAME:
-									past_employer?.value?.previous_company_email,
-								PREVIOUS_COMPANY_PHONE_NUMBER:
-									past_employer?.value?.previous_company_phone_number,
-								PREVIOUS_COMPANY_ADDRESS_1:
-									past_employer?.value?.previous_company_street_address_line_1,
-								PREVIOUS_COMPANY_ADDRESS_2:
-									past_employer?.value?.previous_company_street_address_line_2,
-								zip_code: past_employer?.value?.previous_company_zipcode,
-								START_DATE: past_employer?.value?.start_date,
-								state: past_employer?.value?.state,
-							}}
-						/>
-					</ViewCard>
-				</Col> */}
 				<ViewCard title="PAST_EMPLOYER">
 					<ViewTable
 						type="PAST_EMPLOYER"

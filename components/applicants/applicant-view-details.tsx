@@ -10,9 +10,11 @@ import { ViewApplicantDetailProps } from "../../types/applicant/view-application
 export default function ViewApplicantDetail({
 	applicant,
 	protectedFields,
+	hideAssignTo,
 }: ViewApplicantDetailProps) {
 	const { t } = useTranslation();
 
+	const assignTo = !!hideAssignTo ? {} : { ASSIGNED_TO: applicant.assignedUser?.name || t("NONE"), }
 	return (
 		<ViewCard title={`${applicant?.first_name} ${applicant?.last_name}`}>
 			<Row>
@@ -20,7 +22,7 @@ export default function ViewApplicantDetail({
 					<ViewDetails
 						default={t("NOT_ANSWERED")}
 						obj={{
-							ASSIGNED_TO: applicant.assignedUser?.name || t("NONE"),
+							...assignTo,
 							PHONE: applicant.phone,
 							EMAIL: applicant.email,
 							STREET: applicant.street,
