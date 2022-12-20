@@ -795,14 +795,21 @@ a.here_link {
 .form-check-input {
     margin-top: 3px !important;
 }
+
 /* JotForm CSS */
-.sigCanvas{
+.sigCanvas {
     width: 100%;
     height: 250px;
 }
-.other_req .form-check-inline{
+
+.other_req .form-check-inline {
     display: block;
 }
-.jotform__accordion  button:focus, button:active{
-color: #000 !important;
+
+.jotform__accordion button:focus,
+button:active {
+    color: #000 !important;
+}
+.tab__wid_for_jot svg {
+    width: 4%;
 }

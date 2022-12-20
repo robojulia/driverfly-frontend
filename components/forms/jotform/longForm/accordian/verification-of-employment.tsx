@@ -1,38 +1,60 @@
-import { useContext, useRef } from "react";
-import { Col, Row } from "react-bootstrap";
+import { useContext, useEffect, useRef } from "react";
+import { Col, Form, Row } from "react-bootstrap";
 import BaseInput from "../../../base-input";
-import Accordion from "react-bootstrap/Accordion";
 import SignatureCanvas from "react-signature-canvas";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import styles from "../../../../../styles/jotform.module.css";
 import { AccordianProps } from "../../../../../types/jotform/accordian.type";
 import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
+import { ApplicantExtrasEntity } from "../../../../../models/applicant";
 
-export function VerificationOfEmployment({ eventKey, form }: AccordianProps) {
+export function VerificationOfEmployment({form}: AccordianProps) {
 
     const {
         state: { applicant, applicantExtras },
-        method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+        method: { setApplicant, updateApplicantExtras},
     }: JotFormContextType = useContext(JotformContext);
     const { t } = useTranslation();
 
-    // const canvasRef = useRef<SignatureCanvas>();
-    // const clearSignatureCanvas = () => canvasRef.current.clear();
+    const canvasRef = useRef<SignatureCanvas>();
+    const clearSignatureCanvas = () => canvasRef.current.clear();
+    
 
-    // const handleSignatureEnd = () => {
-    //     const signatureValue = canvasRef.current.toDataURL().toString();
-    //     form.setFieldValue("SIGNATURE.value", signatureValue);
-    // };
+    const handleSignatureEnd = () => {
+        const signatureValue = canvasRef.current.toDataURL().toString();
+        form.setFieldValue("SIGNATURE.value", signatureValue);
+    };
     const current_employer = applicantExtras?.find(
         (v) => v.type == ApplicantExtras.CURRENT_EMPLOYER
     );
+    
+    useEffect(() => {
+        const apx_ss_id = applicantExtras?.find(
+            (v) => v.type === ApplicantExtras.EMPLOYEE_SS_OR_ID
+        );
+
+        const apx_sign = applicantExtras?.find(
+            (v) => v.type === ApplicantExtras.SIGNATURE
+        );
+
+        if (apx_sign) canvasRef?.current?.fromDataURL(apx_sign?.value)
+
+        form.setValues({
+            ...form.values,
+            SIGNATURE: !!apx_sign?.type
+                ? apx_sign
+                : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
+            EMPLOYEE_SS_OR_ID: !!apx_ss_id?.type
+                ? apx_ss_id
+                : new ApplicantExtrasEntity(ApplicantExtras.EMPLOYEE_SS_OR_ID),
+
+        });
+    }, [applicant]);
+
     return (
-        <Accordion.Item eventKey={eventKey}>
-            <Accordion.Header>
-                {t("VERIFICATION_OF_EMPLOYMENT")}
-            </Accordion.Header>
-            <Accordion.Body>
+        <>
+            <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
                 <h2>{t("VERIFICATION_OF_EMPLOYMENT")}</h2>
                 <h6>{t("SAFETY_PERFORMANCE_HISTORY_RECORDS_REQUEST")}</h6>
                 <Row className={styles.align__text_left}>
@@ -94,10 +116,11 @@ export function VerificationOfEmployment({ eventKey, form }: AccordianProps) {
                         {t("DOCUMENTATION_IF_ANY_OF_COMPLETION")}
                     </p>
                 </Row>
-                {/* <Row className={styles.align__text_left}>
+                <Row className={styles.align__text_left}>
                     <Col>
                         <h6>{t("SIGNATURE")}</h6>
                         <SignatureCanvas
+                            name="SIGNATURE.value"
                             onEnd={handleSignatureEnd}
                             ref={canvasRef}
                             canvasProps={{
@@ -117,7 +140,7 @@ export function VerificationOfEmployment({ eventKey, form }: AccordianProps) {
                             {t("CLEAR")}
                         </button>
                     </Col>
-                </Row> */}
+                </Row>
                 <Row className={styles.align__text_left}>
                     <h4 className="mt-3">{t("I_A")}</h4>
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
@@ -418,7 +441,7 @@ export function VerificationOfEmployment({ eventKey, form }: AccordianProps) {
                         </p>
                     </Row>
                 </Row>
-            </Accordion.Body>
-        </Accordion.Item>
+            </Form>
+        </>
     )
 }
