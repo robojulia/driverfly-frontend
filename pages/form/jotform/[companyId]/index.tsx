@@ -23,7 +23,7 @@ export default function FullForm({ employer }: FullFormProps) {
 				? [...oldApx, { ...applicantExtrasEntity }]
 				: [{ ...applicantExtrasEntity }];
 		});
-	const [steps, setSteps] = useState<number>(26);
+	const [steps, setSteps] = useState<number>(0);
 	const stepNext = (): void => setSteps(steps + 1);
 	const stepBack = (): void => setSteps(steps - 1);
 
@@ -54,12 +54,12 @@ export default function FullForm({ employer }: FullFormProps) {
 						style={getFullFormStyle(steps)}
 					>
 						{/* uncomment this during development */}
-						<BaseInput
+						{/* <BaseInput
 							value={steps}
 							min={0}
 							max={26}
 							type="number"
-							onChange={({ target: { value } }) => setSteps(parseInt(value))} />
+							onChange={({ target: { value } }) => setSteps(parseInt(value))} /> */}
 						{getFullFormPages(steps)}
 					</div>
 				</div>
