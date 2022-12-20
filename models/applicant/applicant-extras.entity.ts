@@ -6,7 +6,6 @@ import { AccidentHistoryEntity } from "../jot-form/long-form/accident-last-5-yea
 import { AccordianExtras } from "../jot-form/long-form/accordian-info/index.dto";
 import { BackgroundInfoLineAddress } from "../jot-form/long-form/backgorund-info/index.dto";
 import { CdlExtras } from "../jot-form/long-form/cdl-object/index.dto";
-import { EmploymentHistoryExtraDto } from "../jot-form/long-form/emplyment-history/index.dto";
 import { VioalationExtrasEntity } from "../jot-form/long-form/violaton-history/index.dto";
 import { WorkedBeforeExtrasDto } from "../jot-form/long-form/worked-before/index.dto";
 
@@ -82,10 +81,6 @@ export class ApplicantExtrasEntity {
 						.array((yup.string() as any).enum(OtherRequirementType))
 						.optional()
 						.nullable(),
-				})
-				.when("type", {
-					is: ApplicantExtras.CURRENT_EMPLOYER,
-					then: EmploymentHistoryExtraDto.yupSchema(),
 				})
 				.when("type", {
 					is: ApplicantExtras.PAST_LICENSE_SUSPENSION,

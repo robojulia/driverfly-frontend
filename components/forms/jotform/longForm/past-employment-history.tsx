@@ -5,20 +5,19 @@ import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
 import BaseInput from "../../base-input";
 import BaseInputPhone from "../../base-input-phone";
-import BaseSelect from "../../base-select";
 import BaseCheck from "../../base-check";
-import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferences.enum";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import StateSelect from "../../state-select";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import { PastEmploymentPageDto } from "../../../../models/jot-form/long-form/past-employment-page.dto";
 import { PastEmploymentHistoryDto } from "../../../../models/jot-form/long-form/past-employment-history/index.dto";
+import { ApplicantEmployerEntity } from "../../../../models/applicant";
 
 export function PastEmploymentHistory() {
 
 	const {
-		state: { applicant, applicantExtras },
-		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+		state: { applicant },
+		method: { setApplicant, stepNext, stepBack },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
@@ -28,7 +27,14 @@ export function PastEmploymentHistory() {
 		onSubmit: (values) => {
 			const { employers } = values;
 
-			setApplicant({ ...applicant, employers });
+			const employer: ApplicantEmployerEntity = applicant.employers?.find(v => !!v.is_current)
+
+			if (employer) employers.push(employer)
+
+			setApplicant({
+				...applicant,
+				employers
+			});
 
 			stepNext();
 		},
@@ -38,14 +44,17 @@ export function PastEmploymentHistory() {
 	});
 
 	useEffect(() => {
+		const employers: PastEmploymentHistoryDto[] = applicant.employers?.filter(v => !!!v.is_current) as PastEmploymentHistoryDto[]
+
 		form.setValues({
 			...form.values,
-			employers: [...applicant.employers as PastEmploymentHistoryDto[]],
-			is_previous_employed: !!applicant.employers?.length,
+			employers,
+			is_previous_employed: !!employers?.length,
 		});
-	}, [applicantExtras, applicant]);
+	}, [applicant]);
 
 	useEffect(() => {
+
 		console.log("values", form.values);
 		console.log("error", form.errors);
 	}, [form.values, form.errors]);
@@ -76,7 +85,10 @@ export function PastEmploymentHistory() {
 									onClick={() =>
 										form.setFieldValue("employers", [
 											...(form.values?.employers || []),
-											new PastEmploymentHistoryDto(),
+											{
+												...(new PastEmploymentHistoryDto()),
+												is_current: false
+											},
 										])
 									}
 								>
@@ -213,9 +225,6 @@ export function PastEmploymentHistory() {
 											label="JOB_DESIGNATED_CURRENT_COMPANY"
 											formik={form}
 										/>
-									</Row>
-									<Row className="mt-4 p-lg-0">
-
 									</Row>
 								</div>
 								<Button

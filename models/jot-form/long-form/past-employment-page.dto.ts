@@ -1,5 +1,4 @@
 import * as yup from "yup";
-import { ApplicantExtrasEntity } from "../../applicant/applicant-extras.entity";
 import { PastEmploymentHistoryDto } from "./past-employment-history/index.dto";
 
 export class PastEmploymentPageDto {
