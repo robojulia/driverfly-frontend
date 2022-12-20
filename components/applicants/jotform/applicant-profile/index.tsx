@@ -1,6 +1,6 @@
 import { Col, Row } from "react-bootstrap";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "../../../../hooks/use-translation";
 import ViewDetails from "../../../view-details/view-details";
 import ViewCard from "../../../view-details/view-card";
@@ -86,6 +86,7 @@ export default function ApplicantExtrasDetails({
 	const general_consent = applicant.extras.find(
 		(ex) => ex?.type === ApplicantExtras.GENERAL_CONSENT
 	);
+
 	return (
 		<>
 			<Row>
@@ -96,7 +97,7 @@ export default function ApplicantExtrasDetails({
 								default={t("NOT_ANSWERED")}
 								obj={{
 									Authorize_to_Communicate: authToCommunicate?.value && t(`BooleanPreferenceType.${authToCommunicate?.value}`),
-									hear_about_us: hear_about_us?.value,
+									hear_about_us: hear_about_us?.value && t(`HearAboutUsType.${hear_about_us?.value}`),
 									job_apply_date: job_apply_date?.value,
 									qualified_for_manual_transmission:
 										qualified_for_manual_transmission?.value,
@@ -220,7 +221,7 @@ export default function ApplicantExtrasDetails({
 				</ViewCard>
 			</Row>
 			<Row>
-				<Col md="6">
+				<Col md="12">
 					<ViewCard title="CURRENT_EMPLOYER">
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
@@ -244,40 +245,48 @@ export default function ApplicantExtrasDetails({
 									current_employer?.value
 										?.current_company_street_address_line_2,
 								zip_code: current_employer?.value?.current_company_zipcode,
-								fcr: current_employer?.value?.fcr && t(`BooleanPreferenceType.${current_employer?.value?.fcr}`) ,
-								fmcsr: current_employer?.value?.fmcsr && t(`BooleanPreferenceType.${current_employer?.value?.fmcsr}`) ,
+								fcr: current_employer?.value?.fcr && t(`BooleanPreferenceType.${current_employer?.value?.fcr}`),
+								fmcsr: current_employer?.value?.fmcsr && t(`BooleanPreferenceType.${current_employer?.value?.fmcsr}`),
 								START_DATE: current_employer?.value?.start_date,
 								state: current_employer?.value?.state,
 							}}
 						/>
 					</ViewCard>
 				</Col>
-				<Col md="6">
-					<ViewCard title="PAST_EMPLOYER">
-						<ViewDetails
-							default={t("NOT_ANSWERED")}
-							obj={{
-								// authorize: past_employer?.value?.authorize,
-								city: past_employer?.value?.city,
-								END_DATE: past_employer?.value?.end_date,
-								fcr: past_employer?.value?.fcr && t(`BooleanPreferenceType.${past_employer?.value?.fcr}`) ,
-								fmcsr: past_employer?.value?.fmcsr  && t(`BooleanPreferenceType.${past_employer?.value?.fmcsr}`) ,
-								PREVIOUS_COMPANY_EMAIL: past_employer?.value.fmcsr,
-								PREVIOUS_MANAGER_NAME:
-									past_employer?.value?.previous_company_email,
-								PREVIOUS_COMPANY_PHONE_NUMBER:
-									past_employer?.value?.previous_company_phone_number,
-								PREVIOUS_COMPANY_ADDRESS_1:
-									past_employer?.value?.previous_company_street_address_line_1,
-								PREVIOUS_COMPANY_ADDRESS_2:
-									past_employer?.value?.previous_company_street_address_line_2,
-								zip_code: past_employer?.value?.previous_company_zipcode,
-								START_DATE: past_employer?.value?.start_date,
-								state: past_employer?.value?.state,
-							}}
-						/>
-					</ViewCard>
-				</Col>
+				<ViewCard title="PAST_EMPLOYER">
+					<ViewTable
+						type="PAST_EMPLOYER"
+						headers={{
+							city: "city",
+							END_DATE: "END_DATE",
+							fcr: "fcr",
+							fmcsr: "fmcsr",
+							PREVIOUS_COMPANY_EMAIL: "PREVIOUS_COMPANY_EMAIL",
+							PREVIOUS_MANAGER_NAME: "PREVIOUS_MANAGER_NAME",
+							PREVIOUS_COMPANY_PHONE_NUMBER: "PREVIOUS_COMPANY_PHONE_NUMBER",
+							PREVIOUS_COMPANY_ADDRESS_1: "PREVIOUS_COMPANY_ADDRESS_1",
+							PREVIOUS_COMPANY_ADDRESS_2: "PREVIOUS_COMPANY_ADDRESS_2",
+							zip_code: "zip_code",
+							START_DATE: "START_DATE",
+							state: "state"
+						}}
+						items={past_employer?.value.map((v) => ({
+							city: v?.city,
+							END_DATE: v?.end_date,
+							fcr: v?.fcr && t(`BooleanPreferenceType.${v.fcr}`),
+							fmcsr: v?.fmcsr && t(`BooleanPreferenceType.${v.fmcsr}`),
+							PREVIOUS_COMPANY_EMAIL: v?.previous_company_email,
+							PREVIOUS_MANAGER_NAME: v?.previous_company_manager_name,
+							PREVIOUS_COMPANY_PHONE_NUMBER: v?.previous_company_phone_number,
+							PREVIOUS_COMPANY_ADDRESS_1: v?.previous_company_street_address_line_1,
+							PREVIOUS_COMPANY_ADDRESS_2: v?.previous_company_street_address_line_2,
+							zip_code: v?.previous_company_zipcode,
+							START_DATE: v?.start_date,
+							state: v?.state,
+
+						}))}
+					/>
+				</ViewCard>
 			</Row>
 
 			<Row>

@@ -41,7 +41,7 @@ export default function Dashboard({ entity }: LongFormProps) {
 					<h1>{t("APPLICANT_PROFILE")}</h1>
 				</Row>
 				<Row>
-					<ViewApplicantDetail applicant={entity} />
+					<ViewApplicantDetail applicant={entity} hideAssignTo={true} />
 				</Row>
 				<Row className="p-0">
 					<ApplicantSafetyBackground applicant={entity} />
