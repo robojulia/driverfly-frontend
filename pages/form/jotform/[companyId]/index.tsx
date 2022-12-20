@@ -23,7 +23,7 @@ export default function FullForm({ employer }: FullFormProps) {
 				? [...oldApx, { ...applicantExtrasEntity }]
 				: [{ ...applicantExtrasEntity }];
 		});
-	const [steps, setSteps] = useState<number>(12);
+	const [steps, setSteps] = useState<number>(26);
 	const stepNext = (): void => setSteps(steps + 1);
 	const stepBack = (): void => setSteps(steps - 1);
 

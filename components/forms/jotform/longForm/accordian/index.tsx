@@ -33,7 +33,7 @@ export function AccordianPage() {
 
 	useEffect(() => {
 		console.log('bool values', showTab)
-	},[showTab])
+	}, [showTab])
 	let padRef = useRef<SignatureCanvas>(null);
 
 	const clearSignatureCanvas = (): void => {
@@ -129,9 +129,9 @@ export function AccordianPage() {
 		<>
 			<ToastContainer />
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<h1>{t("FORMS_TO_SIGNUP")}</h1>
-				<h6>{t("PLEASE_CLICK_EACH_ARROW")}</h6>
-				<Button className="w-100 d-flex justify-content-between align-items-center" onClick={() => setShowTab1(!showTab1)}>
+				<h1 className="my-3">{t("FORMS_TO_SIGNUP")}</h1>
+				<h6 className="my-3">{t("PLEASE_CLICK_EACH_ARROW")}</h6>
+				<button className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline " onClick={() => setShowTab1(!showTab1)}>
 					{showTab1 ? (
 						<>
 							{t("HIDE_VERIFICATION_OF_EMPLOYMENT")}
@@ -145,15 +145,15 @@ export function AccordianPage() {
 						</>
 					)}
 
-				</Button>
+				</button>
 				{showTab1 && <VerificationOfEmployment form={form} />}
 
 
-				<Button className="w-100 d-flex justify-content-between align-items-center" onClick={() => setShowTab2(!showTab2)}>
+				<button className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline" onClick={() => setShowTab2(!showTab2)}>
 					{showTab2 ? (
 						<>
 							{t("HIDE_DISCLOSURE_AUTHORIZATION")}
-							< ArrowUpCircleFill />
+							< ArrowUpCircleFill  />
 						</>
 
 					) : (
@@ -163,14 +163,14 @@ export function AccordianPage() {
 						</>
 					)}
 
-				</Button>
+				</button>
 				{showTab2 && <DisclosureAuthorization form={form} />}
 
-				<Button className="w-100 d-flex justify-content-between align-items-center" onClick={() => setShowTab3(!showTab3)}>
+				<button className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline" onClick={() => setShowTab3(!showTab3)}>
 					{showTab3 ? (
 						<>
 							{t("HIDE_IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")}
-							< ArrowUpCircleFill />
+							< ArrowUpCircleFill  />
 						</>
 
 					) : (
@@ -180,15 +180,15 @@ export function AccordianPage() {
 						</>
 					)}
 
-				</Button>
+				</button>
 				{showTab3 && <ImportantDisclosureBackgroundPsp form={form} />}
 
 
-				<Button className="w-100 d-flex justify-content-between align-items-center" onClick={() => setShowTab4(!showTab4)}>
+				<button className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline" onClick={() => setShowTab4(!showTab4)}>
 					{showTab4 ? (
 						<>
 							{t("HIDE_GENERAL_CONSENT_QUERIES")}
-							< ArrowUpCircleFill />
+							< ArrowUpCircleFill  />
 						</>
 
 					) : (
@@ -198,7 +198,7 @@ export function AccordianPage() {
 						</>
 					)}
 
-				</Button>
+				</button>
 				{showTab4 && <GeneralConsentQueries form={form} />}
 
 
@@ -226,7 +226,7 @@ export function AccordianPage() {
 						>{t("CLEAR")}</Button>
 					</Col>
 				</Row> */}
-				<Row className="mt-2">
+				<Row className="mt-4">
 					<Col>
 						<Button className="float-right" type="reset">
 							{t("BACK")}
