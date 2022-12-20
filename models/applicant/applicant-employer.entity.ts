@@ -19,6 +19,13 @@ export class ApplicantEmployerEntity {
     created_at?: string;
     last_updated_at?: string;
 
+    manager_name?: string;
+    email?: string;
+    address?: string;
+    address_2?: string;
+    uuid_token?: string;
+    is_current: boolean = false;
+
     static yupSchema() {
         return yup.object({
             name: yup.string().required().nullable(),

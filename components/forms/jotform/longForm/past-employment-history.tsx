@@ -8,13 +8,11 @@ import BaseInputPhone from "../../base-input-phone";
 import BaseSelect from "../../base-select";
 import BaseCheck from "../../base-check";
 import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferences.enum";
-import { PastEmploymentHistoryDto } from "../../../../models/jot-form/long-form/past-employment-history.dto";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
-import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
-import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import StateSelect from "../../state-select";
-import { PastEmploymentHistoryExtraDto } from "../../../../models/jot-form/long-form/previous-emplyment-history/index.dto";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
+import { PastEmploymentPageDto } from "../../../../models/jot-form/long-form/past-employment-page.dto";
+import { PastEmploymentHistoryDto } from "../../../../models/jot-form/long-form/past-employment-history/index.dto";
 
 export function PastEmploymentHistory() {
 
@@ -25,12 +23,12 @@ export function PastEmploymentHistory() {
 
 	const { t } = useTranslation();
 	const form = useFormik({
-		initialValues: new PastEmploymentHistoryDto(),
-		validationSchema: PastEmploymentHistoryDto.yupSchema(),
+		initialValues: new PastEmploymentPageDto(),
+		validationSchema: PastEmploymentPageDto.yupSchema(),
 		onSubmit: (values) => {
-			const { PAST_EMPLOYER } = values;
+			const { employers } = values;
 
-			if (!!PAST_EMPLOYER?.value?.length) updateApplicantExtras(PAST_EMPLOYER);
+			setApplicant({ ...applicant, employers });
 
 			stepNext();
 		},
@@ -40,15 +38,10 @@ export function PastEmploymentHistory() {
 	});
 
 	useEffect(() => {
-		const apx = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.PAST_EMPLOYER
-		);
 		form.setValues({
 			...form.values,
-			PAST_EMPLOYER: !!apx?.type
-				? apx
-				: new ApplicantExtrasEntity(ApplicantExtras.PAST_EMPLOYER),
-			is_previous_employed: !!apx?.value,
+			employers: [...applicant.employers as PastEmploymentHistoryDto[]],
+			is_previous_employed: !!applicant.employers?.length,
 		});
 	}, [applicantExtras, applicant]);
 
@@ -83,9 +76,9 @@ export function PastEmploymentHistory() {
 								<Button
 									size="sm"
 									onClick={() =>
-										form.setFieldValue("PAST_EMPLOYER.value", [
-											...(form.values?.PAST_EMPLOYER?.value || []),
-											new PastEmploymentHistoryExtraDto(),
+										form.setFieldValue("employers", [
+											...(form.values?.employers || []),
+											new PastEmploymentHistoryDto(),
 										])
 									}
 								>
@@ -94,16 +87,16 @@ export function PastEmploymentHistory() {
 							</Col>
 						</Row>
 
-						{form?.values?.PAST_EMPLOYER?.value?.length > 0 &&
+						{form?.values?.employers?.length > 0 &&
 							<>
-								{form?.values?.PAST_EMPLOYER?.value?.map((entity, i) => (
+								{form?.values?.employers?.map((entity, i) => (
 									<Row key={i}>
 										<div className="py-3">
 											<Row>
 												<BaseCheck
 													className="mt-3 col-md-6 float-left"
 													required
-													name={`PAST_EMPLOYER.value[${i}].authorize`}
+													name={`employers[${i}].can_contact`}
 													label="CONTACT_AUTHORIZATION"
 													formik={form}
 												/>
@@ -111,13 +104,13 @@ export function PastEmploymentHistory() {
 											<Row>
 												<BaseInput
 													className="col-md-6 my-3"
-													name={`PAST_EMPLOYER.value[${i}].previous_company_name`}
+													name={`employers[${i}].name`}
 													label="PREVIOUS_COMPANY_NAME"
 													formik={form}
 												/>
 												<BaseInput
 													className="col-md-6 my-3"
-													name={`PAST_EMPLOYER.value[${i}].previous_company_manager_name`}
+													name={`employers[${i}].manager_name`}
 													label="PREVIOUS_MANAGER_NAME"
 													formik={form}
 												/>
@@ -125,7 +118,7 @@ export function PastEmploymentHistory() {
 											<Row>
 												<BaseInputPhone
 													className="col-md-6 my-3"
-													name={`PAST_EMPLOYER.value[${i}].previous_company_phone_number`}
+													name={`employers[${i}].phone`}
 													placeholder="phone"
 													label="PREVIOUS_COMPANY_PHONE_NUMBER"
 													formik={form}
@@ -133,7 +126,7 @@ export function PastEmploymentHistory() {
 												<BaseInput
 													className="col-md-6 my-3"
 													required
-													name={`PAST_EMPLOYER.value[${i}].previous_company_email`}
+													name={`employers[${i}].email`}
 													label="PREVIOUS_COMPANY_EMAIL"
 													placeholder="email"
 													formik={form}
@@ -144,7 +137,7 @@ export function PastEmploymentHistory() {
 													className="col-md-6 my-3"
 													required
 													type="date"
-													name={`PAST_EMPLOYER.value[${i}].start_date`}
+													name={`employers[${i}].start_at`}
 													label="START_DATE"
 													formik={form}
 												/>
@@ -152,7 +145,7 @@ export function PastEmploymentHistory() {
 													className="col-md-6 my-3"
 													required
 													type="date"
-													name={`PAST_EMPLOYER.value[${i}].end_date`}
+													name={`employers[${i}].end_at`}
 													label="END_DATE"
 													formik={form}
 												/>
@@ -167,7 +160,7 @@ export function PastEmploymentHistory() {
 												<BaseInput
 													className="col-md-6 my-3"
 													required
-													name={`PAST_EMPLOYER.value[${i}].previous_company_street_address_line_1`}
+													name={`employers[${i}].address`}
 													placeholder="ADDRESS_LINE_1"
 													label="ADDRESS_LINE_1"
 													formik={form}
@@ -175,7 +168,7 @@ export function PastEmploymentHistory() {
 												<BaseInput
 													className="col-md-6 my-3"
 													required
-													name={`PAST_EMPLOYER.value[${i}].previous_company_street_address_line_2`}
+													name={`employers[${i}].address_2`}
 													placeholder="ADDRESS_LINE_2"
 													label="ADDRESS_LINE_2"
 													formik={form}
@@ -184,7 +177,7 @@ export function PastEmploymentHistory() {
 												<BaseInput
 													className="col-md-6 my-3"
 													required
-													name={`PAST_EMPLOYER.value[${i}].previous_company_zipcode`}
+													name={`employers[${i}].zip_code`}
 													placeholder="zip_code"
 													label="zip_code"
 													formik={form}
@@ -193,7 +186,7 @@ export function PastEmploymentHistory() {
 												<BaseInput
 													className="col-md-6 my-3"
 													required
-													name={`PAST_EMPLOYER.value[${i}].city`}
+													name={`employers[${i}].city`}
 													label="City"
 													formik={form}
 												/>
@@ -202,29 +195,21 @@ export function PastEmploymentHistory() {
 													className="col my-3"
 													required
 													label="STATE"
-													name={`PAST_EMPLOYER.value[${i}].state`}
+													name={`employers[${i}].state`}
 													placeholder="STATE"
 													formik={form}
 												/>
 											</Row>
 											<Row >
-												<BaseSelect
-													className="col-12 my-3"
-													required
-													labelPrefix="BooleanPreferenceType"
-													enumType={BooleanPreferenceType}
-													name={`PAST_EMPLOYER.value[${i}].fmcsr`}
-													placeholder="CHOOSE"
+												<BaseCheck
+													className="mt-2 col-md-6 float-left"
+													name={`employers[${i}].is_subject_to_fmcsrs`}
 													label="FMCR_QUESTION"
 													formik={form}
 												/>
-												<BaseSelect
-													className="col-12 my-3"
-													required
-													labelPrefix="BooleanPreferenceType"
-													enumType={BooleanPreferenceType}
-													name={`PAST_EMPLOYER.value[${i}].fcr`}
-													placeholder="CHOOSE"
+												<BaseCheck
+													className="mt-2 col-md-6 float-left"
+													name={`employers[${i}].is_subject_to_drug_tests`}
 													label="JOB_DESIGNATED_CURRENT_COMPANY"
 													formik={form}
 												/>
@@ -235,18 +220,11 @@ export function PastEmploymentHistory() {
 										</div>
 										<a
 											href="#"
-											onClick={
-												() =>
-													form.setValues({
-														...form.values,
-														PAST_EMPLOYER: {
-															...form.values?.PAST_EMPLOYER,
-															value:
-																form.values?.PAST_EMPLOYER?.value?.filter(
-																	(v, idx) => i != idx
-																),
-														},
-													})
+											onClick={() =>
+												form.setValues({
+													...form.values,
+													employers: form.values?.employers?.filter((v, idx) => i != idx),
+												})
 											}
 										>
 											<DashCircle className="mt-3" color="red" />

@@ -1,18 +1,19 @@
 import * as yup from "yup";
 import { ApplicantExtrasEntity } from "../../applicant/applicant-extras.entity";
+import { PastEmploymentHistoryDto } from "./past-employment-history/index.dto";
 
-export class PastEmploymentHistoryDto {
+export class PastEmploymentPageDto {
 	is_previous_employed: boolean;
-	PAST_EMPLOYER: ApplicantExtrasEntity;
+	employers: PastEmploymentHistoryDto[];
 
 	static yupSchema() {
-		return yup.object({
+		return yup.object().shape({
 			is_previous_employed: yup.boolean().optional().nullable(),
-			PAST_EMPLOYER: yup
-				.object()
+			employers: yup
+				.array()
 				.when("is_previous_employed", {
 					is: (v) => !!v,
-					then: ApplicantExtrasEntity.yupSchema(),
+					then: yup.array(PastEmploymentHistoryDto.derivedYupSchema()).nullable(),
 				})
 				.nullable(),
 		});

@@ -7,7 +7,6 @@ import { AccordianExtras } from "../jot-form/long-form/accordian-info/index.dto"
 import { BackgroundInfoLineAddress } from "../jot-form/long-form/backgorund-info/index.dto";
 import { CdlExtras } from "../jot-form/long-form/cdl-object/index.dto";
 import { EmploymentHistoryExtraDto } from "../jot-form/long-form/emplyment-history/index.dto";
-import { PastEmploymentHistoryExtraDto } from "../jot-form/long-form/previous-emplyment-history/index.dto";
 import { VioalationExtrasEntity } from "../jot-form/long-form/violaton-history/index.dto";
 import { WorkedBeforeExtrasDto } from "../jot-form/long-form/worked-before/index.dto";
 
@@ -87,10 +86,6 @@ export class ApplicantExtrasEntity {
 				.when("type", {
 					is: ApplicantExtras.CURRENT_EMPLOYER,
 					then: EmploymentHistoryExtraDto.yupSchema(),
-				})
-				.when("type", {
-					is: ApplicantExtras.PAST_EMPLOYER,
-					then: yup.array(PastEmploymentHistoryExtraDto.yupSchema()).nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.PAST_LICENSE_SUSPENSION,
