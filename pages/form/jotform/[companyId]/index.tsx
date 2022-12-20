@@ -54,12 +54,12 @@ export default function FullForm({ employer }: FullFormProps) {
 						style={getFullFormStyle(steps)}
 					>
 						{/* uncomment this during development */}
-						{/* <BaseInput
+						<BaseInput
 							value={steps}
 							min={0}
 							max={26}
 							type="number"
-							onChange={({ target: { value } }) => setSteps(parseInt(value))} /> */}
+							onChange={({ target: { value } }) => setSteps(parseInt(value))} />
 						{getFullFormPages(steps)}
 					</div>
 				</div>

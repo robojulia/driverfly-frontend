@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import Accordion from "react-bootstrap/Accordion";
@@ -17,16 +17,23 @@ import { GeneralConsentQueries } from "./general-consent-queries";
 import SignatureCanvas from "react-signature-canvas";
 import styles from "../../../../../styles/jotform.module.css";
 import { LoaderIcon } from "../../../../loading/loader-icon";
-
+import { ArrowDownCircleFill, ArrowUpCircleFill } from 'react-bootstrap-icons'
 export function AccordianPage() {
 
 	const {
 		state: { applicantExtras, applicant },
 		method: { stepBack, updateApplicantExtras, stepNext },
 	}: JotFormContextType = useContext(JotformContext);
-
+	const [showTab, setShowTab] = useState<boolean[]>([false, false, false, false])
+	const [showTab1, setShowTab1] = useState<boolean>(false)
+	const [showTab2, setShowTab2] = useState<boolean>(false)
+	const [showTab3, setShowTab3] = useState<boolean>(false)
+	const [showTab4, setShowTab4] = useState<boolean>(false)
 	const { t } = useTranslation();
 
+	useEffect(() => {
+		console.log('bool values', showTab)
+	},[showTab])
 	let padRef = useRef<SignatureCanvas>(null);
 
 	const clearSignatureCanvas = (): void => {
@@ -124,25 +131,79 @@ export function AccordianPage() {
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<h1>{t("FORMS_TO_SIGNUP")}</h1>
 				<h6>{t("PLEASE_CLICK_EACH_ARROW")}</h6>
-				<Accordion className="col-12 p-0 jotform__accordion">
-					<VerificationOfEmployment
-						eventKey="0"
-						form={form}
-					/>
-					<DisclosureAuthorization
-						eventKey="1"
-						form={form}
-					/>
-					<ImportantDisclosureBackgroundPsp
-						eventKey="2"
-						form={form}
-					/>
-					<GeneralConsentQueries
-						eventKey="3"
-						form={form}
-					/>
-				</Accordion>
-				<Row className={styles.align__text_left}>
+				<Button className="w-100 d-flex justify-content-between align-items-center" onClick={() => setShowTab1(!showTab1)}>
+					{showTab1 ? (
+						<>
+							{t("HIDE_VERIFICATION_OF_EMPLOYMENT")}
+							< ArrowUpCircleFill />
+						</>
+
+					) : (
+						<>
+							{t("SHOW_VERIFICATION_OF_EMPLOYMENT")}
+							< ArrowDownCircleFill />
+						</>
+					)}
+
+				</Button>
+				{showTab1 && <VerificationOfEmployment form={form} />}
+
+
+				<Button className="w-100 d-flex justify-content-between align-items-center" onClick={() => setShowTab2(!showTab2)}>
+					{showTab2 ? (
+						<>
+							{t("HIDE_DISCLOSURE_AUTHORIZATION")}
+							< ArrowUpCircleFill />
+						</>
+
+					) : (
+						<>
+							{t("SHOW_DISCLOSURE_AUTHORIZATION")}
+							< ArrowDownCircleFill />
+						</>
+					)}
+
+				</Button>
+				{showTab2 && <DisclosureAuthorization form={form} />}
+
+				<Button className="w-100 d-flex justify-content-between align-items-center" onClick={() => setShowTab3(!showTab3)}>
+					{showTab3 ? (
+						<>
+							{t("HIDE_IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")}
+							< ArrowUpCircleFill />
+						</>
+
+					) : (
+						<>
+							{t("SHOW_MPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")}
+							< ArrowDownCircleFill />
+						</>
+					)}
+
+				</Button>
+				{showTab3 && <ImportantDisclosureBackgroundPsp form={form} />}
+
+
+				<Button className="w-100 d-flex justify-content-between align-items-center" onClick={() => setShowTab4(!showTab4)}>
+					{showTab4 ? (
+						<>
+							{t("HIDE_GENERAL_CONSENT_QUERIES")}
+							< ArrowUpCircleFill />
+						</>
+
+					) : (
+						<>
+							{t("SHOW_GENERAL_CONSENT_QUERIES")}
+							< ArrowDownCircleFill />
+						</>
+					)}
+
+				</Button>
+				{showTab4 && <GeneralConsentQueries form={form} />}
+
+
+
+				{/* <Row className={styles.align__text_left}>
 					<Col md="9" className="my-3">
 						<h6>{t("SIGNATURE")}</h6>
 						<SignatureCanvas
@@ -164,7 +225,7 @@ export function AccordianPage() {
 							onClick={clearSignatureCanvas}
 						>{t("CLEAR")}</Button>
 					</Col>
-				</Row>
+				</Row> */}
 				<Row className="mt-2">
 					<Col>
 						<Button className="float-right" type="reset">
