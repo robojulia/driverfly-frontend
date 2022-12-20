@@ -131,8 +131,8 @@ export function AccordianPage() {
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<h1 className="my-3">{t("FORMS_TO_SIGNUP")}</h1>
 				<h6 className="my-3">{t("PLEASE_CLICK_EACH_ARROW")}</h6>
-				<button className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline " onClick={() => setShowTab1(!showTab1)}>
-					{showTab1 ? (
+				<button type="button" className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline " onClick={() => setShowTab([!!!showTab[0], false, false, false])}>
+					{showTab[0] ? (
 						<>
 							{t("HIDE_VERIFICATION_OF_EMPLOYMENT")}
 							< ArrowUpCircleFill />
@@ -146,14 +146,14 @@ export function AccordianPage() {
 					)}
 
 				</button>
-				{showTab1 && <VerificationOfEmployment form={form} />}
+				{showTab[0] && <VerificationOfEmployment form={form} />}
 
 
-				<button className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline" onClick={() => setShowTab2(!showTab2)}>
-					{showTab2 ? (
+				<button type="button" className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline" onClick={() => setShowTab([false, !!!showTab[1], false, false])}>
+					{showTab[1] ? (
 						<>
 							{t("HIDE_DISCLOSURE_AUTHORIZATION")}
-							< ArrowUpCircleFill  />
+							< ArrowUpCircleFill />
 						</>
 
 					) : (
@@ -164,31 +164,31 @@ export function AccordianPage() {
 					)}
 
 				</button>
-				{showTab2 && <DisclosureAuthorization form={form} />}
+				{showTab[1] && <DisclosureAuthorization form={form} />}
 
-				<button className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline" onClick={() => setShowTab3(!showTab3)}>
-					{showTab3 ? (
+				<button type="button" className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline" onClick={() => setShowTab([false, false, !!!showTab[2], false])}>
+					{showTab[2] ? (
 						<>
 							{t("HIDE_IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")}
-							< ArrowUpCircleFill  />
+							< ArrowUpCircleFill />
 						</>
 
 					) : (
 						<>
-							{t("SHOW_MPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")}
+							{t("SHOW_IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")}
 							< ArrowDownCircleFill />
 						</>
 					)}
 
 				</button>
-				{showTab3 && <ImportantDisclosureBackgroundPsp form={form} />}
+				{showTab[2] && <ImportantDisclosureBackgroundPsp form={form} />}
 
 
-				<button className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline" onClick={() => setShowTab4(!showTab4)}>
-					{showTab4 ? (
+				<button type="button" className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline" onClick={() => setShowTab([false, false, false, !!!showTab[3]])}>
+					{showTab[3] ? (
 						<>
 							{t("HIDE_GENERAL_CONSENT_QUERIES")}
-							< ArrowUpCircleFill  />
+							< ArrowUpCircleFill />
 						</>
 
 					) : (
@@ -199,7 +199,7 @@ export function AccordianPage() {
 					)}
 
 				</button>
-				{showTab4 && <GeneralConsentQueries form={form} />}
+				{showTab[3] && <GeneralConsentQueries form={form} />}
 
 
 
