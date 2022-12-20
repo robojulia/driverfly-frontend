@@ -107,6 +107,14 @@ export function PastEmploymentHistory() {
 													label="CONTACT_AUTHORIZATION"
 													formik={form}
 												/>
+											</Row>
+											<Row>
+												<BaseInput
+													className="col-md-6 my-3"
+													name={`PAST_EMPLOYER.value[${i}].previous_company_name`}
+													label="PREVIOUS_COMPANY_NAME"
+													formik={form}
+												/>
 												<BaseInput
 													className="col-md-6 my-3"
 													name={`PAST_EMPLOYER.value[${i}].previous_company_manager_name`}

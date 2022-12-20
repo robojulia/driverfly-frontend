@@ -14,7 +14,7 @@ import styles from "../../../../styles/jotform.module.css";
 export function ViolationHistory() {
 	const {
 		state: { applicant, applicantExtras },
-		method: { updateApplicantExtras, stepBack, stepNext },
+		method: { updateApplicantExtras, stepBack, stepNext, setApplicant },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
@@ -22,10 +22,14 @@ export function ViolationHistory() {
 		initialValues: new ViolationHistoryDto(),
 		validationSchema: ViolationHistoryDto.yupSchema(),
 		onSubmit: (values) => {
-			const { VIOLATION_DETAILS, VIOLATION_COUNT } = values;
+			const { VIOLATION_DETAILS, moving_violations_count } = values;
 			try {
 				updateApplicantExtras(VIOLATION_DETAILS);
-				updateApplicantExtras(VIOLATION_COUNT);
+				setApplicant({
+					...applicant,
+					moving_violations_count
+				});
+
 			} catch (error) {
 				console.log(error);
 			}
@@ -69,7 +73,7 @@ export function ViolationHistory() {
 				<BaseInput
 					type="number"
 					className="col my-3 p-0"
-					name="VIOLATION_COUNT.value"
+					name="moving_violations_count"
 					label="HOW_MANY_VIOALTION_3_YEARS"
 					formik={form}
 				/>
