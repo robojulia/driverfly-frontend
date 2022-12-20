@@ -307,26 +307,6 @@ export default function ApplicantExtrasDetails({
 						</Row>
 					</ViewCard>
 				</Col>
-				<Col md="6">
-					<ViewCard title="LEGAL_INFO">
-						<Row>
-							<ViewDetails
-								default={t("NOT_ANSWERED")}
-								obj={{
-									// EMPLOYEE_SS_OR_BUSINESS: employee_ss_id?.value,
-									// DISCLOSURE_AND_AUTHROIZE_DATE: disclosure_date?.value,
-									IMPOERANT_BACKGROUND_DATE: important_background_date?.value,
-
-									name: general_consent?.value?.name,
-									EMPLOYER_NAME: general_consent?.value?.employer_name,
-									cdl_license_number:
-										general_consent?.value?.cdl_license_number,
-									expiration_date: general_consent?.value?.expiration_date,
-								}}
-							/>
-						</Row>
-					</ViewCard>
-				</Col>
 			</Row>
 		</>
 	);

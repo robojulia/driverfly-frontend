@@ -1817,5 +1817,9 @@
   "TO_BE_READ_AND_SIGNED_BY_APPLICANT":"To Be Read and Signed by Applicant:",
   "IT_IS_AGREE_AND_UNDERSTOOD":"It is agreed and understood that any misrepresentation given on this application shall be considered an act of dishonesty. It is agreed and understood that the motor carrier or his agents may investigate the applicant’s background top obtain any and all information of concern to applicant’s record, whether same is of record or not, and applicant releases employers and person named herein from all liability for any damages on account of his furnishing such information. It is also agreed and understood that under the Fair Credit Reporting Act, Public Law 91-508, I have been told that this investigation may include an investigating Consumer Report, including information regarding my character, general reputation, personal characteristics, and mode of living. I agree to furnish such additional information and complete such examinations as may be required to complete my application file. It is agreed and understood that this Application in no way obligates the motor carrier to employ or hire the applicant. It is agreed and understood that if qualified and hired, I may be on a probationary period during which time I may be disqualified without recourse. This certifies that this application was completed by me, and that all entries on it and information in it are true and complete to the best of my knowledge.",
   "{company_name}_I_HEREBY_AUTHORIZE_AND_REQUEST_FOLLOWING":"I hereby authorize and request the following companies to release any and all information pertaining to my employment records as required by 49 CFR Section 391.23 and Section 40.25(b) to {{company_name}}.",
-  "HIDDEN":"Hidden"
+  "HIDDEN":"Hidden",
+  "APPLICANT_FULL_NAME_{NAME}":"Full Name: {{NAME}}",
+  "APPLICANT_{cdl_number}":"CDL License Number: {{cdl_number}}",
+  "APPLICANT_{COMPANY_NAME}":"Employer Name: {{COMPANY_NAME}}",
+  "APPLICANT_{APPLY_DATE}":"Date: {{APPLY_DATE}}"
 }

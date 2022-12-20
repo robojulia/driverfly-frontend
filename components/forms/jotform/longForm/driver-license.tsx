@@ -75,6 +75,7 @@ export function DriverLicense() {
 					className="my-3"
 					name="document"
 					accept="application/pdf"
+					allowedSizeInByte={3000000}
 					formik={form}
 				/>
 			</Row>

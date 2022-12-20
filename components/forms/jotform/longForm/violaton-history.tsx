@@ -57,6 +57,7 @@ export function ViolationHistory() {
 			VIOLATION_DETAILS: !!apx_detail?.type
 				? apx_detail
 				: new ApplicantExtrasEntity(ApplicantExtras.VIOLATION_DETAILS),
+			moving_violations_count: applicant?.moving_violations_count
 		});
 	}, [applicant, applicantExtras]);
 

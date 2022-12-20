@@ -47,31 +47,6 @@ export default function Dashboard({ entity }: LongFormProps) {
 					<ApplicantSafetyBackground applicant={entity} />
 				</Row>
 				<Row>
-					<ViewCard title="UPLOADED_DOCUMENTS">
-						<ViewTable
-							type="DOCUMENTS"
-							headers={{
-								type: "TYPE",
-								document: "DOCUMENT",
-								date_added: "DATE_ADDED",
-							}}
-							items={entity?.documents?.map((document) => ({
-								type: t(`ApplicantDocumentType.${document.type}`),
-								document: (
-									<a
-										onClick={() =>
-											viewDocumentClick(document.id, document.name)
-										}
-										href="#"
-									>
-										{document.name}
-									</a>
-								),
-								date_added: new Date(document.created_at).toDateString(),
-							}))}
-						/>
-					</ViewCard>
-					<ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
 					<ApplicantExtrasDetails applicant={entity} />
 				</Row>
 			</PageLayout>

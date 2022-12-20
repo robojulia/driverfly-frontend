@@ -124,9 +124,6 @@ export function VerificationOfEmployment({ eventKey, form }: AccordianProps) {
                         {t("NEW_EMPLOYER_NAME_{company_name}", { company_name: applicant?.company?.name }, { translateProps: true })}
                     </p>
 
-                    <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                        {t("WEBSITE_{company_web}", { company_web: applicant?.company?.website }, { translateProps: true })}
-                    </p>
                     {/* <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                     {t("WEBSITE_{company_web}", {company_web: applicant?.company?.website}, { translateProps: true })}
                         {t("DESIGNATED_EMPLOYER")}
