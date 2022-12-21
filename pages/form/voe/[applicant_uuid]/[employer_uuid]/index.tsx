@@ -29,9 +29,9 @@ export default function VoeForm({ applicant, employer }: VoeFormProps) {
 	useEffect(() => {
 		console.log("from index", applicant);
 
-		if (applicant.voeData) setApplicantVoe(applicant.voeData)
+		if (applicant.voeData) setApplicantVoe(applicant.voeData.filter(val => val?.employerId === employer?.id))
 
-	}, [applicant]);
+	}, [employer]);
 
 	return (
 		<VoeFormContext.Provider

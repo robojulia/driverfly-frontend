@@ -1,7 +1,7 @@
 import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
 import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 export default function ConsentAlcoholDrug() {
     const {
@@ -13,7 +13,9 @@ export default function ConsentAlcoholDrug() {
     const date =  applicant?.extras?.find(
         (v) => v.type == ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
     );
-
+useEffect(() => {
+console.log("general consent ", generalConsent)
+},[])
     return (
         <form>
             <div className="Row">
@@ -43,19 +45,19 @@ export default function ConsentAlcoholDrug() {
             <div className="Row" style={{ textAlign: 'left', marginBottom: '20px' }}>
                 <div className="Col">
                     <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>{t("EMPLOYERS_NAME:")}</p>
-                    <p style={{ color: 'black', display: 'inline' }}>{` ${generalConsent?.value?.employer_name}`}</p>
+                    <p style={{ color: 'black', display: 'inline' }}>{` ${applicant?.company?.name}`}</p>
                 </div>
             </div>
             <div className="Row" style={{ textAlign: 'left', marginBottom: '20px' }}>
                 <div className="Col">
                     <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>{t("CDL_LICENSE_NUMBER:")}</p>
-                    <p style={{ color: 'black', display: 'inline' }}>{` ${generalConsent?.value?.cdl_license_number}`}</p>
+                    <p style={{ color: 'black', display: 'inline' }}>{` ${applicant?.license_number}`}</p>
                 </div>
             </div>
             <div className="Row" style={{ textAlign: 'left', marginBottom: '20px' }}>
                 <div className="Col">
                     <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>{t("EXPIRATION_DATE:")}</p>
-                    <p style={{ color: 'black', display: 'inline' }}>{` ${generalConsent?.value?.expiration_date}`}</p>
+                    <p style={{ color: 'black', display: 'inline' }}>{` ${applicant?.license_expiry}`}</p>
                 </div>
             </div>
             <div className="Row">
@@ -95,7 +97,7 @@ export default function ConsentAlcoholDrug() {
             <div className="Row" style={{ textAlign: 'left', marginBottom: '20px' }}>
                 <div className="Col">
                     <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>{t("DATE_OF_CONSENT:")}</p>
-                    <p style={{ color: 'black', display: 'inline' }}>{date?.value ? date?.value : ` ${t("NULL")}`}</p>
+                    <p style={{ color: 'black', display: 'inline' }}>{ date?.value ? date?.value : ` ${t("NULL")}`}</p>
 
                 </div>
             </div>

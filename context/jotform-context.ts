@@ -1,4 +1,5 @@
 import { createContext } from "react";
+import { ApplicantEmployerEntity } from "../models/applicant";
 import { ApplicantExtrasEntity } from "../models/applicant/applicant-extras.entity";
 import { ApplicantEntity } from "../models/applicant/applicant.entity";
 
