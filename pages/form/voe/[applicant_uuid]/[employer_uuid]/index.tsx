@@ -38,6 +38,7 @@ export default function VoeForm({ applicant, employer }: VoeFormProps) {
 			value={{
 				state: {
 					applicant,
+					employer,
 					applicantVoe,
 					steps,
 				},
