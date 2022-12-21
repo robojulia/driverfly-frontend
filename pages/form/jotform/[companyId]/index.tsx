@@ -7,7 +7,6 @@ import { getFullFormPages, getFullFormStyle } from "../../../../components/forms
 import CompanyApi from "../../../api/company";
 import { Status } from "../../../../enums/status.enum";
 import { CompanyEntity } from "../../../../models/company/company.entity";
-import BaseInput from "../../../../components/forms/base-input";
 
 export interface FullFormProps {
 	employer: CompanyEntity
@@ -23,7 +22,7 @@ export default function FullForm({ employer }: FullFormProps) {
 				? [...oldApx, { ...applicantExtrasEntity }]
 				: [{ ...applicantExtrasEntity }];
 		});
-	const [steps, setSteps] = useState<number>(0);
+	const [steps, setSteps] = useState<number>(8);
 	const stepNext = (): void => setSteps(steps + 1);
 	const stepBack = (): void => setSteps(steps - 1);
 
