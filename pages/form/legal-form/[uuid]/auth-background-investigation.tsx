@@ -63,7 +63,7 @@ export default function AuthBackgroundInvestigationPage({ entity }: LegalFormPro
 			</div>
 		</jotformContext.Provider>
 	);
-}
+}``
 
 const pageOne = () => {
 	return <AuthBackgroundInvestigation />

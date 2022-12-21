@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from "react";
-import styles from "../../../../styles/jotform.module.css";
-import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
+import styles from "../../../../../styles/jotform.module.css";
+import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import "react-toastify/dist/ReactToastify.css";
-import jotformContext from "../../../../context/jotform-context";
-import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
-import ApplicantApi from "../../../api/applicant";
-import { VerificationOfEmploymentSection1 } from "../../../../components/forms/jotform/voe-forms/legal-attachments/voe-attachments/section-1";
+import jotformContext from "../../../../../context/jotform-context";
+import { ApplicantExtrasEntity } from "../../../../../models/applicant/applicant-extras.entity";
+import ApplicantApi from "../../../../api/applicant";
+import { VerificationOfEmploymentSection1 } from "../../../../../components/forms/jotform/voe-forms/legal-attachments/voe-attachments/section-1";
+import { ApplicantEmployerEntity, ApplicantVoeFormEntity } from "../../../../../models/applicant";
 
 export interface LegalFormProps {
-	entity: ApplicantEntity
+	entity: ApplicantEntity,
+	employer: ApplicantEmployerEntity
 }
 
-export default function VerificationOfEmploymentSection1Page({ entity }: LegalFormProps) {
+export default function VerificationOfEmploymentSection1Page({ entity, employer }: LegalFormProps) {
 
 	const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
 	const [applicantExtras, setApplicantExtras] = useState<ApplicantExtrasEntity[]>([]);
+	const [applicantVoe, setApplicantVoe] = useState<ApplicantVoeFormEntity[]>([])
+
 	const updateApplicantExtras = (applicantExtrasEntity: ApplicantExtrasEntity) =>
 		setApplicantExtras((oldApx) => {
 			oldApx = oldApx?.filter(v => v.type !== applicantExtrasEntity.type)
@@ -26,12 +30,15 @@ export default function VerificationOfEmploymentSection1Page({ entity }: LegalFo
 	const stepBack = (): void => setSteps(steps - 1)
 
 	useEffect(() => {
-		console.log("applicantextrasvalues", applicantExtras);
-	}, []);
+		console.log("from index", employer);
 
-	const getPageAccordingToStep = (step: number) => {
+		if (applicant.voeData) setApplicantVoe(applicant.voeData.filter(val => val?.employerId === employer?.id))
+
+	}, [employer]);
+
+	const getPageAccordingToStep = (step: number, employer: ApplicantEmployerEntity) => {
 		return {
-			0: pageOne(),
+			0: pageOne({ employer }),
 		}[step];
 	};
 	useEffect(() => {
@@ -57,7 +64,7 @@ export default function VerificationOfEmploymentSection1Page({ entity }: LegalFo
 			<div>
 				<div className={styles.main}>
 					<div style={{ padding: '30px' }}>
-						{getPageAccordingToStep(steps)}
+						{getPageAccordingToStep(steps, employer)}
 					</div>
 				</div>
 			</div>
@@ -65,8 +72,8 @@ export default function VerificationOfEmploymentSection1Page({ entity }: LegalFo
 	);
 }
 
-const pageOne = () => {
-	return <VerificationOfEmploymentSection1 />
+const pageOne = ({ employer }) => {
+	return <VerificationOfEmploymentSection1 employer={employer} />
 };
 function t(arg0: string): import("react-toastify").ToastContent {
 	throw new Error("Function not implemented.");
@@ -75,18 +82,19 @@ function t(arg0: string): import("react-toastify").ToastContent {
 
 export async function getServerSideProps({ query }) {
 	try {
-		const { uuid } = query || {};
+		const { uuid, employer_uuid } = query || {};
 
-		if (!!!uuid) return { notFound: true };
+		if (!!!uuid || !!!employer_uuid) return { notFound: true };
 
 		const applicantApi = new ApplicantApi();
 		const entity: ApplicantEntity = await applicantApi.getByUuidToken(
 			uuid
 		);
+		const employer: ApplicantEmployerEntity = await applicantApi.employer.getByUuidToken(employer_uuid)
 
-		if (!!!entity) return { notFound: true };
+		if (!!!entity || !!!employer || entity.id !== employer?.applicant?.id) return { notFound: true }
 
-		return { props: { entity } };
+		return { props: { entity, employer } }
 	} catch (error) {
 		return { notFound: true };
 	}
