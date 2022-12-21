@@ -10,7 +10,7 @@ export class AccidentHistoryDto {
   REGISTERED_ACCIDENTS_DETAILS: ApplicantVoeFormEntity;
   ACCIDENT_REPORTED_TO_GOVERNMENT: ApplicantVoeFormEntity;
   REASON_TO_LEAVE_EMPLOYMENT: ApplicantVoeFormEntity;
-
+  
   static yupSchema() {
     return yup.object({
       WAS_EMPLOYED_AS: ApplicantVoeFormEntity.yupSchema(),
