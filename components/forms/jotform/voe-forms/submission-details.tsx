@@ -89,7 +89,7 @@ export function SubmissionDetails() {
 			<ToastContainer />
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row className={`${styles.align__text_left}`}>
-					<Col md="9">
+					<Col md="10">
 						<h6 className={styles.bold}>{t("SIGNATURE")}</h6>
 						<SignatureCanvas
 							name="SIGNATURE_VOE.value"
@@ -103,7 +103,7 @@ export function SubmissionDetails() {
 							}}
 						/>
 					</Col>
-					<Col md="3" className="d-flex align-self-center justify-content-center">
+					<Col md="2" className="d-flex align-self-center justify-content-center">
 						<button type="button" className="theme-secondary-btn" onClick={clearSignatureCanvas}>
 							{t("CLEAR")}
 						</button>
