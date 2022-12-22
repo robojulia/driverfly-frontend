@@ -4,9 +4,6 @@ import ApplicantSafetyBackground from "../../../../../components/applicants/appl
 import ViewApplicantDetail from "../../../../../components/applicants/applicant-view-details";
 import ApplicantExtrasDetails from "../../../../../components/applicants/jotform/applicant-profile";
 import PageLayout from "../../../../../components/layouts/page/page-layout";
-import ViewCard from "../../../../../components/view-details/view-card";
-import ViewPdf from "../../../../../components/view-details/view-pdf";
-import ViewTable from "../../../../../components/view-details/view-table";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../../models/applicant";
 import ApplicantApi from "../../../../api/applicant";

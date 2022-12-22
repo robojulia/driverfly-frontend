@@ -7,6 +7,7 @@ import ViewCard from "../../../view-details/view-card";
 import { ViewApplicantDetailProps } from "../../../../types/applicant/view-application-detail-props.type";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import ViewTable from "../../../view-details/view-table";
+import ShowFormattedDate from "../../../jobs/show-formatted-date";
 
 interface ApplicantSafetyBackgroundProps extends ViewApplicantDetailProps { }
 
@@ -237,8 +238,8 @@ export default function ApplicantExtrasDetails({
 									current_employer?.name,
 								CURRENT_COMPANY_PHONE_NUMBER:
 									current_employer?.phone,
-								// CURRENT_COMPANY_POSITION:
-								// 	current_employer?.current_company_position,
+								CURRENT_COMPANY_POSITION:
+									current_employer?.title,
 								CURRENT_COMPANY_STREET_ADDRESS_LINE_1:
 									current_employer?.address,
 								CURRENT_COMPANY_STREET_ADDRESS_LINE_2:
@@ -246,7 +247,7 @@ export default function ApplicantExtrasDetails({
 								zip_code: current_employer?.zip_code,
 								fcr: current_employer?.is_subject_to_drug_tests ? `${t("YES")}` : `${t("NO")}`,
 								fmcsr: current_employer?.is_subject_to_fmcsrs ? `${t("YES")}` : `${t("NO")}`,
-								START_DATE: current_employer?.start_at,
+								START_DATE: new Date(current_employer?.start_at),
 								state: current_employer?.state,
 							}}
 						/>
@@ -271,7 +272,7 @@ export default function ApplicantExtrasDetails({
 						}}
 						items={past_employer?.map((v) => ({
 							city: v?.city,
-							END_DATE: v?.end_at,
+							END_DATE: <ShowFormattedDate date={v?.end_at} hideTime />,
 							fcr: v?.is_subject_to_drug_tests ? `${t("YES")}` : `${t("NO")}`,
 							fmcsr: v?.is_subject_to_fmcsrs ? `${t("YES")}` : `${t("NO")}`,
 							PREVIOUS_COMPANY_EMAIL: v?.email,
@@ -280,8 +281,9 @@ export default function ApplicantExtrasDetails({
 							PREVIOUS_COMPANY_ADDRESS_1: v?.address,
 							PREVIOUS_COMPANY_ADDRESS_2: v?.address_2,
 							zip_code: v?.zip_code,
-							START_DATE: v?.start_at,
+							START_DATE: <ShowFormattedDate date={v?.start_at} hideTime />,
 							state: v?.state,
+
 
 						}))}
 					/>
