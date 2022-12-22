@@ -26,18 +26,16 @@ export function SubmissionDetails() {
 	let padRef = useRef<SignatureCanvas>(null);
 	const clearSignatureCanvas = () => padRef?.current?.clear();
 
+	const calledOnce = useRef(false);
+
 	const form = useFormik({
 		initialValues: new SubmissionDetailsDto(),
 		validationSchema: SubmissionDetailsDto.yupSchema(),
 		onSubmit: async (values) => {
-			const { SIGNATURE_VOE, SENDER_INFO } = values;
-			updateApplicantVoe(SIGNATURE_VOE);
-			updateApplicantVoe(SENDER_INFO);
 
 			const applicantApi = new ApplicantApi();
 			const filtered_voe = applicantVoe?.filter((v) => !!v.value);
 
-			console.log("voe Applicant", applicantVoe);
 			try {
 				const response = await applicantApi.voeform.create({
 					applicant_uuid_token: applicant?.uuid_token,
@@ -61,7 +59,10 @@ export function SubmissionDetails() {
 		const signatureValue = padRef.current.toDataURL().toString();
 		form.setFieldValue("SIGNATURE_VOE.value", signatureValue);
 	};
+
 	useEffect(() => {
+		if (calledOnce.current) return;
+
 		const apx_sign = applicantVoe?.find(
 			(v) => v.type === ApplicantVoeFormEnum.SIGNATURE_VOE
 		);
@@ -78,13 +79,22 @@ export function SubmissionDetails() {
 				? apx_sender_info
 				: new ApplicantVoeFormEntity(ApplicantVoeFormEnum.SENDER_INFO),
 		});
+
+		calledOnce.current = true
 	}, [applicantVoe]);
 
-	useEffect(() => {
-		console.log("form values", form.values);
-		console.log("form eror", form.errors);
+	// useEffect(() => {
+	// 	console.log("form values", form.values);
+	// 	console.log("form eror", form.errors);
 
-	}, [form.values, form.errors]);
+	// }, [form.values, form.errors]);
+
+	useEffect(() => {
+		const { SIGNATURE_VOE, SENDER_INFO } = form.values;
+
+		if (SIGNATURE_VOE?.type) updateApplicantVoe(SIGNATURE_VOE);
+		if (SENDER_INFO?.type) updateApplicantVoe(SENDER_INFO);
+	}, [form.values]);
 
 	return (
 		<>

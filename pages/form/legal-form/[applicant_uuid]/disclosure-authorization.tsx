@@ -1,24 +1,22 @@
 import React, { useEffect, useState } from "react";
-import styles from "../../../../../styles/jotform.module.css";
-import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
+import styles from "../../../../styles/jotform.module.css";
+import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import "react-toastify/dist/ReactToastify.css";
-import jotformContext from "../../../../../context/jotform-context";
-import { ApplicantExtrasEntity } from "../../../../../models/applicant/applicant-extras.entity";
-import ApplicantApi from "../../../../api/applicant";
-import { VerificationOfEmploymentSection1 } from "../../../../../components/forms/jotform/voe-forms/legal-attachments/voe-attachments/section-1";
-import { ApplicantEmployerEntity, ApplicantVoeFormEntity } from "../../../../../models/applicant";
+import jotformContext from "../../../../context/jotform-context";
+import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import ApplicantApi from "../../../api/applicant";
+import DisclosureAttachment from "../../../../components/forms/jotform/voe-forms/legal-attachments/disclosure-attachment";
+
 
 export interface LegalFormProps {
-	entity: ApplicantEntity,
-	employer: ApplicantEmployerEntity
+	entity: ApplicantEntity
 }
 
-export default function VerificationOfEmploymentSection1Page({ entity, employer }: LegalFormProps) {
+
+export default function DisclosureAttachmentPage({ entity }: LegalFormProps) {
 
 	const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
 	const [applicantExtras, setApplicantExtras] = useState<ApplicantExtrasEntity[]>([]);
-	const [applicantVoe, setApplicantVoe] = useState<ApplicantVoeFormEntity[]>([])
-
 	const updateApplicantExtras = (applicantExtrasEntity: ApplicantExtrasEntity) =>
 		setApplicantExtras((oldApx) => {
 			oldApx = oldApx?.filter(v => v.type !== applicantExtrasEntity.type)
@@ -30,15 +28,12 @@ export default function VerificationOfEmploymentSection1Page({ entity, employer 
 	const stepBack = (): void => setSteps(steps - 1)
 
 	useEffect(() => {
-		console.log("from index", employer);
+		console.log("applicantextrasvalues", applicantExtras);
+	}, []);
 
-		if (applicant.voeData) setApplicantVoe(applicant.voeData.filter(val => val?.employerId === employer?.id))
-
-	}, [employer]);
-
-	const getPageAccordingToStep = (step: number, employer: ApplicantEmployerEntity) => {
+	const getPageAccordingToStep = (step: number) => {
 		return {
-			0: pageOne({ employer }),
+			0: pageOne(),
 		}[step];
 	};
 	useEffect(() => {
@@ -64,7 +59,7 @@ export default function VerificationOfEmploymentSection1Page({ entity, employer 
 			<div>
 				<div className={styles.main}>
 					<div style={{ padding: '30px' }}>
-						{getPageAccordingToStep(steps, employer)}
+						{getPageAccordingToStep(steps)}
 					</div>
 				</div>
 			</div>
@@ -72,8 +67,8 @@ export default function VerificationOfEmploymentSection1Page({ entity, employer 
 	);
 }
 
-const pageOne = ({ employer }) => {
-	return <VerificationOfEmploymentSection1 employer={employer} />
+const pageOne = () => {
+	return <DisclosureAttachment/>
 };
 function t(arg0: string): import("react-toastify").ToastContent {
 	throw new Error("Function not implemented.");
@@ -82,19 +77,18 @@ function t(arg0: string): import("react-toastify").ToastContent {
 
 export async function getServerSideProps({ query }) {
 	try {
-		const { uuid, employer_uuid } = query || {};
+		const { uuid } = query || {};
 
-		if (!!!uuid || !!!employer_uuid) return { notFound: true };
+		if (!!!uuid) return { notFound: true };
 
 		const applicantApi = new ApplicantApi();
 		const entity: ApplicantEntity = await applicantApi.getByUuidToken(
 			uuid
 		);
-		const employer: ApplicantEmployerEntity = await applicantApi.employer.getByUuidToken(employer_uuid)
 
-		if (!!!entity || !!!employer || entity.id !== employer?.applicant?.id) return { notFound: true }
+		if (!!!entity) return { notFound: true };
 
-		return { props: { entity, employer } }
+		return { props: { entity } };
 	} catch (error) {
 		return { notFound: true };
 	}

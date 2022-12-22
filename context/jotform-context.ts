@@ -5,15 +5,15 @@ import { ApplicantEntity } from "../models/applicant/applicant.entity";
 
 export type JotFormContextType = {
 	state: {
-		applicant: ApplicantEntity;
-		applicantExtras: ApplicantExtrasEntity[];
-		steps: number;
+		applicant?: ApplicantEntity;
+		applicantExtras?: ApplicantExtrasEntity[];
+		steps?: number;
 	};
 	method: {
-		setApplicant: (e?: any) => void;
-		updateApplicantExtras: (e?: any) => void;
-		stepNext: () => void;
-		stepBack: () => void;
+		setApplicant?: (e?: any) => void;
+		updateApplicantExtras?: (e?: any) => void;
+		stepNext?: () => void;
+		stepBack?: () => void;
 	};
 };
 
