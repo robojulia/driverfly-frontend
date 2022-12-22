@@ -120,7 +120,7 @@ export function OtherQueues() {
             {form.values.CDL_NUMBER?.value?.length > 0 && (
                 <>
                     {form.values.CDL_NUMBER?.value?.map((entity, i) => (
-                        <Row key={i}>
+                        <Row key={i} className="single-past-employer-items my-5">
                             <BaseInput
                                 name={`CDL_NUMBER.value[${i}].license_number`}
                                 className="col-md-4 my-3"
@@ -129,7 +129,7 @@ export function OtherQueues() {
                                 formik={form}
                             />
                             <StateSelect
-                                className="col-md-3 my-3"
+                                className="col-md-4 my-3"
                                 name={`CDL_NUMBER.value[${i}].state`}
                                 placeholder="STATE"
                                 label="CHOOSE"
@@ -143,9 +143,9 @@ export function OtherQueues() {
                                 label="DATE"
                                 formik={form}
                             />
-                            <a
-                                className="text-right col-md-1 mt-md-5"
-                                href="#"
+
+                            <Button className="rounded-0 col"
+                                variant="outline-danger close_btn"
                                 onClick={() =>
                                     form.setValues({
                                         ...form.values,
@@ -158,8 +158,9 @@ export function OtherQueues() {
                                     })
                                 }
                             >
-                                <DashCircle color="red" />
-                            </a>
+                                <DashCircle /></Button>
+                            <div className='Row' style={{ height: '3px', borderBottom: 'solid 2px #8d8c8c', marginTop: '0px' }}></div >
+
                         </Row>
                     ))}
                 </>

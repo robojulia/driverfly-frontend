@@ -37,6 +37,7 @@ export function SubmissionDetails() {
 			const applicantApi = new ApplicantApi();
 			const filtered_voe = applicantVoe?.filter((v) => !!v.value);
 
+			console.log("voe Applicant", applicantVoe);
 			try {
 				const response = await applicantApi.voeform.create({
 					applicant_uuid_token: applicant?.uuid_token,
@@ -45,6 +46,7 @@ export function SubmissionDetails() {
 				});
 
 				if (response) stepNext()
+
 			} catch (error) {
 				console.log(error);
 				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
@@ -66,11 +68,10 @@ export function SubmissionDetails() {
 		const apx_sender_info = applicantVoe?.find(
 			(v) => v.type === ApplicantVoeFormEnum.SENDER_INFO
 		);
-
 		form.setValues({
 			...form.values,
 			SIGNATURE_VOE: !!apx_sign?.type
-				? padRef?.current?.fromDataURL(apx_sign?.value)
+				? apx_sign
 				: new ApplicantVoeFormEntity(ApplicantVoeFormEnum.SIGNATURE_VOE),
 
 			SENDER_INFO: !!apx_sender_info?.type
@@ -82,6 +83,7 @@ export function SubmissionDetails() {
 	useEffect(() => {
 		console.log("form values", form.values);
 		console.log("form eror", form.errors);
+
 	}, [form.values, form.errors]);
 
 	return (

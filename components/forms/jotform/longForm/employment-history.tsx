@@ -122,7 +122,7 @@ export function EmploymentHistory() {
 
 						<Row>
 							<BaseInput
-								className="col-md-6 my-lg-2 my-3"
+								className="col-md-6 my-3"
 								required
 								type="date"
 								name="employer.start_at"

@@ -97,24 +97,24 @@ export function ViolationHistory() {
 			{form.values.VIOLATION_DETAILS?.value?.length > 0 && (
 				<>
 					{form.values.VIOLATION_DETAILS.value.map((entity, i) => (
-						<Row key={i}>
-							<div className="col-md-12 mt-2 p-0">
-								<Row className="p-2">
+						<Row key={i} className="single-past-employer-items my-5">
+							<div className="col-md-12 mt-2">
+								<Row>
 									<BaseInput
-										className="col-md-3 mt-3"
+										className="col-md-6 mt-3"
 										name={`VIOLATION_DETAILS.value[${i}].date_of_violation`}
 										label="VIOLATION_DATE"
 										type="date"
 										formik={form}
 									/>
 									<BaseInput
-										className="col-md-3 mt-3"
+										className="col-md-6 mt-3"
 										name={`VIOLATION_DETAILS.value[${i}].location`}
 										label="location"
 										formik={form}
 									/>
 									<BaseInput
-										className="col-md-3 mt-3"
+										className="col-md-6 mt-3"
 										name={`VIOLATION_DETAILS.value[${i}].charge`}
 										label="CHARGE"
 										formik={form}
@@ -125,8 +125,9 @@ export function ViolationHistory() {
 										label="PENALTY"
 										formik={form}
 									/>
-									<a className="text-right mt-2"
-										href="#"
+									<Button
+										className="rounded-0 mt-3"
+										variant="outline-danger close_btn"
 										onClick={() =>
 											form.setValues({
 												...form.values,
@@ -140,8 +141,9 @@ export function ViolationHistory() {
 											})
 										}
 									>
-										<DashCircle color="red" />
-									</a>
+										<DashCircle />
+									</Button>
+									<div className='Row' style={{ height: '3px', borderBottom: 'solid 2px #8d8c8c', marginTop: '0px' }}></div >
 								</Row>
 							</div>
 						</Row>
