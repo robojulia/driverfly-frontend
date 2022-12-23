@@ -16,7 +16,7 @@ export function VerificationOfEmploymentSection1({ applicant, employer }: Sectio
 
     useEffect(() => {
         console.log("employer from comp ", employer)
-        // console.log("applicant from comp ", applicant?.company?.users[0]?.)
+        console.log("applicant from comp ", applicant?.company?.users[0])
     }, [])
 
     return (
@@ -91,6 +91,10 @@ export function VerificationOfEmploymentSection1({ applicant, employer }: Sectio
                 <h4 className="mt-3">{t("I_A")}</h4>
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                     {t("NEW_EMPLOYER_NAME_{company_name}", { company_name: applicant?.company?.name }, { translateProps: true })}
+                </p>
+               
+                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                    {t("CURENNT_COMPANY_{phone}", { phone:applicant?.company?.users[0]?.contact_number }, { translateProps: true })}
                 </p>
             </Row>
             <Row className={`${styles.align__text_left} ${styles.highlight}`}>

@@ -8,66 +8,22 @@ import ApplicantApi from "../../../api/applicant";
 import ApplicantInfoReleaseConsent from "../../../../components/forms/jotform/voe-forms/legal-attachments/applicant-info-release-consent";
 
 export interface LegalFormProps {
-	entity: ApplicantEntity
+	applicant: ApplicantEntity
 }
 
-export default function ApplicantInfoReleaseConsentPage({ entity }: LegalFormProps) {
-
-	const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
-	const [applicantExtras, setApplicantExtras] = useState<ApplicantExtrasEntity[]>([]);
-	const updateApplicantExtras = (applicantExtrasEntity: ApplicantExtrasEntity) =>
-		setApplicantExtras((oldApx) => {
-			oldApx = oldApx?.filter(v => v.type !== applicantExtrasEntity.type)
-			return !!oldApx ? [...oldApx, { ...applicantExtrasEntity }] : [{ ...applicantExtrasEntity }]
-		})
-
-	const [steps, setSteps] = useState<number>(0);
-	const stepNext = (): void => setSteps(steps + 1)
-	const stepBack = (): void => setSteps(steps - 1)
-
-	useEffect(() => {
-		console.log("applicantextrasvalues", applicantExtras);
-	}, []);
-
-	const getPageAccordingToStep = (step: number) => {
-		return {
-			0: pageOne(),
-		}[step];
-	};
-	useEffect(() => {
-		console.log("applicant from server side props", entity)
-		setApplicant(entity)
-	}, [])
+export default function ApplicantInfoReleaseConsentPage({ applicant }: LegalFormProps) {
 	return (
-		<jotformContext.Provider
-			value={{
-				state: {
-					applicant,
-					applicantExtras,
-					steps,
-				},
-				method: {
-					setApplicant,
-					updateApplicantExtras,
-					stepNext,
-					stepBack
-				},
-			}}
-		>
-			<div>
-				<div className={styles.main}>
-					<div style={{ padding: '30px' }}>
-						{getPageAccordingToStep(steps)}
-					</div>
+
+		<div>
+			<div className={styles.main}>
+				<div style={{ padding: '30px' }}>
+					<ApplicantInfoReleaseConsent applicant={applicant} />
 				</div>
 			</div>
-		</jotformContext.Provider>
+		</div>
 	);
 }
 
-const pageOne = () => {
-	return <ApplicantInfoReleaseConsent />
-};
 function t(arg0: string): import("react-toastify").ToastContent {
 	throw new Error("Function not implemented.");
 }
@@ -75,18 +31,18 @@ function t(arg0: string): import("react-toastify").ToastContent {
 
 export async function getServerSideProps({ query }) {
 	try {
-		const { uuid } = query || {};
+		const { applicant_uuid } = query || {};
 
-		if (!!!uuid) return { notFound: true };
+		if (!!!applicant_uuid) return { notFound: true };
 
 		const applicantApi = new ApplicantApi();
-		const entity: ApplicantEntity = await applicantApi.getByUuidToken(
-			uuid
+		const applicant: ApplicantEntity = await applicantApi.getByUuidToken(
+			applicant_uuid
 		);
 
-		if (!!!entity) return { notFound: true };
+		if (!!!applicant) return { notFound: true };
 
-		return { props: { entity } };
+		return { props: { applicant } };
 	} catch (error) {
 		return { notFound: true };
 	}

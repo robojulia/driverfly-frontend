@@ -14,11 +14,6 @@ export interface LegalFormProps {
 }
 
 export default function VerificationOfEmploymentSection1Page({ applicant, employer }: LegalFormProps) {
-
-	// useEffect(() => {
-	// 	console.log("from index", employer);
-	// }, [employer]);
-
 	useEffect(() => {
 		applicant.company.users = applicant?.company?.users?.filter(user => (!!!user?.createdBy))
 	}, [applicant])
