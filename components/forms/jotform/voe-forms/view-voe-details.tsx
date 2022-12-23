@@ -1,9 +1,8 @@
 import { useFormik } from "formik";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import BaseInput from "../../base-input";
-import VoeFormContext, { VoeFormContextType } from "../../../../context/voeform-context";
 import styles from "../../../../styles/voe.module.css";
 import { ReasonsForLeavingEmployment } from "../../../../enums/users/reasons-for-leaving-employment";
 import BaseSelect from "../../base-select";
@@ -11,23 +10,27 @@ import BaseTextArea from "../../base-text-area";
 import { ApplicantVoeFormEnum } from "../../../../enums/applicants/applicant-voe-form.enum";
 import { ApplicantVoeFormEntity } from "../../../../models/applicant/applicant-voe-form.entity";
 import BaseInputPhone from "../../base-input-phone";
+import { ApplicantEmployerEntity, ApplicantEntity } from "../../../../models/applicant";
 
-export function ViewVOEdetails() {
-    const {
-        state: { applicantVoe, applicant },
-        method: { stepNext, stepBack, updateApplicantVoe },
-    }: VoeFormContextType = useContext(VoeFormContext);
+export interface ViewVoeDetailsProps {
+    applicant: ApplicantEntity;
+    employer: ApplicantEmployerEntity;
+    applicantVoe: ApplicantVoeFormEntity[];
+}
+
+export function ViewVoeDetails({ applicant, employer, applicantVoe }: ViewVoeDetailsProps) {
 
     const { t } = useTranslation();
+
     const form = useFormik({
         initialValues: {},
         onSubmit: (values) => {
 
         },
         onReset: (values) => {
-            stepBack();
         },
     });
+
     useEffect(() => {
         const apx = applicantVoe?.find(
             (v) => v.type === ApplicantVoeFormEnum.WAS_EMPLOYED_AS
