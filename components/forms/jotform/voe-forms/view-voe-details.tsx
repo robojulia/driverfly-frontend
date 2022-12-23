@@ -96,8 +96,8 @@ export function ViewVoeDetails({ applicant, employer, applicantVoe }: ViewVoeDet
         console.log("voe data", applicant.voeData)
         console.log("voe sender", sender_info)
     }, []);
-    
-    const signature = applicantVoe?.find( v => v.type === ApplicantVoeFormEnum.SIGNATURE_VOE)
+
+    const signature = applicantVoe?.find(v => v.type === ApplicantVoeFormEnum.SIGNATURE_VOE)
     const employed_by_us = applicant?.voeData?.find(v => v.type === ApplicantVoeFormEnum.EMPLOYED_BY_US)
     const did_drive = applicant?.voeData?.find(v => v.type === ApplicantVoeFormEnum.DID_DRIVE_FOR_YOU)
     const safety_performance = applicant?.voeData?.find(v => v.type === ApplicantVoeFormEnum.SAFETY_PERFORMANCE_HISTROY_REPORT)
@@ -109,15 +109,17 @@ export function ViewVoeDetails({ applicant, employer, applicantVoe }: ViewVoeDet
             <Row>
                 <h4 className={styles.carrierName}>{t("VOE_SUBMIT_DETAILS")}</h4>
             </Row>
+            <Row>
+                <span>{t("VERIFICATION_OF_{APPLICANT_NAME}_BY_{EMPLOYER_NAME}",
+                    {
+                        APPLICANT_NAME: `${applicant?.first_name} ${applicant?.last_name}`,
+                        EMPLOYER_NAME: `${employer?.name}`
+                    },
+                )}</span>
+            </Row>
             <ViewCard title="BASIC_QUESTIONAIRE">
                 <ViewDetails
-                    default={t(
-                        "{applicantName}_EMPLOYED_BY_US",
-                        {
-                            applicantName: `${applicant?.first_name} ${applicant?.last_name}`
-                        },
-                        { translateProps: true }
-                    )}
+                    default={t("NOT_ANSWERED")}
                     obj={{
                         EMPLOYED_BY_US: employed_by_us?.value ? t('YES') : t('NO'),
                         VOE_DRIVER_QUES: did_drive?.value ? t('YES') : t('NO'),
