@@ -1,7 +1,7 @@
 import styles from "../../../../../styles/voe.module.css";
 import ApplicantApi from "../../../../api/applicant";
 import { ApplicantEmployerEntity, ApplicantEntity, ApplicantVoeFormEntity } from "../../../../../models/applicant";
-import { ViewVOEdetails } from "../../../../../components/forms/jotform/voe-forms/view-voe-details";
+import { ViewVoeDetails } from "../../../../../components/forms/jotform/voe-forms/view-voe-details";
 
 export interface VoeFormProps {
     applicant: ApplicantEntity;
@@ -14,7 +14,7 @@ export default function ViewVoeForm({ applicant, employer }: VoeFormProps) {
         <div className={styles.container}>
             <div className={styles.main}>
                 <div className={styles.main__voe_form}>
-                    <ViewVOEdetails
+                    <ViewVoeDetails
                         applicant={applicant}
                         employer={employer}
                         applicantVoe={(applicant.voeData.filter(val => val?.employerId === employer?.id))}
