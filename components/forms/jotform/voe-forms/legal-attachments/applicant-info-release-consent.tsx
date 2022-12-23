@@ -1,17 +1,14 @@
 import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
-import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
-import { useContext } from "react";
-
-export default function ApplicantInfoReleaseConsent() {
-    const {
-        state: { applicantExtras, applicant }
-    }: JotFormContextType = useContext(JotformContext);
+import { ApplicantEntity } from "../../../../../models/applicant";
+export interface InfoReleaseConsentProps {
+    applicant?: ApplicantEntity;
+}
+export default function ApplicantInfoReleaseConsent({ applicant }: InfoReleaseConsentProps) {
     const { t } = useTranslation();
     const date = applicant?.extras?.find(
         (v) => v.type == ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
     );
-
     return (
         <form>
             <div className="Row">
@@ -22,12 +19,12 @@ export default function ApplicantInfoReleaseConsent() {
                 </div>
             </div>
             <div className="Row">
-                <p style={{ color: 'black', display: 'inline'}}>
+                <p style={{ color: 'black', display: 'inline' }}>
                     {t("I_HEREBT_AUTHORIZE_ANY_PERSONAL")}
                 </p>
             </div>
             <div className="Row" style={{ marginTop: '30px' }}>
-                <p style={{ color: 'black', fontWeight: 'bold' ,margin: '0px'}}>{t("TO_BE_READ_AND_SIGNED_BY_APPLICANT")}</p>
+                <p style={{ color: 'black', fontWeight: 'bold', margin: '0px' }}>{t("TO_BE_READ_AND_SIGNED_BY_APPLICANT")}</p>
                 <p style={{ color: 'black', display: 'inline' }}>
                     {t("IT_IS_AGREE_AND_UNDERSTOOD")}
                 </p>

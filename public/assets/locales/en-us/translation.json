@@ -1817,7 +1817,7 @@
   "EMPLOYEE_SIGNATURE": "Employee Signature",
   "DATE_OF_CONSENT:": "Date of Consent:",
   "EMPLOYEE_SS_OR_ID:": "Employee SS Or ID:",
-  "I_A": "I_A",
+  "I_A": "I-A",
   "I-B": "I-B",
   "1": "1",
   "2": "2",
@@ -1831,5 +1831,6 @@
   "APPLICANT_FULL_NAME_{NAME}": "Full Name: {{NAME}}",
   "APPLICANT_{cdl_number}": "CDL License Number: {{cdl_number}}",
   "APPLICANT_{COMPANY_NAME}": "Employer Name: {{COMPANY_NAME}}",
-  "APPLICANT_{APPLY_DATE}": "Date: {{APPLY_DATE}}"
+  "APPLICANT_{APPLY_DATE}": "Date: {{APPLY_DATE}}",
+  "VOE_SUBMIT_DETAILS": "VOE Details"
 }

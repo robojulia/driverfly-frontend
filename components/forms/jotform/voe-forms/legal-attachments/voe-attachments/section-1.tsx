@@ -1,25 +1,24 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
-import { Interface } from "readline";
-import JotformContext, { JotFormContextType } from "../../../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../../../enums/applicants/applicant-extras.enum";
 import { useTranslation } from "../../../../../../hooks/use-translation";
-import { ApplicantEmployerEntity } from "../../../../../../models/applicant";
+import { ApplicantEmployerEntity, ApplicantEntity } from "../../../../../../models/applicant";
 import styles from "../../../../../../styles/jotform.module.css";
 
 export interface Section1Props {
+    applicant: ApplicantEntity,
     employer: ApplicantEmployerEntity
 }
-export function VerificationOfEmploymentSection1({ employer }: Section1Props) {
+export function VerificationOfEmploymentSection1({ applicant, employer }: Section1Props) {
 
-    const {
-        state: { applicant }
-    }: JotFormContextType = useContext(JotformContext);
     const { t } = useTranslation();
-    const social_security_number = applicant?.extras?.find(d => d?.type === ApplicantExtras?.EMPLOYEE_SS_OR_ID)
+    const social_security_number = applicant?.extras?.find(v => v?.type === ApplicantExtras?.EMPLOYEE_SS_OR_ID)
+
     useEffect(() => {
         console.log("employer from comp ", employer)
+        console.log("applicant from comp ", applicant?.company?.users[0])
     }, [])
+
     return (
         <>
             <Row>
@@ -93,9 +92,9 @@ export function VerificationOfEmploymentSection1({ employer }: Section1Props) {
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                     {t("NEW_EMPLOYER_NAME_{company_name}", { company_name: applicant?.company?.name }, { translateProps: true })}
                 </p>
-
+               
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                    {t("WEBSITE_{company_web}", { company_web: applicant?.company?.website }, { translateProps: true })}
+                    {t("CURENNT_COMPANY_{phone}", { phone:applicant?.company?.users[0]?.contact_number }, { translateProps: true })}
                 </p>
             </Row>
             <Row className={`${styles.align__text_left} ${styles.highlight}`}>

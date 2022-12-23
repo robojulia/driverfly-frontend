@@ -26,13 +26,12 @@ export function SubmissionDetails() {
 	let padRef = useRef<SignatureCanvas>(null);
 	const clearSignatureCanvas = () => padRef?.current?.clear();
 
+	const calledOnce = useRef(false);
+
 	const form = useFormik({
 		initialValues: new SubmissionDetailsDto(),
 		validationSchema: SubmissionDetailsDto.yupSchema(),
 		onSubmit: async (values) => {
-			const { SIGNATURE_VOE, SENDER_INFO } = values;
-			updateApplicantVoe(SIGNATURE_VOE);
-			updateApplicantVoe(SENDER_INFO);
 
 			const applicantApi = new ApplicantApi();
 			const filtered_voe = applicantVoe?.filter((v) => !!v.value);
@@ -45,6 +44,7 @@ export function SubmissionDetails() {
 				});
 
 				if (response) stepNext()
+
 			} catch (error) {
 				console.log(error);
 				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
@@ -59,30 +59,42 @@ export function SubmissionDetails() {
 		const signatureValue = padRef.current.toDataURL().toString();
 		form.setFieldValue("SIGNATURE_VOE.value", signatureValue);
 	};
+
 	useEffect(() => {
+		if (calledOnce.current) return;
+
 		const apx_sign = applicantVoe?.find(
 			(v) => v.type === ApplicantVoeFormEnum.SIGNATURE_VOE
 		);
 		const apx_sender_info = applicantVoe?.find(
 			(v) => v.type === ApplicantVoeFormEnum.SENDER_INFO
 		);
-
 		form.setValues({
 			...form.values,
 			SIGNATURE_VOE: !!apx_sign?.type
-				? padRef?.current?.fromDataURL(apx_sign?.value)
+				? apx_sign
 				: new ApplicantVoeFormEntity(ApplicantVoeFormEnum.SIGNATURE_VOE),
 
 			SENDER_INFO: !!apx_sender_info?.type
 				? apx_sender_info
 				: new ApplicantVoeFormEntity(ApplicantVoeFormEnum.SENDER_INFO),
 		});
+
+		calledOnce.current = true
 	}, [applicantVoe]);
 
+	// useEffect(() => {
+	// 	console.log("form values", form.values);
+	// 	console.log("form eror", form.errors);
+
+	// }, [form.values, form.errors]);
+
 	useEffect(() => {
-		console.log("form values", form.values);
-		console.log("form eror", form.errors);
-	}, [form.values, form.errors]);
+		const { SIGNATURE_VOE, SENDER_INFO } = form.values;
+
+		if (SIGNATURE_VOE?.type) updateApplicantVoe(SIGNATURE_VOE);
+		if (SENDER_INFO?.type) updateApplicantVoe(SENDER_INFO);
+	}, [form.values]);
 
 	return (
 		<>
