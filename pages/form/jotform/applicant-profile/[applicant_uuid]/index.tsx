@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Row } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 import ApplicantSafetyBackground from "../../../../../components/applicants/applicant-safety-background";
 import ViewApplicantDetail from "../../../../../components/applicants/applicant-view-details";
 import ApplicantExtrasDetails from "../../../../../components/applicants/jotform/applicant-profile";
@@ -34,18 +34,14 @@ export default function Dashboard({ entity }: LongFormProps) {
 	return (
 		<div className="pt-4 ">
 			<PageLayout>
-				<Row className="text-center">
-					<h1>{t("APPLICANT_PROFILE")}</h1>
-				</Row>
-				<Row>
+				<Container fluid>
+					<Row className="text-center">
+						<h1 className="pb-3">{t("APPLICANT_PROFILE")}</h1>
+					</Row>
 					<ViewApplicantDetail applicant={entity} hideAssignTo={true} />
-				</Row>
-				<Row className="p-0">
 					<ApplicantSafetyBackground applicant={entity} />
-				</Row>
-				<Row>
 					<ApplicantExtrasDetails applicant={entity} />
-				</Row>
+				</Container>
 			</PageLayout>
 		</div>
 	);

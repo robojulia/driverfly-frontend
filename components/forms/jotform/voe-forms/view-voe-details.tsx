@@ -1,11 +1,9 @@
 import { useFormik } from "formik";
 import { useContext, useEffect } from "react";
-import { Button, Col, Row, Form } from "react-bootstrap";
+import { Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
-import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
 import VoeFormContext, { VoeFormContextType } from "../../../../context/voeform-context";
-import { AccidentHistoryDto } from "../../../../models/jot-form/voe-form/accident-history.dto";
 import styles from "../../../../styles/voe.module.css";
 import { ReasonsForLeavingEmployment } from "../../../../enums/users/reasons-for-leaving-employment";
 import BaseSelect from "../../base-select";
@@ -13,7 +11,6 @@ import BaseTextArea from "../../base-text-area";
 import { ApplicantVoeFormEnum } from "../../../../enums/applicants/applicant-voe-form.enum";
 import { ApplicantVoeFormEntity } from "../../../../models/applicant/applicant-voe-form.entity";
 import BaseInputPhone from "../../base-input-phone";
-import { EmployedByUs } from "./employed-by-us";
 
 export function ViewVOEdetails() {
     const {
@@ -282,10 +279,13 @@ export function ViewVOEdetails() {
                     readOnly
                 />
             </Row>
-            <Row className={`${styles.align__text_left} ml-2`}>
-                {
-                    !!signature?.value ? <img src={signature?.value} style={{ width: '300px', height: '200px', border: '1px solid black' }} alt="image" /> : ''
-                }
+            <Row className={`${styles.align__text_left}`}>
+                <Col className="">
+                    {
+                        !!signature?.value ? <img src={signature?.value} style={{ width: '100%', height: '200px', border: '1px solid black' }} alt="image" /> : ''
+                    }
+                </Col>
+
             </Row>
         </Form>
     );
