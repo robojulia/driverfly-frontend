@@ -22,14 +22,14 @@ export default function VoeForm({ applicant, employer }: VoeFormProps) {
 				: [{ ...applicantVoeEntity }];
 		});
 
-	const [steps, setSteps] = useState<number>(0);
+	const [steps, setSteps] = useState<number>(3);
 	const stepNext = (): void => setSteps(steps + 1);
 	const stepBack = (): void => setSteps(steps - 1);
 
 	useEffect(() => {
 		console.log("from index", applicant);
 
-		if (applicant.voeData) setApplicantVoe(applicant.voeData.filter(val => val?.employerId === employer?.id))
+		// if (applicant.voeData) setApplicantVoe(applicant.voeData.filter(val => val?.employerId === employer?.id))
 
 	}, [employer]);
 
