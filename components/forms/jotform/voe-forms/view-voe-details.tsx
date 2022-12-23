@@ -11,6 +11,8 @@ import { ApplicantVoeFormEnum } from "../../../../enums/applicants/applicant-voe
 import { ApplicantVoeFormEntity } from "../../../../models/applicant/applicant-voe-form.entity";
 import BaseInputPhone from "../../base-input-phone";
 import { ApplicantEmployerEntity, ApplicantEntity } from "../../../../models/applicant";
+import ViewCard from "../../../view-details/view-card";
+import ViewDetails from "../../../view-details/view-details";
 
 export interface ViewVoeDetailsProps {
     applicant: ApplicantEntity;
@@ -94,20 +96,37 @@ export function ViewVoeDetails({ applicant, employer, applicantVoe }: ViewVoeDet
         console.log("voe data", applicant.voeData)
         console.log("voe sender", sender_info)
     }, []);
-    const signature = applicantVoe?.find(
-        v => v.type === ApplicantVoeFormEnum.SIGNATURE_VOE
-    )
+    
+    const signature = applicantVoe?.find( v => v.type === ApplicantVoeFormEnum.SIGNATURE_VOE)
     const employed_by_us = applicant?.voeData?.find(v => v.type === ApplicantVoeFormEnum.EMPLOYED_BY_US)
     const did_drive = applicant?.voeData?.find(v => v.type === ApplicantVoeFormEnum.DID_DRIVE_FOR_YOU)
     const safety_performance = applicant?.voeData?.find(v => v.type === ApplicantVoeFormEnum.SAFETY_PERFORMANCE_HISTROY_REPORT)
     const accident_register = applicant?.voeData?.find(v => v.type === ApplicantVoeFormEnum.REGISTERED_ACCIDENTS_DETAILS)
     const sender_info = applicant?.voeData?.find(v => v.type === ApplicantVoeFormEnum.SENDER_INFO)
+
     return (
         <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
             <Row>
                 <h4 className={styles.carrierName}>{t("VOE_SUBMIT_DETAILS")}</h4>
             </Row>
-            <Row className="pt-2">
+            <ViewCard title="BASIC_QUESTIONAIRE">
+                <ViewDetails
+                    default={t(
+                        "{applicantName}_EMPLOYED_BY_US",
+                        {
+                            applicantName: `${applicant?.first_name} ${applicant?.last_name}`
+                        },
+                        { translateProps: true }
+                    )}
+                    obj={{
+                        EMPLOYED_BY_US: employed_by_us?.value ? t('YES') : t('NO'),
+                        VOE_DRIVER_QUES: did_drive?.value ? t('YES') : t('NO'),
+                        SAFETY_PERFORMANCE_REPORT: safety_performance?.value ? t('YES') : t('NO'),
+                        ACCIDENT_REGISTER: accident_register?.value ? t('YES') : t('NO'),
+                    }}
+                />
+            </ViewCard>
+            {/* <Row className="pt-2">
                 <div className={`${styles.align__text_left} ${styles.bold}`}>
                     <span className="text-dark">
                         {t(
@@ -158,7 +177,8 @@ export function ViewVoeDetails({ applicant, employer, applicantVoe }: ViewVoeDet
                     </span>
                 </div>
 
-            </Row>
+            </Row> */}
+
             <Row className="pt-2">
                 <div className={`${styles.align__text_left} ${styles.bold}`}>
                     <BaseInput

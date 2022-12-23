@@ -1722,6 +1722,7 @@
   "REASONS_FOR_LEAVING_EMPLOYMENT": "Reasons for leaving your employment",
   "VOE_ACCIDENT_NOTE": "ACCIDENTS: Complete the following for any accidents included on your accident register (§390.15(b)) that involved the applicant in the 3 years prior to .",
   "SAFETY_PERFORMANCE_REPORT": "Is there any safety performance history to report?",
+  "ACCIDENT_REGISTER": "Is there any accident register history to report?",
   "ACCIDENT_REGISTER_DATA": "Is there any accident register data for this driver?",
   "NUMBER_OF_INJURIES": "# of Injuries",
   "NUMBER_OF_FATALITIES": "# of Fatalities",
