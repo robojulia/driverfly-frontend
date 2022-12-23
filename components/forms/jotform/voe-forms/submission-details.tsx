@@ -37,14 +37,13 @@ export function SubmissionDetails() {
 			const filtered_voe = applicantVoe?.filter((v) => !!v.value);
 
 			try {
-				const response = await applicantApi.voeform.create({
+				await applicantApi.voeform.create({
 					applicant_uuid_token: applicant?.uuid_token,
 					employer_uuid_token: employer?.uuid_token,
 					applicantVoeFormData: filtered_voe,
 				});
 
-				if (response) stepNext()
-
+				stepNext()
 			} catch (error) {
 				console.log(error);
 				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
