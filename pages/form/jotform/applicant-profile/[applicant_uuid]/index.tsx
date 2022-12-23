@@ -5,15 +5,14 @@ import ViewApplicantDetail from "../../../../../components/applicants/applicant-
 import ApplicantExtrasDetails from "../../../../../components/applicants/jotform/applicant-profile";
 import BaseReCapcha from "../../../../../components/forms/base-re-capcha";
 import PageLayout from "../../../../../components/layouts/page/page-layout";
-import ViewCard from "../../../../../components/view-details/view-card";
-import ViewPdf from "../../../../../components/view-details/view-pdf";
-import ViewTable from "../../../../../components/view-details/view-table";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../../models/applicant";
 import ApplicantApi from "../../../../api/applicant";
 import DocumentApi from "../../../../api/document";
-import ReCAPTCHA from "react-google-recaptcha";
 import React from "react";
+import ViewCard from "../../../../../components/view-details/view-card";
+import ViewTable from "../../../../../components/view-details/view-table";
+import ViewPdf from "../../../../../components/view-details/view-pdf";
 
 export interface LongFormProps {
 	entity: ApplicantEntity;
