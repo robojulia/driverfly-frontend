@@ -62,12 +62,10 @@ export default function ApplicantExtrasDetails({
 	const violation_details = applicant.extras.find(
 		(ex) => ex?.type === ApplicantExtras.VIOLATION_DETAILS
 	);
-	const current_employer = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.CURRENT_EMPLOYER
-	);
-	const past_employer = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.PAST_EMPLOYER
-	);
+	const current_employer = applicant.employers.find(v => !!v.is_current)
+
+	const past_employer = applicant.employers.filter(v => !!!v.is_current);
+
 	const already_applied = applicant.extras.find(
 		(ex) => ex?.type === ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
 	);
@@ -86,6 +84,9 @@ export default function ApplicantExtrasDetails({
 	const general_consent = applicant.extras.find(
 		(ex) => ex?.type === ApplicantExtras.GENERAL_CONSENT
 	);
+	useEffect(() => {
+		console.log("current_employer", past_employer)
+	}, [])
 
 	return (
 		<>
@@ -227,28 +228,26 @@ export default function ApplicantExtrasDetails({
 							default={t("NOT_ANSWERED")}
 							obj={{
 								// authorize: current_employer?.value?.authorize,
-								city: current_employer?.value?.city,
+								city: current_employer?.city,
 								CURRENT_COMPANY_EMAIL:
-									current_employer?.value?.current_company_email,
+									current_employer?.email,
 								CURRENT_COMPANY_MANAGER_NAME:
-									current_employer?.value?.current_company_manager_name,
+									current_employer?.manager_name,
 								CURRENT_COMPANY_NAME:
-									current_employer?.value?.current_company_name,
+									current_employer?.name,
 								CURRENT_COMPANY_PHONE_NUMBER:
-									current_employer?.value?.current_company_phone_number,
-								CURRENT_COMPANY_POSITION:
-									current_employer?.value?.current_company_position,
+									current_employer?.phone,
+								// CURRENT_COMPANY_POSITION:
+								// 	current_employer?.current_company_position,
 								CURRENT_COMPANY_STREET_ADDRESS_LINE_1:
-									current_employer?.value
-										?.current_company_street_address_line_1,
+									current_employer?.address,
 								CURRENT_COMPANY_STREET_ADDRESS_LINE_2:
-									current_employer?.value
-										?.current_company_street_address_line_2,
-								zip_code: current_employer?.value?.current_company_zipcode,
-								fcr: current_employer?.value?.fcr && t(`BooleanPreferenceType.${current_employer?.value?.fcr}`),
-								fmcsr: current_employer?.value?.fmcsr && t(`BooleanPreferenceType.${current_employer?.value?.fmcsr}`),
-								START_DATE: current_employer?.value?.start_date,
-								state: current_employer?.value?.state,
+									current_employer?.address_2,
+								zip_code: current_employer?.zip_code,
+								fcr: current_employer?.is_subject_to_drug_tests ? `${t("YES")}` : `${t("NO")}`,
+								fmcsr: current_employer?.is_subject_to_fmcsrs ? `${t("YES")}` : `${t("NO")}`,
+								START_DATE: current_employer?.start_at,
+								state: current_employer?.state,
 							}}
 						/>
 					</ViewCard>
@@ -270,18 +269,18 @@ export default function ApplicantExtrasDetails({
 							START_DATE: "START_DATE",
 							state: "state"
 						}}
-						items={past_employer?.value.map((v) => ({
+						items={past_employer?.map((v) => ({
 							city: v?.city,
-							END_DATE: v?.end_date,
-							fcr: v?.fcr && t(`BooleanPreferenceType.${v.fcr}`),
-							fmcsr: v?.fmcsr && t(`BooleanPreferenceType.${v.fmcsr}`),
-							PREVIOUS_COMPANY_EMAIL: v?.previous_company_email,
-							PREVIOUS_MANAGER_NAME: v?.previous_company_manager_name,
-							PREVIOUS_COMPANY_PHONE_NUMBER: v?.previous_company_phone_number,
-							PREVIOUS_COMPANY_ADDRESS_1: v?.previous_company_street_address_line_1,
-							PREVIOUS_COMPANY_ADDRESS_2: v?.previous_company_street_address_line_2,
-							zip_code: v?.previous_company_zipcode,
-							START_DATE: v?.start_date,
+							END_DATE: v?.end_at,
+							fcr: v?.is_subject_to_drug_tests ? `${t("YES")}` : `${t("NO")}`,
+							fmcsr: v?.is_subject_to_fmcsrs ? `${t("YES")}` : `${t("NO")}`,
+							PREVIOUS_COMPANY_EMAIL: v?.email,
+							PREVIOUS_MANAGER_NAME: v?.manager_name,
+							PREVIOUS_COMPANY_PHONE_NUMBER: v?.phone,
+							PREVIOUS_COMPANY_ADDRESS_1: v?.address,
+							PREVIOUS_COMPANY_ADDRESS_2: v?.address_2,
+							zip_code: v?.zip_code,
+							START_DATE: v?.start_at,
 							state: v?.state,
 
 						}))}
@@ -302,26 +301,6 @@ export default function ApplicantExtrasDetails({
 										: `${t("NO")}`,
 									START_DATE: already_worked_here?.value?.start_date,
 									END_DATE: already_worked_here?.value?.end_date,
-								}}
-							/>
-						</Row>
-					</ViewCard>
-				</Col>
-				<Col md="6">
-					<ViewCard title="LEGAL_INFO">
-						<Row>
-							<ViewDetails
-								default={t("NOT_ANSWERED")}
-								obj={{
-									// EMPLOYEE_SS_OR_BUSINESS: employee_ss_id?.value,
-									// DISCLOSURE_AND_AUTHROIZE_DATE: disclosure_date?.value,
-									IMPOERANT_BACKGROUND_DATE: important_background_date?.value,
-
-									name: general_consent?.value?.name,
-									EMPLOYER_NAME: general_consent?.value?.employer_name,
-									cdl_license_number:
-										general_consent?.value?.cdl_license_number,
-									expiration_date: general_consent?.value?.expiration_date,
 								}}
 							/>
 						</Row>

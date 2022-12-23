@@ -14,10 +14,11 @@ import ApplicantApi from "../../../../pages/api/applicant";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { LoaderIcon } from "../../../loading/loader-icon";
 
 export function SubmissionDetails() {
 	const {
-		state: { applicantVoe, applicant },
+		state: { applicantVoe, applicant, employer },
 		method: { updateApplicantVoe, stepBack, stepNext },
 	}: VoeFormContextType = useContext(VoeFormContext);
 
@@ -25,22 +26,25 @@ export function SubmissionDetails() {
 	let padRef = useRef<SignatureCanvas>(null);
 	const clearSignatureCanvas = () => padRef?.current?.clear();
 
+	const calledOnce = useRef(false);
+
 	const form = useFormik({
 		initialValues: new SubmissionDetailsDto(),
 		validationSchema: SubmissionDetailsDto.yupSchema(),
 		onSubmit: async (values) => {
-			const { SIGNATURE_VOE, SENDER_INFO } = values;
-			updateApplicantVoe(SIGNATURE_VOE);
-			updateApplicantVoe(SENDER_INFO);
 
 			const applicantApi = new ApplicantApi();
 			const filtered_voe = applicantVoe?.filter((v) => !!v.value);
+
 			try {
 				const response = await applicantApi.voeform.create({
-					uuid_token: applicant?.uuid_token,
+					applicant_uuid_token: applicant?.uuid_token,
+					employer_uuid_token: employer?.uuid_token,
 					applicantVoeFormData: filtered_voe,
 				});
-				stepNext()
+
+				if (response) stepNext()
+
 			} catch (error) {
 				console.log(error);
 				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
@@ -55,30 +59,42 @@ export function SubmissionDetails() {
 		const signatureValue = padRef.current.toDataURL().toString();
 		form.setFieldValue("SIGNATURE_VOE.value", signatureValue);
 	};
+
 	useEffect(() => {
+		if (calledOnce.current) return;
+
 		const apx_sign = applicantVoe?.find(
 			(v) => v.type === ApplicantVoeFormEnum.SIGNATURE_VOE
 		);
 		const apx_sender_info = applicantVoe?.find(
 			(v) => v.type === ApplicantVoeFormEnum.SENDER_INFO
 		);
-
 		form.setValues({
 			...form.values,
 			SIGNATURE_VOE: !!apx_sign?.type
-				? padRef?.current?.fromDataURL(apx_sign?.value)
+				? apx_sign
 				: new ApplicantVoeFormEntity(ApplicantVoeFormEnum.SIGNATURE_VOE),
 
 			SENDER_INFO: !!apx_sender_info?.type
 				? apx_sender_info
 				: new ApplicantVoeFormEntity(ApplicantVoeFormEnum.SENDER_INFO),
 		});
+
+		calledOnce.current = true
 	}, [applicantVoe]);
 
+	// useEffect(() => {
+	// 	console.log("form values", form.values);
+	// 	console.log("form eror", form.errors);
+
+	// }, [form.values, form.errors]);
+
 	useEffect(() => {
-		console.log("form values", form.values);
-		console.log("form eror", form.errors);
-	}, [form.values, form.errors]);
+		const { SIGNATURE_VOE, SENDER_INFO } = form.values;
+
+		if (SIGNATURE_VOE?.type) updateApplicantVoe(SIGNATURE_VOE);
+		if (SENDER_INFO?.type) updateApplicantVoe(SENDER_INFO);
+	}, [form.values]);
 
 	return (
 		<>
@@ -100,7 +116,7 @@ export function SubmissionDetails() {
 						/>
 					</Col>
 					<Col md="3" className="d-flex align-self-center justify-content-center">
-						<button className="theme-secondary-btn" onClick={clearSignatureCanvas}>
+						<button type="button" className="theme-secondary-btn" onClick={clearSignatureCanvas}>
 							{t("CLEAR")}
 						</button>
 					</Col>
@@ -151,8 +167,12 @@ export function SubmissionDetails() {
 						</Button>
 					</Col>
 					<Col>
-						<Button className="float-left" type="submit">
-							{t("SUBMIT")}
+						<Button
+							disabled={form.isValidating || form.isSubmitting || !form.isValid}
+							className="float-left"
+							type="submit"
+						>
+							{t("SUBMIT")}<LoaderIcon isLoading={!!form?.isSubmitting} />
 						</Button>
 					</Col>
 				</Row>
