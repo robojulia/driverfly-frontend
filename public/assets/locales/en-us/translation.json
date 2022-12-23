@@ -1712,6 +1712,7 @@
   "ELIGIBLE_TO_WORK_IN_US": "Are you legally eligible to work in the US? ",
   "VOE_PARAGRAPH_{applicantName}_{companyName}": "This is the Verification of Employment form for {{applicantName}} from {{companyName}}.  If this link was  NOT accompanied with a PDF attachment containing employee's signature for approval, DO NOT COMPLETE.",
   "{applicantName}_EMPLOYED_BY_US": "{{applicantName}} was employed by us?",
+  "EMPLOYED_BY_US": "Applicant was employed by us?",
   "EMPLOYMENT_VERIF": "Employment Verification",
   "{applicantName}_WAS_EMPLOYED_AS": "{{applicantName}} was employed as",
   "POSITION": "Position",
@@ -1833,5 +1834,6 @@
   "APPLICANT_{cdl_number}": "CDL License Number: {{cdl_number}}",
   "APPLICANT_{COMPANY_NAME}": "Employer Name: {{COMPANY_NAME}}",
   "APPLICANT_{APPLY_DATE}": "Date: {{APPLY_DATE}}",
-  "VOE_SUBMIT_DETAILS": "VOE Details"
+  "VOE_SUBMIT_DETAILS": "VOE Details",
+  "VERIFICATION_OF_{APPLICANT_NAME}_BY_{EMPLOYER_NAME}":"Verification of {{APPLICANT_NAME}} by {{EMPLOYER_NAME}}"
 }

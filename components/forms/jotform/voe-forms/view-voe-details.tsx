@@ -104,13 +104,24 @@ export function ViewVoeDetails({ applicant, employer, applicantVoe }: ViewVoeDet
     const accident_register = applicant?.voeData?.find(v => v.type === ApplicantVoeFormEnum.REGISTERED_ACCIDENTS_DETAILS)
     const sender_info = applicant?.voeData?.find(v => v.type === ApplicantVoeFormEnum.SENDER_INFO)
 
+
+    const apx = applicantVoe?.find((v) => v.type === ApplicantVoeFormEnum.WAS_EMPLOYED_AS);
+    const apx_did_drive = applicantVoe?.find((v) => v.type === ApplicantVoeFormEnum.DID_DRIVE_FOR_YOU);
+    const apx_safety_performance = applicantVoe?.find((v) => v.type === ApplicantVoeFormEnum.SAFETY_PERFORMANCE_HISTROY_REPORT);
+    const apx_accident_details = applicantVoe?.find((v) => v.type === ApplicantVoeFormEnum.REGISTERED_ACCIDENTS_DETAILS);
+    const apx_report_to_govt = applicantVoe?.find((v) => v.type === ApplicantVoeFormEnum.ACCIDENT_REPORTED_TO_GOVERNMENT);
+    const apx_reason_to_leave = applicantVoe?.find((v) => v.type === ApplicantVoeFormEnum.REASON_TO_LEAVE_EMPLOYMENT);
+    // const sender_info = applicantVoe?.find(
+    //     (v) => v.type === ApplicantVoeFormEnum.SENDER_INFO
+    // );
+
     return (
         <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
             <Row>
                 <h4 className={styles.carrierName}>{t("VOE_SUBMIT_DETAILS")}</h4>
             </Row>
             <Row>
-                <span>{t("VERIFICATION_OF_{APPLICANT_NAME}_BY_{EMPLOYER_NAME}",
+                <span className="text-black my-3 text-center">{t("VERIFICATION_OF_{APPLICANT_NAME}_BY_{EMPLOYER_NAME}",
                     {
                         APPLICANT_NAME: `${applicant?.first_name} ${applicant?.last_name}`,
                         EMPLOYER_NAME: `${employer?.name}`
@@ -128,59 +139,7 @@ export function ViewVoeDetails({ applicant, employer, applicantVoe }: ViewVoeDet
                     }}
                 />
             </ViewCard>
-            {/* <Row className="pt-2">
-                <div className={`${styles.align__text_left} ${styles.bold}`}>
-                    <span className="text-dark">
-                        {t(
-                            "{applicantName}_EMPLOYED_BY_US",
-                            {
-                                applicantName: `${applicant?.first_name} ${applicant?.last_name}`
-                            },
-                            { translateProps: true }
-                        )}
-
-
-                    </span>
-                    <span className="text-dark ml-2">
-                        {!!employed_by_us?.value ? t('YES') : t('NO')}
-                    </span>
-                </div>
-
-            </Row>
-            <Row className="pt-2">
-                <div className={`${styles.align__text_left} ${styles.bold}`}>
-                    <span className="text-dark">
-                        {t("VOE_DRIVER_QUES")}
-                    </span>
-                    <span className="text-dark ml-2">
-                        {!!did_drive?.value ? t('YES') : t('NO')}
-                    </span>
-                </div>
-
-            </Row>
-            <Row className="pt-2">
-                <div className={`${styles.align__text_left} ${styles.bold}`}>
-                    <span className="text-dark">
-                        {t("SAFETY_PERFORMANCE_REPORT")}
-                    </span>
-                    <span className="text-dark ml-2">
-                        {!!safety_performance?.value ? t('YES') : t('NO')}
-                    </span>
-                </div>
-
-            </Row>
-            <Row className="pt-2">
-                <div className={`${styles.align__text_left} ${styles.bold}`}>
-                    <span className="text-dark">
-                        {t("SAFETY_PERFORMANCE_REPORT")}
-                    </span>
-                    <span className="text-dark ml-2">
-                        {!!accident_register?.value ? t('YES') : t('NO')}
-                    </span>
-                </div>
-
-            </Row> */}
-
+            
             <Row className="pt-2">
                 <div className={`${styles.align__text_left} ${styles.bold}`}>
                     <BaseInput
