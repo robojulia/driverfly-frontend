@@ -6,15 +6,12 @@ import ApplicantApi from "../../../api/applicant";
 import DisclosureAttachment from "../../../../components/forms/jotform/voe-forms/legal-attachments/disclosure-attachment";
 
 
-export interface LegalFormProps {
+export interface DisclosureAttachmentPageProps {
 	applicant: ApplicantEntity
 }
 
-
-export default function DisclosureAttachmentPage({ applicant }: LegalFormProps) {
-
+export default function DisclosureAttachmentPage({ applicant }: DisclosureAttachmentPageProps) {
 	return (
-
 		<div>
 			<div className={styles.main}>
 				<div style={{ padding: '30px' }}>
@@ -24,11 +21,6 @@ export default function DisclosureAttachmentPage({ applicant }: LegalFormProps) 
 		</div>
 	);
 }
-
-function t(arg0: string): import("react-toastify").ToastContent {
-	throw new Error("Function not implemented.");
-}
-
 
 export async function getServerSideProps({ query }) {
 	try {

@@ -5,12 +5,12 @@ import "react-toastify/dist/ReactToastify.css";
 import ApplicantApi from "../../../api/applicant";
 import { VerificationOfEmploymentSection2 } from "../../../../components/forms/jotform/voe-forms/legal-attachments/voe-attachments/section-2";
 
-export interface LegalFormProps {
+export interface VerificationOfEmploymentSection2PageProps {
 	entity: ApplicantEntity
 }
 
-export default function VerificationOfEmploymentSection2Page({ entity }: LegalFormProps) {
-
+// maybe it'll be used in future
+export default function VerificationOfEmploymentSection2Page({ entity }: VerificationOfEmploymentSection2PageProps) {
 
 	return (
 		<div>

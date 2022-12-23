@@ -1,14 +1,16 @@
 import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantEntity } from "../../../../../models/applicant";
-export interface InfoReleaseConsentProps {
+export interface ApplicantInfoReleaseConsentProps {
     applicant?: ApplicantEntity;
 }
-export default function ApplicantInfoReleaseConsent({ applicant }: InfoReleaseConsentProps) {
+export default function ApplicantInfoReleaseConsent({ applicant }: ApplicantInfoReleaseConsentProps) {
+
     const { t } = useTranslation();
     const date = applicant?.extras?.find(
         (v) => v.type == ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
     );
+
     return (
         <form>
             <div className="Row">
