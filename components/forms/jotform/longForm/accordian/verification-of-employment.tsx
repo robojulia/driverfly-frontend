@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import BaseInput from "../../../base-input";
 import SignatureCanvas from "react-signature-canvas";
@@ -8,6 +8,18 @@ import { AccordianProps } from "../../../../../types/jotform/accordian.type";
 import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../../models/applicant";
+
+function formatSSN(value: string) {
+    if (!value) return value
+    const ssn = value.replace(/[^\d]/g, '')
+    const ssnLength = ssn.length
+    if (ssnLength < 4) return ssn
+    if (ssnLength < 6) {
+        return `${ssn.slice(0, 3)}-${ssn.slice(3)}`
+    }
+    return `${ssn.slice(0, 3)}-${ssn.slice(3, 5)}-${ssn.slice(5, 9)}`
+}
+
 
 export function VerificationOfEmployment({ form }: AccordianProps) {
 
@@ -51,6 +63,11 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
 
         });
     }, [applicant]);
+    const handleInput = (value: string) => {
+        const formattedSSN = formatSSN(value);
+        form.setFieldValue("EMPLOYEE_SS_OR_ID.value", formattedSSN)
+        return formattedSSN
+    };
     const current_company = applicant?.employers?.find(v => !!v?.is_current)
     return (
         <>
@@ -76,10 +93,29 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                         className="col my-3"
                         name="EMPLOYEE_SS_OR_ID.value"
                         label="EMPLOYEE_SS_OR_BUSINESS"
+                        onChange={({ target: { value } }) => handleInput(value)}
                         formik={form}
                     />
-                </Row>
 
+                </Row>
+                {/* <Row className={styles.align__text_left}>
+                    <BaseInput
+                        onChange={({target:{value}}) => formatSSN(value)}
+                    />
+
+                </Row> */}
+                {/* <Row className={styles.align__text_left}>
+                    <input
+                        className="col my-3"
+                        name="EMPLOYEE_SS_OR_ID.value"
+                        // label="EMPLOYEE_SS_OR_BUSINESS"
+                        style={{ border: '2px solid  black', color: '#000' }}
+                        onChange={({ target: { value } }) => handleInput(value)}
+                        value={inputValue}
+                        formik={form}
+                    />
+
+                </Row> */}
                 <Row className={styles.align__text_left}>
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                         {t("I_HEREBY_AUTHORIZE_RELEASE_OF_BUSINESS")}

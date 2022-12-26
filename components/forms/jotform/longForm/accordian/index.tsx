@@ -25,10 +25,6 @@ export function AccordianPage() {
 		method: { stepBack, updateApplicantExtras, stepNext },
 	}: JotFormContextType = useContext(JotformContext);
 	const [showTab, setShowTab] = useState<boolean[]>([false, false, false, false])
-	const [showTab1, setShowTab1] = useState<boolean>(false)
-	const [showTab2, setShowTab2] = useState<boolean>(false)
-	const [showTab3, setShowTab3] = useState<boolean>(false)
-	const [showTab4, setShowTab4] = useState<boolean>(false)
 	const { t } = useTranslation();
 
 	useEffect(() => {
