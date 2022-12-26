@@ -5,11 +5,14 @@ import { ApplicantEntity } from '../../../../../models/applicant';
 export interface DisclosureAttachmentProps {
     applicant?: ApplicantEntity;
 }
+
 export default function DisclosureAttachment({ applicant }: DisclosureAttachmentProps) {
+
     const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE)
 
     const { t } = useTranslation();
     const date = applicant?.extras?.find(d => d?.type === ApplicantExtras?.IMPORTANT_DISCLOSURE_BACKGROUND_DATE)
+
     return (
         <form>
             <div className="Row">

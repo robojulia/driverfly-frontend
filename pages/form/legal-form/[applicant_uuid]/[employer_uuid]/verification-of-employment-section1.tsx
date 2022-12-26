@@ -4,14 +4,14 @@ import { ApplicantEntity } from "../../../../../models/applicant/applicant.entit
 import "react-toastify/dist/ReactToastify.css";
 import ApplicantApi from "../../../../api/applicant";
 import { VerificationOfEmploymentSection1 } from "../../../../../components/forms/jotform/voe-forms/legal-attachments/voe-attachments/section-1";
-import { ApplicantEmployerEntity, ApplicantVoeFormEntity } from "../../../../../models/applicant";
+import { ApplicantEmployerEntity } from "../../../../../models/applicant";
 
-export interface LegalFormProps {
+export interface VerificationOfEmploymentSection1PageProps {
 	applicant: ApplicantEntity,
 	employer: ApplicantEmployerEntity
 }
 
-export default function VerificationOfEmploymentSection1Page({ applicant, employer }: LegalFormProps) {
+export default function VerificationOfEmploymentSection1Page({ applicant, employer }: VerificationOfEmploymentSection1PageProps) {
 	useEffect(() => {
 		applicant.company.users = applicant?.company?.users?.filter(user => (!!!user?.createdBy))
 	}, [applicant])
@@ -29,8 +29,6 @@ export default function VerificationOfEmploymentSection1Page({ applicant, employ
 		</div>
 	);
 }
-
-
 
 export async function getServerSideProps({ query }) {
 	try {
