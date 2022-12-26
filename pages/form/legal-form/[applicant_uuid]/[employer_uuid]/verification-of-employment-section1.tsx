@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styles from "../../../../../styles/jotform.module.css";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import "react-toastify/dist/ReactToastify.css";
-import jotformContext from "../../../../../context/jotform-context";
-import { ApplicantExtrasEntity } from "../../../../../models/applicant/applicant-extras.entity";
 import ApplicantApi from "../../../../api/applicant";
 import { VerificationOfEmploymentSection1 } from "../../../../../components/forms/jotform/voe-forms/legal-attachments/voe-attachments/section-1";
 import { ApplicantEmployerEntity, ApplicantVoeFormEntity } from "../../../../../models/applicant";

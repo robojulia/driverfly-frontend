@@ -8,6 +8,7 @@ import { ApplicantEmployerEntity, ApplicantEntity, ApplicantVoeFormEntity } from
 export interface VoeFormProps {
 	applicant: ApplicantEntity;
 	employer: ApplicantEmployerEntity
+	
 }
 
 export default function VoeForm({ applicant, employer }: VoeFormProps) {

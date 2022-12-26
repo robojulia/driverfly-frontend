@@ -1,5 +1,3 @@
-import { useContext } from 'react';
-import JotformContext, { JotFormContextType } from '../../../../../context/jotform-context';
 import { ApplicantExtras } from '../../../../../enums/applicants/applicant-extras.enum';
 import { useTranslation } from '../../../../../hooks/use-translation';
 import { ApplicantEntity } from '../../../../../models/applicant';
