@@ -73,18 +73,6 @@ export default function ApplicantExtrasDetails({
 	const already_worked_here = applicant.extras.find(
 		(ex) => ex?.type === ApplicantExtras.ALREADY_WORKED_TO_COMPANY
 	);
-	const employee_ss_id = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.EMPLOYEE_SS_OR_ID
-	);
-	const disclosure_date = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE
-	);
-	const important_background_date = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
-	);
-	const general_consent = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.GENERAL_CONSENT
-	);
 
 	return (
 		<>

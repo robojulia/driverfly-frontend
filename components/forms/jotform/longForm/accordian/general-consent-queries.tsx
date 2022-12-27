@@ -39,7 +39,11 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
 
         });
     }, [applicant]);
-    const apply_date = applicant?.extras?.find(v => v.type === ApplicantExtras.APPLY_DATE)
+    const apply_date = applicantExtras?.find(v => v.type === ApplicantExtras.APPLY_DATE)
+    console.log("apply_date", apply_date);
+    console.log("applicant_extras", applicantExtras);
+    console.log("applicantt", applicant);
+    
     return (
         <>
                 <Row >
@@ -92,7 +96,7 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                     <h6>
                         {t(
                             "APPLICANT_{APPLY_DATE}",
-                            { APPLY_DATE: `${apply_date}` },
+                            { APPLY_DATE: `${apply_date.value}` },
                             { translateProps: true }
                         )}
                     </h6>
