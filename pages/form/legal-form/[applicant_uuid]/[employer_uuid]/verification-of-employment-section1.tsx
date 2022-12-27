@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import styles from "../../../../../styles/jotform.module.css";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import "react-toastify/dist/ReactToastify.css";
