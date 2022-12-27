@@ -1,19 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styles from "../../../../styles/jotform.module.css";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import "react-toastify/dist/ReactToastify.css";
-import jotformContext from "../../../../context/jotform-context";
-import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import ApplicantApi from "../../../api/applicant";
 import ApplicantInfoReleaseConsent from "../../../../components/forms/jotform/voe-forms/legal-attachments/applicant-info-release-consent";
 
-export interface LegalFormProps {
+export interface ApplicantInfoReleaseConsentPageProps {
 	applicant: ApplicantEntity
 }
 
-export default function ApplicantInfoReleaseConsentPage({ applicant }: LegalFormProps) {
+export default function ApplicantInfoReleaseConsentPage({ applicant }: ApplicantInfoReleaseConsentPageProps) {
 	return (
-
 		<div>
 			<div className={styles.main}>
 				<div style={{ padding: '30px' }}>
@@ -23,11 +20,6 @@ export default function ApplicantInfoReleaseConsentPage({ applicant }: LegalForm
 		</div>
 	);
 }
-
-function t(arg0: string): import("react-toastify").ToastContent {
-	throw new Error("Function not implemented.");
-}
-
 
 export async function getServerSideProps({ query }) {
 	try {

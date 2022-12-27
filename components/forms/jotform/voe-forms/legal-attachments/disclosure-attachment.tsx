@@ -1,5 +1,3 @@
-import { useContext } from 'react';
-import JotformContext, { JotFormContextType } from '../../../../../context/jotform-context';
 import { ApplicantExtras } from '../../../../../enums/applicants/applicant-extras.enum';
 import { useTranslation } from '../../../../../hooks/use-translation';
 import { ApplicantEntity } from '../../../../../models/applicant';
@@ -7,11 +5,14 @@ import { ApplicantEntity } from '../../../../../models/applicant';
 export interface DisclosureAttachmentProps {
     applicant?: ApplicantEntity;
 }
+
 export default function DisclosureAttachment({ applicant }: DisclosureAttachmentProps) {
+
     const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE)
 
     const { t } = useTranslation();
     const date = applicant?.extras?.find(d => d?.type === ApplicantExtras?.IMPORTANT_DISCLOSURE_BACKGROUND_DATE)
+
     return (
         <form>
             <div className="Row">

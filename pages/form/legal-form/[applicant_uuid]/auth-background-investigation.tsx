@@ -5,12 +5,11 @@ import "react-toastify/dist/ReactToastify.css";
 import AuthBackgroundInvestigation from "../../../../components/forms/jotform/voe-forms/legal-attachments/auth-background-investigation";
 import ApplicantApi from "../../../api/applicant";
 
-export interface LegalFormProps {
+export interface AuthBackgroundInvestigationPageProps {
 	applicant: ApplicantEntity
 }
 
-export default function AuthBackgroundInvestigationPage({ applicant }: LegalFormProps) {
-
+export default function AuthBackgroundInvestigationPage({ applicant }: AuthBackgroundInvestigationPageProps) {
 	return (
 		<div>
 			<div className={styles.main}>
@@ -21,10 +20,6 @@ export default function AuthBackgroundInvestigationPage({ applicant }: LegalForm
 		</div>
 	);
 }
-function t(arg0: string): import("react-toastify").ToastContent {
-	throw new Error("Function not implemented.");
-}
-
 
 export async function getServerSideProps({ query }) {
 	try {

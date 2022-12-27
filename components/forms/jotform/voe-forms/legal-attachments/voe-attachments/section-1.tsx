@@ -92,9 +92,9 @@ export function VerificationOfEmploymentSection1({ applicant, employer }: Sectio
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                     {t("NEW_EMPLOYER_NAME_{company_name}", { company_name: applicant?.company?.name }, { translateProps: true })}
                 </p>
-               
+
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                    {t("CURENNT_COMPANY_{phone}", { phone:applicant?.company?.users[0]?.contact_number }, { translateProps: true })}
+                    {t("CURENNT_COMPANY_{phone}", { phone: applicant?.company?.users[0]?.contact_number }, { translateProps: true })}
                 </p>
             </Row>
             <Row className={`${styles.align__text_left} ${styles.highlight}`}>

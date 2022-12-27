@@ -25,10 +25,6 @@ export function AccordianPage() {
 		method: { stepBack, updateApplicantExtras, stepNext },
 	}: JotFormContextType = useContext(JotformContext);
 	const [showTab, setShowTab] = useState<boolean[]>([false, false, false, false])
-	const [showTab1, setShowTab1] = useState<boolean>(false)
-	const [showTab2, setShowTab2] = useState<boolean>(false)
-	const [showTab3, setShowTab3] = useState<boolean>(false)
-	const [showTab4, setShowTab4] = useState<boolean>(false)
 	const { t } = useTranslation();
 
 	useEffect(() => {
@@ -36,15 +32,6 @@ export function AccordianPage() {
 	}, [showTab])
 	let padRef = useRef<SignatureCanvas>(null);
 
-	const clearSignatureCanvas = (): void => {
-		padRef?.current?.clear();
-		form.setFieldValue("SIGNATURE.value", null);
-	}
-
-	const handleSignatureEnd = (): void => {
-		const signatureValue = padRef?.current?.toDataURL()?.toString();
-		form.setFieldValue("SIGNATURE.value", signatureValue);
-	};
 
 	const form = useFormik({
 		initialValues: new AccordianDto(),
@@ -200,32 +187,6 @@ export function AccordianPage() {
 
 				</button>
 				{showTab[3] && <GeneralConsentQueries form={form} />}
-
-
-
-				{/* <Row className={styles.align__text_left}>
-					<Col md="9" className="my-3">
-						<h6>{t("SIGNATURE")}</h6>
-						<SignatureCanvas
-							name="SIGNATURE.value"
-							className="mt-2"
-							required
-							ref={padRef}
-							onEnd={handleSignatureEnd}
-							canvasProps={{
-								style: { border: "1px solid black" },
-								className: "sigCanvas",
-							}}
-						/>
-					</Col>
-					<Col md="3" className="d-flex align-self-center justify-content-center">
-						<Button
-							type="button"
-							className="theme-secondary-btn "
-							onClick={clearSignatureCanvas}
-						>{t("CLEAR")}</Button>
-					</Col>
-				</Row> */}
 				<Row className="mt-4">
 					<Col>
 						<Button className="float-right" type="reset">

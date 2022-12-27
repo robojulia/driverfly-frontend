@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import BaseInput from "../../../base-input";
 import SignatureCanvas from "react-signature-canvas";
@@ -9,17 +9,29 @@ import JotformContext, { JotFormContextType } from "../../../../../context/jotfo
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../../models/applicant";
 
-export function VerificationOfEmployment({form}: AccordianProps) {
+function formatSSN(value: string) {
+    if (!value) return value
+    const ssn = value.replace(/[^\d]/g, '')
+    const ssnLength = ssn.length
+    if (ssnLength < 4) return ssn
+    if (ssnLength < 6) {
+        return `${ssn.slice(0, 3)}-${ssn.slice(3)}`
+    }
+    return `${ssn.slice(0, 3)}-${ssn.slice(3, 5)}-${ssn.slice(5, 9)}`
+}
+
+
+export function VerificationOfEmployment({ form }: AccordianProps) {
 
     const {
         state: { applicant, applicantExtras },
-        method: { setApplicant, updateApplicantExtras},
+        method: { setApplicant, updateApplicantExtras },
     }: JotFormContextType = useContext(JotformContext);
     const { t } = useTranslation();
 
     const canvasRef = useRef<SignatureCanvas>();
     const clearSignatureCanvas = () => canvasRef.current.clear();
-    
+
 
     const handleSignatureEnd = () => {
         const signatureValue = canvasRef.current.toDataURL().toString();
@@ -28,7 +40,7 @@ export function VerificationOfEmployment({form}: AccordianProps) {
     const current_employer = applicantExtras?.find(
         (v) => v.type == ApplicantExtras.CURRENT_EMPLOYER
     );
-    
+
     useEffect(() => {
         const apx_ss_id = applicantExtras?.find(
             (v) => v.type === ApplicantExtras.EMPLOYEE_SS_OR_ID
@@ -51,7 +63,12 @@ export function VerificationOfEmployment({form}: AccordianProps) {
 
         });
     }, [applicant]);
-
+    const handleInput = (value: string) => {
+        const formattedSSN = formatSSN(value);
+        form.setFieldValue("EMPLOYEE_SS_OR_ID.value", formattedSSN)
+        return formattedSSN
+    };
+    const current_company = applicant?.employers?.find(v => !!v?.is_current)
     return (
         <>
             <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -76,10 +93,29 @@ export function VerificationOfEmployment({form}: AccordianProps) {
                         className="col my-3"
                         name="EMPLOYEE_SS_OR_ID.value"
                         label="EMPLOYEE_SS_OR_BUSINESS"
+                        onChange={({ target: { value } }) => handleInput(value)}
                         formik={form}
                     />
-                </Row>
 
+                </Row>
+                {/* <Row className={styles.align__text_left}>
+                    <BaseInput
+                        onChange={({target:{value}}) => formatSSN(value)}
+                    />
+
+                </Row> */}
+                {/* <Row className={styles.align__text_left}>
+                    <input
+                        className="col my-3"
+                        name="EMPLOYEE_SS_OR_ID.value"
+                        // label="EMPLOYEE_SS_OR_BUSINESS"
+                        style={{ border: '2px solid  black', color: '#000' }}
+                        onChange={({ target: { value } }) => handleInput(value)}
+                        value={inputValue}
+                        formik={form}
+                    />
+
+                </Row> */}
                 <Row className={styles.align__text_left}>
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                         {t("I_HEREBY_AUTHORIZE_RELEASE_OF_BUSINESS")}
@@ -156,21 +192,62 @@ export function VerificationOfEmployment({form}: AccordianProps) {
                     <h6>{t("PLEASE_NOTE_THE_FOLLOWING_EMPLOYERS")} </h6>
                 </Row>
                 <Row className={styles.align__text_left}>
-                    <h4 className="mt-3">{t("I-B")}</h4>
-                    <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                        {t("CURENNT_COMPANY_{name}", { name: current_employer?.value?.current_company_name }, { translateProps: true })}
+                <h4 className="mt-3">{t("I-B")}</h4>
+                    {
+                        !!current_company?.is_current && (
+                            <>
+                                <b>
+                                    <h5 className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                        {t("CURENNT_COMPANY_DATA")}
+                                    </h5>
+                                </b>
+                                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                    {t("CURENNT_COMPANY_{name}", { name: current_company?.name }, { translateProps: true })}
 
-                    </p>
-                    <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                        {t("CURENNT_COMPANY_{address}", { address: current_employer?.value?.current_company_street_address_line_1 }, { translateProps: true })}
-                    </p>
-                    <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                        {t("CURENNT_COMPANY_{phone}", { phone: current_employer?.value?.current_company_phone_number }, { translateProps: true })}
-                    </p>
-                    <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                        {t("DESIGNATED_EMPLOYER_REPRESENTATIVE_{current_manager_name}", { current_manager_name: current_employer?.value?.current_company_manager_name }, { translateProps: true })}
-                    </p>
+                                </p>
+                                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                    {t("CURENNT_COMPANY_{address}", { address: current_company?.address }, { translateProps: true })}
+                                </p>
+                                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                    {t("CURENNT_COMPANY_{phone}", { phone: current_company?.phone }, { translateProps: true })}
+                                </p>
+                                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                    {t("DESIGNATED_EMPLOYER_REPRESENTATIVE_{current_manager_name}", { current_manager_name: current_company?.manager_name }, { translateProps: true })}
+                                </p>
+                                <p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("BLANK_LINE")}</p>
+                            </>
+                        )
+                    }
+
                 </Row>
+                <Row className={styles.align__text_left}>
+                   
+
+                    {applicant?.employers?.map(v => !!!v.is_current && (
+                        <>
+                            <b>
+                                <h5 className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                    {t("PAST_COMPANY_DATA")}
+                                </h5>
+                            </b>
+                            <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                {t("CURENNT_COMPANY_{name}", { name: v?.name }, { translateProps: true })}
+
+                            </p>
+                            <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                {t("CURENNT_COMPANY_{address}", { address: v?.address }, { translateProps: true })}
+                            </p>
+                            <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                {t("CURENNT_COMPANY_{phone}", { phone: v?.phone }, { translateProps: true })}
+                            </p>
+                            <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                {t("DESIGNATED_EMPLOYER_REPRESENTATIVE_{current_manager_name}", { current_manager_name: v?.manager_name }, { translateProps: true })}
+                            </p>
+                            <p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("BLANK_LINE")}</p>
+                        </>
+                    ))}
+                </Row>
+                
                 <Row className={`${styles.align__text_left} ${styles.highlight}`}>
                     <h6>{t("PLEASE_NOTE_THE_FOLLOWING")} </h6>
                 </Row>
