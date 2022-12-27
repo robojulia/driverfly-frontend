@@ -35,34 +35,31 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
 
     const handleSignatureEnd = () => {
         const signatureValue = canvasRef.current.toDataURL().toString();
-        form.setFieldValue("SIGNATURE.value", signatureValue);
+        form.setFieldValue("SIGNATURE_VOE_AUTHORIZATION.value", signatureValue);
     };
-    const current_employer = applicantExtras?.find(
-        (v) => v.type == ApplicantExtras.CURRENT_EMPLOYER
-    );
-
     useEffect(() => {
         const apx_ss_id = applicantExtras?.find(
             (v) => v.type === ApplicantExtras.EMPLOYEE_SS_OR_ID
         );
 
-        const apx_sign = applicantExtras?.find(
-            (v) => v.type === ApplicantExtras.SIGNATURE
+        const apx_sign_voe_authorization = applicantExtras?.find(
+            (v) => v.type === ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION
         );
 
-        if (apx_sign) canvasRef?.current?.fromDataURL(apx_sign?.value)
+        if (apx_sign_voe_authorization) canvasRef?.current?.fromDataURL(apx_sign_voe_authorization?.value)
 
         form.setValues({
             ...form.values,
-            SIGNATURE: !!apx_sign?.type
-                ? apx_sign
-                : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
+            SIGNATURE_VOE_AUTHORIZATION: !!apx_sign_voe_authorization?.type
+                ? apx_sign_voe_authorization
+                : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION),
             EMPLOYEE_SS_OR_ID: !!apx_ss_id?.type
                 ? apx_ss_id
                 : new ApplicantExtrasEntity(ApplicantExtras.EMPLOYEE_SS_OR_ID),
 
         });
     }, [applicant]);
+    
     const handleInput = (value: string) => {
         const formattedSSN = formatSSN(value);
         form.setFieldValue("EMPLOYEE_SS_OR_ID.value", formattedSSN)
@@ -98,24 +95,6 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                     />
 
                 </Row>
-                {/* <Row className={styles.align__text_left}>
-                    <BaseInput
-                        onChange={({target:{value}}) => formatSSN(value)}
-                    />
-
-                </Row> */}
-                {/* <Row className={styles.align__text_left}>
-                    <input
-                        className="col my-3"
-                        name="EMPLOYEE_SS_OR_ID.value"
-                        // label="EMPLOYEE_SS_OR_BUSINESS"
-                        style={{ border: '2px solid  black', color: '#000' }}
-                        onChange={({ target: { value } }) => handleInput(value)}
-                        value={inputValue}
-                        formik={form}
-                    />
-
-                </Row> */}
                 <Row className={styles.align__text_left}>
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                         {t("I_HEREBY_AUTHORIZE_RELEASE_OF_BUSINESS")}
@@ -156,7 +135,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                     <Col>
                         <h6>{t("SIGNATURE")}</h6>
                         <SignatureCanvas
-                            name="SIGNATURE.value"
+                            name="SIGNATURE_VOE_AUTHORIZATION.value"
                             onEnd={handleSignatureEnd}
                             ref={canvasRef}
                             canvasProps={{
@@ -182,11 +161,6 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                         {t("NEW_EMPLOYER_NAME_{company_name}", { company_name: applicant?.company?.name }, { translateProps: true })}
                     </p>
-
-                    {/* <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                    {t("WEBSITE_{company_web}", {company_web: applicant?.company?.website}, { translateProps: true })}
-                        {t("DESIGNATED_EMPLOYER")}
-                    </p> */}
                 </Row>
                 <Row className={`${styles.align__text_left} ${styles.highlight}`}>
                     <h6>{t("PLEASE_NOTE_THE_FOLLOWING_EMPLOYERS")} </h6>

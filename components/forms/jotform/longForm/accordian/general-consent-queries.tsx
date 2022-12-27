@@ -22,27 +22,30 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
 
     const handleSignatureEnd = () => {
         const signatureValue = canvasRef.current.toDataURL().toString();
-        form.setFieldValue("SIGNATURE.value", signatureValue);
+        form.setFieldValue("SIGNATURE_GENERAL_CONSENT.value", signatureValue);
     };
     useEffect(() => {
         const apx_sign = applicantExtras?.find(
-            (v) => v.type === ApplicantExtras.SIGNATURE
+            (v) => v.type === ApplicantExtras.SIGNATURE_GENERAL_CONSENT
         );
-
+        const apx_general_consent = applicantExtras?.find(
+			(v) => v.type === ApplicantExtras.GENERAL_CONSENT
+		);
         if (apx_sign) canvasRef?.current?.fromDataURL(apx_sign?.value)
 
         form.setValues({
             ...form.values,
-            SIGNATURE: !!apx_sign?.type
+            SIGNATURE_GENERAL_CONSENT: !!apx_sign?.type
                 ? apx_sign
-                : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
+                : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE_GENERAL_CONSENT),
+            GENERAL_CONSENT: !!apx_general_consent?.type
+                ? apx_general_consent
+                : new ApplicantExtrasEntity(ApplicantExtras.GENERAL_CONSENT),
 
         });
     }, [applicant]);
     const apply_date = applicantExtras?.find(v => v.type === ApplicantExtras.APPLY_DATE)
-    console.log("apply_date", apply_date);
-    console.log("applicant_extras", applicantExtras);
-    console.log("applicantt", applicant);
+   
     
     return (
         <>
@@ -96,7 +99,7 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                     <h6>
                         {t(
                             "APPLICANT_{APPLY_DATE}",
-                            { APPLY_DATE: `${apply_date.value}` },
+                            { APPLY_DATE: `${apply_date?.value}` },
                             { translateProps: true }
                         )}
                     </h6>
@@ -141,7 +144,7 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                     <Col>
                         <h6>{t("SIGNATURE")}</h6>
                         <SignatureCanvas
-                            name="SIGNATURE.value"
+                            name="SIGNATURE_GENERAL_CONSENT.value"
                             required
                             onEnd={handleSignatureEnd}
                             ref={canvasRef}
