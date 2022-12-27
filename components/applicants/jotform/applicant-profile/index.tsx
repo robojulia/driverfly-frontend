@@ -65,7 +65,7 @@ export default function ApplicantExtrasDetails({
 	);
 	const current_employer = applicant.employers.find(v => !!v.is_current)
 
-	const past_employer = applicant.employers.filter(v => !!!v.is_current);
+	const past_employers = applicant.employers.filter(v => !!!v.is_current);
 
 	const already_applied = applicant.extras.find(
 		(ex) => ex?.type === ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
@@ -86,6 +86,9 @@ export default function ApplicantExtrasDetails({
 		(ex) => ex?.type === ApplicantExtras.GENERAL_CONSENT
 	);
 
+	useEffect(() => {
+		console.log("current_employer,", current_employer)
+	}, [])
 	return (
 		<>
 			<Row>
@@ -254,45 +257,40 @@ export default function ApplicantExtrasDetails({
 						/>
 					</ViewCard>
 				</Col>
-				<Col>
+
+
+				<Col md="12">
 					<ViewCard title="PAST_EMPLOYER">
-						<ViewTable
-							type="PAST_EMPLOYER"
-							headers={{
-								city: "city",
-								END_DATE: "END_DATE",
-								fcr: "fcr",
-								fmcsr: "fmcsr",
-								PREVIOUS_COMPANY_EMAIL: "PREVIOUS_COMPANY_EMAIL",
-								PREVIOUS_MANAGER_NAME: "PREVIOUS_MANAGER_NAME",
-								PREVIOUS_COMPANY_PHONE_NUMBER: "PREVIOUS_COMPANY_PHONE_NUMBER",
-								PREVIOUS_COMPANY_ADDRESS_1: "PREVIOUS_COMPANY_ADDRESS_1",
-								PREVIOUS_COMPANY_ADDRESS_2: "PREVIOUS_COMPANY_ADDRESS_2",
-								zip_code: "zip_code",
-								START_DATE: "START_DATE",
-								state: "state"
-							}}
-							items={past_employer?.map((v) => ({
-								city: v?.city,
-								END_DATE: <ShowFormattedDate date={v?.end_at} hideTime />,
-								fcr: v?.is_subject_to_drug_tests
-									? `${t("YES")}`
-									: `${t("NO")}`,
-								fmcsr: v?.is_subject_to_fmcsrs
-									? `${t("YES")}`
-									: `${t("NO")}`,
-								PREVIOUS_COMPANY_EMAIL: v?.email,
-								PREVIOUS_MANAGER_NAME: v?.manager_name,
-								PREVIOUS_COMPANY_PHONE_NUMBER: v?.phone,
-								PREVIOUS_COMPANY_ADDRESS_1: v?.address,
-								PREVIOUS_COMPANY_ADDRESS_2: v?.address_2,
-								zip_code: v?.zip_code,
-								START_DATE: <ShowFormattedDate date={v?.start_at} hideTime />,
-								state: v?.state,
+						{
+							past_employers.length > 0 ?
+								past_employers.map(past_employer => (
+									<>
+										<ViewCard title={`${past_employer?.name}`}>
+											<ViewDetails
+												obj={{
+													city: past_employer?.city,
+													START_DATE: new Date(past_employer?.start_at),
+													END_DATE: new Date(past_employer?.end_at),
+													fcr: past_employer?.is_subject_to_drug_tests,
+													fmcsr: past_employer?.is_subject_to_fmcsrs
+														? `${t("YES")}`
+														: `${t("NO")}`,
 
+													PREVIOUS_COMPANY_EMAIL: past_employer?.email,
+													PREVIOUS_MANAGER_NAME: past_employer?.manager_name,
+													PREVIOUS_COMPANY_PHONE_NUMBER: past_employer?.phone,
+													PREVIOUS_COMPANY_ADDRESS_1: past_employer?.address,
+													PREVIOUS_COMPANY_ADDRESS_2: past_employer?.address_2,
+													zip_code: past_employer?.zip_code,
+													state: past_employer?.state,
 
-							}))}
-						/>
+												}}
+											/>
+										</ViewCard>
+									</>
+								))
+								: <>{t("PAST_EMPLOYER_NOT_FOUND")}</>
+						}
 					</ViewCard>
 				</Col>
 			</Row>
