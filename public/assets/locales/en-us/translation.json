@@ -1838,7 +1838,6 @@
   "VERIFICATION_OF_{APPLICANT_NAME}_BY_{EMPLOYER_NAME}":"Verification of {{APPLICANT_NAME}} by {{EMPLOYER_NAME}}",
   "REASON_TO_LEAVE":"Reason to leave",
   "REASON_TO_LEAVE_EMPLOYMENT":"Reason to leave employment",
-  "WAS_EMPLOYED_AS":"Applicant was employed as"
-
-
+  "WAS_EMPLOYED_AS":"Applicant was employed as",
+  "CONTACT_US": "contact us"
 }
