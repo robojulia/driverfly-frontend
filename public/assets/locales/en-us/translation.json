@@ -1707,7 +1707,7 @@
   "CURRENT_EMPLOYER": "Current Employer",
   "NA": "Put NA for any fields unknown",
   "ADDRESS_CURRENT_COMPANY": "Address (Current Company)",
-  "ADDRESS_PAST_COMPANY": "Address (Previous Company)",
+  "ADDRESS_PAST_COMPANY": "Previous Company",
   "REFERRAL_NUMBER": "Refferal Code",
   "ELIGIBLE_TO_WORK_IN_US": "Are you legally eligible to work in the US? ",
   "VOE_PARAGRAPH_{applicantName}_{companyName}": "This is the Verification of Employment form for {{applicantName}} from {{companyName}}.  If this link was  NOT accompanied with a PDF attachment containing employee's signature for approval, DO NOT COMPLETE.",

@@ -58,7 +58,7 @@ export function AccidentViolation() {
 	return (
 		<>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<Row>
+				<Row >
 					<BaseCheck
 						className="col my-3 pl-0"
 						required
@@ -72,7 +72,7 @@ export function AccidentViolation() {
 						{t("{company_name}_DRUG_TEST_DOT", { company_name: applicant?.company?.name }, { translateProps: true })}
 					</p>
 				</Row>
-				<Row>
+				<Row className={styles.bold}>
 					<BaseInput
 						className="col my-3 pl-0"
 						required
@@ -85,7 +85,7 @@ export function AccidentViolation() {
 						formik={form}
 					/>
 				</Row>
-				<Row>
+				<Row >
 					<BaseCheck
 						className="col my-3 pl-0"
 						name="authorized_to_work_in_us"

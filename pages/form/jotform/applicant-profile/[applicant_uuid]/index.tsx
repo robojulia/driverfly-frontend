@@ -10,10 +10,6 @@ import { ApplicantEntity } from "../../../../../models/applicant";
 import ApplicantApi from "../../../../api/applicant";
 import DocumentApi from "../../../../api/document";
 import React from "react";
-import ViewCard from "../../../../../components/view-details/view-card";
-import ViewTable from "../../../../../components/view-details/view-table";
-import ViewPdf from "../../../../../components/view-details/view-pdf";
-
 export interface LongFormProps {
 	entity: ApplicantEntity;
 	no_bot?: boolean

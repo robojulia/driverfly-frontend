@@ -86,9 +86,6 @@ export default function ApplicantExtrasDetails({
 		(ex) => ex?.type === ApplicantExtras.GENERAL_CONSENT
 	);
 
-	useEffect(() => {
-		console.log("current_employer,", current_employer)
-	}, [])
 	return (
 		<>
 			<Row>
