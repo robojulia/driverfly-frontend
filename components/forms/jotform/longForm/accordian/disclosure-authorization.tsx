@@ -1,8 +1,6 @@
 import { useContext, useEffect, useRef } from "react";
 import { Col, Row } from "react-bootstrap";
 import BaseInput from "../../../base-input";
-import Accordion from "react-bootstrap/Accordion";
-// import SignatureCanvas from "react-signature-canvas";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import styles from "../../../../../styles/jotform.module.css";
 import { AccordianProps } from "../../../../../types/jotform/accordian.type";
@@ -11,10 +9,9 @@ import SignatureCanvas from "react-signature-canvas";
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../../models/applicant";
 
-export function DisclosureAuthorization({ eventKey, form }: AccordianProps) {
+export function DisclosureAuthorization({ form }: AccordianProps) {
     const {
-        state: { applicant, applicantExtras },
-        method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+        state: { applicant, applicantExtras }
     }: JotFormContextType = useContext(JotformContext);
     const { t } = useTranslation();
 
@@ -24,28 +21,25 @@ export function DisclosureAuthorization({ eventKey, form }: AccordianProps) {
 
     const handleSignatureEnd = () => {
         const signatureValue = canvasRef.current.toDataURL().toString();
-        form.setFieldValue("SIGNATURE.value", signatureValue);
+        form.setFieldValue("SIGNATURE_DISCLOSURE_AUTHORIZATION.value", signatureValue);
     };
-    const current_employer = applicantExtras?.find(
-        (v) => v.type == ApplicantExtras.CURRENT_EMPLOYER
-    );
 
     useEffect(() => {
         const apx_disclosure_date = applicantExtras?.find(
             (v) => v.type === ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE
         );
 
-        const apx_sign = applicantExtras?.find(
-            (v) => v.type === ApplicantExtras.SIGNATURE
+        const apx_sign_disclosure = applicantExtras?.find(
+            (v) => v.type === ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION
         );
 
-        if (apx_sign) canvasRef?.current?.fromDataURL(apx_sign?.value)
+        if (apx_sign_disclosure) canvasRef?.current?.fromDataURL(apx_sign_disclosure?.value)
 
         form.setValues({
             ...form.values,
-            SIGNATURE: !!apx_sign?.type
-                ? apx_sign
-                : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
+            SIGNATURE_DISCLOSURE_AUTHORIZATION: !!apx_sign_disclosure?.type
+                ? apx_sign_disclosure
+                : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION),
             DISCLOSURE_AND_AUTHORIZATION_DATE: !!apx_disclosure_date?.type
                 ? apx_disclosure_date
                 : new ApplicantExtrasEntity(
@@ -116,7 +110,7 @@ export function DisclosureAuthorization({ eventKey, form }: AccordianProps) {
                 <Col>
                     <h6>{t("SIGNATURE")}</h6>
                     <SignatureCanvas
-                        name="SIGNATURE.value"
+                        name="SIGNATURE_DISCLOSURE_AUTHORIZATION.value"
                         required
                         onEnd={handleSignatureEnd}
                         ref={canvasRef}

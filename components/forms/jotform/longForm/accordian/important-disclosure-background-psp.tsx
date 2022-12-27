@@ -24,28 +24,24 @@ export function ImportantDisclosureBackgroundPsp({ form }: AccordianProps) {
 
     const handleSignatureEnd = () => {
         const signatureValue = canvasRef.current.toDataURL().toString();
-        form.setFieldValue("SIGNATURE.value", signatureValue);
+        form.setFieldValue("SIGNATURE_IMPORTANT_BACKGROUND.value", signatureValue);
     };
-    const current_employer = applicantExtras?.find(
-        (v) => v.type == ApplicantExtras.CURRENT_EMPLOYER
-    );
-
     useEffect(() => {
         const apx_background_date = applicantExtras?.find(
             (v) => v.type === ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
         );
 
-        const apx_sign = applicantExtras?.find(
-            (v) => v.type === ApplicantExtras.SIGNATURE
+        const apx_sign_important_background = applicantExtras?.find(
+            (v) => v.type === ApplicantExtras.SIGNATURE_IMPORTANT_BACKGROUND
         );
 
-        if (apx_sign) canvasRef?.current?.fromDataURL(apx_sign?.value)
+        if (apx_sign_important_background) canvasRef?.current?.fromDataURL(apx_sign_important_background?.value)
 
         form.setValues({
             ...form.values,
-            SIGNATURE: !!apx_sign?.type
-                ? apx_sign
-                : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
+            SIGNATURE_IMPORTANT_BACKGROUND: !!apx_sign_important_background?.type
+                ? apx_sign_important_background
+                : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE_IMPORTANT_BACKGROUND),
             IMPORTANT_DISCLOSURE_BACKGROUND_DATE: !!apx_background_date?.type
                 ? apx_background_date
                 : new ApplicantExtrasEntity(
@@ -143,7 +139,7 @@ export function ImportantDisclosureBackgroundPsp({ form }: AccordianProps) {
                 <Col>
                     <h6>{t("SIGNATURE")}</h6>
                     <SignatureCanvas
-                        name="SIGNATURE.value"
+                        name="SIGNATURE_IMPORTANT_BACKGROUND.value"
                         required
                         onEnd={handleSignatureEnd}
                         ref={canvasRef}
