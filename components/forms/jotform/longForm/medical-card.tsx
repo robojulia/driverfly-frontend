@@ -64,11 +64,12 @@ export function MedicalCard() {
 			<Row>
 				<h3>{t("MEDICAL_CARD_UPLOAD_TITLE")}</h3>
 			</Row>
-			<Row className={styles.align__text_left}>
+			<Row className={`${styles.align__text_left} ${styles.bold}`}>
 				<FileInput
 					className="my-3"
 					name="document"
 					accept="application/pdf"
+					allowedSizeInByte={3000000}
 					formik={form}
 				/>
 			</Row>

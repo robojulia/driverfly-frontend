@@ -1,38 +1,74 @@
-import { useContext, useRef } from "react";
-import { Col, Row } from "react-bootstrap";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Col, Form, Row } from "react-bootstrap";
 import BaseInput from "../../../base-input";
-import Accordion from "react-bootstrap/Accordion";
 import SignatureCanvas from "react-signature-canvas";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import styles from "../../../../../styles/jotform.module.css";
 import { AccordianProps } from "../../../../../types/jotform/accordian.type";
 import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
+import { ApplicantExtrasEntity } from "../../../../../models/applicant";
 
-export function VerificationOfEmployment({ eventKey, form }: AccordianProps) {
+function formatSSN(value: string) {
+    if (!value) return value
+    const ssn = value.replace(/[^\d]/g, '')
+    const ssnLength = ssn.length
+    if (ssnLength < 4) return ssn
+    if (ssnLength < 6) {
+        return `${ssn.slice(0, 3)}-${ssn.slice(3)}`
+    }
+    return `${ssn.slice(0, 3)}-${ssn.slice(3, 5)}-${ssn.slice(5, 9)}`
+}
+
+
+export function VerificationOfEmployment({ form }: AccordianProps) {
 
     const {
         state: { applicant, applicantExtras },
-        method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+        method: { setApplicant, updateApplicantExtras },
     }: JotFormContextType = useContext(JotformContext);
     const { t } = useTranslation();
 
-    // const canvasRef = useRef<SignatureCanvas>();
-    // const clearSignatureCanvas = () => canvasRef.current.clear();
+    const canvasRef = useRef<SignatureCanvas>();
+    const clearSignatureCanvas = () => canvasRef.current.clear();
 
-    // const handleSignatureEnd = () => {
-    //     const signatureValue = canvasRef.current.toDataURL().toString();
-    //     form.setFieldValue("SIGNATURE.value", signatureValue);
-    // };
-    const current_employer = applicantExtras?.find(
-        (v) => v.type == ApplicantExtras.CURRENT_EMPLOYER
-    );
+
+    const handleSignatureEnd = () => {
+        const signatureValue = canvasRef.current.toDataURL().toString();
+        form.setFieldValue("SIGNATURE_VOE_AUTHORIZATION.value", signatureValue);
+    };
+    useEffect(() => {
+        const apx_ss_id = applicantExtras?.find(
+            (v) => v.type === ApplicantExtras.EMPLOYEE_SS_OR_ID
+        );
+
+        const apx_sign_voe_authorization = applicantExtras?.find(
+            (v) => v.type === ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION
+        );
+
+        if (apx_sign_voe_authorization) canvasRef?.current?.fromDataURL(apx_sign_voe_authorization?.value)
+
+        form.setValues({
+            ...form.values,
+            SIGNATURE_VOE_AUTHORIZATION: !!apx_sign_voe_authorization?.type
+                ? apx_sign_voe_authorization
+                : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION),
+            EMPLOYEE_SS_OR_ID: !!apx_ss_id?.type
+                ? apx_ss_id
+                : new ApplicantExtrasEntity(ApplicantExtras.EMPLOYEE_SS_OR_ID),
+
+        });
+    }, [applicant]);
+    
+    const handleInput = (value: string) => {
+        const formattedSSN = formatSSN(value);
+        form.setFieldValue("EMPLOYEE_SS_OR_ID.value", formattedSSN)
+        return formattedSSN
+    };
+    const current_company = applicant?.employers?.find(v => !!v?.is_current)
     return (
-        <Accordion.Item eventKey={eventKey}>
-            <Accordion.Header>
-                {t("VERIFICATION_OF_EMPLOYMENT")}
-            </Accordion.Header>
-            <Accordion.Body>
+        <>
+            <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
                 <h2>{t("VERIFICATION_OF_EMPLOYMENT")}</h2>
                 <h6>{t("SAFETY_PERFORMANCE_HISTORY_RECORDS_REQUEST")}</h6>
                 <Row className={styles.align__text_left}>
@@ -54,10 +90,11 @@ export function VerificationOfEmployment({ eventKey, form }: AccordianProps) {
                         className="col my-3"
                         name="EMPLOYEE_SS_OR_ID.value"
                         label="EMPLOYEE_SS_OR_BUSINESS"
+                        onChange={({ target: { value } }) => handleInput(value)}
                         formik={form}
                     />
-                </Row>
 
+                </Row>
                 <Row className={styles.align__text_left}>
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                         {t("I_HEREBY_AUTHORIZE_RELEASE_OF_BUSINESS")}
@@ -94,10 +131,11 @@ export function VerificationOfEmployment({ eventKey, form }: AccordianProps) {
                         {t("DOCUMENTATION_IF_ANY_OF_COMPLETION")}
                     </p>
                 </Row>
-                {/* <Row className={styles.align__text_left}>
+                <Row className={styles.align__text_left}>
                     <Col>
                         <h6>{t("SIGNATURE")}</h6>
                         <SignatureCanvas
+                            name="SIGNATURE_VOE_AUTHORIZATION.value"
                             onEnd={handleSignatureEnd}
                             ref={canvasRef}
                             canvasProps={{
@@ -117,40 +155,73 @@ export function VerificationOfEmployment({ eventKey, form }: AccordianProps) {
                             {t("CLEAR")}
                         </button>
                     </Col>
-                </Row> */}
+                </Row>
                 <Row className={styles.align__text_left}>
                     <h4 className="mt-3">{t("I_A")}</h4>
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                         {t("NEW_EMPLOYER_NAME_{company_name}", { company_name: applicant?.company?.name }, { translateProps: true })}
                     </p>
-
-                    <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                        {t("WEBSITE_{company_web}", { company_web: applicant?.company?.website }, { translateProps: true })}
-                    </p>
-                    {/* <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                    {t("WEBSITE_{company_web}", {company_web: applicant?.company?.website}, { translateProps: true })}
-                        {t("DESIGNATED_EMPLOYER")}
-                    </p> */}
                 </Row>
                 <Row className={`${styles.align__text_left} ${styles.highlight}`}>
                     <h6>{t("PLEASE_NOTE_THE_FOLLOWING_EMPLOYERS")} </h6>
                 </Row>
                 <Row className={styles.align__text_left}>
-                    <h4 className="mt-3">{t("I-B")}</h4>
-                    <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                        {t("CURENNT_COMPANY_{name}", { name: current_employer?.value?.current_company_name }, { translateProps: true })}
+                <h4 className="mt-3">{t("I-B")}</h4>
+                    {
+                        !!current_company?.is_current && (
+                            <>
+                                <b>
+                                    <h5 className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                        {t("CURENNT_COMPANY_DATA")}
+                                    </h5>
+                                </b>
+                                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                    {t("CURENNT_COMPANY_{name}", { name: current_company?.name }, { translateProps: true })}
 
-                    </p>
-                    <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                        {t("CURENNT_COMPANY_{address}", { address: current_employer?.value?.current_company_street_address_line_1 }, { translateProps: true })}
-                    </p>
-                    <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                        {t("CURENNT_COMPANY_{phone}", { phone: current_employer?.value?.current_company_phone_number }, { translateProps: true })}
-                    </p>
-                    <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                        {t("DESIGNATED_EMPLOYER_REPRESENTATIVE_{current_manager_name}", { current_manager_name: current_employer?.value?.current_company_manager_name }, { translateProps: true })}
-                    </p>
+                                </p>
+                                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                    {t("CURENNT_COMPANY_{address}", { address: current_company?.address }, { translateProps: true })}
+                                </p>
+                                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                    {t("CURENNT_COMPANY_{phone}", { phone: current_company?.phone }, { translateProps: true })}
+                                </p>
+                                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                    {t("DESIGNATED_EMPLOYER_REPRESENTATIVE_{current_manager_name}", { current_manager_name: current_company?.manager_name }, { translateProps: true })}
+                                </p>
+                                <p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("BLANK_LINE")}</p>
+                            </>
+                        )
+                    }
+
                 </Row>
+                <Row className={styles.align__text_left}>
+                   
+
+                    {applicant?.employers?.map(v => !!!v.is_current && (
+                        <>
+                            <b>
+                                <h5 className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                    {t("PAST_COMPANY_DATA")}
+                                </h5>
+                            </b>
+                            <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                {t("CURENNT_COMPANY_{name}", { name: v?.name }, { translateProps: true })}
+
+                            </p>
+                            <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                {t("CURENNT_COMPANY_{address}", { address: v?.address }, { translateProps: true })}
+                            </p>
+                            <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                {t("CURENNT_COMPANY_{phone}", { phone: v?.phone }, { translateProps: true })}
+                            </p>
+                            <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                {t("DESIGNATED_EMPLOYER_REPRESENTATIVE_{current_manager_name}", { current_manager_name: v?.manager_name }, { translateProps: true })}
+                            </p>
+                            <p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("BLANK_LINE")}</p>
+                        </>
+                    ))}
+                </Row>
+                
                 <Row className={`${styles.align__text_left} ${styles.highlight}`}>
                     <h6>{t("PLEASE_NOTE_THE_FOLLOWING")} </h6>
                 </Row>
@@ -421,7 +492,7 @@ export function VerificationOfEmployment({ eventKey, form }: AccordianProps) {
                         </p>
                     </Row>
                 </Row>
-            </Accordion.Body>
-        </Accordion.Item>
+            </Form>
+        </>
     )
 }

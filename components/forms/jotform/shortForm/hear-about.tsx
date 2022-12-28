@@ -86,7 +86,7 @@ export function HearAbout() {
 					/>
 				</Row>
 				{form.values?.HEAR_ABOUT_US?.value === HearAboutUsType.REFERRAL && (
-					<Row>
+					<Row className={styles.bold}>
 						<BaseInput
 							className="col p-0 mb-4"
 							name="REFERRAL_NUMBER"

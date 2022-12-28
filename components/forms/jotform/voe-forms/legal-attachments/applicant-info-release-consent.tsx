@@ -1,12 +1,13 @@
 import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
-import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
-import { useContext } from "react";
+import { ApplicantEntity } from "../../../../../models/applicant";
+export interface ApplicantInfoReleaseConsentProps {
+    applicant?: ApplicantEntity;
+}
+export default function ApplicantInfoReleaseConsent({ applicant }: ApplicantInfoReleaseConsentProps) {
 
-export default function ApplicantInfoReleaseConsent() {
-    const {
-        state: { applicantExtras, applicant }
-    }: JotFormContextType = useContext(JotformContext);
+    const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE)
+
     const { t } = useTranslation();
     const date = applicant?.extras?.find(
         (v) => v.type == ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
@@ -22,12 +23,12 @@ export default function ApplicantInfoReleaseConsent() {
                 </div>
             </div>
             <div className="Row">
-                <p style={{ color: 'black', display: 'inline'}}>
+                <p style={{ color: 'black', display: 'inline' }}>
                     {t("I_HEREBT_AUTHORIZE_ANY_PERSONAL")}
                 </p>
             </div>
             <div className="Row" style={{ marginTop: '30px' }}>
-                <p style={{ color: 'black', fontWeight: 'bold' ,margin: '0px'}}>{t("TO_BE_READ_AND_SIGNED_BY_APPLICANT")}</p>
+                <p style={{ color: 'black', fontWeight: 'bold', margin: '0px' }}>{t("TO_BE_READ_AND_SIGNED_BY_APPLICANT")}</p>
                 <p style={{ color: 'black', display: 'inline' }}>
                     {t("IT_IS_AGREE_AND_UNDERSTOOD")}
                 </p>
@@ -55,7 +56,15 @@ export default function ApplicantInfoReleaseConsent() {
 
                 </div>
             </div>
+            <div className='Row' style={{ textAlign: 'left', marginBottom: '20px' }}>
+                <div className='Col'>
+                    <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>{t("SIGNATURE:")}</p>
+                </div>
+                <div className="Row" style={{ marginTop: '10px', marginBottom: '30px' }}>
+                    <img src={signature?.value} style={{ width: '300px', height: '200px', border: '1px solid black' }} alt="image" />
 
+                </div>
+            </div>
         </form>
     )
 }

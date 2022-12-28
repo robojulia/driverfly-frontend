@@ -6,8 +6,6 @@ import { AccidentHistoryEntity } from "../jot-form/long-form/accident-last-5-yea
 import { AccordianExtras } from "../jot-form/long-form/accordian-info/index.dto";
 import { BackgroundInfoLineAddress } from "../jot-form/long-form/backgorund-info/index.dto";
 import { CdlExtras } from "../jot-form/long-form/cdl-object/index.dto";
-import { EmploymentHistoryExtraDto } from "../jot-form/long-form/emplyment-history/index.dto";
-import { PastEmploymentHistoryExtraDto } from "../jot-form/long-form/previous-emplyment-history/index.dto";
 import { VioalationExtrasEntity } from "../jot-form/long-form/violaton-history/index.dto";
 import { WorkedBeforeExtrasDto } from "../jot-form/long-form/worked-before/index.dto";
 
@@ -67,11 +65,11 @@ export class ApplicantExtrasEntity {
 				.when("type", {
 					is: ApplicantExtras.ROUTES,
 					then: yup
-						.array((yup.string() as any).enum(RouteType))
-						.min(1)
-						.typeError("Choose atleast one!")
-						.required()
-						.nullable(),
+					.array((yup.string() as any).enum(RouteType))
+					.min(1)
+					.typeError("Choose atleast one!")
+					.required()
+					.nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.REQUIRE_W2_EMPLOYMENT,
@@ -80,17 +78,9 @@ export class ApplicantExtrasEntity {
 				.when("type", {
 					is: ApplicantExtras.OTHER_ABSOLUTELY_REQUIREMENTS,
 					then: yup
-						.array((yup.string() as any).enum(OtherRequirementType))
-						.optional()
-						.nullable(),
-				})
-				.when("type", {
-					is: ApplicantExtras.CURRENT_EMPLOYER,
-					then: EmploymentHistoryExtraDto.yupSchema(),
-				})
-				.when("type", {
-					is: ApplicantExtras.PAST_EMPLOYER,
-					then: yup.array(PastEmploymentHistoryExtraDto.yupSchema()).nullable(),
+					.array((yup.string() as any).enum(OtherRequirementType))
+					.optional()
+					.nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.PAST_LICENSE_SUSPENSION,
@@ -132,7 +122,23 @@ export class ApplicantExtrasEntity {
 				.when("type", {
 					is: ApplicantExtras.GENERAL_CONSENT,
 					then: AccordianExtras.yupSchema(),
-				}),
+				})
+				.when("type", {
+					is: ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION,
+					then: yup.string().optional().nullable(),
+				})
+				.when("type", {
+					is: ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION,
+					then: yup.string().optional().nullable(),
+				})
+				.when("type", {
+					is: ApplicantExtras.SIGNATURE_IMPORTANT_BACKGROUND,
+					then: yup.string().optional().nullable(),
+				})
+				.when("type", {
+					is: ApplicantExtras.SIGNATURE_GENERAL_CONSENT,
+					then: yup.string().optional().nullable(),
+				})
 		});
 	}
 }

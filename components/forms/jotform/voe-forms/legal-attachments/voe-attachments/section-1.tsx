@@ -1,20 +1,23 @@
-import { useContext } from "react";
+import { useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
-import JotformContext, { JotFormContextType } from "../../../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../../../enums/applicants/applicant-extras.enum";
 import { useTranslation } from "../../../../../../hooks/use-translation";
+import { ApplicantEmployerEntity, ApplicantEntity } from "../../../../../../models/applicant";
 import styles from "../../../../../../styles/jotform.module.css";
-export function VerificationOfEmploymentSection1() {
 
-    const {
-        state: { applicant, applicantExtras },
-        method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
-    }: JotFormContextType = useContext(JotformContext);
+export interface Section1Props {
+    applicant: ApplicantEntity,
+    employer: ApplicantEmployerEntity
+}
+export function VerificationOfEmploymentSection1({ applicant, employer }: Section1Props) {
+
     const { t } = useTranslation();
-    const current_employer = applicant?.extras?.find(
-        (v) => v.type == ApplicantExtras.CURRENT_EMPLOYER
-    );
-    const social_security_number = applicantExtras?.find(d => d?.type === ApplicantExtras?.EMPLOYEE_SS_OR_ID)
+    const social_security_number = applicant?.extras?.find(v => v?.type === ApplicantExtras?.EMPLOYEE_SS_OR_ID)
+
+    useEffect(() => {
+        console.log("employer from comp ", employer)
+        console.log("applicant from comp ", applicant?.company?.users[0])
+    }, [])
 
     return (
         <>
@@ -91,7 +94,7 @@ export function VerificationOfEmploymentSection1() {
                 </p>
 
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                    {t("WEBSITE_{company_web}", { company_web: applicant?.company?.website }, { translateProps: true })}
+                    {t("CURENNT_COMPANY_{phone}", { phone: applicant?.company?.users[0]?.contact_number }, { translateProps: true })}
                 </p>
             </Row>
             <Row className={`${styles.align__text_left} ${styles.highlight}`}>
@@ -99,18 +102,23 @@ export function VerificationOfEmploymentSection1() {
             </Row>
             <Row className={styles.align__text_left}>
                 <h4 className="mt-3">{t("I-B")}</h4>
+                <b>
+                    <h4 className={`${styles.paragraph} ${styles.align__text_left}`}>
+                        {!!employer?.is_current ? t("CURENNT_COMPANY_DATA") : t("PAST_COMPANY_DATA")}
+                    </h4>
+                </b>
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                    {t("CURENNT_COMPANY_{name}", { name: current_employer?.value?.current_company_name }, { translateProps: true })}
+                    {t("CURENNT_COMPANY_{name}", { name: employer?.name }, { translateProps: true })}
 
                 </p>
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                    {t("CURENNT_COMPANY_{address}", { address: current_employer?.value?.current_company_street_address_line_1 }, { translateProps: true })}
+                    {t("CURENNT_COMPANY_{address}", { address: employer?.address }, { translateProps: true })}
                 </p>
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                    {t("CURENNT_COMPANY_{phone}", { phone: current_employer?.value?.current_company_phone_number }, { translateProps: true })}
+                    {t("CURENNT_COMPANY_{phone}", { phone: employer?.phone }, { translateProps: true })}
                 </p>
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                    {t("DESIGNATED_EMPLOYER_REPRESENTATIVE_{current_manager_name}", { current_manager_name: current_employer?.value?.current_company_manager_name }, { translateProps: true })}
+                    {t("DESIGNATED_EMPLOYER_REPRESENTATIVE_{current_manager_name}", { current_manager_name: employer?.manager_name }, { translateProps: true })}
                 </p>
             </Row>
             <Row className={`${styles.align__text_left} ${styles.highlight}`}>

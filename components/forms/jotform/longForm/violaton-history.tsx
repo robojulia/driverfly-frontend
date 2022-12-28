@@ -14,7 +14,7 @@ import styles from "../../../../styles/jotform.module.css";
 export function ViolationHistory() {
 	const {
 		state: { applicant, applicantExtras },
-		method: { updateApplicantExtras, stepBack, stepNext },
+		method: { updateApplicantExtras, stepBack, stepNext, setApplicant },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
@@ -22,10 +22,14 @@ export function ViolationHistory() {
 		initialValues: new ViolationHistoryDto(),
 		validationSchema: ViolationHistoryDto.yupSchema(),
 		onSubmit: (values) => {
-			const { VIOLATION_DETAILS, VIOLATION_COUNT } = values;
+			const { VIOLATION_DETAILS, moving_violations_count } = values;
 			try {
 				updateApplicantExtras(VIOLATION_DETAILS);
-				updateApplicantExtras(VIOLATION_COUNT);
+				setApplicant({
+					...applicant,
+					moving_violations_count
+				});
+
 			} catch (error) {
 				console.log(error);
 			}
@@ -53,6 +57,7 @@ export function ViolationHistory() {
 			VIOLATION_DETAILS: !!apx_detail?.type
 				? apx_detail
 				: new ApplicantExtrasEntity(ApplicantExtras.VIOLATION_DETAILS),
+			moving_violations_count: applicant?.moving_violations_count
 		});
 	}, [applicant, applicantExtras]);
 
@@ -65,63 +70,50 @@ export function ViolationHistory() {
 			<h6 className={styles.heading__sty}>
 				{t("VIOLATIONS_LAST_3_YEARS")}
 			</h6>
-			<Row className="p-2">
+			<Row className={`${styles.bold} p-3`}>
 				<BaseInput
 					type="number"
-					className="col my-3 p-0"
-					name="VIOLATION_COUNT.value"
+					className="col p-0"
+					name="moving_violations_count"
 					label="HOW_MANY_VIOALTION_3_YEARS"
 					formik={form}
 				/>
-				<div className="mt-4 float-left d-flex justify-left p-0">
-
-					<Button
-						size="sm"
-						onClick={() =>
-							form.setFieldValue("VIOLATION_DETAILS.value", [
-								...(form.values?.VIOLATION_DETAILS?.value || []),
-								new VioalationExtrasEntity(),
-							])
-						}
-					>
-						<PlusCircle /> {t("TITLE_ADD_VIOLATION_DETAILS")}
-					</Button>
-				</div>
 			</Row>
 
 			{form.values.VIOLATION_DETAILS?.value?.length > 0 && (
 				<>
 					{form.values.VIOLATION_DETAILS.value.map((entity, i) => (
-						<Row key={i}>
-							<div className="col-md-12 mt-2 p-0">
-								<Row className="p-2">
+						<Row key={i} className="single-past-employer-items my-3 ">
+							<div className="col-md-12 mt-2">
+								<Row className={styles.bold}>
 									<BaseInput
-										className="col-md-3 mt-3"
+										className="col-md-6 mt-3"
 										name={`VIOLATION_DETAILS.value[${i}].date_of_violation`}
 										label="VIOLATION_DATE"
 										type="date"
 										formik={form}
 									/>
 									<BaseInput
-										className="col-md-3 mt-3"
+										className="col-md-6 mt-3"
 										name={`VIOLATION_DETAILS.value[${i}].location`}
 										label="location"
 										formik={form}
 									/>
 									<BaseInput
-										className="col-md-3 mt-3"
+										className="col-md-6 mt-3"
 										name={`VIOLATION_DETAILS.value[${i}].charge`}
 										label="CHARGE"
 										formik={form}
 									/>
 									<BaseInput
-										className="col mt-3"
+										className="col-md-6 mt-3"
 										name={`VIOLATION_DETAILS.value[${i}].penalty`}
 										label="PENALTY"
 										formik={form}
 									/>
-									<a className="text-right mt-2"
-										href="#"
+									<Button
+										className="rounded-lg md-6"
+										variant="outline-danger close_btn w-25 mx-auto my-3"
 										onClick={() =>
 											form.setValues({
 												...form.values,
@@ -135,16 +127,33 @@ export function ViolationHistory() {
 											})
 										}
 									>
-										<DashCircle color="red" />
-									</a>
+										<DashCircle />
+									</Button>
+									<div className='Row' style={{ height: '3px', borderBottom: 'solid 2px #8d8c8c', marginTop: '0px' }}></div >
 								</Row>
 							</div>
 						</Row>
 					))}
 				</>
 			)}
+			<Row>
+				<div className="mt-4 float-left d-flex justify-left px-3">
 
-			<Row className="mt-3">
+					<Button
+						className="w-100 py-2"
+						size="sm"
+						onClick={() =>
+							form.setFieldValue("VIOLATION_DETAILS.value", [
+								...(form.values?.VIOLATION_DETAILS?.value || []),
+								new VioalationExtrasEntity(),
+							])
+						}
+					>
+						<PlusCircle /> {t("TITLE_ADD_VIOLATION_DETAILS")}
+					</Button>
+				</div>
+			</Row>
+			<Row className="mt-4">
 				<Col>
 					<Button className="float-right" type="reset">
 						{t("BACK")}

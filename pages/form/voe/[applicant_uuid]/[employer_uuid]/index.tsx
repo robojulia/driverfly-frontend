@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import styles from "../../../../styles/voe.module.css";
-import VoeFormContext from "../../../../context/voeform-context";
-import { VoeFormPageControl } from "../../../../components/forms/jotform/voe-form-pages";
-import ApplicantApi from "../../../api/applicant";
-import { ApplicantEntity, ApplicantVoeFormEntity } from "../../../../models/applicant";
+import styles from "../../../../../styles/voe.module.css";
+import VoeFormContext from "../../../../../context/voeform-context";
+import { VoeFormPageControl } from "../../../../../components/forms/jotform/voe-form-pages";
+import ApplicantApi from "../../../../api/applicant";
+import { ApplicantEmployerEntity, ApplicantEntity, ApplicantVoeFormEntity } from "../../../../../models/applicant";
 
 export interface VoeFormProps {
-	applicant: ApplicantEntity
+	applicant: ApplicantEntity;
+	employer: ApplicantEmployerEntity
+	
 }
 
-export default function VoeForm({ applicant }: VoeFormProps) {
+export default function VoeForm({ applicant, employer }: VoeFormProps) {
 
 	const [applicantVoe, setApplicantVoe] = useState<ApplicantVoeFormEntity[]>([])
 
@@ -28,15 +30,16 @@ export default function VoeForm({ applicant }: VoeFormProps) {
 	useEffect(() => {
 		console.log("from index", applicant);
 
-		if (applicant.voeData) setApplicantVoe(applicant.voeData)
+		// if (applicant.voeData) setApplicantVoe(applicant.voeData.filter(val => val?.employerId === employer?.id))
 
-	}, [applicant]);
+	}, [employer]);
 
 	return (
 		<VoeFormContext.Provider
 			value={{
 				state: {
 					applicant,
+					employer,
 					applicantVoe,
 					steps,
 				},
@@ -60,16 +63,18 @@ export default function VoeForm({ applicant }: VoeFormProps) {
 
 export async function getServerSideProps({ query }) {
 	try {
-		const { uuid } = query || {};
+		const { applicant_uuid, employer_uuid } = query || {};
 
-		if (!!!uuid) return { notFound: true }
+		if (!!!applicant_uuid || !!!employer_uuid) return { notFound: true }
 
 		const applicantApi = new ApplicantApi()
-		const applicant: ApplicantEntity = await applicantApi.getByUuidToken(uuid)
 
-		if (!!!applicant) return { notFound: true }
+		const applicant: ApplicantEntity = await applicantApi.getByUuidToken(applicant_uuid)
+		const employer: ApplicantEmployerEntity = await applicantApi.employer.getByUuidToken(employer_uuid)
 
-		return { props: { applicant } }
+		if (!!!applicant || !!!employer || applicant.id !== employer.applicant.id) return { notFound: true }
+
+		return { props: { applicant, employer } }
 	} catch (error) {
 		return { notFound: true }
 	}

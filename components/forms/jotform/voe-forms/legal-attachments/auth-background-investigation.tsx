@@ -1,16 +1,15 @@
-import { useContext } from "react";
-import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
 import { useTranslation } from "../../../../../hooks/use-translation";
+import { ApplicantEntity } from "../../../../../models/applicant";
 
+export interface AuthBackgroundProps {
+    applicant?: ApplicantEntity;
+}
+export default function AuthBackgroundInvestigation({ applicant }: AuthBackgroundProps) {
 
-export default function AuthBackgroundInvestigation() {
-    const {
-        state: { applicantExtras, applicant }
-    }: JotFormContextType = useContext(JotformContext);
-    const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE)
+    const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION)
     const { t } = useTranslation();
-    const date =applicant?.extras?.find(d => d?.type === ApplicantExtras?.DISCLOSURE_AND_AUTHORIZATION_DATE)
+    const date = applicant?.extras?.find(d => d?.type === ApplicantExtras?.DISCLOSURE_AND_AUTHORIZATION_DATE)
 
     return (
         <form>

@@ -65,7 +65,7 @@ export function EmergencyContact() {
 					{t("EMERGENCY_CONTACT_DETAILS")}
 				</h4>
 
-				<Row className={styles.align__text_left}>
+				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 					<BaseInput
 						className="col-md-6 my-3"
 						name="emergency_contact_name"

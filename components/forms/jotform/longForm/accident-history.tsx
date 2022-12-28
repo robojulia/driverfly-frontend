@@ -62,7 +62,7 @@ export function AccidentHistory() {
 			<h6 className={styles.heading__sty}>
 				{t("MORE_ABOUT_ACCIDENTS")}
 			</h6>
-			<Row>
+			<Row className={styles.bold}>
 				<BaseInput
 					className="col my-3"
 					type="number"
@@ -71,9 +71,88 @@ export function AccidentHistory() {
 					placeholder="PLACEHOLDER_FOR_DIGITS"
 					formik={form}
 				/>
+			</Row>
 
-				<div className="mt-4 float-left d-flex justify-left pl-3">
+			{form.values.ACCIDENT_DETAILS?.value?.length > 0 && (
+				<>
+					{form.values.ACCIDENT_DETAILS.value.map((entity, i) => (
+						<Row className="pl-0 single-past-employer-items my-3" key={i}>
+							<div className="col-md-12 mt-2">
+								<Row className={styles.bold}>
+									<BaseInput
+										className="col-md-6 my-3"
+										name={`ACCIDENT_DETAILS.value[${i}].date_of_accident`}
+										label="DATE"
+										type="date"
+										formik={form}
+									/>
+									<BaseInput
+										className="col-md-6 my-3"
+										name={`ACCIDENT_DETAILS.value[${i}].nature_of_accident`}
+										label="LABEL_ACCIDENT_NATURE"
+										formik={form}
+									/>
+									<BaseInput
+										className="col-md-6 my-3"
+										name={`ACCIDENT_DETAILS.value[${i}].location_of_accident`}
+										label="LABEL_ACCIDENT_LOCATION"
+										formik={form}
+									/>
+									<BaseInput
+										className="col-md-6 my-3"
+										name={`ACCIDENT_DETAILS.value[${i}].number_of_fatalaties`}
+										label="LABEL_ACCIDENT_FATALITIES"
+										formik={form}
+									/>
+									<BaseInput
+										className="col-md-6 mt-2"
+										name={`ACCIDENT_DETAILS.value[${i}].number_of_injured`}
+										label="LABEL_ACCIDENT_INJURED"
+										formik={form}
+									/>
+									<BaseCheck
+										className="col-md-6 mt-5"
+										name={`ACCIDENT_DETAILS.value[${i}].dot_recordable`}
+										label="LABEL_ACCIDENT_DOT"
+										formik={form}
+									/>
+
+									<BaseCheck
+										className="col-md-12 mt-4"
+										name={`ACCIDENT_DETAILS.value[${i}].at_fault`}
+										label="LABEL_ACCIDENT_FAULT"
+										formik={form}
+									/>
+									<Button
+										className="rounded-lg"
+										variant="outline-danger close_btn w-25 mx-auto my-2"
+										onClick={
+											() =>
+												form.setValues({
+													...form.values,
+													ACCIDENT_DETAILS: {
+														...form.values?.ACCIDENT_DETAILS,
+														value:
+															form.values?.ACCIDENT_DETAILS?.value?.filter(
+																(v, idx) => i != idx
+															),
+													},
+												})
+										}
+									>
+										<DashCircle />
+									</Button>
+									<div className='Row' style={{ height: '3px', borderBottom: 'solid 2px #8d8c8c', marginTop: '0px' }}></div >
+								</Row>
+							</div>
+						</Row>
+					))}
+				</>
+			)}
+			<Row>
+				<div className="mt-4 float-left d-flex justify-left">
 					<Button
+						className="w-100 py-2"
 						size="sm"
 						onClick={() =>
 							form.setFieldValue("ACCIDENT_DETAILS.value", [
@@ -86,84 +165,7 @@ export function AccidentHistory() {
 					</Button>
 				</div>
 			</Row>
-
-			{form.values.ACCIDENT_DETAILS?.value?.length > 0 && (
-				<>
-					{form.values.ACCIDENT_DETAILS.value.map((entity, i) => (
-						<Row className="pl-0" key={i}>
-							<div className="col-md-12 mt-2">
-								<Row>
-									<BaseInput
-										className="col-md-4 mt-3"
-										name={`ACCIDENT_DETAILS.value[${i}].date_of_accident`}
-										label="DATE"
-										type="date"
-										formik={form}
-									/>
-									<BaseInput
-										className="col-md-4 mt-3"
-										name={`ACCIDENT_DETAILS.value[${i}].nature_of_accident`}
-										label="LABEL_ACCIDENT_NATURE"
-										formik={form}
-									/>
-									<BaseInput
-										className="col-md-4 mt-3"
-										name={`ACCIDENT_DETAILS.value[${i}].location_of_accident`}
-										label="LABEL_ACCIDENT_LOCATION"
-										formik={form}
-									/>
-									<BaseInput
-										className="col-md-4 mt-3"
-										name={`ACCIDENT_DETAILS.value[${i}].number_of_fatalaties`}
-										label="LABEL_ACCIDENT_FATALITIES"
-										formik={form}
-									/>
-									<BaseInput
-										className="col-md-4 mt-3"
-										name={`ACCIDENT_DETAILS.value[${i}].number_of_injured`}
-										label="LABEL_ACCIDENT_INJURED"
-										formik={form}
-									/>
-									<BaseCheck
-										className="col-md-4 mt-5"
-										name={`ACCIDENT_DETAILS.value[${i}].dot_recordable`}
-										label="LABEL_ACCIDENT_DOT"
-										formik={form}
-									/>
-
-									<BaseCheck
-										className="col-md-4 mt-4 p-lg-0"
-										name={`ACCIDENT_DETAILS.value[${i}].at_fault`}
-										label="LABEL_ACCIDENT_FAULT"
-										formik={form}
-									/>
-									<Col className="mt-4 p-lg-0">
-										<a
-											href="#"
-											onClick={
-												() =>
-													form.setValues({
-														...form.values,
-														ACCIDENT_DETAILS: {
-															...form.values?.ACCIDENT_DETAILS,
-															value:
-																form.values?.ACCIDENT_DETAILS?.value?.filter(
-																	(v, idx) => i != idx
-																),
-														},
-													})
-											}
-										>
-											<DashCircle className="mt-3" color="red" />
-										</a>
-									</Col>
-								</Row>
-							</div>
-						</Row>
-					))}
-				</>
-			)}
-			<Row className="mt-5">
+			<Row className="mt-4">
 				<Col>
 					<Button className="float-right" type="reset">
 						{t("BACK")}

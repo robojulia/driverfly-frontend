@@ -1,18 +1,19 @@
 import { createContext } from "react";
+import { ApplicantEmployerEntity } from "../models/applicant";
 import { ApplicantExtrasEntity } from "../models/applicant/applicant-extras.entity";
 import { ApplicantEntity } from "../models/applicant/applicant.entity";
 
 export type JotFormContextType = {
 	state: {
-		applicant: ApplicantEntity;
-		applicantExtras: ApplicantExtrasEntity[];
-		steps: number;
+		applicant?: ApplicantEntity;
+		applicantExtras?: ApplicantExtrasEntity[];
+		steps?: number;
 	};
 	method: {
-		setApplicant: (e?: any) => void;
-		updateApplicantExtras: (e?: any) => void;
-		stepNext: () => void;
-		stepBack: () => void;
+		setApplicant?: (e?: any) => void;
+		updateApplicantExtras?: (e?: any) => void;
+		stepNext?: () => void;
+		stepBack?: () => void;
 	};
 };
 

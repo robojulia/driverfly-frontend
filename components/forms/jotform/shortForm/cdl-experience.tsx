@@ -8,6 +8,7 @@ import { DriverLicenseType } from "../../../../enums/users/driver-license-type.e
 import { CdlDto } from "../../../../models/jot-form/short-form/cdl-experience.dto";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { useContext, useEffect } from "react";
+import styles from "../../../../styles/jotform.module.css";
 
 
 export function CdlExperience() {
@@ -74,7 +75,7 @@ export function CdlExperience() {
 	return (
 		<>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<Row className="my-3">
+				<Row className={`${styles.bold} my-3`}>
 					<BaseSelect
 						className="col-12"
 						label="TYPE_CDL_CLASS"
@@ -89,7 +90,7 @@ export function CdlExperience() {
 				</Row>
 				{!!form.values.license_type && (
 					<>
-						<Row className="my-3">
+						<Row className={styles.bold}>
 							<BaseInput
 								className="col-12"
 								type="number"

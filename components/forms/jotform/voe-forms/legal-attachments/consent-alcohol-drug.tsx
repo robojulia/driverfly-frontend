@@ -1,18 +1,22 @@
 import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
-import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
-import { useContext } from "react";
+import { useEffect } from "react";
+import { ApplicantEntity } from "../../../../../models/applicant";
 
-export default function ConsentAlcoholDrug() {
-    const {
-        state: { applicantExtras, applicant }
-    }: JotFormContextType = useContext(JotformContext);
-    const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE)
-    const generalConsent = applicant?.extras?.find(consent => consent?.type === ApplicantExtras.GENERAL_CONSENT)
+
+export interface ConsentAlcoholDrugProps {
+    applicant?: ApplicantEntity;
+}
+export default function ConsentAlcoholDrug({ applicant }: ConsentAlcoholDrugProps) {
+
     const { t } = useTranslation();
-    const date =  applicant?.extras?.find(
+
+    const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE_GENERAL_CONSENT)
+    const generalConsent = applicant?.extras?.find(consent => consent?.type === ApplicantExtras.GENERAL_CONSENT)
+    const date = applicant?.extras?.find(
         (v) => v.type == ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
     );
+
 
     return (
         <form>
@@ -43,19 +47,19 @@ export default function ConsentAlcoholDrug() {
             <div className="Row" style={{ textAlign: 'left', marginBottom: '20px' }}>
                 <div className="Col">
                     <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>{t("EMPLOYERS_NAME:")}</p>
-                    <p style={{ color: 'black', display: 'inline' }}>{` ${generalConsent?.value?.employer_name}`}</p>
+                    <p style={{ color: 'black', display: 'inline' }}>{` ${applicant?.company?.name}`}</p>
                 </div>
             </div>
             <div className="Row" style={{ textAlign: 'left', marginBottom: '20px' }}>
                 <div className="Col">
                     <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>{t("CDL_LICENSE_NUMBER:")}</p>
-                    <p style={{ color: 'black', display: 'inline' }}>{` ${generalConsent?.value?.cdl_license_number}`}</p>
+                    <p style={{ color: 'black', display: 'inline' }}>{` ${applicant?.license_number}`}</p>
                 </div>
             </div>
             <div className="Row" style={{ textAlign: 'left', marginBottom: '20px' }}>
                 <div className="Col">
                     <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>{t("EXPIRATION_DATE:")}</p>
-                    <p style={{ color: 'black', display: 'inline' }}>{` ${generalConsent?.value?.expiration_date}`}</p>
+                    <p style={{ color: 'black', display: 'inline' }}>{` ${applicant?.license_expiry}`}</p>
                 </div>
             </div>
             <div className="Row">

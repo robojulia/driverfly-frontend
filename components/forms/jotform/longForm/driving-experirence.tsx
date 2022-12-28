@@ -55,7 +55,7 @@ export function DrivingExperience() {
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<h4 className={styles.heading__sty}> {t("DRVING_EXPERIENCE")}</h4>
-			<Row>
+			<Row className={styles.bold}>
 				<BaseInput
 					className="col-md-6 my-3"
 					required

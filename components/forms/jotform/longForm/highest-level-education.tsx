@@ -53,7 +53,7 @@ export function HighestLevelEducation() {
 						{t("TELL_ABOUT_YOUR_EDUCATION")}
 					</h6>
 				</Row>
-				<Row className={styles.align__text_left}>
+				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 					<BaseSelect
 						className="col my-3"
 						required

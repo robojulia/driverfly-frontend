@@ -66,9 +66,6 @@ export function SplashPage() {
 						<Button type="submit">{t("NEXT")}</Button>
 					</Col>
 				</Row>
-				<Row className="mt-5 col-9" style={{ margin: "auto" }}>
-					<hr className={`${styles.highlight__black}`}></hr>
-				</Row>
 			</Form>
 		</>
 	);

@@ -1,5 +1,6 @@
 import { AxiosRequestConfig } from "axios";
 import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
+import { ApplicantEmployerEntity } from "../../models/applicant";
 import { ApplicantDacEntity } from "../../models/applicant/applicant-dac.entity";
 import { ApplicantJobEntity } from "../../models/applicant/applicant-job.entity";
 import { ApplicantNoteEntity } from "../../models/applicant/applicant-note.entity";
@@ -82,7 +83,7 @@ class ApplicantApi extends BaseApi {
 	}
 
 	async getByUuidToken(uuid_token: string): Promise<ApplicantEntity> {
-		const { data } = await this.get(this.buildUrl(this.baseUrl + `/fetch/${uuid_token}`));
+		const { data } = await this.get(this.buildUrl(this.baseUrl + `/fetch-applicant/${uuid_token}`));
 
 		return data;
 	}
@@ -159,6 +160,13 @@ class ApplicantApi extends BaseApi {
 			const { data } = await this.put(`${this.jotform.baseUrl()}/${applicantId}`, dto);
 			return data;
 		},
+		updateDocuments: async (
+			applicantId: number,
+			dto: DocumentEntity[]
+		): Promise<ApplicantEntity> => {
+			const { data } = await this.put(`${this.jotform.baseUrl()}/${applicantId}/documents`, dto);
+			return data;
+		},
 	};
 
 	voeform = {
@@ -167,6 +175,14 @@ class ApplicantApi extends BaseApi {
 			const { data } = await this.post(this.voeform.baseUrl(), dto);
 			return data;
 		},
+	};
+
+	employer = {
+		getByUuidToken: async (uuid_token: string): Promise<ApplicantEmployerEntity> => {
+			const { data } = await this.get(this.buildUrl(`${this.baseUrl}/fetch-employer/${uuid_token}`));
+
+			return data;
+		}
 	};
 
 	notes = {

@@ -1,12 +1,13 @@
 import { Col, Row } from "react-bootstrap";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "../../../../hooks/use-translation";
 import ViewDetails from "../../../view-details/view-details";
 import ViewCard from "../../../view-details/view-card";
 import { ViewApplicantDetailProps } from "../../../../types/applicant/view-application-detail-props.type";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import ViewTable from "../../../view-details/view-table";
+import ShowFormattedDate from "../../../jobs/show-formatted-date";
 
 interface ApplicantSafetyBackgroundProps extends ViewApplicantDetailProps { }
 
@@ -62,68 +63,49 @@ export default function ApplicantExtrasDetails({
 	const violation_details = applicant.extras.find(
 		(ex) => ex?.type === ApplicantExtras.VIOLATION_DETAILS
 	);
-	const current_employer = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.CURRENT_EMPLOYER
-	);
-	const past_employer = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.PAST_EMPLOYER
-	);
+	const current_employer = applicant.employers.find(v => !!v.is_current)
+
+	const past_employers = applicant.employers.filter(v => !!!v.is_current);
+
 	const already_applied = applicant.extras.find(
 		(ex) => ex?.type === ApplicantExtras.ALREADY_APPLIED_TO_COMPANY
 	);
 	const already_worked_here = applicant.extras.find(
 		(ex) => ex?.type === ApplicantExtras.ALREADY_WORKED_TO_COMPANY
 	);
-	const employee_ss_id = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.EMPLOYEE_SS_OR_ID
-	);
-	const disclosure_date = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE
-	);
-	const important_background_date = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
-	);
-	const general_consent = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.GENERAL_CONSENT
-	);
+
 	return (
 		<>
 			<Row>
 				<Col md="6">
 					<ViewCard title="BASIC_QUESTIONAIRE">
-						<Row>
-							<ViewDetails
-								default={t("NOT_ANSWERED")}
-								obj={{
-									Authorize_to_Communicate: authToCommunicate?.value && t(`BooleanPreferenceType.${authToCommunicate?.value}`),
-									hear_about_us: hear_about_us?.value,
-									job_apply_date: job_apply_date?.value,
-									qualified_for_manual_transmission:
-										qualified_for_manual_transmission?.value,
-								}}
-							/>
-						</Row>
+						<ViewDetails
+							default={t("NOT_ANSWERED")}
+							obj={{
+								Authorize_to_Communicate: authToCommunicate?.value && t(`BooleanPreferenceType.${authToCommunicate?.value}`),
+								hear_about_us: hear_about_us?.value && t(`HearAboutUsType.${hear_about_us?.value}`),
+								job_apply_date: job_apply_date?.value,
+								qualified_for_manual_transmission:
+									qualified_for_manual_transmission?.value,
+							}}
+						/>
 					</ViewCard>
 				</Col>
 				<Col md="6">
 					<ViewCard title="SECURITY_QUESTOINS">
-						<Row>
-							<ViewDetails
-								default={t("NOT_ANSWERED")}
-								obj={{
-									past_license_suspension: past_license_suspension?.value,
-									unable_to_perform_job: unable_to_perform_job?.value,
-									convicted_of_felony: convicted_of_felony?.value,
-									dot_regulation: dot_regulation?.value,
-								}}
-							/>
-						</Row>
+						<ViewDetails
+							default={t("NOT_ANSWERED")}
+							obj={{
+								past_license_suspension: past_license_suspension?.value,
+								unable_to_perform_job: unable_to_perform_job?.value,
+								convicted_of_felony: convicted_of_felony?.value,
+								dot_regulation: dot_regulation?.value,
+							}}
+						/>
 					</ViewCard>
 				</Col>
-			</Row>
-			<Row>
-				<ViewCard title="PERSONAL_ADDRESS">
-					<Row>
+				<Col>
+					<ViewCard title="PERSONAL_ADDRESS">
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
 							obj={{
@@ -131,29 +113,32 @@ export default function ApplicantExtrasDetails({
 								adress_2: lineAdress?.value?.address_2,
 							}}
 						/>
-					</Row>
-				</ViewCard>
+					</ViewCard>
+				</Col>
+
 			</Row>
 			<Row>
-				<ViewCard title="CDL_DETAILS">
-					<ViewTable
-						type="cdl_number_details"
-						headers={{
-							license_number: "driver_license_number",
-							date: "DATE",
-							state: "STATE",
-						}}
-						items={cdl_details?.value?.map((cdl) => ({
-							license_number: cdl?.license_number,
-							date: cdl?.date,
-							state: cdl?.state,
-						}))}
-					/>
-				</ViewCard>
+				<Col>
+					<ViewCard title="CDL_DETAILS">
+						<ViewTable
+							type="cdl_number_details"
+							headers={{
+								license_number: "driver_license_number",
+								date: "DATE",
+								state: "STATE",
+							}}
+							items={cdl_details?.value?.map((cdl) => ({
+								license_number: cdl?.license_number,
+								date: cdl?.date,
+								state: cdl?.state,
+							}))}
+						/>
+					</ViewCard>
+				</Col>
 			</Row>
 			<Row>
-				<ViewCard title="PREFERENCES">
-					<Row>
+				<Col>
+					<ViewCard title="PREFERENCES">
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
 							obj={{
@@ -172,116 +157,131 @@ export default function ApplicantExtrasDetails({
 								W2_requirements: w2_employment?.value && t(`BooleanPreferenceType.${w2_employment?.value}`)
 							}}
 						/>
-					</Row>
-				</ViewCard>
+					</ViewCard>
+				</Col>
 			</Row>
 			<Row>
-				<ViewCard title="ACCIDENT_DEAILS">
-					<ViewTable
-						type="ACCIDENT_DEAILS"
-						headers={{
-							at_fault: "at_fault",
-							date_of_accident: "date_of_accident",
-							dot_recordable: "dot_recordable",
-							location_of_accident: "location_of_accident",
-							nature_of_accident: "nature_of_accident",
-							number_of_fatalaties: "number_of_fatalaties",
-							number_of_injured: "number_of_injured",
-						}}
-						items={accident_details?.value?.map((a) => ({
-							at_fault: !!a?.at_fault ? `${t("YES")}` : `${t("NO")}`,
-							date_of_accident: a?.date_of_accident,
-							dot_recordable: !!a?.dot_recordable
-								? `${t("YES")}`
-								: `${t("NO")}`,
-							location_of_accident: a?.location_of_accident,
-							nature_of_accident: a?.nature_of_accident,
-							number_of_fatalaties: a?.number_of_fatalaties,
-							number_of_injured: a?.number_of_injured,
-						}))}
-					/>
-				</ViewCard>
-				<ViewCard title="VIOLATION_DETAILS">
-					<ViewTable
-						type="VIOLATION_DETAILS"
-						headers={{
-							charge: "charge",
-							date_of_violation: "DATE",
-							location: "location",
-							penalty: "penalty",
-						}}
-						items={violation_details?.value.map((v) => ({
-							charge: v?.charge,
-							date_of_violation: v?.date_of_violation,
-							location: v?.location,
-							penalty: v?.penalty,
-						}))}
-					/>
-				</ViewCard>
+				<Col>
+					<ViewCard title="ACCIDENT_DEAILS">
+						<ViewTable
+							type="ACCIDENT_DEAILS"
+							headers={{
+								at_fault: "at_fault",
+								date_of_accident: "date_of_accident",
+								dot_recordable: "dot_recordable",
+								location_of_accident: "location_of_accident",
+								nature_of_accident: "nature_of_accident",
+								number_of_fatalaties: "number_of_fatalaties",
+								number_of_injured: "number_of_injured",
+							}}
+							items={accident_details?.value?.map((a) => ({
+								at_fault: !!a?.at_fault ? `${t("YES")}` : `${t("NO")}`,
+								date_of_accident: a?.date_of_accident,
+								dot_recordable: !!a?.dot_recordable
+									? `${t("YES")}`
+									: `${t("NO")}`,
+								location_of_accident: a?.location_of_accident,
+								nature_of_accident: a?.nature_of_accident,
+								number_of_fatalaties: a?.number_of_fatalaties,
+								number_of_injured: a?.number_of_injured,
+							}))}
+						/>
+					</ViewCard>
+				</Col>
+				<Col md="12">
+					<ViewCard title="VIOLATION_DETAILS">
+						<ViewTable
+							type="VIOLATION_DETAILS"
+							headers={{
+								charge: "charge",
+								date_of_violation: "DATE",
+								location: "location",
+								penalty: "penalty",
+							}}
+							items={violation_details?.value.map((v) => ({
+								charge: v?.charge,
+								date_of_violation: v?.date_of_violation,
+								location: v?.location,
+								penalty: v?.penalty,
+							}))}
+						/>
+					</ViewCard>
+				</Col>
 			</Row>
 			<Row>
-				<Col md="6">
+				<Col md="12">
 					<ViewCard title="CURRENT_EMPLOYER">
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
 							obj={{
-								// authorize: current_employer?.value?.authorize,
-								city: current_employer?.value?.city,
+								city: current_employer?.city,
 								CURRENT_COMPANY_EMAIL:
-									current_employer?.value?.current_company_email,
+									current_employer?.email,
 								CURRENT_COMPANY_MANAGER_NAME:
-									current_employer?.value?.current_company_manager_name,
+									current_employer?.manager_name,
 								CURRENT_COMPANY_NAME:
-									current_employer?.value?.current_company_name,
+									current_employer?.name,
 								CURRENT_COMPANY_PHONE_NUMBER:
-									current_employer?.value?.current_company_phone_number,
+									current_employer?.phone,
 								CURRENT_COMPANY_POSITION:
-									current_employer?.value?.current_company_position,
+									current_employer?.title,
 								CURRENT_COMPANY_STREET_ADDRESS_LINE_1:
-									current_employer?.value
-										?.current_company_street_address_line_1,
+									current_employer?.address,
 								CURRENT_COMPANY_STREET_ADDRESS_LINE_2:
-									current_employer?.value
-										?.current_company_street_address_line_2,
-								zip_code: current_employer?.value?.current_company_zipcode,
-								fcr: current_employer?.value?.fcr && t(`BooleanPreferenceType.${current_employer?.value?.fcr}`) ,
-								fmcsr: current_employer?.value?.fmcsr && t(`BooleanPreferenceType.${current_employer?.value?.fmcsr}`) ,
-								START_DATE: current_employer?.value?.start_date,
-								state: current_employer?.value?.state,
+									current_employer?.address_2,
+								zip_code: current_employer?.zip_code,
+								fcr: current_employer?.is_subject_to_drug_tests
+									? `${t("YES")}`
+									: `${t("NO")}`,
+								fmcsr: current_employer?.is_subject_to_fmcsrs
+									? `${t("YES")}`
+									: `${t("NO")}`,
+								START_DATE: new Date(current_employer?.start_at),
+								state: current_employer?.state,
 							}}
 						/>
 					</ViewCard>
 				</Col>
-				<Col md="6">
+
+
+				<Col md="12">
 					<ViewCard title="PAST_EMPLOYER">
-						<ViewDetails
-							default={t("NOT_ANSWERED")}
-							obj={{
-								// authorize: past_employer?.value?.authorize,
-								city: past_employer?.value?.city,
-								END_DATE: past_employer?.value?.end_date,
-								fcr: past_employer?.value?.fcr && t(`BooleanPreferenceType.${past_employer?.value?.fcr}`) ,
-								fmcsr: past_employer?.value?.fmcsr  && t(`BooleanPreferenceType.${past_employer?.value?.fmcsr}`) ,
-								PREVIOUS_COMPANY_EMAIL: past_employer?.value.fmcsr,
-								PREVIOUS_MANAGER_NAME:
-									past_employer?.value?.previous_company_email,
-								PREVIOUS_COMPANY_PHONE_NUMBER:
-									past_employer?.value?.previous_company_phone_number,
-								PREVIOUS_COMPANY_ADDRESS_1:
-									past_employer?.value?.previous_company_street_address_line_1,
-								PREVIOUS_COMPANY_ADDRESS_2:
-									past_employer?.value?.previous_company_street_address_line_2,
-								zip_code: past_employer?.value?.previous_company_zipcode,
-								START_DATE: past_employer?.value?.start_date,
-								state: past_employer?.value?.state,
-							}}
-						/>
+						{
+							past_employers.length > 0 ?
+								past_employers.map(past_employer => (
+									<>
+										<ViewCard title={`${past_employer?.name}`}>
+											<ViewDetails
+												obj={{
+													city: past_employer?.city,
+													START_DATE: new Date(past_employer?.start_at),
+													END_DATE: new Date(past_employer?.end_at),
+													fcr: past_employer?.is_subject_to_drug_tests,
+													fmcsr: past_employer?.is_subject_to_fmcsrs
+														? `${t("YES")}`
+														: `${t("NO")}`,
+
+													PREVIOUS_COMPANY_EMAIL: past_employer?.email,
+													PREVIOUS_MANAGER_NAME: past_employer?.manager_name,
+													PREVIOUS_COMPANY_PHONE_NUMBER: past_employer?.phone,
+													PREVIOUS_COMPANY_ADDRESS_1: past_employer?.address,
+													PREVIOUS_COMPANY_ADDRESS_2: past_employer?.address_2,
+													zip_code: past_employer?.zip_code,
+													state: past_employer?.state,
+
+												}}
+											/>
+										</ViewCard>
+									</>
+								))
+								: <>{t("PAST_EMPLOYER_NOT_FOUND")}</>
+						}
 					</ViewCard>
 				</Col>
 			</Row>
 
 			<Row>
-				<Col md="6">
+				<Col>
 					<ViewCard title="APPLIED_OR_WORKED_HERE">
 						<Row>
 							<ViewDetails
@@ -293,26 +293,6 @@ export default function ApplicantExtrasDetails({
 										: `${t("NO")}`,
 									START_DATE: already_worked_here?.value?.start_date,
 									END_DATE: already_worked_here?.value?.end_date,
-								}}
-							/>
-						</Row>
-					</ViewCard>
-				</Col>
-				<Col md="6">
-					<ViewCard title="LEGAL_INFO">
-						<Row>
-							<ViewDetails
-								default={t("NOT_ANSWERED")}
-								obj={{
-									// EMPLOYEE_SS_OR_BUSINESS: employee_ss_id?.value,
-									// DISCLOSURE_AND_AUTHROIZE_DATE: disclosure_date?.value,
-									IMPOERANT_BACKGROUND_DATE: important_background_date?.value,
-
-									name: general_consent?.value?.name,
-									EMPLOYER_NAME: general_consent?.value?.employer_name,
-									cdl_license_number:
-										general_consent?.value?.cdl_license_number,
-									expiration_date: general_consent?.value?.expiration_date,
 								}}
 							/>
 						</Row>
