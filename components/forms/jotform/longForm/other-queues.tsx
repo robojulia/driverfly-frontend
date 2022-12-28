@@ -122,7 +122,7 @@ export function OtherQueues() {
                                 formik={form}
                             />
 
-                            <Button className="rounded-0 col"
+                            <Button
                                 className="rounded-lg"
                                 variant="outline-danger close_btn w-25 mx-auto my-2"
                                 onClick={() =>
