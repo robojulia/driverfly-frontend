@@ -7,9 +7,9 @@ export interface AuthBackgroundProps {
 }
 export default function AuthBackgroundInvestigation({ applicant }: AuthBackgroundProps) {
 
-    const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE)
+    const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION)
     const { t } = useTranslation();
-    const date = applicant?.extras?.find(d => d?.type === ApplicantExtras?.SIGNATURE_DISCLOSURE_AUTHORIZATION)
+    const date = applicant?.extras?.find(d => d?.type === ApplicantExtras?.DISCLOSURE_AND_AUTHORIZATION_DATE)
 
     return (
         <form>

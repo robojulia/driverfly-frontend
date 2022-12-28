@@ -1840,5 +1840,6 @@
   "REASON_TO_LEAVE_EMPLOYMENT":"Reason to leave employment",
   "WAS_EMPLOYED_AS":"Applicant was employed as",
   "CONTACT_US": "contact us",
-  "PAST_EMPLOYER_NOT_FOUND" :"Past Employer Not Found"
+  "PAST_EMPLOYER_NOT_FOUND" :"Past Employer Not Found",
+  "ACCORDIAN_ALERT":"Please go through all the tabs to proceed with your submission request!  "
 }

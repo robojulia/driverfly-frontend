@@ -62,16 +62,25 @@ export function AccordianPage() {
 		updateApplicantExtras(form.values.SIGNATURE_GENERAL_CONSENT);
 	}, [form.values]);
 
-	
-		
+
+
 
 	useEffect(() => {
 		console.log("form values", form.values);
 		console.log("form errors", form.errors);
+		console.log("boolean errors", Object.keys(form.errors));
+
 	}, [form.values, form.errors]);
 	return (
 		<>
 			<ToastContainer />
+			{
+				Boolean(Object.keys(form.errors).length) ? (
+					<div className="alert alert-warning alert-dismissible fade show text-center" role="alert">
+						<strong>{t("ACCORDIAN_ALERT")}</strong>
+					</div>
+				) : null
+			}
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<h1 className="my-3">{t("FORMS_TO_SIGNUP")}</h1>
 				<h6 className="my-3">{t("PLEASE_CLICK_EACH_ARROW")}</h6>

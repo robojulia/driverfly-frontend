@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { ApplicantExtras } from '../../../../../enums/applicants/applicant-extras.enum';
 import { useTranslation } from '../../../../../hooks/use-translation';
 import { ApplicantEntity } from '../../../../../models/applicant';
@@ -7,11 +8,14 @@ export interface DisclosureAttachmentProps {
 }
 
 export default function DisclosureAttachment({ applicant }: DisclosureAttachmentProps) {
+    useEffect(() => {
+        console.log("everything working herer");
 
-    const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE)
+    }, [])
+    const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE_IMPORTANT_BACKGROUND)
 
     const { t } = useTranslation();
-    const date = applicant?.extras?.find(d => d?.type === ApplicantExtras?.SIGNATURE_IMPORTANT_BACKGROUND)
+    const date = applicant?.extras?.find(d => d?.type === ApplicantExtras?.IMPORTANT_DISCLOSURE_BACKGROUND_DATE)
 
     return (
         <form>
