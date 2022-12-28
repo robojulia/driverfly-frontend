@@ -84,7 +84,7 @@ export function EmploymentHistory() {
 				</Row>
 				{!!form.values?.is_current_employed && (
 					<Row className="single-past-employer-items my-5 pb-5">
-						<Row>
+						<Row className={styles.bold}>
 							<h6
 								className={`${styles.heading__sty} ${styles.align__text_left}`}
 							>
@@ -95,7 +95,7 @@ export function EmploymentHistory() {
 							</p>
 						</Row>
 
-						<Row>
+						<Row >
 							<BaseCheck
 								className="mt-lg-12 my-3 col-md-12 float-left"
 								required
@@ -105,7 +105,7 @@ export function EmploymentHistory() {
 							/>
 						</Row>
 
-						<Row className={styles.align__text_left}>
+						<Row className={`${styles.align__text_left} ${styles.bold}`}>
 							<BaseInput
 								className="col-md-6 my-3"
 								name="employer.name"
@@ -120,7 +120,7 @@ export function EmploymentHistory() {
 							/>
 						</Row>
 
-						<Row>
+						<Row className={styles.bold}>
 							<BaseInput
 								className="col-md-6 my-3"
 								required
@@ -138,7 +138,7 @@ export function EmploymentHistory() {
 							/>
 						</Row>
 
-						<Row className={styles.align__text_left}>
+						<Row className={`${styles.align__text_left} ${styles.bold}`}>
 							<BaseInput
 								className="col-md-6 my-3"
 								name="employer.manager_name"
@@ -155,15 +155,15 @@ export function EmploymentHistory() {
 							/>
 						</Row>
 
-						<Row>
+						<Row className={styles.bold}>
 						</Row>
-						<Row>
-							<h6
-								className={`${styles.align__text_left} ${styles.heading__sty}`}>
-								{t("ADDRESS_CURRENT_COMPANY")}
-							</h6>
+						<Row className={styles.bold}>
+							<p
+								className={`${styles.align__text_left} `} style={{ fontSize: '20px', color: '#000', margin: '15px 0px', fontWeight: '600' }}>
+								{t("ADDRESS_PAST_COMPANY")}
+							</p>
 						</Row>
-						<Row>
+						<Row className={styles.bold}>
 							<BaseInput
 								className="col-md-6 my-3"
 								required
@@ -181,7 +181,7 @@ export function EmploymentHistory() {
 								formik={form}
 							/>
 						</Row>
-						<Row>
+						<Row className={styles.bold}>
 							<BaseInput
 								className="col-md-6 my-3"
 								required
@@ -232,7 +232,6 @@ export function EmploymentHistory() {
 					</Col>
 					<Col>
 						<Button
-							// disabled={form.isValidating || form.isSubmitting || !form.isValid}
 							className="float-left"
 							type="submit"
 						>

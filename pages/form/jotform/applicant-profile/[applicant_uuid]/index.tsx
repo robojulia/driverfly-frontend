@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Row } from "react-bootstrap";
 import ApplicantSafetyBackground from "../../../../../components/applicants/applicant-safety-background";
 import ViewApplicantDetail from "../../../../../components/applicants/applicant-view-details";
@@ -10,10 +10,6 @@ import { ApplicantEntity } from "../../../../../models/applicant";
 import ApplicantApi from "../../../../api/applicant";
 import DocumentApi from "../../../../api/document";
 import React from "react";
-import ViewCard from "../../../../../components/view-details/view-card";
-import ViewTable from "../../../../../components/view-details/view-table";
-import ViewPdf from "../../../../../components/view-details/view-pdf";
-
 export interface LongFormProps {
 	entity: ApplicantEntity;
 	no_bot?: boolean
@@ -70,28 +66,6 @@ export default function Dashboard({ entity, no_bot }: LongFormProps) {
 							<ApplicantSafetyBackground applicant={entity} />
 						</Row>
 						<Row>
-							<ViewCard title="UPLOADED_DOCUMENTS">
-								<ViewTable
-									type="DOCUMENTS"
-									headers={{
-										type: "TYPE",
-										document: "DOCUMENT",
-										date_added: "DATE_ADDED",
-									}}
-									items={entity?.documents?.map((document) => ({
-										type: t(`ApplicantDocumentType.${document.type}`),
-										document: (
-											<a
-												onClick={() => viewDocumentClick(document.id, document.name)}
-												href="#"
-											>
-												{document.name}
-											</a>
-										),
-										date_added: new Date(document.created_at).toDateString(),
-									}))} />
-							</ViewCard>
-							<ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
 							<ApplicantExtrasDetails applicant={entity} />
 						</Row>
 					</PageLayout>

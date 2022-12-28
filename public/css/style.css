@@ -2314,6 +2314,7 @@ input[type='radio']:checked:after {
         margin-bottom: 30px !important;
     }
 }
+/* End Styling only for Firefox browser */
 
 .single-past-employer-items {
     border-width: 1px 1px 1px 4px;
@@ -2333,4 +2334,7 @@ input[type='radio']:checked:after {
 
 .single-past-employer-items:hover::after {
     opacity: 1;
+}
+ button:focus , button:active {
+    color: #1976d2;
 }

@@ -63,7 +63,7 @@ export function BackgroundInfo() {
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<h4 className={styles.heading__sty}>{t("BACKGROUND_INFO")}</h4>
-			<Row className={styles.align__text_left}>
+			<Row className={`${styles.align__text_left} ${styles.bold}`}>
 				<BaseInput
 					className="col mt-3 mb-3"
 					required
@@ -83,7 +83,7 @@ export function BackgroundInfo() {
 			<>
 				<Row>
 					<div className="col-md-12 ">
-						<Row className={styles.align__text_left}>
+						<Row className={`${styles.align__text_left} ${styles.bold}`}>
 							<BaseInput
 								className="col-md-6 my-3"
 								required
@@ -105,7 +105,7 @@ export function BackgroundInfo() {
 				</Row>
 			</>
 
-			<Row className={styles.align__text_left}>
+			<Row className={`${styles.align__text_left} ${styles.bold}`}>
 				<BaseInput
 					className="col-md-6 my-3"
 					required
@@ -123,7 +123,7 @@ export function BackgroundInfo() {
 					formik={form}
 				/>
 			</Row>
-			<Row className={styles.align__text_left}>
+			<Row className={`${styles.align__text_left} ${styles.bold}`}>
 				<BaseInput
 					className="col my-3"
 					required
@@ -146,6 +146,6 @@ export function BackgroundInfo() {
 					</Button>
 				</Col>
 			</Row>
-		</Form>
+		</Form >
 	);
 }

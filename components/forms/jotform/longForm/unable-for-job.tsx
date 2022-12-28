@@ -63,7 +63,7 @@ export function UnableForJob() {
 				/>
 			</Row>
 			{form.values.is_unable_to_perform ? (
-				<Row className={styles.align__text_left}>
+				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 					<BaseTextArea
 						className="mt-3"
 						name="REASON_FOR_UNABLE_TO_PERFORM_JOB.value"

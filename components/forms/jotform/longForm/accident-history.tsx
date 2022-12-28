@@ -62,7 +62,7 @@ export function AccidentHistory() {
 			<h6 className={styles.heading__sty}>
 				{t("MORE_ABOUT_ACCIDENTS")}
 			</h6>
-			<Row>
+			<Row className={styles.bold}>
 				<BaseInput
 					className="col my-3"
 					type="number"
@@ -71,28 +71,14 @@ export function AccidentHistory() {
 					placeholder="PLACEHOLDER_FOR_DIGITS"
 					formik={form}
 				/>
-
-				<div className="mt-4 float-left d-flex justify-left pl-3">
-					<Button
-						size="sm"
-						onClick={() =>
-							form.setFieldValue("ACCIDENT_DETAILS.value", [
-								...(form.values?.ACCIDENT_DETAILS?.value || []),
-								new AccidentHistoryEntity(),
-							])
-						}
-					>
-						<PlusCircle /> {t("TITLE_ADD_ACCIDENT_DETAILS")}
-					</Button>
-				</div>
 			</Row>
 
 			{form.values.ACCIDENT_DETAILS?.value?.length > 0 && (
 				<>
 					{form.values.ACCIDENT_DETAILS.value.map((entity, i) => (
-						<Row className="pl-0 single-past-employer-items my-5" key={i}>
+						<Row className="pl-0 single-past-employer-items my-3" key={i}>
 							<div className="col-md-12 mt-2">
-								<Row>
+								<Row className={styles.bold}>
 									<BaseInput
 										className="col-md-6 my-3"
 										name={`ACCIDENT_DETAILS.value[${i}].date_of_accident`}
@@ -138,8 +124,8 @@ export function AccidentHistory() {
 										formik={form}
 									/>
 									<Button
-										className="rounded-0 mt-3"
-										variant="outline-danger close_btn"
+										className="rounded-lg"
+										variant="outline-danger close_btn w-25 mx-auto my-2"
 										onClick={
 											() =>
 												form.setValues({
@@ -163,7 +149,23 @@ export function AccidentHistory() {
 					))}
 				</>
 			)}
-			<Row className="mt-5">
+			<Row>
+				<div className="mt-4 float-left d-flex justify-left">
+					<Button
+						className="w-100 py-2"
+						size="sm"
+						onClick={() =>
+							form.setFieldValue("ACCIDENT_DETAILS.value", [
+								...(form.values?.ACCIDENT_DETAILS?.value || []),
+								new AccidentHistoryEntity(),
+							])
+						}
+					>
+						<PlusCircle /> {t("TITLE_ADD_ACCIDENT_DETAILS")}
+					</Button>
+				</div>
+			</Row>
+			<Row className="mt-4">
 				<Col>
 					<Button className="float-right" type="reset">
 						{t("BACK")}
