@@ -214,14 +214,13 @@ export default function ApplicantExtrasDetails({
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
 							obj={{
+								NAME: current_employer?.name,
 								city: current_employer?.city,
-								CURRENT_COMPANY_EMAIL:
+								Email:
 									current_employer?.email,
 								CURRENT_COMPANY_MANAGER_NAME:
 									current_employer?.manager_name,
-								CURRENT_COMPANY_NAME:
-									current_employer?.name,
-								CURRENT_COMPANY_PHONE_NUMBER:
+								phone:
 									current_employer?.phone,
 								CURRENT_COMPANY_POSITION:
 									current_employer?.title,
@@ -253,6 +252,7 @@ export default function ApplicantExtrasDetails({
 										<ViewCard title={`${past_employer?.name}`}>
 											<ViewDetails
 												obj={{
+													NAME: past_employer?.name,
 													city: past_employer?.city,
 													START_DATE: new Date(past_employer?.start_at),
 													END_DATE: new Date(past_employer?.end_at),
