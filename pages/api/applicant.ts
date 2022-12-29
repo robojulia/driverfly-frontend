@@ -1,4 +1,5 @@
 import { AxiosRequestConfig } from "axios";
+import { ApplicantFormStatus } from "../../enums/applicants/applicant-form-status.enum";
 import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
 import { ApplicantEmployerEntity } from "../../models/applicant";
 import { ApplicantDacEntity } from "../../models/applicant/applicant-dac.entity";
@@ -145,6 +146,7 @@ class ApplicantApi extends BaseApi {
 			return data;
 		},
 	};
+
 	jotform = {
 		baseUrl: () => `${this.baseUrl}/applicant-jotform`,
 		create: async (
@@ -158,6 +160,23 @@ class ApplicantApi extends BaseApi {
 			dto: UpsertApplicantJotformDto
 		): Promise<ApplicantEntity> => {
 			const { data } = await this.put(`${this.jotform.baseUrl()}/${applicantId}`, dto);
+			return data;
+		},
+		mark: async (
+			uuid_token: string,
+			status: ApplicantFormStatus
+		): Promise<void> => {
+			const { data } = await this.patch(
+				`${this.jotform.baseUrl()}/${uuid_token}/mark/${status}`,
+				null
+			);
+			return data;
+		},
+		updateDocuments: async (
+			applicantId: number,
+			dto: DocumentEntity[]
+		): Promise<ApplicantEntity> => {
+			const { data } = await this.put(`${this.jotform.baseUrl()}/${applicantId}/documents`, dto);
 			return data;
 		},
 	};

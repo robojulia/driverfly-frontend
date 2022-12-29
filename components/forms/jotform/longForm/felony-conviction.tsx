@@ -59,7 +59,7 @@ export function FelonyConviction() {
 				/>
 			</Row>
 			{form.values.is_convicted_felony ? (
-				<Row className={styles.align__text_left}>
+				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 					<BaseTextArea
 						className="float-left mt-3"
 						name="CONVICTED_OF_FELONY.value"

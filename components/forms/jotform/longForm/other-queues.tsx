@@ -77,7 +77,7 @@ export function OtherQueues() {
         <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
             <Row>
                 <BaseSelect
-                    className="col-12 my-3"
+                    className={`${styles.bold} col-12 my-3`}
                     labelPrefix="BooleanType"
                     enumType={BooleanType}
                     name="QUALIFIED_FOR_MANUAL_TRANSMISSION.value"
@@ -95,32 +95,10 @@ export function OtherQueues() {
                     cols="2"
                 />
             </Row>
-            <Row>
-                <div className="mt-4 float-left d-flex justify-left">
-                    <Button
-                        size="sm"
-                        onClick={() =>
-                            form.setValues({
-                                ...form.values,
-                                CDL_NUMBER: {
-                                    ...form.values.CDL_NUMBER,
-                                    value: [
-                                        ...(form.values.CDL_NUMBER?.value || []),
-                                        new CdlExtras(),
-                                    ],
-                                },
-                            })
-                        }
-                    >
-                        <PlusCircle /> {t("TITLE_ADD_CDL_DETAIL")}
-                    </Button>
-                </div>
-            </Row>
-
             {form.values.CDL_NUMBER?.value?.length > 0 && (
                 <>
                     {form.values.CDL_NUMBER?.value?.map((entity, i) => (
-                        <Row key={i} className="single-past-employer-items my-5">
+                        <Row key={i} className={`${styles.bold} single-past-employer-items my-3`}>
                             <BaseInput
                                 name={`CDL_NUMBER.value[${i}].license_number`}
                                 className="col-md-4 my-3"
@@ -144,8 +122,9 @@ export function OtherQueues() {
                                 formik={form}
                             />
 
-                            <Button className="rounded-0 col"
-                                variant="outline-danger close_btn"
+                            <Button
+                                className="rounded-lg"
+                                variant="outline-danger close_btn w-25 mx-auto my-2"
                                 onClick={() =>
                                     form.setValues({
                                         ...form.values,
@@ -163,10 +142,34 @@ export function OtherQueues() {
 
                         </Row>
                     ))}
+
                 </>
             )}
+            <Row>
+                <div className="mt-4 float-left d-flex justify-left p-0">
+                    <Button
+                        className="w-100 py-2"
+                        size="sm"
+                        onClick={() =>
+                            form.setValues({
+                                ...form.values,
+                                CDL_NUMBER: {
+                                    ...form.values.CDL_NUMBER,
+                                    value: [
+                                        ...(form.values.CDL_NUMBER?.value || []),
+                                        new CdlExtras(),
+                                    ],
+                                },
+                            })
+                        }
+                    >
+                        <PlusCircle /> {t("TITLE_ADD_CDL_DETAIL")}
+                    </Button>
+                </div>
+            </Row>
 
-            <Row className="mt-3">
+
+            <Row className="mt-4">
                 <Col>
                     <Button className="float-right" type="reset">
                         {t("BACK")}

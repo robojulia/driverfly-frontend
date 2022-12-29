@@ -6,6 +6,8 @@ export interface ApplicantInfoReleaseConsentProps {
 }
 export default function ApplicantInfoReleaseConsent({ applicant }: ApplicantInfoReleaseConsentProps) {
 
+    const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION)
+
     const { t } = useTranslation();
     const date = applicant?.extras?.find(
         (v) => v.type == ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
@@ -54,7 +56,15 @@ export default function ApplicantInfoReleaseConsent({ applicant }: ApplicantInfo
 
                 </div>
             </div>
+            <div className='Row' style={{ textAlign: 'left', marginBottom: '20px' }}>
+                <div className='Col'>
+                    <p style={{ color: 'black', fontWeight: 'bold', display: 'inline' }}>{t("SIGNATURE:")}</p>
+                </div>
+                <div className="Row" style={{ marginTop: '10px', marginBottom: '30px' }}>
+                    <img src={signature?.value} style={{ width: '300px', height: '200px', border: '1px solid black' }} alt="image" />
 
+                </div>
+            </div>
         </form>
     )
 }

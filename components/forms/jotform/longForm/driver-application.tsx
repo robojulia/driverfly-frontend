@@ -48,7 +48,6 @@ export function DriverApplication() {
 	useEffect(() => {
 		console.log("form.values", form.values);
 		console.log("form.errors", form.errors);
-		console.log("applicant", applicant);
 	}, [form.values, form.errors]);
 
 	useEffect(() => {
@@ -98,7 +97,7 @@ export function DriverApplication() {
 					)}
 				</p>
 
-				<Row className={styles.align__text_left}>
+				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 					<BaseInput
 						className="col-md-6 my-3"
 						required
@@ -128,7 +127,7 @@ export function DriverApplication() {
 				</Row>
 				<Row className={styles.align__text_left}>
 					<Col md="10" className="my-3">
-						<h6>{t("SIGNATURE")}</h6>
+						<h6 className={styles.bold}>{t("SIGNATURE")}</h6>
 						<SignatureCanvas
 							name="SIGNATURE.value"
 							className="mt-2"

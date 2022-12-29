@@ -1,20 +1,16 @@
 import { useFormik } from "formik";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../../hooks/use-translation";
-import Accordion from "react-bootstrap/Accordion";
 import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
 import ApplicantApi from "../../../../../pages/api/applicant";
 import { toast, ToastContainer } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
-import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
-import { ApplicantExtrasEntity } from "../../../../../models/applicant/applicant-extras.entity";
 import { AccordianDto } from "../../../../../models/jot-form/long-form/accordian.dto";
 import { VerificationOfEmployment } from "./verification-of-employment";
 import { DisclosureAuthorization } from "./disclosure-authorization";
 import { ImportantDisclosureBackgroundPsp } from "./important-disclosure-background-psp";
 import { GeneralConsentQueries } from "./general-consent-queries";
-import SignatureCanvas from "react-signature-canvas";
 import styles from "../../../../../styles/jotform.module.css";
 import { LoaderIcon } from "../../../../loading/loader-icon";
 import { ArrowDownCircleFill, ArrowUpCircleFill } from 'react-bootstrap-icons'
@@ -30,8 +26,6 @@ export function AccordianPage() {
 	useEffect(() => {
 		console.log('bool values', showTab)
 	}, [showTab])
-	let padRef = useRef<SignatureCanvas>(null);
-
 
 	const form = useFormik({
 		initialValues: new AccordianDto(),
@@ -62,59 +56,31 @@ export function AccordianPage() {
 		updateApplicantExtras(form.values.DISCLOSURE_AND_AUTHORIZATION_DATE);
 		updateApplicantExtras(form.values.IMPORTANT_DISCLOSURE_BACKGROUND_DATE);
 		updateApplicantExtras(form.values.GENERAL_CONSENT);
-		updateApplicantExtras(form.values.SIGNATURE);
+		updateApplicantExtras(form.values.SIGNATURE_VOE_AUTHORIZATION);
+		updateApplicantExtras(form.values.SIGNATURE_DISCLOSURE_AUTHORIZATION);
+		updateApplicantExtras(form.values.SIGNATURE_IMPORTANT_BACKGROUND);
+		updateApplicantExtras(form.values.SIGNATURE_GENERAL_CONSENT);
 	}, [form.values]);
 
-	useEffect(() => {
-		const apx_ss_id = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.EMPLOYEE_SS_OR_ID
-		);
-		const apx_disclosure_date = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE
-		);
-		const apx_background_date = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
-		);
-		const apx_general_consent = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.GENERAL_CONSENT
-		);
-		const apx_sign = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.SIGNATURE
-		);
 
-		if (apx_sign) padRef?.current?.fromDataURL(apx_sign?.value)
 
-		form.setValues({
-			...form.values,
-			SIGNATURE: !!apx_sign?.type
-				? apx_sign
-				: new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
-			EMPLOYEE_SS_OR_ID: !!apx_ss_id?.type
-				? apx_ss_id
-				: new ApplicantExtrasEntity(ApplicantExtras.EMPLOYEE_SS_OR_ID),
-			DISCLOSURE_AND_AUTHORIZATION_DATE: !!apx_disclosure_date?.type
-				? apx_disclosure_date
-				: new ApplicantExtrasEntity(
-					ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE
-				),
-			IMPORTANT_DISCLOSURE_BACKGROUND_DATE: !!apx_background_date?.type
-				? apx_background_date
-				: new ApplicantExtrasEntity(
-					ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
-				),
-			GENERAL_CONSENT: !!apx_general_consent?.type
-				? apx_general_consent
-				: new ApplicantExtrasEntity(ApplicantExtras.GENERAL_CONSENT),
-		});
-	}, [applicant]);
 
 	useEffect(() => {
 		console.log("form values", form.values);
 		console.log("form errors", form.errors);
+		console.log("boolean errors", Object.keys(form.errors));
+
 	}, [form.values, form.errors]);
 	return (
 		<>
 			<ToastContainer />
+			{
+				Boolean(Object.keys(form.errors).length) ? (
+					<div className="alert alert-warning alert-dismissible fade show text-center" role="alert">
+						<strong>{t("ACCORDIAN_ALERT")}</strong>
+					</div>
+				) : null
+			}
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<h1 className="my-3">{t("FORMS_TO_SIGNUP")}</h1>
 				<h6 className="my-3">{t("PLEASE_CLICK_EACH_ARROW")}</h6>

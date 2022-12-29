@@ -82,7 +82,7 @@ export function BasicInfo() {
 				onSubmit={form.handleSubmit}
 				onReset={form.handleReset}
 			>
-				<Row>
+				<Row className={styles.bold}>
 					<BaseInput
 						className="col-md-6 my-3"
 						required
@@ -99,7 +99,7 @@ export function BasicInfo() {
 						formik={form}
 					/>
 				</Row>
-				<Row>
+				<Row className={styles.bold}>
 					<BaseInput
 						className="col-12 my-3"
 						required
@@ -109,7 +109,7 @@ export function BasicInfo() {
 						formik={form}
 					/>
 				</Row>
-				<Row className={styles.align__text_left}>
+				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 					<BaseSelect
 						className="col-12 my-3"
 						required

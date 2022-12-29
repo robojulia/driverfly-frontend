@@ -65,11 +65,11 @@ export class ApplicantExtrasEntity {
 				.when("type", {
 					is: ApplicantExtras.ROUTES,
 					then: yup
-						.array((yup.string() as any).enum(RouteType))
-						.min(1)
-						.typeError("Choose atleast one!")
-						.required()
-						.nullable(),
+					.array((yup.string() as any).enum(RouteType))
+					.min(1)
+					.typeError("Choose atleast one!")
+					.required()
+					.nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.REQUIRE_W2_EMPLOYMENT,
@@ -78,9 +78,9 @@ export class ApplicantExtrasEntity {
 				.when("type", {
 					is: ApplicantExtras.OTHER_ABSOLUTELY_REQUIREMENTS,
 					then: yup
-						.array((yup.string() as any).enum(OtherRequirementType))
-						.optional()
-						.nullable(),
+					.array((yup.string() as any).enum(OtherRequirementType))
+					.optional()
+					.nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.PAST_LICENSE_SUSPENSION,
@@ -122,7 +122,23 @@ export class ApplicantExtrasEntity {
 				.when("type", {
 					is: ApplicantExtras.GENERAL_CONSENT,
 					then: AccordianExtras.yupSchema(),
-				}),
+				})
+				.when("type", {
+					is: ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION,
+					then: yup.string().optional().nullable(),
+				})
+				.when("type", {
+					is: ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION,
+					then: yup.string().optional().nullable(),
+				})
+				.when("type", {
+					is: ApplicantExtras.SIGNATURE_IMPORTANT_BACKGROUND,
+					then: yup.string().optional().nullable(),
+				})
+				.when("type", {
+					is: ApplicantExtras.SIGNATURE_GENERAL_CONSENT,
+					then: yup.string().optional().nullable(),
+				})
 		});
 	}
 }

@@ -80,32 +80,12 @@ export function PastEmploymentHistory() {
 						label="PREVIOUSLY_EMPLOYED"
 						formik={form}
 					/>
-					{!!form?.values?.is_previous_employed && (
-						<>
-							<Col className="p-0 mt-2">
-								<Button
-									size="sm"
-									onClick={() =>
-										form.setFieldValue("employers", [
-											...(form.values?.employers || []),
-											{
-												...(new PastEmploymentHistoryDto()),
-												is_current: false
-											},
-										])
-									}
-								>
-									<PlusCircle /> {t("ADD_PAST_EMPLOYMENT_HISTORY")}
-								</Button>
-							</Col>
-						</>
-					)}
 				</Row>
 
 				{(!!form?.values?.is_previous_employed && form?.values?.employers?.length > 0) &&
 					<>
 						{form?.values?.employers?.map((entity, i) => (
-							<Row key={i} className="single-past-employer-items my-5">
+							<Row key={i} className="single-past-employer-items my-3">
 								<div className="py-3">
 									<Row>
 										<BaseCheck
@@ -116,7 +96,7 @@ export function PastEmploymentHistory() {
 											formik={form}
 										/>
 									</Row>
-									<Row>
+									<Row className={styles.bold}>
 										<BaseInput
 											className="col-md-6 my-3"
 											name={`employers[${i}].name`}
@@ -130,7 +110,7 @@ export function PastEmploymentHistory() {
 											formik={form}
 										/>
 									</Row>
-									<Row>
+									<Row className={styles.bold}>
 										<BaseInputPhone
 											className="col-md-6 my-3"
 											name={`employers[${i}].phone`}
@@ -147,7 +127,7 @@ export function PastEmploymentHistory() {
 											formik={form}
 										/>
 									</Row>
-									<Row>
+									<Row className={styles.bold}>
 										<BaseInput
 											className="col-md-6 my-3"
 											required
@@ -165,13 +145,13 @@ export function PastEmploymentHistory() {
 											formik={form}
 										/>
 									</Row>
-									<Row>
-										<h6
-											className={`${styles.align__text_left} ${styles.heading__sty}`}>
+									<Row className={styles.bold}>
+										<p
+											className={`${styles.align__text_left} `} style={{ fontSize: '20px', color: '#000', margin: '15px 0px', fontWeight: '600' }}>
 											{t("ADDRESS_PAST_COMPANY")}
-										</h6>
+										</p>
 									</Row>
-									<Row>
+									<Row className={styles.bold}>
 										<BaseInput
 											className="col-md-6 my-3"
 											required
@@ -231,20 +211,47 @@ export function PastEmploymentHistory() {
 									</Row>
 								</div>
 								<Button
-									className="rounded-0 "
-									variant="outline-danger close_btn"
+									className="rounded-lg"
+									variant="outline-danger close_btn w-25 mx-auto my-2"
 									onClick={() =>
 										form.setValues({
 											...form.values,
 											employers: form.values?.employers?.filter((v, idx) => i != idx),
 										})
 									}
-								><DashCircle /></Button>
+								>
+									<DashCircle />
+								</Button>
 								<div className='Row' style={{ height: '3px', borderBottom: 'solid 2px #8d8c8c', marginTop: '0px' }}></div >
 							</Row>
 						))}
 					</>
 				}
+				<Row>
+					{!!form?.values?.is_previous_employed && (
+						<>
+							<Col className="p-0 mt-2">
+								<Button
+									className="w-100 py-2"
+									size="sm"
+									onClick={() =>
+										form.setFieldValue("employers", [
+											...(form.values?.employers || []),
+											{
+												...(new PastEmploymentHistoryDto()),
+												is_current: false
+											},
+										])
+									}
+								>
+									<PlusCircle /> {t("ADD_PAST_EMPLOYMENT_HISTORY")}
+								</Button>
+							</Col>
+						</>
+					)}
+				</Row>
+
+
 
 				<Row className="mt-5">
 					<Col>

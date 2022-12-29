@@ -1,6 +1,5 @@
 import { useContext, useEffect } from "react";
 import Form from "react-bootstrap/Form";
-import styles from "../../../../styles/jotform.module.css";
 import { Button, Col, Row } from "react-bootstrap";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
@@ -33,14 +32,12 @@ export function SubmitMissingDocuments() {
 		initialValues: new DocumentsDto(),
 		validationSchema: DocumentsDto.yupSchema(),
 		onSubmit: async (values, { resetForm }) => {
-			const applicantApi = new ApplicantApi();
-
-			console.log("applicant.id", applicant.id);
-
 			try {
-				const response = await applicantApi.jotform.update(applicant.id, {
-					applicant
-				})
+				const applicantApi = new ApplicantApi();
+				await applicantApi.jotform.updateDocuments(
+					applicant.id,
+					[...applicant.documents] as DocumentEntity[]
+				)
 
 				stepNext()
 			} catch (error) {

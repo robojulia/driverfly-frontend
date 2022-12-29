@@ -69,7 +69,7 @@ export function WorkedBefore() {
 			</Row>
 			{form.values?.ALREADY_APPLIED_TO_COMPANY?.value ? (
 				<>
-					<Row>
+					<Row >
 						<Col>
 							<BaseCheck
 								className="my-3 col float-left p-0"

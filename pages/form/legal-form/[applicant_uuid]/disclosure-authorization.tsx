@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "../../../../styles/jotform.module.css";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,6 +11,8 @@ export interface DisclosureAttachmentPageProps {
 }
 
 export default function DisclosureAttachmentPage({ applicant }: DisclosureAttachmentPageProps) {
+
+	
 	return (
 		<div>
 			<div className={styles.main}>
