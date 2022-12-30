@@ -10,6 +10,7 @@ import {
 	getLongFormStyle,
 } from "../../../../../components/forms/jotform/jotform-pages";
 import ApplicantApi from "../../../../api/applicant";
+import { DRIVOPS_30_LOWER_SSL_SECURITY_WORKAROUND } from "../../../../../utils/ssl";
 
 export interface LongFormProps {
 	entity: ApplicantEntity;
@@ -83,7 +84,8 @@ export async function getServerSideProps({ query }) {
 
 		const applicantApi = new ApplicantApi();
 		const entity: ApplicantEntity = await applicantApi.getByUuidToken(
-			applicant_uuid
+			applicant_uuid,
+			DRIVOPS_30_LOWER_SSL_SECURITY_WORKAROUND()
 		);
 
 		if (!!!entity) return { notFound: true };

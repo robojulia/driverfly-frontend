@@ -10,6 +10,8 @@ import { ApplicantEntity } from "../../../../../models/applicant";
 import ApplicantApi from "../../../../api/applicant";
 import DocumentApi from "../../../../api/document";
 import React from "react";
+import { DRIVOPS_30_LOWER_SSL_SECURITY_WORKAROUND } from "../../../../../utils/ssl";
+
 export interface LongFormProps {
 	entity: ApplicantEntity;
 	no_bot?: boolean
@@ -85,7 +87,8 @@ export async function getServerSideProps({ query }) {
 
 		const applicantApi = new ApplicantApi();
 		const entity: ApplicantEntity = await applicantApi.getByUuidToken(
-			applicant_uuid
+			applicant_uuid,
+			DRIVOPS_30_LOWER_SSL_SECURITY_WORKAROUND()
 		);
 
 		if (!!!entity) return { notFound: true };

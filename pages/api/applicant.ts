@@ -82,8 +82,8 @@ class ApplicantApi extends BaseApi {
 		return data;
 	}
 
-	async getByUuidToken(uuid_token: string): Promise<ApplicantEntity> {
-		const { data } = await this.get(this.buildUrl(this.baseUrl + `/fetch-applicant/${uuid_token}`));
+	async getByUuidToken(uuid_token: string, config?: AxiosRequestConfig): Promise<ApplicantEntity> {
+		const { data } = await this.get(this.buildUrl(this.baseUrl + `/fetch-applicant/${uuid_token}`), config);
 
 		return data;
 	}
@@ -178,8 +178,8 @@ class ApplicantApi extends BaseApi {
 	};
 
 	employer = {
-		getByUuidToken: async (uuid_token: string): Promise<ApplicantEmployerEntity> => {
-			const { data } = await this.get(this.buildUrl(`${this.baseUrl}/fetch-employer/${uuid_token}`));
+		getByUuidToken: async (uuid_token: string, config?: AxiosRequestConfig): Promise<ApplicantEmployerEntity> => {
+			const { data } = await this.get(this.buildUrl(`${this.baseUrl}/fetch-employer/${uuid_token}`), config);
 
 			return data;
 		}

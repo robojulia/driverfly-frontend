@@ -10,7 +10,7 @@ import { CompanyEntity } from "../../../../models/company/company.entity";
 import BaseInput from "../../../../components/forms/base-input";
 import { NextPageContext } from "next";
 
-import * as https from "https";
+import { DRIVOPS_30_LOWER_SSL_SECURITY_WORKAROUND } from "../../../../utils/ssl";
 
 export interface FullFormProps {
 	employer: CompanyEntity
@@ -81,11 +81,7 @@ export async function getServerSideProps({ query }: NextPageContext) {
 		}
 
 		const companyApi = new CompanyApi();
-		const employer: CompanyEntity = await companyApi.employer.getById(companyId, {
-			httpsAgent: new https.Agent({
-				rejectUnauthorized: false
-			})
-		});
+		const employer: CompanyEntity = await companyApi.employer.getById(companyId, DRIVOPS_30_LOWER_SSL_SECURITY_WORKAROUND());
 
 		if (employer?.status !== Status.ACTIVE) {
 			if (employer == null) {

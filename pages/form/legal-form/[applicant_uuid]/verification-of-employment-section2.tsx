@@ -4,6 +4,7 @@ import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import "react-toastify/dist/ReactToastify.css";
 import ApplicantApi from "../../../api/applicant";
 import { VerificationOfEmploymentSection2 } from "../../../../components/forms/jotform/voe-forms/legal-attachments/voe-attachments/section-2";
+import { DRIVOPS_30_LOWER_SSL_SECURITY_WORKAROUND } from "../../../../utils/ssl";
 
 export interface VerificationOfEmploymentSection2PageProps {
 	entity: ApplicantEntity
@@ -35,7 +36,8 @@ export async function getServerSideProps({ query }) {
 
 		const applicantApi = new ApplicantApi();
 		const entity: ApplicantEntity = await applicantApi.getByUuidToken(
-			applicant_uuid
+			applicant_uuid,
+			DRIVOPS_30_LOWER_SSL_SECURITY_WORKAROUND()
 		);
 
 		if (!!!entity) return { notFound: true };
