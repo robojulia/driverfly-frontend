@@ -8,6 +8,7 @@ import CompanyApi from "../../../api/company";
 import { Status } from "../../../../enums/status.enum";
 import { CompanyEntity } from "../../../../models/company/company.entity";
 import BaseInput from "../../../../components/forms/base-input";
+import { NextPageContext } from "next";
 
 export interface FullFormProps {
 	employer: CompanyEntity
@@ -68,19 +69,30 @@ export default function FullForm({ employer }: FullFormProps) {
 	);
 }
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps({ query }: NextPageContext) {
 	try {
-		const { companyId } = query || {};
+		let companyId = +(query?.companyId); // { companyId } = query || {};
 
-		if (!!!companyId || isNaN(companyId)) return { notFound: true }
+		if (!companyId) {
+			console.error(`form/jotform: Unable to fetch details for companyId: ${query?.companyId}`);
+			return { notFound: true }
+		}
 
-		const companyApi = new CompanyApi()
-		const employer: CompanyEntity = await companyApi.employer.getById(parseInt(companyId as string))
+		const companyApi = new CompanyApi();
+		const employer: CompanyEntity = await companyApi.employer.getById(companyId);
 
-		if (employer?.status !== Status.ACTIVE) return { notFound: true }
+		if (employer?.status !== Status.ACTIVE) {
+			if (employer == null) {
+				console.error(`form/jotform: Employer ${query?.companyId} not found - does not exist`);
+			} else {
+				console.error(`form/jotform: Employer ${query?.companyId} found, but status is not ACTIVE (status = ${employer?.status})`);
+			}
+			return { notFound: true };
+		}
 
 		return { props: { employer } }
 	} catch (error) {
+		console.error(`form/jotform: Exception when attempting to fetch details for companyId: ${query?.companyId}`, error);
 		return { notFound: true }
 	}
 }
