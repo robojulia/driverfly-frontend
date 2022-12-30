@@ -1,6 +1,7 @@
 import { CompanyEntity } from "../../models/company/company.entity";
 import BaseApi from "./_baseApi";
 import { FindManyOptions } from "../../models/general/find-many-options.dto";
+import { AxiosRequestConfig } from "axios";
 
 export default class CompanyApi extends BaseApi {
     baseUrl: string = "companies"
@@ -47,8 +48,8 @@ export default class CompanyApi extends BaseApi {
 
     employer = {
         baseUrl: "employer",
-        getById: async (id: number): Promise<CompanyEntity> => {
-            const { data } = await this.get(`${this.employer.baseUrl}/${id}`);
+        getById: async (id: number, config?: AxiosRequestConfig): Promise<CompanyEntity> => {
+            const { data } = await this.get(`${this.employer.baseUrl}/${id}`, config);
 
             return data;
         },
