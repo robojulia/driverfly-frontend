@@ -1,4 +1,4 @@
-import { CompanyPreferencesEntity } from "../../models/contact/company-preferences.entity";
+import { CompanyPreferencesEntity } from "../../models/company/company-preferences.entity";
 import BaseApi from "./_baseApi";
 
 export default class CompanyPreferencesApi extends BaseApi {
