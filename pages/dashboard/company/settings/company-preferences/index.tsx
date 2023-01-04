@@ -11,21 +11,21 @@ import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import { ArrowRight } from "react-bootstrap-icons";
 import { useEffectAsync } from "../../../../../utils/react";
 import { Button } from "react-bootstrap";
-import { CompanyPreferencesEntity } from "../../../../../models/contact/company-preferences.entity";
+import { CompanyPreferencesEntity } from "../../../../../models/company/company-preferences.entity";
 import CompanyPreferencesApi from "../../../../api/company-preferences";
 
 export default function CompanyPreference() {
     const { user } = useAuth();
 
     const { t } = useTranslation();
-    const contactApi = new CompanyPreferencesApi();
+    const companyPreferencesApi = new CompanyPreferencesApi();
 
     const form = useFormik({
         initialValues: new CompanyPreferencesEntity(),
         validationSchema: CompanyPreferencesEntity.yupSchema(),
         onSubmit: async (dto) => {
             try {
-                await contactApi.jotformPreferences(dto);
+                await companyPreferencesApi.companyPreferences(dto);
                 toast.success(t("successfully_saved_information"));
             }
             catch (e) {
@@ -35,9 +35,14 @@ export default function CompanyPreference() {
     });
     //  Uncomment this in debugging mode
     useEffectAsync(async () => {
-        console.log("form", form.values)
-        console.log("form", form.errors)
+        console.log("form values", form.values)
+        console.log("form errors", form.errors)
     }, [form])
+
+    useEffectAsync(async () => {
+        const company_jotform_url = `${process.env.FRONTEND_BASE_URL ?? ""}form/jotform/${user?.company?.id}`
+        form.setFieldValue('jotform_url', company_jotform_url)
+    }, [])
     return (
         <PageLayout
             title="COMPANY_PREFERENCE"
@@ -50,6 +55,8 @@ export default function CompanyPreference() {
                         className="my-2"
                         value={`${process.env.FRONTEND_BASE_URL ?? ""}form/jotform/${user?.company?.id}`}
                         tooltipText={t('CLICK_TO_COPY')}
+                        formik={form}
+
                     />
                     <BaseCheckList
                         className="col-12 p-0 mt-4"

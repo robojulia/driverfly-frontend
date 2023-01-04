@@ -7,7 +7,7 @@ export default class CompanyPreferencesApi extends BaseApi {
         super();
     }
 
-    async jotformPreferences(dto: CompanyPreferencesEntity): Promise<CompanyPreferencesEntity> {
+    async companyPreferences(dto: CompanyPreferencesEntity): Promise<CompanyPreferencesEntity> {
         const { data } = await this.post(this.baseUrl, dto);
         return data;
     }
