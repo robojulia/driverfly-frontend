@@ -1,12 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.css'
 import { useState } from "react"
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css'
-import ApplicantApi from "../../../api/applicant"
+import ApplicantApi from "../../api/applicant"
 import { GetServerSidePropsContext } from 'next'
 import { toast } from "react-toastify";
-import { ApplicantEntity, ApplicantSuggestedJobEntity } from '../../../../models/applicant'
-import { useTranslation } from '../../../../hooks/use-translation'
-import { useEffectAsync } from '../../../../utils/react'
+import { ApplicantEntity, ApplicantSuggestedJobEntity } from '../../../models/applicant'
+import { useTranslation } from '../../../hooks/use-translation'
+import { useEffectAsync } from '../../../utils/react'
 
 export default function FindJobs({ applicant }) {
 
@@ -42,7 +42,7 @@ export default function FindJobs({ applicant }) {
             <div className="container">
                 <div className="row">
                     <div className="col-md-9 outer pl-4 ">
-                        Jobs
+                        Suggested Jobs
                         {/* < JobsList /> */}
                     </div>
                 </div>
