@@ -7,7 +7,7 @@ import { Scripts } from "../../../scripts/scripts";
 import React, { useEffect, useRef } from "react";
 
 import { useTranslation } from "../../../../hooks/use-translation";
-import { QuestionCircleFill, TelephoneFill, Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, GearFill, EnvelopeFill, PeopleFill, Hospital, UmbrellaFill, PersonHearts, FileEarmarkImage, ShieldFillCheck } from 'react-bootstrap-icons';
+import { QuestionCircleFill, TelephoneFill, Building, CardImage, HouseFill, BagFill, PersonFill, FileEarmarkFill, GeoAltFill, GearFill, EnvelopeFill, PeopleFill, Hospital, UmbrellaFill, PersonHearts, FileEarmarkImage, ShieldFillCheck, Sliders } from 'react-bootstrap-icons';
 import CompanyProfileNav from "../header/company-profile-nav";
 import { useAuth } from "../../../../hooks/use-auth";
 import { useRouter } from 'next/router';
@@ -105,6 +105,11 @@ const FullLayout = ({ children }) => {
           pathname: "/dashboard/company/settings/support",
           icon: QuestionCircleFill,
           text: "SUPPORT",
+        },
+        {
+          pathname: "/dashboard/company/settings/company-preferences",
+          icon: Sliders,
+          text: "PREFERENCES",
         },
       ],
 
