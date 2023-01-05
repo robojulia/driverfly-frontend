@@ -1841,5 +1841,6 @@
   "WAS_EMPLOYED_AS": "Applicant was employed as",
   "CONTACT_US": "contact us",
   "PAST_EMPLOYER_NOT_FOUND": "Past Employer Not Found",
-  "ACCORDIAN_ALERT": "Please go through all the tabs to proceed with your submission request!  "
+  "ACCORDIAN_ALERT": "Please go through all the tabs to proceed with your submission request!  ",
+  "COMPANY_PREFERENCE":"Company Preferences"
 }
