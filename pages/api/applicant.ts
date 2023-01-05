@@ -179,6 +179,11 @@ class ApplicantApi extends BaseApi {
 			const { data } = await this.put(`${this.jotform.baseUrl()}/${applicantId}/documents`, dto);
 			return data;
 		},
+		suggestedJobs: async (applicantId: number): Promise<ApplicantSuggestedJobEntity[]> => {
+			const { data } = await this.get(`${this.baseUrl}/${applicantId}/jotform-suggested-jobs`);
+
+			return data;
+		},
 	};
 
 	voeform = {
