@@ -6,7 +6,7 @@ export interface ApplicantInfoReleaseConsentProps {
 }
 export default function ApplicantInfoReleaseConsent({ applicant }: ApplicantInfoReleaseConsentProps) {
 
-    const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE)
+    const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION)
 
     const { t } = useTranslation();
     const date = applicant?.extras?.find(
