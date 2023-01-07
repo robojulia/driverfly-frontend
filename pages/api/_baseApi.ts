@@ -1,6 +1,8 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
 import { useToken } from '../../hooks/use-auth';
+import { isBrowser } from '../../utils/common';
+import * as https from "https";
 
 export default class BaseApi {
     private mergeRequestConfig(config?: AxiosRequestConfig): AxiosRequestConfig {
@@ -13,7 +15,22 @@ export default class BaseApi {
 
         const token = getToken();
 
-        console.log("BaseApi: ", token);
+        /**
+         * DRIVOPS-30
+         * This block modifies the AxiosRequestConfig to
+         * lower the SSL security settings for backend API requests
+         * to allow an incomplete SSL certificate chain to be used
+         * 
+         * This method is being retained in the event it needs to be
+         * re-implemented in the future
+         */
+        if (false && !isBrowser()) {
+            config.httpsAgent = new https.Agent({
+                rejectUnauthorized: false
+            })
+        }
+
+        // console.log("BaseApi: ", token);
 
         if (!config.headers)
             config.headers = {};

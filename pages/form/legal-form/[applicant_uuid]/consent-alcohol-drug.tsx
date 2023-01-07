@@ -3,7 +3,6 @@ import styles from "../../../../styles/jotform.module.css";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import ApplicantApi from "../../../api/applicant";
 import ConsentAlcoholDrug from "../../../../components/forms/jotform/voe-forms/legal-attachments/consent-alcohol-drug";
-import { DRIVOPS_30_LOWER_SSL_SECURITY_WORKAROUND } from "../../../../utils/ssl";
 
 export interface ConsentAlcoholDrugPageProps {
 	applicant: ApplicantEntity
@@ -29,8 +28,7 @@ export async function getServerSideProps({ query }) {
 
 		const applicantApi = new ApplicantApi();
 		const applicant: ApplicantEntity = await applicantApi.getByUuidToken(
-			applicant_uuid,
-			DRIVOPS_30_LOWER_SSL_SECURITY_WORKAROUND()
+			applicant_uuid
 		);
 
 		if (!!!applicant) return { notFound: true };

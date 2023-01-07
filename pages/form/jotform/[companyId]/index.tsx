@@ -10,8 +10,6 @@ import { CompanyEntity } from "../../../../models/company/company.entity";
 import BaseInput from "../../../../components/forms/base-input";
 import { NextPageContext } from "next";
 
-import { DRIVOPS_30_LOWER_SSL_SECURITY_WORKAROUND } from "../../../../utils/ssl";
-
 export interface FullFormProps {
 	employer: CompanyEntity
 }
@@ -81,7 +79,7 @@ export async function getServerSideProps({ query }: NextPageContext) {
 		}
 
 		const companyApi = new CompanyApi();
-		const employer: CompanyEntity = await companyApi.employer.getById(companyId, DRIVOPS_30_LOWER_SSL_SECURITY_WORKAROUND());
+		const employer: CompanyEntity = await companyApi.employer.getById(companyId);
 
 		if (employer?.status !== Status.ACTIVE) {
 			if (employer == null) {

@@ -56,12 +56,10 @@ class ApplicantApi extends BaseApi {
 	}
 
 	async searchByPublic(
-		params: ApplicantEntity,
-		config?: AxiosRequestConfig
+		params: ApplicantEntity
 	): Promise<any> {
 		const { data } = await this.get(
-			this.buildUrl(this.baseUrl + "/public-search", params),
-			config
+			this.buildUrl(this.baseUrl + "/public-search", params)
 		);
 
 		return data;
@@ -83,8 +81,8 @@ class ApplicantApi extends BaseApi {
 		return data;
 	}
 
-	async getByUuidToken(uuid_token: string, config?: AxiosRequestConfig): Promise<ApplicantEntity> {
-		const { data } = await this.get(this.buildUrl(this.baseUrl + `/fetch-applicant/${uuid_token}`), config);
+	async getByUuidToken(uuid_token: string): Promise<ApplicantEntity> {
+		const { data } = await this.get(this.buildUrl(this.baseUrl + `/fetch-applicant/${uuid_token}`));
 
 		return data;
 	}
@@ -195,8 +193,8 @@ class ApplicantApi extends BaseApi {
 	};
 
 	employer = {
-		getByUuidToken: async (uuid_token: string, config?: AxiosRequestConfig): Promise<ApplicantEmployerEntity> => {
-			const { data } = await this.get(this.buildUrl(`${this.baseUrl}/fetch-employer/${uuid_token}`), config);
+		getByUuidToken: async (uuid_token: string): Promise<ApplicantEmployerEntity> => {
+			const { data } = await this.get(this.buildUrl(`${this.baseUrl}/fetch-employer/${uuid_token}`));
 
 			return data;
 		}

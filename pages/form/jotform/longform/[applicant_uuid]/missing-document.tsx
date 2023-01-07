@@ -10,7 +10,6 @@ import {
 	getMissingDocumentsPages,
 } from "../../../../../components/forms/jotform/jotform-pages";
 import ApplicantApi from "../../../../api/applicant";
-import { DRIVOPS_30_LOWER_SSL_SECURITY_WORKAROUND } from "../../../../../utils/ssl";
 
 export interface MissingDocumentsProps {
 	entity: ApplicantEntity;
@@ -69,7 +68,7 @@ export async function getServerSideProps({ query }) {
 		if (!!!applicant_uuid) return { notFound: true };
 
 		const applicantApi = new ApplicantApi();
-		const entity: ApplicantEntity = await applicantApi.getByUuidToken(applicant_uuid, DRIVOPS_30_LOWER_SSL_SECURITY_WORKAROUND());
+		const entity: ApplicantEntity = await applicantApi.getByUuidToken(applicant_uuid);
 
 		if (!!!entity) return { notFound: true };
 
