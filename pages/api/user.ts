@@ -22,11 +22,11 @@ export default class UserApi extends BaseApi {
         await this.delete(`user/${id}`);
     }
 
-    async restore(id: number) : Promise<void> {
+    async restore(id: number): Promise<void> {
         const { data } = await this.put(`user/${id}/restore`, null);
     }
 
-    async list(companyId?: number) : Promise<UserEntity[]> {
+    async list(companyId?: number): Promise<UserEntity[]> {
         const { data } = await this.get(this.buildUrl("user/list", { companyId }));
 
         return data;
@@ -61,8 +61,8 @@ export default class UserApi extends BaseApi {
 
             return data;
         },
-        create: async (userId: number, dto: UserPreferenceEntity): Promise<UserPreferenceEntity> => {
-            const { data } = await this.post(this.preferences.baseUrl(userId), dto);
+        create: async (userIda: number, dto: UserPreferenceEntity): Promise<UserPreferenceEntity> => {
+            const { data } = await this.post(this.preferences.baseUrl(userIda), dto);
 
             return data;
         },
