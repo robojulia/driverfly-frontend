@@ -89,6 +89,7 @@ export function WorkedBefore() {
 									name="ALREADY_WORKED_TO_COMPANY.value.start_date"
 									placeholder="DATE"
 									label="FROM"
+									required
 									formik={form}
 								/>
 								<BaseInput
@@ -96,6 +97,7 @@ export function WorkedBefore() {
 									type="date"
 									name="ALREADY_WORKED_TO_COMPANY.value.end_date"
 									placeholder="DATE"
+									required
 									label="TO"
 									formik={form}
 								/>
