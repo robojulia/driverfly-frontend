@@ -5,7 +5,6 @@ import "react-toastify/dist/ReactToastify.css";
 import ApplicantApi from "../../../../api/applicant";
 import { VerificationOfEmploymentSection1 } from "../../../../../components/forms/jotform/voe-forms/legal-attachments/voe-attachments/section-1";
 import { ApplicantEmployerEntity } from "../../../../../models/applicant";
-import { DRIVOPS_30_LOWER_SSL_SECURITY_WORKAROUND } from "../../../../../utils/ssl";
 
 export interface VerificationOfEmploymentSection1PageProps {
 	applicant: ApplicantEntity,
@@ -38,10 +37,8 @@ export async function getServerSideProps({ query }) {
 		if (!!!applicant_uuid || !!!employer_uuid) return { notFound: true };
 
 		const applicantApi = new ApplicantApi();
-		const applicant: ApplicantEntity = await applicantApi.getByUuidToken(applicant_uuid,
-			DRIVOPS_30_LOWER_SSL_SECURITY_WORKAROUND());
-		const employer: ApplicantEmployerEntity = await applicantApi.employer.getByUuidToken(employer_uuid,
-			DRIVOPS_30_LOWER_SSL_SECURITY_WORKAROUND());
+		const applicant: ApplicantEntity = await applicantApi.getByUuidToken(applicant_uuid);
+		const employer: ApplicantEmployerEntity = await applicantApi.employer.getByUuidToken(employer_uuid);
 
 		if (!!!applicant || !!!employer || applicant.id !== employer?.applicant?.id) return { notFound: true }
 

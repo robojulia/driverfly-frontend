@@ -4,7 +4,6 @@ import VoeFormContext from "../../../../../context/voeform-context";
 import { VoeFormPageControl } from "../../../../../components/forms/jotform/voe-form-pages";
 import ApplicantApi from "../../../../api/applicant";
 import { ApplicantEmployerEntity, ApplicantEntity, ApplicantVoeFormEntity } from "../../../../../models/applicant";
-import { DRIVOPS_30_LOWER_SSL_SECURITY_WORKAROUND } from "../../../../../utils/ssl";
 
 export interface VoeFormProps {
 	applicant: ApplicantEntity;
@@ -70,10 +69,8 @@ export async function getServerSideProps({ query }) {
 
 		const applicantApi = new ApplicantApi()
 
-		const applicant: ApplicantEntity = await applicantApi.getByUuidToken(applicant_uuid,
-			DRIVOPS_30_LOWER_SSL_SECURITY_WORKAROUND())
-		const employer: ApplicantEmployerEntity = await applicantApi.employer.getByUuidToken(employer_uuid,
-			DRIVOPS_30_LOWER_SSL_SECURITY_WORKAROUND())
+		const applicant: ApplicantEntity = await applicantApi.getByUuidToken(applicant_uuid)
+		const employer: ApplicantEmployerEntity = await applicantApi.employer.getByUuidToken(employer_uuid)
 
 		if (!!!applicant || !!!employer || applicant.id !== employer.applicant.id) return { notFound: true }
 

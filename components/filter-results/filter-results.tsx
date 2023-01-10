@@ -15,6 +15,7 @@ import Range from "../filters/location/range"
 import { useTranslation } from '../../hooks/use-translation'
 import JobContext from '../../context/job-context'
 import TransmissionType from '../filters/vehicle-transmission-type'
+import MinimumYearsExperience from '../filters/minimum-years-experience'
 
 
 
@@ -54,6 +55,8 @@ export default function FilterResults() {
                 < Schedule state={state} method={method} />
                 < SpecialEndorsementsRequired state={state} method={method} />
                 < MvrRequirement state={state} method={method} />
+                < MinimumYearsExperience state={state} method={method} />
+
               </div>
             </div>
           </div>
