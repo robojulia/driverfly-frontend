@@ -95,7 +95,7 @@ export default function CompanyPreference() {
     }, [form])
 
     useEffectAsync(async () => {
-        const company_jotform_url = `${process.env.FRONTEND_BASE_URL ?? ""}form/jotform/${user?.company?.id}`
+        const company_jotform_url = `${process.env.FRONTEND_BASE_URL ?? ""}/form/jotform/${user?.company?.id}`
         form.setFieldValue('jotform_url', company_jotform_url)
     }, [])
 
@@ -105,7 +105,7 @@ export default function CompanyPreference() {
                 label="JOTFORM_URL"
                 name="jotform_url"
                 className="my-2 border p-3 rounded"
-                value={`${process.env.FRONTEND_BASE_URL ?? ""}form/jotform/${user?.company?.id}`}
+                value={`${process.env.FRONTEND_BASE_URL ?? ""}/form/jotform/${user?.company?.id}`}
                 tooltipText={t('CLICK_TO_COPY')}
                 formik={form}
 
