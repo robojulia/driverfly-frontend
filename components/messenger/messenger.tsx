@@ -2,10 +2,15 @@ import { CancelTokenSource } from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Navbar, Row } from "react-bootstrap";
 import { Plus } from "react-bootstrap-icons";
+import { ChattableType } from "../../enums/conversation/chattable-type.enum";
+import { UserPreferenceCategory } from "../../enums/users/user-preference-category.enum";
+import { UserPreferenceCommunicationLabel } from "../../enums/users/user-preferences-communication-label.enum";
 import { useAuth } from "../../hooks/use-auth";
 import { useTranslation } from "../../hooks/use-translation";
 import { ConversationEntity, CreateConversationDto } from "../../models/conversation/conversation.entity";
+import { UserPreferenceEntity } from "../../models/user/user-preference.entity";
 import { ConversationApi } from "../../pages/api/conversation";
+import UserApi from "../../pages/api/user";
 import { useEffectAsync } from "../../utils/react";
 import { ComboboxItem } from "../controls/combobox";
 import { ConversationForm } from "./conversation-form";
@@ -24,6 +29,7 @@ export function Messenger(props) {
     const { user } = useAuth();
 
     const [conversations, setConversations] = useState<ConversationEntity[]>([]);
+    const [userPreferences, setUserPreferences] = useState<UserPreferenceEntity[]>([]);
 
     const [conversation, setConversation] = useState<ConversationEntity>(new ConversationEntity());
 
@@ -32,19 +38,30 @@ export function Messenger(props) {
         const c = await api.list();
 
         setConversations(c);
-    }, [ user ]);
+    }, [user]);
 
-     const onCreateClick = (e) => {
-         setConversation(new ConversationEntity());
-     }
+    const onCreateClick = (e) => {
+        setConversation(new ConversationEntity());
+    }
 
-     const onConversationClick = async (c: ConversationEntity) => {
-         const api = new ConversationApi();
+    const onConversationClick = async (c: ConversationEntity) => {
+        const api = new ConversationApi();
 
-         c = await api.markRead(c.id);
+        setUserPreferences(null)
+        if (c.chattable_type == ChattableType.USER) {
+            const userApi = new UserApi();
+            const preferences: UserPreferenceEntity[] = await userApi.preferences.list(c.chattable_id, {
+                category: UserPreferenceCategory.COMMUNICATION,
+                label: UserPreferenceCommunicationLabel.PREFERRED_HOURS
+            })
+
+            setUserPreferences(preferences)
+        }
+
+        c = await api.markRead(c.id);
 
         onConversationUpdated(c);
-     }
+    }
 
     const onDeleteConversation = async (e: ConversationEntity) => {
         const { id } = e;
@@ -62,15 +79,15 @@ export function Messenger(props) {
 
     }
 
-     const onConversationCreated = (e: ConversationEntity) => {
+    const onConversationCreated = (e: ConversationEntity) => {
         setConversations([
             ...conversations,
             e
         ]);
         setConversation(e);
-     }
+    }
 
-     const onConversationUpdated = (e: ConversationEntity) => {
+    const onConversationUpdated = (e: ConversationEntity) => {
         const newConversations = conversations.map(v => (
             v.id === e.id ? {
                 ...v,
@@ -80,60 +97,61 @@ export function Messenger(props) {
         ));
         setConversation(e);
         setConversations(newConversations);
-     }
+    }
 
-     const onConversationToChange = (e: CreateConversationDto) => {
-         if (e.chattable_id) {
-             const existing = conversations.find(v => v.chattable_id === e.chattable_id && v.chattable_type === e.chattable_type);
+    const onConversationToChange = (e: CreateConversationDto) => {
+        if (e.chattable_id) {
+            const existing = conversations.find(v => v.chattable_id === e.chattable_id && v.chattable_type === e.chattable_type);
 
-             if (existing)
-                 onConversationClick(existing);
-         }
-     }
+            if (existing)
+                onConversationClick(existing);
+        }
+    }
 
-     const lastMessage = React.createRef<HTMLLIElement>();
-     useEffect(() => lastMessage.current?.scrollIntoView({ behavior: "smooth" }), [lastMessage])
+    const lastMessage = React.createRef<HTMLLIElement>();
+    useEffect(() => lastMessage.current?.scrollIntoView({ behavior: "smooth" }), [lastMessage])
 
 
-     const canCreate = !!getOptions;
+    const canCreate = !!getOptions;
 
     return (
-    <Row>
-        <Col md="6" lg="5" xl="4" className="messages_container">
-            <Card>
-                <Card.Body className="p-2">
-                    <Navbar expand="lg">
-                        <Navbar.Toggle aria-controls="convo-navbar-nav " className="w-100">
-                            {conversation &&
-                                <ConversationListItem entity={conversation} />
-                            }
-                        </Navbar.Toggle>
-                        <Navbar.Collapse id="convo-navbar-nav">
-                            <ConversationList
-                                items={conversations}
-                                selected={conversation}
-                                onItemClick={onConversationClick}
-                                onItemDelete={onDeleteConversation}
-                            />
-                        </Navbar.Collapse>
-                    </Navbar>
-                    {canCreate && <Button className="w-100 mt-1" variant="primary" onClick={onCreateClick}><Plus /> {t("CREATE_NEW_MESSAGE")}</Button>}
-                </Card.Body>
-            </Card>
-        </Col>
-        <Col md="6" lg="7" xl="8">
-            <Card>
-                <ConversationForm
-                    entity={conversation}
-                    canCreate={canCreate}
-                    onCreated={onConversationCreated}
-                    onUpdated={onConversationUpdated}
-                    onConversationToChange={onConversationToChange}
-                    getOptions={getOptions}
+        <Row>
+            <Col md="6" lg="5" xl="4" className="messages_container">
+                <Card>
+                    <Card.Body className="p-2">
+                        <Navbar expand="lg">
+                            <Navbar.Toggle aria-controls="convo-navbar-nav " className="w-100">
+                                {conversation &&
+                                    <ConversationListItem entity={conversation} />
+                                }
+                            </Navbar.Toggle>
+                            <Navbar.Collapse id="convo-navbar-nav">
+                                <ConversationList
+                                    items={conversations}
+                                    selected={conversation}
+                                    onItemClick={onConversationClick}
+                                    onItemDelete={onDeleteConversation}
+                                />
+                            </Navbar.Collapse>
+                        </Navbar>
+                        {canCreate && <Button className="w-100 mt-1" variant="primary" onClick={onCreateClick}><Plus /> {t("CREATE_NEW_MESSAGE")}</Button>}
+                    </Card.Body>
+                </Card>
+            </Col>
+            <Col md="6" lg="7" xl="8">
+                <Card>
+                    <ConversationForm
+                        entity={conversation}
+                        userPreferences={userPreferences}
+                        canCreate={canCreate}
+                        onCreated={onConversationCreated}
+                        onUpdated={onConversationUpdated}
+                        onConversationToChange={onConversationToChange}
+                        getOptions={getOptions}
                     />
-            </Card>
-        </Col>
-    </Row>
+                </Card>
+            </Col>
+        </Row>
 
     );
 

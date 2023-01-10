@@ -5,8 +5,11 @@ import { useEffect, useState } from "react";
 import { Card, Form } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { ChattableType } from "../../enums/conversation/chattable-type.enum";
+import { UserPreferenceCategory } from "../../enums/users/user-preference-category.enum";
+import { UserPreferenceCommunicationLabel } from "../../enums/users/user-preferences-communication-label.enum";
 import { useTranslation } from "../../hooks/use-translation";
 import { ConversationEntity, CreateConversationDto } from "../../models/conversation/conversation.entity";
+import { UserPreferenceEntity } from "../../models/user/user-preference.entity";
 import { ConversationApi } from "../../pages/api/conversation";
 import { globalAjaxExceptionHandler } from "../../utils/ajax";
 import ComboBox, { ComboboxItem } from "../controls/combobox";
@@ -15,6 +18,7 @@ import { Message } from "./message";
 
 export interface ConversationFormProps {
     entity?: ConversationEntity;
+    userPreferences?: UserPreferenceEntity[];
     canCreate?: boolean;
     onCreated?: (e: ConversationEntity) => void;
     onUpdated?: (e: ConversationEntity) => void;
@@ -23,13 +27,13 @@ export interface ConversationFormProps {
 }
 
 export function ConversationForm(props: ConversationFormProps) {
-    const { entity, canCreate, onCreated, onUpdated, onConversationToChange, getOptions } = props;
+    const { entity, canCreate, onCreated, onUpdated, onConversationToChange, getOptions, userPreferences } = props;
 
     const { t } = useTranslation();
 
     const form = useFormik({
-        validateOnChange:false,
-        validateOnBlur:false,
+        validateOnChange: false,
+        validateOnBlur: false,
         initialValues: new ConversationEntity.CreateDto(),
         validationSchema: ConversationEntity.CreateDto.yupSchema(),
         onSubmit: async (dto) => {
@@ -130,11 +134,31 @@ export function ConversationForm(props: ConversationFormProps) {
 
     useEffect(() => lastMessage.current?.scrollIntoView({ behavior: "smooth" }), [lastMessage])
 
+    const PreferredHours = () => {
+        const hours = (userPreferences?.find(v =>
+            v.label == UserPreferenceCommunicationLabel.PREFERRED_HOURS
+        ))?.value
+
+        return (
+            (hours)
+                ? <>{`${hours?.start}-${hours?.end}`}</>
+                : <>{t('NOT_SPECIFIED')}</>
+        )
+    }
+
     return (
         <Card>
             <Card.Header>
                 {(() => {
-                    if (entity.id) return entity.chattable_name;
+                    if (entity.id) return (
+                        <>
+                            <>{entity.chattable_name}</> <br />
+                            <small>
+                                <b>{t('PREFERRED_HOURS')}: </b>
+                                {<PreferredHours />}
+                            </small>
+                        </>
+                    );
 
                     if (canCreate) return (
                         <>
