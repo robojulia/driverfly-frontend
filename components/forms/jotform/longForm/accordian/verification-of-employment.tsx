@@ -59,13 +59,16 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
 
         });
     }, [applicant]);
-    
+
     const handleInput = (value: string) => {
         const formattedSSN = formatSSN(value);
         form.setFieldValue("EMPLOYEE_SS_OR_ID.value", formattedSSN)
         return formattedSSN
     };
     const current_company = applicant?.employers?.find(v => !!v?.is_current)
+    // useEffect(() => {
+    //     console.log("VOE comp errors",Boolean(form?.errors?.SIGNATURE_VOE_AUTHORIZATION) && Object.values(form?.errors)[0].va)
+    // }, [])
     return (
         <>
             <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -92,6 +95,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                         label="EMPLOYEE_SS_OR_BUSINESS"
                         onChange={({ target: { value } }) => handleInput(value)}
                         formik={form}
+                        required
                     />
 
                 </Row>
@@ -143,6 +147,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                                 className: "sigCanvas",
                             }}
                         />
+                        {Boolean(form?.errors?.SIGNATURE_VOE_AUTHORIZATION) && <p className={`h6 text-danger  ${styles.align__text_left}`}><em>{t('ERROR_SIGNS_REQUIRED')}</em></p>}
                     </Col>
                 </Row>
                 <Row className={styles.align__text_left}>
@@ -166,7 +171,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                     <h6>{t("PLEASE_NOTE_THE_FOLLOWING_EMPLOYERS")} </h6>
                 </Row>
                 <Row className={styles.align__text_left}>
-                <h4 className="mt-3">{t("I-B")}</h4>
+                    <h4 className="mt-3">{t("I-B")}</h4>
                     {
                         !!current_company?.is_current && (
                             <>
@@ -195,7 +200,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
 
                 </Row>
                 <Row className={styles.align__text_left}>
-                   
+
 
                     {applicant?.employers?.map(v => !!!v.is_current && (
                         <>
@@ -221,7 +226,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                         </>
                     ))}
                 </Row>
-                
+
                 <Row className={`${styles.align__text_left} ${styles.highlight}`}>
                     <h6>{t("PLEASE_NOTE_THE_FOLLOWING")} </h6>
                 </Row>

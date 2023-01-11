@@ -94,7 +94,6 @@ export function BackgroundInfo() {
 							/>
 							<BaseInput
 								className="col-md-6 my-3"
-								required
 								name={`LINE_ADDRESS.value.address_2`}
 								placeholder="ADDRESS_LINE_2"
 								label="ADDRESS_LINE_2"
