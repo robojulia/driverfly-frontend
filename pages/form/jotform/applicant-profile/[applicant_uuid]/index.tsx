@@ -10,6 +10,7 @@ import { ApplicantEntity } from "../../../../../models/applicant";
 import ApplicantApi from "../../../../api/applicant";
 import DocumentApi from "../../../../api/document";
 import React from "react";
+
 export interface LongFormProps {
 	entity: ApplicantEntity;
 	no_bot?: boolean
