@@ -15,6 +15,8 @@ import { useEffectAsync } from "../../utils/react";
 import { ComboboxItem } from "../controls/combobox";
 import { ConversationForm } from "./conversation-form";
 import { ConversationList, ConversationListItem } from "./conversation-list";
+import { io, Socket } from "socket.io-client";
+import { ConversationMessageEntity } from "../../models/conversation/conversation-message.entity";
 
 export interface MessengerProps {
     getOptions?: (query: string, cancellationToken: CancelTokenSource) => ComboboxItem[]
@@ -22,6 +24,7 @@ export interface MessengerProps {
 }
 
 export function Messenger(props) {
+
     const { getOptions } = props;
 
     const { t } = useTranslation();
@@ -47,14 +50,19 @@ export function Messenger(props) {
     const onConversationClick = async (c: ConversationEntity) => {
         const api = new ConversationApi();
 
+        /* Resetting the user preferences to null, and then if the chattable type is a user, it is setting the
+        user preferences to the preferences of the user. */
         setUserPreferences(null)
         if (c.chattable_type == ChattableType.USER) {
             const userApi = new UserApi();
-            const preferences: UserPreferenceEntity[] = await userApi.preferences.list(c.chattable_id, {
-                category: UserPreferenceCategory.COMMUNICATION,
-                label: UserPreferenceCommunicationLabel.PREFERRED_HOURS
-            })
-
+            const preferences: UserPreferenceEntity[] = await userApi.preferences
+                .list(
+                    c.chattable_id,
+                    {
+                        category: UserPreferenceCategory.COMMUNICATION,
+                        label: UserPreferenceCommunicationLabel.PREFERRED_HOURS
+                    }
+                )
             setUserPreferences(preferences)
         }
 
@@ -103,16 +111,36 @@ export function Messenger(props) {
         if (e.chattable_id) {
             const existing = conversations.find(v => v.chattable_id === e.chattable_id && v.chattable_type === e.chattable_type);
 
-            if (existing)
-                onConversationClick(existing);
+            if (existing) onConversationClick(existing);
         }
     }
 
     const lastMessage = React.createRef<HTMLLIElement>();
     useEffect(() => lastMessage.current?.scrollIntoView({ behavior: "smooth" }), [lastMessage])
 
-
     const canCreate = !!getOptions;
+
+    /**
+     * function that initializes a socket connection to the server, and when the server sends a
+     * message to the client, it finds the conversation that the message belongs to and opens it
+     */
+    const socketInitializer = async (): Promise<void> => {
+        /* Initializing a socket connection to the server. */
+        const socket: Socket = io(`${process.env.BASE_URL}`);
+
+        /* Listening for a message from the server, and when it receives a message, it finds the conversation
+        that the message belongs to and opens it. */
+        socket.on(
+            "replyToMessage",
+            async (message: ConversationMessageEntity): Promise<void> => {
+                const c = conversations?.find(v => v.id == message.conversation?.id)
+                if (Boolean(c)) onConversationClick(c)
+            }
+        );
+    };
+
+    /* A hook that is used to initialize the socket connection to the server. */
+    useEffectAsync(socketInitializer, [conversations]);
 
     return (
         <Row>
