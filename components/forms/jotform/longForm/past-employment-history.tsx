@@ -101,12 +101,14 @@ export function PastEmploymentHistory() {
 											className="col-md-6 my-3"
 											name={`employers[${i}].name`}
 											label="PREVIOUS_COMPANY_NAME"
+											required
 											formik={form}
 										/>
 										<BaseInput
 											className="col-md-6 my-3"
 											name={`employers[${i}].manager_name`}
 											label="PREVIOUS_MANAGER_NAME"
+											required
 											formik={form}
 										/>
 									</Row>
@@ -162,7 +164,6 @@ export function PastEmploymentHistory() {
 										/>
 										<BaseInput
 											className="col-md-6 my-3"
-											required
 											name={`employers[${i}].address_2`}
 											placeholder="ADDRESS_LINE_2"
 											label="ADDRESS_LINE_2"
