@@ -92,6 +92,7 @@ export function ViolationHistory() {
 										label="VIOLATION_DATE"
 										type="date"
 										formik={form}
+										max={new Date().toISOString().split("T")[0]}
 										required
 									/>
 									<BaseInput

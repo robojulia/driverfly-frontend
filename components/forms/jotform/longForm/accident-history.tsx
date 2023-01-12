@@ -86,6 +86,8 @@ export function AccidentHistory() {
 										type="date"
 										formik={form}
 										required
+										max={new Date().toISOString().split("T")[0]}
+
 									/>
 									<BaseInput
 										className="col-md-6 my-3"

@@ -143,6 +143,8 @@ export function DisclosureAuthorization({ form }: AccordianProps) {
                     placeholder="DATE"
                     label="DATE"
                     formik={form}
+                    max={new Date().toISOString().split("T")[0]}
+
                 />
             </Row>
         </>

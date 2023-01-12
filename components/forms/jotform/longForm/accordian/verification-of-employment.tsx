@@ -190,7 +190,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                                     {t("CURENNT_COMPANY_{phone}", { phone: current_company?.phone }, { translateProps: true })}
                                 </p>
-                                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                <p className={`${styles.paragraph} ${styles.align__text_left} bg-danger text-light w-75`}>
                                     {t("DESIGNATED_EMPLOYER_REPRESENTATIVE_{current_manager_name}", { current_manager_name: current_company?.manager_name }, { translateProps: true })}
                                 </p>
                                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("BLANK_LINE")}</p>
@@ -219,7 +219,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                             <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                                 {t("CURENNT_COMPANY_{phone}", { phone: v?.phone }, { translateProps: true })}
                             </p>
-                            <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                            <p className={`${styles.paragraph} ${styles.align__text_left} bg-danger text-light w-75`}>
                                 {t("DESIGNATED_EMPLOYER_REPRESENTATIVE_{current_manager_name}", { current_manager_name: v?.manager_name }, { translateProps: true })}
                             </p>
                             <p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("BLANK_LINE")}</p>
