@@ -172,6 +172,8 @@ export function ImportantDisclosureBackgroundPsp({ form }: AccordianProps) {
                     placeholder="DATE"
                     label="Date"
                     formik={form}
+                    max={new Date().toISOString().split("T")[0]}
+
                 />
             </Row>
             <Row className="mt-4">
