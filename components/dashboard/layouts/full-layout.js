@@ -55,11 +55,11 @@ const FullLayout = ({ children }) => {
             icon: GiftFill,
             text: "FREE_RESOURCES"
         },
-        {
-            pathname: "/dashboard/driver/messages",
-            icon: EnvelopeFill,
-            text: "MESSAGES"
-        },
+        // {
+        //     pathname: "/dashboard/driver/messages",
+        //     icon: EnvelopeFill,
+        //     text: "MESSAGES"
+        // },
         {
             icon: GearFill,
             text: "SETTINGS",

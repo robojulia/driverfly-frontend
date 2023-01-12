@@ -17,6 +17,8 @@ import { ConversationForm } from "./conversation-form";
 import { ConversationList, ConversationListItem } from "./conversation-list";
 import { io, Socket } from "socket.io-client";
 import { ConversationMessageEntity } from "../../models/conversation/conversation-message.entity";
+import { toast } from 'react-toastify'
+
 
 export interface MessengerProps {
     getOptions?: (query: string, cancellationToken: CancelTokenSource) => ComboboxItem[]
@@ -131,10 +133,17 @@ export function Messenger(props) {
         /* Listening for a message from the server, and when it receives a message, it finds the conversation
         that the message belongs to and opens it. */
         socket.on(
-            "replyToMessage",
+            `reply-to-user-${user?.id}`,
             async (message: ConversationMessageEntity): Promise<void> => {
-                const c = conversations?.find(v => v.id == message.conversation?.id)
-                if (Boolean(c)) onConversationClick(c)
+                const c = conversations?.find(v => v.id == message?.conversation?.id)
+                if (Boolean(c)) {
+                    toast(t(
+                        'NEW_MESSAGE_{from}',
+                        { from: message?.conversation?.chattable_name ?? "APPLICANT" },
+                        { translateProps: true }
+                    ))
+                    onConversationClick(c)
+                }
             }
         );
     };
