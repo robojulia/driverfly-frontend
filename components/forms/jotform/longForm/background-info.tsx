@@ -72,6 +72,8 @@ export function BackgroundInfo() {
 					placeholder="birthdate"
 					label="birthdate"
 					formik={form}
+					max={new Date().toISOString().split("T")[0]}
+
 				/>
 			</Row>
 			<p
