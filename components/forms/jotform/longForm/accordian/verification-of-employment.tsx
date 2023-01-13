@@ -180,19 +180,28 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                                         {t("CURENNT_COMPANY_DATA")}
                                     </h5>
                                 </b>
-                                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                                    {t("CURENNT_COMPANY_{name}", { name: current_company?.name }, { translateProps: true })}
+                                {
+                                    current_company?.name && <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                        {t("CURENNT_COMPANY_{name}", { name: current_company?.name }, { translateProps: true })}
 
-                                </p>
-                                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                                    {t("CURENNT_COMPANY_{address}", { address: current_company?.address }, { translateProps: true })}
-                                </p>
-                                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                                    {t("CURENNT_COMPANY_{phone}", { phone: current_company?.phone }, { translateProps: true })}
-                                </p>
-                                <p className={`${styles.paragraph} ${styles.align__text_left} bg-danger text-light w-75`}>
-                                    {t("DESIGNATED_EMPLOYER_REPRESENTATIVE_{current_manager_name}", { current_manager_name: current_company?.manager_name }, { translateProps: true })}
-                                </p>
+                                    </p>
+                                }
+                                {
+                                    current_company?.address && <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                        {t("CURENNT_COMPANY_{address}", { address: current_company?.address }, { translateProps: true })}
+                                    </p>
+                                }
+                                {
+                                    current_company?.phone && <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                                        {t("CURENNT_COMPANY_{phone}", { phone: current_company?.phone }, { translateProps: true })}
+                                    </p>
+                                }
+                                {
+                                    current_company?.manager_name && <p className={`${styles.paragraph} ${styles.align__text_left} bg-danger text-light w-75`}>
+                                        {t("DESIGNATED_EMPLOYER_REPRESENTATIVE_{current_manager_name}", { current_manager_name: current_company?.manager_name }, { translateProps: true })}
+                                    </p>
+                                }
+
                                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("BLANK_LINE")}</p>
                             </>
                         )
