@@ -56,12 +56,10 @@ class ApplicantApi extends BaseApi {
 	}
 
 	async searchByPublic(
-		params: ApplicantEntity,
-		config?: AxiosRequestConfig
+		params: ApplicantEntity
 	): Promise<any> {
 		const { data } = await this.get(
-			this.buildUrl(this.baseUrl + "/public-search", params),
-			config
+			this.buildUrl(this.baseUrl + "/public-search", params)
 		);
 
 		return data;
@@ -177,6 +175,11 @@ class ApplicantApi extends BaseApi {
 			dto: DocumentEntity[]
 		): Promise<ApplicantEntity> => {
 			const { data } = await this.put(`${this.jotform.baseUrl()}/${applicantId}/documents`, dto);
+			return data;
+		},
+		suggestedJobs: async (applicantId: number): Promise<ApplicantSuggestedJobEntity[]> => {
+			const { data } = await this.get(`${this.baseUrl}/${applicantId}/jotform-suggested-jobs`);
+
 			return data;
 		},
 	};

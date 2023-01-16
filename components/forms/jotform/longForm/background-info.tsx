@@ -72,6 +72,8 @@ export function BackgroundInfo() {
 					placeholder="birthdate"
 					label="birthdate"
 					formik={form}
+					max={new Date().toISOString().split("T")[0]}
+
 				/>
 			</Row>
 			<p
@@ -94,7 +96,6 @@ export function BackgroundInfo() {
 							/>
 							<BaseInput
 								className="col-md-6 my-3"
-								required
 								name={`LINE_ADDRESS.value.address_2`}
 								placeholder="ADDRESS_LINE_2"
 								label="ADDRESS_LINE_2"

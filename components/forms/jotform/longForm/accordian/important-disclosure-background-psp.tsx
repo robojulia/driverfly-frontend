@@ -148,6 +148,8 @@ export function ImportantDisclosureBackgroundPsp({ form }: AccordianProps) {
                             className: "sigCanvas",
                         }}
                     />
+                    {Boolean(form?.errors?.SIGNATURE_IMPORTANT_BACKGROUND) && <p className={`h6 text-danger  ${styles.align__text_left}`}><em>{t('ERROR_SIGNS_REQUIRED')}</em></p>}
+
                 </Col>
             </Row>
             <Row>
@@ -170,6 +172,8 @@ export function ImportantDisclosureBackgroundPsp({ form }: AccordianProps) {
                     placeholder="DATE"
                     label="Date"
                     formik={form}
+                    max={new Date().toISOString().split("T")[0]}
+
                 />
             </Row>
             <Row className="mt-4">

@@ -104,6 +104,7 @@ export function DriverApplication() {
 						name="first_name"
 						placeholder="FIRST_NAME"
 						label="FIRST_NAME"
+						readOnly
 						formik={form}
 					/>
 					<BaseInput
@@ -112,6 +113,7 @@ export function DriverApplication() {
 						name="last_name"
 						placeholder="LAST_NAME"
 						label="LAST_NAME"
+						readOnly
 						formik={form}
 					/>
 					<BaseInput
@@ -139,6 +141,8 @@ export function DriverApplication() {
 								className: "sigCanvas",
 							}}
 						/>
+						{Boolean(form?.errors?.SIGNATURE) && <p className={`h6 text-danger  ${styles.align__text_left}`}><em>{t('ERROR_SIGNS_REQUIRED')}</em></p>}
+
 					</Col>
 					<Col md="2" className="d-flex align-self-center justify-content-center">
 						<button

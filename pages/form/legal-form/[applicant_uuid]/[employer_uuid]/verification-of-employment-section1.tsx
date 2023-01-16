@@ -38,7 +38,7 @@ export async function getServerSideProps({ query }) {
 
 		const applicantApi = new ApplicantApi();
 		const applicant: ApplicantEntity = await applicantApi.getByUuidToken(applicant_uuid);
-		const employer: ApplicantEmployerEntity = await applicantApi.employer.getByUuidToken(employer_uuid)
+		const employer: ApplicantEmployerEntity = await applicantApi.employer.getByUuidToken(employer_uuid);
 
 		if (!!!applicant || !!!employer || applicant.id !== employer?.applicant?.id) return { notFound: true }
 
