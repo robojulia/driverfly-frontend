@@ -146,7 +146,7 @@ export function OtherQueues() {
                 </>
             )}
             <Row>
-                <div className="mt-4 float-left d-flex justify-left p-0">
+                <div className="mt-4 float-left d-flex justify-left">
                     <Button
                         className="w-100 py-2"
                         size="sm"

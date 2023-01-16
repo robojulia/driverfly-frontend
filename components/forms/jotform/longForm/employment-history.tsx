@@ -83,7 +83,7 @@ export function EmploymentHistory() {
 					/>
 				</Row>
 				{!!form.values?.is_current_employed && (
-					<Row className="single-past-employer-items my-5 pb-5">
+					<div className="single-past-employer-items my-5 pb-5 px-2">
 						<Row className={styles.bold}>
 							<h6
 								className={`${styles.heading__sty} ${styles.align__text_left}`}
@@ -221,7 +221,7 @@ export function EmploymentHistory() {
 								formik={form}
 							/>
 						</Row>
-					</Row>
+					</div>
 				)}
 
 				<Row className="mt-5">

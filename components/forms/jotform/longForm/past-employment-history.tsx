@@ -56,12 +56,6 @@ export function PastEmploymentHistory() {
 		});
 	}, [applicant]);
 
-	useEffect(() => {
-
-		console.log("values", form.values);
-		console.log("error", form.errors);
-	}, [form.values, form.errors]);
-
 	return (
 		<>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -85,7 +79,7 @@ export function PastEmploymentHistory() {
 				{(!!form?.values?.is_previous_employed && form?.values?.employers?.length > 0) &&
 					<>
 						{form?.values?.employers?.map((entity, i) => (
-							<Row key={i} className="single-past-employer-items my-3">
+							<div key={i} className="single-past-employer-items my-3 px-2">
 								<div className="py-3">
 									<Row>
 										<BaseCheck
@@ -212,7 +206,7 @@ export function PastEmploymentHistory() {
 								</div>
 								<Button
 									className="rounded-lg"
-									variant="outline-danger close_btn w-25 mx-auto my-2"
+									variant="outline-danger close_btn w-25 mx-auto d-block my-2"
 									onClick={() =>
 										form.setValues({
 											...form.values,
@@ -223,14 +217,14 @@ export function PastEmploymentHistory() {
 									<DashCircle />
 								</Button>
 								<div className='Row' style={{ height: '3px', borderBottom: 'solid 2px #8d8c8c', marginTop: '0px' }}></div >
-							</Row>
+							</div>
 						))}
 					</>
 				}
 				<Row>
 					{!!form?.values?.is_previous_employed && (
 						<>
-							<Col className="p-0 mt-2">
+							<Col className="mt-2">
 								<Button
 									className="w-100 py-2"
 									size="sm"

@@ -77,7 +77,7 @@ export function HearAbout() {
 				</Row>
 				<Row>
 					<BaseSelect
-						className="mt-3 mb-3 p-md-0"
+						className="mt-3 mb-3"
 						labelPrefix="HearAboutUsType"
 						enumType={HearAboutUsType}
 						name="HEAR_ABOUT_US.value"
@@ -88,7 +88,7 @@ export function HearAbout() {
 				{form.values?.HEAR_ABOUT_US?.value === HearAboutUsType.REFERRAL && (
 					<Row className={styles.bold}>
 						<BaseInput
-							className="col p-0 mb-4"
+							className="col mb-4"
 							name="REFERRAL_NUMBER"
 							placeholder="REFERRAL_NUMBER"
 							label="REFERRAL_NUMBER"
