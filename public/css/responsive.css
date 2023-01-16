@@ -561,4 +561,7 @@
     .logo_container img {
         width: 100% !important;
     }
+    .tab__wid_for_jot svg {
+        width: 30% !important;
+    }
 }

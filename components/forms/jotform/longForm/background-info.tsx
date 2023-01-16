@@ -55,11 +55,6 @@ export function BackgroundInfo() {
 		});
 	}, [applicant]);
 
-	useEffect(() => {
-		console.log("form values", form.values);
-		console.log("form eror", form.errors);
-	}, [form.values, form.errors]);
-
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<h4 className={styles.heading__sty}>{t("BACKGROUND_INFO")}</h4>

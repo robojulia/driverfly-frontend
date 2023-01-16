@@ -60,21 +60,21 @@ export function AccidentViolation() {
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row >
 					<BaseCheck
-						className="col my-3 pl-0"
+						className="col my-3"
 						required
 						name="can_pass_drug_test"
 						label="can_pass_drug_test"
 						formik={form}
 					/>
 				</Row>
-				<Row className="pl-0">
+				<Row >
 					<p className={`${styles.paragraph} ${styles.align__text_left}`}>
 						{t("{company_name}_DRUG_TEST_DOT", { company_name: applicant?.company?.name }, { translateProps: true })}
 					</p>
 				</Row>
 				<Row className={styles.bold}>
 					<BaseInput
-						className="col my-3 pl-0"
+						className="col my-3"
 						required
 						name="moving_violations_count"
 						type="number"
@@ -87,7 +87,7 @@ export function AccidentViolation() {
 				</Row>
 				<Row >
 					<BaseCheck
-						className="col my-3 pl-0"
+						className="col my-3"
 						name="authorized_to_work_in_us"
 						label="ELIGIBLE_TO_WORK_IN_US"
 						formik={form}

@@ -18,7 +18,7 @@ export interface BaseControlProps {
   after?: JSX.Element | JSX.Element[];
 }
 
-function BaseControl ( { formik, required, className, label, children, touched, error, name, prepend, append, after } : BaseControlProps ) {
+function BaseControl({ formik, required, className, label, children, touched, error, name, prepend, append, after }: BaseControlProps) {
   const { t } = useTranslation();
 
   if (formik) {
@@ -36,7 +36,7 @@ function BaseControl ( { formik, required, className, label, children, touched, 
   return (
     <div className={`${className || ""}`}>
       {label && <>
-        <label>{t(label)}{required ? "*" : ""}:</label>
+        <label>{t(label)}{required ? <span className='text-danger'>*</span> : ""}:</label>
         <br />
       </>}
       <InputGroup className="flex-nowrap">

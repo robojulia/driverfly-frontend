@@ -1846,5 +1846,7 @@
   "SIGN_ALL_FORM": "Please Sign all forms in order to proceed",
   "ERROR_SIGNS_REQUIRED": "Signature is Required",
   "COMPANY_PREFERENCE": "Company Preferences",
-  "MARK_SURE_ALERT": "Are you sure you want to proceed with your decision?"
+  "MARK_SURE_ALERT": "Are you sure you want to proceed with your decision?",
+  "ACCORDIAN_ALERT": "Please go through all the tabs to proceed with your submission request!",
+  "COMPANY_PREFERENCE":"Company Preferences"
 }
