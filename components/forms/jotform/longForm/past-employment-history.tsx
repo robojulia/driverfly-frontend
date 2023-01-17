@@ -168,6 +168,7 @@ export function PastEmploymentHistory() {
 											className="col-md-6 my-3"
 											required
 											name={`employers[${i}].zip_code`}
+											type="number"
 											placeholder="zip_code"
 											label="zip_code"
 											formik={form}
