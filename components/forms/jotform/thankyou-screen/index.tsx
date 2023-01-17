@@ -1,4 +1,4 @@
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";

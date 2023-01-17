@@ -11,7 +11,7 @@ import { VerificationOfEmployment } from "./verification-of-employment";
 import { DisclosureAuthorization } from "./disclosure-authorization";
 import { ImportantDisclosureBackgroundPsp } from "./important-disclosure-background-psp";
 import { GeneralConsentQueries } from "./general-consent-queries";
-import styles from "../../../../../styles/jotform.module.css";
+import styles from "../../../../../styles/digitalhiringapp.module.css";
 import { LoaderIcon } from "../../../../loading/loader-icon";
 import { ArrowDownCircleFill, ArrowUpCircleFill } from 'react-bootstrap-icons'
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
