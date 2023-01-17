@@ -14,6 +14,7 @@ import { GeneralConsentQueries } from "./general-consent-queries";
 import styles from "../../../../../styles/jotform.module.css";
 import { LoaderIcon } from "../../../../loading/loader-icon";
 import { ArrowDownCircleFill, ArrowUpCircleFill } from 'react-bootstrap-icons'
+import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
 export function AccordianPage() {
 
 	const {
@@ -71,6 +72,24 @@ export function AccordianPage() {
 		console.log("boolean errors", Object.keys(form.errors));
 
 	}, [form.values, form.errors]);
+
+	// useEffect(() => {
+	// 	console.log("in use error")
+	// 	if (Boolean(Object.keys(form.errors).includes(ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION))) {
+	// 		() => setShowTab([!!!showTab[0], false, false, false])
+	// 	}
+	// 	if (Boolean(Object.keys(form.errors).includes(ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION))) {
+	// 		() => setShowTab([false, !!!showTab[1], false, false])
+	// 	}
+	// 	if (Boolean(Object.keys(form.errors).includes(ApplicantExtras.SIGNATURE_IMPORTANT_BACKGROUND))) {
+	// 		setShowTab([false, false, !!!showTab[2], false])
+	// 		console.log("in 3rd error")
+	// 	}
+	// 	if (Boolean(Object.keys(form.errors).includes(ApplicantExtras.SIGNATURE_GENERAL_CONSENT))) {
+	// 		() => setShowTab([false, false, false, !!!showTab[3]])
+	// 	}
+
+	// }, [form.errors])
 	return (
 		<>
 			<ToastContainer />

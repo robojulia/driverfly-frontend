@@ -92,24 +92,29 @@ export function ViolationHistory() {
 										label="VIOLATION_DATE"
 										type="date"
 										formik={form}
+										max={new Date().toISOString().split("T")[0]}
+										required
 									/>
 									<BaseInput
 										className="col-md-6 mt-3"
 										name={`VIOLATION_DETAILS.value[${i}].location`}
 										label="location"
 										formik={form}
+										required
 									/>
 									<BaseInput
 										className="col-md-6 mt-3"
 										name={`VIOLATION_DETAILS.value[${i}].charge`}
 										label="CHARGE"
 										formik={form}
+										required
 									/>
 									<BaseInput
 										className="col-md-6 mt-3"
 										name={`VIOLATION_DETAILS.value[${i}].penalty`}
 										label="PENALTY"
 										formik={form}
+										required
 									/>
 									<Button
 										className="rounded-lg md-6"

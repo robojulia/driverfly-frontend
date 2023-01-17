@@ -110,6 +110,7 @@ export function EmploymentHistory() {
 								className="col-md-6 my-3"
 								name="employer.name"
 								label="CURRENT_COMPANY_NAME"
+								required
 								formik={form}
 							/>
 							<BaseInput
@@ -174,7 +175,6 @@ export function EmploymentHistory() {
 							/>
 							<BaseInput
 								className="col-md-6 my-3"
-								required
 								name="employer.address_2"
 								placeholder="ADDRESS_LINE_2"
 								label="ADDRESS_LINE_2"

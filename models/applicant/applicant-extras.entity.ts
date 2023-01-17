@@ -44,7 +44,7 @@ export class ApplicantExtrasEntity {
 				})
 				.when("type", {
 					is: ApplicantExtras.SIGNATURE,
-					then: yup.string().optional().nullable(),
+					then: yup.string().required().nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.LINE_ADDRESS,
@@ -109,15 +109,15 @@ export class ApplicantExtrasEntity {
 				//for accordian
 				.when("type", {
 					is: ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE,
-					then: yup.date().optional().nullable(),
+					then: yup.date().required().nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.EMPLOYEE_SS_OR_ID,
-					then: yup.string().optional().nullable(),
+					then: yup.string().required().nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE,
-					then: yup.date().optional().nullable(),
+					then: yup.date().required().nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.GENERAL_CONSENT,
@@ -125,19 +125,19 @@ export class ApplicantExtrasEntity {
 				})
 				.when("type", {
 					is: ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION,
-					then: yup.string().optional().nullable(),
+					then: yup.string().required().nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION,
-					then: yup.string().optional().nullable(),
+					then: yup.string().required().nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.SIGNATURE_IMPORTANT_BACKGROUND,
-					then: yup.string().optional().nullable(),
+					then: yup.string().required().nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.SIGNATURE_GENERAL_CONSENT,
-					then: yup.string().optional().nullable(),
+					then: yup.string().required().nullable(),
 				})
 		});
 	}

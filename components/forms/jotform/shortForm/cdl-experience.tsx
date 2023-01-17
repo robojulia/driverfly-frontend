@@ -99,6 +99,7 @@ export function CdlExperience() {
 								name="years_cdl_experience"
 								label="years_cdl_experience"
 								placeholder="PLACEHOLDER_FOR_DIGITS"
+								required
 								formik={form}
 							/>
 						</Row>

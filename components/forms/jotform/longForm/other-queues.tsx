@@ -104,6 +104,7 @@ export function OtherQueues() {
                                 className="col-md-4 my-3"
                                 placeholder="CDL_NUMBER_1"
                                 label="CDL_NUMBER"
+                                required
                                 formik={form}
                             />
                             <StateSelect
@@ -111,6 +112,7 @@ export function OtherQueues() {
                                 name={`CDL_NUMBER.value[${i}].state`}
                                 placeholder="STATE"
                                 label="CHOOSE"
+                                required
                                 formik={form}
                             />
                             <BaseInput
@@ -119,6 +121,7 @@ export function OtherQueues() {
                                 name={`CDL_NUMBER.value[${i}].date`}
                                 placeholder="expiration_date"
                                 label="DATE"
+                                required
                                 formik={form}
                             />
 

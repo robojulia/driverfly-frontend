@@ -85,30 +85,37 @@ export function AccidentHistory() {
 										label="DATE"
 										type="date"
 										formik={form}
+										required
+										max={new Date().toISOString().split("T")[0]}
+
 									/>
 									<BaseInput
 										className="col-md-6 my-3"
 										name={`ACCIDENT_DETAILS.value[${i}].nature_of_accident`}
 										label="LABEL_ACCIDENT_NATURE"
 										formik={form}
+										required
 									/>
 									<BaseInput
 										className="col-md-6 my-3"
 										name={`ACCIDENT_DETAILS.value[${i}].location_of_accident`}
 										label="LABEL_ACCIDENT_LOCATION"
 										formik={form}
+										required
 									/>
 									<BaseInput
 										className="col-md-6 my-3"
 										name={`ACCIDENT_DETAILS.value[${i}].number_of_fatalaties`}
 										label="LABEL_ACCIDENT_FATALITIES"
 										formik={form}
+										required
 									/>
 									<BaseInput
 										className="col-md-6 mt-2"
 										name={`ACCIDENT_DETAILS.value[${i}].number_of_injured`}
 										label="LABEL_ACCIDENT_INJURED"
 										formik={form}
+										required
 									/>
 									<BaseCheck
 										className="col-md-6 mt-5"
