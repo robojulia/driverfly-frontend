@@ -104,6 +104,7 @@ export function BasicInfo() {
 						className="col-12 my-3"
 						required
 						name="zip_code"
+						type="number"
 						label="zip_code"
 						placeholder="zip_code"
 						formik={form}
