@@ -4,7 +4,7 @@ import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { AccidentHistoryDto } from "../../../../models/jot-form/long-form/accident-history.dto";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";

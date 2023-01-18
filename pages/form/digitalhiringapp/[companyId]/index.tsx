@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ApplicantEntity, ApplicantExtrasEntity } from "../../../../models/applicant";
 import JotformContext from "../../../../context/jotform-context";

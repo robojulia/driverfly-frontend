@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef } from "react";
 import { Col, Row } from "react-bootstrap";
 import BaseInput from "../../../base-input";
 import { useTranslation } from "../../../../../hooks/use-translation";
-import styles from "../../../../../styles/jotform.module.css";
+import styles from "../../../../../styles/digitalhiringapp.module.css";
 import { AccordianProps } from "../../../../../types/jotform/accordian.type";
 import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
 import SignatureCanvas from "react-signature-canvas";

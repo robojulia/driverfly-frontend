@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
@@ -186,6 +186,7 @@ export function EmploymentHistory() {
 								className="col-md-6 my-3"
 								required
 								name="employer.zip_code"
+								type="number"
 								placeholder="zip_code"
 								label="zip_code"
 								formik={form}

@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import ApplicantApi from "../../../api/applicant";
 import ConsentAlcoholDrug from "../../../../components/forms/jotform/voe-forms/legal-attachments/consent-alcohol-drug";

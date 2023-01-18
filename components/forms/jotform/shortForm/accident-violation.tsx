@@ -6,7 +6,7 @@ import BaseInput from "../../base-input";
 import BaseCheck from "../../base-check";
 import { AccidentViolationDto } from "../../../../models/jot-form/short-form/accident-violation.dto";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 
 export function AccidentViolation() {

@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { useTranslation } from "../../../../hooks/use-translation";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 export function HalfWay() {
 
 	const {
