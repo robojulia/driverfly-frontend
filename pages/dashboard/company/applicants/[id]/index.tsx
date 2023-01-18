@@ -276,15 +276,15 @@ export default function ViewApplicant({ id }) {
 			</Row>
 			<Row>
 				<Col>
+					<ApplicantWorkHistory applicant={applicant} />
+				</Col>
+				<Col>
 					< ViewApplicantDAC applicant={applicant} />
 				</Col>
 
 			</Row>
 			<Row>
-				<Col md="4">
-					<ApplicantWorkHistory applicant={applicant} />
-				</Col>
-				<Col md="8">
+				<Col >
 					<ApplicantSafetyBackground applicant={applicant} />
 				</Col>
 			</Row>
