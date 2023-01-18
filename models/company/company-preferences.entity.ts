@@ -2,7 +2,7 @@ import { CompanyPreferenceCategory } from "../../enums/company/company-preferenc
 import * as yup from "yup";
 import "../../utils/yup";
 import { CompanyEntity } from "./company.entity";
-import { CompanyPreferenceLabel } from "../../enums/company/company-preferences-communication-label.enum";
+import { CompanyPreferenceLabel } from "../../enums/company/company-preferences-jotform-label.enum";
 
 export class CompanyPreferenceEntity {
     constructor() { }
