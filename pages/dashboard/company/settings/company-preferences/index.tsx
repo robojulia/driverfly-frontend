@@ -14,7 +14,7 @@ import { CompanyPreferenceEntity } from "../../../../../models/company/company-p
 
 import * as yup from "yup";
 import { CompanyPreferenceCategory } from "../../../../../enums/company/company-preference-category.enum";
-import { CompanyPreferenceLabel } from "../../../../../enums/company/company-preferences-communication-label.enum";
+import { CompanyPreferenceLabel } from "../../../../../enums/company/company-preferences-jotform-label.enum";
 import { useEffectAsync } from "../../../../../utils/react";
 import BaseCheckList from "../../../../../components/forms/base-check-list";
 import BaseCheck from "../../../../../components/forms/base-check";
