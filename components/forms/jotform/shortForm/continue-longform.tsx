@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
 import { Button, Col, Row } from "react-bootstrap";

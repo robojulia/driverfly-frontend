@@ -1,32 +1,30 @@
-import { useEffect, useState } from "react";
-import styles from "../../../../../styles/jotform.module.css";
+import { useState } from "react";
+import styles from "../../../../../styles/digitalhiringapp.module.css";
 import {
 	ApplicantEntity,
 	ApplicantExtrasEntity,
 } from "../../../../../models/applicant";
 import JotformContext from "../../../../../context/jotform-context";
 import {
-	getLongFormPages,
 	getLongFormStyle,
+	getMissingDocumentsPages,
 } from "../../../../../components/forms/jotform/jotform-pages";
 import ApplicantApi from "../../../../api/applicant";
 
-export interface LongFormProps {
+export interface MissingDocumentsProps {
 	entity: ApplicantEntity;
 }
 
-export default function LongForm({ entity }: LongFormProps) {
-
+export default function MissingDocuments({ entity }: MissingDocumentsProps) {
 	const [applicant, setApplicant] = useState<ApplicantEntity>(entity);
 	const [applicantExtras, setApplicantExtras] = useState<
 		ApplicantExtrasEntity[]
-	>(entity.extras);
-
+	>(entity?.extras);
 	const updateApplicantExtras = (
 		applicantExtrasEntity: ApplicantExtrasEntity
 	) =>
 		setApplicantExtras((oldApx) => {
-			oldApx = oldApx?.filter((v) => v.type !== applicantExtrasEntity?.type);
+			oldApx = oldApx?.filter((v) => v?.type !== applicantExtrasEntity?.type);
 			return !!oldApx
 				? [...oldApx, { ...applicantExtrasEntity }]
 				: [{ ...applicantExtrasEntity }];
@@ -35,11 +33,6 @@ export default function LongForm({ entity }: LongFormProps) {
 	const [steps, setSteps] = useState<number>(0);
 	const stepNext = (): void => setSteps(steps + 1);
 	const stepBack = (): void => setSteps(steps - 1);
-
-	useEffect(() => {
-		console.log("from index applicant", applicant);
-		console.log("from index applicantExtras", applicantExtras);
-	}, []);
 
 	return (
 		<JotformContext.Provider
@@ -60,14 +53,7 @@ export default function LongForm({ entity }: LongFormProps) {
 			<div className={styles.container}>
 				<div className={styles.main}>
 					<div className={styles.main_form} style={getLongFormStyle(steps)}>
-						{/* uncomment this during development */}
-						{/* <BaseInput
-							value={steps}
-							min={0}
-							max={26}
-							type="number"
-							onChange={({ target: { value } }) => setSteps(parseInt(value))} /> */}
-						{getLongFormPages(steps)}
+						{getMissingDocumentsPages(steps)}
 					</div>
 				</div>
 			</div>
@@ -82,9 +68,7 @@ export async function getServerSideProps({ query }) {
 		if (!!!applicant_uuid) return { notFound: true };
 
 		const applicantApi = new ApplicantApi();
-		const entity: ApplicantEntity = await applicantApi.getByUuidToken(
-			applicant_uuid
-		);
+		const entity: ApplicantEntity = await applicantApi.getByUuidToken(applicant_uuid);
 
 		if (!!!entity) return { notFound: true };
 

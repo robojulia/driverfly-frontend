@@ -7,7 +7,7 @@ import { HearAboutUsDto } from "../../../../models/jot-form/short-form/hear-abou
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { HearAboutUsType } from "../../../../enums/jotform/hear-about-type.enum";
 import BaseInput from "../../base-input";
 import ApplicantApi from "../../../../pages/api/applicant";
@@ -77,7 +77,7 @@ export function HearAbout() {
 				</Row>
 				<Row>
 					<BaseSelect
-						className="mt-3 mb-3 p-md-0"
+						className="mt-3 mb-3"
 						labelPrefix="HearAboutUsType"
 						enumType={HearAboutUsType}
 						name="HEAR_ABOUT_US.value"
@@ -88,7 +88,7 @@ export function HearAbout() {
 				{form.values?.HEAR_ABOUT_US?.value === HearAboutUsType.REFERRAL && (
 					<Row className={styles.bold}>
 						<BaseInput
-							className="col p-0 mb-4"
+							className="col mb-4"
 							name="REFERRAL_NUMBER"
 							placeholder="REFERRAL_NUMBER"
 							label="REFERRAL_NUMBER"

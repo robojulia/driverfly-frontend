@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import Form from "react-bootstrap/Form";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { Button, Col, Row } from "react-bootstrap";
 import BaseSelect from "../../base-select";
 import { useFormik } from "formik";

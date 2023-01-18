@@ -3,7 +3,7 @@ import { Col, Form, Row } from "react-bootstrap";
 import BaseInput from "../../../base-input";
 import SignatureCanvas from "react-signature-canvas";
 import { useTranslation } from "../../../../../hooks/use-translation";
-import styles from "../../../../../styles/jotform.module.css";
+import styles from "../../../../../styles/digitalhiringapp.module.css";
 import { AccordianProps } from "../../../../../types/jotform/accordian.type";
 import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";

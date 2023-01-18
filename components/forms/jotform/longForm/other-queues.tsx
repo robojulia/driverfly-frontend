@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import Form from "react-bootstrap/Form";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { Button, Col, Row } from "react-bootstrap";
 import BaseInput from "../../base-input";
 import BaseSelect from "../../base-select";
@@ -149,7 +149,7 @@ export function OtherQueues() {
                 </>
             )}
             <Row>
-                <div className="mt-4 float-left d-flex justify-left p-0">
+                <div className="mt-4 float-left d-flex justify-left">
                     <Button
                         className="w-100 py-2"
                         size="sm"

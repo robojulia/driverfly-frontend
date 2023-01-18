@@ -3,7 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import { ApplicantExtras } from "../../../../../../enums/applicants/applicant-extras.enum";
 import { useTranslation } from "../../../../../../hooks/use-translation";
 import { ApplicantEmployerEntity, ApplicantEntity } from "../../../../../../models/applicant";
-import styles from "../../../../../../styles/jotform.module.css";
+import styles from "../../../../../../styles/digitalhiringapp.module.css";
 
 export interface Section1Props {
     applicant: ApplicantEntity,

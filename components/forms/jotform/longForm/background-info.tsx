@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
@@ -55,11 +55,6 @@ export function BackgroundInfo() {
 		});
 	}, [applicant]);
 
-	useEffect(() => {
-		console.log("form values", form.values);
-		console.log("form eror", form.errors);
-	}, [form.values, form.errors]);
-
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<h4 className={styles.heading__sty}>{t("BACKGROUND_INFO")}</h4>
@@ -111,6 +106,7 @@ export function BackgroundInfo() {
 					className="col-md-6 my-3"
 					required
 					name="city"
+					type="text"
 					placeholder="city"
 					label="city"
 					formik={form}
@@ -129,6 +125,7 @@ export function BackgroundInfo() {
 					className="col my-3"
 					required
 					name="zip_code"
+					type="number"
 					placeholder="zip_code"
 					label="zip_code"
 					formik={form}
