@@ -106,6 +106,7 @@ export function BackgroundInfo() {
 					className="col-md-6 my-3"
 					required
 					name="city"
+					type="text"
 					placeholder="city"
 					label="city"
 					formik={form}
@@ -124,6 +125,7 @@ export function BackgroundInfo() {
 					className="col my-3"
 					required
 					name="zip_code"
+					type="number"
 					placeholder="zip_code"
 					label="zip_code"
 					formik={form}
