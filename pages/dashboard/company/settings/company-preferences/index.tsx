@@ -21,216 +21,207 @@ import BaseCheck from "../../../../../components/forms/base-check";
 import BaseInput from "../../../../../components/forms/base-input";
 
 export default function CompanyPreference() {
-  const { user } = useAuth();
+	const { user } = useAuth();
 
-  const { t } = useTranslation();
+	const { t } = useTranslation();
 
-  const form = useFormik({
-    initialValues: {
-      cdl_class: {
-        ...new CompanyPreferenceEntity(),
-        category: CompanyPreferenceCategory.JOTFORM,
-        label: CompanyPreferenceLabel.CDL_CLASS,
-        value: [],
-      } as CompanyPreferenceEntity,
-      owner_operator: {
-        ...new CompanyPreferenceEntity(),
-        category: CompanyPreferenceCategory.JOTFORM,
-        label: CompanyPreferenceLabel.OWNER_OPERATOR,
-        value: false,
-      } as CompanyPreferenceEntity,
-      drug_test_pass: {
-        ...new CompanyPreferenceEntity(),
-        category: CompanyPreferenceCategory.JOTFORM,
-        label: CompanyPreferenceLabel.DRUG_TEST_PASS,
-        value: false,
-      } as CompanyPreferenceEntity,
-      minimum_accidents: {
-        ...new CompanyPreferenceEntity(),
-        category: CompanyPreferenceCategory.JOTFORM,
-        label: CompanyPreferenceLabel.MINIMUM_ACCIDENTS,
-        value: 0,
-      } as CompanyPreferenceEntity,
-      minimum_moving_violations: {
-        ...new CompanyPreferenceEntity(),
-        category: CompanyPreferenceCategory.JOTFORM,
-        label: CompanyPreferenceLabel.MIN_MOVING_VIOLATIONS,
-        value: 0,
-      } as CompanyPreferenceEntity,
-      years_cdl_experience: {
-        ...new CompanyPreferenceEntity(),
-        category: CompanyPreferenceCategory.JOTFORM,
-        label: CompanyPreferenceLabel.YEARS_CDL_EXPERIENCE,
-        value: 0,
-      },
-    } as CompanyPreferenceEntity,
+	const form = useFormik({
+		initialValues: {
+			cdl_class: {
+				...new CompanyPreferenceEntity(),
+				category: CompanyPreferenceCategory.JOTFORM,
+				label: CompanyPreferenceLabel.CDL_CLASS,
+				value: [],
+			} as CompanyPreferenceEntity,
+			owner_operator: {
+				...new CompanyPreferenceEntity(),
+				category: CompanyPreferenceCategory.JOTFORM,
+				label: CompanyPreferenceLabel.OWNER_OPERATOR,
+				value: false,
+			} as CompanyPreferenceEntity,
+			drug_test_pass: {
+				...new CompanyPreferenceEntity(),
+				category: CompanyPreferenceCategory.JOTFORM,
+				label: CompanyPreferenceLabel.DRUG_TEST_PASS,
+				value: false,
+			} as CompanyPreferenceEntity,
+			minimum_accidents: {
+				...new CompanyPreferenceEntity(),
+				category: CompanyPreferenceCategory.JOTFORM,
+				label: CompanyPreferenceLabel.MINIMUM_ACCIDENTS,
+				value: 0,
+			} as CompanyPreferenceEntity,
+			minimum_moving_violations: {
+				...new CompanyPreferenceEntity(),
+				category: CompanyPreferenceCategory.JOTFORM,
+				label: CompanyPreferenceLabel.MIN_MOVING_VIOLATIONS,
+				value: 0,
+			} as CompanyPreferenceEntity,
+			years_cdl_experience: {
+				...new CompanyPreferenceEntity(),
+				category: CompanyPreferenceCategory.JOTFORM,
+				label: CompanyPreferenceLabel.YEARS_CDL_EXPERIENCE,
+				value: 0,
+			},
+		} as CompanyPreferenceEntity,
 
-    validationSchema: yup.object({
-      cdl_clas: CompanyPreferenceEntity.yupSchema(),
-      owner_operator: CompanyPreferenceEntity.yupSchema(),
-      drug_test_pass: CompanyPreferenceEntity.yupSchema(),
-      minimum_moving_violations: CompanyPreferenceEntity.yupSchema(),
-      minimum_accidents: CompanyPreferenceEntity.yupSchema(),
-      years_cdl_experience: CompanyPreferenceEntity.yupSchema(),
-    }),
-    onSubmit: async (values) => {
-      const api = new CompanyApi();
+		validationSchema: yup.object({
+			cdl_clas: CompanyPreferenceEntity.yupSchema(),
+			owner_operator: CompanyPreferenceEntity.yupSchema(),
+			drug_test_pass: CompanyPreferenceEntity.yupSchema(),
+			minimum_moving_violations: CompanyPreferenceEntity.yupSchema(),
+			minimum_accidents: CompanyPreferenceEntity.yupSchema(),
+			years_cdl_experience: CompanyPreferenceEntity.yupSchema(),
+		}),
+		onSubmit: async (values) => {
+			const api = new CompanyApi();
 
-      try {
-        const preferences = await Promise.all(
-          Object.values(values).map(async (preference) => {
-            console.log('preference ----', preference);
-            if (preference.value) {
-              if (preference.id)
-                preference = await api.preferences.update(
-                  user?.company.id,
-                  preference.id,
-                  preference
-                );
-              else {
-                preference = await api.preferences.create(
-                  user?.company.id,
-                  preference
-                );
-              }
-            } else if (preference.id) {
-              await api.preferences.remove(user.id, preference.id);
-              delete preference.id;
-            }
+			try {
+				const preferences = await Promise.all(
+					Object.values(values).map(async (preference) => {
+						if (preference.value) {
+							if (preference.id)
+								preference = await api.preferences.update(
+									user?.company.id,
+									preference.id,
+									preference
+								);
+							else {
+								preference = await api.preferences.create(
+									user?.company.id,
+									preference
+								);
+							}
+						} else if (preference.id) {
+							await api.preferences.remove(user.id, preference.id);
+							delete preference.id;
+						}
 
-            return preference;
-          })
-        );
-        populateForm(preferences);
-        toast.success(t("successfully_saved_information"));
-      } catch (e) {
-        console.error("Unable to save preferences", e);
-        toast.error(t("unable_to_save_information"));
-      }
-    },
-  });
+						return preference;
+					})
+				);
+				populateForm(preferences);
+				toast.success(t("successfully_saved_information"));
+			} catch (e) {
+				console.error("Unable to save preferences", e);
+				toast.error(t("unable_to_save_information"));
+			}
+		},
+	});
 
-  useEffectAsync(async () => {
-    if (user.company) {
-      const api = new CompanyApi();
-      const preferences = await api.preferences.list(user.company.id, {
-        category: CompanyPreferenceCategory.JOTFORM,
-      });
-      populateForm(preferences);
-    }
-  }, []);
+	useEffectAsync(async () => {
+		if (user.company) {
+			const api = new CompanyApi();
+			const preferences = await api.preferences.list(user.company.id, {
+				category: CompanyPreferenceCategory.JOTFORM,
+			});
+			populateForm(preferences);
+		}
+	}, []);
 
-  /**
-   *
-   * @param {CompanyPreferenceEntity[]} preferences
-   */
-  const populateForm = function (preferences) {
-    preferences.forEach((v) => {
-      console.log('v.label', v)
-      const label = v.label?.toLowerCase();
-      if (label in form.values) {
-        form.initialValues[label] = v;
-        // console.log('v.label', label, v)
-        form.setFieldValue(label, v);
-      }
-    });
-  };
+	/**
+	 *
+	 * @param {CompanyPreferenceEntity[]} preferences
+	 */
+	const populateForm = function (preferences) {
+		preferences.forEach((v) => {
+			const label = v.label?.toLowerCase();
+			if (label in form.values) {
+				form.initialValues[label] = v;
+				form.setFieldValue(label, v);
+			}
+		});
+	};
 
-  //  Uncomment this in debugging mode
-  useEffectAsync(async () => {
-    // console.log("form values", form.values);
-    // console.log("form errors", form.errors);
-  }, [form]);
+	useEffectAsync(async () => {
+		const company_jotform_url = `${process.env.FRONTEND_BASE_URL ?? ""
+			}form/jotform/${user?.company?.id}`;
+		form.setFieldValue("jotform_url", company_jotform_url);
+	}, []);
 
-  useEffectAsync(async () => {
-    const company_jotform_url = `${process.env.FRONTEND_BASE_URL ?? ""
-      }form/jotform/${user?.company?.id}`;
-    form.setFieldValue("jotform_url", company_jotform_url);
-  }, []);
+	return (
+		<>
+			<PageLayout title="COMPANY_PREFERENCE">
+				<BaseClickToCopyInput
+					label="JOTFORM_URL"
+					name="jotform_url"
+					className="my-2 p-3 border rounded"
+					value={`${process.env.FRONTEND_BASE_URL ?? ""}form/jotform/${user?.company?.id
+						}`}
+					tooltipText={t("CLICK_TO_COPY")}
+					formik={form}
+				/>
 
-  return (
-    <>
-      <PageLayout title="COMPANY_PREFERENCE">
-        <BaseClickToCopyInput
-          label="JOTFORM_URL"
-          name="jotform_url"
-          className="my-2 border p-3 rounded"
-          value={`${process.env.FRONTEND_BASE_URL ?? ""}form/jotform/${user?.company?.id
-            }`}
-          tooltipText={t("CLICK_TO_COPY")}
-          formik={form}
-        />
+				<form onSubmit={form.handleSubmit} className="py-4 px-3 border rounded mt-5" style={{ background: '#e9ecef' }}>
+					<Row>
+						<BaseCheckList
+							className="col-12"
+							label="CDL_CLASS"
+							name="cdl_class.value"
+							labelPrefix="DriverLicenseType"
+							required
+							enumType={DriverLicenseType}
+							formik={form}
+						/>
+						<BaseCheck
+							className="col-12 mt-4"
+							label="OWNER_OPERATOR"
+							name="owner_operator.value"
+							formik={form}
+						/>
 
-        <form onSubmit={form.handleSubmit}>
-          <Row className="p-3">
-            <BaseCheckList
-              className="col-12 p-0 mt-2"
-              label="CDL_CLASS"
-              name="cdl_class.value"
-              labelPrefix="DriverLicenseType"
-              required
-              enumType={DriverLicenseType}
-              formik={form}
-            />
-            <BaseCheck
-              className="col-12 mt-5"
-              label="OWNER_OPERATOR"
-              name="owner_operator.value"
-              formik={form}
-            />
+						<BaseCheck
+							className="col-12 mt-4"
+							label="DRUG_TEST_PASS"
+							name="drug_test_pass.value"
+							formik={form}
+						/>
 
-            <BaseCheck
-              className="col-12 mt-4"
-              label="DRUG_TEST_PASS"
-              name="drug_test_pass.value"
-              formik={form}
-            />
+						<BaseInput
+							className="col-md-4 mt-4"
+							label="years_cdl_experience"
+							name="years_cdl_experience.value"
+							type="number"
+							placeholder
+							formik={form}
+						/>
 
-            <BaseInput
-              className="col-4 mt-5"
-              label="years_cdl_experience"
-              name="years_cdl_experience.value"
-              type="number"
-              placeholder
-              formik={form}
-            />
+						<BaseInput
+							className="col-md-4 mt-4"
+							label="MIN_ACCIDENTS"
+							name="minimum_accidents.value"
+							type="number"
+							placeholder
+							formik={form}
+						/>
 
-            <BaseInput
-              className="col-4 mt-5"
-              label="MIN_ACCIDENTS"
-              name="minimum_accidents.value"
-              type="number"
-              placeholder
-              formik={form}
-            />
+						<BaseInput
+							className="col-md-4 mt-4"
+							label="MIN_MOVING_VIOLATIONS"
+							name="minimum_moving_violations.value"
+							type="number"
+							placeholder
+							formik={form}
+						/>
+					</Row>
 
-            <BaseInput
-              className="col-4 mt-5"
-              label="MIN_MOVING_VIOLATIONS"
-              name="minimum_moving_violations.value"
-              type="number"
-              placeholder
-              formik={form}
-            />
-          </Row>
-
-          <Row className="mt-3">
-            <Col className="text-end">
-              <Button
-                type="submit"
-                variant="primary"
-                disabled={form.isSubmitting || !form.isValid || !form.dirty}
-              >
-                {t("UPDATE")}
-              </Button>
-            </Col>
-          </Row>
-        </form>
-      </PageLayout>
-    </>
-  );
+					<Row className="mt-4">
+						<Col className="text-end">
+							<Button
+								type="submit"
+								variant="primary"
+								disabled={form.isSubmitting || !form.isValid || !form.dirty}
+							>
+								{t("UPDATE")}
+							</Button>
+						</Col>
+					</Row>
+				</form>
+			</PageLayout>
+		</>
+	);
 }
 
 CompanyPreference.getLayout = function getLayout(page) {
-  return <FullLayout>{page}</FullLayout>;
+	return <FullLayout>{page}</FullLayout>;
 };
