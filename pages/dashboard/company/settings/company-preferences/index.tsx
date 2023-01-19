@@ -14,7 +14,7 @@ import { CompanyPreferenceEntity } from "../../../../../models/company/company-p
 
 import * as yup from "yup";
 import { CompanyPreferenceCategory } from "../../../../../enums/company/company-preference-category.enum";
-import { CompanyPreferenceLabel } from "../../../../../enums/company/company-preferences-jotform-label.enum";
+import { CompanyPreferenceJotformLabel } from "../../../../../enums/company/company-preferences-jotform-label.enum";
 import { useEffectAsync } from "../../../../../utils/react";
 import BaseCheckList from "../../../../../components/forms/base-check-list";
 import BaseCheck from "../../../../../components/forms/base-check";
@@ -30,37 +30,37 @@ export default function CompanyPreference() {
       cdl_class: {
         ...new CompanyPreferenceEntity(),
         category: CompanyPreferenceCategory.JOTFORM,
-        label: CompanyPreferenceLabel.CDL_CLASS,
+        label: CompanyPreferenceJotformLabel.CDL_CLASS,
         value: [],
       } as CompanyPreferenceEntity,
       owner_operator: {
         ...new CompanyPreferenceEntity(),
         category: CompanyPreferenceCategory.JOTFORM,
-        label: CompanyPreferenceLabel.OWNER_OPERATOR,
+        label: CompanyPreferenceJotformLabel.OWNER_OPERATOR,
         value: false,
       } as CompanyPreferenceEntity,
       drug_test_pass: {
         ...new CompanyPreferenceEntity(),
         category: CompanyPreferenceCategory.JOTFORM,
-        label: CompanyPreferenceLabel.DRUG_TEST_PASS,
+        label: CompanyPreferenceJotformLabel.DRUG_TEST_PASS,
         value: false,
       } as CompanyPreferenceEntity,
       minimum_accidents: {
         ...new CompanyPreferenceEntity(),
         category: CompanyPreferenceCategory.JOTFORM,
-        label: CompanyPreferenceLabel.MINIMUM_ACCIDENTS,
+        label: CompanyPreferenceJotformLabel.MINIMUM_ACCIDENTS,
         value: 0,
       } as CompanyPreferenceEntity,
       minimum_moving_violations: {
         ...new CompanyPreferenceEntity(),
         category: CompanyPreferenceCategory.JOTFORM,
-        label: CompanyPreferenceLabel.MIN_MOVING_VIOLATIONS,
+        label: CompanyPreferenceJotformLabel.MIN_MOVING_VIOLATIONS,
         value: 0,
       } as CompanyPreferenceEntity,
       years_cdl_experience: {
         ...new CompanyPreferenceEntity(),
         category: CompanyPreferenceCategory.JOTFORM,
-        label: CompanyPreferenceLabel.YEARS_CDL_EXPERIENCE,
+        label: CompanyPreferenceJotformLabel.YEARS_CDL_EXPERIENCE,
         value: 0,
       },
     } as CompanyPreferenceEntity,

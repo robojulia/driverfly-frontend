@@ -1,4 +1,4 @@
-export enum CompanyPreferenceLabel {
+export enum CompanyPreferenceJotformLabel {
     CDL_CLASS = "CDL_CLASS",
     OWNER_OPERATOR = "OWNER_OPERATOR",
     DRUG_TEST_PASS = "DRUG_TEST_PASS",
