@@ -4,7 +4,7 @@ import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import BaseTextArea from "../../base-text-area";
 import BaseCheck from "../../base-check";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { PastSuspensionDto } from "../../../../models/jot-form/long-form/past-suspension.dto";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";

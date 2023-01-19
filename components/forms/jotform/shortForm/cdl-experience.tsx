@@ -8,7 +8,7 @@ import { DriverLicenseType } from "../../../../enums/users/driver-license-type.e
 import { CdlDto } from "../../../../models/jot-form/short-form/cdl-experience.dto";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { useContext, useEffect } from "react";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 
 export function CdlExperience() {
@@ -99,6 +99,7 @@ export function CdlExperience() {
 								name="years_cdl_experience"
 								label="years_cdl_experience"
 								placeholder="PLACEHOLDER_FOR_DIGITS"
+								required
 								formik={form}
 							/>
 						</Row>

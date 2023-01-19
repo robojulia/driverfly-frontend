@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef } from "react";
 import { Col, Row } from "react-bootstrap";
 import BaseInput from "../../../base-input";
 import { useTranslation } from "../../../../../hooks/use-translation";
-import styles from "../../../../../styles/jotform.module.css";
+import styles from "../../../../../styles/digitalhiringapp.module.css";
 import { AccordianProps } from "../../../../../types/jotform/accordian.type";
 import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
 import SignatureCanvas from "react-signature-canvas";
@@ -119,6 +119,8 @@ export function DisclosureAuthorization({ form }: AccordianProps) {
                             className: "sigCanvas",
                         }}
                     />
+                    {Boolean(form?.errors?.SIGNATURE_DISCLOSURE_AUTHORIZATION) && <p className={`h6 text-danger  ${styles.align__text_left}`}><em>{t('ERROR_SIGNS_REQUIRED')}</em></p>}
+
                 </Col>
             </Row>
             <Row>
@@ -141,6 +143,8 @@ export function DisclosureAuthorization({ form }: AccordianProps) {
                     placeholder="DATE"
                     label="DATE"
                     formik={form}
+                    max={new Date().toISOString().split("T")[0]}
+
                 />
             </Row>
         </>

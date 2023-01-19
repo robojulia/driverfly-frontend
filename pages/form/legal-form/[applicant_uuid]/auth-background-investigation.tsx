@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import "react-toastify/dist/ReactToastify.css";
 import AuthBackgroundInvestigation from "../../../../components/forms/jotform/voe-forms/legal-attachments/auth-background-investigation";

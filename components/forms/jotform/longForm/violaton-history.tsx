@@ -9,7 +9,7 @@ import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import { VioalationExtrasEntity } from "../../../../models/jot-form/long-form/violaton-history/index.dto";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 export function ViolationHistory() {
 	const {
@@ -92,24 +92,29 @@ export function ViolationHistory() {
 										label="VIOLATION_DATE"
 										type="date"
 										formik={form}
+										max={new Date().toISOString().split("T")[0]}
+										required
 									/>
 									<BaseInput
 										className="col-md-6 mt-3"
 										name={`VIOLATION_DETAILS.value[${i}].location`}
 										label="location"
 										formik={form}
+										required
 									/>
 									<BaseInput
 										className="col-md-6 mt-3"
 										name={`VIOLATION_DETAILS.value[${i}].charge`}
 										label="CHARGE"
 										formik={form}
+										required
 									/>
 									<BaseInput
 										className="col-md-6 mt-3"
 										name={`VIOLATION_DETAILS.value[${i}].penalty`}
 										label="PENALTY"
 										formik={form}
+										required
 									/>
 									<Button
 										className="rounded-lg md-6"

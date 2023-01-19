@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import styles from "../../../../../styles/jotform.module.css";
+import styles from "../../../../../styles/digitalhiringapp.module.css";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import "react-toastify/dist/ReactToastify.css";
 import ApplicantApi from "../../../../api/applicant";
@@ -38,7 +38,7 @@ export async function getServerSideProps({ query }) {
 
 		const applicantApi = new ApplicantApi();
 		const applicant: ApplicantEntity = await applicantApi.getByUuidToken(applicant_uuid);
-		const employer: ApplicantEmployerEntity = await applicantApi.employer.getByUuidToken(employer_uuid)
+		const employer: ApplicantEmployerEntity = await applicantApi.employer.getByUuidToken(employer_uuid);
 
 		if (!!!applicant || !!!employer || applicant.id !== employer?.applicant?.id) return { notFound: true }
 

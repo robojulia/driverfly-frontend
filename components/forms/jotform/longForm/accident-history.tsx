@@ -4,7 +4,7 @@ import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { AccidentHistoryDto } from "../../../../models/jot-form/long-form/accident-history.dto";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
@@ -85,30 +85,37 @@ export function AccidentHistory() {
 										label="DATE"
 										type="date"
 										formik={form}
+										required
+										max={new Date().toISOString().split("T")[0]}
+
 									/>
 									<BaseInput
 										className="col-md-6 my-3"
 										name={`ACCIDENT_DETAILS.value[${i}].nature_of_accident`}
 										label="LABEL_ACCIDENT_NATURE"
 										formik={form}
+										required
 									/>
 									<BaseInput
 										className="col-md-6 my-3"
 										name={`ACCIDENT_DETAILS.value[${i}].location_of_accident`}
 										label="LABEL_ACCIDENT_LOCATION"
 										formik={form}
+										required
 									/>
 									<BaseInput
 										className="col-md-6 my-3"
 										name={`ACCIDENT_DETAILS.value[${i}].number_of_fatalaties`}
 										label="LABEL_ACCIDENT_FATALITIES"
 										formik={form}
+										required
 									/>
 									<BaseInput
 										className="col-md-6 mt-2"
 										name={`ACCIDENT_DETAILS.value[${i}].number_of_injured`}
 										label="LABEL_ACCIDENT_INJURED"
 										formik={form}
+										required
 									/>
 									<BaseCheck
 										className="col-md-6 mt-5"

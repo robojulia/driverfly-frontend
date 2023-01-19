@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
@@ -56,12 +56,6 @@ export function PastEmploymentHistory() {
 		});
 	}, [applicant]);
 
-	useEffect(() => {
-
-		console.log("values", form.values);
-		console.log("error", form.errors);
-	}, [form.values, form.errors]);
-
 	return (
 		<>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -85,7 +79,7 @@ export function PastEmploymentHistory() {
 				{(!!form?.values?.is_previous_employed && form?.values?.employers?.length > 0) &&
 					<>
 						{form?.values?.employers?.map((entity, i) => (
-							<Row key={i} className="single-past-employer-items my-3">
+							<div key={i} className="single-past-employer-items my-3 px-2">
 								<div className="py-3">
 									<Row>
 										<BaseCheck
@@ -101,12 +95,14 @@ export function PastEmploymentHistory() {
 											className="col-md-6 my-3"
 											name={`employers[${i}].name`}
 											label="PREVIOUS_COMPANY_NAME"
+											required
 											formik={form}
 										/>
 										<BaseInput
 											className="col-md-6 my-3"
 											name={`employers[${i}].manager_name`}
 											label="PREVIOUS_MANAGER_NAME"
+											required
 											formik={form}
 										/>
 									</Row>
@@ -162,7 +158,6 @@ export function PastEmploymentHistory() {
 										/>
 										<BaseInput
 											className="col-md-6 my-3"
-											required
 											name={`employers[${i}].address_2`}
 											placeholder="ADDRESS_LINE_2"
 											label="ADDRESS_LINE_2"
@@ -173,6 +168,7 @@ export function PastEmploymentHistory() {
 											className="col-md-6 my-3"
 											required
 											name={`employers[${i}].zip_code`}
+											type="number"
 											placeholder="zip_code"
 											label="zip_code"
 											formik={form}
@@ -212,7 +208,7 @@ export function PastEmploymentHistory() {
 								</div>
 								<Button
 									className="rounded-lg"
-									variant="outline-danger close_btn w-25 mx-auto my-2"
+									variant="outline-danger close_btn w-25 mx-auto d-block my-2"
 									onClick={() =>
 										form.setValues({
 											...form.values,
@@ -223,14 +219,14 @@ export function PastEmploymentHistory() {
 									<DashCircle />
 								</Button>
 								<div className='Row' style={{ height: '3px', borderBottom: 'solid 2px #8d8c8c', marginTop: '0px' }}></div >
-							</Row>
+							</div>
 						))}
 					</>
 				}
 				<Row>
 					{!!form?.values?.is_previous_employed && (
 						<>
-							<Col className="p-0 mt-2">
+							<Col className="mt-2">
 								<Button
 									className="w-100 py-2"
 									size="sm"

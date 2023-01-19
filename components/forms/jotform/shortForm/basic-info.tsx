@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import Form from "react-bootstrap/Form";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { Button, Col, Row } from "react-bootstrap";
 import BaseInput from "../../base-input";
 import BaseInputPhone from "../../base-input-phone";
@@ -104,6 +104,7 @@ export function BasicInfo() {
 						className="col-12 my-3"
 						required
 						name="zip_code"
+						type="number"
 						label="zip_code"
 						placeholder="zip_code"
 						formik={form}

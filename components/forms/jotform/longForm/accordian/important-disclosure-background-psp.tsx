@@ -3,7 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import BaseInput from "../../../base-input";
 import Accordion from "react-bootstrap/Accordion";
 import { useTranslation } from "../../../../../hooks/use-translation";
-import styles from "../../../../../styles/jotform.module.css";
+import styles from "../../../../../styles/digitalhiringapp.module.css";
 import { AccordianProps } from "../../../../../types/jotform/accordian.type";
 import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
@@ -148,6 +148,8 @@ export function ImportantDisclosureBackgroundPsp({ form }: AccordianProps) {
                             className: "sigCanvas",
                         }}
                     />
+                    {Boolean(form?.errors?.SIGNATURE_IMPORTANT_BACKGROUND) && <p className={`h6 text-danger  ${styles.align__text_left}`}><em>{t('ERROR_SIGNS_REQUIRED')}</em></p>}
+
                 </Col>
             </Row>
             <Row>
@@ -165,11 +167,14 @@ export function ImportantDisclosureBackgroundPsp({ form }: AccordianProps) {
                 <BaseInput
                     className="col my-3"
                     required
+                    
                     type="date"
                     name="IMPORTANT_DISCLOSURE_BACKGROUND_DATE.value"
                     placeholder="DATE"
                     label="Date"
                     formik={form}
+                    max={new Date().toISOString().split("T")[0]}
+
                 />
             </Row>
             <Row className="mt-4">

@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import Form from "react-bootstrap/Form";
 import { RouteType } from "../../../../enums/vehicles/routes-type.enum";
 import { useTranslation } from "../../../../hooks/use-translation";

@@ -332,6 +332,7 @@
   "years_of_past_duis": "Years of past DUI's",
   "criminal_history_last_3_years": "Criminal history in last 3 years",
   "MAX_MOVING_VIOLATIONS": "Maximum moving violations",
+  "MIN_MOVING_VIOLATIONS": "Minimum moving violations",
   "accidents_last_5_years": "Accidents within the last 5 years",
   "accident_details": "Accident Details",
   "has_had_license_revoked": "Have any of your license, permit, or privilege to operate a CMV ever been suspended or revoked?",
@@ -1154,6 +1155,7 @@
   "{seconds}_SECONDS_AGO": "{{seconds}} secs ago",
   "YESTERDAY": "Yesterday",
   "CREATE_NEW_MESSAGE": "Create New Message",
+  "NEW_MESSAGE_{from}": "New Message from {{from}}",
   "START_TYPING_TO_SEE_OPTIONS": "Start typing to see options",
   "TYPE_AT_LEAST_{num}_CHARACTERS_TO_SEE_OPTIONS": "Type at least {{num}} characters to see options",
   "NO_MATCHING_RESULTS": "No matching results",
@@ -1721,6 +1723,7 @@
   "VOE_DRIVER_QUES": "Did drive motor vehicle(s) for you?",
   "TYPE_OF_VEHICLE": "What type of vehicle?",
   "REASONS_FOR_LEAVING_EMPLOYMENT": "Reasons for leaving your employment",
+  "MIN_ACCIDENTS": "Minimum number of accidents",
   "VOE_ACCIDENT_NOTE": "ACCIDENTS: Complete the following for any accidents included on your accident register (§390.15(b)) that involved the applicant in the 3 years prior to .",
   "SAFETY_PERFORMANCE_REPORT": "Is there any safety performance history to report?",
   "ACCIDENT_REGISTER": "Is there any accident register history to report?",
@@ -1841,6 +1844,12 @@
   "WAS_EMPLOYED_AS": "Applicant was employed as",
   "CONTACT_US": "contact us",
   "PAST_EMPLOYER_NOT_FOUND": "Past Employer Not Found",
+  "ACCORDIAN_ALERT": "Please go through all the tabs and sign all the forms with required information to proceed with your submission request!",
+  "SIGN_ALL_FORM": "Please Sign all forms in order to proceed",
+  "ERROR_SIGNS_REQUIRED": "Signature is Required",
+  "COMPANY_PREFERENCE": "Company Preferences",
+  "MARK_SURE_ALERT": "Are you sure you want to proceed with your decision?",
   "ACCORDIAN_ALERT": "Please go through all the tabs to proceed with your submission request!  ",
-  "COMPANY_PREFERENCE":"Company Preferences"
+  "DRUG_TEST_PASS": "Drug Test Pass",
+  "YEARS_OF_CDL_EXPERIENCE": "Years"
 }
