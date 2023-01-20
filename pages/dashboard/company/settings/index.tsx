@@ -34,7 +34,7 @@ export default function Settings() {
 			<BaseClickToCopyInput
 				label="JOTFORM_URL"
 				className="my-2"
-				value={`${process.env.FRONTEND_BASE_URL ?? ""}/form/jotform/${user?.company?.id}`}
+				value={`${process.env.FRONTEND_BASE_URL ?? ""}/form/digitalhiringapp/${user?.company?.id}`}
 				tooltipText={t('CLICK_TO_COPY')}
 			/>
 			<CompanyForm

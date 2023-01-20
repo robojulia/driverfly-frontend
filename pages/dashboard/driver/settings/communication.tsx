@@ -73,8 +73,11 @@ export default function Communication() {
                         .values(values)
                         .map(async (preference) => {
                             if (preference.value) {
+                                console.log('preferences', preference);
                                 if (preference.id) preference = await api.preferences.update(user.id, preference.id, preference);
-                                else preference = await api.preferences.create(user.id, preference);
+                                else {
+                                    preference = await api.preferences.create(user.id, preference);
+                                } 
                             }
                             else if (preference.id) {
                                 await api.preferences.remove(user.id, preference.id);

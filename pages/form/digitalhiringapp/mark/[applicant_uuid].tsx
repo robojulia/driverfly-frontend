@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "../../../../hooks/use-translation";
 import ApplicantApi from "../../../api/applicant";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { ApplicantFormStatus } from "../../../../enums/applicants/applicant-form-status.enum";
 import { Button, Col, Row } from "react-bootstrap";
 

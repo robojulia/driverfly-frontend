@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
@@ -83,7 +83,7 @@ export function EmploymentHistory() {
 					/>
 				</Row>
 				{!!form.values?.is_current_employed && (
-					<Row className="single-past-employer-items my-5 pb-5">
+					<div className="single-past-employer-items my-5 pb-5 px-2">
 						<Row className={styles.bold}>
 							<h6
 								className={`${styles.heading__sty} ${styles.align__text_left}`}
@@ -186,6 +186,7 @@ export function EmploymentHistory() {
 								className="col-md-6 my-3"
 								required
 								name="employer.zip_code"
+								type="number"
 								placeholder="zip_code"
 								label="zip_code"
 								formik={form}
@@ -221,7 +222,7 @@ export function EmploymentHistory() {
 								formik={form}
 							/>
 						</Row>
-					</Row>
+					</div>
 				)}
 
 				<Row className="mt-5">
