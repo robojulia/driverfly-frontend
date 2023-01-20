@@ -3,7 +3,6 @@ import { Table } from "react-bootstrap";
 import { useTranslation } from "../../hooks/use-translation";
 import { ApplicantDac } from "../../enums/applicants/applicant-dac.enum";
 import ViewCard from "../view-details/view-card";
-import { ViewApplicantDetailProps } from "../../types/applicant/view-application-detail-props.type";
 import { ApplicantDacEntity } from "../../models/applicant/applicant-dac.entity";
 import BaseCheck from "../forms/base-check";
 import { ApplicantEntity } from "../../models/applicant";
