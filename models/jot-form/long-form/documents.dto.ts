@@ -1,6 +1,5 @@
 import * as yup from "yup";
 import { DocumentVisibility } from "../../../enums/documents/document-visibility.enum";
-import { ApplicantExtrasEntity } from "../../applicant";
 import { DocumentEntity } from "../../documents/document.entity";
 
 export class DocumentsDto {

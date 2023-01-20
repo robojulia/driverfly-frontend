@@ -11,7 +11,7 @@ export function CameraComponent() {
         method: { stepBack }
     }: JotFormContextType = useContext(JotformContext);
     const camera = useRef(null);
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState<string>(null);
 
     const { t } = useTranslation();
 
