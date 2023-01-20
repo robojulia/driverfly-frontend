@@ -24,12 +24,12 @@ export default function ApplicantWorkHistory({ applicant }: ApplicantWorkHistory
                 <>
                     {applicant.employers?.map((e, i) => (
                         <Accordion>
-                            <AccordionSummary
+                            <AccordionSummary className='p-0'
                                 expandIcon={<ArrowsExpand />}
                             >
                                 {e.name || t("UNKNOWN")}
                             </AccordionSummary>
-                            <AccordionDetails>
+                            <AccordionDetails className='p-0'>
                                 <ViewDetails
                                     key={i}
                                     default={t("NOT_ANSWERED")}
