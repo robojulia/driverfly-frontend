@@ -6,25 +6,26 @@ import ViewCard from "../view-details/view-card";
 import { ViewApplicantDetailProps } from "../../types/applicant/view-application-detail-props.type";
 import { ApplicantDacEntity } from "../../models/applicant/applicant-dac.entity";
 import BaseCheck from "../forms/base-check";
+import { ApplicantEntity } from "../../models/applicant";
 
-export interface ApplicantDacProps extends ViewApplicantDetailProps { }
+export interface ApplicantDacProps extends ViewApplicantDetailProps {
+    applicant: ApplicantEntity;
+    type: any;
+    dac?: ApplicantDacEntity
+}
 
-const ViewApplicantDAC = ({ applicant }: ApplicantDacProps, type: any, dac?: ApplicantDacEntity) => {
+const ViewApplicantDAC = ({ applicant, type, dac }: ApplicantDacProps) => {
 
     const { t } = useTranslation();
-    const data: ApplicantDacEntity = { type }
-    if (dac) {
-        data.id = dac.id
-        data.value = dac.value
-    }
+
     return (
         <>
             <ViewCard title={t("APPLICANT_DAC")}>
                 <Table striped>
                     <tbody>
                         {
-                            Object.values(ApplicantDac).map((value: ApplicantDac, i) => {
-                                const dac: ApplicantDacEntity = applicant?.dac?.find(v => (v.type === value))
+                            Object.values(ApplicantDac)?.map((value, i) => {
+                                dac = applicant?.dac?.find(v => (v?.type === value))
                                 return (
                                     <tr key={i}>
                                         <td> {t(`ApplicantDac.${value}`)}</td>
@@ -32,7 +33,7 @@ const ViewApplicantDAC = ({ applicant }: ApplicantDacProps, type: any, dac?: App
                                             <BaseCheck
                                                 readOnly
                                                 disabled
-                                                checked={dac?.type && dac.type == value && dac.value}
+                                                checked={dac?.type && dac?.type == value && dac?.value}
                                             />
                                         </td>
 
