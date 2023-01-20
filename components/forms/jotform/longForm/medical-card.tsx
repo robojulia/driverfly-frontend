@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Form from "react-bootstrap/Form";
 import styles from "../../../../styles/digitalhiringapp.module.css";
 import { Button, Col, Row } from "react-bootstrap";
@@ -9,7 +9,8 @@ import FileInput from "../../file-input";
 import { DocumentsDto } from "../../../../models/jot-form/long-form/documents.dto";
 import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-document-type.enum";
 import { DocumentEntity } from "../../../../models/documents/document.entity";
-
+import { CameraComponent } from './camera'
+import BaseCheck from "../../base-check";
 export function MedicalCard() {
 	const {
 		state: { applicant },
@@ -50,41 +51,53 @@ export function MedicalCard() {
 				...(new DocumentEntity()),
 				type: ApplicantDocumentType.MEDICAL_CARD,
 			},
+			mediaOptions: false
 		});
 	}, [applicant]);
 
-	// useEffect(() => {
-	// 	console.log("form errors", form.errors);
-	// 	console.log("form valuez", form.values);
-	// 	console.log("form applicant", applicant);
-	// }, [form.errors, form.values]);
 
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row>
 				<h3>{t("MEDICAL_CARD_UPLOAD_TITLE")}</h3>
 			</Row>
+			<BaseCheck
+				className="mt-2 col float-left"
+				label="MEDIA_PREFERENCE"
+				name="mediaOptions"
+				formik={form}
+			/>
+
 			<Row className={`${styles.align__text_left} ${styles.bold}`}>
-				<FileInput
-					className="my-3"
-					name="document"
-					accept="application/pdf"
-					allowedSizeInByte={3000000}
-					formik={form}
-				/>
+				{
+					Boolean(form.values.mediaOptions) ? (
+						<CameraComponent />
+					) : (
+						<FileInput
+							className="my-3"
+							name="document"
+							accept="application/pdf"
+							allowedSizeInByte={3000000}
+							formik={form} />
+					)
+				}
+
 			</Row>
 			<Row className="mt-4">
+
 				<Col>
 					<Button className="float-right" type="reset">
 						{t("BACK")}
 					</Button>
 				</Col>
 
+
 				<Col>
 					<Button className="float-left" type="submit">
 						{t("NEXT")}
 					</Button>
 				</Col>
+
 			</Row>
 		</Form>
 	)
