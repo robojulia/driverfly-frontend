@@ -5,43 +5,42 @@ import { ApplicantDac } from "../../enums/applicants/applicant-dac.enum";
 import ViewCard from "../view-details/view-card";
 import { ApplicantDacEntity } from "../../models/applicant/applicant-dac.entity";
 import BaseCheck from "../forms/base-check";
-import { ApplicantEntity } from "../../models/applicant";
+import { ViewApplicantDetailProps } from "../../types/applicant/view-application-detail-props.type";
 
-export interface ApplicantDacProps {
-    applicant: ApplicantEntity;
-    dac?: ApplicantDacEntity
-}
+export interface ApplicantDacProps extends ViewApplicantDetailProps { }
 
-const ViewApplicantDAC = ({ applicant, dac }: ApplicantDacProps) => {
+const ViewApplicantDAC = ({ applicant }: ApplicantDacProps) => {
 
     const { t } = useTranslation();
 
     return (
-        <>
-            <ViewCard title={t("APPLICANT_DAC")}>
-                <Table striped>
-                    <tbody>
-                        {
-                            Object.values(ApplicantDac)?.map((value, i) => {
-                                dac = applicant?.dac?.find(v => (v?.type === value))
-                                return (
-                                    <tr key={i}>
-                                        <td> {t(`ApplicantDac.${value}`)}</td>
-                                        <td className="text-right">
-                                            <BaseCheck
-                                                readOnly
-                                                disabled
-                                                checked={dac?.type && dac?.type == value && dac?.value}
-                                            />
-                                        </td>
-                                    </tr>
-                                )
-                            })
-                        }
-                    </tbody>
-                </Table>
-            </ViewCard>
-        </>
+        <ViewCard title={t("APPLICANT_DAC")}>
+            <Table striped>
+                <tbody>
+                    {
+                        Object.values(ApplicantDac)?.map((value, i) => {
+                            const dac: ApplicantDacEntity = applicant?.dac?.find(v => (v?.type === value))
+                            return (
+                                <tr key={i}>
+                                    <td> {t(`ApplicantDac.${value}`)}</td>
+                                    <td className="text-right">
+                                        <BaseCheck
+                                            readOnly
+                                            disabled
+                                            checked={
+                                                Boolean(dac?.type)
+                                                && dac?.type == value
+                                                && Boolean(dac?.value)
+                                            }
+                                        />
+                                    </td>
+                                </tr>
+                            )
+                        })
+                    }
+                </tbody>
+            </Table>
+        </ViewCard>
     );
 };
 
