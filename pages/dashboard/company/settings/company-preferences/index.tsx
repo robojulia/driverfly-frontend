@@ -5,7 +5,6 @@ import BaseClickToCopyInput from "../../../../../components/forms/base-click-to-
 import { DriverLicenseType } from "../../../../../enums/users/driver-license-type.enum";
 
 import { useFormik } from "formik";
-import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../../../hooks/use-auth";
 import CompanyApi from "../../../../api/company";
@@ -142,23 +141,16 @@ export default function CompanyPreference() {
     // console.log("form errors", form.errors);
   }, [form]);
 
-  useEffectAsync(async () => {
-    const company_jotform_url = `${process.env.FRONTEND_BASE_URL ?? ""
-      }form/jotform/${user?.company?.id}`;
-    form.setFieldValue("jotform_url", company_jotform_url);
-  }, []);
 
   return (
     <>
       <PageLayout title="COMPANY_PREFERENCE">
         <BaseClickToCopyInput
           label="JOTFORM_URL"
-          name="jotform_url"
           className="my-2 border p-3 rounded"
-          value={`${process.env.FRONTEND_BASE_URL ?? ""}form/jotform/${user?.company?.id
+          value={`${process.env.FRONTEND_BASE_URL ?? ""}form/digitalhiringapp/${user?.company?.id
             }`}
           tooltipText={t("CLICK_TO_COPY")}
-          formik={form}
         />
 
         <form onSubmit={form.handleSubmit}>
