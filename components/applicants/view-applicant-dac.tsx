@@ -8,13 +8,12 @@ import { ApplicantDacEntity } from "../../models/applicant/applicant-dac.entity"
 import BaseCheck from "../forms/base-check";
 import { ApplicantEntity } from "../../models/applicant";
 
-export interface ApplicantDacProps extends ViewApplicantDetailProps {
+export interface ApplicantDacProps {
     applicant: ApplicantEntity;
-    type: any;
     dac?: ApplicantDacEntity
 }
 
-const ViewApplicantDAC = ({ applicant, type, dac }: ApplicantDacProps) => {
+const ViewApplicantDAC = ({ applicant, dac }: ApplicantDacProps) => {
 
     const { t } = useTranslation();
 
@@ -36,7 +35,6 @@ const ViewApplicantDAC = ({ applicant, type, dac }: ApplicantDacProps) => {
                                                 checked={dac?.type && dac?.type == value && dac?.value}
                                             />
                                         </td>
-
                                     </tr>
                                 )
                             })
