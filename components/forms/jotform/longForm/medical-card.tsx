@@ -62,7 +62,7 @@ export function MedicalCard() {
 				<h3>{t("MEDICAL_CARD_UPLOAD_TITLE")}</h3>
 			</Row>
 			<BaseCheck
-				className="mt-2 col float-left"
+				className="my-3 col float-left p-0"
 				label="MEDIA_PREFERENCE"
 				name="mediaOptions"
 				formik={form}
@@ -84,14 +84,11 @@ export function MedicalCard() {
 
 			</Row>
 			<Row className="mt-4">
-
 				<Col>
 					<Button className="float-right" type="reset">
 						{t("BACK")}
 					</Button>
 				</Col>
-
-
 				<Col>
 					<Button className="float-left" type="submit">
 						{t("NEXT")}

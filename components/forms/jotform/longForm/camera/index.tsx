@@ -26,13 +26,11 @@ export function CameraComponent() {
     }
     return (
         <Form>
-
-            <Row className={`${styles.align__text_left} ${styles.bold}`}>
+            <div className={`${styles.align__text_left} ${styles.bold}`}>
                 {
                     !image ? (
-                        <Row style={{ position: 'relative' }}>
-
-                            <div style={{ zIndex: '1', height: '60vh' }}>
+                        <Row className={styles.camera_container_main}>
+                            <div className={styles.camera_container}>
                                 <Camera ref={camera}
                                     facingMode="environment"
                                     errorMessages={{
@@ -42,30 +40,19 @@ export function CameraComponent() {
                                         canvas: ""
                                     }} />
                             </div>
-                            <Col style={{ zIndex: '2' }}>
-                                <Button
-                                    style={{
-                                        borderRadius: '50%',
-                                        height: '80px',
-                                        width: '80px',
-                                        position: 'absolute',
-                                        marginBottom: '0',
-                                        marginLeft: 0,
-                                        transform: 'translate(400%, -110%)'
-                                    }}
-                                    onClick={handleCameraEvents}>{t('CAPTURE')}</Button>
 
-                            </Col>
+                            <Button
+                                className={styles.capture_btn}
+                                onClick={handleCameraEvents}>{t('CAPTURE')}</Button>
                         </Row>
                     ) : (
                         <Row>
                             <img src={image} alt='Taken photo' />
-                            <Row className="mt-2 mb-2">
-
-                                <Col className="text-center float-right">
+                            <Row className="my-3">
+                                <Col className="text-center">
                                     <Button onClick={() => setImage(null)}>{t('NEW_IMAGE')}</Button>
                                 </Col>
-                                <Col className="text-center float-left">
+                                <Col className="text-center">
                                     <Button onClick={blockerAlert}>{t('UPLOAD_THIS_IMAGE')}</Button>
                                 </Col>
                             </Row>
@@ -73,9 +60,7 @@ export function CameraComponent() {
                         </Row>
                     )
                 }
-
-            </Row>
-
+            </div>
         </Form>
     )
 }
