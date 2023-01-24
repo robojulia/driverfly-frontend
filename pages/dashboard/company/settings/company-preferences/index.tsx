@@ -5,7 +5,6 @@ import BaseClickToCopyInput from "../../../../../components/forms/base-click-to-
 import { DriverLicenseType } from "../../../../../enums/users/driver-license-type.enum";
 
 import { useFormik } from "formik";
-import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../../../hooks/use-auth";
 import CompanyApi from "../../../../api/company";
@@ -79,7 +78,7 @@ export default function CompanyPreference() {
       try {
         const preferences = await Promise.all(
           Object.values(values).map(async (preference) => {
-			console.log('preference ----', preference);
+            console.log('preference ----', preference);
             if (preference.value) {
               if (preference.id)
                 preference = await api.preferences.update(
@@ -126,11 +125,11 @@ export default function CompanyPreference() {
    */
   const populateForm = function (preferences) {
     preferences.forEach((v) => {
-		console.log('v.label', v)
+      console.log('v.label', v)
       const label = v.label?.toLowerCase();
       if (label in form.values) {
         form.initialValues[label] = v;
-		// console.log('v.label', label, v)
+        // console.log('v.label', label, v)
         form.setFieldValue(label, v);
       }
     });
@@ -142,25 +141,16 @@ export default function CompanyPreference() {
     // console.log("form errors", form.errors);
   }, [form]);
 
-  useEffectAsync(async () => {
-    const company_jotform_url = `${
-      process.env.FRONTEND_BASE_URL ?? ""
-    }form/jotform/${user?.company?.id}`;
-    form.setFieldValue("jotform_url", company_jotform_url);
-  }, []);
 
   return (
     <>
       <PageLayout title="COMPANY_PREFERENCE">
         <BaseClickToCopyInput
           label="JOTFORM_URL"
-          name="jotform_url"
           className="my-2 border p-3 rounded"
-          value={`${process.env.FRONTEND_BASE_URL ?? ""}form/jotform/${
-            user?.company?.id
-          }`}
+          value={`${process.env.FRONTEND_BASE_URL ?? ""}form/digitalhiringapp/${user?.company?.id
+            }`}
           tooltipText={t("CLICK_TO_COPY")}
-          formik={form}
         />
 
         <form onSubmit={form.handleSubmit}>
