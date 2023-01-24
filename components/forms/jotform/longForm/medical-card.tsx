@@ -71,7 +71,7 @@ export function MedicalCard() {
 			<Row className={`${styles.align__text_left} ${styles.bold}`}>
 				{
 					Boolean(form.values.mediaOptions) ? (
-						<CameraComponent />
+						<CameraComponent form={form} />
 					) : (
 						<FileInput
 							className="my-3"

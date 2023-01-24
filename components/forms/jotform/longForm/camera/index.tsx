@@ -1,29 +1,39 @@
-import { useContext, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Form from "react-bootstrap/Form";
 import styles from "../../../../../styles/digitalhiringapp.module.css";
 import { Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import { Camera } from "react-camera-pro";
-import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
+import { FormikInterface } from "../../../../../utils/formik";
+interface CameraCompProps {
+    form?: FormikInterface<any>
+}
 
-export function CameraComponent() {
-    const {
-        method: { stepBack }
-    }: JotFormContextType = useContext(JotformContext);
+export function CameraComponent({ form }: CameraCompProps) {
+
     const camera = useRef(null);
     const [image, setImage] = useState<string>(null);
-
+    const date = new Date()
     const { t } = useTranslation();
 
     const handleCameraEvents = () => {
         const img = camera.current.takePhoto()
         setImage(img)
-        console.log(img)
+
+        let extensionStart = img.indexOf("/") + 1;
+        let extensionEnd = img.indexOf(";");
+        let extension = img.slice(extensionStart, extensionEnd);
+
+
+        form.setFieldValue("document.file_base64", img)
+        form.setFieldValue("document.mime_type", `${extension}`)
+        form.setFieldValue("document.name", `${date.toISOString()}.${extension}`)
+
     }
-    const blockerAlert = () => {
-        alert(`${t('CAMERA_BLOCKER')}`)
-        stepBack()
-    }
+    useEffect(() => {
+        console.log("form valuessssssss useEffect", form.values)
+
+    }, [form.values])
     return (
         <Form>
             <div className={`${styles.align__text_left} ${styles.bold}`}>
@@ -48,13 +58,13 @@ export function CameraComponent() {
                     ) : (
                         <Row>
                             <img src={image} alt='Taken photo' />
-                            <Row className="my-3">
-                                <Col className="text-center">
-                                    <Button onClick={() => setImage(null)}>{t('NEW_IMAGE')}</Button>
-                                </Col>
+                            <Row className="my-3 ml-1 p-2">
+                                {/* <Col className="text-center"> */}
+                                <Button className="p-2" onClick={() => setImage(null)}>{t('NEW_IMAGE')}</Button>
+                                {/* </Col>
                                 <Col className="text-center">
                                     <Button onClick={blockerAlert}>{t('UPLOAD_THIS_IMAGE')}</Button>
-                                </Col>
+                                </Col> */}
                             </Row>
 
                         </Row>
