@@ -2,7 +2,7 @@ import FullLayout from "../../../../components/dashboard/layouts/full-layout";
 import { Container, Row, Col } from 'react-bootstrap';
 import JobApi from '../../../api/job';
 import { ChangeEvent, useState } from 'react';
-import jobsContext from "../../../../context/job-context"
+import JobContext from "../../../../context/job-context"
 import JobsList from "../../../../components/find-jobs/job-list";
 import ResultCount from "../../../../components/find-jobs/result-count"
 import Filters from "../../../../components/dashboard/driver/find-job/filters";
@@ -75,7 +75,7 @@ export default function FindJobs() {
         <PageLayout
             title="FIND_JOBS"
         >
-            <jobsContext.Provider value={{
+            <JobContext.Provider value={{
                 state: {
                     jobs,
                     pagingMeta,
@@ -113,7 +113,7 @@ export default function FindJobs() {
                         </Row>
                     }
                 </div>
-            </jobsContext.Provider>
+            </JobContext.Provider>
         </PageLayout>
     )
 };

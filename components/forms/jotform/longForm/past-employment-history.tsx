@@ -1,36 +1,41 @@
-import React, { useContext, useEffect } from "react";
-import styles from "../../../../styles/jotform.module.css";
+import { useContext, useEffect } from "react";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
 import BaseInput from "../../base-input";
 import BaseInputPhone from "../../base-input-phone";
-import BaseSelect from "../../base-select";
 import BaseCheck from "../../base-check";
-import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferences.enum";
-import { PastEmploymentHistoryDto } from "../../../../models/jot-form/long-form/past-employment-history.dto";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import jotformContext from "../../../../context/jotform-context";
-import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
-import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import StateSelect from "../../state-select";
-
-export interface PastEmploymentHistoryProps extends PageProps { }
+import { DashCircle, PlusCircle } from "react-bootstrap-icons";
+import { PastEmploymentPageDto } from "../../../../models/jot-form/long-form/past-employment-page.dto";
+import { PastEmploymentHistoryDto } from "../../../../models/jot-form/long-form/past-employment-history/index.dto";
+import { ApplicantEmployerEntity } from "../../../../models/applicant";
 
 export function PastEmploymentHistory() {
 
 	const {
-		state: { applicant, applicantExtras },
-		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
-	} = useContext(jotformContext);
+		state: { applicant },
+		method: { setApplicant, stepNext, stepBack },
+	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 	const form = useFormik({
-		initialValues: new PastEmploymentHistoryDto(),
-		validationSchema: PastEmploymentHistoryDto.yupSchema(),
+		initialValues: new PastEmploymentPageDto(),
+		validationSchema: PastEmploymentPageDto.yupSchema(),
 		onSubmit: (values) => {
-			const { PAST_EMPLOYER } = values;
-			updateApplicantExtras(PAST_EMPLOYER);
+			const { employers } = values;
+
+			const employer: ApplicantEmployerEntity = applicant.employers?.find(v => !!v.is_current)
+
+			if (employer) employers.push(employer)
+
+			setApplicant({
+				...applicant,
+				employers
+			});
+
 			stepNext();
 		},
 		onReset: (values) => {
@@ -39,22 +44,17 @@ export function PastEmploymentHistory() {
 	});
 
 	useEffect(() => {
-		const apx = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.PAST_EMPLOYER
-		);
+		const employers: PastEmploymentHistoryDto[] = applicant.employers?.filter(v => !!!v.is_current) as PastEmploymentHistoryDto[]
+
 		form.setValues({
 			...form.values,
-			PAST_EMPLOYER: !!apx?.type
-				? apx
-				: new ApplicantExtrasEntity(ApplicantExtras.PAST_EMPLOYER),
-			is_previous_employed: !!apx?.value,
+			employers: employers.length > 0 ? employers : [{
+				...(new PastEmploymentHistoryDto()),
+				is_current: false
+			}],
+			is_previous_employed: !!employers?.length,
 		});
-	}, [applicantExtras]);
-
-	useEffect(() => {
-		console.log("values", form.values);
-		console.log("error", form.errors);
-	}, [form.values, form.errors]);
+	}, [applicant]);
 
 	return (
 		<>
@@ -69,138 +69,186 @@ export function PastEmploymentHistory() {
 				</p>
 				<Row className={styles.align__text_left}>
 					<BaseCheck
-						className="mt-2 col-md-6 float-left"
+						className="mt-2 col-md-8 float-left"
 						name="is_previous_employed"
 						label="PREVIOUSLY_EMPLOYED"
 						formik={form}
 					/>
 				</Row>
-				{!!form.values.is_previous_employed && (
+
+				{(!!form?.values?.is_previous_employed && form?.values?.employers?.length > 0) &&
 					<>
-						<Row>
-							<BaseCheck
-								className="mt-3 col-md-6 float-left"
-								required
-								name="PAST_EMPLOYER.value.authorize"
-								label="CONTACT_AUTHORIZATION"
-								formik={form}
-							/>
-							<BaseInput
-								className="col-md-6 my-3"
-								name="PAST_EMPLOYER.value.previous_company_manager_name"
-								label="PREVIOUS_MANAGER_NAME"
-								formik={form}
-							/>
-						</Row>
-						<Row>
-							<BaseInputPhone
-								className="col-md-6 my-3"
-								name="PAST_EMPLOYER.value.previous_company_phone_number"
-								placeholder="phone"
-								label="PREVIOUS_COMPANY_PHONE_NUMBER"
-								formik={form}
-							/>
-							<BaseInput
-								className="col-md-6 my-3"
-								required
-								name="PAST_EMPLOYER.value.previous_company_email"
-								label="PREVIOUS_COMPANY_EMAIL"
-								placeholder="email"
-								formik={form}
-							/>
-						</Row>
-						<Row>
-							<BaseInput
-								className="col-md-6 my-3"
-								required
-								type="date"
-								name="PAST_EMPLOYER.value.start_date"
-								label="START_DATE"
-								formik={form}
-							/>
-							<BaseInput
-								className="col-md-6 my-3"
-								required
-								type="date"
-								name="PAST_EMPLOYER.value.end_date"
-								label="END_DATE"
-								formik={form}
-							/>
-						</Row>
-						<Row>
-							<h6
-								className={`${styles.align__text_left} ${styles.heading__sty}`}>
-								{t("ADDRESS_PAST_COMPANY")}
-							</h6>
-						</Row>
-						<Row>
-							<BaseInput
-								className="col-md-6 my-3"
-								required
-								name="PAST_EMPLOYER.value.previous_company_street_address_line_1"
-								placeholder="ADDRESS_LINE_1"
-								label="ADDRESS_LINE_1"
-								formik={form}
-							/>
-							<BaseInput
-								className="col-md-6 my-3"
-								required
-								name="PAST_EMPLOYER.value.previous_company_street_address_line_2"
-								placeholder="ADDRESS_LINE_2"
-								label="ADDRESS_LINE_2"
-								formik={form}
-							/>
+						{form?.values?.employers?.map((entity, i) => (
+							<div key={i} className="single-past-employer-items my-3 px-2">
+								<div className="py-3">
+									<Row>
+										<BaseCheck
+											className="mt-3 col-md-12 float-left"
+											required
+											name={`employers[${i}].can_contact`}
+											label="CONTACT_AUTHORIZATION"
+											formik={form}
+										/>
+									</Row>
+									<Row className={styles.bold}>
+										<BaseInput
+											className="col-md-6 my-3"
+											name={`employers[${i}].name`}
+											label="PREVIOUS_COMPANY_NAME"
+											required
+											formik={form}
+										/>
+										<BaseInput
+											className="col-md-6 my-3"
+											name={`employers[${i}].manager_name`}
+											label="PREVIOUS_MANAGER_NAME"
+											required
+											formik={form}
+										/>
+									</Row>
+									<Row className={styles.bold}>
+										<BaseInputPhone
+											className="col-md-6 my-3"
+											name={`employers[${i}].phone`}
+											placeholder="phone"
+											label="PREVIOUS_COMPANY_PHONE_NUMBER"
+											formik={form}
+										/>
+										<BaseInput
+											className="col-md-6 my-3"
+											required
+											name={`employers[${i}].email`}
+											label="PREVIOUS_COMPANY_EMAIL"
+											placeholder="email"
+											formik={form}
+										/>
+									</Row>
+									<Row className={styles.bold}>
+										<BaseInput
+											className="col-md-6 my-3"
+											required
+											type="date"
+											name={`employers[${i}].start_at`}
+											label="START_DATE"
+											formik={form}
+										/>
+										<BaseInput
+											className="col-md-6 my-3"
+											required
+											type="date"
+											name={`employers[${i}].end_at`}
+											label="END_DATE"
+											formik={form}
+										/>
+									</Row>
+									<Row className={styles.bold}>
+										<p
+											className={`${styles.align__text_left} `} style={{ fontSize: '20px', color: '#000', margin: '15px 0px', fontWeight: '600' }}>
+											{t("ADDRESS_PAST_COMPANY")}
+										</p>
+									</Row>
+									<Row className={styles.bold}>
+										<BaseInput
+											className="col-md-6 my-3"
+											required
+											name={`employers[${i}].address`}
+											placeholder="ADDRESS_LINE_1"
+											label="ADDRESS_LINE_1"
+											formik={form}
+										/>
+										<BaseInput
+											className="col-md-6 my-3"
+											name={`employers[${i}].address_2`}
+											placeholder="ADDRESS_LINE_2"
+											label="ADDRESS_LINE_2"
+											formik={form}
+										/>
 
-							<BaseInput
-								className="col-md-6 my-3"
-								required
-								name="PAST_EMPLOYER.value.previous_company_zipcode"
-								placeholder="zip_code"
-								label="zip_code"
-								formik={form}
-							/>
+										<BaseInput
+											className="col-md-6 my-3"
+											required
+											name={`employers[${i}].zip_code`}
+											type="number"
+											placeholder="zip_code"
+											label="zip_code"
+											formik={form}
+										/>
 
-							<BaseInput
-								className="col-md-6 my-3"
-								required
-								name="PAST_EMPLOYER.value.city"
-								label="City"
-								formik={form}
-							/>
+										<BaseInput
+											className="col-md-6 my-3"
+											required
+											name={`employers[${i}].city`}
+											label="City"
+											formik={form}
+										/>
 
-							<StateSelect
-								className="col my-3"
-								required
-								label="STATE"
-								name="PAST_EMPLOYER.value.state"
-								placeholder="STATE"
-								formik={form}
-							/>
-						</Row>
-						<Row >
-							<BaseSelect
-								className="col-12 my-3"
-								required
-								labelPrefix="BooleanPreferenceType"
-								enumType={BooleanPreferenceType}
-								name="PAST_EMPLOYER.value.fmcsr"
-								placeholder="CHOOSE"
-								label="FMCR_QUESTION"
-								formik={form}
-							/>
-							<BaseSelect
-								className="col-12 my-3"
-								required
-								labelPrefix="BooleanPreferenceType"
-								enumType={BooleanPreferenceType}
-								name="PAST_EMPLOYER.value.fcr"
-								placeholder="CHOOSE"
-								label="JOB_DESIGNATED_CURRENT_COMPANY"
-								formik={form}
-							/>
-						</Row>
+										<StateSelect
+											className="col my-3"
+											required
+											label="STATE"
+											name={`employers[${i}].state`}
+											placeholder="STATE"
+											formik={form}
+										/>
+									</Row>
+									<Row >
+										<BaseCheck
+											className="mt-2 col-md-6 float-left"
+											name={`employers[${i}].is_subject_to_fmcsrs`}
+											label="FMCR_QUESTION"
+											formik={form}
+										/>
+										<BaseCheck
+											className="mt-2 col-md-6 float-left"
+											name={`employers[${i}].is_subject_to_drug_tests`}
+											label="JOB_DESIGNATED_CURRENT_COMPANY"
+											formik={form}
+										/>
+									</Row>
+								</div>
+								<Button
+									className="rounded-lg"
+									variant="outline-danger close_btn w-25 mx-auto d-block my-2"
+									onClick={() =>
+										form.setValues({
+											...form.values,
+											employers: form.values?.employers?.filter((v, idx) => i != idx),
+										})
+									}
+								>
+									<DashCircle />
+								</Button>
+								<div className='Row' style={{ height: '3px', borderBottom: 'solid 2px #8d8c8c', marginTop: '0px' }}></div >
+							</div>
+						))}
 					</>
-				)}
+				}
+				<Row>
+					{!!form?.values?.is_previous_employed && (
+						<>
+							<Col className="mt-2">
+								<Button
+									className="w-100 py-2"
+									size="sm"
+									onClick={() =>
+										form.setFieldValue("employers", [
+											...(form.values?.employers || []),
+											{
+												...(new PastEmploymentHistoryDto()),
+												is_current: false
+											},
+										])
+									}
+								>
+									<PlusCircle /> {t("ADD_PAST_EMPLOYMENT_HISTORY")}
+								</Button>
+							</Col>
+						</>
+					)}
+				</Row>
+
+
+
 				<Row className="mt-5">
 					<Col>
 						<Button className="float-right" type="reset">

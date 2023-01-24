@@ -1,28 +1,28 @@
-import React, { useContext, useEffect, useState } from "react";
-import styles from "../../../../styles/jotform.module.css";
-import { Form, Button, Col, Row, Table } from "react-bootstrap";
+import { useContext, useEffect, useRef, useState } from "react";
+import styles from "../../../../styles/digitalhiringapp.module.css";
+import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
 import BaseInput from "../../base-input";
-import SignaturePad from "react-signature-canvas";
 import SignatureCanvas from "react-signature-canvas";
 import { DriverApplicationDto } from "../../../../models/jot-form/long-form/driver-application.dto";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import jotformContext from "../../../../context/jotform-context";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
-
-export interface DriverApplicationProps extends PageProps { }
 
 export function DriverApplication() {
 	const {
 		state: { applicant, applicantExtras },
-		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
-	} = useContext(jotformContext);
+		method: { setApplicant, updateApplicantExtras, stepNext },
+	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
-	let padRef = React.useRef<SignatureCanvas>(null);
-	const clearSignaturePad = () => padRef?.current?.clear();
+	let padRef = useRef<SignatureCanvas>(null);
+
+	const clearSignatureCanvas = (): void => {
+		padRef?.current?.clear();
+		form.setFieldValue("SIGNATURE.value", null);
+	}
 
 	const form = useFormik({
 		initialValues: new DriverApplicationDto(),
@@ -38,9 +38,6 @@ export function DriverApplication() {
 				console.log(error);
 			}
 		},
-		onReset: () => {
-			stepBack();
-		},
 	});
 
 	const handleSignatureEnd = () => {
@@ -51,7 +48,6 @@ export function DriverApplication() {
 	useEffect(() => {
 		console.log("form.values", form.values);
 		console.log("form.errors", form.errors);
-		console.log("applicant", applicant);
 	}, [form.values, form.errors]);
 
 	useEffect(() => {
@@ -63,18 +59,20 @@ export function DriverApplication() {
 			(v) => v.type === ApplicantExtras.SIGNATURE
 		);
 
-    form.setValues({
-      ...form.values,
-      APPLY_DATE: !!apx?.type
-        ? apx
-        : new ApplicantExtrasEntity(ApplicantExtras.APPLY_DATE),
-      SIGNATURE: !!apx_sign?.type
-        ? padRef?.current?.fromDataURL(apx_sign?.value)
-        : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
-      first_name: first_name || null,
-      last_name: last_name || null,
-    });
-  }, [applicant]);
+		if (apx_sign) padRef?.current?.fromDataURL(apx_sign?.value)
+
+		form.setValues({
+			...form.values,
+			APPLY_DATE: !!apx?.type
+				? apx
+				: new ApplicantExtrasEntity(ApplicantExtras.APPLY_DATE),
+			SIGNATURE: !!apx_sign?.type
+				? apx_sign
+				: new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
+			first_name: first_name || null,
+			last_name: last_name || null,
+		});
+	}, [applicant]);
 
 	return (
 		<>
@@ -83,7 +81,7 @@ export function DriverApplication() {
 					<h1>
 						{t(
 							"{COMPANY_NAME}",
-							{ COMPANY_NAME: "talhatrucking" },
+							{ COMPANY_NAME: applicant?.company?.name },
 							{ translateProps: true }
 						)}
 					</h1>
@@ -92,71 +90,78 @@ export function DriverApplication() {
 					{t("DRIVER_APPLICATION")}
 				</h6>
 				<p className={`${styles.paragraph} ${styles.align__text_left}`}>
-					{t("MVR_AND_DMV_AUTHORIZATION_TO_NAUTILIUS")}
+					{t(
+						"{COMPANY_NAME}_MVR_AND_DMV_AUTHORIZATION",
+						{ COMPANY_NAME: applicant?.company?.name },
+						{ translateProps: true }
+					)}
 				</p>
 
-        <Row className={styles.align__text_left}>
-          <BaseInput
+				<Row className={`${styles.align__text_left} ${styles.bold}`}>
+					<BaseInput
 						className="col-md-6 my-3"
-            required
-            name="first_name"
-            placeholder="FIRST_NAME"
-            label="FIRST_NAME"
-            formik={form}
-          />
-          <BaseInput
+						required
+						name="first_name"
+						placeholder="FIRST_NAME"
+						label="FIRST_NAME"
+						readOnly
+						formik={form}
+					/>
+					<BaseInput
 						className="col-md-6 my-3"
-            required
-            name="last_name"
-            placeholder="LAST_NAME"
-            label="LAST_NAME"
-            formik={form}
-          />
-          <BaseInput
+						required
+						name="last_name"
+						placeholder="LAST_NAME"
+						label="LAST_NAME"
+						readOnly
+						formik={form}
+					/>
+					<BaseInput
 						className="col-md-12 my-3"
-            required
-            type="date"
-            name="APPLY_DATE.value"
-            placeholder="DATE"
-            label="DATE"
-            formik={form}
-          />
-        </Row>
-        <Row className={styles.align__text_left}>
-        <Col className="my-3">
-            <h6>{t("SIGNATURE")}</h6>
+						required
+						type="date"
+						name="APPLY_DATE.value"
+						placeholder="DATE"
+						min={new Date().toISOString().split("T")[0]}
+						label="DATE"
+						formik={form}
+					/>
+				</Row>
+				<Row className={styles.align__text_left}>
+					<Col md="10" className="my-3">
+						<h6 className={styles.bold}>{t("SIGNATURE")}</h6>
+						<SignatureCanvas
+							name="SIGNATURE.value"
+							className="mt-2"
+							required
+							ref={padRef}
+							onEnd={handleSignatureEnd}
+							canvasProps={{
+								style: { border: "1px solid black" },
+								className: "sigCanvas",
+							}}
+						/>
+						{Boolean(form?.errors?.SIGNATURE) && <p className={`h6 text-danger  ${styles.align__text_left}`}><em>{t('ERROR_SIGNS_REQUIRED')}</em></p>}
 
-            <SignaturePad
-              name="SIGNATURE.value"
-              className="mt-2"
-              required
-              ref={padRef}
-              onEnd={handleSignatureEnd}
-              canvasProps={{
-                style: { border: "1px solid black" },
-                className: "sigCanvas",
-              }}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-            <button className="theme-secondary-btn " onClick={clearSignaturePad}>{t("CLEAR")}</button>
-          </Col>
-        </Row>
-        <Row className="mt-3">
-          <Col>
-            <Button className="float-right" type="reset">
-              {t("BACK")}
-            </Button>
-          </Col>
-          <Col>
-            <Button className="float-left" type="submit">
-              {t("NEXT")}
-            </Button>
-          </Col>
-        </Row>
-      </Form>
-    </>
-  );
+					</Col>
+					<Col md="2" className="d-flex align-self-center justify-content-center">
+						<button
+							type="button"
+							className="theme-secondary-btn "
+							onClick={clearSignatureCanvas}
+						>
+							{t("CLEAR")}
+						</button>
+					</Col>
+				</Row>
+				<Row className="mt-3">
+					<Col className="text-center">
+						<Button type="submit">
+							{t("NEXT")}
+						</Button>
+					</Col>
+				</Row>
+			</Form>
+		</>
+	);
 }

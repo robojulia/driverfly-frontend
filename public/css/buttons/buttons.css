@@ -64,7 +64,8 @@
     border-radius: .25rem;
 }
 
-.theme-primary-btn-outline:hover {
+.theme-primary-btn-outline:hover,
+.theme-primary-btn-outline:focus:not(:focus-visible) {
     color: white;
     background: linear-gradient(to bottom right, #1b4454, #2ec8c4) !important;
     border-color: #2da2af;

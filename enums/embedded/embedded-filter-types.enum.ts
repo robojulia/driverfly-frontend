@@ -1,0 +1,9 @@
+export enum EmbeddedFilterTypes {
+    CDL_SCHOOLS = 'CDL_SCHOOLS',
+    HEAVY_HAUL = 'HEAVY_HAUL',
+    OWNER_OPERATOR = 'OWNER_OPERATOR',
+    NEW_HIRES = 'NEW_HIRES',
+    TEAM_DRIVERS = 'TEAM_DRIVERS',
+    OTR_JOBS = 'OTR_JOBS'
+  }
+  

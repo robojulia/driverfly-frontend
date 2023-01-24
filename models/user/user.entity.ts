@@ -9,6 +9,7 @@ import { DocumentEntity } from '../documents/document.entity';
 
 export class UserEntity {
     id?: number;
+    createdBy?: number;
     email?: string;
     name?: string;
     first_name?: string;

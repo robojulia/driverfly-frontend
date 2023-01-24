@@ -1,12 +1,10 @@
 import { useFormik } from "formik";
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import BaseInput from "../../base-input";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import voeFormContextType from "../../../../context/voeform-context";
-import styles from "../../../../styles/jotform.module.css";
-import SignaturePad from "react-signature-canvas";
+import VoeFormContext, { VoeFormContextType } from "../../../../context/voeform-context";
+import styles from "../../../../styles/voe.module.css";
 import SignatureCanvas from "react-signature-canvas";
 import { SubmissionDetailsDto } from "../../../../models/jot-form/voe-form/submission-details.dto";
 import { ApplicantVoeFormEnum } from "../../../../enums/applicants/applicant-voe-form.enum";
@@ -16,161 +14,168 @@ import ApplicantApi from "../../../../pages/api/applicant";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-export interface SubmissionDetailsProps extends PageProps {}
+import { LoaderIcon } from "../../../loading/loader-icon";
 
 export function SubmissionDetails() {
-  const {
-    state: { applicantVoe, uuidVoeToken },
-    method: { updateApplicantVoe, stepBack, stepNext },
-  } = useContext(voeFormContextType);
+	const {
+		state: { applicantVoe, applicant, employer },
+		method: { updateApplicantVoe, stepBack, stepNext },
+	}: VoeFormContextType = useContext(VoeFormContext);
 
-  const { t } = useTranslation();
-  let padRef = React.useRef<SignatureCanvas>(null);
-  const clearSignaturePad = () => padRef?.current?.clear();
+	const { t } = useTranslation();
+	let padRef = useRef<SignatureCanvas>(null);
+	const clearSignatureCanvas = () => padRef?.current?.clear();
 
-  const form = useFormik({
-    initialValues: new SubmissionDetailsDto(),
-    validationSchema: SubmissionDetailsDto.yupSchema(),
-    onSubmit: async (values) => {
-      const { SIGNATURE_VOE, SENDER_INFO } = values;
-      updateApplicantVoe(SIGNATURE_VOE);
-      updateApplicantVoe(SENDER_INFO);
+	const calledOnce = useRef(false);
 
-      const applicantApi = new ApplicantApi();
-      // const filtered_voe = applicantVoe?.filter((v) => !!v.value);
-      try {
-        const response = await applicantApi.voeform.create({
-          uuid_voe_token: uuidVoeToken,
-          applicantVoeFormData: applicantVoe,
-        });
-        toast.success(t(response.msg));
-      } catch (error) {
-        console.log(error);
-        globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
-      }
-      // stepNext();
-    },
-    onReset: (values) => {
-      stepBack();
-    },
-  });
+	const form = useFormik({
+		initialValues: new SubmissionDetailsDto(),
+		validationSchema: SubmissionDetailsDto.yupSchema(),
+		onSubmit: async (values) => {
 
-  const signatureEnd = () => {
-    const signatureValue = padRef.current.toDataURL().toString();
-    form.setFieldValue("SIGNATURE_VOE.value", signatureValue);
-  };
-  useEffect(() => {
-    const apx_sign = applicantVoe?.find(
-      (v) => v.type === ApplicantVoeFormEnum.SIGNATURE_VOE
-    );
-    const apx_sender_info = applicantVoe?.find(
-      (v) => v.type === ApplicantVoeFormEnum.SENDER_INFO
-    );
+			const applicantApi = new ApplicantApi();
+			const filtered_voe = applicantVoe?.filter((v) => !!v.value);
 
-    form.setValues({
-      ...form.values,
-      SIGNATURE_VOE: !!apx_sign?.type
-        ? padRef?.current?.fromDataURL(apx_sign?.value)
-        : new ApplicantVoeFormEntity(ApplicantVoeFormEnum.SIGNATURE_VOE),
+			try {
+				await applicantApi.voeform.create({
+					applicant_uuid_token: applicant?.uuid_token,
+					employer_uuid_token: employer?.uuid_token,
+					applicantVoeFormData: filtered_voe,
+				});
 
-      SENDER_INFO: !!apx_sender_info?.type
-        ? apx_sender_info
-        : new ApplicantVoeFormEntity(ApplicantVoeFormEnum.SENDER_INFO),
-    });
-  }, [applicantVoe]);
+				stepNext()
+			} catch (error) {
+				console.log(error);
+				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
+			}
+		},
+		onReset: (values) => {
+			stepBack();
+		},
+	});
 
-  useEffect(() => {
-    console.log("form values", form.values);
-    console.log("form eror", form.errors);
-  }, [form.values, form.errors]);
+	const signatureEnd = () => {
+		const signatureValue = padRef.current.toDataURL().toString();
+		form.setFieldValue("SIGNATURE_VOE.value", signatureValue);
+	};
 
-  return (
-    <>
-      <ToastContainer />
-      <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-        <Row className={`${styles.align__text_left}`}>
-          <Col>
-            <h6 className={styles.bold}>{t("SIGNATURE")}</h6>
-            <SignaturePad
-              name="SIGNATURE_VOE.value"
-              ref={padRef}
-              onEnd={signatureEnd}
-              canvasProps={{
-                width: 720,
-                height: 200,
-                style: { border: "1px solid black" },
-                className: "sigCanvas",
-              }}
-            />
-          </Col>
-        </Row>
+	useEffect(() => {
+		if (calledOnce.current) return;
 
-        <Row>
-          <Col className={styles.align__text_center}>
-            <button onClick={clearSignaturePad}>{t("CLEAR")}</button>
-          </Col>
-        </Row>
-        <Row className={`${styles.align__text_left} ${styles.bold}`}>
-          <Col>
-            <BaseInput
-              className="mt-3 float-left col-9 pl-0"
-              label="FULL_NAME"
-              name="SENDER_INFO.value.name"
-              formik={form}
-            />
-          </Col>
-          <Col>
-            <BaseInput
-              className="mt-3 float-left col-9"
-              label="TITLE"
-              name="SENDER_INFO.value.title"
-              formik={form}
-            />
-          </Col>
-        </Row>
+		const apx_sign = applicantVoe?.find(
+			(v) => v.type === ApplicantVoeFormEnum.SIGNATURE_VOE
+		);
+		const apx_sender_info = applicantVoe?.find(
+			(v) => v.type === ApplicantVoeFormEnum.SENDER_INFO
+		);
+		form.setValues({
+			...form.values,
+			SIGNATURE_VOE: !!apx_sign?.type
+				? apx_sign
+				: new ApplicantVoeFormEntity(ApplicantVoeFormEnum.SIGNATURE_VOE),
 
-        <Row className={`${styles.align__text_left} ${styles.bold}`}>
-          <Col>
-            <BaseInputPhone
-              className="mt-3 float-left col-9 pl-0"
-              label="PHONE"
-              name="SENDER_INFO.value.phone"
-              formik={form}
-            />
-          </Col>
-          <Col>
-            <BaseInput
-              className="mt-3 float-left col-9"
-              label="EMAIL"
-              name="SENDER_INFO.value.email"
-              formik={form}
-            />
-          </Col>
-        </Row>
+			SENDER_INFO: !!apx_sender_info?.type
+				? apx_sender_info
+				: new ApplicantVoeFormEntity(ApplicantVoeFormEnum.SENDER_INFO),
+		});
 
-        <Row className={`${styles.align__text_left} ${styles.bold}`}>
-          <BaseInput
-            className="mt-3 float-left col-4"
-            label="DATE"
-            name="SENDER_INFO.value.date"
-            type="date"
-            formik={form}
-          />
-        </Row>
+		calledOnce.current = true
+	}, [applicantVoe]);
 
-        <Row className="mt-3">
-          <Col>
-            <Button className="float-right" type="reset">
-              {t("BACK")}
-            </Button>
-          </Col>
-          <Col>
-            <Button className="float-left" type="submit">
-              {t("SUBMIT")}
-            </Button>
-          </Col>
-        </Row>
-      </Form>
-    </>
-  );
+	// useEffect(() => {
+	// 	console.log("form values", form.values);
+	// 	console.log("form eror", form.errors);
+
+	// }, [form.values, form.errors]);
+
+	useEffect(() => {
+		const { SIGNATURE_VOE, SENDER_INFO } = form.values;
+
+		if (SIGNATURE_VOE?.type) updateApplicantVoe(SIGNATURE_VOE);
+		if (SENDER_INFO?.type) updateApplicantVoe(SENDER_INFO);
+	}, [form.values]);
+
+	return (
+		<>
+			<ToastContainer />
+			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+				<Row className={`${styles.align__text_left}`}>
+					<Col md="10">
+						<h6 className={styles.bold}>{t("SIGNATURE")}</h6>
+						<SignatureCanvas
+							name="SIGNATURE_VOE.value"
+							ref={padRef}
+							onEnd={signatureEnd}
+							canvasProps={{
+								width: 720,
+								height: 200,
+								style: { border: "1px solid black" },
+								className: "sigCanvas",
+							}}
+						/>
+					</Col>
+					<Col md="2" className="d-flex align-self-center justify-content-center">
+						<button type="button" className="theme-secondary-btn" onClick={clearSignatureCanvas}>
+							{t("CLEAR")}
+						</button>
+					</Col>
+				</Row>
+				<Row className={`${styles.align__text_left} ${styles.bold}`}>
+					<BaseInput
+						className="my-3 float-left col-md-6"
+						label="FULL_NAME"
+						name="SENDER_INFO.value.name"
+						formik={form}
+					/>
+					<BaseInput
+						className="my-3 float-left col-md-6"
+						label="TITLE"
+						name="SENDER_INFO.value.title"
+						formik={form}
+					/>
+				</Row>
+				<Row className={`${styles.align__text_left} ${styles.bold}`}>
+					<BaseInputPhone
+						className="my-3 float-left col-md-6"
+						label="PHONE"
+						name="SENDER_INFO.value.phone"
+						formik={form}
+					/>
+					<BaseInput
+						className="my-3 float-left col-md-6"
+						label="EMAIL"
+						name="SENDER_INFO.value.email"
+						formik={form}
+					/>
+				</Row>
+
+				<Row className={`${styles.align__text_left} ${styles.bold}`}>
+					<BaseInput
+						className="my-3 float-left col"
+						label="DATE"
+						name="SENDER_INFO.value.date"
+						type="date"
+						formik={form}
+					/>
+				</Row>
+
+				<Row className="my-3">
+					<Col>
+						<Button className="float-right" type="reset">
+							{t("BACK")}
+						</Button>
+					</Col>
+					<Col>
+						<Button
+							disabled={form.isValidating || form.isSubmitting || !form.isValid}
+							className="float-left"
+							type="submit"
+						>
+							{t("SUBMIT")}<LoaderIcon isLoading={!!form?.isSubmitting} />
+						</Button>
+					</Col>
+				</Row>
+			</Form>
+		</>
+	);
 }

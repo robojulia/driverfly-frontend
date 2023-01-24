@@ -4,13 +4,10 @@ import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import BaseCheck from "../../base-check";
 import BaseInput from "../../base-input";
-import { PageProps } from "../../../../types/jotform/page-props.type";
 import jotformContext from "../../../../context/jotform-context";
 import { WorkedBeforeDto } from "../../../../models/jot-form/long-form/worked-before.dto";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
-
-export interface WorkedBeforeProps extends PageProps { }
 
 export function WorkedBefore() {
 	const {
@@ -72,7 +69,7 @@ export function WorkedBefore() {
 			</Row>
 			{form.values?.ALREADY_APPLIED_TO_COMPANY?.value ? (
 				<>
-					<Row>
+					<Row >
 						<Col>
 							<BaseCheck
 								className="my-3 col float-left p-0"
@@ -92,6 +89,7 @@ export function WorkedBefore() {
 									name="ALREADY_WORKED_TO_COMPANY.value.start_date"
 									placeholder="DATE"
 									label="FROM"
+									required
 									formik={form}
 								/>
 								<BaseInput
@@ -99,6 +97,7 @@ export function WorkedBefore() {
 									type="date"
 									name="ALREADY_WORKED_TO_COMPANY.value.end_date"
 									placeholder="DATE"
+									required
 									label="TO"
 									formik={form}
 								/>

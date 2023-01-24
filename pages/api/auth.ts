@@ -1,5 +1,4 @@
 import { ForgotPasswordDto } from "../../models/auth/forgot-password.dto";
-import { JwtRefreshTokenPayload } from "../../models/auth/jwt-refresh-token-payload.interface";
 import { LoginDto } from "../../models/auth/login.dto";
 import { SignUpDto } from "../../models/auth/sign-up.dto";
 import { VerifyEmailDto } from "../../models/auth/verify-email.dto";
@@ -44,7 +43,7 @@ export default class AuthApi extends BaseApi {
         return data;
     }
 
-    async refreshToken(token: string) : Promise<UserEntity> {
+    async refreshToken(token: string): Promise<UserEntity> {
         const { data } = await this.get(`${this.baseUrl}/refresh-token`, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -54,13 +53,13 @@ export default class AuthApi extends BaseApi {
         return data;
     }
 
-    async impersonate(dto: { companyId: number, userId: number }) : Promise<UserEntity> {
+    async impersonate(dto: { companyId: number, userId: number }): Promise<UserEntity> {
         const { data } = await this.post(`${this.baseUrl}/impersonate`, dto);
 
         return data;
     }
 
-    async changeOrganization(dto: { companyId: number }) : Promise<UserEntity> {
+    async changeOrganization(dto: { companyId: number }): Promise<UserEntity> {
         const { data } = await this.get(this.buildUrl(`${this.baseUrl}/change-organization`, dto));
 
         return data;
