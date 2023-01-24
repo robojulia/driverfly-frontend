@@ -1850,5 +1850,6 @@
   "MARK_SURE_ALERT": "Are you sure you want to proceed with your decision?",
   "APPLICANT_DAC":"Applicant DAC",
   "DRUG_TEST_PASS": "Drug Test Pass",
-  "YEARS_OF_CDL_EXPERIENCE": "Years"
+  "YEARS_OF_CDL_EXPERIENCE": "Years",
+  "CONGRATS":"Congrats job created successful"
 }

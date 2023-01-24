@@ -8,18 +8,18 @@ export default function CreateJob() {
     const router = useRouter();
     const { t } = useTranslation();
 
-    const backPath = "/dashboard/company/jobs";
+    const nextPath = "/dashboard/company/jobs/thank-you";
 
-    const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
+    const goBack = () => window.setTimeout(() => router.push(nextPath), 2000);
 
     return (
         <ChildPageLayout
             title={t("CREATE_{name}", { name: "JOB" }, { translateProps: true })}
-            backPath={backPath}
-            >
+            backPath={nextPath}
+        >
             <JobForm
                 onSaveComplete={goBack}
-                />
+            />
         </ChildPageLayout>
     );
 }
