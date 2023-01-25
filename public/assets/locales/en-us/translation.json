@@ -1851,5 +1851,7 @@
   "APPLICANT_DAC":"Applicant DAC",
   "DRUG_TEST_PASS": "Drug Test Pass",
   "YEARS_OF_CDL_EXPERIENCE": "Years",
-  "CONGRATS":"Congrats job created successful"
+  "CONGRATS":"Congrats job created successful",
+  "SHARE_ON_YOUR_FACEBOOK_PAGE":"Share on your Facebook page",
+  "WANT_TO_POST_OUTSIDE_JOB_BOARDS":"Want to post on outside job boards?"
 }

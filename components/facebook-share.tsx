@@ -1,15 +1,16 @@
 import React from 'react';
+import { useTranslation } from '../hooks/use-translation';
 
-const SocialShareButton = ({ postUrl }) => {
+const SocialShareButton = ({ jobUrl }) => {
+    const { t } = useTranslation();
+
     const handleClick = () => {
-        const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${postUrl}`;
+        const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${jobUrl}`;
         window.open(shareUrl, '_blank');
     };
 
     return (
-        <button onClick={handleClick} className="theme-secondary-btn w-75 p-4">
-            Share on your Facebook page
-        </button>
+        <button onClick={handleClick} className="theme-secondary-btn w-100 p-4">{t("SHARE_ON_YOUR_FACEBOOK_PAGE")}</button>
     );
 };
 

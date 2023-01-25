@@ -9,6 +9,7 @@ import { useAuth } from "../../../hooks/use-auth";
 import { BaseFormProps } from "./base-form-props";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { counts, year2Only, year3Only, year5Only, years } from "../../../utils/jobs";
+import router, { useRouter } from 'next/router';
 
 import { PlusCircle } from "react-bootstrap-icons";
 
@@ -423,6 +424,8 @@ export function JobForm(props: JobFormProps) {
             }
             else {
                 job = await jobApi.create(dto);
+                // Navigate to the post page and pass the URL as a prop
+                router.push({ pathname: '/dashboard/company/jobs/thank-you/', query: { id: job.id } });
             }
 
             setShowConfirmationModal(false);
@@ -439,11 +442,6 @@ export function JobForm(props: JobFormProps) {
             if (onSaveError) onSaveError(e);
         }
     }
-
-    // useEffect(() => {
-    //     console.log('errors', form.errors)
-    //     console.log('values', form.values)
-    // }, [form.values, form.errors]);
 
     return (
         <>

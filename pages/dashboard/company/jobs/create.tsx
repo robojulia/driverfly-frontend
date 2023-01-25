@@ -10,7 +10,7 @@ export default function CreateJob() {
 
     const nextPath = "/dashboard/company/jobs/thank-you";
 
-    const goBack = () => window.setTimeout(() => router.push(nextPath), 2000);
+    const goNext = () => window.setTimeout(() => router.push(nextPath), 2000);
 
     return (
         <ChildPageLayout
@@ -18,7 +18,7 @@ export default function CreateJob() {
             backPath={nextPath}
         >
             <JobForm
-                onSaveComplete={goBack}
+                onSaveComplete={goNext}
             />
         </ChildPageLayout>
     );
