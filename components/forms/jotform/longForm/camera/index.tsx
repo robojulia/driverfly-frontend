@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Form from "react-bootstrap/Form";
 import styles from "../../../../../styles/digitalhiringapp.module.css";
 import { Button, Col, Row } from "react-bootstrap";
@@ -13,27 +13,22 @@ export function CameraComponent({ form }: CameraCompProps) {
 
     const camera = useRef(null);
     const [image, setImage] = useState<string>(null);
+
     const date = new Date()
     const { t } = useTranslation();
 
     const handleCameraEvents = () => {
         const img = camera.current.takePhoto()
         setImage(img)
-
         let extensionStart = img.indexOf("/") + 1;
         let extensionEnd = img.indexOf(";");
         let extension = img.slice(extensionStart, extensionEnd);
 
-
-        form.setFieldValue("document.file_base64", img)
-        form.setFieldValue("document.mime_type", `${extension}`)
+        form.setFieldValue("document.file_base64", img.split(',')[1])
+        form.setFieldValue("document.mime_type", `image/${extension}`)
         form.setFieldValue("document.name", `${date.toISOString()}.${extension}`)
 
     }
-    useEffect(() => {
-        console.log("form valuessssssss useEffect", form.values)
-
-    }, [form.values])
     return (
         <Form>
             <div className={`${styles.align__text_left} ${styles.bold}`}>

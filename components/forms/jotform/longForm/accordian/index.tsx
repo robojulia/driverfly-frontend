@@ -41,7 +41,7 @@ export function AccordianPage() {
 					applicantExtras: filtered_extras,
 				});
 
-				if (response) stepNext()
+				// if (response) stepNext()
 			} catch (error) {
 				console.log(error);
 				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
