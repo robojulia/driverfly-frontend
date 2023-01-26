@@ -1,567 +1,548 @@
-@media (max-width:991px) {
-    .hire-driver-item {
-        width: 100% !important;
-    }
+@media (max-width: 991px) {
+  .hire-driver-item {
+    width: 100% !important;
+  }
 
-    .hire-driver-section {
-        flex-direction: column !important;
-    }
+  .hire-driver-section {
+    flex-direction: column !important;
+  }
 }
 
-@media (max-width:767px) {
-    .Slider-container-bg::before {
-        display: none;
-    }
+@media (max-width: 767px) {
+  .Slider-container-bg::before {
+    display: none;
+  }
 
-    .Slider_box {
-        width: 100%;
-    }
+  .Slider_box {
+    width: 100%;
+  }
 
-    .driver-flag {
-        right: 0% !important;
-    }
+  .driver-flag {
+    right: 0% !important;
+  }
 
-    .driver-flag span {
-        font-size: 14px !important;
-        transition: font-size 1s !important;
-    }
+  .driver-flag span {
+    font-size: 14px !important;
+    transition: font-size 1s !important;
+  }
 
-    .driver-flag svg {
-        margin: 0 !important;
-    }
+  .driver-flag svg {
+    margin: 0 !important;
+  }
 }
 
-@media (min-width:769px) and (max-width:990px) {
-
-    .Slider_owl-next,
-    .Slider_owl-prev {
-        top: 60%;
-    }
+@media (min-width: 769px) and (max-width: 990px) {
+  .Slider_owl-next,
+  .Slider_owl-prev {
+    top: 60%;
+  }
 }
 
-@media (min-width:991px) and (max-width:1200px) {
-
-    .Slider_owl-next,
-    .Slider_owl-prev {
-        top: 60%;
-    }
+@media (min-width: 991px) and (max-width: 1200px) {
+  .Slider_owl-next,
+  .Slider_owl-prev {
+    top: 60%;
+  }
 }
 
-@media screen and (max-width:1024px) {
-    .tab-content .media {
-        padding: 30px 10px 25px 10px !important;
-    }
+@media screen and (max-width: 1024px) {
+  .tab-content .media {
+    padding: 30px 10px 25px 10px !important;
+  }
 
-    .media {
-        padding: 30px 15px 15px 15px;
-    }
+  .media {
+    padding: 30px 15px 15px 15px;
+  }
 
-    .signup-driver-section .signup-driver-item h1 {
-        padding: 0px;
-
-    }
-
+  .signup-driver-section .signup-driver-item h1 {
+    padding: 0px;
+  }
 }
 
-@media screen and (max-width:992px) {
-    .logo {
-        width: 50% !important;
-        vertical-align: middle;
-    }
+@media screen and (max-width: 992px) {
+  .logo {
+    width: 50% !important;
+    vertical-align: middle;
+  }
 
-    .header-sec .navbar {
-        width: 50%;
-        position: static;
-        margin-top: 20px;
-    }
+  .header-sec .navbar {
+    width: 50%;
+    position: static;
+    margin-top: 20px;
+  }
 
-    .header-sec .navbar-collapse {
-        width: 100%;
-        text-align: left;
-        left: 0px;
-        top: 140px;
-        background: rgb(0, 0, 0);
-        position: absolute;
-        padding: 25px 0px;
-        z-index: 999999;
-    }
+  .header-sec .navbar-collapse {
+    width: 100%;
+    text-align: left;
+    left: 0px;
+    top: 140px;
+    background: rgb(0, 0, 0);
+    position: absolute;
+    padding: 25px 0px;
+    z-index: 999999;
+  }
 
-    .signup-driver-section .signup-driver-item {
-        width: 100%;
-    }
+  .signup-driver-section .signup-driver-item {
+    width: 100%;
+  }
 }
 
-@media screen and (max-width:768px) {
-
-    img {
-        width: 100% !important;
-    }
-
-    .logo_container img {
-        width: 50% !important;
-    }
-
-    .btn.btn-link {
-        text-align: left;
-        padding: 0px;
-    }
-
-    .hero-search .form-group-search {
-        width: 100%;
-    }
-
-    .header-sec i.fa.fa-bars {
-        color: #fff !important;
-    }
-
-    .hero-search svg {
-        margin-top: 10px;
-    }
-
-    ul.trending-keywords {
-        padding: 0 !important;
-
-    }
-
-    .about-inner {
-        margin-left: 0px;
-    }
-
-    .who-we-serve-sec .col {
-        flex-basis: 100% !important;
-    }
-
-    .who-we-serve-inner {
-        min-height: auto;
-    }
-
-    .box {
-        margin: 100px 0px 20px 25px;
-    }
-
-    .box i.fa.fa-quote-left {
-        font-size: 40px;
-        top: -18px;
-        left: 28px;
-    }
-
-    .partners img {
-        width: 60% !important;
-    }
-
-    .partners {
-        padding: 40px 15px 75px;
-    }
-
-    .footer-logo {
-        width: 209px !important;
-        height: 100%;
-        border: none;
-        object-fit: contain;
-        padding: 40px 15px 40px 0px
-    }
-
-    .footer .col-md-5.pl-5 {
-        padding: 15px !important;
-    }
-
-    .footer-inner {
-        padding: 0px !important;
-    }
-
-    .contact-form .col-sm-12.col-lg-5.pl-0 {
-        padding: 15px !important;
-    }
-
-    .top-outer.bg-white.py-5 {
-        padding: 20px !important;
-    }
-
-    .faq-inner.pl-3 {
-        padding: 0px 0px 30px !important;
-    }
-
-    .footer-inner .nav-link {
-        font-size: 15px;
-    }
-
-    .widget-title {
-        font-size: 16px;
-        white-space: nowrap;
-    }
-
-    .filter-sec .media {
-        display: block;
-    }
-
-    .filter-sec .truck-img {
-        max-width: 100%;
-        margin-bottom: 20px;
-        border: none;
-    }
-
-    .filter-sec .media label.checkbox-inline {
-        display: none;
-    }
-
-    .filter-btn-groups .btn.btn-danger {
-        padding: 10px 20px;
-        margin-bottom: 20px;
-    }
-
-    .filter-btn-groups {
-        align-items: baseline;
-    }
-
-    .filter-inner input.form-control {
-        width: 100% !important;
-    }
-
-    .hero-sec {
-        height: auto;
-        padding: 10px 0px 25px;
-    }
-
-    .hero-inner h1 {
-        font-size: 35px;
-        letter-spacing: 0.5px;
-        line-height: 45px;
-        margin-bottom: 35px;
-    }
-
-    .hero-inner h2 {
-        display: none;
-    }
-
-    .hero-search {
-        display: block;
-        margin: 0px 0px 20px;
-        padding: 0px;
-        background-color: transparent;
-    }
-
-    .hero-search .input-group {
-        width: 100% !important;
-        background: white;
-        margin-bottom: 15px;
-        border-radius: 5px;
-        height: auto;
-    }
-
-    .hero-search .input-group-prepend {
-        top: 14px;
-    }
-
-    .hero-search .filter-inner {
-        border: none;
-        height: 52px;
-        width: 100%;
-        background: white;
-        border-radius: 5px;
-        margin-bottom: 15px;
-    }
-
-    .custom-sel {
-        width: 100% !important;
-        height: 52px !important;
-        margin-bottom: 15px;
-        border-radius: 5px !important;
-
-    }
-
-    .hero-search .input-group input {
-        width: 96%;
-        border: 0px;
-        border-radius: 5px;
-    }
-
-    .form-group-search {
-        padding: 0px !important;
-    }
-
-    .tab-sec .nav-link {
-        padding: 12px 35px;
-    }
-
-    .tab-sec ul.nav.nav-tabs {
-        width: 350px;
-    }
-
-    .tab-sec {
-        padding: 30px 0px;
-    }
-
-    .tab-sec .truck-img {
-        width: 80px !important;
-    }
-
-    .custom-tst .item {
-        width: 100%;
-    }
-
-    .testimonial-sec .about-testominial .custom-tst .item {
-        width: 50px !important;
-    }
-
-    .custom-tst button.owl-next {
-        width: 40px;
-        height: 40px;
-        font-size: 17px !important;
-        position: absolute;
-        right: -24px;
-        top: 45%;
-    }
-
-    .custom-tst button.owl-prev {
-        width: 40px;
-        height: 40px;
-        font-size: 17px !important;
-        position: absolute;
-        left: 2px;
-        top: 45%;
-    }
-
-    .ort-inner .truck-img {
-        max-width: 150px;
-        height: 160px;
-    }
-
-    .ort-inner .media h4 {
-        font-size: 21px;
-    }
-
-    .ort-inner .job-location p {
-        display: flex;
-        align-items: baseline;
-    }
-
-    .ort-inner .job-location {
-        display: unset !important;
-    }
-
-    .ort-general {
-        padding: 50px 0px 35px;
-    }
-
-    .related-job-sec .truck-img {
-        display: none !important;
-    }
-
-    .related-job-sec .media {
-        display: block;
-    }
-
-    .related-job-sec .media h4 {
-        white-space: unset;
-        line-height: 25px;
-    }
-
-    .related-job-sec .btn.btn-outline-danger {
-        display: none;
-    }
-
-    .job-deatails-sec .row {
-        flex-direction: column-reverse;
-    }
-
-    .job-deatails-inner {
-        margin-top: 45px;
-    }
-
-    .ort-btn .theme-primary-btn,
-    .ort-btn .btn.btn-danger {
-        padding: 14px 0px !important;
-        width: 100% !important;
-        margin-top: 5px;
-    }
-
-    .footer-social-icons {
-        padding-top: 0px;
-        margin-bottom: 20px;
-    }
-
-    .media {
-        padding: 30px;
-    }
-
-    .sidebar-inner {
-        padding: 0px;
-    }
-
-    .header-sec {
-        min-height: 100px !important;
-
-    }
-
-    .header-sec .navbar-collapse {
-
-        top: 101px;
-
-    }
-
-    .logo img {
-        height: 100px;
-        max-width: 100px;
-        padding: 0px 0px;
-    }
-
-    .slide___3-Nqo {
-        padding: 10% !important;
-    }
-
-    .signup-driver-section .signup-driver-item h1 {
-        font-size: 32px;
-    }
-
-    .signup-driver-section .signup-driver-left {
-        height: 370px;
-    }
-
-    .signup-driver-section .signup-driver-item {
-        padding: 10px;
-
-    }
-
-    .get-feature-section h1 {
-        font-size: 32px;
-    }
-
-    .testimonial-sec {
-        padding: 40px 0px;
-    }
-
-    .checklist_toggle {
-        display: inline-block;
-    }
-
-    .signup_toggle_btn {
-        display: block !important;
-    }
-
-    .preferred_location {
-        padding: 0px 5px !important;
-    }
-
-    .preferred_location span {
-        display: block;
-    }
-
+@media screen and (max-width: 768px) {
+  img {
+    width: 100% !important;
+  }
+
+  .logo_container img {
+    width: 50% !important;
+  }
+
+  .btn.btn-link {
+    text-align: left;
+    padding: 0px;
+  }
+
+  .hero-search .form-group-search {
+    width: 100%;
+  }
+
+  .header-sec i.fa.fa-bars {
+    color: #fff !important;
+  }
+
+  .hero-search svg {
+    margin-top: 10px;
+  }
+
+  ul.trending-keywords {
+    padding: 0 !important;
+  }
+
+  .about-inner {
+    margin-left: 0px;
+  }
+
+  .who-we-serve-sec .col {
+    flex-basis: 100% !important;
+  }
+
+  .who-we-serve-inner {
+    min-height: auto;
+  }
+
+  .box {
+    margin: 100px 0px 20px 25px;
+  }
+
+  .box i.fa.fa-quote-left {
+    font-size: 40px;
+    top: -18px;
+    left: 28px;
+  }
+
+  .partners img {
+    width: 60% !important;
+  }
+
+  .partners {
+    padding: 40px 15px 75px;
+  }
+
+  .footer-logo {
+    width: 209px !important;
+    height: 100%;
+    border: none;
+    object-fit: contain;
+    padding: 40px 15px 40px 0px;
+  }
+
+  .footer .col-md-5.pl-5 {
+    padding: 15px !important;
+  }
+
+  .footer-inner {
+    padding: 0px !important;
+  }
+
+  .contact-form .col-sm-12.col-lg-5.pl-0 {
+    padding: 15px !important;
+  }
+
+  .top-outer.bg-white.py-5 {
+    padding: 20px !important;
+  }
+
+  .faq-inner.pl-3 {
+    padding: 0px 0px 30px !important;
+  }
+
+  .footer-inner .nav-link {
+    font-size: 15px;
+  }
+
+  .widget-title {
+    font-size: 16px;
+    white-space: nowrap;
+  }
+
+  .filter-sec .media {
+    display: block;
+  }
+
+  .filter-sec .truck-img {
+    max-width: 100%;
+    margin-bottom: 20px;
+    border: none;
+  }
+
+  .filter-sec .media label.checkbox-inline {
+    display: none;
+  }
+
+  .filter-btn-groups .btn.btn-danger {
+    padding: 10px 20px;
+    margin-bottom: 20px;
+  }
+
+  .filter-btn-groups {
+    align-items: baseline;
+  }
+
+  .filter-inner input.form-control {
+    width: 100% !important;
+  }
+
+  .hero-sec {
+    height: auto;
+    padding: 10px 0px 25px;
+  }
+
+  .hero-inner h1 {
+    font-size: 35px;
+    letter-spacing: 0.5px;
+    line-height: 45px;
+    margin-bottom: 35px;
+  }
+
+  .hero-inner h2 {
+    display: none;
+  }
+
+  .hero-search {
+    display: block;
+    margin: 0px 0px 20px;
+    padding: 0px;
+    background-color: transparent;
+  }
+
+  .hero-search .input-group {
+    width: 100% !important;
+    background: white;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    height: auto;
+  }
+
+  .hero-search .input-group-prepend {
+    top: 14px;
+  }
+
+  .hero-search .filter-inner {
+    border: none;
+    height: 52px;
+    width: 100%;
+    background: white;
+    border-radius: 5px;
+    margin-bottom: 15px;
+  }
+
+  .custom-sel {
+    width: 100% !important;
+    height: 52px !important;
+    margin-bottom: 15px;
+    border-radius: 5px !important;
+  }
+
+  .hero-search .input-group input {
+    width: 96%;
+    border: 0px;
+    border-radius: 5px;
+  }
+
+  .form-group-search {
+    padding: 0px !important;
+  }
+
+  .tab-sec .nav-link {
+    padding: 12px 35px;
+  }
+
+  .tab-sec ul.nav.nav-tabs {
+    width: 350px;
+  }
+
+  .tab-sec {
+    padding: 30px 0px;
+  }
+
+  .tab-sec .truck-img {
+    width: 80px !important;
+  }
+
+  .custom-tst .item {
+    width: 100%;
+  }
+
+  .testimonial-sec .about-testominial .custom-tst .item {
+    width: 50px !important;
+  }
+
+  .custom-tst button.owl-next {
+    width: 40px;
+    height: 40px;
+    font-size: 17px !important;
+    position: absolute;
+    right: -24px;
+    top: 45%;
+  }
+
+  .custom-tst button.owl-prev {
+    width: 40px;
+    height: 40px;
+    font-size: 17px !important;
+    position: absolute;
+    left: 2px;
+    top: 45%;
+  }
+
+  .ort-inner .truck-img {
+    max-width: 150px;
+    height: 160px;
+  }
+
+  .ort-inner .media h4 {
+    font-size: 21px;
+  }
+
+  .ort-inner .job-location p {
+    display: flex;
+    align-items: baseline;
+  }
+
+  .ort-inner .job-location {
+    display: unset !important;
+  }
+
+  .ort-general {
+    padding: 50px 0px 35px;
+  }
+
+  .related-job-sec .truck-img {
+    display: none !important;
+  }
+
+  .related-job-sec .media {
+    display: block;
+  }
+
+  .related-job-sec .media h4 {
+    white-space: unset;
+    line-height: 25px;
+  }
+
+  .related-job-sec .btn.btn-outline-danger {
+    display: none;
+  }
+
+  .job-deatails-sec .row {
+    flex-direction: column-reverse;
+  }
+
+  .job-deatails-inner {
+    margin-top: 45px;
+  }
+
+  .ort-btn .theme-primary-btn,
+  .ort-btn .btn.btn-danger {
+    padding: 14px 0px !important;
+    width: 100% !important;
+    margin-top: 5px;
+  }
+
+  .footer-social-icons {
+    padding-top: 0px;
+    margin-bottom: 20px;
+  }
+
+  .media {
+    padding: 30px;
+  }
+
+  .sidebar-inner {
+    padding: 0px;
+  }
+
+  .header-sec {
+    min-height: 100px !important;
+  }
+
+  .header-sec .navbar-collapse {
+    top: 101px;
+  }
+
+  .logo img {
+    height: 100px;
+    max-width: 100px;
+    padding: 0px 0px;
+  }
+
+  .slide___3-Nqo {
+    padding: 10% !important;
+  }
+
+  .signup-driver-section .signup-driver-item h1 {
+    font-size: 32px;
+  }
+
+  .signup-driver-section .signup-driver-left {
+    height: 370px;
+  }
+
+  .signup-driver-section .signup-driver-item {
+    padding: 10px;
+  }
+
+  .get-feature-section h1 {
+    font-size: 32px;
+  }
+
+  .testimonial-sec {
+    padding: 40px 0px;
+  }
+
+  .checklist_toggle {
+    display: inline-block;
+  }
+
+  .signup_toggle_btn {
+    display: block !important;
+  }
+
+  .preferred_location {
+    padding: 0px 5px !important;
+  }
+
+  .preferred_location span {
+    display: block;
+  }
 }
 
-@media screen and (max-width:1070px) {
-
-    .ml-30 {
-        margin-left: 0px;
-    }
+@media screen and (max-width: 1070px) {
+  .ml-30 {
+    margin-left: 0px;
+  }
 }
 
-@media screen and (max-width:991px) {
-    .slide___3-Nqo {
-        padding: 7%;
-    }
+@media screen and (max-width: 991px) {
+  .slide___3-Nqo {
+    padding: 7%;
+  }
 
-    .ml-30 {
-        margin-left: 30px;
-    }
+  .ml-30 {
+    margin-left: 30px;
+  }
 }
 
-@media screen and (max-width:464px) {
-    .tab-sec ul.nav.nav-tabs {
-        width: 300px;
-    }
+@media screen and (max-width: 464px) {
+  .tab-sec ul.nav.nav-tabs {
+    width: 300px;
+  }
 
-    .tab-sec .nav-link {
-        padding: 12px 22px;
-    }
+  .tab-sec .nav-link {
+    padding: 12px 22px;
+  }
 
-    .top-links-sec h2 {
-        font-size: 15px;
-    }
+  .top-links-sec h2 {
+    font-size: 15px;
+  }
 
-    .general-headings {
-        font-size: 31px;
-    }
+  .general-headings {
+    font-size: 31px;
+  }
 
-    .Slider_owl-next,
-    .Slider_owl-prev {
-        display: none;
-    }
+  .Slider_owl-next,
+  .Slider_owl-prev {
+    display: none;
+  }
 
-    .vehicle-img .company_photo {
-        display: block;
-    }
+  .vehicle-img .company_photo {
+    display: block;
+  }
 
-    .vehicle-img .ort-inner .company_photo .truck-img {
-        max-width: 100% !important;
-        height: auto;
-    }
+  .vehicle-img .ort-inner .company_photo .truck-img {
+    max-width: 100% !important;
+    height: auto;
+  }
 
-    ol.breadcrumb_sec {
-        padding-left: 0.5rem !important;
-    }
+  ol.breadcrumb_sec {
+    padding-left: 0.5rem !important;
+  }
 
-    .sign_up_btns .btn.btn-primary {
-        font-size: 18px;
-    }
+  .sign_up_btns .btn.btn-primary {
+    font-size: 18px;
+  }
 
-    .profile button {
-        padding: 5px 12px !important;
-        font-size: 12px !important;
-    }
+  .profile button {
+    padding: 5px 12px !important;
+    font-size: 12px !important;
+  }
 
-    .my_card_body {
-        padding: 10px !important;
-    }
+  .my_card_body {
+    padding: 10px !important;
+  }
 
-    .my_card_body .card-body strong {
-        font-size: 13px;
-    }
+  .my_card_body .card-body strong {
+    font-size: 13px;
+  }
 
-    .messages_container .navbar {
-        display: block !important;
-        padding: 0;
-    }
+  .messages_container .navbar {
+    display: block !important;
+    padding: 0;
+  }
 
-    .messages_container .navbar-collapse {
-        text-align: center;
-    }
+  .messages_container .navbar-collapse {
+    text-align: center;
+  }
 
-    .preferred_geography span {
-        width: 100%;
-        display: block;
-    }
+  .preferred_geography span {
+    width: 100%;
+    display: block;
+  }
 }
 
+@media (max-width: 1267px) {
+  .btn.btn-primary {
+    padding: 3px 10px !important;
+  }
 
-@media (max-width:1267px) {
+  .btn.btn-primary {
+    padding: 7px 10px;
+  }
 
-    .btn.btn-primary {
-        padding: 3px 10px !important;
+  .nav-link {
+    font-size: 15px;
+  }
 
-    }
-
-    .btn.btn-primary {
-        padding: 7px 10px;
-    }
-
-
-
-    .nav-link {
-        font-size: 15px;
-    }
-
-    .logo {
-        width: 150px;
-        border-right: solid 0px;
-    }
+  .logo {
+    width: 150px;
+    border-right: solid 0px;
+  }
 }
 
-@media (max-width:600px) {
-
-    .logo_container img {
-        width: 100% !important;
-    }
-    .tab__wid_for_jot svg {
-        width: 30% !important;
-    }
+@media (max-width: 600px) {
+  .logo_container img {
+    width: 100% !important;
+  }
+  .tab__wid_for_jot svg {
+    width: 30% !important;
+  }
 }
