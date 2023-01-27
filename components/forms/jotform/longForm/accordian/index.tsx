@@ -24,10 +24,6 @@ export function AccordianPage() {
 	const [showTab, setShowTab] = useState<boolean[]>([false, false, false, false])
 	const { t } = useTranslation();
 
-	useEffect(() => {
-		console.log('bool values', showTab)
-	}, [showTab])
-
 	const form = useFormik({
 		initialValues: new AccordianDto(),
 		validationSchema: AccordianDto.yupSchema(),
@@ -41,7 +37,7 @@ export function AccordianPage() {
 					applicantExtras: filtered_extras,
 				});
 
-				// if (response) stepNext()
+				if (response) stepNext()
 			} catch (error) {
 				console.log(error);
 				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });

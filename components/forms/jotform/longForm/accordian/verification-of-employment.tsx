@@ -62,7 +62,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
 
     const handleInput = (value: string) => {
         const formattedSSN = formatSSN(value);
-        form.setFieldValue("EMP LOYEE_SS_OR_ID.value", formattedSSN)
+        form.setFieldValue("EMPLOYEE_SS_OR_ID.value", formattedSSN)
         return formattedSSN
     };
     const current_company = applicant?.employers?.find(v => !!v?.is_current)
