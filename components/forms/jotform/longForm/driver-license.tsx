@@ -11,6 +11,8 @@ import FileInput from "../../file-input";
 import { DocumentEntity } from "../../../../models/documents/document.entity";
 import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-document-type.enum";
 import { DocumentsDto } from "../../../../models/jot-form/long-form/documents.dto";
+import BaseCheck from "../../base-check";
+import { CameraComponent } from "./camera";
 
 export function DriverLicense() {
 	const {
@@ -56,6 +58,7 @@ export function DriverLicense() {
 				...new DocumentEntity(),
 				type: ApplicantDocumentType.DRIVERS_LICENSE,
 			},
+			mediaOptions: false
 		});
 	}, [applicant]);
 
@@ -70,14 +73,28 @@ export function DriverLicense() {
 			<Row>
 				<h3>{t("DRIVER_LICENSE_PHOTO")}</h3>
 			</Row>
+			<BaseCheck
+				className="my-3 col float-left p-0"
+				label="MEDIA_PREFERENCE"
+				name="mediaOptions"
+				formik={form}
+			/>
+
 			<Row className={styles.align__text_left}>
-				<FileInput
-					className="my-3"
-					name="document"
-					accept="application/pdf"
-					allowedSizeInByte={3000000}
-					formik={form}
-				/>
+				{
+					Boolean(form.values.mediaOptions) ? (
+						<CameraComponent form={form} />
+					) : (
+						<FileInput
+							className="my-3"
+							name="document"
+							accept="application/pdf"
+							allowedSizeInByte={3000000}
+							formik={form}
+						/>
+					)
+				}
+
 			</Row>
 
 			<Row className="mt-3">
