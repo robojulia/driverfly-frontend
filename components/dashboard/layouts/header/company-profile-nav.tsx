@@ -25,11 +25,6 @@ export default function CompanyProfileNav() {
 
     const menu_options = [
         {
-            href: "/dashboard/company/settings",
-            label: "COMPANY_SETTINGS"
-        },
-        {}, // divider
-        {
             href: "/dashboard/company/settings/profile",
             label: "MY_PROFILE"
         },
@@ -49,7 +44,7 @@ export default function CompanyProfileNav() {
                         />
                         <span> {user.first_name}    {user.last_name}</span>
                     </Dropdown.Toggle >
-                    <Dropdown.Menu>
+                    <Dropdown.Menu className="w-100">
                         {menu_options.map((v, i) => {
                             if (!v.label) return <Dropdown.Divider key={i} />
 
