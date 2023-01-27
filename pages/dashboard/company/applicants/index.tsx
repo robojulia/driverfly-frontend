@@ -54,7 +54,7 @@ export default function Applicants() {
 
     let { viewMode, jobId } = router.query;
 
-    if (!ViewMode[`${viewMode}`]) viewMode = ViewMode.job;
+    if (!ViewMode[`${viewMode}`]) viewMode = ViewMode.applicant;
 
     const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
 
@@ -174,7 +174,7 @@ export default function Applicants() {
                 <Col className='force-overflow p-0  '>
                     <FormGroup style={{ float: "right" }}>
                         <FormControlLabel
-                            control={<Switch value={viewMode === ViewMode.applicant ? ViewMode.job : ViewMode.applicant} checked={viewMode === ViewMode.applicant} onChange={onViewModeChange} />}
+                            control={<Switch value={viewMode === ViewMode.applicant ? ViewMode.job : ViewMode.applicant} checked={viewMode === ViewMode.job} onChange={onViewModeChange} />}
                             label={t("VIEW_BY_{name}", { name: t(viewMode === ViewMode.applicant ? "APPLICANT" : "JOB") })}
                         />
                     </FormGroup>
