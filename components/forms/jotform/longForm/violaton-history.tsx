@@ -141,23 +141,34 @@ export function ViolationHistory() {
 					))}
 				</>
 			)}
-			<Row>
-				<div className="mt-4 float-left d-flex justify-left px-3">
+			{
+				form?.values?.moving_violations_count > 0 && (
+					<>
+						{
+							Boolean(form?.values?.moving_violations_count !== Object?.keys(form?.values?.VIOLATION_DETAILS?.value || 0)?.length) && (
+								<>
+									<Row>
+										<div className="mt-4 float-left d-flex justify-left px-3">
 
-					<Button
-						className="w-100 py-2"
-						size="sm"
-						onClick={() =>
-							form.setFieldValue("VIOLATION_DETAILS.value", [
-								...(form.values?.VIOLATION_DETAILS?.value || []),
-								new VioalationExtrasEntity(),
-							])
-						}
-					>
-						<PlusCircle /> {t("TITLE_ADD_VIOLATION_DETAILS")}
-					</Button>
-				</div>
-			</Row>
+											<Button
+												className="w-100 py-2"
+												size="sm"
+												onClick={() =>
+													form.setFieldValue("VIOLATION_DETAILS.value", [
+														...(form.values?.VIOLATION_DETAILS?.value || []),
+														new VioalationExtrasEntity(),
+													])
+												}
+											>
+												<PlusCircle /> {t("TITLE_ADD_VIOLATION_DETAILS")}
+											</Button>
+										</div>
+									</Row>
+								</>
+							)}
+					</>
+				)
+			}
 			<Row className="mt-4">
 				<Col>
 					<Button className="float-right" type="reset">
@@ -170,6 +181,6 @@ export function ViolationHistory() {
 					</Button>
 				</Col>
 			</Row>
-		</Form>
+		</Form >
 	);
 }
