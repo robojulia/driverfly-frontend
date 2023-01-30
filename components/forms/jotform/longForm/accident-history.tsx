@@ -156,22 +156,37 @@ export function AccidentHistory() {
 					))}
 				</>
 			)}
-			<Row>
-				<div className="mt-4 float-left d-flex justify-left">
-					<Button
-						className="w-100 py-2"
-						size="sm"
-						onClick={() =>
-							form.setFieldValue("ACCIDENT_DETAILS.value", [
-								...(form.values?.ACCIDENT_DETAILS?.value || []),
-								new AccidentHistoryEntity(),
-							])
-						}
-					>
-						<PlusCircle /> {t("TITLE_ADD_ACCIDENT_DETAILS")}
-					</Button>
-				</div>
-			</Row>
+			{
+				console.log("form.values.ACCIDENT_DETAILS.value.", form.values.ACCIDENT_DETAILS?.value?.length)
+
+			}
+			{
+				console.log("form.values.accident_count", form.values.accident_count)
+			}
+			{
+				form.values.accident_count > 0 || form.values.accident_count < form.values.accident_count && (
+					<>
+
+
+						<Row>
+							<div className="mt-4 float-left d-flex justify-left">
+								<Button
+									className="w-100 py-2"
+									size="sm"
+									onClick={() =>
+										form.setFieldValue("ACCIDENT_DETAILS.value", [
+											...(form.values?.ACCIDENT_DETAILS?.value || []),
+											new AccidentHistoryEntity(),
+										])
+									}
+								>
+									<PlusCircle /> {t("TITLE_ADD_ACCIDENT_DETAILS")}
+								</Button>
+							</div>
+						</Row>
+					</>
+				)}
+
 			<Row className="mt-4">
 				<Col>
 					<Button className="float-right" type="reset">
