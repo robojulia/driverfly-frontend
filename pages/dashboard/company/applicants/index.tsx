@@ -175,7 +175,7 @@ export default function Applicants() {
                     <FormGroup style={{ float: "right" }}>
                         <FormControlLabel
                             control={<Switch value={viewMode === ViewMode.applicant ? ViewMode.job : ViewMode.applicant} checked={viewMode === ViewMode.job} onChange={onViewModeChange} />}
-                            label={t("VIEW_BY_{name}", { name: t(viewMode === ViewMode.applicant ? "APPLICANT" : "JOB") })}
+                            label={t("VIEW_BY_{name}", { name: t(viewMode === ViewMode.applicant ? "JOB" : "APPLICANT") })}
                         />
                     </FormGroup>
                     {viewMode === ViewMode.applicant && <ApplicantView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
