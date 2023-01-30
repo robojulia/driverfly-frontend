@@ -3,7 +3,7 @@ import * as yup from "yup";
 import "../../utils/yup";
 import { CompanyEntity } from "./company.entity";
 import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
-import { CompanyPreferenceLabel } from "../../enums/company/company-preferences-jotform-label.enum";
+import { CompanyPreferenceJotformLabel } from "../../enums/company/company-preferences-jotform-label.enum";
 
 export class CompanyPreferenceEntity {
     constructor() { }
@@ -19,7 +19,7 @@ export class CompanyPreferenceEntity {
             label: yup.string().optional().nullable()
                 .when("category", {
                     is: CompanyPreferenceCategory.JOTFORM,
-                    then: (yup.string().required().nullable() as any).enum(CompanyPreferenceLabel)
+                    then: (yup.string().required().nullable() as any).enum(CompanyPreferenceJotformLabel)
                 }),
 
             value: yup.mixed()
@@ -27,27 +27,27 @@ export class CompanyPreferenceEntity {
                     is: CompanyPreferenceCategory.JOTFORM,
                     then: yup.mixed()
                         .when("label", {
-                            is: CompanyPreferenceLabel.CDL_CLASS,
+                            is: CompanyPreferenceJotformLabel.CDL_CLASS,
                             then: yup.array((yup.string() as any).required().enum(DriverLicenseType)).nullable()
                         })
                         .when("label", {
-                            is: CompanyPreferenceLabel.DRUG_TEST_PASS,
+                            is: CompanyPreferenceJotformLabel.DRUG_TEST_PASS,
                             then: yup.bool().required().default(false)
                         })
                         .when("label", {
-                            is: CompanyPreferenceLabel.OWNER_OPERATOR,
+                            is: CompanyPreferenceJotformLabel.OWNER_OPERATOR,
                             then: yup.bool().required().default(false)
                         })
                         .when("label", {
-                            is: CompanyPreferenceLabel.MINIMUM_ACCIDENTS,
+                            is: CompanyPreferenceJotformLabel.MINIMUM_ACCIDENTS,
                             then: yup.number().min(0).required().nullable()
                         })
                         .when("label", {
-                            is: CompanyPreferenceLabel.MIN_MOVING_VIOLATIONS,
+                            is: CompanyPreferenceJotformLabel.MIN_MOVING_VIOLATIONS,
                             then: yup.number().min(0).required().nullable()
                         })
                         .when("label", {
-                            is: CompanyPreferenceLabel.YEARS_CDL_EXPERIENCE,
+                            is: CompanyPreferenceJotformLabel.YEARS_CDL_EXPERIENCE,
                             then: yup.number().min(0).required().nullable()
                         })
                 })
