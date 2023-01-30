@@ -5,8 +5,6 @@ import { Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import { Camera } from "react-camera-pro";
 import { FormikInterface } from "../../../../../utils/formik";
-import FileInput from "../../../file-input";
-import { blob } from "stream/consumers";
 interface CameraCompProps {
     form?: FormikInterface<any>
 }
@@ -17,9 +15,6 @@ export function CameraComponent({ form }: CameraCompProps) {
     const [image, setImage] = useState<string>(null);
     const date = new Date()
     const { t } = useTranslation();
-
-
-    // const imgFile = new File([""], "image.jpeg", { type: "image/jpeg" });
 
     const handleCameraEvents = () => {
         const img = camera.current.takePhoto()
@@ -68,13 +63,8 @@ export function CameraComponent({ form }: CameraCompProps) {
                         </Row>
                     ) : (
                         <Row>
-                            {/* <img src={image} alt='Taken photo' /> */}
-                            <FileInput
-                                className="my-3"
-                                name="document"
-                                accept="image/jpeg"
-                                allowedSizeInByte={3000000}
-                                formik={form} />
+                            <img src={image} alt='Taken photo' />
+
                             <Row className="my-3 ml-1 p-2">
                                 <Button className="p-2" onClick={() => setImage(null)}>{t('NEW_IMAGE')}</Button>
                             </Row>
