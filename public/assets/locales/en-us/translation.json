@@ -1848,7 +1848,13 @@
   "ERROR_SIGNS_REQUIRED": "Signature is Required",
   "COMPANY_PREFERENCE": "Company Preferences",
   "MARK_SURE_ALERT": "Are you sure you want to proceed with your decision?",
-  "APPLICANT_DAC":"Applicant DAC",
+  "APPLICANT_DAC": "Applicant DAC",
   "DRUG_TEST_PASS": "Drug Test Pass",
-  "YEARS_OF_CDL_EXPERIENCE": "Years"
+  "YEARS_OF_CDL_EXPERIENCE": "Years",
+  "CAPTURE": "Capture",
+  "NEW_IMAGE": "Take Again",
+  "UPLOAD_THIS_IMAGE": "Upload!",
+  "CAMERA_BLOCKER": "Sorry, This Functionality is not yet availabe!",
+  "MEDIA_PREFERENCE": "Use device camera instead",
+  "N/A": "Not Provided"
 }

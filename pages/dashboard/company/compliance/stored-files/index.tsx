@@ -1,7 +1,7 @@
 import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 import { useState } from "react";
 import React from "react";
-import { CloudArrowDown, Download, Plus, Send } from 'react-bootstrap-icons';
+import { Eye, Plus, Send } from 'react-bootstrap-icons';
 import PageLayout from "../../../../../components/layouts/page/page-layout";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/view-details/view-data-table";
@@ -94,12 +94,6 @@ export default function StoredFiles() {
             toast.error(t('DOCUMENT_SENT_FAILED_MESSAGE'))
         }
     }
-
-    //  Uncomment this in debugging mode
-    // useEffectAsync(async () => {
-    //     console.log("form", form.values)
-    //     console.log("form", form.errors)
-    // }, [form])
     const [pdf, setPdf] = useState({});
 
     const viewDocumentClick = async (id, name) => {
@@ -168,7 +162,7 @@ export default function StoredFiles() {
                         cell: (file) => (
                             <>
                                 <button type="button" className="theme-primary-btn mr-2 px-4 py-2" onClick={() => setDocumentId(file.id)}><Send /></button>
-                                <a onClick={() => viewDocumentClick(file.id, file.name)} href="#" role="button" className="theme-secondary-btn mr-2 px-4 py-2"><CloudArrowDown /></a>
+                                <a onClick={() => viewDocumentClick(file.id, file.name)} href="#" role="button" className="theme-secondary-btn mr-2 px-4 py-2"><Eye /></a>
                             </>
                         ),
                     },

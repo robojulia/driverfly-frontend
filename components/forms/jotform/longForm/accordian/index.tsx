@@ -24,10 +24,6 @@ export function AccordianPage() {
 	const [showTab, setShowTab] = useState<boolean[]>([false, false, false, false])
 	const { t } = useTranslation();
 
-	useEffect(() => {
-		console.log('bool values', showTab)
-	}, [showTab])
-
 	const form = useFormik({
 		initialValues: new AccordianDto(),
 		validationSchema: AccordianDto.yupSchema(),

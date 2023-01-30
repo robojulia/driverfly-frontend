@@ -92,7 +92,9 @@ const FullLayout = ({ children }) => {
 					icon: Hospital,
 					text: "COMPANIES",
 					permissions: "CanViewCompany",
-					startsWith: true
+					startsWith: true,
+					visible: isSuperAdmin,
+
 				},
 				{
 					pathname: "/dashboard/company/settings/users",
