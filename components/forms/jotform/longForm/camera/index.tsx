@@ -32,6 +32,7 @@ export function CameraComponent({ form }: CameraCompProps) {
     return (
         <Form>
             <div className={`${styles.align__text_left} ${styles.bold}`}>
+                {/* testing */}
                 {
                     !image ? (
                         <Row className={styles.camera_container_main}>
