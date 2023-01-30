@@ -13,7 +13,7 @@ export function CameraComponent({ form }: CameraCompProps) {
 
     const camera = useRef(null);
     const [image, setImage] = useState<string>(null);
-
+    const [switchCamera, setSwitchCamera] = useState<boolean>(null)
     const date = new Date()
     const { t } = useTranslation();
 
@@ -32,13 +32,12 @@ export function CameraComponent({ form }: CameraCompProps) {
     return (
         <Form>
             <div className={`${styles.align__text_left} ${styles.bold}`}>
-                {/* // test */}
                 {
                     !image ? (
                         <Row className={styles.camera_container_main}>
                             <div className={styles.camera_container}>
                                 <Camera ref={camera}
-                                    facingMode="environment"
+                                    facingMode={switchCamera ? "environment" : "user"}
                                     errorMessages={{
                                         noCameraAccessible: "",
                                         permissionDenied: "",
@@ -46,6 +45,7 @@ export function CameraComponent({ form }: CameraCompProps) {
                                         canvas: ""
                                     }} />
                             </div>
+                            <Button style={{ zIndex: '9999' }} onClick={() => setSwitchCamera(!switchCamera)}>switch</Button>
 
                             <Button
                                 className={styles.capture_btn}
