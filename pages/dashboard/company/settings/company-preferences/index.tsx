@@ -146,7 +146,7 @@ export default function CompanyPreference() {
     <>
       <PageLayout title="COMPANY_PREFERENCE">
         <BaseClickToCopyInput
-          label="JOTFORM_URL"
+          label="DIGITAL_HIRING_APP_URL"
           className="my-2 border p-3 rounded"
           value={`${process.env.FRONTEND_BASE_URL ?? ""}form/digitalhiringapp/${user?.company?.id
             }`}
