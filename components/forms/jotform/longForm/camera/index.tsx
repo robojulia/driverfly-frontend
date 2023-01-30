@@ -5,6 +5,8 @@ import { Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import { Camera } from "react-camera-pro";
 import { FormikInterface } from "../../../../../utils/formik";
+import FileInput from "../../../file-input";
+import { blob } from "stream/consumers";
 interface CameraCompProps {
     form?: FormikInterface<any>
 }
@@ -16,14 +18,30 @@ export function CameraComponent({ form }: CameraCompProps) {
     const date = new Date()
     const { t } = useTranslation();
 
+
+    // const imgFile = new File([""], "image.jpeg", { type: "image/jpeg" });
+
     const handleCameraEvents = () => {
         const img = camera.current.takePhoto()
         setImage(img)
+
+
+        const byteCharacters = atob(img.split(',')[1]);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'image/jpeg' });
+        const imgPath = URL.createObjectURL(blob)
+
+
         let extensionStart = img.indexOf("/") + 1;
         let extensionEnd = img.indexOf(";");
         let extension = img.slice(extensionStart, extensionEnd);
 
         form.setFieldValue("document.file_base64", img.split(',')[1])
+        form.setFieldValue("document.path", imgPath)
         form.setFieldValue("document.mime_type", `image/${extension}`)
         form.setFieldValue("document.name", `${date.toISOString()}.${extension}`)
 
@@ -50,14 +68,15 @@ export function CameraComponent({ form }: CameraCompProps) {
                         </Row>
                     ) : (
                         <Row>
-                            <img src={image} alt='Taken photo' />
+                            {/* <img src={image} alt='Taken photo' /> */}
+                            <FileInput
+                                className="my-3"
+                                name="document"
+                                accept="image/jpeg"
+                                allowedSizeInByte={3000000}
+                                formik={form} />
                             <Row className="my-3 ml-1 p-2">
-                                {/* <Col className="text-center"> */}
                                 <Button className="p-2" onClick={() => setImage(null)}>{t('NEW_IMAGE')}</Button>
-                                {/* </Col>
-                                <Col className="text-center">
-                                    <Button onClick={blockerAlert}>{t('UPLOAD_THIS_IMAGE')}</Button>
-                                </Col> */}
                             </Row>
 
                         </Row>

@@ -76,7 +76,7 @@ export function MedicalCard() {
 						<FileInput
 							className="my-3"
 							name="document"
-							accept="application/pdf"
+							accept="image/jpeg"
 							allowedSizeInByte={3000000}
 							formik={form} />
 					)
