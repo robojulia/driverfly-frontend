@@ -1531,6 +1531,7 @@
   "PLACEHOLDER_FOR_DIGITS": "ex:2",
   "{company_name}_THANKS": "Thanks for your submission to {{company_name}}.",
   "{company_name}_THANKS_NOTE": "Please note that {{company_name}} requires that you have your Class A CDL to be employed here.",
+  "{company_name}_THANKS_NOTE_{cdl_category}": "Please note that {{company_name}} requires that you have your class {{cdl_category}} CDL to be employed here.",
   "{COMPANY_NAME}_MVR_AND_DMV_AUTHORIZATION": " Submitting this application certifies that this form was completed by me and all entries and information on it are true and complete to the best of my knowledge. I authorize {{COMPANY_NAME}} to make investigations and inquires of my driving history and past employment records. I hereby authorize {{COMPANY_NAME}} to check my MVR from DMV and PSP record for review as part of the hiring process.",
   "MORE_ABOUT_ACCIDENTS": "Tell us more about your accidents(even if not at fault)",
   "LABEL_ACCIDENT_NATURE": "Nature of Accident",
