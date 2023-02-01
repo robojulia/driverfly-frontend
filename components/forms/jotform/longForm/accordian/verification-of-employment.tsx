@@ -66,9 +66,10 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
         return formattedSSN
     };
     const current_company = applicant?.employers?.find(v => !!v?.is_current)
-    // useEffect(() => {
-    //     console.log("VOE comp errors",Boolean(form?.errors?.SIGNATURE_VOE_AUTHORIZATION) && Object.values(form?.errors)[0].va)
-    // }, [])
+    useEffect(() => {
+        console.log('applicantttttt', applicant);
+
+    }, [])
     return (
         <>
             <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -219,17 +220,17 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                                 </h5>
                             </b>
                             <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                                {t("CURENNT_COMPANY_{name}", { name: v?.name }, { translateProps: true })}
+                                {t("CURENNT_COMPANY_{name}", { name: v?.name ? v.name : `${t('N/A')}` }, { translateProps: true })}
 
                             </p>
                             <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                                {t("CURENNT_COMPANY_{address}", { address: v?.address }, { translateProps: true })}
+                                {t("CURENNT_COMPANY_{address}", { address: v?.address ? v.address : `${t('N/A')}` }, { translateProps: true })}
                             </p>
                             <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                                {t("CURENNT_COMPANY_{phone}", { phone: v?.phone }, { translateProps: true })}
+                                {t("CURENNT_COMPANY_{phone}", { phone: v?.phone ? v?.phone : `${t('N/A')}` }, { translateProps: true })}
                             </p>
                             <p className={`${styles.paragraph} ${styles.align__text_left} bg-danger text-light w-75`}>
-                                {t("DESIGNATED_EMPLOYER_REPRESENTATIVE_{current_manager_name}", { current_manager_name: v?.manager_name }, { translateProps: true })}
+                                {t("DESIGNATED_EMPLOYER_REPRESENTATIVE_{current_manager_name}", { current_manager_name: v?.manager_name ? v?.manager_name : `${t('N/A')}` }, { translateProps: true })}
                             </p>
                             <p className={`${styles.paragraph} ${styles.align__text_left}`}>{t("BLANK_LINE")}</p>
                         </>

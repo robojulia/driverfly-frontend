@@ -58,6 +58,7 @@ export function SubmitMissingDocuments() {
 				...new DocumentEntity(),
 				type: ApplicantDocumentType.DRIVERS_LICENSE,
 			},
+			mediaOptions: false
 		});
 	}, [applicant]);
 
