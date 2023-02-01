@@ -13,11 +13,6 @@ export default function ThankYou() {
 
     const { t } = useTranslation();
     const jobUrl = `/dashboard/company/jobs/${jobId}`;
-    useEffect(() => {
-        const url = router?.query?.id
-        setJobId(url)
-    }, [])
-
     const goBack = () => window.setTimeout(() => router.push(jobId), 2000);
 
     return (
@@ -46,7 +41,7 @@ export default function ThankYou() {
                         <p className="mb-5 text-center ">{t("WANT_TO_POST_OUTSIDE_JOB_BOARDS")}</p>
                     </Col>
                     <Col>
-                        <button type="button" className="theme-primary-btn btn-block btn-theme w-50 p-3 m-auto" > {t("view_job")}</button>
+                        <button type="button" className="theme-primary-btn btn-block btn-theme w-50 p-3 m-auto" > {t("COPY_FULL_JOB_DETAILS")}</button>
 
                     </Col>
 
