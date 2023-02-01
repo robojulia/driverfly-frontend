@@ -1852,6 +1852,7 @@
   "DRUG_TEST_PASS": "Drug Test Pass",
   "YEARS_OF_CDL_EXPERIENCE": "Years",
   "CONGRATS":"Congrats job created successful",
-  "SHARE_ON_YOUR_FACEBOOK_PAGE":"Share on your Facebook page",
+  "SHARE_ON_YOUR_COMPANY_FACEBOOK_PAGE":"Share On Your Company Facebook Page",
+  "SHARE_ON_DRIVERFLY_FACEBOOK_PAGE":"Share On DriverFly Facebook Page",
   "WANT_TO_POST_OUTSIDE_JOB_BOARDS":"Want to post on outside job boards?"
 }

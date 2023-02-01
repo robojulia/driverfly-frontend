@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from '../hooks/use-translation';
 
-const SocialShareButton = ({ jobUrl }) => {
+const FacebookShare = ({ jobUrl }) => {
     const { t } = useTranslation();
 
     const handleClick = () => {
@@ -10,8 +10,8 @@ const SocialShareButton = ({ jobUrl }) => {
     };
 
     return (
-        <button onClick={handleClick} className="theme-secondary-btn w-100 p-4">{t("SHARE_ON_YOUR_FACEBOOK_PAGE")}</button>
+        <button onClick={handleClick} className="theme-secondary-btn w-100 p-4">{t("SHARE_ON_YOUR_COMPANY_FACEBOOK_PAGE")}</button>
     );
 };
 
-export default SocialShareButton;
+export default FacebookShare;
