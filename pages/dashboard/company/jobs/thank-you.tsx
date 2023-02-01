@@ -13,6 +13,12 @@ export default function ThankYou() {
 
     const { t } = useTranslation();
     const jobUrl = `/dashboard/company/jobs/${jobId}`;
+
+    useEffect(() => {
+        const url = router?.query?.id
+        setJobId(url)
+    }, [])
+
     const goBack = () => window.setTimeout(() => router.push(jobId), 2000);
 
     return (
