@@ -129,34 +129,26 @@ export default function CompanyPreference() {
       const label = v.label?.toLowerCase();
       if (label in form.values) {
         form.initialValues[label] = v;
-        // console.log('v.label', label, v)
         form.setFieldValue(label, v);
       }
     });
   };
 
-  //  Uncomment this in debugging mode
-  useEffectAsync(async () => {
-    // console.log("form values", form.values);
-    // console.log("form errors", form.errors);
-  }, [form]);
-
-
   return (
     <>
       <PageLayout title="COMPANY_PREFERENCE">
         <BaseClickToCopyInput
-          label="JOTFORM_URL"
+          label="DIGITAL_HIRING_APP_URL"
           className="my-2 border p-3 rounded"
           value={`${process.env.FRONTEND_BASE_URL ?? ""}form/digitalhiringapp/${user?.company?.id
             }`}
           tooltipText={t("CLICK_TO_COPY")}
         />
 
-        <form onSubmit={form.handleSubmit}>
-          <Row className="p-3">
+        <form onSubmit={form.handleSubmit} className="py-4 px-3 border rounded mt-4" style={{ background: '#e9ecef' }}>
+          <Row>
             <BaseCheckList
-              className="col-12 p-0 mt-2"
+              className="col-12 mt-2"
               label="CDL_CLASS"
               name="cdl_class.value"
               labelPrefix="DriverLicenseType"
@@ -165,7 +157,7 @@ export default function CompanyPreference() {
               formik={form}
             />
             <BaseCheck
-              className="col-12 mt-5"
+              className="col-12 mt-4"
               label="OWNER_OPERATOR"
               name="owner_operator.value"
               formik={form}
@@ -179,7 +171,7 @@ export default function CompanyPreference() {
             />
 
             <BaseInput
-              className="col-4 mt-5"
+              className="col-md-4 mt-4"
               label="years_cdl_experience"
               name="years_cdl_experience.value"
               type="number"
@@ -188,7 +180,7 @@ export default function CompanyPreference() {
             />
 
             <BaseInput
-              className="col-4 mt-5"
+              className="col-md-4 mt-4"
               label="MIN_ACCIDENTS"
               name="minimum_accidents.value"
               type="number"
@@ -197,7 +189,7 @@ export default function CompanyPreference() {
             />
 
             <BaseInput
-              className="col-4 mt-5"
+              className="col-md-4 mt-4"
               label="MIN_MOVING_VIOLATIONS"
               name="minimum_moving_violations.value"
               type="number"

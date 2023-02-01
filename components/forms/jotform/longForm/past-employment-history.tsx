@@ -142,12 +142,6 @@ export function PastEmploymentHistory() {
 										/>
 									</Row>
 									<Row className={styles.bold}>
-										<p
-											className={`${styles.align__text_left} `} style={{ fontSize: '20px', color: '#000', margin: '15px 0px', fontWeight: '600' }}>
-											{t("ADDRESS_PAST_COMPANY")}
-										</p>
-									</Row>
-									<Row className={styles.bold}>
 										<BaseInput
 											className="col-md-6 my-3"
 											required
