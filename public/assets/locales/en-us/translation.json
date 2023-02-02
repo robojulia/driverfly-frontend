@@ -1525,7 +1525,7 @@
   "CONTINUE_APPLICATION": "Continue Application",
   "NAUTILIUS_TRUCKING": "Nautilius Trucking",
   "JOTFORM_WELCOME": "Welcome we have been waiting for you!",
-  "JOTFORM_URL": "Jotform URL",
+  "DIGITAL_HIRING_APP_URL": "Digital Hiring App URL",
   "CHOOSE": "Click to choose",
   "{company_name}_SMS_EMAIL_AUTHORIZATION_NAUTILIUS": "I authorize {{company_name}} and any applicable third parties associated with {{company_name}} the ability to send me SMS and email communications regarding job availabilities and other relevant resources.",
   "PLACEHOLDER_FOR_DIGITS": "ex:2",
@@ -1849,6 +1849,7 @@
   "ERROR_SIGNS_REQUIRED": "Signature is Required",
   "COMPANY_PREFERENCE": "Company Preferences",
   "MARK_SURE_ALERT": "Are you sure you want to proceed with your decision?",
+  "ACCORDIAN_ALERT": "Please go through all the tabs to proceed with your submission request!  ",
   "APPLICANT_DAC": "Applicant DAC",
   "DRUG_TEST_PASS": "Drug Test Pass",
   "YEARS_OF_CDL_EXPERIENCE": "Years",
@@ -1857,5 +1858,6 @@
   "UPLOAD_THIS_IMAGE": "Upload!",
   "CAMERA_BLOCKER": "Sorry, This Functionality is not yet availabe!",
   "MEDIA_PREFERENCE": "Use device camera instead",
-  "N/A": "Not Provided"
+  "N/A": "Not Provided",
+  "ACCORDIAN_ALERT": "Please go through all the tabs in order to proceed with you request!"
 }

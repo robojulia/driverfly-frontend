@@ -46,7 +46,7 @@ export default function Embedded({ filterType }) {
     const setFiltersForCdlSchools = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A })
     const setFiltersForHeavyHaul = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A })
     const setFiltersForOwnerOperator = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A })
-    const setFiltersForNewHires = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A })
+    const setFiltersForNewHires = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A, total_years_experience: 0 })
     const setFiltersForTeamDrivers = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A })
     const setFiltersForOtrJobs = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A })
 
