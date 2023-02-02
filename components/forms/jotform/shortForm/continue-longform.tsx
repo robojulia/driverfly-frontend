@@ -18,7 +18,7 @@ export function ContinueLongForm() {
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
-	const [cdlCategory, setCdlCategory] = useState<[]>([])
+	const [cdlCategory, setCdlCategory] = useState<string[]>([])
 	const form = useFormik({
 		initialValues: {},
 		onSubmit: () => {
