@@ -49,6 +49,7 @@ export interface SearchJobsDto {
     take?: number;
     page?: number;
     min_years_experience?: number;
+    total_years_experience?: number;
     team_drivers?: JobTeamDriver;
 
 }
