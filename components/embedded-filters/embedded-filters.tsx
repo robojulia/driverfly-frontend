@@ -83,7 +83,16 @@ export default function EmbeddedFilters({ filterType }: EmbeddedFiltersProps) {
                                 }
                                 < MvrRequirement state={state} method={method} />
                                 < TeamDrivers state={state} method={method} />
-                                < MinimumYearsExperience state={state} method={method} />
+
+                                {
+                                    (!!!([
+                                        EmbeddedFilterTypes.NEW_HIRES
+                                    ]).includes(filterType)) &&
+                                    <>
+                                        < MinimumYearsExperience state={state} method={method} />
+                                    </>
+                                }
+
                             </div>
                         </div>
                     </div>
