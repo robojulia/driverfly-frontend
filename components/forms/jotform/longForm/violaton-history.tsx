@@ -46,14 +46,8 @@ export function ViolationHistory() {
 		const apx_detail = applicantExtras?.find(
 			(v) => v.type === ApplicantExtras.VIOLATION_DETAILS
 		);
-		const apx_count = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.VIOLATION_COUNT
-		);
 		form.setValues({
 			...form.values,
-			VIOLATION_COUNT: !!apx_count?.type
-				? apx_count
-				: new ApplicantExtrasEntity(ApplicantExtras.VIOLATION_COUNT),
 			VIOLATION_DETAILS: !!apx_detail?.type
 				? apx_detail
 				: new ApplicantExtrasEntity(ApplicantExtras.VIOLATION_DETAILS),
@@ -72,6 +66,7 @@ export function ViolationHistory() {
 			</h6>
 			<Row className={`${styles.bold} p-3`}>
 				<BaseInput
+					min={0}
 					type="number"
 					className="col p-0"
 					name="moving_violations_count"
@@ -141,23 +136,27 @@ export function ViolationHistory() {
 					))}
 				</>
 			)}
-			<Row>
-				<div className="mt-4 float-left d-flex justify-left px-3">
-
-					<Button
-						className="w-100 py-2"
-						size="sm"
-						onClick={() =>
-							form.setFieldValue("VIOLATION_DETAILS.value", [
-								...(form.values?.VIOLATION_DETAILS?.value || []),
-								new VioalationExtrasEntity(),
-							])
-						}
-					>
-						<PlusCircle /> {t("TITLE_ADD_VIOLATION_DETAILS")}
-					</Button>
-				</div>
-			</Row>
+			{(
+				Boolean(form?.values?.moving_violations_count > 0)
+				&& Boolean(form?.values?.moving_violations_count > form?.values?.VIOLATION_DETAILS?.value?.length)
+			) && (
+					<Row>
+						<div className="mt-4 float-left d-flex justify-left px-3">
+							<Button
+								className="w-100 py-2"
+								size="sm"
+								onClick={() =>
+									form.setFieldValue("VIOLATION_DETAILS.value", [
+										...(form.values?.VIOLATION_DETAILS?.value || []),
+										new VioalationExtrasEntity(),
+									])
+								}
+							>
+								<PlusCircle /> {t("TITLE_ADD_VIOLATION_DETAILS")}
+							</Button>
+						</div>
+					</Row>
+				)}
 			<Row className="mt-4">
 				<Col>
 					<Button className="float-right" type="reset">
@@ -170,6 +169,6 @@ export function ViolationHistory() {
 					</Button>
 				</Col>
 			</Row>
-		</Form>
+		</Form >
 	);
 }
