@@ -35,10 +35,6 @@ export class ApplicantExtrasEntity {
 					then: yup.array(VioalationExtrasEntity.yupSchema()),
 				})
 				.when("type", {
-					is: ApplicantExtras.VIOLATION_COUNT,
-					then: yup.number().optional().nullable(),
-				})
-				.when("type", {
 					is: ApplicantExtras.APPLY_DATE,
 					then: yup.string().required().nullable(),
 				})
@@ -65,11 +61,11 @@ export class ApplicantExtrasEntity {
 				.when("type", {
 					is: ApplicantExtras.ROUTES,
 					then: yup
-					.array((yup.string() as any).enum(RouteType))
-					.min(1)
-					.typeError("Choose atleast one!")
-					.required()
-					.nullable(),
+						.array((yup.string() as any).enum(RouteType))
+						.min(1)
+						.typeError("Choose atleast one!")
+						.required()
+						.nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.REQUIRE_W2_EMPLOYMENT,
@@ -78,9 +74,9 @@ export class ApplicantExtrasEntity {
 				.when("type", {
 					is: ApplicantExtras.OTHER_ABSOLUTELY_REQUIREMENTS,
 					then: yup
-					.array((yup.string() as any).enum(OtherRequirementType))
-					.optional()
-					.nullable(),
+						.array((yup.string() as any).enum(OtherRequirementType))
+						.optional()
+						.nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.PAST_LICENSE_SUSPENSION,
