@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import styles from "../../../../styles/digitalhiringapp.module.css";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
@@ -9,6 +9,7 @@ import CompanyApi from "../../../../pages/api/company";
 import { CompanyPreferenceCategory } from "../../../../enums/company/company-preference-category.enum";
 import { useEffectAsync } from "../../../../utils/react";
 import { CompanyPreferenceJotformLabel } from "../../../../enums/company/company-preferences-jotform-label.enum";
+import { CompanyPreferenceEntity } from "../../../../models/company/company-preferences.entity";
 
 
 export function ContinueLongForm() {
@@ -18,7 +19,7 @@ export function ContinueLongForm() {
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
-	const [cdlCategory, setCdlCategory] = useState<string[]>([])
+	const [companyCdlPreferences, setCompanyCdlPreferences] = useState<string[]>([])
 	const form = useFormik({
 		initialValues: {},
 		onSubmit: () => {
@@ -26,37 +27,54 @@ export function ContinueLongForm() {
 			stepNext();
 		}
 	});
+
 	useEffectAsync(async () => {
 		if (applicant?.company) {
-			const api = new CompanyApi();
-			const preferences = await api.preferences.list(applicant?.company?.id, {
-				category: CompanyPreferenceCategory.JOTFORM,
-			}).then((pref) => {
-				const category = pref?.find(v => v?.label === CompanyPreferenceJotformLabel.CDL_CLASS)
-				setCdlCategory(category?.value)
-			})
+			const companyApi = new CompanyApi();
+			const cdl_class: CompanyPreferenceEntity = await companyApi.preferences
+				.list(applicant?.company?.id,
+					{ category: CompanyPreferenceCategory.JOTFORM }
+				)
+				.then((preferences: CompanyPreferenceEntity[]) =>
+					preferences?.find((v) =>
+						v?.label === CompanyPreferenceJotformLabel.CDL_CLASS
+					)
+				);
 
+			setCompanyCdlPreferences(cdl_class?.value?.map(v => t(`DriverLicenseType.${v}`)) ?? [])
 			toast.success(t("successfully_saved_information"));
 		}
-	}, [])
+	}, [applicant?.company])
 
-
-	const categoryTypes = cdlCategory.join(', ')
 	return (
 		<>
 			<ToastContainer />
 			<form onSubmit={form.handleSubmit}>
 				<Row>
 					<h4 className={styles.heading__sty}>
-						{t("{company_name}_THANKS", { company_name: applicant?.company?.name }, { translateProps: true })}
+						{t(
+							"{company_name}_THANKS",
+							{ company_name: applicant?.company?.name },
+							{ translateProps: true }
+						)}
 					</h4>
 				</Row>
 				<Row className="mt-3">
-					{cdlCategory.length > 0 && !cdlCategory.includes(applicant?.license_type) && (
-						<h6 className={`${styles.paragraph} ${styles.margin__top} bg-danger text-light  p-1`}>
-							{t("{company_name}_THANKS_NOTE_{cdl_category}", { company_name: applicant?.company?.name, cdl_category: categoryTypes }, { translateProps: true })}
-						</h6>
-					)}
+					{(
+						Boolean(companyCdlPreferences.length > 0)
+						&& !Boolean(companyCdlPreferences.includes(t(`DriverLicenseType.${applicant?.license_type}`)))
+					) && (
+							<h6 className={`${styles.paragraph} ${styles.margin__top} bg-danger text-light  p-1`}>
+								{t(
+									"{company_name}_REQUIRES_{cdl_category}",
+									{
+										company_name: applicant?.company?.name,
+										cdl_category: companyCdlPreferences.join(", ")
+									},
+									{ translateProps: true }
+								)}
+							</h6>
+						)}
 				</Row>
 				<Row className="mt-3">
 					<Col className="text-center" >
