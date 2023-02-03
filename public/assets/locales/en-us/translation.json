@@ -1857,5 +1857,8 @@
   "UPLOAD_THIS_IMAGE": "Upload!",
   "CAMERA_BLOCKER": "Sorry, This Functionality is not yet availabe!",
   "MEDIA_PREFERENCE": "Use device camera instead",
-  "N/A": "Not Provided"
+  "N/A": "Not Provided",
+  "DIGITAL_HIRING_APP": "Digital Hiring App",
+  "ATS": "ATS",
+  "SOURCE": "Source"
 }
