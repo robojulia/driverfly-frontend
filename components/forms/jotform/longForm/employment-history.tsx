@@ -126,6 +126,7 @@ export function EmploymentHistory() {
 								className="col-md-6 my-3"
 								required
 								type="date"
+								max={new Date().toISOString().split('T')[0]}
 								name="employer.start_at"
 								label="START_DATE"
 								formik={form}
@@ -157,12 +158,6 @@ export function EmploymentHistory() {
 						</Row>
 
 						<Row className={styles.bold}>
-						</Row>
-						<Row className={styles.bold}>
-							<p
-								className={`${styles.align__text_left} `} style={{ fontSize: '20px', color: '#000', margin: '15px 0px', fontWeight: '600' }}>
-								{t("ADDRESS_PAST_COMPANY")}
-							</p>
 						</Row>
 						<Row className={styles.bold}>
 							<BaseInput
