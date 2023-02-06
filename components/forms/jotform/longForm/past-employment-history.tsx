@@ -130,6 +130,7 @@ export function PastEmploymentHistory() {
 											type="date"
 											name={`employers[${i}].start_at`}
 											label="START_DATE"
+											max={`9999-11-11`}
 											formik={form}
 										/>
 										<BaseInput
@@ -138,6 +139,7 @@ export function PastEmploymentHistory() {
 											type="date"
 											name={`employers[${i}].end_at`}
 											label="END_DATE"
+											max={`9999-11-11`}
 											formik={form}
 										/>
 									</Row>
