@@ -1450,7 +1450,7 @@
   "FILTER_&_SEARCH_DRIVER_JOBS": "Filter & Search Driver Jobs",
   "BROWSE_HUNDREDS_OF_JOBS_ON_YOIR_SPECIFIC_CRITERIA": "Browse hundreds of jobs based on your specific criteria, including driver schedule & other parameters.",
   "SAVE_&_APPLY": "Save & Apply",
-  "USE_THE_DRIVERFLY_PLATFORM_TO_FAVORITE_JOBS": "Use the DriverFly platform to favorite jobs, forward to friends, and submit for application.",
+  "USE_THE_DRIVERFLY_PLATFORM_TO_FAVORITE_JOBS": "Use the DriverFly platform for your favorite jobs, forward to friends, and submit for application.",
   "HAVE_JOBS_COME_TO_YOU": "Have Jobs Come To You",
   "YOU_ALSO_HAVE_THE_ABILITY_TO_DISPLAY_YOUR_PROFILE": "You also have the ability to display your profile to prospective employers and set up push notifications (through RSS feeds) whenever a job matching your search criteria becomes available.",
   "GET_HIRED": "Get Hired",
@@ -1530,7 +1530,7 @@
   "{company_name}_SMS_EMAIL_AUTHORIZATION_NAUTILIUS": "I authorize {{company_name}} and any applicable third parties associated with {{company_name}} the ability to send me SMS and email communications regarding job availabilities and other relevant resources.",
   "PLACEHOLDER_FOR_DIGITS": "ex:2",
   "{company_name}_THANKS": "Thanks for your submission to {{company_name}}.",
-  "{company_name}_THANKS_NOTE": "Please note that {{company_name}} requires that you have your Class A CDL to be employed here.",
+  "{company_name}_REQUIRES_{cdl_category}": "Please note that {{company_name}} requires that you have your {{cdl_category}} to be employed here.",
   "{COMPANY_NAME}_MVR_AND_DMV_AUTHORIZATION": " Submitting this application certifies that this form was completed by me and all entries and information on it are true and complete to the best of my knowledge. I authorize {{COMPANY_NAME}} to make investigations and inquires of my driving history and past employment records. I hereby authorize {{COMPANY_NAME}} to check my MVR from DMV and PSP record for review as part of the hiring process.",
   "MORE_ABOUT_ACCIDENTS": "Tell us more about your accidents(even if not at fault)",
   "LABEL_ACCIDENT_NATURE": "Nature of Accident",
@@ -1848,7 +1848,7 @@
   "ERROR_SIGNS_REQUIRED": "Signature is Required",
   "COMPANY_PREFERENCE": "Company Preferences",
   "MARK_SURE_ALERT": "Are you sure you want to proceed with your decision?",
-  "ACCORDIAN_ALERT": "Please go through all the tabs to proceed with your submission request!  ",
+  "ACCORDIAN_ALERT": "Please go through all the tabs to proceed with your submission request!",
   "APPLICANT_DAC": "Applicant DAC",
   "DRUG_TEST_PASS": "Drug Test Pass",
   "YEARS_OF_CDL_EXPERIENCE": "Years",
@@ -1860,5 +1860,10 @@
   "N/A": "Not Provided",
   "DIGITAL_HIRING_APP": "Digital Hiring App",
   "ATS": "ATS",
-  "SOURCE": "Source"
+  "SOURCE": "Source",
+  "EMAIL_ADDRESS": "Email Address",
+  "ApplicantSourceEnum": {
+    "DIGITAL_HIRING_APP": "Digital Hiring App",
+    "ATS": "ATS"
+  }
 }

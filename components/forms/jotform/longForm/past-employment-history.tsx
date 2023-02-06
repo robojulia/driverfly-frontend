@@ -128,6 +128,7 @@ export function PastEmploymentHistory() {
 											className="col-md-6 my-3"
 											required
 											type="date"
+											max={new Date().toISOString().split('T')[0]}
 											name={`employers[${i}].start_at`}
 											label="START_DATE"
 											formik={form}
@@ -136,6 +137,7 @@ export function PastEmploymentHistory() {
 											className="col-md-6 my-3"
 											required
 											type="date"
+											max={new Date().toISOString().split('T')[0]}
 											name={`employers[${i}].end_at`}
 											label="END_DATE"
 											formik={form}
