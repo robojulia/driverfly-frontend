@@ -159,7 +159,7 @@ export function AccidentHistory() {
 			)}
 			{(
 				Boolean(form?.values?.accident_count > 0)
-				&& Boolean(form?.values?.accident_count > form?.values?.ACCIDENT_DETAILS?.value?.length)
+				&& Boolean(form?.values?.accident_count > (form?.values?.ACCIDENT_DETAILS?.value ?? []).length)
 			) && (
 					<Row>
 						<div className="mt-4 float-left d-flex justify-left">

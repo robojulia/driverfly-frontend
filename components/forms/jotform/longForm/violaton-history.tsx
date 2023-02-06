@@ -138,7 +138,7 @@ export function ViolationHistory() {
 			)}
 			{(
 				Boolean(form?.values?.moving_violations_count > 0)
-				&& Boolean(form?.values?.moving_violations_count > form?.values?.VIOLATION_DETAILS?.value?.length)
+				&& Boolean(form?.values?.moving_violations_count > (form?.values?.VIOLATION_DETAILS?.value ?? []).length)
 			) && (
 					<Row>
 						<div className="mt-4 float-left d-flex justify-left px-3">
