@@ -130,7 +130,6 @@ export function EmploymentHistory() {
 								name="employer.start_at"
 								label="START_DATE"
 								formik={form}
-								max={`9999-11-11`}
 							/>
 							<BaseInputPhone
 								className="col-md-6 my-3"

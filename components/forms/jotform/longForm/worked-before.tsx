@@ -90,7 +90,7 @@ export function WorkedBefore() {
 									placeholder="DATE"
 									label="FROM"
 									required
-									max={`9999-11-11`}
+									max={`9999-12-31`}
 									formik={form}
 								/>
 								<BaseInput
@@ -100,7 +100,7 @@ export function WorkedBefore() {
 									placeholder="DATE"
 									required
 									label="TO"
-									max={`9999-11-11`}
+									max={`9999-12-31`}
 									formik={form}
 								/>
 

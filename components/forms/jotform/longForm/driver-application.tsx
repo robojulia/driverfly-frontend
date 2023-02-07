@@ -122,7 +122,7 @@ export function DriverApplication() {
 						type="date"
 						name="APPLY_DATE.value"
 						placeholder="DATE"
-						max={`9999-11-11`}
+						max={`9999-12-31`}
 						min={new Date().toISOString().split("T")[0]}
 						label="DATE"
 						formik={form}
