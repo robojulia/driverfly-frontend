@@ -12,17 +12,19 @@ export default function ThankYou() {
 
     const router = useRouter();
     const [jobId, setJobId] = useState<any>(null);
+    const [jobSlug, setJobSlug] = useState<any>(null);
 
     const { t } = useTranslation();
-    const jobUrl = `/dashboard/company/jobs/${jobId}`;
+    const jobUrl = `${process.env.FRONTEND_BASE_URL}/jobs/${jobId}/${jobSlug}`;
     // const jobUrl = `https://test.driverfly.co/jobs/19/jobmatching7`;
 
     useEffect(() => {
         const fetchData = async () => {
             const url = typeof router?.query?.id === 'string' ? router.query.id : (router.query.id as string[])[0];
+            setJobId(url);
             if (url && !isNaN(parseInt(url))) {
                 const job = await new JobApi().getById(parseInt(url));
-                setJobId(job.slug);
+                setJobSlug(job.slug)
                 console.log("job fetched", job);
             }
         };
