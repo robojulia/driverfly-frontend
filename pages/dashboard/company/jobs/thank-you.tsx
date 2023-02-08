@@ -17,14 +17,18 @@ export default function ThankYou() {
     const jobUrl = `/dashboard/company/jobs/${jobId}`;
     // const jobUrl = `https://test.driverfly.co/jobs/19/jobmatching7`;
 
-    useEffectAsync(async () => {
-        const url = router?.query?.id
-        // comment added
-        const job = await new JobApi().getById(parseInt(url))
-        setJobId(job.slug)
-        console.log("job fetced", job);
+    useEffect(() => {
+        const fetchData = async () => {
+            const url = typeof router?.query?.id === 'string' ? router.query.id : (router.query.id as string[])[0];
+            if (url && !isNaN(parseInt(url))) {
+                const job = await new JobApi().getById(parseInt(url));
+                setJobId(job.slug);
+                console.log("job fetched", job);
+            }
+        };
 
-    }, [])
+        fetchData();
+    }, []);
 
     const goBack = () => window.setTimeout(() => router.push(jobId), 2000);
 
