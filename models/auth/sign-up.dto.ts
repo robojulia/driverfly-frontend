@@ -30,7 +30,13 @@ export class SignUpDto {
 			last_name: yup.string().trim().required().nullable(),
 			phone: yup.string().trim().nullable(),
 			email: yup.string().trim().email().required().nullable(),
-			password: yup.string().trim().required().nullable(),
+
+			/* Validating the password. */
+			password: yup.string().trim().min(8, "PASSWORD_REQUIREMENT_LENGTH")
+				.matches(/\d/, "PASSWORD_REQUIREMENT_NUMBER")
+				.matches(/[`!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/, "PASSWORD_REQUIREMENT_SPECIAL_CHARACTER")
+				.required().nullable(),
+
 			confirmPassword: yup.string().trim().oneOf([yup.ref("password")], "PASSWORDS_DO_NOT_MATCH").required().nullable(),
 			accept_tos: yup.boolean().oneOf([true], "MUST_BE_CHECKED"),
 			personal_recruiter: yup.boolean().nullable(),
