@@ -46,7 +46,7 @@ export default function ThankYou() {
                 </Row>
                 <Row className="mt-90">
                     <Col md="12" lg="6">
-                        <FacebookShare jobUrl={jobId} />
+                        <FacebookShare jobUrl={jobUrl} />
                     </Col>
                     <Col className="text-lg-right my-3 my-lg-0" md="12" lg="6">
                         <button className="theme-secondary-btn w-100 p-4">{t("SHARE_ON_DRIVERFLY_FACEBOOK_PAGE")}</button>
