@@ -425,7 +425,7 @@ export function JobForm(props: JobFormProps) {
             else {
                 job = await jobApi.create(dto);
                 // Navigate to the post page and pass the URL as a prop
-                router.push({ pathname: '/dashboard/company/jobs/thank-you/', query: { id: job.id } });
+                // router.push({ pathname: '/dashboard/company/jobs/thank-you/', query: { id: job.id } });
             }
 
             setShowConfirmationModal(false);

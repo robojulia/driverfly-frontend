@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import { useTranslation } from "../../../../hooks/use-translation";
 import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
 import ChildPageLayout from "../../../../components/layouts/page/child-page-layout";
@@ -9,12 +8,11 @@ import { Col, Container, Row } from "react-bootstrap";
 import FacebookShare from "../../../../components/facebook-share";
 
 export default function CreateJob() {
-    const router = useRouter();
     const { t } = useTranslation();
 
     const [job, setJob] = useState<JobEntity>(null)
 
-    const jobUrl = (): string => (`${process.env.FRONTEND_BASE_URL}/jobs/${job.id}/${job?.slug}`)
+    const jobUrl: string = `${process.env.FRONTEND_BASE_URL}/jobs/${job?.id}/${job?.slug}`
 
     return (
         <ChildPageLayout
@@ -32,7 +30,7 @@ export default function CreateJob() {
 
                         <Col>
                             <a
-                                href="" // set path for job.id
+                                href={jobUrl}
                                 type="button"
                                 className="theme-primary-btn btn-block btn-theme w-100 p-3"
                             > {t("view_job")}</a>
