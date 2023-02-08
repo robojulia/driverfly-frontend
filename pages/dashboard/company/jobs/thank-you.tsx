@@ -19,6 +19,7 @@ export default function ThankYou() {
 
     useEffectAsync(async () => {
         const url: number = router?.query?.id
+        // comment added
         const job = await new JobApi().getById(parseInt(url))
         setJobId(job.slug)
         console.log("job fetced", job);
