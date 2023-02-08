@@ -4,9 +4,8 @@ import FullLayout from "../../../../components/dashboard/layouts/layout/full-lay
 import PageLayout from "../../../../components/layouts/page/page-layout";
 import { Col, Container, Row } from "react-bootstrap";
 import FacebookShare from "../../../../components/facebook-share";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import JobApi from "../../../api/job";
-import { JobFormProps } from "../../../../components/forms/company/job-form";
 import { JobEntity } from "../../../../models/job/job.entity";
 import { useEffectAsync } from "../../../../utils/react";
 
