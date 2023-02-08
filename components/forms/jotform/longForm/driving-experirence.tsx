@@ -80,6 +80,7 @@ export function DrivingExperience() {
 					placeholder="expiration_date"
 					label="expiration_date"
 					formik={form}
+					max={`9999-12-31`}
 				/>
 				<StateSelect
 					className="col-md-6  my-3"
