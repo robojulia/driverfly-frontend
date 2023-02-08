@@ -18,7 +18,7 @@ export default function ThankYou() {
     // const jobUrl = `https://test.driverfly.co/jobs/19/jobmatching7`;
 
     useEffectAsync(async () => {
-        const url: number = router?.query?.id
+        const url = router?.query?.id
         // comment added
         const job = await new JobApi().getById(parseInt(url))
         setJobId(job.slug)
