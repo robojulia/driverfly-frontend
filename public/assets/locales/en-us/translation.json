@@ -1855,16 +1855,17 @@
   "APPLICANT_DAC": "Applicant DAC",
   "DRUG_TEST_PASS": "Drug Test Pass",
   "YEARS_OF_CDL_EXPERIENCE": "Years",
-  "CONGRATS":"Congrats job created successful",
-  "SHARE_ON_YOUR_COMPANY_FACEBOOK_PAGE":"Share On Your Company Facebook Page",
-  "SHARE_ON_DRIVERFLY_FACEBOOK_PAGE":"Share On DriverFly Facebook Page",
-  "WANT_TO_POST_OUTSIDE_JOB_BOARDS":"Want to post on outside job boards?",
-  "COPY_FULL_JOB_DETAILS":"Copy Full Job Details",
+  "CONGRATS": "CONGRATS!",
+  "SHARE_ON_YOUR_COMPANY_FACEBOOK_PAGE": "Share On Your Company Facebook Page",
+  "SHARE_ON_DRIVERFLY_FACEBOOK_PAGE": "Share On DriverFly Facebook Page",
+  "WANT_TO_POST_OUTSIDE_JOB_BOARDS": "Want to post on outside job boards?",
+  "COPY_FULL_JOB_DETAILS": "Copy Full Job Details",
   "CAPTURE": "Capture",
   "NEW_IMAGE": "Take Again",
   "UPLOAD_THIS_IMAGE": "Upload!",
   "CAMERA_BLOCKER": "Sorry, This Functionality is not yet availabe!",
   "MEDIA_PREFERENCE": "Use device camera instead",
   "N/A": "Not Provided",
-  "EMAIL_ADDRESS": "Email Address"
+  "EMAIL_ADDRESS": "Email Address",
+  "{jobTitle}_CREATED": "{{jobTitle}} successfully created"
 }

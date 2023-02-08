@@ -6,44 +6,42 @@ import { Col, Container, Row } from "react-bootstrap";
 import FacebookShare from "../../../../components/facebook-share";
 import { useEffect, useState } from "react";
 import JobApi from "../../../api/job";
+import { JobFormProps } from "../../../../components/forms/company/job-form";
+import { JobEntity } from "../../../../models/job/job.entity";
 import { useEffectAsync } from "../../../../utils/react";
 
 export default function ThankYou() {
 
     const router = useRouter();
     const [jobId, setJobId] = useState<any>(null);
-    const [jobSlug, setJobSlug] = useState<any>(null);
+    const [job, setJob] = useState<JobEntity>(null);
 
     const { t } = useTranslation();
-    const jobUrl = `${process.env.FRONTEND_BASE_URL}/jobs/${jobId}/${jobSlug}`;
-    // const jobUrl = `https://test.driverfly.co/jobs/19/jobmatching7`;
+    const jobUrl = `${process.env.FRONTEND_BASE_URL}/jobs/${jobId}/${job?.slug}`;
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const url = typeof router?.query?.id === 'string' ? router.query.id : (router.query.id as string[])[0];
-            setJobId(url);
-            if (url && !isNaN(parseInt(url))) {
-                const job = await new JobApi().getById(parseInt(url));
-                setJobSlug(job.slug)
-                console.log("job fetched", job);
-            }
-        };
+    useEffectAsync(async () => {
 
-        fetchData();
+        const id = router?.query?.id;
+        const url = id && id.length > 0 ? (typeof id === 'string' ? id : id[0]) : undefined;
+        setJobId(url);
+        if (url && !isNaN(parseInt(url))) {
+            const job = await new JobApi().getById(parseInt(url));
+            setJob(job)
+        }
+
+
     }, []);
-    // useEffect(() => {
-    //     const url = router?.query?.id
-    //     setJobId(url)
-    // }, [])
-
 
     const goBack = () => window.setTimeout(() => router.push(jobId), 2000);
 
     return (
         <PageLayout
-            title={t("CONGRATS")}
         >
             <Container>
+                <h3 className="text-center text-success">{t("CONGRATS")}</h3>
+                <h3 className="text-center">
+                    {t("{jobTitle}_CREATED", { jobTitle: job?.title }, { translateProps: true })}
+                </h3>
                 <Row className="text-center mt-150">
 
                     <Col>
