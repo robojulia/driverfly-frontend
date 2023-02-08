@@ -1862,8 +1862,10 @@
   "ATS": "ATS",
   "SOURCE": "Source",
   "EMAIL_ADDRESS": "Email Address",
-  "ApplicantSourceEnum": {
-    "DIGITAL_HIRING_APP": "Digital Hiring App",
-    "ATS": "ATS"
+  "ApplicantType": {
+    "USER": "USER",
+    "COMPANY": "COMPANY",
+    "DHA": "Digital Hiring App",
+    "DIRECT_JOB_APPLY": "Direct Job Apply"
   }
 }

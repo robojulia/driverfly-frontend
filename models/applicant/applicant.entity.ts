@@ -20,7 +20,7 @@ import {
 	ApplicantExtrasEntity
 } from "./index"
 import { ApplicantVoeFormEntity } from "./applicant-voe-form.entity";
-import { ApplicantSourceEnum } from "../../enums/applicants/applicant-source.enum";
+
 
 export class ApplicantEntity {
 	id?: number;
@@ -88,7 +88,6 @@ export class ApplicantEntity {
 	extras?: ApplicantExtrasEntity[] = []
 	voeData?: ApplicantVoeFormEntity[] = []
 	uuid_token?: string;
-	source: ApplicantSourceEnum
 
 	static yupSchema() {
 		return yup.object({
@@ -165,7 +164,6 @@ export class ApplicantEntity {
 				yup.array(DocumentEntity.yupSchema(ApplicantDocumentType)) as any
 			).unique("type"),
 			jobs: (yup.array(ApplicantJobEntity.yupSchema()) as any).unique("job.id"),
-			source: (yup.string() as any).enum(ApplicantSourceEnum).nullable(),
 		});
 	}
 }

@@ -28,7 +28,6 @@ import { ApplicantReasonCodeFired, ApplicantReasonCodeNotInterested, ApplicantRe
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import OverlyPopover from "../../../../components/popover/overly-popover";
 import Link from "next/link";
-import { ApplicantSourceEnum } from "../../../../enums/applicants/applicant-source.enum";
 
 const ViewMode = {
     job: "job",
@@ -471,7 +470,7 @@ function ApplicantView(props: ViewProps) {
                     {
                         id: "source",
                         name: "SOURCE",
-                        selector: applicant => applicant.source ? t(`ApplicantSourceEnum.${applicant.source}`) : "",
+                        selector: applicant => applicant.type ? t(`ApplicantType.${applicant.type}`) : "",
                     },
                     {
                         id: "assigned_to",
