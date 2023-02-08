@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from '../hooks/use-translation';
 
 const FacebookShare = ({ jobUrl }) => {
+    useEffect(() => {
+        console.log("joburl", jobUrl);
+
+    }, [])
     const { t } = useTranslation();
 
     const handleClick = () => {

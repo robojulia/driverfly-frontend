@@ -5,6 +5,8 @@ import PageLayout from "../../../../components/layouts/page/page-layout";
 import { Col, Container, Row } from "react-bootstrap";
 import FacebookShare from "../../../../components/facebook-share";
 import { useEffect, useState } from "react";
+import JobApi from "../../../api/job";
+import { useEffectAsync } from "../../../../utils/react";
 
 export default function ThankYou() {
 
@@ -13,10 +15,14 @@ export default function ThankYou() {
 
     const { t } = useTranslation();
     const jobUrl = `/dashboard/company/jobs/${jobId}`;
+    // const jobUrl = `https://test.driverfly.co/jobs/19/jobmatching7`;
 
-    useEffect(() => {
-        const url = router?.query?.id
-        setJobId(url)
+    useEffectAsync(async () => {
+        const url: number = router?.query?.id
+        const job = await new JobApi().getById(parseInt(url))
+        setJobId(job.slug)
+        console.log("job fetced", job);
+
     }, [])
 
     const goBack = () => window.setTimeout(() => router.push(jobId), 2000);
@@ -35,7 +41,7 @@ export default function ThankYou() {
                 </Row>
                 <Row className="mt-90">
                     <Col md="12" lg="6">
-                        <FacebookShare jobUrl={jobUrl} />
+                        <FacebookShare jobUrl={jobId} />
                     </Col>
                     <Col className="text-lg-right my-3 my-lg-0" md="12" lg="6">
                         <button className="theme-secondary-btn w-100 p-4">{t("SHARE_ON_DRIVERFLY_FACEBOOK_PAGE")}</button>
