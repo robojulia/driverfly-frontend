@@ -29,6 +29,11 @@ export default function ThankYou() {
 
         fetchData();
     }, []);
+    // useEffect(() => {
+    //     const url = router?.query?.id
+    //     setJobId(url)
+    // }, [])
+
 
     const goBack = () => window.setTimeout(() => router.push(jobId), 2000);
 
