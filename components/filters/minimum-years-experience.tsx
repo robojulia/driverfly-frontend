@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { InputGroup } from "react-bootstrap";
 import { useTranslation } from "../../hooks/use-translation";
+import { SearchJobFilterProps } from "../../types/search-filter/job-search-filter.type";
 import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion";
 import BaseInput from "../forms/base-input";
 
@@ -8,7 +9,7 @@ export type MinimumExperienceType = {
     months: number,
     years: number
 }
-export default function MinimumYearsExperience(props) {
+export default function MinimumYearsExperience(props: SearchJobFilterProps) {
 
     const {
         state: { filters: { min_years_experience } },
@@ -21,7 +22,9 @@ export default function MinimumYearsExperience(props) {
         years: min_years_experience ? Math.floor(min_years_experience) : null
     })
 
-    const handleChange = ({ target: { name, value } }: React.ChangeEvent<HTMLInputElement>): void =>
+    const handleChange = (
+        { target: { name, value } }: React.ChangeEvent<HTMLInputElement>
+    ): void =>
         setMinimumExperience({
             ...minimumExperience,
             [name]: value ? parseInt(value) : 0

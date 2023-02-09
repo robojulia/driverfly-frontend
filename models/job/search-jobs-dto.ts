@@ -32,7 +32,7 @@ export interface SearchJobsDto {
     companyId?: number;
     keywords?: string;
     cdl_class?: DriverLicenseType;
-    areas_covered?: JobGeography;
+    areas_covered?: JobGeography | JobGeography[];
     employment_type?: JobEmploymentType;
     delivery_type?: JobDeliveryType;
     equipment_type?: JobEquipmentType;
@@ -49,6 +49,7 @@ export interface SearchJobsDto {
     take?: number;
     page?: number;
     min_years_experience?: number;
+    max_years_experience?: number;
     total_years_experience?: number;
     team_drivers?: JobTeamDriver;
 
