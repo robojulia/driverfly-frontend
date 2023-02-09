@@ -29,6 +29,10 @@ export default function EmbeddedFilters({ filterType }: EmbeddedFiltersProps) {
 
     const { handleReset } = method;
 
+    /**
+     * It returns an object with the keys of the filterType enum, and the values are objects with the keys
+     * of the other enums, and the values are arrays of the enum values
+     */
     const hiddenOptions = () =>
     ({
         [EmbeddedFilterTypes.OWNER_OPERATOR]: {
@@ -43,9 +47,6 @@ export default function EmbeddedFilters({ filterType }: EmbeddedFiltersProps) {
             JobDeliveryType: [JobDeliveryType.FINAL_MILE]
         },
     }[filterType] || {})
-
-    console.log("hiddenOptions", typeof hiddenOptions());
-
 
     return (
         <div className="filter_container">
