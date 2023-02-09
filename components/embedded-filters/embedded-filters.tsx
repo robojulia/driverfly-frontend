@@ -18,6 +18,7 @@ import { EmbeddedFilterTypes } from "../../enums/embedded/embedded-filter-types.
 import TeamDrivers from "../filters/team-driver";
 import MinimumYearsExperience from "../filters/minimum-years-experience";
 import { DriverEndorsement } from "../../enums/users/driver-endorsement.enum";
+import { JobDeliveryType } from "../../enums/jobs/job-delivery-type.enum";
 
 export type EmbeddedFiltersProps = {
     filterType: EmbeddedFilterTypes;
@@ -27,6 +28,24 @@ export default function EmbeddedFilters({ filterType }: EmbeddedFiltersProps) {
     const { state, method } = useContext(JobContext);
 
     const { handleReset } = method;
+
+    const hiddenOptions = () =>
+    ({
+        [EmbeddedFilterTypes.OWNER_OPERATOR]: {
+            DriverEndorsement: [DriverEndorsement.SCHOOL_BUS],
+        },
+        [EmbeddedFilterTypes.TEAM_DRIVERS]: {
+            DriverEndorsement: [DriverEndorsement.SCHOOL_BUS],
+            JobDeliveryType: [JobDeliveryType.FINAL_MILE]
+        },
+        [EmbeddedFilterTypes.OTR_JOBS]: {
+            DriverEndorsement: [DriverEndorsement.SCHOOL_BUS],
+            JobDeliveryType: [JobDeliveryType.FINAL_MILE]
+        },
+    }[filterType] || {})
+
+    console.log("hiddenOptions", typeof hiddenOptions());
+
 
     return (
         <div className="filter_container">
@@ -59,7 +78,10 @@ export default function EmbeddedFilters({ filterType }: EmbeddedFiltersProps) {
                                     <AreasCovered state={state} method={method} />
                                 )}
 
-                            <TypeOfDelivery state={state} method={method} />
+                            <TypeOfDelivery
+                                hide={(hiddenOptions()).JobDeliveryType}
+                                state={state}
+                                method={method} />
                             <PayStructure state={state} method={method} />
 
                             {!Boolean(
@@ -78,11 +100,10 @@ export default function EmbeddedFilters({ filterType }: EmbeddedFiltersProps) {
                             {!Boolean(
                                 [
                                     EmbeddedFilterTypes.HEAVY_HAUL,
-                                    // EmbeddedFilterTypes.OWNER_OPERATOR
                                 ].includes(filterType)
                             ) && (
                                     <SpecialEndorsementsRequired
-                                        // hide={[DriverEndorsement.SCHOOL_BUS]}
+                                        hide={(hiddenOptions()).DriverEndorsement}
                                         state={state}
                                         method={method}
                                     />
