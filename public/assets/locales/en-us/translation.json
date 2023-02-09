@@ -1861,5 +1861,14 @@
   "CAMERA_BLOCKER": "Sorry, This Functionality is not yet availabe!",
   "MEDIA_PREFERENCE": "Use device camera instead",
   "N/A": "Not Provided",
-  "EMAIL_ADDRESS": "Email Address"
+  "DIGITAL_HIRING_APP": "Digital Hiring App",
+  "ATS": "ATS",
+  "SOURCE": "Source",
+  "EMAIL_ADDRESS": "Email Address",
+  "ApplicantType": {
+    "USER": "USER",
+    "COMPANY": "COMPANY",
+    "DHA": "Digital Hiring App",
+    "DIRECT_JOB_APPLY": "Direct Job Apply"
+  }
 }

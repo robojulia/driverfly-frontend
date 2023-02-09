@@ -21,6 +21,7 @@ import {
 } from "./index"
 import { ApplicantVoeFormEntity } from "./applicant-voe-form.entity";
 
+
 export class ApplicantEntity {
 	id?: number;
 	version?: number;

@@ -5,7 +5,7 @@ import { TranslateInterface, useTranslation } from "../../../../hooks/use-transl
 import { FormGroup, FormControlLabel, Switch } from '@mui/material';
 import { EyeFill, PencilFill } from 'react-bootstrap-icons';
 import ApplicantApi from "../../../api/applicant";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NextRouter, useRouter } from 'next/router';
 import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum';
 import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
@@ -44,6 +44,7 @@ interface ConsolodatedApplicantJob extends ApplicantJobEntity {
     meets_basic_qualifications?: boolean;
     qualification_fail_reason?: string[];
 }
+
 export default function Applicants() {
     // continue loading
     const { t } = useTranslation();
@@ -429,6 +430,7 @@ function ApplicantView(props: ViewProps) {
                         name: 'ID',
                         selector: applicant => applicant.id,
                     },
+
                     {
                         id: "name",
                         name: "NAME",
@@ -466,10 +468,15 @@ function ApplicantView(props: ViewProps) {
                         selector: applicant => applicant.email,
                     },
                     {
+                        id: "type",
+                        name: "type",
+                        selector: applicant => applicant.type ? t(`ApplicantType.${applicant.type}`) : "",
+                    },
+                    {
                         id: "assigned_to",
                         name: "ASSIGNED_TO",
                         selector: applicant => applicant.assignedUser?.name || t("NONE"),
-                    },
+                    }
                 ]}
                 items={items}
                 actions={row => [
