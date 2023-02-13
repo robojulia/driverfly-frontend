@@ -7,6 +7,7 @@ import BaseCheck from "../../base-check";
 import { AccidentViolationDto } from "../../../../models/jot-form/short-form/accident-violation.dto";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import styles from "../../../../styles/digitalhiringapp.module.css";
+import { DriverLicenseType } from "../../../../enums/users/driver-license-type.enum";
 
 
 export function AccidentViolation() {
@@ -51,6 +52,9 @@ export function AccidentViolation() {
 		});
 	}, []);
 	useEffect(() => {
+		console.log("applicant", applicant.license_type);
+		console.log("checkeeee", Boolean(applicant.license_type === DriverLicenseType.NO_CDL));
+
 		console.log("values", form.values);
 		console.log("error", form.errors);
 	}, [form.values, form.errors]);
@@ -86,12 +90,17 @@ export function AccidentViolation() {
 					/>
 				</Row>
 				<Row >
-					<BaseCheck
-						className="col my-3"
-						name="authorized_to_work_in_us"
-						label="ELIGIBLE_TO_WORK_IN_US"
-						formik={form}
-					/>
+					{
+						Boolean(applicant.license_type === DriverLicenseType.NO_CDL) && (
+							<BaseCheck
+								className="col my-3"
+								name="authorized_to_work_in_us"
+								label="ELIGIBLE_TO_WORK_IN_US"
+								formik={form}
+							/>
+						)
+					}
+
 				</Row>
 				<Row className={"mt-3"}>
 					<Col>

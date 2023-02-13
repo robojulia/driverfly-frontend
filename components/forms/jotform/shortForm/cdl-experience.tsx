@@ -71,7 +71,11 @@ export function CdlExperience() {
 				break;
 		}
 	}
+	useEffect(() => {
+		console.log("form errors", form.errors);
+		console.log("form values", form.values);
 
+	}, [form.errors, form.values])
 	return (
 		<>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -79,7 +83,7 @@ export function CdlExperience() {
 					<BaseSelect
 						className="col-12"
 						label="TYPE_CDL_CLASS"
-						placeholder="DriverLicenseType.NONE"
+						placeholder="SELECT_ONE_PLACEHOLDER"
 						name="license_type"
 						required
 						labelPrefix="DriverLicenseType"
@@ -88,7 +92,10 @@ export function CdlExperience() {
 						onChange={onLicenseTypeChange}
 					/>
 				</Row>
-				{!!form.values.license_type && (
+
+
+
+				{!!form.values.license_type && form.values.license_type !== DriverLicenseType.NO_CDL && (
 					<>
 						<Row className={styles.bold}>
 							<BaseInput
