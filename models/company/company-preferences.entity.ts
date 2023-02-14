@@ -4,6 +4,8 @@ import "../../utils/yup";
 import { CompanyEntity } from "./company.entity";
 import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
 import { CompanyPreferenceJotformLabel } from "../../enums/company/company-preferences-jotform-label.enum";
+import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
+import { JobGeography } from "../../enums/jobs/job-geography.enum";
 
 export class CompanyPreferenceEntity {
     constructor() { }
@@ -49,6 +51,14 @@ export class CompanyPreferenceEntity {
                         .when("label", {
                             is: CompanyPreferenceJotformLabel.YEARS_CDL_EXPERIENCE,
                             then: yup.number().min(0).required().nullable()
+                        })
+                        .when("label", {
+                            is: CompanyPreferenceJotformLabel.EMPLOYMENT_TYPE,
+                            then: yup.array((yup.string() as any).required().enum(JobEmploymentType)).nullable()
+                        })
+                        .when("label", {
+                            is: CompanyPreferenceJotformLabel.JOB_GEOGRAPHY,
+                            then: yup.array((yup.string() as any).required().enum(JobGeography)).nullable()
                         })
                 })
         });

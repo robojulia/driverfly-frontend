@@ -18,12 +18,15 @@ import { useEffectAsync } from "../../../../../utils/react";
 import BaseCheckList from "../../../../../components/forms/base-check-list";
 import BaseCheck from "../../../../../components/forms/base-check";
 import BaseInput from "../../../../../components/forms/base-input";
+import { JobEmploymentType } from "../../../../../enums/jobs/job-employment-type.enum";
+import { JobGeography } from "../../../../../enums/jobs/job-geography.enum";
 
 export default function CompanyPreference() {
   const { user } = useAuth();
 
   const { t } = useTranslation();
-
+  const removeEmploymentTypes = [JobEmploymentType.SEASONAL, JobEmploymentType.PART_TIME, JobEmploymentType.ONE_TIME_GIG]
+  const FilteredEmploymentTypes = Object.values(JobEmploymentType).filter(v => !removeEmploymentTypes.includes(v))
   const form = useFormik({
     initialValues: {
       cdl_class: {
@@ -32,18 +35,30 @@ export default function CompanyPreference() {
         label: CompanyPreferenceJotformLabel.CDL_CLASS,
         value: [],
       } as CompanyPreferenceEntity,
-      owner_operator: {
+      // owner_operator: {
+      //   ...new CompanyPreferenceEntity(),
+      //   category: CompanyPreferenceCategory.JOTFORM,
+      //   label: CompanyPreferenceJotformLabel.OWNER_OPERATOR,
+      //   value: false,
+      // } as CompanyPreferenceEntity,
+      employment_type: {
         ...new CompanyPreferenceEntity(),
         category: CompanyPreferenceCategory.JOTFORM,
-        label: CompanyPreferenceJotformLabel.OWNER_OPERATOR,
-        value: false,
+        label: CompanyPreferenceJotformLabel.EMPLOYMENT_TYPE,
+        value: [],
       } as CompanyPreferenceEntity,
-      drug_test_pass: {
+      job_geography: {
         ...new CompanyPreferenceEntity(),
         category: CompanyPreferenceCategory.JOTFORM,
-        label: CompanyPreferenceJotformLabel.DRUG_TEST_PASS,
-        value: false,
+        label: CompanyPreferenceJotformLabel.JOB_GEOGRAPHY,
+        value: [],
       } as CompanyPreferenceEntity,
+      // drug_test_pass: {
+      //   ...new CompanyPreferenceEntity(),
+      //   category: CompanyPreferenceCategory.JOTFORM,
+      //   label: CompanyPreferenceJotformLabel.DRUG_TEST_PASS,
+      //   value: false,
+      // } as CompanyPreferenceEntity,
       minimum_accidents: {
         ...new CompanyPreferenceEntity(),
         category: CompanyPreferenceCategory.JOTFORM,
@@ -66,11 +81,13 @@ export default function CompanyPreference() {
 
     validationSchema: yup.object({
       cdl_clas: CompanyPreferenceEntity.yupSchema(),
-      owner_operator: CompanyPreferenceEntity.yupSchema(),
-      drug_test_pass: CompanyPreferenceEntity.yupSchema(),
+      // owner_operator: CompanyPreferenceEntity.yupSchema(),
+      // drug_test_pass: CompanyPreferenceEntity.yupSchema(),
       minimum_moving_violations: CompanyPreferenceEntity.yupSchema(),
       minimum_accidents: CompanyPreferenceEntity.yupSchema(),
       years_cdl_experience: CompanyPreferenceEntity.yupSchema(),
+      employment_type: CompanyPreferenceEntity.yupSchema(),
+      job_geography: CompanyPreferenceEntity.yupSchema(),
     }),
     onSubmit: async (values) => {
       const api = new CompanyApi();
@@ -140,7 +157,7 @@ export default function CompanyPreference() {
         <BaseClickToCopyInput
           label="DIGITAL_HIRING_APP_URL"
           className="my-2 border p-3 rounded"
-          value={`${process.env.FRONTEND_BASE_URL ?? ""}form/digitalhiringapp/${user?.company?.id
+          value={`${process.env.FRONTEND_BASE_URL ?? ""}/form/digitalhiringapp/${user?.company?.id
             }`}
           tooltipText={t("CLICK_TO_COPY")}
         />
@@ -156,19 +173,37 @@ export default function CompanyPreference() {
               enumType={DriverLicenseType}
               formik={form}
             />
-            <BaseCheck
+            <BaseCheckList
+              className="col-12 mt-2"
+              label="EMPLOYMENT_TYPE"
+              name="employment_type.value"
+              labelPrefix="JobEmploymentType"
+              required
+              enumType={FilteredEmploymentTypes}
+              formik={form}
+            />
+            <BaseCheckList
+              className="col-12 mt-2"
+              label="PREFERRED_LOCATION"
+              name="job_geography.value"
+              labelPrefix="JobGeography"
+              required
+              enumType={JobGeography}
+              formik={form}
+            />
+            {/* <BaseCheck
               className="col-12 mt-4"
               label="OWNER_OPERATOR"
               name="owner_operator.value"
               formik={form}
-            />
+            /> */}
 
-            <BaseCheck
+            {/* <BaseCheck
               className="col-12 mt-4"
               label="DRUG_TEST_PASS"
               name="drug_test_pass.value"
               formik={form}
-            />
+            /> */}
 
             <BaseInput
               className="col-md-4 mt-4"
