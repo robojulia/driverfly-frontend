@@ -1,7 +1,7 @@
 import { useTranslation } from '../../hooks/use-translation';
 import React from 'react';
 import ViewCard from '../view-details/view-card';
-import { Link } from 'react-bootstrap-icons';
+import  Link  from 'next/link';
 import ViewTable from '../view-details/view-table';
 import { ViewApplicantDetailProps } from '../../types/applicant/view-application-detail-props.type';
 import { ApplicantSuggestedJobEntity } from '../../models/applicant/applicant-suggested-job.entity';
@@ -13,7 +13,6 @@ interface ApplicantConsiderForProps extends ViewApplicantDetailProps {
 export default function ApplicantConsiderFor({ applicant, applicantSuggestedJobs }: ApplicantConsiderForProps) {
 
     const { t } = useTranslation();
-
     return (
         <ViewCard title={t("CONSIDER_{name}_FOR", { name: applicant?.first_name })}>
             <ViewTable
