@@ -33,9 +33,22 @@ export function BarChart(props: BarChartProps): JSX.Element {
         <Bar
             options={{
                 maintainAspectRatio: false,
-                responsive: true
+                responsive: true,
+                scales: {
+                    x: {
+                      grid: {
+                        display: false,
+                      },
+                    },
+                    y: {
+                        grid: {
+                          display: false,
+                        },
+                      },
+                  },
             }}
             data={{
+                
                 labels: labels.map(v => t(v)),
                 datasets: [{
                     label: `${t(title)} - ${yearToShow}`,

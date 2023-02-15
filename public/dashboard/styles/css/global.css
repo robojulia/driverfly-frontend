@@ -629,6 +629,16 @@ textarea {
 .my_chart canvas {
     height: 270px;
 }
+.my_chart p {
+    font-size:10px;
+    font-weight:300;
+}
+.my_chart .h-10{
+    height:60px;
+}
+.stats_card{
+    width:300px;
+}
 
 .data_table_dropdown a {
     color: #000 !important;

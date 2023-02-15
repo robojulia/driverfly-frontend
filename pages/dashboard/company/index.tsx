@@ -7,42 +7,58 @@ import { TotalApplicantBarChart } from "../../../components/charts/company/total
 
 import { useAuth } from "../../../hooks/use-auth";
 import { PieChart } from "../../../components/charts/pie-chart";
+import { ChartWrapper } from "../../../components/charts/chart-wrapper";
+import { Card } from "react-bootstrap";
 
 export default function Dashboard() {
+  const { hasPermission } = useAuth();
 
-    const { hasPermission } = useAuth();
+  return (
+    <PageLayout title="COMPANY_PROFILE_DASHBOARD">
+      <Row>
+        {hasPermission("CanViewApplicant") && (
+          <>
+            <Row className="my_chart">
+              <ChartWrapper
+                title="Application Status"
+                subTitle={"Rage:(Total, past week, custom date range)"}
+              >
+                <ApplicantPieChart />
+              </ChartWrapper>
 
-    return (
-        <PageLayout
-            title="COMPANY_PROFILE_DASHBOARD"
-        >
-            <Row>
-                {
-                    hasPermission("CanViewApplicant") &&
-                    <>
-                        <Row className="my_chart">
-                            <Col md="6" className="p-0" >
-                                <ApplicantPieChart />
-                            </Col>
-                            <Col md="6" className="p-0" >
-                                <ApplicantsPerRecruiterChart />
-                            </Col>
-                            <Col md="12"  className="mt-5 p-0">
-                                <TotalApplicantBarChart />
-                            </Col>
-                        </Row>
-                    </>
-                }
+              <ChartWrapper
+                title="Stats"
+              >
+                <Card className="rounded-lg h-100 stats_card">
+                  <Card.Body>
+                    <Row>
+                        <Col md="4" className="justify-content-end text-end fw-bold ">2</Col>
+                        <Col md="8" className="justify-content-start text-primary fw-normal">
+                            Active Job Posts</Col>
+                    </Row>
+                    <Row>
+                        <Col md="4" className="justify-content-end text-end">245454</Col>
+                        <Col md="8" className="justify-content-start">Total Leads</Col>
+                    </Row>
+                  </Card.Body>
+                </Card>
+         </ChartWrapper>
+
+              <ChartWrapper title="Lead Assignment">
+                <ApplicantsPerRecruiterChart />
+              </ChartWrapper>
+
+              <Col md="12" className="mt-5 p-0">
+                <TotalApplicantBarChart />
+              </Col>
             </Row>
-
-        </PageLayout>
-    )
-};
+          </>
+        )}
+      </Row>
+    </PageLayout>
+  );
+}
 
 Dashboard.getLayout = function getLayout(page) {
-    return (
-        <FullLayout>
-            {page}
-        </FullLayout>
-    )
-}
+  return <FullLayout>{page}</FullLayout>;
+};
