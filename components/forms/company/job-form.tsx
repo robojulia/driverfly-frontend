@@ -1039,13 +1039,6 @@ export function JobForm(props: JobFormProps) {
                                 </Col >
 
                                 <Col md="6">
-
-                                    <BaseCheck
-                                        className="col-12"
-                                        label="must_pass_drug_test"
-                                        name="must_pass_drug_test"
-                                        formik={form}
-                                    />
                                     <BaseCheckList
                                         className="col-12"
                                         label="drug_test_type"
