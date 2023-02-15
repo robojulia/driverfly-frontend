@@ -1871,5 +1871,7 @@
     "DHA": "Digital Hiring App",
     "DIRECT_JOB_APPLY": "Direct Job Apply"
   },
-  "SELECT_ONE_PLACEHOLDER":"Please Select One"
+  "SELECT_ONE_PLACEHOLDER": "Please Select One",
+  "DRUG_TEST_VALIDATION": "You answered that you cannot pass a drug test.",
+  "DRUG_TEST_VALIDATION_FAIL_MESSAGE": "Please note that all US registered trucking companies require that drivers pass drug tests during the hiring process...i.e. you WILL be tested and if you fail you WILL have to go through the SAP program. If you feel you selected the drug testing question in error, please go back and resubmit your application.  "
 }

@@ -42,48 +42,62 @@ export function ContinueLongForm() {
 				);
 
 			setCompanyCdlPreferences(cdl_class?.value?.map(v => t(`DriverLicenseType.${v}`)) ?? [])
-			toast.success(t("successfully_saved_information"));
+			if (applicant?.can_pass_drug_test) toast.success(t("successfully_saved_information"));
 		}
 	}, [applicant?.company])
 
 	return (
 		<>
 			<ToastContainer />
-			<form onSubmit={form.handleSubmit}>
-				<Row>
-					<h4 className={styles.heading__sty}>
-						{t(
-							"{company_name}_THANKS",
-							{ company_name: applicant?.company?.name },
-							{ translateProps: true }
-						)}
-					</h4>
-				</Row>
-				<Row className="mt-3">
-					{(
-						Boolean(companyCdlPreferences.length > 0)
-						&& !Boolean(companyCdlPreferences.includes(t(`DriverLicenseType.${applicant?.license_type}`)))
-					) && (
-							<h6 className={`${styles.paragraph} ${styles.margin__top} bg-danger text-light  p-1`}>
+			{
+				Boolean(applicant?.can_pass_drug_test) ? (
+					<form onSubmit={form.handleSubmit}>
+						<Row>
+							<h4 className={styles.heading__sty}>
 								{t(
-									"{company_name}_REQUIRES_{cdl_category}",
-									{
-										company_name: applicant?.company?.name,
-										cdl_category: companyCdlPreferences.join(", ")
-									},
+									"{company_name}_THANKS",
+									{ company_name: applicant?.company?.name },
 									{ translateProps: true }
 								)}
-							</h6>
-						)}
-				</Row>
-				<Row className="mt-3">
-					<Col className="text-center" >
-						<Button type="submit">
-							{t("CONTINUE_APPLICATION")}
-						</Button>
-					</Col>
-				</Row>
-			</form>
+							</h4>
+						</Row>
+						<Row className="mt-3">
+							{(
+								Boolean(companyCdlPreferences.length > 0)
+								&& !Boolean(companyCdlPreferences.includes(t(`DriverLicenseType.${applicant?.license_type}`)))
+							) && (
+									<h6 className={`${styles.paragraph} ${styles.margin__top} bg-danger text-light  p-1`}>
+										{t(
+											"{company_name}_REQUIRES_{cdl_category}",
+											{
+												company_name: applicant?.company?.name,
+												cdl_category: companyCdlPreferences.join(", ")
+											},
+											{ translateProps: true }
+										)}
+									</h6>
+								)}
+						</Row>
+						<Row className="mt-3">
+							<Col className="text-center" >
+								<Button type="submit">
+									{t("CONTINUE_APPLICATION")}
+								</Button>
+							</Col>
+						</Row>
+					</form>
+				) : (
+					<Row>
+						<h6 className={`${styles.paragraph} ${styles.margin__top}  text-danger  p-1`}>
+							{t('DRUG_TEST_VALIDATION')}
+						</h6>
+						<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
+							{t('DRUG_TEST_VALIDATION_FAIL_MESSAGE')}
+						</h6>
+					</Row>
+				)
+
+			}
 		</>
 	);
 }
