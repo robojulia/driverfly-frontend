@@ -1,17 +1,16 @@
+import { useContext } from "react";
 import { ApplicantApi } from "../../../pages/api/applicant";
 import { PieChart } from "../pie-chart";
+import DashboardChartContext from "../../../context/dashboard-chart-context";
 
 export function ApplicantPieChart() {
+  const {state} = useContext(DashboardChartContext);
   const fetchData = async () => {
-    const api = new ApplicantApi();
 
     let leads = 0;
     let inProcess = 0;
     let hired = 0;
-
-    const applicants = await api.list();
-
-    applicants.forEach((v) => {
+    state?.data.forEach((v) => {
       v.jobs.forEach((j) => {
         if (!j.status) return;
         if (j.status.startsWith("NEW_")) leads++;
@@ -27,6 +26,6 @@ export function ApplicantPieChart() {
   );
 
   return (
-     <PieChart title="APPLICANTS" labels={labels} fetchData={fetchData} />
+     <PieChart title="APPLICANTS" labels={labels} fetchData={fetchData}  deps={[state]} />
   );
 }

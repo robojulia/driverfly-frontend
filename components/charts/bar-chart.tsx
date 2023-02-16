@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { DependencyList, useState } from "react";
 import { Bar,ChartProps } from "react-chartjs-2";
 import { useTranslation } from "../../hooks/use-translation";
 import { useEffectAsync } from "../../utils/react";
@@ -9,16 +9,18 @@ export interface BarChartProps {
     yearToShow?: number;
     labels: string[];
     fetchData: () => Promise<BarChartDataSets[]>;
+    deps?:DependencyList
 }
 interface BarChartDataSets {
     label:string,
     backgroundColor: string,
     borderColor: string,
     data:number[],
-    borderWidth: number
+    borderWidth: number,
+   
 }
 export function BarChart(props: BarChartProps): JSX.Element {
-    const { title, yearToShow, labels, fetchData } = props;
+    const { title, yearToShow, labels, fetchData ,deps} = props;
 
     const { t } = useTranslation();
     const { user } = useAuth();
@@ -33,7 +35,7 @@ export function BarChart(props: BarChartProps): JSX.Element {
         setData(data);
     };
 
-    useEffectAsync(refreshData, []);
+    useEffectAsync(refreshData, deps?? []);
 
     return (
         <Bar

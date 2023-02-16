@@ -1,41 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Card, Row, Col } from "react-bootstrap";
 import ApplicantApi from "../../pages/api/applicant";
 import { useEffectAsync } from "../../utils/react";
 import moment from "moment";
 import { useTranslation } from "../../hooks/use-translation";
+import DashboardChartContext from "../../context/dashboard-chart-context";
 export const DashboardStast = () => {
-  const [data,setData] = useState({});
-  const DATA = [
-    {
-      value: 6,
-      text: "Active Job Posts",
-    },
-    {
-      value: 28,
-      text: "New Leads this week",
-    },
-    {
-      value: 8,
-      text: "New Hires this week",
-    },
-    {
-      value: "23%",
-      text: "Conversion rate (lead to hire)",
-    },
-    {
-      value: "30,9000",
-      text: "Total leads",
-    },
-    {
-      value: 10,
-      text: "Total Active Employee",
-    },
-    {
-      value: 3,
-      text: "Employee birthday this week",
-    },
-  ];
+  const {state} = useContext(DashboardChartContext);
+  const [data,setData] = useState({
+  });
   const { t } = useTranslation();
   const getDays = (date) => {
     const createdAt = moment(date);
@@ -43,9 +16,7 @@ export const DashboardStast = () => {
     var duration = moment.duration(now.diff(createdAt));
     return duration.asDays();
   };
-  const fetchData = async (): Promise<Record<string, number>> => {
-    const api = new ApplicantApi();
-    const applicants = await api.list();
+  const fetchData = async () => {
 
     var stats = {
       NEW_LEADS: 0,
@@ -55,7 +26,7 @@ export const DashboardStast = () => {
       ACTIVE_JOB_POSTS: 0,
       CONVERSION_RATE: 0,
     };
-    applicants.forEach((a) => {
+    state?.data.forEach((a) => {
       
     if(a.jobs.length === 0){
       stats = {
@@ -69,7 +40,6 @@ export const DashboardStast = () => {
       ...stats,
       TOTAL_LEADS: stats.TOTAL_LEADS + a.jobs.length,
     };
-    console.log("jobs------>",stats);
       a.jobs?.map((b) => {
         if (b.created_at && getDays(b.created_at) <= 7) {
           stats = {
@@ -110,17 +80,12 @@ export const DashboardStast = () => {
       ...stats,
       CONVERSION_RATE,
     };
-    console.log("jobs------> all",stats)
-    return stats;
+    setData(stats);
   };
 
-  const refreshData = async () => {
-    setData({});
-    const data = await fetchData();
-    setData(data);
-  };
 
-  useEffectAsync(refreshData, []);
+
+  useEffectAsync(fetchData, [state]);
 
   return (
     <Card className="rounded-lg h-100 stats_card mx-auto">

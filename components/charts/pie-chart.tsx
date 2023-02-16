@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,DependencyList } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart, ArcElement } from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -12,10 +12,11 @@ export interface PieChartProps {
   title: string;
   labels: string[];
   fetchData: () => Promise<number[]>;
+  deps?:DependencyList
 }
 
 export function PieChart(props: PieChartProps): JSX.Element {
-  const { title, labels, fetchData } = props;
+  const { title, labels, fetchData,deps } = props;
 
   const { t } = useTranslation();
 
@@ -30,8 +31,8 @@ export function PieChart(props: PieChartProps): JSX.Element {
     setData(data);
   };
 
-  useEffectAsync(refreshData, []);
-console.log("Appp----->",data)
+  useEffectAsync(refreshData, deps ?? []);
+
   return (
     <Doughnut
       options={{

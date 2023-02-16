@@ -11,31 +11,54 @@ import { ChartWrapper } from "../../../components/charts/chart-wrapper";
 import { Card } from "react-bootstrap";
 import { DashboardStast } from "../../../components/charts/dashboard-stats";
 import { SourceBreakdownChart } from "../../../components/charts/company/source-breakdown-chart";
+import { useContext, useEffect, useState } from "react";
+import DashboardChartContext from "../../../context/dashboard-chart-context";
+import ApplicantApi from "../../api/applicant";
+import { useEffectAsync } from "../../../utils/react";
+import { ApplicantEntity } from "../../../models/applicant";
 
 export default function Dashboard() {
-  const { hasPermission } = useAuth();
+  const { hasPermission, user } = useAuth();
+  const [data, setData] = useState<ApplicantEntity[]>([]);
+  const api = new ApplicantApi();
+
+  useEffectAsync(async () => {
+    console.log("refresh fired");
+    const v = await api.list();
+    setData(v);
+}, [user], () => {
+    console.log("unloading page...")
+});
 
   return (
     <PageLayout title="COMPANY_PROFILE_DASHBOARD">
       <Row>
         {hasPermission("CanViewApplicant") && (
-          <>
+          <DashboardChartContext.Provider
+            value={{
+              state: {
+                data: data,
+              },
+              method: {
+                setData: setData,
+              },
+            }}
+          >
             <Row className="my_chart">
               <ChartWrapper
                 title="APPLICATION_STATUS"
                 subTitle={"Application_Status_Subtitle"}
                 md="6"
                 lg="4"
-                
               >
                 <ApplicantPieChart />
               </ChartWrapper>
 
-              <ChartWrapper title="STATS" md="6" lg="4" >
+              <ChartWrapper title="STATS" md="6" lg="4">
                 <DashboardStast />
               </ChartWrapper>
 
-              <ChartWrapper title="LEAD_ASSIGNMENT" md="6" lg="4" >
+              <ChartWrapper title="LEAD_ASSIGNMENT" md="6" lg="4">
                 <ApplicantsPerRecruiterChart />
               </ChartWrapper>
 
@@ -57,7 +80,7 @@ export default function Dashboard() {
                 <SourceBreakdownChart />
               </ChartWrapper>
             </Row>
-          </>
+          </DashboardChartContext.Provider>
         )}
       </Row>
     </PageLayout>

@@ -1871,5 +1871,22 @@
     "DHA": "Digital Hiring App",
     "DIRECT_JOB_APPLY": "Direct Job Apply"
   },
-  "SELECT_ONE_PLACEHOLDER":"Please Select One"
+  "SELECT_ONE_PLACEHOLDER": "Please Select One",
+  "STATS": "Stats",
+  "LEAD_ASSIGNMENT": "Lead Assignment",
+  "HISTORICAL_RANGE": "Historical Range",
+  "SOURCE_BREAKDOWN": "Source breakdown",
+  "Application_Status_Subtitle": "Rage:(Total, past week, custom date range)",
+  "Source_breakdown_Subtitle": "Rage:(Total, past week, custom date range)",
+  "NEW_LEADS": "New Leads this week",
+  "TOTAL_LEADS": "Total Leads",
+  "TOTAL_ACTIVE_EMPLOYEE": "Total Active Employees",
+  "EMPLOYEE_BIRTHDAYS": "Employee Birthdays this week",
+  "ACTIVE_JOB_POSTS": "Active Job Posts",
+  "CONVERSION_RATE": "Conversion rate (lead to hire)",
+  "SourceBreakdownChartLabel":{
+    "DRIVERFLY":"Driverfly",
+    "UPLOADED": "Uploaded",
+    "DIGITAL_HIRING_APP":"Digital Hiring App"
+  }
 }

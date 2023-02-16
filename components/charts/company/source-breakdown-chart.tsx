@@ -1,16 +1,17 @@
 import { Col } from "react-bootstrap";
 import { ApplicantApi } from "../../../pages/api/applicant";
 import { PieChart } from "../pie-chart";
+import DashboardChartContext from "../../../context/dashboard-chart-context";
+import { useContext } from "react";
 
 export function SourceBreakdownChart() {
- 
+  const {state} = useContext(DashboardChartContext);
   const fetchData = async () => {
-    const api = new ApplicantApi();
-    const applicants = await api.list();
+  
     let dha = 0;
     let user = 0;
     let company = 0;
-    applicants.forEach((a)=>{
+    state.data.forEach((a)=>{
       if(a.type === "DHA") dha++
       if(a.type === "USER") user ++
       company++;
@@ -23,6 +24,6 @@ export function SourceBreakdownChart() {
   );
 
   return (
-     <PieChart title="APPLICANTS" labels={labels} fetchData={fetchData} />
+     <PieChart title="APPLICANTS" labels={labels} fetchData={fetchData}  deps={[state]} />
   );
 }

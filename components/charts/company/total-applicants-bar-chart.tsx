@@ -3,9 +3,11 @@ import { BarChart } from "../bar-chart";
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
 import moment from "moment";
 import { useTranslation } from "../../../hooks/use-translation";
+import DashboardChartContext from "../../../context/dashboard-chart-context";
+import { useContext } from "react";
 
 export function TotalApplicantBarChart() {
-  const applicantApi = new ApplicantApi();
+  const {state} = useContext(DashboardChartContext);
   const { t } = useTranslation();
   const getWeeksWithInMonth = () => {
     const startOfMonth = moment().startOf("month");
@@ -25,7 +27,7 @@ export function TotalApplicantBarChart() {
 
   const fetchData = async () => {
     // const months = moment.months().map(v => ({ name: v.toUpperCase(), count: 0 ,hired:0 }))
-    const applicants: ApplicantEntity[] = await applicantApi.list();
+    const applicants: ApplicantEntity[] = state?.data;
     const weeks = getWeeksWithInMonth();
     const applicantData = [];
       const hiredData = [];
@@ -58,7 +60,7 @@ export function TotalApplicantBarChart() {
       applicantData.push(count);
       hiredData.push(hiredCount);
     });
-    console.log("data--->", applicants, applicantData,hiredData);    
+   
     return [{
         label:t("Applicants"),
         backgroundColor: 'rgba(29, 67, 84)',
@@ -80,6 +82,7 @@ export function TotalApplicantBarChart() {
       title="APPLICANTS"
       labels={labels}
       fetchData={fetchData}
+      deps={[state]}
     />
   );
 }
