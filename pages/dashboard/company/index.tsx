@@ -9,6 +9,8 @@ import { useAuth } from "../../../hooks/use-auth";
 import { PieChart } from "../../../components/charts/pie-chart";
 import { ChartWrapper } from "../../../components/charts/chart-wrapper";
 import { Card } from "react-bootstrap";
+import { DashboardStast } from "../../../components/charts/dashboard-stats";
+import { SourceBreakdownChart } from "../../../components/charts/company/source-breakdown-chart";
 
 export default function Dashboard() {
   const { hasPermission } = useAuth();
@@ -20,37 +22,40 @@ export default function Dashboard() {
           <>
             <Row className="my_chart">
               <ChartWrapper
-                title="Application Status"
-                subTitle={"Rage:(Total, past week, custom date range)"}
+                title="APPLICATION_STATUS"
+                subTitle={"Application_Status_Subtitle"}
+                md="6"
+                lg="4"
+                
               >
                 <ApplicantPieChart />
               </ChartWrapper>
 
-              <ChartWrapper
-                title="Stats"
-              >
-                <Card className="rounded-lg h-100 stats_card">
-                  <Card.Body>
-                    <Row>
-                        <Col md="4" className="justify-content-end text-end fw-bold ">2</Col>
-                        <Col md="8" className="justify-content-start text-primary fw-normal">
-                            Active Job Posts</Col>
-                    </Row>
-                    <Row>
-                        <Col md="4" className="justify-content-end text-end">245454</Col>
-                        <Col md="8" className="justify-content-start">Total Leads</Col>
-                    </Row>
-                  </Card.Body>
-                </Card>
-         </ChartWrapper>
+              <ChartWrapper title="STATS" md="6" lg="4" >
+                <DashboardStast />
+              </ChartWrapper>
 
-              <ChartWrapper title="Lead Assignment">
+              <ChartWrapper title="LEAD_ASSIGNMENT" md="6" lg="4" >
                 <ApplicantsPerRecruiterChart />
               </ChartWrapper>
 
-              <Col md="12" className="mt-5 p-0">
+              <ChartWrapper
+                title="HISTORICAL_RANGE"
+                md="6"
+                className="p-0"
+                titleClassName="text-left justify-content-start"
+              >
                 <TotalApplicantBarChart />
-              </Col>
+              </ChartWrapper>
+              <ChartWrapper
+                title="SOURCE_BREAKDOWN"
+                md="6"
+                className="p-0"
+                titleClassName="text-center justify-content-center"
+                subTitle={"Source_breakdown_Subtitle"}
+              >
+                <SourceBreakdownChart />
+              </ChartWrapper>
             </Row>
           </>
         )}
