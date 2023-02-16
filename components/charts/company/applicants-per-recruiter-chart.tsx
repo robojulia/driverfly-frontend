@@ -21,6 +21,7 @@ export function ApplicantsPerRecruiterChart() {
                 :
                 unassigned++;
         });
+      
         applicantsPerRecruiter[t("UNASSIGNED")] = unassigned;
 
         setRecruiterLabels(Object.keys(applicantsPerRecruiter));

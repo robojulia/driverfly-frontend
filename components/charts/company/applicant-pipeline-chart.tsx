@@ -1,4 +1,3 @@
-import { Col } from "react-bootstrap";
 import { ApplicantApi } from "../../../pages/api/applicant";
 import { PieChart } from "../pie-chart";
 
