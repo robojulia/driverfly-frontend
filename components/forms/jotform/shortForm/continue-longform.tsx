@@ -11,11 +11,13 @@ import { useEffectAsync } from "../../../../utils/react";
 import { CompanyPreferenceJotformLabel } from "../../../../enums/company/company-preferences-jotform-label.enum";
 import { CompanyPreferenceEntity } from "../../../../models/company/company-preferences.entity";
 import { JobEmploymentType } from "../../../../enums/jobs/job-employment-type.enum";
+import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import { ApplicantExtrasEntity } from "../../../../models/applicant";
 
 
 export function ContinueLongForm() {
 	const {
-		state: { applicant },
+		state: { applicant, applicantExtras },
 		method: { stepNext },
 	}: JotFormContextType = useContext(JotformContext);
 
@@ -57,14 +59,32 @@ export function ContinueLongForm() {
 		}
 	}, [applicant?.company])
 
-	console.log("company prefsss ----", companyPref);
+	// console.log("company prefsss ----", companyPref);
 	const OwnerOperator: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.EMPLOYMENT_TYPE)
 	const CompanyPrefferedMinExperience: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.YEARS_CDL_EXPERIENCE)
 	const CompanyPrefferedAccidentCountLimit: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.MINIMUM_ACCIDENTS)
 	const CompanyPrefferedAccidentViolationLimit: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.MIN_MOVING_VIOLATIONS)
-	console.log("company minimum experirence----", CompanyPrefferedAccidentCountLimit?.value)
-	console.log("applicant minimum experirence----", applicant?.accident_count)
-	console.log("final result----", Boolean(applicant?.accident_count > CompanyPrefferedAccidentCountLimit?.value))
+	const CompanyPreferedLocations: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.JOB_GEOGRAPHY)
+
+	const ApplicantAddedRoutes: ApplicantExtrasEntity = applicantExtras.find(v => v.type === ApplicantExtras.ROUTES)
+
+	function checkJobGeographyInRouteType(RouteType: string[], JobGeography: string[]): boolean {
+		for (let i = 0; i < RouteType?.length; i++) {
+			for (let j = 0; j < JobGeography?.length; j++) {
+				if (RouteType[i]?.includes(JobGeography[j])) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	const hasJobGeographyInRouteType = checkJobGeographyInRouteType(ApplicantAddedRoutes?.value, CompanyPreferedLocations?.value);
+	console.log("company prefered Location----", CompanyPreferedLocations?.value)
+	console.log("applicant prefered routes----", ApplicantAddedRoutes?.value)
+	console.log("final result----", hasJobGeographyInRouteType)
+
+
 	return (
 		<>
 			<ToastContainer />
@@ -185,9 +205,9 @@ export function ContinueLongForm() {
 															{t("PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PROCEED")}
 														</h6>
 													</>
-	
-	
-	
+
+
+
 												) : (
 													Boolean(applicant?.moving_violations_count > CompanyPrefferedAccidentViolationLimit?.value) ? (
 														<>
@@ -214,10 +234,40 @@ export function ContinueLongForm() {
 																{t("PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PROCEED")}
 															</h6>
 														</>
-		
-		
-		
-													) : ('')
+
+
+
+													) : (
+														!Boolean(hasJobGeographyInRouteType) && (
+
+															<>
+																<h4 className={`${styles.paragraph} ${styles.margin__top} text-warning  p-1`}>
+																	{t(
+																		"{company_name}_PREFERED_ROUTES_VALIDATION_{preffered_routes}",
+																		{
+																			company_name: applicant?.company?.name,
+																			preffered_routes: CompanyPreferedLocations?.value
+																		},
+																		{ translateProps: true }
+																	)}
+																</h4>
+																<h6 className={`${styles.paragraph} ${styles.margin__top} text-bold  p-1`}>
+																	{t(
+																		"{company_name}_PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE",
+																		{
+																			company_name: applicant?.company?.name
+																		},
+																		{ translateProps: true }
+																	)}
+																</h6>
+																<h6 className={`${styles.paragraph} ${styles.margin__top} p-1`}>
+																	{t("PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PROCEED")}
+																</h6>
+															</>
+
+
+														)
+													)
 												)
 											)
 
