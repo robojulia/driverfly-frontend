@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Bar } from "react-chartjs-2";
+import { Bar,ChartProps } from "react-chartjs-2";
 import { useTranslation } from "../../hooks/use-translation";
 import { useEffectAsync } from "../../utils/react";
 import { useAuth } from "../../hooks/use-auth";
@@ -8,16 +8,22 @@ export interface BarChartProps {
     title: string;
     yearToShow?: number;
     labels: string[];
-    fetchData: () => Promise<number[]>;
+    fetchData: () => Promise<BarChartDataSets[]>;
 }
-
+interface BarChartDataSets {
+    label:string,
+    backgroundColor: string,
+    borderColor: string,
+    data:number[],
+    borderWidth: number
+}
 export function BarChart(props: BarChartProps): JSX.Element {
     const { title, yearToShow, labels, fetchData } = props;
 
     const { t } = useTranslation();
     const { user } = useAuth();
 
-    const [data, setData] = useState<number[]>([]);
+    const [data, setData] = useState<BarChartDataSets[]>([]);
     const resetData = () => { setData([]) }
 
     const refreshData = async () => {
@@ -46,25 +52,18 @@ export function BarChart(props: BarChartProps): JSX.Element {
                         },
                       },
                   },
+                 plugins:{
+                    datalabels: {
+                       color:"transparent"
+                      },
+                      legend: {
+                        position: 'bottom' as const,
+                      },
+                 }
             }}
             data={{
-                
                 labels: labels.map(v => t(v)),
-                datasets: [{
-                    label: `${t(title)} - ${yearToShow}`,
-                    data: data,
-                    backgroundColor: [
-                        'rgba(29, 67, 84)',
-                        'rgba(92, 200, 196)',
-                        'rgba(245, 192, 24)',
-                    ],
-                    borderColor: [
-                        'rgba(29, 67, 84)',
-                        'rgba(92, 200, 196)',
-                        'rgba(245, 192, 24)',
-                    ],
-                    borderWidth: 1
-                }]
+                datasets:data
             }}
         />
 
