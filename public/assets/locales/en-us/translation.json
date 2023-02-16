@@ -1871,5 +1871,16 @@
     "DHA": "Digital Hiring App",
     "DIRECT_JOB_APPLY": "Direct Job Apply"
   },
-  "SELECT_ONE_PLACEHOLDER":"Please Select One"
+  "SELECT_ONE_PLACEHOLDER": "Please Select One",
+  "DRUG_TEST_VALIDATION": "You answered that you cannot pass a drug test.",
+  "DRUG_TEST_VALIDATION_FAIL_MESSAGE": "Please note that all US registered trucking companies require that drivers pass drug tests during the hiring process...i.e. you WILL be tested and if you fail you WILL have to go through the SAP program. If you feel you selected the drug testing question in error, please go back and resubmit your application.  ",
+  "{company_name}_OWNER_OPERATOR_VALIDATION": "Warning: {{company_name}} may only be looking for owner operators only.",
+  "OWNER_OPERATOR_VALIDATION_SHORT": "Please double check the job listing accordingly.",
+  "{{company_name}}_OWNER_OPERATOR_VALIDATION_LONG": "Regardless, please still continue with the full application for {{company_name}}. If it turns out that it's not a good fit with {{company_name}}, DriverFly can find another company to place you with. Please click the link below to proceed",
+  "{company_name}_PREFERED_MIN_CDL_EXPERIENCE_VALIDATION_{preffered_experience}": "Warning: {{company_name}} requires at least {{preffered_experience}} years of experience. ",
+  "{company_name}_PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE": "You can (and should) still continue with the full application for {{company_name}}. If it turns out that you do not qualify, DriverFly can find another company to place you with.",
+  "PREFERED_MIN_EXPERIECE_VALIDATION_MESSAGE_PROCEED": "Please click the link below to proceed",
+  "{company_name}_PREFERED_MIN_ACCIDENT_COUNT_{preffered_accident_count}": "Warning: {{company_name}}'s maximum accident allowance in the last 5 years is listed as {{preffered_accident_count}}. ",
+  "{company_name}_PREFERED_MIN_VIOLATION_COUNT_{preffered_violation_count}": "Warning: {{company_name}}'s maximum moving violations is listed as {{preffered_violation_count}}. ",
+  "{company_name}_PREFERED_ROUTES_VALIDATION_{preffered_routes}": "Warning: {{company_name}}'s may only be looking for Route types {{preffered_routes}} at the moment. "
 }

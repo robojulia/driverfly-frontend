@@ -26,12 +26,14 @@ export function AccidentViolation() {
 				can_pass_drug_test,
 				moving_violations_count,
 				authorized_to_work_in_us,
+				accident_count
 			} = values;
 			setApplicant({
 				...applicant,
 				can_pass_drug_test,
 				moving_violations_count,
 				authorized_to_work_in_us,
+				accident_count
 			});
 			stepNext();
 		},
@@ -44,11 +46,13 @@ export function AccidentViolation() {
 			can_pass_drug_test,
 			moving_violations_count,
 			authorized_to_work_in_us,
+			accident_count
 		} = applicant;
 		form.setValues({
 			can_pass_drug_test: can_pass_drug_test || null,
 			moving_violations_count: moving_violations_count || null,
 			authorized_to_work_in_us: authorized_to_work_in_us || null,
+			accident_count: accident_count || null,
 		});
 	}, []);
 	useEffect(() => {
@@ -89,6 +93,17 @@ export function AccidentViolation() {
 						formik={form}
 					/>
 				</Row>
+				<Row className={styles.bold}>
+				<BaseInput
+					min={0}
+					className="col my-3"
+					type="number"
+					name="accident_count"
+					label="accidents_last_5_years"
+					placeholder="PLACEHOLDER_FOR_DIGITS"
+					formik={form}
+				/>
+			</Row>
 				<Row >
 					{
 						Boolean(applicant.license_type === DriverLicenseType.NO_CDL) && (
