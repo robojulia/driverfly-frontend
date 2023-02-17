@@ -1,5 +1,6 @@
 import moment from "moment";
 import * as yup from "yup";
+import stateList from "../../../utils/stateList";
 
 export class DrivingExperienceDto {
   license_number: string;
@@ -16,8 +17,14 @@ export class DrivingExperienceDto {
           "Your License should at least be valid for 6 more months"
         ),
       state: yup.string().required().nullable(),
-      license_number: yup.string().required().nullable(),
-      license_state: yup.string().required().nullable(),
+      license_state: yup.string().oneOf(stateList.map(state => state.value)).required(),
+      license_number: yup.string()
+        .when("license_state", {
+          is: (value) => value === "AL",
+          then: yup.string().max(8),
+        })
+        .required().nullable(),
+      
     });
   }
 }

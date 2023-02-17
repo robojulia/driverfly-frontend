@@ -8,6 +8,7 @@ import { useTranslation } from "../../../../hooks/use-translation";
 import { DrivingExperienceDto } from "../../../../models/jot-form/long-form/driving-experience.dto";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import StateSelect from "../../state-select";
+import stateList from "../../../../utils/stateList";
 
 export function DrivingExperience() {
 	const {
@@ -51,7 +52,10 @@ export function DrivingExperience() {
 			license_state: license_state || null,
 		});
 	}, []);
+	useEffect(() => {
+		console.log("form valuess---", form.values);
 
+	}, [form.values])
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<h4 className={styles.heading__sty}> {t("DRVING_EXPERIENCE")}</h4>
