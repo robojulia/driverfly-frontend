@@ -10,11 +10,11 @@ export class CdlDto {
     return yup.object({
       license_type: yup
         .string()
-        .when({
-          is: (value) => !!value,
-          then: yup.string().oneOf(Object.values(DriverLicenseType)),
-        })
-        .required()
+        // .when({
+        //   is: (value) => !!value,
+        //   then: yup.string().oneOf(Object.values(DriverLicenseType)),
+        // })
+        .required().nullable()
       ,
       years_cdl_experience: yup
         .number()
