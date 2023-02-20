@@ -59,6 +59,20 @@ export function PastEmploymentHistory() {
 	return (
 		<>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+
+				<h4
+					className={`${styles.heading__sty} mt-0 mb-0 pb-0 fs-5 text-start`}
+					style={{ color: 'gray' }}
+				>
+					{t("ADD_EMPLOYMENT_HISTORY_NUMBER_{number}", { number: applicant?.years_cdl_experience > 3 ? 10 : 3 }, { translateProps: true })}
+				</h4>
+				<h5
+					className={`${styles.heading__sty} pt-0 mt-2 fs-6 text-start`}
+					style={{ color: 'gray' }}
+				>
+					{t("ADD_EMPLOYMENT_HISTORY_SUB_HEADING")}
+				</h5>
+
 				<h4
 					className={`${styles.heading__sty} ${styles.striped__border}`}
 				>
@@ -219,29 +233,35 @@ export function PastEmploymentHistory() {
 						))}
 					</>
 				}
-				<Row>
-					{!!form?.values?.is_previous_employed && (
-						<>
-							<Col className="mt-2">
-								<Button
-									className="w-100 py-2"
-									size="sm"
-									onClick={() =>
-										form.setFieldValue("employers", [
-											...(form.values?.employers || []),
-											{
-												...(new PastEmploymentHistoryDto()),
-												is_current: false
-											},
-										])
-									}
-								>
-									<PlusCircle /> {t("ADD_PAST_EMPLOYMENT_HISTORY")}
-								</Button>
-							</Col>
-						</>
-					)}
-				</Row>
+				<>
+					{
+						Boolean((form?.values?.employers)?.length !== 12) && (
+							<Row>
+								{!!form?.values?.is_previous_employed && (
+									<>
+										<Col className="mt-2">
+											<Button
+												className="w-100 py-2"
+												size="sm"
+												onClick={() =>
+													form.setFieldValue("employers", [
+														...(form.values?.employers || []),
+														{
+															...(new PastEmploymentHistoryDto()),
+															is_current: false
+														},
+													])
+												}
+											>
+												<PlusCircle /> {t("ADD_PAST_EMPLOYMENT_HISTORY")}
+											</Button>
+										</Col>
+									</>
+								)}
+							</Row>
+						)
+					}
+				</>
 
 
 
