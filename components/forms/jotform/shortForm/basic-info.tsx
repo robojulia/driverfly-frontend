@@ -15,6 +15,7 @@ import { BooleanTypeExtra } from "../../../../enums/jotform/bool-and-not-sure.en
 import ApplicantApi from "../../../../pages/api/applicant";
 import { LoaderIcon } from "../../../loading/loader-icon";
 import ViewModal from "../../../view-details/view-modal";
+import OtpInputField from 'react-otp-input';
 
 
 export function BasicInfo() {
@@ -25,6 +26,9 @@ export function BasicInfo() {
 
 	const { t } = useTranslation();
 	const [openModal, setOpenModal] = useState<boolean>(false)
+	const [otp, setOtp] = useState<string>('')
+	const [showOtpField, seShowtOtpField] = useState<boolean>(false)
+
 	const form = useFormik({
 		initialValues: new ContactDto(),
 		validationSchema: ContactDto.yupSchema(),
@@ -103,7 +107,16 @@ export function BasicInfo() {
 	useEffect(() => {
 		setApplicantExtras([...applicant?.extras])
 	}, [applicant])
-
+	const inputStyle = {
+		width: '40px',
+		height: '40px',
+		margin: '8px',
+		borderRadius: '4px',
+		border: '1px solid #ccc',
+		fontSize: '24px',
+		fontWeight: 'bold',
+		textAlign: 'center',
+	};
 	return (
 		<>
 			<ViewModal
@@ -120,20 +133,52 @@ export function BasicInfo() {
 						</Col>
 
 						<Col>
-							<Button
-								onClick={handleUsePreviousProfile}
-								className="float-left theme-secondary-btn"
-							>
-								{t("PROCEED")}
-							</Button>
+							{
+								showOtpField ? (
+									<Button
+										onClick={handleUsePreviousProfile}
+										className="float-left theme-secondary-btn"
+									>
+										{t("SUBMIT")}
+									</Button>
+								) : (
+
+									<Button
+										onClick={() => seShowtOtpField(true)}
+										className="float-left theme-secondary-btn"
+									>
+										{t("PROCEED")}
+									</Button>
+								)
+							}
 						</Col>
 					</Row>
 				}
 			>
-				<>
-					<h3 className="text-center text-warning">It looks like you already applied to some other company.</h3>
-					<h5 className="text-center">Do you wish to proceed with your previous profile?</h5>
-				</>
+				<div>
+
+					{showOtpField ? (
+						<>
+							<h5 className="text-center">{t("OTP_MESSAGES")}</h5>
+							<div className="w-100 d-flex justify-content-center mt-4 mb-4">
+								<OtpInputField
+									inputStyle={inputStyle}
+									value={otp}
+									onChange={(e) => setOtp(e)}
+									numInputs={4}
+									separator={<span>-</span>}
+								/>
+							</div>
+
+						</>
+					) : (
+						<>
+							<h3 className="text-center text-warning">{t("ALREADY_AN_APPLICANT")}</h3>
+							<h5 className="text-center">{t("DO_YOU_WISH_TO_PROCEED_WITH_PREVIOUS_PROFILE")}</h5>
+
+						</>
+					)}
+				</div>
 			</ViewModal>
 			<Form
 				className={styles.align__text_left}

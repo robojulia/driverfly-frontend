@@ -1885,5 +1885,8 @@
   "{company_name}_PREFERED_ROUTES_VALIDATION_{preffered_routes}": "Warning: {{company_name}}'s may only be looking for Route types {{preffered_routes}} at the moment. ",
   "ADD_EMPLOYMENT_HISTORY_NUMBER_{number}": "Please provide last {{number}} years of Employment History",
   "ADD_EMPLOYMENT_HISTORY_SUB_HEADING": "You can leave the extra sections empty",
-  "PROCEED": "Proceed"
+  "PROCEED": "Proceed",
+  "ALREADY_AN_APPLICANT":"It looks like you already applied to some other company.",
+  "DO_YOU_WISH_TO_PROCEED_WITH_PREVIOUS_PROFILE":"Do you wish to proceed with your previous profile?",
+  "OTP_MESSAGES":"We've sent you OTP, Please enter below to continue."
 }
