@@ -64,6 +64,16 @@ class ApplicantApi extends BaseApi {
 
 		return data;
 	}
+	// new api to fetch applicant Profile
+	async searchApplicantProfile(
+		params: ApplicantEntity
+	): Promise<ApplicantEntity> {
+		const { data } = await this.get(
+			this.buildUrl(this.baseUrl + "/search-applicant", params)
+		);
+
+		return data;
+	}
 
 	async list(params?: {
 		jobId?: number;

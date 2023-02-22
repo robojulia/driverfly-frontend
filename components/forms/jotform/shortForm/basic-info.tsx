@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import Form from "react-bootstrap/Form";
 import styles from "../../../../styles/digitalhiringapp.module.css";
 import { Button, Col, Row } from "react-bootstrap";
@@ -14,16 +14,17 @@ import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-ex
 import { BooleanTypeExtra } from "../../../../enums/jotform/bool-and-not-sure.enum";
 import ApplicantApi from "../../../../pages/api/applicant";
 import { LoaderIcon } from "../../../loading/loader-icon";
+import ViewModal from "../../../view-details/view-modal";
 
 
 export function BasicInfo() {
 	const {
 		state: { applicant, applicantExtras },
-		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+		method: { setApplicant, updateApplicantExtras, stepNext, stepBack, setApplicantExtras },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
-
+	const [openModal, setOpenModal] = useState<boolean>(false)
 	const form = useFormik({
 		initialValues: new ContactDto(),
 		validationSchema: ContactDto.yupSchema(),
@@ -33,12 +34,12 @@ export function BasicInfo() {
 				const { email, phone, zip_code, AUTHORIZE_TO_COMMUNICATE } = values;
 				const applicantApi = new ApplicantApi()
 				const applicantEmailExists = await applicantApi.searchByPublic({ email })
-				const applicantPhoneExists = await applicantApi.searchByPublic({ phone })
+				// const applicantPhoneExists = await applicantApi.searchByPublic({ phone })
 
 				if (applicantEmailExists) {
-					setErrors({ email: 'EMAIL_ALREADY_EXISTS' })
-				} else if (applicantPhoneExists) {
-					setErrors({ phone: 'ALREADY_EXISTS' })
+					setOpenModal(true)
+					// } else if (applicantPhoneExists) {
+					// 	setErrors({ phone: 'ALREADY_EXISTS' })
 				} else {
 					setApplicant({
 						...applicant,
@@ -75,8 +76,65 @@ export function BasicInfo() {
 		});
 	}, []);
 
+
+	const handleUsePreviousProfile = async () => {
+		const applicantApi = new ApplicantApi()
+		const { email } = form.values
+		try {
+			const applicantExistingProfile = await applicantApi.searchApplicantProfile({ email })
+			setApplicant(applicantExistingProfile)
+			setOpenModal(false)
+			stepNext()
+
+		} catch (error) {
+			console.log("errors", error)
+		}
+	}
+
+	const handleLeavePreviousProfile = () => {
+		setOpenModal(false)
+		stepNext()
+	}
+
+	const onCloseClick = () => {
+		setOpenModal(false)
+	}
+
+	useEffect(() => {
+		setApplicantExtras([...applicant?.extras])
+	}, [applicant])
+
 	return (
 		<>
+			<ViewModal
+				show={openModal}
+				title="EMAIL_ALREADY_EXISTS"
+				size="lg"
+				onCloseClick={onCloseClick}
+				footer={
+					<Row className="mt-5 w-100">
+						<Col>
+							<Button className="float-right" onClick={handleLeavePreviousProfile}>
+								{t("NO")}
+							</Button>
+						</Col>
+
+						<Col>
+							<Button
+								onClick={handleUsePreviousProfile}
+								className="float-left theme-secondary-btn"
+							>
+								{t("PROCEED")}
+							</Button>
+						</Col>
+					</Row>
+				}
+			>
+				<>
+					<h3 className="text-center text-warning">It looks like you already applied to some other company.</h3>
+					<h5 className="text-center">Do you wish to proceed with your previous profile?</h5>
+				</>
+			</ViewModal>
 			<Form
 				className={styles.align__text_left}
 				onSubmit={form.handleSubmit}
