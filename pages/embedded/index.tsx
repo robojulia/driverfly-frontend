@@ -21,6 +21,7 @@ import { DriverLicenseType } from '../../enums/users/driver-license-type.enum'
 import { JobEmploymentType } from '../../enums/jobs/job-employment-type.enum'
 import { JobGeography } from '../../enums/jobs/job-geography.enum'
 import { JobTeamDriver } from '../../enums/jobs/job-team-driver.enum'
+import { JobEquipmentType } from '../../enums/jobs/job-equipment-type.enum'
 
 
 export default function Embedded({ filterType }) {
@@ -54,7 +55,8 @@ export default function Embedded({ filterType }) {
         max_years_experience: 0.6,
     })
     const setFiltersForHeavyHaul = (): SearchJobsDto => ({
-        cdl_class: DriverLicenseType.CDL_CLASS_A
+        cdl_class: DriverLicenseType.CDL_CLASS_A,
+        equipment_type: JobEquipmentType.FLATBED
     })
     const setFiltersForOwnerOperator = (): SearchJobsDto => ({
         cdl_class: DriverLicenseType.CDL_CLASS_A,
