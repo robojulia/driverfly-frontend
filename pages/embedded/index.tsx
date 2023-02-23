@@ -56,7 +56,7 @@ export default function Embedded({ filterType }) {
     })
     const setFiltersForHeavyHaul = (): SearchJobsDto => ({
         cdl_class: DriverLicenseType.CDL_CLASS_A,
-        equipment_type: JobEquipmentType.FLATBED
+        equipment_type: JobEquipmentType.FLATBED,
     })
     const setFiltersForOwnerOperator = (): SearchJobsDto => ({
         cdl_class: DriverLicenseType.CDL_CLASS_A,
