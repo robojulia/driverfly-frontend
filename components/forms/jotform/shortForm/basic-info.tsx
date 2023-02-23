@@ -35,27 +35,25 @@ export function BasicInfo() {
 		onSubmit: async (values, { setErrors }) => {
 			console.log("values", values);
 			try {
-				const { email, phone, zip_code, AUTHORIZE_TO_COMMUNICATE } = values;
+				const { email, zip_code, AUTHORIZE_TO_COMMUNICATE } = values;
 				const applicantApi = new ApplicantApi()
-				const applicantEmailExists = await applicantApi.searchByPublic({ email })
-				// const applicantPhoneExists = await applicantApi.searchByPublic({ phone })
+				// const applicantEmailExists = await applicantApi.searchByPublic({ email })
 
-				if (applicantEmailExists) {
-					setOpenModal(true)
-					// } else if (applicantPhoneExists) {
-					// 	setErrors({ phone: 'ALREADY_EXISTS' })
-				} else {
-					setApplicant({
-						...applicant,
-						email,
-						phone,
-						zip_code,
-					});
+				// if (applicantEmailExists) {
+				setOpenModal(true)
+				// } else if (applicantPhoneExists) {
+				// 	setErrors({ phone: 'ALREADY_EXISTS' })
+				// } else {
+				setApplicant({
+					...applicant,
+					email,
+					zip_code,
+				});
 
-					updateApplicantExtras(AUTHORIZE_TO_COMMUNICATE);
+				updateApplicantExtras(AUTHORIZE_TO_COMMUNICATE);
 
-					stepNext();
-				}
+				stepNext();
+				// }
 			} catch (error) {
 				console.log("error", error);
 			}
@@ -75,111 +73,12 @@ export function BasicInfo() {
 				? apx
 				: new ApplicantExtrasEntity(ApplicantExtras.AUTHORIZE_TO_COMMUNICATE),
 			email: applicant.email,
-			phone: applicant.phone,
 			zip_code: applicant.zip_code,
 		});
 	}, []);
-
-
-	const handleUsePreviousProfile = async () => {
-		const applicantApi = new ApplicantApi()
-		const { email } = form.values
-		try {
-			const applicantExistingProfile = await applicantApi.searchApplicantProfile({ email })
-			setApplicant(applicantExistingProfile)
-			setOpenModal(false)
-			stepNext()
-
-		} catch (error) {
-			console.log("errors", error)
-		}
-	}
-
-	const handleLeavePreviousProfile = () => {
-		setOpenModal(false)
-		stepNext()
-	}
-
-	const onCloseClick = () => {
-		setOpenModal(false)
-	}
-
-	useEffect(() => {
-		setApplicantExtras([...applicant?.extras])
-	}, [applicant])
-	const inputStyle = {
-		width: '40px',
-		height: '40px',
-		margin: '8px',
-		borderRadius: '4px',
-		border: '1px solid #ccc',
-		fontSize: '24px',
-		fontWeight: 'bold',
-		textAlign: 'center',
-	};
 	return (
 		<>
-			<ViewModal
-				show={openModal}
-				title="EMAIL_ALREADY_EXISTS"
-				size="lg"
-				onCloseClick={onCloseClick}
-				footer={
-					<Row className="mt-5 w-100">
-						<Col>
-							<Button className="float-right" onClick={handleLeavePreviousProfile}>
-								{t("NO")}
-							</Button>
-						</Col>
 
-						<Col>
-							{
-								showOtpField ? (
-									<Button
-										onClick={handleUsePreviousProfile}
-										className="float-left theme-secondary-btn"
-									>
-										{t("SUBMIT")}
-									</Button>
-								) : (
-
-									<Button
-										onClick={() => seShowtOtpField(true)}
-										className="float-left theme-secondary-btn"
-									>
-										{t("PROCEED")}
-									</Button>
-								)
-							}
-						</Col>
-					</Row>
-				}
-			>
-				<div>
-
-					{showOtpField ? (
-						<>
-							<h5 className="text-center">{t("OTP_MESSAGES")}</h5>
-							<div className="w-100 d-flex justify-content-center mt-4 mb-4">
-								<OtpInputField
-									inputStyle={inputStyle}
-									value={otp}
-									onChange={(e) => setOtp(e)}
-									numInputs={4}
-									separator={<span>-</span>}
-								/>
-							</div>
-
-						</>
-					) : (
-						<>
-							<h3 className="text-center text-warning">{t("ALREADY_AN_APPLICANT")}</h3>
-							<h5 className="text-center">{t("DO_YOU_WISH_TO_PROCEED_WITH_PREVIOUS_PROFILE")}</h5>
-
-						</>
-					)}
-				</div>
-			</ViewModal>
 			<Form
 				className={styles.align__text_left}
 				onSubmit={form.handleSubmit}
@@ -192,13 +91,6 @@ export function BasicInfo() {
 						name="email"
 						label="email"
 						placeholder="email"
-						formik={form}
-					/>
-					<BaseInputPhone
-						className="col-md-6 my-3"
-						required
-						name="phone"
-						label="phone"
 						formik={form}
 					/>
 				</Row>

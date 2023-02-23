@@ -5,10 +5,12 @@ import { ApplicantEmployerEntity } from "../../models/applicant";
 import { ApplicantDacEntity } from "../../models/applicant/applicant-dac.entity";
 import { ApplicantJobEntity } from "../../models/applicant/applicant-job.entity";
 import { ApplicantNoteEntity } from "../../models/applicant/applicant-note.entity";
+import { ApplicantOTPEntity } from "../../models/applicant/applicant-otp.entity";
 import { ApplicantSuggestedJobEntity } from "../../models/applicant/applicant-suggested-job.entity";
 import { ApplicantEntity } from "../../models/applicant/applicant.entity";
 import { DocumentEntity } from "../../models/documents/document.entity";
 import { ApplicantJobsByStatusDto } from "../../models/job/applicant-jobs-by-status.dto";
+import { VerifyOTPDto } from "../../models/jot-form/OTP/verify-otp.dto";
 import { UpsertApplicantJotformDto } from "../../models/jot-form/upsert-applicant-jotform.dto";
 import { UpsertApplicantVoeformDto } from "../../models/jot-form/upsert-applicant-voe.dto";
 import BaseApi from "./_baseApi";
@@ -71,6 +73,18 @@ class ApplicantApi extends BaseApi {
 		const { data } = await this.get(
 			this.buildUrl(this.baseUrl + "/search-applicant", params)
 		);
+
+		return data;
+	}
+
+
+	async requestOTP(dto: ApplicantEntity): Promise<any> {
+		const { data } = await this.post(this.baseUrl + "/request-otp", dto);
+
+		return data;
+	}
+	async verifyOTP(dto: VerifyOTPDto): Promise<ApplicantEntity> {
+		const { data } = await this.post(this.baseUrl + "/verify-otp", dto);
 
 		return data;
 	}
