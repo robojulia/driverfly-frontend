@@ -14,7 +14,7 @@ import styles from "../../../../styles/digitalhiringapp.module.css";
 export function CdlExperience() {
 	const {
 		state: { applicant },
-		method: { setApplicant, stepNext, stepBack },
+		method: { setApplicant, stepNext, stepBack, setApplicantExtras },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
@@ -37,6 +37,7 @@ export function CdlExperience() {
 		},
 	});
 	useEffect(() => {
+		// setApplicantExtras([...applicant?.extras])
 		const { license_type, years_cdl_experience, is_owner_operator } = applicant;
 		form.setValues({
 			license_type: license_type || null,
@@ -71,11 +72,6 @@ export function CdlExperience() {
 				break;
 		}
 	}
-	useEffect(() => {
-		console.log("form errors", form.errors);
-		console.log("form values", form.values);
-
-	}, [form.errors, form.values])
 	return (
 		<>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>

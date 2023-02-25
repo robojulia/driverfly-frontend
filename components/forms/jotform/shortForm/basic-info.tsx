@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import Form from "react-bootstrap/Form";
 import styles from "../../../../styles/digitalhiringapp.module.css";
 import { Button, Col, Row } from "react-bootstrap";
@@ -14,15 +14,20 @@ import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-ex
 import { BooleanTypeExtra } from "../../../../enums/jotform/bool-and-not-sure.enum";
 import ApplicantApi from "../../../../pages/api/applicant";
 import { LoaderIcon } from "../../../loading/loader-icon";
+import ViewModal from "../../../view-details/view-modal";
+import OtpInputField from 'react-otp-input';
 
 
 export function BasicInfo() {
 	const {
 		state: { applicant, applicantExtras },
-		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+		method: { setApplicant, updateApplicantExtras, stepNext, stepBack, setApplicantExtras },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
+	const [openModal, setOpenModal] = useState<boolean>(false)
+	const [otp, setOtp] = useState<string>('')
+	const [showOtpField, seShowtOtpField] = useState<boolean>(false)
 
 	const form = useFormik({
 		initialValues: new ContactDto(),
@@ -30,27 +35,25 @@ export function BasicInfo() {
 		onSubmit: async (values, { setErrors }) => {
 			console.log("values", values);
 			try {
-				const { email, phone, zip_code, AUTHORIZE_TO_COMMUNICATE } = values;
+				const { email, zip_code, AUTHORIZE_TO_COMMUNICATE } = values;
 				const applicantApi = new ApplicantApi()
-				const applicantEmailExists = await applicantApi.searchByPublic({ email })
-				const applicantPhoneExists = await applicantApi.searchByPublic({ phone })
+				// const applicantEmailExists = await applicantApi.searchByPublic({ email })
 
-				if (applicantEmailExists) {
-					setErrors({ email: 'EMAIL_ALREADY_EXISTS' })
-				} else if (applicantPhoneExists) {
-					setErrors({ phone: 'ALREADY_EXISTS' })
-				} else {
-					setApplicant({
-						...applicant,
-						email,
-						phone,
-						zip_code,
-					});
+				// if (applicantEmailExists) {
+				setOpenModal(true)
+				// } else if (applicantPhoneExists) {
+				// 	setErrors({ phone: 'ALREADY_EXISTS' })
+				// } else {
+				setApplicant({
+					...applicant,
+					email,
+					zip_code,
+				});
 
-					updateApplicantExtras(AUTHORIZE_TO_COMMUNICATE);
+				updateApplicantExtras(AUTHORIZE_TO_COMMUNICATE);
 
-					stepNext();
-				}
+				stepNext();
+				// }
 			} catch (error) {
 				console.log("error", error);
 			}
@@ -70,13 +73,12 @@ export function BasicInfo() {
 				? apx
 				: new ApplicantExtrasEntity(ApplicantExtras.AUTHORIZE_TO_COMMUNICATE),
 			email: applicant.email,
-			phone: applicant.phone,
 			zip_code: applicant.zip_code,
 		});
 	}, []);
-
 	return (
 		<>
+
 			<Form
 				className={styles.align__text_left}
 				onSubmit={form.handleSubmit}
@@ -89,13 +91,6 @@ export function BasicInfo() {
 						name="email"
 						label="email"
 						placeholder="email"
-						formik={form}
-					/>
-					<BaseInputPhone
-						className="col-md-6 my-3"
-						required
-						name="phone"
-						label="phone"
 						formik={form}
 					/>
 				</Row>

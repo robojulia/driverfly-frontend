@@ -59,6 +59,7 @@ export function HearAbout() {
 	});
 
 	useEffect(() => {
+		
 		const apx = applicantExtras?.find(
 			(v) => v.type === ApplicantExtras.HEAR_ABOUT_US
 		);

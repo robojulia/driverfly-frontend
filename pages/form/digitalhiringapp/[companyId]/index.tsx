@@ -43,6 +43,7 @@ export default function FullForm({ employer }: FullFormProps) {
 				method: {
 					setApplicant,
 					updateApplicantExtras,
+					setApplicantExtras,
 					stepNext,
 					stepBack
 				}

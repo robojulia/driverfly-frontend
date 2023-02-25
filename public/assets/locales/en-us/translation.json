@@ -1884,5 +1884,12 @@
   "{company_name}_PREFERED_MIN_VIOLATION_COUNT_{preffered_violation_count}": "Warning: {{company_name}}'s maximum moving violations is listed as {{preffered_violation_count}}. ",
   "{company_name}_PREFERED_ROUTES_VALIDATION_{preffered_routes}": "Warning: {{company_name}}'s may only be looking for Route types {{preffered_routes}} at the moment. ",
   "ADD_EMPLOYMENT_HISTORY_NUMBER_{number}": "Please provide last {{number}} years of Employment History",
-  "ADD_EMPLOYMENT_HISTORY_SUB_HEADING": "You can leave the extra sections empty"
+  "ADD_EMPLOYMENT_HISTORY_SUB_HEADING": "You can leave the extra sections empty",
+  "PROCEED": "Proceed",
+  "ALREADY_AN_APPLICANT":"It looks like you already applied to some other company.",
+  "DO_YOU_WISH_TO_PROCEED_WITH_PREVIOUS_PROFILE":"Do you wish to proceed with your previous profile?",
+  "OTP_MESSAGES":"We've sent you OTP, Please enter below to continue.",
+  "ENTER_PHONE_NUMBER":"Please enter your phone number:",
+  "OTP_EXCEPTION_MESSAGE":"Your OTP is expired or invalid. Click here to ",
+  "RESEND":"Resend"
 }
