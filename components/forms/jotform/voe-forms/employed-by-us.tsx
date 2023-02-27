@@ -11,8 +11,8 @@ import { ApplicantVoeFormEntity } from "../../../../models/applicant/applicant-v
 
 export function EmployedByUs() {
 	const {
-		state: { applicantVoe, applicant },
-		method: { stepNext, stepBack, updateApplicantVoe },
+		state: { applicantVoe, applicant, steps },
+		method: { stepNext, stepBack, updateApplicantVoe, jumpToStep },
 	}: VoeFormContextType = useContext(VoeFormContext);
 
 	const { t } = useTranslation();
@@ -23,7 +23,11 @@ export function EmployedByUs() {
 		onSubmit: (values) => {
 			const { EMPLOYED_BY_US } = values;
 			updateApplicantVoe(EMPLOYED_BY_US);
-			stepNext();
+			if (!!EMPLOYED_BY_US.value) {
+				stepNext();
+			} else {
+				jumpToStep(3)
+			}
 		},
 		onReset: (values) => {
 			stepBack();

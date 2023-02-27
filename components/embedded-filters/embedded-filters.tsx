@@ -19,6 +19,7 @@ import TeamDrivers from "../filters/team-driver";
 import MinimumYearsExperience from "../filters/minimum-years-experience";
 import { DriverEndorsement } from "../../enums/users/driver-endorsement.enum";
 import { JobDeliveryType } from "../../enums/jobs/job-delivery-type.enum";
+import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
 
 export type EmbeddedFiltersProps = {
     filterType: EmbeddedFilterTypes;
@@ -35,6 +36,9 @@ export default function EmbeddedFilters({ filterType }: EmbeddedFiltersProps) {
      */
     const hiddenOptions = () =>
     ({
+        [EmbeddedFilterTypes.CDL_SCHOOLS]: {
+            JobEmploymentType: [JobEmploymentType.OWNER_OPERATOR],
+        },
         [EmbeddedFilterTypes.OWNER_OPERATOR]: {
             DriverEndorsement: [DriverEndorsement.SCHOOL_BUS],
         },
@@ -91,7 +95,10 @@ export default function EmbeddedFilters({ filterType }: EmbeddedFiltersProps) {
                                     EmbeddedFilterTypes.NEW_HIRES,
                                 ].includes(filterType)
                             ) && (
-                                    <EmploymentType state={state} method={method} />
+                                    <EmploymentType
+                                        hide={(hiddenOptions()).JobEmploymentType}
+                                        state={state}
+                                        method={method} />
                                 )}
 
                             <Equipment state={state} method={method} />
