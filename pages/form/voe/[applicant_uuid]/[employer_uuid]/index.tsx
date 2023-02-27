@@ -26,7 +26,9 @@ export default function VoeForm({ applicant, employer }: VoeFormProps) {
 	const [steps, setSteps] = useState<number>(0);
 	const stepNext = (): void => setSteps(steps + 1);
 	const stepBack = (): void => setSteps(steps - 1);
-
+	const jumpToStep = (step: number): void => {
+		setSteps(step);
+	};
 	useEffect(() => {
 		console.log("from index", applicant);
 
@@ -47,6 +49,7 @@ export default function VoeForm({ applicant, employer }: VoeFormProps) {
 					updateApplicantVoe,
 					stepNext,
 					stepBack,
+					jumpToStep
 				},
 			}}
 		>

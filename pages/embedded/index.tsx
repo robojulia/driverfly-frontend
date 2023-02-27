@@ -21,6 +21,8 @@ import { DriverLicenseType } from '../../enums/users/driver-license-type.enum'
 import { JobEmploymentType } from '../../enums/jobs/job-employment-type.enum'
 import { JobGeography } from '../../enums/jobs/job-geography.enum'
 import { JobTeamDriver } from '../../enums/jobs/job-team-driver.enum'
+import { JobEquipmentType } from '../../enums/jobs/job-equipment-type.enum'
+import EmploymentType from '../../components/filters/employment-type'
 
 
 export default function Embedded({ filterType }) {
@@ -51,13 +53,14 @@ export default function Embedded({ filterType }) {
 
     const setFiltersForCdlSchools = (): SearchJobsDto => ({
         cdl_class: DriverLicenseType.CDL_CLASS_A,
+        employment_type: JobEmploymentType.W2,
         max_years_experience: 0.6,
     })
     const setFiltersForHeavyHaul = (): SearchJobsDto => ({
-        cdl_class: DriverLicenseType.CDL_CLASS_A
+        cdl_class: DriverLicenseType.CDL_CLASS_A,
+        equipment_type: JobEquipmentType.FLATBED,
     })
     const setFiltersForOwnerOperator = (): SearchJobsDto => ({
-        cdl_class: DriverLicenseType.CDL_CLASS_A,
         employment_type: JobEmploymentType.OWNER_OPERATOR,
     })
     const setFiltersForNewHires = (): SearchJobsDto => ({
@@ -67,12 +70,12 @@ export default function Embedded({ filterType }) {
     })
     const setFiltersForTeamDrivers = (): SearchJobsDto => ({
         cdl_class: DriverLicenseType.CDL_CLASS_A,
-        areas_covered: [JobGeography.OTR, JobGeography.REGIONAL],
-        team_drivers: JobTeamDriver.HAS_TEAM_DRIVER,
+        areas_covered: JobGeography.OTR,
+        team_driver: JobTeamDriver.HAS_TEAM_DRIVER,
     })
     const setFiltersForOtrJobs = (): SearchJobsDto => ({
         cdl_class: DriverLicenseType.CDL_CLASS_A,
-        areas_covered: [JobGeography.OTR, JobGeography.REGIONAL],
+        areas_covered: JobGeography.OTR,
     })
 
     const [filters, setFilters] = useState<SearchJobsDto>(filtersForQuery(filterType))

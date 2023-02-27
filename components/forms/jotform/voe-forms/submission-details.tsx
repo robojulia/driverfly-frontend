@@ -19,7 +19,7 @@ import { LoaderIcon } from "../../../loading/loader-icon";
 export function SubmissionDetails() {
 	const {
 		state: { applicantVoe, applicant, employer },
-		method: { updateApplicantVoe, stepBack, stepNext },
+		method: { updateApplicantVoe, stepBack, stepNext, jumpToStep },
 	}: VoeFormContextType = useContext(VoeFormContext);
 
 	const { t } = useTranslation();
@@ -50,7 +50,12 @@ export function SubmissionDetails() {
 			}
 		},
 		onReset: (values) => {
-			stepBack();
+			const EmployedByUs = applicantVoe?.find(v => v.type === ApplicantVoeFormEnum.EMPLOYED_BY_US)
+			if (!!EmployedByUs?.value) {
+				stepBack();
+			} else {
+				jumpToStep(1)
+			}
 		},
 	});
 

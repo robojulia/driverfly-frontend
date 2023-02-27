@@ -31,22 +31,26 @@ export function HearAbout() {
 			const applicantApi = new ApplicantApi();
 			const { HEAR_ABOUT_US } = values;
 			updateApplicantExtras(HEAR_ABOUT_US);
-			try {
-				const filtered_extras = applicantExtras?.filter((v) => !!v.value);
-				const { id } = await applicantApi.jotform.create({
-					applicant,
-					applicantExtras: filtered_extras,
-				});
-				setApplicant({
-					...applicant,
-					id,
-				});
+			if (applicant?.can_pass_drug_test) {
+				try {
+					const filtered_extras = applicantExtras?.filter((v) => !!v.value);
+					const { id } = await applicantApi.jotform.create({
+						applicant,
+						applicantExtras: filtered_extras,
+					});
+					setApplicant({
+						...applicant,
+						id,
+					});
 
+					stepNext();
+
+				} catch (error) {
+					console.log(error);
+					globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
+				}
+			} else {
 				stepNext();
-
-			} catch (error) {
-				console.log(error);
-				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
 			}
 		},
 		onReset: (values) => {
@@ -55,6 +59,7 @@ export function HearAbout() {
 	});
 
 	useEffect(() => {
+		
 		const apx = applicantExtras?.find(
 			(v) => v.type === ApplicantExtras.HEAR_ABOUT_US
 		);

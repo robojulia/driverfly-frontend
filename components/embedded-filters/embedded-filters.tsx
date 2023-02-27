@@ -19,6 +19,8 @@ import TeamDrivers from "../filters/team-driver";
 import MinimumYearsExperience from "../filters/minimum-years-experience";
 import { DriverEndorsement } from "../../enums/users/driver-endorsement.enum";
 import { JobDeliveryType } from "../../enums/jobs/job-delivery-type.enum";
+import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
+import { JobGeography } from "../../enums/jobs/job-geography.enum";
 
 export type EmbeddedFiltersProps = {
     filterType: EmbeddedFilterTypes;
@@ -35,16 +37,21 @@ export default function EmbeddedFilters({ filterType }: EmbeddedFiltersProps) {
      */
     const hiddenOptions = () =>
     ({
+        [EmbeddedFilterTypes.CDL_SCHOOLS]: {
+            JobEmploymentType: [JobEmploymentType.OWNER_OPERATOR],
+        },
         [EmbeddedFilterTypes.OWNER_OPERATOR]: {
             DriverEndorsement: [DriverEndorsement.SCHOOL_BUS],
         },
         [EmbeddedFilterTypes.TEAM_DRIVERS]: {
             DriverEndorsement: [DriverEndorsement.SCHOOL_BUS],
-            JobDeliveryType: [JobDeliveryType.FINAL_MILE]
+            JobDeliveryType: [JobDeliveryType.FINAL_MILE],
         },
         [EmbeddedFilterTypes.OTR_JOBS]: {
             DriverEndorsement: [DriverEndorsement.SCHOOL_BUS],
-            JobDeliveryType: [JobDeliveryType.FINAL_MILE]
+            JobDeliveryType: [JobDeliveryType.FINAL_MILE],
+            JobGeography: [JobGeography.LOCAL]
+
         },
     }[filterType] || {})
 
@@ -69,15 +76,11 @@ export default function EmbeddedFilters({ filterType }: EmbeddedFiltersProps) {
                             <Category state={state} method={method} />
                             <PostedDate state={state} method={method} />
                             <Range state={state} method={method} />
-
-                            {!Boolean(
-                                [
-                                    EmbeddedFilterTypes.TEAM_DRIVERS,
-                                    EmbeddedFilterTypes.OTR_JOBS,
-                                ].includes(filterType)
-                            ) && (
-                                    <AreasCovered state={state} method={method} />
-                                )}
+                            <AreasCovered
+                                hide={(hiddenOptions()).JobGeography}
+                                state={state}
+                                method={method}
+                            />
 
                             <TypeOfDelivery
                                 hide={(hiddenOptions()).JobDeliveryType}
@@ -91,7 +94,10 @@ export default function EmbeddedFilters({ filterType }: EmbeddedFiltersProps) {
                                     EmbeddedFilterTypes.NEW_HIRES,
                                 ].includes(filterType)
                             ) && (
-                                    <EmploymentType state={state} method={method} />
+                                    <EmploymentType
+                                        hide={(hiddenOptions()).JobEmploymentType}
+                                        state={state}
+                                        method={method} />
                                 )}
 
                             <Equipment state={state} method={method} />
