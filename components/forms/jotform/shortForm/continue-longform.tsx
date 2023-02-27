@@ -238,7 +238,7 @@ export function ContinueLongForm() {
 
 
 													) : (
-														!Boolean(hasJobGeographyInRouteType) && (
+														!Boolean(hasJobGeographyInRouteType) ? (
 
 															<>
 																<h4 className={`${styles.paragraph} ${styles.margin__top} text-warning  p-1`}>
@@ -266,7 +266,7 @@ export function ContinueLongForm() {
 															</>
 
 
-														)
+														) : ('')
 													)
 												)
 											)
