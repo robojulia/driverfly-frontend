@@ -1,21 +1,19 @@
-import FullLayout from "../../../components/dashboard/layouts/layout/full-layout";
-import { Col, Row } from "reactstrap";
-import PageLayout from "../../../components/layouts/page/page-layout";
+import { Row } from "reactstrap";
 import { ApplicantPieChart } from "../../../components/charts/company/applicant-pipeline-chart";
 import { ApplicantsPerRecruiterChart } from "../../../components/charts/company/applicants-per-recruiter-chart";
 import { TotalApplicantBarChart } from "../../../components/charts/company/total-applicants-bar-chart";
+import FullLayout from "../../../components/dashboard/layouts/layout/full-layout";
+import PageLayout from "../../../components/layouts/page/page-layout";
 
-import { useAuth } from "../../../hooks/use-auth";
-import { PieChart } from "../../../components/charts/pie-chart";
+import { useState } from "react";
 import { ChartWrapper } from "../../../components/charts/chart-wrapper";
-import { Card } from "react-bootstrap";
-import { DashboardStast } from "../../../components/charts/dashboard-stats";
 import { SourceBreakdownChart } from "../../../components/charts/company/source-breakdown-chart";
-import { useContext, useEffect, useState } from "react";
+import { DashboardStast } from "../../../components/charts/dashboard-stats";
 import DashboardChartContext from "../../../context/dashboard-chart-context";
-import ApplicantApi from "../../api/applicant";
-import { useEffectAsync } from "../../../utils/react";
+import { useAuth } from "../../../hooks/use-auth";
 import { ApplicantEntity } from "../../../models/applicant";
+import { useEffectAsync } from "../../../utils/react";
+import ApplicantApi from "../../api/applicant";
 
 export default function Dashboard() {
   const { hasPermission, user } = useAuth();
@@ -66,7 +64,7 @@ export default function Dashboard() {
                 title="HISTORICAL_RANGE"
                 md="6"
                 className="p-0"
-                titleClassName="text-left justify-content-start"
+                titleClassName="text-left justify-content-start ml-4"
               >
                 <TotalApplicantBarChart />
               </ChartWrapper>

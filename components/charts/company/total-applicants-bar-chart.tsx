@@ -1,13 +1,12 @@
-import { ApplicantApi } from "../../../pages/api/applicant";
-import { BarChart } from "../bar-chart";
-import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
 import moment from "moment";
-import { useTranslation } from "../../../hooks/use-translation";
+import { useContext, useMemo } from "react";
 import DashboardChartContext from "../../../context/dashboard-chart-context";
-import { useContext } from "react";
+import { useTranslation } from "../../../hooks/use-translation";
+import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
+import { BarChart } from "../bar-chart";
 
 export function TotalApplicantBarChart() {
-  const {state} = useContext(DashboardChartContext);
+  const { state } = useContext(DashboardChartContext);
   const { t } = useTranslation();
   const getWeeksWithInMonth = () => {
     const startOfMonth = moment().startOf("month");
@@ -21,21 +20,23 @@ export function TotalApplicantBarChart() {
     }
     return weeks;
   };
-  const labels: string[] = getWeeksWithInMonth().map(el=> moment(el).format("DD-MM-YYYY"));
+  const labels: string[] = getWeeksWithInMonth().map((el) =>
+    moment(el).format("DD-MM-YYYY")
+  );
 
   const yearToShow: number = new Date().getFullYear();
 
-  const fetchData = async () => {
+  const fetchData = () => {
     // const months = moment.months().map(v => ({ name: v.toUpperCase(), count: 0 ,hired:0 }))
     const applicants: ApplicantEntity[] = state?.data;
     const weeks = getWeeksWithInMonth();
     const applicantData = [];
-      const hiredData = [];
-   weeks.map((week) => {
+    const hiredData = [];
+    weeks.map((week) => {
       const weekEnd = week.clone().endOf("week");
       let count = 0;
       let hiredCount = 0;
-      
+
       applicants.forEach((a) => {
         if (
           a.jobs.length == 0 &&
@@ -60,29 +61,35 @@ export function TotalApplicantBarChart() {
       applicantData.push(count);
       hiredData.push(hiredCount);
     });
-   
-    return [{
-        label:t("Applicants"),
-        backgroundColor: 'rgba(29, 67, 84)',
-        borderColor: 'rgba(29, 67, 84)',
-        data:applicantData,
-        borderWidth: 1
-    },{
+
+    return [
+      {
+        label: t("Applicants"),
+        backgroundColor: "rgba(29, 67, 84)",
+        borderColor: "rgba(29, 67, 84)",
+        data: applicantData,
+        borderWidth: 1,
+      },
+      {
         label: t("Hired"),
-       backgroundColor: 'rgba(92, 200, 196)',
-       borderColor: 'rgba(92, 200, 196)',
-       data:hiredData,
-        borderWidth: 1
-    }];
+        backgroundColor: "rgba(92, 200, 196)",
+        borderColor: "rgba(92, 200, 196)",
+        data: hiredData,
+        borderWidth: 1,
+      },
+    ];
   };
+  
+  const data = useMemo(() => {
+    return fetchData();
+  }, [state]);
 
   return (
     <BarChart
       yearToShow={yearToShow}
       title="APPLICANTS"
       labels={labels}
-      fetchData={fetchData}
-      deps={[state]}
+      data={data}
     />
   );
 }

@@ -1,37 +1,20 @@
-import React, { useState,DependencyList } from "react";
-import { Doughnut } from "react-chartjs-2";
-import { Chart, ArcElement } from "chart.js";
+import { ArcElement, Chart } from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { Doughnut } from "react-chartjs-2";
+import { useTranslation } from "../../hooks/use-translation";
 Chart.register(ArcElement);
 Chart.register(ChartDataLabels);
-import { useTranslation } from "../../hooks/use-translation";
-import { useEffectAsync } from "../../utils/react";
-import { useAuth } from "../../hooks/use-auth";
 
 export interface PieChartProps {
   title: string;
   labels: string[];
-  fetchData: () => Promise<number[]>;
-  deps?:DependencyList
+  data?:any
 }
 
 export function PieChart(props: PieChartProps): JSX.Element {
-  const { title, labels, fetchData,deps } = props;
+  const { title, labels,data=[] } = props;
 
   const { t } = useTranslation();
-
-  const { user } = useAuth();
-
-  const [data, setData] = useState<number[]>([]);
-
-  const refreshData = async () => {
-    setData([]);
-    const data = await fetchData();
-
-    setData(data);
-  };
-
-  useEffectAsync(refreshData, deps ?? []);
 
   return (
     <Doughnut

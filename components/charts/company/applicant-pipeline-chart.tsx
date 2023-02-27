@@ -1,12 +1,10 @@
-import { useContext } from "react";
-import { ApplicantApi } from "../../../pages/api/applicant";
-import { PieChart } from "../pie-chart";
+import { useContext, useMemo } from "react";
 import DashboardChartContext from "../../../context/dashboard-chart-context";
+import { PieChart } from "../pie-chart";
 
 export function ApplicantPieChart() {
-  const {state} = useContext(DashboardChartContext);
-  const fetchData = async () => {
-
+  const { state } = useContext(DashboardChartContext);
+  const fetchData = () => {
     let leads = 0;
     let inProcess = 0;
     let hired = 0;
@@ -21,11 +19,19 @@ export function ApplicantPieChart() {
     return [leads, inProcess, hired];
   };
 
+  const data = useMemo(() => {
+    return fetchData();
+  }, [state]);
+
   const labels = ["LEADS", "IN_PROCESS", "HIRED"].map(
     (v) => `ApplicantPipelineChartLabel.${v}`
   );
-
+ 
   return (
-     <PieChart title="APPLICANTS" labels={labels} fetchData={fetchData}  deps={[state]} />
+    <PieChart
+      title="APPLICANTS"
+      labels={labels}
+      data={data}
+    />
   );
 }

@@ -1,14 +1,11 @@
-import React, { useContext, useState } from "react";
-import { Card, Row, Col } from "react-bootstrap";
-import ApplicantApi from "../../pages/api/applicant";
-import { useEffectAsync } from "../../utils/react";
 import moment from "moment";
-import { useTranslation } from "../../hooks/use-translation";
+import { useContext, useMemo } from "react";
+import { Card, Col, Row } from "react-bootstrap";
 import DashboardChartContext from "../../context/dashboard-chart-context";
+import { useTranslation } from "../../hooks/use-translation";
 export const DashboardStast = () => {
   const {state} = useContext(DashboardChartContext);
-  const [data,setData] = useState({
-  });
+ 
   const { t } = useTranslation();
   const getDays = (date) => {
     const createdAt = moment(date);
@@ -16,7 +13,7 @@ export const DashboardStast = () => {
     var duration = moment.duration(now.diff(createdAt));
     return duration.asDays();
   };
-  const fetchData = async () => {
+  const fetchData =  () => {
 
     var stats = {
       NEW_LEADS: 0,
@@ -80,12 +77,14 @@ export const DashboardStast = () => {
       ...stats,
       CONVERSION_RATE,
     };
-    setData(stats);
+    return stats;
   };
 
 
 
-  useEffectAsync(fetchData, [state]);
+  const data = useMemo(()=>{
+return fetchData()
+  },[state])
 
   return (
     <Card className="rounded-lg h-100 stats_card mx-auto">
