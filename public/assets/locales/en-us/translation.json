@@ -1873,6 +1873,22 @@
     "DIRECT_JOB_APPLY": "Direct Job Apply"
   },
   "SELECT_ONE_PLACEHOLDER": "Please Select One",
+  "STATS": "Stats",
+  "LEAD_ASSIGNMENT": "Lead Assignment",
+  "HISTORICAL_RANGE": "Historical Range",
+  "SOURCE_BREAKDOWN": "Source breakdown",
+  "APPLICATION_STATUS_SUBTITLE": "Range:(Total, past week, custom date range)",
+  "NEW_LEADS": "New Leads this week",
+  "TOTAL_LEADS": "Total Leads",
+  "TOTAL_ACTIVE_EMPLOYEE": "Total Active Employees",
+  "EMPLOYEE_BIRTHDAYS": "Employee Birthdays this week",
+  "ACTIVE_JOB_POSTS": "Active Job Posts",
+  "CONVERSION_RATE": "Conversion rate (lead to hire)",
+  "SourceBreakdownChartLabel":{
+    "DRIVERFLY":"Driverfly",
+    "UPLOADED": "Uploaded",
+    "DIGITAL_HIRING_APP":"Digital Hiring App"
+  },
   "DRUG_TEST_VALIDATION": "You answered that you cannot pass a drug test.",
   "DRUG_TEST_VALIDATION_FAIL_MESSAGE": "Please note that all US registered trucking companies require that drivers pass drug tests during the hiring process...i.e. you WILL be tested and if you fail you WILL have to go through the SAP program. If you feel you selected the drug testing question in error, please go back and resubmit your application.  ",
   "{company_name}_OWNER_OPERATOR_VALIDATION": "Warning: {{company_name}} may only be looking for owner operators only.",
