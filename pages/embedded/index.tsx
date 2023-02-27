@@ -22,6 +22,7 @@ import { JobEmploymentType } from '../../enums/jobs/job-employment-type.enum'
 import { JobGeography } from '../../enums/jobs/job-geography.enum'
 import { JobTeamDriver } from '../../enums/jobs/job-team-driver.enum'
 import { JobEquipmentType } from '../../enums/jobs/job-equipment-type.enum'
+import EmploymentType from '../../components/filters/employment-type'
 
 
 export default function Embedded({ filterType }) {
@@ -52,6 +53,7 @@ export default function Embedded({ filterType }) {
 
     const setFiltersForCdlSchools = (): SearchJobsDto => ({
         cdl_class: DriverLicenseType.CDL_CLASS_A,
+        employment_type: JobEmploymentType.W2,
         max_years_experience: 0.6,
     })
     const setFiltersForHeavyHaul = (): SearchJobsDto => ({
