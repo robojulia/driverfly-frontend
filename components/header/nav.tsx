@@ -74,12 +74,17 @@ export default function MyNav() {
                                 </Link>
                             </NavDropdown.Item>
                         </NavDropdown>
+                        <Nav.Link className="nav-item ml-30">
+                            <Link href="http://blog.driverfly.co" target="_blank">
+                                <div >{t("BLOGS")}</div>
+                            </Link>
+                        </Nav.Link>
                     </Nav>
                     <ul className="d-flex align-items-center mb-0">
-                       
+
                         {user ?
                             <>
-                                 <li><a href="#" className="nav-link"> < Bell /></a></li>
+                                <li><a href="#" className="nav-link"> < Bell /></a></li>
                                 <DashboardButton className="theme-secondary-btn mr-4" />
                                 <LogoutButton as={Button} className="theme-secondary-btn mr-4" />
                             </>
