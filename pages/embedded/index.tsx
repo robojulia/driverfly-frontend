@@ -61,7 +61,6 @@ export default function Embedded({ filterType }) {
         equipment_type: JobEquipmentType.FLATBED,
     })
     const setFiltersForOwnerOperator = (): SearchJobsDto => ({
-        cdl_class: DriverLicenseType.CDL_CLASS_A,
         employment_type: JobEmploymentType.OWNER_OPERATOR,
     })
     const setFiltersForNewHires = (): SearchJobsDto => ({
@@ -71,12 +70,12 @@ export default function Embedded({ filterType }) {
     })
     const setFiltersForTeamDrivers = (): SearchJobsDto => ({
         cdl_class: DriverLicenseType.CDL_CLASS_A,
-        areas_covered: [JobGeography.OTR, JobGeography.REGIONAL],
+        areas_covered: JobGeography.OTR,
         team_driver: JobTeamDriver.HAS_TEAM_DRIVER,
     })
     const setFiltersForOtrJobs = (): SearchJobsDto => ({
         cdl_class: DriverLicenseType.CDL_CLASS_A,
-        areas_covered: [JobGeography.OTR, JobGeography.REGIONAL],
+        areas_covered: JobGeography.OTR,
     })
 
     const [filters, setFilters] = useState<SearchJobsDto>(filtersForQuery(filterType))
