@@ -1877,7 +1877,7 @@
   "LEAD_ASSIGNMENT": "Lead Assignment",
   "HISTORICAL_RANGE": "Historical Range",
   "SOURCE_BREAKDOWN": "Source breakdown",
-  "APPLICATION_STATUS_SUBTITLE": "Rage:(Total, past week, custom date range)",
+  "APPLICATION_STATUS_SUBTITLE": "Range:(Total, past week, custom date range)",
   "NEW_LEADS": "New Leads this week",
   "TOTAL_LEADS": "Total Leads",
   "TOTAL_ACTIVE_EMPLOYEE": "Total Active Employees",
