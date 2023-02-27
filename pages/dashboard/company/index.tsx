@@ -16,17 +16,14 @@ import { useEffectAsync } from "../../../utils/react";
 import ApplicantApi from "../../api/applicant";
 
 export default function Dashboard() {
-  const { hasPermission, user } = useAuth();
+  const { hasPermission, company } = useAuth();
   const [data, setData] = useState<ApplicantEntity[]>([]);
   const api = new ApplicantApi();
 
   useEffectAsync(async () => {
-    console.log("refresh fired");
     const v = await api.list();
     setData(v);
-}, [user], () => {
-    console.log("unloading page...")
-});
+  }, [company.id]);
 
   return (
     <PageLayout title="COMPANY_PROFILE_DASHBOARD">
@@ -37,15 +34,12 @@ export default function Dashboard() {
               state: {
                 data: data,
               },
-              method: {
-                setData: setData,
-              },
             }}
           >
             <Row className="my_chart">
               <ChartWrapper
                 title="APPLICATION_STATUS"
-                subTitle={"Application_Status_Subtitle"}
+                subTitle={"APPLICATION_STATUS_SUBTITLE"}
                 md="6"
                 lg="4"
               >
@@ -73,7 +67,7 @@ export default function Dashboard() {
                 md="6"
                 className="p-0"
                 titleClassName="text-center justify-content-center"
-                subTitle={"Source_breakdown_Subtitle"}
+                subTitle={"APPLICATION_STATUS_SUBTITLE"}
               >
                 <SourceBreakdownChart />
               </ChartWrapper>

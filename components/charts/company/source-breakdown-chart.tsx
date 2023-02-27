@@ -1,6 +1,7 @@
 import { useContext, useMemo } from "react";
 import DashboardChartContext from "../../../context/dashboard-chart-context";
 import { PieChart } from "../pie-chart";
+import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
 
 export function SourceBreakdownChart() {
   const { state } = useContext(DashboardChartContext);
@@ -9,9 +10,19 @@ export function SourceBreakdownChart() {
     let user = 0;
     let company = 0;
     state.data.forEach((a) => {
-      if (a.type === "DHA") dha++;
-      if (a.type === "USER") user++;
-      company++;
+      switch (a.type) {
+        case ApplicantType.DHA:
+          dha++;
+          break;
+        case ApplicantType.USER:
+          user++;
+          break;
+        case ApplicantType.COMPANY:
+          company++;
+          break;
+        default:
+          break;
+      }
     });
     return [dha, user, company];
   };
@@ -19,7 +30,7 @@ export function SourceBreakdownChart() {
   const data = useMemo(() => {
     return fetchData();
   }, [state]);
-  
+
   const labels = ["DIGITAL_HIRING_APP", "DRIVERFLY", "UPLOADED"].map(
     (v) => `SourceBreakdownChartLabel.${v}`
   );

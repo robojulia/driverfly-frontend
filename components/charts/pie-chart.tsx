@@ -8,7 +8,7 @@ Chart.register(ChartDataLabels);
 export interface PieChartProps {
   title: string;
   labels: string[];
-  data?:any
+  data?: number[]
 }
 
 export function PieChart(props: PieChartProps): JSX.Element {
