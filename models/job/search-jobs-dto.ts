@@ -51,6 +51,6 @@ export interface SearchJobsDto {
     min_years_experience?: number;
     max_years_experience?: number;
     total_years_experience?: number;
-    team_driver?: JobTeamDriver;
+    team_drivers?: JobTeamDriver;
 
 }
