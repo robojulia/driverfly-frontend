@@ -14,6 +14,7 @@ import { PhoneNumberDto } from "../../../../models/jot-form/short-form/phone-num
 import { ApplicantOTPEntity } from "../../../../models/applicant/applicant-otp.entity";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import { toast, ToastContainer } from "react-toastify";
+import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 
 
 export function PhoneNumber() {
@@ -107,7 +108,18 @@ export function PhoneNumber() {
         }
     }
     useEffect(() => {
-        if (!!applicant?.extras) setApplicantExtras([...applicant?.extras])
+        const typesToExclude = [
+            ApplicantExtras.SIGNATURE,
+            ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION,
+            ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION,
+            ApplicantExtras.SIGNATURE_IMPORTANT_BACKGROUND,
+            ApplicantExtras.SIGNATURE_GENERAL_CONSENT,
+        ];
+
+        const filteredSignature = applicant?.extras.filter(
+            v => !typesToExclude.includes(v.type)
+        );
+        if (!!applicant?.extras) setApplicantExtras([...filteredSignature])
 
     }, [applicant])
     const inputStyle = {
