@@ -71,7 +71,7 @@ export default function Embedded({ filterType }) {
     const setFiltersForTeamDrivers = (): SearchJobsDto => ({
         cdl_class: DriverLicenseType.CDL_CLASS_A,
         areas_covered: JobGeography.OTR,
-        team_driver: JobTeamDriver.HAS_TEAM_DRIVER,
+        team_drivers: JobTeamDriver.HAS_TEAM_DRIVER,
     })
     const setFiltersForOtrJobs = (): SearchJobsDto => ({
         cdl_class: DriverLicenseType.CDL_CLASS_A,
