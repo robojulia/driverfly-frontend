@@ -18,7 +18,7 @@ export default function ViewMoreRadioFilter(props) {
             <EnumFilterByKeyValue
                 {...props}
                 translate={true}
-                withAll={true}
+                withAll={typeof props.withAll == "undefined" ? true : props.withAll}
                 enumArray={firstHalf}
                 name={props.name}
                 labelPrefix={props.labelPrefix}
