@@ -77,6 +77,7 @@ export default function EmbeddedFilters({ filterType }: EmbeddedFiltersProps) {
                             <PostedDate state={state} method={method} />
                             <Range state={state} method={method} />
                             <AreasCovered
+                                withAll={filterType != EmbeddedFilterTypes.OTR_JOBS}
                                 hide={(hiddenOptions()).JobGeography}
                                 state={state}
                                 method={method}
