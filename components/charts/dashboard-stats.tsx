@@ -21,7 +21,7 @@ export const DashboardStast = () => {
 			TOTAL_ACTIVE_EMPLOYEE: 0,
 			EMPLOYEE_BIRTHDAYS: 1,
 			ACTIVE_JOB_POSTS: 10,
-			CONVERSION_RATE: 0,
+			CONVERSION_RATE: "0%",
 		};
 		state?.data.forEach((a) => {
 
@@ -75,7 +75,7 @@ export const DashboardStast = () => {
 				: 0;
 		stats = {
 			...stats,
-			CONVERSION_RATE: parseFloat(CONVERSION_RATE.toFixed(3))
+			CONVERSION_RATE: `${(CONVERSION_RATE*100).toFixed(2)}%`
 		};
 		return stats;
 	};

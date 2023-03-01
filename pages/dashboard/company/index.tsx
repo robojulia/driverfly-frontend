@@ -39,7 +39,6 @@ export default function Dashboard() {
             <Row className="my_chart">
               <ChartWrapper
                 title="APPLICATION_STATUS"
-                subTitle={"APPLICATION_STATUS_SUBTITLE"}
                 md="6"
                 lg="4"
               >
@@ -67,7 +66,6 @@ export default function Dashboard() {
                 md="6"
                 className="p-0"
                 titleClassName="text-center justify-content-center"
-                subTitle={"APPLICATION_STATUS_SUBTITLE"}
               >
                 <SourceBreakdownChart />
               </ChartWrapper>

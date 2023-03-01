@@ -26,6 +26,20 @@ export function TotalApplicantBarChart() {
 
   const yearToShow: number = new Date().getFullYear();
 
+  const isWeekData = ({
+    created_at,
+    week,
+    weekEnd,
+  }: {
+    created_at: string;
+    week: string;
+    weekEnd: string;
+  }) => {
+    return (
+      moment(created_at).isSameOrAfter(week, "day") &&
+      moment(created_at).isSameOrBefore(weekEnd, "day")
+    );
+  };
   const fetchData = () => {
     // const months = moment.months().map(v => ({ name: v.toUpperCase(), count: 0 ,hired:0 }))
     const applicants: ApplicantEntity[] = state?.data;
@@ -40,21 +54,23 @@ export function TotalApplicantBarChart() {
       applicants.forEach((a) => {
         if (
           a.jobs.length == 0 &&
-          moment(a.created_at).isSameOrAfter(week, "day") &&
-          moment(a.created_at).isSameOrBefore(weekEnd, "day")
+          isWeekData({ created_at: a.created_at, week: week, weekEnd: weekEnd })
         ) {
           count++;
           return;
         }
         a.jobs.map((j) => {
           if (
-            moment(j.created_at).isSameOrAfter(week, "day") &&
-            moment(j.created_at).isSameOrBefore(weekEnd, "day")
+            isWeekData({
+              created_at: j.created_at,
+              week: week,
+              weekEnd: weekEnd,
+            })
           ) {
             count++;
-          }
-          if (j.status.startsWith("COMPLETED_")) {
-            hiredCount++;
+            if (j.status.startsWith("COMPLETED_")) {
+              hiredCount++;
+            }
           }
         });
       });
@@ -79,7 +95,7 @@ export function TotalApplicantBarChart() {
       },
     ];
   };
-  
+
   const data = useMemo(() => {
     return fetchData();
   }, [state]);
