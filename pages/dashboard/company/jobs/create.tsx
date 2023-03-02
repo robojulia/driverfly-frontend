@@ -60,6 +60,7 @@ export default function CreateJob() {
             }
         </ChildPageLayout >
     );
+    
 }
 
 CreateJob.getLayout = function getLayout(page) {
