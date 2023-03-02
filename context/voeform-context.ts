@@ -12,6 +12,7 @@ export type VoeFormContextType = {
 		updateApplicantVoe: (e?: any) => void;
 		stepNext: () => void;
 		stepBack: () => void;
+		jumpToStep: (step: number) => void;
 	};
 };
 
@@ -26,6 +27,7 @@ const VoeFormContext = createContext<VoeFormContextType>({
 		updateApplicantVoe: (e?: any) => { },
 		stepNext: () => { },
 		stepBack: () => { },
+		jumpToStep: (step: number) => { },
 	},
 });
 export default VoeFormContext;

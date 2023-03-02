@@ -97,6 +97,7 @@ export function ViolationHistory() {
 										formik={form}
 										required
 									/>
+									
 									<BaseInput
 										className="col-md-6 mt-3"
 										name={`VIOLATION_DETAILS.value[${i}].charge`}

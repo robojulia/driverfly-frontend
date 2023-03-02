@@ -18,6 +18,11 @@ import { useRouter } from 'next/router'
 import EmbeddedFilters from '../../components/embedded-filters/embedded-filters'
 import { EmbeddedFilterTypes } from '../../enums/embedded/embedded-filter-types.enum'
 import { DriverLicenseType } from '../../enums/users/driver-license-type.enum'
+import { JobEmploymentType } from '../../enums/jobs/job-employment-type.enum'
+import { JobGeography } from '../../enums/jobs/job-geography.enum'
+import { JobTeamDriver } from '../../enums/jobs/job-team-driver.enum'
+import { JobEquipmentType } from '../../enums/jobs/job-equipment-type.enum'
+import EmploymentType from '../../components/filters/employment-type'
 
 
 export default function Embedded({ filterType }) {
@@ -34,6 +39,9 @@ export default function Embedded({ filterType }) {
     const [searchQuery, setSearchQuery] = useState<string>()
     const resetSearchQuery = (): void => setSearchQuery('')
 
+    /**
+     * @param {EmbeddedFilterTypes} type - EmbeddedFilterTypes
+     */
     const filtersForQuery = (type: EmbeddedFilterTypes): SearchJobsDto => ({
         [EmbeddedFilterTypes.CDL_SCHOOLS]: setFiltersForCdlSchools(),
         [EmbeddedFilterTypes.HEAVY_HAUL]: setFiltersForHeavyHaul(),
@@ -43,12 +51,32 @@ export default function Embedded({ filterType }) {
         [EmbeddedFilterTypes.OTR_JOBS]: setFiltersForOtrJobs(),
     }[type] || {})
 
-    const setFiltersForCdlSchools = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A })
-    const setFiltersForHeavyHaul = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A })
-    const setFiltersForOwnerOperator = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A })
-    const setFiltersForNewHires = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A, total_years_experience: 0 })
-    const setFiltersForTeamDrivers = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A })
-    const setFiltersForOtrJobs = (): SearchJobsDto => ({ cdl_class: DriverLicenseType.CDL_CLASS_A })
+    const setFiltersForCdlSchools = (): SearchJobsDto => ({
+        cdl_class: DriverLicenseType.CDL_CLASS_A,
+        employment_type: JobEmploymentType.W2,
+        max_years_experience: 0.6,
+    })
+    const setFiltersForHeavyHaul = (): SearchJobsDto => ({
+        cdl_class: DriverLicenseType.CDL_CLASS_A,
+        equipment_type: JobEquipmentType.FLATBED,
+    })
+    const setFiltersForOwnerOperator = (): SearchJobsDto => ({
+        employment_type: JobEmploymentType.OWNER_OPERATOR,
+    })
+    const setFiltersForNewHires = (): SearchJobsDto => ({
+        cdl_class: DriverLicenseType.CDL_CLASS_A,
+        max_years_experience: 0.6,
+        employment_type: JobEmploymentType.W2,
+    })
+    const setFiltersForTeamDrivers = (): SearchJobsDto => ({
+        cdl_class: DriverLicenseType.CDL_CLASS_A,
+        areas_covered: JobGeography.OTR,
+        team_drivers: JobTeamDriver.HAS_TEAM_DRIVER,
+    })
+    const setFiltersForOtrJobs = (): SearchJobsDto => ({
+        cdl_class: DriverLicenseType.CDL_CLASS_A,
+        areas_covered: JobGeography.OTR,
+    })
 
     const [filters, setFilters] = useState<SearchJobsDto>(filtersForQuery(filterType))
     const resetFilters = (): void => setFilters(filtersInitialsValues)

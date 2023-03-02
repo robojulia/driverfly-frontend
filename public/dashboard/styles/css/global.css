@@ -602,6 +602,16 @@ textarea {
 .my_chart canvas {
   height: 270px;
 }
+.my_chart p {
+  font-size: 10px;
+  font-weight: 300;
+}
+.my_chart .h-10 {
+  height: 60px;
+}
+.stats_card {
+  width: 300px;
+}
 
 .data_table_dropdown a {
   color: #000 !important;
@@ -784,5 +794,11 @@ button:active {
   margin-top: 90px !important;
 }
 .mt-150 {
-  margin-top: 150px !important;
+  margin-top: 150px !important;}
+.stats_card {
+  background: linear-gradient(to bottom right, #1b4454ba, #2ec8c4);
+  color: #fff;
+}
+.stats_card h6 {
+  color: #fff;
 }

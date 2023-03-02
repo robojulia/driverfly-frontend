@@ -2,9 +2,10 @@ import EnumFilterByKeyValue from "../enum-filters/enum-filter-by-key-value"
 import { DriverLicenseType } from "../../enums/users/driver-license-type.enum"
 import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
 import { useTranslation } from "../../hooks/use-translation";
+import { SearchJobFilterProps } from "../../types/search-filter/job-search-filter.type";
 
 
-export default function Category(props: any) {
+export default function Category(props: SearchJobFilterProps) {
 
     const { t } = useTranslation();
     const { state, method } = props

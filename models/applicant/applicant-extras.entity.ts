@@ -64,7 +64,6 @@ export class ApplicantExtrasEntity {
 						.array((yup.string() as any).enum(RouteType))
 						.min(1)
 						.typeError("Choose atleast one!")
-						.required()
 						.nullable(),
 				})
 				.when("type", {

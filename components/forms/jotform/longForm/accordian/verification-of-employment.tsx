@@ -8,6 +8,7 @@ import { AccordianProps } from "../../../../../types/jotform/accordian.type";
 import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../../models/applicant";
+import BasePasswordInput from "../../../base-password-input";
 
 function formatSSN(value: string) {
     if (!value) return value
@@ -90,15 +91,14 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
 
                 </Row>
                 <Row className={styles.align__text_left}>
-                    <BaseInput
-                        className="col my-3"
-                        name="EMPLOYEE_SS_OR_ID.value"
-                        label="EMPLOYEE_SS_OR_BUSINESS"
-                        onChange={({ target: { value } }) => handleInput(value)}
-                        formik={form}
-                        required
+                    <BasePasswordInput
+                      className="col my-3"
+                      name="EMPLOYEE_SS_OR_ID.value"
+                      label="EMPLOYEE_SS_OR_BUSINESS"
+                      onChange={({ target: { value } }) => handleInput(value)}
+                      formik={form}
+                      required
                     />
-
                 </Row>
                 <Row className={styles.align__text_left}>
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>

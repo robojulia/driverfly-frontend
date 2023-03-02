@@ -1037,13 +1037,6 @@ export function JobForm(props: JobFormProps) {
                                 </Col >
 
                                 <Col md="6">
-
-                                    <BaseCheck
-                                        className="col-12"
-                                        label="must_pass_drug_test"
-                                        name="must_pass_drug_test"
-                                        formik={form}
-                                    />
                                     <BaseCheckList
                                         className="col-12"
                                         label="drug_test_type"
@@ -1212,15 +1205,6 @@ export function JobForm(props: JobFormProps) {
                                             </ViewCard>
                                         </Col>
                                     }
-                                    <BaseInput
-                                        className="col-12"
-                                        label="MAX_MOVING_VIOLATIONS"
-                                        placeholder="COUNT"
-                                        name="max_moving_violations"
-                                        min="0"
-                                        type="int"
-                                        formik={form}
-                                    />
                                     <BaseTextArea
                                         className="col-12"
                                         label="other_safety_requirements"
