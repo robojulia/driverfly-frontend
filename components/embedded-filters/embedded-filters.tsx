@@ -40,6 +40,9 @@ export default function EmbeddedFilters({ filterType }: EmbeddedFiltersProps) {
         [EmbeddedFilterTypes.CDL_SCHOOLS]: {
             JobEmploymentType: [JobEmploymentType.OWNER_OPERATOR],
         },
+        [EmbeddedFilterTypes.NEW_HIRES]: {
+            JobEmploymentType: [JobEmploymentType.OWNER_OPERATOR],
+        },
         [EmbeddedFilterTypes.OWNER_OPERATOR]: {
             DriverEndorsement: [DriverEndorsement.SCHOOL_BUS],
         },
@@ -92,7 +95,6 @@ export default function EmbeddedFilters({ filterType }: EmbeddedFiltersProps) {
                             {!Boolean(
                                 [
                                     EmbeddedFilterTypes.OWNER_OPERATOR,
-                                    EmbeddedFilterTypes.NEW_HIRES,
                                 ].includes(filterType)
                             ) && (
                                     <EmploymentType
@@ -125,11 +127,7 @@ export default function EmbeddedFilters({ filterType }: EmbeddedFiltersProps) {
                                     <TeamDrivers state={state} method={method} />
                                 )}
 
-                            {!Boolean(
-                                [EmbeddedFilterTypes.NEW_HIRES].includes(filterType)
-                            ) && (
-                                    <MinimumYearsExperience state={state} method={method} />
-                                )}
+                            <MinimumYearsExperience state={state} method={method} />
                         </div>
                     </div>
                 </div>
