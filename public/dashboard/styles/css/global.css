@@ -790,6 +790,11 @@ button:active {
 .tab__wid_for_jot svg {
   width: 4%;
 }
+.mt-90 {
+  margin-top: 90px !important;
+}
+.mt-150 {
+  margin-top: 150px !important;}
 .stats_card {
   background: linear-gradient(to bottom right, #1b4454ba, #2ec8c4);
   color: #fff;

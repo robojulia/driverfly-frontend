@@ -3,7 +3,7 @@ import { PublicLayout } from "../../components/layouts/public-layout";
 import CompanyInfo from "../../components/employer/company-info";
 import CompanyJob from "../../components/employer/company-job";
 import CompanyApi from "../api/company";
-import { useTranslation } from '../../hooks/use-translation';
+import { useTranslation } from "../../hooks/use-translation";
 
 import JobApi from "../api/job";
 import Link from "next/link";
