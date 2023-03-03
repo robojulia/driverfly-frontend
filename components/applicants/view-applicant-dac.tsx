@@ -14,7 +14,7 @@ const ViewApplicantDAC = ({ applicant }: ApplicantDacProps) => {
     const { t } = useTranslation();
 
     return (
-        <ViewCard title={t("APPLICANT_DAC")}>
+        <ViewCard title={t("APPLICANT_DRIVER_ONBOARDING_CHECKLIST")}>
             <Table striped>
                 <tbody>
                     {
