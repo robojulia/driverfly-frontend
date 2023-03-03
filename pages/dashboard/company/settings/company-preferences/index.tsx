@@ -153,7 +153,8 @@ export default function CompanyPreference() {
 
   return (
     <>
-      <PageLayout title="COMPANY_PREFERENCE">
+      <PageLayout title="DIGITAL_HIRING_APPLICATION">
+      <p className="pt-2 pb-2">{t("DHA_PREFERENCE_POINT_1")}</p>
         <BaseClickToCopyInput
           label="DIGITAL_HIRING_APP_URL"
           className="my-2 border p-3 rounded"
@@ -161,6 +162,8 @@ export default function CompanyPreference() {
             }`}
           tooltipText={t("CLICK_TO_COPY")}
         />
+
+          <p className="pt-2 pb-2">{t("DHA_PREFERENCE_POINT_2")}</p>
 
         <form onSubmit={form.handleSubmit} className="py-4 px-3 border rounded mt-4" style={{ background: '#e9ecef' }}>
           <Row>

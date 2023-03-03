@@ -1913,5 +1913,8 @@
   "OTP_MESSAGES": "We've sent you OTP, Please enter below to continue.",
   "ENTER_PHONE_NUMBER": "Please enter your phone number:",
   "OTP_EXCEPTION_MESSAGE": "Your OTP is expired or invalid. Click here to ",
-  "RESEND": "Resend"
+  "RESEND": "Resend",
+  "DIGITAL_HIRING_APPLICATION":"Digital Hiring Application",
+  "DHA_PREFERENCE_POINT_1":"This is your company’s custom digital hiring application that you can embed or link to on any job board or social media posting. Results will funnel from this application directly into your DriverFly account",
+  "DHA_PREFERENCE_POINT_2":"These company-level constraints are used to automatically qualify candidates on your behalf. You will still receive all applicants that fill out your driver application."
 }
