@@ -42,9 +42,12 @@ export function DisclosureAuthorization({ form }: AccordianProps) {
                 : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION),
             DISCLOSURE_AND_AUTHORIZATION_DATE: !!apx_disclosure_date?.type
                 ? apx_disclosure_date
-                : new ApplicantExtrasEntity(
-                    ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE
-                ),
+                : {
+                    ...new ApplicantExtrasEntity(
+                        ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE
+                    ),
+                    value: new Date().toISOString()
+                }
 
         });
     }, [applicant]);

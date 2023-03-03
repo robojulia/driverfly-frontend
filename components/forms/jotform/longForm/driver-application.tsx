@@ -65,7 +65,10 @@ export function DriverApplication() {
 			...form.values,
 			APPLY_DATE: !!apx?.type
 				? apx
-				: new ApplicantExtrasEntity(ApplicantExtras.APPLY_DATE),
+				: {
+					...new ApplicantExtrasEntity(ApplicantExtras.APPLY_DATE),
+					value: new Date().toISOString()
+				},
 			SIGNATURE: !!apx_sign?.type
 				? apx_sign
 				: new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
