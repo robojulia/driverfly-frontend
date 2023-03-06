@@ -103,7 +103,7 @@ export function AccidentHistory() {
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row>
-				<h4 className={styles.carrierName}>{t("ACCIDENT_HISTORY")}</h4>
+				<h4 className={styles.carrierName}>{t("EMPLOYMENT_VERIF")}</h4>
 			</Row>
 			<Row>
 				<div className={`${styles.align__text_left} ${styles.bold}`}>
