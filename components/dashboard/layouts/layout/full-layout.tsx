@@ -130,7 +130,7 @@ const FullLayout = ({ children }) => {
 				{
 					pathname: "/dashboard/company/settings/company-preferences",
 					icon: Sliders,
-					text: "PREFERENCES",
+					text: "DIGITAL_HIRING_APPLICATION",
 				},
 			],
 
