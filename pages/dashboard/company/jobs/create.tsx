@@ -12,7 +12,7 @@ export default function CreateJob() {
 
     const [job, setJob] = useState<JobEntity>(null)
 
-    const jobUrl: string = `${process.env.FRONTEND_BASE_URL}/jobs/${job?.id}/${job?.slug}`
+    const jobUrl: string = `${process.env.FRONTEND_BASE_URL}jobs/${job?.id}/${job?.slug}`
 
     return (
         <ChildPageLayout
