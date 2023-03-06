@@ -44,9 +44,12 @@ export function ImportantDisclosureBackgroundPsp({ form }: AccordianProps) {
                 : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE_IMPORTANT_BACKGROUND),
             IMPORTANT_DISCLOSURE_BACKGROUND_DATE: !!apx_background_date?.type
                 ? apx_background_date
-                : new ApplicantExtrasEntity(
-                    ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
-                ),
+                : {
+                    ...new ApplicantExtrasEntity(
+                        ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE
+                    ),
+                    value: new Date().toISOString()
+                }
 
         });
     }, [applicant]);
@@ -167,7 +170,7 @@ export function ImportantDisclosureBackgroundPsp({ form }: AccordianProps) {
                 <BaseInput
                     className="col my-3"
                     required
-                    
+
                     type="date"
                     name="IMPORTANT_DISCLOSURE_BACKGROUND_DATE.value"
                     placeholder="DATE"
