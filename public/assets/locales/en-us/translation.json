@@ -1913,5 +1913,7 @@
   "OTP_MESSAGES": "We've sent you OTP, Please enter below to continue.",
   "ENTER_PHONE_NUMBER": "Please enter your phone number:",
   "OTP_EXCEPTION_MESSAGE": "Your OTP is expired or invalid. Click here to ",
-  "RESEND": "Resend"
+  "RESEND": "Resend",
+  "APPLICANT_DRIVER_ONBOARDING_CHECKLIST":"Applicant Driver Onboarding Checklist",
+  "DRIVER_ONBOARDING_CHECKLIST":"Driver Onboarding Checklist"
 }
