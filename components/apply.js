@@ -177,7 +177,7 @@ export default function JobApply({ job, setEncourageModal }) {
                                 className="col-12 mt-3"
                                 label="CDL_CLASS"
                                 name="license_type"
-                                placeholder="DriverLicenseType.NONE"
+                                // placeholder="DriverLicenseType.NONE"
                                 labelPrefix="DriverLicenseType"
                                 required
                                 enumType={DriverLicenseType}
