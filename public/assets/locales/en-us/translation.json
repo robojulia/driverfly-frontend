@@ -1889,10 +1889,10 @@
   "EMPLOYEE_BIRTHDAYS": "Employee Birthdays this week",
   "ACTIVE_JOB_POSTS": "Active Job Posts",
   "CONVERSION_RATE": "Conversion rate (lead to hire)",
-  "SourceBreakdownChartLabel":{
-    "DRIVERFLY":"Driverfly",
+  "SourceBreakdownChartLabel": {
+    "DRIVERFLY": "Driverfly",
     "UPLOADED": "Uploaded",
-    "DIGITAL_HIRING_APP":"Digital Hiring App"
+    "DIGITAL_HIRING_APP": "Digital Hiring App"
   },
   "DRUG_TEST_VALIDATION": "You answered that you cannot pass a drug test.",
   "DRUG_TEST_VALIDATION_FAIL_MESSAGE": "Please note that all US registered trucking companies require that drivers pass drug tests during the hiring process...i.e. you WILL be tested and if you fail you WILL have to go through the SAP program. If you feel you selected the drug testing question in error, please go back and resubmit your application.  ",
@@ -1914,9 +1914,10 @@
   "ENTER_PHONE_NUMBER": "Please enter your phone number:",
   "OTP_EXCEPTION_MESSAGE": "Your OTP is expired or invalid. Click here to ",
   "RESEND": "Resend",
-  "DIGITAL_HIRING_APPLICATION":"Digital Hiring Application",
-  "DHA_PREFERENCE_POINT_1":"This is your company’s custom digital hiring application that you can embed or link to on any job board or social media posting. Results will funnel from this application directly into your DriverFly account",
-  "DHA_PREFERENCE_POINT_2":"These company-level constraints are used to automatically qualify candidates on your behalf. You will still receive all applicants that fill out your driver application.",
-  "APPLICANT_DRIVER_ONBOARDING_CHECKLIST":"Applicant Driver Onboarding Checklist",
-  "DRIVER_ONBOARDING_CHECKLIST":"Driver Onboarding Checklist"
+  "DIGITAL_HIRING_APPLICATION": "Digital Hiring Application",
+  "DHA_PREFERENCE_POINT_1": "This is your company’s custom digital hiring application that you can embed or link to on any job board or social media posting. Results will funnel from this application directly into your DriverFly account",
+  "DHA_PREFERENCE_POINT_2": "These company-level constraints are used to automatically qualify candidates on your behalf. You will still receive all applicants that fill out your driver application.",
+  "APPLICANT_DRIVER_ONBOARDING_CHECKLIST": "Applicant Driver Onboarding Checklist",
+  "DRIVER_ONBOARDING_CHECKLIST": "Driver Onboarding Checklist",
+  "EMPLOYEES": "Employees"
 }
