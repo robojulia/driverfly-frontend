@@ -11,7 +11,7 @@ export default function DriversNewsletter() {
                 <ul className="p-0">
                     <p className="text-secondary mb-4">{t("SUBSCRIBE_TO_THE_DRIVERFLY_NEWSLETTER")}</p>
                     <form action="">
-                        <input type="email" className="form-control" placeholder="Email Adress" />
+                        <input type="email" className="form-control" placeholder={`${t("EMAIL_ADDRESS")}`} />
                         <button type="submit" className="theme-primary-btn btn-block mt-3">{t("submit")}</button>
                     </form>
                 </ul>
@@ -22,7 +22,7 @@ export default function DriversNewsletter() {
                 <ul className="p-0">
 
                     <form action="">
-                        <input type="email" className="form-control" placeholder="Email Adress" />
+                        <input type="email" className="form-control" placeholder={`${t("EMAIL_ADDRESS")}`} />
                         <button type="submit" className="theme-primary-btn btn-block mt-3">{t("submit")}</button>
                     </form>
                 </ul>

@@ -1,19 +1,16 @@
 import { useFormik } from "formik";
-import React, { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
-import jotformContext from "../../../../context/jotform-context";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { useTranslation } from "../../../../hooks/use-translation";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import styles from "../../../../styles/jotform.module.css";
-
-export interface HalfWayProps extends PageProps { }
-
+import styles from "../../../../styles/digitalhiringapp.module.css";
 export function HalfWay() {
 
 	const {
 		state: { applicant },
 		method: { stepNext, stepBack },
-	} = useContext(jotformContext);
+	}: JotFormContextType = useContext(JotformContext);
+
 	const { t } = useTranslation();
 	const form = useFormik({
 		initialValues: {},
@@ -28,10 +25,14 @@ export function HalfWay() {
 	return (
 		<>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<h1 className={styles.heading__sty}>{t("HARD_QUESTIONS")}</h1>
+				<div className="d-flex justify-content-center mt-n4 w-100" style={{height: '200px'}}>
+					<img src='/img/gifs/simpsonRunning.gif' alt="simpsons" />
+				</div>
+				<h1 className={`${styles.heading__sty} mt-0 pt-0`}>{t("HARD_QUESTIONS")}</h1>
 				<h3 className="text-center">{t("ANSWER_FOLLOWIN_QUESTIONS")}</h3>
 				<p className={`${styles.paragraph} my-4`}>{t("EXCLUDE_CONSIDERATION")}</p>
 				<Row className="mt-4">
+
 					<Col>
 						<Button className="float-right" type="reset">
 							{t("BACK")}

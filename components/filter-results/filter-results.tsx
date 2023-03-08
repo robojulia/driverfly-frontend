@@ -13,15 +13,16 @@ import SpecialEndorsementsRequired from '../filters/special-endorsements-require
 import TypeOfDelivery from '../filters/type-of-delivery'
 import Range from "../filters/location/range"
 import { useTranslation } from '../../hooks/use-translation'
-import jobContext from '../../context/job-context'
+import JobContext from '../../context/job-context'
 import TransmissionType from '../filters/vehicle-transmission-type'
+import MinimumYearsExperience from '../filters/minimum-years-experience'
 
 
 
 export default function FilterResults() {
 
   const { t } = useTranslation();
-  const { state, method } = useContext(jobContext)
+  const { state, method } = useContext(JobContext)
 
   const { handleReset } = method
 
@@ -54,6 +55,8 @@ export default function FilterResults() {
                 < Schedule state={state} method={method} />
                 < SpecialEndorsementsRequired state={state} method={method} />
                 < MvrRequirement state={state} method={method} />
+                < MinimumYearsExperience state={state} method={method} />
+
               </div>
             </div>
           </div>

@@ -1,0 +1,8 @@
+export enum ApplicantFormStatus {
+    OPEN = 'OPEN',
+    CLOSE = 'CLOSE',
+    SHORT_FORM_SUBMITTED = 'SHORT_FORM_SUBMITTED',
+    LONG_FORM_SUBMITTED = 'LONG_FORM_SUBMITTED',
+    HIRED = 'HIRED',
+    REJECTED = 'REJECTED',
+}

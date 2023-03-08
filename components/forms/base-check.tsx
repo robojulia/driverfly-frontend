@@ -60,7 +60,7 @@ export default function BaseCheck({ formik, required, className, label, checked,
           role="switch"
           className={`form-check-input ${error ? "is-invalid" : ""}`}
         />
-        {label && <label htmlFor={name} style={{ marginLeft: ".5em" }} className="form-check-label">{t(label)}{required ? "*" : ""}</label>}
+        {label && <label htmlFor={name} style={{ marginLeft: ".5em" }} className="form-check-label">{t(label)}{required ? <span className='text-danger'>*</span> : ""}</label>}
 
       </div>
       {touched && error && (typeof error === "string") ? <span className="text-danger small">{t(error)}</span> : null}

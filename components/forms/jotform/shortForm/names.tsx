@@ -1,20 +1,18 @@
-import React, { useContext, useEffect } from "react";
-import styles from "../../../../styles/jotform.module.css";
+import { useContext, useEffect } from "react";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { Button, Col, Row } from "react-bootstrap";
 import BaseInput from "../../base-input";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { NamesDto } from "../../../../models/jot-form/short-form/names";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import jotformContext from "../../../../context/jotform-context";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 
-export interface NamesProps extends PageProps { }
 
 export function Names() {
 	const {
 		state: { applicant },
 		method: { setApplicant, stepNext, stepBack },
-	} = useContext(jotformContext);
+	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 

@@ -1,24 +1,21 @@
-import React, { useContext, useEffect } from "react";
-import styles from "../../../../styles/jotform.module.css";
+import { useContext, useEffect } from "react";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
 import BaseInput from "../../base-input";
 import { BackgroundInfoDto } from "../../../../models/jot-form/long-form/background-info.dto";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import jotformContext from "../../../../context/jotform-context";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import StateSelect from "../../state-select";
-
-export interface BackgroundInfoProps extends PageProps { }
 
 export function BackgroundInfo() {
 
 	const {
 		state: { applicant, applicantExtras },
 		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
-	} = useContext(jotformContext);
+	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 
@@ -58,15 +55,10 @@ export function BackgroundInfo() {
 		});
 	}, [applicant]);
 
-	useEffect(() => {
-		console.log("form values", form.values);
-		console.log("form eror", form.errors);
-	}, [form.values, form.errors]);
-
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<h4 className={styles.heading__sty}>{t("BACKGROUND_INFO")}</h4>
-			<Row className={styles.align__text_left}>
+			<Row className={`${styles.align__text_left} ${styles.bold}`}>
 				<BaseInput
 					className="col mt-3 mb-3"
 					required
@@ -75,6 +67,8 @@ export function BackgroundInfo() {
 					placeholder="birthdate"
 					label="birthdate"
 					formik={form}
+					max={new Date().toISOString().split("T")[0]}
+
 				/>
 			</Row>
 			<p
@@ -86,7 +80,7 @@ export function BackgroundInfo() {
 			<>
 				<Row>
 					<div className="col-md-12 ">
-						<Row className={styles.align__text_left}>
+						<Row className={`${styles.align__text_left} ${styles.bold}`}>
 							<BaseInput
 								className="col-md-6 my-3"
 								required
@@ -97,7 +91,6 @@ export function BackgroundInfo() {
 							/>
 							<BaseInput
 								className="col-md-6 my-3"
-								required
 								name={`LINE_ADDRESS.value.address_2`}
 								placeholder="ADDRESS_LINE_2"
 								label="ADDRESS_LINE_2"
@@ -108,11 +101,12 @@ export function BackgroundInfo() {
 				</Row>
 			</>
 
-			<Row className={styles.align__text_left}>
+			<Row className={`${styles.align__text_left} ${styles.bold}`}>
 				<BaseInput
 					className="col-md-6 my-3"
 					required
 					name="city"
+					type="text"
 					placeholder="city"
 					label="city"
 					formik={form}
@@ -126,11 +120,12 @@ export function BackgroundInfo() {
 					formik={form}
 				/>
 			</Row>
-			<Row className={styles.align__text_left}>
+			<Row className={`${styles.align__text_left} ${styles.bold}`}>
 				<BaseInput
 					className="col my-3"
 					required
 					name="zip_code"
+					type="number"
 					placeholder="zip_code"
 					label="zip_code"
 					formik={form}
@@ -149,6 +144,6 @@ export function BackgroundInfo() {
 					</Button>
 				</Col>
 			</Row>
-		</Form>
+		</Form >
 	);
 }

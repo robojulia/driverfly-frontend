@@ -1,24 +1,21 @@
 import { useFormik } from "formik";
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import BaseTextArea from "../../base-text-area";
 import BaseCheck from "../../base-check";
-import styles from "../../../../styles/jotform.module.css";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import jotformContext from "../../../../context/jotform-context";
+import styles from "../../../../styles/digitalhiringapp.module.css";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { UnableForJobDto } from "../../../../models/jot-form/long-form/unable-for-job.dto";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
-
-export interface UnableForJobProps extends PageProps { }
 
 export function UnableForJob() {
 
 	const {
 		state: { applicant, applicantExtras },
 		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
-	} = useContext(jotformContext);
+	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 	const form = useFormik({
@@ -66,7 +63,7 @@ export function UnableForJob() {
 				/>
 			</Row>
 			{form.values.is_unable_to_perform ? (
-				<Row className={styles.align__text_left}>
+				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 					<BaseTextArea
 						className="mt-3"
 						name="REASON_FOR_UNABLE_TO_PERFORM_JOB.value"

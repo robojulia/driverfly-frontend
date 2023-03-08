@@ -8,7 +8,7 @@ import { AsyncTypeahead } from 'react-bootstrap-typeahead'; // ES2015
 
 export default function SchoolLocation() {
 
-    const { state, method } = useContext(jobContext)
+    const { state, method } = useContext(JobContext)
     const [location, setLocation] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [options, setOptions] = useState([]);

@@ -1,37 +1,42 @@
-import React, { useContext, useEffect, useState } from "react";
-import styles from "../../../../styles/jotform.module.css";
+import { useContext, useEffect } from "react";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
 import BaseInput from "../../base-input";
 import BaseInputPhone from "../../base-input-phone";
-import BaseSelect from "../../base-select";
 import BaseCheck from "../../base-check";
-import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferences.enum";
-import { EmploymentHistoryDto } from "../../../../models/jot-form/long-form/employment-history.dto";
-import { PageProps } from "../../../../types/jotform/page-props.type";
-import jotformContext from "../../../../context/jotform-context";
-import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
-import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import { CurrentEmploymentHistoryPageDto } from "../../../../models/jot-form/long-form/current-employment-history-page.dto";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import StateSelect from "../../state-select";
-
-export interface EmploymentHistoryProps extends PageProps { }
+import { LoaderIcon } from "../../../loading/loader-icon";
+import { CurrentEmploymentHistoryDto } from "../../../../models/jot-form/long-form/current-emplyment-history/index.dto";
+import { ApplicantEmployerEntity } from "../../../../models/applicant";
 
 export function EmploymentHistory() {
 	const {
-		state: { applicant, applicantExtras },
-		method: { updateApplicantExtras, stepNext, stepBack },
-	} = useContext(jotformContext);
+		state: { applicant },
+		method: { setApplicant, stepNext, stepBack },
+	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
 
 	const form = useFormik({
-		initialValues: new EmploymentHistoryDto(),
-		validationSchema: EmploymentHistoryDto.yupSchema(),
+		initialValues: new CurrentEmploymentHistoryPageDto(),
+		validationSchema: CurrentEmploymentHistoryPageDto.yupSchema(),
 		onSubmit: (values) => {
-			const { CURRENT_EMPLOYER } = values;
-			updateApplicantExtras(CURRENT_EMPLOYER);
+			const { employer, is_current_employed } = values;
+
+			const employers: ApplicantEmployerEntity[] = applicant?.employers?.filter(v => !!!v?.is_current)
+
+			if (!!is_current_employed) employers.push(employer)
+
+			setApplicant({
+				...applicant,
+				employers
+			});
 			stepNext();
+			return
 		},
 		onReset: (values) => {
 			stepBack();
@@ -39,20 +44,19 @@ export function EmploymentHistory() {
 	});
 
 	useEffect(() => {
-		const apx = applicantExtras?.find(
-			(v) => v.type === ApplicantExtras.CURRENT_EMPLOYER
-		);
+		const employer: CurrentEmploymentHistoryDto = applicant.employers?.find(v => !!v?.is_current) as CurrentEmploymentHistoryDto;
+
 		form.setValues({
 			...form.values,
-			CURRENT_EMPLOYER: !!apx?.type
-				? apx
-				: new ApplicantExtrasEntity(ApplicantExtras.CURRENT_EMPLOYER),
-			is_current_employed: !!apx?.value,
+			employer: {
+				...employer,
+				is_current: true
+			},
+			is_current_employed: !!employer,
 		});
-	}, [applicantExtras]);
+	}, [applicant]);
 
 	useEffect(() => {
-		console.log("applicant", applicantExtras);
 
 		console.log("values", form.values);
 		console.log("error", form.errors);
@@ -78,9 +82,9 @@ export function EmploymentHistory() {
 						formik={form}
 					/>
 				</Row>
-				{!!form.values?.is_current_employed ? (
-					<>
-						<Row>
+				{!!form.values?.is_current_employed && (
+					<div className="single-past-employer-items my-5 pb-5 px-2">
+						<Row className={styles.bold}>
 							<h6
 								className={`${styles.heading__sty} ${styles.align__text_left}`}
 							>
@@ -90,94 +94,94 @@ export function EmploymentHistory() {
 								{t("NA")}
 							</p>
 						</Row>
-						<Row className={styles.align__text_left}>
-							<BaseInput
-								className="col-md-6 my-3"
-								name="CURRENT_EMPLOYER.value.current_company_name"
-								label="CURRENT_COMPANY_NAME"
-								formik={form}
-							/>
-							<BaseInput
-								className="col-md-6 my-3"
-								name="CURRENT_EMPLOYER.value.current_company_position"
-								label="CURRENT_COMPANY_POSITION"
-								formik={form}
-							/>
-						</Row>
 
-						<Row>
-							<BaseInput
-								className="col-md-6 my-lg-2 my-3"
-								required
-								type="date"
-								name="CURRENT_EMPLOYER.value.start_date"
-								label="START_DATE"
-								formik={form}
-							/>
+						<Row >
 							<BaseCheck
-								className="mt-lg-5 my-3 col-md-6 float-left"
+								className="mt-lg-12 my-3 col-md-12 float-left"
 								required
-								name="CURRENT_EMPLOYER.value.authorize"
+								name="employer.can_contact"
 								label="CONATACT_AUTHORITY"
 								formik={form}
 							/>
 						</Row>
 
-						<Row className={styles.align__text_left}>
+						<Row className={`${styles.align__text_left} ${styles.bold}`}>
 							<BaseInput
 								className="col-md-6 my-3"
-								name="CURRENT_EMPLOYER.value.current_company_manager_name"
-								label="MANAGER_OR_REPRESENTATIVE"
+								name="employer.name"
+								label="CURRENT_COMPANY_NAME"
+								required
+								formik={form}
+							/>
+							<BaseInput
+								className="col-md-6 my-3"
+								name="employer.title"
+								label="CURRENT_COMPANY_POSITION"
+								formik={form}
+							/>
+						</Row>
+
+						<Row className={styles.bold}>
+							<BaseInput
+								className="col-md-6 my-3"
+								required
+								type="date"
+								max={new Date().toISOString().split('T')[0]}
+								name="employer.start_at"
+								label="START_DATE"
 								formik={form}
 							/>
 							<BaseInputPhone
 								className="col-md-6 my-3"
-								name="CURRENT_EMPLOYER.value.current_company_phone_number"
+								name="employer.phone"
 								placeholder="phone"
 								label="CURRENT_COMPANY_NUMBER"
 								formik={form}
 							/>
 						</Row>
 
-						<Row>
+						<Row className={`${styles.align__text_left} ${styles.bold}`}>
 							<BaseInput
-								className="col my-3"
+								className="col-md-6 my-3"
+								name="employer.manager_name"
+								label="MANAGER_OR_REPRESENTATIVE"
+								formik={form}
+							/>
+							<BaseInput
+								className="col-md-6 my-3"
 								required
-								name="CURRENT_EMPLOYER.value.current_company_email"
+								name="employer.email"
 								label="CURRENT_COMPANY_EMAIL"
 								placeholder="email"
 								formik={form}
 							/>
 						</Row>
-						<Row>
-							<h6
-								className={`${styles.align__text_left} ${styles.heading__sty}`}>
-								{t("ADDRESS_CURRENT_COMPANY")}
-							</h6>
+
+						<Row className={styles.bold}>
 						</Row>
-						<Row>
+						<Row className={styles.bold}>
 							<BaseInput
 								className="col-md-6 my-3"
 								required
-								name="CURRENT_EMPLOYER.value.current_company_street_address_line_1"
+								name="employer.address"
 								placeholder="ADDRESS_LINE_1"
 								label="ADDRESS_LINE_1"
 								formik={form}
 							/>
 							<BaseInput
 								className="col-md-6 my-3"
-								required
-								name="CURRENT_EMPLOYER.value.current_company_street_address_line_2"
+								name="employer.address_2"
 								placeholder="ADDRESS_LINE_2"
 								label="ADDRESS_LINE_2"
 								formik={form}
 							/>
 						</Row>
-						<Row>
+						<Row className={styles.bold}>
 							<BaseInput
 								className="col-md-6 my-3"
 								required
-								name="CURRENT_EMPLOYER.value.current_company_zipcode"
+								name="employer.zip_code"
+								type="number"
 								placeholder="zip_code"
 								label="zip_code"
 								formik={form}
@@ -185,7 +189,7 @@ export function EmploymentHistory() {
 							<BaseInput
 								className="col-md-6 my-3"
 								required
-								name="CURRENT_EMPLOYER.value.city"
+								name="employer.city"
 								label="City"
 								formik={form}
 							/>
@@ -193,40 +197,29 @@ export function EmploymentHistory() {
 								className="col my-3"
 								required
 								label="STATE"
-								name="CURRENT_EMPLOYER.value.state"
+								name="employer.state"
 								placeholder="STATE"
 								formik={form}
 							/>
 						</Row>
 
-						<Row>
-							<BaseSelect
-								className="col my-3"
-								required
-								labelPrefix="BooleanPreferenceType"
-								enumType={BooleanPreferenceType}
-								name="CURRENT_EMPLOYER.value.fmcsr"
-								placeholder="CHOOSE"
+						<Row >
+							<BaseCheck
+								className="mt-2 col-md-6 float-left"
+								name={`employer.is_subject_to_fmcsrs`}
 								label="FMCR_QUESTION"
 								formik={form}
 							/>
-						</Row>
-						<Row>
-							<BaseSelect
-								className="col mt-4"
-								required
-								labelPrefix="BooleanPreferenceType"
-								enumType={BooleanPreferenceType}
-								name="CURRENT_EMPLOYER.value.fcr"
-								placeholder="CHOOSE"
+							<BaseCheck
+								className="mt-2 col-md-6 float-left"
+								name={`employer.is_subject_to_drug_tests`}
 								label="JOB_DESIGNATED_CURRENT_COMPANY"
 								formik={form}
 							/>
 						</Row>
-					</>
-				) : null}
+					</div>
+				)}
 
-				{/* )} */}
 				<Row className="mt-5">
 					<Col>
 						<Button className="float-right" type="reset">
@@ -234,8 +227,11 @@ export function EmploymentHistory() {
 						</Button>
 					</Col>
 					<Col>
-						<Button className="float-left" type="submit">
-							{t("NEXT")}
+						<Button
+							className="float-left"
+							type="submit"
+						>
+							{t("NEXT")} <LoaderIcon isLoading={!!form?.isSubmitting} />
 						</Button>
 					</Col>
 				</Row>

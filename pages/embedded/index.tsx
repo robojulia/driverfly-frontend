@@ -9,30 +9,76 @@ import { useEffectAsync } from '../../utils/react'
 import { toast } from "react-toastify";
 import { useTranslation } from '../../hooks/use-translation'
 import PageLayout from '../../components/layouts/page/page-layout'
-import jobsContext from "../../context/job-context"
+import JobContext from "../../context/job-context"
 import { JobSearchLocation, SearchJobsDto } from "../../models/job/search-jobs-dto";
 import ResultCount from "../../components/find-jobs/result-count"
-import Filters from "../../components/dashboard/driver/find-job/filters";
-import OtrJobsList from "../../components/find-jobs/otr-job-list";
-import { JobGeography } from "../../enums/jobs/job-geography.enum";
-import { Row, Col } from 'react-bootstrap';
 import JobsList from '../../components/embedded-jobs-listing/jobs-list'
+import { GetServerSidePropsContext } from 'next'
+import { useRouter } from 'next/router'
+import EmbeddedFilters from '../../components/embedded-filters/embedded-filters'
+import { EmbeddedFilterTypes } from '../../enums/embedded/embedded-filter-types.enum'
+import { DriverLicenseType } from '../../enums/users/driver-license-type.enum'
+import { JobEmploymentType } from '../../enums/jobs/job-employment-type.enum'
+import { JobGeography } from '../../enums/jobs/job-geography.enum'
+import { JobTeamDriver } from '../../enums/jobs/job-team-driver.enum'
+import { JobEquipmentType } from '../../enums/jobs/job-equipment-type.enum'
+import EmploymentType from '../../components/filters/employment-type'
 
 
-export default function Embedded() {
+export default function Embedded({ filterType }) {
 
+    const router = useRouter()
     const jobApi = new JobApi()
     const { t } = useTranslation();
 
     const [jobs, setJobs] = useState<JobEntity[]>([])
 
-    const [pagingMeta, setPagingMeta] = useState<PagingMetaProps>(pagingMetaInitialValues())
+    const [pagingMeta, setPagingMeta] = useState<PagingMetaProps>(pagingMetaInitialValues)
     const resetPagingMeta = (): void => setPagingMeta(pagingMetaInitialValues)
 
     const [searchQuery, setSearchQuery] = useState<string>()
     const resetSearchQuery = (): void => setSearchQuery('')
 
-    const [filters, setFilters] = useState<SearchJobsDto>(filtersInitialsValues)
+    /**
+     * @param {EmbeddedFilterTypes} type - EmbeddedFilterTypes
+     */
+    const filtersForQuery = (type: EmbeddedFilterTypes): SearchJobsDto => ({
+        [EmbeddedFilterTypes.CDL_SCHOOLS]: setFiltersForCdlSchools(),
+        [EmbeddedFilterTypes.HEAVY_HAUL]: setFiltersForHeavyHaul(),
+        [EmbeddedFilterTypes.OWNER_OPERATOR]: setFiltersForOwnerOperator(),
+        [EmbeddedFilterTypes.NEW_HIRES]: setFiltersForNewHires(),
+        [EmbeddedFilterTypes.TEAM_DRIVERS]: setFiltersForTeamDrivers(),
+        [EmbeddedFilterTypes.OTR_JOBS]: setFiltersForOtrJobs(),
+    }[type] || {})
+
+    const setFiltersForCdlSchools = (): SearchJobsDto => ({
+        cdl_class: DriverLicenseType.CDL_CLASS_A,
+        employment_type: JobEmploymentType.W2,
+        max_years_experience: 0.6,
+    })
+    const setFiltersForHeavyHaul = (): SearchJobsDto => ({
+        cdl_class: DriverLicenseType.CDL_CLASS_A,
+        equipment_type: JobEquipmentType.FLATBED,
+    })
+    const setFiltersForOwnerOperator = (): SearchJobsDto => ({
+        employment_type: JobEmploymentType.OWNER_OPERATOR,
+    })
+    const setFiltersForNewHires = (): SearchJobsDto => ({
+        cdl_class: DriverLicenseType.CDL_CLASS_A,
+        max_years_experience: 0.6,
+        employment_type: JobEmploymentType.W2,
+    })
+    const setFiltersForTeamDrivers = (): SearchJobsDto => ({
+        cdl_class: DriverLicenseType.CDL_CLASS_A,
+        areas_covered: JobGeography.OTR,
+        team_drivers: JobTeamDriver.HAS_TEAM_DRIVER,
+    })
+    const setFiltersForOtrJobs = (): SearchJobsDto => ({
+        cdl_class: DriverLicenseType.CDL_CLASS_A,
+        areas_covered: JobGeography.OTR,
+    })
+
+    const [filters, setFilters] = useState<SearchJobsDto>(filtersForQuery(filterType))
     const resetFilters = (): void => setFilters(filtersInitialsValues)
 
     const [location, setLocation] = useState<JobSearchLocation>(null)
@@ -61,8 +107,17 @@ export default function Embedded() {
 
     const fetchJobs = async (): Promise<void> => {
         try {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                setFiltersByKeyValue("location", {
+                    "lat": position.coords.latitude,
+                    "long": position.coords.longitude,
+                    "range": 1500
+                });
+            });
+
             await jobApi.search({ ...filters as any })
                 .then(({ items, meta }) => {
+                    console.log({ items, meta, filters });
                     setJobs(items)
                     setPagingMeta(meta)
                 })
@@ -71,10 +126,18 @@ export default function Embedded() {
         }
     }
 
-    useEffectAsync(fetchJobs, [filters]);
+    useEffectAsync(fetchJobs, [filters])
+    useEffectAsync(async (): Promise<void> => {
+        try {
+            // await router.replace('embedded', undefined, { shallow: true });
+            await fetchJobs()
+        } catch (e) {
+            toast.error(t('FIND_JOB_ERROR_GENERAL'))
+        }
+    }, [])
     return (
         <PageLayout>
-            <jobsContext.Provider value={{
+            <JobContext.Provider value={{
                 state: {
                     jobs,
                     pagingMeta,
@@ -95,28 +158,31 @@ export default function Embedded() {
                     handleReset
                 },
             }}>
-                <div className="job-list_sec container mt-5">
-                    <Filters />
-                    <Row className='m-lg-0 mt-2'>
-                        <Col className='col-12 my-2 p-lg-0'>
-                            <ResultCount />
-                            < JobsList />
-                        </Col>
-                    </Row>
-                    {
-                        (!!filters.location && !!filters.areas_covered && filters.areas_covered == JobGeography.OTR) &&
-                        <Row className='mt-5'>
-                            <Col className='col-12 my-lg-0 my-4'>
-                                < OtrJobsList />
-                            </Col>
-                        </Row>
-                    }
+                <div className="filter-sec">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-12 col-lg-3 lg-mt-0 mt-5">
+                                <EmbeddedFilters filterType={filterType} />
+                            </div>
+                            <div className="col-md-9 outer pl-4 ">
+                                <ResultCount />
+                                < JobsList />
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </jobsContext.Provider>
+            </JobContext.Provider>
         </PageLayout>
     )
 }
+export async function getServerSideProps({ query }: GetServerSidePropsContext) {
 
+    const { filterType } = query || {};
+
+    if (!!!filterType) return { notFound: true }
+
+    return { props: { filterType } }
+}
 Embedded.getLayout = function getLayout(page) {
     return (
         <EmbeddedLayout>
