@@ -1,3 +1,6 @@
+function isBrowser() {
+    return typeof window !== 'undefined';
+}
 function buildAddress(props?: { street?: string, city?: string, state?: string, zip_code?: string}) {
 
     if (!props) return;
@@ -33,6 +36,7 @@ function generateUUID() { // Public Domain/MIT
 }
 
 export {
+    isBrowser,
     buildAddress,
     generateUUID
 };

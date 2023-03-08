@@ -6,8 +6,6 @@ import { AccidentHistoryEntity } from "../jot-form/long-form/accident-last-5-yea
 import { AccordianExtras } from "../jot-form/long-form/accordian-info/index.dto";
 import { BackgroundInfoLineAddress } from "../jot-form/long-form/backgorund-info/index.dto";
 import { CdlExtras } from "../jot-form/long-form/cdl-object/index.dto";
-import { EmploymentHistoryExtraDto } from "../jot-form/long-form/emplyment-history/index.dto";
-import { PastEmploymentHistoryExtraDto } from "../jot-form/long-form/previous-emplyment-history/index.dto";
 import { VioalationExtrasEntity } from "../jot-form/long-form/violaton-history/index.dto";
 import { WorkedBeforeExtrasDto } from "../jot-form/long-form/worked-before/index.dto";
 
@@ -37,16 +35,12 @@ export class ApplicantExtrasEntity {
 					then: yup.array(VioalationExtrasEntity.yupSchema()),
 				})
 				.when("type", {
-					is: ApplicantExtras.VIOLATION_COUNT,
-					then: yup.number().optional().nullable(),
-				})
-				.when("type", {
 					is: ApplicantExtras.APPLY_DATE,
 					then: yup.string().required().nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.SIGNATURE,
-					then: yup.string().optional().nullable(),
+					then: yup.string().required().nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.LINE_ADDRESS,
@@ -70,7 +64,6 @@ export class ApplicantExtrasEntity {
 						.array((yup.string() as any).enum(RouteType))
 						.min(1)
 						.typeError("Choose atleast one!")
-						.required()
 						.nullable(),
 				})
 				.when("type", {
@@ -83,14 +76,6 @@ export class ApplicantExtrasEntity {
 						.array((yup.string() as any).enum(OtherRequirementType))
 						.optional()
 						.nullable(),
-				})
-				.when("type", {
-					is: ApplicantExtras.CURRENT_EMPLOYER,
-					then: EmploymentHistoryExtraDto.yupSchema(),
-				})
-				.when("type", {
-					is: ApplicantExtras.PAST_EMPLOYER,
-					then: PastEmploymentHistoryExtraDto.yupSchema(),
 				})
 				.when("type", {
 					is: ApplicantExtras.PAST_LICENSE_SUSPENSION,
@@ -119,20 +104,36 @@ export class ApplicantExtrasEntity {
 				//for accordian
 				.when("type", {
 					is: ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE,
-					then: yup.date().optional().nullable(),
+					then: yup.date().required().nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.EMPLOYEE_SS_OR_ID,
-					then: yup.string().optional().nullable(),
+					then: yup.string().required().nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE,
-					then: yup.date().optional().nullable(),
+					then: yup.date().required().nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.GENERAL_CONSENT,
 					then: AccordianExtras.yupSchema(),
-				}),
+				})
+				.when("type", {
+					is: ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION,
+					then: yup.string().required().nullable(),
+				})
+				.when("type", {
+					is: ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION,
+					then: yup.string().required().nullable(),
+				})
+				.when("type", {
+					is: ApplicantExtras.SIGNATURE_IMPORTANT_BACKGROUND,
+					then: yup.string().required().nullable(),
+				})
+				.when("type", {
+					is: ApplicantExtras.SIGNATURE_GENERAL_CONSENT,
+					then: yup.string().required().nullable(),
+				})
 		});
 	}
 }

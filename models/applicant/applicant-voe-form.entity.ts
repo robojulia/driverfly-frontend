@@ -11,7 +11,7 @@ export class ApplicantVoeFormEntity {
 	id?: number;
 	type: ApplicantVoeFormEnum;
 	value?: any;
-
+	employerId?: number;
 	static yupSchema() {
 		return yup.object({
 			type: (yup.string().required().nullable() as any).enum(

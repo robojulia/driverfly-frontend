@@ -19,6 +19,8 @@ import {
 	ApplicantDacEntity,
 	ApplicantExtrasEntity
 } from "./index"
+import { ApplicantVoeFormEntity } from "./applicant-voe-form.entity";
+
 
 export class ApplicantEntity {
 	id?: number;
@@ -71,7 +73,7 @@ export class ApplicantEntity {
 	moving_violations?: boolean = false;
 	moving_violations_count?: number;
 	moving_violations_details?: string;
-
+	must_pass_drug_test?: boolean = true;
 	positive_drug_test?: boolean = false;
 	positive_drug_test_details?: string;
 	equipment_experience?: ApplicantExperienceEntity[] = [];
@@ -84,6 +86,7 @@ export class ApplicantEntity {
 	last_updated_at?: string;
 	dac?: ApplicantDacEntity[];
 	extras?: ApplicantExtrasEntity[] = []
+	voeData?: ApplicantVoeFormEntity[] = []
 	uuid_token?: string;
 
 	static yupSchema() {

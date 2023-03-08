@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
@@ -65,7 +65,7 @@ export function EmergencyContact() {
 					{t("EMERGENCY_CONTACT_DETAILS")}
 				</h4>
 
-				<Row className={styles.align__text_left}>
+				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 					<BaseInput
 						className="col-md-6 my-3"
 						name="emergency_contact_name"

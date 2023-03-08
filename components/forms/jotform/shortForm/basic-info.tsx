@@ -1,6 +1,6 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import Form from "react-bootstrap/Form";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { Button, Col, Row } from "react-bootstrap";
 import BaseInput from "../../base-input";
 import BaseInputPhone from "../../base-input-phone";
@@ -12,34 +12,48 @@ import JotformContext, { JotFormContextType } from "../../../../context/jotform-
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import { BooleanTypeExtra } from "../../../../enums/jotform/bool-and-not-sure.enum";
+import ApplicantApi from "../../../../pages/api/applicant";
+import { LoaderIcon } from "../../../loading/loader-icon";
+import ViewModal from "../../../view-details/view-modal";
+import OtpInputField from 'react-otp-input';
 
 
 export function BasicInfo() {
 	const {
 		state: { applicant, applicantExtras },
-		method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+		method: { setApplicant, updateApplicantExtras, stepNext, stepBack, setApplicantExtras },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
+	const [openModal, setOpenModal] = useState<boolean>(false)
+	const [otp, setOtp] = useState<string>('')
+	const [showOtpField, seShowtOtpField] = useState<boolean>(false)
 
 	const form = useFormik({
 		initialValues: new ContactDto(),
 		validationSchema: ContactDto.yupSchema(),
-		onSubmit: (values) => {
+		onSubmit: async (values, { setErrors }) => {
+			console.log("values", values);
 			try {
-				console.log("values", values);
-				const { email, phone, zip_code, AUTHORIZE_TO_COMMUNICATE } = values;
+				const { email, zip_code, AUTHORIZE_TO_COMMUNICATE } = values;
+				const applicantApi = new ApplicantApi()
+				// const applicantEmailExists = await applicantApi.searchByPublic({ email })
 
+				// if (applicantEmailExists) {
+				setOpenModal(true)
+				// } else if (applicantPhoneExists) {
+				// 	setErrors({ phone: 'ALREADY_EXISTS' })
+				// } else {
 				setApplicant({
 					...applicant,
 					email,
-					phone,
 					zip_code,
 				});
 
 				updateApplicantExtras(AUTHORIZE_TO_COMMUNICATE);
 
 				stepNext();
+				// }
 			} catch (error) {
 				console.log("error", error);
 			}
@@ -59,19 +73,18 @@ export function BasicInfo() {
 				? apx
 				: new ApplicantExtrasEntity(ApplicantExtras.AUTHORIZE_TO_COMMUNICATE),
 			email: applicant.email,
-			phone: applicant.phone,
 			zip_code: applicant.zip_code,
 		});
 	}, []);
-
 	return (
 		<>
+
 			<Form
 				className={styles.align__text_left}
 				onSubmit={form.handleSubmit}
 				onReset={form.handleReset}
 			>
-				<Row>
+				<Row className={styles.bold}>
 					<BaseInput
 						className="col-md-6 my-3"
 						required
@@ -80,25 +93,19 @@ export function BasicInfo() {
 						placeholder="email"
 						formik={form}
 					/>
-					<BaseInputPhone
-						className="col-md-6 my-3"
-						required
-						name="phone"
-						label="phone"
-						formik={form}
-					/>
 				</Row>
-				<Row>
+				<Row className={styles.bold}>
 					<BaseInput
 						className="col-12 my-3"
 						required
 						name="zip_code"
+						type="number"
 						label="zip_code"
 						placeholder="zip_code"
 						formik={form}
 					/>
 				</Row>
-				<Row className={styles.align__text_left}>
+				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 					<BaseSelect
 						className="col-12 my-3"
 						required
@@ -106,7 +113,7 @@ export function BasicInfo() {
 						enumType={BooleanTypeExtra}
 						name="AUTHORIZE_TO_COMMUNICATE.value"
 						placeholder="CHOOSE"
-						label="SMS_EMAIL_AUTHORIZATION_NAUTILIUS"
+						label={t("{company_name}_SMS_EMAIL_AUTHORIZATION_NAUTILIUS", { company_name: applicant?.company?.name }, { translateProps: true })}
 						formik={form}
 					/>
 				</Row>
@@ -118,8 +125,12 @@ export function BasicInfo() {
 					</Col>
 
 					<Col>
-						<Button className="float-left theme-secondary-btn" type="submit">
-							{t("NEXT")}
+						<Button
+							disabled={form.isValidating || form.isSubmitting || !form.isValid}
+							className="float-left theme-secondary-btn"
+							type="submit"
+						>
+							{t("NEXT")} <LoaderIcon isLoading={!!form?.isSubmitting} />
 						</Button>
 					</Col>
 				</Row>

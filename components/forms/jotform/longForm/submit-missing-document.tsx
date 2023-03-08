@@ -1,6 +1,5 @@
 import { useContext, useEffect } from "react";
 import Form from "react-bootstrap/Form";
-import styles from "../../../../styles/jotform.module.css";
 import { Button, Col, Row } from "react-bootstrap";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../hooks/use-translation";
@@ -12,12 +11,15 @@ import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-do
 import { DocumentsDto } from "../../../../models/jot-form/long-form/documents.dto";
 import ApplicantApi from "../../../../pages/api/applicant";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { LoaderIcon } from "../../../loading/loader-icon";
+
 
 export function SubmitMissingDocuments() {
 	const {
-		state: { applicant, applicantExtras },
-		method: { setApplicant, stepNext, stepBack },
+		state: { applicant },
+		method: { stepNext, stepBack },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const isDriverLicense = (v: DocumentEntity): boolean =>
@@ -30,15 +32,14 @@ export function SubmitMissingDocuments() {
 		initialValues: new DocumentsDto(),
 		validationSchema: DocumentsDto.yupSchema(),
 		onSubmit: async (values, { resetForm }) => {
-			const applicantApi = new ApplicantApi();
-
 			try {
-				const filtered_extras = applicantExtras?.filter((v) => !!v.value);
-				const response = await applicantApi.jotform.update(applicant.id, {
-					applicant,
-					applicantExtras: filtered_extras,
-				});
-				toast.success(t("successfully_saved_information"));
+				const applicantApi = new ApplicantApi();
+				await applicantApi.jotform.updateDocuments(
+					applicant.id,
+					[...applicant.documents] as DocumentEntity[]
+				)
+
+				stepNext()
 			} catch (error) {
 				console.log(error);
 				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
@@ -57,33 +58,35 @@ export function SubmitMissingDocuments() {
 				...new DocumentEntity(),
 				type: ApplicantDocumentType.DRIVERS_LICENSE,
 			},
+			mediaOptions: false
 		});
 	}, [applicant]);
 
-	// useEffect(() => {
-	//     console.log("form errors", form.errors);
-	//     console.log("form valuez", form.values);
-	//     console.log("form applicant", applicant);
-	// }, [form.errors, form.values]);
-
 	return (
-		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-			<Row>
-				<h3>{t("SUBMIT_THIS_FORM")}</h3>
-			</Row>
-			<Row className="mt-3">
-				<Col>
-					<Button className="float-right" type="reset">
-						{t("BACK")}
-					</Button>
-				</Col>
+		<>
+			<ToastContainer />
+			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+				<Row>
+					<h3>{t("SUBMIT_THIS_FORM")}</h3>
+				</Row>
+				<Row className="mt-3">
+					<Col>
+						<Button className="float-right" type="reset">
+							{t("BACK")}
+						</Button>
+					</Col>
 
-				<Col>
-					<Button className="float-left" type="submit">
-						{t("SUBMIT")}
-					</Button>
-				</Col>
-			</Row>
-		</Form>
+					<Col>
+						<Button
+							disabled={form.isValidating || form.isSubmitting || !form.isValid}
+							className="float-left"
+							type="submit"
+						>
+							{t("SUBMIT")} <LoaderIcon isLoading={!!form?.isSubmitting} />
+						</Button>
+					</Col>
+				</Row>
+			</Form>
+		</>
 	);
 }

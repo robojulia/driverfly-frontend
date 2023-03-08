@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { Form, Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
@@ -57,7 +57,7 @@ export function SplashPage() {
 				</div> */}
 
 				<h1 className={styles.carrierName}>
-					{t("{name}_carrier", { name: "Nautilus" }, { translateProps: true })}
+					{t("{name}_carrier", { name: applicant?.company?.name }, { translateProps: true })}
 				</h1>
 				<h4 className={styles.Application}>{t("DRIVER_APPLICATION")}</h4>
 				<h6 className={styles.paragraph}>{t("JOTFORM_WELCOME")}</h6>
@@ -65,9 +65,6 @@ export function SplashPage() {
 					<Col>
 						<Button type="submit">{t("NEXT")}</Button>
 					</Col>
-				</Row>
-				<Row className="mt-5 col-9" style={{ margin: "auto" }}>
-					<hr className={`${styles.highlight__black}`}></hr>
 				</Row>
 			</Form>
 		</>

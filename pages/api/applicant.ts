@@ -1,12 +1,16 @@
 import { AxiosRequestConfig } from "axios";
+import { ApplicantFormStatus } from "../../enums/applicants/applicant-form-status.enum";
 import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
+import { ApplicantEmployerEntity } from "../../models/applicant";
 import { ApplicantDacEntity } from "../../models/applicant/applicant-dac.entity";
 import { ApplicantJobEntity } from "../../models/applicant/applicant-job.entity";
 import { ApplicantNoteEntity } from "../../models/applicant/applicant-note.entity";
+import { ApplicantOTPEntity } from "../../models/applicant/applicant-otp.entity";
 import { ApplicantSuggestedJobEntity } from "../../models/applicant/applicant-suggested-job.entity";
 import { ApplicantEntity } from "../../models/applicant/applicant.entity";
 import { DocumentEntity } from "../../models/documents/document.entity";
 import { ApplicantJobsByStatusDto } from "../../models/job/applicant-jobs-by-status.dto";
+import { VerifyOTPDto } from "../../models/jot-form/OTP/verify-otp.dto";
 import { UpsertApplicantJotformDto } from "../../models/jot-form/upsert-applicant-jotform.dto";
 import { UpsertApplicantVoeformDto } from "../../models/jot-form/upsert-applicant-voe.dto";
 import BaseApi from "./_baseApi";
@@ -53,6 +57,38 @@ class ApplicantApi extends BaseApi {
 		return data;
 	}
 
+	async searchByPublic(
+		params: ApplicantEntity
+	): Promise<any> {
+		const { data } = await this.get(
+			this.buildUrl(this.baseUrl + "/public-search", params)
+		);
+
+		return data;
+	}
+	// new api to fetch applicant Profile
+	async searchApplicantProfile(
+		params: ApplicantEntity
+	): Promise<ApplicantEntity> {
+		const { data } = await this.get(
+			this.buildUrl(this.baseUrl + "/search-applicant", params)
+		);
+
+		return data;
+	}
+
+
+	async requestOTP(dto: ApplicantEntity): Promise<any> {
+		const { data } = await this.post(this.baseUrl + "/request-otp", dto);
+
+		return data;
+	}
+	async verifyOTP(dto: VerifyOTPDto): Promise<ApplicantEntity> {
+		const { data } = await this.post(this.baseUrl + "/verify-otp", dto);
+
+		return data;
+	}
+
 	async list(params?: {
 		jobId?: number;
 		email?: string;
@@ -70,7 +106,7 @@ class ApplicantApi extends BaseApi {
 	}
 
 	async getByUuidToken(uuid_token: string): Promise<ApplicantEntity> {
-		const { data } = await this.get(this.buildUrl(this.baseUrl + `/fetch/${uuid_token}`));
+		const { data } = await this.get(this.buildUrl(this.baseUrl + `/fetch-applicant/${uuid_token}`));
 
 		return data;
 	}
@@ -132,6 +168,7 @@ class ApplicantApi extends BaseApi {
 			return data;
 		},
 	};
+
 	jotform = {
 		baseUrl: () => `${this.baseUrl}/applicant-jotform`,
 		create: async (
@@ -147,6 +184,28 @@ class ApplicantApi extends BaseApi {
 			const { data } = await this.put(`${this.jotform.baseUrl()}/${applicantId}`, dto);
 			return data;
 		},
+		mark: async (
+			uuid_token: string,
+			status: ApplicantFormStatus
+		): Promise<void> => {
+			const { data } = await this.patch(
+				`${this.jotform.baseUrl()}/${uuid_token}/mark/${status}`,
+				null
+			);
+			return data;
+		},
+		updateDocuments: async (
+			applicantId: number,
+			dto: DocumentEntity[]
+		): Promise<ApplicantEntity> => {
+			const { data } = await this.put(`${this.jotform.baseUrl()}/${applicantId}/documents`, dto);
+			return data;
+		},
+		suggestedJobs: async (applicantId: number): Promise<ApplicantSuggestedJobEntity[]> => {
+			const { data } = await this.get(`${this.baseUrl}/${applicantId}/jotform-suggested-jobs`);
+
+			return data;
+		},
 	};
 
 	voeform = {
@@ -155,6 +214,14 @@ class ApplicantApi extends BaseApi {
 			const { data } = await this.post(this.voeform.baseUrl(), dto);
 			return data;
 		},
+	};
+
+	employer = {
+		getByUuidToken: async (uuid_token: string): Promise<ApplicantEmployerEntity> => {
+			const { data } = await this.get(this.buildUrl(`${this.baseUrl}/fetch-employer/${uuid_token}`));
+
+			return data;
+		}
 	};
 
 	notes = {

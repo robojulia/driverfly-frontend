@@ -79,7 +79,6 @@ export class JobEntity {
     accept_sap_graduates?: boolean = false;
     must_have_clean_criminal_history?: boolean = true;
     criminal_history?: JobCriminalEntity[] = [];
-    max_moving_violations?: number;
     safety_requirements_other?: string;
     is_orientation_needed: boolean = true;
     orientation_location: LocationEntity = new LocationEntity();
@@ -215,7 +214,6 @@ export class JobEntity {
             criminal_history: (yup.array(
                 JobCriminalEntity.yupSchema()
             ) as any).unique("type"),
-            max_moving_violations: yup.number().min(0).nullable(),
             safety_requirements_other: yup.string().max(250).nullable(),
         }, [['min_experience_in_months', 'min_experience_in_years']]);
 

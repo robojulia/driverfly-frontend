@@ -1,116 +1,155 @@
-import { useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { Col, Row } from "react-bootstrap";
 import BaseInput from "../../../base-input";
-import Accordion from "react-bootstrap/Accordion";
-import SignatureCanvas from "react-signature-canvas";
 import { useTranslation } from "../../../../../hooks/use-translation";
-import styles from "../../../../../styles/jotform.module.css";
+import styles from "../../../../../styles/digitalhiringapp.module.css";
 import { AccordianProps } from "../../../../../types/jotform/accordian.type";
+import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
+import SignatureCanvas from "react-signature-canvas";
+import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
+import { ApplicantExtrasEntity } from "../../../../../models/applicant";
 
-export function DisclosureAuthorization({ eventKey, form }: AccordianProps) {
+export function DisclosureAuthorization({ form }: AccordianProps) {
+    const {
+        state: { applicant, applicantExtras }
+    }: JotFormContextType = useContext(JotformContext);
     const { t } = useTranslation();
 
-    const canvasRef = useRef<SignatureCanvas>(null);
-    const clearSignatureCanvas = () => canvasRef?.current?.clear();
+    const canvasRef = useRef<SignatureCanvas>();
+    const clearSignatureCanvas = () => canvasRef.current.clear();
+
 
     const handleSignatureEnd = () => {
-        const signatureValue = canvasRef?.current?.toDataURL()?.toString();
-        form.setFieldValue("SIGNATURE.value", signatureValue);
+        const signatureValue = canvasRef.current.toDataURL().toString();
+        form.setFieldValue("SIGNATURE_DISCLOSURE_AUTHORIZATION.value", signatureValue);
     };
 
+    useEffect(() => {
+        const apx_disclosure_date = applicantExtras?.find(
+            (v) => v.type === ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE
+        );
+
+        const apx_sign_disclosure = applicantExtras?.find(
+            (v) => v.type === ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION
+        );
+
+        if (apx_sign_disclosure) canvasRef?.current?.fromDataURL(apx_sign_disclosure?.value)
+
+        form.setValues({
+            ...form.values,
+            SIGNATURE_DISCLOSURE_AUTHORIZATION: !!apx_sign_disclosure?.type
+                ? apx_sign_disclosure
+                : new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION),
+            DISCLOSURE_AND_AUTHORIZATION_DATE: !!apx_disclosure_date?.type
+                ? apx_disclosure_date
+                : {
+                    ...new ApplicantExtrasEntity(
+                        ApplicantExtras.DISCLOSURE_AND_AUTHORIZATION_DATE
+                    ),
+                    value: new Date().toISOString()
+                }
+
+        });
+    }, [applicant]);
+
+
     return (
-        //eventKey="1"
-        <Accordion.Item eventKey={eventKey}>
-            <Accordion.Header>{t("DISCLOSURE_AUTHORIZATION")}</Accordion.Header>
-            <Accordion.Body>
-                <Row className="mb-3">
-                    <h1>
+        <>
+            <Row className="mb-3">
+                <h1>
+                    {t(
+                        "{COMPANY_NAME}",
+                        { COMPANY_NAME: applicant?.company?.name },
+                        { translateProps: true }
+                    )}
+                </h1>
+            </Row>
+            <Row>
+                <h3>{t("DISCLOSURE_AUTHORIZATION")}</h3>
+            </Row>
+            <Row className="my-3">
+                <h6>{t("DISCLOSURE")}</h6>
+            </Row>
+            <Row>
+                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                    {t(
+                        "{COMPANY_NAME}_REQUEST_BACKGROUND_REPORTS",
+                        { COMPANY_NAME: applicant?.company?.name },
+                        { translateProps: true }
+                    )}
+                </p>
+            </Row>
+            <Row>
+                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                    {t("BACKGROUND_REPORTS_CONTAINS")}
+                </p>
+            </Row>
+            <Row>
+                <h6>{t("AUTHORIZATION")}</h6>
+            </Row>
+            <Row>
+                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                    {t(
+                        "{COMPANY_NAME}_AUTHORIZATION_NAUTILUS_TRUCKINGS",
+                        { COMPANY_NAME: applicant?.company?.name },
+                        { translateProps: true }
+                    )}
+                </p>
+            </Row>
+            <Row>
+                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                    <span>
+                        {" "}
+                        {t("APPLICANT_NAME")}{" "}
                         {t(
-                            "{COMPANY_NAME}",
-                            { COMPANY_NAME: "talhatrucking" },
+                            "{APPLICANT_NAME}",
+                            { APPLICANT_NAME: `${applicant?.first_name} ${applicant?.last_name}` },
                             { translateProps: true }
                         )}
-                    </h1>
-                </Row>
-                <Row>
-                    <h3>{t("DISCLOSURE_AUTHORIZATION")}</h3>
-                </Row>
-                <Row className="my-3">
-                    <h6>{t("DISCLOSURE")}</h6>
-                </Row>
-                <Row>
-                    <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                        {t(
-                            "{COMPANY_NAME}_REQUEST_BACKGROUND_REPORTS",
-                            { COMPANY_NAME: "talhatrucking" },
-                            { translateProps: true }
-                        )}
-                    </p>
-                </Row>
-                <Row>
-                    <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                        {t("BACKGROUND_REPORTS_CONTAINS")}
-                    </p>
-                </Row>
-                <Row>
-                    <h6>{t("AUTHORIZATION")}</h6>
-                </Row>
-                <Row>
-                    <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                        {t("AUTHORIZATION_NAUTILUS_TRUCKING")}
-                    </p>
-                </Row>
-                <Row>
-                    <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                        <span>
-                            {" "}
-                            {t("APPLICANT_NAME")}{" "}
-                            {t(
-                                "{APPLICANT_NAME}",
-                                { APPLICANT_NAME: "Talha Bhutta" },
-                                { translateProps: true }
-                            )}
-                        </span>
-                    </p>
-                </Row>
-                <Row>
-                    <Col>
-                        <h6>{t("SIGNATURE")}</h6>
-                        <SignatureCanvas
-                            name="SIGNATURE.value"
-                            required
-                            onEnd={handleSignatureEnd}
-                            ref={canvasRef}
-                            canvasProps={{
-                                style: { border: "1px solid black" },
-                                className: "sigCanvas",
-                            }}
-                        />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <button
-                            className="theme-secondary-btn"
-                            type="button"
-                            onClick={clearSignatureCanvas}
-                        >
-                            {t("CLEAR")}
-                        </button>
-                    </Col>
-                </Row>
-                <Row className={styles.align__text_left}>
-                    <BaseInput
-                        className="col my-3"
+                    </span>
+                </p>
+            </Row>
+            <Row>
+                <Col>
+                    <h6>{t("SIGNATURE")}</h6>
+                    <SignatureCanvas
+                        name="SIGNATURE_DISCLOSURE_AUTHORIZATION.value"
                         required
-                        type="date"
-                        name="DISCLOSURE_AND_AUTHORIZATION_DATE.value"
-                        placeholder="DATE"
-                        label="DATE"
-                        formik={form}
+                        onEnd={handleSignatureEnd}
+                        ref={canvasRef}
+                        canvasProps={{
+                            style: { border: "1px solid black" },
+                            className: "sigCanvas",
+                        }}
                     />
-                </Row>
-            </Accordion.Body>
-        </Accordion.Item>
+                    {Boolean(form?.errors?.SIGNATURE_DISCLOSURE_AUTHORIZATION) && <p className={`h6 text-danger  ${styles.align__text_left}`}><em>{t('ERROR_SIGNS_REQUIRED')}</em></p>}
+
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <button
+                        className="theme-secondary-btn"
+                        type="button"
+                        onClick={clearSignatureCanvas}
+                    >
+                        {t("CLEAR")}
+                    </button>
+                </Col>
+            </Row>
+            <Row className={styles.align__text_left}>
+                <BaseInput
+                    className="col my-3"
+                    required
+                    type="date"
+                    name="DISCLOSURE_AND_AUTHORIZATION_DATE.value"
+                    placeholder="DATE"
+                    label="DATE"
+                    formik={form}
+                    max={new Date().toISOString().split("T")[0]}
+
+                />
+            </Row>
+        </>
     )
 }

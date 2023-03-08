@@ -23,6 +23,7 @@ import { SignUpDto } from "../models/auth/sign-up.dto";
 import { PublicPage } from "../components/layouts/public/public-page";
 import { useEffect } from "react";
 import BaseTextArea from "../components/forms/base-text-area";
+import { useEffectAsync } from "../utils/react";
 
 
 export default function Signup() {
@@ -61,7 +62,11 @@ export default function Signup() {
       utm_content: `${utm_content || ""}`
     })
   }, []);
-
+  //  Uncomment this in debugging mode
+  useEffectAsync(async () => {
+    console.log("form values", form.values)
+    console.log("form errors", form.errors)
+  }, [form])
   return (
     <PublicPage
       title="SIGN_UP"
@@ -187,7 +192,7 @@ export default function Signup() {
                 />
               }
               {
-                !isReferred &&
+                (!isReferred && form.values.role === SignUpRole.COMPANY) &&
                 <>
                   <BaseSelect
                     className="col-12 mt-1"

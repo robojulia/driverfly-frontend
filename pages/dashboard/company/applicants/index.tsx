@@ -5,7 +5,7 @@ import { TranslateInterface, useTranslation } from "../../../../hooks/use-transl
 import { FormGroup, FormControlLabel, Switch } from '@mui/material';
 import { EyeFill, PencilFill } from 'react-bootstrap-icons';
 import ApplicantApi from "../../../api/applicant";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NextRouter, useRouter } from 'next/router';
 import { JobEquipmentType } from '../../../../enums/jobs/job-equipment-type.enum';
 import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
@@ -44,6 +44,7 @@ interface ConsolodatedApplicantJob extends ApplicantJobEntity {
     meets_basic_qualifications?: boolean;
     qualification_fail_reason?: string[];
 }
+
 export default function Applicants() {
     // continue loading
     const { t } = useTranslation();
@@ -54,7 +55,7 @@ export default function Applicants() {
 
     let { viewMode, jobId } = router.query;
 
-    if (!ViewMode[`${viewMode}`]) viewMode = ViewMode.job;
+    if (!ViewMode[`${viewMode}`]) viewMode = ViewMode.applicant;
 
     const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
 
@@ -174,8 +175,8 @@ export default function Applicants() {
                 <Col className='force-overflow p-0  '>
                     <FormGroup style={{ float: "right" }}>
                         <FormControlLabel
-                            control={<Switch value={viewMode === ViewMode.applicant ? ViewMode.job : ViewMode.applicant} checked={viewMode === ViewMode.applicant} onChange={onViewModeChange} />}
-                            label={t("VIEW_BY_{name}", { name: t(viewMode === ViewMode.applicant ? "APPLICANT" : "JOB") })}
+                            control={<Switch value={viewMode === ViewMode.applicant ? ViewMode.job : ViewMode.applicant} checked={viewMode === ViewMode.job} onChange={onViewModeChange} />}
+                            label={t("VIEW_BY_{name}", { name: t(viewMode === ViewMode.applicant ? "JOB" : "APPLICANT") })}
                         />
                     </FormGroup>
                     {viewMode === ViewMode.applicant && <ApplicantView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
@@ -429,6 +430,7 @@ function ApplicantView(props: ViewProps) {
                         name: 'ID',
                         selector: applicant => applicant.id,
                     },
+
                     {
                         id: "name",
                         name: "NAME",
@@ -466,10 +468,15 @@ function ApplicantView(props: ViewProps) {
                         selector: applicant => applicant.email,
                     },
                     {
+                        id: "type",
+                        name: "type",
+                        selector: applicant => applicant.type ? t(`ApplicantType.${applicant.type}`) : "",
+                    },
+                    {
                         id: "assigned_to",
                         name: "ASSIGNED_TO",
                         selector: applicant => applicant.assignedUser?.name || t("NONE"),
-                    },
+                    }
                 ]}
                 items={items}
                 actions={row => [

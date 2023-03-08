@@ -10,9 +10,11 @@ import { ViewApplicantDetailProps } from "../../types/applicant/view-application
 export default function ViewApplicantDetail({
 	applicant,
 	protectedFields,
+	hideAssignTo,
 }: ViewApplicantDetailProps) {
 	const { t } = useTranslation();
 
+	const assignTo = !!hideAssignTo ? {} : { ASSIGNED_TO: applicant.assignedUser?.name || t("NONE"), }
 	return (
 		<ViewCard title={`${applicant?.first_name} ${applicant?.last_name}`}>
 			<Row>
@@ -20,7 +22,7 @@ export default function ViewApplicantDetail({
 					<ViewDetails
 						default={t("NOT_ANSWERED")}
 						obj={{
-							ASSIGNED_TO: applicant.assignedUser?.name || t("NONE"),
+							...assignTo,
 							PHONE: applicant.phone,
 							EMAIL: applicant.email,
 							STREET: applicant.street,
@@ -37,7 +39,7 @@ export default function ViewApplicantDetail({
 							driver_license_number: protectedFields?.license_number
 								? applicant.license_number
 								: t("HIDDEN"),
-							expiration_date: applicant.license_expiry,
+							expiration_date: new Date(applicant.license_expiry),
 							state_issued: applicant.license_state,
 							cdl_class_type: applicant.license_type
 								? t(`DriverLicenseType.${applicant.license_type}`)
@@ -99,7 +101,7 @@ export default function ViewApplicantDetail({
 						<ViewDetails
 							default={t("NONE")}
 							obj={{
-								equipment_owned: {
+								EQUIPMENT_OWNED: {
 									show: applicant.is_owner_operator || false,
 									items: applicant.equipment_owned?.map((v) => ({
 										type:

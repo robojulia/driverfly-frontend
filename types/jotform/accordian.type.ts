@@ -1,7 +1,7 @@
 import { FormikInterface } from "../../utils/formik";
 
 export type AccordianProps = {
-    eventKey: string;
+    eventKey?: string;
     form?: FormikInterface<any>;
 
 }

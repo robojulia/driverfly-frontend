@@ -4,7 +4,7 @@ import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../hooks/use-translation";
 import BaseTextArea from "../../base-text-area";
 import BaseCheck from "../../base-check";
-import styles from "../../../../styles/jotform.module.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { FelonyConvictionDto } from "../../../../models/jot-form/long-form/felony-conviction.dto";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
@@ -59,7 +59,7 @@ export function FelonyConviction() {
 				/>
 			</Row>
 			{form.values.is_convicted_felony ? (
-				<Row className={styles.align__text_left}>
+				<Row className={`${styles.align__text_left} ${styles.bold}`}>
 					<BaseTextArea
 						className="float-left mt-3"
 						name="CONVICTED_OF_FELONY.value"

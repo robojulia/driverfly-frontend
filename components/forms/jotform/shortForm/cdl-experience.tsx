@@ -8,12 +8,13 @@ import { DriverLicenseType } from "../../../../enums/users/driver-license-type.e
 import { CdlDto } from "../../../../models/jot-form/short-form/cdl-experience.dto";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { useContext, useEffect } from "react";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 
 
 export function CdlExperience() {
 	const {
 		state: { applicant },
-		method: { setApplicant, stepNext, stepBack },
+		method: { setApplicant, stepNext, stepBack, setApplicantExtras },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
@@ -36,6 +37,7 @@ export function CdlExperience() {
 		},
 	});
 	useEffect(() => {
+		// setApplicantExtras([...applicant?.extras])
 		const { license_type, years_cdl_experience, is_owner_operator } = applicant;
 		form.setValues({
 			license_type: license_type || null,
@@ -70,15 +72,14 @@ export function CdlExperience() {
 				break;
 		}
 	}
-
 	return (
 		<>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<Row className="my-3">
+				<Row className={`${styles.bold} my-3`}>
 					<BaseSelect
 						className="col-12"
 						label="TYPE_CDL_CLASS"
-						placeholder="DriverLicenseType.NONE"
+						placeholder="SELECT_ONE_PLACEHOLDER"
 						name="license_type"
 						required
 						labelPrefix="DriverLicenseType"
@@ -87,9 +88,12 @@ export function CdlExperience() {
 						onChange={onLicenseTypeChange}
 					/>
 				</Row>
-				{!!form.values.license_type && (
+
+
+
+				{!!form.values.license_type && form.values.license_type !== DriverLicenseType.NO_CDL && (
 					<>
-						<Row className="my-3">
+						<Row className={styles.bold}>
 							<BaseInput
 								className="col-12"
 								type="number"
@@ -98,6 +102,7 @@ export function CdlExperience() {
 								name="years_cdl_experience"
 								label="years_cdl_experience"
 								placeholder="PLACEHOLDER_FOR_DIGITS"
+								required
 								formik={form}
 							/>
 						</Row>

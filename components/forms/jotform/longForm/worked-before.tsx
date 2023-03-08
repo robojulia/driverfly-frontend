@@ -69,7 +69,7 @@ export function WorkedBefore() {
 			</Row>
 			{form.values?.ALREADY_APPLIED_TO_COMPANY?.value ? (
 				<>
-					<Row>
+					<Row >
 						<Col>
 							<BaseCheck
 								className="my-3 col float-left p-0"
@@ -89,6 +89,8 @@ export function WorkedBefore() {
 									name="ALREADY_WORKED_TO_COMPANY.value.start_date"
 									placeholder="DATE"
 									label="FROM"
+									required
+									max={`9999-12-31`}
 									formik={form}
 								/>
 								<BaseInput
@@ -96,7 +98,9 @@ export function WorkedBefore() {
 									type="date"
 									name="ALREADY_WORKED_TO_COMPANY.value.end_date"
 									placeholder="DATE"
+									required
 									label="TO"
+									max={`9999-12-31`}
 									formik={form}
 								/>
 

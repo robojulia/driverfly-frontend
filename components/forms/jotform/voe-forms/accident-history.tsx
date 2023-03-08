@@ -103,7 +103,7 @@ export function AccidentHistory() {
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row>
-				<h4 className={styles.carrierName}>{t("ACCIDENT_HISTORY")}</h4>
+				<h4 className={styles.carrierName}>{t("EMPLOYMENT_VERIF")}</h4>
 			</Row>
 			<Row>
 				<div className={`${styles.align__text_left} ${styles.bold}`}>
@@ -174,14 +174,19 @@ export function AccidentHistory() {
 				/>
 			</Row>
 			<>
-				<Row className={`${styles.align__text_left} ${styles.bold}`}>
-					<BaseCheck
-						className="float-left col my-2"
-						name="REGISTERED_ACCIDENTS_DETAILS.value"
-						label="ACCIDENT_REGISTER_DATA"
-						formik={form}
-					/>
-				</Row>
+				{
+					Boolean(form?.values?.SAFETY_PERFORMANCE_HISTROY_REPORT?.value) && (
+						<Row className={`${styles.align__text_left} ${styles.bold}`}>
+							<BaseCheck
+								className="float-left col my-2"
+								name="REGISTERED_ACCIDENTS_DETAILS.value"
+								label="ACCIDENT_REGISTER_DATA"
+								formik={form}
+							/>
+						</Row>
+					)
+				}
+
 				{/* <Row>
 					{form.values.registered_accidents_check ? (
 						<>
@@ -280,16 +285,20 @@ export function AccidentHistory() {
 					) : null}
 				</Row> */}
 
-				<Row
-					className={`${styles.align__text_left} ${styles.bold} ${styles.paragraph}`}
-				>
-					<BaseTextArea
-						className="float-left col my-3"
-						name="ACCIDENT_REPORTED_TO_GOVERNMENT.value"
-						label="OTHER_GOV_REPORTED_ACCIDENTS"
-						formik={form}
-					/>
-				</Row>
+				{
+					Boolean(form?.values?.REGISTERED_ACCIDENTS_DETAILS?.value) && (
+						<Row
+							className={`${styles.align__text_left} ${styles.bold} ${styles.paragraph}`}
+						>
+							<BaseTextArea
+								className="float-left col my-3"
+								name="ACCIDENT_REPORTED_TO_GOVERNMENT.value"
+								label="OTHER_GOV_REPORTED_ACCIDENTS"
+								formik={form}
+							/>
+						</Row>
+					)
+				}
 			</>
 			<Row className={`${styles.align__text_left} ${styles.bold}`}>
 				<BaseSelect

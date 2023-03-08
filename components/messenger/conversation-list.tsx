@@ -23,15 +23,15 @@ export function ConversationList(props: ConversationListProps) {
     }
 
     return (
-    <ul className="list-unstyled mb-0 w-100" style={{ overflowY: "auto", height: "50vh" }}>
-        {
-            items.map(c => (
-            <li key={c.id} className="p-2 border-bottom" style={{ backgroundColor: c.id === selected?.id ? "#fff" : "#eee", cursor: "pointer" }} onClick={e => onItemClick(c)}>
-                <ConversationListItem entity={c} onDelete={onItemDelete} />
-            </li>
-            ))
-        }
-    </ul>);
+        <ul className="list-unstyled mb-0 w-100" style={{ overflowY: "auto", height: "50vh" }}>
+            {
+                items.map(c => (
+                    <li key={c.id} className="p-2 border-bottom" style={{ backgroundColor: c.id === selected?.id ? "#fff" : "#eee", cursor: "pointer" }} onClick={e => onItemClick(c)}>
+                        <ConversationListItem entity={c} onDelete={onItemDelete} />
+                    </li>
+                ))
+            }
+        </ul>);
 }
 
 export interface ConversationListItemProps {
@@ -48,7 +48,7 @@ export function ConversationListItem(props: ConversationListItemProps) {
                 <p className="fw-bold mb-0">{entity.chattable_name}</p>
                 {
                     entity.lastMessage &&
-                    <p title={entity.lastMessage.text} className="small text-muted text-truncate" style={{ width: "200px"}}>{entity.lastMessage.text}</p>
+                    <p title={entity.lastMessage.text} className="small text-muted text-truncate" style={{ width: "200px" }}>{entity.lastMessage.text}</p>
                 }
             </div>
             <div className="pt-1">
@@ -63,6 +63,6 @@ export function ConversationListItem(props: ConversationListItemProps) {
             </div>
             {onDelete && <XCircle color="red" onClick={e => onDelete(entity)} />}
         </div>
-     );
+    );
 
 }
