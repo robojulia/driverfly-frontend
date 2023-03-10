@@ -59,8 +59,9 @@ export default function EmployeeDirectory() {
 
     const tabs = {
         BACKGROUND: <Background applicant={applicant} />,
-        DRIVER_ONBOARDING_CHECKLIST: < DAC applicant={applicant} />,
         DQF: < DqfTab applicant={applicant} />,
+        DRIVER_ONBOARDING_CHECKLIST: < DAC applicant={applicant} />,
+
         // VEHICLES: < VehicleInformationTab />  //according to wireframe this tab (vehichled are pushed to phase 3)
     };
 
