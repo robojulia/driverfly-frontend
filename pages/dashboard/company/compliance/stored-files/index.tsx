@@ -249,7 +249,6 @@ export default function StoredFiles() {
                             selector: applicant => applicant.email,
                             hidable: false
                         },
-
                         {
                             cell: (applicant) => (
                                 <>
