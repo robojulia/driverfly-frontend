@@ -228,8 +228,6 @@ export default function ViewApplicant({ id }) {
 		{ name: "APPLICANT" },
 		{ translateProps: true }
 	);
-	// const jobCount = applicant?.jobs?.
-	console.log("job count ===", Object.values(applicant?.jobs).length)
 	return (
 		<ChildPageLayout backPath={backPath} title={title}>
 
