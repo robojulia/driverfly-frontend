@@ -83,7 +83,7 @@ export default function Embedded({ filterType, companyId }: EmbeddedCdlFiltersPr
     })
 
     const [filters, setFilters] = useState<SearchJobsDto>({ ...filtersForQuery(filterType), companyId })
-    const resetFilters = (): void => setFilters(filtersInitialsValues)
+    const resetFilters = (): void => setFilters({ ...filtersForQuery(filterType), companyId, page: 1 })
 
     const [location, setLocation] = useState<JobSearchLocation>(null)
     const resetLocation = (): void => setLocation(null)
@@ -97,7 +97,6 @@ export default function Embedded({ filterType, companyId }: EmbeddedCdlFiltersPr
         resetFilters()
         resetLocation()
         resetRange()
-        setFilters({ ...filtersForQuery(filterType), companyId })
     }
 
     const setFiltersByKeyValue = (key: string, value: any): void => {
