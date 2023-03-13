@@ -97,6 +97,7 @@ export default function Embedded({ filterType, companyId }: EmbeddedCdlFiltersPr
         resetFilters()
         resetLocation()
         resetRange()
+        setFilters({ ...filtersForQuery(filterType), companyId })
     }
 
     const setFiltersByKeyValue = (key: string, value: any): void => {
