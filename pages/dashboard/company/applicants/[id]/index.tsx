@@ -228,16 +228,31 @@ export default function ViewApplicant({ id }) {
 		{ name: "APPLICANT" },
 		{ translateProps: true }
 	);
-
+	// const jobCount = applicant?.jobs?.
+	console.log("job count ===", Object.values(applicant?.jobs).length)
 	return (
 		<ChildPageLayout backPath={backPath} title={title}>
+
 			{canEdit && (
 				<Row>
+					<Col>
+						{
+							!!!Object.values(applicant?.jobs).length && <strong>
+								<em>
+									<p className="text-danger">
+										{t("NO_JOB_TIED_WITH_APPLICANT")}
+									</p>
+								</em>
+							</strong>
+						}
+
+					</Col>
 					<Col>
 						<div
 							style={{ float: "right", marginBottom: "10px" }}
 							className="assign_unassign"
 						>
+
 							<ButtonGroup size="sm">
 								{applicant?.assignedUser ? (
 									<Button

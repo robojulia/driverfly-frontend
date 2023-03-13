@@ -1924,5 +1924,6 @@
   "{name}_manager": "Manager: {{name}}",
   "{date}_hireDate": "Hire Date: {{date}}",
   "{date}_birthdate": "Birthdate {{date}}",
-  "EMPLOYEES": "Employees"
+  "EMPLOYEES": "Employees",
+  "NO_JOB_TIED_WITH_APPLICANT":"No jobs tied up with this applicant! Click on EDIT to add jobs. "
 }
