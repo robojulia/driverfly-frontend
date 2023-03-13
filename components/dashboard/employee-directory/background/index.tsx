@@ -8,7 +8,6 @@ import ViewApplicantDetail from '../../../applicants/applicant-view-details';
 export default function Background({ applicant, protectedFields }: ViewApplicantDetailProps) {
     const router = useRouter()
     const { t } = useTranslation();
-
     const onViewProfileCLick = () => router.push(`/dashboard/company/applicants/${applicant?.id}`)
     
     const employeePosition = applicant?.jobs?.find(v => v.status)
