@@ -1924,5 +1924,23 @@
   "{name}_manager": "Manager: {{name}}",
   "{date}_hireDate": "Hire Date: {{date}}",
   "{date}_birthdate": "Birthdate {{date}}",
-  "EMPLOYEES": "Employees"
+  "EMPLOYEES": "Employees",
+  "ApplicantDqf": {
+    "DRIVER_CERTIFICATION_OF_VIOLATIONS": "Driver Certification of Violations (Annual)",
+    "MOTOR_VEHICLE_REPORT": "Motor Vehicle Report (Annual)",
+    "ANNUAL_MVR_REVIEW_NOTES": "Annual MVR Review Notes (optional)",
+    "DRUG_AND_ALCOHOL_CLEARINGHOUSE_QUERY": "Drug and alcohol clearinghouse query (Annual)",
+    "DRUG_TEST_RESULTS": "Drug Test Results (At Random)",
+    "VALID_DRIVERS_LICENSE_COPY": "Valid Driver’s License Copy (As Needed)",
+    "PHYSICAL_EXAM": "Physical Exam (Every 1-2 years)",
+    "ENDORSEMENTS_TWIC": "Endorsements / TWIC (optional)",
+    "PSP_RECORD": "PSP Record",
+    "MEDICAL_EXAMINER_PROOF_OF_CERTIFICATION": "Medical Examiner Proof of Certification",
+    "MEDICAL_EXAMINERS_CERTIFICATE": "Medical Examiner’s Certificate",
+    "PRE_EMPLOYMENT_DRUG_TEST": "Pre-employment Drug Test",
+    "RECORD_OF_ATTEMPTS": "Record of Attempts (Safety Performance History)",
+    "SAFETY_PERFORMANCE_HISTORY": "Safety Performance History (Previous Employers)",
+    "EMPLOYMENT_APPLICATION": "Employment Application",
+    "DRIVERS_ROAD_TEST_CERTIFICATION": "Driver’s Road Test Certification (optional)"
+  }
 }

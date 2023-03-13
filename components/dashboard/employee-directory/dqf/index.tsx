@@ -7,7 +7,6 @@ import { useFormik } from "formik";
 import ApplicantApi from "../../../../pages/api/applicant";
 import ViewCard from "../../../view-details/view-card";
 import FileInput from '../../../forms/file-input';
-import { ApplicantDocumentType } from '../../../../enums/applicants/applicant-document-type.enum';
 import { toast } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import ShowFormattedDate from "../../../jobs/show-formatted-date";
@@ -18,6 +17,7 @@ import { useState } from "react";
 import { ThreeCircles } from 'react-loader-spinner';
 import DocumentApi from "../../../../pages/api/document";
 import ViewPdf from "../../../view-details/view-pdf";
+import { ApplicantDqf } from "../../../../enums/applicants/applicant-dqf-types.enum";
 
 export interface DqfTabProps extends ViewApplicantDetailProps { }
 
@@ -63,7 +63,7 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
             });
         }
     }
-    const handleUpdateDocument = async (type: ApplicantDocumentType, documentId?: number) => {
+    const handleUpdateDocument = async (type: ApplicantDqf, documentId?: number) => {
         form.setFieldValue("document", { type: type, id: documentId || null })
     }
 
@@ -92,13 +92,13 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
 
                                 <tbody>
                                     {
-                                        Object.values(ApplicantDocumentType).map((value: ApplicantDocumentType, i) => {
+                                        Object.values(ApplicantDqf).map((value: ApplicantDqf, i) => {
 
                                             const document: any = applicantUser?.documents?.find(v => (v.type === value))
                                             return (
                                                 <tr key={i}>
                                                     <td colSpan={2}>
-                                                        {t(`ApplicantDocumentType.${value}`)}
+                                                        {t(`ApplicantDqf.${value}`)}
                                                     </td>
                                                     <td colSpan={2}>
                                                         {document ? <ShowFormattedDate date={document.last_updated_at} /> : <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>}
