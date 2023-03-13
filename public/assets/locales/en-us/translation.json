@@ -1919,5 +1919,10 @@
   "DHA_PREFERENCE_POINT_2": "These company-level constraints are used to automatically qualify candidates on your behalf. You will still receive all applicants that fill out your driver application.",
   "APPLICANT_DRIVER_ONBOARDING_CHECKLIST": "Applicant Driver Onboarding Checklist",
   "DRIVER_ONBOARDING_CHECKLIST": "Driver Onboarding Checklist",
+  "{rank}_position": "Position: {{rank}}",
+  "{terminal}_terimanl": "Terminal: {{terminal}}",
+  "{name}_manager": "Manager: {{name}}",
+  "{date}_hireDate": "Hire Date: {{date}}",
+  "{date}_birthdate": "Birthdate {{date}}",
   "EMPLOYEES": "Employees"
 }
