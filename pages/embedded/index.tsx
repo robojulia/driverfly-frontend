@@ -24,8 +24,12 @@ import { JobTeamDriver } from '../../enums/jobs/job-team-driver.enum'
 import { JobEquipmentType } from '../../enums/jobs/job-equipment-type.enum'
 import EmploymentType from '../../components/filters/employment-type'
 
+export type EmbeddedCdlFiltersProps = {
+    filterType: EmbeddedFilterTypes;
+    companyId?: number;
+};
 
-export default function Embedded({ filterType }) {
+export default function Embedded({ filterType, companyId }: EmbeddedCdlFiltersProps) {
 
     const router = useRouter()
     const jobApi = new JobApi()
@@ -78,7 +82,7 @@ export default function Embedded({ filterType }) {
         areas_covered: JobGeography.OTR,
     })
 
-    const [filters, setFilters] = useState<SearchJobsDto>(filtersForQuery(filterType))
+    const [filters, setFilters] = useState<SearchJobsDto>({ ...filtersForQuery(filterType), companyId })
     const resetFilters = (): void => setFilters(filtersInitialsValues)
 
     const [location, setLocation] = useState<JobSearchLocation>(null)
@@ -177,11 +181,11 @@ export default function Embedded({ filterType }) {
 }
 export async function getServerSideProps({ query }: GetServerSidePropsContext) {
 
-    const { filterType } = query || {};
+    const { filterType, companyId } = query || {};
 
     if (!!!filterType) return { notFound: true }
 
-    return { props: { filterType } }
+    return { props: { filterType, companyId: Boolean(companyId) ? parseInt(companyId as string) : null } }
 }
 Embedded.getLayout = function getLayout(page) {
     return (
