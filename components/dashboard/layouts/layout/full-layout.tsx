@@ -79,6 +79,20 @@ const FullLayout = ({ children }) => {
 			startsWith: true
 		},
 		{
+			pathname: "/dashboard/company/compliance/employee-directory",
+			icon: GeoAltFill,
+			text: "EMPLOYEES",
+			startsWith: true
+
+		},
+		{
+			icon: FileEarmarkImage,
+			text: "STORED_FILES",
+			pathname: "/dashboard/company/compliance/stored-files",
+			startsWith: true
+
+		},
+		{
 			pathname: "/dashboard/company/settings",
 			icon: GearFill,
 			text: "SETTINGS",
@@ -141,39 +155,6 @@ const FullLayout = ({ children }) => {
 					text: "DIGITAL_HIRING_APPLICATION",
 				},
 			],
-
-		},
-		{
-			pathname: "/dashboard/company/compliance/employee-directory",
-			icon: GeoAltFill,
-			text: "EMPLOYEES",
-			startsWith: true
-
-		},
-		// {
-		// 	icon: ShieldFillCheck,
-		// 	text: "employees",
-		// 	items: [
-		// 		{
-		// 			pathname: "/dashboard/company/compliance/employee-directory",
-		// 			icon: GeoAltFill,
-		// 			text: "EMPLOYEE_DIRECTORY",
-		// 			startsWith: true
-		// 		},
-		// 		{
-		// 			pathname: "/dashboard/company/compliance/stored-files",
-		// 			icon: FileEarmarkImage,
-		// 			text: "STORED_FILES",
-		// 			startsWith: true
-		// 		},
-
-		// 	],
-		// },
-		{
-			icon: FileEarmarkImage,
-			text: "STORED_FILES",
-			pathname: "/dashboard/company/compliance/stored-files",
-			startsWith: true
 
 		},
 
