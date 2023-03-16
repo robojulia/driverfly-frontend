@@ -25,7 +25,7 @@ import { JobEquipmentType } from '../../enums/jobs/job-equipment-type.enum'
 import EmploymentType from '../../components/filters/employment-type'
 
 export type EmbeddedCdlFiltersProps = {
-    filterType: EmbeddedFilterTypes;
+    filterType?: EmbeddedFilterTypes;
     companyId?: number;
 };
 
@@ -166,7 +166,7 @@ export default function Embedded({ filterType, companyId }: EmbeddedCdlFiltersPr
                     <div className="container">
                         <div className="row">
                             <div className="col-12 col-lg-3 lg-mt-0 mt-5">
-                                <EmbeddedFilters filterType={filterType} />
+                                <EmbeddedFilters filterType={filterType ?? null} />
                             </div>
                             <div className="col-md-9 outer pl-4 ">
                                 <ResultCount />
@@ -183,9 +183,9 @@ export async function getServerSideProps({ query }: GetServerSidePropsContext) {
 
     const { filterType, companyId } = query || {};
 
-    if (!!!filterType) return { notFound: true }
+    // if (!!!filterType) return { notFound: true }
 
-    return { props: { filterType, companyId: Boolean(companyId) ? parseInt(companyId as string) : null } }
+    return { props: { filterType: filterType ?? null, companyId: Boolean(companyId) ? parseInt(companyId as string) : null } }
 }
 Embedded.getLayout = function getLayout(page) {
     return (
