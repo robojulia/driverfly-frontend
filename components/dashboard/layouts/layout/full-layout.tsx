@@ -25,7 +25,9 @@ import {
 	PersonHearts,
 	FileEarmarkImage,
 	ShieldFillCheck,
-	Sliders
+	Sliders,
+	PersonBadgeFill,
+	PersonLinesFill
 } from 'react-bootstrap-icons';
 import CompanyProfileNav from "../header/company-profile-nav";
 import { useAuth } from "../../../../hooks/use-auth";
@@ -115,6 +117,12 @@ const FullLayout = ({ children }) => {
 					icon: PeopleFill,
 					text: "USERS",
 					permissions: "CanViewUser",
+					startsWith: true
+				},
+				{
+					pathname: "/dashboard/company/settings/managers",
+					icon: PersonLinesFill,
+					text: "MANAGERS",
 					startsWith: true
 				},
 				{
