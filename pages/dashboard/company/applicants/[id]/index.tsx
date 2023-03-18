@@ -302,11 +302,13 @@ export default function ViewApplicant({ id }) {
 				</Col>
 			</Row>
 			<Row>
-				<Col md="6">
+				<Col md="12">
 					<ApplicantJobsApplied applicant={applicant} />
 				</Col>
+			</Row>
+			<Row>
 				{applicantSuggestedJobs && (
-					<Col md="6">
+					<Col md="12">
 						<ApplicantConsiderFor
 							applicant={applicant}
 							applicantSuggestedJobs={applicantSuggestedJobs}
