@@ -1,17 +1,17 @@
 import { Button, Col, Row } from 'react-bootstrap';
 import { useTranslation } from '../../../../hooks/use-translation';
 import React from 'react';
-import { ViewApplicantDetailProps } from '../../../../types/applicant/view-application-detail-props.type';
 import { useRouter } from 'next/router';
 import ViewApplicantDetail from '../../../applicants/applicant-view-details';
+import { ViewApplicantBackgroundProps } from '../../../../types/applicant/view-application-background-props.type';
 
-export default function Background({ applicant, protectedFields }: ViewApplicantDetailProps) {
+
+export default function Background({ applicant, applicantJob }: ViewApplicantBackgroundProps) {
+
 	const router = useRouter()
 	const { t } = useTranslation();
+
 	const onViewProfileCLick = () => router.push(`/dashboard/company/applicants/${applicant?.id}`)
-
-	const employeePosition = applicant?.jobs?.find(v => v.status)
-
 	const onEditClick = () => router.push(`/dashboard/company/applicants/${applicant?.id}/edit`)
 
 
@@ -32,18 +32,18 @@ export default function Background({ applicant, protectedFields }: ViewApplicant
 
 						<div className="my-2 d-flex">
 							<p>
-								{t("{rank}_position", { rank: employeePosition?.status ? `ApplicantStatus.${employeePosition?.status}` : "N/A" }, { translateProps: true })}
+								{t("{rank}_position", { rank: applicantJob?.status ? `ApplicantStatus.${applicantJob?.status}` : "N/A" }, { translateProps: true })}
 							</p>
 							<p className="ml-4">
-								{t("{terminal}_terimanl", { terminal: employeePosition?.job?.location?.city }, { translateProps: true })}
+								{t("{terminal}_terimanl", { terminal: applicantJob?.job?.location?.city }, { translateProps: true })}
 							</p>
 							<p className="ml-4">
-								{t("{name}_manager", { name: employeePosition?.manager?.name }, { translateProps: true })}
+								{t("{name}_manager", { name: applicantJob?.manager?.name }, { translateProps: true })}
 							</p>
 						</div>
 						<div className="my-2 d-flex">
 							<p>
-								{t("{date}_hireDate", { date: employeePosition?.hired_at ? new Date(employeePosition?.hired_at).toDateString() : "N/A" }, { translateProps: true })}
+								{t("{date}_hireDate", { date: applicantJob?.hired_at ? new Date(applicantJob?.hired_at).toDateString() : "N/A" }, { translateProps: true })}
 							</p>
 							<p className="ml-4">
 								{t("{date}_birthdate", { date: applicant?.birthdate ? new Date(applicant?.birthdate).toDateString() : "N/A" }, { translateProps: true })}
