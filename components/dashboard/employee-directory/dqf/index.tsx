@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import ShowFormattedDate from "../../../jobs/show-formatted-date";
 import { ApplicantDocumentDto } from "../../../../models/applicant/applicant-document-dto";
-import { CloudArrowDown, Pen } from "react-bootstrap-icons";
+import { CloudArrowDown, Pen, Eye, Trash } from "react-bootstrap-icons";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import { useState } from "react";
 import { ThreeCircles } from 'react-loader-spinner';
@@ -73,6 +73,9 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
     }, [user], () => {
         form.resetForm()
     });
+    function deleteDocument(e) {
+        console.log("document", e)
+    }
 
     return (
         <div className="employee_directory_tabs">
@@ -103,14 +106,16 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                                                     <td colSpan={2}>
                                                         {document ? <ShowFormattedDate date={document.last_updated_at} /> : <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>}
                                                     </td>
-                                                    <td colSpan={1} >
+                                                    <td colSpan={1} className="border border-2 w-50">
                                                         {
                                                             (!form.values.document?.type || form.values.document?.type !== value) &&
                                                             <div className="d-flex">
+                                                                {document ? <a onClick={() => viewDocumentClick(document.id, document.name)} href='#' role="button" className="btn btn-success p-0 pt-1 mr-2 w-100"><Eye /></a> : null}
                                                                 <Button className="mr-2 w-100" onClick={() => { handleUpdateDocument(value, document?.id) }}>
                                                                     {document ? <Pen /> : t('ADD')}
                                                                 </Button>
-                                                                {document ? <a onClick={() => viewDocumentClick(document.id, document.name)} href='#' role="button" className="btn theme-primary2-btn p-0 pt-1 mr-2"><CloudArrowDown /></a> : null}
+                                                                {document ? <a href={document?.path} download className="btn theme-primary2-btn p-0 pt-1 mr-2"><CloudArrowDown /></a> : null}
+                                                                {document ? <a onClick={(e) => deleteDocument(e)} href='#' role="button" className="btn btn-danger  p-0 pt-1 mr-2 w-100"><Trash /></a> : null}
                                                             </div>
                                                         }
 

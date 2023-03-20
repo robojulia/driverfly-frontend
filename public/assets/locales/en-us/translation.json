@@ -290,7 +290,7 @@
   "UNRECOGNIZED_DOCUMENT_TYPE": "UNRECOGNIZED DOCUMENT TYPE",
   "DOCUMENT_TYPE": "Document type",
   "successfully_saved_information": "Successfully saved your information",
-  "unable_to_save_information": "Unable to save your information",
+  "UNABLE_TO_SAVE_INFORMATION": "Unable to save your information",
   "above_21": "Above 21?",
   "basic": "Basic",
   "basic_details": "Basic Details",
@@ -1233,6 +1233,10 @@
   "USERS": "Users",
   "CREATE_USER": "Create User",
   "EDIT_USER": "Edit User",
+  "MANAGERS": "Managers",
+  "MANAGER": "Manager",
+  "CREATE_MAMNAGER": "Create Manager",
+  "EDIT_MANAGER": "Edit Manager",
   "MINIMUM_CDL_CLASS": "Minimum CDL Class",
   "DOES_NOT_MATCH": "The value does not match the value expected",
   "INVITE_CODE": "Invitation Code",
@@ -1942,5 +1946,6 @@
     "SAFETY_PERFORMANCE_HISTORY": "Safety Performance History (Previous Employers)",
     "EMPLOYMENT_APPLICATION": "Employment Application",
     "DRIVERS_ROAD_TEST_CERTIFICATION": "Driver’s Road Test Certification (optional)"
-  }
+  },
+  "NO_JOB_TIED_WITH_APPLICANT": "No jobs tied up with this applicant! Click on EDIT to add jobs. "
 }

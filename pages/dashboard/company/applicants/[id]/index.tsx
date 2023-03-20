@@ -228,16 +228,29 @@ export default function ViewApplicant({ id }) {
 		{ name: "APPLICANT" },
 		{ translateProps: true }
 	);
-
 	return (
 		<ChildPageLayout backPath={backPath} title={title}>
+
 			{canEdit && (
 				<Row>
+					<Col>
+						{
+							!!!Object.values(applicant?.jobs).length && <strong>
+								<em>
+									<p className="text-danger">
+										{t("NO_JOB_TIED_WITH_APPLICANT")}
+									</p>
+								</em>
+							</strong>
+						}
+
+					</Col>
 					<Col>
 						<div
 							style={{ float: "right", marginBottom: "10px" }}
 							className="assign_unassign"
 						>
+
 							<ButtonGroup size="sm">
 								{applicant?.assignedUser ? (
 									<Button
@@ -289,11 +302,13 @@ export default function ViewApplicant({ id }) {
 				</Col>
 			</Row>
 			<Row>
-				<Col md="6">
+				<Col md="12">
 					<ApplicantJobsApplied applicant={applicant} />
 				</Col>
+			</Row>
+			<Row>
 				{applicantSuggestedJobs && (
-					<Col md="6">
+					<Col md="12">
 						<ApplicantConsiderFor
 							applicant={applicant}
 							applicantSuggestedJobs={applicantSuggestedJobs}
