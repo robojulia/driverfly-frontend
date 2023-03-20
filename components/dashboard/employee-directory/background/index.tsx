@@ -43,10 +43,10 @@ export default function Background({ applicant, protectedFields }: ViewApplicant
 						</div>
 						<div className="my-2 d-flex">
 							<p>
-								{t("{date}_hireDate", { date: "N/A" }, { translateProps: true })}
+								{t("{date}_hireDate", { date: employeePosition?.hired_at ? new Date(employeePosition?.hired_at).toDateString() : "N/A" }, { translateProps: true })}
 							</p>
 							<p className="ml-4">
-								{t("{date}_birthdate", { date: applicant?.birthdate }, { translateProps: true })}
+								{t("{date}_birthdate", { date: applicant?.birthdate ? new Date(applicant?.birthdate).toDateString() : "N/A" }, { translateProps: true })}
 							</p>
 						</div>
 					</div>
