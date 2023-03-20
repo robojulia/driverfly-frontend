@@ -51,10 +51,10 @@ export default function EmployeeDirectory() {
     const { setPreviousPath } = useLastPage();
     setPreviousPath(router.asPath)
 
+    const [applicants, setApplicants] = useState<ReducedApplicantEntityType[]>([])
+
     const [applicant, setApplicant] = useState<ReducedApplicantEntityType>()
     const resetApplicant = (): void => setApplicant(null)
-
-    const [applicants, setApplicants] = useState<ReducedApplicantEntityType[]>([])
 
     const onEditClick = (id: number) => router.push(`/dashboard/company/applicants/${id}/edit`)
 
@@ -94,7 +94,16 @@ export default function EmployeeDirectory() {
         },
     });
 
+    const [pastEmployees, setPastEmployees] = useState<ReducedApplicantEntityType[]>([])
+    const resetPastEmployees = (): void => setPastEmployees([])
 
+    const fetchPastEmployee = async () => {
+        const data = await applicantApi.list({ status: ApplicantStatus.INACTIVE_FIRED });
+
+        const reducedApplicants: ReducedApplicantEntityType[] = reduceSingleEntity(data)
+
+        setPastEmployees(reducedApplicants)
+    }
 
     return (
         <PageLayout
@@ -108,6 +117,14 @@ export default function EmployeeDirectory() {
                                 <Link href="/dashboard/company/compliance/employee-directory/import">
                                     <a className="here_link">{t("HERE")}</a>
                                 </Link>
+                            </u>
+                        </p>
+                        <p className="mt-2 mb-2">
+                            <u className="ml-1">
+                                <a
+                                    onClick={fetchPastEmployee}
+                                    className="here_link"
+                                >{t("PAST_EMPLOYEE_LIST")}</a>
                             </u>
                         </p>
                     </Col>
@@ -192,23 +209,21 @@ export default function EmployeeDirectory() {
                     },
                     {
                         cell: (data) => (
-                            <>
-                                <div className="data_table_custom_action_button">
-                                    <div onClick={(e) => setApplicant(data)}>
-                                        <EyeFill className="view cursor-pointer enlarge-font" />
-                                    </div>
-                                    <div onClick={(e) => onEditClick(data?.applicant?.id)}>
-                                        <PenFill className="edit cursor-pointer enlarge-font" />
-                                    </div>
-                                    <div onClick={() => {
-                                        applicantJobForm.setValues(data?.applicantJob);
-                                        applicantJobForm.setFieldValue("reason_codes", []);
-                                        applicantJobForm.setFieldValue("status", ApplicantStatus.INACTIVE_FIRED);
-                                    }}>
-                                        <Trash3Fill className="edit cursor-pointer enlarge-font" />
-                                    </div>
+                            <div className="data_table_custom_action_button">
+                                <div onClick={(e) => setApplicant(data)}>
+                                    <EyeFill className="view cursor-pointer enlarge-font" />
                                 </div>
-                            </>
+                                <div onClick={(e) => onEditClick(data?.applicant?.id)}>
+                                    <PenFill className="edit cursor-pointer enlarge-font" />
+                                </div>
+                                <div onClick={() => {
+                                    applicantJobForm.setValues(data?.applicantJob);
+                                    applicantJobForm.setFieldValue("reason_codes", []);
+                                    applicantJobForm.setFieldValue("status", ApplicantStatus.INACTIVE_FIRED);
+                                }}>
+                                    <a className="btn btn-link btn-sm">{t('MOVE_TO_PAST_EMPLOYEE')}</a>
+                                </div>
+                            </div>
                         ),
                     },
                 ]}
@@ -256,6 +271,48 @@ export default function EmployeeDirectory() {
                         </Col>
                     </Row>
                 </EntityForm>
+            </ViewModal>
+
+            <ViewModal
+                show={Boolean(pastEmployees?.length)}
+                onCloseClick={resetPastEmployees}
+                closeText="CANCEL"
+                title="APPLICANTS"
+            >
+                <ViewDataTable<ReducedApplicantEntityType>
+                    customStyles={{
+                        headRow: {
+                            style: {
+                                background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+                                color: "white"
+                            },
+                        },
+                    }}
+                    columns={[
+                        {
+                            id: "id",
+                            name: "ID",
+                            selector: aJob => aJob?.applicant?.id,
+                            hidable: false
+                        },
+                        {
+                            name: "first_name",
+                            selector: aJob => aJob?.applicant?.first_name,
+                            hidable: false
+                        },
+                        {
+                            name: "last_name",
+                            selector: aJob => aJob?.applicant?.last_name,
+                            hidable: false
+                        },
+                        {
+                            name: "email",
+                            selector: aJob => aJob?.applicant?.email,
+                            hidable: false
+                        },
+                    ]}
+                    items={pastEmployees}
+                />
             </ViewModal>
 
         </PageLayout>
