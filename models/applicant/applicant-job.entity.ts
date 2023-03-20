@@ -22,6 +22,7 @@ export class ApplicantJobEntity {
   reason_codes_other?: string;
   created_at?: string;
   last_updated_at?: string;
+  hired_at?: string;
 
   static yupSchema() {
     return yup.object({
