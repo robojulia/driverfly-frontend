@@ -44,6 +44,8 @@ import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmi
 import { ApplicantDocumentType } from "../../../enums/applicants/applicant-document-type.enum";
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
 import { JobGeography } from "../../../enums/jobs/job-geography.enum";
+import { CompanyManagerEntity } from "../../../models/company/company-manager.entity";
+import CompanyApi from "../../../pages/api/company";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> {
 }
@@ -116,12 +118,18 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	});
 
 	const [jobs, setJobs] = useState<JobEntity[]>([]);
+	const [managers, setManagers] = useState<CompanyManagerEntity[]>([]);
 
 	useEffectAsync(async () => {
 		const api = new JobApi();
 		const jobs = await api.list();
 
 		setJobs(jobs);
+
+		const companyApi = new CompanyApi();
+		const data = await companyApi.manager.list();
+
+		setManagers(data);
 	}, [user]);
 
 	useEffect(() => {
@@ -795,7 +803,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				</Col>
 			</Row>
 			<Row>
-				<Col md="5" className="p-0 px-lg-2">
+				<Col md="12" className="p-0 px-lg-2">
 					<ViewCard
 						title="UPLOADED_DOCUMENTS"
 						actions={<Button size='sm'
@@ -860,7 +868,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
 						}
 					</ViewCard>
 				</Col>
-				<Col md="7" className="p-0 px-lg-2">
+			</Row>
+			<Row>
+				<Col md="12" className="p-0 px-lg-2">
 					<ViewCard
 						title="JOBS_APPLIED_TO_WITH_YOU"
 						actions={<Button size='sm'
@@ -883,6 +893,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									<tr>
 										<th>{t("JOB")}*</th>
 										<th>{t("STATUS")}*</th>
+										<th>{t("MANAGER")}*</th>
 										<th></th>
 									</tr>
 								</thead>
@@ -919,6 +930,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 															labelPrefix="ApplicantStatus"
 															hideOptions={hideStatus}
 															enumType={ApplicantStatus}
+															formik={form}
+														/>
+													</td>
+													<td>
+														<BaseSelect
+															name={`jobs[${i}].manager.id`}
+															required
+															placeholder="MANAGER"
+															options={managers}
+															labelKey="name"
+															valueKey="id"
 															formik={form}
 														/>
 													</td>
