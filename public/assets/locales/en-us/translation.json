@@ -1947,5 +1947,7 @@
     "EMPLOYMENT_APPLICATION": "Employment Application",
     "DRIVERS_ROAD_TEST_CERTIFICATION": "Driver’s Road Test Certification (optional)"
   },
-  "NO_JOB_TIED_WITH_APPLICANT": "No jobs tied up with this applicant! Click on EDIT to add jobs. "
+  "NO_JOB_TIED_WITH_APPLICANT": "No jobs tied up with this applicant! Click on EDIT to add jobs. ",
+  "MOVE_TO_PAST_EMPLOYEE": "Move to past employee",
+  "PAST_EMPLOYEE_LIST": "Past employee list"
 }
