@@ -1,7 +1,7 @@
 import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 import { useState } from "react";
 import React from "react";
-import { EyeFill, PenFill } from 'react-bootstrap-icons';
+import { EyeFill, PenFill, Trash2Fill, Trash3Fill, TrashFill } from 'react-bootstrap-icons';
 import PageLayout from "../../../../../components/layouts/page/page-layout";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import { useRouter } from "next/router";
@@ -9,14 +9,20 @@ import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/
 import { useAuth } from "../../../../../hooks/use-auth";
 import { useEffectAsync } from "../../../../../utils/react";
 import Link from "next/link";
-import { Col, Row } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import 'react-tabs/style/react-tabs.css';
 import { TabbedLayout } from "../../../../../components/layouts/page/tabbed-layout";
 import DAC from "../../../../../components/dashboard/employee-directory/dac";
 import DqfTab from "../../../../../components/dashboard/employee-directory/dqf";
 import ApplicantApi from "../../../../api/applicant";
-import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
-import { filterHired, reduceSingleEntity } from "../../../../../utils/filter-applicants";
+import {
+    ApplicantEntity,
+    ApplicantJobEntity
+} from "../../../../../models/applicant";
+import {
+    filterHired,
+    reduceSingleEntity
+} from "../../../../../utils/filter-applicants";
 import { ReducedApplicantEntityType } from "../../../../../types/applicant/reduced-applicant-entity.type";
 import ViewModal from "../../../../../components/view-details/view-modal";
 import useLastPage from "../../../../../hooks/use-last-page";
@@ -25,6 +31,13 @@ import { ApplicantStatus } from "../../../../../enums/applicants/applicant-statu
 import OverlyPopover from "../../../../../components/popover/overly-popover";
 import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
 import Background from "../../../../../components/dashboard/employee-directory/background";
+import BaseCheckList from "../../../../../components/forms/base-check-list";
+import { ApplicantReasonCodeFired } from "../../../../../enums/applicants/applicant-reason-codes.enum";
+import { useFormik } from "formik";
+import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
+import EntityForm from "../../../../../components/layouts/page/entity-form";
+import BaseTextArea from "../../../../../components/forms/base-text-area";
+import { toast } from "react-toastify";
 
 export default function EmployeeDirectory() {
 
@@ -38,7 +51,7 @@ export default function EmployeeDirectory() {
     const { setPreviousPath } = useLastPage();
     setPreviousPath(router.asPath)
 
-    const [applicant, setApplicant] = useState<ApplicantEntity>()
+    const [applicant, setApplicant] = useState<ReducedApplicantEntityType>()
     const resetApplicant = (): void => setApplicant(null)
 
     const [applicants, setApplicants] = useState<ReducedApplicantEntityType[]>([])
@@ -58,12 +71,30 @@ export default function EmployeeDirectory() {
     });
 
     const tabs = {
-        BACKGROUND: <Background applicant={applicant} />,
-        DQF: < DqfTab applicant={applicant} />,
-        DRIVER_ONBOARDING_CHECKLIST: < DAC applicant={applicant} />,
+        BACKGROUND: <Background {...applicant} />,
+        DQF: < DqfTab {...applicant} />,
+        DRIVER_ONBOARDING_CHECKLIST: < DAC {...applicant} />,
 
         // VEHICLES: < VehicleInformationTab />  //according to wireframe this tab (vehichled are pushed to phase 3)
     };
+
+    const applicantJobForm = useFormik({
+        initialValues: new ApplicantJobEntity(),
+        validationSchema: ApplicantJobEntity.yupSchema(),
+        onSubmit: async (values) => {
+            try {
+                console.log("values", values);
+
+                await applicantApi.jobs.update(values.applicant?.id, values?.job?.id, values)
+                applicantJobForm.resetForm();
+                setApplicants(applicants.filter(v => v.applicantJob.id != values.id))
+            } catch (e) {
+                globalAjaxExceptionHandler(e, { formik: applicantJobForm, t: t, toast: toast });
+            }
+        },
+    });
+
+
 
     return (
         <PageLayout
@@ -102,7 +133,11 @@ export default function EmployeeDirectory() {
                     {
                         id: "name",
                         name: 'NAME',
-                        cell: data => <span role="button" className="bg-priamry cursor-pointer enlarge-font" onClick={() => setApplicant(data?.applicant)}>{data?.applicant?.first_name + ' ' + data?.applicant?.last_name}</span>,
+                        cell: data => <span
+                            role="button"
+                            className="bg-priamry cursor-pointer enlarge-font"
+                            onClick={() => setApplicant(data)}
+                        >{data?.applicant?.first_name + ' ' + data?.applicant?.last_name}</span>,
                     },
                     {
                         id: "phone",
@@ -137,9 +172,9 @@ export default function EmployeeDirectory() {
                     {
                         id: "dateHired",
                         name: 'DATE_HIRED',
-                        selector: data => data?.applicant?.last_updated_at,
+                        selector: data => data?.applicantJob?.hired_at,
                         cell: data => <ShowFormattedDate
-                            date={data?.applicant?.last_updated_at}
+                            date={data?.applicantJob?.hired_at}
                             hideTime
                         />
                     },
@@ -159,11 +194,18 @@ export default function EmployeeDirectory() {
                         cell: (data) => (
                             <>
                                 <div className="data_table_custom_action_button">
-                                    <div onClick={(e) => setApplicant(data?.applicant)}>
+                                    <div onClick={(e) => setApplicant(data)}>
                                         <EyeFill className="view cursor-pointer enlarge-font" />
                                     </div>
                                     <div onClick={(e) => onEditClick(data?.applicant?.id)}>
                                         <PenFill className="edit cursor-pointer enlarge-font" />
+                                    </div>
+                                    <div onClick={() => {
+                                        applicantJobForm.setValues(data?.applicantJob);
+                                        applicantJobForm.setFieldValue("reason_codes", []);
+                                        applicantJobForm.setFieldValue("status", ApplicantStatus.INACTIVE_FIRED);
+                                    }}>
+                                        <Trash3Fill className="edit cursor-pointer enlarge-font" />
                                     </div>
                                 </div>
                             </>
@@ -172,8 +214,48 @@ export default function EmployeeDirectory() {
                 ]}
                 items={applicants}
             />
+
             <ViewModal show={!!applicant} onCloseClick={resetApplicant} size='xl' >
                 <TabbedLayout items={tabs} className="mt-5"></TabbedLayout>
+            </ViewModal>
+
+            <ViewModal
+                show={!!applicantJobForm.values?.id}
+                onCloseClick={applicantJobForm.resetForm}
+                size='lg'
+            >
+                <EntityForm
+                    onSubmit={applicantJobForm.handleSubmit}
+                    id={applicantJobForm?.values?.id}
+                    formik={applicantJobForm}
+                    canSubmit={applicantJobForm.isValid || applicantJobForm.values?.reason_codes?.length > 0}
+                >
+                    <Row className="py-3">
+                        <Col md="6">
+                            <BaseCheckList
+                                className="col-12"
+                                label="REASON_CODES"
+                                name="reason_codes"
+                                required
+                                cols={2}
+                                formik={applicantJobForm}
+                                labelPrefix="ApplicantReasonCodeFired"
+                                enumType={ApplicantReasonCodeFired}
+                            />
+                        </Col>
+                        <Col md="6">
+                            {applicantJobForm.values.reason_codes?.includes("OTHER") &&
+                                <BaseTextArea
+                                    className="col-12"
+                                    placeholder="REASONS"
+                                    name="reason_codes_other"
+                                    required
+                                    maxLength={100}
+                                    formik={applicantJobForm}
+                                />}
+                        </Col>
+                    </Row>
+                </EntityForm>
             </ViewModal>
 
         </PageLayout>
