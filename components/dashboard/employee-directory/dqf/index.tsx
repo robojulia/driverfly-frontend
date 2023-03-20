@@ -73,8 +73,9 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
     }, [user], () => {
         form.resetForm()
     });
-    function deleteDocument(e) {
-        console.log("document", e)
+    const deleteDocument = async (docType) => {
+        const applicantApi = new ApplicantApi()
+        const deleteDoc = await applicantApi.documents.delete(applicant?.id, docType)
     }
 
     return (
@@ -115,7 +116,7 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                                                                     {document ? <Pen /> : t('ADD')}
                                                                 </Button>
                                                                 {document ? <a href={document?.path} download className="btn theme-primary2-btn p-0 pt-1 mr-2"><CloudArrowDown /></a> : null}
-                                                                {document ? <a onClick={(e) => deleteDocument(e)} href='#' role="button" className="btn btn-danger  p-0 pt-1 mr-2 w-100"><Trash /></a> : null}
+                                                                {document ? <a onClick={() => deleteDocument(document.type)} href='#' role="button" className="btn btn-danger  p-0 pt-1 mr-2 w-100"><Trash /></a> : null}
                                                             </div>
                                                         }
 
