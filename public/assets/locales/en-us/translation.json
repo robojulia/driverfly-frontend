@@ -1947,7 +1947,13 @@
     "EMPLOYMENT_APPLICATION": "Employment Application",
     "DRIVERS_ROAD_TEST_CERTIFICATION": "Driver’s Road Test Certification (optional)"
   },
+  "ApplicantAdditionalFilesEnum": {
+    "DAC_REPORT": "DAC Report",
+    "SKILL_PERFORMANCE_EVALUATION_CERTIFICATE": "Skill Performance Evaluation Certificate",
+    "SIGNED_HOURS_OF_SERVICE_RECORD_STATEMENT": "Signed hours of service record statement(s)"
+  },
   "NO_JOB_TIED_WITH_APPLICANT": "No jobs tied up with this applicant! Click on EDIT to add jobs. ",
-  "COMPLETED?":"Completed?",
-  "ONBOARDING_CHECKLIST":"Onboarding Checklist"
+  "COMPLETED?": "Completed?",
+  "ONBOARDING_CHECKLIST": "Onboarding Checklist",
+  "ADDITIONAL_FILES": "Additional Files"
 }

@@ -25,6 +25,7 @@ import { ApplicantStatus } from "../../../../../enums/applicants/applicant-statu
 import OverlyPopover from "../../../../../components/popover/overly-popover";
 import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
 import Background from "../../../../../components/dashboard/employee-directory/background";
+import AdditionalFiles from "../../../../../components/dashboard/employee-directory/additional-files";
 
 export default function EmployeeDirectory() {
 
@@ -60,7 +61,7 @@ export default function EmployeeDirectory() {
     const tabs = {
         BACKGROUND: <Background applicant={applicant} />,
         DQF: < DqfTab applicant={applicant} />,
-        DRIVER_ONBOARDING_CHECKLIST: < DAC applicant={applicant} />,
+        ADDITIONAL_FILES: < AdditionalFiles applicant={applicant} />,
 
         // VEHICLES: < VehicleInformationTab />  //according to wireframe this tab (vehichled are pushed to phase 3)
     };
