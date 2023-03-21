@@ -17,11 +17,12 @@ import { useState } from "react";
 import { ThreeCircles } from 'react-loader-spinner';
 import DocumentApi from "../../../../pages/api/document";
 import ViewPdf from "../../../view-details/view-pdf";
-import { ApplicantDqf } from "../../../../enums/applicants/applicant-dqf-types.enum";
+import { ApplicantAdditionalFilesDto } from "../../../../models/applicant/additional-files.dto";
+import { ApplicantAdditionalFilesEnum } from "../../../../enums/applicants/applicant-additional-files.enum";
 
-export interface DqfTabProps extends ViewApplicantDetailProps { }
+export interface AdditionalFilesProps extends ViewApplicantDetailProps { }
 
-const DqfTab = ({ applicant }: DqfTabProps) => {
+const AdditionalFiles = ({ applicant }: AdditionalFilesProps) => {
 
     const [applicantUser, setApplicantUser] = useState<ApplicantEntity>(null)
 
@@ -30,8 +31,8 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
     const applicantApi = new ApplicantApi();
 
     const form = useFormik({
-        initialValues: new ApplicantDocumentDto(),
-        validationSchema: ApplicantDocumentDto.yupSchema(),
+        initialValues: new ApplicantAdditionalFilesDto(),
+        validationSchema: ApplicantAdditionalFilesDto.yupSchema(),
         onSubmit: async ({ document }, { resetForm }) => {
             try {
                 const applicantDocumentUpload = await applicantApi.documents.create(applicantUser.id, document)
@@ -63,7 +64,7 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
             });
         }
     }
-    const handleUpdateDocument = async (type: ApplicantDqf, documentId?: number) => {
+    const handleUpdateDocument = async (type: ApplicantAdditionalFilesEnum, documentId?: number) => {
         form.setFieldValue("document", { type: type, id: documentId || null })
     }
 
@@ -96,13 +97,13 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
 
                                 <tbody>
                                     {
-                                        Object.values(ApplicantDqf).map((value: ApplicantDqf, i) => {
+                                        Object.values(ApplicantAdditionalFilesEnum).map((value: ApplicantAdditionalFilesEnum, i) => {
 
                                             const document: any = applicantUser?.documents?.find(v => (v.type === value))
                                             return (
                                                 <tr key={i}>
                                                     <td colSpan={2}>
-                                                        {t(`ApplicantDqf.${value}`)}
+                                                        {t(`ApplicantAdditionalFilesEnum.${value}`)}
                                                     </td>
                                                     <td colSpan={2}>
                                                         {document ? <ShowFormattedDate date={document.last_updated_at} /> : <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>}
@@ -168,4 +169,4 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
     );
 };
 
-export default DqfTab;
+export default AdditionalFiles;

@@ -39,6 +39,7 @@ import ApplicantSafetyBackground from "../../../../../components/applicants/appl
 import ApplicantJobsApplied from "../../../../../components/applicants/applicant-jobs-applied";
 import ApplicantConsiderFor from "../../../../../components/applicants/applicant-consider-for";
 import ViewApplicantDAC from "../../../../../components/applicants/view-applicant-dac";
+import ViewApplicantDqf from "../../../../../components/applicants/view-applicant-dqf";
 
 export default function ViewApplicant({ id }) {
 	const router = useRouter();
@@ -292,7 +293,8 @@ export default function ViewApplicant({ id }) {
 						<ApplicantWorkHistory applicant={applicant} />
 					</Col>
 					<Col>
-						< ViewApplicantDAC applicant={applicant} />
+						{/* < ViewApplicantDAC applicant={applicant} /> */}
+						<ViewApplicantDqf applicant={applicant}/>
 					</Col>
 
 				</Row>

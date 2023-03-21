@@ -1,5 +1,6 @@
 import { AxiosRequestConfig } from "axios";
 import { ApplicantDocumentType } from "../../enums/applicants/applicant-document-type.enum";
+import { ApplicantDqf } from "../../enums/applicants/applicant-dqf-types.enum";
 import { ApplicantFormStatus } from "../../enums/applicants/applicant-form-status.enum";
 import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
 import { ApplicantEmployerEntity } from "../../models/applicant";
@@ -171,7 +172,7 @@ class ApplicantApi extends BaseApi {
 		},
 		delete: async (
 			applicantId: number,
-			type: ApplicantDocumentType
+			type: ApplicantDocumentType | ApplicantDqf | string
 		): Promise<DocumentEntity> => {
 			const { data } = await this.delete(`${this.documents.baseUrl(applicantId)}/${type}`);
 
