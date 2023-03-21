@@ -463,11 +463,6 @@ function ApplicantView(props: ViewProps) {
                         hidable: false,
                     },
                     {
-                        id: "member",
-                        name: "IS_MMEMBER",
-                        selector: applicant => !!!applicant.user?.id ? t('MMEMBER') : t('NON_MMEMBER'),
-                    },
-                    {
                         id: "city",
                         name: "CITY",
                         selector: applicant => applicant.city,
@@ -488,8 +483,8 @@ function ApplicantView(props: ViewProps) {
                         selector: applicant => applicant.email,
                     },
                     {
-                        id: "type",
-                        name: "type",
+                        id: "source",
+                        name: "SOURCE",
                         selector: applicant => applicant.type ? t(`ApplicantType.${applicant.type}`) : "",
                     },
                     {
