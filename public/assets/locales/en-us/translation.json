@@ -1877,10 +1877,10 @@
   "ATS": "ATS",
   "SOURCE": "Source",
   "ApplicantType": {
-    "USER": "USER",
-    "COMPANY": "COMPANY",
+    "USER": "Driverfly User",
+    "COMPANY": "Manual Upload",
     "DHA": "Digital Hiring App",
-    "DIRECT_JOB_APPLY": "Direct Job Apply"
+    "DIRECT_JOB_APPLY": "Driverfly Job Board"
   },
   "SELECT_ONE_PLACEHOLDER": "Please Select One",
   "STATS": "Stats",
