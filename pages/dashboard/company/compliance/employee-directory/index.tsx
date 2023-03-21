@@ -31,6 +31,7 @@ import { ApplicantStatus } from "../../../../../enums/applicants/applicant-statu
 import OverlyPopover from "../../../../../components/popover/overly-popover";
 import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
 import Background from "../../../../../components/dashboard/employee-directory/background";
+import AdditionalFiles from "../../../../../components/dashboard/employee-directory/additional-files";
 import BaseCheckList from "../../../../../components/forms/base-check-list";
 import { ApplicantReasonCodeFired } from "../../../../../enums/applicants/applicant-reason-codes.enum";
 import { useFormik } from "formik";
@@ -71,9 +72,9 @@ export default function EmployeeDirectory() {
     });
 
     const tabs = {
-        BACKGROUND: <Background {...applicant} />,
-        DQF: < DqfTab {...applicant} />,
-        DRIVER_ONBOARDING_CHECKLIST: < DAC {...applicant} />,
+        BACKGROUND: <Background applicant={applicant} />,
+        DQF: < DqfTab applicant={applicant} />,
+        ADDITIONAL_FILES: < AdditionalFiles applicant={applicant} />,
 
         // VEHICLES: < VehicleInformationTab />  //according to wireframe this tab (vehichled are pushed to phase 3)
     };
