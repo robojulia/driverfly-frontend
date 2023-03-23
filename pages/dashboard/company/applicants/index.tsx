@@ -362,7 +362,7 @@ function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
             // since violation count isn't specific
             // we just want to pull the max number
             // and check against that
-            const mvr = job.mvr_requirements?.reduce((p, c) => {
+            const mvr = job?.mvr_requirements?.reduce((p, c) => {
                 if (p.max_count >= c.max_count) return p;
 
                 return c;
