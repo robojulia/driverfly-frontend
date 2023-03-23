@@ -73,8 +73,8 @@ export default function EmployeeDirectory() {
 
     const tabs = {
         BACKGROUND: <Background {...applicant} />,
-        DQF: < DqfTab applicant={applicant?.applicant} />,
-        ADDITIONAL_FILES: < AdditionalFiles applicant={applicant?.applicant} />,
+        DQF: < DqfTab {...applicant} />,
+        ADDITIONAL_FILES: < AdditionalFiles {...applicant} />,
 
         // VEHICLES: < VehicleInformationTab />  //according to wireframe this tab (vehichled are pushed to phase 3)
     };
