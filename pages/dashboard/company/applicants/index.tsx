@@ -357,7 +357,7 @@ function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
             results.meets_basic_qualifications = false;
             results.qualification_fail_reason.push("DOES_NOT_HAVE_CLEAN_MVR");
         }
-        else {
+        else if (job?.mvr_requirements?.length) {
             // complicated check around max violations
             // since violation count isn't specific
             // we just want to pull the max number
