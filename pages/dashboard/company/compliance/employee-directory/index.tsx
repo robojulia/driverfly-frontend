@@ -31,7 +31,6 @@ import { ApplicantStatus } from "../../../../../enums/applicants/applicant-statu
 import OverlyPopover from "../../../../../components/popover/overly-popover";
 import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
 import Background from "../../../../../components/dashboard/employee-directory/background";
-import AdditionalFiles from "../../../../../components/dashboard/employee-directory/additional-files";
 import BaseCheckList from "../../../../../components/forms/base-check-list";
 import { ApplicantReasonCodeFired } from "../../../../../enums/applicants/applicant-reason-codes.enum";
 import { useFormik } from "formik";
@@ -74,7 +73,7 @@ export default function EmployeeDirectory() {
     const tabs = {
         BACKGROUND: <Background {...applicant} />,
         DQF: < DqfTab {...applicant} />,
-        ADDITIONAL_FILES: < AdditionalFiles {...applicant} />,
+        DRIVER_ONBOARDING_CHECKLIST: < DAC {...applicant} />,
 
         // VEHICLES: < VehicleInformationTab />  //according to wireframe this tab (vehichled are pushed to phase 3)
     };
@@ -95,15 +94,16 @@ export default function EmployeeDirectory() {
         },
     });
 
-    const [pastEmployees, setPastEmployees] = useState<ReducedApplicantEntityType[]>([])
+    const [pastEmployees, setPastEmployees] = useState<ApplicantEntity[]>([])
     const resetPastEmployees = (): void => setPastEmployees([])
 
     const fetchPastEmployee = async () => {
         const data = await applicantApi.list({ status: ApplicantStatus.INACTIVE_FIRED });
 
-        const reducedApplicants: ReducedApplicantEntityType[] = reduceSingleEntity(data)
+        // const reducedApplicants: ReducedApplicantEntityType[] = reduceSingleEntity(data)
+        if (!data.length) alert(t('NO_PAST_EMPLOYEE_FOUND'))
 
-        setPastEmployees(reducedApplicants)
+        setPastEmployees(data)
     }
 
     return (
@@ -124,7 +124,7 @@ export default function EmployeeDirectory() {
                             <u className="ml-1">
                                 <a
                                     onClick={fetchPastEmployee}
-                                    className="here_link"
+                                    className="btn btn-primary"
                                 >{t("PAST_EMPLOYEE_LIST")}</a>
                             </u>
                         </p>
@@ -278,9 +278,9 @@ export default function EmployeeDirectory() {
                 show={Boolean(pastEmployees?.length)}
                 onCloseClick={resetPastEmployees}
                 closeText="CANCEL"
-                title="APPLICANTS"
+                title="PAST_EMPLOYEE"
             >
-                <ViewDataTable<ReducedApplicantEntityType>
+                <ViewDataTable<ApplicantEntity>
                     customStyles={{
                         headRow: {
                             style: {
@@ -293,22 +293,22 @@ export default function EmployeeDirectory() {
                         {
                             id: "id",
                             name: "ID",
-                            selector: aJob => aJob?.applicant?.id,
+                            selector: applicant => applicant?.id,
                             hidable: false
                         },
                         {
                             name: "first_name",
-                            selector: aJob => aJob?.applicant?.first_name,
+                            selector: applicant => applicant?.first_name,
                             hidable: false
                         },
                         {
                             name: "last_name",
-                            selector: aJob => aJob?.applicant?.last_name,
+                            selector: applicant => applicant?.last_name,
                             hidable: false
                         },
                         {
                             name: "email",
-                            selector: aJob => aJob?.applicant?.email,
+                            selector: applicant => applicant?.email,
                             hidable: false
                         },
                     ]}
