@@ -1235,6 +1235,7 @@
   "EDIT_USER": "Edit User",
   "MANAGERS": "Managers",
   "MANAGER": "Manager",
+  "NO_MANAGER_ASSIGNED": "No Manager Assigned",
   "CREATE_MAMNAGER": "Create Manager",
   "EDIT_MANAGER": "Edit Manager",
   "MINIMUM_CDL_CLASS": "Minimum CDL Class",
