@@ -192,11 +192,12 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
 
                 </Col>
             </Row>
+
             <ViewModal
                 show={Boolean(documentHistory?.length)}
                 onCloseClick={resetDocumentHistory}
                 closeText="CANCEL"
-                title="PAST_EMPLOYEE"
+                title="DOCUMENT_HISTORY"
             >
                 <ViewDataTable<DocumentHistoryEntity>
                     customStyles={{
