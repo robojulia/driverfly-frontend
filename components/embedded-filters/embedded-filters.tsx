@@ -23,7 +23,7 @@ import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
 import { JobGeography } from "../../enums/jobs/job-geography.enum";
 
 export type EmbeddedFiltersProps = {
-    filterType: EmbeddedFilterTypes;
+    filterType?: EmbeddedFilterTypes;
 };
 export default function EmbeddedFilters({ filterType }: EmbeddedFiltersProps) {
     const { t } = useTranslation();

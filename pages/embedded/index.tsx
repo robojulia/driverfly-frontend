@@ -24,8 +24,12 @@ import { JobTeamDriver } from '../../enums/jobs/job-team-driver.enum'
 import { JobEquipmentType } from '../../enums/jobs/job-equipment-type.enum'
 import EmploymentType from '../../components/filters/employment-type'
 
+export type EmbeddedCdlFiltersProps = {
+    filterType?: EmbeddedFilterTypes;
+    companyId?: number;
+};
 
-export default function Embedded({ filterType }) {
+export default function Embedded({ filterType, companyId }: EmbeddedCdlFiltersProps) {
 
     const router = useRouter()
     const jobApi = new JobApi()
@@ -78,8 +82,8 @@ export default function Embedded({ filterType }) {
         areas_covered: JobGeography.OTR,
     })
 
-    const [filters, setFilters] = useState<SearchJobsDto>(filtersForQuery(filterType))
-    const resetFilters = (): void => setFilters(filtersInitialsValues)
+    const [filters, setFilters] = useState<SearchJobsDto>({ ...filtersForQuery(filterType), companyId })
+    const resetFilters = (): void => setFilters({ ...filtersForQuery(filterType), companyId, page: 1 })
 
     const [location, setLocation] = useState<JobSearchLocation>(null)
     const resetLocation = (): void => setLocation(null)
@@ -162,7 +166,7 @@ export default function Embedded({ filterType }) {
                     <div className="container">
                         <div className="row">
                             <div className="col-12 col-lg-3 lg-mt-0 mt-5">
-                                <EmbeddedFilters filterType={filterType} />
+                                <EmbeddedFilters filterType={filterType ?? null} />
                             </div>
                             <div className="col-md-9 outer pl-4 ">
                                 <ResultCount />
@@ -177,11 +181,11 @@ export default function Embedded({ filterType }) {
 }
 export async function getServerSideProps({ query }: GetServerSidePropsContext) {
 
-    const { filterType } = query || {};
+    const { filterType, companyId } = query || {};
 
-    if (!!!filterType) return { notFound: true }
+    // if (!!!filterType) return { notFound: true }
 
-    return { props: { filterType } }
+    return { props: { filterType: filterType ?? null, companyId: Boolean(companyId) ? parseInt(companyId as string) : null } }
 }
 Embedded.getLayout = function getLayout(page) {
     return (

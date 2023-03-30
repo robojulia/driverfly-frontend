@@ -1,4 +1,6 @@
 import { AxiosRequestConfig } from "axios";
+import { ApplicantDocumentType } from "../../enums/applicants/applicant-document-type.enum";
+import { ApplicantDqf } from "../../enums/applicants/applicant-dqf-types.enum";
 import { ApplicantFormStatus } from "../../enums/applicants/applicant-form-status.enum";
 import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
 import { ApplicantEmployerEntity } from "../../models/applicant";
@@ -92,6 +94,7 @@ class ApplicantApi extends BaseApi {
 	async list(params?: {
 		jobId?: number;
 		email?: string;
+		status?: ApplicantStatus;
 	}): Promise<ApplicantEntity[]> {
 		const { data } = await this.get(
 			this.buildUrl(this.baseUrl + "/list", params)
@@ -164,6 +167,14 @@ class ApplicantApi extends BaseApi {
 				this.documents.baseUrl(applicantId),
 				dto
 			);
+
+			return data;
+		},
+		delete: async (
+			applicantId: number,
+			type: ApplicantDocumentType | ApplicantDqf | string
+		): Promise<DocumentEntity> => {
+			const { data } = await this.delete(`${this.documents.baseUrl(applicantId)}/${type}`);
 
 			return data;
 		},

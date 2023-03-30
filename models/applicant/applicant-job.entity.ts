@@ -6,6 +6,7 @@ import { ApplicantEntity } from './applicant.entity';
 import * as yup from "yup";
 import "../../utils/yup";
 import { ApplicantReasonCodeFired, ApplicantReasonCodeNotInterested, ApplicantReasonCodeNotQualified, ApplicantReasonCodeQuit } from '../../enums/applicants/applicant-reason-codes.enum';
+import { CompanyManagerEntity } from '../company/company-manager.entity';
 
 export class ApplicantJobEntity {
   id?: number;
@@ -13,6 +14,7 @@ export class ApplicantJobEntity {
   applicant?: ApplicantEntity;
   user?: UserEntity;
   company?: CompanyEntity;
+  manager?: CompanyManagerEntity;
   job?: JobEntity;
   status?: ApplicantStatus;
   status_other?: string;
@@ -20,6 +22,7 @@ export class ApplicantJobEntity {
   reason_codes_other?: string;
   created_at?: string;
   last_updated_at?: string;
+  hired_at?: string;
 
   static yupSchema() {
     return yup.object({
