@@ -1,5 +1,5 @@
 import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import { Eye, Plus, Send } from 'react-bootstrap-icons';
 import PageLayout from "../../../../../components/layouts/page/page-layout";
@@ -57,6 +57,18 @@ export default function StoredFiles() {
     }, [user], () => {
         console.log("unloading page...")
     });
+
+
+    //for multiple file selection
+
+    const [selectedRows, setSelectedRows] = useState([]);
+
+    const handleSelectedRowsChange = ({ selectedRows }) => {
+        setSelectedRows(selectedRows);
+    };
+    useEffect(() => {
+        console.log("selected rows", selectedRows)
+    }, [selectedRows])
 
 
     const form = useFormik({
@@ -164,6 +176,7 @@ export default function StoredFiles() {
                                 <button type="button" className="theme-primary-btn mr-2 px-4 py-2" onClick={() => setDocumentId(file.id)}><Send /></button>
                                 <a onClick={() => viewDocumentClick(file.id, file.name)} href="#" role="button" className="theme-secondary-btn mr-2 px-4 py-2"><Eye /></a>
                             </>
+
                         ),
                     },
 
@@ -216,8 +229,12 @@ export default function StoredFiles() {
                 onCloseClick={resetDocumentId}
                 closeText="CANCEL"
                 title="APPLICANTS"
+            
             >
+             {/* {    Boolean(!!!selectedRows.length) && <Button>sds</Button>} */}
                 <ViewDataTable<ApplicantEntity>
+                    enableSelectableRows={true}
+                    selectableRowChangeHandler={handleSelectedRowsChange}
                     columnSettingKey={columnSettingKey}
                     customStyles={{
                         headRow: {
@@ -252,7 +269,7 @@ export default function StoredFiles() {
 
                         {
                             cell: (applicant) => (
-                                <>
+                                Boolean(!!!selectedRows.length) && <>
                                     <Button type="button" disabled={form.isSubmitting || !form.isValid || form.isValidating} onClick={() => sendEmail(applicant)} className="theme-secondary-btn mr-2 px-4 py-1"><Send /></Button>
                                 </>
                             ),
