@@ -225,6 +225,17 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                             cell: doc => <ShowFormattedDate date={doc.created_at} />,
                             hidable: false
                         },
+                        {
+                            cell: doc => <Button
+                                onClick={() => {
+                                    setPdf({
+                                        name: `(${doc.name})`,
+                                        url: doc.path
+                                    })
+                                }}
+                                className="btn theme-primary2-btn p-0 pt-1 mr-2"><Eye /></Button>,
+                            hidable: false
+                        },
                     ]}
                     items={documentHistory}
                 />
