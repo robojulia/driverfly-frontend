@@ -1554,6 +1554,7 @@
   "SHOW_VERIFICATION_OF_EMPLOYMENT": "SHOW VERIFICATION OF EMPLOYMENT",
   "HIDE_VERIFICATION_OF_EMPLOYMENT": "HIDE VERIFICATION OF EMPLOYMENT",
   "SAFETY_PERFORMANCE_HISTORY_RECORDS_REQUEST": "SAFETY PERFORMANCE HISTORY RECORDS REQUEST",
+  "HISTORY": "History",
   "SECTION_I": "Section I.",
   "TO_BE_COMPLETED_BY_THE_NEW_EMPLOYER": "To be completed by the new employer, signed by the employee, and transmitted to the previous employer:",
   "EMPLOYEE_NAME_NAUTILUS_{employee_name}": "Employee Name: {{employee_name}}",

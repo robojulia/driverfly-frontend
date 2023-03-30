@@ -11,13 +11,17 @@ import { toast } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import ShowFormattedDate from "../../../jobs/show-formatted-date";
 import { ApplicantDocumentDto } from "../../../../models/applicant/applicant-document-dto";
-import { CloudArrowDown, Pen, Eye, Trash } from "react-bootstrap-icons";
+import { CloudArrowDown, Pen, Eye, Trash, ClockHistory } from "react-bootstrap-icons";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import { useState } from "react";
 import { ThreeCircles } from 'react-loader-spinner';
 import DocumentApi from "../../../../pages/api/document";
 import ViewPdf from "../../../view-details/view-pdf";
 import { ApplicantDqf } from "../../../../enums/applicants/applicant-dqf-types.enum";
+import { DocumentableType } from "../../../../enums/documents/documentable-type.enum";
+import ViewModal from "../../../view-details/view-modal";
+import { DocumentHistoryEntity } from "../../../../models/documents/document-history.entity";
+import ViewDataTable from "../../../view-details/view-data-table";
 
 export interface DqfTabProps extends ViewApplicantDetailProps { }
 
@@ -78,13 +82,26 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
         const deleteDoc = await applicantApi.documents.delete(applicant?.id, docType)
     }
 
+    const [documentHistory, setDocumentHistory] = useState<DocumentHistoryEntity[]>([])
+    const resetDocumentHistory = () => setDocumentHistory([])
+
+    const viewHistory = async (type: string) => {
+        const documentApi = new DocumentApi()
+        const data = await documentApi.getDocumentHistory({
+            type,
+            documentable_type: DocumentableType.APPLICANTS as string,
+            documentable_id: applicant.id
+        })
+        if (!data?.length) alert(t('NO_RECORDS_FOUND'))
+        setDocumentHistory(data)
+    }
+
     return (
         <div className="employee_directory_tabs">
             <Row>
                 <Col>
                     {!!applicantUser ? (
                         <ViewCard title="DOCUMENTS">
-
                             <Table striped>
                                 <thead>
                                     <tr>
@@ -117,6 +134,10 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                                                                 </Button>
                                                                 {document ? <a href={document?.path} download className="btn theme-primary2-btn p-0 pt-1 mr-2"><CloudArrowDown /></a> : null}
                                                                 {document ? <a onClick={() => deleteDocument(document.type)} href='#' role="button" className="btn btn-danger  p-0 pt-1 mr-2 w-100"><Trash /></a> : null}
+                                                                <Button
+                                                                    title={t("HISTORY")}
+                                                                    onClick={() => { viewHistory(value) }}
+                                                                ><ClockHistory /></Button>
                                                             </div>
                                                         }
 
@@ -138,7 +159,6 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                                                                 </div>
                                                             </Form>
                                                         }
-
                                                     </td>
                                                 </tr>
                                             )
@@ -164,6 +184,43 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
 
                 </Col>
             </Row>
+            <ViewModal
+                show={Boolean(documentHistory?.length)}
+                onCloseClick={resetDocumentHistory}
+                closeText="CANCEL"
+                title="PAST_EMPLOYEE"
+            >
+                <ViewDataTable<DocumentHistoryEntity>
+                    customStyles={{
+                        headRow: {
+                            style: {
+                                background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+                                color: "white"
+                            },
+                        },
+                    }}
+                    columns={[
+                        {
+                            name: "TYPE",
+                            selector: doc => t(`ApplicantDqf.${doc.type}`),
+                            hidable: false
+                        },
+                        {
+                            name: "NAME",
+                            selector: doc => doc.name,
+                            hidable: false
+                        },
+                        {
+                            name: "upload_date",
+                            selector: doc => doc.created_at,
+                            cell: doc => <ShowFormattedDate date={doc.created_at} />,
+                            hidable: false
+                        },
+                    ]}
+                    items={documentHistory}
+                />
+            </ViewModal>
+
         </div>
     );
 };
