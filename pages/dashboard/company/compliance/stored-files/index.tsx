@@ -25,6 +25,7 @@ import ApplicantApi from "../../../../api/applicant";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import ViewPdf from "../../../../../components/view-details/view-pdf";
 import DocumentApi from "../../../../api/document";
+import { SendFileDto } from "../../../../../models/compiance/send-file.dto";
 
 export default function StoredFiles() {
 
@@ -61,15 +62,12 @@ export default function StoredFiles() {
 
     //for multiple file selection
 
-    const [selectedRows, setSelectedRows] = useState([]);
+    const [selectedRowsIds, setSelectedRowsIds] = useState<number[]>();
 
-    const handleSelectedRowsChange = ({ selectedRows }) => {
-        setSelectedRows(selectedRows);
+    const handleSelectedRowsChange = ({ selectedRows }: any) => {
+
+        setSelectedRowsIds(selectedRows?.map(selectedRow => selectedRow?.id));
     };
-    useEffect(() => {
-        console.log("selected rows", selectedRows)
-    }, [selectedRows])
-
 
     const form = useFormik({
         initialValues: new StoredFileDto(),
@@ -92,20 +90,23 @@ export default function StoredFiles() {
         }
     });
 
-    const sendEmail = async (applicant: ApplicantEntity): Promise<void> => {
+    const sendEmail = async (applicantIds: number[]): Promise<void> => {
+
         try {
             if (documentId)
-                await complianceApi.sendComplianceFile(applicant.id, documentId)
+                await complianceApi.sendComplianceFile({ applicantIds, documentId })
                     .then(res => {
                         toast.success(t('DOCUMENT_SENT_SUCCESS_MESSAGE'))
                         setTimeout(() => {
                             resetDocumentId()
+                            setSelectedRowsIds(null)
                         }, 1000)
                     })
         } catch (error) {
             toast.error(t('DOCUMENT_SENT_FAILED_MESSAGE'))
         }
     }
+
     const [pdf, setPdf] = useState({});
 
     const viewDocumentClick = async (id, name) => {
@@ -233,9 +234,12 @@ export default function StoredFiles() {
             >
                 <>
                     <div className="float-right pr-2">
-                        {Boolean(!!selectedRows.length) && <Button className=" w-100">
-                            Send to all
-                        </Button>}
+                        {
+                            Boolean(selectedRowsIds?.length) &&
+                            <Button className=" w-100" onClick={() => sendEmail(selectedRowsIds)}>
+                                {t("selected_row_{count}", { count: selectedRowsIds?.length }, { translateProps: true })}
+                            </Button>
+                        }
                     </div>
                     <ViewDataTable<ApplicantEntity>
                         enableSelectableRows={true}
@@ -273,8 +277,8 @@ export default function StoredFiles() {
                             },
                             {
                                 cell: (applicant) => (
-                                    Boolean(!!!selectedRows.length) && <>
-                                        <Button type="button" disabled={form.isSubmitting || !form.isValid || form.isValidating} onClick={() => sendEmail(applicant)} className="theme-secondary-btn mr-2 px-4 py-1"><Send /></Button>
+                                    Boolean(!!!selectedRowsIds) && <>
+                                        <Button type="button" disabled={form.isSubmitting || !form.isValid || form.isValidating} onClick={() => sendEmail([applicant?.id])} className="theme-secondary-btn mr-2 px-4 py-1"><Send /></Button>
                                     </>
                                 ),
                             },

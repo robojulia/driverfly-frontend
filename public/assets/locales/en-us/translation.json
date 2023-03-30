@@ -1962,5 +1962,8 @@
   "NO_JOB_TIED_WITH_APPLICANT": "No jobs tied up with this applicant! Click on EDIT to add jobs. ",
   "COMPLETED?": "Completed?",
   "ONBOARDING_CHECKLIST": "Onboarding Checklist",
-  "ADDITIONAL_FILES": "Additional Files"
+  "ADDITIONAL_FILES": "Additional Files",
+  "selected_row_{count}": "Send to  {{count}} ",
+  "DOCUMENT_NOT_FOUND": "Document Not Found",
+  "COMPANY_NOT_FOUND": "Company Not found"
 }
