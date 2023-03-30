@@ -229,56 +229,63 @@ export default function StoredFiles() {
                 onCloseClick={resetDocumentId}
                 closeText="CANCEL"
                 title="APPLICANTS"
-            
+
             >
-             {/* {    Boolean(!!!selectedRows.length) && <Button>sds</Button>} */}
-                <ViewDataTable<ApplicantEntity>
-                    enableSelectableRows={true}
-                    selectableRowChangeHandler={handleSelectedRowsChange}
-                    columnSettingKey={columnSettingKey}
-                    customStyles={{
-                        headRow: {
-                            style: {
-                                background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
-                                color: "white"
+                <>
+                    <div className="float-right pr-2">
+                        {Boolean(!!selectedRows.length) && <Button className=" w-100">
+                            Send to all
+                        </Button>}
+                    </div>
+                    <ViewDataTable<ApplicantEntity>
+                        enableSelectableRows={true}
+                        selectableRowChangeHandler={handleSelectedRowsChange}
+                        columnSettingKey={columnSettingKey}
+                        customStyles={{
+                            headRow: {
+                                style: {
+                                    background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+                                    color: "white"
+                                },
                             },
-                        },
-                    }}
-                    columns={[
-                        {
-                            id: "id",
-                            name: "ID",
-                            selector: applicant => applicant.id,
-                            hidable: false
-                        },
-                        {
-                            name: "first_name",
-                            selector: applicant => applicant.first_name,
-                            hidable: false
-                        },
-                        {
-                            name: "last_name",
-                            selector: applicant => applicant.last_name,
-                            hidable: false
-                        },
-                        {
-                            name: "email",
-                            selector: applicant => applicant.email,
-                            hidable: false
-                        },
-                        {
-                            cell: (applicant) => (
-                                Boolean(!!!selectedRows.length) && <>
-                                    <Button type="button" disabled={form.isSubmitting || !form.isValid || form.isValidating} onClick={() => sendEmail(applicant)} className="theme-secondary-btn mr-2 px-4 py-1"><Send /></Button>
-                                </>
-                            ),
-                        },
+                        }}
+                        columns={[
+                            {
+                                id: "id",
+                                name: "ID",
+                                selector: applicant => applicant.id,
+                                hidable: false
+                            },
+                            {
+                                name: "first_name",
+                                selector: applicant => applicant.first_name,
+                                hidable: false
+                            },
+                            {
+                                name: "last_name",
+                                selector: applicant => applicant.last_name,
+                                hidable: false
+                            },
+                            {
+                                name: "email",
+                                selector: applicant => applicant.email,
+                                hidable: false
+                            },
+                            {
+                                cell: (applicant) => (
+                                    Boolean(!!!selectedRows.length) && <>
+                                        <Button type="button" disabled={form.isSubmitting || !form.isValid || form.isValidating} onClick={() => sendEmail(applicant)} className="theme-secondary-btn mr-2 px-4 py-1"><Send /></Button>
+                                    </>
+                                ),
+                            },
 
 
-                    ]}
-                    items={applicants}
-                />
+                        ]}
+                        items={applicants}
+                    />
+                </>
             </ViewModal>
+
         </PageLayout>
     )
 
