@@ -85,6 +85,10 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
     const [documentHistory, setDocumentHistory] = useState<DocumentHistoryEntity[]>([])
     const resetDocumentHistory = () => setDocumentHistory([])
 
+    /**
+     * It fetches the document history of an applicant and sets the state of the document history
+     * @param {string} type - The type of document you want to view the history of.
+     */
     const viewHistory = async (type: string) => {
         const documentApi = new DocumentApi()
         const data = await documentApi.getDocumentHistory({
@@ -134,6 +138,10 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                                                                 </Button>
                                                                 {document ? <a href={document?.path} download className="btn theme-primary2-btn p-0 pt-1 mr-2"><CloudArrowDown /></a> : null}
                                                                 {document ? <a onClick={() => deleteDocument(document.type)} href='#' role="button" className="btn btn-danger  p-0 pt-1 mr-2 w-100"><Trash /></a> : null}
+
+                                                                {/* A button that when clicked will call
+                                                                the viewHistory function and pass in
+                                                                the value. */}
                                                                 <Button
                                                                     title={t("HISTORY")}
                                                                     onClick={() => { viewHistory(value) }}
