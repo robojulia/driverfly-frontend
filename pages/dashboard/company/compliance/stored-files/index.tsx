@@ -1,5 +1,5 @@
 import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import { Eye, Plus, Send } from 'react-bootstrap-icons';
 import PageLayout from "../../../../../components/layouts/page/page-layout";
@@ -25,6 +25,7 @@ import ApplicantApi from "../../../../api/applicant";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import ViewPdf from "../../../../../components/view-details/view-pdf";
 import DocumentApi from "../../../../api/document";
+import { SendFileDto } from "../../../../../models/compiance/send-file.dto";
 
 export default function StoredFiles() {
 
@@ -59,6 +60,15 @@ export default function StoredFiles() {
     });
 
 
+    //for multiple file selection
+
+    const [selectedRowsIds, setSelectedRowsIds] = useState<number[]>();
+
+    const handleSelectedRowsChange = ({ selectedRows }: any) => {
+
+        setSelectedRowsIds(selectedRows?.map(selectedRow => selectedRow?.id));
+    };
+
     const form = useFormik({
         initialValues: new StoredFileDto(),
         validationSchema: StoredFileDto.yupSchema(),
@@ -80,20 +90,23 @@ export default function StoredFiles() {
         }
     });
 
-    const sendEmail = async (applicant: ApplicantEntity): Promise<void> => {
+    const sendEmail = async (applicantIds: number[]): Promise<void> => {
+
         try {
             if (documentId)
-                await complianceApi.sendComplianceFile(applicant.id, documentId)
+                await complianceApi.sendComplianceFile({ applicantIds, documentId })
                     .then(res => {
                         toast.success(t('DOCUMENT_SENT_SUCCESS_MESSAGE'))
                         setTimeout(() => {
                             resetDocumentId()
+                            setSelectedRowsIds(null)
                         }, 1000)
                     })
         } catch (error) {
             toast.error(t('DOCUMENT_SENT_FAILED_MESSAGE'))
         }
     }
+
     const [pdf, setPdf] = useState({});
 
     const viewDocumentClick = async (id, name) => {
@@ -164,6 +177,7 @@ export default function StoredFiles() {
                                 <button type="button" className="theme-primary-btn mr-2 px-4 py-2" onClick={() => setDocumentId(file.id)}><Send /></button>
                                 <a onClick={() => viewDocumentClick(file.id, file.name)} href="#" role="button" className="theme-secondary-btn mr-2 px-4 py-2"><Eye /></a>
                             </>
+
                         ),
                     },
 
@@ -216,52 +230,66 @@ export default function StoredFiles() {
                 onCloseClick={resetDocumentId}
                 closeText="CANCEL"
                 title="APPLICANTS"
+
             >
-                <ViewDataTable<ApplicantEntity>
-                    columnSettingKey={columnSettingKey}
-                    customStyles={{
-                        headRow: {
-                            style: {
-                                background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
-                                color: "white"
+                <>
+                    <div className="float-right pr-2">
+                        {
+                            Boolean(selectedRowsIds?.length) &&
+                            <Button className=" w-100" onClick={() => sendEmail(selectedRowsIds)}>
+                                {t("selected_row_{count}", { count: selectedRowsIds?.length }, { translateProps: true })}
+                            </Button>
+                        }
+                    </div>
+                    <ViewDataTable<ApplicantEntity>
+                        enableSelectableRows={true}
+                        selectableRowChangeHandler={handleSelectedRowsChange}
+                        columnSettingKey={columnSettingKey}
+                        customStyles={{
+                            headRow: {
+                                style: {
+                                    background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+                                    color: "white"
+                                },
                             },
-                        },
-                    }}
-                    columns={[
-                        {
-                            id: "id",
-                            name: "ID",
-                            selector: applicant => applicant.id,
-                            hidable: false
-                        },
-                        {
-                            name: "first_name",
-                            selector: applicant => applicant.first_name,
-                            hidable: false
-                        },
-                        {
-                            name: "last_name",
-                            selector: applicant => applicant.last_name,
-                            hidable: false
-                        },
-                        {
-                            name: "email",
-                            selector: applicant => applicant.email,
-                            hidable: false
-                        },
-                        {
-                            cell: (applicant) => (
-                                <>
-                                    <Button type="button" disabled={form.isSubmitting || !form.isValid || form.isValidating} onClick={() => sendEmail(applicant)} className="theme-secondary-btn mr-2 px-4 py-1"><Send /></Button>
-                                </>
-                            ),
-                        },
+                        }}
+                        columns={[
+                            {
+                                id: "id",
+                                name: "ID",
+                                selector: applicant => applicant.id,
+                                hidable: false
+                            },
+                            {
+                                name: "first_name",
+                                selector: applicant => applicant.first_name,
+                                hidable: false
+                            },
+                            {
+                                name: "last_name",
+                                selector: applicant => applicant.last_name,
+                                hidable: false
+                            },
+                            {
+                                name: "email",
+                                selector: applicant => applicant.email,
+                                hidable: false
+                            },
+                            {
+                                cell: (applicant) => (
+                                    Boolean(!!!selectedRowsIds) && <>
+                                        <Button type="button" disabled={form.isSubmitting || !form.isValid || form.isValidating} onClick={() => sendEmail([applicant?.id])} className="theme-secondary-btn mr-2 px-4 py-1"><Send /></Button>
+                                    </>
+                                ),
+                            },
 
 
-                    ]}
-                    items={applicants}
-                />
+                        ]}
+                        items={applicants}
+                    />
+                </>
             </ViewModal>
+
         </PageLayout>
     )
 

@@ -41,15 +41,15 @@ export default function Signup() {
     validationSchema: SignUpDto.yupSchema(),
     onSubmit: async (dto) => {
       const api = new AuthApi();
-
-      try {
-        await api.signUp(dto);
-        toast.success(t("SUCCESSFULLY_REGISTERED"));
-        setTimeout(() => router.push('/login'), 3000);
-      }
-      catch (e) {
-        globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SIGNUP" });
-      }
+console.log("dfds",dto)
+    //   try {
+    //     await api.signUp(dto);
+    //     toast.success(t("SUCCESSFULLY_REGISTERED"));
+    //     setTimeout(() => router.push('/login'), 3000);
+    //   }
+    //   catch (e) {
+    //     globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SIGNUP" });
+    //   }
     }
   });
 
