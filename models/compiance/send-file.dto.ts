@@ -6,7 +6,7 @@ export class SendFileDto {
     static yupSchema() {
         return yup.object({
             documentId: yup.number().required().nullable(),
-            applicantIds: yup.array(yup.number()).nullable(),
+            applicantIds: yup.array(yup.number()).min(1).nullable(),
         });
     }
 }
