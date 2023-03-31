@@ -33,7 +33,7 @@ export default function Background({ applicant, applicantJob }: ViewApplicantBac
 							<ViewDetails
 								default={t("NOT_ANSWERED")}
 								obj={{
-									POSITION: t(`ApplicantStatus.${applicantJob?.status}`),
+									POSITION: applicantJob?.job?.title,
 									TERMINAL: applicantJob?.job?.location?.city,
 									MANAGER: applicantJob?.manager?.name ? applicantJob?.manager?.name : t('NO_MANAGER_ASSIGNED'),
 								}}
