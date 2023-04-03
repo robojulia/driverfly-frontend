@@ -8,7 +8,7 @@ export enum DocumentType {
     DRIVER_LICENSE = 'DRIVER_LICENSE',
     MEDICAL_CARD = 'MEDICAL_CARD',
 }
-  
+
 export class DocumentEntity {
     id: number;
     name: string;
@@ -22,6 +22,7 @@ export class DocumentEntity {
     documentable_id: number;
     documentable_type: string;
     created_at: string;
+    last_updated_at: string;
     // user: UserEntity;
 
     static yupSchema(enumType?: object) {
@@ -42,4 +43,3 @@ export class DocumentEntity {
         return entity.type;
     }
 }
-  

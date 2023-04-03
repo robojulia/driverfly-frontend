@@ -1,20 +1,20 @@
+import { useState } from "react";
+import { useFormik } from "formik";
+import { toast } from "react-toastify";
+import { CloudArrowDown, Pen, Eye, Trash, ClockHistory } from "react-bootstrap-icons";
+import { ThreeCircles } from 'react-loader-spinner';
 import { Button, Col, Form, Row, Table } from "react-bootstrap";
 import { useAuth } from "../../../../hooks/use-auth";
 import { useEffectAsync } from "../../../../utils/react";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { ViewApplicantDetailProps } from "../../../../types/applicant/view-application-detail-props.type";
-import { useFormik } from "formik";
 import ApplicantApi from "../../../../pages/api/applicant";
 import ViewCard from "../../../view-details/view-card";
 import FileInput from '../../../forms/file-input';
-import { toast } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import ShowFormattedDate from "../../../jobs/show-formatted-date";
 import { ApplicantDocumentDto } from "../../../../models/applicant/applicant-document-dto";
-import { CloudArrowDown, Pen, Eye, Trash, ClockHistory } from "react-bootstrap-icons";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
-import { useState } from "react";
-import { ThreeCircles } from 'react-loader-spinner';
 import DocumentApi from "../../../../pages/api/document";
 import ViewPdf from "../../../view-details/view-pdf";
 import { ApplicantDqf } from "../../../../enums/applicants/applicant-dqf-types.enum";
@@ -22,10 +22,10 @@ import { DocumentableType } from "../../../../enums/documents/documentable-type.
 import ViewModal from "../../../view-details/view-modal";
 import { DocumentHistoryEntity } from "../../../../models/documents/document-history.entity";
 import ViewDataTable from "../../../view-details/view-data-table";
+import { DocumentEntity } from "../../../../models/documents/document.entity";
+import { ViewApplicantDqfProps } from "../../../../types/applicant/view-application-dqf-props.type";
 
-export interface DqfTabProps extends ViewApplicantDetailProps { }
-
-const DqfTab = ({ applicant }: DqfTabProps) => {
+const DqfTab = ({ applicant }: ViewApplicantDqfProps) => {
 
     const [applicantUser, setApplicantUser] = useState<ApplicantEntity>(null)
 
@@ -55,20 +55,31 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
 
     const [pdf, setPdf] = useState({});
 
-    const viewDocumentClick = async (id, name) => {
+    /**
+     * It gets the signed URL for a document and sets the state of the PDF viewer
+     * @param {number} id - The id of the document you want to view
+     */
+    const viewDocumentClick = async (id: number): Promise<void> => {
         const api = new DocumentApi();
 
-        const document = await api.getSignedUrl(id);
+        const document: DocumentEntity = await api.getSignedUrl(id);
 
         if (document) {
             setPdf({
-                name: `${t(name)} (${document.name})`,
+                name: document.name,
                 url: document.path
             });
         }
     }
-    const handleUpdateDocument = async (type: ApplicantDqf, documentId?: number) => {
-        form.setFieldValue("document", { type: type, id: documentId || null })
+
+    /**
+     * It takes a type and an optional documentId, and sets the form's document field to an object with the
+     * type and id
+     * @param {ApplicantDqf} type - ApplicantDqf - this is the type of document that is being uploaded.
+     * @param {number} [documentId] - The id of the document to be updated.
+     */
+    const handleUpdateDocument = async (type: ApplicantDqf, documentId?: number): Promise<void> => {
+        form.setFieldValue("document", { type, id: documentId ?? null })
     }
 
     useEffectAsync(async () => {
@@ -77,12 +88,25 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
     }, [user], () => {
         form.resetForm()
     });
-    const deleteDocument = async (docType) => {
+
+    /**
+     * It deletes a document from the applicant's profile.
+     * @param {ApplicantDqf | string} docType - The type of document you want to
+     * delete.
+     */
+    const deleteDocument = async (docType: ApplicantDqf | string): Promise<void> => {
         const applicantApi = new ApplicantApi()
-        const deleteDoc = await applicantApi.documents.delete(applicant?.id, docType)
+        await applicantApi.documents.delete(applicant?.id, docType)
+        setApplicantUser({
+            ...applicantUser,
+            documents: applicantUser?.documents?.filter(v => (v.type != docType))
+        })
     }
 
     const [documentHistory, setDocumentHistory] = useState<DocumentHistoryEntity[]>([])
+    /**
+     * It sets the document history to an empty array.
+     */
     const resetDocumentHistory = () => setDocumentHistory([])
 
     /**
@@ -119,39 +143,80 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                                     {
                                         Object.values(ApplicantDqf).map((value: ApplicantDqf, i) => {
 
-                                            const document: any = applicantUser?.documents?.find(v => (v.type === value))
+                                            /* Finding the document in the applicantUser.documents array that has the same type as the value. */
+                                            const document: DocumentEntity = applicantUser?.documents?.find(v => (v.type === value))
                                             return (
                                                 <tr key={i}>
                                                     <td colSpan={2}>
                                                         {t(`ApplicantDqf.${value}`)}
                                                     </td>
                                                     <td colSpan={2}>
-                                                        {document ? <ShowFormattedDate date={document.last_updated_at} /> : <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>}
+                                                        {/* Checking if the document is available, if it
+                                                        is, it will display the date, if not, it
+                                                        will display the text "NOT_AVAILABLE"
+                                                        */ }
+                                                        {document
+                                                            ? <ShowFormattedDate date={document.last_updated_at} />
+                                                            : <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>}
                                                     </td>
                                                     <td colSpan={1} className="border border-2 w-50">
                                                         {
-                                                            (!form.values.document?.type || form.values.document?.type !== value) &&
-                                                            <div className="d-flex">
-                                                                {document ? <a onClick={() => viewDocumentClick(document.id, document.name)} href='#' role="button" className="btn btn-success p-0 pt-1 mr-2 w-100"><Eye /></a> : null}
-                                                                <Button className="mr-2 w-100" onClick={() => { handleUpdateDocument(value, document?.id) }}>
-                                                                    {document ? <Pen /> : t('ADD')}
-                                                                </Button>
-                                                                {document ? <a href={document?.path} download className="btn theme-primary2-btn p-0 pt-1 mr-2"><CloudArrowDown /></a> : null}
-                                                                {document ? <a onClick={() => deleteDocument(document.type)} href='#' role="button" className="btn btn-danger  p-0 pt-1 mr-2 w-100"><Trash /></a> : null}
+                                                            (!form.values.document?.type || form.values.document?.type !== value)
+                                                            && (<div className="d-flex">
+
+                                                                {/* It is checking
+                                                                if the document exists. If it does,
+                                                                it will display view the button. If it
+                                                                doesn't, it will display nothing. */}
+                                                                {document
+                                                                    ? <a
+                                                                        onClick={() => viewDocumentClick(document.id)}
+                                                                        href='#'
+                                                                        role="button"
+                                                                        className="btn btn-success p-0 pt-1 mr-2 w-100"
+                                                                    ><Eye /></a>
+                                                                    : null}
+
+                                                                {/* A button that will either update or
+                                                                add a document. */}
+                                                                <Button
+                                                                    className="mr-2 w-100"
+                                                                    onClick={() => { handleUpdateDocument(value, document?.id) }}
+                                                                >{document ? <Pen /> : t('ADD')}</Button>
+
+                                                                {document
+                                                                    ? <a
+                                                                        href={document?.path}
+                                                                        download
+                                                                        className="btn theme-primary2-btn p-0 pt-1 mr-2"
+                                                                    ><CloudArrowDown /></a>
+                                                                    : null}
+
+                                                                {/* A ternary operator. It is checking
+                                                                if the document exists. If it does,
+                                                                it will render the delete button. If
+                                                                it doesn't, it will render nothing. */}
+                                                                {document
+                                                                    ? <a
+                                                                        onClick={() => deleteDocument(document.type)}
+                                                                        href='#'
+                                                                        role="button"
+                                                                        className="btn btn-danger  p-0 pt-1 mr-2 w-100"
+                                                                    ><Trash /></a>
+                                                                    : null}
 
                                                                 {/* A button that when clicked will call
                                                                 the viewHistory function and pass in
-                                                                the value. */}
+                                                                the type. */}
                                                                 <Button
                                                                     title={t("HISTORY")}
                                                                     onClick={() => { viewHistory(value) }}
                                                                 ><ClockHistory /></Button>
-                                                            </div>
+                                                            </div>)
                                                         }
 
-                                                        {
-                                                            (form.values?.document?.type === value) &&
-                                                            <Form onSubmit={form.handleSubmit} >
+                                                        {(form.values?.document?.type === value)
+                                                            && <Form onSubmit={form.handleSubmit} >
                                                                 <FileInput
                                                                     name={`document`}
                                                                     accept="application/pdf"
@@ -223,6 +288,17 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                             name: "upload_date",
                             selector: doc => doc.created_at,
                             cell: doc => <ShowFormattedDate date={doc.created_at} />,
+                            hidable: false
+                        },
+                        {
+                            cell: doc => <Button
+                                onClick={() => {
+                                    setPdf({
+                                        name: `(${doc.name})`,
+                                        url: doc.path
+                                    })
+                                }}
+                                className="btn btn-success p-0 py-1 mr-2 w-50"><Eye /></Button>,
                             hidable: false
                         },
                     ]}
