@@ -1093,7 +1093,7 @@
     "TRAINING_DOCUMENTS": "Training Documents",
     "COMPANY_POLICY": "Company Policy",
     "SAFETY": "Safety",
-    "OTHER": "Others"
+    "OTHER": "Other"
   },
   "InappropriateCompanyFlag": {
     "INAPPROPRIATE_OR_INACCURATE_PHOTOS": "Inappropriate or inaccurate photo(s)",
@@ -1235,6 +1235,7 @@
   "EDIT_USER": "Edit User",
   "MANAGERS": "Managers",
   "MANAGER": "Manager",
+  "NO_MANAGER_ASSIGNED": "No Manager Assigned",
   "CREATE_MAMNAGER": "Create Manager",
   "EDIT_MANAGER": "Edit Manager",
   "MINIMUM_CDL_CLASS": "Minimum CDL Class",
@@ -1554,6 +1555,8 @@
   "SHOW_VERIFICATION_OF_EMPLOYMENT": "SHOW VERIFICATION OF EMPLOYMENT",
   "HIDE_VERIFICATION_OF_EMPLOYMENT": "HIDE VERIFICATION OF EMPLOYMENT",
   "SAFETY_PERFORMANCE_HISTORY_RECORDS_REQUEST": "SAFETY PERFORMANCE HISTORY RECORDS REQUEST",
+  "HISTORY": "History",
+  "DOCUMENT_HISTORY": "Document History",
   "SECTION_I": "Section I.",
   "TO_BE_COMPLETED_BY_THE_NEW_EMPLOYER": "To be completed by the new employer, signed by the employee, and transmitted to the previous employer:",
   "EMPLOYEE_NAME_NAUTILUS_{employee_name}": "Employee Name: {{employee_name}}",
@@ -1959,13 +1962,10 @@
   "NO_JOB_TIED_WITH_APPLICANT": "No jobs tied up with this applicant! Click on EDIT to add jobs. ",
   "COMPLETED?": "Completed?",
   "ONBOARDING_CHECKLIST": "Onboarding Checklist",
-<<<<<<< Updated upstream
-  "ADDITIONAL_FILES": "Additional Files"
-}
-=======
   "ADDITIONAL_FILES": "Additional Files",
   "selected_row_{count}": "Send to  {{count}} ",
   "DOCUMENT_NOT_FOUND": "Document Not Found",
   "COMPANY_NOT_FOUND": "Company Not found"
+
 }
->>>>>>> Stashed changes
+

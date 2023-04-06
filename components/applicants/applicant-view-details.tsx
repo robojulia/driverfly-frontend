@@ -15,13 +15,13 @@ export default function ViewApplicantDetail({
 
 	const assignTo = !!hideAssignTo ? {} : { ASSIGNED_TO: applicant.assignedUser?.name || t("NONE"), }
 
-	
+
 	return (
 		<>
-			
+
 			<ViewCard title={`${applicant.first_name} ${applicant.last_name}`}>
 				<Row>
-					<Col md="4" className="px-2">
+					<Col className="px-2">
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
 							obj={{
@@ -35,7 +35,9 @@ export default function ViewApplicantDetail({
 							}}
 						/>
 					</Col>
-					<Col md="4" className="px-2">
+				</Row>
+				<Row>
+					<Col className="px-2">
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
 							obj={{
@@ -59,7 +61,7 @@ export default function ViewApplicantDetail({
 							}}
 						/>
 					</Col>
-					<Col md="4" className="px-2">
+					<Col className="px-2">
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
 							obj={{

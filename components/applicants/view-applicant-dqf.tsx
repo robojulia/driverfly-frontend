@@ -24,9 +24,11 @@ import ViewPdf from "../view-details/view-pdf";
 import BaseCheck from "../forms/base-check";
 
 
-export interface DqfTabProps extends ViewApplicantDetailProps { }
+export interface DqfTabProps extends ViewApplicantDetailProps {
+    canEdit?: boolean;
+}
 
-const ViewApplicantDqf = ({ applicant }: DqfTabProps) => {
+const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
 
     const [applicantUser, setApplicantUser] = useState<ApplicantEntity>(null)
 
@@ -78,9 +80,13 @@ const ViewApplicantDqf = ({ applicant }: DqfTabProps) => {
     }, [user], () => {
         form.resetForm()
     });
-    const deleteDocument = async (docType) => {
+    const deleteDocument = async (docType: ApplicantDqf | string): Promise<void> => {
         const applicantApi = new ApplicantApi()
-        const deleteDoc = await applicantApi.documents.delete(applicant?.id, docType)
+        await applicantApi.documents.delete(applicant?.id, docType)
+        setApplicantUser({
+            ...applicantUser,
+            documents: applicantUser?.documents?.filter(v => (v.type != docType))
+        })
     }
 
     return (
@@ -110,7 +116,7 @@ const ViewApplicantDqf = ({ applicant }: DqfTabProps) => {
                                                     {t(`ApplicantDqf.${value}`)}
                                                 </td>
                                                 <td colSpan={1} className="text-center">
-                                                    <input className="form-check-input" type="checkbox"  disabled checked={Boolean(document?.id)}/>
+                                                    <input className="form-check-input" type="checkbox" disabled checked={Boolean(document?.id)} />
                                                 </td>
                                                 <td colSpan={2}>
                                                     {document ? <ShowFormattedDate date={document.last_updated_at} /> : <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>}
@@ -122,6 +128,11 @@ const ViewApplicantDqf = ({ applicant }: DqfTabProps) => {
                                                             {document ? <a onClick={() => viewDocumentClick(document.id, document.name)} href='#' role="button" className="btn theme-primary-btn pt-2 mr-2"><Eye /></a> : null}
 
                                                             {document ? <a href={document?.path} download className="btn theme-primary-btn pt-2  mr-2 "><CloudArrowDown /></a> : null}
+
+                                                            {
+                                                                canEdit ? (document ? <a onClick={() => deleteDocument(document.type)} className="btn btn-danger pt-2  mr-2 "><Trash /></a> : null) : ""
+                                                            }
+
                                                         </div>
                                                     }
 
