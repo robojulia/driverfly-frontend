@@ -38,12 +38,18 @@ import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import EntityForm from "../../../../../components/layouts/page/entity-form";
 import BaseTextArea from "../../../../../components/forms/base-text-area";
 import { toast } from "react-toastify";
+import { Status } from "../../../../../enums/status.enum";
 
 export default function EmployeeDirectory() {
 
-    const { user } = useAuth();
-    const columnSettingKey = getDataTableColumnKey("company", user, "employee-directory");
+    const { user, hasPermission } = useAuth();
+    const can = {
+        viewUser: hasPermission("CanViewApplicant"),
+        editUser: hasPermission("CanEditApplicant"),
+        deleteUser: hasPermission("CanDeleteApplicant"),
+    };
 
+    const columnSettingKey = getDataTableColumnKey("company", user, "employee-directory");
     const { t } = useTranslation();
     const applicantApi = new ApplicantApi();
     const router = useRouter()
@@ -52,28 +58,37 @@ export default function EmployeeDirectory() {
     setPreviousPath(router.asPath)
 
     const [applicants, setApplicants] = useState<ReducedApplicantEntityType[]>([])
-
-    const [applicant, setApplicant] = useState<ReducedApplicantEntityType>()
-    const resetApplicant = (): void => setApplicant(null)
-
-    const onEditClick = (id: number) => router.push(`/dashboard/company/applicants/${id}/edit`)
-
     useEffectAsync(async () => {
-
         const data = await applicantApi.list();
         const filteredApplicants: ApplicantEntity[] = filterHired(data)
         const reducedApplicants: ReducedApplicantEntityType[] = reduceSingleEntity(filteredApplicants)
-
         setApplicants(reducedApplicants)
-
     }, [user], () => {
         console.log("unloading page...")
     });
 
+    const [pastEmployees, setPastEmployees] = useState<ApplicantEntity[]>([])
+    const resetPastEmployees = (): void => setPastEmployees([])
+
+    const fetchPastEmployee = async () => {
+        const data = await applicantApi.list({ status: ApplicantStatus.INACTIVE_FIRED });
+
+        // const reducedApplicants: ReducedApplicantEntityType[] = reduceSingleEntity(data)
+        if (!data.length) alert(t('NO_PAST_EMPLOYEE_FOUND'))
+
+        setPastEmployees(data)
+    }
+
+    const [modalAction, setModalAction] = useState<{
+        entity: ReducedApplicantEntityType,
+        type: "VIEW" | "DELETE" | "MOVE_TO_PAST_EMPLOYEE",
+    }>(null)
+    const resetModalAction = (): void => setModalAction(null)
+
     const tabs = {
-        BACKGROUND: <Background {...applicant} />,
-        DQF: < DqfTab {...applicant} />,
-        DRIVER_ONBOARDING_CHECKLIST: < DAC {...applicant} />,
+        BACKGROUND: <Background {...modalAction?.entity} />,
+        DQF: < DqfTab {...modalAction?.entity} />,
+        DRIVER_ONBOARDING_CHECKLIST: < DAC {...modalAction?.entity} />,
 
         // VEHICLES: < VehicleInformationTab />  //according to wireframe this tab (vehichled are pushed to phase 3)
     };
@@ -94,17 +109,23 @@ export default function EmployeeDirectory() {
         },
     });
 
-    const [pastEmployees, setPastEmployees] = useState<ApplicantEntity[]>([])
-    const resetPastEmployees = (): void => setPastEmployees([])
+    const onViewClick = (entity: ReducedApplicantEntityType): void =>
+        setModalAction({ entity, type: "VIEW" })
 
-    const fetchPastEmployee = async () => {
-        const data = await applicantApi.list({ status: ApplicantStatus.INACTIVE_FIRED });
+    const onEditClick = (entity: ReducedApplicantEntityType) =>
+        router.push(`/dashboard/company/applicants/${entity?.applicant?.id}/edit`)
 
-        // const reducedApplicants: ReducedApplicantEntityType[] = reduceSingleEntity(data)
-        if (!data.length) alert(t('NO_PAST_EMPLOYEE_FOUND'))
-
-        setPastEmployees(data)
+    const onDeleteClick = async (entity: ReducedApplicantEntityType): Promise<void> => {
+        setModalAction({ entity, type: "DELETE" })
     }
+
+    const onMoveToPastEmploeeClick = async (): Promise<void> => {
+        setModalAction({ ...modalAction, type: "MOVE_TO_PAST_EMPLOYEE" })
+        applicantJobForm.setValues(modalAction?.entity?.applicantJob);
+        applicantJobForm.setFieldValue("reason_codes", []);
+        applicantJobForm.setFieldValue("status", ApplicantStatus.INACTIVE_FIRED);
+    }
+
 
     return (
         <PageLayout
@@ -154,7 +175,7 @@ export default function EmployeeDirectory() {
                         cell: data => <span
                             role="button"
                             className="bg-priamry cursor-pointer enlarge-font"
-                            onClick={() => setApplicant(data)}
+                            onClick={() => onViewClick(data)}
                         >{data?.applicant?.first_name + ' ' + data?.applicant?.last_name}</span>,
                     },
                     {
@@ -208,34 +229,63 @@ export default function EmployeeDirectory() {
                             enumArray={ApplicantStatus} />
                         ),
                     },
-                    {
-                        cell: (data) => (
-                            <div className="data_table_custom_action_button">
-                                <div onClick={(e) => setApplicant(data)}>
-                                    <EyeFill className="view cursor-pointer enlarge-font" />
-                                </div>
-                                <div onClick={(e) => onEditClick(data?.applicant?.id)}>
-                                    <PenFill className="edit cursor-pointer enlarge-font" />
-                                </div>
-                                <div onClick={() => {
-                                    applicantJobForm.setValues(data?.applicantJob);
-                                    applicantJobForm.setFieldValue("reason_codes", []);
-                                    applicantJobForm.setFieldValue("status", ApplicantStatus.INACTIVE_FIRED);
-                                }}>
-                                    <a className="btn btn-link btn-sm">{t('MOVE_TO_PAST_EMPLOYEE')}</a>
-                                </div>
-                            </div>
-                        ),
-                    },
                 ]}
+                actions={data => ([
+                    {
+                        onClick: e => onViewClick(data),
+                        icon: EyeFill,
+                        // label: "VIEW",
+                        hide: !can.viewUser
+                    },
+                    {
+                        onClick: e => onEditClick(data),
+                        icon: PenFill,
+                        // label: "EDIT",
+                        hide: !can.editUser
+                    },
+                    {
+                        onClick: e => onDeleteClick(data),
+                        icon: TrashFill,
+                        // label: "DELETE",
+                        hide: !(can.deleteUser)
+                    },
+                ])}
+
                 items={applicants}
             />
 
-            <ViewModal show={!!applicant} onCloseClick={resetApplicant} size='xl' >
+            {/* TabbedLayout modal component with items passed as a prop `tabs` */}
+            <ViewModal show={!!(modalAction?.type == "VIEW")} onCloseClick={resetModalAction} size='xl' >
                 <TabbedLayout items={tabs} className="mt-5"></TabbedLayout>
             </ViewModal>
 
+            {/* modal that displays a table for confirming trash action */}
             <ViewModal
+                title="CONFIRMATION"
+                show={modalAction?.type == "DELETE"}
+                onCloseClick={resetModalAction}
+                size='sm'
+            >
+                <Row className="mt-90 my-10">
+                    <Col>
+                        <button
+                            type="button"
+                            className="theme-danger-btn btn-block btn-theme w-50 p-3 m-auto"
+                        > {t("DELETE")}</button>
+                    </Col>
+                    <Col>
+                        <button
+                            onClick={() => onMoveToPastEmploeeClick()}
+                            type="button"
+                            className="theme-primary-btn btn-block btn-theme w-50 p-3 m-auto"
+                        > {t("MOVE_TO_PAST_EMPLOYEE")}</button>
+                    </Col>
+                </Row>
+            </ViewModal>
+
+            {/* modal that displays a table for moving applicant to past employee list */}
+            <ViewModal
+                title={t("MOVE_TO_PAST_EMPLOYEE")}
                 show={!!applicantJobForm.values?.id}
                 onCloseClick={applicantJobForm.resetForm}
                 size='lg'
@@ -274,6 +324,7 @@ export default function EmployeeDirectory() {
                 </EntityForm>
             </ViewModal>
 
+            {/* modal that displays a table of past employees. */}
             <ViewModal
                 show={Boolean(pastEmployees?.length)}
                 onCloseClick={resetPastEmployees}

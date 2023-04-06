@@ -1797,7 +1797,7 @@
   "PAST_EMPLOYEE": "Past Employees",
   "PAST_EMPLOYEE_LIST": "Past Employee List",
   "NO_PAST_EMPLOYEE_FOUND": "No Past Employee Found",
-  "MOVE_TO_PAST_EMPLOYEE": "Past Employer",
+  "MOVE_TO_PAST_EMPLOYEE": "Move To Past Employee",
   "APPLIED_OR_WORKED_HERE": "Applied or worked with this companys",
   "LEGAL_INFO": "Legal Information",
   "ALREADY_APPLIED_HERE": "Have you applied to this job before ?",
@@ -1959,5 +1959,13 @@
   "NO_JOB_TIED_WITH_APPLICANT": "No jobs tied up with this applicant! Click on EDIT to add jobs. ",
   "COMPLETED?": "Completed?",
   "ONBOARDING_CHECKLIST": "Onboarding Checklist",
+<<<<<<< Updated upstream
   "ADDITIONAL_FILES": "Additional Files"
 }
+=======
+  "ADDITIONAL_FILES": "Additional Files",
+  "selected_row_{count}": "Send to  {{count}} ",
+  "DOCUMENT_NOT_FOUND": "Document Not Found",
+  "COMPANY_NOT_FOUND": "Company Not found"
+}
+>>>>>>> Stashed changes

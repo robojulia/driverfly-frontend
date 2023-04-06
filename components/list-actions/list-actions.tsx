@@ -17,7 +17,7 @@ export interface ListActionsProps {
 
 export interface ListActionOptions {
   icon?: Icon;
-  label: string | ReactNode | (() => string|ReactNode);
+  label?: string | ReactNode | (() => string|ReactNode);
   onClick?: (e: React.MouseEvent) => void;
   hide?: boolean;
 }
