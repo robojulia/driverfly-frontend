@@ -58,6 +58,9 @@ export default function EmployeeDirectory() {
     setPreviousPath(router.asPath)
 
     const [applicants, setApplicants] = useState<ReducedApplicantEntityType[]>([])
+    const filterApplicants = (id: number) =>
+        setApplicants(applicants.filter(v => v.applicant.id != id))
+
     useEffectAsync(async () => {
         const data = await applicantApi.list();
         const filteredApplicants: ApplicantEntity[] = filterHired(data)
@@ -102,7 +105,7 @@ export default function EmployeeDirectory() {
 
                 await applicantApi.jobs.update(values.applicant?.id, values?.job?.id, values)
                 applicantJobForm.resetForm();
-                setApplicants(applicants.filter(v => v.applicantJob.id != values.id))
+                filterApplicants(values?.applicant?.id)
             } catch (e) {
                 globalAjaxExceptionHandler(e, { formik: applicantJobForm, t: t, toast: toast });
             }
@@ -115,8 +118,24 @@ export default function EmployeeDirectory() {
     const onEditClick = (entity: ReducedApplicantEntityType) =>
         router.push(`/dashboard/company/applicants/${entity?.applicant?.id}/edit`)
 
-    const onDeleteClick = async (entity: ReducedApplicantEntityType): Promise<void> => {
+    const onTrashClick = async (entity: ReducedApplicantEntityType): Promise<void> => {
         setModalAction({ entity, type: "DELETE" })
+    }
+
+    const onDeleteClick = async (): Promise<void> => {
+        try {
+            const data = await applicantApi.remove(modalAction?.entity?.applicant?.id)
+
+            if (data && data?.status == Status.DELETED) {
+                filterApplicants(modalAction?.entity?.applicant?.id)
+                toast(t("successfully_saved_information"))
+            } else {
+                toast(t("ERROR_MESSAGE_DEFAULT"))
+            }
+        } catch (error) {
+            toast(t("ERROR_MESSAGE_DEFAULT"))
+        }
+        resetModalAction()
     }
 
     const onMoveToPastEmploeeClick = async (): Promise<void> => {
@@ -244,7 +263,7 @@ export default function EmployeeDirectory() {
                         hide: !can.editUser
                     },
                     {
-                        onClick: e => onDeleteClick(data),
+                        onClick: e => onTrashClick(data),
                         icon: TrashFill,
                         // label: "DELETE",
                         hide: !(can.deleteUser)
@@ -269,6 +288,7 @@ export default function EmployeeDirectory() {
                 <Row className="mt-90 my-10">
                     <Col>
                         <button
+                            onClick={() => onDeleteClick()}
                             type="button"
                             className="theme-danger-btn btn-block btn-theme w-50 p-3 m-auto"
                         > {t("DELETE")}</button>

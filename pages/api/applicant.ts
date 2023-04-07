@@ -35,6 +35,12 @@ class ApplicantApi extends BaseApi {
 		return data;
 	}
 
+	async remove(id: number): Promise<ApplicantEntity | void> {
+		const { data } = await this.delete(`${this.baseUrl}/${id}`);
+
+		return data;
+	}
+
 	async assign(id: number) {
 		const { data } = await this.post(this.baseUrl + "/" + id + "/assign", null);
 
