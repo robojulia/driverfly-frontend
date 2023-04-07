@@ -39,6 +39,8 @@ import EntityForm from "../../../../../components/layouts/page/entity-form";
 import BaseTextArea from "../../../../../components/forms/base-text-area";
 import { toast } from "react-toastify";
 import { Status } from "../../../../../enums/status.enum";
+import BaseCheck from "../../../../../components/forms/base-check";
+import BaseSelect from "../../../../../components/forms/base-select";
 
 export default function EmployeeDirectory() {
 
@@ -142,7 +144,7 @@ export default function EmployeeDirectory() {
         setModalAction({ ...modalAction, type: "MOVE_TO_PAST_EMPLOYEE" })
         applicantJobForm.setValues(modalAction?.entity?.applicantJob);
         applicantJobForm.setFieldValue("reason_codes", []);
-        applicantJobForm.setFieldValue("status", ApplicantStatus.INACTIVE_FIRED);
+        // applicantJobForm.setFieldValue("status", ApplicantStatus.INACTIVE_FIRED);
     }
 
 
@@ -316,7 +318,22 @@ export default function EmployeeDirectory() {
                     formik={applicantJobForm}
                     canSubmit={applicantJobForm.isValid || applicantJobForm.values?.reason_codes?.length > 0}
                 >
-                    <Row className="py-3">
+                    <Row className="py-3 px-5">
+                        <Col>
+                            <BaseSelect
+                                label="STATUS"
+                                formik={applicantJobForm}
+                                name={`status`}
+                                required
+                                placeholder="STATUS"
+                                labelPrefix="ApplicantStatus"
+                                showOptions={[ApplicantStatus.INACTIVE_FIRED, ApplicantStatus.INACTIVE_QUIT]}
+                                enumType={ApplicantStatus}
+
+                            />
+                        </Col>
+                    </Row>
+                    <Row className="py-3 px-5">
                         <Col md="6">
                             <BaseCheckList
                                 className="col-12"
