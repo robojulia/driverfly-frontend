@@ -83,14 +83,25 @@ export default function EmployeeDirectory() {
     }
 
     const fetchEmployee = async () => {
-        const data = await applicantApi.list();
-        const filteredApplicants: ApplicantEntity[] = filterHired(data)
-        const reducedApplicants: ReducedApplicantEntityType[] = reduceSingleEntity(filteredApplicants)
+        const data = await applicantApi.list({
+            status: [
+                ApplicantStatus.COMPLETED_EMPLOYED,
+                ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
+                ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE
+            ]
+        });
+        // const filteredApplicants: ApplicantEntity[] = filterHired(data)
+        const reducedApplicants: ReducedApplicantEntityType[] = reduceSingleEntity(data)
         setApplicants(reducedApplicants)
     }
 
     const fetchPastEmployee = async () => {
-        const data = await applicantApi.list({ status: ApplicantStatus.INACTIVE_FIRED });
+        const data = await applicantApi.list({
+            status: [
+                ApplicantStatus.INACTIVE_FIRED,
+                ApplicantStatus.INACTIVE_QUIT
+            ]
+        });
         const reducedApplicants: ReducedApplicantEntityType[] = reduceSingleEntity(data)
         setApplicants(reducedApplicants)
     }
@@ -260,26 +271,28 @@ export default function EmployeeDirectory() {
                         ),
                     },
                 ]}
-                actions={data => ([
-                    {
-                        onClick: e => onViewClick(data),
-                        icon: EyeFill,
-                        // label: "VIEW",
-                        hide: !can.viewUser
-                    },
-                    {
-                        onClick: e => onEditClick(data),
-                        icon: PenFill,
-                        // label: "EDIT",
-                        hide: !can.editUser
-                    },
-                    {
-                        onClick: e => onTrashClick(data),
-                        icon: TrashFill,
-                        // label: "DELETE",
-                        hide: (!can.deleteUser) || (viewMode != ViewModeType.EMPLOYEE)
-                    },
-                ])}
+                actions={data => (viewMode != ViewModeType.EMPLOYEE)
+                    ? null
+                    : ([
+                        {
+                            onClick: e => onViewClick(data),
+                            icon: EyeFill,
+                            // label: "VIEW",
+                            hide: (!can.viewUser)
+                        },
+                        {
+                            onClick: e => onEditClick(data),
+                            icon: PenFill,
+                            // label: "EDIT",
+                            hide: (!can.editUser)
+                        },
+                        {
+                            onClick: e => onTrashClick(data),
+                            icon: TrashFill,
+                            // label: "DELETE",
+                            hide: (!can.deleteUser)
+                        },
+                    ])}
 
                 items={applicants}
             />
