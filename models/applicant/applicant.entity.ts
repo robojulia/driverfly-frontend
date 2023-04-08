@@ -20,6 +20,7 @@ import {
 	ApplicantExtrasEntity
 } from "./index"
 import { ApplicantVoeFormEntity } from "./applicant-voe-form.entity";
+import { Status } from "../../enums/status.enum";
 
 
 export class ApplicantEntity {
@@ -88,6 +89,7 @@ export class ApplicantEntity {
 	extras?: ApplicantExtrasEntity[] = []
 	voeData?: ApplicantVoeFormEntity[] = []
 	uuid_token?: string;
+	status?: Status;
 
 	static yupSchema() {
 		return yup.object({
