@@ -1,16 +1,19 @@
-import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
-import { useState } from "react";
+import { useFormik } from "formik";
+import { toast } from "react-toastify";
+import Link from "next/link";
+import { Button, Col, FormGroup, Row } from "react-bootstrap";
+import { FormControlLabel, Switch } from "@mui/material";
+import { useEffect, useState } from "react";
 import React from "react";
-import { EyeFill, PenFill, Trash2Fill, Trash3Fill, TrashFill } from 'react-bootstrap-icons';
+import { useRouter } from "next/router";
+import { EyeFill, PenFill, TrashFill } from 'react-bootstrap-icons';
+import 'react-tabs/style/react-tabs.css';
+import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 import PageLayout from "../../../../../components/layouts/page/page-layout";
 import { useTranslation } from "../../../../../hooks/use-translation";
-import { useRouter } from "next/router";
 import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/view-details/view-data-table";
 import { useAuth } from "../../../../../hooks/use-auth";
 import { useEffectAsync } from "../../../../../utils/react";
-import Link from "next/link";
-import { Button, Col, Row } from "react-bootstrap";
-import 'react-tabs/style/react-tabs.css';
 import { TabbedLayout } from "../../../../../components/layouts/page/tabbed-layout";
 import DAC from "../../../../../components/dashboard/employee-directory/dac";
 import DqfTab from "../../../../../components/dashboard/employee-directory/dqf";
@@ -32,15 +35,13 @@ import OverlyPopover from "../../../../../components/popover/overly-popover";
 import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
 import Background from "../../../../../components/dashboard/employee-directory/background";
 import BaseCheckList from "../../../../../components/forms/base-check-list";
-import { ApplicantReasonCodeFired } from "../../../../../enums/applicants/applicant-reason-codes.enum";
-import { useFormik } from "formik";
+import { ApplicantReasonCodeFired, ApplicantReasonCodeQuit } from "../../../../../enums/applicants/applicant-reason-codes.enum";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import EntityForm from "../../../../../components/layouts/page/entity-form";
 import BaseTextArea from "../../../../../components/forms/base-text-area";
-import { toast } from "react-toastify";
 import { Status } from "../../../../../enums/status.enum";
-import BaseCheck from "../../../../../components/forms/base-check";
 import BaseSelect from "../../../../../components/forms/base-select";
+
 
 export default function EmployeeDirectory() {
 
@@ -60,28 +61,38 @@ export default function EmployeeDirectory() {
     setPreviousPath(router.asPath)
 
     const [applicants, setApplicants] = useState<ReducedApplicantEntityType[]>([])
-    const filterApplicants = (id: number) =>
-        setApplicants(applicants.filter(v => v.applicant.id != id))
+    const resetApplicants = () => setApplicants([])
+    const filterApplicants = (id: number) => setApplicants(applicants.filter(v => v.applicant.id != id))
+
+    enum ViewModeType { EMPLOYEE = "EMPLOYEE", PAST_EMPLOYEE = "PAST_EMPLOYEE" }
+    const [viewMode, setViewMode] = useState<ViewModeType>(ViewModeType.EMPLOYEE)
+
+    useEffect(() => {
+        setViewMode(router.query.viewMode as ViewModeType ?? ViewModeType.EMPLOYEE)
+    }, [router])
 
     useEffectAsync(async () => {
+        viewMode == ViewModeType.EMPLOYEE ? fetchEmployee() : fetchPastEmployee()
+    }, [user, viewMode]);
+
+    const onViewModeChange = async ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
+        value = viewMode == ViewModeType.EMPLOYEE ? ViewModeType.PAST_EMPLOYEE : ViewModeType.EMPLOYEE
+        resetApplicants()
+        router.query.viewMode = value;
+        await router.push(router);
+    }
+
+    const fetchEmployee = async () => {
         const data = await applicantApi.list();
         const filteredApplicants: ApplicantEntity[] = filterHired(data)
         const reducedApplicants: ReducedApplicantEntityType[] = reduceSingleEntity(filteredApplicants)
         setApplicants(reducedApplicants)
-    }, [user], () => {
-        console.log("unloading page...")
-    });
-
-    const [pastEmployees, setPastEmployees] = useState<ApplicantEntity[]>([])
-    const resetPastEmployees = (): void => setPastEmployees([])
+    }
 
     const fetchPastEmployee = async () => {
         const data = await applicantApi.list({ status: ApplicantStatus.INACTIVE_FIRED });
-
-        // const reducedApplicants: ReducedApplicantEntityType[] = reduceSingleEntity(data)
-        if (!data.length) alert(t('NO_PAST_EMPLOYEE_FOUND'))
-
-        setPastEmployees(data)
+        const reducedApplicants: ReducedApplicantEntityType[] = reduceSingleEntity(data)
+        setApplicants(reducedApplicants)
     }
 
     const [modalAction, setModalAction] = useState<{
@@ -103,8 +114,6 @@ export default function EmployeeDirectory() {
         validationSchema: ApplicantJobEntity.yupSchema(),
         onSubmit: async (values) => {
             try {
-                console.log("values", values);
-
                 await applicantApi.jobs.update(values.applicant?.id, values?.job?.id, values)
                 applicantJobForm.resetForm();
                 filterApplicants(values?.applicant?.id)
@@ -113,6 +122,7 @@ export default function EmployeeDirectory() {
             }
         },
     });
+    useEffect(() => console.log(applicantJobForm.errors), [applicantJobForm.errors])
 
     const onViewClick = (entity: ReducedApplicantEntityType): void =>
         setModalAction({ entity, type: "VIEW" })
@@ -144,9 +154,7 @@ export default function EmployeeDirectory() {
         setModalAction({ ...modalAction, type: "MOVE_TO_PAST_EMPLOYEE" })
         applicantJobForm.setValues(modalAction?.entity?.applicantJob);
         applicantJobForm.setFieldValue("reason_codes", []);
-        // applicantJobForm.setFieldValue("status", ApplicantStatus.INACTIVE_FIRED);
     }
-
 
     return (
         <PageLayout
@@ -162,14 +170,15 @@ export default function EmployeeDirectory() {
                                 </Link>
                             </u>
                         </p>
-                        <p className="mt-2 mb-2">
-                            <u className="ml-1">
-                                <a
-                                    onClick={fetchPastEmployee}
-                                    className="btn btn-primary"
-                                >{t("PAST_EMPLOYEE_LIST")}</a>
-                            </u>
-                        </p>
+                        <FormGroup style={{ float: "right" }}>
+                            <FormControlLabel
+                                control={<Switch
+                                    value={viewMode === ViewModeType.EMPLOYEE ? ViewModeType.EMPLOYEE : ViewModeType.PAST_EMPLOYEE}
+                                    checked={viewMode === ViewModeType.EMPLOYEE}
+                                    onChange={onViewModeChange} />}
+                                label={t("VIEW_BY_{name}", { name: t(viewMode === ViewModeType.EMPLOYEE ? "EMPLOYEE" : "PAST_EMPLOYEE") })}
+                            />
+                        </FormGroup>
                     </Col>
                 </Row>
             }
@@ -268,7 +277,7 @@ export default function EmployeeDirectory() {
                         onClick: e => onTrashClick(data),
                         icon: TrashFill,
                         // label: "DELETE",
-                        hide: !(can.deleteUser)
+                        hide: (!can.deleteUser) || (viewMode != ViewModeType.EMPLOYEE)
                     },
                 ])}
 
@@ -334,19 +343,31 @@ export default function EmployeeDirectory() {
                         </Col>
                     </Row>
                     <Row className="py-3 px-5">
-                        <Col md="6">
-                            <BaseCheckList
-                                className="col-12"
-                                label="REASON_CODES"
-                                name="reason_codes"
-                                required
-                                cols={2}
-                                formik={applicantJobForm}
-                                labelPrefix="ApplicantReasonCodeFired"
-                                enumType={ApplicantReasonCodeFired}
-                            />
+                        <Col md="12">
+                            {({
+                                [ApplicantStatus.INACTIVE_FIRED]: (<BaseCheckList
+                                    className="col-12"
+                                    label="REASON_CODES"
+                                    name="reason_codes"
+                                    required
+                                    cols={2}
+                                    formik={applicantJobForm}
+                                    labelPrefix="ApplicantReasonCodeFired"
+                                    enumType={ApplicantReasonCodeFired}
+                                />),
+                                [ApplicantStatus.INACTIVE_QUIT]: (<BaseCheckList
+                                    className="col-12"
+                                    label="REASON_CODES"
+                                    name="reason_codes"
+                                    required
+                                    cols={2}
+                                    formik={applicantJobForm}
+                                    labelPrefix="ApplicantReasonCodeQuit"
+                                    enumType={ApplicantReasonCodeQuit}
+                                />),
+                            }[applicantJobForm.values?.status] ?? <></>)}
                         </Col>
-                        <Col md="6">
+                        <Col>
                             {applicantJobForm.values.reason_codes?.includes("OTHER") &&
                                 <BaseTextArea
                                     className="col-12"
@@ -360,50 +381,6 @@ export default function EmployeeDirectory() {
                     </Row>
                 </EntityForm>
             </ViewModal>
-
-            {/* modal that displays a table of past employees. */}
-            <ViewModal
-                show={Boolean(pastEmployees?.length)}
-                onCloseClick={resetPastEmployees}
-                closeText="CANCEL"
-                title="PAST_EMPLOYEE"
-            >
-                <ViewDataTable<ApplicantEntity>
-                    customStyles={{
-                        headRow: {
-                            style: {
-                                background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
-                                color: "white"
-                            },
-                        },
-                    }}
-                    columns={[
-                        {
-                            id: "id",
-                            name: "ID",
-                            selector: applicant => applicant?.id,
-                            hidable: false
-                        },
-                        {
-                            name: "first_name",
-                            selector: applicant => applicant?.first_name,
-                            hidable: false
-                        },
-                        {
-                            name: "last_name",
-                            selector: applicant => applicant?.last_name,
-                            hidable: false
-                        },
-                        {
-                            name: "email",
-                            selector: applicant => applicant?.email,
-                            hidable: false
-                        },
-                    ]}
-                    items={pastEmployees}
-                />
-            </ViewModal>
-
         </PageLayout>
     )
 
