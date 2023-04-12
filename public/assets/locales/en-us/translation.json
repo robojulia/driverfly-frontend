@@ -1337,7 +1337,8 @@
   "TECHNICAL_ASSISTANCE_HELP": "For technical assistance, reach out to help@driverfly.co",
   "Status": {
     "ACTIVE": "Active",
-    "DELETED": "Deleted"
+    "DELETED": "Deleted",
+    "DEACTIVE": "DEACTIVE"
   },
   "UNABLE_TO_RESTORE": "Unable to restore.",
   "DESCRIPTION": "Description",
@@ -1800,7 +1801,7 @@
   "PAST_EMPLOYEE": "Past Employees",
   "PAST_EMPLOYEE_LIST": "Past Employee List",
   "NO_PAST_EMPLOYEE_FOUND": "No Past Employee Found",
-  "MOVE_TO_PAST_EMPLOYEE": "Past Employer",
+  "MOVE_TO_PAST_EMPLOYEE": "Move To Past Employee",
   "APPLIED_OR_WORKED_HERE": "Applied or worked with this companys",
   "LEGAL_INFO": "Legal Information",
   "ALREADY_APPLIED_HERE": "Have you applied to this job before ?",
