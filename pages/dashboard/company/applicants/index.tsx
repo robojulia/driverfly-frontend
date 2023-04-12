@@ -484,7 +484,7 @@ function ApplicantView(props: ViewProps) {
                     },
                     {
                         id: "source",
-                        name: "SOURCE",
+                        name: "Lead Source",
                         selector: applicant => applicant.type ? t(`ApplicantType.${applicant.type}`) : "",
                     },
                     {
