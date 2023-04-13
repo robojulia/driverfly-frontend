@@ -811,6 +811,9 @@
   "DOES_NOT_HAVE_{name}_EXPERIENCE": "Does not have {{name}} experience",
   "YEARS_OF_{name}_EXPERIENCE_TOO_LOW": "Years of {{name}} experience is too low",
   "APPLICATION_STATUS": "Application Status",
+  "APPLICANT_CURRENT_STATUS": "Applicant Current Status",
+  "APPLICANT_CURRENT_STATUS_MESSAGE": "There are no jobs tied to this driver. Please populate a job and corresponding status down below and it will populate here",
+  "GENERAL_INTAKE": "General Intake",
   "MY_APPLICATIONS": "My Applications",
   "NO_RECORDS_FOUND": "No Record Found",
   "ApplicantDac": {

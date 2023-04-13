@@ -294,7 +294,7 @@ export default function ViewApplicant({ id }) {
 					</Col>
 					<Col>
 						{/* < ViewApplicantDAC applicant={applicant} /> */}
-						<ViewApplicantDqf applicant={applicant}/>
+						<ViewApplicantDqf applicant={applicant} />
 					</Col>
 
 				</Row>
