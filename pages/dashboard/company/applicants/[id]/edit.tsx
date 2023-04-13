@@ -18,7 +18,8 @@ export default function EditApplicant({ id }) {
     const backPath = `/dashboard/company/applicants/${id}`;
 
 
-    const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
+    // const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
+    const goBack = () => window.setTimeout(() => router.back(), 2000);
 
     const [applicant, setApplicant] = useState(new ApplicantEntity());
 
