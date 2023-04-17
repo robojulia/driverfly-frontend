@@ -8,7 +8,7 @@ import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../../../hooks/use-auth";
 import CompanyApi from "../../../../api/company";
-import { Row, Col, Button } from "react-bootstrap";
+import { Row, Col, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { CompanyPreferenceEntity } from "../../../../../models/company/company-preferences.entity";
 
 import * as yup from "yup";
@@ -16,7 +16,6 @@ import { CompanyPreferenceCategory } from "../../../../../enums/company/company-
 import { CompanyPreferenceJotformLabel } from "../../../../../enums/company/company-preferences-jotform-label.enum";
 import { useEffectAsync } from "../../../../../utils/react";
 import BaseCheckList from "../../../../../components/forms/base-check-list";
-import BaseCheck from "../../../../../components/forms/base-check";
 import BaseInput from "../../../../../components/forms/base-input";
 import { JobEmploymentType } from "../../../../../enums/jobs/job-employment-type.enum";
 import { JobGeography } from "../../../../../enums/jobs/job-geography.enum";
@@ -35,12 +34,6 @@ export default function CompanyPreference() {
         label: CompanyPreferenceJotformLabel.CDL_CLASS,
         value: [],
       } as CompanyPreferenceEntity,
-      // owner_operator: {
-      //   ...new CompanyPreferenceEntity(),
-      //   category: CompanyPreferenceCategory.JOTFORM,
-      //   label: CompanyPreferenceJotformLabel.OWNER_OPERATOR,
-      //   value: false,
-      // } as CompanyPreferenceEntity,
       employment_type: {
         ...new CompanyPreferenceEntity(),
         category: CompanyPreferenceCategory.JOTFORM,
@@ -53,12 +46,6 @@ export default function CompanyPreference() {
         label: CompanyPreferenceJotformLabel.JOB_GEOGRAPHY,
         value: [],
       } as CompanyPreferenceEntity,
-      // drug_test_pass: {
-      //   ...new CompanyPreferenceEntity(),
-      //   category: CompanyPreferenceCategory.JOTFORM,
-      //   label: CompanyPreferenceJotformLabel.DRUG_TEST_PASS,
-      //   value: false,
-      // } as CompanyPreferenceEntity,
       minimum_accidents: {
         ...new CompanyPreferenceEntity(),
         category: CompanyPreferenceCategory.JOTFORM,
@@ -81,8 +68,6 @@ export default function CompanyPreference() {
 
     validationSchema: yup.object({
       cdl_clas: CompanyPreferenceEntity.yupSchema(),
-      // owner_operator: CompanyPreferenceEntity.yupSchema(),
-      // drug_test_pass: CompanyPreferenceEntity.yupSchema(),
       minimum_moving_violations: CompanyPreferenceEntity.yupSchema(),
       minimum_accidents: CompanyPreferenceEntity.yupSchema(),
       years_cdl_experience: CompanyPreferenceEntity.yupSchema(),
@@ -151,10 +136,15 @@ export default function CompanyPreference() {
     });
   };
 
+
+
+  const tooltip = <Tooltip id="my-tooltip" >{t("REFER_BACK_DETAILS")}</Tooltip>;
+
+
   return (
     <>
       <PageLayout title="DIGITAL_HIRING_APPLICATION">
-      <p className="pt-2 pb-2">{t("DHA_PREFERENCE_POINT_1")}</p>
+        <p className="pt-2 pb-2">{t("DHA_PREFERENCE_POINT_1")}</p>
         <BaseClickToCopyInput
           label="DIGITAL_HIRING_APP_URL"
           className="my-2 border p-3 rounded"
@@ -163,7 +153,8 @@ export default function CompanyPreference() {
           tooltipText={t("CLICK_TO_COPY")}
         />
 
-          <p className="pt-2 pb-2">{t("DHA_PREFERENCE_POINT_2")}</p>
+        <h2 className="pt-2 pb-2">{t("COMPANY_PREFERENCE")}</h2>
+        <p className="pt-2 pb-2">{t("DHA_PREFERENCE_POINT_2")}</p>
 
         <form onSubmit={form.handleSubmit} className="py-4 px-3 border rounded mt-4" style={{ background: '#e9ecef' }}>
           <Row>
@@ -194,20 +185,6 @@ export default function CompanyPreference() {
               enumType={JobGeography}
               formik={form}
             />
-            {/* <BaseCheck
-              className="col-12 mt-4"
-              label="OWNER_OPERATOR"
-              name="owner_operator.value"
-              formik={form}
-            /> */}
-
-            {/* <BaseCheck
-              className="col-12 mt-4"
-              label="DRUG_TEST_PASS"
-              name="drug_test_pass.value"
-              formik={form}
-            /> */}
-
             <BaseInput
               className="col-md-4 mt-4"
               label="years_cdl_experience"
@@ -237,6 +214,13 @@ export default function CompanyPreference() {
           </Row>
 
           <Row className="mt-3">
+            <Col className="">
+              <OverlayTrigger trigger={['hover', 'focus']} delay={{ show: 0, hide: 0 }} overlay={tooltip}>
+                <Button>
+                  {t("REFER_BACK_QUESTION")}
+                </Button>
+              </OverlayTrigger>
+            </Col>
             <Col className="text-end">
               <Button
                 type="submit"
@@ -245,6 +229,7 @@ export default function CompanyPreference() {
               >
                 {t("UPDATE")}
               </Button>
+
             </Col>
           </Row>
         </form>
