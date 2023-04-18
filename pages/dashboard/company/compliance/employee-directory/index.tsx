@@ -187,7 +187,7 @@ export default function EmployeeDirectory() {
                                     value={viewMode === ViewModeType.EMPLOYEE ? ViewModeType.EMPLOYEE : ViewModeType.PAST_EMPLOYEE}
                                     checked={viewMode === ViewModeType.EMPLOYEE}
                                     onChange={onViewModeChange} />}
-                                label={t("VIEW_BY_{name}", { name: t(viewMode === ViewModeType.EMPLOYEE ? "EMPLOYEE" : "PAST_EMPLOYEE") })}
+                                label={t("VIEW_BY_{name}", { name: t(viewMode !== ViewModeType.EMPLOYEE ? "EMPLOYEE" : "PAST_EMPLOYEE") })}
                             />
                         </FormGroup>
                     </Col>
