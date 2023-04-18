@@ -75,9 +75,12 @@ const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
     }
 
     useEffectAsync(async () => {
-        const v = await applicantApi.getById(applicant.id)
-        setApplicantUser(v)
-    }, [user], () => {
+        if (applicant.id
+        ) {
+            const v = await applicantApi.getById(applicant.id)
+            setApplicantUser(v)
+        }
+    }, [user, applicant], () => {
         form.resetForm()
     });
     const deleteDocument = async (docType: ApplicantDqf | string): Promise<void> => {
