@@ -50,6 +50,8 @@ export function PastEmploymentHistory() {
 			...form.values,
 			employers: employers.length > 0 ? employers : [{
 				...(new PastEmploymentHistoryDto()),
+				is_subject_to_fmcsrs: true,
+				is_subject_to_drug_tests: true,
 				is_current: false
 			}],
 			is_previous_employed: !!employers?.length,
@@ -248,6 +250,8 @@ export function PastEmploymentHistory() {
 														...(form.values?.employers || []),
 														{
 															...(new PastEmploymentHistoryDto()),
+															is_subject_to_fmcsrs: true,
+															is_subject_to_drug_tests: true,
 															is_current: false
 														},
 													])
