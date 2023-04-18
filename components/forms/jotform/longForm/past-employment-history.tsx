@@ -74,6 +74,7 @@ export function PastEmploymentHistory() {
 			>
 				{t("PAST_EMPLOYMENT_HISTORY")}
 			</h4>
+			
 			<p className={`${styles.paragraph} ${styles.align__text_left}`}>
 				{t("HONEST_ABOUT_PAST_EMPLOYMENT")}
 			</p>
