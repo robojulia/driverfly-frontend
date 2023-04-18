@@ -58,16 +58,18 @@ export default function Applicants() {
     if (!ViewMode[`${viewMode}`]) viewMode = ViewMode.applicant;
 
     const [applicants, setApplicants] = useState<ApplicantEntity[]>([]);
+    const [applicantStatus, setApplicantStatus] = useState<ApplicantStatus | null>(null);
 
     useEffectAsync(async () => {
         const api = new ApplicantApi();
 
         const data = await api.list({
-            jobId: (jobId as any) as number
+            jobId: (jobId as any) as number,
+            status: applicantStatus
         });
 
         setApplicants(data);
-    }, [user, jobId, viewMode]);
+    }, [user, jobId, viewMode, applicantStatus]);
 
     const onViewClick = (id: number) => {
         router.push(`${router.pathname}/${id}`);
@@ -179,6 +181,24 @@ export default function Applicants() {
                             label={t("VIEW_BY_{name}", { name: t(viewMode === ViewMode.applicant ? "JOB" : "APPLICANT") })}
                         />
                     </FormGroup>
+                    <Row>
+                        <BaseSelect
+                            className="col-md-3"
+                            placeholder="STATUS"
+                            labelPrefix="ApplicantStatus"
+                            enumType={ApplicantStatus}
+                            onChange={({ target: { value } }) => setApplicantStatus(value as ApplicantStatus)}
+                            value={applicantStatus}
+                        />
+                        {Boolean(applicantStatus) && (<Col md="2">
+                            <button
+                                onClick={() => { setApplicantStatus(null) }}
+                                type="button"
+                                className="btn btn-link"
+                            >{t("CLEAR")}</button>
+                        </Col>)}
+                    </Row>
+
                     {viewMode === ViewMode.applicant && <ApplicantView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
                     {viewMode === ViewMode.job && <JobView router={router} applicants={applicants} onViewClick={onViewClick} onEditClick={onEditClick} onChangeStatus={onChangeStatus} t={t} />}
                 </Col>
@@ -284,7 +304,7 @@ export default function Applicants() {
                 </form>
 
             </ViewModal>
-        </PageLayout>
+        </PageLayout >
     )
 };
 
@@ -337,12 +357,12 @@ function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
             results.meets_basic_qualifications = false;
             results.qualification_fail_reason.push("DOES_NOT_HAVE_CLEAN_MVR");
         }
-        else {
+        else if (job?.mvr_requirements?.length) {
             // complicated check around max violations
             // since violation count isn't specific
             // we just want to pull the max number
             // and check against that
-            const mvr = job.mvr_requirements?.reduce((p, c) => {
+            const mvr = job?.mvr_requirements?.reduce((p, c) => {
                 if (p.max_count >= c.max_count) return p;
 
                 return c;
@@ -443,11 +463,6 @@ function ApplicantView(props: ViewProps) {
                         hidable: false,
                     },
                     {
-                        id: "member",
-                        name: "IS_MMEMBER",
-                        selector: applicant => !!!applicant.user?.id ? t('MMEMBER') : t('NON_MMEMBER'),
-                    },
-                    {
                         id: "city",
                         name: "CITY",
                         selector: applicant => applicant.city,
@@ -468,8 +483,8 @@ function ApplicantView(props: ViewProps) {
                         selector: applicant => applicant.email,
                     },
                     {
-                        id: "type",
-                        name: "type",
+                        id: "source",
+                        name: "Lead Source",
                         selector: applicant => applicant.type ? t(`ApplicantType.${applicant.type}`) : "",
                     },
                     {

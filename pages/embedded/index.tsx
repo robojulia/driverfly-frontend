@@ -21,9 +21,15 @@ import { DriverLicenseType } from '../../enums/users/driver-license-type.enum'
 import { JobEmploymentType } from '../../enums/jobs/job-employment-type.enum'
 import { JobGeography } from '../../enums/jobs/job-geography.enum'
 import { JobTeamDriver } from '../../enums/jobs/job-team-driver.enum'
+import { JobEquipmentType } from '../../enums/jobs/job-equipment-type.enum'
+import EmploymentType from '../../components/filters/employment-type'
 
+export type EmbeddedCdlFiltersProps = {
+    filterType?: EmbeddedFilterTypes;
+    companyId?: number;
+};
 
-export default function Embedded({ filterType }) {
+export default function Embedded({ filterType, companyId }: EmbeddedCdlFiltersProps) {
 
     const router = useRouter()
     const jobApi = new JobApi()
@@ -51,13 +57,14 @@ export default function Embedded({ filterType }) {
 
     const setFiltersForCdlSchools = (): SearchJobsDto => ({
         cdl_class: DriverLicenseType.CDL_CLASS_A,
+        employment_type: JobEmploymentType.W2,
         max_years_experience: 0.6,
     })
     const setFiltersForHeavyHaul = (): SearchJobsDto => ({
-        cdl_class: DriverLicenseType.CDL_CLASS_A
+        cdl_class: DriverLicenseType.CDL_CLASS_A,
+        equipment_type: JobEquipmentType.FLATBED,
     })
     const setFiltersForOwnerOperator = (): SearchJobsDto => ({
-        cdl_class: DriverLicenseType.CDL_CLASS_A,
         employment_type: JobEmploymentType.OWNER_OPERATOR,
     })
     const setFiltersForNewHires = (): SearchJobsDto => ({
@@ -67,16 +74,16 @@ export default function Embedded({ filterType }) {
     })
     const setFiltersForTeamDrivers = (): SearchJobsDto => ({
         cdl_class: DriverLicenseType.CDL_CLASS_A,
-        areas_covered: [JobGeography.OTR, JobGeography.REGIONAL],
+        areas_covered: JobGeography.OTR,
         team_drivers: JobTeamDriver.HAS_TEAM_DRIVER,
     })
     const setFiltersForOtrJobs = (): SearchJobsDto => ({
         cdl_class: DriverLicenseType.CDL_CLASS_A,
-        areas_covered: [JobGeography.OTR, JobGeography.REGIONAL],
+        areas_covered: JobGeography.OTR,
     })
 
-    const [filters, setFilters] = useState<SearchJobsDto>(filtersForQuery(filterType))
-    const resetFilters = (): void => setFilters(filtersInitialsValues)
+    const [filters, setFilters] = useState<SearchJobsDto>({ ...filtersForQuery(filterType), companyId })
+    const resetFilters = (): void => setFilters({ ...filtersForQuery(filterType), companyId, page: 1 })
 
     const [location, setLocation] = useState<JobSearchLocation>(null)
     const resetLocation = (): void => setLocation(null)
@@ -159,7 +166,7 @@ export default function Embedded({ filterType }) {
                     <div className="container">
                         <div className="row">
                             <div className="col-12 col-lg-3 lg-mt-0 mt-5">
-                                <EmbeddedFilters filterType={filterType} />
+                                <EmbeddedFilters filterType={filterType ?? null} />
                             </div>
                             <div className="col-md-9 outer pl-4 ">
                                 <ResultCount />
@@ -174,11 +181,11 @@ export default function Embedded({ filterType }) {
 }
 export async function getServerSideProps({ query }: GetServerSidePropsContext) {
 
-    const { filterType } = query || {};
+    const { filterType, companyId } = query || {};
 
-    if (!!!filterType) return { notFound: true }
+    // if (!!!filterType) return { notFound: true }
 
-    return { props: { filterType } }
+    return { props: { filterType: filterType ?? null, companyId: Boolean(companyId) ? parseInt(companyId as string) : null } }
 }
 Embedded.getLayout = function getLayout(page) {
     return (

@@ -25,7 +25,9 @@ import {
 	PersonHearts,
 	FileEarmarkImage,
 	ShieldFillCheck,
-	Sliders
+	Sliders,
+	PersonBadgeFill,
+	PersonLinesFill
 } from 'react-bootstrap-icons';
 import CompanyProfileNav from "../header/company-profile-nav";
 import { useAuth } from "../../../../hooks/use-auth";
@@ -77,6 +79,20 @@ const FullLayout = ({ children }) => {
 			startsWith: true
 		},
 		{
+			pathname: "/dashboard/company/compliance/employee-directory",
+			icon: GeoAltFill,
+			text: "EMPLOYEES",
+			startsWith: true
+
+		},
+		{
+			icon: FileEarmarkImage,
+			text: "STORED_FILES",
+			pathname: "/dashboard/company/compliance/stored-files",
+			startsWith: true
+
+		},
+		{
 			pathname: "/dashboard/company/settings",
 			icon: GearFill,
 			text: "SETTINGS",
@@ -101,6 +117,12 @@ const FullLayout = ({ children }) => {
 					icon: PeopleFill,
 					text: "USERS",
 					permissions: "CanViewUser",
+					startsWith: true
+				},
+				{
+					pathname: "/dashboard/company/settings/managers",
+					icon: PersonLinesFill,
+					text: "MANAGERS",
 					startsWith: true
 				},
 				{
@@ -130,29 +152,10 @@ const FullLayout = ({ children }) => {
 				{
 					pathname: "/dashboard/company/settings/company-preferences",
 					icon: Sliders,
-					text: "PREFERENCES",
+					text: "DIGITAL_HIRING_APPLICATION",
 				},
 			],
 
-		},
-		{
-			icon: ShieldFillCheck,
-			text: "COMPLIANCE",
-			items: [
-				{
-					pathname: "/dashboard/company/compliance/employee-directory",
-					icon: GeoAltFill,
-					text: "EMPLOYEE_DIRECTORY",
-					startsWith: true
-				},
-				{
-					pathname: "/dashboard/company/compliance/stored-files",
-					icon: FileEarmarkImage,
-					text: "STORED_FILES",
-					startsWith: true
-				},
-				
-			],
 		},
 
 		// superadmin panel

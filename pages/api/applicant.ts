@@ -1,14 +1,18 @@
 import { AxiosRequestConfig } from "axios";
+import { ApplicantDocumentType } from "../../enums/applicants/applicant-document-type.enum";
+import { ApplicantDqf } from "../../enums/applicants/applicant-dqf-types.enum";
 import { ApplicantFormStatus } from "../../enums/applicants/applicant-form-status.enum";
 import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
 import { ApplicantEmployerEntity } from "../../models/applicant";
 import { ApplicantDacEntity } from "../../models/applicant/applicant-dac.entity";
 import { ApplicantJobEntity } from "../../models/applicant/applicant-job.entity";
 import { ApplicantNoteEntity } from "../../models/applicant/applicant-note.entity";
+import { ApplicantOTPEntity } from "../../models/applicant/applicant-otp.entity";
 import { ApplicantSuggestedJobEntity } from "../../models/applicant/applicant-suggested-job.entity";
 import { ApplicantEntity } from "../../models/applicant/applicant.entity";
 import { DocumentEntity } from "../../models/documents/document.entity";
 import { ApplicantJobsByStatusDto } from "../../models/job/applicant-jobs-by-status.dto";
+import { VerifyOTPDto } from "../../models/jot-form/OTP/verify-otp.dto";
 import { UpsertApplicantJotformDto } from "../../models/jot-form/upsert-applicant-jotform.dto";
 import { UpsertApplicantVoeformDto } from "../../models/jot-form/upsert-applicant-voe.dto";
 import BaseApi from "./_baseApi";
@@ -27,6 +31,12 @@ class ApplicantApi extends BaseApi {
 
 	async update(id: number, dto: ApplicantEntity): Promise<ApplicantEntity> {
 		const { data } = await this.put(this.baseUrl + "/" + id, dto);
+
+		return data;
+	}
+
+	async remove(id: number): Promise<ApplicantEntity | void> {
+		const { data } = await this.delete(`${this.baseUrl}/${id}`);
 
 		return data;
 	}
@@ -64,10 +74,33 @@ class ApplicantApi extends BaseApi {
 
 		return data;
 	}
+	// new api to fetch applicant Profile
+	async searchApplicantProfile(
+		params: ApplicantEntity
+	): Promise<ApplicantEntity> {
+		const { data } = await this.get(
+			this.buildUrl(this.baseUrl + "/search-applicant", params)
+		);
+
+		return data;
+	}
+
+
+	async requestOTP(dto: ApplicantEntity): Promise<any> {
+		const { data } = await this.post(this.baseUrl + "/request-otp", dto);
+
+		return data;
+	}
+	async verifyOTP(dto: VerifyOTPDto): Promise<ApplicantEntity> {
+		const { data } = await this.post(this.baseUrl + "/verify-otp", dto);
+
+		return data;
+	}
 
 	async list(params?: {
 		jobId?: number;
 		email?: string;
+		status?: ApplicantStatus | ApplicantStatus[];
 	}): Promise<ApplicantEntity[]> {
 		const { data } = await this.get(
 			this.buildUrl(this.baseUrl + "/list", params)
@@ -140,6 +173,14 @@ class ApplicantApi extends BaseApi {
 				this.documents.baseUrl(applicantId),
 				dto
 			);
+
+			return data;
+		},
+		delete: async (
+			applicantId: number,
+			type: ApplicantDocumentType | ApplicantDqf | string
+		): Promise<DocumentEntity> => {
+			const { data } = await this.delete(`${this.documents.baseUrl(applicantId)}/${type}`);
 
 			return data;
 		},

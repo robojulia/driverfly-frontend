@@ -13,7 +13,8 @@ export function VerificationOfEmploymentSection1({ applicant, employer }: Sectio
 
     const { t } = useTranslation();
     const social_security_number = applicant?.extras?.find(v => v?.type === ApplicantExtras?.EMPLOYEE_SS_OR_ID)
-
+    const signature = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION)
+    const date_VOE = applicant?.extras?.find(sign => sign?.type === ApplicantExtras.APPLY_DATE)
     useEffect(() => {
         console.log("employer from comp ", employer)
         console.log("applicant from comp ", applicant?.company?.users[0])
@@ -53,10 +54,25 @@ export function VerificationOfEmploymentSection1({ applicant, employer }: Sectio
             </div>
             <Row className={styles.align__text_left}>
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
-                    {t("I_HEREBY_AUTHORIZE_RELEASE_OF_BUSINESS")}
+                    {t("VERIFICATION_OF_EMPLOYMENT_FMCSR_AUTHORIZED")}
                 </p>
             </Row>
             <Row className={styles.align__text_left}>
+                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                    {t("UNDERSTAND_CONSENT_REQUESTED")}
+                </p>
+            </Row>
+            <Row className={styles.align__text_left}>
+                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                    {t("{name}_AUTHORIZE_COMPANY", { name: `${applicant?.first_name} ${applicant?.last_name}` }, { translateProps: true })}
+                </p>
+            </Row>
+            {/* <Row className={styles.align__text_left}>
+                <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                    {t("I_HEREBY_AUTHORIZE_RELEASE_OF_BUSINESS")}
+                </p>
+            </Row> */}
+            {/* <Row className={styles.align__text_left}>
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
 
                     {t("ALCOHOL_TESTS_WITH_A_RESULT")}
@@ -86,13 +102,36 @@ export function VerificationOfEmploymentSection1({ applicant, employer }: Sectio
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                     {t("DOCUMENTATION_IF_ANY_OF_COMPLETION")}
                 </p>
+            </Row> */}
+            <Row>
+                <Col>
+                    <div>
+                        <h5 className={`${styles.paragraph} ${styles.align__text_left}`}>
+                            {t("SIGNATURE:")}
+                        </h5>
+                    </div>
+                    <div className="Row" style={{ marginTop: '10px', marginBottom: '30px' }}>
+                        <img src={signature?.value} style={{ width: '300px', height: '200px' }} alt="image" />
+
+                    </div>
+                </Col>
+                <Col>
+                    <div>
+                        <h5 className={`${styles.paragraph} ${styles.align__text_left}`}>
+                            {t("DATE:")}
+                        </h5>
+                        <p className={`${styles.paragraph} ${styles.align__text_left}`}>
+                            {date_VOE?.value}
+                        </p>
+                    </div>
+                </Col>
             </Row>
+
             <Row className={styles.align__text_left}>
                 <h4 className="mt-3">{t("I_A")}</h4>
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                     {t("NEW_EMPLOYER_NAME_{company_name}", { company_name: applicant?.company?.name }, { translateProps: true })}
                 </p>
-
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                     {t("CURENNT_COMPANY_{phone}", { phone: applicant?.company?.users[0]?.contact_number }, { translateProps: true })}
                 </p>
@@ -277,7 +316,7 @@ export function VerificationOfEmploymentSection1({ applicant, employer }: Sectio
                         {t("BLANK_LINE")}
                     </p>
                 </Row>
-                <Row className={styles.align__text_left}>
+                {/* <Row className={styles.align__text_left}>
                     <Col>
                         <h4>{t("II_B")}</h4>
                     </Col>
@@ -337,10 +376,10 @@ export function VerificationOfEmploymentSection1({ applicant, employer }: Sectio
                     >
                         {t("NOTE_PREVIOUS_EMPLOYER_REPORT")}
                     </p>
-                </Row>
+                </Row> */}
                 <Row className={styles.align__text_left}>
                     <Col>
-                        <h4>{t("II_C")}</h4>
+                        <h4>{t("II-B")}</h4>
                     </Col>
                 </Row>
                 <Row className={styles.align__text_left}>

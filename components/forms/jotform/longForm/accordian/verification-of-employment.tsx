@@ -94,6 +94,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                         className="col my-3"
                         name="EMPLOYEE_SS_OR_ID.value"
                         label="EMPLOYEE_SS_OR_BUSINESS"
+                        type="password"
                         onChange={({ target: { value } }) => handleInput(value)}
                         formik={form}
                         required

@@ -17,14 +17,16 @@ export default function ApplicantJobsApplied({ applicant }: ApplicantJobsApplied
                 headers={{
                     title: "JOB",
                     status: "STATUS",
-                    date_applied: "DATE_APPLIED"
+                    date_applied: "DATE_APPLIED",
+                    manager: "MANAGER"
                 }}
                 items={applicant?.jobs?.map(aJob => ({
-                    title: <Link href={`/jobs/${aJob.job.id}/${aJob.job.title}`}><a>{aJob.job.title}</a></Link>,
+                    title: <a href={`/jobs/${aJob.job.id}/${aJob.job.title}`}>{aJob.job?.title}</a>,
                     status: <ShowEnumFromString skipLowerCase popover={true} str={aJob.status} labelPrefix="ApplicantStatus" enumArray={ApplicantStatus} />,
-                    date_applied: new Date(aJob.created_at).toDateString()
+                    date_applied: new Date(aJob.created_at).toDateString(),
+                    manager: aJob.manager?.name
                 }))}
             />
-        </ViewCard>
+        </ViewCard >
     )
 }

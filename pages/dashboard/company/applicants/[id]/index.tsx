@@ -39,6 +39,7 @@ import ApplicantSafetyBackground from "../../../../../components/applicants/appl
 import ApplicantJobsApplied from "../../../../../components/applicants/applicant-jobs-applied";
 import ApplicantConsiderFor from "../../../../../components/applicants/applicant-consider-for";
 import ViewApplicantDAC from "../../../../../components/applicants/view-applicant-dac";
+import ViewApplicantDqf from "../../../../../components/applicants/view-applicant-dqf";
 
 export default function ViewApplicant({ id }) {
 	const router = useRouter();
@@ -228,198 +229,213 @@ export default function ViewApplicant({ id }) {
 		{ name: "APPLICANT" },
 		{ translateProps: true }
 	);
-
 	return (
 		<ChildPageLayout backPath={backPath} title={title}>
-			{canEdit && (
-				<Row>
-					<Col>
-						<div
-							style={{ float: "right", marginBottom: "10px" }}
-							className="assign_unassign"
-						>
-							<ButtonGroup size="sm">
-								{applicant?.assignedUser ? (
-									<Button
-										type="button"
-										variant="danger"
-										onClick={onUnassignClick}
-									>
-										<BookmarkDash /> {t("UNASSIGN")}
-									</Button>
-								) : (
-									<Button
-										type="button"
-										className="theme-general-btn"
-										variant=""
-										onClick={onAssignClick}
-									>
-										<BookmarkCheck /> {t("ASSIGN_TO_ME")}
-									</Button>
-								)}
-								<Button type="button" onClick={onEditClick}>
-									<Pencil /> {t("EDIT")}
-								</Button>
-							</ButtonGroup>
-						</div>
-					</Col>
-				</Row>
-			)}
-			<FlagApplicant applicantId={id} />
-			<Row>
-				<Col>
-					<ViewApplicantDetail
-						applicant={applicant}
-						protectedFields={protectedFields}
-					/>
-				</Col>
-			</Row>
-			<Row>
-				<Col>
-					<ApplicantWorkHistory applicant={applicant} />
-				</Col>
-				<Col>
-					< ViewApplicantDAC applicant={applicant} />
-				</Col>
-
-			</Row>
-			<Row>
-				<Col >
-					<ApplicantSafetyBackground applicant={applicant} />
-				</Col>
-			</Row>
-			<Row>
-				<Col md="6">
-					<ApplicantJobsApplied applicant={applicant} />
-				</Col>
-				{applicantSuggestedJobs && (
-					<Col md="6">
-						<ApplicantConsiderFor
-							applicant={applicant}
-							applicantSuggestedJobs={applicantSuggestedJobs}
-						/>
-					</Col>
-				)}
-			</Row>
-			<Row>
-				<Col md="12">
-					<ViewCard title="UPLOADED_DOCUMENTS">
-						<ViewTable
-							type="DOCUMENTS"
-							headers={{
-								type: "TYPE",
-								document: "DOCUMENT",
-								date_added: "DATE_ADDED",
-							}}
-							items={applicant?.documents?.map((document) => ({
-								type: t(`ApplicantDocumentType.${document.type}`),
-								document: (
-									<a
-										onClick={() =>
-											viewDocumentClick(document.id, document.name)
-										}
-										href="#"
-									>
-										{document.name}
-									</a>
-								),
-								date_added: new Date(document.created_at).toDateString(),
-							}))}
-						/>
-					</ViewCard>
-				</Col>
-				<Col md="12">
-					<ViewCard title="NOTES">
-						<ViewTable
-							type="NOTES"
-							headers={{
-								notes: "NOTES",
-								user: "USER",
-								date: "DATE",
-								action: (
-									<a
-										className="font-weight-bold"
-										role="button"
-										onClick={handleNoteModalShow}
-									>
-										<PlusLg />
-									</a>
-								),
-							}}
-							items={applicant?.notes?.map((v) => ({
-								notes: v.text,
-								user: `${v.user.first_name} ${v.user.last_name}`,
-								date: new Date(v.created_at).toDateString(),
-								action: (
-									<>
-										<a
-											className="mr-2 font-weight-bold"
-											role="button"
-											onClick={() => {
-												editNoteClick(v.id);
-											}}
-										>
-											<Pencil />
-										</a>
-										<a
-											className="mr-2font-weight-bold"
-											role="button"
-											onClick={() => {
-												deleteNoteClick(v.id);
-											}}
-										>
-											<Trash />
-										</a>
-									</>
-								),
-							}))}
-						/>
-					</ViewCard>
-				</Col>
-			</Row>
-			<ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
-			<ViewModal
-				title={t(addNoteForm.values?.id ? "EDIT_{name}" : "ADD_{name}", {
-					name: t("NOTE"),
-				})}
-				show={addNoteVisible}
-				onCloseClick={handleNoteModalClose}
-			>
-				<form onSubmit={addNoteForm.handleSubmit}>
+			{Boolean(applicant.id) && <>
+				{canEdit && (
 					<Row>
 						<Col>
-							<BaseTextArea
-								label={t("NOTE")}
-								name="text"
-								placeholder={t("NOTES")}
-								required
-								formik={addNoteForm}
+							{
+								!!!Object.values(applicant?.jobs).length && <strong>
+									<em>
+										<p className="text-danger">
+											{t("NO_JOB_TIED_WITH_APPLICANT")}
+										</p>
+									</em>
+								</strong>
+							}
+
+						</Col>
+						<Col>
+							<div
+								style={{ float: "right", marginBottom: "10px" }}
+								className="assign_unassign"
+							>
+
+								<ButtonGroup size="sm">
+									{applicant?.assignedUser ? (
+										<Button
+											type="button"
+											variant="danger"
+											onClick={onUnassignClick}
+										>
+											<BookmarkDash /> {t("UNASSIGN")}
+										</Button>
+									) : (
+										<Button
+											type="button"
+											className="theme-general-btn"
+											variant=""
+											onClick={onAssignClick}
+										>
+											<BookmarkCheck /> {t("ASSIGN_TO_ME")}
+										</Button>
+									)}
+									<Button type="button" onClick={onEditClick}>
+										<Pencil /> {t("EDIT")}
+									</Button>
+								</ButtonGroup>
+							</div>
+						</Col>
+					</Row>
+				)}
+				<FlagApplicant applicantId={id} />
+				<Row>
+					<Col>
+						<ViewApplicantDetail
+							applicant={applicant}
+							protectedFields={protectedFields}
+						/>
+					</Col>
+				</Row>
+				<Row>
+					<Col>
+						<ApplicantWorkHistory applicant={applicant} />
+					</Col>
+					<Col>
+						{/* < ViewApplicantDAC applicant={applicant} /> */}
+						<ViewApplicantDqf applicant={applicant} />
+					</Col>
+
+				</Row>
+				<Row>
+					<Col >
+						<ApplicantSafetyBackground applicant={applicant} />
+					</Col>
+				</Row>
+				<Row>
+					<Col md="6">
+						<ApplicantJobsApplied applicant={applicant} />
+					</Col>
+					{applicantSuggestedJobs && (
+						<Col md="6">
+							<ApplicantConsiderFor
+								applicant={applicant}
+								applicantSuggestedJobs={applicantSuggestedJobs}
 							/>
 						</Col>
-					</Row>
-					<Row className="mt-1">
-						<Col xs="2" className="">
-							<Button type="submit">{t("SAVE")}</Button>
-						</Col>
-					</Row>
-				</form>
-			</ViewModal>
-			<ViewModal
-				title="CONFIRMATION"
-				show={showConfirmationModal}
-				onCloseClick={() => setShowConfirmationModal(false)}
-				footer={
-					<button
-						type="button"
-						className="btn btn-primary w-100 p-lg-3 p-5 mx-2"
-						onClick={handleConfirmClick}
-					>
-						{t("CONFIRM")}
-					</button>
-				}
-			>
-				<p className="m-3">{t("NOTE_DELETION_CONFIRMATION")}</p>
-			</ViewModal>
+					)}
+				</Row>
+				<Row>
+					<Col md="12">
+						<ViewCard title="UPLOADED_DOCUMENTS">
+							<ViewTable
+								type="DOCUMENTS"
+								headers={{
+									type: "TYPE",
+									document: "DOCUMENT",
+									date_added: "DATE_ADDED",
+								}}
+								items={applicant?.documents?.map((document) => ({
+									type: t(`ApplicantDocumentType.${document.type}`),
+									document: (
+										<a
+											onClick={() =>
+												viewDocumentClick(document.id, document.name)
+											}
+											href="#"
+										>
+											{document.name}
+										</a>
+									),
+									date_added: new Date(document.created_at).toDateString(),
+								}))}
+							/>
+						</ViewCard>
+					</Col>
+					<Col md="12">
+						<ViewCard title="NOTES">
+							<ViewTable
+								type="NOTES"
+								headers={{
+									notes: "NOTES",
+									user: "USER",
+									date: "DATE",
+									action: (
+										<a
+											className="font-weight-bold"
+											role="button"
+											onClick={handleNoteModalShow}
+										>
+											<PlusLg />
+										</a>
+									),
+								}}
+								items={applicant?.notes?.map((v) => ({
+									notes: v.text,
+									user: `${v.user.first_name} ${v.user.last_name}`,
+									date: new Date(v.created_at).toDateString(),
+									action: (
+										<>
+											<a
+												className="mr-2 font-weight-bold"
+												role="button"
+												onClick={() => {
+													editNoteClick(v.id);
+												}}
+											>
+												<Pencil />
+											</a>
+											<a
+												className="mr-2font-weight-bold"
+												role="button"
+												onClick={() => {
+													deleteNoteClick(v.id);
+												}}
+											>
+												<Trash />
+											</a>
+										</>
+									),
+								}))}
+							/>
+						</ViewCard>
+					</Col>
+				</Row>
+				<ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
+				<ViewModal
+					title={t(addNoteForm.values?.id ? "EDIT_{name}" : "ADD_{name}", {
+						name: t("NOTE"),
+					})}
+					show={addNoteVisible}
+					onCloseClick={handleNoteModalClose}
+				>
+					<form onSubmit={addNoteForm.handleSubmit}>
+						<Row>
+							<Col>
+								<BaseTextArea
+									label={t("NOTE")}
+									name="text"
+									placeholder={t("NOTES")}
+									required
+									formik={addNoteForm}
+								/>
+							</Col>
+						</Row>
+						<Row className="mt-1">
+							<Col xs="2" className="">
+								<Button type="submit">{t("SAVE")}</Button>
+							</Col>
+						</Row>
+					</form>
+				</ViewModal>
+				<ViewModal
+					title="CONFIRMATION"
+					show={showConfirmationModal}
+					onCloseClick={() => setShowConfirmationModal(false)}
+					footer={
+						<button
+							type="button"
+							className="btn btn-primary w-100 p-lg-3 p-5 mx-2"
+							onClick={handleConfirmClick}
+						>
+							{t("CONFIRM")}
+						</button>
+					}
+				>
+					<p className="m-3">{t("NOTE_DELETION_CONFIRMATION")}</p>
+				</ViewModal>
+			</>}
 		</ChildPageLayout>
 	);
 }

@@ -118,7 +118,6 @@ export default function FileInput({ documentType, formik, accept, required, clas
     const [viewDoc, setViewDoc] = useState("");
 
     async function view(e) {
-        console.log("valuueeeeee filr inputtt",value);
         if (value?.id) {
             const api = new DocumentApi();
             const document = await api.getSignedUrl(value.id);

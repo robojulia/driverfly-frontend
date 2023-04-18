@@ -5,7 +5,9 @@ import BaseControl, { BaseControlProps } from './base-control';
 
 export interface BaseSelectProps extends BaseControlProps {
   enumType?: object;
-  options?: {value?: string, label?: string}[] | any[];
+  hideOptions?: string[];
+  showOptions?: string[];
+  options?: { value?: string, label?: string }[] | any[];
   valueKey?: string;
   labelKey?: string;
   labelPrefix?: string;
@@ -17,7 +19,7 @@ export interface BaseSelectProps extends BaseControlProps {
   readOnly?: boolean;
 }
 
-function BaseSelect ( { append, prepend, formik, required, className, enumType, options, valueKey = "value", labelKey = "label", labelPrefix, createLabel, label, placeholder, value, onChange, handleBlur, readOnly, name, touched, error, }: BaseSelectProps ) {
+function BaseSelect({ append, prepend, formik, required, className, enumType, options, valueKey = "value", labelKey = "label", labelPrefix, createLabel, label, placeholder, value, onChange, handleBlur, readOnly, name, touched, error, hideOptions, showOptions }: BaseSelectProps) {
   const { t } = useTranslation();
 
   if (formik) {
@@ -40,6 +42,10 @@ function BaseSelect ( { append, prepend, formik, required, className, enumType, 
       [valueKey]: value,
       [labelKey]: value
     }))
+
+    if (hideOptions?.length) options = options?.filter(v => !hideOptions.includes(v.value))
+    if (showOptions?.length) options = options?.filter(v => showOptions.includes(v.value))
+
   }
   else if (options && options.length > 0 && typeof options[0] !== "object") {
     options = options?.map(v => ({
@@ -58,7 +64,7 @@ function BaseSelect ( { append, prepend, formik, required, className, enumType, 
    * 
    * @param {React.ChangeEvent<HTMLSelectElement>} e 
    */
-   function onChangeProxy(e) {
+  function onChangeProxy(e) {
     const { name, value } = e.target;
 
     if (!onChange) return;
@@ -87,15 +93,15 @@ function BaseSelect ( { append, prepend, formik, required, className, enumType, 
       error={error}
       prepend={prepend}
       append={append}
-      >
+    >
       <select
         value={value == null ? "" : value}
         onChange={onChangeProxy}
         onBlur={handleBlur}
         disabled={readOnly}
         name={name?.toString()}
-        className={`form-select ${error ? "is-invalid" : ""}`} 
-        >
+        className={`form-select ${error ? "is-invalid" : ""}`}
+      >
         {placeholder && <option value="">{placeholder === true ? t("SELECT_{name}", { name: `${label || name}` }, { translateProps: true }) : t(placeholder.toString())}</option>}
         {options && options?.map((v, i) => (<option key={i} value={v[valueKey]}>{t(labelPrefix ? `${labelPrefix}.${v[labelKey]}` : v[labelKey])}</option>))}
       </select>

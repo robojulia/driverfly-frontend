@@ -10,73 +10,73 @@ import { Icon } from 'react-bootstrap-icons';
 import { useTranslation } from '../../hooks/use-translation';
 
 export interface ListActionsProps {
-  id?: string;
-  options?: ListActionOptions[];
-  onClick?: (e: React.MouseEvent) => void;
+	id?: string;
+	options?: ListActionOptions[];
+	onClick?: (e: React.MouseEvent) => void;
 }
 
 export interface ListActionOptions {
-  icon?: Icon;
-  label: string | ReactNode | (() => string|ReactNode);
-  onClick?: (e: React.MouseEvent) => void;
-  hide?: boolean;
+	icon?: Icon;
+	label?: string | ReactNode | (() => string | ReactNode);
+	onClick?: (e: React.MouseEvent) => void;
+	hide?: boolean;
 }
 
 export default function ListActions({ id, options, onClick }: ListActionsProps) {
-    const [ state, setState ] = useState({ anchorEl: null });
+	const [state, setState] = useState({ anchorEl: null });
 
-    const { t } = useTranslation();
-    
-    const filteredOptions = options.filter((option) => !option.hide);
+	const { t } = useTranslation();
 
-    const handleClick = event => {
-        setState({ anchorEl: event.currentTarget });
-    };
-    
-    const handleClose = (e: React.MouseEvent) => {
-        setState({ anchorEl: null });
-    };
+	const filteredOptions = options?.filter((option) => !option.hide);
 
-    if (!id) id = generateUUID();
+	const handleClick = event => {
+		setState({ anchorEl: event.currentTarget });
+	};
 
-    const { anchorEl } = state;
+	const handleClose = (e: React.MouseEvent) => {
+		setState({ anchorEl: null });
+	};
 
-    if (!filteredOptions?.length) {
-      return null;
-    } else {
-      return (
-        <div>
-          <Button
-            aria-owns={anchorEl ? id : undefined}
-            aria-haspopup="true"
-            onClick={handleClick}
-          >
-            <MoreVertIcon />
-          </Button>
-          <Menu
-            id={id}
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-              {filteredOptions.map((v, i) => {
-                let { icon: Cmp, label } = v;
+	if (!id) id = generateUUID();
 
-                if (typeof label === "function") label = label();
-                
-                return (
-                  <MenuItem key={i} onClick={e => {
-                      e.preventDefault();
-                      handleClose(e);
-                      if (v.onClick) v.onClick(e);
-                      if (onClick) onClick(e)
-                  }}>
-                    {Cmp && <Cmp style={{ marginRight: "5px" }} />} {typeof label === "string" ? t(label) : label}
-                </MenuItem>);
-            })}
-          </Menu>
-        </div>
-      );
-    }
+	const { anchorEl } = state;
+
+	if (!filteredOptions?.length) {
+		return null;
+	} else {
+		return (
+			<div>
+				<Button
+					aria-owns={anchorEl ? id : undefined}
+					aria-haspopup="true"
+					onClick={handleClick}
+				>
+					<MoreVertIcon />
+				</Button>
+				<Menu
+					id={id}
+					anchorEl={anchorEl}
+					open={Boolean(anchorEl)}
+					onClose={handleClose}
+				>
+					{filteredOptions.map((v, i) => {
+						let { icon: Cmp, label } = v;
+
+						if (typeof label === "function") label = label();
+
+						return (
+							<MenuItem key={i} onClick={e => {
+								e.preventDefault();
+								handleClose(e);
+								if (v.onClick) v.onClick(e);
+								if (onClick) onClick(e)
+							}}>
+								{Cmp && <Cmp style={{ marginRight: "5px" }} />} {typeof label === "string" ? t(label) : label}
+							</MenuItem>);
+					})}
+				</Menu>
+			</div>
+		);
+	}
 }
 
