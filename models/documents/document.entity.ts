@@ -18,14 +18,14 @@ export class DocumentEntity {
 
     mime_type?: string;
     file_base64?: string;
-
+ 
     documentable_id: number;
     documentable_type: string;
     created_at: string;
     last_updated_at: string;
     // user: UserEntity;
 
-    static yupSchema(enumType?: object) {
+    static yupSchema(enumType?) {
         return yup.object({
             type: (enumType ? (yup.string() as any).enum(enumType) : yup.string()).required().nullable(),
             visibility: (yup.string() as any).enum(DocumentVisibility).nullable(),

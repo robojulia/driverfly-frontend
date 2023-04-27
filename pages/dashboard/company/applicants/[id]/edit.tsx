@@ -51,7 +51,7 @@ export default function EditApplicant({ id }) {
                 onSaveComplete={goBack}
             />
             <Row>
-                <Col md={6}>
+                <Col md={8}>
                     <ViewApplicantDqf canEdit={true} applicant={applicant} />
                 </Col>
             </Row>
