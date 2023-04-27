@@ -10,7 +10,7 @@ export class ApplicantDocumentDto {
     static yupSchema() {
         return yup.object({
 
-            document: DocumentEntity.yupSchema(ApplicantDqf as any | ApplicantOnBoardingChecklist as any)
+            document: DocumentEntity.yupSchema()
 
         });
     }
