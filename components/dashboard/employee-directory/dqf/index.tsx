@@ -24,6 +24,7 @@ import { DocumentHistoryEntity } from "../../../../models/documents/document-his
 import ViewDataTable from "../../../view-details/view-data-table";
 import { DocumentEntity } from "../../../../models/documents/document.entity";
 import { ViewApplicantDqfProps } from "../../../../types/applicant/view-application-dqf-props.type";
+import { ApplicantOnBoardingChecklist } from "../../../../enums/applicants/applicant-onboarding-checklist.enum";
 
 const DqfTab = ({ applicant }: ViewApplicantDqfProps) => {
 
@@ -78,7 +79,7 @@ const DqfTab = ({ applicant }: ViewApplicantDqfProps) => {
      * @param {ApplicantDqf} type - ApplicantDqf - this is the type of document that is being uploaded.
      * @param {number} [documentId] - The id of the document to be updated.
      */
-    const handleUpdateDocument = async (type: ApplicantDqf, documentId?: number): Promise<void> => {
+    const handleUpdateDocument = async (type: ApplicantDqf | ApplicantOnBoardingChecklist, documentId?: number): Promise<void> => {
         form.setFieldValue("document", { type, id: documentId ?? null })
     }
 
@@ -130,6 +131,7 @@ const DqfTab = ({ applicant }: ViewApplicantDqfProps) => {
                 <Col>
                     {!!applicantUser ? (
                         <ViewCard title="DOCUMENTS">
+                            <h3 className="my-4"><em>{t("ONBOARDING_CHECKLIST")}</em></h3>
                             <Table striped>
                                 <thead>
                                     <tr>
@@ -140,6 +142,120 @@ const DqfTab = ({ applicant }: ViewApplicantDqfProps) => {
                                 </thead>
 
                                 <tbody>
+
+                                    {
+                                        Object.values(ApplicantOnBoardingChecklist).map((value: ApplicantOnBoardingChecklist, i) => {
+
+                                            /* Finding the document in the applicantUser.documents array that has the same type as the value. */
+                                            const document: DocumentEntity = applicantUser?.documents?.find(v => (v.type === value))
+                                            return (
+                                                <tr key={i}>
+                                                    <td colSpan={2}>
+                                                        {t(`ApplicantOnBoardingChecklist.${value}`)}
+                                                    </td>
+                                                    <td colSpan={2}>
+                                                        {/* Checking if the document is available, if it
+                                                        is, it will display the date, if not, it
+                                                        will display the text "NOT_AVAILABLE"
+                                                        */ }
+                                                        {document
+                                                            ? <ShowFormattedDate date={document.last_updated_at} />
+                                                            : <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>}
+                                                    </td>
+                                                    <td colSpan={1} className="border border-2 w-50">
+                                                        {
+                                                            (!form.values.document?.type || form.values.document?.type !== value)
+                                                            && (<div className="d-flex">
+
+                                                                {/* It is checking
+                                                                if the document exists. If it does,
+                                                                it will display view the button. If it
+                                                                doesn't, it will display nothing. */}
+                                                                {document
+                                                                    ? <a
+                                                                        onClick={() => viewDocumentClick(document.id)}
+                                                                        href='#'
+                                                                        role="button"
+                                                                        className="btn btn-success p-0 pt-1 mr-2 w-100"
+                                                                    ><Eye /></a>
+                                                                    : null}
+
+                                                                {/* A button that will either update or
+                                                                add a document. */}
+                                                                <Button
+                                                                    className="mr-2 w-100"
+                                                                    onClick={() => { handleUpdateDocument(value, document?.id) }}
+                                                                >{document ? <Pen /> : t('ADD')}</Button>
+
+                                                                {document
+                                                                    ? <a
+                                                                        href={document?.path}
+                                                                        download
+                                                                        className="btn theme-primary2-btn p-0 pt-1 mr-2"
+                                                                    ><CloudArrowDown /></a>
+                                                                    : null}
+
+                                                                {/* A ternary operator. It is checking
+                                                                if the document exists. If it does,
+                                                                it will render the delete button. If
+                                                                it doesn't, it will render nothing. */}
+                                                                {document
+                                                                    ? <a
+                                                                        onClick={() => deleteDocument(document.type)}
+                                                                        href='#'
+                                                                        role="button"
+                                                                        className="btn btn-danger  p-0 pt-1 mr-2 w-100"
+                                                                    ><Trash /></a>
+                                                                    : null}
+
+                                                                {/* A button that when clicked will call
+                                                                the viewHistory function and pass in
+                                                                the type. */}
+                                                                <Button
+                                                                    title={t("HISTORY")}
+                                                                    onClick={() => { viewHistory(value) }}
+                                                                ><ClockHistory /></Button>
+                                                            </div>)
+                                                        }
+
+                                                        {(form.values?.document?.type === value)
+                                                            && <Form onSubmit={form.handleSubmit} >
+                                                                <FileInput
+                                                                    name={`document`}
+                                                                    accept="application/pdf"
+                                                                    formik={form}
+                                                                />
+                                                                <div className="mt-2 d-flex w-100 ">
+                                                                    <Button disabled={form.isSubmitting || !form.isValid || form.isValidating} className="mr-2 w-50 theme-primary-btn" type="submit">
+                                                                        {t(`SAVE`)}
+                                                                    </Button>
+                                                                    <Button type="button" className="mr-2 w-50 bg-danger" onClick={() => { form.resetForm() }}                                                            >
+                                                                        {t(`CANCEL`)}
+                                                                    </Button>
+                                                                </div>
+                                                            </Form>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            )
+                                        })
+                                    }
+
+                                </tbody>
+                            </Table>
+                            <h3 className="my-4"><em>{t("DQF")}</em></h3>
+                            <Table striped>
+
+                                <thead>
+                                    <tr>
+                                        <th colSpan={2}>{t("TYPE")}</th>
+                                        <th colSpan={2}>{t("UPDATED_AT")}</th>
+                                        <th colSpan={1}></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
                                     {
                                         Object.values(ApplicantDqf).map((value: ApplicantDqf, i) => {
 
@@ -237,8 +353,10 @@ const DqfTab = ({ applicant }: ViewApplicantDqfProps) => {
                                             )
                                         })
                                     }
+
                                 </tbody>
                             </Table>
+
                             <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
 
                         </ViewCard>
