@@ -129,17 +129,18 @@ export function Messenger(props) {
     const socketInitializer = async (): Promise<void> => {
         /* Initializing a socket connection to the server. */
         const socket: Socket = io(`${process.env.BASE_URL}`);
+        console.log(`Socket :: initializer reply-to-user-${user?.id}`);
 
-        console.log(`initializer reply-to-user-${user?.id}`);
-        socket.emit("msgToServer", "Testing client msgToServer")
+        socket.on("connect_error", (err) => {
+            console.log(`Socket :: connect_error due to ${err.message}`);
+        });
 
         /* Listening for a message from the server, and when it receives a message, it finds the conversation
         that the message belongs to and opens it. */
         socket.on(
             `reply-to-user-${user?.id}`,
             async (message: ConversationMessageEntity): Promise<void> => {
-                console.log(`reply-to-user-${user?.id}`);
-                alert(`reply-to-user-${user?.id}`);
+                console.log(`Socket :: reply-to-user-${user?.id}`);
                 const c = conversations?.find(v => v.id == message?.conversation?.id)
                 if (Boolean(c)) {
                     toast(t(
