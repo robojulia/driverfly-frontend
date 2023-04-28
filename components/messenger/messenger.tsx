@@ -128,9 +128,31 @@ export function Messenger(props) {
      */
     const socketInitializer = async (): Promise<void> => {
         /* Initializing a socket connection to the server. */
-        const socket: Socket = io(`${process.env.BASE_URL}`);
-        console.log(`Socket :: initializer reply-to-user-${user?.id}`);
+        const socket: Socket = io(`${process.env.BASE_URL}`, {});
 
+        // Add a connect listener
+        /* This code is setting up a listener for the 'connection' event on the socket object. When a client
+        connects to the server, this event will be triggered and the function passed as the second argument
+        will be executed. In this case, it simply logs a message to the console indicating that a client has
+        connected. */
+        socket.on('connection', function (socket) {
+            console.log('Socket :: Client connected.');
+        });
+
+        // Disconnect listener
+        /* This code sets up a listener for the 'disconnect' event on the socket object. When a client
+        disconnects from the server, this event will be triggered and the function passed as the second
+        argument will be executed. In this case, it simply logs a message to the console indicating that a
+        client has disconnected. */
+        socket.on('disconnect', function () {
+            console.log('Socket :: Client disconnected.');
+        });
+
+        // Error listener
+        /* This code sets up a listener for the "connect_error" event on the socket object. When there is an
+        error connecting to the server, this event will be triggered and the function passed as the second
+        argument will be executed. In this case, it simply logs a message to the console indicating that
+        there was a connection error and the reason for the error. */
         socket.on("connect_error", (err) => {
             console.log(`Socket :: connect_error due to ${err.message}`);
         });
