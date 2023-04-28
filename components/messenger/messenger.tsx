@@ -140,8 +140,12 @@ export function Messenger(props) {
         connects to the server, this event will be triggered and the function passed as the second argument
         will be executed. In this case, it simply logs a message to the console indicating that a client has
         connected. */
-        socket.on('connection', function (socket) {
-            console.log('Socket :: Client connected.');
+        socket.on('connection', () => {
+            console.log('Socket :: Client connected.', socket);
+        });
+
+        socket.on('connect', () => {
+            console.log('Socket :: Client connect.', socket);
         });
 
         // Disconnect listener
@@ -149,7 +153,7 @@ export function Messenger(props) {
         disconnects from the server, this event will be triggered and the function passed as the second
         argument will be executed. In this case, it simply logs a message to the console indicating that a
         client has disconnected. */
-        socket.on('disconnect', function () {
+        socket.on('disconnect', () => {
             console.log('Socket :: Client disconnected.');
         });
 
@@ -159,7 +163,14 @@ export function Messenger(props) {
         argument will be executed. In this case, it simply logs a message to the console indicating that
         there was a connection error and the reason for the error. */
         socket.on("connect_error", (err) => {
-            console.log(`Socket :: connect_error due to ${err.message}`, err);
+            console.log(`Socket :: connect_error due to ${err.message}`, err.name);
+            setTimeout(() => {
+                socket.connect();
+            }, 1000);
+        });
+
+        socket.on("connect_failed", (err) => {
+            console.log(`Socket :: connect_failed ${err.message}`, err);
         });
 
         /* Listening for a message from the server, and when it receives a message, it finds the conversation
