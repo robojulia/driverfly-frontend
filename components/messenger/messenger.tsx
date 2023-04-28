@@ -2,6 +2,9 @@ import { CancelTokenSource } from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Navbar, Row } from "react-bootstrap";
 import { Plus } from "react-bootstrap-icons";
+import { Socket } from "socket.io-client";
+const io = require("socket.io-client");
+import { toast } from 'react-toastify'
 import { ChattableType } from "../../enums/conversation/chattable-type.enum";
 import { UserPreferenceCategory } from "../../enums/users/user-preference-category.enum";
 import { UserPreferenceCommunicationLabel } from "../../enums/users/user-preferences-communication-label.enum";
@@ -15,9 +18,7 @@ import { useEffectAsync } from "../../utils/react";
 import { ComboboxItem } from "../controls/combobox";
 import { ConversationForm } from "./conversation-form";
 import { ConversationList, ConversationListItem } from "./conversation-list";
-import { io, Socket } from "socket.io-client";
 import { ConversationMessageEntity } from "../../models/conversation/conversation-message.entity";
-import { toast } from 'react-toastify'
 
 
 export interface MessengerProps {
@@ -128,8 +129,14 @@ export function Messenger(props) {
      */
     const socketInitializer = async (): Promise<void> => {
         /* Initializing a socket connection to the server. */
-        const socket: Socket = io(
+        const socket1: Socket = io(
             `${process.env.BASE_URL}`,
+            {
+                rejectUnauthorized: false
+            }
+        );
+        const socket: Socket = io(
+            `https://driverfly-backend.test.driverfly.co`,
             {
                 rejectUnauthorized: false
             }
@@ -171,6 +178,10 @@ export function Messenger(props) {
 
         socket.on("connect_failed", (err) => {
             console.log(`Socket :: connect_failed ${err.message}`, err);
+        });
+
+        socket.onAny((event, ...args) => {
+            console.log(`Socket :: got ${event}`, args);
         });
 
         /* Listening for a message from the server, and when it receives a message, it finds the conversation
