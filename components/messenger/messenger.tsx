@@ -163,7 +163,7 @@ export function Messenger(props) {
         argument will be executed. In this case, it simply logs a message to the console indicating that
         there was a connection error and the reason for the error. */
         socket.on("connect_error", (err) => {
-            console.log(`Socket :: connect_error due to ${err.message}`, err.name);
+            console.log(`Socket :: connect_error due to ${err.message}`, err.stack);
             setTimeout(() => {
                 socket.connect();
             }, 1000);
