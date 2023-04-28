@@ -128,7 +128,12 @@ export function Messenger(props) {
      */
     const socketInitializer = async (): Promise<void> => {
         /* Initializing a socket connection to the server. */
-        const socket: Socket = io(`${process.env.BASE_URL}`, {});
+        const socket: Socket = io(
+            `${process.env.BASE_URL}`,
+            {
+                rejectUnauthorized: false
+            }
+        );
 
         // Add a connect listener
         /* This code is setting up a listener for the 'connection' event on the socket object. When a client
