@@ -131,6 +131,8 @@ export function Messenger(props) {
         const socket: Socket = io(`${process.env.BASE_URL}`);
 
         console.log(`initializer reply-to-user-${user?.id}`);
+        socket.emit("msgToServer", "Testing client msgToServer")
+
         /* Listening for a message from the server, and when it receives a message, it finds the conversation
         that the message belongs to and opens it. */
         socket.on(
