@@ -137,6 +137,7 @@ export function Messenger(props) {
             `reply-to-user-${user?.id}`,
             async (message: ConversationMessageEntity): Promise<void> => {
                 console.log(`reply-to-user-${user?.id}`);
+                alert(`reply-to-user-${user?.id}`);
                 const c = conversations?.find(v => v.id == message?.conversation?.id)
                 if (Boolean(c)) {
                     toast(t(
