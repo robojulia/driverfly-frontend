@@ -129,28 +129,27 @@ export function Messenger(props) {
      */
     const socketInitializer = async (): Promise<void> => {
         /* Initializing a socket connection to the server. */
-        const socket1: Socket = io(
+        const socket: Socket = io(
             `${process.env.BASE_URL}`,
             {
                 rejectUnauthorized: false
             }
         );
-        const socket: Socket = io(
-            `https://driverfly-backend.test.driverfly.co`,
-            {
-                rejectUnauthorized: false
-            }
-        );
+        // const socket: Socket = io(
+        //     `https://driverfly-backend.test.driverfly.co`,
+        //     {
+        //         rejectUnauthorized: false
+        //     }
+        // );
 
         // Add a connect listener
         /* This code is setting up a listener for the 'connection' event on the socket object. When a client
         connects to the server, this event will be triggered and the function passed as the second argument
         will be executed. In this case, it simply logs a message to the console indicating that a client has
         connected. */
-        socket.on('connection', () => {
-            console.log('Socket :: Client connected.', socket);
-        });
-
+        // socket.on('connection', () => {
+        //     console.log('Socket :: Client connection.', socket);
+        // });
         socket.on('connect', () => {
             console.log('Socket :: Client connect.', socket);
         });
@@ -174,10 +173,6 @@ export function Messenger(props) {
             setTimeout(() => {
                 socket.connect();
             }, 1000);
-        });
-
-        socket.on("connect_failed", (err) => {
-            console.log(`Socket :: connect_failed ${err.message}`, err);
         });
 
         socket.onAny((event, ...args) => {
