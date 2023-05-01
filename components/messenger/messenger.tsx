@@ -20,6 +20,13 @@ import { ConversationForm } from "./conversation-form";
 import { ConversationList, ConversationListItem } from "./conversation-list";
 import { ConversationMessageEntity } from "../../models/conversation/conversation-message.entity";
 
+/* Initializing a socket connection to the server. */
+const socket: Socket = io(
+    `${process.env.BASE_URL}`,
+    {
+        rejectUnauthorized: false
+    }
+);
 
 export interface MessengerProps {
     getOptions?: (query: string, cancellationToken: CancelTokenSource) => ComboboxItem[]
@@ -128,28 +135,12 @@ export function Messenger(props) {
      * message to the client, it finds the conversation that the message belongs to and opens it
      */
     const socketInitializer = async (): Promise<void> => {
-        /* Initializing a socket connection to the server. */
-        const socket: Socket = io(
-            `${process.env.BASE_URL}`,
-            {
-                rejectUnauthorized: false
-            }
-        );
-        // const socket: Socket = io(
-        //     `https://driverfly-backend.test.driverfly.co`,
-        //     {
-        //         rejectUnauthorized: false
-        //     }
-        // );
 
         // Add a connect listener
         /* This code is setting up a listener for the 'connection' event on the socket object. When a client
         connects to the server, this event will be triggered and the function passed as the second argument
         will be executed. In this case, it simply logs a message to the console indicating that a client has
         connected. */
-        // socket.on('connection', () => {
-        //     console.log('Socket :: Client connection.', socket);
-        // });
         socket.on('connect', () => {
             console.log('Socket :: Client connect.', socket);
         });
@@ -199,7 +190,7 @@ export function Messenger(props) {
     };
 
     /* A hook that is used to initialize the socket connection to the server. */
-    useEffectAsync(socketInitializer, [conversations]);
+    useEffectAsync(socketInitializer, [conversations, socket]);
 
     return (
         <Row>
