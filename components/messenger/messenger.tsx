@@ -28,8 +28,9 @@ const socket: Socket = io(
     `${process.env.BASE_URL}`,
     {
         rejectUnauthorized: false,
-        transports: ['polling', 'websocket'],
+        transports: ['websocket'],
         path: "/socket.io",
+        protocols: ["ws:// ", "wss://"]
 
     }
 );
