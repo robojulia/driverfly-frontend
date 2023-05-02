@@ -17,11 +17,11 @@ import { ComboboxItem } from "../controls/combobox";
 import { ConversationForm } from "./conversation-form";
 import { ConversationList, ConversationListItem } from "./conversation-list";
 import { ConversationMessageEntity } from "../../models/conversation/conversation-message.entity";
-// const io = require("socket.io-client");
-// import { Socket } from "socket.io-client";
-import { io, Socket } from "socket.io-client";
+const io = require("socket.io-client");
+import { Socket } from "socket.io-client";
+// import { io, Socket } from "socket.io-client";
 
-console.log("process.env.BASE_URL", process.env.BASE_URL);
+// console.log("process.env.BASE_URL", process.env.BASE_URL);
 
 /* Initializing a socket connection to the server. */
 const socket: Socket = io(
