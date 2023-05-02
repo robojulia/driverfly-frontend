@@ -27,7 +27,7 @@ const socket: Socket = io(
     {
         rejectUnauthorized: false,
         transports: ['polling', 'websocket'],
-        path: "socket.io",
+        path: "/socket.io",
 
     }
 );
