@@ -869,6 +869,7 @@ export default function Applicant() {
                                                         name={`documents[${i}]`}
                                                         required
                                                         accept="application/pdf"
+                                                        allowedSizeInByte={3072}
                                                         formik={form}
                                                     />
                                                 </Col>

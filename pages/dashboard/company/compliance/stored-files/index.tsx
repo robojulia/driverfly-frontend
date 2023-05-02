@@ -217,6 +217,7 @@ export default function StoredFiles() {
                             required
                             accept="application/pdf"
                             documentType={"PDF"}
+                            allowedSizeInByte={3072}
                             formik={form}
                         />
                     </Row>

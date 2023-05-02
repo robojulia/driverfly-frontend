@@ -869,6 +869,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														name={`documents[${i}]`}
 														required
 														accept="application/pdf"
+														allowedSizeInByte={3072}
 														formik={form}
 													/>
 												</td>

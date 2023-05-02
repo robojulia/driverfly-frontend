@@ -85,6 +85,7 @@ export function CompanyForm(props: CompanyFormProps) {
                 label={`photo`}
                 name={`photo`}
                 accept="image/*"
+                allowedSizeInByte={3072}
                 documentType={"PHOTO"}
                 formik={form}
               />

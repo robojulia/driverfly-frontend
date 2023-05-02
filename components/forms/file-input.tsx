@@ -56,7 +56,7 @@ export default function FileInput({ documentType, formik, accept, required, clas
         if (!onChange) return;
 
         if (!!allowedSizeInByte && e.target.files[0].size >= allowedSizeInByte) {
-            alert(t('FILE_MUST_BE_OF_{size}_{unit}', { size: allowedSizeInByte / 1000000, unit: "MB" }))
+            alert(t('FILE_MUST_BE_OF_{size}_{unit}', { size: allowedSizeInByte / 1024, unit: "MB" }))
             return;
         }
 

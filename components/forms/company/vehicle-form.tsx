@@ -157,7 +157,7 @@ export function VehicleForm(props: VehicleFormProps) {
                     accept="image/*"
                     documentType={DocumentType.PHOTO}
                     formik={form}
-                    allowedSizeInByte={3000000}
+                    allowedSizeInByte={3072}
                 />
                 <BaseCheckList
                     className="col-md-4 pt-3"
