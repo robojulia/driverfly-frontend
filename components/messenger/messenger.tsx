@@ -2,8 +2,6 @@ import { CancelTokenSource } from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Navbar, Row } from "react-bootstrap";
 import { Plus } from "react-bootstrap-icons";
-import { Socket } from "socket.io-client";
-const io = require("socket.io-client");
 import { toast } from 'react-toastify'
 import { ChattableType } from "../../enums/conversation/chattable-type.enum";
 import { UserPreferenceCategory } from "../../enums/users/user-preference-category.enum";
@@ -19,12 +17,17 @@ import { ComboboxItem } from "../controls/combobox";
 import { ConversationForm } from "./conversation-form";
 import { ConversationList, ConversationListItem } from "./conversation-list";
 import { ConversationMessageEntity } from "../../models/conversation/conversation-message.entity";
+// const io = require("socket.io-client");
+// import { Socket } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
 /* Initializing a socket connection to the server. */
 const socket: Socket = io(
     `${process.env.BASE_URL}`,
     {
-        rejectUnauthorized: false
+        rejectUnauthorized: false,
+        transports: ['polling', 'websocket']
+
     }
 );
 
