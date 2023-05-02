@@ -27,10 +27,10 @@ console.log("process.env.BASE_URL", process.env.BASE_URL);
 const socket: Socket = io(
     `${process.env.BASE_URL}`,
     {
-        rejectUnauthorized: false,
+        // rejectUnauthorized: false,
         transports: ['websocket'],
-        path: "/socket.io",
-        protocols: ["ws:// ", "wss://"]
+        // path: "/socket.io",
+        // protocols: ["ws:// ", "wss://"],
 
     }
 );
