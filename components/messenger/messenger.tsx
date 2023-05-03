@@ -174,10 +174,6 @@ export function Messenger(props) {
             }, 1000);
         });
 
-        socket.onAny((event, ...args) => {
-            console.log(`Socket :: got ${event}`, args);
-        });
-
         /* Listening for a message from the server, and when it receives a message, it finds the conversation
         that the message belongs to and opens it. */
         socket.on(
