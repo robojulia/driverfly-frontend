@@ -150,6 +150,7 @@ export function Messenger(props) {
         connected. */
         socket.on('connect', () => {
             console.log('Socket :: Client connect.', socket);
+            socket.emit("msgToServer", "emiting message")
         });
 
         // Disconnect listener
@@ -192,6 +193,13 @@ export function Messenger(props) {
                     ))
                     onConversationClick(c)
                 }
+            }
+        );
+
+        socket.on(
+            `msgToClient`,
+            async (message): Promise<void> => {
+                console.log(`Socket :: msgToClient ${message}`);
             }
         );
     };
