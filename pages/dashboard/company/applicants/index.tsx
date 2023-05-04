@@ -561,16 +561,26 @@ function ApplicantView(props: ViewProps) {
                                 hidable: false,
                             },
                             {
-                                cell: aJob => (
-                                    <BaseSelect
-                                        name={data.id.toString()}
-                                        value=""
-                                        onChange={e => onChangeStatus(e, data, aJob.job)}
-                                        placeholder={"CHANGE_STATUS"}
-                                        labelPrefix="ApplicantStatus"
-                                        enumType={ApplicantStatus}
-                                    />
-                                )
+                                cell: aJob => {
+                                    const hideStatus = Boolean(data?.jobs?.find(j => j?.id != aJob?.id && j?.status?.startsWith("COMPLETED_")))
+                                        ? [
+                                            ApplicantStatus.COMPLETED_EMPLOYED,
+                                            ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
+                                            ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE
+                                        ]
+                                        : [];
+                                    return (
+                                        <BaseSelect
+                                            hideOptions={hideStatus}
+                                            name={data.id.toString()}
+                                            value=""
+                                            onChange={e => onChangeStatus(e, data, aJob.job)}
+                                            placeholder={"CHANGE_STATUS"}
+                                            labelPrefix="ApplicantStatus"
+                                            enumType={ApplicantStatus}
+                                        />
+                                    )
+                                }
                             },
                         ]}
                         hideSearch
@@ -735,16 +745,26 @@ function JobView(props: ViewProps) {
                         hidable: false,
                     },
                     {
-                        cell: aJob => (
-                            <BaseSelect
-                                name={aJob.applicant.id.toString()}
-                                value=""
-                                onChange={e => onChangeStatus(e, aJob.applicant, data)}
-                                placeholder={"CHANGE_STATUS"}
-                                labelPrefix="ApplicantStatus"
-                                enumType={ApplicantStatus}
-                            />
-                        )
+                        cell: aJob => {
+                            const hideStatus = Boolean(applicants?.find(a => a.id == aJob.applicant.id)?.jobs?.find(j => j?.id != aJob?.id && j?.status?.startsWith("COMPLETED_")))
+                                ? [
+                                    ApplicantStatus.COMPLETED_EMPLOYED,
+                                    ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
+                                    ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE
+                                ]
+                                : [];
+                            return (
+                                <BaseSelect
+                                    hideOptions={hideStatus}
+                                    name={aJob.applicant.id.toString()}
+                                    value=""
+                                    onChange={e => onChangeStatus(e, aJob.applicant, data)}
+                                    placeholder={"CHANGE_STATUS"}
+                                    labelPrefix="ApplicantStatus"
+                                    enumType={ApplicantStatus}
+                                />
+                            )
+                        }
                     },
                 ]}
                 hideSearch
