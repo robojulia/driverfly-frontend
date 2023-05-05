@@ -150,7 +150,7 @@ export function Messenger(props) {
         connected. */
         socket.on('connect', () => {
             console.log('Socket :: Client connect.', socket);
-            socket.emit("msgToServer", "emiting message")
+            socket.emit("msgToServer", "emiting test message")
         });
 
         // Disconnect listener
