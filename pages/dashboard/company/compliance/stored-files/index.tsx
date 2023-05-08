@@ -160,7 +160,7 @@ export default function StoredFiles() {
                         (<ShowEnumFromString
                             popover
                             labelPrefix="CompanyDocumentType"
-                            str={file.type}
+                            value={file.type}
                             enumArray={CompanyDocumentType} />
                         ),
                         selector: file => file.type,

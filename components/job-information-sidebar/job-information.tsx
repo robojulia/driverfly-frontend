@@ -51,7 +51,7 @@ export default function JonInformation({ job }: JobDetailProps) {
                             <div className="details">
                                 <div className="text">{t('AREAS_COVERED')}</div>
                                 <div className="value text-muted">
-                                    <ShowEnumFromString labelPrefix='JobGeography' str={job.geography} />
+                                    <ShowEnumFromString labelPrefix='JobGeography' value={job.geography} />
                                 </div>
                             </div>
                         </li>
@@ -64,7 +64,7 @@ export default function JonInformation({ job }: JobDetailProps) {
                             <div className="details">
                                 <div className="text">{t('EMPLOYMENT_TYPE')}</div>
                                 <div className="value text-muted">
-                                    <ShowEnumFromString labelPrefix="JobEmploymentType" str={job.employment_type} />
+                                    <ShowEnumFromString labelPrefix="JobEmploymentType" value={job.employment_type} />
                                 </div>
                             </div>
                         </li>
@@ -77,7 +77,7 @@ export default function JonInformation({ job }: JobDetailProps) {
                             <div className="details">
                                 <div className="text">{t('PAY_FREQUENCY')}</div>
                                 <div className="value text-muted">
-                                    <ShowEnumFromString labelPrefix="JobPayFrequency" str={job.pay_frequency} />
+                                    <ShowEnumFromString labelPrefix="JobPayFrequency" value={job.pay_frequency} />
                                 </div>
                             </div>
                         </li>
@@ -90,7 +90,7 @@ export default function JonInformation({ job }: JobDetailProps) {
                             <div className="details">
                                 <div className="text">{t('DELIVERY_TYPE')}</div>
                                 <div className="value text-muted">
-                                    <ShowEnumFromString labelPrefix="JobDeliveryType" str={job.delivery_type} />
+                                    <ShowEnumFromString labelPrefix="JobDeliveryType" value={job.delivery_type} />
                                 </div>
                             </div>
                         </li>
@@ -103,7 +103,7 @@ export default function JonInformation({ job }: JobDetailProps) {
                             <div className="details">
                                 <div className="text">{t('EQUIPMENT_TYPE')}</div>
                                 <div className="value text-muted">
-                                    <ShowEnumFromString labelPrefix="JobEquipmentType" str={job.equipment_type} />
+                                    <ShowEnumFromString labelPrefix="JobEquipmentType" value={job.equipment_type} />
                                 </div>
                             </div>
                         </li>
@@ -116,7 +116,7 @@ export default function JonInformation({ job }: JobDetailProps) {
                             <div className="details">
                                 <div className="text">{t('SCHEDULE')}</div>
                                 <div className="value text-muted">
-                                    <ShowEnumFromString labelPrefix="JobSchedule" str={job.schedule} />
+                                    <ShowEnumFromString labelPrefix="JobSchedule" value={job.schedule} />
                                 </div>
                             </div>
                         </li>
@@ -129,7 +129,7 @@ export default function JonInformation({ job }: JobDetailProps) {
                             <div className="details">
                                 <div className="text">{t('TEAM_DRIVERS')}</div>
                                 <div className="value text-muted">
-                                    <ShowEnumFromString labelPrefix="JobTeamDriver" str={job.team_drivers} />
+                                    <ShowEnumFromString labelPrefix="JobTeamDriver" value={job.team_drivers} />
                                 </div>
                             </div>
                         </li>
@@ -142,7 +142,7 @@ export default function JonInformation({ job }: JobDetailProps) {
                             <div className="details">
                                 <div className="text">{t('PAY_METHOD')}</div>
                                 <div className="value text-muted">
-                                    <ShowEnumFromString labelPrefix="JobPayMethod" str={job.pay_method} />
+                                    <ShowEnumFromString labelPrefix="JobPayMethod" value={job.pay_method} />
                                 </div>
                             </div>
                         </li>
@@ -155,7 +155,7 @@ export default function JonInformation({ job }: JobDetailProps) {
                             <div className="details">
                                 <div className="text">{t('MINIMUM_CDL_CLASS')}</div>
                                 <div className="value text-muted">
-                                    <ShowEnumFromString labelPrefix="DriverLicenseType" str={job.cdl_class} />
+                                    <ShowEnumFromString labelPrefix="DriverLicenseType" value={job.cdl_class} />
                                 </div>
                             </div>
                         </li>
@@ -168,7 +168,7 @@ export default function JonInformation({ job }: JobDetailProps) {
                             <div className="details">
                                 <div className="text">{t('TRANSMISSION_TYPE')}</div>
                                 <div className="value text-muted">
-                                    <ShowEnumFromString labelPrefix="VehicleTransmissionType" str={job.transmission_type_experience} />
+                                    <ShowEnumFromString labelPrefix="VehicleTransmissionType" value={job.transmission_type_experience} />
                                 </div>
                             </div>
                         </li>
@@ -181,7 +181,7 @@ export default function JonInformation({ job }: JobDetailProps) {
                             <div className="details">
                                 <div className="text">{t('ENDORSEMENTS')}</div>
                                 <div className="value text-muted">
-                                    <ShowEnumFromString labelPrefix="DriverEndorsement" str={job.required_endorsement} />
+                                    <ShowEnumFromString labelPrefix="DriverEndorsement" value={job.required_endorsement} />
                                 </div>
                             </div>
                         </li>

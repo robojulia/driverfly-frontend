@@ -148,7 +148,7 @@ export default function JobListing() {
                             popover_header={t('DELIVERY_TYPE')}
                             labelPrefix="JobDeliveryType"
                             popover={true}
-                            str={j.delivery_type}
+                            value={j.delivery_type}
                             enumArray={JobDeliveryType} />
                         ),
                         selector: job => t(`JobDeliveryType.${job.delivery_type}`),
