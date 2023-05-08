@@ -35,7 +35,7 @@ const socket: Socket = io(
  * function that initializes a socket connection to the server, and when the server sends a
  * message to the client, it finds the conversation that the message belongs to and opens it
  */
-const socketInitializer = async (user, conversations, onConversationClick): Promise<void> => {
+const socketInitializer = async (user, conversations, onConversationClick, t, toast): Promise<void> => {
 
     // Add a connect listener
     /* This code is setting up a listener for the 'connection' event on the socket object. When a client
@@ -189,7 +189,7 @@ export function Messenger(props) {
     const canCreate = !!getOptions;
 
     /* A hook that is used to initialize the socket connection to the server. */
-    useEffectAsync(() => socketInitializer(user, conversations, onConversationClick), [user]);
+    useEffectAsync(() => socketInitializer(user, conversations, onConversationClick, t, toast), [user]);
 
     return (
         <Row>
