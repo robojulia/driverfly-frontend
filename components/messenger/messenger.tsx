@@ -20,6 +20,71 @@ import { ConversationForm } from "./conversation-form";
 import { ConversationList, ConversationListItem } from "./conversation-list";
 import { ConversationMessageEntity } from "../../models/conversation/conversation-message.entity";
 
+/* Initializing a socket connection to the server. */
+const socket: Socket = io(
+    `${process.env.BASE_URL}`,
+    {
+        transports: ['websocket'],
+        // rejectUnauthorized: false,
+        // path: "/socket.io",
+        // protocols: ["ws:// ", "wss://"],
+    }
+);
+
+/**
+ * function that initializes a socket connection to the server, and when the server sends a
+ * message to the client, it finds the conversation that the message belongs to and opens it
+ */
+const socketInitializer = async (user, conversations, onConversationClick): Promise<void> => {
+
+    // Add a connect listener
+    /* This code is setting up a listener for the 'connection' event on the socket object. When a client
+    connects to the server, this event will be triggered and the function passed as the second argument
+    will be executed. In this case, it simply logs a message to the console indicating that a client has
+    connected. */
+    socket.on('connect', () => {
+        console.log('Socket :: Client connect.', socket?.id);
+    });
+
+    // Disconnect listener
+    /* This code sets up a listener for the 'disconnect' event on the socket object. When a client
+    disconnects from the server, this event will be triggered and the function passed as the second
+    argument will be executed. In this case, it simply logs a message to the console indicating that a
+    client has disconnected. */
+    socket.on('disconnect', () => {
+        console.log('Socket :: Client disconnected.');
+    });
+
+    // Error listener
+    /* This code sets up a listener for the "connect_error" event on the socket object. When there is an
+    error connecting to the server, this event will be triggered and the function passed as the second
+    argument will be executed. In this case, it simply logs a message to the console indicating that
+    there was a connection error and the reason for the error. */
+    socket.on("connect_error", (err) => {
+        console.log(`Socket :: connect_error due to ${err.message}`, err.stack);
+        setTimeout(() => {
+            socket.connect();
+        }, 1000);
+    });
+
+    /* Listening for a message from the server, and when it receives a message, it finds the conversation
+    that the message belongs to and opens it. */
+    socket.on(
+        `reply-to-user-${user?.id}`,
+        async (message: ConversationMessageEntity): Promise<void> => {
+            alert("Alive")
+            const c = conversations?.find(v => v.id == message?.conversation?.id)
+            if (Boolean(c)) {
+                toast(t(
+                    'NEW_MESSAGE_{from}',
+                    { from: message?.conversation?.chattable_name ?? "APPLICANT" },
+                    { translateProps: true }
+                ))
+                onConversationClick(c)
+            }
+        }
+    );
+};
 
 export interface MessengerProps {
     getOptions?: (query: string, cancellationToken: CancelTokenSource) => ComboboxItem[]
@@ -123,74 +188,8 @@ export function Messenger(props) {
 
     const canCreate = !!getOptions;
 
-    /* Initializing a socket connection to the server. */
-    const socket: Socket = io(
-        `${process.env.BASE_URL}`,
-        {
-            transports: ['websocket'],
-            // rejectUnauthorized: false,
-            // path: "/socket.io",
-            // protocols: ["ws:// ", "wss://"],
-        }
-    );
-
-    /**
-     * function that initializes a socket connection to the server, and when the server sends a
-     * message to the client, it finds the conversation that the message belongs to and opens it
-     */
-    const socketInitializer = async (): Promise<void> => {
-
-        // Add a connect listener
-        /* This code is setting up a listener for the 'connection' event on the socket object. When a client
-        connects to the server, this event will be triggered and the function passed as the second argument
-        will be executed. In this case, it simply logs a message to the console indicating that a client has
-        connected. */
-        socket.on('connect', () => {
-            console.log('Socket :: Client connect.', socket?.id);
-        });
-
-        // Disconnect listener
-        /* This code sets up a listener for the 'disconnect' event on the socket object. When a client
-        disconnects from the server, this event will be triggered and the function passed as the second
-        argument will be executed. In this case, it simply logs a message to the console indicating that a
-        client has disconnected. */
-        socket.on('disconnect', () => {
-            console.log('Socket :: Client disconnected.');
-        });
-
-        // Error listener
-        /* This code sets up a listener for the "connect_error" event on the socket object. When there is an
-        error connecting to the server, this event will be triggered and the function passed as the second
-        argument will be executed. In this case, it simply logs a message to the console indicating that
-        there was a connection error and the reason for the error. */
-        socket.on("connect_error", (err) => {
-            console.log(`Socket :: connect_error due to ${err.message}`, err.stack);
-            setTimeout(() => {
-                socket.connect();
-            }, 1000);
-        });
-
-        /* Listening for a message from the server, and when it receives a message, it finds the conversation
-        that the message belongs to and opens it. */
-        socket.on(
-            `reply-to-user-${user?.id}`,
-            async (message: ConversationMessageEntity): Promise<void> => {
-                alert("Alive")
-                const c = conversations?.find(v => v.id == message?.conversation?.id)
-                if (Boolean(c)) {
-                    toast(t(
-                        'NEW_MESSAGE_{from}',
-                        { from: message?.conversation?.chattable_name ?? "APPLICANT" },
-                        { translateProps: true }
-                    ))
-                    onConversationClick(c)
-                }
-            }
-        );
-    };
-
     /* A hook that is used to initialize the socket connection to the server. */
-    useEffectAsync(socketInitializer, [conversations, socket]);
+    useEffectAsync(() => socketInitializer(user, conversations, onConversationClick), [user]);
 
     return (
         <Row>
