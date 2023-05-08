@@ -4,6 +4,7 @@ import { CancelTokenSource } from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Navbar, Row } from "react-bootstrap";
 import { Plus } from "react-bootstrap-icons";
+import { toast } from 'react-toastify'
 import { ChattableType } from "../../enums/conversation/chattable-type.enum";
 import { UserPreferenceCategory } from "../../enums/users/user-preference-category.enum";
 import { UserPreferenceCommunicationLabel } from "../../enums/users/user-preferences-communication-label.enum";
@@ -18,7 +19,6 @@ import { ComboboxItem } from "../controls/combobox";
 import { ConversationForm } from "./conversation-form";
 import { ConversationList, ConversationListItem } from "./conversation-list";
 import { ConversationMessageEntity } from "../../models/conversation/conversation-message.entity";
-import { toast } from 'react-toastify'
 
 
 export interface MessengerProps {
@@ -139,8 +139,6 @@ export function Messenger(props) {
      * message to the client, it finds the conversation that the message belongs to and opens it
      */
     const socketInitializer = async (): Promise<void> => {
-        /* Initializing a socket connection to the server. */
-        const socket: Socket = io(`${process.env.BASE_URL}`);
 
         // Add a connect listener
         /* This code is setting up a listener for the 'connection' event on the socket object. When a client
@@ -191,7 +189,7 @@ export function Messenger(props) {
     };
 
     /* A hook that is used to initialize the socket connection to the server. */
-    useEffectAsync(socketInitializer, [conversations]);
+    useEffectAsync(socketInitializer, [conversations, socket]);
 
     return (
         <Row>
