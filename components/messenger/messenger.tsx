@@ -72,7 +72,6 @@ const socketInitializer = async (user, conversations, onConversationClick, t, to
     socket.on(
         `reply-to-user-${user?.id}`,
         async (message: ConversationMessageEntity): Promise<void> => {
-            alert("Alive")
             const c = conversations?.find(v => v.id == message?.conversation?.id)
             if (Boolean(c)) {
                 toast(t(
