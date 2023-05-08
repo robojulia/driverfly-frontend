@@ -1,3 +1,5 @@
+const io = require("socket.io-client");
+import { Socket } from "socket.io-client";
 import { CancelTokenSource } from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Navbar, Row } from "react-bootstrap";
@@ -17,23 +19,7 @@ import { ComboboxItem } from "../controls/combobox";
 import { ConversationForm } from "./conversation-form";
 import { ConversationList, ConversationListItem } from "./conversation-list";
 import { ConversationMessageEntity } from "../../models/conversation/conversation-message.entity";
-const io = require("socket.io-client");
-import { Socket } from "socket.io-client";
-// import { io, Socket } from "socket.io-client";
 
-// console.log("process.env.BASE_URL", process.env.BASE_URL);
-
-/* Initializing a socket connection to the server. */
-const socket: Socket = io(
-    `${process.env.BASE_URL}`,
-    {
-        // rejectUnauthorized: false,
-        transports: ['websocket'],
-        // path: "/socket.io",
-        // protocols: ["ws:// ", "wss://"],
-
-    }
-);
 
 export interface MessengerProps {
     getOptions?: (query: string, cancellationToken: CancelTokenSource) => ComboboxItem[]
@@ -137,6 +123,17 @@ export function Messenger(props) {
 
     const canCreate = !!getOptions;
 
+    /* Initializing a socket connection to the server. */
+    const socket: Socket = io(
+        `${process.env.BASE_URL}`,
+        {
+            transports: ['websocket'],
+            // rejectUnauthorized: false,
+            // path: "/socket.io",
+            // protocols: ["ws:// ", "wss://"],
+        }
+    );
+
     /**
      * function that initializes a socket connection to the server, and when the server sends a
      * message to the client, it finds the conversation that the message belongs to and opens it
@@ -149,8 +146,7 @@ export function Messenger(props) {
         will be executed. In this case, it simply logs a message to the console indicating that a client has
         connected. */
         socket.on('connect', () => {
-            console.log('Socket :: Client connect.', socket);
-            socket.emit("msgToServer", "emiting test message")
+            console.log('Socket :: Client connect.', socket?.id);
         });
 
         // Disconnect listener
@@ -179,7 +175,6 @@ export function Messenger(props) {
         socket.on(
             `reply-to-user-${user?.id}`,
             async (message: ConversationMessageEntity): Promise<void> => {
-                console.log(`Socket :: reply-to-user-${user?.id}`);
                 const c = conversations?.find(v => v.id == message?.conversation?.id)
                 if (Boolean(c)) {
                     toast(t(
@@ -189,13 +184,6 @@ export function Messenger(props) {
                     ))
                     onConversationClick(c)
                 }
-            }
-        );
-
-        socket.on(
-            `msgToClient`,
-            async (message): Promise<void> => {
-                console.log(`Socket :: msgToClient ${message}`);
             }
         );
     };
