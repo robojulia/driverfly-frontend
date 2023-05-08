@@ -157,7 +157,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 					<ViewCard title="BASIC_DETAILS">
 						<Row>
 							<Col md="4" className="px-2">
-								{entity?.jobs?.length
+								{jobHired
 									? <BaseSelect
 										className="col-12"
 										name={`current_application_status`}
