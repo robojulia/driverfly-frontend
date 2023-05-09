@@ -1,4 +1,4 @@
-import { Button, Col, Row } from "react-bootstrap";
+import { Button, Col, Row } from "reactstrap";
 import { useState } from 'react';
 import { Container, Modal } from "react-bootstrap";
 import { toast } from 'react-toastify'
