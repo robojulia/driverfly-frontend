@@ -1,8 +1,8 @@
-import { Button, Col, Row } from "reactstrap";
+import { Col, Row } from "reactstrap";
 import { useState } from 'react';
 import { Container, Modal } from "react-bootstrap";
 import { toast } from 'react-toastify'
-import Spinner from 'react-bootstrap/Spinner'
+import { Spinner, Button } from 'react-bootstrap'
 import ViewMissedCalls from "../../../../components/call/view-missed-calls";
 import { TelephoneFill, TelephoneMinusFill, TelephoneOutboundFill, TelephoneXFill } from "react-bootstrap-icons";
 import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
@@ -104,10 +104,15 @@ export default function Call() {
 
     const connectCall = () => {
         setConnected(true)
-        if (identity?.phone) device.connect({
-            'PhoneNumber': formatPhoneNumber(identity.phone),
-            'from': callingId,
-        })
+        if (identity?.phone) {
+            const connection = device.connect({
+                'PhoneNumber': formatPhoneNumber(identity.phone),
+                'from': callingId,
+            })
+            connection?.on('status', function (status) {
+                console.log('Call status:', status);
+            });
+        }
     }
 
     const disconnectCall = () => {
@@ -207,24 +212,30 @@ export default function Call() {
                                         {(identity.phone)}
                                     </h3>
                                 </Col>
-                                <Col lg='12' className="text-center pb-5  rounded">
+                                <Col lg='12' className="text-center pb-5 rounded">
                                     <h5 className="text-white pt-3 pb-2">
                                         {status}
                                     </h5>
-                                    {
-                                        !!!connected ?
-                                            <Button onClick={connectCall}
-                                                id="call"
-                                                className="btn btn-success p-3 rounded-circle">
-                                                < TelephoneOutboundFill size={20} />
-                                            </Button>
-                                            :
-                                            <Button onClick={disconnectCall}
-                                                id="end"
-                                                className="btn btn-warning p-3 rounded-circle">
-                                                < TelephoneXFill size={20} />
-                                            </Button>
-                                    }
+                                    <div className="call-buttons">
+                                        {
+                                            !!!connected ?
+                                                <Button
+                                                    variant="success"
+                                                    onClick={connectCall}
+                                                    id="call"
+                                                    className=" p-3 rounded-circle">
+                                                    < TelephoneOutboundFill size={20} />
+                                                </Button>
+                                                :
+                                                <Button
+                                                    variant="danger"
+                                                    onClick={disconnectCall}
+                                                    id="end"
+                                                    className="btn p-3 rounded-circle">
+                                                    < TelephoneXFill size={20} />
+                                                </Button>
+                                        }
+                                    </div>
                                 </Col>
                             </div>
                         </Row>
