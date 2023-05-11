@@ -109,9 +109,9 @@ export default function Call() {
                 'PhoneNumber': formatPhoneNumber(identity.phone),
                 'from': callingId,
             })
-            connection?.on('status', function (status) {
-                console.log('Call status:', status);
-            });
+            // connection?.on('connecting', function (status) {
+            //     console.log('Call status:', status);
+            // });
         }
     }
 
