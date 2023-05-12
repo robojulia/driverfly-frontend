@@ -133,8 +133,10 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	}, [user]);
 
 	useEffect(() => {
-		if (entity && !form.dirty)
+		if (entity && !form.dirty) {
+			entity.documents = entity.documents.filter(v => Object.values(ApplicantDocumentType).includes(v.type as ApplicantDocumentType))
 			form.setValues(entity);
+		}
 	}, [entity]);
 
 	const [jobHired, setJobHired] = useState<ApplicantJobEntity>(null)
@@ -869,7 +871,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														name={`documents[${i}]`}
 														required
 														accept="application/pdf"
-														allowedSizeInByte={3072}
+														allowedSizeInByte={3145728}
 														formik={form}
 													/>
 												</td>

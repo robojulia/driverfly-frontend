@@ -122,7 +122,7 @@ export default function Profile() {
             name={`photo`}
             accept="image/*"
             documentType={"PHOTO"}
-            allowedSizeInByte={3072}
+            allowedSizeInByte={3145728}
             formik={form}
           />
         </Row>

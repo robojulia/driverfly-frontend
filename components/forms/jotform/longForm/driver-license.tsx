@@ -89,7 +89,7 @@ export function DriverLicense() {
 							className="my-3"
 							name="document"
 							accept="application/pdf"
-							allowedSizeInByte={3072}
+							allowedSizeInByte={3145728}
 							formik={form}
 						/>
 					)
