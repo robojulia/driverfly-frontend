@@ -127,7 +127,7 @@ const AdditionalFiles = ({ applicant }: AdditionalFilesProps) => {
                                                                 <FileInput
                                                                     name={`document`}
                                                                     accept="application/pdf"
-                                                                    allowedSizeInByte={3072}
+                                                                    allowedSizeInByte={3145728}
                                                                     formik={form}
                                                                 />
                                                                 <div className="mt-2 d-flex w-100 ">

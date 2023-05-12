@@ -224,6 +224,7 @@ export default function JobApply({ job, setEncourageModal }) {
                                                             </Col>
                                                             <Col md="6" className="pr-0 my-2">
                                                                 <FileInput
+                                                                    allowedSizeInByte={3145728}
                                                                     name={`documents[${i}]`}
                                                                     required
                                                                     accept="application/pdf"
