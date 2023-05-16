@@ -1,29 +1,27 @@
+import { PlusCircle, DashCircle, ArrowRight, Star } from 'react-bootstrap-icons'
 import { useEffect, useState } from 'react'
-import { useAuth } from '../hooks/use-auth'
 import { toast } from 'react-toastify'
 import { useFormik } from "formik"
+import { Col, Row, Table } from 'react-bootstrap'
+import Button from "react-bootstrap/Button"
 import { useTranslation } from "../hooks/use-translation"
 import JobApi from '../pages/api/job'
 import BaseInput from './forms/base-input'
 import BaseSelect from './forms/base-select'
 import FileInput from "./forms/file-input";
 import BaseCheck from './forms/base-check'
-import { Col, Row, Table } from 'react-bootstrap'
 import { EducationLevel } from '../enums/users/education-level.enum'
-import Button from "react-bootstrap/Button"
-
+import { useAuth } from '../hooks/use-auth'
 import { ApplicantEntity } from '../models/applicant/applicant.entity'
 import ApplicantApi from '../pages/api/applicant'
 import UserApi from '../pages/api/user';
 import { UserPreferenceCategory } from '../enums/users/user-preference-category.enum';
 import { SharePreference } from '../enums/users/share-preference.enum';
-
 import ViewModal from "./view-details/view-modal";
 import { globalAjaxExceptionHandler } from "../utils/ajax";
 import ViewCard from './view-details/view-card'
 import { ApplicantDocumentType } from '../enums/applicants/applicant-document-type.enum'
 import { DocumentEntity } from '../models/documents/document.entity'
-import { PlusCircle, DashCircle, ArrowRight, Star } from 'react-bootstrap-icons'
 import BaseInputPhone from './forms/base-input-phone'
 import { DriverLicenseType } from "../enums/users/driver-license-type.enum";
 import { LoaderIcon } from './loading/loader-icon'
@@ -59,6 +57,8 @@ export default function JobApply({ job, setEncourageModal }) {
             try {
                 if (!user.company) {
                     const applicant = await api.getByUserId();
+                    applicant.documents = applicant.documents.filter(v => Object.values(ApplicantDocumentType).includes(v.type))
+
                     if (applicant) {
                         const preferences = await userApi.preferences.list(user.id, { category: UserPreferenceCategory.SHARING });
 
@@ -95,9 +95,9 @@ export default function JobApply({ job, setEncourageModal }) {
         setViewForm(false);
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         console.error(apply_form.errors);
-    },[apply_form.errors])
+    }, [apply_form.errors])
 
     return (
         <>
@@ -112,11 +112,11 @@ export default function JobApply({ job, setEncourageModal }) {
                 onCloseClick={onCloseClick}
                 title="apply_for_this_job"
                 footer={
-                <button 
-                    disabled={!!apply_form.isSubmitting || !!!apply_form.isValid || !!apply_form.isValidating}
-                    type="submit" 
-                    className="btn btn-primary w-100 p-lg-3 p-5" 
-                    onClick={apply_form.handleSubmit}>
+                    <button
+                        disabled={!!apply_form.isSubmitting || !!!apply_form.isValid || !!apply_form.isValidating}
+                        type="submit"
+                        className="btn btn-primary w-100 p-lg-3 p-5"
+                        onClick={apply_form.handleSubmit}>
                         <LoaderIcon isLoading={!!apply_form.isSubmitting} /> {t('submit')}
                     </button>
                 }
@@ -224,6 +224,7 @@ export default function JobApply({ job, setEncourageModal }) {
                                                             </Col>
                                                             <Col md="6" className="pr-0 my-2">
                                                                 <FileInput
+                                                                    allowedSizeInByte={3145728}
                                                                     name={`documents[${i}]`}
                                                                     required
                                                                     accept="application/pdf"

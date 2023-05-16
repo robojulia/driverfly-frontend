@@ -623,6 +623,10 @@
   "FILE_TYPE": "File Type",
   "CALL": "Call",
   "MAKE_CALL": "Make Call",
+  "READY_TO_CALL": "Ready to call",
+  "INCOMMING_SUPPORT_CALL": "Incoming support call",
+  "IN_CALL_WITH_USER": "In call with user",
+  "CALLINHG": "Calling",
   "VIEW_MISSED_CALLS": "View missed calls",
   "CALL_START_TIME": "Call Start Time",
   "CALL_DIRECTION": "Direction",
@@ -811,6 +815,9 @@
   "DOES_NOT_HAVE_{name}_EXPERIENCE": "Does not have {{name}} experience",
   "YEARS_OF_{name}_EXPERIENCE_TOO_LOW": "Years of {{name}} experience is too low",
   "APPLICATION_STATUS": "Application Status",
+  "APPLICANT_CURRENT_STATUS": "Applicant Current Status",
+  "APPLICANT_CURRENT_STATUS_MESSAGE": "There are no jobs tied to this driver. Please populate a job and corresponding status down below and it will populate here",
+  "GENERAL_INTAKE": "General Intake",
   "MY_APPLICATIONS": "My Applications",
   "NO_RECORDS_FOUND": "No Record Found",
   "ApplicantDac": {
@@ -1093,7 +1100,7 @@
     "TRAINING_DOCUMENTS": "Training Documents",
     "COMPANY_POLICY": "Company Policy",
     "SAFETY": "Safety",
-    "OTHER": "Others"
+    "OTHER": "Other"
   },
   "InappropriateCompanyFlag": {
     "INAPPROPRIATE_OR_INACCURATE_PHOTOS": "Inappropriate or inaccurate photo(s)",
@@ -1337,7 +1344,8 @@
   "TECHNICAL_ASSISTANCE_HELP": "For technical assistance, reach out to help@driverfly.co",
   "Status": {
     "ACTIVE": "Active",
-    "DELETED": "Deleted"
+    "DELETED": "Deleted",
+    "DEACTIVE": "DEACTIVE"
   },
   "UNABLE_TO_RESTORE": "Unable to restore.",
   "DESCRIPTION": "Description",
@@ -1595,7 +1603,7 @@
   "INFORMATION_CONCERNING_OTHER_ACCIDENTS": "Please provide information concerning any other accidents involving the applicant that were reported to government agencies or insurers or retained under internal company policies:",
   "BLANK_LINE": "__________________________________________________________",
   "ANY_OTHER_MARK": "Any other remarks:",
-  "II_B": "II-B. Drug and Alcohol History",
+  "II_B": "II-B.",
   "DOT_REGULATED_TESTING": "In the two years prior to the date of the employee’s signature (in Section I), for DOT-regulated testing ~ ",
   "QUESTION_ALCOHOL_TEST": "1. Did the employee have alcohol tests with a result of 0.04 or higher? YES ____ NO ____",
   "QUESTION_VERIFIED_DRUG_TEST": "2. Did the employee have verified positive drug tests? YES ____ NO ____",
@@ -1605,7 +1613,7 @@
   "QUESTION_RETURN_TO_DUTY": "6. If you answered “yes” to any of the above items, did the employee complete the return-to-duty process? N/A ____ YES ____ NO ____",
   "NOTE_PREVIOUS_EMPLOYER_REPORT": "NOTE: If you answered “yes” to item 5, you must provide the previous employer’s report. If you answered “yes” to item 6, you must also transmit the appropriate return-to-duty documentation (e.g., SAP report(s), follow-up testing record).",
   "II_C": "II-C.",
-  "NAME_OF_PERSON_ABOVE": "Name of person providing information in Section II-A & II-B:",
+  "NAME_OF_PERSON_ABOVE": "Name of person providing information in Section II-A:",
   "BLANK_LINE_TITLE": "Title: ___________________________________________",
   "BLANK_LINE_PHONE": "Phone #: ________________________________________",
   "BLANK_LINE_DATE": "Date: ___________________________________________",
@@ -1800,7 +1808,7 @@
   "PAST_EMPLOYEE": "Past Employees",
   "PAST_EMPLOYEE_LIST": "Past Employee List",
   "NO_PAST_EMPLOYEE_FOUND": "No Past Employee Found",
-  "MOVE_TO_PAST_EMPLOYEE": "Past Employer",
+  "MOVE_TO_PAST_EMPLOYEE": "Move To Past Employee",
   "APPLIED_OR_WORKED_HERE": "Applied or worked with this companys",
   "LEGAL_INFO": "Legal Information",
   "ALREADY_APPLIED_HERE": "Have you applied to this job before ?",
@@ -1884,9 +1892,9 @@
   "ATS": "ATS",
   "SOURCE": "Source",
   "ApplicantType": {
-    "USER": "Driverfly User",
-    "COMPANY": "Manual Upload",
-    "DHA": "Digital Hiring App",
+    "USER": "Job Board Lead",
+    "COMPANY": "Company Uploaded",
+    "DHA": "Lead from Digital Hiring App",
     "DIRECT_JOB_APPLY": "Driverfly Job Board"
   },
   "SELECT_ONE_PLACEHOLDER": "Please Select One",
@@ -1962,5 +1970,13 @@
   "NO_JOB_TIED_WITH_APPLICANT": "No jobs tied up with this applicant! Click on EDIT to add jobs. ",
   "COMPLETED?": "Completed?",
   "ONBOARDING_CHECKLIST": "Onboarding Checklist",
-  "ADDITIONAL_FILES": "Additional Files"
+  "ADDITIONAL_FILES": "Additional Files",
+  "selected_row_{count}": "Send to  {{count}} ",
+  "DOCUMENT_NOT_FOUND": "Document Not Found",
+  "COMPANY_NOT_FOUND": "Company Not found",
+  "VERIFICATION_OF_EMPLOYMENT_FMCSR_AUTHORIZED": "As a Commercial Motor Vehicle (CMV) Driver, I understand that per the Federal Motor CarrierSafety Regulations (FMCSRs) Part 391, the following information will be requested from allprevious employers for which I operated a CMV, subject to the FMCSR Parts 390 and/or 40, 382,383 and 391 Subpart G, within the past three years, from date shown below. I also acknowledgethat this information will be used in determining my eligibility to be hired, that I have the right toreview this information and rebut any errors in these statements from my prior employers, asdescribed in the FMCSR Part 391.23.",
+  "UNDERSTAND_CONSENT_REQUESTED": "I understand should I refuse to provide the written consent requested, the prospective motor carrieremployer shall not permit me to operate a commercial motor vehicle for that motor carrier perFMCSA 391.23(f).",
+  "{name}_AUTHORIZE_COMPANY": "I {{name}} hereby authorize this company to release all records of employment,including assessments of my job performance, ability, and fitness. I hereby release this company,and its employees, officers, directors, and agents from any and all liability of any type as a resultof providing information to the above-mentioned person and/or company.",
+  "REFER_BACK_QUESTION": "would you like to participate in our Refer Back program?",
+  "REFER_BACK_DETAILS": "With this you authorize DriverFly to contact applicants who are not a good fit based on the parameters contained in this section. In return, you receive $250 in company credit per candidate that gets placed through our platform"
 }

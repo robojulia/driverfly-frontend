@@ -133,8 +133,10 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	}, [user]);
 
 	useEffect(() => {
-		if (entity && !form.dirty)
+		if (entity && !form.dirty) {
+			entity.documents = entity.documents.filter(v => Object.values(ApplicantDocumentType).includes(v.type as ApplicantDocumentType))
 			form.setValues(entity);
+		}
 	}, [entity]);
 
 	const [jobHired, setJobHired] = useState<ApplicantJobEntity>(null)
@@ -157,6 +159,24 @@ export function ApplicantForm(props: ApplicantFormProps) {
 					<ViewCard title="BASIC_DETAILS">
 						<Row>
 							<Col md="4" className="px-2">
+								{jobHired
+									? <BaseSelect
+										className="col-12"
+										name={`current_application_status`}
+										required
+										placeholder="APPLICANT_CURRENT_STATUS"
+										label="APPLICANT_CURRENT_STATUS"
+										labelPrefix="ApplicantStatus"
+										enumType={ApplicantStatus}
+										formik={form}
+									/>
+									: <BaseInput
+										className="col-12"
+										label="APPLICANT_CURRENT_STATUS"
+										readOnly
+										value={t('GENERAL_INTAKE')}
+									/>
+								}
 								<BaseInput
 									className="col-12"
 									label="FIRST_NAME"
@@ -851,6 +871,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														name={`documents[${i}]`}
 														required
 														accept="application/pdf"
+														allowedSizeInByte={3145728}
 														formik={form}
 													/>
 												</td>

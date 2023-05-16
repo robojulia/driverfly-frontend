@@ -9,6 +9,7 @@ import useStorage from "../../hooks/use-storage";
 import { ExpandableRowsComponent, TableStyles } from "react-data-table-component/dist/src/DataTable/types";
 import { useStatefulStorage, StatefulStorageInterface } from "../../hooks/use-stateful-storage";
 import { UserEntity } from "../../models/user/user.entity";
+import { TableBodyProps } from "@mui/material";
 
 export interface ViewTableProps<TElement> {
     columns: ViewTableColumn<TElement>[];
@@ -16,6 +17,8 @@ export interface ViewTableProps<TElement> {
     columnSettingKey?: string;
     actions?: (row: TElement) => ListActionOptions[];
     preExpanded?: boolean | ((row: TElement) => boolean);
+    enableSelectableRows?: boolean | (() => boolean);
+    selectableRowChangeHandler?: (e?: any) => void;
     expandableRowsComponent?: ExpandableRowsComponent<TElement>;
     hideSearch?: boolean;
     noDataComponent?: ReactNode;
@@ -129,7 +132,8 @@ export default function ViewDataTable<TElement>(props: ViewTableProps<TElement>)
             fixedHeader
 
             noDataComponent={props.noDataComponent || (<>{t("NO_RECORDS_FOUND")}</>)}
-
+            selectableRows={Boolean(props.enableSelectableRows)}
+            onSelectedRowsChange={props.selectableRowChangeHandler}
             expandableRowExpanded={row => !props.preExpanded ? false : (typeof props.preExpanded === "boolean" ? props.preExpanded : props.preExpanded(row))}
             expandableRows={!!props.expandableRowsComponent}
             expandableRowsComponent={props.expandableRowsComponent ? (expandableProps) => (<Container fluid className="bg-light pl-5 pr-0">{<props.expandableRowsComponent {...expandableProps} />}</Container>) : null}

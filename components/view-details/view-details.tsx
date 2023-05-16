@@ -105,7 +105,7 @@ export default function ViewDetails(props: ViewDetailProps) {
                                     <thead>
                                         <tr>
                                             {Object.entries(firstValue).map(([subKey, subValue], subI) => (
-                                                <td key={subI}><strong>{t(subValue.label || subKey)}</strong></td>
+                                                <td key={subI}><strong>{t(subValue?.label || subKey)}</strong></td>
                                             ))}
                                         </tr>
                                     </thead>
@@ -133,7 +133,7 @@ export default function ViewDetails(props: ViewDetailProps) {
 
             return (
                 <tr key={key}>
-                    <td>{t(value.label)}</td>
+                    <td>{t(value?.label)}</td>
                     <td>{resolveText(value)}</td>
                 </tr>
             );

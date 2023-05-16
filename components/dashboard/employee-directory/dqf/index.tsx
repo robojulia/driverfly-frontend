@@ -237,6 +237,7 @@ const DqfTab = ({ applicant }: ViewApplicantDqfProps) => {
                                                                     name={`document`}
                                                                     accept="application/pdf"
                                                                     formik={form}
+                                                                    allowedSizeInByte={3145728}
                                                                 />
                                                                 <div className="mt-2 d-flex w-100 ">
                                                                     <Button disabled={form.isSubmitting || !form.isValid || form.isValidating} className="mr-2 w-50 theme-primary-btn" type="submit">

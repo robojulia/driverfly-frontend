@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { Col, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
+import ViewApplicantDqf from "../../../../../components/applicants/view-applicant-dqf";
 import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 import { ApplicantForm } from "../../../../../components/forms/company/applicant-form";
 import ChildPageLayout from "../../../../../components/layouts/page/child-page-layout";
@@ -16,7 +18,8 @@ export default function EditApplicant({ id }) {
     const backPath = `/dashboard/company/applicants/${id}`;
 
 
-    const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
+    // const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
+    const goBack = () => window.setTimeout(() => router.back(), 2000);
 
     const [applicant, setApplicant] = useState(new ApplicantEntity());
 
@@ -42,10 +45,16 @@ export default function EditApplicant({ id }) {
             title={t("EDIT_{name}", { name: "APPLICANT" }, { translateProps: true })}
             backPath={backPath}
         >
+
             <ApplicantForm
                 entity={applicant}
                 onSaveComplete={goBack}
             />
+            <Row>
+                <Col md={6}>
+                    <ViewApplicantDqf canEdit={true} applicant={applicant} />
+                </Col>
+            </Row>
         </ChildPageLayout>
     );
 }
