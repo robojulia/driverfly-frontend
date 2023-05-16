@@ -73,6 +73,23 @@ const DqfTab = ({ applicant }: ViewApplicantDqfProps) => {
     }
 
     /**
+     * This function downloads a document by getting a signed URL from an API and creating a temporary
+     * link element to initiate the download.
+     * @param {number} id - The `id` parameter is a number representing the ID of the document that
+     * needs to be downloaded. It is used to fetch the signed URL of the document from the API.
+     */
+    const downloadDocumentClick = async (id: number): Promise<void> => {
+        const api = new DocumentApi();
+        const doc: DocumentEntity = await api.getSignedUrl(id);
+        const link = document.createElement('a');
+        link.href = doc.path;
+        link.download = doc.name
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    /**
      * It takes a type and an optional documentId, and sets the form's document field to an object with the
      * type and id
      * @param {ApplicantDqf} type - ApplicantDqf - this is the type of document that is being uploaded.
@@ -186,8 +203,7 @@ const DqfTab = ({ applicant }: ViewApplicantDqfProps) => {
 
                                                                 {document
                                                                     ? <a
-                                                                        href={document?.path}
-                                                                        download
+                                                                        onClick={() => downloadDocumentClick(document.id)}
                                                                         className="btn theme-primary2-btn p-0 pt-1 mr-2"
                                                                     ><CloudArrowDown /></a>
                                                                     : null}
