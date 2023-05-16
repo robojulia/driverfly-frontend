@@ -79,14 +79,28 @@ const DqfTab = ({ applicant }: ViewApplicantDqfProps) => {
      * needs to be downloaded. It is used to fetch the signed URL of the document from the API.
      */
     const downloadDocumentClick = async (id: number): Promise<void> => {
+        console.log("Debugging");
+
         const api = new DocumentApi();
         const doc: DocumentEntity = await api.getSignedUrl(id);
+
+        // Make a request to get the file data
+        const response = await fetch(doc.path);
+        const fileBlob = await response.blob();
+
+        // Create a temporary link element
         const link = document.createElement('a');
-        link.href = doc.path;
-        link.download = doc.name
+        link.href = URL.createObjectURL(fileBlob);
+        link.download = doc.name;
+
         document.body.appendChild(link);
+
+        // Simulate a click on the link to trigger the download
         link.click();
+
+        // Clean up the temporary link
         document.body.removeChild(link);
+        link.remove();
     }
 
     /**
