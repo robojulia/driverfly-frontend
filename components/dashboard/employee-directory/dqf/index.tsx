@@ -202,10 +202,10 @@ const DqfTab = ({ applicant }: ViewApplicantDqfProps) => {
                                                                 >{document ? <Pen /> : t('ADD')}</Button>
 
                                                                 {document
-                                                                    ? <a
+                                                                    ? <Button
                                                                         onClick={() => downloadDocumentClick(document.id)}
                                                                         className="btn theme-primary2-btn p-0 pt-1 mr-2"
-                                                                    ><CloudArrowDown /></a>
+                                                                    ><CloudArrowDown /></Button>
                                                                     : null}
 
                                                                 {/* A ternary operator. It is checking
