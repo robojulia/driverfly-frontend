@@ -18,7 +18,7 @@ export default function ViewApplicantDetail({
 	const currentStatus = !!hideCurrentStatus
 		? {}
 		: {
-			APPLICANT_CURRENT_STATUS: (applicant?.jobs.length && applicant?.current_application_status)
+			APPLICANT_CURRENT_STATUS: (applicant?.jobs?.length && applicant?.current_application_status)
 				? t(`ApplicantStatus.${applicant?.current_application_status}`)
 				: t("GENERAL_INTAKE"),
 		}
