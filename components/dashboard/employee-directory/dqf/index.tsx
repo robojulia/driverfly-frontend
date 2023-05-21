@@ -251,9 +251,14 @@ const DqfTab = ({ applicant }: ViewApplicantDqfProps) => {
                             {t(`ApplicantDqf.${type}`)}
                         </td>
                         <td colSpan={2}>
-                            {document
-                                ? <ShowFormattedDate date={document.last_updated_at} />
-                                : <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>}
+                            {type != ApplicantDqf.SAFETY_PERFORMANCE_HISTORY
+                                &&
+                                <>
+                                    {document
+                                        ? <ShowFormattedDate date={document.last_updated_at} />
+                                        : <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>}
+                                </>
+                            }
                         </td>
                         <td colSpan={1} className="border border-2 w-50">
                             <ButtonList document={document} type={type} />
