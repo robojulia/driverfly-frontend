@@ -23,8 +23,8 @@ export default class DocumentApi extends BaseApi {
         return data;
     }
 
-    async getDocumentHistory(dto: DocumentHistoryEntity): Promise<DocumentHistoryEntity[]> {
-        const { data } = await this.get(this.buildUrl(this.baseUrl + "/history", dto));
+    async getDocumentHistory(dto: DocumentHistoryEntity, attachEmployer?: Boolean): Promise<DocumentHistoryEntity[]> {
+        const { data } = await this.get(this.buildUrl(this.baseUrl + "/history", { ...dto, attachEmployer }));
 
         return data;
     }
