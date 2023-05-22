@@ -234,8 +234,14 @@ class ApplicantApi extends BaseApi {
 	};
 
 	employer = {
+		baseUrl: (applicantId: number) => `${this.baseUrl}/${applicantId}/employer/`,
 		getByUuidToken: async (uuid_token: string): Promise<ApplicantEmployerEntity> => {
 			const { data } = await this.get(this.buildUrl(`${this.baseUrl}/fetch-employer/${uuid_token}`));
+
+			return data;
+		},
+		list: async (applicantId: number): Promise<ApplicantEmployerEntity[]> => {
+			const { data } = await this.get(`${this.employer.baseUrl(applicantId)}`);
 
 			return data;
 		}
