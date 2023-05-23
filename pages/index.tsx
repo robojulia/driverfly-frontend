@@ -32,7 +32,7 @@ export default function Index() {
     useEffect(() => {
         // Add Google Tag Manager script dynamically
         const handleRouteChange = (url) => {
-            window.gtag('config', 'G-ES6C2YKZ67', {
+            window.gtag('config', 'G-9BHS96Z9P0', {
                 page_path: url,
             });
         };
@@ -52,7 +52,7 @@ export default function Index() {
                 {/* Google Tag Manager script */}
                 <script
                     async
-                    src="https://www.googletagmanager.com/gtag/js?id=G-ES6C2YKZ67"
+                    src="https://www.googletagmanager.com/gtag/js?id=G-9BHS96Z9P0"
                 ></script>
                 <script
                     dangerouslySetInnerHTML={{
@@ -60,7 +60,7 @@ export default function Index() {
                             window.dataLayer = window.dataLayer || [];
                             function gtag(){dataLayer.push(arguments);}
                             gtag('js', new Date());
-                            gtag('config', 'G-ES6C2YKZ67');
+                            gtag('config', 'G-9BHS96Z9P0');
                         `,
                     }}
                 ></script>
