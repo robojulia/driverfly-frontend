@@ -26,6 +26,7 @@ import { DocumentEntity } from "../../../../models/documents/document.entity";
 import { ViewApplicantDqfProps } from "../../../../types/applicant/view-application-dqf-props.type";
 import SafetyPerformanceHistory from "../../../applicants/safety-performance-history";
 import ViewDocumentHistory from "../../../documents/view-history";
+import { ApplicantOnBoardingChecklist } from "../../../../enums/applicants/applicant-onboarding-checklist.enum";
 
 const DqfTab = ({ applicant }: ViewApplicantDqfProps) => {
 
@@ -110,7 +111,7 @@ const DqfTab = ({ applicant }: ViewApplicantDqfProps) => {
      * @param {ApplicantDqf} type - ApplicantDqf - this is the type of document that is being uploaded.
      * @param {number} [documentId] - The id of the document to be updated.
      */
-    const handleUpdateDocument = async (type: ApplicantDqf, documentId?: number): Promise<void> => {
+    const handleUpdateDocument = async (type: ApplicantDqf | ApplicantOnBoardingChecklist, documentId?: number): Promise<void> => {
         form.setFieldValue("document", { type, id: documentId ?? null })
     }
 
@@ -276,6 +277,7 @@ const DqfTab = ({ applicant }: ViewApplicantDqfProps) => {
                 <Col>
                     {!!applicantUser ? (
                         <ViewCard title="DOCUMENTS">
+                            <h3 className="my-4"><em>{t("ONBOARDING_CHECKLIST")}</em></h3>
                             <Table striped>
                                 <thead>
                                     <tr>
@@ -288,6 +290,7 @@ const DqfTab = ({ applicant }: ViewApplicantDqfProps) => {
                                     <TableBody />
                                 </tbody>
                             </Table>
+
                             <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
                         </ViewCard>
                     ) : (

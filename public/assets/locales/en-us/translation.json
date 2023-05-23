@@ -1962,6 +1962,16 @@
     "EMPLOYMENT_APPLICATION": "Employment Application",
     "DRIVERS_ROAD_TEST_CERTIFICATION": "Driver’s Road Test Certification (optional)"
   },
+  "ApplicantOnBoardingChecklist": {
+    "DRUG_ALCOHOL_CHAIN_CUSTODY": "Drug and alcohol Test & Chain Custody",
+    "BACKGROUND_CHECK": "Background Check",
+    "DRIVER_AUTHORIZATION": "Driver Authorization",
+    "SIGNED_HOURS_OF_SERVICE_RECORD": "Signed hours of service record statement (optional)",
+    "INSURANCE_PASS": "Insurance Pass",
+    "CONTRACT_SIGNED": "Contract Signed",
+    "TRUCK_PROVIDED": "Truck Provided",
+    "ORIENTATION_COMPLETE": "Orientation Complete"
+  },
   "ApplicantAdditionalFilesEnum": {
     "DAC_REPORT": "DAC Report",
     "SKILL_PERFORMANCE_EVALUATION_CERTIFICATE": "Skill Performance Evaluation Certificate",
@@ -1979,5 +1989,9 @@
   "{name}_AUTHORIZE_COMPANY": "I {{name}} hereby authorize this company to release all records of employment,including assessments of my job performance, ability, and fitness. I hereby release this company,and its employees, officers, directors, and agents from any and all liability of any type as a resultof providing information to the above-mentioned person and/or company.",
   "REFER_BACK_QUESTION": "would you like to participate in our Refer Back program?",
   "REFER_BACK_DETAILS": "With this you authorize DriverFly to contact applicants who are not a good fit based on the parameters contained in this section. In return, you receive $250 in company credit per candidate that gets placed through our platform",
-  "UPLOAD_FILE":"Upload file"
+  "UPLOAD_FILE": "Upload file",
+  "DHA_welcome_note": "Welcome to our Digital Hiring Applicatiion",
+  "COMPANY_PREFERENCE_DHA_NOTE": "To maximize yopur recruiting pipeline,fill out your company level preference in the fields below and copy and paste the URL provided to all your external job postings and communications. All applicants will be passed directly into your applicants tab",
+  "LEARN_MORE_ABOUT_BENEFITS": "To learn more about the full benefits, go to ",
+  "DHA_LINK": "digitalhiringapp.com"
 }
