@@ -6,7 +6,7 @@ import Drivers from "../components/works/drivers";
 import Companies from "../components/works/companies";
 import CompaniesSlider from '../components/featured-companies-slider/companies-slider'
 import TestimonialSlider from "../components/testominial-slider/slider";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "../hooks/use-translation";
 import { useRouter } from "next/router";
 import NewsletterSingup from "../components/news-letter-signup"
@@ -16,6 +16,12 @@ import OwnerOperators from "../components/home/owner-operators";
 import { Check } from 'react-bootstrap-icons';
 
 
+declare global {
+    interface Window {
+        dataLayer: any[];
+        gtag: Function;
+    }
+}
 export default function Index() {
 
     const router = useRouter();
@@ -23,10 +29,40 @@ export default function Index() {
 
     const [showTab, setShowTab] = useState('feature');
 
+    useEffect(() => {
+        // Add Google Tag Manager script dynamically
+        const handleRouteChange = (url) => {
+            window.gtag('config', 'G-9BHS96Z9P0', {
+                page_path: url,
+            });
+        };
+
+        router.events.on('routeChangeComplete', handleRouteChange);
+
+        return () => {
+            router.events.off('routeChangeComplete', handleRouteChange);
+        };
+    }, [router.events]);
+
     return (
         <>
             <Head>
                 <meta name="google-site-verification" content="m9bfVuOGxtYDxi8eKLetXlJplLbdwnewUO37wDyw96I" />
+                {/* Google Tag Manager script */}
+                <script
+                    async
+                    src="https://www.googletagmanager.com/gtag/js?id=G-9BHS96Z9P0"
+                ></script>
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `
+                            window.dataLayer = window.dataLayer || [];
+                            function gtag(){dataLayer.push(arguments);}
+                            gtag('js', new Date());
+                            gtag('config', 'G-9BHS96Z9P0');
+                        `,
+                    }}
+                ></script>
             </Head>
             <HeroSection />
             <MotorCarrier />
