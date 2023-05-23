@@ -43,6 +43,7 @@ export default function Index() {
             router.events.off('routeChangeComplete', handleRouteChange);
         };
     }, [router.events]);
+    
 
     return (
         <>
