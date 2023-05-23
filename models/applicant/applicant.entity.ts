@@ -22,6 +22,7 @@ import {
 import { ApplicantVoeFormEntity } from "./applicant-voe-form.entity";
 import { Status } from "../../enums/status.enum";
 import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
+import { ApplicantJobStatusHistoryEntity } from "./applicant-job-status-history.entity";
 
 
 export class ApplicantEntity {
@@ -92,6 +93,7 @@ export class ApplicantEntity {
 	uuid_token?: string;
 	status?: Status;
 	current_application_status?: ApplicantStatus;
+	job_history?: ApplicantJobStatusHistoryEntity;
 
 	static yupSchema() {
 		return yup.object({
