@@ -18,6 +18,7 @@ import DocumentApi from "../../../../pages/api/document";
 import ViewPdf from "../../../view-details/view-pdf";
 import { ApplicantAdditionalFilesDto } from "../../../../models/applicant/additional-files.dto";
 import { ApplicantAdditionalFilesEnum } from "../../../../enums/applicants/applicant-additional-files.enum";
+import { DocumentEntity } from "../../../../models/documents/document.entity";
 
 export interface AdditionalFilesProps extends ViewApplicantDetailProps { }
 
@@ -80,6 +81,30 @@ const AdditionalFiles = (props: AdditionalFilesProps) => {
         setApplicant({ ...applicant, documents: applicant.documents.filter(v => (v.type != type)) })
     }
 
+    const downloadDocumentClick = async (id: number): Promise<void> => {
+
+        const api = new DocumentApi();
+        const doc: DocumentEntity = await api.getSignedUrl(id);
+
+        // Make a request to get the file data
+        const response = await fetch(doc.path);
+        const fileBlob = await response.blob();
+
+        // Create a temporary link element
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(fileBlob);
+        link.download = doc.name;
+
+        document.body.appendChild(link);
+
+        // Simulate a click on the link to trigger the download
+        link.click();
+
+        // Clean up the temporary link
+        document.body.removeChild(link);
+        link.remove();
+    }
+
     return (
         <div className="employee_directory_tabs">
             <Row>
@@ -117,7 +142,7 @@ const AdditionalFiles = (props: AdditionalFilesProps) => {
                                                                 <Button className="mr-2 w-100" onClick={() => { handleUpdateDocument(value, document?.id) }}>
                                                                     {document ? <Pen /> : t('ADD')}
                                                                 </Button>
-                                                                {document ? <a href={document?.path} download className="btn theme-primary2-btn p-0 pt-1 mr-2"><CloudArrowDown /></a> : null}
+                                                                {document ? <a onClick={() => downloadDocumentClick(document.id)} href='#' role="button" className="btn theme-primary2-btn p-0 pt-1 mr-2"><CloudArrowDown /></a> : null}
                                                                 {document ? <a onClick={() => deleteDocument(document.type)} href='#' role="button" className="btn btn-danger  p-0 pt-1 mr-2 w-100"><Trash /></a> : null}
                                                             </div>
                                                         }
