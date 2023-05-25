@@ -1,20 +1,19 @@
 import { Button, Col, Form, Row, Table } from "react-bootstrap";
+import { useFormik } from "formik";
+import { toast } from "react-toastify";
+import { CloudArrowDown, Pen, Eye, Trash } from "react-bootstrap-icons";
+import { useState } from "react";
+import { ThreeCircles } from 'react-loader-spinner';
 import { useAuth } from "../../../../hooks/use-auth";
 import { useEffectAsync } from "../../../../utils/react";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { ViewApplicantDetailProps } from "../../../../types/applicant/view-application-detail-props.type";
-import { useFormik } from "formik";
 import ApplicantApi from "../../../../pages/api/applicant";
 import ViewCard from "../../../view-details/view-card";
 import FileInput from '../../../forms/file-input';
-import { toast } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import ShowFormattedDate from "../../../jobs/show-formatted-date";
-import { ApplicantDocumentDto } from "../../../../models/applicant/applicant-document-dto";
-import { CloudArrowDown, Pen, Eye, Trash } from "react-bootstrap-icons";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
-import { useState } from "react";
-import { ThreeCircles } from 'react-loader-spinner';
 import DocumentApi from "../../../../pages/api/document";
 import ViewPdf from "../../../view-details/view-pdf";
 import { ApplicantAdditionalFilesDto } from "../../../../models/applicant/additional-files.dto";
@@ -22,25 +21,25 @@ import { ApplicantAdditionalFilesEnum } from "../../../../enums/applicants/appli
 
 export interface AdditionalFilesProps extends ViewApplicantDetailProps { }
 
-const AdditionalFiles = ({ applicant }: AdditionalFilesProps) => {
-
-    const [applicantUser, setApplicantUser] = useState<ApplicantEntity>(null)
+const AdditionalFiles = (props: AdditionalFilesProps) => {
 
     const { t } = useTranslation();
     const { user } = useAuth();
     const applicantApi = new ApplicantApi();
+
+    const [applicant, setApplicant] = useState<ApplicantEntity>(null)
 
     const form = useFormik({
         initialValues: new ApplicantAdditionalFilesDto(),
         validationSchema: ApplicantAdditionalFilesDto.yupSchema(),
         onSubmit: async ({ document }, { resetForm }) => {
             try {
-                const applicantDocumentUpload = await applicantApi.documents.create(applicantUser.id, document)
+                const data = await applicantApi.documents.create(applicant.id, document)
 
                 if (document.id) {
-                    applicantUser.documents = applicantUser.documents.filter(v => (v.id !== applicantDocumentUpload.id))
+                    applicant.documents = applicant.documents.filter(v => (v.id != data.id))
                 }
-                applicantUser.documents.push(applicantDocumentUpload)
+                applicant.documents.push(data)
                 toast.success(t('DOCUMENT_UPLOAD_SUCCESS_MESSAGE'))
                 resetForm()
             }
@@ -48,6 +47,13 @@ const AdditionalFiles = ({ applicant }: AdditionalFilesProps) => {
                 globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t });
             }
         }
+    });
+
+    useEffectAsync(async () => {
+        const v = await applicantApi.getById(props.applicant.id)
+        setApplicant(v)
+    }, [user], () => {
+        form.resetForm()
     });
 
     const [pdf, setPdf] = useState({});
@@ -64,26 +70,21 @@ const AdditionalFiles = ({ applicant }: AdditionalFilesProps) => {
             });
         }
     }
+
     const handleUpdateDocument = async (type: ApplicantAdditionalFilesEnum, documentId?: number) => {
         form.setFieldValue("document", { type: type, id: documentId || null })
     }
 
-    useEffectAsync(async () => {
-        const v = await applicantApi.getById(applicant.id)
-        setApplicantUser(v)
-    }, [user], () => {
-        form.resetForm()
-    });
-    const deleteDocument = async (docType) => {
-        const applicantApi = new ApplicantApi()
-        const deleteDoc = await applicantApi.documents.delete(applicant?.id, docType)
+    const deleteDocument = async (type: ApplicantAdditionalFilesEnum) => {
+        await applicantApi.documents.delete(props.applicant?.id, type)
+        setApplicant({ ...applicant, documents: applicant.documents.filter(v => (v.type != type)) })
     }
 
     return (
         <div className="employee_directory_tabs">
             <Row>
                 <Col>
-                    {!!applicantUser ? (
+                    {!!applicant ? (
                         <ViewCard title="DOCUMENTS">
 
                             <Table striped>
@@ -99,7 +100,7 @@ const AdditionalFiles = ({ applicant }: AdditionalFilesProps) => {
                                     {
                                         Object.values(ApplicantAdditionalFilesEnum).map((value: ApplicantAdditionalFilesEnum, i) => {
 
-                                            const document: any = applicantUser?.documents?.find(v => (v.type === value))
+                                            const document: any = applicant?.documents?.find(v => (v.type === value))
                                             return (
                                                 <tr key={i}>
                                                     <td colSpan={2}>

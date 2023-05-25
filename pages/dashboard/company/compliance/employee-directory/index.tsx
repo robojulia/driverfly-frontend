@@ -41,6 +41,7 @@ import EntityForm from "../../../../../components/layouts/page/entity-form";
 import BaseTextArea from "../../../../../components/forms/base-text-area";
 import { Status } from "../../../../../enums/status.enum";
 import BaseSelect from "../../../../../components/forms/base-select";
+import AdditionalFiles from "../../../../../components/dashboard/employee-directory/additional-files";
 
 
 export default function EmployeeDirectory() {
@@ -116,6 +117,7 @@ export default function EmployeeDirectory() {
         BACKGROUND: <Background {...modalAction?.entity} />,
         DQF: < DqfTab {...modalAction?.entity} />,
         DRIVER_ONBOARDING_CHECKLIST: < DAC {...modalAction?.entity} />,
+        ADDITIONAL_FILES: < AdditionalFiles {...modalAction?.entity} />,
 
         // VEHICLES: < VehicleInformationTab />  //according to wireframe this tab (vehichled are pushed to phase 3)
     };
