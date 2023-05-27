@@ -244,7 +244,7 @@ export default function DqfTab(props: ViewApplicantDqfProps) {
             <Row>
                 <Col>
                     {!!applicant ? (
-                        <ViewCard title="DOCUMENTS">
+                        <ViewCard title={props.title ?? "DOCUMENTS"}>
                             <Table striped>
                                 <thead>
                                     <tr>
@@ -308,12 +308,8 @@ export default function DqfTab(props: ViewApplicantDqfProps) {
                             />
                         </div>
                     )}
-
-
                 </Col>
             </Row>
-
-
         </div>
     );
 };
