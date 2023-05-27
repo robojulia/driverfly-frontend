@@ -1,17 +1,17 @@
 import { useState } from "react";
+import { Button } from "react-bootstrap";
+import { ClockHistory, Eye } from "react-bootstrap-icons";
 import { ViewDocumentHistoryProps } from "../../types/applicant/view-document-history-props.type";
 import ViewModal from "../view-details/view-modal";
 import { DocumentHistoryEntity } from "../../models/documents/document-history.entity";
 import DocumentApi from "../../pages/api/document";
 import ViewDataTable from "../view-details/view-data-table";
 import ShowFormattedDate from "../jobs/show-formatted-date";
-import { Button } from "react-bootstrap";
-import { ClockHistory, Eye } from "react-bootstrap-icons";
 import { useTranslation } from "../../hooks/use-translation";
 import ViewPdf from "../view-details/view-pdf";
 
 
-export default function ViewDocumentHistory({ buttonClass, document }: ViewDocumentHistoryProps) {
+export default function ViewDocumentHistory({ buttonClass, document, type, documentable_type, documentable_id }: ViewDocumentHistoryProps) {
 
     const { t } = useTranslation();
 
@@ -29,9 +29,9 @@ export default function ViewDocumentHistory({ buttonClass, document }: ViewDocum
     const viewHistory = async () => {
         const documentApi = new DocumentApi()
         const data = await documentApi.getDocumentHistory({
-            type: document.type,
-            documentable_type: document.documentable_type as string,
-            documentable_id: document.documentable_id
+            type: type,
+            documentable_type: document?.documentable_type as string ?? documentable_type,
+            documentable_id: document?.documentable_id ?? documentable_id,
         })
         if (!data?.length) alert(t('NO_RECORDS_FOUND'))
         setDocumentHistory(data)
@@ -40,6 +40,7 @@ export default function ViewDocumentHistory({ buttonClass, document }: ViewDocum
     return (
         <>
             <Button
+                className={buttonClass}
                 title={t("HISTORY")}
                 onClick={() => { viewHistory() }}
             ><ClockHistory /></Button>

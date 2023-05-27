@@ -26,6 +26,7 @@ import { SafetyPerformanceHistoryProps } from "../../types/applicant/safety-perf
 import ViewModal from "../view-details/view-modal";
 import ViewDataTable from "../view-details/view-data-table";
 import ViewDocumentHistory from "../documents/view-history";
+import { ApplicantDocumentType } from "../../enums/applicants/applicant-document-type.enum";
 
 export default function SafetyPerformanceHistory({ buttonClass, applicant }: SafetyPerformanceHistoryProps) {
 
@@ -132,7 +133,10 @@ export default function SafetyPerformanceHistory({ buttonClass, applicant }: Saf
                                             })
                                         }}
                                         className="btn btn-success p-0 py-1 mr-2 w-100"><Eye /></Button>
-                                    <ViewDocumentHistory document={doc} />
+                                    <ViewDocumentHistory
+                                        document={doc}
+                                        type={ApplicantDqf.SAFETY_PERFORMANCE_HISTORY}
+                                    />
                                 </>)
                             },
                             hidable: false
