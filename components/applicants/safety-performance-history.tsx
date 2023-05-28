@@ -1,43 +1,34 @@
-import { Button, Col, Form, Row, Table } from "react-bootstrap";
-
-import { useFormik } from "formik";
-
+import { Button } from "react-bootstrap";
+import { Form, useFormik } from "formik";
 import { toast } from "react-toastify";
-
-import { CloudArrowDown, Pen, Eye, Trash } from "react-bootstrap-icons";
-
+import { Eye } from "react-bootstrap-icons";
 import { useState } from "react";
-import { ThreeCircles } from 'react-loader-spinner';
-import { ViewApplicantDetailProps } from "../../types/applicant/view-application-detail-props.type";
 import { ApplicantDocumentDto, ApplicantEmployerEntity, ApplicantEntity } from "../../models/applicant";
 import { useTranslation } from "../../hooks/use-translation";
-import { useAuth } from "../../hooks/use-auth";
 import ApplicantApi from "../../pages/api/applicant";
 import DocumentApi from "../../pages/api/document";
 import { ApplicantDqf } from "../../enums/applicants/applicant-dqf-types.enum";
-import { useEffectAsync } from "../../utils/react";
 import { globalAjaxExceptionHandler } from "../../utils/ajax";
-import ShowFormattedDate from "../jobs/show-formatted-date";
-import FileInput from "../forms/file-input";
-import ViewCard from "../view-details/view-card";
 import ViewPdf from "../view-details/view-pdf";
-import BaseCheck from "../forms/base-check";
-import { SafetyPerformanceHistoryProps } from "../../types/applicant/safety-performnance-history-props.type";
 import ViewModal from "../view-details/view-modal";
 import ViewDataTable from "../view-details/view-data-table";
 import ViewDocumentHistory from "../documents/view-history";
-import { ApplicantDocumentType } from "../../enums/applicants/applicant-document-type.enum";
+import { AddDocumentButton, DeleteDocumentButton, DownloadDocumentButton, ViewDocumentButton } from "../documents/buttons";
+import { DocumentableType } from "../../enums/documents/documentable-type.enum";
+import { SafetyPerformanceHistoryProps } from "../../types/applicant/safety-performnance-history-props.type";
+import { handleDownloadDocument, handleViewDocument } from "../../utils/documents/button-actions";
+import FileInput from "../forms/file-input";
+import OverlyPopover from '../popover/overly-popover'
 
-export default function SafetyPerformanceHistory({ buttonClass, applicant }: SafetyPerformanceHistoryProps) {
 
-    const [applicantUser, setApplicantUser] = useState<ApplicantEntity>(null)
+export default function SafetyPerformanceHistory({ buttonClass, applicant, canEditSafetyPerformance, showHistory, showResendButton }: SafetyPerformanceHistoryProps) {
 
     const { t } = useTranslation();
-    const { user } = useAuth();
     const applicantApi = new ApplicantApi();
     const api = new DocumentApi();
 
     const [pdf, setPdf] = useState({});
+
     const [employers, setEmployers] = useState<ApplicantEmployerEntity[]>([])
     const resetEmployers = () => setEmployers([])
 
@@ -46,12 +37,12 @@ export default function SafetyPerformanceHistory({ buttonClass, applicant }: Saf
         validationSchema: ApplicantDocumentDto.yupSchema(),
         onSubmit: async ({ document }, { resetForm }) => {
             try {
-                const applicantDocumentUpload = await applicantApi.documents.create(applicantUser.id, document)
+                const applicantDocumentUpload = await applicantApi.employer.documents.create(applicant.id, document.documentable_id, document)
 
                 if (document.id) {
-                    applicantUser.documents = applicantUser.documents.filter(v => (v.id !== applicantDocumentUpload.id))
+                    applicant.documents = applicant.documents.filter(v => (v.id !== applicantDocumentUpload.id))
                 }
-                applicantUser.documents.push(applicantDocumentUpload)
+                applicant.documents.push(applicantDocumentUpload)
                 toast.success(t('DOCUMENT_UPLOAD_SUCCESS_MESSAGE'))
                 resetForm()
             }
@@ -61,21 +52,105 @@ export default function SafetyPerformanceHistory({ buttonClass, applicant }: Saf
         }
     });
 
-    const viewDocumentClick = async (id, name) => {
-        const document = await api.getSignedUrl(id);
-
-        if (document) {
-            setPdf({
-                name: `${t(name)} (${document.name})`,
-                url: document.path
-            });
-        }
-    }
-
     const handleClick = async () => {
         const data = await applicantApi.employer.list(applicant.id)
         setEmployers(data)
     }
+
+
+    /**
+     * It deletes a document from the applicant's profile.
+     * @param {ApplicantDqf | string} docType - The type of document you want to
+     * delete.
+     */
+    const handleDeleteDocument = async (employer: ApplicantEmployerEntity, docType: ApplicantDqf | string): Promise<void> => {
+        const applicantApi = new ApplicantApi()
+        await applicantApi.employer.documents.delete(applicant?.id, employer?.id, docType)
+
+        setEmployers([
+            ...employers.filter(v => v.id == employer.id),
+            {
+                ...employer,
+                documents: employer.documents?.filter(v => v.type == docType)
+            }
+        ])
+    }
+
+
+    /**
+     * It takes a type and an optional documentId, and sets the form's document field to an object with the
+     * type and id
+     * @param {ApplicantDqf} type - ApplicantDqf - this is the type of document that is being uploaded.
+     * @param {number} [documentId] - The id of the document to be updated.
+     */
+    const handleUpdateDocument = async (type: ApplicantDqf, documentId?: number, employerId?: number): Promise<void> => {
+        // form?.resetForm()
+        // console.log("{ type, id: documentId ?? null, documentable_id: employerId }", { type, id: documentId ?? null, documentable_id: employerId });
+
+        form?.setFieldValue("document", { type, id: documentId ?? null, documentable_id: employerId })
+    }
+
+    const resendVoeRequest = async (employerId: number) => {
+        try {
+            const applicantApi = new ApplicantApi()
+            await applicantApi.employer.sendVoeRequest(applicant?.id, employerId)
+            toast.success(t("RESEND_VOE_SUCCESSFULL"))
+        } catch (error) {
+            toast.error(t("ERROR_MESSAGE_DEFAULT"))
+        }
+    }
+
+    const ButtonList = ({ employer, document, type }) => (
+        <>
+            {(!form?.values?.document?.type || form?.values?.document?.type !== type)
+                && (<div className="d-flex w-100">
+                    <ViewDocumentButton
+                        document={document}
+                        onClick={() => handleViewDocument(document.id, setPdf)}
+                    />
+                    {Boolean(canEditSafetyPerformance)
+                        && <AddDocumentButton
+                            document={document}
+                            type={type}
+                            t={t}
+                            onClick={() => handleUpdateDocument(type, document?.id, employer.id)}
+                        />
+                    }
+                    <DownloadDocumentButton
+                        document={document}
+                        onClick={() => handleDownloadDocument(document.id)}
+                    />
+                    {Boolean(canEditSafetyPerformance)
+                        && <DeleteDocumentButton
+                            document={document}
+                            onClick={() => handleDeleteDocument(employer, type)}
+                        />
+                    }
+                    {Boolean(showHistory)
+                        && <ViewDocumentHistory
+                            document={document}
+                            type={type}
+                            documentable_id={applicant.id}
+                            documentable_type={DocumentableType.APPLICANT_EMPLOYERS}
+                        />
+                    }
+                    {(Boolean(showResendButton)
+                        &&
+                        <Button
+                            className="mr-2 w-100"
+                            disabled={!Boolean(employer.can_contact && employer?.is_subject_to_fmcsrs)}
+                            onClick={() => resendVoeRequest(employer.id)}
+                        >
+                            <OverlyPopover str={!Boolean(employer.can_contact) ? "NOT_AUTHORIZED_TO_COMMUNICATE" : "RESEND_VOE"}>
+                                {t('RESEND')}
+                            </OverlyPopover>
+                        </Button>
+                    )}
+                </div>)
+            }
+        </>
+    )
+
 
     return (
         <>
@@ -102,41 +177,45 @@ export default function SafetyPerformanceHistory({ buttonClass, applicant }: Saf
                     }}
                     columns={[
                         {
-                            name: "TITLE",
-                            selector: emp => emp.title,
-                            hidable: false
-                        },
-                        {
                             name: "NAME",
                             selector: emp => emp.name,
-                            hidable: false
+                            hidable: false,
+                            width: '30%',
                         },
                         {
                             name: "EMAIL",
                             selector: emp => emp.email,
-                            hidable: false
+                            hidable: false,
+                            width: '30%',
                         },
                         {
-                            name: "MANAGER",
-                            selector: emp => emp.manager_name,
-                            hidable: false
-                        },
-                        {
+                            width: '40%',
                             cell: emp => {
                                 const doc = emp.documents?.find(v => v.type == ApplicantDqf.SAFETY_PERFORMANCE_HISTORY)
                                 return (<>
-                                    <Button
-                                        onClick={() => {
-                                            setPdf({
-                                                name: `(${doc.name})`,
-                                                url: doc.path
-                                            })
-                                        }}
-                                        className="btn btn-success p-0 py-1 mr-2 w-100"><Eye /></Button>
-                                    <ViewDocumentHistory
-                                        document={doc}
-                                        type={ApplicantDqf.SAFETY_PERFORMANCE_HISTORY}
-                                    />
+                                    <ButtonList employer={emp} type={ApplicantDqf.SAFETY_PERFORMANCE_HISTORY} document={doc} />
+                                    {/* {(form?.values?.document?.type && form?.values?.document?.documentable_id == emp.id)
+                                        && <Form onSubmit={form?.handleSubmit} >
+                                            <FileInput
+                                                name={`document`}
+                                                accept="application/pdf"
+                                                // formik={form}
+                                                allowedSizeInByte={3145728}
+                                            />
+                                            <div className="mt-2 d-flex w-100 ">
+                                                <Button
+                                                    // disabled={form?.isSubmitting || !form?.isValid || form?.isValidating}
+                                                    className="mr-2 w-50 theme-primary-btn"
+                                                    type="submit"
+                                                >{t(`SAVE`)}</Button>
+                                                <Button
+                                                    type="button"
+                                                    className="mr-2 w-50 bg-danger"
+                                                // onClick={() => { form?.resetForm() }}
+                                                >{t(`CANCEL`)}</Button>
+                                            </div>
+                                        </Form>
+                                    } */}
                                 </>)
                             },
                             hidable: false
