@@ -10,6 +10,8 @@ import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import { useEffectAsync } from "../../../../../utils/react";
 import ApplicantApi from "../../../../api/applicant";
+import DQF from "../../../../../components/dashboard/employee-directory/dqf";
+import { ApplicantStatus } from "../../../../../enums/applicants/applicant-status.enum";
 
 export default function EditApplicant({ id }) {
     const router = useRouter();
@@ -50,11 +52,28 @@ export default function EditApplicant({ id }) {
                 entity={applicant}
                 onSaveComplete={goBack}
             />
-            <Row>
-                <Col md={8}>
-                    <ViewApplicantDqf canEdit={true} applicant={applicant} />
-                </Col>
-            </Row>
+            {applicant?.id
+                && <Row>
+                    <Col>
+                        <DQF
+                            title="ONBOARDING_CHECKLIST"
+                            applicant={applicant}
+                            canEdit={true}
+                            showOnboarding={true}
+                            showCompleted={true}
+                            canEditSafetyPerformance={
+                                ([
+                                    ApplicantStatus.COMPLETED_EMPLOYED,
+                                    ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
+                                    ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE
+                                ]).includes(applicant.current_application_status)
+                            }
+                            showResendButton={true}
+                        />
+                        {/* <ViewApplicantDqf canEdit={true} applicant={applicant} /> */}
+                    </Col>
+                </Row>
+            }
         </ChildPageLayout>
     );
 }
