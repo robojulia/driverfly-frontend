@@ -121,17 +121,7 @@ export function PhoneNumber() {
         if (!!applicant?.extras) setApplicantExtras([...filteredSignature])
 
     }, [applicant])
-    const inputStyle = {
-        width: '40px',
-        height: '40px',
-        margin: '8px',
-        borderRadius: '4px',
-        border: '1px solid #ccc',
-        fontSize: '24px',
-        fontWeight: 'bold',
-        textAlign: 'center',
-        color: '#000'
-    };
+   
 
     return (
         <>
@@ -179,7 +169,17 @@ export function PhoneNumber() {
                             <h5 className="text-center">{t("OTP_MESSAGES")}</h5>
                             <div className="w-100 d-flex justify-content-center mt-4 mb-4">
                                 <OtpInputField
-                                    // inputStyle={inputStyle}
+                                    inputStyle={{
+                                        width: '40px',
+                                        height: '40px',
+                                        margin: '8px',
+                                        borderRadius: '4px',
+                                        border: '1px solid #ccc',
+                                        fontSize: '24px',
+                                        fontWeight: 'bold',
+                                        textAlign: 'center',
+                                        color: '#000',
+                                    }}
                                     renderInput={(props) => <input {...props} />}
                                     value={otp}
                                     onChange={(e) => setOtp(e)}
