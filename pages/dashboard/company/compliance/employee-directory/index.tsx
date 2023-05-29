@@ -16,7 +16,7 @@ import { useAuth } from "../../../../../hooks/use-auth";
 import { useEffectAsync } from "../../../../../utils/react";
 import { TabbedLayout } from "../../../../../components/layouts/page/tabbed-layout";
 import DAC from "../../../../../components/dashboard/employee-directory/dac";
-import DqfTab from "../../../../../components/dashboard/employee-directory/dqf";
+import DQF from "../../../../../components/dashboard/employee-directory/dqf";
 import ApplicantApi from "../../../../api/applicant";
 import {
     ApplicantEntity,
@@ -115,7 +115,7 @@ export default function EmployeeDirectory() {
 
     const tabs = {
         BACKGROUND: <Background {...modalAction?.entity} />,
-        DQF: < DqfTab {...modalAction?.entity} />,
+        DQF: < DQF {...modalAction?.entity} canEdit={true} showHistory={true} />,
         DRIVER_ONBOARDING_CHECKLIST: < DAC {...modalAction?.entity} />,
         ADDITIONAL_FILES: < AdditionalFiles {...modalAction?.entity} />,
 

@@ -234,7 +234,7 @@ class ApplicantApi extends BaseApi {
 	};
 
 	employer = {
-		baseUrl: (applicantId: number) => `${this.baseUrl}/${applicantId}/employer/`,
+		baseUrl: (applicantId: number) => `${this.baseUrl}/${applicantId}/employer`,
 		getByUuidToken: async (uuid_token: string): Promise<ApplicantEmployerEntity> => {
 			const { data } = await this.get(this.buildUrl(`${this.baseUrl}/fetch-employer/${uuid_token}`));
 
@@ -244,7 +244,39 @@ class ApplicantApi extends BaseApi {
 			const { data } = await this.get(`${this.employer.baseUrl(applicantId)}`);
 
 			return data;
-		}
+		},
+		sendVoeRequest: async (applicantId: number, employerId: number): Promise<void> => {
+			const { data } = await this.get(`${this.employer.baseUrl(applicantId)}/${employerId}/send-voew-request`);
+
+			return data;
+		},
+		documents: {
+			baseUrl: (applicantId: number, employerId: number) =>
+				`${this.employer.baseUrl(applicantId)}/${employerId}/documents`,
+			create: async (
+				applicantId: number,
+				employerId: number,
+				dto: DocumentEntity
+			): Promise<DocumentEntity> => {
+				const { data } = await this.post(
+					`${this.employer.documents.baseUrl(applicantId, employerId)}`,
+					dto
+				);
+
+				return data;
+			},
+			delete: async (
+				applicantId: number,
+				employerId: number,
+				type: ApplicantDocumentType | ApplicantDqf | string
+			): Promise<void> => {
+				const { data } = await this.delete(
+					`${this.employer.documents.baseUrl(applicantId, employerId)}/${type}`
+				);
+
+				return data;
+			},
+		},
 	};
 
 	notes = {
