@@ -1,12 +1,10 @@
 import { Button } from "react-bootstrap";
-import { Form, useFormik } from "formik";
+import { useFormik } from "formik";
 import { toast } from "react-toastify";
-import { Eye } from "react-bootstrap-icons";
 import { useState } from "react";
-import { ApplicantDocumentDto, ApplicantEmployerEntity, ApplicantEntity } from "../../models/applicant";
+import { ApplicantEmployerEntity } from "../../models/applicant";
 import { useTranslation } from "../../hooks/use-translation";
 import ApplicantApi from "../../pages/api/applicant";
-import DocumentApi from "../../pages/api/document";
 import { ApplicantDqf } from "../../enums/applicants/applicant-dqf-types.enum";
 import { globalAjaxExceptionHandler } from "../../utils/ajax";
 import ViewPdf from "../view-details/view-pdf";
@@ -19,13 +17,19 @@ import { SafetyPerformanceHistoryProps } from "../../types/applicant/safety-perf
 import { handleDownloadDocument, handleViewDocument } from "../../utils/documents/button-actions";
 import FileInput from "../forms/file-input";
 import OverlyPopover from '../popover/overly-popover'
+import { ApplicantEmployerDocumentDto } from "../../models/applicant/applicant-employer-document-dto";
 
 
-export default function SafetyPerformanceHistory({ buttonClass, applicant, canEditSafetyPerformance, showHistory, showResendButton }: SafetyPerformanceHistoryProps) {
+export default function SafetyPerformanceHistory({
+    buttonClass,
+    applicant,
+    canEditSafetyPerformance,
+    showHistory,
+    showResendButton
+}: SafetyPerformanceHistoryProps) {
 
     const { t } = useTranslation();
     const applicantApi = new ApplicantApi();
-    const api = new DocumentApi();
 
     const [pdf, setPdf] = useState({});
 
@@ -33,16 +37,17 @@ export default function SafetyPerformanceHistory({ buttonClass, applicant, canEd
     const resetEmployers = () => setEmployers([])
 
     const form = useFormik({
-        initialValues: new ApplicantDocumentDto(),
-        validationSchema: ApplicantDocumentDto.yupSchema(),
-        onSubmit: async ({ document }, { resetForm }) => {
+        initialValues: new ApplicantEmployerDocumentDto(),
+        validationSchema: ApplicantEmployerDocumentDto.yupSchema(),
+        onSubmit: async ({ document, employer }, { resetForm }) => {
             try {
-                const applicantDocumentUpload = await applicantApi.employer.documents.create(applicant.id, document.documentable_id, document)
+                const doc = await applicantApi.employer.documents.create(applicant.id, employer.id, document)
 
                 if (document.id) {
-                    applicant.documents = applicant.documents.filter(v => (v.id !== applicantDocumentUpload.id))
+                    employer.documents = employer.documents?.filter(v => v.id != document.id)
                 }
-                applicant.documents.push(applicantDocumentUpload)
+                employer.documents?.push(doc)
+
                 toast.success(t('DOCUMENT_UPLOAD_SUCCESS_MESSAGE'))
                 resetForm()
             }
@@ -57,25 +62,22 @@ export default function SafetyPerformanceHistory({ buttonClass, applicant, canEd
         setEmployers(data)
     }
 
-
     /**
      * It deletes a document from the applicant's profile.
      * @param {ApplicantDqf | string} docType - The type of document you want to
      * delete.
      */
     const handleDeleteDocument = async (employer: ApplicantEmployerEntity, docType: ApplicantDqf | string): Promise<void> => {
-        const applicantApi = new ApplicantApi()
         await applicantApi.employer.documents.delete(applicant?.id, employer?.id, docType)
 
         setEmployers([
-            ...employers.filter(v => v.id == employer.id),
+            ...employers.filter(v => v.id != employer.id),
             {
                 ...employer,
-                documents: employer.documents?.filter(v => v.type == docType)
+                documents: employer.documents?.filter(v => v.type != docType)
             }
         ])
     }
-
 
     /**
      * It takes a type and an optional documentId, and sets the form's document field to an object with the
@@ -83,11 +85,9 @@ export default function SafetyPerformanceHistory({ buttonClass, applicant, canEd
      * @param {ApplicantDqf} type - ApplicantDqf - this is the type of document that is being uploaded.
      * @param {number} [documentId] - The id of the document to be updated.
      */
-    const handleUpdateDocument = async (type: ApplicantDqf, documentId?: number, employerId?: number): Promise<void> => {
-        // form?.resetForm()
-        // console.log("{ type, id: documentId ?? null, documentable_id: employerId }", { type, id: documentId ?? null, documentable_id: employerId });
-
-        form?.setFieldValue("document", { type, id: documentId ?? null, documentable_id: employerId })
+    const handleUpdateDocument = async (type: ApplicantDqf, documentId?: number, employer?: ApplicantEmployerEntity): Promise<void> => {
+        form?.setFieldValue("employer", employer)
+        form?.setFieldValue("document", { type, id: documentId ?? null })
     }
 
     const resendVoeRequest = async (employerId: number) => {
@@ -102,8 +102,8 @@ export default function SafetyPerformanceHistory({ buttonClass, applicant, canEd
 
     const ButtonList = ({ employer, document, type }) => (
         <>
-            {(!form?.values?.document?.type || form?.values?.document?.type !== type)
-                && (<div className="d-flex w-100">
+            {(!form?.values?.document?.type)
+                && (<div className="d-flex w-100 mt-2">
                     <ViewDocumentButton
                         document={document}
                         onClick={() => handleViewDocument(document.id, setPdf)}
@@ -113,7 +113,7 @@ export default function SafetyPerformanceHistory({ buttonClass, applicant, canEd
                             document={document}
                             type={type}
                             t={t}
-                            onClick={() => handleUpdateDocument(type, document?.id, employer.id)}
+                            onClick={() => handleUpdateDocument(type, document?.id, employer)}
                         />
                     }
                     <DownloadDocumentButton
@@ -151,7 +151,6 @@ export default function SafetyPerformanceHistory({ buttonClass, applicant, canEd
         </>
     )
 
-
     return (
         <>
             <Button
@@ -162,7 +161,10 @@ export default function SafetyPerformanceHistory({ buttonClass, applicant, canEd
 
             <ViewModal
                 show={Boolean(employers.length)}
-                onCloseClick={resetEmployers}
+                onCloseClick={() => {
+                    resetEmployers()
+                    form.resetForm()
+                }}
                 closeText="CANCEL"
                 title="PAST_EMPLOYER"
             >
@@ -180,42 +182,42 @@ export default function SafetyPerformanceHistory({ buttonClass, applicant, canEd
                             name: "NAME",
                             selector: emp => emp.name,
                             hidable: false,
-                            width: '30%',
+                            width: '25%',
                         },
                         {
                             name: "EMAIL",
                             selector: emp => emp.email,
                             hidable: false,
-                            width: '30%',
+                            width: '25%',
                         },
                         {
-                            width: '40%',
+                            width: '50%',
                             cell: emp => {
                                 const doc = emp.documents?.find(v => v.type == ApplicantDqf.SAFETY_PERFORMANCE_HISTORY)
                                 return (<>
                                     <ButtonList employer={emp} type={ApplicantDqf.SAFETY_PERFORMANCE_HISTORY} document={doc} />
-                                    {/* {(form?.values?.document?.type && form?.values?.document?.documentable_id == emp.id)
-                                        && <Form onSubmit={form?.handleSubmit} >
+                                    {(form?.values?.document?.type)
+                                        && <form className="mt-2 mr-2" onSubmit={form?.handleSubmit} >
                                             <FileInput
                                                 name={`document`}
                                                 accept="application/pdf"
-                                                // formik={form}
+                                                formik={form}
                                                 allowedSizeInByte={3145728}
                                             />
                                             <div className="mt-2 d-flex w-100 ">
                                                 <Button
-                                                    // disabled={form?.isSubmitting || !form?.isValid || form?.isValidating}
+                                                    disabled={form?.isSubmitting || !form?.isValid || form?.isValidating}
                                                     className="mr-2 w-50 theme-primary-btn"
                                                     type="submit"
                                                 >{t(`SAVE`)}</Button>
                                                 <Button
                                                     type="button"
-                                                    className="mr-2 w-50 bg-danger"
-                                                // onClick={() => { form?.resetForm() }}
+                                                    className="w-50 bg-danger"
+                                                    onClick={() => { form?.resetForm() }}
                                                 >{t(`CANCEL`)}</Button>
                                             </div>
-                                        </Form>
-                                    } */}
+                                        </form>
+                                    }
                                 </>)
                             },
                             hidable: false
