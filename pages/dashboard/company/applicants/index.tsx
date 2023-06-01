@@ -28,6 +28,7 @@ import { ApplicantReasonCodeFired, ApplicantReasonCodeNotInterested, ApplicantRe
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import OverlyPopover from "../../../../components/popover/overly-popover";
 import Link from "next/link";
+import ShowFormattedDate from "../../../../components/jobs/show-formatted-date";
 
 const ViewMode = {
     job: "job",
@@ -450,7 +451,6 @@ function ApplicantView(props: ViewProps) {
                         name: 'ID',
                         selector: applicant => applicant.id,
                     },
-
                     {
                         id: "name",
                         name: "NAME",
@@ -486,6 +486,15 @@ function ApplicantView(props: ViewProps) {
                         id: "source",
                         name: "Lead Source",
                         selector: applicant => applicant.type ? t(`ApplicantType.${applicant.type}`) : "",
+                    },
+                    {
+                        id: "date_added",
+                        name: "DATE_ADDED",
+                        selector: applicant => applicant.created_at,
+                        cell: applicant => (
+                            <ShowFormattedDate date={applicant.created_at} />
+                        ),
+                        hidable: false,
                     },
                     {
                         id: "assigned_to",
@@ -737,6 +746,15 @@ function JobView(props: ViewProps) {
                     {
                         name: "REASONS_IF_NO",
                         selector: aJob => aJob.qualification_fail_reason.join(),
+                        hidable: false,
+                    },
+                    {
+                        id: "date_added",
+                        name: "DATE_ADDED",
+                        selector: aJob => aJob.applicant.created_at,
+                        cell: aJob => (
+                            <ShowFormattedDate date={aJob.applicant.created_at} />
+                        ),
                         hidable: false,
                     },
                     {
