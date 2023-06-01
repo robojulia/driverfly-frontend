@@ -47,6 +47,12 @@ export default function Signup() {
 			}
 			catch (e) {
 				globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t, defaultMessage: "UNABLE_TO_SIGNUP" });
+
+				if (e?.response?.data?.email == "ALREADY_EXISTS") form.setFieldError('email', "ACCOUNT_ALREADY_EXISTS_WITH_EMAIL")
+				if (e?.response?.data?.contact_number == "ALREADY_EXISTS") {
+					form.setFieldError('contact_number', "ALREADY_EXISTS")
+					form.setFieldError('phone', t("ACCOUNT_ALREADY_EXISTS_WITH_PHONE_{censor_email}", { censor_email: e.response?.data?.user?.email }, { translateProps: false }))
+				}
 			}
 		}
 	});
@@ -145,6 +151,17 @@ export default function Signup() {
 								formik={form}
 							/>
 
+							{form.errors.email == "ACCOUNT_ALREADY_EXISTS_WITH_EMAIL" &&
+								<>
+									<Link href="/login">
+										<a className="mx-1">{t("LOGIN")}</a>
+									</Link>
+									<Link href="/forgot-password">
+										<a className="mx-1">{t("RESET_PASSWORD")}</a>
+									</Link>
+								</>
+							}
+
 							<BaseInputPhone
 								className="col-12 mt-1"
 								label="PHONE"
@@ -152,6 +169,14 @@ export default function Signup() {
 								placeholder
 								formik={form}
 							/>
+
+							{form.errors.contact_number == "ALREADY_EXISTS" &&
+								<>
+									<Link href="/forgot-password">
+										<a className="mx-1">{t("RESET_PASSWORD")}</a>
+									</Link>
+								</>
+							}
 
 							<BaseInput
 								className="col-md-6 mt-1"
