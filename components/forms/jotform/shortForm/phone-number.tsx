@@ -1,19 +1,18 @@
 import React, { useEffect, useContext, useState } from "react";
-import Form from "react-bootstrap/Form";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import { Button, Col, Row } from "react-bootstrap";
-import BaseInputPhone from "../../base-input-phone";
+import { Button, Col, Row, Form } from "react-bootstrap";
 import { useFormik } from "formik";
+import OtpInputField from 'react-otp-input';
+import { toast, ToastContainer } from "react-toastify";
+import styles from "../../../../styles/digitalhiringapp.module.css";
+import BaseInputPhone from "../../base-input-phone";
 import { useTranslation } from "../../../../hooks/use-translation";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import ApplicantApi from "../../../../pages/api/applicant";
 import { LoaderIcon } from "../../../loading/loader-icon";
 import ViewModal from "../../../view-details/view-modal";
-import OtpInputField from 'react-otp-input';
 import { PhoneNumberDto } from "../../../../models/jot-form/short-form/phone-number.dto";
 import { ApplicantOTPEntity } from "../../../../models/applicant/applicant-otp.entity";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
-import { toast, ToastContainer } from "react-toastify";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 
 
@@ -122,17 +121,7 @@ export function PhoneNumber() {
         if (!!applicant?.extras) setApplicantExtras([...filteredSignature])
 
     }, [applicant])
-    const inputStyle = {
-        width: '40px',
-        height: '40px',
-        margin: '8px',
-        borderRadius: '4px',
-        border: '1px solid #ccc',
-        fontSize: '24px',
-        fontWeight: 'bold',
-        textAlign: 'center',
-        color: '#000'
-    };
+   
 
     return (
         <>
@@ -180,11 +169,23 @@ export function PhoneNumber() {
                             <h5 className="text-center">{t("OTP_MESSAGES")}</h5>
                             <div className="w-100 d-flex justify-content-center mt-4 mb-4">
                                 <OtpInputField
-                                    inputStyle={inputStyle}
+                                    inputStyle={{
+                                        width: '40px',
+                                        height: '40px',
+                                        margin: '8px',
+                                        borderRadius: '4px',
+                                        border: '1px solid #ccc',
+                                        fontSize: '24px',
+                                        fontWeight: 'bold',
+                                        textAlign: 'center',
+                                        color: '#000',
+                                    }}
+                                    renderInput={(props) => <input {...props} />}
                                     value={otp}
                                     onChange={(e) => setOtp(e)}
+                                    shouldAutoFocus
                                     numInputs={6}
-                                    separator={<span>-</span>}
+                                    renderSeparator={<span>-</span>}
                                 />
 
                             </div>

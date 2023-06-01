@@ -19,8 +19,12 @@ import BaseCheckList from "../../../../../components/forms/base-check-list";
 import BaseInput from "../../../../../components/forms/base-input";
 import { JobEmploymentType } from "../../../../../enums/jobs/job-employment-type.enum";
 import { JobGeography } from "../../../../../enums/jobs/job-geography.enum";
+import ViewModal from "../../../../../components/view-details/view-modal";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function CompanyPreference() {
+  const [showModal, setShowModal] = useState<boolean>(false)
   const { user } = useAuth();
 
   const { t } = useTranslation();
@@ -140,10 +144,35 @@ export default function CompanyPreference() {
 
   const tooltip = <Tooltip id="my-tooltip" >{t("REFER_BACK_DETAILS")}</Tooltip>;
 
-
+  useEffect(() => {
+    setShowModal(true)
+  }, [])
   return (
     <>
       <PageLayout title="DIGITAL_HIRING_APPLICATION">
+        {showModal && (
+          <ViewModal
+            show={showModal}
+            onCloseClick={() => setShowModal(false)}
+            closeText="CANCEL"
+          >
+            <div className="text-center">
+              <h2>{t('DHA_welcome_note')}</h2>
+              <p>{t('COMPANY_PREFERENCE_DHA_NOTE')}</p>
+              <p>{t('LEARN_MORE_ABOUT_BENEFITS')}
+                <span className="text-blue">
+                  <span> </span>
+                  <Link href="https://digitalhiringapp.com/">
+                    <a target="_blank">
+                      {t('DHA_LINK')}
+                    </a>
+                  </Link>
+
+                </span>
+              </p>
+            </div>
+          </ViewModal>
+        )}
         <p className="pt-2 pb-2">{t("DHA_PREFERENCE_POINT_1")}</p>
         <BaseClickToCopyInput
           label="DIGITAL_HIRING_APP_URL"

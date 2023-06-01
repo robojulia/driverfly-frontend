@@ -1,17 +1,17 @@
-import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
 import { Col, Row } from "reactstrap";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { Container, Modal } from "react-bootstrap";
+import { toast } from 'react-toastify'
+import { Spinner, Button } from 'react-bootstrap'
+import ViewMissedCalls from "../../../../components/call/view-missed-calls";
+import { TelephoneFill, TelephoneMinusFill, TelephoneOutboundFill, TelephoneXFill } from "react-bootstrap-icons";
+import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
 import TwilioApi from "../../../api/twilio"
 import ApplicantApi from "../../../api/applicant"
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import ViewDataTable from "../../../../components/view-details/view-data-table";
 import { useEffectAsync } from "../../../../utils/react";
-import { TelephoneFill, TelephoneMinusFill, TelephoneOutboundFill } from "react-bootstrap-icons";
 import { useTranslation } from "../../../../hooks/use-translation";
-import { Container, Modal } from "react-bootstrap";
-import { toast } from 'react-toastify'
-import Spinner from 'react-bootstrap/Spinner'
-import ViewMissedCalls from "../../../../components/call/view-missed-calls";
 
 export default function Call() {
 
@@ -38,7 +38,6 @@ export default function Call() {
     }
 
     useEffectAsync(async () => {
-
         await twilioApi.getPhoneNumber()
             .then(({ value }) => setCallingId(value || null))
             .catch(error => toast.error(t(error?.response?.data?.message || "NO_TWILIO_NUMBER_AVAILABLE")))
@@ -63,14 +62,14 @@ export default function Call() {
         }
     }
 
-    const setupClient = async (token) => {
+    const setupClient = async (token: string): Promise<void> => {
         try {
             const Device = (await import('twilio-client')).Device
             const client = new Device(token, { debug: true, appName: process.env.TWILIO_APP_NAME || 'driverfly' })
 
             client.on("ready", (device) => {
                 setConnected(false)
-                setStatus("Ready to call");
+                setStatus(t("READY_TO_CALL"));
                 setReady(true);
             });
 
@@ -81,19 +80,19 @@ export default function Call() {
 
             client.on("connect", (conn) => {
                 setConnected(true)
-                setStatus("Calling")
+                setStatus(t("CALLINHG"))
             });
 
             client.on("disconnect", (conn) => {
                 setConnected(false)
-                setStatus("Ready to call");
+                setStatus(t("READY_TO_CALL"));
             });
 
             client.on("incoming", (conn) => {
-                setStatus("Incoming support call");
+                setStatus(t("INCOMMING_SUPPORT_CALL"));
 
                 conn.accept(function () {
-                    setStatus("In call with user");
+                    setStatus(t("IN_CALL_WITH_USER"));
                 });
             });
 
@@ -105,10 +104,15 @@ export default function Call() {
 
     const connectCall = () => {
         setConnected(true)
-        if (identity?.phone) device.connect({
-            'PhoneNumber': formatPhoneNumber(identity.phone),
-            'from': callingId,
-        })
+        if (identity?.phone) {
+            const connection = device.connect({
+                'PhoneNumber': formatPhoneNumber(identity.phone),
+                'from': callingId,
+            })
+            // connection?.on('connecting', function (status) {
+            //     console.log('Call status:', status);
+            // });
+        }
     }
 
     const disconnectCall = () => {
@@ -208,24 +212,30 @@ export default function Call() {
                                         {(identity.phone)}
                                     </h3>
                                 </Col>
-                                <Col lg='12' className="text-center pb-5  rounded">
+                                <Col lg='12' className="text-center pb-5 rounded">
                                     <h5 className="text-white pt-3 pb-2">
                                         {status}
                                     </h5>
-                                    {
-                                        !!!connected ?
-                                            <button onClick={connectCall}
-                                                id="call"
-                                                className="btn btn-success rounded-circle">
-                                                < TelephoneOutboundFill />
-                                            </button>
-                                            :
-                                            <button onClick={disconnectCall}
-                                                id="end"
-                                                className="btn btn-danger rounded-circle">
-                                                < TelephoneMinusFill />
-                                            </button>
-                                    }
+                                    <div className="call-buttons">
+                                        {
+                                            !!!connected ?
+                                                <Button
+                                                    variant="success"
+                                                    onClick={connectCall}
+                                                    id="call"
+                                                    className=" p-3 rounded-circle">
+                                                    < TelephoneOutboundFill size={20} />
+                                                </Button>
+                                                :
+                                                <Button
+                                                    variant="danger"
+                                                    onClick={disconnectCall}
+                                                    id="end"
+                                                    className="btn p-3 rounded-circle">
+                                                    < TelephoneXFill size={20} />
+                                                </Button>
+                                        }
+                                    </div>
                                 </Col>
                             </div>
                         </Row>

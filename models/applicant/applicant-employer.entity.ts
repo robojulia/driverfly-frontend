@@ -1,5 +1,6 @@
 import * as yup from "yup";
 import { ApplicantEntity } from "./applicant.entity";
+import { DocumentEntity } from "../documents/document.entity";
 
 export class ApplicantEmployerEntity {
     id?: number;
@@ -25,6 +26,8 @@ export class ApplicantEmployerEntity {
     address_2?: string;
     uuid_token?: string;
     is_current: boolean;
+
+    documents: DocumentEntity[];
 
     static yupSchema() {
         return yup.object({

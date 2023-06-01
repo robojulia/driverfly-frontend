@@ -16,7 +16,7 @@ import { useAuth } from "../../../../../hooks/use-auth";
 import { useEffectAsync } from "../../../../../utils/react";
 import { TabbedLayout } from "../../../../../components/layouts/page/tabbed-layout";
 import DAC from "../../../../../components/dashboard/employee-directory/dac";
-import DqfTab from "../../../../../components/dashboard/employee-directory/dqf";
+import DQF from "../../../../../components/dashboard/employee-directory/dqf";
 import ApplicantApi from "../../../../api/applicant";
 import {
     ApplicantEntity,
@@ -41,6 +41,7 @@ import EntityForm from "../../../../../components/layouts/page/entity-form";
 import BaseTextArea from "../../../../../components/forms/base-text-area";
 import { Status } from "../../../../../enums/status.enum";
 import BaseSelect from "../../../../../components/forms/base-select";
+import AdditionalFiles from "../../../../../components/dashboard/employee-directory/additional-files";
 
 
 export default function EmployeeDirectory() {
@@ -114,8 +115,9 @@ export default function EmployeeDirectory() {
 
     const tabs = {
         BACKGROUND: <Background {...modalAction?.entity} />,
-        DQF: < DqfTab {...modalAction?.entity} />,
+        DQF: < DQF {...modalAction?.entity} canEdit={true} showHistory={true} />,
         DRIVER_ONBOARDING_CHECKLIST: < DAC {...modalAction?.entity} />,
+        ADDITIONAL_FILES: < AdditionalFiles {...modalAction?.entity} />,
 
         // VEHICLES: < VehicleInformationTab />  //according to wireframe this tab (vehichled are pushed to phase 3)
     };

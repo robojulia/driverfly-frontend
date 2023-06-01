@@ -623,6 +623,10 @@
   "FILE_TYPE": "File Type",
   "CALL": "Call",
   "MAKE_CALL": "Make Call",
+  "READY_TO_CALL": "Ready to call",
+  "INCOMMING_SUPPORT_CALL": "Incoming support call",
+  "IN_CALL_WITH_USER": "In call with user",
+  "CALLINHG": "Calling",
   "VIEW_MISSED_CALLS": "View missed calls",
   "CALL_START_TIME": "Call Start Time",
   "CALL_DIRECTION": "Direction",
@@ -728,6 +732,8 @@
   "INVALID_JOB_SPECIFIED": "Job doest not exist.",
   "ALREADY_APPLIED": "You have already applied to this job",
   "USER_ALREADY_EXISTS": "The user is not logged in but already has an account based on the email address (user must log in)",
+  "ACCOUNT_ALREADY_EXISTS_WITH_EMAIL": "The user already has an account based on the email address (You can login or reset password)",
+  "ACCOUNT_ALREADY_EXISTS_WITH_PHONE_{censor_email}": "This phone number is already tied to an account with the username {{censor_email}} (Please log in with that email address or click “Forgot Password”. For further assistance, please contact us at help@driverfly.co.)",
   "LOGIN_SUCCESSFULL": "Login successfully! ",
   "INVALID_CREDENTIALS": "Credentials invalid",
   "INVALID_RECAPTCHA_TOKEN": "Could not verify",
@@ -1778,6 +1784,9 @@
   "APPLICANT_PROFILE": "Applicant Profile",
   "BASIC_QUESTIONAIRE": "Basic Questionaire",
   "Authorize_to_Communicate": "Authorize to communicate",
+  "NOT_AUTHORIZED_TO_COMMUNICATE": "You are not authorize to communicate by applicant",
+  "RESEND_VOE": "Resend VOE Email",
+  "RESEND_VOE_SUCCESSFULL": "Request for VOE sent successfully",
   "hear_about_us": "Hear about us?",
   "job_apply_date": "Date of Applying for this job",
   "qualified_for_manual_transmission": "Qualified for manual trasnmission",
@@ -1959,6 +1968,16 @@
     "EMPLOYMENT_APPLICATION": "Employment Application",
     "DRIVERS_ROAD_TEST_CERTIFICATION": "Driver’s Road Test Certification (optional)"
   },
+  "ApplicantOnBoardingChecklist": {
+    "DRUG_ALCOHOL_CHAIN_CUSTODY": "Drug and alcohol Test & Chain Custody",
+    "BACKGROUND_CHECK": "Background Check",
+    "DRIVER_AUTHORIZATION": "Driver Authorization",
+    "SIGNED_HOURS_OF_SERVICE_RECORD": "Signed hours of service record statement (optional)",
+    "INSURANCE_PASS": "Insurance Pass",
+    "CONTRACT_SIGNED": "Contract Signed",
+    "TRUCK_PROVIDED": "Truck Provided",
+    "ORIENTATION_COMPLETE": "Orientation Complete"
+  },
   "ApplicantAdditionalFilesEnum": {
     "DAC_REPORT": "DAC Report",
     "SKILL_PERFORMANCE_EVALUATION_CERTIFICATE": "Skill Performance Evaluation Certificate",
@@ -1975,5 +1994,10 @@
   "UNDERSTAND_CONSENT_REQUESTED": "I understand should I refuse to provide the written consent requested, the prospective motor carrieremployer shall not permit me to operate a commercial motor vehicle for that motor carrier perFMCSA 391.23(f).",
   "{name}_AUTHORIZE_COMPANY": "I {{name}} hereby authorize this company to release all records of employment,including assessments of my job performance, ability, and fitness. I hereby release this company,and its employees, officers, directors, and agents from any and all liability of any type as a resultof providing information to the above-mentioned person and/or company.",
   "REFER_BACK_QUESTION": "would you like to participate in our Refer Back program?",
-  "REFER_BACK_DETAILS": "With this you authorize DriverFly to contact applicants who are not a good fit based on the parameters contained in this section. In return, you receive $250 in company credit per candidate that gets placed through our platform"
+  "REFER_BACK_DETAILS": "With this you authorize DriverFly to contact applicants who are not a good fit based on the parameters contained in this section. In return, you receive $250 in company credit per candidate that gets placed through our platform",
+  "UPLOAD_FILE": "Upload file",
+  "DHA_welcome_note": "Welcome to our Digital Hiring Applicatiion",
+  "COMPANY_PREFERENCE_DHA_NOTE": "To maximize yopur recruiting pipeline,fill out your company level preference in the fields below and copy and paste the URL provided to all your external job postings and communications. All applicants will be passed directly into your applicants tab",
+  "LEARN_MORE_ABOUT_BENEFITS": "To learn more about the full benefits, go to ",
+  "DHA_LINK": "digitalhiringapp.com"
 }
