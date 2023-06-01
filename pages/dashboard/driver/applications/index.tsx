@@ -100,7 +100,7 @@ export default function Index() {
                                     popover_header={t('LICENSE_TYPE')}
                                     labelPrefix="DriverLicenseType"
                                     popover={true}
-                                    str={applicant.job.cdl_class}
+                                    value={applicant.job.cdl_class}
                                     enumArray={DriverLicenseType} />),
                                 selector: applicant => t(`DriverLicenseType.${applicant.job.cdl_class}`),
                             },
@@ -111,7 +111,7 @@ export default function Index() {
                                     popover_header={t('APPLICATION_STATUS')}
                                     labelPrefix="ApplicantStatus"
                                     popover={true}
-                                    str={applicant.status}
+                                    value={applicant.status}
                                     enumArray={ApplicantStatus} />),
                                 selector: applicant => t(`ApplicantStatus.${applicant.status}`),
                             },
@@ -148,7 +148,7 @@ export default function Index() {
                                     popover_header={t('DELIVERY_TYPE')}
                                     labelPrefix="JobDeliveryType"
                                     popover={true}
-                                    str={applicant.job.delivery_type}
+                                    value={applicant.job.delivery_type}
                                     enumArray={JobDeliveryType} />
                                 ),
                                 selector: applicant => t(`JobDeliveryType.${applicant.job.delivery_type}`),

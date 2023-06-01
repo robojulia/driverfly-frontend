@@ -102,7 +102,7 @@ export default function JobsSaved() {
                             popover_header={t('LICENSE_TYPE')}
                             labelPrefix="DriverLicenseType"
                             popover={true}
-                            str={v.job.cdl_class}
+                            value={v.job.cdl_class}
                             enumArray={DriverLicenseType} />),
                     },
                     {
@@ -146,7 +146,7 @@ export default function JobsSaved() {
                             popover_header={t('DELIVERY_TYPE')}
                             labelPrefix="JobDeliveryType"
                             popover={true}
-                            str={v.job.delivery_type}
+                            value={v.job.delivery_type}
                             enumArray={JobDeliveryType} />
                         ),
                     },

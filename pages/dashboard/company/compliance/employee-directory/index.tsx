@@ -171,7 +171,7 @@ export default function EmployeeDirectory() {
 
     return (
         <PageLayout
-            title="EMPLOYEE_DIRECTORY"
+            title={viewMode == ViewModeType.EMPLOYEE ? "EMPLOYEE_DIRECTORY" : "PAST_EMPLOYEE"}
             actions={
                 <Row>
                     <Col>
@@ -189,7 +189,7 @@ export default function EmployeeDirectory() {
                                     value={viewMode === ViewModeType.EMPLOYEE ? ViewModeType.EMPLOYEE : ViewModeType.PAST_EMPLOYEE}
                                     checked={viewMode === ViewModeType.EMPLOYEE}
                                     onChange={onViewModeChange} />}
-                                label={t("VIEW_BY_{name}", { name: t(viewMode !== ViewModeType.EMPLOYEE ? "EMPLOYEE" : "PAST_EMPLOYEE") })}
+                                label={t("VIEW_BY_{name}", { name: t(viewMode !== ViewModeType.EMPLOYEE ? "EMPLOYEES" : "PAST_EMPLOYEE") })}
                             />
                         </FormGroup>
                     </Col>
@@ -252,8 +252,19 @@ export default function EmployeeDirectory() {
                         />),
                     },
                     {
+                        hide: (viewMode === ViewModeType.PAST_EMPLOYEE ? 1 : 0),
                         id: "dateHired",
                         name: 'DATE_HIRED',
+                        selector: data => data?.applicantJob?.hired_at,
+                        cell: data => <ShowFormattedDate
+                            date={data?.applicantJob?.hired_at}
+                            hideTime
+                        />
+                    },
+                    {
+                        hide: (viewMode !== ViewModeType.PAST_EMPLOYEE ? 1 : 0),
+                        id: "dateTermination",
+                        name: 'DATE_TERMINATION',
                         selector: data => data?.applicantJob?.hired_at,
                         cell: data => <ShowFormattedDate
                             date={data?.applicantJob?.hired_at}
@@ -266,10 +277,23 @@ export default function EmployeeDirectory() {
                         selector: data => data?.applicantJob?.status,
                         cell: data =>
                         (<ShowEnumFromString
-                            popover
                             labelPrefix="ApplicantStatus"
-                            str={data?.applicantJob?.status}
+                            value={data?.applicantJob?.status}
                             enumArray={ApplicantStatus} />
+                        ),
+                    },
+                    {
+                        hide: (viewMode !== ViewModeType.PAST_EMPLOYEE ? 1 : 0),
+                        id: "reason_codes",
+                        name: 'REASON_CODES',
+                        // selector: data => data?.applicantJob?.reason_codes,
+                        cell: data =>
+                        (<ShowEnumFromString
+                            popover
+                            labelPrefix={data.applicantJob.status == ApplicantStatus.INACTIVE_QUIT ? "ApplicantReasonCodeQuit" : "ApplicantReasonCodeFired"}
+                            enumArray={data.applicantJob.status == ApplicantStatus.INACTIVE_FIRED ? ApplicantReasonCodeQuit : ApplicantReasonCodeFired}
+                            value={data?.applicantJob?.reason_codes}
+                        />
                         ),
                     },
                 ]}

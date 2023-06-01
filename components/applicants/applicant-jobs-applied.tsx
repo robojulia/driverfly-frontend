@@ -22,7 +22,7 @@ export default function ApplicantJobsApplied({ applicant }: ApplicantJobsApplied
                 }}
                 items={applicant?.jobs?.map(aJob => ({
                     title: <a href={`/jobs/${aJob.job.id}/${aJob.job.title}`}>{aJob.job?.title}</a>,
-                    status: <ShowEnumFromString skipLowerCase popover={true} str={aJob.status} labelPrefix="ApplicantStatus" enumArray={ApplicantStatus} />,
+                    status: <ShowEnumFromString popover={true} value={aJob.status} labelPrefix="ApplicantStatus" enumArray={ApplicantStatus} />,
                     date_applied: new Date(aJob.created_at).toDateString(),
                     manager: aJob.manager?.name
                 }))}

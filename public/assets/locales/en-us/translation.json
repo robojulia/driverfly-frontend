@@ -795,6 +795,7 @@
   "DATE_{name}": "Date {{name}}",
   "DATE_APPLIED": "Date Applied",
   "DATE_HIRED": "Date Hired",
+  "DATE_TERMINATION": "Date Termination",
   "JobDatePosted": {
     "LAST_HOUR": "Last Hour",
     "LAST_24_HOURS": "Last 24 Hour",
