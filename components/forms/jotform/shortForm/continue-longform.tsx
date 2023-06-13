@@ -24,13 +24,6 @@ export function ContinueLongForm() {
 	const { t } = useTranslation();
 	const [companyCdlPreferences, setCompanyCdlPreferences] = useState<string[]>([])
 	const [companyPref, setCompanyPref] = useState<CompanyPreferenceEntity[]>([])
-	const form = useFormik({
-		initialValues: {},
-		onSubmit: () => {
-			console.log(`applicant company ${applicant?.company?.name}`, applicant?.company?.id)
-			stepNext();
-		}
-	});
 
 	useEffectAsync(async () => {
 		if (applicant?.company) {
@@ -118,14 +111,14 @@ export function ContinueLongForm() {
 									</h6>
 									<Row className="mt-3">
 										<Col className="text-center" >
-											<Button type="submit">
+											<Button onClick={() => stepNext()}>
 												{t("CONTINUE_APPLICATION")}
 											</Button>
 										</Col>
 									</Row>
 								</>
 							) : (
-								<form onSubmit={form.handleSubmit}>
+								<>
 									<Row>
 										<h4 className={styles.heading__sty}>
 											{t(
@@ -275,12 +268,12 @@ export function ContinueLongForm() {
 									</Row>
 									<Row className="mt-3">
 										<Col className="text-center" >
-											<Button type="submit">
+											<Button  onClick={() => stepNext()}>
 												{t("CONTINUE_APPLICATION")}
 											</Button>
 										</Col>
 									</Row>
-								</form>
+								</>
 							)
 						}
 					</>
