@@ -1,4 +1,4 @@
-import { TranslateInterface } from "../hooks/useTranslation";
+import { TranslateInterface } from "../hooks/use-translation";
 import { FormikInterface } from "./formik";
 import { ToastInterface } from "./toast";
 

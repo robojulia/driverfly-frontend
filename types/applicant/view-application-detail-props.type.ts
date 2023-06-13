@@ -5,5 +5,7 @@ export type ViewApplicantDetailProps = {
 
     applicant: ApplicantEntity;
     protectedFields?: ProtectedFields;
+    hideAssignTo?: boolean | (() => boolean);
+    hideCurrentStatus?: boolean | (() => boolean);
 
 }

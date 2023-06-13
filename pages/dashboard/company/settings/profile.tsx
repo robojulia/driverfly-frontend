@@ -2,16 +2,16 @@ import { toast } from 'react-toastify'
 import { Col, Row } from "react-bootstrap";
 
 import { useFormik } from "formik";
-import { useAuth } from '../../../../hooks/useAuth';
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useAuth } from '../../../../hooks/use-auth';
+import { useTranslation } from "../../../../hooks/use-translation";
 
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 
-import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
-import PageLayout from "../../../../components/layouts/page/PageLayout";
-import EntityForm from "../../../../components/layouts/page/EntityForm";
-import BaseInputPhone from "../../../../components/forms/BaseInputPhone";
-import BaseInput from "../../../../components/forms/BaseInput";
+import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
+import PageLayout from "../../../../components/layouts/page/page-layout";
+import EntityForm from "../../../../components/layouts/page/entity-form";
+import BaseInputPhone from "../../../../components/forms/base-input-phone";
+import BaseInput from "../../../../components/forms/base-input";
 
 import UserApi from "../../../api/user";
 import { UserEntity } from "../../../../models/user/user.entity";
@@ -54,7 +54,7 @@ export default function Profile() {
       >
         <Row>
           <BaseInput
-            className="col-6 mt-1"
+            className="col-sm-6 mt-1"
             label="FIRST_NAME"
             name="first_name"
             required
@@ -62,7 +62,7 @@ export default function Profile() {
             formik={form}
           />
           <BaseInput
-            className="col-6 mt-1"
+            className="col-sm-6 mt-1"
             label="LAST_NAME"
             name="last_name"
             required
@@ -71,7 +71,7 @@ export default function Profile() {
           />
 
           <BaseInputPhone
-            className="col-6 mt-1"
+            className="col-sm-6 mt-1"
             label="phone"
             name="contact_number"
             placeholder
@@ -79,7 +79,7 @@ export default function Profile() {
           />
 
           <BaseInputPhone
-            className="col-6 mt-1"
+            className="col-sm-6 mt-1"
             label="phone_cell"
             name="cell_number"
             placeholder

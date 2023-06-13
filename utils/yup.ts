@@ -1,6 +1,6 @@
 import * as yup from "yup"
 import { TestContext } from "yup/lib/util/createValidation"
-import { useTranslation } from "../hooks/useTranslation";
+import { useTranslation } from "../hooks/use-translation";
 
 yup.addMethod(yup.string, "enum", function(enumType, message) {
   const keys = Object.values(enumType);

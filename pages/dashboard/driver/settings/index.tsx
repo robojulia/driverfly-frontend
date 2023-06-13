@@ -4,16 +4,16 @@ import { useEffect, useState } from 'react'
 import { useFormik } from "formik";
 
 // layouts
-import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
-import PageLayout from "../../../../components/layouts/page/PageLayout";
+import FullLayout from "../../../../components/dashboard/layouts/full-layout";
+import PageLayout from "../../../../components/layouts/page/page-layout";
 
 // hooks
-import { useAuth } from '../../../../hooks/useAuth';
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useAuth } from "../../../../hooks/use-auth";
+import { useTranslation } from "../../../../hooks/use-translation";
 
 // inputs
-import BaseInputPhone from "../../../../components/forms/BaseInputPhone";
-import BaseInput from "../../../../components/forms/BaseInput";
+import BaseInputPhone from "../../../../components/forms/base-input-phone";
+import BaseInput from "../../../../components/forms/base-input";
 
 // api
 import UserApi from "../../../api/user";
@@ -23,8 +23,8 @@ import ApplicantApi from "../../../api/applicant";
 import { UserEntity } from "../../../../models/user/user.entity";
 
 import * as toast from "../../../../utils/toast";
-import EntityForm from "../../../../components/layouts/page/EntityForm";
-import FileInput from "../../../../components/forms/FileInput";
+import EntityForm from "../../../../components/layouts/page/entity-form";
+import FileInput from "../../../../components/forms/file-input";
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -76,7 +76,7 @@ export default function Profile() {
       >
         <Row>
           <BaseInput
-            className="col-6"
+            className="col-sm-6"
             label="first_name"
             name="first_name"
             placeholder="first_name"
@@ -84,7 +84,7 @@ export default function Profile() {
             formik={form}
           />
           <BaseInput
-            className="col-6"
+            className="col-sm-6"
             label="last_name"
             name="last_name"
             placeholder="last_name"
@@ -93,7 +93,7 @@ export default function Profile() {
           />
 
           <BaseInputPhone
-            className="col-6"
+            className="col-sm-6"
             label="phone"
             name="contact_number"
             placeholder="phone"
@@ -101,7 +101,7 @@ export default function Profile() {
             formik={form}
           />
           <BaseInputPhone
-            className="col-6"
+            className="col-sm-6"
             label="phone_cell"
             name="cell_number"
             placeholder="phone_cell"
@@ -122,6 +122,7 @@ export default function Profile() {
             name={`photo`}
             accept="image/*"
             documentType={"PHOTO"}
+            allowedSizeInByte={3145728}
             formik={form}
           />
         </Row>

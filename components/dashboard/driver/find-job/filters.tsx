@@ -10,8 +10,8 @@ import SpecialEndorsementsRequired from '../../../filters/special-endorsements-r
 import TypeOfDelivery from '../../../filters/type-of-delivery'
 import Range from '../../../filters/location/range'
 import Category from '../../../filters/category'
-import { useTranslation } from '../../../../hooks/useTranslation'
-import jobContext from '../../../../context/jobContext'
+import { useTranslation } from '../../../../hooks/use-translation'
+import JobContext from '../../../../context/job-context'
 import Search from '../../../filters/search'
 import { Row, Col, Offcanvas, Button } from 'react-bootstrap';
 import Sort from '../../../find-jobs/sort'
@@ -21,7 +21,7 @@ import TransmissionType from '../../../filters/vehicle-transmission-type'
 export default function Filters() {
 
     const { t } = useTranslation();
-    const { state, method } = useContext(jobContext)
+    const { state, method } = useContext(JobContext)
 
     const [showFilters, setShowFilters] = useState<boolean>(false);
     const handleCloseFilters = () => setShowFilters(false);
@@ -36,14 +36,14 @@ export default function Filters() {
             <Row>
                 <Col md="3">
                     < Search state={state} method={method}
-                        inputClassName="form-control shadow-sm p-4" labelClassName="text-secondary w-sm-25" />
+                        inputClassName="form-control shadow-sm p-4" labelClassName="text-secondary " />
                 </Col>
-                <Col md="2">
-                    <div className="filter-btn-groups sort_by">
-                        <Sort inputClassName="custom-select shadow-none mt-2" labelClassName="text-secondary w-sm-25" />
+                <Col md="3">
+                    <div className="rbt mt-lg-0 mt-md-0 mt-3">
+                        <Sort inputClassName="custom-select shadow-none mt-2" labelClassName="text-secondary" />
                     </div>
                 </Col>
-                <Col md="7" className='text-right'>
+                <Col md="6" className='text-right'>
                     <Button onClick={handleShowFilters} className="mt-39 theme-primary-btn-outline">
                         <Filter /> {t('FILTERS')}
                     </Button>

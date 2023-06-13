@@ -1,31 +1,30 @@
+import { PlusCircle, DashCircle, ArrowRight, Star } from 'react-bootstrap-icons'
 import { useEffect, useState } from 'react'
-import { useAuth } from '../hooks/useAuth'
 import { toast } from 'react-toastify'
 import { useFormik } from "formik"
-import { useTranslation } from "../hooks/useTranslation"
-import JobApi from '../pages/api/job'
-import BaseInput from './forms/BaseInput'
-import BaseSelect from './forms/BaseSelect'
-import FileInput from "./forms/FileInput";
-import BaseCheck from './forms/BaseCheck'
 import { Col, Row, Table } from 'react-bootstrap'
-import { EducationLevel } from '../enums/users/education-level.enum'
 import Button from "react-bootstrap/Button"
-
+import { useTranslation } from "../hooks/use-translation"
+import JobApi from '../pages/api/job'
+import BaseInput from './forms/base-input'
+import BaseSelect from './forms/base-select'
+import FileInput from "./forms/file-input";
+import BaseCheck from './forms/base-check'
+import { EducationLevel } from '../enums/users/education-level.enum'
+import { useAuth } from '../hooks/use-auth'
 import { ApplicantEntity } from '../models/applicant/applicant.entity'
 import ApplicantApi from '../pages/api/applicant'
 import UserApi from '../pages/api/user';
 import { UserPreferenceCategory } from '../enums/users/user-preference-category.enum';
 import { SharePreference } from '../enums/users/share-preference.enum';
-
-import ViewModal from "./viewDetails/viewModal";
+import ViewModal from "./view-details/view-modal";
 import { globalAjaxExceptionHandler } from "../utils/ajax";
-import ViewCard from './viewDetails/viewCard'
+import ViewCard from './view-details/view-card'
 import { ApplicantDocumentType } from '../enums/applicants/applicant-document-type.enum'
 import { DocumentEntity } from '../models/documents/document.entity'
-import { PlusCircle, DashCircle, ArrowRight, Star } from 'react-bootstrap-icons'
-import BaseInputPhone from './forms/BaseInputPhone'
+import BaseInputPhone from './forms/base-input-phone'
 import { DriverLicenseType } from "../enums/users/driver-license-type.enum";
+import { LoaderIcon } from './loading/loader-icon'
 
 export default function JobApply({ job, setEncourageModal }) {
     const { user } = useAuth();
@@ -41,7 +40,7 @@ export default function JobApply({ job, setEncourageModal }) {
 
                 toast.success(t('job_applied_success_message'))
                 setViewForm(false);
-                resetForm()
+                // resetForm()
                 setEncourageModal(true)
             }
             catch (e) {
@@ -58,6 +57,8 @@ export default function JobApply({ job, setEncourageModal }) {
             try {
                 if (!user.company) {
                     const applicant = await api.getByUserId();
+                    applicant.documents = applicant.documents.filter(v => Object.values(ApplicantDocumentType).includes(v.type))
+
                     if (applicant) {
                         const preferences = await userApi.preferences.list(user.id, { category: UserPreferenceCategory.SHARING });
 
@@ -94,8 +95,9 @@ export default function JobApply({ job, setEncourageModal }) {
         setViewForm(false);
     }
 
-    if (apply_form.errors && Object.keys(apply_form.errors).length > 0)
+    useEffect(() => {
         console.error(apply_form.errors);
+    }, [apply_form.errors])
 
     return (
         <>
@@ -109,7 +111,15 @@ export default function JobApply({ job, setEncourageModal }) {
                 closeText="CANCEL"
                 onCloseClick={onCloseClick}
                 title="apply_for_this_job"
-                footer={<button type="submit" className="btn btn-primary w-100 p-lg-3 p-5" onClick={apply_form.handleSubmit}>{t('submit')}</button>}
+                footer={
+                    <button
+                        disabled={!!apply_form.isSubmitting || !!!apply_form.isValid || !!apply_form.isValidating}
+                        type="submit"
+                        className="btn btn-primary w-100 p-lg-3 p-5"
+                        onClick={apply_form.handleSubmit}>
+                        <LoaderIcon isLoading={!!apply_form.isSubmitting} /> {t('submit')}
+                    </button>
+                }
             >
                 <form onSubmit={apply_form.handleSubmit}>
                     {typeof apply_form.errors.job === "string" &&
@@ -119,7 +129,7 @@ export default function JobApply({ job, setEncourageModal }) {
                     }
                     <Row>
                         <BaseInput
-                            className=" col-6 mt-3"
+                            className=" col-md-6 mt-3"
                             label="first_name"
                             placeholder="first_name"
                             name="first_name"
@@ -127,7 +137,7 @@ export default function JobApply({ job, setEncourageModal }) {
                             formik={apply_form}
                         />
                         <BaseInput
-                            className="col-6 mt-3"
+                            className="col-md-6 mt-3"
                             label="last_name"
                             placeholder="last_name"
                             name="last_name"
@@ -139,14 +149,14 @@ export default function JobApply({ job, setEncourageModal }) {
                         <BaseInput
                             readOnly={user && !user.company ? true : false}
                             type="email"
-                            className=" col-6 mt-3"
+                            className=" col-md-6 mt-3"
                             label="email"
                             placeholder="email"
                             name="email"
                             formik={user?.company ? null : apply_form}
                         />
                         <BaseInputPhone
-                            className=" col-6 mt-3"
+                            className=" col-md-6 mt-3"
                             label="contact_number"
                             placeholder="contact_number"
                             name="phone"
@@ -167,7 +177,7 @@ export default function JobApply({ job, setEncourageModal }) {
                                 className="col-12 mt-3"
                                 label="CDL_CLASS"
                                 name="license_type"
-                                placeholder="DriverLicenseType.NONE"
+                                // placeholder="DriverLicenseType.NONE"
                                 labelPrefix="DriverLicenseType"
                                 required
                                 enumType={DriverLicenseType}
@@ -194,50 +204,44 @@ export default function JobApply({ job, setEncourageModal }) {
                                 }
                                 {
                                     apply_form.values.documents?.length > 0 &&
+                                    <>
+                                        <Row className="p-1">
+                                            {
+                                                apply_form.values
+                                                    .documents
+                                                    .map((entity, i) => (
+                                                        <Row key={i} className="pr-0">
+                                                            <Col className='my-2 pr-0'>
+                                                                <BaseSelect
+                                                                    name={`documents[${i}].type`}
+                                                                    required
+                                                                    placeholder="TYPE"
+                                                                    labelPrefix="ApplicantDocumentType"
+                                                                    enumType={ApplicantDocumentType}
+                                                                    readOnly={!!entity.id && !entity.file_base64}
+                                                                    formik={apply_form}
+                                                                />
+                                                            </Col>
+                                                            <Col md="6" className="pr-0 my-2">
+                                                                <FileInput
+                                                                    allowedSizeInByte={3145728}
+                                                                    name={`documents[${i}]`}
+                                                                    required
+                                                                    accept="application/pdf"
+                                                                    formik={apply_form}
+                                                                />
+                                                            </Col>
+                                                            <div className="col-md-1 mt-lg-3 mt-md-3 mt-1 text-right p-0">
+                                                                <button onClick={() => apply_form.setValues({
+                                                                    ...apply_form.values,
+                                                                    documents: apply_form.values.documents.filter((v, idx) => i != idx)
+                                                                })}><DashCircle color="red" /></button>
+                                                            </div>
+                                                        </Row>
+                                                    ))}
+                                        </Row>
 
-                                    <Table striped>
-                                        <thead>
-                                            <tr>
-                                                <th>{t("TYPE")}</th>
-                                                <th>{t("DOCUMENT")}</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {apply_form.values
-                                                .documents
-                                                .map((entity, i) => (
-                                                    <tr key={i}>
-                                                        <td>
-                                                            <BaseSelect
-                                                                name={`documents[${i}].type`}
-                                                                required
-                                                                placeholder="TYPE"
-                                                                labelPrefix="ApplicantDocumentType"
-                                                                enumType={ApplicantDocumentType}
-                                                                readOnly={!!entity.id && !entity.file_base64}
-                                                                formik={apply_form}
-                                                            />
-                                                        </td>
-                                                        <td>
-                                                            <FileInput
-                                                                name={`documents[${i}]`}
-                                                                required
-                                                                accept="application/pdf"
-                                                                formik={apply_form}
-                                                            />
-                                                        </td>
-                                                        <td>
-                                                            <button onClick={() => apply_form.setValues({
-                                                                ...apply_form.values,
-                                                                documents: apply_form.values.documents.filter((v, idx) => i != idx)
-                                                            })}><DashCircle color="red" /></button>
-                                                        </td>
-
-                                                    </tr>
-                                                ))}
-                                        </tbody>
-                                    </Table>
+                                    </>
                                 }
                             </ViewCard>
                         </Col>
@@ -246,7 +250,7 @@ export default function JobApply({ job, setEncourageModal }) {
 
                     <Row>
                         <BaseInput
-                            className=" col-6 mt-3"
+                            className=" col-md-6 mt-3"
                             label="years_cdl_driving_experience"
                             placeholder="years_cdl_driving_experience"
                             name="years_cdl_experience"
@@ -255,7 +259,7 @@ export default function JobApply({ job, setEncourageModal }) {
                             formik={apply_form}
                         />
                         <BaseInput
-                            className=" col-6 mt-3"
+                            className=" col-md-6 mt-3"
                             label={t("voilations_in_last_3_years")}
                             placeholder={t("voilations_in_last_3_years")}
                             name="accident_count"
@@ -267,21 +271,21 @@ export default function JobApply({ job, setEncourageModal }) {
 
                     <Row>
                         <BaseCheck
-                            className="col-6 mt-4"
+                            className="col-md-6 mt-4"
                             label="can_pass_drug_and_alcohol_test"
                             name="can_pass_drug_test"
                             formik={apply_form}
                         />
                     </Row>
                     <Row>
-                        <div className=" col-12">
+                        <div className=" col-12 p-0">
                             <p className='mx-3 mt-5'>{t('i_accept_{terms_and_condition}', { terms_and_condition: t('terms_and_condition') })}</p>
                         </div>
                     </Row>
                 </form>
 
 
-            </ViewModal>
+            </ViewModal >
 
         </>
     )

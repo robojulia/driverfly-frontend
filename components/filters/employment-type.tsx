@@ -1,9 +1,10 @@
 import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
+import { SearchJobFilterProps } from "../../types/search-filter/job-search-filter.type";
 import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
 import ViewMoreRadioFilter from "./view-more-radio-filter";
 
-export default function EmploymentType(props: any) {
+export default function EmploymentType(props: SearchJobFilterProps) {
 
     const { t } = useTranslation();
     const { state, method } = props

@@ -1,20 +1,20 @@
-import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
+import FullLayout from "../../../../components/dashboard/layouts/full-layout";
 import { Container, Row, Col } from 'react-bootstrap';
 import JobApi from '../../../api/job';
 import { ChangeEvent, useState } from 'react';
-import jobsContext from "../../../../context/jobContext"
+import JobContext from "../../../../context/job-context"
 import JobsList from "../../../../components/find-jobs/job-list";
 import ResultCount from "../../../../components/find-jobs/result-count"
 import Filters from "../../../../components/dashboard/driver/find-job/filters";
 import OtrJobsList from "../../../../components/find-jobs/otr-job-list";
 import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
 import { useEffectAsync } from "../../../../utils/react";
-import PageLayout from "../../../../components/layouts/page/PageLayout";
+import PageLayout from "../../../../components/layouts/page/page-layout";
 import { JobEntity } from "../../../../models/job/job.entity";
 import { filtersInitialsValues, pagingMetaInitialValues, PagingMetaProps } from "../../../../utils/job-filter";
 import { JobSearchLocation, SearchJobsDto } from "../../../../models/job/search-jobs-dto";
 import { toast } from "react-toastify";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 
 export default function FindJobs() {
 
@@ -75,7 +75,7 @@ export default function FindJobs() {
         <PageLayout
             title="FIND_JOBS"
         >
-            <jobsContext.Provider value={{
+            <JobContext.Provider value={{
                 state: {
                     jobs,
                     pagingMeta,
@@ -96,10 +96,10 @@ export default function FindJobs() {
                     handleReset
                 },
             }}>
-                <Container fluid>
+                <div className="job-list_sec">
                     <Filters />
                     <Row className='mt-5'>
-                        <Col className='col-12 my-lg-0 my-4'>
+                        <Col className='col-12 my-lg-0 my-4 p-0'>
                             <ResultCount />
                             < JobsList />
                         </Col>
@@ -112,8 +112,8 @@ export default function FindJobs() {
                             </Col>
                         </Row>
                     }
-                </Container>
-            </jobsContext.Provider>
+                </div>
+            </JobContext.Provider>
         </PageLayout>
     )
 };

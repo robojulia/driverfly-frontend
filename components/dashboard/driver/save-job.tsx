@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { BookmarkCheckFill, BookmarkPlus } from "react-bootstrap-icons"
-import { useAuth } from '../../../hooks/useAuth';
-import { useTranslation } from '../../../hooks/useTranslation';
+import { useAuth } from '../../../hooks/use-auth';
+import { useTranslation } from '../../../hooks/use-translation';
 import SavedJobApi from '../../../pages/api/saved-job';
 import { toast } from 'react-toastify';
 import { useEffectAsync } from '../../../utils/react';
@@ -24,37 +24,40 @@ export default function SaveJob({ job, wrapperClassName, spanClassName }: SaveJo
     const { t } = useTranslation();
     const savedJobApi = new SavedJobApi();
 
-    const [isSaved, setIsSaved] = useState(false)
-    const setSaved = () => { setIsSaved(true) }
-    const setUnsaved = () => { setIsSaved(false) }
-    const [isLoading, setIsLoading] = useState(true)
+    const [isSaved, setIsSaved] = useState<boolean>(false)
+    const setSaved = () => setIsSaved(true)
+    const setUnsaved = () => setIsSaved(false)
 
-    useEffectAsync(async () => {
+    const [isLoading, setIsLoading] = useState<boolean>(true)
+    const startLoading = () => setIsLoading(true)
+    const stopLoading = () => setIsLoading(false)
+
+    useEffectAsync(async (): Promise<void> => {
         await savedJobApi.getByJobId(job.id)
-            .then(data => true)
-            .catch((error) => (error?.response?.status === 404) && false)
+            .then(data => !!data)
+            .catch(error => (!!!(error?.response?.status === 404)))
             .then(saved => saved ? setSaved() : setUnsaved())
-            .then(() => setIsLoading(false))
+            .then(() => stopLoading())
     }, [])
 
-    const showMessage = (status, action) => {
-        if (!!status) {
-            toast(t('Forms.SUCCESS_{action}_{name}', { action, name: 'JOB' }, { translateProps: true }))
-        } else {
-            toast(t('Forms.FAIL_{action}_{name}', { action, name: 'JOB' }, { translateProps: true }))
-        }
+    const showMessage = (status: boolean, action: string): boolean => {
+        toast(t(
+            !!status ? 'Forms.SUCCESS_{action}_{name}' : 'Forms.FAIL_{action}_{name}',
+            { action, name: 'JOB' },
+            { translateProps: true }
+        ))
         return status
     }
 
-    const markSaved = async () => {
+    const markSaved = async (): Promise<void> => {
         await savedJobApi.saveJob(job.id)
-            .then(data => true)
-            .catch((error) => ((error?.response?.status === 404) ? false : true))
+            .then(data => !!data)
+            .catch((error) => (!!!(error?.response?.status === 404)))
             .then(saved => showMessage(saved, 'SAVED'))
             .then(saved => saved ? setSaved() : setUnsaved())
     }
 
-    const markUnsaved = async () => {
+    const markUnsaved = async (): Promise<void> => {
         await savedJobApi.remove(job.id)
             .then(data => true)
             .catch((error) => ((error?.response?.status === 404) && false))
@@ -62,22 +65,26 @@ export default function SaveJob({ job, wrapperClassName, spanClassName }: SaveJo
             .then(unsaved => unsaved ? setUnsaved() : setSaved())
     }
 
-    const handleClick = async () => {
-        setIsLoading(true);
+    const handleClick = async (): Promise<void> => {
+        startLoading();
         (!!isSaved) ? await markUnsaved() : await markSaved();
-        setIsLoading(false);
+        stopLoading();
     }
+
+    const Loader = ({ children }) => (!!isLoading ? <span className="spinner-grow spinner-grow-sm"></span> : children)
 
     return (
         <div className={wrapperClassName || "ort-btn mt-3 "}>
             <button
-                disabled={isLoading}
+                disabled={!!isLoading}
                 onClick={handleClick}
                 className={spanClassName || "btn theme-primary2-btn"}>
+
+                &nbsp;
                 {
                     isSaved ?
-                        <><BookmarkCheckFill /> {t('SAVED')}</>
-                        : <><BookmarkPlus /> {t('SAVE_JOB')}</>
+                        <><Loader ><BookmarkCheckFill /></Loader> {t('SAVED')}</>
+                        : <><Loader ><BookmarkPlus /></Loader> {t('SAVE_JOB')}</>
                 }
             </button>
         </div>

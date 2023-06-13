@@ -1,28 +1,31 @@
-import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
-import { useState } from "react";
+import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
+import { useEffect, useState } from "react";
 import React from "react";
-import { Plus } from 'react-bootstrap-icons';
-import PageLayout from "../../../../../components/layouts/page/PageLayout";
-import { useTranslation } from "../../../../../hooks/useTranslation";
-import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
-import { useAuth } from "../../../../../hooks/useAuth";
+import { Eye, Plus, Send } from 'react-bootstrap-icons';
+import PageLayout from "../../../../../components/layouts/page/page-layout";
+import { useTranslation } from "../../../../../hooks/use-translation";
+import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/view-details/view-data-table";
+import { useAuth } from "../../../../../hooks/use-auth";
 import { useEffectAsync } from "../../../../../utils/react";
 import { Button, Row } from "react-bootstrap";
-import ViewModal from "../../../../../components/viewDetails/viewModal";
-import FileInput from "../../../../../components/forms/FileInput";
-import BaseSelect from "../../../../../components/forms/BaseSelect";
+import ViewModal from "../../../../../components/view-details/view-modal";
+import FileInput from "../../../../../components/forms/file-input";
+import BaseSelect from "../../../../../components/forms/base-select";
 import ComplianceApi from "../../../../api/compliance";
 import { DocumentEntity } from "../../../../../models/documents/document.entity";
 import { StoredFileDto } from "../../../../../models/compiance/stored-file.dto";
 import { useFormik } from "formik";
 import { CompanyDocumentType } from "../../../../../enums/compliance/company-document-type.enum";
-import EntityForm from "../../../../../components/layouts/page/EntityForm";
+import EntityForm from "../../../../../components/layouts/page/entity-form";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import { toast } from 'react-toastify'
 import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
 import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
 import ApplicantApi from "../../../../api/applicant";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
+import ViewPdf from "../../../../../components/view-details/view-pdf";
+import DocumentApi from "../../../../api/document";
+import { SendFileDto } from "../../../../../models/compiance/send-file.dto";
 
 export default function StoredFiles() {
 
@@ -44,8 +47,6 @@ export default function StoredFiles() {
     const [files, setFiles] = useState<DocumentEntity[]>([])
     const [applicants, setApplicants] = useState<ApplicantEntity[]>([])
 
-
-
     useEffectAsync(async () => {
 
         const v = await complianceApi.filesList();
@@ -59,11 +60,14 @@ export default function StoredFiles() {
     });
 
 
-    // To Do
-    // const can = {
-    //     editJob: hasPermission("CanUpdateJob"),
-    //     deleteJob: hasPermission("CanDeleteJob"),
-    // };
+    //for multiple file selection
+
+    const [selectedRowsIds, setSelectedRowsIds] = useState<number[]>();
+
+    const handleSelectedRowsChange = ({ selectedRows }: any) => {
+
+        setSelectedRowsIds(selectedRows?.map(selectedRow => selectedRow?.id));
+    };
 
     const form = useFormik({
         initialValues: new StoredFileDto(),
@@ -86,14 +90,16 @@ export default function StoredFiles() {
         }
     });
 
-    const sendEmail = async (applicant: ApplicantEntity): Promise<void> => {
+    const sendEmail = async (applicantIds: number[]): Promise<void> => {
+
         try {
             if (documentId)
-                await complianceApi.sendComplianceFile(documentId, applicant.id)
+                await complianceApi.sendComplianceFile({ applicantIds, documentId })
                     .then(res => {
                         toast.success(t('DOCUMENT_SENT_SUCCESS_MESSAGE'))
                         setTimeout(() => {
                             resetDocumentId()
+                            setSelectedRowsIds(null)
                         }, 1000)
                     })
         } catch (error) {
@@ -101,12 +107,20 @@ export default function StoredFiles() {
         }
     }
 
-    //  Uncomment this in debugging mode
-    // useEffectAsync(async () => {
-    //     console.log("form", form.values)
-    //     console.log("form", form.errors)
-    // }, [form])
+    const [pdf, setPdf] = useState({});
 
+    const viewDocumentClick = async (id, name) => {
+        const api = new DocumentApi();
+
+        const document = await api.getSignedUrl(id);
+
+        if (document) {
+            setPdf({
+                name: `${t(name)} (${document.name})`,
+                url: document.path
+            });
+        }
+    }
     return (
         <PageLayout
             title="STORED_FILES"
@@ -119,9 +133,9 @@ export default function StoredFiles() {
             <ViewDataTable<DocumentEntity>
                 columnSettingKey={columnSettingKey}
                 customStyles={{
-                    headCells: {
+                    headRow: {
                         style: {
-                            background: "#5bb0b9",
+                            background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
                             color: "white"
                         },
                     },
@@ -141,12 +155,12 @@ export default function StoredFiles() {
                     },
                     {
                         id: "type",
-                        name: "CATEGORY",
+                        name: "type",
                         cell: file =>
                         (<ShowEnumFromString
                             popover
                             labelPrefix="CompanyDocumentType"
-                            str={file.type}
+                            value={file.type}
                             enumArray={CompanyDocumentType} />
                         ),
                         selector: file => file.type,
@@ -160,9 +174,10 @@ export default function StoredFiles() {
                     {
                         cell: (file) => (
                             <>
-                                <button type="button" className="theme-secondary-btn mr-4 p-2" onClick={() => setDocumentId(file.id)}>{t('SEND')}</button>
-                                <button type="button" className="btn theme-primary-btn download_file_btn"> <a href={file.path} download target="_blank">{t('DOWNLOAD')}</a></button>
+                                <button type="button" className="theme-primary-btn mr-2 px-4 py-2" onClick={() => setDocumentId(file.id)}><Send /></button>
+                                <a onClick={() => viewDocumentClick(file.id, file.name)} href="#" role="button" className="theme-secondary-btn mr-2 px-4 py-2"><Eye /></a>
                             </>
+
                         ),
                     },
 
@@ -170,6 +185,7 @@ export default function StoredFiles() {
                 ]}
                 items={files}
             />
+            <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
 
             {/* Model for Upload file */}
 
@@ -196,10 +212,12 @@ export default function StoredFiles() {
                         />
                         <FileInput
                             className="col-12 my-3"
-                            label={`pdf`}
+                            label={`UPLOAD_FILE`}
                             name={`file`}
+                            required
                             accept="application/pdf"
                             documentType={"PDF"}
+                            allowedSizeInByte={3145728}
                             formik={form}
                         />
                     </Row>
@@ -213,53 +231,66 @@ export default function StoredFiles() {
                 onCloseClick={resetDocumentId}
                 closeText="CANCEL"
                 title="APPLICANTS"
+
             >
-                <ViewDataTable<ApplicantEntity>
-                    columnSettingKey={columnSettingKey}
-                    customStyles={{
-                        headCells: {
-                            style: {
-                                background: "#5bb0b9",
-                                color: "white"
+                <>
+                    <div className="float-right pr-2">
+                        {
+                            Boolean(selectedRowsIds?.length) &&
+                            <Button className=" w-100" onClick={() => sendEmail(selectedRowsIds)}>
+                                {t("selected_row_{count}", { count: selectedRowsIds?.length }, { translateProps: true })}
+                            </Button>
+                        }
+                    </div>
+                    <ViewDataTable<ApplicantEntity>
+                        enableSelectableRows={true}
+                        selectableRowChangeHandler={handleSelectedRowsChange}
+                        columnSettingKey={columnSettingKey}
+                        customStyles={{
+                            headRow: {
+                                style: {
+                                    background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+                                    color: "white"
+                                },
                             },
-                        },
-                    }}
-                    columns={[
-                        {
-                            id: "id",
-                            name: "ID",
-                            selector: applicant => applicant.id,
-                            hidable: false
-                        },
-                        {
-                            name: "first_name",
-                            selector: applicant => applicant.first_name,
-                            hidable: false
-                        },
-                        {
-                            name: "last_name",
-                            selector: applicant => applicant.last_name,
-                            hidable: false
-                        },
-                        {
-                            name: "email",
-                            selector: applicant => applicant.email,
-                            hidable: false
-                        },
-
-                        {
-                            cell: (applicant) => (
-                                <>
-                                    <button type="button" onClick={() => sendEmail(applicant)} className="theme-secondary-btn mr-4 p-2">{t('SEND')}</button>
-                                </>
-                            ),
-                        },
+                        }}
+                        columns={[
+                            {
+                                id: "id",
+                                name: "ID",
+                                selector: applicant => applicant.id,
+                                hidable: false
+                            },
+                            {
+                                name: "first_name",
+                                selector: applicant => applicant.first_name,
+                                hidable: false
+                            },
+                            {
+                                name: "last_name",
+                                selector: applicant => applicant.last_name,
+                                hidable: false
+                            },
+                            {
+                                name: "email",
+                                selector: applicant => applicant.email,
+                                hidable: false
+                            },
+                            {
+                                cell: (applicant) => (
+                                    Boolean(!!!selectedRowsIds) && <>
+                                        <Button type="button" disabled={form.isSubmitting || !form.isValid || form.isValidating} onClick={() => sendEmail([applicant?.id])} className="theme-secondary-btn mr-2 px-4 py-1"><Send /></Button>
+                                    </>
+                                ),
+                            },
 
 
-                    ]}
-                    items={applicants}
-                />
+                        ]}
+                        items={applicants}
+                    />
+                </>
             </ViewModal>
+
         </PageLayout>
     )
 

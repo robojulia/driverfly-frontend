@@ -1,6 +1,9 @@
 import { CompanyEntity } from "../../models/company/company.entity";
 import BaseApi from "./_baseApi";
 import { FindManyOptions } from "../../models/general/find-many-options.dto";
+import { CompanyPreferenceCategory } from "../../enums/company/company-preference-category.enum";
+import { CompanyPreferenceEntity } from "../../models/company/company-preferences.entity";
+import { CompanyManagerEntity } from "../../models/company/company-manager.entity";
 
 export default class CompanyApi extends BaseApi {
     baseUrl: string = "companies"
@@ -39,7 +42,7 @@ export default class CompanyApi extends BaseApi {
 
             return data;
         },
-        remove: async () : Promise<void> => {
+        remove: async (): Promise<void> => {
             await this.delete(this.baseUrl);
         },
 
@@ -63,5 +66,55 @@ export default class CompanyApi extends BaseApi {
             return data;
         },
     }
+
+    preferences = {
+        baseUrl: (companyId: number) => `company/${companyId}/preferences`,
+        list: async (companyId: number, query?: { category?: CompanyPreferenceCategory, label?: string }): Promise<CompanyPreferenceEntity[]> => {
+            const { data } = await this.get(this.buildUrl(this.preferences.baseUrl(companyId), query));
+
+            return data;
+        },
+        create: async (companyId: number, dto: CompanyPreferenceEntity): Promise<CompanyPreferenceEntity> => {
+            const { data } = await this.post(this.preferences.baseUrl(companyId), dto);
+
+            return data;
+        },
+        update: async (companyId: number, id: number, dto: CompanyPreferenceEntity): Promise<CompanyPreferenceEntity> => {
+            const { data } = await this.put(`${this.preferences.baseUrl(companyId)}/${id}`, dto);
+
+            return data;
+        },
+        remove: async (companyId: number, id: number): Promise<void> => {
+            await this.delete(`${this.preferences.baseUrl(companyId)}/${id}`);
+        }
+    }
+
+    manager = {
+        baseUrl: (id?: number) => `company/manager/${id ?? ''}`,
+        findById: async (id: number): Promise<CompanyManagerEntity> => {
+            const { data } = await this.get(`${this.manager.baseUrl(id)}`);
+
+            return data;
+        },
+        list: async (params?: FindManyOptions): Promise<CompanyManagerEntity[]> => {
+            const { data } = await this.get(`${this.manager.baseUrl()}`, { params });
+
+            return data;
+        },
+        create: async (dto: CompanyManagerEntity): Promise<CompanyManagerEntity> => {
+            const { data } = await this.post(this.manager.baseUrl(), dto);
+
+            return data;
+        },
+        update: async (id: number, dto: CompanyManagerEntity): Promise<CompanyManagerEntity> => {
+            const { data } = await this.put(`${this.manager.baseUrl(id)}`, dto);
+
+            return data;
+        },
+        remove: async (companyId: number, id: number): Promise<void> => {
+            await this.delete(`${this.manager.baseUrl(companyId)}/${id}`);
+        }
+    }
+
 
 }

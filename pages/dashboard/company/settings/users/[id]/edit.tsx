@@ -1,11 +1,11 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import FullLayout from "../../../../../../components/dashboard/layouts/Layout/FullLayout";
-import { UserForm } from "../../../../../../components/forms/company/UserForm";
-import ChildPageLayout from "../../../../../../components/layouts/page/ChildPageLayout";
-import { useAuth } from "../../../../../../hooks/useAuth";
-import { useTranslation } from "../../../../../../hooks/useTranslation";
+import FullLayout from "../../../../../../components/dashboard/layouts/layout/full-layout";
+import { UserForm } from "../../../../../../components/forms/company/user-form";
+import ChildPageLayout from "../../../../../../components/layouts/page/child-page-layout";
+import { useAuth } from "../../../../../../hooks/use-auth";
+import { useTranslation } from "../../../../../../hooks/use-translation";
 import { UserEntity } from "../../../../../../models/user/user.entity";
 import { useEffectAsync } from "../../../../../../utils/react";
 import UserApi from "../../../../../api/user";
@@ -20,14 +20,15 @@ export default function EditUser({ id }) {
 
     const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
 
-    const [ user, setUser ] = useState(new UserEntity());
+    const [user, setUser] = useState(new UserEntity());
 
     useEffectAsync(async () => {
+        if (!user) return;
         if (id) {
             const api = new UserApi();
 
             let entity = null
-            
+
             try {
                 entity = await api.findById(+id);
             }
@@ -45,18 +46,19 @@ export default function EditUser({ id }) {
             toast.error(t("UNABLE_TO_FIND_{name}", { name: "USER" }, { translateProps: true }));
             goBack();
         }
-    }, [ company, id ]);
+    }, [user, id]);
+    // }, [ company, id ]);
 
     return (
         <ChildPageLayout
             title={t("EDIT_{name}", { name: "USER" }, { translateProps: true })}
             backPath={backPath}
-            >
+        >
             <UserForm
                 entity={user}
                 onSaveComplete={goBack}
-                // onSaveError={goBack}
-                />
+            // onSaveError={goBack}
+            />
         </ChildPageLayout>
     );
 }

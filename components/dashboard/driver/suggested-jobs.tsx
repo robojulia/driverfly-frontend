@@ -1,11 +1,11 @@
-import FullLayout from "../../../components/dashboard/layouts/FullLayout";
-import { useAuth } from '../../../hooks/useAuth';
+import FullLayout from "../layouts/full-layout";
+import { useAuth } from "../../../hooks/use-auth";
 import { useState } from "react"
 import { Row, Col, Table, Card, CardBody } from "reactstrap";
 import ApplicantApi from '../../../pages/api/applicant';
 import { globalAjaxExceptionHandler } from '../../../utils/ajax';
 import { toast } from 'react-toastify';
-import { useTranslation } from '../../../hooks/useTranslation';
+import { useTranslation } from "../../../hooks/use-translation";
 import { useEffectAsync } from "../../../utils/react";
 import Link from "next/link";
 
@@ -34,9 +34,9 @@ export default function SuggestedJobs() {
         <h2>{t("SUGGESTED_JOBS")}</h2>
       </Row>
       <Row>
-        <Col lg="12">
-          <Card>
-            <CardBody className="">
+        <Col lg="12" className="p-0">
+          <Card className="border-0">
+            <CardBody >
               <Table bordered striped>
                 <thead>
                   <tr>

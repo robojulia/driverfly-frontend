@@ -1,11 +1,12 @@
-import Link from 'next/link';
-import { PublicLayout } from "../components/layouts/PublicLayout";
-import Owneroperator from '../public/css/Owneroperator.module.css'
-import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
+import { PublicLayout } from "../components/layouts/public-layout";
+import Owneroperator from '../public/css/owner-operator.module.css'
+import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import { useRouter } from 'next/router'
+import { useTranslation } from '../hooks/use-translation';
 
 export default function Owneroperators() {
 
+    const { t } = useTranslation();
     const router = useRouter()
 
     const handleSubmit = (e) => {
@@ -20,7 +21,7 @@ export default function Owneroperators() {
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
-                        <h2>Owner Operators</h2>
+                        <h2>{t("OWNER_OPERATORS")}</h2>
                         < Breadcrumb />
                     </div>
                 </div>
@@ -28,12 +29,10 @@ export default function Owneroperators() {
             <div className="filter-sec">
                 <div className="container">
                     <div className={Owneroperator.owneroperators}>
-                        <h2 className="text-center text-white lg-pt-5 pt-3">Owner Operators</h2>
-                        <p className="mt-5 text-white">Are you looking to lease on to a Motor Carrier? We’ve got opportunities for you too!
-                            Go to the job search and select owner operator for job type.
-                        </p>
+                        <h2 className="text-center text-white lg-pt-5 pt-3">{t("OWNER_OPERATORS")}</h2>
+                        <p className="mt-5 text-white">{t("ARE_YOU_LOOKING_TO_LEASE_ONTO_MOTOR_CARRIER_FOR_JOB_TYPE")}</p>
                         <div className={Owneroperator.btn__custom}>
-                            <button className="form-control bt btn-lg mt-5 text-center" onClick={handleSubmit}>Lease On To A Carrier</button>
+                            <button className=" form-control bt btn-lg mt-5 text-center" onClick={handleSubmit}>{t("LEASE_ONTO_A_CARRIER")}</button>
                         </div>
                     </div>
                 </div>

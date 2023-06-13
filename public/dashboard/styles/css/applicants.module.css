@@ -1,0 +1,41 @@
+.tablheader {
+    background-color: #5eccc4;
+    color: #fff;
+}
+
+.applicanttable {
+    padding: 0;
+}
+
+.applicanttable tbody {
+    background-color: #e9fafa;
+}
+
+.applicanttable th,
+.applicanttable td {
+    padding: 15px;
+}
+
+.applicanttable th {
+    border-right: solid 1px;
+}
+
+.change_status_btn {
+    background: #5eccc4;
+    padding: 10px;
+    border-radius: 5px;
+    color: #fff;
+
+}
+
+.applicant_detail_sec .header {
+    background-color: #f2f2f2;
+    padding: 20px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.applicant_detail_sec .body {
+    background: #e9fafa;
+    padding: 100px;
+}

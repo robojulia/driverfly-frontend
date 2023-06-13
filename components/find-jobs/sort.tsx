@@ -1,15 +1,15 @@
 import { useContext } from "react"
-import jobContext from "../../context/jobContext"
-import { useTranslation } from "../../hooks/useTranslation"
+import JobContext from "../../context/job-context"
+import { useTranslation } from "../../hooks/use-translation"
 
 export default function Sort(props) {
 
-    const { state, method } = useContext(jobContext)
+    const { state, method } = useContext(JobContext)
     const { handleChange } = method
     const { t } = useTranslation();
 
     return (
-        <span className={props.labelClassName || "text-secondary w-sm-25"}>
+        <span className={props.labelClassName || "text-secondary"}>
             {t('SORT_BY')}:
             <select
                 name="order_by"

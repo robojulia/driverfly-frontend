@@ -1,8 +1,8 @@
 
-import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
+import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
 import React from "react";
 
-import PageLayout from "../../../../components/layouts/page/PageLayout";
+import PageLayout from "../../../../components/layouts/page/page-layout";
 
 import { ApplicantApi } from "../../../api/applicant";
 
@@ -13,9 +13,9 @@ import { Messenger } from "../../../../components/messenger/messenger";
 export default function MessageList() {
 
     const getOptions = async (query: string, cancellationToken: CancelTokenSource) => {
-         const api = new ApplicantApi();
+        const api = new ApplicantApi();
 
-         const applicants = await api.search({
+        const applicants = await api.search({
             last_name: query,
             first_name: query,
             // email: query,
@@ -37,10 +37,10 @@ export default function MessageList() {
     return (
         <PageLayout
             title="MESSAGES"
-            >
+        >
             <Messenger
                 getOptions={getOptions}
-                />
+            />
         </PageLayout>
     )
 

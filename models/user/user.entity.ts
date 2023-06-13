@@ -9,6 +9,7 @@ import { DocumentEntity } from '../documents/document.entity';
 
 export class UserEntity {
     id?: number;
+    createdBy?: number;
     email?: string;
     name?: string;
     first_name?: string;
@@ -16,7 +17,8 @@ export class UserEntity {
     password?: string;
     enabled_notifications?: boolean;
     status?: Status;
-    roles?: RoleEntity[] = [];
+    roles?: RoleEntity[];
+    // roles?: RoleEntity[] = [];
     theme_color?: boolean;
     swipe_actions?: boolean;
     activated?: boolean;
@@ -43,7 +45,7 @@ export class UserEntity {
             cell_number: yup.string().nullable(),
             timezone: yup.string().nullable(),
             language: yup.string().nullable(),
-            roles: yup.array(RoleEntity.yupConnectSchema()).length(1, "yup.required").nullable().required(),
+            // roles: yup.array(RoleEntity.yupConnectSchema()).length(1, "yup.required").nullable().required(),
             password: yup.string().when("id", {
                 is: v => !v,
                 then: yup.string().required().nullable()
@@ -51,7 +53,7 @@ export class UserEntity {
             photo: yup.mixed().when({
                 is: v => !!v,
                 then: DocumentEntity.yupSchema()
-              }).optional(),
+            }).optional(),
         });
     }
 }

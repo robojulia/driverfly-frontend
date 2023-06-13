@@ -1,23 +1,23 @@
 
-import FullLayout from "../../../../components/dashboard/layouts/Layout/FullLayout";
+import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
 import { useEffect, useState } from "react";
 import React from "react";
 
 import { PenFill, TrashFill, Plus } from 'react-bootstrap-icons';
 
-import PageLayout from "../../../../components/layouts/page/PageLayout";
+import PageLayout from "../../../../components/layouts/page/page-layout";
 
 import JobApi from "../../../api/job";
 import { JobEntity } from "../../../../models/job/job.entity";
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { JobDeliveryType } from "../../../../enums/jobs/job-delivery-type.enum";
 import Router, { useRouter } from "next/router";
 import ShowEnumFromString from "../../../../components/enum-filters/show-enum-from-string";
 
 import { buildAddress } from "../../../../utils/common";
-import ViewDataTable, { getDataTableColumnKey } from "../../../../components/viewDetails/viewDataTable";
+import ViewDataTable, { getDataTableColumnKey } from "../../../../components/view-details/view-data-table";
 import OverlyPopover from "../../../../components/popover/overly-popover";
-import { useAuth } from "../../../../hooks/useAuth";
+import { useAuth } from "../../../../hooks/use-auth";
 import { useEffectAsync } from "../../../../utils/react";
 import Link from "next/link";
 import { Button } from "react-bootstrap";
@@ -81,9 +81,9 @@ export default function JobListing() {
             <ViewDataTable<JobEntity>
                 columnSettingKey={columnSettingKey}
                 customStyles={{
-                    headCells: {
+                    headRow: {
                         style: {
-                            background: "#5bb0b9",
+                            background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
                             color: "white"
                         },
                     },
@@ -148,7 +148,7 @@ export default function JobListing() {
                             popover_header={t('DELIVERY_TYPE')}
                             labelPrefix="JobDeliveryType"
                             popover={true}
-                            str={j.delivery_type}
+                            value={j.delivery_type}
                             enumArray={JobDeliveryType} />
                         ),
                         selector: job => t(`JobDeliveryType.${job.delivery_type}`),

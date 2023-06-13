@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { useRouter } from "next/router";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/use-auth";
 import { TranslationContext } from "../../context/translation-context";
 import { Loading } from "../loading/loading";
 import translations_EN_US from "../../public/assets/locales/en-us/translation.json";

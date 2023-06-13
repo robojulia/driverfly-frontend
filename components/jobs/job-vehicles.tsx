@@ -2,10 +2,10 @@ import { Col, Row } from "react-bootstrap";
 import { VehicleAccessory } from "../../enums/vehicles/vehicle-accessory.enum";
 import { VehicleTrailerType } from "../../enums/vehicles/vehicle-trailer-type.enum";
 import { VehicleType } from "../../enums/vehicles/vehicle-type.enum";
-import { useTranslation } from "../../hooks/useTranslation";
-import ViewCard from "../viewDetails/viewCard";
+import { useTranslation } from "../../hooks/use-translation";
+import ViewCard from "../view-details/view-card";
 import VehiclePhoto from "./vehicle-photo";
-import { useAuth } from '../../hooks/useAuth'
+import { useAuth } from '../../hooks/use-auth'
 import { VehicleEntity } from "../../models/company/vehicle.entity";
 import Link from "next/link";
 import { JobDetailProps } from "../../types/job/job-detail-props.type";

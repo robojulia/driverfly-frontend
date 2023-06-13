@@ -1,0 +1,7 @@
+export enum ReasonsForLeavingEmployment {
+  DISCHARGED = "DISCHARGED",
+  RESIGNATION = "RESIGNATION",
+  LAY_OFF = "LAY_OFF",
+  MILITARY_DUTY = "MILITARY_DUTY",
+  OTHER = "OTHER",
+}

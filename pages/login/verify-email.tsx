@@ -5,16 +5,16 @@ import { globalAjaxExceptionHandler } from '../../utils/ajax';
 
 import { useRouter } from "next/router";
 import { useFormik } from "formik";
-import { useAuth } from "../../hooks/useAuth";
-import { useTranslation } from "../../hooks/useTranslation"
+import { useAuth } from "../../hooks/use-auth";
+import { useTranslation } from "../../hooks/use-translation"
 
-import { PublicLayout } from "../../components/layouts/PublicLayout";
-import { PublicPage } from "../../components/layouts/public/PublicPage"
+import { PublicLayout } from "../../components/layouts/public-layout";
+import { PublicPage } from "../../components/layouts/public/public-page"
 
 import AuthApi from "../api/auth";
 import { VerifyEmailDto } from "../../models/auth/verify-email.dto";
 import React, { useEffect } from 'react';
-import BaseInput from '../../components/forms/BaseInput';
+import BaseInput from '../../components/forms/base-input';
 
 export default function VerifyEmail(props: VerifyEmailDto) {
   const router = useRouter();

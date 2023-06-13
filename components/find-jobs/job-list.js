@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import { useContext } from "react"
-import jobContext from "../../context/jobContext"
+import JobContext from "../../context/job-context"
 import timeSince from "../../utils/timeSince"
-import { useTranslation } from "../../hooks/useTranslation"
+import { useTranslation } from "../../hooks/use-translation"
 import CompanyPhoto from '../jobs/company-photo'
 import { CurrencyDollar } from 'react-bootstrap-icons';
 import Pagination from './pagination'
@@ -11,14 +11,14 @@ import { buildAddress } from '../../utils/common'
 
 export default function JobsList() {
 
-    const { state, method } = useContext(jobContext)
+    const { state, method } = useContext(JobContext)
     const { jobs } = state
     const { t } = useTranslation();
 
     return (
         <>
-            <div className='filter-sec'>
-                <div className="filter-outer mt-5">
+            <div className='filter-sec p-0'>
+                <div className="filter-outer mt-lg-5">
                     {jobs.length > 0 && jobs.map(job => (
                         <div key={job.id} className="media align-items-center shadow-sm">
 

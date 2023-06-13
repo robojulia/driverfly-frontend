@@ -1,22 +1,22 @@
-import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
+import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 import { Col, Row, Table } from "reactstrap";
 import { useRouter } from "next/router"
 import React, { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { useTranslation } from "../../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../../hooks/use-translation";
 
 
-import {EyeFill, PenFill, TrashFill} from 'react-bootstrap-icons';
+import { EyeFill, PenFill, TrashFill } from 'react-bootstrap-icons';
 
 
 import LocationApi from "../../../../api/location";
 import { LocationEntity } from "../../../../../models/company/location.entity";
-import { useAuth } from "../../../../../hooks/useAuth";
-import PageLayout from "../../../../../components/layouts/page/PageLayout";
+import { useAuth } from "../../../../../hooks/use-auth";
+import PageLayout from "../../../../../components/layouts/page/page-layout";
 import { useEffectAsync } from "../../../../../utils/react";
 import { Button, ButtonGroup } from "react-bootstrap";
-import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
+import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/view-details/view-data-table";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import Link from "next/link";
 
@@ -29,7 +29,7 @@ export default function LocationList() {
 
   const columnSettingKey = getDataTableColumnKey("company", user, "locations");
 
-  const [ locations, setLocations ] = useState([]);
+  const [locations, setLocations] = useState([]);
 
   useEffectAsync(async () => {
     try {
@@ -41,13 +41,13 @@ export default function LocationList() {
     } catch (e) {
       globalAjaxExceptionHandler(e, { t: t, toast: toast });
     }
-  }, [ user ]);
+  }, [user]);
 
   /**
    * 
    * @param {React.MouseEvent} e 
    */
-   const onAddClick = (e: React.MouseEvent) => {
+  const onAddClick = (e: React.MouseEvent) => {
     e.preventDefault();
 
     router.push(`${router.asPath}/create`);
@@ -62,15 +62,15 @@ export default function LocationList() {
   }
 
   const onDeleteClick = async (id: number) => {
-     try {
+    try {
       const api = new LocationApi();
 
       await api.remove(id);
 
       setLocations(locations.filter(v => v.id != id));
-     } catch (e) {
-       globalAjaxExceptionHandler(e, { t: t, toast: toast });
-     }
+    } catch (e) {
+      globalAjaxExceptionHandler(e, { t: t, toast: toast });
+    }
   }
 
   const can = {
@@ -95,18 +95,18 @@ export default function LocationList() {
       <ViewDataTable<LocationEntity>
         columnSettingKey={columnSettingKey}
         customStyles={{
-          headCells: {
-              style: {
-                  background: "#5bb0b9",
-                  color: "white"
-              },
+          headRow: {
+            style: {
+              background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+              color: "white"
+            },
           },
-      }}
+        }}
         columns={[
           {
             id: "name",
             name: "ID",
-            selector: v=> v.id,
+            selector: v => v.id,
           },
           {
             id: "street",
@@ -133,26 +133,26 @@ export default function LocationList() {
         ]}
         actions={l => ([
           {
-              onClick: e => onViewClick(l.id),
-              icon: EyeFill,
-              label: "VIEW",
-              hide: !can.view
+            onClick: e => onViewClick(l.id),
+            icon: EyeFill,
+            label: "VIEW",
+            hide: !can.view
           },
           {
-              onClick: e => onEditClick(l.id),
-              icon: PenFill,
-              label: "EDIT",
-              hide: !can.update
+            onClick: e => onEditClick(l.id),
+            icon: PenFill,
+            label: "EDIT",
+            hide: !can.update
           },
           {
-              onClick: e => onDeleteClick(l.id),
-              icon: TrashFill,
-              label: "DELETE",
-              hide: !can.delete
+            onClick: e => onDeleteClick(l.id),
+            icon: TrashFill,
+            label: "DELETE",
+            hide: !can.delete
           }
         ])}
         items={locations}
-        />
+      />
     </PageLayout>
   )
 };

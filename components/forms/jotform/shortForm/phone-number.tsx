@@ -1,0 +1,247 @@
+import React, { useEffect, useContext, useState } from "react";
+import { Button, Col, Row, Form } from "react-bootstrap";
+import { useFormik } from "formik";
+import OtpInputField from 'react-otp-input';
+import { toast, ToastContainer } from "react-toastify";
+import styles from "../../../../styles/digitalhiringapp.module.css";
+import BaseInputPhone from "../../base-input-phone";
+import { useTranslation } from "../../../../hooks/use-translation";
+import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
+import ApplicantApi from "../../../../pages/api/applicant";
+import { LoaderIcon } from "../../../loading/loader-icon";
+import ViewModal from "../../../view-details/view-modal";
+import { PhoneNumberDto } from "../../../../models/jot-form/short-form/phone-number.dto";
+import { ApplicantOTPEntity } from "../../../../models/applicant/applicant-otp.entity";
+import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
+import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+
+
+export function PhoneNumber() {
+    const {
+        state: { applicant },
+        method: { setApplicant, stepNext, stepBack, setApplicantExtras },
+    }: JotFormContextType = useContext(JotformContext);
+
+    const { t } = useTranslation();
+    const [openModal, setOpenModal] = useState<boolean>(false)
+    const [otp, setOtp] = useState<string>('')
+    const [showOtpField, seShowtOtpField] = useState<boolean>(false)
+    const [otpApplicant, setOtpApplicant] = useState<ApplicantOTPEntity>(null)
+    const [otpException, setOtpException] = useState<boolean>(false)
+
+    const form = useFormik({
+        initialValues: new PhoneNumberDto(),
+        validationSchema: PhoneNumberDto.yupSchema(),
+        onSubmit: async (values, { setErrors }) => {
+            try {
+                const { phone } = values;
+                const applicantApi = new ApplicantApi()
+                // const applicantEmailExists = await applicantApi.searchByPublic({ email })
+                const applicantPhoneExists = await applicantApi.searchByPublic({ phone })
+
+                if (applicantPhoneExists) {
+                    setOpenModal(true)
+                    // } else if (applicantPhoneExists) {
+                    // 	setErrors({ phone: 'ALREADY_EXISTS' })
+                } else {
+                    setApplicant({
+                        ...applicant,
+                        phone,
+                    });
+
+                    stepNext();
+                }
+            } catch (error) {
+                console.log("error", error);
+            }
+        },
+        onReset: (values) => {
+            stepBack();
+        },
+    });
+
+    useEffect(() => {
+        form.setValues({
+            ...form.values,
+            phone: applicant.phone,
+        });
+    }, []);
+
+
+    const verifyOTP = async () => {
+        const applicantApi = new ApplicantApi()
+
+        const applicantId = otpApplicant?.applicantId
+
+        try {
+            const applicantExistingProfile = await applicantApi.verifyOTP({ applicantId, otp })
+            setApplicant(applicantExistingProfile)
+            setOpenModal(false)
+            stepNext()
+
+        } catch (error) {
+            globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
+            setOtpException(true)
+        }
+    }
+
+    const handleLeavePreviousProfile = () => {
+        setOpenModal(false)
+        stepNext()
+    }
+
+    const onCloseClick = () => {
+        setOpenModal(false)
+    }
+
+    const requestOTP = async () => {
+        setOtpException(false)
+        const applicantApi = new ApplicantApi()
+        const { phone } = form.values
+        try {
+            const OTPresponse = await applicantApi.requestOTP({ phone })
+            setOtpApplicant(OTPresponse)
+            seShowtOtpField(true)
+        } catch (error) {
+            console.log("errors", error)
+        }
+    }
+    useEffect(() => {
+        const typesToExclude = [
+            ApplicantExtras.SIGNATURE,
+            ApplicantExtras.SIGNATURE_VOE_AUTHORIZATION,
+            ApplicantExtras.SIGNATURE_DISCLOSURE_AUTHORIZATION,
+            ApplicantExtras.SIGNATURE_IMPORTANT_BACKGROUND,
+            ApplicantExtras.SIGNATURE_GENERAL_CONSENT,
+        ];
+
+        const filteredSignature = applicant?.extras.filter(
+            v => !typesToExclude.includes(v.type)
+        );
+        if (!!applicant?.extras) setApplicantExtras([...filteredSignature])
+
+    }, [applicant])
+   
+
+    return (
+        <>
+            <ToastContainer />
+            <ViewModal
+                show={openModal}
+                title="EMAIL_ALREADY_EXISTS"
+                size="lg"
+                onCloseClick={onCloseClick}
+                footer={
+                    <Row className="mt-5 w-100">
+                        <Col>
+                            <Button className="float-right" onClick={handleLeavePreviousProfile}>
+                                {t("NO")}
+                            </Button>
+                        </Col>
+
+                        <Col>
+                            {
+                                showOtpField ? (
+                                    <Button
+                                        onClick={verifyOTP}
+                                        className="float-left theme-secondary-btn"
+                                    >
+                                        {t("SUBMIT")}
+                                    </Button>
+                                ) : (
+
+                                    <Button
+                                        onClick={requestOTP}
+                                        className="float-left theme-secondary-btn"
+                                    >
+                                        {t("PROCEED")}
+                                    </Button>
+                                )
+                            }
+                        </Col>
+                    </Row>
+                }
+            >
+                <div>
+
+                    {showOtpField ? (
+                        <>
+                            <h5 className="text-center">{t("OTP_MESSAGES")}</h5>
+                            <div className="w-100 d-flex justify-content-center mt-4 mb-4">
+                                <OtpInputField
+                                    inputStyle={{
+                                        width: '40px',
+                                        height: '40px',
+                                        margin: '8px',
+                                        borderRadius: '4px',
+                                        border: '1px solid #ccc',
+                                        fontSize: '24px',
+                                        fontWeight: 'bold',
+                                        textAlign: 'center',
+                                        color: '#000',
+                                    }}
+                                    renderInput={(props) => <input {...props} />}
+                                    value={otp}
+                                    onChange={(e) => setOtp(e)}
+                                    shouldAutoFocus
+                                    numInputs={6}
+                                    renderSeparator={<span>-</span>}
+                                />
+
+                            </div>
+                            {
+                                otpException && <p className="text-center">{t("OTP_EXCEPTION_MESSAGE")}<a role="button" className="text-primary" onClick={requestOTP}>{t("RESEND")}</a></p>
+                            }
+                        </>
+                    ) : (
+                        <>
+                            <h3 className="text-center text-warning">{t("ALREADY_AN_APPLICANT")}</h3>
+                            <h5 className="text-center">{t("DO_YOU_WISH_TO_PROCEED_WITH_PREVIOUS_PROFILE")}</h5>
+
+                        </>
+                    )}
+                </div>
+            </ViewModal>
+            <Form
+                className={styles.align__text_left}
+                onSubmit={form.handleSubmit}
+                onReset={form.handleReset}
+            >
+                <Row className="w-100 d-flex justify-content-center mb-2 mt-4 ">
+                    <strong>
+                        <em>
+                            <h5 className="text-dark text-center" >
+                                {t("ENTER_PHONE_NUMBER")}
+                            </h5>
+                        </em>
+                    </strong>
+                </Row>
+                <Row className="w-100 d-flex justify-content-center">
+                    <BaseInputPhone
+                        className="col-md-6 my-3"
+                        required
+                        name="phone"
+                        formik={form}
+                    />
+                </Row>
+                <Row className="mt-5">
+                    <Col>
+                        <Button className="float-right" type="reset">
+                            {t("BACK")}
+                        </Button>
+                    </Col>
+
+                    <Col>
+                        <Button
+                            disabled={form.isValidating || form.isSubmitting || !form.isValid}
+                            className="float-left theme-secondary-btn"
+                            type="submit"
+                        >
+                            {t("NEXT")} <LoaderIcon isLoading={!!form?.isSubmitting} />
+                        </Button>
+                    </Col>
+                </Row>
+            </Form>
+        </>
+    );
+}

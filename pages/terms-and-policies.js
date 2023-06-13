@@ -1,13 +1,17 @@
-import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
-import { PublicLayout } from "../components/layouts/PublicLayout";
+import Link from 'next/link';
+import Breadcrumb from "../components/breadcrumbs/breadcrumb";
+import { PublicLayout } from "../components/layouts/public-layout";
+import { useTranslation } from '../hooks/use-translation';
 
 export default function TermsAndPolicies() {
+
+    const { t } = useTranslation();
     return (
         <>
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
-                        <h2>Terms And Policies</h2>
+                        <h2>{t("TERMS_AND_POLICIES")}</h2>
                         < Breadcrumb />
                     </div>
                 </div>
@@ -156,7 +160,11 @@ export default function TermsAndPolicies() {
                 </ol>
                 <h5> III. User Rights and Responsibilities</h5>
                 <h5 className='py-3'>Privacy Policy</h5>
-                <p className="text-secondary">Your privacy is very important to us. Please read our <a href="/privacy-policy">Privacy Policy</a>, which governs your use of this Site. By using this Site, you agree that the terms of this policy are reasonable and satisfactory to you. You consent to the use of your personal information by DriverFly.co, digitalhiringapp.com, and/or any third party partners in accordance with the terms of this policy. DriverFly will not be responsible for any damages resulting from a lapse in compliance with the Privacy Policy.</p>
+                <p className="text-secondary">Your privacy is very important to us. Please read our
+                    <Link href="/privacy-policy">
+                        <a > Privacy Policy</a>
+                    </Link>
+                    , which governs your use of this Site. By using this Site, you agree that the terms of this policy are reasonable and satisfactory to you. You consent to the use of your personal information by DriverFly.co, digitalhiringapp.com, and/or any third party partners in accordance with the terms of this policy. DriverFly will not be responsible for any damages resulting from a lapse in compliance with the Privacy Policy.</p>
                 <h5 className=" py-3">Accounts, Security, Passwords</h5>
                 <p className="text-secondary">You may register to use this Site by completing the specified registration process and providing us with current, complete, and accurate information as requested by the online registration form. It is your responsibility to maintain the completeness and accuracy of your registration data, and any loss caused by your failure to do so is your responsibility. As part of the registration process, you will be asked to choose a security question. It is your responsibility to maintain the confidentiality of your security question and your account. You agree to notify DriverFly immediately of any unauthorized use of your account. DriverFly is not liable for any loss that you may incur as a result of someone else using your account, either with or without your knowledge.</p>
                 <h5 className=" py-3">Third Parties</h5>

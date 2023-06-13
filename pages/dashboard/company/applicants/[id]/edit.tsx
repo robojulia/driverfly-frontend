@@ -1,13 +1,17 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { Col, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
-import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
-import { ApplicantForm } from "../../../../../components/forms/company/ApplicantForm";
-import ChildPageLayout from "../../../../../components/layouts/page/ChildPageLayout";
-import { useTranslation } from "../../../../../hooks/useTranslation";
+import ViewApplicantDqf from "../../../../../components/applicants/view-applicant-dqf";
+import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
+import { ApplicantForm } from "../../../../../components/forms/company/applicant-form";
+import ChildPageLayout from "../../../../../components/layouts/page/child-page-layout";
+import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import { useEffectAsync } from "../../../../../utils/react";
 import ApplicantApi from "../../../../api/applicant";
+import DQF from "../../../../../components/dashboard/employee-directory/dqf";
+import { ApplicantStatus } from "../../../../../enums/applicants/applicant-status.enum";
 
 export default function EditApplicant({ id }) {
     const router = useRouter();
@@ -16,7 +20,8 @@ export default function EditApplicant({ id }) {
     const backPath = `/dashboard/company/applicants/${id}`;
 
 
-    const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
+    // const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
+    const goBack = () => window.setTimeout(() => router.back(), 2000);
 
     const [applicant, setApplicant] = useState(new ApplicantEntity());
 
@@ -42,10 +47,33 @@ export default function EditApplicant({ id }) {
             title={t("EDIT_{name}", { name: "APPLICANT" }, { translateProps: true })}
             backPath={backPath}
         >
+
             <ApplicantForm
                 entity={applicant}
                 onSaveComplete={goBack}
             />
+            {applicant?.id
+                && <Row>
+                    <Col>
+                        <DQF
+                            title="ONBOARDING_CHECKLIST"
+                            applicant={applicant}
+                            canEdit={true}
+                            showOnboarding={true}
+                            showCompleted={true}
+                            canEditSafetyPerformance={
+                                ([
+                                    ApplicantStatus.COMPLETED_EMPLOYED,
+                                    ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
+                                    ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE
+                                ]).includes(applicant.current_application_status)
+                            }
+                            showResendButton={true}
+                        />
+                        {/* <ViewApplicantDqf canEdit={true} applicant={applicant} /> */}
+                    </Col>
+                </Row>
+            }
         </ChildPageLayout>
     );
 }

@@ -1,5 +1,6 @@
 import * as yup from "yup";
 import { ApplicantEntity } from "./applicant.entity";
+import { DocumentEntity } from "../documents/document.entity";
 
 export class ApplicantEmployerEntity {
     id?: number;
@@ -19,9 +20,22 @@ export class ApplicantEmployerEntity {
     created_at?: string;
     last_updated_at?: string;
 
+    manager_name?: string;
+    email?: string;
+    address?: string;
+    address_2?: string;
+    uuid_token?: string;
+    is_current: boolean;
+
+    documents: DocumentEntity[];
+
     static yupSchema() {
         return yup.object({
             name: yup.string().required().nullable(),
+            manager_name: yup.string().optional().nullable(),
+            email: yup.string().optional().nullable(),
+            address: yup.string().optional().nullable(),
+            address_2: yup.string().optional().nullable(),
             start_at: yup.date().nullable(),
             end_at: yup.date().nullable(),
             title: yup.string().nullable(),
@@ -33,6 +47,7 @@ export class ApplicantEmployerEntity {
             can_contact: yup.bool().nullable(),
             is_subject_to_fmcsrs: yup.bool().nullable(),
             is_subject_to_drug_tests: yup.bool().nullable(),
+            is_current: yup.boolean().nullable(),
         });
     }
 }

@@ -1,11 +1,12 @@
 import moment from "moment"
 import FindJobFilterAccordion from "../find-jobs-accordion/find-job-filter-accordion"
 import { JobDatePosted } from "../../enums/jobs/job-date-posted.enum"
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 import { ChangeEvent } from "react";
+import { SearchJobFilterProps } from "../../types/search-filter/job-search-filter.type";
 
 
-export default function DatePosted(props: any) {
+export default function DatePosted(props: SearchJobFilterProps) {
 
     const { t } = useTranslation();
     const { state, method } = props;

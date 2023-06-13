@@ -6,10 +6,10 @@ import { useRouter } from 'next/router'
 import { globalAjaxExceptionHandler } from "../../utils/ajax";
 
 // hooks
-import { useTranslation } from "../../hooks/useTranslation";
+import { useTranslation } from "../../hooks/use-translation";
 
 // inputs
-import BaseInput from "../forms/BaseInput";
+import BaseInput from "../forms/base-input";
 
 import { SupportDto } from "../../models/support/support.dto";
 
@@ -38,7 +38,7 @@ export default function Support() {
         <form onSubmit={form.handleSubmit}>
             <Row>
                 <BaseInput
-                    className="col-6 mb-2"
+                    className="col-sm-6 mb-2"
                     label="bug"
                     name="bug"
                     placeholder="bug"
@@ -46,7 +46,7 @@ export default function Support() {
                     formik={form}
                 />
                 <BaseInput
-                    className="col-6 mb-2"
+                    className="col-sm-6 mb-2"
                     label="operating_system"
                     name="operating_system"
                     placeholder="operating_system"
@@ -54,7 +54,7 @@ export default function Support() {
                     formik={form}
                 />
                 <BaseInput
-                    className="col-6 mb-2"
+                    className="col-sm-6 mb-2"
                     label="page-path-url"
                     name="page_path_url"
                     placeholder="page-path-url"

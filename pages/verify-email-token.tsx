@@ -1,4 +1,4 @@
-import { PublicLayout } from "../components/layouts/PublicLayout";
+import { PublicLayout } from "../components/layouts/public-layout";
 
 // PAGE DEPRECATED IN FAVOR OF /login/verify-email
 export default function VerifyEmailToken() {

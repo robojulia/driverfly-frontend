@@ -1,9 +1,9 @@
 import React from 'react';
-import ViewCard from '../viewDetails/viewCard';
+import ViewCard from '../view-details/view-card';
 import { Link } from 'react-bootstrap-icons';
 import { ApplicantStatus } from '../../enums/applicants/applicant-status.enum';
 import ShowEnumFromString from '../enum-filters/show-enum-from-string';
-import ViewTable from '../viewDetails/viewTable';
+import ViewTable from '../view-details/view-table';
 import { ViewApplicantDetailProps } from '../../types/applicant/view-application-detail-props.type';
 
 interface ApplicantJobsAppliedProps extends ViewApplicantDetailProps { }
@@ -17,14 +17,16 @@ export default function ApplicantJobsApplied({ applicant }: ApplicantJobsApplied
                 headers={{
                     title: "JOB",
                     status: "STATUS",
-                    date_applied: "DATE_APPLIED"
+                    date_applied: "DATE_APPLIED",
+                    manager: "MANAGER"
                 }}
                 items={applicant?.jobs?.map(aJob => ({
-                    title: <Link href={`/jobs/${aJob.job.id}/${aJob.job.title}`}><a>{aJob.job.title}</a></Link>,
-                    status: <ShowEnumFromString skipLowerCase popover={true} str={aJob.status} labelPrefix="ApplicantStatus" enumArray={ApplicantStatus} />,
-                    date_applied: new Date(aJob.created_at).toDateString()
+                    title: <a href={`/jobs/${aJob.job.id}/${aJob.job.title}`}>{aJob.job?.title}</a>,
+                    status: <ShowEnumFromString popover={true} value={aJob.status} labelPrefix="ApplicantStatus" enumArray={ApplicantStatus} />,
+                    date_applied: new Date(aJob.created_at).toDateString(),
+                    manager: aJob.manager?.name
                 }))}
             />
-        </ViewCard>
+        </ViewCard >
     )
 }

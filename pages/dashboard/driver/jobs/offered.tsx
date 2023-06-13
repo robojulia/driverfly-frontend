@@ -1,21 +1,21 @@
-import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
+import FullLayout from "../../../../components/dashboard/layouts/full-layout";
 import { Col, Row } from "react-bootstrap";
-import { useAuth } from "../../../../hooks/useAuth";
+import { useAuth } from "../../../../hooks/use-auth";
 import { useState } from "react";
 import JobList from "../../../public/dashboard/styles/css/JobList.module.css"
 import Link from 'next/link';
 import ApplicantApi from '../../../api/applicant';
 import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { CurrencyDollar } from 'react-bootstrap-icons';
 import ShowEnumFromString from '../../../../components/enum-filters/show-enum-from-string';
 import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
-import ViewDataTable, { getDataTableColumnKey } from '../../../../components/viewDetails/viewDataTable';
+import ViewDataTable, { getDataTableColumnKey } from '../../../../components/view-details/view-data-table';
 import OverlyPopover from '../../../../components/popover/overly-popover';
 import { buildAddress } from '../../../../utils/common';
 import { JobDeliveryType } from '../../../../enums/jobs/job-delivery-type.enum';
 import { useEffectAsync } from "../../../../utils/react";
-import PageLayout from "../../../../components/layouts/page/PageLayout";
+import PageLayout from "../../../../components/layouts/page/page-layout";
 import { ApplicantJobEntity } from "../../../../models/applicant/applicant-job.entity";
 
 export default function OfferedJobs() {
@@ -31,21 +31,21 @@ export default function OfferedJobs() {
             const data = await api.me.jobs();
             setApplicantJobs(data.filter(v => v.status === ApplicantStatus.IN_PROCESS_OFFERED_JOB));
         }
-    }, [ user ]);
+    }, [user]);
 
     return (
         <PageLayout
             title="JOBS_OFFERED"
-            >
+        >
             <ViewDataTable<ApplicantJobEntity>
-                    customStyles={{
-                        headCells: {
-                            style: {
-                                background: "#5bb0b9",
-                                color: "white"
-                            },
+                customStyles={{
+                    headRow: {
+                        style: {
+                            background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+                            color: "white"
                         },
-                    }}
+                    },
+                }}
                 columns={[
                     {
                         id: "id",
@@ -98,7 +98,7 @@ export default function OfferedJobs() {
                             popover_header={t('LICENSE_TYPE')}
                             labelPrefix="DriverLicenseType"
                             popover={true}
-                            str={applicant.job.cdl_class}
+                            value={applicant.job.cdl_class}
                             enumArray={DriverLicenseType} />),
                     },
                     {
@@ -142,7 +142,7 @@ export default function OfferedJobs() {
                             popover_header={t('DELIVERY_TYPE')}
                             labelPrefix="JobDeliveryType"
                             popover={true}
-                            str={applicant.job.delivery_type}
+                            value={applicant.job.delivery_type}
                             enumArray={JobDeliveryType} />
                         ),
                     },

@@ -1,20 +1,20 @@
-import FullLayout from "../../../../components/dashboard/layouts/FullLayout";
+import FullLayout from "../../../../components/dashboard/layouts/full-layout";
 import { Col, Row, Card, CardBody, Table } from "reactstrap";
-import { useAuth } from "../../../../hooks/useAuth";
+import { useAuth } from "../../../../hooks/use-auth";
 import { useState } from "react";
-import JobList from "../../../../public/dashboard/styles/css/JobList.module.css"
+import JobList from "../../../../public/dashboard/styles/css/job-list.module.css"
 import Link from 'next/link';
 import ApplicantApi from '../../../api/applicant';
 import { ApplicantStatus } from '../../../../enums/applicants/applicant-status.enum';
-import { useTranslation } from "../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../hooks/use-translation";
 import { CurrencyDollar } from 'react-bootstrap-icons';
 import ShowEnumFromString from '../../../../components/enum-filters/show-enum-from-string';
 import { DriverLicenseType } from '../../../../enums/users/driver-license-type.enum';
-import ViewDataTable, { getDataTableColumnKey } from '../../../../components/viewDetails/viewDataTable';
+import ViewDataTable, { getDataTableColumnKey } from '../../../../components/view-details/view-data-table';
 import { buildAddress } from '../../../../utils/common';
 import OverlyPopover from '../../../../components/popover/overly-popover';
 import { JobDeliveryType } from '../../../../enums/jobs/job-delivery-type.enum';
-import useStorage from "../../../../hooks/useStorage";
+import useStorage from "../../../../hooks/use-storage";
 import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
 import { useEffectAsync } from "../../../../utils/react";
 import { ApplicantJobEntity } from "../../../../models/applicant/applicant-job.entity";
@@ -48,9 +48,9 @@ export default function Index() {
                     <ViewDataTable<ApplicantJobEntity>
                         columnSettingKey={columnSettingKey}
                         customStyles={{
-                            headCells: {
+                            headRow: {
                                 style: {
-                                    background: "#5bb0b9",
+                                    background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
                                     color: "white"
                                 },
                             },
@@ -100,7 +100,7 @@ export default function Index() {
                                     popover_header={t('LICENSE_TYPE')}
                                     labelPrefix="DriverLicenseType"
                                     popover={true}
-                                    str={applicant.job.cdl_class}
+                                    value={applicant.job.cdl_class}
                                     enumArray={DriverLicenseType} />),
                                 selector: applicant => t(`DriverLicenseType.${applicant.job.cdl_class}`),
                             },
@@ -111,7 +111,7 @@ export default function Index() {
                                     popover_header={t('APPLICATION_STATUS')}
                                     labelPrefix="ApplicantStatus"
                                     popover={true}
-                                    str={applicant.status}
+                                    value={applicant.status}
                                     enumArray={ApplicantStatus} />),
                                 selector: applicant => t(`ApplicantStatus.${applicant.status}`),
                             },
@@ -148,7 +148,7 @@ export default function Index() {
                                     popover_header={t('DELIVERY_TYPE')}
                                     labelPrefix="JobDeliveryType"
                                     popover={true}
-                                    str={applicant.job.delivery_type}
+                                    value={applicant.job.delivery_type}
                                     enumArray={JobDeliveryType} />
                                 ),
                                 selector: applicant => t(`JobDeliveryType.${applicant.job.delivery_type}`),

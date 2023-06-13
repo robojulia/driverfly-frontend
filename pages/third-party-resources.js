@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
-import { PublicLayout } from "../components/layouts/PublicLayout";
-import resource from '../public/css/ThirdPartyResources.module.css'
+import Breadcrumb from "../components/breadcrumbs/breadcrumb";
+import { PublicLayout } from "../components/layouts/public-layout";
+import resource from '../public/css/third-party-resources.module.css'
+import { useTranslation } from '../hooks/use-translation';
 
-export default function ThirdPartyResources()
-{
+export default function ThirdPartyResources() {
+
+    const { t } = useTranslation();
+
+
     const types = [
         {
             type: "All",
@@ -370,9 +374,9 @@ export default function ThirdPartyResources()
     const [resourceType, setResourceType] = useState("All");
     const [filteredResources, setFilteredResources] = useState([]);
 
-    useEffect( () => {
+    useEffect(() => {
         // filter for audience (drivers vs companies)
-        let fr = resources.filter( v => {
+        let fr = resources.filter(v => {
             if (audience === "drivers") {
                 return v.for_drivers;
             }
@@ -386,7 +390,7 @@ export default function ThirdPartyResources()
         });
 
         // filter for resource type
-        fr = fr.filter( v => {
+        fr = fr.filter(v => {
             return (resourceType === "All" || resourceType === v.type);
         });
 
@@ -406,15 +410,15 @@ export default function ThirdPartyResources()
     return (
         <>
             <div className="top-links-sec">
-               <div className="container">
-                  <div className="top-links-inner d-flex align-items-center justify-content-between">
-                     <h2>Third Party Resources</h2>
-                      < Breadcrumb />
-                  </div>
-               </div>
+                <div className="container">
+                    <div className="top-links-inner d-flex align-items-center justify-content-between">
+                        <h2>{t("THIRD_PARTY_RESOURCES")}</h2>
+                        < Breadcrumb />
+                    </div>
+                </div>
             </div>
 
-            <div className="container mt-5 mb-5 p-lg-2 p-0">
+            <div className="container mt-5 mb-5">
                 <div className="resource-audience-filter-sec">
                     <label>
                         Audience Type:
@@ -431,21 +435,20 @@ export default function ThirdPartyResources()
                         Resource Type:
                         {
                             // only show types for the chosen audience type
-                            types.map(function(obj, id) {
+                            types.map(function (obj, id) {
                                 if (
                                     audience === "all" ||
                                     (audience === "drivers" && obj.for_drivers) ||
                                     (audience === "oo" && obj.for_oo) ||
                                     (audience === "companies" && obj.for_companies)
-                                )
-                                {
+                                ) {
                                     return (
                                         <div className={resource.resource_type_button}>
                                             <button
                                                 name={obj.type}
                                                 onClick={handleChangeResourceType}
                                             >
-                                                { obj.type }
+                                                {obj.type}
                                             </button>
                                         </div>
                                     )
@@ -457,12 +460,12 @@ export default function ThirdPartyResources()
 
                 <div className="resource-list-sec">
                     {
-                        filteredResources.map(function(obj, id) {
+                        filteredResources.map(function (obj, id) {
                             return (
                                 <div>
-                                    <h5> { obj.company } </h5>
+                                    <h5> {obj.company} </h5>
                                     <p>
-                                        { obj.description }
+                                        {obj.description}
                                         <br />
                                         <a href={obj.link} target="_blank"> Learn more. </a>
                                     </p>
@@ -479,7 +482,7 @@ export default function ThirdPartyResources()
 ThirdPartyResources.getLayout = function getLayout(page) {
     return (
         <PublicLayout title="THIRD_PARTY_RESOURCES">
-        {page}
+            {page}
         </PublicLayout>
     )
 }

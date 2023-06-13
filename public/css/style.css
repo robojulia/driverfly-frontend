@@ -141,6 +141,19 @@ a:hover {
     border-color: #2da2af !important;
 }
 
+.call-buttons>.btn-danger:not(:disabled):not(.disabled).active,
+.call-buttons>.btn-danger:not(:disabled):not(.disabled):active {
+    color: #fff;
+    background-color: #ab0505 !important;
+    border-color: #ab0505 !important;
+}
+
+.call-buttons>.btn-danger.focus,
+.call-buttons>.btn-danger:focus {
+    background-color: #990404 !important;
+    border-color: #990404 !important;
+}
+
 
 strong {
     font-family: sans-serif;
@@ -174,6 +187,11 @@ h2 {
 
 }
 
+.header-sec .dropdown-item,
+.rbt .dropdown-item {
+    color: rgb(201, 192, 192) !important;
+}
+
 /************************** HEADER-SEC ***************************/
 .header-sec {
     background: #060606F7;
@@ -181,10 +199,19 @@ h2 {
     position: relative;
 }
 
+.navbar-nav a a {
+    color: #fff !important;
+    text-decoration: none !important;
+}
+
 .header-sec .navbar {
     width: 80%;
     display: inline-block;
     text-align: end;
+}
+
+.header-sec .navbar-dark .navbar-toggler {
+    background: #183745;
 }
 
 .logo {
@@ -238,7 +265,6 @@ h2 {
     color: #aaa !important;
     font-size: 15px;
     line-height: 35px;
-    /* padding: 0px; */
 }
 
 .dropdown-item:hover {
@@ -416,7 +442,7 @@ li:hover ul {
 }
 
 .results-count.mt-4 {
-    font-size: 20px;
+    font-size: 23px;
 }
 
 .filter-btn-groups {
@@ -494,10 +520,10 @@ li:hover ul {
 }
 
 .media h4 {
-    color: #2da2af;
+    color: #2da2af !important;
     font-size: 18px;
     margin: 7px 0px !important;
-    font-weight: 400;
+    font-weight: 600;
 }
 
 .job-date-author {
@@ -564,14 +590,14 @@ span.urgent {
 }
 
 .page-numbers:hover {
-    background: #357694 !important;
+    background: linear-gradient(to bottom right, #1b4454, #2ec8c4) !important;
     transition: all 0.3s;
     text-decoration: none;
     color: white !important;
 }
 
 .page-numbers.current.active {
-    background: #1D4354 !important;
+    background: linear-gradient(to bottom right, #2ec8c4, #1b4454) !important;
     color: white !important;
 }
 
@@ -901,19 +927,15 @@ input[type='range']::-webkit-slider-thumb {
 
 .faq-sec .card-header {
     box-shadow: 1px 1px 4px rgb(0 0 0 / 9%);
-
 }
 
 .card-header {
     color: #6a6a6a;
     text-align: left;
-
-
 }
 
 .card-header:hover {
     color: #2da2af;
-
 }
 
 .faq_question_widget .widget_list {
@@ -1096,7 +1118,7 @@ img.who-we-img.img-fluid {
 
 .testimonial-sec {
     background: #fafafa;
-    padding: 140px 0px 0px;
+    padding: 80px 0px 0px;
 }
 
 .custom-tst .item {
@@ -1105,8 +1127,8 @@ img.who-we-img.img-fluid {
 }
 
 .Slider_owl-next {
-    width: 60px;
-    height: 50px;
+    width: 65px;
+    height: 60px;
     line-height: 50px;
     background: white !important;
     font-size: 18px !important;
@@ -1240,10 +1262,9 @@ img.who-we-img.img-fluid {
 }
 
 .hero-sec {
-    /* background: linear-gradient(to bottom, #7a7a7a 0%, rgb(0 123 255 / 25%) 100%), url(/img/truck-on-windy-road-hero-min.jpg); */
-    background: linear-gradient(to bottom, #7a7a7a 0%, rgb(0 123 255 / 25%) 100%), url(/img/banner.png);
+    background: url(/img/banner.png);
     background-color: #9f9b9b91;
-    background-position: center;
+    background-position: 50%;
     background-repeat: no-repeat;
     background-size: cover;
     background-blend-mode: multiply;
@@ -1373,12 +1394,14 @@ img.who-we-img.img-fluid {
 
 /******************************* TABS-SEC ***************************/
 .tab-sec {
-    padding: 60px 0px;
+    padding: 100px 0px 70px 0px;
 }
 
 .tab-content .media {
-    padding: 25px 80px 25px 20px;
+    padding: 45px 80px 40px 20px;
     border: 1px solid lightgrey;
+    background: rgb(250, 254, 255);
+    background: linear-gradient(127deg, rgba(250, 254, 255, 1) 61%, rgba(250, 254, 255, 1) 66%, rgb(115 231 255 / 56%) 91%, rgb(115 231 255 / 56%) 91%, rgb(0 212 255 / 34%) 97%);
 }
 
 .tab-content .media h4 {
@@ -1400,33 +1423,39 @@ img.who-we-img.img-fluid {
 }
 
 .tab-sec .nav-link.active {
-    background: #252834 !important;
-    color: white !important;
+    background: #ffc107 !important;
+    color: #fff !important;
 }
 
 .tab-sec .nav-link {
     border: none !important;
-    background: white !important;
-    color: #252834 !important;
+    background-color: #2EC8C4 !important;
+    color: #fff !important;
     font-size: 16px;
     font-weight: 500;
-    padding: 12px 50px;
+    padding: 18px 60px;
     display: inline-block;
-    border-radius: 4px;
+    margin-right: -10px;
+    border-radius: 5px;
+
 }
 
 .tab-sec ul.nav.nav-tabs {
     justify-content: center;
     border: none;
-    background: #252834 !important;
-    width: 400px;
+    width: 450px;
     margin: 0px auto;
-    padding: 6px 0px;
+    padding: 3px 0px;
     border-radius: 4px;
 }
 
 .tab-sec ul.nav.nav-tabs li {
-    padding: 1px;
+    padding: 0px;
+}
+
+.nav-tabs .nav-link:hover,
+.nav-tabs .nav-link:focus {
+    isolation: auto !important;
 }
 
 /************************** DRIVER-SEC **********************/
@@ -1450,8 +1479,8 @@ img.who-we-img.img-fluid {
 }
 
 .Slider_owl-prev {
-    width: 60px;
-    height: 50px;
+    width: 65px;
+    height: 60px;
     line-height: 50px;
     background: white !important;
     font-size: 18px !important;
@@ -1818,10 +1847,6 @@ li.link-wrapper>a.active {
     border-bottom: 1px solid #ced4da;
 }
 
-/* .ort-general a {
-    color: #000 !important;
-} */
-
 .ort-general p {
     margin: 0px;
     color: #6a6a87;
@@ -1871,7 +1896,6 @@ li.link-wrapper>a.active {
 .hire-driver-item {
     width: 50%;
     padding: 30px;
-    height: 300px;
     line-height: 1;
     transition: background 0.3s, border-radius 0.3s, opacity 0.3s;
 }
@@ -1882,7 +1906,6 @@ li.link-wrapper>a.active {
 
 .hire-driver-left {
     position: relative;
-    height: 300px;
 }
 
 .hire-driver-left::before {
@@ -1913,9 +1936,10 @@ li.link-wrapper>a.active {
 
 .hire-driver-item p {
     color: #fff;
-    font-size: 23px;
+    font-size: 18px;
     line-height: 30px;
     position: relative;
+    margin: 0;
 }
 
 .opacity-overly {
@@ -1976,6 +2000,7 @@ li.link-wrapper>a.active {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: 100px;
 }
 
 .get-feature-section::before {
@@ -2012,8 +2037,28 @@ li.link-wrapper>a.active {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    background-image: linear-gradient(180deg, #1e1e1ca8, rgb(0 0 0 / 25%)), url(/img/truck-on-windy-road-hero-min.jpg);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+
+
 
 }
+
+/* .news-letter-signup-sec::before {
+    content: "";
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    opacity: 0.45;
+    background-attachment: fixed;
+} */
 
 .news-letter-signup-sec p {
     font-size: 16px;
@@ -2022,6 +2067,15 @@ li.link-wrapper>a.active {
 }
 
 /* muli crousal styling */
+.company_slider {
+    margin-top: 100px;
+}
+
+.company_slider a,
+.company_slider:hover a {
+    text-decoration: none;
+}
+
 .react-multi-carousel-dot button {
     border-color: #2EC8C4 !important;
     width: 15px !important;
@@ -2142,4 +2196,161 @@ input[type=checkbox] {
 
 .get_result_text {
     color: #5dcac4 !important;
+}
+
+.signup-driver-section .signup-driver-item {
+    width: 50%;
+    padding: 30px;
+    line-height: 1;
+    transition: background 0.3s, border-radius 0.3s, opacity 0.3s;
+}
+
+.signup-driver-right {
+    position: relative;
+    height: 475px;
+
+}
+
+.signup-driver-section .signup-driver-right::before {
+    background: url(/img/googleusercontent.png);
+    content: "";
+    background-size: cover;
+    position: absolute;
+    background-position: center center;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: -3px;
+}
+
+.signup-driver-section .signup-driver-left {
+    background-color: #5db1bb;
+
+    opacity: 1;
+    position: relative;
+    height: 475px;
+
+}
+
+.signup-driver-section .signup-driver-item h1 {
+    color: #fff;
+    font-size: 42px;
+    font-weight: 500;
+    position: relative;
+    padding: 0px 105px;
+
+}
+
+.signup-driver-section .signup-driver-item p {
+    color: #fff;
+    font-size: 23px;
+    line-height: 30px;
+    position: relative;
+}
+
+/*  Home motor carrier section css*/
+
+.motor-carrier-bg {
+    background: linear-gradient(to bottom, rgb(8 177 184 / 85%) 0%, rgb(8 177 184 / 85%) 100%), url(/img/motor-carrier.jpeg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.motor-carrier {
+    color: #fff;
+    font-weight: 700;
+
+}
+
+.motor-carrier-bg a {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+}
+
+.motor-carrier-bg:hover a {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+}
+
+.job-list_sec {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+input[type='radio']:checked:after {
+    width: 16px;
+    height: 16px;
+    border-radius: 15px;
+    top: 0px;
+    left: 8px;
+    position: relative;
+    background: linear-gradient(to bottom right, #2ec8c4, #1b4454) !important;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid white;
+}
+
+/* Styling only for Firefox browser */
+@supports (-moz-appearance:none) {
+    .range-slider__wrap {
+        height: calc(3em + 0.75rem + 2px) !important;
+        margin-top: -25px !important;
+    }
+
+    input[type="range"].range-slider {
+        height: calc(0.5em + 0.75rem + 2px) !important;
+    }
+
+    input[type="range"]:nth-child(1)::-moz-range-thumb {
+        transform: translateY(0px) !important;
+    }
+
+    .range-slider__wrap .range-slider__tooltip .range-slider__tooltip__label {
+        top: 80% !important;
+    }
+
+    .range-slider__wrap .range-slider__tooltip .range-slider__tooltip__caret::before {
+        top: 21px !important;
+    }
+
+    .custom-range::-moz-range-track {
+        background-color: #2ec8c4 !important;
+    }
+
+    .fire-fox-cls {
+        margin-bottom: 30px !important;
+    }
+}
+
+/* End Styling only for Firefox browser */
+
+.single-past-employer-items {
+    border-width: 1px 1px 1px 4px;
+    border-style: solid;
+    border-color: #fff;
+    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.single-past-employer-items::after {
+    transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.single-past-employer-items:hover {
+    border-color: #2da2af;
+    transform: scale(1.01, 1.011);
+}
+
+.single-past-employer-items:hover::after {
+    opacity: 1;
+}
+
+button:focus,
+button:active {
+    color: #1976d2;
 }

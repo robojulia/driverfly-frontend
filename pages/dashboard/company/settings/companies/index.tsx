@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
-import PageLayout from "../../../../../components/layouts/page/PageLayout";
+import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
+import PageLayout from "../../../../../components/layouts/page/page-layout";
 import { Col, Row } from "reactstrap";
-import { useAuth } from '../../../../../hooks/useAuth';
+import { useAuth } from '../../../../../hooks/use-auth';
 import { useRouter } from "next/router"
-import { useTranslation } from "../../../../../hooks/useTranslation";
+import { useTranslation } from "../../../../../hooks/use-translation";
 import { EyeFill, PenFill, TrashFill } from 'react-bootstrap-icons';
-import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/viewDetails/viewDataTable";
+import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/view-details/view-data-table";
 import { Status } from '../../../../../enums/status.enum';
 import { useEffectAsync } from '../../../../../utils/react';
 import { globalAjaxExceptionHandler } from '../../../../../utils/ajax';
@@ -74,13 +74,13 @@ export default function CompanyList() {
       <ViewDataTable<CompanyEntity>
         columnSettingKey={columnSettingKey}
         customStyles={{
-          headCells: {
-              style: {
-                  background: "#5bb0b9",
-                  color: "white"
-              },
+          headRow: {
+            style: {
+              background: "linear-gradient(to bottom right, #2ec8c4, #1b4454ba)",
+              color: "white"
+            },
           },
-      }}
+        }}
         columns={[
           {
             id: "id",

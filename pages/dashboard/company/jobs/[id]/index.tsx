@@ -1,17 +1,17 @@
-import FullLayout from "../../../../../components/dashboard/layouts/Layout/FullLayout";
-import ChildPageLayout from "../../../../../components/layouts/page/ChildPageLayout";
+import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
+import ChildPageLayout from "../../../../../components/layouts/page/child-page-layout";
 import { toast } from "react-toastify";
 import { Button, ButtonGroup } from "react-bootstrap";
 import { Pencil } from "react-bootstrap-icons";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useEffectAsync } from "../../../../../utils/react";
-import { useAuth } from "../../../../../hooks/useAuth";
-import { useTranslation } from "../../../../../hooks/useTranslation";
+import { useAuth } from "../../../../../hooks/use-auth";
+import { useTranslation } from "../../../../../hooks/use-translation";
 
 import JobApi from "../../../../api/job";
 import { JobEntity } from "../../../../../models/job/job.entity";
-import { DeleteButton } from "../../../../../components/buttons/DeleteButton";
+import { DeleteButton } from "../../../../../components/buttons/delete-button";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import ViewJobDetail from "../../../../../components/jobs/view-job-detail";
 

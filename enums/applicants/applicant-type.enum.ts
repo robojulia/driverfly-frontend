@@ -1,4 +1,6 @@
 export enum ApplicantType {
     USER = "USER",
-    COMPANY = "COMPANY"
+    COMPANY = "COMPANY", // Directly inserted by company 
+    DHA = "DHA", // through Digital Hiring App
+    DIRECT_JOB_APPLY = "DIRECT_JOB_APPLY", // Directly applied on job
 }
