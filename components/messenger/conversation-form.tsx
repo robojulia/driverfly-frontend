@@ -2,7 +2,7 @@ import axios, { CancelTokenSource } from "axios";
 import { useFormik } from "formik";
 import React from "react";
 import { useEffect, useState } from "react";
-import { Card, Form } from "react-bootstrap";
+import { Card, Col, Form, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { ChattableType } from "../../enums/conversation/chattable-type.enum";
 import { useTranslation } from "../../hooks/useTranslation";
@@ -28,8 +28,8 @@ export function ConversationForm(props: ConversationFormProps) {
     const { t } = useTranslation();
 
     const form = useFormik({
-        validateOnChange:false,
-        validateOnBlur:false,
+        validateOnChange: false,
+        validateOnBlur: false,
         initialValues: new ConversationEntity.CreateDto(),
         validationSchema: ConversationEntity.CreateDto.yupSchema(),
         onSubmit: async (dto) => {
@@ -161,13 +161,21 @@ export function ConversationForm(props: ConversationFormProps) {
                 (entity.id || canCreate) &&
                 <Card.Footer>
                     <Form className="form-outline" onSubmit={form.handleSubmit}>
-                        <BaseTextArea
-                            name="message"
-                            formik={form}
-                            readOnly={!entity.id && !canCreate}
-                            required
-                            placeholder="MESSAGE" />
-                        <button type="submit" className="btn btn-info float-end my-2">{t("SEND")}</button>
+                        <Row>
+                            <Col md={10}>
+                                <BaseTextArea
+                                    name="message"
+                                    formik={form}
+                                    readOnly={!entity.id && !canCreate}
+                                    required
+                                    placeholder="MESSAGE" />
+                            </Col>
+                            <Col md={2}>
+                                <div className="d-flex justify-content-center align-items-center h-100">
+                                    <button type="submit" className=" btn btn-info float-end">{t("SEND")}</button>
+                                </div>
+                            </Col>
+                        </Row>
                     </Form>
                 </Card.Footer>
             }
