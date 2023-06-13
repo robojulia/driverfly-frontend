@@ -1999,5 +1999,7 @@
   "DHA_welcome_note": "Welcome to our Digital Hiring Applicatiion",
   "COMPANY_PREFERENCE_DHA_NOTE": "To maximize yopur recruiting pipeline,fill out your company level preference in the fields below and copy and paste the URL provided to all your external job postings and communications. All applicants will be passed directly into your applicants tab",
   "LEARN_MORE_ABOUT_BENEFITS": "To learn more about the full benefits, go to ",
-  "DHA_LINK": "digitalhiringapp.com"
+  "DHA_LINK": "digitalhiringapp.com",
+  "BUSINESS_NAME": "If you have a separate business name, please provide here:",
+  "DOT_NUMBER": "If you have a DOT number, please provide here:"
 }
