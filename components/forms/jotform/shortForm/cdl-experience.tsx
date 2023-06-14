@@ -142,22 +142,27 @@ export function CdlExperience() {
 						)}
 					</>
 				)}
-				<Row className={styles.bold}>
-					<BaseInput
-						className="col-12"
-						name="BUSINESS_NAME.value"
-						label="BUSINESS_NAME"
-						formik={form}
-					/>
-				</Row>
-				<Row className={styles.bold}>
-					<BaseInput
-						className="col-12"
-						name="DOT_NUMBER.value"
-						label="DOT_NUMBER"
-						formik={form}
-					/>
-				</Row>
+				{Boolean(form.values.is_owner_operator) && (
+					<>
+						<Row className={styles.bold}>
+							<BaseInput
+								className="col-12"
+								name="BUSINESS_NAME.value"
+								label="BUSINESS_NAME"
+								formik={form}
+							/>
+						</Row>
+						<Row className={styles.bold}>
+							<BaseInput
+								className="col-12"
+								name="DOT_NUMBER.value"
+								label="DOT_NUMBER"
+								formik={form}
+							/>
+						</Row>
+					</>
+				)}
+
 
 				<Row className="mt-5">
 					<Col>
