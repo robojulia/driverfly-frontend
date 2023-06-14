@@ -114,7 +114,7 @@ export function HearAbout() {
 							className="float-md-left float-right"
 							type="submit"
 						>
-							{t("SUBMIT")} <LoaderIcon isLoading={!!form?.isSubmitting} />
+							{t("NEXT")} <LoaderIcon isLoading={!!form?.isSubmitting} />
 						</Button>
 					</Col>
 				</Row>

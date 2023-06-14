@@ -134,6 +134,14 @@ export class ApplicantExtrasEntity {
 					is: ApplicantExtras.SIGNATURE_GENERAL_CONSENT,
 					then: yup.string().required().nullable(),
 				})
+				.when("type", {
+					is: ApplicantExtras.BUSINESS_NAME,
+					then: yup.string().optional().nullable(),
+				})
+				.when("type", {
+					is: ApplicantExtras.DOT_NUMBER,
+					then: yup.string().optional().nullable(),
+				})
 		});
 	}
 }
