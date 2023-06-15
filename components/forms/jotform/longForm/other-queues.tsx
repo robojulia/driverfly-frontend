@@ -85,6 +85,7 @@ export function OtherQueues() {
                     label="QUALIFIED_TO_MANUAL_DRIVING"
                     formik={form}
                 />
+                <p className="text-black mt-2 mbb-0"><strong>{t('PLEASE_SELECT_ENDORSEMENT')}</strong></p>
                 <BaseCheckList
                     className="col-12"
                     label="ENDORSEMENTS"
