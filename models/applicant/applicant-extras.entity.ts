@@ -8,6 +8,7 @@ import { BackgroundInfoLineAddress } from "../jot-form/long-form/backgorund-info
 import { CdlExtras } from "../jot-form/long-form/cdl-object/index.dto";
 import { VioalationExtrasEntity } from "../jot-form/long-form/violaton-history/index.dto";
 import { WorkedBeforeExtrasDto } from "../jot-form/long-form/worked-before/index.dto";
+import { BooleanTypeExtra } from "../../enums/jotform/bool-and-not-sure.enum";
 
 export class ApplicantExtrasEntity {
 	constructor(type?: ApplicantExtras) {
@@ -24,7 +25,7 @@ export class ApplicantExtrasEntity {
 				.mixed()
 				.when("type", {
 					is: ApplicantExtras.AUTHORIZE_TO_COMMUNICATE,
-					then: yup.string().required().nullable(),
+					then: yup.string().required().nullable().default(BooleanTypeExtra.YES),
 				})
 				.when("type", {
 					is: ApplicantExtras.ACCIDENT_DETAILS,

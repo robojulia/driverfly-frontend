@@ -22,25 +22,15 @@ export function BasicInfo() {
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
-	const [openModal, setOpenModal] = useState<boolean>(false)
-	const [otp, setOtp] = useState<string>('')
-	const [showOtpField, seShowtOtpField] = useState<boolean>(false)
 
 	const form = useFormik({
 		initialValues: new ContactDto(),
 		validationSchema: ContactDto.yupSchema(),
-		onSubmit: async (values, { setErrors }) => {
+		onSubmit: async (values) => {
 			console.log("values", values);
 			try {
 				const { email, zip_code, AUTHORIZE_TO_COMMUNICATE } = values;
-				const applicantApi = new ApplicantApi()
-				// const applicantEmailExists = await applicantApi.searchByPublic({ email })
 
-				// if (applicantEmailExists) {
-				setOpenModal(true)
-				// } else if (applicantPhoneExists) {
-				// 	setErrors({ phone: 'ALREADY_EXISTS' })
-				// } else {
 				setApplicant({
 					...applicant,
 					email,
@@ -50,7 +40,7 @@ export function BasicInfo() {
 				updateApplicantExtras(AUTHORIZE_TO_COMMUNICATE);
 
 				stepNext();
-				// }
+
 			} catch (error) {
 				console.log("error", error);
 			}
@@ -68,10 +58,14 @@ export function BasicInfo() {
 			...form.values,
 			AUTHORIZE_TO_COMMUNICATE: !!apx?.type
 				? apx
-				: new ApplicantExtrasEntity(ApplicantExtras.AUTHORIZE_TO_COMMUNICATE),
+				: {
+					...new ApplicantExtrasEntity(ApplicantExtras.AUTHORIZE_TO_COMMUNICATE),
+					value: BooleanTypeExtra.YES
+				},
 			email: applicant.email,
 			zip_code: applicant.zip_code,
 		});
+
 	}, []);
 	return (
 		<>
