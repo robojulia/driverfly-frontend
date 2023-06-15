@@ -97,8 +97,8 @@ export class ApplicantEntity {
 
 	static yupSchema() {
 		return yup.object({
-			first_name: yup.string().required().nullable(),
-			last_name: yup.string().required().nullable(),
+			first_name: yup.string().required().nullable().trim(),
+			last_name: yup.string().required().nullable().trim(),
 			phone: yup.string().nullable(),
 			email: yup.string().email().required().nullable(),
 			birthdate: yup.date().nullable(),
