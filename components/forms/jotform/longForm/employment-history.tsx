@@ -151,7 +151,6 @@ export function EmploymentHistory() {
 							/>
 							<BaseInput
 								className="col-md-6 my-3"
-								required
 								name="employer.email"
 								label="CURRENT_COMPANY_EMAIL"
 								placeholder="email"
