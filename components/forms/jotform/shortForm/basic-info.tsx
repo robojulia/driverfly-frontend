@@ -72,6 +72,7 @@ export function BasicInfo() {
 			email: applicant.email,
 			zip_code: applicant.zip_code,
 		});
+		form.setFieldValue("AUTHORIZE_TO_COMMUNICATE.value", BooleanTypeExtra.YES)
 	}, []);
 	return (
 		<>
