@@ -174,6 +174,7 @@ export function Messenger(props) {
         setConversations(newConversations);
     }
 
+
     const onConversationToChange = (e: CreateConversationDto) => {
         if (e.chattable_id) {
             const existing = conversations.find(v => v.chattable_id === e.chattable_id && v.chattable_type === e.chattable_type);
@@ -189,6 +190,7 @@ export function Messenger(props) {
 
     /* A hook that is used to initialize the socket connection to the server. */
     useEffectAsync(() => socketInitializer(user, conversations, onConversationClick, t, toast), [user]);
+    console.log("entity form masseger parent", conversation)
 
     return (
         <Row>

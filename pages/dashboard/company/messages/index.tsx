@@ -1,6 +1,6 @@
 
 import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
-import React from "react";
+import React, { useEffect } from "react";
 
 import PageLayout from "../../../../components/layouts/page/page-layout";
 
@@ -15,14 +15,14 @@ export default function MessageList() {
     const getOptions = async (query: string, cancellationToken: CancelTokenSource) => {
         const api = new ApplicantApi();
 
-        const applicants = await api.search({
+        const applicants = (await api.search({
             last_name: query,
             first_name: query,
             // email: query,
             phone: query
         }, {
             cancelToken: cancellationToken.token
-        });
+        }))?.filter(ap => !!ap?.phone);
 
         return applicants.map(v => ({
             text: `${v.first_name} ${v.last_name}`,
@@ -32,6 +32,7 @@ export default function MessageList() {
                 chattable_name: v.user?.name || `${v.first_name} ${v.last_name}`
             }
         }));
+
     };
 
     return (
