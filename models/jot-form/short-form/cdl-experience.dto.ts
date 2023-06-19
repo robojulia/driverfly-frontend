@@ -1,10 +1,13 @@
 import * as yup from "yup";
 import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum";
+import { ApplicantExtrasEntity } from "../../applicant";
 
 export class CdlDto {
   license_type: string;
   years_cdl_experience: number;
   is_owner_operator: boolean = false;
+  BUSINESS_NAME: ApplicantExtrasEntity;
+  DOT_NUMBER: ApplicantExtrasEntity;
 
   static yupSchema() {
     return yup.object({
@@ -24,6 +27,8 @@ export class CdlDto {
         })
         .nullable(),
       is_owner_operator: yup.boolean().nullable(),
+      BUSINESS_NAME: ApplicantExtrasEntity.yupSchema(),
+      DOT_NUMBER: ApplicantExtrasEntity.yupSchema(),
     });
   }
 }

@@ -25,7 +25,8 @@ export function HalfWay() {
 	return (
 		<>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<div className="d-flex justify-content-center mt-n4 w-100" style={{height: '200px'}}>
+				<h1 className={`${styles.heading__sty} mt-0 pt-0`}>{t("HALF_WAY_DONE")}</h1>
+				<div className="d-flex justify-content-center mt-n4 w-100" style={{ height: '200px' }}>
 					<img src='/img/gifs/simpsonRunning.gif' alt="simpsons" />
 				</div>
 				<h1 className={`${styles.heading__sty} mt-0 pt-0`}>{t("HARD_QUESTIONS")}</h1>

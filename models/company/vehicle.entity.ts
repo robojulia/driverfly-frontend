@@ -39,7 +39,7 @@ export class VehicleEntity {
                 then: yup.string().required().nullable(),
             }).nullable(),
             transmission_type: yup.string().nullable(),
-            make: yup.string().required().nullable(),
+            make: yup.string().required().nullable().trim(),
             model: yup.string().nullable(),
             year: yup.number().min(1900).nullable(),
             photo: yup.mixed().when({

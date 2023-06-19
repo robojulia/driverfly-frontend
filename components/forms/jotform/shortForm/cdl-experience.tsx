@@ -9,12 +9,14 @@ import { CdlDto } from "../../../../models/jot-form/short-form/cdl-experience.dt
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { useContext, useEffect } from "react";
 import styles from "../../../../styles/digitalhiringapp.module.css";
+import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import { ApplicantExtrasEntity } from "../../../../models/applicant";
 
 
 export function CdlExperience() {
 	const {
-		state: { applicant },
-		method: { setApplicant, stepNext, stepBack, setApplicantExtras },
+		state: { applicant, applicantExtras },
+		method: { setApplicant, stepNext, stepBack, setApplicantExtras, updateApplicantExtras },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
@@ -23,13 +25,16 @@ export function CdlExperience() {
 		initialValues: new CdlDto(),
 		validationSchema: CdlDto.yupSchema(),
 		onSubmit: (values) => {
-			const { license_type, years_cdl_experience, is_owner_operator } = values;
+			const { license_type, years_cdl_experience, is_owner_operator, BUSINESS_NAME, DOT_NUMBER } = values;
+
 			setApplicant({
 				...applicant,
 				license_type,
 				years_cdl_experience,
 				is_owner_operator,
 			});
+			updateApplicantExtras(BUSINESS_NAME)
+			updateApplicantExtras(DOT_NUMBER)
 			stepNext();
 		},
 		onReset: (values) => {
@@ -39,10 +44,23 @@ export function CdlExperience() {
 	useEffect(() => {
 		// setApplicantExtras([...applicant?.extras])
 		const { license_type, years_cdl_experience, is_owner_operator } = applicant;
+
+		const apx_business_name = applicantExtras?.find(
+			(v) => v.type === ApplicantExtras.BUSINESS_NAME
+		);
+		const apx_dot_number = applicantExtras?.find(
+			(v) => v.type === ApplicantExtras.DOT_NUMBER
+		);
 		form.setValues({
 			license_type: license_type || null,
 			years_cdl_experience: years_cdl_experience || null,
 			is_owner_operator: is_owner_operator || null,
+			BUSINESS_NAME: !!apx_business_name?.type
+				? apx_business_name
+				: new ApplicantExtrasEntity(ApplicantExtras.BUSINESS_NAME),
+			DOT_NUMBER: !!apx_business_name?.type
+				? apx_dot_number
+				: new ApplicantExtrasEntity(ApplicantExtras.DOT_NUMBER),
 		});
 	}, []);
 
@@ -72,6 +90,11 @@ export function CdlExperience() {
 				break;
 		}
 	}
+	useEffect(() => {
+		console.log("form.values", form.values)
+		console.log("form.errors", form.errors)
+	}, [form.values, form.errors])
+
 	return (
 		<>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
@@ -119,6 +142,27 @@ export function CdlExperience() {
 						)}
 					</>
 				)}
+				{Boolean(form.values.is_owner_operator) && (
+					<>
+						<Row className={styles.bold}>
+							<BaseInput
+								className="col-12"
+								name="BUSINESS_NAME.value"
+								label="BUSINESS_NAME"
+								formik={form}
+							/>
+						</Row>
+						<Row className={styles.bold}>
+							<BaseInput
+								className="col-12"
+								name="DOT_NUMBER.value"
+								label="DOT_NUMBER"
+								formik={form}
+							/>
+						</Row>
+					</>
+				)}
+
 
 				<Row className="mt-5">
 					<Col>
