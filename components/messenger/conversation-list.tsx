@@ -41,7 +41,7 @@ export interface ConversationListItemProps {
 
 export function ConversationListItem(props: ConversationListItemProps) {
     const { entity, onDelete } = props;
-
+    console.log("entity form masseger child", entity)
     return (
         <div className="d-flex justify-content-between text-start">
             <div className="pt-1">

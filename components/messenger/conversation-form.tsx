@@ -172,7 +172,7 @@ export function ConversationForm(props: ConversationFormProps) {
                     return t("NONE");
                 })()}
             </Card.Header>
-            <Card.Body>
+            {Boolean(entity.lastMessage) && <Card.Body>
                 <ul className="list-unstyled" style={{ overflowY: "auto", height: "50vh" }}>
                     {
                         entity?.messages?.map((m, i, a) => (
@@ -181,6 +181,9 @@ export function ConversationForm(props: ConversationFormProps) {
                     }
                 </ul>
             </Card.Body>
+            
+            }
+           
             {
                 (entity.id || canCreate) &&
                 <Card.Footer>
