@@ -4,7 +4,7 @@ import React from "react";
 
 import PageLayout from "../../../../components/layouts/page/page-layout";
 
-import { ApplicantApi } from "../../../api/applicant";
+import ApplicantApi from "../../../api/applicant";
 
 import { ChattableType } from "../../../../enums/conversation/chattable-type.enum";
 import { CancelTokenSource } from "axios";

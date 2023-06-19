@@ -379,4 +379,3 @@ class ApplicantApi extends BaseApi {
 }
 
 export default ApplicantApi;
-export { ApplicantApi };
