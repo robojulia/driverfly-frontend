@@ -46,6 +46,9 @@ import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum
 import { JobGeography } from "../../../enums/jobs/job-geography.enum";
 import { CompanyManagerEntity } from "../../../models/company/company-manager.entity";
 import CompanyApi from "../../../pages/api/company";
+import ViewModal from "../../view-details/view-modal";
+import { EmployeeEntity } from "../../../models/applicant/employee.entity";
+import EmployeeApi from "../../../pages/api/employee";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> {
 }
@@ -147,36 +150,51 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		)
 	}, [form.values.jobs]);
 
+	const hireApplicantForm = useFormik({
+		initialValues: new EmployeeEntity(),
+		validationSchema: EmployeeEntity.yupSchema(),
+		onSubmit: async (values) => {
+			try {
+				const employeeApi = new EmployeeApi()
+				const data = await employeeApi.create(entity.id, values.job.id, values)
+				entity.employee = data;
+				hireApplicantForm.resetForm();
+				formSuccess(t, "hired", "STATUS");
+			} catch (e) {
+				globalAjaxExceptionHandler(e, { formik: hireApplicantForm, t: t, toast: toast });
+			}
+		},
+	});
+
+	useEffect(() => {
+		console.log("hireApplicantForm.errors", hireApplicantForm.errors);
+	}, [hireApplicantForm.errors]);
+
 	return (
 		<EntityForm
 			id={entity?.id}
 			formik={form}
 			onSubmit={form.handleSubmit}
 			className={className}
+			actions={[
+				{
+					label: "HIRE",
+					className: "btn theme-primary-btn",
+					hide: !Boolean(form.values.id),
+					disabled: form.isSubmitting,
+					onClick: () => {
+						hireApplicantForm.setValues({ ...(entity.employee ?? new EmployeeEntity(0)) })
+						hireApplicantForm.setFieldValue('job.id', entity?.employee?.job?.id ?? null)
+						hireApplicantForm.setFieldValue('status', ApplicantStatus.COMPLETED_EMPLOYED)
+					},
+				}
+			]}
 		>
 			<Row>
 				<Col className="p-0 px-lg-2 mt-3">
 					<ViewCard title="BASIC_DETAILS">
 						<Row>
 							<Col md="4" className="px-2">
-								{jobHired
-									? <BaseSelect
-										className="col-12"
-										name={`current_application_status`}
-										required
-										placeholder="APPLICANT_CURRENT_STATUS"
-										label="APPLICANT_CURRENT_STATUS"
-										labelPrefix="ApplicantStatus"
-										enumType={ApplicantStatus}
-										formik={form}
-									/>
-									: <BaseInput
-										className="col-12"
-										label="APPLICANT_CURRENT_STATUS"
-										readOnly
-										value={t('GENERAL_INTAKE')}
-									/>
-								}
 								<BaseInput
 									className="col-12"
 									label="FIRST_NAME"
@@ -313,6 +331,20 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									enumType={JobGeography}
 
 								/>
+
+								{form.values.id
+									&& <BaseSelect
+										className="col-12 mt-2"
+										name={`current_application_status`}
+										required
+										placeholder="APPLICANT_CURRENT_STATUS"
+										label="APPLICANT_CURRENT_STATUS"
+										labelPrefix="ApplicantStatus"
+										enumType={ApplicantStatus}
+										formik={form}
+									/>
+								}
+
 							</Col>
 							<Col md="4" className="px-2">
 								<BaseCheckList
@@ -981,6 +1013,37 @@ export function ApplicantForm(props: ApplicantFormProps) {
 					</ViewCard>
 				</Col>
 			</Row>
+
+			<ViewModal
+				title={t("HIRE")}
+				show={Boolean(hireApplicantForm.values.status)}
+				onCloseClick={() => hireApplicantForm.resetForm()}
+				size='sm'
+			>
+				<EntityForm
+					onSubmit={hireApplicantForm.handleSubmit}
+					id={hireApplicantForm?.values?.id}
+					formik={hireApplicantForm}
+					canSubmit={hireApplicantForm.isValid}
+					submitLabel="HIRE"
+				>
+					<Row className="py-3 px-5">
+						<Col>
+							<BaseSelect
+								name={`job.id`}
+								required
+								placeholder="JOB"
+								options={jobs}
+								labelKey="title"
+								label="JOB"
+								valueKey="id"
+								formik={hireApplicantForm}
+							/>
+						</Col>
+					</Row>
+				</EntityForm>
+			</ViewModal>
+
 		</EntityForm>
 	);
 }
