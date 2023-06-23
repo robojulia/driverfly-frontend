@@ -2003,5 +2003,20 @@
   "BUSINESS_NAME": "If you have a separate business name, please provide here:",
   "DOT_NUMBER": "If you have a DOT number, please provide here:",
   "HALF_WAY_DONE": "Half way done!",
-  "PLEASE_SELECT_ENDORSEMENT": "Please select endorsements and qualifications you have:"
+  "PLEASE_SELECT_ENDORSEMENT": "Please select endorsements and qualifications you have:",
+  "PARTICIPE_IN_REFER_BACK_PROGRAM": " Participate in Refer Back Program",
+  "REFER_BACK_PROGRAM": "Refer Back Program",
+  "REFER_BACK_PROGRAM_TEXT_1": "The Refer Back Program is an excellent way to earn back some of your marketing/recruiting spend while helping candidates that you cannot hire get jobs elsewhere.",
+  "REFER_BACK_PROGRAM_TEXT_2": "By opting in, you authorize DriverFly to contact consenting applicants who are not a good fit based on your company match parameters (listed below). In return, you will receive $350 software credit per applicant that gets hired through the program.To learn more, reach out to our team at info@driverfly.co to schedule a call.",
+  "REFER_BACK_PROGRAM_TEXT_3": "To learn more, reach out to our team at info@driverfly.co to schedule a call.",
+  "AUTO_RECRUITING": "Auto Recruiting",
+  "LOOKING_TO_SCALE_UP": "Looking to scale up your recruiting?",
+  "AUTO_RECRUITING_TEXT_1": "Hire fast and efficiently through DriverFly’s Auto Recruiting Services. Our system intelligently matches you with qualified and interested applicants for your active job listings. These applicants will be:",
+  "AUTO_RECRUITING_TEXT_2": "1-    Qualified based on your active job listings",
+  "AUTO_RECRUITING_TEXT_3": "2-    Interested in your applicable job postings",
+  "AUTO_RECRUITING_TEXT_4": "And you will be provided with completed application by the driver.",
+  "ENROLL_IN_AUTO_RECURUITING": "Enroll in Auto Recruiting",
+  "AUTO_RECURUITING_REGISTRATION": "Auto Recruiting Registration",
+  "AUTO_RECURUITING_REGISTRATION_TEXT_1": "By clicking confirm below, I authorize DriverFly to debit my account in the amount of $100 per driver application forwarded to me through the Auto Recruiting system",
+  "WHATS_THIS": "what's this?"
 }
