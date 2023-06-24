@@ -2018,5 +2018,8 @@
   "ENROLL_IN_AUTO_RECURUITING": "Enroll in Auto Recruiting",
   "AUTO_RECURUITING_REGISTRATION": "Auto Recruiting Registration",
   "AUTO_RECURUITING_REGISTRATION_TEXT_1": "By clicking confirm below, I authorize DriverFly to debit my account in the amount of $100 per driver application forwarded to me through the Auto Recruiting system",
-  "WHATS_THIS": "what's this?"
+  "WHATS_THIS": "what's this?",
+  "TOOLTIP_REFER_BACK":"Please reach out to your admin to have this option enabled/disabled",
+  "MATCH_CRITERIA":"Match Criteria",
+  "MATCH_CRITERIA_MESSAGE":"We help you streamline your recruiting efforts by labelling  all incoming applicants as either “good” or “ill fit” candidates based on the parameters you provide below. For each field, please select all options that are applicable for your active company positions."
 }
