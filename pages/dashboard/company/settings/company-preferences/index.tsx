@@ -352,7 +352,7 @@ export default function CompanyPreference() {
             />
             <BaseCheckList
               className="col-12 mt-2"
-              label="PREFERRED_LOCATION"
+              label="DRIVER_DISTANCE"
               name="job_geography.value"
               labelPrefix="JobGeography"
               required
@@ -370,7 +370,7 @@ export default function CompanyPreference() {
 
             <BaseInput
               className="col-md-4 mt-4"
-              label="MIN_ACCIDENTS"
+              label="MAX_ACCIDENTS"
               name="minimum_accidents.value"
               type="number"
               placeholder
