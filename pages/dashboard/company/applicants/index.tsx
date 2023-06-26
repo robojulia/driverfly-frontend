@@ -187,6 +187,7 @@ export default function Applicants() {
                             className="col-md-3"
                             placeholder="STATUS"
                             labelPrefix="ApplicantStatus"
+                            hideOptions={[ApplicantStatus.OTHER]}
                             enumType={ApplicantStatus}
                             onChange={({ target: { value } }) => setApplicantStatus(value as ApplicantStatus)}
                             value={applicantStatus}
