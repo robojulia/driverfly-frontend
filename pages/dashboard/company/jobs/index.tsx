@@ -21,6 +21,7 @@ import { useAuth } from "../../../../hooks/use-auth";
 import { useEffectAsync } from "../../../../utils/react";
 import Link from "next/link";
 import { Button } from "react-bootstrap";
+import ShowFormattedDate from "../../../../components/jobs/show-formatted-date";
 
 export default function JobListing() {
 
@@ -119,6 +120,11 @@ export default function JobListing() {
                         selector: j => j.applicantsCount,
                     },
                     {
+                        id: "created_at",
+                        name: "CREATED_AT",
+                        cell: job => job?.created_at ? <ShowFormattedDate date={job?.created_at} hideTime /> : null,
+                    },
+                    {
                         id: "expiration_date",
                         name: "expiration_date",
                         selector: j => j.expiry_date ? new Date(j.expiry_date).toDateString() : null,
@@ -159,6 +165,7 @@ export default function JobListing() {
                         cell: job => (<OverlyPopover labelPrefix="JobTeamDriver" skipTranslate={false} header={t('TEAM_DRIVERS')} str={job.team_drivers} />),
                         selector: job => t(`JobTeamDriver.${job.team_drivers}`),
                     },
+
                 ]}
                 actions={j => ([
 
