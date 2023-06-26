@@ -1,3 +1,4 @@
+import { CompanyPreferenceAutoRecrutingLabel } from './../../enums/company/company-preferences-auto-recruiting-label.enum';
 import { CompanyPreferenceCategory } from "../../enums/company/company-preference-category.enum";
 import * as yup from "yup";
 import "../../utils/yup";
@@ -62,5 +63,25 @@ export class CompanyPreferenceEntity {
                         })
                 })
         });
+    }
+
+    static autoRecruitingYupScehma() {
+        return yup.object({
+            category: (yup.string().optional().nullable() as any).enum(CompanyPreferenceCategory),
+            label: yup.string().optional().nullable()
+                .when("category", {
+                    is: CompanyPreferenceCategory.AUTO_RECRUITING,
+                    then: (yup.string().required().nullable() as any).enum(CompanyPreferenceJotformLabel)
+                }),
+            value: yup.mixed()
+                .when("category", {
+                    is: CompanyPreferenceCategory.AUTO_RECRUITING,
+                    then: yup.mixed()
+                        .when("label", {
+                            is: CompanyPreferenceAutoRecrutingLabel.ENROLL_IN_AUTO_RECRUITING,
+                            then: yup.boolean().optional().nullable()
+                        })
+                })
+        })
     }
 }

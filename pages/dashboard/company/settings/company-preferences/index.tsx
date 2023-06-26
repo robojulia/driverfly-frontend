@@ -22,14 +22,37 @@ import { JobGeography } from "../../../../../enums/jobs/job-geography.enum";
 import ViewModal from "../../../../../components/view-details/view-modal";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import BaseCheck from "../../../../../components/forms/base-check";
+import { CompanyPreferenceAutoRecrutingLabel } from "../../../../../enums/company/company-preferences-auto-recruiting-label.enum";
+
 
 export default function CompanyPreference() {
+  enum WhatsThisOptionsEnum {
+    SHOW_AUTO_RECRUITING_MODAL = "SHOW_AUTO_RECRUITING_MODAL",
+    SHOW_REFER_BACK_MODAL = 'SHOW_REFER_BACK_MODAL'
+  }
+
+  const [preferences, setPreferences] = useState<CompanyPreferenceEntity[]>([])
+
   const [showModal, setShowModal] = useState<boolean>(false)
+  const [showReferModal, setShowReferModal] = useState<boolean>(false)
+  const [showAutoRecruitingModal, setShowAutoRecruitingModal] = useState<boolean>(false)
+
+  const [modalAction, setModalAction] = useState<{
+    label: CompanyPreferenceAutoRecrutingLabel.ENROLL_IN_AUTO_RECRUITING |
+    CompanyPreferenceAutoRecrutingLabel.PARTICIPATE_IN_REFER_BACK_PROGRAM
+  }>(null)
+
+
+
   const { user } = useAuth();
 
   const { t } = useTranslation();
   const removeEmploymentTypes = [JobEmploymentType.SEASONAL, JobEmploymentType.PART_TIME, JobEmploymentType.ONE_TIME_GIG]
   const FilteredEmploymentTypes = Object.values(JobEmploymentType).filter(v => !removeEmploymentTypes.includes(v))
+
+  const api = new CompanyApi();
+
   const form = useFormik({
     initialValues: {
       cdl_class: {
@@ -79,10 +102,10 @@ export default function CompanyPreference() {
       job_geography: CompanyPreferenceEntity.yupSchema(),
     }),
     onSubmit: async (values) => {
-      const api = new CompanyApi();
+
 
       try {
-        const preferences = await Promise.all(
+        const data = await Promise.all(
           Object.values(values).map(async (preference) => {
             console.log('preference ----', preference);
             if (preference.value) {
@@ -106,7 +129,8 @@ export default function CompanyPreference() {
             return preference;
           })
         );
-        populateForm(preferences);
+        setPreferences([...preferences, ...data])
+        populateForm(data);
         toast.success(t("successfully_saved_information"));
       } catch (e) {
         console.error("Unable to save preferences", e);
@@ -118,10 +142,9 @@ export default function CompanyPreference() {
   useEffectAsync(async () => {
     if (user.company) {
       const api = new CompanyApi();
-      const preferences = await api.preferences.list(user.company.id, {
-        category: CompanyPreferenceCategory.JOTFORM,
-      });
-      populateForm(preferences);
+      const data = await api.preferences.list(user.company.id);
+      setPreferences(data)
+      populateForm(data?.filter(pref => pref?.category == CompanyPreferenceCategory.JOTFORM));
     }
   }, []);
 
@@ -140,13 +163,38 @@ export default function CompanyPreference() {
     });
   };
 
-
+  const handleAdditinonalPreferenceChange = async ({ label }) => {
+    let pref = await preferences?.find(p => p?.label == label)
+    if (pref?.id) {
+      pref = await api.preferences.update(
+        user?.company?.id,
+        pref?.id,
+        { ...pref, value: !(pref.value) }
+      );
+    }
+    else {
+      pref = await api.preferences.create(
+        user?.company?.id,
+        { category: CompanyPreferenceCategory.AUTO_RECRUITING, label, value: true }
+      );
+    }
+    if (!!pref) setModalAction(null)
+    setPreferences([...preferences, { ...pref }])
+  }
 
   const tooltip = <Tooltip id="my-tooltip" >{t("REFER_BACK_DETAILS")}</Tooltip>;
+  const tooltipReferBack = <Tooltip id="my-tooltip" >{t("TOOLTIP_REFER_BACK")}</Tooltip>;
+  ;
+
 
   useEffect(() => {
     setShowModal(true)
   }, [])
+
+  const autoRecruitingPreference = preferences.filter(pref => pref.category == CompanyPreferenceCategory.AUTO_RECRUITING)
+  console.log("=====", user)
+  console.log("=====preference", preferences)
+
   return (
     <>
       <PageLayout title="DIGITAL_HIRING_APPLICATION">
@@ -173,6 +221,61 @@ export default function CompanyPreference() {
             </div>
           </ViewModal>
         )}
+        {/* refer back program modal */}
+
+        {showReferModal && (
+          <ViewModal
+            show={showReferModal}
+            onCloseClick={() => setShowReferModal(false)}
+            closeText="CANCEL"
+          >
+            <div className="text-center">
+              <h2>{t('REFER_BACK_PROGRAM')}</h2>
+              <p>{t('REFER_BACK_PROGRAM_TEXT_1')}</p>
+              <p>{t('REFER_BACK_PROGRAM_TEXT_2')}</p>
+              <p>{t('REFER_BACK_PROGRAM_TEXT_3')}</p>
+
+            </div>
+          </ViewModal>
+        )}
+        {/* auto recruiting */}
+        {showAutoRecruitingModal && (
+          <ViewModal
+            show={showAutoRecruitingModal}
+            onCloseClick={() => setShowAutoRecruitingModal(false)}
+            closeText="CANCEL"
+          >
+            <div >
+              <h2 className="text-center">{t('AUTO_RECRUITING')}</h2>
+              <p className="text-center">{t('LOOKING_TO_SCALE_UP')}</p>
+              <p>{t('AUTO_RECRUITING_TEXT_1')}</p>
+              <p>{t('AUTO_RECRUITING_TEXT_2')}</p>
+              <p>{t('AUTO_RECRUITING_TEXT_3')}</p>
+              <p>{t('AUTO_RECRUITING_TEXT_4')}</p>
+              <p className="text-center">{t('REFER_BACK_PROGRAM_TEXT_3')}</p>
+
+            </div>
+          </ViewModal>
+        )}
+        {/* confirm auto recruiting */}
+        {Boolean(modalAction) && (
+          <ViewModal
+            size="sm"
+            show={Boolean(modalAction)}
+            onCloseClick={() => setModalAction(null)}
+            closeText="CANCEL"
+          >
+            <>
+              {console.log("lskdlksldklsd", modalAction)}
+              <h2 className="text-center">{t('AUTO_RECURUITING_REGISTRATION')}</h2>
+              <p >{t('AUTO_RECURUITING_REGISTRATION_TEXT_1')}</p>
+              <div className="d-flex justify-content-center" >
+                <Button onClick={() => handleAdditinonalPreferenceChange(modalAction)}>{t('CONFIRM')}</Button>
+              </div>
+            </>
+          </ViewModal>
+        )}
+
         <p className="pt-2 pb-2">{t("DHA_PREFERENCE_POINT_1")}</p>
         <BaseClickToCopyInput
           label="DIGITAL_HIRING_APP_URL"
@@ -181,8 +284,50 @@ export default function CompanyPreference() {
             }`}
           tooltipText={t("CLICK_TO_COPY")}
         />
+        <div className="d-flex align-item-start my-4">
+          <p>{t('PARTICIPE_IN_REFER_BACK_PROGRAM')}</p>
+          <p
+            className="ml-1 text-blue cursor-pointer hover:underline"
+            onClick={() => setShowReferModal(true)}
+            style={{ fontSize: '12px' }}>
+            {!Boolean(user?.company?.id) ? (
+              <OverlayTrigger trigger={['hover']} delay={{ show: 0, hide: 0 }} overlay={tooltipReferBack}>
+                <em>{t('WHATS_THIS')}</em>
+              </OverlayTrigger>
+            ) : (<em>{t('WHATS_THIS')}</em>)}
 
-        <h2 className="pt-2 pb-2">{t("COMPANY_PREFERENCE")}</h2>
+
+          </p>
+          <BaseCheck
+            className="mt-2 col float-left"
+            name="is_current_employed"
+            disabled={!Boolean(user?.company?.id)}
+            onChange={() => handleAdditinonalPreferenceChange({ label: CompanyPreferenceAutoRecrutingLabel.PARTICIPATE_IN_REFER_BACK_PROGRAM })}
+          />
+        </div>
+
+        <div className="d-flex align-item-start my-4">
+          <p>{t('ENROLL_IN_AUTO_RECURUITING')}</p>
+          <p
+            className="ml-1 text-blue cursor-pointer hover:underline"
+            onClick={() => setShowAutoRecruitingModal(true)}
+            style={{ fontSize: '12px' }}>
+            <em>{t('WHATS_THIS')}</em>
+          </p>
+
+          <BaseCheck
+            className="mt-2 col float-left"
+            checked={
+              Boolean(autoRecruitingPreference.find(({ label, value }) => label === CompanyPreferenceAutoRecrutingLabel.ENROLL_IN_AUTO_RECRUITING && value))
+            }
+            onChange={() => setModalAction({ label: CompanyPreferenceAutoRecrutingLabel.ENROLL_IN_AUTO_RECRUITING })}
+          />
+        </div>
+
+        <h3 className="pt-2 pb-2">{t("MATCH_CRITERIA")}</h3>
+        <p className="pt-2 pb-2">{t("MATCH_CRITERIA_MESSAGE")}</p>
+
+        <h3 className="pt-2 pb-2">{t("COMPANY_PREFERENCE")}</h3>
         <p className="pt-2 pb-2">{t("DHA_PREFERENCE_POINT_2")}</p>
 
         <form onSubmit={form.handleSubmit} className="py-4 px-3 border rounded mt-4" style={{ background: '#e9ecef' }}>
