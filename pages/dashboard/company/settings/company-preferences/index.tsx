@@ -290,7 +290,7 @@ export default function CompanyPreference() {
           label="DIGITAL_HIRING_APP_URL"
           className="my-2 border p-3 rounded"
           value={`${process.env.FRONTEND_BASE_URL ?? ""}form/digitalhiringapp/${user?.company?.id
-            }`}
+            }?source=indeed`}
           tooltipText={t("CLICK_TO_COPY")}
         />
         <div className="d-flex align-item-start my-4">
