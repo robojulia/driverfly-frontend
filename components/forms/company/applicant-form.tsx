@@ -194,7 +194,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 					hide: !Boolean(form.values.id),
 					disabled: form.isSubmitting,
 					onClick: () => {
-						hireApplicantForm.setValues({ ...(entity.employee ?? new EmployeeEntity(0)) })
+						hireApplicantForm.setValues({ ...(entity.employee ?? new EmployeeEntity()) })
 						hireApplicantForm.setFieldValue('job.id', entity?.employee?.job?.id ?? null)
 						hireApplicantForm.setFieldValue('status', ApplicantStatus.COMPLETED_EMPLOYED)
 					},
