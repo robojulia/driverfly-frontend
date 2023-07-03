@@ -2024,5 +2024,6 @@
   "TOOLTIP_REFER_BACK": "Please reach out to your admin to have this option enabled/disabled",
   "MATCH_CRITERIA": "Match Criteria",
   "MATCH_CRITERIA_MESSAGE": "We help you streamline your recruiting efforts by labelling  all incoming applicants as either “good” or “ill fit” candidates based on the parameters you provide below. For each field, please select all options that are applicable for your active company positions.",
-  "LEAD_TYPE": "Lead Type"
+  "LEAD_TYPE": "Lead Type",
+  "ASSIGNED_RECRUITER": "Assigned Recruiter"
 }
