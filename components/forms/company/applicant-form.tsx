@@ -51,6 +51,7 @@ import { EmployeeEntity } from "../../../models/applicant/employee.entity";
 import EmployeeApi from "../../../pages/api/employee";
 import UserApi from "../../../pages/api/user";
 import { UserEntity } from "../../../models/user/user.entity";
+import { JobForm } from "./job-form";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> {
 }
@@ -168,6 +169,16 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			}
 		},
 	});
+
+	const [createJob, setCreateJob] = useState(false);
+
+	const onJobAdded = (job: JobEntity) => {
+		setJobs([
+			...jobs,
+			job
+		])
+		setCreateJob(false);
+	}
 
 	useEffect(() => {
 		console.log("hireApplicantForm.errors", hireApplicantForm.errors);
@@ -1064,11 +1075,26 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								valueKey="id"
 								formik={hireApplicantForm}
 							/>
+							<button
+								type="button"
+								onClick={() => setCreateJob(true)}
+								className="my-2 btn btn-link"
+							>
+								{t("CREATE_{name}", { name: "JOB" }, { translateProps: true })}
+							</button>
 						</Col>
 					</Row>
 				</EntityForm>
 			</ViewModal>
-
+			<ViewModal
+				title={t("CREATE_{name}", { name: "JOB" }, { translateProps: true })}
+				show={createJob}
+				onCloseClick={() => setCreateJob(false)}
+			>
+				<JobForm
+					onSaveComplete={onJobAdded}
+				/>
+			</ViewModal>
 		</EntityForm>
 	);
 }
