@@ -1733,7 +1733,7 @@
   "NA": "Put NA for any fields unknown",
   "ADDRESS_CURRENT_COMPANY": "Address (Current Company)",
   "ADDRESS_PAST_COMPANY": "Previous Company",
-  "REFERRAL_NUMBER": "Referrer's Name",
+  "REFERRAL_NAME": "Referrer's Name",
   "ELIGIBLE_TO_WORK_IN_US": "Are you legally eligible to work in the US? ",
   "VOE_PARAGRAPH_{applicantName}_{companyName}": "This is the Verification of Employment form for {{applicantName}} from {{companyName}}.  If this link was  NOT accompanied with a PDF attachment containing employee's signature for approval, DO NOT COMPLETE.",
   "{applicantName}_EMPLOYED_BY_US": "{{applicantName}} was employed by us?",
@@ -2021,7 +2021,8 @@
   "AUTO_RECURUITING_REGISTRATION": "Auto Recruiting Registration",
   "AUTO_RECURUITING_REGISTRATION_TEXT_1": "By clicking confirm below, I authorize DriverFly to debit my account in the amount of $100 per driver application forwarded to me through the Auto Recruiting system",
   "WHATS_THIS": "what's this?",
-  "TOOLTIP_REFER_BACK":"Please reach out to your admin to have this option enabled/disabled",
-  "MATCH_CRITERIA":"Match Criteria",
-  "MATCH_CRITERIA_MESSAGE":"We help you streamline your recruiting efforts by labelling  all incoming applicants as either “good” or “ill fit” candidates based on the parameters you provide below. For each field, please select all options that are applicable for your active company positions."
+  "TOOLTIP_REFER_BACK": "Please reach out to your admin to have this option enabled/disabled",
+  "MATCH_CRITERIA": "Match Criteria",
+  "MATCH_CRITERIA_MESSAGE": "We help you streamline your recruiting efforts by labelling  all incoming applicants as either “good” or “ill fit” candidates based on the parameters you provide below. For each field, please select all options that are applicable for your active company positions.",
+  "LEAD_TYPE": "Lead Type"
 }
