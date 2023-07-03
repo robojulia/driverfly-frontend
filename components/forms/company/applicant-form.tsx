@@ -1051,6 +1051,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								formik={hireApplicantForm}
 							/>
 							<button
+								type="button"
 								onClick={() => setCreateJob(true)}
 								className="my-2 btn btn-link"
 							>
