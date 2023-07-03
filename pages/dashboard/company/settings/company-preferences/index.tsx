@@ -24,6 +24,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import BaseCheck from "../../../../../components/forms/base-check";
 import { CompanyPreferenceAutoRecrutingLabel } from "../../../../../enums/company/company-preferences-auto-recruiting-label.enum";
+import { Cpu } from "react-bootstrap-icons";
 
 
 export default function CompanyPreference() {
@@ -45,7 +46,7 @@ export default function CompanyPreference() {
 
 
 
-  const { user } = useAuth();
+  const { user, isSuperAdmin } = useAuth();
 
   const { t } = useTranslation();
   const removeEmploymentTypes = [JobEmploymentType.SEASONAL, JobEmploymentType.PART_TIME, JobEmploymentType.ONE_TIME_GIG]
@@ -142,7 +143,18 @@ export default function CompanyPreference() {
   useEffectAsync(async () => {
     if (user.company) {
       const api = new CompanyApi();
-      const data = await api.preferences.list(user.company.id);
+      let data = await api.preferences.list(user.company.id);
+      console.log(" pre first time ", data)
+      if (!data?.find(d => d?.label == CompanyPreferenceAutoRecrutingLabel.PARTICIPATE_IN_REFER_BACK_PROGRAM)) {
+        console.log("first time ")
+        const referProgram: CompanyPreferenceEntity = await api.preferences.create(user?.company?.id, {
+          category: CompanyPreferenceCategory.AUTO_RECRUITING,
+          label: CompanyPreferenceAutoRecrutingLabel.PARTICIPATE_IN_REFER_BACK_PROGRAM,
+          value: true
+        })
+        console.log("second time ", referProgram)
+        data = [...data, { ...referProgram }]
+      }
       setPreferences(data)
       populateForm(data?.filter(pref => pref?.category == CompanyPreferenceCategory.JOTFORM));
     }
@@ -179,7 +191,7 @@ export default function CompanyPreference() {
       );
     }
     if (!!pref) setModalAction(null)
-    setPreferences([...preferences, { ...pref }])
+    setPreferences([...(preferences?.filter(p => p?.id != pref?.id) ?? []), { ...pref }])
   }
 
   const tooltip = <Tooltip id="my-tooltip" >{t("REFER_BACK_DETAILS")}</Tooltip>;
@@ -191,9 +203,6 @@ export default function CompanyPreference() {
     setShowModal(true)
   }, [])
 
-  const autoRecruitingPreference = preferences.filter(pref => pref.category == CompanyPreferenceCategory.AUTO_RECRUITING)
-  console.log("=====", user)
-  console.log("=====preference", preferences)
 
   return (
     <>
@@ -281,7 +290,7 @@ export default function CompanyPreference() {
           label="DIGITAL_HIRING_APP_URL"
           className="my-2 border p-3 rounded"
           value={`${process.env.FRONTEND_BASE_URL ?? ""}form/digitalhiringapp/${user?.company?.id
-            }`}
+            }?source=indeed`}
           tooltipText={t("CLICK_TO_COPY")}
         />
         <div className="d-flex align-item-start my-4">
@@ -290,7 +299,7 @@ export default function CompanyPreference() {
             className="ml-1 text-blue cursor-pointer hover:underline"
             onClick={() => setShowReferModal(true)}
             style={{ fontSize: '12px' }}>
-            {!Boolean(user?.company?.id) ? (
+            {!Boolean(isSuperAdmin) ? (
               <OverlayTrigger trigger={['hover']} delay={{ show: 0, hide: 0 }} overlay={tooltipReferBack}>
                 <em>{t('WHATS_THIS')}</em>
               </OverlayTrigger>
@@ -301,7 +310,10 @@ export default function CompanyPreference() {
           <BaseCheck
             className="mt-2 col float-left"
             name="is_current_employed"
-            disabled={!Boolean(user?.company?.id)}
+            disabled={!Boolean(isSuperAdmin)}
+            checked={
+              Boolean(preferences?.find(pref => pref?.label == CompanyPreferenceAutoRecrutingLabel.PARTICIPATE_IN_REFER_BACK_PROGRAM)?.value)
+            }
             onChange={() => handleAdditinonalPreferenceChange({ label: CompanyPreferenceAutoRecrutingLabel.PARTICIPATE_IN_REFER_BACK_PROGRAM })}
           />
         </div>
@@ -318,7 +330,7 @@ export default function CompanyPreference() {
           <BaseCheck
             className="mt-2 col float-left"
             checked={
-              Boolean(autoRecruitingPreference.find(({ label, value }) => label === CompanyPreferenceAutoRecrutingLabel.ENROLL_IN_AUTO_RECRUITING && value))
+              Boolean(preferences?.find(pref => pref?.label == CompanyPreferenceAutoRecrutingLabel.ENROLL_IN_AUTO_RECRUITING)?.value)
             }
             onChange={() => setModalAction({ label: CompanyPreferenceAutoRecrutingLabel.ENROLL_IN_AUTO_RECRUITING })}
           />
