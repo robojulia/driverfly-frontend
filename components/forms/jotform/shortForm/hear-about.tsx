@@ -19,7 +19,7 @@ import { LoaderIcon } from "../../../loading/loader-icon";
 export function HearAbout() {
 	const {
 		state: { applicantExtras, applicant },
-		method: { updateApplicantExtras, stepNext, stepBack, setApplicant },
+		method: { updateApplicantExtras, setApplicantExtras, stepNext, stepBack, setApplicant },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
@@ -30,22 +30,19 @@ export function HearAbout() {
 		onSubmit: async (values) => {
 			const applicantApi = new ApplicantApi();
 			const { HEAR_ABOUT_US, REFERAL_NAME } = values;
-			updateApplicantExtras(HEAR_ABOUT_US);
-			updateApplicantExtras(REFERAL_NAME);
 			if (applicant?.can_pass_drug_test) {
 				try {
-					// console.log("before ===", applicantExtras)
-					// const filtered_extras = applicantExtras?.filter((v) => !!v.value);
-					// console.log("after ===", filtered_extras)
+					const filteredExtras = ([
+						...applicantExtras,
+						{ ...HEAR_ABOUT_US },
+						{ ...REFERAL_NAME },
+					]).filter(v => !!v?.value)
+
 					const data = await applicantApi.jotform.create({
 						applicant,
-						applicantExtras: [
-							...applicantExtras?.filter((v) => !!v.value),
-							{ ...HEAR_ABOUT_US },
-							// { ...(REFERAL_NAME ?? {}) },
-							(REFERAL_NAME ? { ...REFERAL_NAME } : null)
-						],
+						applicantExtras: filteredExtras,
 					});
+					setApplicantExtras(filteredExtras)
 					setApplicant({
 						...applicant,
 						...data,
@@ -73,6 +70,7 @@ export function HearAbout() {
 		const apx_referal_name = applicantExtras?.find(
 			(v) => v.type === ApplicantExtras.REFERAL_NAME
 		);
+
 		form.setValues({
 			...form.values,
 			HEAR_ABOUT_US: !!apx?.type
@@ -84,13 +82,14 @@ export function HearAbout() {
 		});
 	}, [applicantExtras]);
 
-	useEffect(() => {
-		console.log("form.values===", form?.values)
-		console.log("form.errors===", form?.errors)
-	}, [])
+	// Uncomment code below in debugging mode
+	// useEffect(() => {
+	// 	console.log("form.values===", form?.values)
+	// 	console.log("form.errors===", form?.errors)
+	// }, [form?.values, form?.errors])
+
 	return (
 		<>
-
 			<form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row>
 					<h4 className={styles.heading__sty}>
