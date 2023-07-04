@@ -52,6 +52,10 @@ export class ApplicantExtrasEntity {
 					then: yup.string().required().nullable(),
 				})
 				.when("type", {
+					is: ApplicantExtras.REFERAL_NAME,
+					then: yup.string().required().nullable(),
+				})
+				.when("type", {
 					is: ApplicantExtras.QUALIFIED_FOR_MANUAL_TRANSMISSION,
 					then: yup.string().optional().nullable(),
 				})

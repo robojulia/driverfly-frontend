@@ -187,6 +187,7 @@ export default function Applicants() {
                             className="col-md-3"
                             placeholder="STATUS"
                             labelPrefix="ApplicantStatus"
+                            hideOptions={[ApplicantStatus.OTHER]}
                             enumType={ApplicantStatus}
                             onChange={({ target: { value } }) => setApplicantStatus(value as ApplicantStatus)}
                             value={applicantStatus}
@@ -484,7 +485,7 @@ function ApplicantView(props: ViewProps) {
                     },
                     {
                         id: "source",
-                        name: "Lead Source",
+                        name: "LEAD_TYPE",
                         selector: applicant => applicant.type ? t(`ApplicantType.${applicant.type}`) : "",
                     },
                     {
