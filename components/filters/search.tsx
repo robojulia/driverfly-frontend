@@ -6,6 +6,7 @@ import { useTranslation } from "../../hooks/use-translation";
 import JobApi from "../../pages/api/job";
 
 export type Title = {
+    id?: number;
     title: string;
 }
 
@@ -67,7 +68,7 @@ export default function Search(props) {
     ): JSX.Element => (
         <Menu {...menuProps}>
             {results.map((result: Title, index) => (
-                <MenuItem onClick={generalEventHandler} option={result} position={index}>
+                <MenuItem key={index} onClick={generalEventHandler} option={result} position={index}>
                     <Highlighter search={state.text}>{result.title}</Highlighter>
                 </MenuItem>
             ))}

@@ -1,10 +1,12 @@
 import * as yup from "yup";
 
 export class AtsJobDto {
-    applying_for_job: boolean;
+    applying_for_job: boolean = false;
+    jobId?: number;
+
     static yupSchema() {
         return yup.object({
-            phone: yup.string().required().nullable()
+            applying_for_job: yup.boolean().nullable(),
         });
     }
 }
