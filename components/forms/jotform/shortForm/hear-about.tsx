@@ -29,18 +29,26 @@ export function HearAbout() {
 		validationSchema: HearAboutUsDto.yupSchema(),
 		onSubmit: async (values) => {
 			const applicantApi = new ApplicantApi();
-			const { HEAR_ABOUT_US } = values;
+			const { HEAR_ABOUT_US, REFERAL_NAME } = values;
 			updateApplicantExtras(HEAR_ABOUT_US);
+			updateApplicantExtras(REFERAL_NAME);
 			if (applicant?.can_pass_drug_test) {
 				try {
-					const filtered_extras = applicantExtras?.filter((v) => !!v.value);
-					const { id } = await applicantApi.jotform.create({
+					// console.log("before ===", applicantExtras)
+					// const filtered_extras = applicantExtras?.filter((v) => !!v.value);
+					// console.log("after ===", filtered_extras)
+					const data = await applicantApi.jotform.create({
 						applicant,
-						applicantExtras: filtered_extras,
+						applicantExtras: [
+							...applicantExtras?.filter((v) => !!v.value),
+							{ ...HEAR_ABOUT_US },
+							// { ...(REFERAL_NAME ?? {}) },
+							(REFERAL_NAME ? { ...REFERAL_NAME } : null)
+						],
 					});
 					setApplicant({
 						...applicant,
-						id,
+						...data,
 					});
 
 					stepNext();
@@ -59,18 +67,27 @@ export function HearAbout() {
 	});
 
 	useEffect(() => {
-		
 		const apx = applicantExtras?.find(
 			(v) => v.type === ApplicantExtras.HEAR_ABOUT_US
+		);
+		const apx_referal_name = applicantExtras?.find(
+			(v) => v.type === ApplicantExtras.REFERAL_NAME
 		);
 		form.setValues({
 			...form.values,
 			HEAR_ABOUT_US: !!apx?.type
 				? apx
 				: new ApplicantExtrasEntity(ApplicantExtras.HEAR_ABOUT_US),
+			REFERAL_NAME: !!apx_referal_name?.type
+				? apx_referal_name
+				: new ApplicantExtrasEntity(ApplicantExtras.REFERAL_NAME)
 		});
 	}, [applicantExtras]);
 
+	useEffect(() => {
+		console.log("form.values===", form?.values)
+		console.log("form.errors===", form?.errors)
+	}, [])
 	return (
 		<>
 
@@ -90,13 +107,14 @@ export function HearAbout() {
 						formik={form}
 					/>
 				</Row>
+
 				{form.values?.HEAR_ABOUT_US?.value === HearAboutUsType.REFERRAL && (
 					<Row className={styles.bold}>
 						<BaseInput
 							className="col mb-4"
-							name="REFERRAL_NUMBER"
-							placeholder="REFERRAL_NUMBER"
-							label="REFERRAL_NUMBER"
+							name="REFERAL_NAME.value"
+							placeholder="REFERRAL_NAME"
+							label="REFERRAL_NAME"
 							formik={form}
 						/>
 					</Row>

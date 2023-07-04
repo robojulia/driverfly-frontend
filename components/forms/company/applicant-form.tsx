@@ -49,12 +49,15 @@ import CompanyApi from "../../../pages/api/company";
 import ViewModal from "../../view-details/view-modal";
 import { EmployeeEntity } from "../../../models/applicant/employee.entity";
 import EmployeeApi from "../../../pages/api/employee";
+import UserApi from "../../../pages/api/user";
+import { UserEntity } from "../../../models/user/user.entity";
 import { JobForm } from "./job-form";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> {
 }
 
 export function ApplicantForm(props: ApplicantFormProps) {
+	const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([])
 	const { t } = useTranslation();
 	let { className, entity, onSaveComplete, onSaveError } = props;
 
@@ -181,6 +184,12 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		console.log("hireApplicantForm.errors", hireApplicantForm.errors);
 	}, [hireApplicantForm.errors]);
 
+
+	const userApi = new UserApi()
+	useEffectAsync(async () => {
+		const data = await userApi.list()
+		setCompanyUsers(data)
+	}, [])
 	return (
 		<EntityForm
 			id={entity?.id}
@@ -201,9 +210,25 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				}
 			]}
 		>
+
 			<Row>
+
 				<Col className="p-0 px-lg-2 mt-3">
 					<ViewCard title="BASIC_DETAILS">
+						<Row className="mb-2">
+							<Col md='4'>
+								<BaseSelect
+									// className="col-12 my-2"
+									label="ASSIGNED_RECRUITER"
+									name="assignedUserId"
+									placeholder
+									options={companyUsers}
+									valueKey="id"
+									createLabel={c => `${c.name} (#${c.id})`}
+									formik={form}
+								/>
+							</Col>
+						</Row>
 						<Row>
 							<Col md="4" className="px-2">
 								<BaseInput

@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 
-import { Button, ButtonGroup, Col, Row } from "react-bootstrap";
+import { Button, ButtonGroup, Col, Form, Row } from "react-bootstrap";
 import {
 	BookmarkCheck,
 	BookmarkDash,
@@ -12,7 +12,7 @@ import {
 import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import { useEffectAsync } from "../../../../../utils/react";
@@ -40,8 +40,13 @@ import ApplicantJobsApplied from "../../../../../components/applicants/applicant
 import ApplicantConsiderFor from "../../../../../components/applicants/applicant-consider-for";
 import ViewApplicantDAC from "../../../../../components/applicants/view-applicant-dac";
 import ViewApplicantDqf from "../../../../../components/applicants/view-applicant-dqf";
+import UserApi from "../../../../api/user";
+import { UserContext, useUserContext } from "../../../../../context/user-context";
+import BaseSelect from "../../../../../components/forms/base-select";
+import { UserEntity } from "../../../../../models/user/user.entity";
 
 export default function ViewApplicant({ id }) {
+	
 	const router = useRouter();
 
 	const { t } = useTranslation();
@@ -229,6 +234,7 @@ export default function ViewApplicant({ id }) {
 		{ name: "APPLICANT" },
 		{ translateProps: true }
 	);
+
 	return (
 		<ChildPageLayout backPath={backPath} title={title}>
 			{Boolean(applicant.id) && <>
@@ -251,9 +257,15 @@ export default function ViewApplicant({ id }) {
 								style={{ float: "right", marginBottom: "10px" }}
 								className="assign_unassign"
 							>
+								<div className="float-right mr-2">
 
-								<ButtonGroup size="sm">
-									{applicant?.assignedUser ? (
+									<Button type="button" onClick={onEditClick}>
+										<Pencil /> {t("EDIT")}
+									</Button>
+								</div>
+
+								{/* <ButtonGroup size="sm"> */}
+								{/* {applicant?.assignedUser ? (
 										<Button
 											type="button"
 											variant="danger"
@@ -270,11 +282,11 @@ export default function ViewApplicant({ id }) {
 										>
 											<BookmarkCheck /> {t("ASSIGN_TO_ME")}
 										</Button>
-									)}
-									<Button type="button" onClick={onEditClick}>
+									)} */}
+								{/* <Button type="button" onClick={onEditClick}>
 										<Pencil /> {t("EDIT")}
-									</Button>
-								</ButtonGroup>
+									</Button> */}
+								{/* </ButtonGroup> */}
 							</div>
 						</Col>
 					</Row>
