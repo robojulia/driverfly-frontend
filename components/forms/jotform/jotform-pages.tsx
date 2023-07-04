@@ -103,6 +103,13 @@ const getMissingDocumentsPages = (step: number): JSX.Element =>
 	2: <SubmitMissingDocuments />,
 	3: <ThankyouPage />
 }[step]);
+const getSuggestedJobPages = (step: number): JSX.Element =>
+({
+	0: <DriverApplication />,
+	1: <WorkedBefore />,
+	2: <AccordianPage />,
+	3: <ThankyouPage />
+}[step]);
 const getLongFormStyle = (step: number): CSSProperties | undefined =>
 	({}[step]);
 
@@ -112,4 +119,5 @@ export {
 	getLongFormPages,
 	getLongFormStyle,
 	getMissingDocumentsPages,
+	getSuggestedJobPages
 };
