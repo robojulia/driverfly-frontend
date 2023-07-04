@@ -5,7 +5,7 @@ import { Option, TypeaheadManagerChildProps } from "react-bootstrap-typeahead/ty
 import { useTranslation } from "../../hooks/use-translation";
 import JobApi from "../../pages/api/job";
 
-type Title = {
+export type Title = {
     title: string;
 }
 
