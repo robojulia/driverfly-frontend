@@ -32,6 +32,7 @@ export class ApplicantEntity {
 	user?: UserEntity;
 	company?: CompanyEntity;
 	assignedUser?: UserEntity;
+	assignedUserId?: number;
 	type?: ApplicantType;
 	first_name?: string;
 	last_name?: string;
@@ -172,6 +173,7 @@ export class ApplicantEntity {
 				yup.array(DocumentEntity.yupSchema(ApplicantDocumentType)) as any
 			).unique("type"),
 			jobs: (yup.array(ApplicantJobEntity.yupSchema()) as any).unique("job.id"),
+			assignedUserId: yup.number().optional().nullable()
 		});
 	}
 }
