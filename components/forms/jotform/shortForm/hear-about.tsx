@@ -15,11 +15,10 @@ import { toast, ToastContainer } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import { LoaderIcon } from "../../../loading/loader-icon";
 
-
 export function HearAbout() {
 	const {
-		state: { applicantExtras, applicant },
-		method: { updateApplicantExtras, setApplicantExtras, stepNext, stepBack, setApplicant },
+		state: { applicantExtras, applicant, jobs },
+		method: { setApplicantExtras, stepNext, stepBack, setApplicant },
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
@@ -41,6 +40,7 @@ export function HearAbout() {
 					const data = await applicantApi.jotform.create({
 						applicant,
 						applicantExtras: filteredExtras,
+						jobs
 					});
 					setApplicantExtras(filteredExtras)
 					setApplicant({
