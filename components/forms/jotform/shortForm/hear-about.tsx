@@ -34,17 +34,16 @@ export function HearAbout() {
 			updateApplicantExtras(REFERAL_NAME);
 			if (applicant?.can_pass_drug_test) {
 				try {
-					// console.log("before ===", applicantExtras)
-					// const filtered_extras = applicantExtras?.filter((v) => !!v.value);
-					// console.log("after ===", filtered_extras)
+
+					const filteredExtras = ([
+						...applicantExtras,
+						{ ...HEAR_ABOUT_US },
+						(Boolean(REFERAL_NAME?.value) ? { ...REFERAL_NAME } : null)
+					]).filter(v => !!v?.value)
+
 					const data = await applicantApi.jotform.create({
 						applicant,
-						applicantExtras: [
-							...applicantExtras?.filter((v) => !!v.value),
-							{ ...HEAR_ABOUT_US },
-							// { ...(REFERAL_NAME ?? {}) },
-							(REFERAL_NAME ? { ...REFERAL_NAME } : null)
-						],
+						applicantExtras: filteredExtras,
 					});
 					setApplicant({
 						...applicant,
@@ -73,6 +72,7 @@ export function HearAbout() {
 		const apx_referal_name = applicantExtras?.find(
 			(v) => v.type === ApplicantExtras.REFERAL_NAME
 		);
+		
 		form.setValues({
 			...form.values,
 			HEAR_ABOUT_US: !!apx?.type
@@ -83,11 +83,10 @@ export function HearAbout() {
 				: new ApplicantExtrasEntity(ApplicantExtras.REFERAL_NAME)
 		});
 	}, [applicantExtras]);
-
 	useEffect(() => {
 		console.log("form.values===", form?.values)
 		console.log("form.errors===", form?.errors)
-	}, [])
+	}, [form?.values, form?.errors])
 	return (
 		<>
 

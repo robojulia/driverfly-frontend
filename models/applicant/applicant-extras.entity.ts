@@ -12,6 +12,7 @@ import { BooleanTypeExtra } from "../../enums/jotform/bool-and-not-sure.enum";
 
 export class ApplicantExtrasEntity {
 	constructor(type?: ApplicantExtras) {
+		console.log("type===", type)
 		if (!!type) this.type = type;
 	}
 	id?: number;
