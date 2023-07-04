@@ -1,6 +1,7 @@
+import { NextPageContext } from "next";
 import { useEffect, useState } from "react";
-import styles from "../../../../styles/digitalhiringapp.module.css";
 import "react-toastify/dist/ReactToastify.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { ApplicantEntity, ApplicantExtrasEntity } from "../../../../models/applicant";
 import JotformContext from "../../../../context/jotform-context";
 import { getFullFormPages, getFullFormStyle } from "../../../../components/forms/jotform/jotform-pages";
@@ -8,13 +9,14 @@ import CompanyApi from "../../../api/company";
 import { Status } from "../../../../enums/status.enum";
 import { CompanyEntity } from "../../../../models/company/company.entity";
 import BaseInput from "../../../../components/forms/base-input";
-import { NextPageContext } from "next";
+import { JobEntity } from "../../../../models/job/job.entity";
 
 export interface FullFormProps {
 	employer: CompanyEntity
 }
 export default function FullForm({ employer }: FullFormProps) {
 
+	const [jobs, setJobs] = useState<JobEntity[]>([]);
 	const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
 	const [applicantExtras, setApplicantExtras] = useState<ApplicantExtrasEntity[]>([]);
 	const updateApplicantExtras = (applicantExtrasEntity: ApplicantExtrasEntity) =>
@@ -37,11 +39,13 @@ export default function FullForm({ employer }: FullFormProps) {
 			value={{
 				state: {
 					applicant,
+					jobs,
 					applicantExtras,
 					steps
 				},
 				method: {
 					setApplicant,
+					setJobs,
 					updateApplicantExtras,
 					setApplicantExtras,
 					stepNext,

@@ -61,7 +61,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	const { t } = useTranslation();
 	let { className, entity, onSaveComplete, onSaveError } = props;
 
-	let { user, hasPermission } = useAuth();
+	let { user, hasPermission, isSuperAdmin } = useAuth();
 
 	const [protectedFields, setProtectedFields] = useState({
 		license_number: false,
@@ -219,6 +219,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 							<Col md='4'>
 								<BaseSelect
 									// className="col-12 my-2"
+									readOnly={!Boolean(isSuperAdmin)}
 									label="ASSIGNED_RECRUITER"
 									name="assignedUserId"
 									placeholder
