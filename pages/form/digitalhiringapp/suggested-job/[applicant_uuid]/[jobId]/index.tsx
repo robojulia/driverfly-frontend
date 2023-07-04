@@ -1,22 +1,24 @@
 import { useEffect, useState } from "react";
-import styles from "../../../../../styles/digitalhiringapp.module.css";
+import styles from "../../../../../../styles/digitalhiringapp.module.css";
 import {
     ApplicantEntity,
     ApplicantExtrasEntity,
-} from "../../../../../models/applicant";
-import JotformContext from "../../../../../context/jotform-context";
+} from "../../../../../../models/applicant";
+import JotformContext from "../../../../../../context/jotform-context";
 import {
     getLongFormStyle,
     getSuggestedJobPages,
-} from "../../../../../components/forms/jotform/jotform-pages";
-import ApplicantApi from "../../../../api/applicant";
+} from "../../../../../../components/forms/jotform/jotform-pages";
+import ApplicantApi from "../../../../../api/applicant";
 
 export interface LongFormProps {
     entity: ApplicantEntity;
+    jobId: number;
 }
 
-export default function LongForm({ entity }: LongFormProps) {
+export default function LongForm({ entity, jobId }: LongFormProps) {
 
+    console.log("job id====", jobId)
     const [applicant, setApplicant] = useState<ApplicantEntity>(entity);
     const [applicantExtras, setApplicantExtras] = useState<
         ApplicantExtrasEntity[]
@@ -77,7 +79,7 @@ export default function LongForm({ entity }: LongFormProps) {
 
 export async function getServerSideProps({ query }) {
     try {
-        const { applicant_uuid } = query || {};
+        const { applicant_uuid, jobId } = query || {};
 
         if (!!!applicant_uuid) return { notFound: true };
 
@@ -88,7 +90,7 @@ export async function getServerSideProps({ query }) {
 
         if (!!!entity) return { notFound: true };
 
-        return { props: { entity } };
+        return { props: { entity, jobId } };
     } catch (error) {
         return { notFound: true };
     }
