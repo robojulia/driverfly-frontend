@@ -1,4 +1,3 @@
-alert()
 const type = document.currentScript.getAttribute('filterType');
 var iframe = document.createElement('iframe');
 let urlString = iframe.src = `https://driverfly.co/embedded?filterType=${type}`;
