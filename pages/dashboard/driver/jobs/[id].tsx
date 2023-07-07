@@ -6,6 +6,8 @@ import FullLayout from "../../../../components/dashboard/layouts/full-layout"
 import ChildPageLayout from "../../../../components/layouts/page/child-page-layout"
 import ViewJobDetail from "../../../../components/jobs/view-job-detail";
 import { JobDetailProps } from '../../../../types/job/job-detail-props.type'
+import { Pagination } from '../../../../types/pagination.type'
+import { JobEntity } from '../../../../models/job/job.entity'
 
 export default function JobDetail({ job, relatedJobs }: JobDetailProps) {
 
@@ -44,7 +46,7 @@ export async function getServerSideProps(context) {
                 notFound: true
             };
         }
-        const { items } = await new JobApi().search({ exclude: { jobId: id }, companyId: data.company?.id, take: 3 });
+        const { items } = await new JobApi().search({ exclude: { jobId: id }, companyId: data.company?.id, take: 3 }) as Pagination<JobEntity>;
         return {
             props: { job: data, relatedJobs: items }
         }

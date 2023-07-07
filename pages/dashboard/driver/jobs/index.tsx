@@ -1,5 +1,5 @@
 import FullLayout from "../../../../components/dashboard/layouts/full-layout";
-import { Container, Row, Col } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import JobApi from '../../../api/job';
 import { ChangeEvent, useState } from 'react';
 import JobContext from "../../../../context/job-context"
@@ -11,10 +11,11 @@ import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
 import { useEffectAsync } from "../../../../utils/react";
 import PageLayout from "../../../../components/layouts/page/page-layout";
 import { JobEntity } from "../../../../models/job/job.entity";
-import { filtersInitialsValues, pagingMetaInitialValues, PagingMetaProps } from "../../../../utils/job-filter";
+import { filtersInitialsValues, pagingMetaInitialValues } from "../../../../utils/job-filter";
 import { JobSearchLocation, SearchJobsDto } from "../../../../models/job/search-jobs-dto";
 import { toast } from "react-toastify";
 import { useTranslation } from "../../../../hooks/use-translation";
+import { Pagination, PagingMeta } from "../../../../types/pagination.type";
 
 export default function FindJobs() {
 
@@ -23,7 +24,7 @@ export default function FindJobs() {
 
     const [jobs, setJobs] = useState<JobEntity[]>([])
 
-    const [pagingMeta, setPagingMeta] = useState<PagingMetaProps>(pagingMetaInitialValues)
+    const [pagingMeta, setPagingMeta] = useState<PagingMeta>(pagingMetaInitialValues)
     const resetPagingMeta = (): void => setPagingMeta(pagingMetaInitialValues)
 
     const [searchQuery, setSearchQuery] = useState<string>()
@@ -59,7 +60,7 @@ export default function FindJobs() {
     const fetchJobs = async (): Promise<void> => {
         try {
             await jobApi.search({ ...filters as any })
-                .then(({ items, meta }) => {
+                .then(({ items, meta }: Pagination<JobEntity>) => {
                     setJobs(items)
                     setPagingMeta(meta)
                 })

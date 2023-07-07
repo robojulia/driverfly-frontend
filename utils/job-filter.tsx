@@ -1,12 +1,6 @@
-export type PagingMetaProps = {
-    currentPage: number;
-    itemCount: number;
-    itemsPerPage: number;
-    totalItems: number;
-    totalPages: number;
-}
+import { PagingMeta } from "../types/pagination.type"
 
-export const pagingMetaInitialValues = () => ({
+export const pagingMetaInitialValues = (): PagingMeta => ({
     currentPage: 1,
     itemCount: 0,
     itemsPerPage: 0,

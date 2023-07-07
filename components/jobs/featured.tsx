@@ -10,6 +10,7 @@ import { useEffectAsync } from "../../utils/react";
 import JobApi from "../../pages/api/job";
 import { JobEntity } from "../../models/job/job.entity";
 import Link from "next/link";
+import { Pagination } from "../../types/pagination.type";
 
 export default function FeaturedJobs() {
     const [jobs, setJobs] = useState<JobEntity[]>([]);
@@ -19,7 +20,7 @@ export default function FeaturedJobs() {
         const api = new JobApi();
 
         try {
-            const { items } = await api.search({ take: 6, order_by: "ASC" });
+            const { items } = await api.search({ take: 6, order_by: "ASC" }) as Pagination<JobEntity>;
             setJobs(items);
         }
         catch (e) {

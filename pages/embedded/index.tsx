@@ -1,20 +1,20 @@
-import 'bootstrap/dist/css/bootstrap.css'
+import { useRouter } from 'next/router'
 import { ChangeEvent, useState } from "react"
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css'
+import { toast } from "react-toastify";
+import { GetServerSidePropsContext } from 'next'
+import 'bootstrap/dist/css/bootstrap.css'
 import { EmbeddedLayout } from '../../components/layouts/embedded/embedded-layout'
 import JobApi from "../api/job"
 import { JobEntity } from '../../models/job/job.entity'
-import { filtersInitialsValues, pagingMetaInitialValues, PagingMetaProps } from '../../utils/job-filter'
+import { pagingMetaInitialValues } from '../../utils/job-filter'
 import { useEffectAsync } from '../../utils/react'
-import { toast } from "react-toastify";
 import { useTranslation } from '../../hooks/use-translation'
 import PageLayout from '../../components/layouts/page/page-layout'
 import JobContext from "../../context/job-context"
 import { JobSearchLocation, SearchJobsDto } from "../../models/job/search-jobs-dto";
 import ResultCount from "../../components/find-jobs/result-count"
 import JobsList from '../../components/embedded-jobs-listing/jobs-list'
-import { GetServerSidePropsContext } from 'next'
-import { useRouter } from 'next/router'
 import EmbeddedFilters from '../../components/embedded-filters/embedded-filters'
 import { EmbeddedFilterTypes } from '../../enums/embedded/embedded-filter-types.enum'
 import { DriverLicenseType } from '../../enums/users/driver-license-type.enum'
@@ -22,7 +22,7 @@ import { JobEmploymentType } from '../../enums/jobs/job-employment-type.enum'
 import { JobGeography } from '../../enums/jobs/job-geography.enum'
 import { JobTeamDriver } from '../../enums/jobs/job-team-driver.enum'
 import { JobEquipmentType } from '../../enums/jobs/job-equipment-type.enum'
-import EmploymentType from '../../components/filters/employment-type'
+import { Pagination, PagingMeta } from '../../types/pagination.type'
 
 export type EmbeddedCdlFiltersProps = {
     filterType?: EmbeddedFilterTypes;
@@ -37,7 +37,7 @@ export default function Embedded({ filterType, companyId }: EmbeddedCdlFiltersPr
 
     const [jobs, setJobs] = useState<JobEntity[]>([])
 
-    const [pagingMeta, setPagingMeta] = useState<PagingMetaProps>(pagingMetaInitialValues)
+    const [pagingMeta, setPagingMeta] = useState<PagingMeta>(pagingMetaInitialValues)
     const resetPagingMeta = (): void => setPagingMeta(pagingMetaInitialValues)
 
     const [searchQuery, setSearchQuery] = useState<string>()
@@ -120,7 +120,7 @@ export default function Embedded({ filterType, companyId }: EmbeddedCdlFiltersPr
             });
 
             await jobApi.search({ ...filters as any })
-                .then(({ items, meta }) => {
+                .then(({ items, meta }: Pagination<JobEntity>) => {
                     console.log({ items, meta, filters });
                     setJobs(items)
                     setPagingMeta(meta)
