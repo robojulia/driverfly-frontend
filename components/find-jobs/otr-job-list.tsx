@@ -90,7 +90,7 @@ export default function OtrJobsList() {
                                         <>
                                             <p>
                                                 <span className='mr-4'>
-                                                    {buildAddress(job.location || {}, { street: false, zip_code: false })}
+                                                    {buildAddress(job.location || {})}
                                                 </span></p>
                                         </>
                                     }
