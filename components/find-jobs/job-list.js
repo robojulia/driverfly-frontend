@@ -50,7 +50,7 @@ export default function JobsList() {
                                             job.location &&
                                             <>
                                                 <span className='mr-4'>
-                                                    {buildAddress(job.location || {}, { street: false, zip_code: false })}
+                                                    {buildAddress(job.location || {})}
 
                                                 </span>
                                             </>
