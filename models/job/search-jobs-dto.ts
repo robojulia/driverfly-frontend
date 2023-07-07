@@ -52,5 +52,6 @@ export interface SearchJobsDto {
     max_years_experience?: number;
     total_years_experience?: number;
     team_drivers?: JobTeamDriver;
+	withoutPagination?: boolean;
 
 }

@@ -10,7 +10,7 @@ import { useEffectAsync } from "../../../../utils/react";
 import { JobEntity } from "../../../../models/job/job.entity";
 import BaseCheck from "../../base-check";
 import { AtsJobDto } from "../../../../models/jot-form/short-form/ats-job.dto";
-import { PagingMetaProps } from "../../../../utils/job-filter";
+import BaseSelect from "../../base-select";
 
 export function AtsJobs() {
 
@@ -22,15 +22,14 @@ export function AtsJobs() {
     const jobApi = new JobApi()
     const { t } = useTranslation();
 
-    const [companyJobs, setCompanyJobs] = useState<{ items: JobEntity[], meta: PagingMetaProps }>(null)
+    const [companyJobs, setCompanyJobs] = useState<JobEntity[]>(null)
     const [jobCount, setJobCount] = useState<number>(null)
 
     const form = useFormik({
         initialValues: new AtsJobDto(),
         validationSchema: AtsJobDto.yupSchema(),
         onSubmit: async ({ jobId }) => {
-            if (Boolean(jobId)) setJobs([{ id: jobId }])
-
+            setJobs(Boolean(jobId) ? [{ id: jobId }] : null)
             stepNext();
         },
         onReset: (values) => {
@@ -40,19 +39,24 @@ export function AtsJobs() {
 
     useEffectAsync(async () => {
         if (form.values?.applying_for_job) {
-            const response = await jobApi.search({ companyId: applicant.company.id })
+            const response = await jobApi.search({
+                companyId: applicant?.company?.id,
+                withoutPagination: true
+            }) as JobEntity[]
             setCompanyJobs(response)
-            setJobCount(response?.items?.length > 0 ? response?.items?.length : -1)
+            setJobCount(response?.length > 0 ? response?.length : -1)
         } else {
             form.setFieldValue('jobId', null)
             setJobCount(0)
         }
-    }, [form.values?.applying_for_job]);
+    }, [applicant, form.values?.applying_for_job]);
 
     useEffectAsync(async () => {
         const job = jobs?.find(v => v?.id)
-        form.setFieldValue("jobId", job?.id)
-        form.setFieldValue("applying_for_job", Boolean(job?.id))
+        form.setValues({
+            applying_for_job: Boolean(job?.id),
+            jobId: job?.id,
+        })
     }, [jobs]);
 
     // useEffectAsync(async () => {
@@ -88,15 +92,15 @@ export function AtsJobs() {
                 <Row className="w-100 d-flex justify-content-center">
                     <Col md="6">
                         {jobCount > 0 && <>
-                            <label className={"heading-label my-4"}>{t('POSITION')} </label>
-                            {companyJobs?.items?.map(job => (
-                                <BaseCheck
-                                    key={job.id}
-                                    label={job.title}
-                                    checked={form.values.jobId == job.id}
-                                    onChange={() => form.setFieldValue('jobId', job.id)}
-                                />
-                            ))}
+                            <BaseSelect
+                                className="my-3"
+                                label="POSITION"
+                                formik={form}
+                                name="jobId"
+                                options={companyJobs}
+                                labelKey="title"
+                                valueKey="id"
+                            />
                         </>}
                         {
                             (jobCount == -1)

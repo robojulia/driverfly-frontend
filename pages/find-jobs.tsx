@@ -10,12 +10,13 @@ import JobApi from "./api/job"
 import Sort from "../components/find-jobs/sort"
 import ResultCount from "../components/find-jobs/result-count"
 import { JobEntity } from '../models/job/job.entity'
-import { filtersInitialsValues, pagingMetaInitialValues, PagingMetaProps } from '../utils/job-filter'
+import { filtersInitialsValues, pagingMetaInitialValues } from '../utils/job-filter'
 import { JobSearchLocation, SearchJobsDto } from '../models/job/search-jobs-dto'
 import { useEffectAsync } from '../utils/react'
 import { GetServerSidePropsContext } from 'next'
 import { toast } from "react-toastify";
 import { useTranslation } from '../hooks/use-translation'
+import { Pagination, PagingMeta } from '../types/pagination.type'
 
 export default function FindJobs(props) {
 
@@ -27,7 +28,7 @@ export default function FindJobs(props) {
 
     const [jobs, setJobs] = useState<JobEntity[]>([])
 
-    const [pagingMeta, setPagingMeta] = useState<PagingMetaProps>(pagingMetaInitialValues)
+    const [pagingMeta, setPagingMeta] = useState<PagingMeta>(pagingMetaInitialValues)
     const resetPagingMeta = (): void => setPagingMeta(pagingMetaInitialValues)
 
     const [searchQuery, setSearchQuery] = useState<string>()
@@ -120,7 +121,7 @@ export default function FindJobs(props) {
             });
 
             await jobApi.search({ ...filters as any })
-                .then(({ items, meta }) => {
+                .then(({ items, meta }: Pagination<JobEntity>) => {
                     console.log({ items, meta, filters });
                     setJobs(items)
                     setPagingMeta(meta)
