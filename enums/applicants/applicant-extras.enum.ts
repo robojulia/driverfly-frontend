@@ -32,4 +32,5 @@ export enum ApplicantExtras {
 	BUSINESS_NAME = "BUSINESS_NAME",
 	DOT_NUMBER = "DOT_NUMBER",
 	REFERAL_NAME = 'REFERAL_NAME',
+	GOOD_FIT = 'GOOD_FIT'
 }
