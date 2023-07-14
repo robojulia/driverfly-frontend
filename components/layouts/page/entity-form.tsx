@@ -41,8 +41,9 @@ export default function EntityForm(props: EntityFormProps) {
         <Form className={className} onSubmit={onSubmit}>
             <Row>
                 <Col xs="12" className="text-end">
-                    {props.actions?.map(({ icon: IconComp, label, className, disabled, onClick }) => (
-                        <Button
+                    {props.actions?.map(({ icon: IconComp, label, className, disabled, onClick, hide }, index) => (
+                        (!hide && <Button
+                            key={index}
                             type="button"
                             className={`${className} mr-2`}
                             disabled={disabled}
@@ -56,7 +57,7 @@ export default function EntityForm(props: EntityFormProps) {
                                         ? label()
                                         : label
                             }
-                        </Button>
+                        </Button>)
                     ))}
 
                     <Button type="submit" className="theme-secondary-btn" disabled={canSubmit == null || !!!canSubmit}>

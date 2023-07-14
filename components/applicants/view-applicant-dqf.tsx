@@ -120,7 +120,7 @@ const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
                                                     {t(`ApplicantDqf.${value}`)}
                                                 </td>
                                                 <td colSpan={1} className="text-center">
-                                                    <input className="form-check-input" type="checkbox" disabled checked={Boolean(document?.id)} />
+                                                    <input className="form-check-input" type="radio" disabled checked={Boolean(document?.id)} />
                                                 </td>
                                                 <td colSpan={2}>
                                                     {document ? <ShowFormattedDate date={document.last_updated_at} /> : <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>}

@@ -13,7 +13,9 @@ import {
 export class EmployeeEntity {
 	id?: number;
 	applicant?: ApplicantEntity;
+	// applicantId?: number;
 	job?: JobEntity;
+	// jobId?: number;
 	status?: ApplicantStatus;
 	status_other?: string;
 	reason_codes?: string[] = [];
