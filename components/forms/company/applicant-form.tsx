@@ -44,10 +44,8 @@ import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmi
 import { ApplicantDocumentType } from "../../../enums/applicants/applicant-document-type.enum";
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
 import { JobGeography } from "../../../enums/jobs/job-geography.enum";
-import CompanyApi from "../../../pages/api/company";
 import ViewModal from "../../view-details/view-modal";
 import { EmployeeEntity } from "../../../models/applicant/employee.entity";
-import EmployeeApi from "../../../pages/api/employee";
 import UserApi from "../../../pages/api/user";
 import { UserEntity } from "../../../models/user/user.entity";
 import { JobForm } from "./job-form";

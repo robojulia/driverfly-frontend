@@ -13,7 +13,7 @@ import BaseCheck from "../../../forms/base-check";
 
 export interface DacTabProps extends ViewApplicantDetailProps { }
 
-const DAC = ({ applicant }: DacTabProps) => {
+export default function DAC({ applicant }: DacTabProps) {
 
     const { t } = useTranslation();
     const applicantApi = new ApplicantApi();
@@ -113,5 +113,3 @@ const DAC = ({ applicant }: DacTabProps) => {
         </div>
     );
 };
-
-export default DAC;

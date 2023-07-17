@@ -381,6 +381,12 @@ class ApplicantApi extends BaseApi {
 	employee = {
 		baseUrl: `employee`,
 
+		list: async (): Promise<EmployeeEntity[]> => {
+			const { data } = await this.get(`${this.employee.baseUrl}`);
+
+			return data;
+		},
+
 		create: async (applicantId: number, dto: EmployeeEntity): Promise<EmployeeEntity> => {
 			const { data } = await this.post(`${this.employee.baseUrl}/applicant/${applicantId}`, dto);
 

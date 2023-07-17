@@ -231,7 +231,7 @@ export default function DQF(props: ViewApplicantDqfProps) {
                                                     {Boolean(props.showCompleted)
                                                         &&
                                                         <td colSpan={1} className="text-center">
-                                                            <input className="form-check-input" type="checkbox" disabled checked={Boolean(document?.id)} />
+                                                            <input className="form-check-input" type="radio" disabled checked={Boolean(document?.id)} />
                                                         </td>
                                                     }
                                                     <td colSpan={2}>

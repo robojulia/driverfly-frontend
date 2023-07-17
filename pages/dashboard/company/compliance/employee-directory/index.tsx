@@ -42,7 +42,7 @@ import BaseTextArea from "../../../../../components/forms/base-text-area";
 import { Status } from "../../../../../enums/status.enum";
 import BaseSelect from "../../../../../components/forms/base-select";
 import AdditionalFiles from "../../../../../components/dashboard/employee-directory/additional-files";
-
+import { EmployeeEntity } from "../../../../../models/applicant/employee.entity";
 
 export default function EmployeeDirectory() {
 
@@ -61,9 +61,9 @@ export default function EmployeeDirectory() {
     const { setPreviousPath } = useLastPage();
     setPreviousPath(router.asPath)
 
-    const [applicants, setApplicants] = useState<ReducedApplicantEntityType[]>([])
-    const resetApplicants = () => setApplicants([])
-    const filterApplicants = (id: number) => setApplicants(applicants.filter(v => v.applicant.id != id))
+    const [employees, setEmployees] = useState<EmployeeEntity[]>([])
+    const resetEmployees = () => setEmployees([])
+    const filterEmployees = (id: number) => setEmployees(employees.filter(v => v.id != id))
 
     enum ViewModeType { EMPLOYEE = "EMPLOYEE", PAST_EMPLOYEE = "PAST_EMPLOYEE" }
     const [viewMode, setViewMode] = useState<ViewModeType>(ViewModeType.EMPLOYEE)
@@ -78,58 +78,51 @@ export default function EmployeeDirectory() {
 
     const onViewModeChange = async ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
         value = viewMode == ViewModeType.EMPLOYEE ? ViewModeType.PAST_EMPLOYEE : ViewModeType.EMPLOYEE
-        resetApplicants()
+        resetEmployees()
         router.query.viewMode = value;
         await router.push(router);
     }
 
     const fetchEmployee = async () => {
-        const data = await applicantApi.list({
-            status: [
-                ApplicantStatus.COMPLETED_EMPLOYED,
-                ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
-                ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE
-            ]
-        });
-        // const filteredApplicants: ApplicantEntity[] = filterHired(data)
-        const reducedApplicants: ReducedApplicantEntityType[] = reduceSingleEntity(data)
-        setApplicants(reducedApplicants)
+        const data = await applicantApi.employee.list()
+        setEmployees(data.filter(v => [
+            ApplicantStatus.COMPLETED_EMPLOYED,
+            ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
+            ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE
+        ].includes(v.status)))
     }
 
     const fetchPastEmployee = async () => {
-        const data = await applicantApi.list({
-            status: [
-                ApplicantStatus.INACTIVE_FIRED,
-                ApplicantStatus.INACTIVE_QUIT
-            ]
-        });
-        const reducedApplicants: ReducedApplicantEntityType[] = reduceSingleEntity(data)
-        setApplicants(reducedApplicants)
+        const data = await applicantApi.employee.list()
+        setEmployees(data.filter(v => [
+            ApplicantStatus.INACTIVE_FIRED,
+            ApplicantStatus.INACTIVE_QUIT
+        ].includes(v.status)))
     }
 
     const [modalAction, setModalAction] = useState<{
-        entity: ReducedApplicantEntityType,
+        entity: EmployeeEntity,
         type: "VIEW" | "DELETE" | "MOVE_TO_PAST_EMPLOYEE",
     }>(null)
     const resetModalAction = (): void => setModalAction(null)
 
     const tabs = {
-        BACKGROUND: <Background {...modalAction?.entity} />,
-        DQF: < DQF {...modalAction?.entity} canEdit={true} showHistory={true} />,
-        DRIVER_ONBOARDING_CHECKLIST: < DAC {...modalAction?.entity} />,
-        ADDITIONAL_FILES: < AdditionalFiles {...modalAction?.entity} />,
+        BACKGROUND: <Background employee={modalAction?.entity} />,
+        DQF: < DQF applicant={modalAction?.entity.applicant} canEdit={true} showHistory={true} />,
+        DRIVER_ONBOARDING_CHECKLIST: < DAC applicant={modalAction?.entity.applicant} />,
+        ADDITIONAL_FILES: < AdditionalFiles applicant={modalAction?.entity.applicant} />,
 
         // VEHICLES: < VehicleInformationTab />  //according to wireframe this tab (vehichled are pushed to phase 3)
     };
 
     const applicantJobForm = useFormik({
-        initialValues: new ApplicantJobEntity(),
-        validationSchema: ApplicantJobEntity.yupSchema(),
+        initialValues: new EmployeeEntity(),
+        validationSchema: EmployeeEntity.yupSchema(),
         onSubmit: async (values) => {
             try {
-                await applicantApi.jobs.update(values.applicant?.id, values?.job?.id, values)
+                await applicantApi.employee.update(values?.id, values)
                 applicantJobForm.resetForm();
-                filterApplicants(values?.applicant?.id)
+                filterEmployees(values?.id)
             } catch (e) {
                 globalAjaxExceptionHandler(e, { formik: applicantJobForm, t: t, toast: toast });
             }
@@ -137,22 +130,22 @@ export default function EmployeeDirectory() {
     });
     useEffect(() => console.log(applicantJobForm.errors), [applicantJobForm.errors])
 
-    const onViewClick = (entity: ReducedApplicantEntityType): void =>
+    const onViewClick = (entity: EmployeeEntity): void =>
         setModalAction({ entity, type: "VIEW" })
 
-    const onEditClick = (entity: ReducedApplicantEntityType) =>
+    const onEditClick = (entity: EmployeeEntity) =>
         router.push(`/dashboard/company/applicants/${entity?.applicant?.id}/edit`)
 
-    const onTrashClick = async (entity: ReducedApplicantEntityType): Promise<void> => {
+    const onTrashClick = async (entity: EmployeeEntity): Promise<void> => {
         setModalAction({ entity, type: "DELETE" })
     }
 
     const onDeleteClick = async (): Promise<void> => {
         try {
-            const data = await applicantApi.remove(modalAction?.entity?.applicant?.id)
+            const data = await applicantApi.employee.remove(modalAction?.entity?.id)
 
-            if (data && data?.status == Status.DELETED) {
-                filterApplicants(modalAction?.entity?.applicant?.id)
+            if (data && data?.active_status == Status.DELETED) {
+                filterEmployees(modalAction?.entity?.id)
                 toast(t("successfully_saved_information"))
             } else {
                 toast(t("ERROR_MESSAGE_DEFAULT"))
@@ -165,7 +158,7 @@ export default function EmployeeDirectory() {
 
     const onMoveToPastEmploeeClick = async (): Promise<void> => {
         setModalAction({ ...modalAction, type: "MOVE_TO_PAST_EMPLOYEE" })
-        applicantJobForm.setValues(modalAction?.entity?.applicantJob);
+        applicantJobForm.setValues(modalAction?.entity);
         applicantJobForm.setFieldValue("reason_codes", []);
     }
 
@@ -196,7 +189,7 @@ export default function EmployeeDirectory() {
                 </Row>
             }
         >
-            <ViewDataTable<ReducedApplicantEntityType>
+            <ViewDataTable<EmployeeEntity>
                 columnSettingKey={columnSettingKey}
                 customStyles={{
                     headRow: {
@@ -210,7 +203,7 @@ export default function EmployeeDirectory() {
                     {
                         id: "id",
                         name: "ID",
-                        selector: data => data?.applicant?.id,
+                        selector: data => data?.id,
                     },
                     {
                         id: "name",
@@ -244,41 +237,41 @@ export default function EmployeeDirectory() {
                     {
                         id: "jobTitle",
                         name: 'job_title',
-                        selector: data => data?.applicantJob?.job?.title,
+                        selector: data => data?.job?.title,
                         cell: data => (<OverlyPopover
                             skipTranslate
                             slice_at={40}
-                            str={data?.applicantJob?.job?.title}
+                            str={data?.job?.title}
                         />),
                     },
-                    {
-                        hide: (viewMode === ViewModeType.PAST_EMPLOYEE ? 1 : 0),
-                        id: "dateHired",
-                        name: 'DATE_HIRED',
-                        selector: data => data?.applicantJob?.hired_at,
-                        cell: data => <ShowFormattedDate
-                            date={data?.applicantJob?.hired_at}
-                            hideTime
-                        />
-                    },
-                    {
-                        hide: (viewMode !== ViewModeType.PAST_EMPLOYEE ? 1 : 0),
-                        id: "dateTermination",
-                        name: 'DATE_TERMINATION',
-                        selector: data => data?.applicantJob?.hired_at,
-                        cell: data => <ShowFormattedDate
-                            date={data?.applicantJob?.hired_at}
-                            hideTime
-                        />
-                    },
+                    // {
+                    //     hide: (viewMode === ViewModeType.PAST_EMPLOYEE ? 1 : 0),
+                    //     id: "dateHired",
+                    //     name: 'DATE_HIRED',
+                    //     selector: data => data?.applicantJob?.hired_at,
+                    //     cell: data => <ShowFormattedDate
+                    //         date={data?.applicantJob?.hired_at}
+                    //         hideTime
+                    //     />
+                    // },
+                    // {
+                    //     hide: (viewMode !== ViewModeType.PAST_EMPLOYEE ? 1 : 0),
+                    //     id: "dateTermination",
+                    //     name: 'DATE_TERMINATION',
+                    //     selector: data => data?.applicantJob?.hired_at,
+                    //     cell: data => <ShowFormattedDate
+                    //         date={data?.applicantJob?.hired_at}
+                    //         hideTime
+                    //     />
+                    // },
                     {
                         id: "status",
                         name: 'STATUS',
-                        selector: data => data?.applicantJob?.status,
+                        selector: data => data?.status,
                         cell: data =>
                         (<ShowEnumFromString
                             labelPrefix="ApplicantStatus"
-                            value={data?.applicantJob?.status}
+                            value={data?.status}
                             enumArray={ApplicantStatus} />
                         ),
                     },
@@ -290,9 +283,9 @@ export default function EmployeeDirectory() {
                         cell: data =>
                         (<ShowEnumFromString
                             popover
-                            labelPrefix={data.applicantJob.status == ApplicantStatus.INACTIVE_QUIT ? "ApplicantReasonCodeQuit" : "ApplicantReasonCodeFired"}
-                            enumArray={data.applicantJob.status == ApplicantStatus.INACTIVE_FIRED ? ApplicantReasonCodeQuit : ApplicantReasonCodeFired}
-                            value={data?.applicantJob?.reason_codes}
+                            labelPrefix={data.status == ApplicantStatus.INACTIVE_QUIT ? "ApplicantReasonCodeQuit" : "ApplicantReasonCodeFired"}
+                            enumArray={data.status == ApplicantStatus.INACTIVE_FIRED ? ApplicantReasonCodeQuit : ApplicantReasonCodeFired}
+                            value={data?.reason_codes}
                         />
                         ),
                     },
@@ -320,7 +313,7 @@ export default function EmployeeDirectory() {
                         },
                     ])}
 
-                items={applicants}
+                items={employees}
             />
 
             {/* TabbedLayout modal component with items passed as a prop `tabs` */}
