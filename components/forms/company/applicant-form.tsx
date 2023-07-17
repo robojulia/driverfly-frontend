@@ -44,11 +44,8 @@ import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmi
 import { ApplicantDocumentType } from "../../../enums/applicants/applicant-document-type.enum";
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
 import { JobGeography } from "../../../enums/jobs/job-geography.enum";
-import { CompanyManagerEntity } from "../../../models/company/company-manager.entity";
-import CompanyApi from "../../../pages/api/company";
 import ViewModal from "../../view-details/view-modal";
 import { EmployeeEntity } from "../../../models/applicant/employee.entity";
-import EmployeeApi from "../../../pages/api/employee";
 import UserApi from "../../../pages/api/user";
 import { UserEntity } from "../../../models/user/user.entity";
 import { JobForm } from "./job-form";
@@ -59,6 +56,7 @@ export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> {
 export function ApplicantForm(props: ApplicantFormProps) {
 	const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([])
 	const { t } = useTranslation();
+	const applicantApi = new ApplicantApi();
 	let { className, entity, onSaveComplete, onSaveError } = props;
 
 	let { user, hasPermission, isSuperAdmin } = useAuth();
@@ -79,7 +77,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		initialValues: new ApplicantEntity(),
 		validationSchema: ApplicantEntity.yupSchema(),
 		onSubmit: async (values) => {
-			const api = new ApplicantApi();
 
 			const jobs = values.jobs || [];
 			if ("jobs" in values)
@@ -87,17 +84,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
 			try {
 				if (entity?.id) {
-					values = await api.update(entity.id, values);
+					values = await applicantApi.update(entity.id, values);
 				}
 				else {
-					values = await api.create(values);
+					values = await applicantApi.create(values);
 				}
 
 				for (let i = 0; i < entity?.jobs?.length; i++) {
 					let job = entity.jobs[i];
 
 					if (!jobs.some(v => v.job?.id === job.job.id)) {
-						await api.jobs.remove(values.id, job.job.id);
+						await applicantApi.jobs.remove(values.id, job.job.id);
 					}
 				}
 
@@ -105,10 +102,10 @@ export function ApplicantForm(props: ApplicantFormProps) {
 					let job = jobs[i];
 
 					if (job.id) {
-						await api.jobs.update(values.id, job.job.id, job);
+						await applicantApi.jobs.update(values.id, job.job.id, job);
 					}
 					else {
-						await api.jobs.create(values.id, job.job.id, job);
+						await applicantApi.jobs.create(values.id, job.job.id, job);
 					}
 				}
 
@@ -125,18 +122,12 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	});
 
 	const [jobs, setJobs] = useState<JobEntity[]>([]);
-	const [managers, setManagers] = useState<CompanyManagerEntity[]>([]);
 
 	useEffectAsync(async () => {
 		const api = new JobApi();
 		const jobs = await api.list();
 
 		setJobs(jobs);
-
-		const companyApi = new CompanyApi();
-		const data = await companyApi.manager.list();
-
-		setManagers(data);
 	}, [user]);
 
 	useEffect(() => {
@@ -157,12 +148,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	const hireApplicantForm = useFormik({
 		initialValues: new EmployeeEntity(),
 		validationSchema: EmployeeEntity.yupSchema(),
-		onSubmit: async (values) => {
+		validateOnMount: false,
+		onSubmit: async (values, { resetForm }) => {
 			try {
-				const employeeApi = new EmployeeApi()
-				const data = await employeeApi.create(entity.id, values.job.id, values)
-				entity.employee = data;
-				hireApplicantForm.resetForm();
+				let response: EmployeeEntity;
+				if (values.id) {
+					response = await applicantApi.employee.update(values.id, values)
+				} else {
+					response = await applicantApi.employee.create(entity.id, values)
+				}
+				entity.employee = response;
+				resetForm();
 				formSuccess(t, "hired", "STATUS");
 			} catch (e) {
 				globalAjaxExceptionHandler(e, { formik: hireApplicantForm, t: t, toast: toast });
@@ -170,7 +166,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		},
 	});
 
-	const [createJob, setCreateJob] = useState(false);
+	const [createJob, setCreateJob] = useState<boolean>(false);
 
 	const onJobAdded = (job: JobEntity) => {
 		setJobs([
@@ -181,8 +177,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	}
 
 	useEffect(() => {
+		console.log("hireApplicantForm.values", hireApplicantForm.values);
 		console.log("hireApplicantForm.errors", hireApplicantForm.errors);
-	}, [hireApplicantForm.errors]);
+	}, [hireApplicantForm.errors, hireApplicantForm.values]);
 
 
 	const userApi = new UserApi()
@@ -982,8 +979,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								<thead>
 									<tr>
 										<th>{t("JOB")}*</th>
-										<th>{t("STATUS")}*</th>
-										<th>{t("MANAGER")}*</th>
+										<th>{t("APPLICATION_STATUS")}*</th>
 										<th></th>
 									</tr>
 								</thead>
@@ -1024,17 +1020,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														/>
 													</td>
 													<td>
-														<BaseSelect
-															name={`jobs[${i}].manager.id`}
-															required
-															placeholder="MANAGER"
-															options={managers}
-															labelKey="name"
-															valueKey="id"
-															formik={form}
-														/>
-													</td>
-													<td>
 														<a href="#" onClick={() => form.setValues({
 															...form.values,
 															jobs: form.values.jobs.filter((v, idx) => i != idx)
@@ -1069,7 +1054,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 							<BaseSelect
 								name={`job.id`}
 								required
-								placeholder="JOB"
+								placeholder={t("SELECT_{name}", { name: "JOB" }, { translateProps: true })}
 								options={jobs}
 								labelKey="title"
 								label="JOB"

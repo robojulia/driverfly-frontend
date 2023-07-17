@@ -9,17 +9,21 @@ import {
 	ApplicantReasonCodeNotQualified,
 	ApplicantReasonCodeQuit
 } from '../../enums/applicants/applicant-reason-codes.enum';
+import { Status } from '../../enums/status.enum';
 
 export class EmployeeEntity {
 	id?: number;
 	applicant?: ApplicantEntity;
+	// applicantId?: number;
 	job?: JobEntity;
+	// jobId?: number;
 	status?: ApplicantStatus;
 	status_other?: string;
 	reason_codes?: string[] = [];
 	reason_codes_other?: string;
 	created_at?: string;
 	last_updated_at?: string;
+	active_status?: Status;
 
 	static yupSchema() {
 		return yup.object({
