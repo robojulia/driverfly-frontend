@@ -317,7 +317,7 @@ export default function EmployeeDirectory() {
             />
 
             {/* TabbedLayout modal component with items passed as a prop `tabs` */}
-            <ViewModal show={!!(modalAction?.type == "VIEW")} onCloseClick={resetModalAction} size='xl' >
+            <ViewModal title="VIEW_DETAILS" show={!!(modalAction?.type == "VIEW")} onCloseClick={resetModalAction} size='xl' >
                 <TabbedLayout items={tabs} className="mt-5"></TabbedLayout>
             </ViewModal>
 
