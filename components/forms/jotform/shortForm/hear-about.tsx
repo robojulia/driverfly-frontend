@@ -19,6 +19,7 @@ import { CompanyPreferenceEntity } from "../../../../models/company/company-pref
 import { CompanyPreferenceCategory } from "../../../../enums/company/company-preference-category.enum";
 import { CompanyPreferenceJotformLabel } from "../../../../enums/company/company-preferences-jotform-label.enum";
 import { useEffectAsync } from "../../../../utils/react";
+import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 
 export function HearAbout() {
 	const {
@@ -59,14 +60,14 @@ export function HearAbout() {
 						...data,
 					});
 
-					stepNext();
+					// stepNext();
 
 				} catch (error) {
 					console.log(error);
 					globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
 				}
 			} else {
-				stepNext();
+				// stepNext();
 			}
 		},
 		onReset: (values) => {
@@ -102,13 +103,15 @@ export function HearAbout() {
 	}, [applicant?.company])
 
 
-	const OwnerOperator: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.EMPLOYMENT_TYPE)
+	const CompanyPrefferedEmploymentType: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.EMPLOYMENT_TYPE)
 	const CompanyPrefferedMinExperience: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.YEARS_CDL_EXPERIENCE)
 	const CompanyPrefferedAccidentCountLimit: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.MINIMUM_ACCIDENTS)
 	const CompanyPrefferedAccidentViolationLimit: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.MIN_MOVING_VIOLATIONS)
 	const CompanyPreferedLocations: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.JOB_GEOGRAPHY)
-
 	const ApplicantAddedRoutes: ApplicantExtrasEntity = applicantExtras.find(v => v.type === ApplicantExtras.ROUTES)
+
+	const ApplicantSalariedW2: ApplicantExtrasEntity = applicantExtras?.find(v => v.type == ApplicantExtras.REQUIRE_W2_EMPLOYMENT && v.value == BooleanType.YES)
+
 
 	function checkJobGeographyInRouteType(RouteType: string[], JobGeography: string[]): boolean {
 		for (let i = 0; i < RouteType?.length; i++) {
@@ -123,38 +126,43 @@ export function HearAbout() {
 
 	const hasJobGeographyInRouteType = checkJobGeographyInRouteType(ApplicantAddedRoutes?.value, CompanyPreferedLocations?.value);
 
+	const checkApplicantEligibility = () => {
+		if (Boolean(companyCdlPreferences.length > 0)
+			&& !Boolean(companyCdlPreferences.includes(applicant?.license_type))) {
+			return false
+		}
+
+		if (Boolean(applicant?.years_cdl_experience < CompanyPrefferedMinExperience?.value)) {
+			return false
+		}
+
+		if (
+			!Boolean(hasJobGeographyInRouteType) &&
+			!Boolean(
+				(CompanyPrefferedEmploymentType?.value?.includes('W2') && ApplicantSalariedW2) ||
+				(CompanyPrefferedEmploymentType?.value?.includes('OWNER_OPERATOR') && applicant?.is_owner_operator)
+			)
+		) {
+			return false
+		}
+
+		if (Boolean(applicant?.accident_count > CompanyPrefferedAccidentCountLimit?.value)
+			&& Boolean(applicant?.moving_violations_count > CompanyPrefferedAccidentViolationLimit?.value)) {
+			return false
+		}
+
+		return true
+	}
+
+
 	useEffect(() => {
-
-		(
-			Boolean(companyCdlPreferences.length > 0)
-			&& !Boolean(companyCdlPreferences.includes(applicant?.license_type))
-		) ? (
-			console.log("not cleared cdl")
-		) : (
-			Boolean(applicant?.years_cdl_experience < CompanyPrefferedMinExperience?.value) ? (
-				console.log("no cleared min exp")
-			) : (
-				!Boolean(hasJobGeographyInRouteType) ? (
-					console.log("not cleared routes type")
-				) : (
-					(
-						Boolean(applicant?.accident_count > CompanyPrefferedAccidentCountLimit?.value)
-						&& Boolean(applicant?.moving_violations_count > CompanyPrefferedAccidentViolationLimit?.value)
-					) ? (
-						console.log("no cleared accident/violation count")
-					) : (
-						console.log("cleared")
-					)
-				)))
-
-
-		// ) {
-		// 	console.log("Applicant is suitable");
-		// 	form?.setFieldValue("GOOD_FIT.value", true)
-		// } else {
-		// 	console.log("Applicant is not suitable");
-		// 	form?.setFieldValue("GOOD_FIT.value", false)
-		// }
+		if (checkApplicantEligibility()) {
+			console.log("Applicant is suitable");
+			form?.setFieldValue("GOOD_FIT.value", true)
+		} else {
+			console.log("Applicant is not suitable");
+			form?.setFieldValue("GOOD_FIT.value", false)
+		}
 	}, [form.values])
 
 
@@ -183,10 +191,10 @@ export function HearAbout() {
 		});
 	}, [applicantExtras]);
 
-	// useEffect(() => {
-	// 	console.log("form values", form.values);
-	// 	console.log("form error", form.errors);
-	// }, [form.values, form.errors]);
+	useEffect(() => {
+		console.log("form values", form.values);
+		console.log("form error", form.errors);
+	}, [form.values, form.errors]);
 
 	return (
 		<>
