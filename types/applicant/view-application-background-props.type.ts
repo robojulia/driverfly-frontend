@@ -1,7 +1,6 @@
-import { ApplicantJobEntity } from "../../models/applicant";
-import { ApplicantEntity } from "../../models/applicant/applicant.entity";
+
+import { EmployeeEntity } from "../../models/applicant/employee.entity";
 
 export type ViewApplicantBackgroundProps = {
-    applicant: ApplicantEntity;
-    applicantJob: ApplicantJobEntity;
+    employee: EmployeeEntity;
 }

@@ -7,22 +7,22 @@ import { ViewApplicantBackgroundProps } from '../../../../types/applicant/view-a
 import ViewDetails from '../../../view-details/view-details';
 
 
-export default function Background({ applicant, applicantJob }: ViewApplicantBackgroundProps) {
+export default function Background({ employee }: ViewApplicantBackgroundProps) {
 
 	const router = useRouter()
 	const { t } = useTranslation();
 
-	const onViewProfileCLick = () => router.push(`/dashboard/company/applicants/${applicant?.id}`)
-	const onEditClick = () => router.push(`/dashboard/company/applicants/${applicant?.id}/edit`)
+	const onViewProfileCLick = () => router.push(`/dashboard/company/applicants/${employee?.applicant?.id}`)
+	const onEditClick = () => router.push(`/dashboard/company/applicants/${employee?.applicant?.id}/edit`)
 
 
 	return (
 		<div className="employee_directory_tabs">
-			{applicant && (
+			{employee?.applicant && (
 				<>
 					<Row className="my-2">
 						<Col>
-							<strong><h5>{t(`${applicant.first_name} ${applicant.last_name}`)}</h5></strong>
+							<strong><h5>{t(`${employee?.applicant?.first_name} ${employee?.applicant?.last_name}`)}</h5></strong>
 						</Col>
 						<Col>
 							<Button onClick={onEditClick} className="float-right">{t("EDIT")}</Button>
@@ -33,9 +33,9 @@ export default function Background({ applicant, applicantJob }: ViewApplicantBac
 							<ViewDetails
 								default={t("NOT_ANSWERED")}
 								obj={{
-									POSITION: applicantJob?.job?.title,
-									TERMINAL: applicantJob?.job?.location?.city,
-									MANAGER: applicantJob?.manager?.name ? applicantJob?.manager?.name : t('NO_MANAGER_ASSIGNED'),
+									POSITION: employee?.job?.title,
+									TERMINAL: employee?.job?.location?.city,
+									// MANAGER: job?.manager?.name ? job?.manager?.name : t('NO_MANAGER_ASSIGNED'),
 								}}
 							/>
 						</Col>
@@ -43,15 +43,15 @@ export default function Background({ applicant, applicantJob }: ViewApplicantBac
 							<ViewDetails
 								default={t("NOT_ANSWERED")}
 								obj={{
-									DATE_HIRED: applicantJob?.hired_at ? new Date(applicantJob?.hired_at).toDateString() : t("N/A"),
-									BIRTHDATE: applicant?.birthdate ? new Date(applicant?.birthdate).toDateString() : t("N/A"),
+									// DATE_HIRED: job?.hired_at ? new Date(job?.hired_at).toDateString() : t("N/A"),
+									BIRTHDATE: employee?.applicant?.birthdate ? new Date(employee?.applicant?.birthdate).toDateString() : t("N/A"),
 								}}
 							/>
 						</Col>
 					</Row>
 
 
-					<ViewApplicantDetail applicant={applicant} />
+					<ViewApplicantDetail applicant={employee?.applicant} />
 					<Button onClick={onViewProfileCLick}>{t(`view_applicant_profile`)}</Button>
 				</>
 			)}
