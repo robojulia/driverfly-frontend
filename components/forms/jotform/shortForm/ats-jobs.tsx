@@ -29,7 +29,9 @@ export function AtsJobs() {
         initialValues: new AtsJobDto(),
         validationSchema: AtsJobDto.yupSchema(),
         onSubmit: async ({ jobId }) => {
-            setJobs(Boolean(jobId) ? [{ id: jobId }] : null)
+            if (Boolean(jobId)) {
+                setJobs([...jobs, { id: jobId }])
+            }
             stepNext();
         },
         onReset: (values) => {

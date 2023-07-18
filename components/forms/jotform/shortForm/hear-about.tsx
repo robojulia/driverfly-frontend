@@ -191,10 +191,10 @@ export function HearAbout() {
 		});
 	}, [applicantExtras]);
 
-	useEffect(() => {
-		console.log("form values", form.values);
-		console.log("form error", form.errors);
-	}, [form.values, form.errors]);
+	// useEffect(() => {
+	// 	console.log("form values", form.values);
+	// 	console.log("form error", form.errors);
+	// }, [form.values, form.errors]);
 
 	return (
 		<>
