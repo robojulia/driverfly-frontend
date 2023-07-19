@@ -241,9 +241,16 @@ export default function CompanyPreference() {
             <div className="text-center">
               <h2>{t('REFER_BACK_PROGRAM')}</h2>
               <p>{t('REFER_BACK_PROGRAM_TEXT_1')}</p>
-              <p>{t('REFER_BACK_PROGRAM_TEXT_2')}</p>
-              <p>{t('REFER_BACK_PROGRAM_TEXT_3')}</p>
 
+              <p>{t('REFER_BACK_PROGRAM_TEXT_2')}</p>
+              <p>
+                <span> {t('REFER_BACK_PROGRAM_TEXT_3_PART_1')}</span>
+                <span> </span>
+                <span className="text-primary">
+                  {t('REFER_BACK_PROGRAM_TEXT_3_PART_2')}
+                </span>
+                <span>{t('REFER_BACK_PROGRAM_TEXT_3_PART_3')}</span>
+              </p>
             </div>
           </ViewModal>
         )}
@@ -261,8 +268,14 @@ export default function CompanyPreference() {
               <p>{t('AUTO_RECRUITING_TEXT_2')}</p>
               <p>{t('AUTO_RECRUITING_TEXT_3')}</p>
               <p>{t('AUTO_RECRUITING_TEXT_4')}</p>
-              <p className="text-center">{t('REFER_BACK_PROGRAM_TEXT_3')}</p>
-
+              <p className="text-center">
+                <span> {t('REFER_BACK_PROGRAM_TEXT_3_PART_1')}</span>
+                <span> </span>
+                <span className="text-primary">
+                  {t('REFER_BACK_PROGRAM_TEXT_3_PART_2')}
+                </span>
+                <span>{t('REFER_BACK_PROGRAM_TEXT_3_PART_3')}</span>
+              </p>
             </div>
           </ViewModal>
         )}
@@ -293,6 +306,7 @@ export default function CompanyPreference() {
             }?source=indeed`}
           tooltipText={t("CLICK_TO_COPY")}
         />
+        <p className="pt-2 pb-2">{t("DHA_URL_TIP_TEXT")}</p>
         <div className="d-flex align-item-start my-4">
           <p>{t('PARTICIPE_IN_REFER_BACK_PROGRAM')}</p>
           <p
