@@ -140,9 +140,13 @@ export function HearAbout() {
 			!Boolean(hasJobGeographyInRouteType) &&
 			!Boolean(
 				(CompanyPrefferedEmploymentType?.value?.includes('W2') && ApplicantSalariedW2) ||
-				(CompanyPrefferedEmploymentType?.value?.includes('OWNER_OPERATOR') && applicant?.is_owner_operator)
+				(CompanyPrefferedEmploymentType?.value?.includes('CONTRACT') && applicant?.is_owner_operator && ApplicantSalariedW2)
+
 			)
 		) {
+			return false
+		}
+		if ((CompanyPrefferedEmploymentType?.value?.includes('OWNER_OPERATOR') && !applicant?.is_owner_operator)) {
 			return false
 		}
 
