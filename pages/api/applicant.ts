@@ -16,6 +16,7 @@ import { VerifyOTPDto } from "../../models/jot-form/OTP/verify-otp.dto";
 import { UpsertApplicantJotformDto } from "../../models/jot-form/upsert-applicant-jotform.dto";
 import { UpsertApplicantVoeformDto } from "../../models/jot-form/upsert-applicant-voe.dto";
 import BaseApi from "./_baseApi";
+import { EmployeeEntity } from "../../models/applicant/employee.entity";
 
 class ApplicantApi extends BaseApi {
 	baseUrl: string = "applicants";
@@ -376,6 +377,35 @@ class ApplicantApi extends BaseApi {
 			return data;
 		},
 	};
+
+	employee = {
+		baseUrl: `employee`,
+
+		list: async (): Promise<EmployeeEntity[]> => {
+			const { data } = await this.get(`${this.employee.baseUrl}`);
+
+			return data;
+		},
+
+		create: async (applicantId: number, dto: EmployeeEntity): Promise<EmployeeEntity> => {
+			const { data } = await this.post(`${this.employee.baseUrl}/applicant/${applicantId}`, dto);
+
+			return data;
+		},
+
+		update: async (id: number, dto: EmployeeEntity): Promise<EmployeeEntity> => {
+			const { data } = await this.put(`${this.employee.baseUrl}/${id}`, dto);
+
+			return data;
+		},
+
+		remove: async (id: number): Promise<EmployeeEntity | void> => {
+			const { data } = await this.delete(`${this.employee.baseUrl}/${id}`);
+
+			return data;
+		}
+
+	}
 }
 
 export default ApplicantApi;

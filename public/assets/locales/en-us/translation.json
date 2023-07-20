@@ -1360,6 +1360,7 @@
   "DON'T_HAVE_AN_ACCOUNT": "Don't have an account? Make one",
   "OTHER_SKILLS": "Other Skills",
   "ALREADY_EXISTS": "Already Exists",
+  "ALREADY_EMPLOYED": "Already Employed",
   "HAS_HAD_INFRACTIONS_LAST_5_YEARS": "Have you had any infractions in the previous 5 years?",
   "HAS_HAD_MOVING_VIOLATIONS_LAST_3_YEARS": "Have you had any moving violations (not at fault) in the previous 3 years?",
   "ADMIN": "Admin",
@@ -2001,7 +2002,7 @@
   "REFER_BACK_DETAILS": "With this you authorize DriverFly to contact applicants who are not a good fit based on the parameters contained in this section. In return, you receive $250 in company credit per candidate that gets placed through our platform",
   "UPLOAD_FILE": "Upload file",
   "DHA_welcome_note": "Welcome to our Digital Hiring Applicatiion",
-  "COMPANY_PREFERENCE_DHA_NOTE": "To maximize yopur recruiting pipeline,fill out your company level preference in the fields below and copy and paste the URL provided to all your external job postings and communications. All applicants will be passed directly into your applicants tab",
+  "COMPANY_PREFERENCE_DHA_NOTE": "To maximize your recruiting pipeline,fill out your company level preference in the fields below and copy and paste the URL provided to all your external job postings and communications. All applicants will be passed directly into your applicants tab",
   "LEARN_MORE_ABOUT_BENEFITS": "To learn more about the full benefits, go to ",
   "DHA_LINK": "digitalhiringapp.com",
   "BUSINESS_NAME": "If you have a separate business name, please provide here:",
@@ -2012,7 +2013,9 @@
   "REFER_BACK_PROGRAM": "Refer Back Program",
   "REFER_BACK_PROGRAM_TEXT_1": "The Refer Back Program is an excellent way to earn back some of your marketing/recruiting spend while helping candidates that you cannot hire get jobs elsewhere.",
   "REFER_BACK_PROGRAM_TEXT_2": "By opting in, you authorize DriverFly to contact consenting applicants who are not a good fit based on your company match parameters (listed below). In return, you will receive $350 software credit per applicant that gets hired through the program.To learn more, reach out to our team at info@driverfly.co to schedule a call.",
-  "REFER_BACK_PROGRAM_TEXT_3": "To learn more, reach out to our team at info@driverfly.co to schedule a call.",
+  "REFER_BACK_PROGRAM_TEXT_3_PART_1": "To learn more, reach out to our team at ",
+  "REFER_BACK_PROGRAM_TEXT_3_PART_2": " info@driverfly.co",
+  "REFER_BACK_PROGRAM_TEXT_3_PART_3": " to schedule a call.",
   "AUTO_RECRUITING": "Auto Recruiting",
   "LOOKING_TO_SCALE_UP": "Looking to scale up your recruiting?",
   "AUTO_RECRUITING_TEXT_1": "Hire fast and efficiently through DriverFly’s Auto Recruiting Services. Our system intelligently matches you with qualified and interested applicants for your active job listings. These applicants will be:",
@@ -2027,5 +2030,6 @@
   "MATCH_CRITERIA": "Match Criteria",
   "MATCH_CRITERIA_MESSAGE": "We help you streamline your recruiting efforts by labelling  all incoming applicants as either “good” or “ill fit” candidates based on the parameters you provide below. For each field, please select all options that are applicable for your active company positions.",
   "LEAD_TYPE": "Lead Type",
-  "ASSIGNED_RECRUITER": "Assigned Recruiter"
+  "ASSIGNED_RECRUITER": "Assigned Recruiter",
+  "DHA_URL_TIP_TEXT": "Tip: to track activity across multiple job boards or channels such as indeed, add \"?source=indeed\" at the end of the URL listed above and insert the entire link into your job posting."
 }
