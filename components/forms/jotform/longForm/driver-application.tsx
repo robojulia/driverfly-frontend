@@ -10,7 +10,10 @@ import JotformContext, { JotFormContextType } from "../../../../context/jotform-
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
-export function DriverApplication() {
+export interface DriverApplicationProps {
+	isAutoRecruitmentLead?: boolean | (() => boolean)
+}
+export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationProps) {
 	const {
 		state: { applicant, applicantExtras, jobs },
 		method: { setApplicant, updateApplicantExtras, stepNext },
@@ -29,10 +32,11 @@ export function DriverApplication() {
 		validationSchema: DriverApplicationDto.yupSchema(),
 		onSubmit: (values) => {
 			try {
-				const { first_name, last_name, APPLY_DATE, SIGNATURE } = values;
+				const { first_name, last_name, APPLY_DATE, SIGNATURE, AUTOMATED_RECRUITING_LEAD } = values;
 				setApplicant({ ...applicant, first_name, last_name });
 				updateApplicantExtras(APPLY_DATE);
 				updateApplicantExtras(SIGNATURE);
+				updateApplicantExtras(AUTOMATED_RECRUITING_LEAD);
 				stepNext();
 			} catch (error) {
 				console.log(error);
@@ -76,7 +80,13 @@ export function DriverApplication() {
 				: new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
 			first_name: first_name || null,
 			last_name: last_name || null,
+			AUTOMATED_RECRUITING_LEAD: Boolean(isAutoRecruitmentLead) ? {
+				type: ApplicantExtras.AUTOMATED_RECRUITING_LEAD,
+				value: true
+			} : new ApplicantExtrasEntity(ApplicantExtras.AUTOMATED_RECRUITING_LEAD)
+
 		});
+
 	}, [applicant]);
 
 	return (

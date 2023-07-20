@@ -74,7 +74,7 @@ export default function LongForm({ entity, jobId }: LongFormProps) {
 							max={26}
 							type="number"
 							onChange={({ target: { value } }) => setSteps(parseInt(value))} /> */}
-                        {getSuggestedJobPages(steps)}
+                        {getSuggestedJobPages(steps, jobId)}
                     </div>
                 </div>
             </div>
