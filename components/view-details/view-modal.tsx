@@ -29,14 +29,15 @@ export default function ViewModal(props: ViewModalProps) {
     return (
         <Modal show={show} size={props.size} onHide={props.onCloseClick ?? hideModelHandler}>
             <Modal.Header className="justify-content-between">
-                {
-                    props.title &&
-                    <h4 className="modal-title font-weight-normal">
-                        {typeof props.title === "string" ? t(props.title) : props.title}
-                    </h4>
-                }
-                {props.header}
-                <Button variant=" theme-general-btn " onClick={props.onCloseClick ?? hideModelHandler}>
+                <div className="d-flex align-items-center">
+                    {props.title && (
+                        <h4 className="modal-title font-weight-normal">
+                            {typeof props.title === "string" ? t(props.title) : props.title}
+                        </h4>
+                    )}
+                    {props.header}
+                </div>
+                <Button style={{ backgroundColor: "grey", color: "white" }} variant="theme-general-btn" onClick={props.onCloseClick ?? hideModelHandler}>
                     <XLg /> {t(props.closeText || "CLOSE")}
                 </Button>
             </Modal.Header>
