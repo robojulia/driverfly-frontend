@@ -24,6 +24,13 @@ export function ContinueLongForm() {
 	const { t } = useTranslation();
 	const [companyCdlPreferences, setCompanyCdlPreferences] = useState<string[]>([])
 	const [companyPref, setCompanyPref] = useState<CompanyPreferenceEntity[]>([])
+	const form = useFormik({
+		initialValues: {},
+		onSubmit: () => {
+			console.log(`applicant company ${applicant?.company?.name}`, applicant?.company?.id)
+			stepNext();
+		}
+	});
 
 	useEffectAsync(async () => {
 		if (applicant?.company) {
@@ -52,7 +59,7 @@ export function ContinueLongForm() {
 		}
 	}, [applicant?.company])
 
-	// console.log("company prefsss ----", companyPref);
+
 	const OwnerOperator: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.EMPLOYMENT_TYPE)
 	const CompanyPrefferedMinExperience: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.YEARS_CDL_EXPERIENCE)
 	const CompanyPrefferedAccidentCountLimit: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.MINIMUM_ACCIDENTS)
@@ -73,11 +80,7 @@ export function ContinueLongForm() {
 	}
 
 	const hasJobGeographyInRouteType = checkJobGeographyInRouteType(ApplicantAddedRoutes?.value, CompanyPreferedLocations?.value);
-	console.log("company prefered Location----", CompanyPreferedLocations?.value)
-	console.log("applicant prefered routes----", ApplicantAddedRoutes?.value)
-	console.log("final result----", hasJobGeographyInRouteType)
-
-
+	console.log("applicant?", applicant)
 	return (
 		<>
 			<ToastContainer />
@@ -111,14 +114,14 @@ export function ContinueLongForm() {
 									</h6>
 									<Row className="mt-3">
 										<Col className="text-center" >
-											<Button onClick={() => stepNext()}>
+											<Button type="submit">
 												{t("CONTINUE_APPLICATION")}
 											</Button>
 										</Col>
 									</Row>
 								</>
 							) : (
-								<>
+								<form onSubmit={form.handleSubmit}>
 									<Row>
 										<h4 className={styles.heading__sty}>
 											{t(
@@ -268,12 +271,12 @@ export function ContinueLongForm() {
 									</Row>
 									<Row className="mt-3">
 										<Col className="text-center" >
-											<Button  onClick={() => stepNext()}>
+											<Button type="submit">
 												{t("CONTINUE_APPLICATION")}
 											</Button>
 										</Col>
 									</Row>
-								</>
+								</form>
 							)
 						}
 					</>
