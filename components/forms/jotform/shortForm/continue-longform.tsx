@@ -80,7 +80,7 @@ export function ContinueLongForm() {
 	}
 
 	const hasJobGeographyInRouteType = checkJobGeographyInRouteType(ApplicantAddedRoutes?.value, CompanyPreferedLocations?.value);
-	console.log("applicant?", applicant)
+
 	return (
 		<>
 			<ToastContainer />
@@ -121,7 +121,7 @@ export function ContinueLongForm() {
 									</Row>
 								</>
 							) : (
-								<form onSubmit={form.handleSubmit}>
+								<form >
 									<Row>
 										<h4 className={styles.heading__sty}>
 											{t(
@@ -271,7 +271,7 @@ export function ContinueLongForm() {
 									</Row>
 									<Row className="mt-3">
 										<Col className="text-center" >
-											<Button type="submit">
+											<Button onClick={() => form.handleSubmit()}>
 												{t("CONTINUE_APPLICATION")}
 											</Button>
 										</Col>

@@ -60,14 +60,14 @@ export function HearAbout() {
 						...data
 					});
 
-					// stepNext();
+					stepNext();
 
 				} catch (error) {
 					console.log(error);
 					globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
 				}
 			} else {
-				// stepNext();
+				stepNext();
 			}
 		},
 		onReset: (values) => {

@@ -12,7 +12,7 @@ import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-ex
 
 export function DriverApplication() {
 	const {
-		state: { applicant, applicantExtras },
+		state: { applicant, applicantExtras, jobs },
 		method: { setApplicant, updateApplicantExtras, stepNext },
 	}: JotFormContextType = useContext(JotformContext);
 
@@ -48,6 +48,8 @@ export function DriverApplication() {
 	useEffect(() => {
 		console.log("form.values", form.values);
 		console.log("form.errors", form.errors);
+		console.log("jobs", jobs);
+
 	}, [form.values, form.errors]);
 
 	useEffect(() => {
