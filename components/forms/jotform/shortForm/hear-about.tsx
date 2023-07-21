@@ -45,7 +45,7 @@ export function HearAbout() {
 					setApplicantExtras(filteredExtras)
 					setApplicant({
 						...applicant,
-						...data,
+						...data
 					});
 
 					stepNext();
