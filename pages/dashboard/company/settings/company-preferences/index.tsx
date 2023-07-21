@@ -215,7 +215,7 @@ export default function CompanyPreference() {
           >
             <div className="text-center">
               <h2>{t('DHA_welcome_note')}</h2>
-              <p>{t('COMPANY_PREFERENCE_DHA_NOTE')}</p>
+              <p dangerouslySetInnerHTML={{__html: t('COMPANY_PREFERENCE_DHA_NOTE')}} />
               <p>{t('LEARN_MORE_ABOUT_BENEFITS')}
                 <span className="text-blue">
                   <span> </span>
