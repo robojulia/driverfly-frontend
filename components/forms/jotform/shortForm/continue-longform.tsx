@@ -80,7 +80,6 @@ export function ContinueLongForm() {
 	}
 
 	const hasJobGeographyInRouteType = checkJobGeographyInRouteType(ApplicantAddedRoutes?.value, CompanyPreferedLocations?.value);
-
 	return (
 		<>
 			<ToastContainer />
