@@ -29,6 +29,8 @@ import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import OverlyPopover from "../../../../components/popover/overly-popover";
 import Link from "next/link";
 import ShowFormattedDate from "../../../../components/jobs/show-formatted-date";
+import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 
 const ViewMode = {
     job: "job",
@@ -487,6 +489,11 @@ function ApplicantView(props: ViewProps) {
                         id: "source",
                         name: "LEAD_TYPE",
                         selector: applicant => applicant.type ? t(`ApplicantType.${applicant.type}`) : "",
+                    },
+                    {
+                        id: "AUTOMATED_RECRUITING_LEAD",
+                        name: "AUTOMATED_RECRUITING_LEAD",
+                        selector: applicant => Boolean(applicant?.extras?.find(ap => ap?.type == ApplicantExtras.AUTOMATED_RECRUITING_LEAD && ap?.value)) ? BooleanType.YES : BooleanType.NO,
                     },
                     {
                         id: "date_added",
