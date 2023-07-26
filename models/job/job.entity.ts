@@ -29,10 +29,10 @@ import { numberRangeEnd, numberRangeStart } from '../../utils/yup';
 export class JobEntity {
     id?: number;
     slug?: string;
-    location: LocationEntity = new LocationEntity();
-    company: CompanyEntity = null;
-    title: string;
-    description: string;
+    location?: LocationEntity = new LocationEntity();
+    company?: CompanyEntity = null;
+    title?: string;
+    description?: string;
     description_short?: string;
     drivers_needed?: number;
     expiry_date?: string | Date;
@@ -80,8 +80,8 @@ export class JobEntity {
     must_have_clean_criminal_history?: boolean = true;
     criminal_history?: JobCriminalEntity[] = [];
     safety_requirements_other?: string;
-    is_orientation_needed: boolean = true;
-    orientation_location: LocationEntity = new LocationEntity();
+    is_orientation_needed?: boolean = true;
+    orientation_location?: LocationEntity = new LocationEntity();
     orientation_start_at?: string | Date;
     orientation_end_at?: string | Date;
     created_at?: string | Date;

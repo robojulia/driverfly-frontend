@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import styles from "../../../../../../styles/digitalhiringapp.module.css";
+import styles from "../../../../../styles/digitalhiringapp.module.css";
 import {
     ApplicantEntity,
     ApplicantExtrasEntity,
-} from "../../../../../../models/applicant";
-import JotformContext from "../../../../../../context/jotform-context";
+} from "../../../../../models/applicant";
+import JotformContext from "../../../../../context/jotform-context";
 import {
     getLongFormStyle,
     getSuggestedJobPages,
-} from "../../../../../../components/forms/jotform/jotform-pages";
-import ApplicantApi from "../../../../../api/applicant";
+} from "../../../../../components/forms/jotform/jotform-pages";
+import ApplicantApi from "../../../../api/applicant";
+import { JobEntity } from "../../../../../models/job/job.entity";
 
 export interface LongFormProps {
     entity: ApplicantEntity;
@@ -18,7 +19,7 @@ export interface LongFormProps {
 
 export default function LongForm({ entity, jobId }: LongFormProps) {
 
-    console.log("job id====", jobId)
+    const [jobs, setJobs] = useState<JobEntity[]>([]);
     const [applicant, setApplicant] = useState<ApplicantEntity>(entity);
     const [applicantExtras, setApplicantExtras] = useState<
         ApplicantExtrasEntity[]
@@ -39,9 +40,11 @@ export default function LongForm({ entity, jobId }: LongFormProps) {
     const stepBack = (): void => setSteps(steps - 1);
 
     useEffect(() => {
-        console.log("from index applicant", applicant);
-        console.log("from index applicantExtras", applicantExtras);
-    }, []);
+        if (Boolean(jobId)) {
+            setJobs([{ id: jobId }])
+        }
+    }, [jobId]);
+
 
     return (
         <JotformContext.Provider
@@ -50,12 +53,14 @@ export default function LongForm({ entity, jobId }: LongFormProps) {
                     applicant,
                     applicantExtras,
                     steps,
+                    jobs
                 },
                 method: {
                     setApplicant,
                     updateApplicantExtras,
                     stepNext,
                     stepBack,
+                    setJobs
                 },
             }}
         >
@@ -69,7 +74,7 @@ export default function LongForm({ entity, jobId }: LongFormProps) {
 							max={26}
 							type="number"
 							onChange={({ target: { value } }) => setSteps(parseInt(value))} /> */}
-                        {getSuggestedJobPages(steps)}
+                        {getSuggestedJobPages(steps, jobId)}
                     </div>
                 </div>
             </div>

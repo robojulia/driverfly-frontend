@@ -16,7 +16,7 @@ import { LoaderIcon } from "../../../../loading/loader-icon";
 export function AccordianPage() {
 
 	const {
-		state: { applicantExtras, applicant },
+		state: { applicantExtras, applicant, jobs },
 		method: { stepBack, updateApplicantExtras, stepNext },
 	}: JotFormContextType = useContext(JotformContext);
 	const [showTab, setShowTab] = useState<boolean[]>([false, false, false, false])
@@ -33,6 +33,7 @@ export function AccordianPage() {
 				const response = await applicantApi.jotform.update(applicant.id, {
 					applicant,
 					applicantExtras: filtered_extras,
+					jobs
 				});
 
 				if (response) stepNext()

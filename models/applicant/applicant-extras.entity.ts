@@ -148,6 +148,14 @@ export class ApplicantExtrasEntity {
 					is: ApplicantExtras.DOT_NUMBER,
 					then: yup.string().optional().nullable(),
 				})
+				.when("type", {
+					is: ApplicantExtras.GOOD_FIT,
+					then: yup.boolean().optional().nullable(),
+				})
+				.when("type", {
+					is: ApplicantExtras.AUTOMATED_RECRUITING_LEAD,
+					then: yup.boolean().optional().nullable(),
+				})
 		});
 	}
 }

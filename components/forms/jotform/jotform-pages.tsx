@@ -105,9 +105,9 @@ const getMissingDocumentsPages = (step: number): JSX.Element =>
 	2: <SubmitMissingDocuments />,
 	3: <ThankyouPage />
 }[step]);
-const getSuggestedJobPages = (step: number): JSX.Element =>
+const getSuggestedJobPages = (step: number, jobId?: number): JSX.Element =>
 ({
-	0: <DriverApplication />,
+	0: <DriverApplication isAutoRecruitmentLead={Boolean(jobId)} />,
 	1: <WorkedBefore />,
 	2: <AccordianPage />,
 	3: <ThankyouPage />
