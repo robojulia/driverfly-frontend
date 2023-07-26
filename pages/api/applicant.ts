@@ -246,7 +246,7 @@ class ApplicantApi extends BaseApi {
 
 			return data;
 		},
-		sendVoeRequest: async (applicantId: number, employerId: number): Promise<void> => {
+		sendVoeRequest: async (applicantId: number, employerId: number): Promise<ApplicantEmployerEntity> => {
 			const { data } = await this.get(`${this.employer.baseUrl(applicantId)}/${employerId}/send-voew-request`);
 
 			return data;

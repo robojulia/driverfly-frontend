@@ -60,6 +60,7 @@ export default function SafetyPerformanceHistory({
     const handleClick = async () => {
         const data = await applicantApi.employer.list(applicant.id)
         setEmployers(data)
+        if (!Boolean(data.length)) alert(t('NO_RECORDS_FOUND'))
     }
 
     /**
@@ -93,7 +94,8 @@ export default function SafetyPerformanceHistory({
     const resendVoeRequest = async (employerId: number) => {
         try {
             const applicantApi = new ApplicantApi()
-            await applicantApi.employer.sendVoeRequest(applicant?.id, employerId)
+            const response: ApplicantEmployerEntity = await applicantApi.employer.sendVoeRequest(applicant?.id, employerId)
+            setEmployers([...(employers.filter(v => v.id != response.id)), { ...response }])
             toast.success(t("RESEND_VOE_SUCCESSFULL"))
         } catch (error) {
             toast.error(t("ERROR_MESSAGE_DEFAULT"))
@@ -182,13 +184,19 @@ export default function SafetyPerformanceHistory({
                             name: "NAME",
                             selector: emp => emp.name,
                             hidable: false,
-                            width: '25%',
+                            width: '20%',
                         },
                         {
                             name: "EMAIL",
                             selector: emp => emp.email,
                             hidable: false,
-                            width: '25%',
+                            width: '20%',
+                        },
+                        {
+                            name: "VOE_ATTEMPT_COUNT",
+                            selector: emp => emp.voe_attempts ?? 0,
+                            hidable: false,
+                            width: '10%',
                         },
                         {
                             width: '50%',

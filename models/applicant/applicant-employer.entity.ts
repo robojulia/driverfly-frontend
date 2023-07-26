@@ -27,6 +27,9 @@ export class ApplicantEmployerEntity {
     uuid_token?: string;
     is_current: boolean;
 
+    voe_submitted?: boolean;
+    voe_attempts?: number;
+
     documents: DocumentEntity[];
 
     static yupSchema() {

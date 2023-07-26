@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
+import "react-toastify/dist/ReactToastify.css";
 import styles from "../../../../../styles/digitalhiringapp.module.css";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
-import "react-toastify/dist/ReactToastify.css";
 import ApplicantApi from "../../../../api/applicant";
 import { VerificationOfEmploymentSection1 } from "../../../../../components/forms/jotform/voe-forms/legal-attachments/voe-attachments/section-1";
 import { ApplicantEmployerEntity } from "../../../../../models/applicant";
@@ -13,7 +13,7 @@ export interface VerificationOfEmploymentSection1PageProps {
 
 export default function VerificationOfEmploymentSection1Page({ applicant, employer }: VerificationOfEmploymentSection1PageProps) {
 	useEffect(() => {
-		applicant.company.users = applicant?.company?.users?.filter(user => (!!!user?.createdBy))
+		if (applicant?.company?.users) applicant.company.users = applicant?.company?.users?.filter(user => (!!!user?.createdBy))
 	}, [applicant])
 
 	return (

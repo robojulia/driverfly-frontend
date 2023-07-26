@@ -1,20 +1,18 @@
+import { toast, ToastContainer } from "react-toastify";
+import { ArrowDownCircleFill, ArrowUpCircleFill } from 'react-bootstrap-icons'
 import { useFormik } from "formik";
 import { useContext, useEffect, useState } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
 import ApplicantApi from "../../../../../pages/api/applicant";
-import { toast, ToastContainer } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import { AccordianDto } from "../../../../../models/jot-form/long-form/accordian.dto";
 import { VerificationOfEmployment } from "./verification-of-employment";
 import { DisclosureAuthorization } from "./disclosure-authorization";
 import { ImportantDisclosureBackgroundPsp } from "./important-disclosure-background-psp";
 import { GeneralConsentQueries } from "./general-consent-queries";
-import styles from "../../../../../styles/digitalhiringapp.module.css";
 import { LoaderIcon } from "../../../../loading/loader-icon";
-import { ArrowDownCircleFill, ArrowUpCircleFill } from 'react-bootstrap-icons'
-import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
 export function AccordianPage() {
 
 	const {
