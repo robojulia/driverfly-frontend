@@ -11,7 +11,7 @@ import 'react-tabs/style/react-tabs.css';
 import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 import PageLayout from "../../../../../components/layouts/page/page-layout";
 import { useTranslation } from "../../../../../hooks/use-translation";
-import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/view-details/view-data-table";
+import ViewDataTable, { ViewTableColumn, getDataTableColumnKey } from "../../../../../components/view-details/view-data-table";
 import { useAuth } from "../../../../../hooks/use-auth";
 import { useEffectAsync } from "../../../../../utils/react";
 import { TabbedLayout } from "../../../../../components/layouts/page/tabbed-layout";
@@ -43,6 +43,7 @@ import { Status } from "../../../../../enums/status.enum";
 import BaseSelect from "../../../../../components/forms/base-select";
 import AdditionalFiles from "../../../../../components/dashboard/employee-directory/additional-files";
 import { EmployeeEntity } from "../../../../../models/applicant/employee.entity";
+import { ListActionOptions } from "../../../../../components/list-actions/list-actions";
 
 export default function EmployeeDirectory() {
 
@@ -129,6 +130,7 @@ export default function EmployeeDirectory() {
         },
     });
     useEffect(() => console.log(applicantJobForm.errors), [applicantJobForm.errors])
+    useEffect(() => console.log("viewMode", viewMode), [viewMode])
 
     const onViewClick = (entity: EmployeeEntity): void =>
         setModalAction({ entity, type: "VIEW" })
@@ -161,6 +163,130 @@ export default function EmployeeDirectory() {
         applicantJobForm.setValues(modalAction?.entity);
         applicantJobForm.setFieldValue("reason_codes", []);
     }
+
+    const tableColumns = (): ViewTableColumn<EmployeeEntity>[] => {
+        const data: ViewTableColumn<EmployeeEntity>[] = [
+            {
+                id: "id",
+                name: "ID",
+                selector: data => data?.id,
+            },
+            {
+                id: "name",
+                name: 'NAME',
+                cell: data => <span
+                    role="button"
+                    className="bg-priamry cursor-pointer enlarge-font"
+                    onClick={() => onViewClick(data)}
+                >{data?.applicant?.first_name + ' ' + data?.applicant?.last_name}</span>,
+            },
+            {
+                id: "phone",
+                name: 'PHONE',
+                selector: data => data?.applicant?.phone,
+                cell: data => (<OverlyPopover
+                    skipTranslate
+                    slice_at={10}
+                    str={data?.applicant?.phone}
+                />),
+            },
+            {
+                id: "email",
+                name: 'EMAIL',
+                selector: data => data?.applicant?.email,
+                cell: data => (<OverlyPopover
+                    skipTranslate
+                    slice_at={40}
+                    str={data?.applicant?.email}
+                />),
+            },
+            {
+                id: "jobTitle",
+                name: 'job_title',
+                selector: data => data?.job?.title,
+                cell: data => (<OverlyPopover
+                    skipTranslate
+                    slice_at={40}
+                    str={data?.job?.title}
+                />),
+            },
+            {
+                id: "dateHired",
+                name: 'DATE_HIRED',
+                selector: data => data?.created_at,
+                cell: data => <ShowFormattedDate
+                    date={data?.created_at}
+                />
+            },
+            {
+                id: "status",
+                name: 'STATUS',
+                selector: data => data?.status,
+                cell: data =>
+                (<ShowEnumFromString
+                    labelPrefix="ApplicantStatus"
+                    value={data?.status}
+                    enumArray={ApplicantStatus} />
+                ),
+            },
+        ]
+        if (viewMode == ViewModeType.PAST_EMPLOYEE) {
+            // data.push({
+            //     id: "end_of_employment",
+            //     name: "END_OF_EMPLOYMENT",
+            //     cell: (data) => (
+            //         <ShowFormattedDate
+            //             date={data?.end_of_employment}
+            //         />
+            //     ),
+            // });
+            data.push({
+                id: "reason_codes",
+                name: "REASON_CODES",
+                // selector: data => data?.applicantJob?.reason_codes,
+                cell: (data) => (
+                    <ShowEnumFromString
+                        popover
+                        labelPrefix={
+                            data.status == ApplicantStatus.INACTIVE_QUIT
+                                ? "ApplicantReasonCodeQuit"
+                                : "ApplicantReasonCodeFired"
+                        }
+                        enumArray={
+                            data.status == ApplicantStatus.INACTIVE_FIRED
+                                ? ApplicantReasonCodeQuit
+                                : ApplicantReasonCodeFired
+                        }
+                        value={data?.reason_codes}
+                    />
+                ),
+            });
+        } else {
+        }
+
+        return data
+    }
+
+    const tableActions = (data: EmployeeEntity): ListActionOptions[] => ([
+        {
+            onClick: e => onViewClick(data),
+            icon: EyeFill,
+            // label: "VIEW",
+            hide: (!can.viewUser)
+        },
+        {
+            onClick: e => onEditClick(data),
+            icon: PenFill,
+            // label: "EDIT",
+            hide: (!can.editUser)
+        },
+        {
+            onClick: e => onTrashClick(data),
+            icon: TrashFill,
+            // label: "DELETE",
+            hide: (!can.deleteUser)
+        },
+    ])
 
     return (
         <PageLayout
@@ -199,120 +325,8 @@ export default function EmployeeDirectory() {
                         },
                     },
                 }}
-                columns={[
-                    {
-                        id: "id",
-                        name: "ID",
-                        selector: data => data?.id,
-                    },
-                    {
-                        id: "name",
-                        name: 'NAME',
-                        cell: data => <span
-                            role="button"
-                            className="bg-priamry cursor-pointer enlarge-font"
-                            onClick={() => onViewClick(data)}
-                        >{data?.applicant?.first_name + ' ' + data?.applicant?.last_name}</span>,
-                    },
-                    {
-                        id: "phone",
-                        name: 'PHONE',
-                        selector: data => data?.applicant?.phone,
-                        cell: data => (<OverlyPopover
-                            skipTranslate
-                            slice_at={10}
-                            str={data?.applicant?.phone}
-                        />),
-                    },
-                    {
-                        id: "email",
-                        name: 'EMAIL',
-                        selector: data => data?.applicant?.email,
-                        cell: data => (<OverlyPopover
-                            skipTranslate
-                            slice_at={40}
-                            str={data?.applicant?.email}
-                        />),
-                    },
-                    {
-                        id: "jobTitle",
-                        name: 'job_title',
-                        selector: data => data?.job?.title,
-                        cell: data => (<OverlyPopover
-                            skipTranslate
-                            slice_at={40}
-                            str={data?.job?.title}
-                        />),
-                    },
-                    // {
-                    //     hide: (viewMode === ViewModeType.PAST_EMPLOYEE ? 1 : 0),
-                    //     id: "dateHired",
-                    //     name: 'DATE_HIRED',
-                    //     selector: data => data?.applicantJob?.hired_at,
-                    //     cell: data => <ShowFormattedDate
-                    //         date={data?.applicantJob?.hired_at}
-                    //         hideTime
-                    //     />
-                    // },
-                    // {
-                    //     hide: (viewMode !== ViewModeType.PAST_EMPLOYEE ? 1 : 0),
-                    //     id: "dateTermination",
-                    //     name: 'DATE_TERMINATION',
-                    //     selector: data => data?.applicantJob?.hired_at,
-                    //     cell: data => <ShowFormattedDate
-                    //         date={data?.applicantJob?.hired_at}
-                    //         hideTime
-                    //     />
-                    // },
-                    {
-                        id: "status",
-                        name: 'STATUS',
-                        selector: data => data?.status,
-                        cell: data =>
-                        (<ShowEnumFromString
-                            labelPrefix="ApplicantStatus"
-                            value={data?.status}
-                            enumArray={ApplicantStatus} />
-                        ),
-                    },
-                    {
-                        hide: (viewMode !== ViewModeType.PAST_EMPLOYEE ? 1 : 0),
-                        id: "reason_codes",
-                        name: 'REASON_CODES',
-                        // selector: data => data?.applicantJob?.reason_codes,
-                        cell: data =>
-                        (<ShowEnumFromString
-                            popover
-                            labelPrefix={data.status == ApplicantStatus.INACTIVE_QUIT ? "ApplicantReasonCodeQuit" : "ApplicantReasonCodeFired"}
-                            enumArray={data.status == ApplicantStatus.INACTIVE_FIRED ? ApplicantReasonCodeQuit : ApplicantReasonCodeFired}
-                            value={data?.reason_codes}
-                        />
-                        ),
-                    },
-                ]}
-                actions={data => (viewMode != ViewModeType.EMPLOYEE)
-                    ? null
-                    : ([
-                        {
-                            onClick: e => onViewClick(data),
-                            icon: EyeFill,
-                            // label: "VIEW",
-                            hide: (!can.viewUser)
-                        },
-                        {
-                            onClick: e => onEditClick(data),
-                            icon: PenFill,
-                            // label: "EDIT",
-                            hide: (!can.editUser)
-                        },
-                        {
-                            onClick: e => onTrashClick(data),
-                            icon: TrashFill,
-                            // label: "DELETE",
-                            hide: (!can.deleteUser)
-                        },
-                    ])}
-
+                columns={tableColumns()}
+                actions={data => (viewMode != ViewModeType.EMPLOYEE) ? null : tableActions(data)}
                 items={employees}
             />
 
