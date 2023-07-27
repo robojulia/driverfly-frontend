@@ -59,7 +59,7 @@ export function HearAbout() {
 						...applicant,
 						...data
 					});
-
+					console.log("sdksdjskjd")
 					stepNext();
 
 				} catch (error) {
@@ -127,7 +127,7 @@ export function HearAbout() {
 	const hasJobGeographyInRouteType = checkJobGeographyInRouteType(ApplicantAddedRoutes?.value, CompanyPreferedLocations?.value);
 
 	const checkApplicantEligibility = () => {
-		if (Boolean(companyCdlPreferences.length > 0)
+		if (Boolean(companyCdlPreferences?.length > 0)
 			&& !Boolean(companyCdlPreferences.includes(applicant?.license_type))) {
 			return false
 		}
