@@ -50,6 +50,7 @@ import UserApi from "../../../pages/api/user";
 import { UserEntity } from "../../../models/user/user.entity";
 import { JobForm } from "./job-form";
 import { HireApplicantDto } from "../../../models/applicant/hire-applicant.dto";
+import EmployeeApi from "../../../pages/api/employee";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> {
 }
@@ -152,7 +153,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		validateOnMount: false,
 		onSubmit: async (values, { resetForm }) => {
 			try {
-				await applicantApi.employee.hire(values)
+				const employeeApi = new EmployeeApi()
+				await employeeApi.hire(values)
 				resetForm();
 				formSuccess(t, "hired", "STATUS");
 			} catch (e) {

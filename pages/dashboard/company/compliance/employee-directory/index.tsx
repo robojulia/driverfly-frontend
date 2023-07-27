@@ -44,6 +44,7 @@ import BaseSelect from "../../../../../components/forms/base-select";
 import AdditionalFiles from "../../../../../components/dashboard/employee-directory/additional-files";
 import { EmployeeEntity } from "../../../../../models/applicant/employee.entity";
 import { ListActionOptions } from "../../../../../components/list-actions/list-actions";
+import EmployeeApi from "../../../../api/employee";
 
 export default function EmployeeDirectory() {
 
@@ -57,6 +58,7 @@ export default function EmployeeDirectory() {
     const columnSettingKey = getDataTableColumnKey("company", user, "employee-directory");
     const { t } = useTranslation();
     const applicantApi = new ApplicantApi();
+    const employeeApi = new EmployeeApi();
     const router = useRouter()
 
     const { setPreviousPath } = useLastPage();
@@ -85,7 +87,7 @@ export default function EmployeeDirectory() {
     }
 
     const fetchEmployee = async () => {
-        const data = await applicantApi.employee.list()
+        const data = await employeeApi.list()
         setEmployees(data.filter(v => [
             ApplicantStatus.COMPLETED_EMPLOYED,
             ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
@@ -94,7 +96,7 @@ export default function EmployeeDirectory() {
     }
 
     const fetchPastEmployee = async () => {
-        const data = await applicantApi.employee.list()
+        const data = await employeeApi.list()
         setEmployees(data.filter(v => [
             ApplicantStatus.INACTIVE_FIRED,
             ApplicantStatus.INACTIVE_QUIT
@@ -121,7 +123,7 @@ export default function EmployeeDirectory() {
         validationSchema: EmployeeEntity.yupSchema(),
         onSubmit: async (values) => {
             try {
-                await applicantApi.employee.update(values?.id, values)
+                await employeeApi.update(values?.id, values)
                 applicantJobForm.resetForm();
                 filterEmployees(values?.id)
             } catch (e) {
@@ -144,7 +146,7 @@ export default function EmployeeDirectory() {
 
     const onDeleteClick = async (): Promise<void> => {
         try {
-            const data = await applicantApi.employee.remove(modalAction?.entity?.id)
+            const data = await employeeApi.remove(modalAction?.entity?.id)
 
             if (data && data?.active_status == Status.DELETED) {
                 filterEmployees(modalAction?.entity?.id)
