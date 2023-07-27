@@ -24,6 +24,7 @@ export class EmployeeEntity {
 	created_at?: string;
 	last_updated_at?: string;
 	active_status?: Status;
+	// end_of_employment?: string;
 
 	static yupSchema() {
 		return yup.object({
