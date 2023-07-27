@@ -49,6 +49,7 @@ import { EmployeeEntity } from "../../../models/applicant/employee.entity";
 import UserApi from "../../../pages/api/user";
 import { UserEntity } from "../../../models/user/user.entity";
 import { JobForm } from "./job-form";
+import { HireApplicantDto } from "../../../models/applicant/hire-applicant.dto";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> {
 }
@@ -146,18 +147,12 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	}, [form.values.jobs]);
 
 	const hireApplicantForm = useFormik({
-		initialValues: new EmployeeEntity(),
-		validationSchema: EmployeeEntity.yupSchema(),
+		initialValues: new HireApplicantDto(),
+		validationSchema: HireApplicantDto.yupSchema(),
 		validateOnMount: false,
 		onSubmit: async (values, { resetForm }) => {
 			try {
-				let response: EmployeeEntity;
-				if (values.id) {
-					response = await applicantApi.employee.update(values.id, values)
-				} else {
-					response = await applicantApi.employee.create(entity.id, values)
-				}
-				entity.employee = response;
+				await applicantApi.employee.hire(values)
 				resetForm();
 				formSuccess(t, "hired", "STATUS");
 			} catch (e) {
@@ -199,11 +194,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 					className: "btn theme-primary-btn",
 					hide: !Boolean(form.values.id),
 					disabled: form.isSubmitting,
-					onClick: () => {
-						hireApplicantForm.setValues({ ...(entity.employee ?? new EmployeeEntity()) })
-						hireApplicantForm.setFieldValue('job.id', entity?.employee?.job?.id ?? null)
-						hireApplicantForm.setFieldValue('status', ApplicantStatus.COMPLETED_EMPLOYED)
-					},
+					onClick: () => hireApplicantForm.setValues({ applicantId: entity.id }),
 				}
 			]}
 		>
@@ -1038,13 +1029,12 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
 			<ViewModal
 				title={t("HIRE")}
-				show={Boolean(hireApplicantForm.values.status)}
+				show={Boolean(hireApplicantForm.values.applicantId)}
 				onCloseClick={() => hireApplicantForm.resetForm()}
 				size='sm'
 			>
 				<EntityForm
 					onSubmit={hireApplicantForm.handleSubmit}
-					id={hireApplicantForm?.values?.id}
 					formik={hireApplicantForm}
 					canSubmit={hireApplicantForm.isValid}
 					submitLabel="HIRE"
@@ -1052,7 +1042,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 					<Row className="py-3 px-5">
 						<Col>
 							<BaseSelect
-								name={`job.id`}
+								name={`jobId`}
 								required
 								placeholder={t("SELECT_{name}", { name: "JOB" }, { translateProps: true })}
 								options={jobs}

@@ -17,6 +17,7 @@ import { UpsertApplicantJotformDto } from "../../models/jot-form/upsert-applican
 import { UpsertApplicantVoeformDto } from "../../models/jot-form/upsert-applicant-voe.dto";
 import BaseApi from "./_baseApi";
 import { EmployeeEntity } from "../../models/applicant/employee.entity";
+import { HireApplicantDto } from "../../models/applicant/hire-applicant.dto";
 
 class ApplicantApi extends BaseApi {
 	baseUrl: string = "applicants";
@@ -387,8 +388,8 @@ class ApplicantApi extends BaseApi {
 			return data;
 		},
 
-		create: async (applicantId: number, dto: EmployeeEntity): Promise<EmployeeEntity> => {
-			const { data } = await this.post(`${this.employee.baseUrl}/applicant/${applicantId}`, dto);
+		hire: async (dto: HireApplicantDto): Promise<EmployeeEntity> => {
+			const { data } = await this.post(`${this.employee.baseUrl}`, dto);
 
 			return data;
 		},
