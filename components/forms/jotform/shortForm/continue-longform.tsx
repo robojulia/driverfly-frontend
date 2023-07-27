@@ -132,7 +132,7 @@ export function ContinueLongForm() {
 									</Row>
 									<Row className="mt-3">
 										{(
-											Boolean(companyCdlPreferences.length > 0)
+											Boolean(companyCdlPreferences?.length > 0)
 											&& !Boolean(companyCdlPreferences.includes(t(`DriverLicenseType.${applicant?.license_type}`)))
 										) ? (
 											<h6 className={`${styles.paragraph} ${styles.margin__top} bg-danger text-light  p-1`}>
