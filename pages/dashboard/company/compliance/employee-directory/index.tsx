@@ -185,26 +185,26 @@ export default function EmployeeDirectory() {
                     role="button"
                     className="bg-priamry cursor-pointer enlarge-font"
                     onClick={() => onViewClick(data)}
-                >{data?.applicant?.first_name + ' ' + data?.applicant?.last_name}</span>,
+                >{data?.first_name + ' ' + data?.last_name}</span>,
             },
             {
                 id: "phone",
                 name: 'PHONE',
-                selector: data => data?.applicant?.phone,
+                selector: data => data?.phone,
                 cell: data => (<OverlyPopover
                     skipTranslate
                     slice_at={10}
-                    str={data?.applicant?.phone}
+                    str={data?.phone}
                 />),
             },
             {
                 id: "email",
                 name: 'EMAIL',
-                selector: data => data?.applicant?.email,
+                selector: data => data?.email,
                 cell: data => (<OverlyPopover
                     skipTranslate
                     slice_at={40}
-                    str={data?.applicant?.email}
+                    str={data?.email}
                 />),
             },
             {
