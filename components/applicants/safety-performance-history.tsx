@@ -18,7 +18,7 @@ import { handleDownloadDocument, handleViewDocument } from "../../utils/document
 import FileInput from "../forms/file-input";
 import OverlyPopover from '../popover/overly-popover'
 import { ApplicantEmployerDocumentDto } from "../../models/applicant/applicant-employer-document-dto";
-
+import { LoaderIcon } from "../loading/loader-icon";
 
 export default function SafetyPerformanceHistory({
     buttonClass,
@@ -35,6 +35,11 @@ export default function SafetyPerformanceHistory({
 
     const [employers, setEmployers] = useState<ApplicantEmployerEntity[]>([])
     const resetEmployers = () => setEmployers([])
+
+    // const [isLoading, setIsLoading] = useState<{
+    //     action: "DELETE" | "RESEND",
+    // }>(null)
+    // const resetIsLoading = (setIsLoading(null))
 
     const form = useFormik({
         initialValues: new ApplicantEmployerDocumentDto(),
@@ -87,6 +92,8 @@ export default function SafetyPerformanceHistory({
      * @param {number} [documentId] - The id of the document to be updated.
      */
     const handleUpdateDocument = async (type: ApplicantDqf, documentId?: number, employer?: ApplicantEmployerEntity): Promise<void> => {
+        console.log("type", type, documentId, employer);
+
         form?.setFieldValue("employer", employer)
         form?.setFieldValue("document", { type, id: documentId ?? null })
     }
@@ -95,7 +102,16 @@ export default function SafetyPerformanceHistory({
         try {
             const applicantApi = new ApplicantApi()
             const response: ApplicantEmployerEntity = await applicantApi.employer.sendVoeRequest(applicant?.id, employerId)
-            setEmployers([...(employers.filter(v => v.id != response.id)), { ...response }])
+
+            const updatedEmployers: ApplicantEmployerEntity[] = [
+                ...employers.filter((v) => v.id !== response.id),
+                {
+                    ...employers.find((v) => v.id === response.id), // Find the employer to update
+                    voe_attempts: response.voe_attempts, // Update the 'voe_attempts' property
+                },
+            ];
+            setEmployers(updatedEmployers.slice().sort((a, b) => a.id - b.id))
+
             toast.success(t("RESEND_VOE_SUCCESSFULL"))
         } catch (error) {
             toast.error(t("ERROR_MESSAGE_DEFAULT"))
@@ -104,54 +120,64 @@ export default function SafetyPerformanceHistory({
 
     const ButtonList = ({ employer, document, type }) => (
         <>
-            {(!form?.values?.document?.type)
-                && (<div className="d-flex w-100 mt-2">
+            {form?.values?.employer?.id != employer?.id && (
+                <div className="d-flex w-100 mt-2">
                     <ViewDocumentButton
                         document={document}
                         onClick={() => handleViewDocument(document.id, setPdf)}
                     />
-                    {Boolean(canEditSafetyPerformance)
-                        && <AddDocumentButton
+                    {Boolean(canEditSafetyPerformance) && (
+                        <AddDocumentButton
                             document={document}
                             type={type}
                             t={t}
-                            onClick={() => handleUpdateDocument(type, document?.id, employer)}
+                            onClick={() =>
+                                handleUpdateDocument(type, document?.id, employer)
+                            }
                         />
-                    }
+                    )}
                     <DownloadDocumentButton
                         document={document}
                         onClick={() => handleDownloadDocument(document.id)}
                     />
-                    {Boolean(canEditSafetyPerformance)
-                        && <DeleteDocumentButton
+                    {Boolean(canEditSafetyPerformance) && (
+                        <DeleteDocumentButton
                             document={document}
                             onClick={() => handleDeleteDocument(employer, type)}
                         />
-                    }
-                    {Boolean(showHistory)
-                        && <ViewDocumentHistory
+                    )}
+                    {Boolean(showHistory) && (
+                        <ViewDocumentHistory
+                            typePrefix="ApplicantDqf"
                             document={document}
                             type={type}
                             documentable_id={applicant.id}
                             documentable_type={DocumentableType.APPLICANT_EMPLOYERS}
                         />
-                    }
-                    {(Boolean(showResendButton)
-                        &&
-                        <Button
-                            className="mr-2 w-100"
-                            disabled={!Boolean(employer.can_contact && employer?.is_subject_to_fmcsrs)}
-                            onClick={() => resendVoeRequest(employer.id)}
-                        >
-                            <OverlyPopover str={!Boolean(employer.can_contact) ? "NOT_AUTHORIZED_TO_COMMUNICATE" : "RESEND_VOE"}>
-                                {t('RESEND')}
-                            </OverlyPopover>
-                        </Button>
                     )}
-                </div>)
-            }
+                    {Boolean(showResendButton) &&
+                        Boolean(employer.can_contact) &&
+                        Boolean(employer?.is_subject_to_fmcsrs) && (
+                            <Button
+                                className="mr-2 w-100"
+                                // disabled={}
+                                onClick={() => resendVoeRequest(employer.id)}
+                            >
+                                <OverlyPopover
+                                    str={
+                                        !Boolean(employer.can_contact)
+                                            ? "NOT_AUTHORIZED_TO_COMMUNICATE"
+                                            : "RESEND_VOE"
+                                    }
+                                >
+                                    {t("RESEND")}
+                                </OverlyPopover>
+                            </Button>
+                        )}
+                </div>
+            )}
         </>
-    )
+    );
 
     return (
         <>
@@ -183,19 +209,28 @@ export default function SafetyPerformanceHistory({
                         {
                             name: "NAME",
                             selector: emp => emp.name,
-                            hidable: false,
-                            width: '20%',
+                            cell: emp => <OverlyPopover slice_at={5} str={emp.name} />,
+                            width: '10%',
                         },
                         {
                             name: "EMAIL",
                             selector: emp => emp.email,
-                            hidable: false,
-                            width: '20%',
+                            cell: emp => <OverlyPopover slice_at={5} str={emp.email} />,
+                            width: '10%',
                         },
                         {
                             name: "VOE_ATTEMPT_COUNT",
                             selector: emp => emp.voe_attempts ?? 0,
-                            hidable: false,
+                            width: '10%',
+                        },
+                        {
+                            name: "AUTHORIZED_TO_COMMUNICATE",
+                            selector: emp => t(`BooleanType.${emp.can_contact ? "YES" : "NO"}`),
+                            width: '10%',
+                        },
+                        {
+                            name: "SUBJECT_TO_FMCR",
+                            selector: emp => t(`BooleanType.${emp?.is_subject_to_fmcsrs ? "YES" : "NO"}`),
                             width: '10%',
                         },
                         {
@@ -204,7 +239,7 @@ export default function SafetyPerformanceHistory({
                                 const doc = emp.documents?.find(v => v.type == ApplicantDqf.SAFETY_PERFORMANCE_HISTORY)
                                 return (<>
                                     <ButtonList employer={emp} type={ApplicantDqf.SAFETY_PERFORMANCE_HISTORY} document={doc} />
-                                    {(form?.values?.document?.type)
+                                    {(form?.values?.employer?.id == emp.id)
                                         && <form className="mt-2 mr-2" onSubmit={form?.handleSubmit} >
                                             <FileInput
                                                 name={`document`}
@@ -217,7 +252,7 @@ export default function SafetyPerformanceHistory({
                                                     disabled={form?.isSubmitting || !form?.isValid || form?.isValidating}
                                                     className="mr-2 w-50 theme-primary-btn"
                                                     type="submit"
-                                                >{t(`SAVE`)}</Button>
+                                                >{t(`SAVE`)} <LoaderIcon isLoading={form?.isSubmitting} /></Button>
                                                 <Button
                                                     type="button"
                                                     className="w-50 bg-danger"

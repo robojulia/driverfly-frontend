@@ -42,7 +42,7 @@ import BaseTextArea from "../../../../../components/forms/base-text-area";
 import { Status } from "../../../../../enums/status.enum";
 import BaseSelect from "../../../../../components/forms/base-select";
 import AdditionalFiles from "../../../../../components/dashboard/employee-directory/additional-files";
-import { EmployeeEntity } from "../../../../../models/applicant/employee.entity";
+import { EmployeeEntity } from "../../../../../models/employee/employee.entity";
 import { ListActionOptions } from "../../../../../components/list-actions/list-actions";
 import EmployeeApi from "../../../../api/employee";
 
@@ -91,7 +91,8 @@ export default function EmployeeDirectory() {
         setEmployees(data.filter(v => [
             ApplicantStatus.COMPLETED_EMPLOYED,
             ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
-            ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE
+            ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE,
+            Status.ACTIVE
         ].includes(v.status)))
     }
 
@@ -111,9 +112,9 @@ export default function EmployeeDirectory() {
 
     const tabs = {
         BACKGROUND: <Background employee={modalAction?.entity} />,
-        DQF: < DQF applicant={modalAction?.entity.applicant} canEdit={true} showHistory={true} />,
-        DRIVER_ONBOARDING_CHECKLIST: < DAC applicant={modalAction?.entity.applicant} />,
-        ADDITIONAL_FILES: < AdditionalFiles applicant={modalAction?.entity.applicant} />,
+        DQF: < DQF employee={modalAction?.entity} canEdit={true} showHistory={true} />,
+        // DRIVER_ONBOARDING_CHECKLIST: < DAC applicant={modalAction?.entity.applicant} />,
+        // ADDITIONAL_FILES: < AdditionalFiles applicant={modalAction?.entity.applicant} />,
 
         // VEHICLES: < VehicleInformationTab />  //according to wireframe this tab (vehichled are pushed to phase 3)
     };
@@ -134,15 +135,19 @@ export default function EmployeeDirectory() {
     useEffect(() => console.log(applicantJobForm.errors), [applicantJobForm.errors])
     useEffect(() => console.log("viewMode", viewMode), [viewMode])
 
-    const onViewClick = (entity: EmployeeEntity): void =>
-        setModalAction({ entity, type: "VIEW" })
+    const onViewClick = async (entity: EmployeeEntity): Promise<void> => {
+        const v = await employeeApi.getById(entity?.id)
+        setModalAction({ entity: v, type: "VIEW" })
+    }
 
     const onEditClick = (entity: EmployeeEntity) =>
-        router.push(`/dashboard/company/applicants/${entity?.applicant?.id}/edit`)
+        router.push(
+            `/dashboard/company/applicants/${entity?.applicant?.id}/edit`
+        );
 
-    const onTrashClick = async (entity: EmployeeEntity): Promise<void> => {
-        setModalAction({ entity, type: "DELETE" })
-    }
+    const onTrashClick = async (entity: EmployeeEntity): Promise<void> =>
+        setModalAction({ entity, type: "DELETE" });
+
 
     const onDeleteClick = async (): Promise<void> => {
         try {

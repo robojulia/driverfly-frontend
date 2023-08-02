@@ -11,7 +11,14 @@ import { useTranslation } from "../../hooks/use-translation";
 import ViewPdf from "../view-details/view-pdf";
 
 
-export default function ViewDocumentHistory({ buttonClass, document, type, documentable_type, documentable_id }: ViewDocumentHistoryProps) {
+export default function ViewDocumentHistory({
+    buttonClass,
+    document,
+    type,
+    documentable_type,
+    documentable_id,
+    typePrefix
+}: ViewDocumentHistoryProps) {
 
     const { t } = useTranslation();
 
@@ -63,7 +70,7 @@ export default function ViewDocumentHistory({ buttonClass, document, type, docum
                     columns={[
                         {
                             name: "TYPE",
-                            selector: doc => t(`ApplicantDqf.${doc.type}`),
+                            selector: doc => t(`${typePrefix}.${doc.type}`),
                             hidable: false
                         },
                         {

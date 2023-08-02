@@ -3,53 +3,55 @@ import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import { ThreeCircles } from 'react-loader-spinner';
 import { Button, Col, Form, Row, Table } from "react-bootstrap";
-import { useAuth } from "../../../../hooks/use-auth";
-import { useEffectAsync } from "../../../../utils/react";
-import { useTranslation } from "../../../../hooks/use-translation";
-import ViewCard from "../../../view-details/view-card";
-import FileInput from '../../../forms/file-input';
-import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
-import ShowFormattedDate from "../../../jobs/show-formatted-date";
-import ViewPdf from "../../../view-details/view-pdf";
-import { EmployeeDocumentType } from "../../../../enums/employee/employee-document-types.enum";
-import { DocumentableType } from "../../../../enums/documents/documentable-type.enum";
-import { DocumentEntity } from "../../../../models/documents/document.entity";
-import SafetyPerformanceHistory from "../safety-performance-history";
-import ViewDocumentHistory from "../../../documents/view-history";
-import { AddDocumentButton, DeleteDocumentButton, DownloadDocumentButton, ViewDocumentButton } from "../../../documents/buttons";
-import { handleDownloadDocument, handleViewDocument } from "../../../../utils/documents/button-actions";
-import EmployeeApi from "../../../../pages/api/employee";
-import { EmployeeEntity } from "../../../../models/employee/employee.entity";
-import { EmployeeDocumentDto } from "../../../../models/employee/employee-document-dto";
-import { EmployeeOnBoardingChecklist } from "../../../../enums/employee/employee-onboarding-checklist.enum";
-import { LoaderIcon } from "../../../loading/loader-icon";
-import { ViewEmployeeDqfProps } from "../../../../types/employee/view-employee-dqf-props.type";
+import { useAuth } from "../../../hooks/use-auth";
+import { useEffectAsync } from "../../../utils/react";
+import { useTranslation } from "../../../hooks/use-translation";
+import ApplicantApi from "../../../pages/api/applicant";
+import ViewCard from "../../view-details/view-card";
+import FileInput from '../../forms/file-input';
+import { globalAjaxExceptionHandler } from "../../../utils/ajax";
+import ShowFormattedDate from "../../jobs/show-formatted-date";
+import { ApplicantDocumentDto } from "../../../models/applicant/applicant-document-dto";
+import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
+import ViewPdf from "../../view-details/view-pdf";
+import { ApplicantDqf } from "../../../enums/applicants/applicant-dqf-types.enum";
+import { DocumentableType } from "../../../enums/documents/documentable-type.enum";
+import { DocumentEntity } from "../../../models/documents/document.entity";
+import { ViewApplicantDqfProps } from "../../../types/applicant/view-application-dqf-props.type";
+import SafetyPerformanceHistory from "../../applicants/safety-performance-history";
+import ViewDocumentHistory from "../../documents/view-history";
+import { ApplicantOnBoardingChecklist } from "../../../enums/applicants/applicant-onboarding-checklist.enum";
+import { AddDocumentButton, DeleteDocumentButton, DownloadDocumentButton, ViewDocumentButton } from "../../documents/buttons";
+import { handleDownloadDocument, handleViewDocument } from "../../../utils/documents/button-actions";
 
-export default function DQF(props: ViewEmployeeDqfProps) {
+export default function DQF(props: ViewApplicantDqfProps) {
 
     const { t } = useTranslation();
     const { user } = useAuth();
-    const employeeApi = new EmployeeApi();
+    const applicantApi = new ApplicantApi();
 
     const [pdf, setPdf] = useState({});
 
-    const [employee, setEmployee] = useState<EmployeeEntity>(null)
+    const [applicant, setApplicant] = useState<ApplicantEntity>(null)
 
     useEffectAsync(async () => {
-        if (props.employee?.id) setEmployee(props.employee)
+        if (props.applicant?.id) {
+            const v = await applicantApi.getById(props.applicant?.id)
+            setApplicant(v)
+        }
     }, [user]);
 
     const form = useFormik({
-        initialValues: new EmployeeDocumentDto(),
-        validationSchema: EmployeeDocumentDto.yupSchema(),
+        initialValues: new ApplicantDocumentDto(),
+        validationSchema: ApplicantDocumentDto.yupSchema(),
         onSubmit: async ({ document }, { resetForm }) => {
             try {
-                const employeeDocumentUpload = await employeeApi.documents.create(employee.id, document)
+                const applicantDocumentUpload = await applicantApi.documents.create(applicant.id, document)
 
                 if (document.id) {
-                    employee.documents = employee.documents.filter(v => (v.id !== employeeDocumentUpload.id))
+                    applicant.documents = applicant.documents.filter(v => (v.id !== applicantDocumentUpload.id))
                 }
-                employee.documents.push(employeeDocumentUpload)
+                applicant.documents.push(applicantDocumentUpload)
                 toast.success(t('DOCUMENT_UPLOAD_SUCCESS_MESSAGE'))
                 resetForm()
             }
@@ -60,28 +62,26 @@ export default function DQF(props: ViewEmployeeDqfProps) {
     });
 
     /**
-     * It deletes a document from the employee's profile.
-     * @param {EmployeeDocumentType | string} docType - The type of document you want to
+     * It deletes a document from the applicant's profile.
+     * @param {ApplicantDqf | string} docType - The type of document you want to
      * delete.
      */
-    const handleDeleteDocument = async (docType: EmployeeDocumentType | string): Promise<void> => {
-        await employeeApi.documents.delete(employee?.id, docType)
-        setEmployee({
-            ...employee,
-            documents: employee?.documents?.filter(v => (v.type != docType))
+    const handleDeleteDocument = async (docType: ApplicantDqf | string): Promise<void> => {
+        const applicantApi = new ApplicantApi()
+        await applicantApi.documents.delete(applicant?.id, docType)
+        setApplicant({
+            ...applicant,
+            documents: applicant?.documents?.filter(v => (v.type != docType))
         })
     }
 
     /**
      * It takes a type and an optional documentId, and sets the form's document field to an object with the
      * type and id
-     * @param {EmployeeDocumentType} type - EmployeeDocumentType - this is the type of document that is being uploaded.
+     * @param {ApplicantDqf} type - ApplicantDqf - this is the type of document that is being uploaded.
      * @param {number} [documentId] - The id of the document to be updated.
      */
-    const handleUpdateDocument = (
-        type: EmployeeDocumentType,
-        documentId?: number
-    ): void => {
+    const handleUpdateDocument = async (type: ApplicantDqf, documentId?: number): Promise<void> => {
         form.setFieldValue("document", { type, id: documentId ?? null })
     }
 
@@ -91,11 +91,11 @@ export default function DQF(props: ViewEmployeeDqfProps) {
     ViewDocumentButton, AddDocumentButton, DownloadDocumentButton, DeleteDocumentButton, and
     ViewDocumentHistory. If the type is SAFETY_PERFORMANCE_HISTORY, it renders the
     SafetyPerformanceHistory component instead of the buttons. */
-    const ButtonList = ({ document, type }): JSX.Element => (
+    const ButtonList = ({ document, type }) => (
         <>
             {(!form.values.document?.type || form.values.document?.type !== type)
                 && (<div className="d-flex">
-                    {type != EmployeeDocumentType.SAFETY_PERFORMANCE_HISTORY
+                    {type != ApplicantDqf.SAFETY_PERFORMANCE_HISTORY
                         ? (<>
                             <ViewDocumentButton
                                 document={document}
@@ -121,17 +121,17 @@ export default function DQF(props: ViewEmployeeDqfProps) {
                             }
                             {Boolean(props.showHistory)
                                 && <ViewDocumentHistory
+                                    typePrefix="ApplicantDqf"
                                     document={document}
                                     type={type}
-                                    documentable_id={employee.id}
-                                    documentable_type={DocumentableType.EMPLOYEE}
+                                    documentable_id={applicant.id}
+                                    documentable_type={DocumentableType.APPLICANTS}
                                 />
                             }
                         </>)
                         : (
-                            // <></>
                             <SafetyPerformanceHistory
-                                employee={employee}
+                                applicant={applicant}
                                 canEditSafetyPerformance={props.canEditSafetyPerformance}
                                 showHistory={props.showHistory}
                                 showResendButton={props.showResendButton}
@@ -144,11 +144,11 @@ export default function DQF(props: ViewEmployeeDqfProps) {
 
     /**
      * This is a TypeScript React component that displays the last updated date of a document, unless the
-     * document type is EmployeeDocumentType.SAFETY_PERFORMANCE_HISTORY.
+     * document type is ApplicantDqf.SAFETY_PERFORMANCE_HISTORY.
      * @param  - The function `UpdatedAt` takes two parameters:
      */
-    const UpdatedAt = ({ document, type }): JSX.Element => {
-        if (type == EmployeeDocumentType.SAFETY_PERFORMANCE_HISTORY) return (<></>)
+    const UpdatedAt = ({ document, type }) => {
+        if (type == ApplicantDqf.SAFETY_PERFORMANCE_HISTORY) return (<></>)
 
         return (<>
             {document
@@ -161,7 +161,7 @@ export default function DQF(props: ViewEmployeeDqfProps) {
         <div className="employee_directory_tabs">
             <Row>
                 <Col>
-                    {!!employee ? (
+                    {!!applicant ? (
                         <ViewCard title={props.title ?? "DOCUMENTS"}>
                             <Table striped>
                                 <thead>
@@ -175,13 +175,13 @@ export default function DQF(props: ViewEmployeeDqfProps) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {Object.values(EmployeeDocumentType).map((type: EmployeeDocumentType, i) => {
-                                        /* Finding the document in the employee.documents array that has the same type. */
-                                        const document: DocumentEntity = employee?.documents?.find(v => (v.type === type))
+                                    {Object.values(ApplicantDqf).map((type: ApplicantDqf, i) => {
+                                        /* Finding the document in the applicant.documents array that has the same type. */
+                                        const document: DocumentEntity = applicant?.documents?.find(v => (v.type === type))
                                         return (
                                             <tr key={i}>
                                                 <td colSpan={2}>
-                                                    {t(`EmployeeDocumentType.${type}`)}
+                                                    {t(`ApplicantDqf.${type}`)}
                                                 </td>
                                                 {Boolean(props.showCompleted)
                                                     &&
@@ -207,7 +207,7 @@ export default function DQF(props: ViewEmployeeDqfProps) {
                                                                     disabled={form.isSubmitting || !form.isValid || form.isValidating}
                                                                     className="mr-2 w-50 theme-primary-btn"
                                                                     type="submit"
-                                                                >{t(`SAVE`)} <LoaderIcon isLoading={form.isSubmitting} /></Button>
+                                                                >{t(`SAVE`)}</Button>
                                                                 <Button
                                                                     type="button"
                                                                     className="mr-2 w-50 bg-danger"
@@ -221,13 +221,13 @@ export default function DQF(props: ViewEmployeeDqfProps) {
                                         )
                                     })}
                                     {props.showOnboarding
-                                        && Object.values(EmployeeOnBoardingChecklist).map((type: EmployeeOnBoardingChecklist, i) => {
-                                            /* Finding the document in the employee.documents array that has the same type. */
-                                            const document: DocumentEntity = employee?.documents?.find(v => (v.type === type))
+                                        && Object.values(ApplicantOnBoardingChecklist).map((type: ApplicantOnBoardingChecklist, i) => {
+                                            /* Finding the document in the applicant.documents array that has the same type. */
+                                            const document: DocumentEntity = applicant?.documents?.find(v => (v.type === type))
                                             return (
                                                 <tr key={i}>
                                                     <td colSpan={2}>
-                                                        {t(`EmployeeOnBoardingChecklist.${type}`)}
+                                                        {t(`ApplicantOnBoardingChecklist.${type}`)}
                                                     </td>
                                                     {Boolean(props.showCompleted)
                                                         &&

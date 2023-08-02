@@ -45,7 +45,6 @@ import { ApplicantDocumentType } from "../../../enums/applicants/applicant-docum
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
 import { JobGeography } from "../../../enums/jobs/job-geography.enum";
 import ViewModal from "../../view-details/view-modal";
-import { EmployeeEntity } from "../../../models/applicant/employee.entity";
 import UserApi from "../../../pages/api/user";
 import { UserEntity } from "../../../models/user/user.entity";
 import { JobForm } from "./job-form";

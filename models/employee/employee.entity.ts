@@ -1,6 +1,6 @@
 import { JobEntity } from '../job/job.entity';
 import { ApplicantStatus } from '../../enums/applicants/applicant-status.enum';
-import { ApplicantEntity } from './applicant.entity';
+import { ApplicantEntity } from '../applicant';
 import * as yup from "yup";
 import "../../utils/yup";
 import {
@@ -11,12 +11,13 @@ import {
 } from '../../enums/applicants/applicant-reason-codes.enum';
 import { Status } from '../../enums/status.enum';
 import { UserEntity } from '../user/user.entity';
-import { ApplicantExperienceEntity } from './applicant-experience.entity';
+import { ApplicantExperienceEntity } from '../applicant';
 import { DriverLicenseType } from '../../enums/users/driver-license-type.enum';
 import { JobGeography } from '../../enums/jobs/job-geography.enum';
 import { VehicleTransmissionType } from '../../enums/vehicles/vehicle-transmission-type.enum';
 import { DriverEndorsement } from '../../enums/users/driver-endorsement.enum';
 import { EducationLevel } from '../../enums/users/education-level.enum';
+import { DocumentEntity } from '../documents/document.entity';
 
 export class EmployeeEntity {
 	id?: number;
@@ -57,6 +58,8 @@ export class EmployeeEntity {
 	emergency_contact_name?: string;
 	emergency_contact_number?: string;
 	emergency_contact_relationship?: string;
+
+	documents?: DocumentEntity[] = [];
 
 	static yupSchema() {
 		return yup.object({
