@@ -97,6 +97,7 @@ export class ApplicantEntity {
 	current_application_status?: ApplicantStatus;
 	job_history?: ApplicantJobStatusHistoryEntity;
 	employee?: EmployeeEntity;
+	is_hired?: boolean = false;
 
 	static yupSchema() {
 		return yup.object({
@@ -173,7 +174,8 @@ export class ApplicantEntity {
 				yup.array(DocumentEntity.yupSchema(ApplicantDocumentType)) as any
 			).unique("type"),
 			jobs: (yup.array(ApplicantJobEntity.yupSchema()) as any).unique("job.id"),
-			assignedUserId: yup.number().optional().nullable()
+			assignedUserId: yup.number().optional().nullable(),
+			is_hired: yup.bool().nullable(),
 		});
 	}
 }

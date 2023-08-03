@@ -57,7 +57,10 @@ export function PastEmploymentHistory() {
 			is_previous_employed: !!employers?.length,
 		});
 	}, [applicant]);
-
+	useEffect(() => {
+		console.log("form.values", form.values)
+		console.log("form.errors", form.errors)
+	}, [form.values, form.errors])
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 
@@ -79,7 +82,7 @@ export function PastEmploymentHistory() {
 			>
 				{t("PAST_EMPLOYMENT_HISTORY")}
 			</h4>
-			
+
 			<p className={`${styles.paragraph} ${styles.align__text_left}`}>
 				{t("HONEST_ABOUT_PAST_EMPLOYMENT")}
 			</p>
@@ -91,7 +94,149 @@ export function PastEmploymentHistory() {
 					formik={form}
 				/>
 			</Row>
+			{(!!form?.values?.is_previous_employed && form?.values?.employers?.length > 0) &&
+				<>
+					{form?.values?.employers?.map((entity, i) => (
+						<div key={i} className="single-past-employer-items my-3 px-2">
+							<div className="py-3">
+								<Row>
+									<BaseCheck
+										className="mt-3 col-md-12 float-left"
+										required
+										name={`employers[${i}].can_contact`}
+										label="CONTACT_AUTHORIZATION"
+										formik={form}
+									/>
+								</Row>
+								<Row className={styles.bold}>
+									<BaseInput
+										className="col-md-6 my-3"
+										name={`employers[${i}].name`}
+										label="PREVIOUS_COMPANY_NAME"
+										required
+										formik={form}
+									/>
+									<BaseInput
+										className="col-md-6 my-3"
+										name={`employers[${i}].manager_name`}
+										label="PREVIOUS_MANAGER_NAME"
+										required
+										formik={form}
+									/>
+								</Row>
+								<Row className={styles.bold}>
+									<BaseInputPhone
+										className="col-md-6 my-3"
+										name={`employers[${i}].phone`}
+										placeholder="phone"
+										label="PREVIOUS_COMPANY_PHONE_NUMBER"
+										formik={form}
+									/>
+									<BaseInput
+										className="col-md-6 my-3"
+										required
+										name={`employers[${i}].email`}
+										label="PREVIOUS_COMPANY_EMAIL"
+										placeholder="email"
+										formik={form}
+									/>
+								</Row>
+								<Row className={styles.bold}>
+									<BaseInput
+										className="col-md-6 my-3"
+										required
+										type="date"
+										max={new Date().toISOString().split('T')[0]}
+										name={`employers[${i}].start_at`}
+										label="START_DATE"
+										formik={form}
+									/>
+									<BaseInput
+										className="col-md-6 my-3"
+										required
+										type="date"
+										max={new Date().toISOString().split('T')[0]}
+										name={`employers[${i}].end_at`}
+										label="END_DATE"
+										formik={form}
+									/>
+								</Row>
+								<Row className={styles.bold}>
+									<BaseInput
+										className="col-md-6 my-3"
+										required
+										name={`employers[${i}].address`}
+										placeholder="ADDRESS_LINE_1"
+										label="ADDRESS_LINE_1"
+										formik={form}
+									/>
+									<BaseInput
+										className="col-md-6 my-3"
+										name={`employers[${i}].address_2`}
+										placeholder="ADDRESS_LINE_2"
+										label="ADDRESS_LINE_2"
+										formik={form}
+									/>
 
+									<BaseInput
+										className="col-md-6 my-3"
+										required
+										name={`employers[${i}].zip_code`}
+										type="number"
+										placeholder="zip_code"
+										label="zip_code"
+										formik={form}
+									/>
+
+									<BaseInput
+										className="col-md-6 my-3"
+										required
+										name={`employers[${i}].city`}
+										label="City"
+										formik={form}
+									/>
+
+									<StateSelect
+										className="col my-3"
+										required
+										label="STATE"
+										name={`employers[${i}].state`}
+										placeholder="STATE"
+										formik={form}
+									/>
+								</Row>
+								<Row >
+									<BaseCheck
+										className="mt-2 col-md-6 float-left"
+										name={`employers[${i}].is_subject_to_fmcsrs`}
+										label="FMCR_QUESTION"
+										formik={form}
+									/>
+									<BaseCheck
+										className="mt-2 col-md-6 float-left"
+										name={`employers[${i}].is_subject_to_drug_tests`}
+										label="JOB_DESIGNATED_CURRENT_COMPANY"
+										formik={form}
+									/>
+								</Row>
+							</div>
+							<Button
+								className="rounded-lg"
+								variant="outline-danger close_btn w-25 mx-auto d-block my-2"
+								onClick={() =>
+									form.setValues({
+										...form.values,
+										employers: form.values?.employers?.filter((v, idx) => i != idx),
+									})
+								}
+							>
+								<DashCircle />
+							</Button>
+							<div className='Row' style={{ height: '3px', borderBottom: 'solid 2px #8d8c8c', marginTop: '0px' }}></div >
+						</div>
+					))}
+				</>
+			}
 			{(!!form?.values?.is_previous_employed && form?.values?.employers?.length > 0) &&
 				<>
 					{
@@ -125,35 +270,7 @@ export function PastEmploymentHistory() {
 					}
 				</>
 			}
-			<>
-				{
-					Boolean((form?.values?.employers)?.length !== 12) && (
-						<Row>
-							{!!form?.values?.is_previous_employed && (
-								<>
-									<Col className="mt-2">
-										<Button
-											className="w-100 py-2"
-											size="sm"
-											onClick={() =>
-												form.setFieldValue("employers", [
-													...(form.values?.employers || []),
-													{
-														...(new PastEmploymentHistoryDto()),
-														is_current: false
-													},
-												])
-											}
-										>
-											<PlusCircle /> {t("ADD_PAST_EMPLOYMENT_HISTORY")}
-										</Button>
-									</Col>
-								</>
-							)}
-						</Row>
-					)
-				}
-			</>
+
 
 
 

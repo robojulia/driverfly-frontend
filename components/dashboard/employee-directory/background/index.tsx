@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import ViewApplicantDetail from '../../../applicants/applicant-view-details';
 import { ViewApplicantBackgroundProps } from '../../../../types/applicant/view-application-background-props.type';
 import ViewDetails from '../../../view-details/view-details';
+import ViewEmployeeDetails from '../../../employee/view-employee-detail';
 
 
 export default function Background({ employee }: ViewApplicantBackgroundProps) {
@@ -13,16 +14,16 @@ export default function Background({ employee }: ViewApplicantBackgroundProps) {
 	const { t } = useTranslation();
 
 	const onViewProfileCLick = () => router.push(`/dashboard/company/applicants/${employee?.applicant?.id}`)
-	const onEditClick = () => router.push(`/dashboard/company/applicants/${employee?.applicant?.id}/edit`)
+	const onEditClick = () => router.push(`/dashboard/company/compliance/employee-directory/${employee?.id}/edit`)
 
 
 	return (
 		<div className="employee_directory_tabs">
-			{employee?.applicant && (
+			{employee && (
 				<>
 					<Row className="my-2">
 						<Col>
-							<strong><h5>{t(`${employee?.applicant?.first_name} ${employee?.applicant?.last_name}`)}</h5></strong>
+							<strong><h5>{t(`${employee?.first_name} ${employee?.last_name}`)}</h5></strong>
 						</Col>
 						<Col>
 							<Button onClick={onEditClick} className="float-right">{t("EDIT")}</Button>
@@ -44,14 +45,14 @@ export default function Background({ employee }: ViewApplicantBackgroundProps) {
 								default={t("NOT_ANSWERED")}
 								obj={{
 									// DATE_HIRED: job?.hired_at ? new Date(job?.hired_at).toDateString() : t("N/A"),
-									BIRTHDATE: employee?.applicant?.birthdate ? new Date(employee?.applicant?.birthdate).toDateString() : t("N/A"),
+									BIRTHDATE: employee?.birthdate ? new Date(employee?.birthdate).toDateString() : t("N/A"),
 								}}
 							/>
 						</Col>
 					</Row>
 
 
-					<ViewApplicantDetail applicant={employee?.applicant} />
+					<ViewEmployeeDetails employee={employee} />
 					<Button onClick={onViewProfileCLick}>{t(`view_applicant_profile`)}</Button>
 				</>
 			)}

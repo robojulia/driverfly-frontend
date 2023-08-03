@@ -1,14 +1,7 @@
 import { JobEntity } from '../job/job.entity';
-import { ApplicantStatus } from '../../enums/applicants/applicant-status.enum';
 import { ApplicantEntity } from '../applicant';
 import * as yup from "yup";
 import "../../utils/yup";
-import {
-	ApplicantReasonCodeFired,
-	ApplicantReasonCodeNotInterested,
-	ApplicantReasonCodeNotQualified,
-	ApplicantReasonCodeQuit
-} from '../../enums/applicants/applicant-reason-codes.enum';
 import { Status } from '../../enums/status.enum';
 import { UserEntity } from '../user/user.entity';
 import { ApplicantExperienceEntity } from '../applicant';
@@ -97,6 +90,11 @@ export class EmployeeEntity {
 			job: yup.object({
 				id: yup.number().required().nullable()
 			}).required().nullable(),
+			// status: (yup.string() as any).enum(ApplicantStatus).required().nullable(),
+			// status_other: yup.string().when("status", {
+			// 	is: ApplicantStatus.OTHER,
+			// 	then: yup.string().required().nullable(),
+			// }).nullable(),
 			// reason_codes: (yup.array(yup.string())
 			// 	.when("status", {
 			// 		is: ApplicantStatus.INACTIVE_CONTACTED_NOT_QUALIFIED,

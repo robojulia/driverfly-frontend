@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 
-import { Button, ButtonGroup, Col, Form, Row } from "react-bootstrap";
+import { Button, ButtonGroup, Col, Form, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
 import {
 	BookmarkCheck,
 	BookmarkDash,
@@ -46,7 +46,7 @@ import BaseSelect from "../../../../../components/forms/base-select";
 import { UserEntity } from "../../../../../models/user/user.entity";
 
 export default function ViewApplicant({ id }) {
-	
+
 	const router = useRouter();
 
 	const { t } = useTranslation();
@@ -235,6 +235,8 @@ export default function ViewApplicant({ id }) {
 		{ translateProps: true }
 	);
 
+	const tooltip = <Tooltip id="my-tooltip" >{t("CANOT_EDIT_APPLICANT")}</Tooltip>;
+	const canEditTooltip = <Tooltip id="my-tooltip">{t("EDIT_APPLICANT_PROFILE")}</Tooltip>
 	return (
 		<ChildPageLayout backPath={backPath} title={title}>
 			{Boolean(applicant.id) && <>
@@ -257,12 +259,13 @@ export default function ViewApplicant({ id }) {
 								style={{ float: "right", marginBottom: "10px" }}
 								className="assign_unassign"
 							>
-								<div className="float-right mr-2">
-
-									<Button type="button" onClick={onEditClick}>
-										<Pencil /> {t("EDIT")}
-									</Button>
-								</div>
+								<OverlayTrigger trigger={['hover', 'focus']} delay={{ show: 0, hide: 0 }} overlay={Boolean(applicant?.is_hired) ? tooltip : canEditTooltip}>
+									<div className="float-right mr-2">
+										<Button type="button" onClick={onEditClick} disabled={Boolean(applicant?.is_hired)} >
+											<Pencil /> {t("EDIT")}
+										</Button>
+									</div>
+								</OverlayTrigger>
 
 								{/* <ButtonGroup size="sm"> */}
 								{/* {applicant?.assignedUser ? (

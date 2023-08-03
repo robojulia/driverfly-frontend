@@ -1,459 +1,345 @@
 import { useEffect, useState } from "react";
-import { useEffectAsync } from "../../../utils/react";
-
 import { toast } from "react-toastify";
+
+import { useEffectAsync } from "../../../utils/react";
 import { formFailed, formSuccess } from "../../../utils/toast";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 
 import { useFormik } from "formik";
 import { useTranslation } from "../../../hooks/use-translation";
 import { useAuth } from "../../../hooks/use-auth";
-
-import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
-import { Button, Col, Row, Table } from "react-bootstrap";
-import { ChevronUp, DashCircle, PlusCircle, XCircle } from "react-bootstrap-icons";
-
+import {  Col, Row } from "react-bootstrap";
 import { BaseFormProps } from "./base-form-props";
 import EntityForm from "../../layouts/page/entity-form";
 import ViewCard from "../../view-details/view-card";
 import BaseCheckList from "../base-check-list";
 import BaseInput from "../base-input";
 import BaseSelect from "../base-select";
-import BaseTextArea from "../base-text-area";
 import BaseInputPhone from "../base-input-phone";
 import StateSelect from "../state-select";
 import BaseCheck from "../base-check";
-import FileInput from "../file-input";
-
-import JobApi from "../../../pages/api/job";
-import ApplicantApi from "../../../pages/api/applicant";
-
-import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
-import { ApplicantEquipmentEntity } from "../../../models/applicant/applicant-equipment.entity";
-import { ApplicantExperienceEntity } from "../../../models/applicant/applicant-experience.entity";
-import { ApplicantEmployerEntity } from "../../../models/applicant/applicant-employer.entity";
-import { ApplicantJobEntity } from "../../../models/applicant/applicant-job.entity";
-import { JobEntity } from "../../../models/job/job.entity";
-import { DocumentEntity } from "../../../models/documents/document.entity";
-
 import { DriverEndorsement } from "../../../enums/users/driver-endorsement.enum";
 import { DriverLicenseType } from "../../../enums/users/driver-license-type.enum";
 import { EducationLevel } from "../../../enums/users/education-level.enum";
-import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
 import { VehicleTransmissionType } from "../../../enums/vehicles/vehicle-transmission-type.enum";
-import { ApplicantDocumentType } from "../../../enums/applicants/applicant-document-type.enum";
 import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
 import { JobGeography } from "../../../enums/jobs/job-geography.enum";
-import ViewModal from "../../view-details/view-modal";
 import UserApi from "../../../pages/api/user";
 import { UserEntity } from "../../../models/user/user.entity";
-import { JobForm } from "./job-form";
-import { HireApplicantDto } from "../../../models/applicant/hire-applicant.dto";
 import EmployeeApi from "../../../pages/api/employee";
+import { EmployeeEntity } from "../../../models/employee/employee.entity";
 
-export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> {
+export interface EmployeeFormProps extends BaseFormProps<EmployeeEntity> {
 }
 
-export function ApplicantForm(props: ApplicantFormProps) {
-	const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([])
-	const { t } = useTranslation();
-	const applicantApi = new ApplicantApi();
-	let { className, entity, onSaveComplete, onSaveError } = props;
+export function EmployeeForm(props: EmployeeFormProps) {
+    const { t } = useTranslation();
 
-	let { user, hasPermission, isSuperAdmin } = useAuth();
+    const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([])
 
-	const [protectedFields, setProtectedFields] = useState({
-		license_number: false,
-		social_security_number: false
-	});
+    const userApi = new UserApi()
+    const employeeApi = new EmployeeApi();
 
-	useEffect(() => {
-		setProtectedFields({
-			license_number: hasPermission("CanViewApplicant.license_number"),
-			social_security_number: hasPermission("CanViewApplicant.social_security_number"),
-		});
-	}, [user]);
+    let { className, entity, onSaveComplete, onSaveError } = props;
 
-	const form = useFormik({
-		initialValues: new ApplicantEntity(),
-		validationSchema: ApplicantEntity.yupSchema(),
-		onSubmit: async (values) => {
+    let { user, hasPermission, isSuperAdmin } = useAuth();
 
-			const jobs = values.jobs || [];
-			if ("jobs" in values)
-				delete values.jobs;
+    const [protectedFields, setProtectedFields] = useState({
+        license_number: false,
+        social_security_number: false
+    });
 
-			try {
-				if (entity?.id) {
-					values = await applicantApi.update(entity.id, values);
-				}
-				else {
-					values = await applicantApi.create(values);
-				}
+    useEffect(() => {
+        setProtectedFields({
+            license_number: hasPermission("CanViewApplicant.license_number"),
+            social_security_number: hasPermission("CanViewApplicant.social_security_number"),
+        });
+    }, [user]);
 
-				for (let i = 0; i < entity?.jobs?.length; i++) {
-					let job = entity.jobs[i];
+    const form = useFormik({
+        initialValues: new EmployeeEntity(),
+        validationSchema: EmployeeEntity.yupSchema(),
+        onSubmit: async (values) => {
 
-					if (!jobs.some(v => v.job?.id === job.job.id)) {
-						await applicantApi.jobs.remove(values.id, job.job.id);
-					}
-				}
 
-				for (let i = 0; i < jobs.length; i++) {
-					let job = jobs[i];
+            try {
+                if (entity?.id) {
+                    values = await employeeApi.update(entity.id, values);
+                }
 
-					if (job.id) {
-						await applicantApi.jobs.update(values.id, job.job.id, job);
-					}
-					else {
-						await applicantApi.jobs.create(values.id, job.job.id, job);
-					}
-				}
+                formSuccess(t, entity?.id ? "update" : "create", "EMPLOYEE");
+                // if (onSaveComplete) onSaveComplete(values);
+            } catch (e) {
+                console.error("Unable to save employee info", e);
+                if (!globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast }))
+                    formFailed(t, entity?.id ? "update" : "create", "EMPLOYEE");
 
-				formSuccess(t, entity?.id ? "update" : "create", "APPLICANT");
-				if (onSaveComplete) onSaveComplete(values);
-			} catch (e) {
-				console.error("Unable to save applicant info", e);
-				if (!globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast }))
-					formFailed(t, entity?.id ? "update" : "create", "APPLICANT");
+                if (onSaveError) onSaveError(e);
+            }
+        }
+    });
 
-				if (onSaveError) onSaveError(e);
-			}
-		}
-	});
-
-	const [jobs, setJobs] = useState<JobEntity[]>([]);
-
-	useEffectAsync(async () => {
-		const api = new JobApi();
-		const jobs = await api.list();
-
-		setJobs(jobs);
-	}, [user]);
-
-	useEffect(() => {
-		if (entity && !form.dirty) {
-			entity.documents = entity.documents.filter(v => Object.values(ApplicantDocumentType).includes(v.type as ApplicantDocumentType))
-			form.setValues(entity);
-		}
+    useEffect(() => {
+        form.setValues(entity);
 	}, [entity]);
+    
+    useEffect(() => {
+       console.log("form error", form.errors)
+       console.log("form val", form.values)
+	}, [form.errors, form.values]);
+    
+    
+    useEffectAsync(async () => {
+        const data = await userApi.list()
+        setCompanyUsers(data)
+    }, [])
+    return (
+        <EntityForm
+            id={entity?.id}
+            formik={form}
+            onSubmit={form.handleSubmit}
+            className={className}
+        // actions={[
+        // 	{
+        // 		label: "HIRE",
+        // 		className: "btn theme-primary-btn",
+        // 		hide: !Boolean(form.values.id),
+        // 		disabled: form.isSubmitting,
+        // 		onClick: () => hireApplicantForm.setValues({ applicantId: entity.id }),
+        // 	}
+        // ]}
+        >
 
-	const [jobHired, setJobHired] = useState<ApplicantJobEntity>(null)
+            <Row>
 
-	useEffect(() => {
-		setJobHired(
-			form.values.jobs?.find(j => j?.status?.startsWith("COMPLETED")) ?? null
-		)
-	}, [form.values.jobs]);
+                <Col className="p-0 px-lg-2 mt-3">
+                    <ViewCard title="BASIC_DETAILS">
+                        <Row className="mb-2">
+                            <Col md='4'>
+                                <BaseSelect
+                                    // className="col-12 my-2"
+                                    readOnly={!Boolean(isSuperAdmin)}
+                                    label="ASSIGNED_RECRUITER"
+                                    name="assignedUserId"
+                                    placeholder
+                                    options={companyUsers}
+                                    valueKey="id"
+                                    createLabel={c => `${c.name} (#${c.id})`}
+                                    formik={form}
+                                />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col md="4" className="px-2">
+                                <BaseInput
+                                    className="col-12"
+                                    label="FIRST_NAME"
+                                    required
+                                    name="first_name"
+                                    placeholder="FIRST_NAME"
+                                    formik={form}
+                                />
+                                <BaseInput
+                                    className="col-12"
+                                    label="LAST_NAME"
+                                    required
+                                    name="last_name"
+                                    placeholder="LAST_NAME"
+                                    formik={form}
+                                />
+                                <BaseInput
+                                    className="col-12"
+                                    label="BIRTHDATE"
+                                    type="date"
+                                    name="birthdate"
+                                    placeholder="MM/DD/YYYY"
+                                    formik={form}
+                                />
 
-	const hireApplicantForm = useFormik({
-		initialValues: new HireApplicantDto(),
-		validationSchema: HireApplicantDto.yupSchema(),
-		validateOnMount: false,
-		onSubmit: async (values, { resetForm }) => {
-			try {
-				const employeeApi = new EmployeeApi()
-				await employeeApi.hire(values)
-				resetForm();
-				formSuccess(t, "hired", "STATUS");
-			} catch (e) {
-				globalAjaxExceptionHandler(e, { formik: hireApplicantForm, t: t, toast: toast });
-			}
-		},
-	});
+                                <BaseInputPhone
+                                    className="col-12"
+                                    label="PHONE"
+                                    name="phone"
+                                    placeholder="PHONE"
+                                    formik={form}
+                                />
+                                <BaseInput
+                                    className="col-12"
+                                    label="EMAIL"
+                                    required
+                                    type="email"
+                                    name="email"
+                                    placeholder="EMAIL"
+                                    formik={form}
+                                />
+                                <BaseInput
+                                    className="col-12"
+                                    label="STREET"
+                                    name="street"
+                                    placeholder="STREET"
+                                    formik={form}
+                                />
+                                <BaseInput
+                                    className="col-12"
+                                    label="CITY"
+                                    name="city"
+                                    placeholder="CITY"
+                                    formik={form}
+                                />
+                                <Row className='px-3'>
+                                    <StateSelect
+                                        className="col-6"
+                                        label="STATE"
+                                        name="state"
+                                        placeholder="STATE"
+                                        formik={form}
+                                    />
+                                    <BaseInput
+                                        className="col-6"
+                                        label="ZIP_CODE"
+                                        name="zip_code"
+                                        placeholder="ZIP_CODE"
+                                        formik={form}
+                                    />
+                                </Row>
+                            </Col>
+                            <Col md="4" className="px-2">
+                                <BaseInput
+                                    className="col-12"
+                                    label="driver_license_number"
+                                    name="license_number"
+                                    placeholder="driver_license_number"
+                                    formik={form}
+                                    readOnly={!protectedFields.license_number}
+                                />
+                                <BaseInput
+                                    className="col-12"
+                                    label="expiration_date"
+                                    name="license_expiry"
+                                    type="date"
+                                    placeholder="expiration_date"
+                                    formik={form}
+                                />
+                                <Row className="px-3">
+                                    <StateSelect
+                                        className="col-6"
+                                        label="state_issued"
+                                        name="license_state"
+                                        placeholder="state_issued"
+                                        formik={form}
+                                    />
+                                    <BaseSelect
+                                        className="col-6"
+                                        label="CDL_CLASS"
+                                        name="license_type"
+                                        placeholder
+                                        labelPrefix="DriverLicenseType"
+                                        enumType={DriverLicenseType}
+                                        formik={form}
+                                    />
+                                </Row>
+                                <BaseInput
+                                    className="col-12"
+                                    label="years_cdl_experience"
+                                    name="years_cdl_experience"
+                                    type="number"
+                                    placeholder="years_cdl_experience"
+                                    formik={form}
+                                />
+                                <BaseCheck
+                                    className="col-12 mt-2"
+                                    label="OWNER_OPERATOR"
+                                    name="is_owner_operator"
+                                    formik={form}
+                                />
+                                <BaseCheck
+                                    className="col-12 mt-2"
+                                    label="AUTHORIZED_TO_WORK_IN_THE_US"
+                                    name="authorized_to_work_in_us"
+                                    formik={form}
+                                />
+                                <BaseCheckList
+                                    className="col-12 mt-2"
+                                    label="PREFERRED_LOCATION"
+                                    name="preferred_location"
+                                    formik={form}
+                                    labelPrefix="JobGeography"
+                                    enumType={JobGeography}
 
-	const [createJob, setCreateJob] = useState<boolean>(false);
+                                />
 
-	const onJobAdded = (job: JobEntity) => {
-		setJobs([
-			...jobs,
-			job
-		])
-		setCreateJob(false);
-	}
+                                {form.values.id
+                                    && <BaseSelect
+                                        className="col-12 mt-2"
+                                        name={`current_application_status`}
+                                        required
+                                        placeholder="APPLICANT_CURRENT_STATUS"
+                                        label="APPLICANT_CURRENT_STATUS"
+                                        labelPrefix="ApplicantStatus"
+                                        enumType={ApplicantStatus}
+                                        formik={form}
+                                    />
+                                }
 
-	useEffect(() => {
-		console.log("hireApplicantForm.values", hireApplicantForm.values);
-		console.log("hireApplicantForm.errors", hireApplicantForm.errors);
-	}, [hireApplicantForm.errors, hireApplicantForm.values]);
+                            </Col>
+                            <Col md="4" className="px-2">
+                                <BaseCheckList
+                                    className="col-12"
+                                    label="TRANSMISSION_EXPERIENCE"
+                                    name="transmission_type"
+                                    labelPrefix="VehicleTransmissionType"
+                                    enumType={VehicleTransmissionType}
+                                    formik={form}
+                                    cols="2"
+                                />
+                                <BaseCheckList
+                                    className="col-12"
+                                    label="ENDORSEMENTS"
+                                    name="endorsements"
+                                    labelPrefix="DriverEndorsement"
+                                    enumType={DriverEndorsement}
+                                    formik={form}
+                                    cols="2"
+                                />
+                                <BaseSelect
+                                    className="col-12"
+                                    label="HIGHEST_DEGREE"
+                                    name="highest_degree"
+                                    placeholder="HIGHEST_DEGREE"
+                                    formik={form}
+                                    labelPrefix="EducationLevel"
+                                    enumType={EducationLevel}
+                                />
+                                <Col xs="12" className='mt-2'>
+                                    <ViewCard title="EMERGENCY_CONTACT">
+                                        <BaseInput
+                                            className="col-12"
+                                            name={`emergency_contact_name`}
+                                            label="NAME"
+                                            placeholder="FULL_NAME"
+                                            formik={form}
+                                        />
 
+                                        <BaseInputPhone
+                                            className="col-12"
+                                            name={`emergency_contact_number`}
+                                            label="PHONE"
+                                            placeholder="PHONE"
+                                            formik={form}
+                                        />
+                                        <BaseInput
+                                            className="col-12"
+                                            name={`emergency_contact_relationship`}
+                                            label="RELATIONSHIP"
+                                            placeholder="RELATIONSHIP"
+                                            formik={form}
+                                        />
 
-	const userApi = new UserApi()
-	useEffectAsync(async () => {
-		const data = await userApi.list()
-		setCompanyUsers(data)
-	}, [])
-	return (
-		<EntityForm
-			id={entity?.id}
-			formik={form}
-			onSubmit={form.handleSubmit}
-			forbidSubmit={Boolean(entity?.is_hired)}
-			className={className}
-			actions={[
-				{
-					label: "HIRE",
-					className: "btn theme-primary-btn",
-					hide: !Boolean(form.values.id) || Boolean(entity?.is_hired),
-					disabled: form.isSubmitting,
-					onClick: () => hireApplicantForm.setValues({ applicantId: entity.id }),
-				}
-			]}
-		>
-
-			<Row>
-
-				<Col className="p-0 px-lg-2 mt-3">
-					<ViewCard title="BASIC_DETAILS">
-						<Row className="mb-2">
-							<Col md='4'>
-								<BaseSelect
-									// className="col-12 my-2"
-									readOnly={!Boolean(isSuperAdmin) || Boolean(entity?.is_hired)}
-									label="ASSIGNED_RECRUITER"
-									name="assignedUserId"
-									placeholder
-									options={companyUsers}
-									valueKey="id"
-									createLabel={c => `${c.name} (#${c.id})`}
-									formik={form}
-								/>
-							</Col>
-						</Row>
-						<Row>
-							<Col md="4" className="px-2">
-								<BaseInput
-									className="col-12"
-									readOnly={Boolean(entity?.is_hired)}
-									label="FIRST_NAME"
-									required
-									name="first_name"
-									placeholder="FIRST_NAME"
-									formik={form}
-								/>
-								<BaseInput
-									className="col-12"
-									readOnly={Boolean(entity?.is_hired)}
-									label="LAST_NAME"
-									required
-									name="last_name"
-									placeholder="LAST_NAME"
-									formik={form}
-								/>
-								<BaseInput
-									className="col-12"
-									readOnly={Boolean(entity?.is_hired)}
-									label="BIRTHDATE"
-									type="date"
-									name="birthdate"
-									placeholder="MM/DD/YYYY"
-									formik={form}
-								/>
-
-								<BaseInputPhone
-									className="col-12"
-									readOnly={Boolean(entity?.is_hired)}
-									label="PHONE"
-									name="phone"
-									placeholder="PHONE"
-									formik={form}
-								/>
-								<BaseInput
-									className="col-12"
-									readOnly={Boolean(entity?.is_hired)}
-									label="EMAIL"
-									required
-									type="email"
-									name="email"
-									placeholder="EMAIL"
-									formik={form}
-								/>
-								<BaseInput
-									className="col-12"
-									readOnly={Boolean(entity?.is_hired)}
-									label="STREET"
-									name="street"
-									placeholder="STREET"
-									formik={form}
-								/>
-								<BaseInput
-									className="col-12"
-									readOnly={Boolean(entity?.is_hired)}
-									label="CITY"
-									name="city"
-									placeholder="CITY"
-									formik={form}
-								/>
-								<Row className='px-3'>
-									<StateSelect
-										className="col-6"
-										readOnly={Boolean(entity?.is_hired)}
-										label="STATE"
-										name="state"
-										placeholder="STATE"
-										formik={form}
-									/>
-									<BaseInput
-										className="col-6"
-										readOnly={Boolean(entity?.is_hired)}
-										label="ZIP_CODE"
-										name="zip_code"
-										placeholder="ZIP_CODE"
-										formik={form}
-									/>
-								</Row>
-							</Col>
-							<Col md="4" className="px-2">
-								<BaseInput
-									className="col-12"
-									label="driver_license_number"
-									name="license_number"
-									placeholder="driver_license_number"
-									formik={form}
-									readOnly={!protectedFields.license_number || Boolean(entity?.is_hired)}
-								/>
-								<BaseInput
-									className="col-12"
-									readOnly={Boolean(entity?.is_hired)}
-									label="expiration_date"
-									name="license_expiry"
-									type="date"
-									placeholder="expiration_date"
-									formik={form}
-								/>
-								<Row className="px-3">
-									<StateSelect
-										className="col-6"
-										readOnly={Boolean(entity?.is_hired)}
-										label="state_issued"
-										name="license_state"
-										placeholder="state_issued"
-										formik={form}
-									/>
-									<BaseSelect
-										className="col-6"
-										readOnly={Boolean(entity?.is_hired)}
-										label="CDL_CLASS"
-										name="license_type"
-										placeholder
-										labelPrefix="DriverLicenseType"
-										enumType={DriverLicenseType}
-										formik={form}
-									/>
-								</Row>
-								<BaseInput
-									className="col-12"
-									readOnly={Boolean(entity?.is_hired)}
-									label="years_cdl_experience"
-									name="years_cdl_experience"
-									type="number"
-									placeholder="years_cdl_experience"
-									formik={form}
-								/>
-								<BaseCheck
-									className="col-12 mt-2"
-									disabled={Boolean(entity?.is_hired)}
-									label="OWNER_OPERATOR"
-									name="is_owner_operator"
-									formik={form}
-								/>
-								<BaseCheck
-									className="col-12 mt-2"
-									disabled={Boolean(entity?.is_hired)}
-									label="AUTHORIZED_TO_WORK_IN_THE_US"
-									name="authorized_to_work_in_us"
-									formik={form}
-								/>
-								<BaseCheckList
-									className="col-12 mt-2"
-									readOnly={Boolean(entity?.is_hired)}
-									label="PREFERRED_LOCATION"
-									name="preferred_location"
-									formik={form}
-									labelPrefix="JobGeography"
-									enumType={JobGeography}
-
-								/>
-
-								{form.values.id
-									&& <BaseSelect
-										className="col-12 mt-2"
-										readOnly={Boolean(entity?.is_hired)}
-										name={`current_application_status`}
-										required
-										placeholder="APPLICANT_CURRENT_STATUS"
-										label="APPLICANT_CURRENT_STATUS"
-										labelPrefix="ApplicantStatus"
-										enumType={ApplicantStatus}
-										formik={form}
-									/>
-								}
-
-							</Col>
-							<Col md="4" className="px-2">
-								<BaseCheckList
-									className="col-12"
-									readOnly={Boolean(entity?.is_hired)}
-									label="TRANSMISSION_EXPERIENCE"
-									name="transmission_type"
-									labelPrefix="VehicleTransmissionType"
-									enumType={VehicleTransmissionType}
-									formik={form}
-									cols="2"
-								/>
-								<BaseCheckList
-									className="col-12"
-									readOnly={Boolean(entity?.is_hired)}
-									label="ENDORSEMENTS"
-									name="endorsements"
-									labelPrefix="DriverEndorsement"
-									enumType={DriverEndorsement}
-									formik={form}
-									cols="2"
-								/>
-								<BaseSelect
-									className="col-12"
-									readOnly={Boolean(entity?.is_hired)}
-									label="HIGHEST_DEGREE"
-									name="highest_degree"
-									placeholder="HIGHEST_DEGREE"
-									formik={form}
-									labelPrefix="EducationLevel"
-									enumType={EducationLevel}
-								/>
-								<Col xs="12" className='mt-2'>
-									<ViewCard title="EMERGENCY_CONTACT">
-										<BaseInput
-											className="col-12"
-											readOnly={Boolean(entity?.is_hired)}
-											name={`emergency_contact_name`}
-											label="NAME"
-											placeholder="FULL_NAME"
-											formik={form}
-										/>
-
-										<BaseInputPhone
-											className="col-12"
-											readOnly={Boolean(entity?.is_hired)}
-											name={`emergency_contact_number`}
-											label="PHONE"
-											placeholder="PHONE"
-											formik={form}
-										/>
-										<BaseInput
-											className="col-12"
-											readOnly={Boolean(entity?.is_hired)}
-											name={`emergency_contact_relationship`}
-											label="RELATIONSHIP"
-											placeholder="RELATIONSHIP"
-											formik={form}
-										/>
-
-									</ViewCard>
-								</Col>
-							</Col>
-						</Row>
-						<Row>
+                                    </ViewCard>
+                                </Col>
+                            </Col>
+                        </Row>
+                        {/* <Row>
 							<Col className="col-md-6">
 								<Col xs="12" className='p-2 mt-2' >
 									<ViewCard
@@ -477,7 +363,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 																<Col className="p-0"><strong>{t("TYPE")}</strong></Col>
 
 																<BaseSelect
-																	readOnly={Boolean(props?.entity?.is_hired)}
 																	name={`equipment_experience[${i}].type`}
 																	placeholder="TYPE"
 																	labelPrefix="JobEquipmentType"
@@ -489,7 +374,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 																<Col className="p-0"><strong>{t("YEARS")}</strong></Col>
 
 																<BaseInput
-																	readOnly={Boolean(props?.entity?.is_hired)}
 																	name={`equipment_experience[${i}].years`}
 																	placeholder="YEARS"
 																	type="int"
@@ -501,7 +385,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 																entity.type === JobEquipmentType.OTHER &&
 																<div >
 																	<BaseInput
-																		readOnly={Boolean(props?.entity?.is_hired)}
 																		className="my-2"
 																		name={`equipment_experience[${i}].type_other`}
 																		placeholder="TYPE"
@@ -558,7 +441,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 																</Col>
 																<Col xs="6">
 																	<BaseSelect
-																		readOnly={Boolean(props?.entity?.is_hired)}
 																		name={`equipment_owned[${i}].type`}
 																		placeholder="TYPE"
 																		labelPrefix="JobEquipmentType"
@@ -568,7 +450,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 																</Col>
 																<Col xs="5">
 																	<BaseInput
-																		readOnly={Boolean(props?.entity?.is_hired)}
 																		name={`equipment_owned[${i}].quantity`}
 																		placeholder="QUANTITY"
 																		type="int"
@@ -580,7 +461,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 																	entity.type === JobEquipmentType.OTHER &&
 																	<Col xs="11">
 																		<BaseInput
-																			readOnly={Boolean(props?.entity?.is_hired)}
 																			name={`equipment_owned[${i}].type_other`}
 																			placeholder="TYPE"
 																			formik={form}
@@ -606,11 +486,11 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								}
 							</Col>
 
-						</Row>
-					</ViewCard>
-				</Col>
-			</Row>
-			<Row>
+						</Row> */}
+                    </ViewCard>
+                </Col>
+            </Row>
+            {/* <Row>
 				<Col md="4" className="p-0 px-lg-2">
 					<ViewCard
 						title="WORK_HISTORY"
@@ -659,7 +539,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											<AccordionDetails>
 												<Row>
 													<BaseInput
-														readOnly={Boolean(entity?.is_hired)}
 														className="col-12"
 														name={`employers[${i}].name`}
 														label="NAME"
@@ -668,7 +547,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														formik={form}
 													/>
 													<BaseInput
-														readOnly={Boolean(entity?.is_hired)}
 														className="col-6"
 														name={`employers[${i}].start_at`}
 														label="DATES_EMPLOYED"
@@ -677,7 +555,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													/>
 													<BaseInput
 														className="col-6"
-														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].end_at`}
 														label="THROUGH_OPTIONAL"
 														type="date"
@@ -685,7 +562,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													/>
 													<BaseInput
 														className="col-12"
-														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].title`}
 														label="TITLE"
 														placeholder="TITLE"
@@ -693,7 +569,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													/>
 													<BaseInput
 														className="col-12"
-														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].street`}
 														label="STREET"
 														placeholder="STREET"
@@ -701,7 +576,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													/>
 													<BaseInput
 														className="col-12"
-														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].city`}
 														label="CITY"
 														placeholder="CITY"
@@ -709,7 +583,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													/>
 													<StateSelect
 														className="col-6"
-														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].state`}
 														label="STATE"
 														placeholder="STATE"
@@ -717,7 +590,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													/>
 													<BaseInput
 														className="col-6"
-														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].zip_code`}
 														label="ZIP_CODE"
 														placeholder="ZIP_CODE"
@@ -725,7 +597,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													/>
 													<BaseInputPhone
 														className="col-12"
-														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].phone`}
 														label="PHONE"
 														placeholder="PHONE"
@@ -733,21 +604,18 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													/>
 													<BaseCheck
 														className="col-12 mt-2"
-														disabled={Boolean(entity?.is_hired)}
 														name={`employers[${i}].can_contact`}
 														label="MAY_CONTACT_COMPANY"
 														formik={form}
 													/>
 													<BaseCheck
 														className="col-12 mt-2"
-														disabled={Boolean(entity?.is_hired)}
 														name={`employers[${i}].is_subject_to_fmcsrs`}
 														label="SUBJECT_TO_FMCSRS"
 														formik={form}
 													/>
 													<BaseCheck
 														className="col-12 mt-2"
-														disabled={Boolean(entity?.is_hired)}
 														name={`employers[${i}].is_subject_to_drug_tests`}
 														label="JOB_DESIGNATED_AS_SATEFY_SENSITIVE"
 														formik={form}
@@ -767,14 +635,12 @@ export function ApplicantForm(props: ApplicantFormProps) {
 							<Col md="6">
 								<BaseCheck
 									className="col-12 mt-2"
-									disabled={Boolean(entity?.is_hired)}
 									label="CAN_PASS_DRUG_TEST"
 									name="can_pass_drug_test"
 									formik={form}
 								/>
 								<BaseCheck
 									className="col-12 mt-2"
-									disabled={Boolean(entity?.is_hired)}
 									label="HAS_DUIS"
 									name="has_past_dui"
 									formik={form}
@@ -809,7 +675,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 																	<td className='w-100'>
 																		<BaseInput
 																			name={`dui_years[${i}]`}
-																			readOnly={Boolean(props?.entity?.is_hired)}
 																			placeholder="YEAR"
 																			type="int"
 																			required
@@ -835,14 +700,12 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								}
 								<BaseTextArea
 									className="col-12 mt-2"
-									readOnly={Boolean(entity?.is_hired)}
 									label="criminal_history_last_3_years"
 									name="criminal_history"
 									formik={form}
 								/>
 								<BaseInput
 									className="col-12 mt-2"
-									readOnly={Boolean(entity?.is_hired)}
 									label="accidents_last_5_years"
 									name="accident_count"
 									type="int"
@@ -853,7 +716,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									form.values.accident_count > 0 &&
 									<BaseTextArea
 										className="col-12 mt-2"
-										readOnly={Boolean(entity?.is_hired)}
 										label="accident_details"
 										name="accident_details"
 										formik={form}
@@ -864,7 +726,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								<Row>
 									<BaseCheck
 										className="col-12 mt-2"
-										disabled={Boolean(entity?.is_hired)}
 										label="has_had_license_revoked"
 										name="license_revoked"
 										formik={form}
@@ -873,7 +734,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										form.values.license_revoked &&
 										<BaseTextArea
 											className="col-12 mt-2"
-											readOnly={Boolean(entity?.is_hired)}
 											label="details"
 											name="license_revoked_details"
 											formik={form}
@@ -881,7 +741,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									}
 									<BaseCheck
 										className="col-12 mt-2"
-										disabled={Boolean(entity?.is_hired)}
 										label="has_had_psp_violations"
 										name="psp_violations"
 										formik={form}
@@ -890,7 +749,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										form.values.psp_violations &&
 										<BaseTextArea
 											className="col-12 mt-2"
-											readOnly={Boolean(entity?.is_hired)}
 											label="details"
 											name="violations_details"
 											formik={form}
@@ -898,7 +756,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									}
 									<BaseCheck
 										className="col-12 mt-2"
-										disabled={Boolean(entity?.is_hired)}
 										label="has_had_tickets_last_5_years"
 										name="tickets"
 										formik={form}
@@ -907,7 +764,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										form.values.tickets &&
 										<BaseTextArea
 											className="col-12 mt-2"
-											readOnly={Boolean(entity?.is_hired)}
 											label="details"
 											name="tickets_details"
 											formik={form}
@@ -915,7 +771,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									}
 									<BaseCheck
 										className="col-12 mt-2"
-										disabled={Boolean(entity?.is_hired)}
 										label="has_had_positive_drug_test"
 										name="positive_drug_test"
 										formik={form}
@@ -924,7 +779,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										form.values.positive_drug_test &&
 										<BaseTextArea
 											className="col-12 mt-2"
-											readOnly={Boolean(entity?.is_hired)}
 											label="details"
 											name="positive_drug_test_details"
 											formik={form}
@@ -976,14 +830,13 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														placeholder="TYPE"
 														labelPrefix="ApplicantDocumentType"
 														enumType={ApplicantDocumentType}
-														readOnly={Boolean(!!entity.id && !entity.file_base64) || Boolean(props?.entity?.is_hired)}
+														readOnly={!!entity.id && !entity.file_base64}
 														formik={form}
 													/>
 												</td>
 												<td>
 													<FileInput
 														name={`documents[${i}]`}
-														readOnly={Boolean(props?.entity?.is_hired)}
 														required
 														accept="application/pdf"
 														allowedSizeInByte={3145728}
@@ -1048,7 +901,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 															? entity.job.title
 															: <BaseSelect
 																name={`jobs[${i}].job.id`}
-																readOnly={Boolean(props?.entity?.is_hired)}
 																required
 																placeholder="JOB"
 																options={jobs}
@@ -1061,7 +913,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 													<td>
 														<BaseSelect
 															name={`jobs[${i}].status`}
-															readOnly={Boolean(props?.entity?.is_hired)}
 															required
 															placeholder="STATUS"
 															labelPrefix="ApplicantStatus"
@@ -1085,9 +936,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
 						}
 					</ViewCard>
 				</Col>
-			</Row>
+			</Row> */}
 
-			<ViewModal
+            {/* <ViewModal
 				title={t("HIRE")}
 				show={Boolean(hireApplicantForm.values.applicantId)}
 				onCloseClick={() => hireApplicantForm.resetForm()}
@@ -1103,7 +954,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 						<Col>
 							<BaseSelect
 								name={`jobId`}
-								readOnly={Boolean(entity?.is_hired)}
 								required
 								placeholder={t("SELECT_{name}", { name: "JOB" }, { translateProps: true })}
 								options={jobs}
@@ -1131,7 +981,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				<JobForm
 					onSaveComplete={onJobAdded}
 				/>
-			</ViewModal>
-		</EntityForm>
-	);
+			</ViewModal> */}
+        </EntityForm>
+    );
 }
