@@ -36,6 +36,11 @@ export default function SafetyPerformanceHistory({
     const [employers, setEmployers] = useState<EmployeeEmployerEntity[]>([])
     const resetEmployers = () => setEmployers([])
 
+    const [isLoading, setIsLoading] = useState<{
+        action: "DELETE",
+    }>(null)
+    const resetIsLoading = (): void => setIsLoading(null);
+
     const form = useFormik({
         initialValues: new EmployeeEmployerDocumentDto(),
         validationSchema: EmployeeEmployerDocumentDto.yupSchema(),
@@ -68,7 +73,11 @@ export default function SafetyPerformanceHistory({
      * @param {EmployeeDocumentType | string} docType - The type of document you want to
      * delete.
      */
-    const handleDeleteDocument = async (employer: EmployeeEmployerEntity, docType: EmployeeDocumentType | string): Promise<void> => {
+    const handleDeleteDocument = async (
+        employer: EmployeeEmployerEntity,
+        docType: EmployeeDocumentType | string
+    ): Promise<void> => {
+        setIsLoading({ action: "DELETE" })
         await employeeApi.employer.documents.delete(employee?.id, employer?.id, docType)
 
         setEmployers([
@@ -78,6 +87,7 @@ export default function SafetyPerformanceHistory({
                 documents: employer.documents?.filter(v => v.type != docType)
             }
         ])
+        resetIsLoading()
     }
 
     /**
@@ -124,6 +134,7 @@ export default function SafetyPerformanceHistory({
                     {Boolean(canEditSafetyPerformance)
                         && <DeleteDocumentButton
                             document={document}
+                            isLoading={isLoading?.action == "DELETE"}
                             onClick={() => handleDeleteDocument(employer, type)}
                         />
                     }

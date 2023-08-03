@@ -18,6 +18,7 @@ import { VehicleTransmissionType } from '../../enums/vehicles/vehicle-transmissi
 import { DriverEndorsement } from '../../enums/users/driver-endorsement.enum';
 import { EducationLevel } from '../../enums/users/education-level.enum';
 import { DocumentEntity } from '../documents/document.entity';
+import { EmployeeStatus } from '../../enums/applicants/employee-status.enum';
 
 export class EmployeeEntity {
 	id?: number;
@@ -25,14 +26,14 @@ export class EmployeeEntity {
 	// applicantId?: number;
 	job?: JobEntity;
 	// jobId?: number;
-	status?: ApplicantStatus;
+	status?: EmployeeStatus;
 	status_other?: string;
 	reason_codes?: string[] = [];
 	reason_codes_other?: string;
 	created_at?: string;
 	last_updated_at?: string;
 	active_status?: Status;
-	assignedUser: UserEntity;
+	assignedUser?: UserEntity;
 	first_name?: string;
 	last_name?: string;
 	phone?: string;
@@ -96,37 +97,39 @@ export class EmployeeEntity {
 			job: yup.object({
 				id: yup.number().required().nullable()
 			}).required().nullable(),
-			status: (yup.string() as any).enum(ApplicantStatus).required().nullable(),
-			status_other: yup.string().when("status", {
-				is: ApplicantStatus.OTHER,
-				then: yup.string().required().nullable(),
-			}).nullable(),
-			reason_codes: (yup.array(yup.string())
-				.when("status", {
-					is: ApplicantStatus.INACTIVE_CONTACTED_NOT_QUALIFIED,
-					then: yup.array((yup.string() as any).enum(ApplicantReasonCodeNotQualified)).min(1).nullable()
-				})
-				.when("status", {
-					is: ApplicantStatus.INACTIVE_CONTACTED_UNINTERESTED,
-					then: yup.array((yup.string() as any).enum(ApplicantReasonCodeNotInterested)).min(1).nullable()
-				})
-				.when("status", {
-					is: ApplicantStatus.INACTIVE_QUIT,
-					then: yup.array((yup.string() as any).enum(ApplicantReasonCodeQuit)).min(1).nullable()
-				})
-				.when("status", {
-					is: ApplicantStatus.INACTIVE_FIRED,
-					then: yup.array((yup.string() as any).enum(ApplicantReasonCodeFired)).min(1).nullable()
-				}) as any)
-				.unique().nullable(),
-			reason_codes_other: yup.string().when("reason_codes", {
-				is: v => v && v.includes("OTHER"),
-				then: yup.string().required().nullable(),
-			}).nullable(),
+			// reason_codes: (yup.array(yup.string())
+			// 	.when("status", {
+			// 		is: ApplicantStatus.INACTIVE_CONTACTED_NOT_QUALIFIED,
+			// 		then: yup.array((yup.string() as any).enum(ApplicantReasonCodeNotQualified)).min(1).nullable()
+			// 	})
+			// 	.when("status", {
+			// 		is: ApplicantStatus.INACTIVE_CONTACTED_UNINTERESTED,
+			// 		then: yup.array((yup.string() as any).enum(ApplicantReasonCodeNotInterested)).min(1).nullable()
+			// 	})
+			// 	.when("status", {
+			// 		is: ApplicantStatus.INACTIVE_QUIT,
+			// 		then: yup.array((yup.string() as any).enum(ApplicantReasonCodeQuit)).min(1).nullable()
+			// 	})
+			// 	.when("status", {
+			// 		is: ApplicantStatus.INACTIVE_FIRED,
+			// 		then: yup.array((yup.string() as any).enum(ApplicantReasonCodeFired)).min(1).nullable()
+			// 	}) as any)
+			// 	.unique().nullable(),
+			// reason_codes_other: yup.string().when("reason_codes", {
+			// 	is: v => v && v.includes("OTHER"),
+			// 	then: yup.string().required().nullable(),
+			// }).nullable(),
 			equipment_experience: (
 				yup.array(ApplicantExperienceEntity.yupSchema()) as any
 			).unique("type", { mapper: ApplicantExperienceEntity.key }),
 			assignedUserId: yup.number().optional().nullable()
+		});
+	}
+
+	static yupSchemaForMarking() {
+		return yup.object({
+			id: yup.number().required().nullable(),
+			status: (yup.string() as any).enum(EmployeeStatus).required().nullable(),
 		});
 	}
 }
