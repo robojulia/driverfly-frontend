@@ -36,7 +36,7 @@ export default function Background({ employee }: ViewApplicantBackgroundProps) {
 								obj={{
 									POSITION: employee?.job?.title,
 									TERMINAL: employee?.job?.location?.city,
-									// MANAGER: job?.manager?.name ? job?.manager?.name : t('NO_MANAGER_ASSIGNED'),
+									MANAGER: employee?.manager?.name ? employee?.manager?.name : t('NO_MANAGER_ASSIGNED'),
 								}}
 							/>
 						</Col>

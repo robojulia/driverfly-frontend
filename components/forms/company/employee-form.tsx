@@ -8,7 +8,7 @@ import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../hooks/use-translation";
 import { useAuth } from "../../../hooks/use-auth";
-import {  Col, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { BaseFormProps } from "./base-form-props";
 import EntityForm from "../../layouts/page/entity-form";
 import ViewCard from "../../view-details/view-card";
@@ -28,318 +28,337 @@ import UserApi from "../../../pages/api/user";
 import { UserEntity } from "../../../models/user/user.entity";
 import EmployeeApi from "../../../pages/api/employee";
 import { EmployeeEntity } from "../../../models/employee/employee.entity";
+import { CompanyManagerEntity } from "../../../models/company/company-manager.entity";
+import CompanyApi from "../../../pages/api/company";
 
 export interface EmployeeFormProps extends BaseFormProps<EmployeeEntity> {
 }
 
 export function EmployeeForm(props: EmployeeFormProps) {
-    const { t } = useTranslation();
+	const { t } = useTranslation();
 
-    const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([])
+	const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([])
+	const [managers, setManagers] = useState<CompanyManagerEntity[]>([]);
 
-    const userApi = new UserApi()
-    const employeeApi = new EmployeeApi();
+	const userApi = new UserApi()
+	const employeeApi = new EmployeeApi();
 
-    let { className, entity, onSaveComplete, onSaveError } = props;
+	let { className, entity, onSaveComplete, onSaveError } = props;
 
-    let { user, hasPermission, isSuperAdmin } = useAuth();
+	let { user, hasPermission, isSuperAdmin } = useAuth();
 
-    const [protectedFields, setProtectedFields] = useState({
-        license_number: false,
-        social_security_number: false
-    });
+	const [protectedFields, setProtectedFields] = useState({
+		license_number: false,
+		social_security_number: false
+	});
 
-    useEffect(() => {
-        setProtectedFields({
-            license_number: hasPermission("CanViewApplicant.license_number"),
-            social_security_number: hasPermission("CanViewApplicant.social_security_number"),
-        });
-    }, [user]);
+	useEffectAsync(async () => {
+		setProtectedFields({
+			license_number: hasPermission("CanViewApplicant.license_number"),
+			social_security_number: hasPermission("CanViewApplicant.social_security_number"),
+		});
 
-    const form = useFormik({
-        initialValues: new EmployeeEntity(),
-        validationSchema: EmployeeEntity.yupSchema(),
-        onSubmit: async (values) => {
+		const companyApi = new CompanyApi();
+		const data = await companyApi.manager.list();
+		setManagers(data);
+	}, [user]);
+
+	const form = useFormik({
+		initialValues: new EmployeeEntity(),
+		validationSchema: EmployeeEntity.yupSchema(),
+		onSubmit: async (values) => {
 
 
-            try {
-                if (entity?.id) {
-                    values = await employeeApi.update(entity.id, values);
-                }
+			try {
+				if (entity?.id) {
+					values = await employeeApi.update(entity.id, values);
+				}
 
-                formSuccess(t, entity?.id ? "update" : "create", "EMPLOYEE");
-                // if (onSaveComplete) onSaveComplete(values);
-            } catch (e) {
-                console.error("Unable to save employee info", e);
-                if (!globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast }))
-                    formFailed(t, entity?.id ? "update" : "create", "EMPLOYEE");
+				formSuccess(t, entity?.id ? "update" : "create", "EMPLOYEE");
+				// if (onSaveComplete) onSaveComplete(values);
+			} catch (e) {
+				console.error("Unable to save employee info", e);
+				if (!globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast }))
+					formFailed(t, entity?.id ? "update" : "create", "EMPLOYEE");
 
-                if (onSaveError) onSaveError(e);
-            }
-        }
-    });
+				if (onSaveError) onSaveError(e);
+			}
+		}
+	});
 
-    useEffect(() => {
-        form.setValues(entity);
+	useEffect(() => {
+		form.setValues(entity);
 	}, [entity]);
-    
-    useEffect(() => {
-       console.log("form error", form.errors)
-       console.log("form val", form.values)
+
+	useEffect(() => {
+		console.log("form error", form.errors)
+		console.log("form val", form.values)
 	}, [form.errors, form.values]);
-    
-    
-    useEffectAsync(async () => {
-        const data = await userApi.list()
-        setCompanyUsers(data)
-    }, [])
-    return (
-        <EntityForm
-            id={entity?.id}
-            formik={form}
-            onSubmit={form.handleSubmit}
-            className={className}
-        // actions={[
-        // 	{
-        // 		label: "HIRE",
-        // 		className: "btn theme-primary-btn",
-        // 		hide: !Boolean(form.values.id),
-        // 		disabled: form.isSubmitting,
-        // 		onClick: () => hireApplicantForm.setValues({ applicantId: entity.id }),
-        // 	}
-        // ]}
-        >
 
-            <Row>
 
-                <Col className="p-0 px-lg-2 mt-3">
-                    <ViewCard title="BASIC_DETAILS">
-                        <Row className="mb-2">
-                            <Col md='4'>
-                                <BaseSelect
-                                    // className="col-12 my-2"
-                                    readOnly={!Boolean(isSuperAdmin)}
-                                    label="ASSIGNED_RECRUITER"
-                                    name="assignedUserId"
-                                    placeholder
-                                    options={companyUsers}
-                                    valueKey="id"
-                                    createLabel={c => `${c.name} (#${c.id})`}
-                                    formik={form}
-                                />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col md="4" className="px-2">
-                                <BaseInput
-                                    className="col-12"
-                                    label="FIRST_NAME"
-                                    required
-                                    name="first_name"
-                                    placeholder="FIRST_NAME"
-                                    formik={form}
-                                />
-                                <BaseInput
-                                    className="col-12"
-                                    label="LAST_NAME"
-                                    required
-                                    name="last_name"
-                                    placeholder="LAST_NAME"
-                                    formik={form}
-                                />
-                                <BaseInput
-                                    className="col-12"
-                                    label="BIRTHDATE"
-                                    type="date"
-                                    name="birthdate"
-                                    placeholder="MM/DD/YYYY"
-                                    formik={form}
-                                />
+	useEffectAsync(async () => {
+		const data = await userApi.list()
+		setCompanyUsers(data)
+	}, [])
+	return (
+		<EntityForm
+			id={entity?.id}
+			formik={form}
+			onSubmit={form.handleSubmit}
+			className={className}
+		// actions={[
+		// 	{
+		// 		label: "HIRE",
+		// 		className: "btn theme-primary-btn",
+		// 		hide: !Boolean(form.values.id),
+		// 		disabled: form.isSubmitting,
+		// 		onClick: () => hireApplicantForm.setValues({ applicantId: entity.id }),
+		// 	}
+		// ]}
+		>
 
-                                <BaseInputPhone
-                                    className="col-12"
-                                    label="PHONE"
-                                    name="phone"
-                                    placeholder="PHONE"
-                                    formik={form}
-                                />
-                                <BaseInput
-                                    className="col-12"
-                                    label="EMAIL"
-                                    required
-                                    type="email"
-                                    name="email"
-                                    placeholder="EMAIL"
-                                    formik={form}
-                                />
-                                <BaseInput
-                                    className="col-12"
-                                    label="STREET"
-                                    name="street"
-                                    placeholder="STREET"
-                                    formik={form}
-                                />
-                                <BaseInput
-                                    className="col-12"
-                                    label="CITY"
-                                    name="city"
-                                    placeholder="CITY"
-                                    formik={form}
-                                />
-                                <Row className='px-3'>
-                                    <StateSelect
-                                        className="col-6"
-                                        label="STATE"
-                                        name="state"
-                                        placeholder="STATE"
-                                        formik={form}
-                                    />
-                                    <BaseInput
-                                        className="col-6"
-                                        label="ZIP_CODE"
-                                        name="zip_code"
-                                        placeholder="ZIP_CODE"
-                                        formik={form}
-                                    />
-                                </Row>
-                            </Col>
-                            <Col md="4" className="px-2">
-                                <BaseInput
-                                    className="col-12"
-                                    label="driver_license_number"
-                                    name="license_number"
-                                    placeholder="driver_license_number"
-                                    formik={form}
-                                    readOnly={!protectedFields.license_number}
-                                />
-                                <BaseInput
-                                    className="col-12"
-                                    label="expiration_date"
-                                    name="license_expiry"
-                                    type="date"
-                                    placeholder="expiration_date"
-                                    formik={form}
-                                />
-                                <Row className="px-3">
-                                    <StateSelect
-                                        className="col-6"
-                                        label="state_issued"
-                                        name="license_state"
-                                        placeholder="state_issued"
-                                        formik={form}
-                                    />
-                                    <BaseSelect
-                                        className="col-6"
-                                        label="CDL_CLASS"
-                                        name="license_type"
-                                        placeholder
-                                        labelPrefix="DriverLicenseType"
-                                        enumType={DriverLicenseType}
-                                        formik={form}
-                                    />
-                                </Row>
-                                <BaseInput
-                                    className="col-12"
-                                    label="years_cdl_experience"
-                                    name="years_cdl_experience"
-                                    type="number"
-                                    placeholder="years_cdl_experience"
-                                    formik={form}
-                                />
-                                <BaseCheck
-                                    className="col-12 mt-2"
-                                    label="OWNER_OPERATOR"
-                                    name="is_owner_operator"
-                                    formik={form}
-                                />
-                                <BaseCheck
-                                    className="col-12 mt-2"
-                                    label="AUTHORIZED_TO_WORK_IN_THE_US"
-                                    name="authorized_to_work_in_us"
-                                    formik={form}
-                                />
-                                <BaseCheckList
-                                    className="col-12 mt-2"
-                                    label="PREFERRED_LOCATION"
-                                    name="preferred_location"
-                                    formik={form}
-                                    labelPrefix="JobGeography"
-                                    enumType={JobGeography}
+			<Row>
 
-                                />
+				<Col className="p-0 px-lg-2 mt-3">
+					<ViewCard title="BASIC_DETAILS">
+						<Row className="mb-2">
+							<Col md='4'>
+								<BaseSelect
+									// className="col-12 my-2"
+									readOnly={!Boolean(isSuperAdmin)}
+									label="ASSIGNED_RECRUITER"
+									name="assignedUserId"
+									placeholder
+									options={companyUsers}
+									valueKey="id"
+									createLabel={c => `${c.name} (#${c.id})`}
+									formik={form}
+								/>
+							</Col>
+							<Col md='4'>
+								<BaseSelect
+									name={`manager.id`}
+									label="MANAGER"
+									required
+									placeholder="MANAGER"
+									options={managers}
+									labelKey="name"
+									valueKey="id"
+									formik={form}
+								/>
+							</Col>
+						</Row>
+						<Row>
+							<Col md="4" className="px-2">
+								<BaseInput
+									className="col-12"
+									label="FIRST_NAME"
+									required
+									name="first_name"
+									placeholder="FIRST_NAME"
+									formik={form}
+								/>
+								<BaseInput
+									className="col-12"
+									label="LAST_NAME"
+									required
+									name="last_name"
+									placeholder="LAST_NAME"
+									formik={form}
+								/>
+								<BaseInput
+									className="col-12"
+									label="BIRTHDATE"
+									type="date"
+									name="birthdate"
+									placeholder="MM/DD/YYYY"
+									formik={form}
+								/>
 
-                                {form.values.id
-                                    && <BaseSelect
-                                        className="col-12 mt-2"
-                                        name={`current_application_status`}
-                                        required
-                                        placeholder="APPLICANT_CURRENT_STATUS"
-                                        label="APPLICANT_CURRENT_STATUS"
-                                        labelPrefix="ApplicantStatus"
-                                        enumType={ApplicantStatus}
-                                        formik={form}
-                                    />
-                                }
+								<BaseInputPhone
+									className="col-12"
+									label="PHONE"
+									name="phone"
+									placeholder="PHONE"
+									formik={form}
+								/>
+								<BaseInput
+									className="col-12"
+									label="EMAIL"
+									required
+									type="email"
+									name="email"
+									placeholder="EMAIL"
+									formik={form}
+								/>
+								<BaseInput
+									className="col-12"
+									label="STREET"
+									name="street"
+									placeholder="STREET"
+									formik={form}
+								/>
+								<BaseInput
+									className="col-12"
+									label="CITY"
+									name="city"
+									placeholder="CITY"
+									formik={form}
+								/>
+								<Row className='px-3'>
+									<StateSelect
+										className="col-6"
+										label="STATE"
+										name="state"
+										placeholder="STATE"
+										formik={form}
+									/>
+									<BaseInput
+										className="col-6"
+										label="ZIP_CODE"
+										name="zip_code"
+										placeholder="ZIP_CODE"
+										formik={form}
+									/>
+								</Row>
+							</Col>
+							<Col md="4" className="px-2">
+								<BaseInput
+									className="col-12"
+									label="driver_license_number"
+									name="license_number"
+									placeholder="driver_license_number"
+									formik={form}
+									readOnly={!protectedFields.license_number}
+								/>
+								<BaseInput
+									className="col-12"
+									label="expiration_date"
+									name="license_expiry"
+									type="date"
+									placeholder="expiration_date"
+									formik={form}
+								/>
+								<Row className="px-3">
+									<StateSelect
+										className="col-6"
+										label="state_issued"
+										name="license_state"
+										placeholder="state_issued"
+										formik={form}
+									/>
+									<BaseSelect
+										className="col-6"
+										label="CDL_CLASS"
+										name="license_type"
+										placeholder
+										labelPrefix="DriverLicenseType"
+										enumType={DriverLicenseType}
+										formik={form}
+									/>
+								</Row>
+								<BaseInput
+									className="col-12"
+									label="years_cdl_experience"
+									name="years_cdl_experience"
+									type="number"
+									placeholder="years_cdl_experience"
+									formik={form}
+								/>
+								<BaseCheck
+									className="col-12 mt-2"
+									label="OWNER_OPERATOR"
+									name="is_owner_operator"
+									formik={form}
+								/>
+								<BaseCheck
+									className="col-12 mt-2"
+									label="AUTHORIZED_TO_WORK_IN_THE_US"
+									name="authorized_to_work_in_us"
+									formik={form}
+								/>
+								<BaseCheckList
+									className="col-12 mt-2"
+									label="PREFERRED_LOCATION"
+									name="preferred_location"
+									formik={form}
+									labelPrefix="JobGeography"
+									enumType={JobGeography}
 
-                            </Col>
-                            <Col md="4" className="px-2">
-                                <BaseCheckList
-                                    className="col-12"
-                                    label="TRANSMISSION_EXPERIENCE"
-                                    name="transmission_type"
-                                    labelPrefix="VehicleTransmissionType"
-                                    enumType={VehicleTransmissionType}
-                                    formik={form}
-                                    cols="2"
-                                />
-                                <BaseCheckList
-                                    className="col-12"
-                                    label="ENDORSEMENTS"
-                                    name="endorsements"
-                                    labelPrefix="DriverEndorsement"
-                                    enumType={DriverEndorsement}
-                                    formik={form}
-                                    cols="2"
-                                />
-                                <BaseSelect
-                                    className="col-12"
-                                    label="HIGHEST_DEGREE"
-                                    name="highest_degree"
-                                    placeholder="HIGHEST_DEGREE"
-                                    formik={form}
-                                    labelPrefix="EducationLevel"
-                                    enumType={EducationLevel}
-                                />
-                                <Col xs="12" className='mt-2'>
-                                    <ViewCard title="EMERGENCY_CONTACT">
-                                        <BaseInput
-                                            className="col-12"
-                                            name={`emergency_contact_name`}
-                                            label="NAME"
-                                            placeholder="FULL_NAME"
-                                            formik={form}
-                                        />
+								/>
 
-                                        <BaseInputPhone
-                                            className="col-12"
-                                            name={`emergency_contact_number`}
-                                            label="PHONE"
-                                            placeholder="PHONE"
-                                            formik={form}
-                                        />
-                                        <BaseInput
-                                            className="col-12"
-                                            name={`emergency_contact_relationship`}
-                                            label="RELATIONSHIP"
-                                            placeholder="RELATIONSHIP"
-                                            formik={form}
-                                        />
+								{form.values.id
+									&& <BaseSelect
+										className="col-12 mt-2"
+										name={`current_application_status`}
+										required
+										placeholder="APPLICANT_CURRENT_STATUS"
+										label="APPLICANT_CURRENT_STATUS"
+										labelPrefix="ApplicantStatus"
+										enumType={ApplicantStatus}
+										formik={form}
+									/>
+								}
 
-                                    </ViewCard>
-                                </Col>
-                            </Col>
-                        </Row>
-                        {/* <Row>
+							</Col>
+							<Col md="4" className="px-2">
+								<BaseCheckList
+									className="col-12"
+									label="TRANSMISSION_EXPERIENCE"
+									name="transmission_type"
+									labelPrefix="VehicleTransmissionType"
+									enumType={VehicleTransmissionType}
+									formik={form}
+									cols="2"
+								/>
+								<BaseCheckList
+									className="col-12"
+									label="ENDORSEMENTS"
+									name="endorsements"
+									labelPrefix="DriverEndorsement"
+									enumType={DriverEndorsement}
+									formik={form}
+									cols="2"
+								/>
+								<BaseSelect
+									className="col-12"
+									label="HIGHEST_DEGREE"
+									name="highest_degree"
+									placeholder="HIGHEST_DEGREE"
+									formik={form}
+									labelPrefix="EducationLevel"
+									enumType={EducationLevel}
+								/>
+								<Col xs="12" className='mt-2'>
+									<ViewCard title="EMERGENCY_CONTACT">
+										<BaseInput
+											className="col-12"
+											name={`emergency_contact_name`}
+											label="NAME"
+											placeholder="FULL_NAME"
+											formik={form}
+										/>
+
+										<BaseInputPhone
+											className="col-12"
+											name={`emergency_contact_number`}
+											label="PHONE"
+											placeholder="PHONE"
+											formik={form}
+										/>
+										<BaseInput
+											className="col-12"
+											name={`emergency_contact_relationship`}
+											label="RELATIONSHIP"
+											placeholder="RELATIONSHIP"
+											formik={form}
+										/>
+
+									</ViewCard>
+								</Col>
+							</Col>
+						</Row>
+						{/* <Row>
 							<Col className="col-md-6">
 								<Col xs="12" className='p-2 mt-2' >
 									<ViewCard
@@ -487,10 +506,10 @@ export function EmployeeForm(props: EmployeeFormProps) {
 							</Col>
 
 						</Row> */}
-                    </ViewCard>
-                </Col>
-            </Row>
-            {/* <Row>
+					</ViewCard>
+				</Col>
+			</Row>
+			{/* <Row>
 				<Col md="4" className="p-0 px-lg-2">
 					<ViewCard
 						title="WORK_HISTORY"
@@ -938,7 +957,7 @@ export function EmployeeForm(props: EmployeeFormProps) {
 				</Col>
 			</Row> */}
 
-            {/* <ViewModal
+			{/* <ViewModal
 				title={t("HIRE")}
 				show={Boolean(hireApplicantForm.values.applicantId)}
 				onCloseClick={() => hireApplicantForm.resetForm()}
@@ -982,6 +1001,6 @@ export function EmployeeForm(props: EmployeeFormProps) {
 					onSaveComplete={onJobAdded}
 				/>
 			</ViewModal> */}
-        </EntityForm>
-    );
+		</EntityForm>
+	);
 }
