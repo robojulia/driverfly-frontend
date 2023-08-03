@@ -5,7 +5,7 @@ import ImportApplicants from "../../../../../components/dashboard/import-applica
 export default function Import() {
 
     return (<>
-        <ChildPageLayout title="IMPORT_APPLICANTS" backPath="/dashboard/company/compliance/employee-directory">
+        <ChildPageLayout title="IMPORT_EMPLOYEES" backPath="/dashboard/company/compliance/employee-directory">
             <ImportApplicants />
         </ChildPageLayout>
     </>);
