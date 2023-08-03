@@ -4,6 +4,7 @@ import BaseApi from "./_baseApi";
 import { EmployeeEntity } from "../../models/employee/employee.entity";
 import { HireApplicantDto } from "../../models/applicant/hire-applicant.dto";
 import { DocumentEntity } from "../../models/documents/document.entity";
+import { SearchEmployeeDto } from '../../models/employee/search-employee.dto';
 
 export default class EmployeeApi extends BaseApi {
 	baseUrl: string = "employee";
@@ -11,8 +12,8 @@ export default class EmployeeApi extends BaseApi {
 		super();
 	}
 
-	async list(): Promise<EmployeeEntity[]> {
-		const { data } = await this.get(`${this.baseUrl}`);
+	async list(dto?: SearchEmployeeDto): Promise<EmployeeEntity[]> {
+		const { data } = await this.get(`${this.buildUrl(this.baseUrl, dto)}`);
 
 		return data;
 	}
@@ -31,6 +32,12 @@ export default class EmployeeApi extends BaseApi {
 
 	async update(id: number, dto: EmployeeEntity): Promise<EmployeeEntity> {
 		const { data } = await this.put(`${this.baseUrl}/${id}`, dto);
+
+		return data;
+	}
+
+	async mark(id: number, dto: EmployeeEntity): Promise<EmployeeEntity> {
+		const { data } = await this.patch(`${this.baseUrl}/${id}`, dto);
 
 		return data;
 	}

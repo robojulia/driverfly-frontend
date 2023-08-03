@@ -1,14 +1,7 @@
 import { JobEntity } from '../job/job.entity';
-import { ApplicantStatus } from '../../enums/applicants/applicant-status.enum';
 import { ApplicantEntity } from '../applicant';
 import * as yup from "yup";
 import "../../utils/yup";
-import {
-	ApplicantReasonCodeFired,
-	ApplicantReasonCodeNotInterested,
-	ApplicantReasonCodeNotQualified,
-	ApplicantReasonCodeQuit
-} from '../../enums/applicants/applicant-reason-codes.enum';
 import { Status } from '../../enums/status.enum';
 import { UserEntity } from '../user/user.entity';
 import { ApplicantExperienceEntity } from '../applicant';
@@ -18,6 +11,7 @@ import { VehicleTransmissionType } from '../../enums/vehicles/vehicle-transmissi
 import { DriverEndorsement } from '../../enums/users/driver-endorsement.enum';
 import { EducationLevel } from '../../enums/users/education-level.enum';
 import { DocumentEntity } from '../documents/document.entity';
+import { EmployeeStatus } from '../../enums/applicants/employee-status.enum';
 
 export class EmployeeEntity {
 	id?: number;
@@ -25,14 +19,14 @@ export class EmployeeEntity {
 	// applicantId?: number;
 	job?: JobEntity;
 	// jobId?: number;
-	status?: ApplicantStatus;
+	status?: EmployeeStatus;
 	status_other?: string;
 	reason_codes?: string[] = [];
 	reason_codes_other?: string;
 	created_at?: string;
 	last_updated_at?: string;
 	active_status?: Status;
-	assignedUser: UserEntity;
+	assignedUser?: UserEntity;
 	first_name?: string;
 	last_name?: string;
 	phone?: string;
@@ -127,6 +121,13 @@ export class EmployeeEntity {
 				yup.array(ApplicantExperienceEntity.yupSchema()) as any
 			).unique("type", { mapper: ApplicantExperienceEntity.key }),
 			assignedUserId: yup.number().optional().nullable()
+		});
+	}
+
+	static yupSchemaForMarking() {
+		return yup.object({
+			id: yup.number().required().nullable(),
+			status: (yup.string() as any).enum(EmployeeStatus).required().nullable(),
 		});
 	}
 }
