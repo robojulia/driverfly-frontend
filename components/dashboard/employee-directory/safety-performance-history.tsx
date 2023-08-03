@@ -2,51 +2,51 @@ import { Button } from "react-bootstrap";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import { ApplicantEmployerEntity } from "../../models/applicant";
-import { useTranslation } from "../../hooks/use-translation";
-import ApplicantApi from "../../pages/api/applicant";
-import { ApplicantDqf } from "../../enums/applicants/applicant-dqf-types.enum";
-import { globalAjaxExceptionHandler } from "../../utils/ajax";
-import ViewPdf from "../view-details/view-pdf";
-import ViewModal from "../view-details/view-modal";
-import ViewDataTable from "../view-details/view-data-table";
-import ViewDocumentHistory from "../documents/view-history";
-import { AddDocumentButton, DeleteDocumentButton, DownloadDocumentButton, ViewDocumentButton } from "../documents/buttons";
-import { DocumentableType } from "../../enums/documents/documentable-type.enum";
-import { SafetyPerformanceHistoryProps } from "../../types/applicant/safety-performnance-history-props.type";
-import { handleDownloadDocument, handleViewDocument } from "../../utils/documents/button-actions";
-import FileInput from "../forms/file-input";
-import OverlyPopover from '../popover/overly-popover'
-import { ApplicantEmployerDocumentDto } from "../../models/applicant/applicant-employer-document-dto";
-import { LoaderIcon } from "../loading/loader-icon";
+import { useTranslation } from "../../../hooks/use-translation";
+import { globalAjaxExceptionHandler } from "../../../utils/ajax";
+import ViewPdf from "../../view-details/view-pdf";
+import ViewModal from "../../view-details/view-modal";
+import ViewDataTable from "../../view-details/view-data-table";
+import ViewDocumentHistory from "../../documents/view-history";
+import { AddDocumentButton, DeleteDocumentButton, DownloadDocumentButton, ViewDocumentButton } from "../../documents/buttons";
+import { DocumentableType } from "../../../enums/documents/documentable-type.enum";
+import { handleDownloadDocument, handleViewDocument } from "../../../utils/documents/button-actions";
+import FileInput from "../../forms/file-input";
+import OverlyPopover from '../../popover/overly-popover'
+import { EmployeeSafetyPerformanceHistoryProps } from "../../../types/employee/employee-safety-performnance-history-props.type";
+import EmployeeApi from "../../../pages/api/employee";
+import { EmployeeEmployerDocumentDto } from "../../../models/employee/employee-employer-document-dto";
+import { EmployeeDocumentType } from "../../../enums/employee/employee-document-types.enum";
+import { EmployeeEmployerEntity } from "../../../models/employee/employee-employer.entity";
+
 
 export default function SafetyPerformanceHistory({
     buttonClass,
-    applicant,
+    employee,
     canEditSafetyPerformance,
     showHistory,
     showResendButton
-}: SafetyPerformanceHistoryProps) {
+}: EmployeeSafetyPerformanceHistoryProps) {
 
     const { t } = useTranslation();
-    const applicantApi = new ApplicantApi();
+    const employeeApi = new EmployeeApi();
 
     const [pdf, setPdf] = useState({});
 
-    const [employers, setEmployers] = useState<ApplicantEmployerEntity[]>([])
+    const [employers, setEmployers] = useState<EmployeeEmployerEntity[]>([])
     const resetEmployers = () => setEmployers([])
 
     const [isLoading, setIsLoading] = useState<{
-        action: "DELETE" | "RESEND",
+        action: "DELETE",
     }>(null)
     const resetIsLoading = (): void => setIsLoading(null);
 
     const form = useFormik({
-        initialValues: new ApplicantEmployerDocumentDto(),
-        validationSchema: ApplicantEmployerDocumentDto.yupSchema(),
+        initialValues: new EmployeeEmployerDocumentDto(),
+        validationSchema: EmployeeEmployerDocumentDto.yupSchema(),
         onSubmit: async ({ document, employer }, { resetForm }) => {
             try {
-                const doc = await applicantApi.employer.documents.create(applicant.id, employer.id, document)
+                const doc = await employeeApi.employer.documents.create(employee.id, employer.id, document)
 
                 if (document.id) {
                     employer.documents = employer.documents?.filter(v => v.id != document.id)
@@ -63,23 +63,22 @@ export default function SafetyPerformanceHistory({
     });
 
     const handleClick = async () => {
-        const data = await applicantApi.employer.list(applicant.id)
+        const data = await employeeApi.employer.list(employee.id)
         setEmployers(data)
         if (!Boolean(data.length)) alert(t('NO_RECORDS_FOUND'))
     }
 
     /**
-     * It deletes a document from the applicant's profile.
-     * @param {ApplicantDqf | string} docType - The type of document you want to
+     * It deletes a document from the employee's profile.
+     * @param {EmployeeDocumentType | string} docType - The type of document you want to
      * delete.
      */
     const handleDeleteDocument = async (
-        employer: ApplicantEmployerEntity,
-        docType: ApplicantDqf | string
+        employer: EmployeeEmployerEntity,
+        docType: EmployeeDocumentType | string
     ): Promise<void> => {
         setIsLoading({ action: "DELETE" })
-
-        await applicantApi.employer.documents.delete(applicant?.id, employer?.id, docType)
+        await employeeApi.employer.documents.delete(employee?.id, employer?.id, docType)
 
         setEmployers([
             ...employers.filter(v => v.id != employer.id),
@@ -94,32 +93,18 @@ export default function SafetyPerformanceHistory({
     /**
      * It takes a type and an optional documentId, and sets the form's document field to an object with the
      * type and id
-     * @param {ApplicantDqf} type - ApplicantDqf - this is the type of document that is being uploaded.
+     * @param {EmployeeDocumentType} type - EmployeeDocumentType - this is the type of document that is being uploaded.
      * @param {number} [documentId] - The id of the document to be updated.
      */
-    const handleUpdateDocument = async (type: ApplicantDqf, documentId?: number, employer?: ApplicantEmployerEntity): Promise<void> => {
-        console.log("type", type, documentId, employer);
-
+    const handleUpdateDocument = async (type: EmployeeDocumentType, documentId?: number, employer?: EmployeeEmployerEntity): Promise<void> => {
         form?.setFieldValue("employer", employer)
         form?.setFieldValue("document", { type, id: documentId ?? null })
     }
 
     const resendVoeRequest = async (employerId: number) => {
         try {
-            setIsLoading({ action: "RESEND" })
-            const applicantApi = new ApplicantApi()
-            const response: ApplicantEmployerEntity = await applicantApi.employer.sendVoeRequest(applicant?.id, employerId)
-
-            const updatedEmployers: ApplicantEmployerEntity[] = [
-                ...employers.filter((v) => v.id !== response.id),
-                {
-                    ...employers.find((v) => v.id === response.id), // Find the employer to update
-                    voe_attempts: response.voe_attempts, // Update the 'voe_attempts' property
-                },
-            ];
-            setEmployers(updatedEmployers.slice().sort((a, b) => a.id - b.id))
-
-            resetIsLoading()
+            const response: EmployeeEmployerEntity = await employeeApi.employer.sendVoeRequest(employee?.id, employerId)
+            setEmployers([...(employers.filter(v => v.id != response.id)), { ...response }])
             toast.success(t("RESEND_VOE_SUCCESSFULL"))
         } catch (error) {
             toast.error(t("ERROR_MESSAGE_DEFAULT"))
@@ -128,67 +113,55 @@ export default function SafetyPerformanceHistory({
 
     const ButtonList = ({ employer, document, type }) => (
         <>
-            {form?.values?.employer?.id != employer?.id && (
-                <div className="d-flex w-100 mt-2">
+            {(!form?.values?.document?.type)
+                && (<div className="d-flex w-100 mt-2">
                     <ViewDocumentButton
                         document={document}
                         onClick={() => handleViewDocument(document.id, setPdf)}
                     />
-                    {Boolean(canEditSafetyPerformance) && (
-                        <AddDocumentButton
+                    {Boolean(canEditSafetyPerformance)
+                        && <AddDocumentButton
                             document={document}
                             type={type}
                             t={t}
-                            onClick={() =>
-                                handleUpdateDocument(type, document?.id, employer)
-                            }
+                            onClick={() => handleUpdateDocument(type, document?.id, employer)}
                         />
-                    )}
+                    }
                     <DownloadDocumentButton
                         document={document}
                         onClick={() => handleDownloadDocument(document.id)}
                     />
-                    {Boolean(canEditSafetyPerformance) && (
-                        <DeleteDocumentButton
-                            isLoading={isLoading?.action == "DELETE"}
+                    {Boolean(canEditSafetyPerformance)
+                        && <DeleteDocumentButton
                             document={document}
+                            isLoading={isLoading?.action == "DELETE"}
                             onClick={() => handleDeleteDocument(employer, type)}
                         />
-                    )}
-                    {Boolean(showHistory) && (
-                        <ViewDocumentHistory
-                            typePrefix="ApplicantDqf"
+                    }
+                    {Boolean(showHistory)
+                        && <ViewDocumentHistory
                             document={document}
                             type={type}
-                            documentable_id={applicant.id}
-                            documentable_type={DocumentableType.APPLICANT_EMPLOYERS}
+                            documentable_id={employee.id}
+                            documentable_type={DocumentableType.EMPLOYEE_EMPLOYERS}
                         />
+                    }
+                    {(Boolean(showResendButton)
+                        &&
+                        <Button
+                            className="mr-2 w-100"
+                            disabled={!Boolean(employer.can_contact && employer?.is_subject_to_fmcsrs)}
+                            onClick={() => resendVoeRequest(employer.id)}
+                        >
+                            <OverlyPopover str={!Boolean(employer.can_contact) ? "NOT_AUTHORIZED_TO_COMMUNICATE" : "RESEND_VOE"}>
+                                {t('RESEND')}
+                            </OverlyPopover>
+                        </Button>
                     )}
-                    {Boolean(showResendButton) &&
-                        Boolean(employer.can_contact) &&
-                        Boolean(employer?.is_subject_to_fmcsrs) && (
-                            <Button
-                                className="mr-2 w-100"
-                                onClick={() => resendVoeRequest(employer.id)}
-                            >
-                                <OverlyPopover
-                                    str={
-                                        !Boolean(employer.can_contact)
-                                            ? "NOT_AUTHORIZED_TO_COMMUNICATE"
-                                            : "RESEND_VOE"
-                                    }
-                                >
-                                    <>
-                                        {t("RESEND")}
-                                        <LoaderIcon isLoading={Boolean(isLoading?.action == "RESEND")} />
-                                    </>
-                                </OverlyPopover>
-                            </Button>
-                        )}
-                </div>
-            )}
+                </div>)
+            }
         </>
-    );
+    )
 
     return (
         <>
@@ -207,7 +180,7 @@ export default function SafetyPerformanceHistory({
                 closeText="CANCEL"
                 title="PAST_EMPLOYER"
             >
-                <ViewDataTable<ApplicantEmployerEntity>
+                <ViewDataTable<EmployeeEmployerEntity>
                     customStyles={{
                         headRow: {
                             style: {
@@ -220,37 +193,28 @@ export default function SafetyPerformanceHistory({
                         {
                             name: "NAME",
                             selector: emp => emp.name,
-                            cell: emp => <OverlyPopover slice_at={5} str={emp.name} />,
-                            width: '10%',
+                            hidable: false,
+                            width: '20%',
                         },
                         {
                             name: "EMAIL",
                             selector: emp => emp.email,
-                            cell: emp => <OverlyPopover slice_at={5} str={emp.email} />,
-                            width: '10%',
+                            hidable: false,
+                            width: '20%',
                         },
                         {
                             name: "VOE_ATTEMPT_COUNT",
                             selector: emp => emp.voe_attempts ?? 0,
-                            width: '10%',
-                        },
-                        {
-                            name: "AUTHORIZED_TO_COMMUNICATE",
-                            selector: emp => t(`BooleanType.${emp.can_contact ? "YES" : "NO"}`),
-                            width: '10%',
-                        },
-                        {
-                            name: "SUBJECT_TO_FMCR",
-                            selector: emp => t(`BooleanType.${emp?.is_subject_to_fmcsrs ? "YES" : "NO"}`),
+                            hidable: false,
                             width: '10%',
                         },
                         {
                             width: '50%',
                             cell: emp => {
-                                const doc = emp.documents?.find(v => v.type == ApplicantDqf.SAFETY_PERFORMANCE_HISTORY)
+                                const doc = emp.documents?.find(v => v.type == EmployeeDocumentType.SAFETY_PERFORMANCE_HISTORY)
                                 return (<>
-                                    <ButtonList employer={emp} type={ApplicantDqf.SAFETY_PERFORMANCE_HISTORY} document={doc} />
-                                    {(form?.values?.employer?.id == emp.id)
+                                    <ButtonList employer={emp} type={EmployeeDocumentType.SAFETY_PERFORMANCE_HISTORY} document={doc} />
+                                    {(form?.values?.document?.type)
                                         && <form className="mt-2 mr-2" onSubmit={form?.handleSubmit} >
                                             <FileInput
                                                 name={`document`}
@@ -263,7 +227,7 @@ export default function SafetyPerformanceHistory({
                                                     disabled={form?.isSubmitting || !form?.isValid || form?.isValidating}
                                                     className="mr-2 w-50 theme-primary-btn"
                                                     type="submit"
-                                                >{t(`SAVE`)} <LoaderIcon isLoading={form?.isSubmitting} /></Button>
+                                                >{t(`SAVE`)}</Button>
                                                 <Button
                                                     type="button"
                                                     className="w-50 bg-danger"

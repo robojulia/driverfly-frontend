@@ -7,18 +7,15 @@ import { ApplicantEmployerEntity } from "../../models/applicant";
 import { ApplicantDacEntity } from "../../models/applicant/applicant-dac.entity";
 import { ApplicantJobEntity } from "../../models/applicant/applicant-job.entity";
 import { ApplicantNoteEntity } from "../../models/applicant/applicant-note.entity";
-import { ApplicantOTPEntity } from "../../models/applicant/applicant-otp.entity";
 import { ApplicantSuggestedJobEntity } from "../../models/applicant/applicant-suggested-job.entity";
 import { ApplicantEntity } from "../../models/applicant/applicant.entity";
 import { DocumentEntity } from "../../models/documents/document.entity";
-import { ApplicantJobsByStatusDto } from "../../models/job/applicant-jobs-by-status.dto";
 import { VerifyOTPDto } from "../../models/jot-form/OTP/verify-otp.dto";
 import { UpsertApplicantJotformDto } from "../../models/jot-form/upsert-applicant-jotform.dto";
 import { UpsertApplicantVoeformDto } from "../../models/jot-form/upsert-applicant-voe.dto";
 import BaseApi from "./_baseApi";
-import { EmployeeEntity } from "../../models/applicant/employee.entity";
 
-class ApplicantApi extends BaseApi {
+export default class ApplicantApi extends BaseApi {
 	baseUrl: string = "applicants";
 	constructor() {
 		super();
@@ -377,35 +374,4 @@ class ApplicantApi extends BaseApi {
 			return data;
 		},
 	};
-
-	employee = {
-		baseUrl: `employee`,
-
-		list: async (): Promise<EmployeeEntity[]> => {
-			const { data } = await this.get(`${this.employee.baseUrl}`);
-
-			return data;
-		},
-
-		create: async (applicantId: number, dto: EmployeeEntity): Promise<EmployeeEntity> => {
-			const { data } = await this.post(`${this.employee.baseUrl}/applicant/${applicantId}`, dto);
-
-			return data;
-		},
-
-		update: async (id: number, dto: EmployeeEntity): Promise<EmployeeEntity> => {
-			const { data } = await this.put(`${this.employee.baseUrl}/${id}`, dto);
-
-			return data;
-		},
-
-		remove: async (id: number): Promise<EmployeeEntity | void> => {
-			const { data } = await this.delete(`${this.employee.baseUrl}/${id}`);
-
-			return data;
-		}
-
-	}
 }
-
-export default ApplicantApi;

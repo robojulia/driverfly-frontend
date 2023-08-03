@@ -10,7 +10,7 @@ import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import { useEffectAsync } from "../../../../../utils/react";
 import ApplicantApi from "../../../../api/applicant";
-import DQF from "../../../../../components/dashboard/employee-directory/dqf";
+import DQF from "../../../../../components/applicants/dqf";
 import { ApplicantStatus } from "../../../../../enums/applicants/applicant-status.enum";
 
 export default function EditApplicant({ id }) {
@@ -62,11 +62,12 @@ export default function EditApplicant({ id }) {
                             showOnboarding={true}
                             showCompleted={true}
                             canEditSafetyPerformance={
-                                ([
-                                    ApplicantStatus.COMPLETED_EMPLOYED,
-                                    ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
-                                    ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE
-                                ]).includes(applicant.current_application_status)
+                                true
+                                // ([
+                                //     ApplicantStatus.COMPLETED_EMPLOYED,
+                                //     ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
+                                //     ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE
+                                // ]).includes(applicant.current_application_status)
                             }
                             showResendButton={true}
                         />

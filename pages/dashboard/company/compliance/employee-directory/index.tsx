@@ -30,7 +30,6 @@ import { ReducedApplicantEntityType } from "../../../../../types/applicant/reduc
 import ViewModal from "../../../../../components/view-details/view-modal";
 import useLastPage from "../../../../../hooks/use-last-page";
 import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
-import { ApplicantStatus } from "../../../../../enums/applicants/applicant-status.enum";
 import OverlyPopover from "../../../../../components/popover/overly-popover";
 import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
 import Background from "../../../../../components/dashboard/employee-directory/background";
@@ -42,8 +41,10 @@ import BaseTextArea from "../../../../../components/forms/base-text-area";
 import { Status } from "../../../../../enums/status.enum";
 import BaseSelect from "../../../../../components/forms/base-select";
 import AdditionalFiles from "../../../../../components/dashboard/employee-directory/additional-files";
-import { EmployeeEntity } from "../../../../../models/applicant/employee.entity";
+import { EmployeeEntity } from "../../../../../models/employee/employee.entity";
 import { ListActionOptions } from "../../../../../components/list-actions/list-actions";
+import EmployeeApi from "../../../../api/employee";
+import { EmployeeStatus } from "../../../../../enums/applicants/employee-status.enum";
 
 export default function EmployeeDirectory() {
 
@@ -57,6 +58,7 @@ export default function EmployeeDirectory() {
     const columnSettingKey = getDataTableColumnKey("company", user, "employee-directory");
     const { t } = useTranslation();
     const applicantApi = new ApplicantApi();
+    const employeeApi = new EmployeeApi();
     const router = useRouter()
 
     const { setPreviousPath } = useLastPage();
@@ -84,21 +86,14 @@ export default function EmployeeDirectory() {
         await router.push(router);
     }
 
-    const fetchEmployee = async () => {
-        const data = await applicantApi.employee.list()
-        setEmployees(data.filter(v => [
-            ApplicantStatus.COMPLETED_EMPLOYED,
-            ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
-            ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE
-        ].includes(v.status)))
+    const fetchEmployee = async (): Promise<void> => {
+        const data = await employeeApi.list({ status: [EmployeeStatus.ACTIVE] })
+        setEmployees(data)
     }
 
-    const fetchPastEmployee = async () => {
-        const data = await applicantApi.employee.list()
-        setEmployees(data.filter(v => [
-            ApplicantStatus.INACTIVE_FIRED,
-            ApplicantStatus.INACTIVE_QUIT
-        ].includes(v.status)))
+    const fetchPastEmployee = async (): Promise<void> => {
+        const data = await employeeApi.list({ status: [EmployeeStatus.QUIT, EmployeeStatus.FIRED] })
+        setEmployees(data)
     }
 
     const [modalAction, setModalAction] = useState<{
@@ -109,42 +104,47 @@ export default function EmployeeDirectory() {
 
     const tabs = {
         BACKGROUND: <Background employee={modalAction?.entity} />,
-        DQF: < DQF applicant={modalAction?.entity.applicant} canEdit={true} showHistory={true} />,
-        DRIVER_ONBOARDING_CHECKLIST: < DAC applicant={modalAction?.entity.applicant} />,
-        ADDITIONAL_FILES: < AdditionalFiles applicant={modalAction?.entity.applicant} />,
+        DQF: < DQF employee={modalAction?.entity} canEdit={true} showHistory={true} />,
+        // DRIVER_ONBOARDING_CHECKLIST: < DAC applicant={modalAction?.entity.applicant} />,
+        // ADDITIONAL_FILES: < AdditionalFiles applicant={modalAction?.entity.applicant} />,
 
         // VEHICLES: < VehicleInformationTab />  //according to wireframe this tab (vehichled are pushed to phase 3)
     };
 
-    const applicantJobForm = useFormik({
+    const moveToPastForm = useFormik({
         initialValues: new EmployeeEntity(),
-        validationSchema: EmployeeEntity.yupSchema(),
+        validationSchema: EmployeeEntity.yupSchemaForMarking(),
         onSubmit: async (values) => {
             try {
-                await applicantApi.employee.update(values?.id, values)
-                applicantJobForm.resetForm();
+                await employeeApi.mark(values?.id, values)
+                moveToPastForm.resetForm();
                 filterEmployees(values?.id)
+                toast(t("successfully_saved_information"))
             } catch (e) {
-                globalAjaxExceptionHandler(e, { formik: applicantJobForm, t: t, toast: toast });
+                globalAjaxExceptionHandler(e, { formik: moveToPastForm, t: t, toast: toast });
             }
         },
     });
-    useEffect(() => console.log(applicantJobForm.errors), [applicantJobForm.errors])
+    useEffect(() => console.log(moveToPastForm.errors), [moveToPastForm.errors])
     useEffect(() => console.log("viewMode", viewMode), [viewMode])
 
-    const onViewClick = (entity: EmployeeEntity): void =>
-        setModalAction({ entity, type: "VIEW" })
+    const onViewClick = async (entity: EmployeeEntity): Promise<void> => {
+        const v = await employeeApi.getById(entity?.id)
+        setModalAction({ entity: v, type: "VIEW" })
+    }
 
     const onEditClick = (entity: EmployeeEntity) =>
-        router.push(`/dashboard/company/applicants/${entity?.applicant?.id}/edit`)
+        router.push(
+            `/dashboard/company/applicants/${entity?.applicant?.id}/edit`
+        );
 
-    const onTrashClick = async (entity: EmployeeEntity): Promise<void> => {
-        setModalAction({ entity, type: "DELETE" })
-    }
+    const onTrashClick = async (entity: EmployeeEntity): Promise<void> =>
+        setModalAction({ entity, type: "DELETE" });
+
 
     const onDeleteClick = async (): Promise<void> => {
         try {
-            const data = await applicantApi.employee.remove(modalAction?.entity?.id)
+            const data = await employeeApi.remove(modalAction?.entity?.id)
 
             if (data && data?.active_status == Status.DELETED) {
                 filterEmployees(modalAction?.entity?.id)
@@ -160,8 +160,7 @@ export default function EmployeeDirectory() {
 
     const onMoveToPastEmploeeClick = async (): Promise<void> => {
         setModalAction({ ...modalAction, type: "MOVE_TO_PAST_EMPLOYEE" })
-        applicantJobForm.setValues(modalAction?.entity);
-        applicantJobForm.setFieldValue("reason_codes", []);
+        moveToPastForm.setFieldValue("id", modalAction?.entity?.id);
     }
 
     const tableColumns = (): ViewTableColumn<EmployeeEntity>[] => {
@@ -224,9 +223,9 @@ export default function EmployeeDirectory() {
                 selector: data => data?.status,
                 cell: data =>
                 (<ShowEnumFromString
-                    labelPrefix="ApplicantStatus"
+                    labelPrefix="EmployeeStatus"
                     value={data?.status}
-                    enumArray={ApplicantStatus} />
+                    enumArray={EmployeeStatus} />
                 ),
             },
         ]
@@ -240,27 +239,27 @@ export default function EmployeeDirectory() {
             //         />
             //     ),
             // });
-            data.push({
-                id: "reason_codes",
-                name: "REASON_CODES",
-                // selector: data => data?.applicantJob?.reason_codes,
-                cell: (data) => (
-                    <ShowEnumFromString
-                        popover
-                        labelPrefix={
-                            data.status == ApplicantStatus.INACTIVE_QUIT
-                                ? "ApplicantReasonCodeQuit"
-                                : "ApplicantReasonCodeFired"
-                        }
-                        enumArray={
-                            data.status == ApplicantStatus.INACTIVE_FIRED
-                                ? ApplicantReasonCodeQuit
-                                : ApplicantReasonCodeFired
-                        }
-                        value={data?.reason_codes}
-                    />
-                ),
-            });
+            // data.push({
+            //     id: "reason_codes",
+            //     name: "REASON_CODES",
+            //     // selector: data => data?.applicantJob?.reason_codes,
+            //     cell: (data) => (
+            //         <ShowEnumFromString
+            //             popover
+            //             labelPrefix={
+            //                 data.status == EmployeeStatus.INACTIVE_QUIT
+            //                     ? "ApplicantReasonCodeQuit"
+            //                     : "ApplicantReasonCodeFired"
+            //             }
+            //             enumArray={
+            //                 data.status == EmployeeStatus.INACTIVE_FIRED
+            //                     ? ApplicantReasonCodeQuit
+            //                     : ApplicantReasonCodeFired
+            //             }
+            //             value={data?.reason_codes}
+            //         />
+            //     ),
+            // });
         } else {
         }
 
@@ -363,66 +362,28 @@ export default function EmployeeDirectory() {
             {/* modal that displays a table for moving applicant to past employee list */}
             <ViewModal
                 title={t("MOVE_TO_PAST_EMPLOYEE")}
-                show={!!applicantJobForm.values?.id}
-                onCloseClick={applicantJobForm.resetForm}
+                show={!!moveToPastForm.values?.id}
+                onCloseClick={moveToPastForm.resetForm}
                 size='lg'
             >
                 <EntityForm
-                    onSubmit={applicantJobForm.handleSubmit}
-                    id={applicantJobForm?.values?.id}
-                    formik={applicantJobForm}
-                    canSubmit={applicantJobForm.isValid || applicantJobForm.values?.reason_codes?.length > 0}
+                    onSubmit={moveToPastForm.handleSubmit}
+                    id={moveToPastForm?.values?.id}
+                    formik={moveToPastForm}
+                    canSubmit={moveToPastForm.isValid}
                 >
                     <Row className="py-3 px-5">
                         <Col>
                             <BaseSelect
                                 label="STATUS"
-                                formik={applicantJobForm}
+                                formik={moveToPastForm}
                                 name={`status`}
                                 required
                                 placeholder="STATUS"
-                                labelPrefix="ApplicantStatus"
-                                showOptions={[ApplicantStatus.INACTIVE_FIRED, ApplicantStatus.INACTIVE_QUIT]}
-                                enumType={ApplicantStatus}
-
+                                labelPrefix="EmployeeStatus"
+                                showOptions={[EmployeeStatus.FIRED, EmployeeStatus.QUIT]}
+                                enumType={EmployeeStatus}
                             />
-                        </Col>
-                    </Row>
-                    <Row className="py-3 px-5">
-                        <Col md="12">
-                            {({
-                                [ApplicantStatus.INACTIVE_FIRED]: (<BaseCheckList
-                                    className="col-12"
-                                    label="REASON_CODES"
-                                    name="reason_codes"
-                                    required
-                                    cols={2}
-                                    formik={applicantJobForm}
-                                    labelPrefix="ApplicantReasonCodeFired"
-                                    enumType={ApplicantReasonCodeFired}
-                                />),
-                                [ApplicantStatus.INACTIVE_QUIT]: (<BaseCheckList
-                                    className="col-12"
-                                    label="REASON_CODES"
-                                    name="reason_codes"
-                                    required
-                                    cols={2}
-                                    formik={applicantJobForm}
-                                    labelPrefix="ApplicantReasonCodeQuit"
-                                    enumType={ApplicantReasonCodeQuit}
-                                />),
-                            }[applicantJobForm.values?.status] ?? <></>)}
-                        </Col>
-                        <Col>
-                            {applicantJobForm.values.reason_codes?.includes("OTHER") &&
-                                <BaseTextArea
-                                    className="col-12"
-                                    placeholder="REASONS"
-                                    name="reason_codes_other"
-                                    required
-                                    maxLength={100}
-                                    formik={applicantJobForm}
-                                />}
                         </Col>
                     </Row>
                 </EntityForm>

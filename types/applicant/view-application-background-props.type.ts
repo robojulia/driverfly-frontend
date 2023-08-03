@@ -1,5 +1,5 @@
 
-import { EmployeeEntity } from "../../models/applicant/employee.entity";
+import { EmployeeEntity } from "../../models/employee/employee.entity";
 
 export type ViewApplicantBackgroundProps = {
     employee: EmployeeEntity;

@@ -23,7 +23,7 @@ import { ApplicantVoeFormEntity } from "./applicant-voe-form.entity";
 import { Status } from "../../enums/status.enum";
 import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
 import { ApplicantJobStatusHistoryEntity } from "./applicant-job-status-history.entity";
-import { EmployeeEntity } from "./employee.entity";
+import { EmployeeEntity } from "../employee/employee.entity";
 
 
 export class ApplicantEntity {
