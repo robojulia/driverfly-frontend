@@ -1361,6 +1361,7 @@
   "JOB_CREATION_CONFIRMATION": "By submitting, I confirm that the details of this job are as honest and accurate to the best of my knowledge.",
   "DON'T_HAVE_AN_ACCOUNT": "Don't have an account? Make one",
   "OTHER_SKILLS": "Other Skills",
+  "ACCOUNT_SUSPENDED": "This account is suspended",
   "ALREADY_EXISTS": "Already Exists",
   "ALREADY_EMPLOYED": "Already Employed",
   "HAS_HAD_INFRACTIONS_LAST_5_YEARS": "Have you had any infractions in the previous 5 years?",
@@ -1959,6 +1960,13 @@
   "{date}_hireDate": "Hire Date: {{date}}",
   "{date}_birthdate": "Birthdate {{date}}",
   "EMPLOYEES": "Employees",
+  "EmployeeStatus": {
+    "ACTIVE": "Active",
+    "QUIT": "Quit",
+    "FIRED": "Fired",
+    "DEACTIVE": "Deactive",
+    "DELETED": "Deleted"
+  },
   "ApplicantDqf": {
     "DRIVER_CERTIFICATION_OF_VIOLATIONS": "Driver Certification of Violations (Annual)",
     "MOTOR_VEHICLE_REPORT": "Motor Vehicle Report (Annual)",

@@ -36,10 +36,10 @@ export default function SafetyPerformanceHistory({
     const [employers, setEmployers] = useState<ApplicantEmployerEntity[]>([])
     const resetEmployers = () => setEmployers([])
 
-    // const [isLoading, setIsLoading] = useState<{
-    //     action: "DELETE" | "RESEND",
-    // }>(null)
-    // const resetIsLoading = (setIsLoading(null))
+    const [isLoading, setIsLoading] = useState<{
+        action: "DELETE" | "RESEND",
+    }>(null)
+    const resetIsLoading = (): void => setIsLoading(null);
 
     const form = useFormik({
         initialValues: new ApplicantEmployerDocumentDto(),
@@ -73,7 +73,12 @@ export default function SafetyPerformanceHistory({
      * @param {ApplicantDqf | string} docType - The type of document you want to
      * delete.
      */
-    const handleDeleteDocument = async (employer: ApplicantEmployerEntity, docType: ApplicantDqf | string): Promise<void> => {
+    const handleDeleteDocument = async (
+        employer: ApplicantEmployerEntity,
+        docType: ApplicantDqf | string
+    ): Promise<void> => {
+        setIsLoading({ action: "DELETE" })
+
         await applicantApi.employer.documents.delete(applicant?.id, employer?.id, docType)
 
         setEmployers([
@@ -83,6 +88,7 @@ export default function SafetyPerformanceHistory({
                 documents: employer.documents?.filter(v => v.type != docType)
             }
         ])
+        resetIsLoading()
     }
 
     /**
@@ -100,6 +106,7 @@ export default function SafetyPerformanceHistory({
 
     const resendVoeRequest = async (employerId: number) => {
         try {
+            setIsLoading({ action: "RESEND" })
             const applicantApi = new ApplicantApi()
             const response: ApplicantEmployerEntity = await applicantApi.employer.sendVoeRequest(applicant?.id, employerId)
 
@@ -112,6 +119,7 @@ export default function SafetyPerformanceHistory({
             ];
             setEmployers(updatedEmployers.slice().sort((a, b) => a.id - b.id))
 
+            resetIsLoading()
             toast.success(t("RESEND_VOE_SUCCESSFULL"))
         } catch (error) {
             toast.error(t("ERROR_MESSAGE_DEFAULT"))
@@ -142,6 +150,7 @@ export default function SafetyPerformanceHistory({
                     />
                     {Boolean(canEditSafetyPerformance) && (
                         <DeleteDocumentButton
+                            isLoading={isLoading?.action == "DELETE"}
                             document={document}
                             onClick={() => handleDeleteDocument(employer, type)}
                         />
@@ -160,7 +169,6 @@ export default function SafetyPerformanceHistory({
                         Boolean(employer?.is_subject_to_fmcsrs) && (
                             <Button
                                 className="mr-2 w-100"
-                                // disabled={}
                                 onClick={() => resendVoeRequest(employer.id)}
                             >
                                 <OverlyPopover
@@ -170,7 +178,10 @@ export default function SafetyPerformanceHistory({
                                             : "RESEND_VOE"
                                     }
                                 >
-                                    {t("RESEND")}
+                                    <>
+                                        {t("RESEND")}
+                                        <LoaderIcon isLoading={Boolean(isLoading?.action == "RESEND")} />
+                                    </>
                                 </OverlyPopover>
                             </Button>
                         )}

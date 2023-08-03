@@ -62,11 +62,12 @@ export default function EditApplicant({ id }) {
                             showOnboarding={true}
                             showCompleted={true}
                             canEditSafetyPerformance={
-                                ([
-                                    ApplicantStatus.COMPLETED_EMPLOYED,
-                                    ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
-                                    ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE
-                                ]).includes(applicant.current_application_status)
+                                true
+                                // ([
+                                //     ApplicantStatus.COMPLETED_EMPLOYED,
+                                //     ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
+                                //     ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE
+                                // ]).includes(applicant.current_application_status)
                             }
                             showResendButton={true}
                         />
