@@ -50,6 +50,7 @@ import { UserEntity } from "../../../models/user/user.entity";
 import { JobForm } from "./job-form";
 import { HireApplicantDto } from "../../../models/applicant/hire-applicant.dto";
 import EmployeeApi from "../../../pages/api/employee";
+import { useRouter } from "next/router";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> {
 }
@@ -57,6 +58,7 @@ export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> {
 export function ApplicantForm(props: ApplicantFormProps) {
 	const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([])
 	const { t } = useTranslation();
+	const router = useRouter()
 	const applicantApi = new ApplicantApi();
 	let { className, entity, onSaveComplete, onSaveError } = props;
 
@@ -146,6 +148,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		)
 	}, [form.values.jobs]);
 
+	const routeToEmployees = () => router.push('/dashboard/company/compliance/employee-directory')
+
 	const hireApplicantForm = useFormik({
 		initialValues: new HireApplicantDto(),
 		validationSchema: HireApplicantDto.yupSchema(),
@@ -156,6 +160,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				await employeeApi.hire(values)
 				resetForm();
 				formSuccess(t, "hired", "STATUS");
+				routeToEmployees()
 			} catch (e) {
 				globalAjaxExceptionHandler(e, { formik: hireApplicantForm, t: t, toast: toast });
 			}
@@ -366,7 +371,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								/>
 								<BaseCheckList
 									className="col-12 mt-2"
-									readOnly={Boolean(entity?.is_hired)}
+									disabled={Boolean(entity?.is_hired)}
+
 									label="PREFERRED_LOCATION"
 									name="preferred_location"
 									formik={form}
@@ -393,7 +399,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 							<Col md="4" className="px-2">
 								<BaseCheckList
 									className="col-12"
-									readOnly={Boolean(entity?.is_hired)}
+									disabled={Boolean(entity?.is_hired)}
 									label="TRANSMISSION_EXPERIENCE"
 									name="transmission_type"
 									labelPrefix="VehicleTransmissionType"
@@ -403,7 +409,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								/>
 								<BaseCheckList
 									className="col-12"
-									readOnly={Boolean(entity?.is_hired)}
+									disabled={Boolean(entity?.is_hired)}
 									label="ENDORSEMENTS"
 									name="endorsements"
 									labelPrefix="DriverEndorsement"
@@ -458,7 +464,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								<Col xs="12" className='p-2 mt-2' >
 									<ViewCard
 										title="equipment_experience"
-										actions={<Button size='sm' onClick={() => form.setValues({
+										actions={<Button disabled={Boolean(entity?.is_hired)} size='sm' onClick={() => form.setValues({
 											...form.values,
 											equipment_experience: [
 												...(form.values.equipment_experience || []),
@@ -533,7 +539,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									<Col xs="12" className='mt-3'>
 										<ViewCard
 											title="equipment_owned"
-											actions={<Button size='sm' onClick={() => form.setValues({
+											actions={<Button disabled={Boolean(entity?.is_hired)} size='sm' onClick={() => form.setValues({
 												...form.values,
 												equipment_owned: [
 													...form.values.equipment_owned,
@@ -614,7 +620,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				<Col md="4" className="p-0 px-lg-2">
 					<ViewCard
 						title="WORK_HISTORY"
-						actions={<Button size='sm' onClick={() => form.setValues({
+						actions={<Button disabled={Boolean(entity?.is_hired)} size='sm' onClick={() => form.setValues({
 							...form.values,
 							employers: [
 								...(form.values.employers || []),
@@ -642,7 +648,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											<AccordionSummary
 												expandIcon={<ChevronUp />}
 											>
-												<Button
+												<Button disabled={Boolean(entity?.is_hired)}
 													type="button"
 													size="sm"
 													variant="danger"
@@ -784,7 +790,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									<Col xs="12" className='mt-2'>
 										<ViewCard
 											title="PAST_DUIS"
-											actions={<Button size='sm' onClick={() => form.setValues({
+											actions={<Button disabled={Boolean(entity?.is_hired)} size='sm' onClick={() => form.setValues({
 												...form.values,
 												dui_years: [
 													...(form.values.dui_years || []),
@@ -941,7 +947,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 					<ViewCard
 						title="UPLOADED_DOCUMENTS"
 						actions={<Button size='sm'
-							disabled={form.values.documents?.length === Object.keys(ApplicantDocumentType).length}
+							disabled={Boolean(form.values.documents?.length === Object.keys(ApplicantDocumentType).length) || Boolean(entity?.is_hired)}
 							onClick={() => form.setValues({
 								...form.values,
 								documents: [
@@ -1009,7 +1015,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				<Col md="12" className="p-0 px-lg-2">
 					<ViewCard
 						title="JOBS_APPLIED_TO_WITH_YOU"
-						actions={<Button size='sm'
+						actions={<Button disabled={Boolean(entity?.is_hired)} size='sm'
 							onClick={() => form.setValues({
 								...form.values,
 								jobs: [
@@ -1112,7 +1118,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								valueKey="id"
 								formik={hireApplicantForm}
 							/>
-							<button
+							<button disabled={Boolean(entity?.is_hired)}
 								type="button"
 								onClick={() => setCreateJob(true)}
 								className="my-2 btn btn-link"

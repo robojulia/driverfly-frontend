@@ -2073,5 +2073,6 @@
   "AUTOMATED_RECRUITING_LEAD": "Automated Recruiting Lead",
   "CANOT_EDIT_APPLICANT": "You are in read-only mode and you can't make changes in applicant view",
   "EDIT_APPLICANT_PROFILE": "Edit Applicant Profile",
-  "IMPORT_EMPLOYEES":"Import Employees"
+  "IMPORT_EMPLOYEES": "Import Employees",
+  "EMPLOYEE": "Employee"
 }

@@ -8,7 +8,7 @@ import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../hooks/use-translation";
 import { useAuth } from "../../../hooks/use-auth";
-import {  Col, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { BaseFormProps } from "./base-form-props";
 import EntityForm from "../../layouts/page/entity-form";
 import ViewCard from "../../view-details/view-card";
@@ -28,12 +28,14 @@ import UserApi from "../../../pages/api/user";
 import { UserEntity } from "../../../models/user/user.entity";
 import EmployeeApi from "../../../pages/api/employee";
 import { EmployeeEntity } from "../../../models/employee/employee.entity";
+import { useRouter } from "next/router";
 
 export interface EmployeeFormProps extends BaseFormProps<EmployeeEntity> {
 }
 
 export function EmployeeForm(props: EmployeeFormProps) {
     const { t } = useTranslation();
+    const router = useRouter();
 
     const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([])
 
@@ -48,7 +50,7 @@ export function EmployeeForm(props: EmployeeFormProps) {
         license_number: false,
         social_security_number: false
     });
-
+    const goBack = () => router.push('/dashboard/company/compliance/employee-directory')
     useEffect(() => {
         setProtectedFields({
             license_number: hasPermission("CanViewApplicant.license_number"),
@@ -65,9 +67,11 @@ export function EmployeeForm(props: EmployeeFormProps) {
             try {
                 if (entity?.id) {
                     values = await employeeApi.update(entity.id, values);
+
                 }
 
                 formSuccess(t, entity?.id ? "update" : "create", "EMPLOYEE");
+                goBack()
                 // if (onSaveComplete) onSaveComplete(values);
             } catch (e) {
                 console.error("Unable to save employee info", e);
@@ -81,14 +85,14 @@ export function EmployeeForm(props: EmployeeFormProps) {
 
     useEffect(() => {
         form.setValues(entity);
-	}, [entity]);
-    
+    }, [entity]);
+
     useEffect(() => {
-       console.log("form error", form.errors)
-       console.log("form val", form.values)
-	}, [form.errors, form.values]);
-    
-    
+        console.log("form error", form.errors)
+        console.log("form val", form.values)
+    }, [form.errors, form.values]);
+
+
     useEffectAsync(async () => {
         const data = await userApi.list()
         setCompanyUsers(data)
