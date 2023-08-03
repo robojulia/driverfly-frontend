@@ -58,7 +58,7 @@ export default function EditApplicant({ id }) {
                         <DQF
                             title="ONBOARDING_CHECKLIST"
                             applicant={applicant}
-                            canEdit={true}
+                            canEdit={!Boolean(applicant?.is_hired)}
                             showOnboarding={true}
                             showCompleted={true}
                             canEditSafetyPerformance={

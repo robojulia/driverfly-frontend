@@ -1,10 +1,8 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { Col, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useEffectAsync } from "../../../../../../utils/react";
 import ChildPageLayout from "../../../../../../components/layouts/page/child-page-layout";
-import { ApplicantForm } from "../../../../../../components/forms/company/applicant-form";
 import { useTranslation } from "../../../../../../hooks/use-translation";
 import FullLayout from "../../../../../../components/dashboard/layouts/layout/full-layout";
 import EmployeeApi from "../../../../../api/employee";

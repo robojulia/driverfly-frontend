@@ -140,11 +140,8 @@ export default function EmployeeDirectory() {
         setModalAction({ entity: v, type: "VIEW" })
     }
 
-    const onEditClick = (entity: EmployeeEntity) =>
-        router.push(
-            `/dashboard/company/applicants/${entity?.applicant?.id}/edit`
-        );
 
+    const onEditClick = (data) => router.push(`/dashboard/company/compliance/employee-directory/${data?.id}/edit`)
     const onTrashClick = async (entity: EmployeeEntity): Promise<void> =>
         setModalAction({ entity, type: "DELETE" });
 

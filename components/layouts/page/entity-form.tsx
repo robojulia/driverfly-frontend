@@ -23,12 +23,13 @@ export interface EntityFormProps {
     readonly children?: JSX.Element | JSX.Element[];
     actions?: FormActionOptions[];
     submitLabel?: string;
+    forbidSubmit?: boolean;
 }
 
 export default function EntityForm(props: EntityFormProps) {
     const { t } = useTranslation();
 
-    let { id, canSubmit, formik, className, onSubmit, children } = props;
+    let { id, canSubmit, forbidSubmit, formik, className, onSubmit, children } = props;
 
     const action = t(props.submitLabel ?? (id ? "UPDATE" : "CREATE"));
 
@@ -60,7 +61,7 @@ export default function EntityForm(props: EntityFormProps) {
                         </Button>)
                     ))}
 
-                    <Button type="submit" className="theme-secondary-btn" disabled={canSubmit == null || !!!canSubmit}>
+                    <Button type="submit" className="theme-secondary-btn" disabled={canSubmit == null || !!!canSubmit || forbidSubmit}>
                         <LoaderIcon isLoading={!!formik?.isSubmitting} /> {action}
                     </Button>
                 </Col>
