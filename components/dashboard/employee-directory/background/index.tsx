@@ -53,7 +53,20 @@ export default function Background({ employee }: ViewApplicantBackgroundProps) {
 
 
 					<ViewEmployeeDetails employee={employee} />
-					<Button onClick={onViewProfileCLick}>{t(`view_applicant_profile`)}</Button>
+					<Button disabled={!Boolean(employee?.applicant)} onClick={onViewProfileCLick}>
+						{
+							Boolean(employee?.applicant) ? (
+								<>
+									{t(`view_applicant_profile`)}
+								</>
+							) : (
+								<>
+									{t(`NO_APPLICANT_PROFILE_FOUND`)}
+								</>
+							)
+						}
+
+					</Button>
 				</>
 			)}
 

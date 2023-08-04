@@ -4,4 +4,5 @@ export class SearchEmployeeDto {
 
 	limit?: number;
 	status?: EmployeeStatus[];
+	email?: string;
 }
