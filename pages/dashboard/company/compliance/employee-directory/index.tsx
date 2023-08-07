@@ -17,27 +17,14 @@ import { useEffectAsync } from "../../../../../utils/react";
 import { TabbedLayout } from "../../../../../components/layouts/page/tabbed-layout";
 import DAC from "../../../../../components/dashboard/employee-directory/dac";
 import DQF from "../../../../../components/dashboard/employee-directory/dqf";
-import ApplicantApi from "../../../../api/applicant";
-import {
-    ApplicantEntity,
-    ApplicantJobEntity
-} from "../../../../../models/applicant";
-import {
-    filterHired,
-    reduceSingleEntity
-} from "../../../../../utils/filter-applicants";
-import { ReducedApplicantEntityType } from "../../../../../types/applicant/reduced-applicant-entity.type";
 import ViewModal from "../../../../../components/view-details/view-modal";
 import useLastPage from "../../../../../hooks/use-last-page";
 import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
 import OverlyPopover from "../../../../../components/popover/overly-popover";
 import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
 import Background from "../../../../../components/dashboard/employee-directory/background";
-import BaseCheckList from "../../../../../components/forms/base-check-list";
-import { ApplicantReasonCodeFired, ApplicantReasonCodeQuit } from "../../../../../enums/applicants/applicant-reason-codes.enum";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import EntityForm from "../../../../../components/layouts/page/entity-form";
-import BaseTextArea from "../../../../../components/forms/base-text-area";
 import { Status } from "../../../../../enums/status.enum";
 import BaseSelect from "../../../../../components/forms/base-select";
 import AdditionalFiles from "../../../../../components/dashboard/employee-directory/additional-files";
@@ -50,14 +37,13 @@ export default function EmployeeDirectory() {
 
     const { user, hasPermission } = useAuth();
     const can = {
-        viewUser: hasPermission("CanViewApplicant"),
-        editUser: hasPermission("CanEditApplicant"),
-        deleteUser: hasPermission("CanDeleteApplicant"),
+        viewUser: hasPermission("CanViewEmployee"),
+        editUser: hasPermission("CanEditEmployee"),
+        deleteUser: hasPermission("CanDeleteEmployee"),
     };
 
     const columnSettingKey = getDataTableColumnKey("company", user, "employee-directory");
     const { t } = useTranslation();
-    const applicantApi = new ApplicantApi();
     const employeeApi = new EmployeeApi();
     const router = useRouter()
 
@@ -356,7 +342,7 @@ export default function EmployeeDirectory() {
                 </Row>
             </ViewModal>
 
-            {/* modal that displays a table for moving applicant to past employee list */}
+            {/* modal that displays a table for moving employee to past employee list */}
             <ViewModal
                 title={t("MOVE_TO_PAST_EMPLOYEE")}
                 show={!!moveToPastForm.values?.id}

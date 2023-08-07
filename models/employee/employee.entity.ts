@@ -12,6 +12,7 @@ import { DriverEndorsement } from '../../enums/users/driver-endorsement.enum';
 import { EducationLevel } from '../../enums/users/education-level.enum';
 import { DocumentEntity } from '../documents/document.entity';
 import { EmployeeStatus } from '../../enums/applicants/employee-status.enum';
+import { CompanyManagerEntity } from '../company/company-manager.entity';
 
 export class EmployeeEntity {
 	id?: number;
@@ -53,6 +54,7 @@ export class EmployeeEntity {
 	emergency_contact_number?: string;
 	emergency_contact_relationship?: string;
 
+	manager?: CompanyManagerEntity;
 	documents?: DocumentEntity[] = [];
 
 	static yupSchema() {
@@ -73,6 +75,9 @@ export class EmployeeEntity {
 			years_cdl_experience: yup.number().min(0).nullable(),
 			can_pass_drug_test: yup.bool().nullable(),
 			is_owner_operator: yup.bool().nullable(),
+			manager: yup.object({
+				id: yup.number().optional().nullable()
+			}).optional().nullable(),
 			transmission_type: yup
 				.array((yup.string() as any).enum(VehicleTransmissionType))
 				.nullable(),
