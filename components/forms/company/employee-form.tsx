@@ -51,13 +51,11 @@ export function EmployeeForm(props: EmployeeFormProps) {
 
 	const [protectedFields, setProtectedFields] = useState({
 		license_number: false,
-		social_security_number: false
 	});
 	const goBack = () => router.push('/dashboard/company/compliance/employee-directory')
 	useEffectAsync(async () => {
 		setProtectedFields({
-			license_number: hasPermission("CanViewApplicant.license_number"),
-			social_security_number: hasPermission("CanViewApplicant.social_security_number"),
+			license_number: hasPermission("CanViewEmployee.license_number"),
 		});
 		const companyApi = new CompanyApi();
 		const data = await companyApi.manager.list();
@@ -278,20 +276,6 @@ export function EmployeeForm(props: EmployeeFormProps) {
 								enumType={JobGeography}
 
 							/>
-
-							{form.values.id
-								&& <BaseSelect
-									className="col-12 mt-2"
-									name={`current_application_status`}
-									required
-									placeholder="APPLICANT_CURRENT_STATUS"
-									label="APPLICANT_CURRENT_STATUS"
-									labelPrefix="ApplicantStatus"
-									enumType={ApplicantStatus}
-									formik={form}
-								/>
-							}
-
 						</Col>
 						<Col md="4" className="px-2">
 							<BaseCheckList
