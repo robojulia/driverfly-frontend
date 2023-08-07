@@ -3,20 +3,20 @@ import React from 'react'
 import { useTranslation } from "../../hooks/use-translation"
 import { BaseControlProps } from './base-control';
 
-function InlineLayout(t, options, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix) {
+function InlineLayout(t, options, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix, disabled) {
   return (
     <>
       {options.map((v, i) => (
         <div key={i} className={`form-check form-check-inline flex-row-reverse`}>
           <label className="form-check-label">{t((labelPrefix ? labelPrefix + "." : "") + v[labelKey])}</label>
-          <input className={`form-check-input ${error ? "is-invalid" : ""}`} type="checkbox" readOnly={readOnly} value={v[valueKey]} name={name} onChange={onChange} onBlur={handleBlur} checked={value.includes(v[valueKey])} />
+          <input disabled={disabled} className={`form-check-input ${error ? "is-invalid" : ""}`} type="checkbox" readOnly={readOnly} value={v[valueKey]} name={name} onChange={onChange} onBlur={handleBlur} checked={value.includes(v[valueKey])} />
         </div>
       ))}
     </>
   );
 }
 
-function ColLayout(t, options, cols, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix) {
+function ColLayout(t, options, cols, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix, disabled) {
   return (
     <div className='row mt-1'>
       {options.map((v, i) => (
@@ -25,7 +25,7 @@ function ColLayout(t, options, cols, value, name, labelKey, valueKey, onChange, 
           className={`col-md-${12 / cols}`}>
           <div className={`form-check form-check-inline flex-row-reverse`}>
             <label className="form-check-label">{t((labelPrefix ? labelPrefix + "." : "") + v[labelKey])}</label>
-            <input className={`form-check-input ${error ? "is-invalid" : ""}`} readOnly={readOnly} type="checkbox" value={v[valueKey]} name={name} onChange={onChange} onBlur={handleBlur} checked={value.includes(v[valueKey])} />
+            <input disabled={disabled} className={`form-check-input ${error ? "is-invalid" : ""}`} readOnly={readOnly} type="checkbox" value={v[valueKey]} name={name} onChange={onChange} onBlur={handleBlur} checked={value.includes(v[valueKey])} />
           </div>
         </div>
       ))}
@@ -44,6 +44,7 @@ export interface BaseCheckListProps extends BaseControlProps {
   handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   readOnly?: boolean;
   enumType?: object;
+  disabled?: boolean
 }
 
 function BaseCheckList({
@@ -63,7 +64,8 @@ function BaseCheckList({
   name,
   touched,
   error,
-  enumType
+  enumType,
+  disabled
 }: BaseCheckListProps) {
   const { t } = useTranslation();
 
@@ -93,8 +95,8 @@ function BaseCheckList({
     <div className={className}>
       {label && <span style={{ marginRight: "20px" }}>{t(label)}{required ? "*" : ""}:</span>}
       {cols ?
-        ColLayout(t, options, +cols, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix)
-        : InlineLayout(t, options, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix)}
+        ColLayout(t, options, +cols, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix, disabled)
+        : InlineLayout(t, options, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix, disabled)}
       {touched && error && (typeof error === "string") ? <span className="text-danger small">{error}</span> : null}
     </div>
   )

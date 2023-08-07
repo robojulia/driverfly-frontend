@@ -1,11 +1,11 @@
 import { Button, Col, Row } from 'react-bootstrap';
 import { useTranslation } from '../../../../hooks/use-translation';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import ViewApplicantDetail from '../../../applicants/applicant-view-details';
 import { ViewApplicantBackgroundProps } from '../../../../types/applicant/view-application-background-props.type';
 import ViewDetails from '../../../view-details/view-details';
 import ViewEmployeeDetails from '../../../employee/view-employee-detail';
+import { useAuth } from '../../../../hooks/use-auth';
 
 
 export default function Background({ employee }: ViewApplicantBackgroundProps) {
@@ -15,6 +15,18 @@ export default function Background({ employee }: ViewApplicantBackgroundProps) {
 
 	const onViewProfileCLick = () => router.push(`/dashboard/company/applicants/${employee?.applicant?.id}`)
 	const onEditClick = () => router.push(`/dashboard/company/compliance/employee-directory/${employee?.id}/edit`)
+
+	let { user, hasPermission } = useAuth();
+
+	const [protectedFields, setProtectedFields] = useState({
+		license_number: false,
+	});
+
+	useEffect(() => {
+		setProtectedFields({
+			license_number: hasPermission("CanViewEmployee.license_number"),
+		});
+	}, [user]);
 
 
 	return (
@@ -36,7 +48,7 @@ export default function Background({ employee }: ViewApplicantBackgroundProps) {
 								obj={{
 									POSITION: employee?.job?.title,
 									TERMINAL: employee?.job?.location?.city,
-									// MANAGER: job?.manager?.name ? job?.manager?.name : t('NO_MANAGER_ASSIGNED'),
+									MANAGER: employee?.manager?.name ? employee?.manager?.name : t('NO_MANAGER_ASSIGNED'),
 								}}
 							/>
 						</Col>
