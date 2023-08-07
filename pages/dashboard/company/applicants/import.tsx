@@ -1,6 +1,6 @@
 import ChildPageLayout from "../../../../components/layouts/page/child-page-layout";
 import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
-import ImportApplicants from "../../../../components/dashboard/import-applicants";
+import ImportApplicants from "../../../../components/dashboard/import-applicants/ppp";
 
 export default function Import() {
 

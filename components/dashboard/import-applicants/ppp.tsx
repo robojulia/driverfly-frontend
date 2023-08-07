@@ -8,10 +8,10 @@ import { Check, CheckCircle, ExclamationTriangle, XCircle } from "react-bootstra
 import { useState } from "react";
 import FileDownload from 'js-file-download';
 import * as fileUtils from "../../../utils/file";
-import Switch from "../../../components/controls/switch";
+import Switch from "../../controls/switch";
 import * as _style from "../../../public/components/styles/ImportApplicantsModule.module.css"
 import ApplicantApi from "../../../pages/api/applicant";
-import OverlyPopover from "../../../components/popover/overly-popover";
+import OverlyPopover from "../../popover/overly-popover";
 import { FormikInterface } from "../../../utils/formik";
 import { SchemaDescription, SchemaObjectDescription } from "yup/lib/schema";
 import { LicenseRestrictions } from "../../../enums/applicants/applicant-license-restrictions-type.enum";

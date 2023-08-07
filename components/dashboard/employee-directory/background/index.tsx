@@ -2,7 +2,6 @@ import { Button, Col, Row } from 'react-bootstrap';
 import { useTranslation } from '../../../../hooks/use-translation';
 import React from 'react';
 import { useRouter } from 'next/router';
-import ViewApplicantDetail from '../../../applicants/applicant-view-details';
 import { ViewApplicantBackgroundProps } from '../../../../types/applicant/view-application-background-props.type';
 import ViewDetails from '../../../view-details/view-details';
 import ViewEmployeeDetails from '../../../employee/view-employee-detail';
