@@ -1,10 +1,11 @@
 import { Button, Col, Row } from 'react-bootstrap';
 import { useTranslation } from '../../../../hooks/use-translation';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { ViewApplicantBackgroundProps } from '../../../../types/applicant/view-application-background-props.type';
 import ViewDetails from '../../../view-details/view-details';
 import ViewEmployeeDetails from '../../../employee/view-employee-detail';
+import { useAuth } from '../../../../hooks/use-auth';
 
 
 export default function Background({ employee }: ViewApplicantBackgroundProps) {
@@ -14,6 +15,18 @@ export default function Background({ employee }: ViewApplicantBackgroundProps) {
 
 	const onViewProfileCLick = () => router.push(`/dashboard/company/applicants/${employee?.applicant?.id}`)
 	const onEditClick = () => router.push(`/dashboard/company/compliance/employee-directory/${employee?.id}/edit`)
+
+	let { user, hasPermission } = useAuth();
+
+	const [protectedFields, setProtectedFields] = useState({
+		license_number: false,
+	});
+
+	useEffect(() => {
+		setProtectedFields({
+			license_number: hasPermission("CanViewEmployee.license_number"),
+		});
+	}, [user]);
 
 
 	return (
@@ -51,7 +64,7 @@ export default function Background({ employee }: ViewApplicantBackgroundProps) {
 					</Row>
 
 
-					<ViewEmployeeDetails employee={employee} />
+					<ViewEmployeeDetails employee={employee} protectedFields={protectedFields} />
 					<Button onClick={onViewProfileCLick}>{t(`view_applicant_profile`)}</Button>
 				</>
 			)}
