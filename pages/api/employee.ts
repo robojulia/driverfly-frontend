@@ -24,8 +24,16 @@ export default class EmployeeApi extends BaseApi {
 		return data;
 	}
 
+
+	async create(dto: EmployeeEntity): Promise<EmployeeEntity> {
+		const { data } = await this.post(this.baseUrl, dto);
+
+		return data;
+	}
+
+
 	async hire(dto: HireApplicantDto): Promise<EmployeeEntity> {
-		const { data } = await this.post(`${this.baseUrl}`, dto);
+		const { data } = await this.post(`${this.baseUrl}/hire`, dto);
 
 		return data;
 	}

@@ -2082,5 +2082,6 @@
   "CANOT_EDIT_APPLICANT": "Applicant is in read-only mode and you can't make changes.",
   "EDIT_APPLICANT_PROFILE": "Edit Applicant Profile",
   "IMPORT_EMPLOYEES": "Import Employees",
+  "NO_APPLICANT_PROFILE_FOUND": "No Applicant Profile Attached",
   "EMPLOYEE": "Employee"
 }
