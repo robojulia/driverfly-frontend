@@ -37,6 +37,7 @@ export default function SafetyPerformanceHistory({
     const resetEmployers = () => setEmployers([])
 
     const [isLoading, setIsLoading] = useState<{
+        id: number,
         action: "DELETE" | "RESEND",
     }>(null)
     const resetIsLoading = (): void => setIsLoading(null);
@@ -77,7 +78,7 @@ export default function SafetyPerformanceHistory({
         employer: ApplicantEmployerEntity,
         docType: ApplicantDqf | string
     ): Promise<void> => {
-        setIsLoading({ action: "DELETE" })
+        setIsLoading({ action: "DELETE", id: employer?.id })
 
         await applicantApi.employer.documents.delete(applicant?.id, employer?.id, docType)
 
@@ -106,14 +107,14 @@ export default function SafetyPerformanceHistory({
 
     const resendVoeRequest = async (employerId: number) => {
         try {
-            setIsLoading({ action: "RESEND" })
+            setIsLoading({ action: "RESEND", id: employerId })
             const applicantApi = new ApplicantApi()
             const response: ApplicantEmployerEntity = await applicantApi.employer.sendVoeRequest(applicant?.id, employerId)
 
             const updatedEmployers: ApplicantEmployerEntity[] = [
-                ...employers.filter((v) => v.id !== response.id),
+                ...employers.filter((v) => v.id !== employerId),
                 {
-                    ...employers.find((v) => v.id === response.id), // Find the employer to update
+                    ...employers.find((v) => v.id === employerId), // Find the employer to update
                     voe_attempts: response.voe_attempts, // Update the 'voe_attempts' property
                 },
             ];
@@ -150,7 +151,7 @@ export default function SafetyPerformanceHistory({
                     />
                     {Boolean(canEditSafetyPerformance) && (
                         <DeleteDocumentButton
-                            isLoading={isLoading?.action == "DELETE"}
+                            isLoading={isLoading?.action == "DELETE" && isLoading.id == document?.id}
                             document={document}
                             onClick={() => handleDeleteDocument(employer, type)}
                         />
@@ -165,7 +166,8 @@ export default function SafetyPerformanceHistory({
                         />
                     )}
                     {Boolean(showResendButton) &&
-                        Boolean(employer.can_contact) &&
+                        Boolean(employer?.email) &&
+                        Boolean(employer?.can_contact) &&
                         Boolean(employer?.is_subject_to_fmcsrs) && (
                             <Button
                                 className="mr-2 w-100"
@@ -180,7 +182,7 @@ export default function SafetyPerformanceHistory({
                                 >
                                     <>
                                         {t("RESEND")}
-                                        <LoaderIcon isLoading={Boolean(isLoading?.action == "RESEND")} />
+                                        <LoaderIcon isLoading={Boolean(isLoading?.action == "RESEND" && isLoading.id == employer?.id)} />
                                     </>
                                 </OverlyPopover>
                             </Button>
