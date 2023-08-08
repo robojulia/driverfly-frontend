@@ -14,6 +14,7 @@ import { DocumentEntity } from '../documents/document.entity';
 import { EmployeeStatus } from '../../enums/applicants/employee-status.enum';
 import { CompanyEntity } from '../company/company.entity';
 import { CompanyManagerEntity } from '../company/company-manager.entity';
+import { EmployeeExperienceEntity } from './employee-experience.entity';
 
 export class EmployeeEntity {
 	id?: number;
@@ -48,7 +49,7 @@ export class EmployeeEntity {
 	highest_degree?: string;
 	authorized_to_work_in_us?: boolean;
 	preferred_location?: string[];
-	equipment_experience?: ApplicantExperienceEntity[];
+	equipment_experience?: EmployeeExperienceEntity[];
 	transmission_type?: string[];
 	endorsements?: string[];
 	emergency_contact_name?: string;
@@ -125,8 +126,8 @@ export class EmployeeEntity {
 			// 	then: yup.string().required().nullable(),
 			// }).nullable(),
 			equipment_experience: (
-				yup.array(ApplicantExperienceEntity.yupSchema()) as any
-			).unique("type", { mapper: ApplicantExperienceEntity.key }),
+				yup.array(EmployeeExperienceEntity.yupSchema()) as any
+			).unique("type", { mapper: EmployeeExperienceEntity.key }),
 			assignedUserId: yup.number().optional().nullable()
 		});
 	}
