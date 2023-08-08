@@ -538,7 +538,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									form.values.is_owner_operator &&
 									<Col xs="12" className='mt-3'>
 										<ViewCard
-											title="equipment_owned"
+											title="EQUIPMENT_OWNED"
 											actions={<Button disabled={Boolean(entity?.is_hired)} size='sm' onClick={() => form.setValues({
 												...form.values,
 												equipment_owned: [

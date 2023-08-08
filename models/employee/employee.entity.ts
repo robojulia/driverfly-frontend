@@ -15,6 +15,7 @@ import { EmployeeStatus } from '../../enums/applicants/employee-status.enum';
 import { CompanyEntity } from '../company/company.entity';
 import { CompanyManagerEntity } from '../company/company-manager.entity';
 import { EmployeeExperienceEntity } from './employee-experience.entity';
+import { EmployeeEquipmentEntity } from './employee-equipment.entity';
 
 export class EmployeeEntity {
 	id?: number;
@@ -50,6 +51,7 @@ export class EmployeeEntity {
 	authorized_to_work_in_us?: boolean;
 	preferred_location?: string[];
 	equipment_experience?: EmployeeExperienceEntity[];
+	equipment_owned?: EmployeeEquipmentEntity[] = [];
 	transmission_type?: string[];
 	endorsements?: string[];
 	emergency_contact_name?: string;
@@ -128,6 +130,9 @@ export class EmployeeEntity {
 			equipment_experience: (
 				yup.array(EmployeeExperienceEntity.yupSchema()) as any
 			).unique("type", { mapper: EmployeeExperienceEntity.key }),
+			equipment_owned: (
+				yup.array(EmployeeEquipmentEntity.yupSchema()) as any
+			).unique("type", { mapper: EmployeeEquipmentEntity.key }),
 			assignedUserId: yup.number().optional().nullable()
 		});
 	}
