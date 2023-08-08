@@ -8,7 +8,7 @@ import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { useFormik } from "formik";
 import { useTranslation } from "../../../hooks/use-translation";
 import { useAuth } from "../../../hooks/use-auth";
-import { Col, Row } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import { BaseFormProps } from "./base-form-props";
 import EntityForm from "../../layouts/page/entity-form";
 import ViewCard from "../../view-details/view-card";
@@ -31,6 +31,9 @@ import { EmployeeEntity } from "../../../models/employee/employee.entity";
 import { useRouter } from "next/router";
 import { CompanyManagerEntity } from "../../../models/company/company-manager.entity";
 import CompanyApi from "../../../pages/api/company";
+import { EmployeeEquipmentEntity } from "../../../models/employee/employee-equipment.entity";
+import { DashCircle, PlusCircle } from "react-bootstrap-icons";
+import { JobEquipmentType } from "../../../enums/jobs/job-equipment-type.enum";
 
 export interface EmployeeFormProps extends BaseFormProps<EmployeeEntity> {
 }
@@ -332,6 +335,158 @@ export function EmployeeForm(props: EmployeeFormProps) {
 							</Col>
 						</Col>
 					</Row>
+					<Row>
+						<Col className="col-md-6">
+							<Col xs="12" className='p-2 mt-2' >
+								<ViewCard
+									title="equipment_experience"
+									actions={<Button size='sm' onClick={() => form.setValues({
+										...form.values,
+										equipment_experience: [
+											...(form.values.equipment_experience || []),
+											new EmployeeEquipmentEntity()
+										]
+									})}><PlusCircle /> {t("ADD")}</Button>}
+								>
+									{
+										form.values.equipment_experience?.length > 0 &&
+										<>
+											{form.values
+												.equipment_experience
+												.map((entity, i) => (
+													<Row key={i}>
+														<div className="col-md-6 mt-2">
+															<Col className="p-0"><strong>{t("TYPE")}</strong></Col>
+
+															<BaseSelect
+																name={`equipment_experience[${i}].type`}
+																placeholder="TYPE"
+																labelPrefix="JobEquipmentType"
+																enumType={JobEquipmentType}
+																formik={form}
+															/>
+														</div >
+														<div className="col-md-5 mt-2">
+															<Col className="p-0"><strong>{t("YEARS")}</strong></Col>
+
+															<BaseInput
+																name={`equipment_experience[${i}].years`}
+																placeholder="YEARS"
+																type="int"
+																min="1"
+																formik={form}
+															/>
+														</div >
+														{
+															entity.type === JobEquipmentType.OTHER &&
+															<div >
+																<BaseInput
+																	className="my-2"
+																	name={`equipment_experience[${i}].type_other`}
+																	placeholder="TYPE"
+																	formik={form}
+																/>
+															</div >
+														}
+														<div className="pl-sm-1 pt-lg-2 col-lg-1 col-md-12">
+															<Col className="mt-4"></Col>
+															<a href="#" onClick={() => form.setValues({
+																...form.values,
+																equipment_experience: form.values.equipment_experience.filter((v, idx) => i != idx)
+															})}><DashCircle color="red" /></a>
+														</div >
+														<div className="12">
+															<hr />
+														</div >
+
+													</Row>
+												))}
+										</>
+									}
+								</ViewCard>
+							</Col>
+						</Col>
+						<Col md="6" className='px-2'>
+							{
+								form.values.is_owner_operator &&
+								<Col xs="12" className='mt-3'>
+									<ViewCard
+										title="equipment_owned"
+										actions={<Button size='sm' onClick={() => form.setValues({
+											...form.values,
+											equipment_owned: [
+												...form.values.equipment_owned,
+												new EmployeeEquipmentEntity()
+											]
+										})}><PlusCircle /> {t("ADD")}</Button>}
+									>
+										{
+											form.values.equipment_owned.length > 0 &&
+											<>
+												<Row className='d-sm-none d-md-flex'>
+													<Col><strong>{t("TYPE")}</strong></Col>
+													<Col><strong>{t("QUANTITY")}</strong></Col>
+												</Row>
+												{form.values
+													.equipment_owned
+													.map((entity, i) => (
+														<Row key={i}>
+															<Col xs="12" className='d-sm-flex d-md-none'>
+																<Col><strong>{t("TYPE")}</strong></Col>
+																<Col><strong>{t("QUANTITY")}</strong></Col>
+															</Col>
+															<Col xs="6">
+																<BaseSelect
+																	name={`equipment_owned[${i}].type`}
+																	placeholder="TYPE"
+																	labelPrefix="JobEquipmentType"
+																	enumType={JobEquipmentType}
+																	formik={form}
+																/>
+															</Col>
+															<Col xs="5">
+																<BaseInput
+																	name={`equipment_owned[${i}].quantity`}
+																	placeholder="QUANTITY"
+																	type="int"
+																	min="1"
+																	formik={form}
+																/>
+															</Col>
+															{
+																entity.type === JobEquipmentType.OTHER &&
+																<Col xs="11">
+																	<BaseInput
+																		name={`equipment_owned[${i}].type_other`}
+																		placeholder="TYPE"
+																		formik={form}
+																	/>
+																</Col>
+															}
+															<Col xs="1">
+																<a href="#" onClick={() => form.setValues({
+																	...form.values,
+																	equipment_owned: form.values.equipment_owned.filter((v, idx) => i != idx)
+																})}><DashCircle color="red" /></a>
+															</Col>
+															<Col xs="12">
+																<hr />
+															</Col>
+
+														</Row>
+													))}
+											</>
+										}
+									</ViewCard>
+								</Col>
+							}
+						</Col>
+
+					</Row>
+
+
+
+
 				</ViewCard >
 			</div>
 		</EntityForm >

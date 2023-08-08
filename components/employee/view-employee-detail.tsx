@@ -107,7 +107,13 @@ export default function ViewEmployeeDetails({
 								default={t("NONE")}
 								obj={{
 									EQUIPMENT_OWNED: {
-										show: employee.is_owner_operator || false,
+										items: employee.equipment_owned?.map((v) => ({
+											type:
+												v.type == JobEquipmentType.OTHER
+													? v.type_other
+													: t(`JobEquipmentType.${v.type}`),
+											years: v.quantity,
+										})),
 									},
 								}}
 							/>
