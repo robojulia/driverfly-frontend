@@ -115,6 +115,10 @@ const ImportEmployees = () => {
                         toast.error(t(e?.response?.data?.user?.message, {
                             assignedUserId: e?.response?.data?.user?.id
                         }))
+                    } else if (e?.response?.data?.user) {
+                        toast.error(t(e?.response?.data?.user?.message, {
+                            email: e?.response?.data?.user?.email
+                        }))
                     } else toast.error(t("unable_to_save_information"))
 
                     return;
