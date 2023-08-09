@@ -371,6 +371,7 @@ export default function ViewApplicant({ id }) {
 											className="font-weight-bold"
 											role="button"
 											onClick={handleNoteModalShow}
+											hidden={Boolean(applicant?.is_hired)}
 										>
 											<PlusLg />
 										</a>
