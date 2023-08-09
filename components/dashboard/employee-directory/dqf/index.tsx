@@ -123,6 +123,7 @@ export default function DQF(props: ViewEmployeeDqfProps) {
                                 && <ViewDocumentHistory
                                     document={document}
                                     type={type}
+                                    typePrefix="EmployeeDocumentType"
                                     documentable_id={employee.id}
                                     documentable_type={DocumentableType.EMPLOYEE}
                                 />

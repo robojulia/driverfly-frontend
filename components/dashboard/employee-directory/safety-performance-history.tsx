@@ -142,6 +142,7 @@ export default function SafetyPerformanceHistory({
                         && <ViewDocumentHistory
                             document={document}
                             type={type}
+                            typePrefix="EmployeeDocumentType"
                             documentable_id={employee.id}
                             documentable_type={DocumentableType.EMPLOYEE_EMPLOYERS}
                         />
