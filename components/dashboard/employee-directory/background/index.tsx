@@ -6,6 +6,7 @@ import { ViewApplicantBackgroundProps } from '../../../../types/applicant/view-a
 import ViewDetails from '../../../view-details/view-details';
 import ViewEmployeeDetails from '../../../employee/view-employee-detail';
 import { useAuth } from '../../../../hooks/use-auth';
+import { EmployeeStatus } from '../../../../enums/applicants/employee-status.enum';
 
 
 export default function Background({ employee }: ViewApplicantBackgroundProps) {
@@ -37,9 +38,14 @@ export default function Background({ employee }: ViewApplicantBackgroundProps) {
 						<Col>
 							<strong><h5>{t(`${employee?.first_name} ${employee?.last_name}`)}</h5></strong>
 						</Col>
-						<Col>
-							<Button onClick={onEditClick} className="float-right">{t("EDIT")}</Button>
-						</Col>
+						{
+							!!!(employee.status === EmployeeStatus.FIRED || employee.status === EmployeeStatus.QUIT) ? <Col>
+								<Button onClick={onEditClick} className="float-right">
+									{t("EDIT")}
+								</Button>
+							</Col> : null
+						}
+
 					</Row>
 					<Row>
 						<Col>
