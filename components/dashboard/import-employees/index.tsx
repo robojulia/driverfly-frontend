@@ -105,9 +105,18 @@ const ImportEmployees = () => {
                     await api.create(dto);
                 }
                 catch (e) {
-                    console.log("error saving applicant", i, e);
+                    console.log("error saving applicant", i, e.response);
                     form.setFieldError(`items.${i}.id`, t("UNABLE_TO_SAVE"));
-                    toast.error(t("unable_to_save_information"))
+                    if (e?.response?.data?.job) {
+                        toast.error(t(e?.response?.data?.job?.message, {
+                            jobId: e?.response?.data?.job?.id
+                        }))
+                    } else if (e?.response?.data?.user) {
+                        toast.error(t(e?.response?.data?.user?.message, {
+                            assignedUserId: e?.response?.data?.user?.id
+                        }))
+                    } else toast.error(t("unable_to_save_information"))
+
                     return;
                 }
 
@@ -205,7 +214,7 @@ const ImportEmployees = () => {
         });//Object.keys(new ApplicantEntity());
 
     const onDownloadClick = (e) => {
-        FileDownload(headers.join(","), "Import Applicants Template.csv");
+        FileDownload(headers.join(","), "Import Employee Template.csv");
     }
 
     const onClearClick = (e) => {
