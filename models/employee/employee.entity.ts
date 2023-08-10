@@ -150,7 +150,7 @@ export class EmployeeEntity {
 			last_name: yup.string().optional().nullable().trim(),
 			phone: yup.string().nullable(),
 			email: yup.string().email().optional().nullable(),
-			birthdate: yup.date().min(new Date(Date.now() - 567648000000), "You must be at least 18 years").nullable(),
+			birthdate: yup.date().max(new Date(), 'Birthdate cannot be in the future').nullable(),
 			street: yup.string().nullable(),
 			city: yup.string().nullable(),
 			state: yup.string().nullable(),
