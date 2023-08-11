@@ -2086,5 +2086,6 @@
   "EMPLOYEE": "Employee",
   "ASSIGNED_USER_NOT_FOUND_{assignedUserId}": "Assigned user not found with {{assignedUserId}}",
   "NO_JOB_FOUND_{jobId}": "No job found with id {{jobId}}",
-  "USER_ALREADY_EXIST_{email}": "User Already exist {{email}}"
+  "USER_ALREADY_EXIST_{email}": "User Already exist {{email}}",
+  "REMARKS": "Remarks"
 }
