@@ -1,18 +1,16 @@
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useEffectAsync } from "../../../utils/react";
-
 import { toast } from "react-toastify";
-import { formFailed, formSuccess } from "../../../utils/toast";
-import { globalAjaxExceptionHandler } from "../../../utils/ajax";
-
-import { useFormik } from "formik";
-import { useTranslation } from "../../../hooks/use-translation";
-import { useAuth } from "../../../hooks/use-auth";
-
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import { Button, Col, Row, Table } from "react-bootstrap";
 import { ChevronUp, DashCircle, PlusCircle, XCircle } from "react-bootstrap-icons";
+import { useFormik } from "formik";
 
+import { useEffectAsync } from "../../../utils/react";
+import { useTranslation } from "../../../hooks/use-translation";
+import { useAuth } from "../../../hooks/use-auth";
+import { formFailed, formSuccess } from "../../../utils/toast";
+import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { BaseFormProps } from "./base-form-props";
 import EntityForm from "../../layouts/page/entity-form";
 import ViewCard from "../../view-details/view-card";
@@ -50,7 +48,6 @@ import { UserEntity } from "../../../models/user/user.entity";
 import { JobForm } from "./job-form";
 import { HireApplicantDto } from "../../../models/applicant/hire-applicant.dto";
 import EmployeeApi from "../../../pages/api/employee";
-import { useRouter } from "next/router";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> {
 }
@@ -69,13 +66,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		social_security_number: false
 	});
 
-	useEffect(() => {
-		setProtectedFields({
-			license_number: hasPermission("CanViewApplicant.license_number"),
-			social_security_number: hasPermission("CanViewApplicant.social_security_number"),
-		});
-	}, [user]);
-
 	const form = useFormik({
 		initialValues: new ApplicantEntity(),
 		validationSchema: ApplicantEntity.yupSchema(),
@@ -87,7 +77,15 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
 			try {
 				if (entity?.id) {
-					values = await applicantApi.update(entity.id, values);
+					values = await applicantApi.update(entity.id, {
+						...values,
+						documents: [
+							...values.documents,
+							...entity.documents?.filter(
+								(v) => !Object.values(ApplicantDocumentType).includes(v.type as ApplicantDocumentType)
+							),
+						]?.filter(v => !!v),
+					} as ApplicantEntity);
 				}
 				else {
 					values = await applicantApi.create(values);
@@ -127,6 +125,11 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	const [jobs, setJobs] = useState<JobEntity[]>([]);
 
 	useEffectAsync(async () => {
+		setProtectedFields({
+			license_number: hasPermission("CanViewApplicant.license_number"),
+			social_security_number: hasPermission("CanViewApplicant.social_security_number"),
+		});
+
 		const api = new JobApi();
 		const jobs = await api.list();
 
@@ -135,8 +138,14 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
 	useEffect(() => {
 		if (entity && !form.dirty) {
-			entity.documents = entity.documents.filter(v => Object.values(ApplicantDocumentType).includes(v.type as ApplicantDocumentType))
-			form.setValues(entity);
+			form.setValues({
+				...entity,
+				documents: entity.documents?.filter((v) =>
+					Object.values(ApplicantDocumentType).includes(
+						v.type as ApplicantDocumentType
+					)
+				),
+			});
 		}
 	}, [entity]);
 
@@ -144,8 +153,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
 	useEffect(() => {
 		setJobHired(
-			form.values.jobs?.find(j => j?.status?.startsWith("COMPLETED")) ?? null
-		)
+			form.values.jobs?.find((j) => j?.status?.startsWith("COMPLETED")) ?? null
+		);
 	}, [form.values.jobs]);
 
 	const routeToEmployees = () => router.push('/dashboard/company/compliance/employee-directory')
@@ -177,14 +186,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		setCreateJob(false);
 	}
 
-	useEffect(() => {
-		console.log("hireApplicantForm.values", hireApplicantForm.values);
-		console.log("hireApplicantForm.errors", hireApplicantForm.errors);
-	}, [hireApplicantForm.errors, hireApplicantForm.values]);
-
-
-	const userApi = new UserApi()
 	useEffectAsync(async () => {
+		const userApi = new UserApi()
 		const data = await userApi.list()
 		setCompanyUsers(data)
 	}, [])
@@ -975,8 +978,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								</thead>
 								<tbody>
 									{form.values
-										.documents
-										.map((entity, i) => (
+										?.documents
+										?.map((entity, i) => (
 											<tr key={i}>
 												<td>
 													<BaseSelect
