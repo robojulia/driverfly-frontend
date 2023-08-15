@@ -133,7 +133,7 @@ export class EmployeeEntity {
 			equipment_owned: (
 				yup.array(EmployeeEquipmentEntity.yupSchema()) as any
 			).unique("type", { mapper: EmployeeEquipmentEntity.key }),
-			assignedUserId: yup.number().optional().nullable()
+			// managerId: yup.number().optional().nullable()
 		});
 	}
 
@@ -180,7 +180,7 @@ export class EmployeeEntity {
 			// equipment_experience: (
 			// 	yup.array(ApplicantExperienceEntity.yupSchema()) as any
 			// ).unique("type", { mapper: ApplicantExperienceEntity.key }),
-			assignedUserId: yup.number().optional().nullable()
+			managerId: yup.number().optional().nullable()
 		});
 	}
 }
