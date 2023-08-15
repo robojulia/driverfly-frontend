@@ -30,7 +30,6 @@ export class EmployeeEntity {
 	created_at?: string;
 	last_updated_at?: string;
 	active_status?: Status;
-	assignedUser?: UserEntity;
 	first_name?: string;
 	last_name?: string;
 	phone?: string;

@@ -9,12 +9,9 @@ import { ViewEmployeeDetailProps } from "../../types/employee/view-employee-deta
 export default function ViewEmployeeDetails({
 	employee,
 	protectedFields,
-	hideAssignTo,
 
 }: ViewEmployeeDetailProps) {
 	const { t } = useTranslation();
-
-	const assignTo = !!hideAssignTo ? {} : { ASSIGNED_TO: employee?.assignedUser?.name || t("NONE"), }
 
 	return (
 		<>
@@ -25,7 +22,6 @@ export default function ViewEmployeeDetails({
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
 							obj={{
-								...assignTo,
 								PHONE: employee.phone,
 								EMAIL: employee.email,
 								STREET: employee.street,

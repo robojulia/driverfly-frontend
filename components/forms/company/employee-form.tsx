@@ -117,19 +117,6 @@ export function EmployeeForm(props: EmployeeFormProps) {
 					<Row className="mb-2">
 						<Col md='4'>
 							<BaseSelect
-								// className="col-12 my-2"
-								readOnly={!Boolean(isSuperAdmin)}
-								label="ASSIGNED_RECRUITER"
-								name="assignedUserId"
-								placeholder
-								options={companyUsers}
-								valueKey="id"
-								createLabel={c => `${c.name} (#${c.id})`}
-								formik={form}
-							/>
-						</Col>
-						<Col md='4'>
-							<BaseSelect
 								name={`manager.id`}
 								label="MANAGER"
 								required
