@@ -408,7 +408,7 @@ export function EmployeeForm(props: EmployeeFormProps) {
 								form.values.is_owner_operator &&
 								<Col xs="12" className='mt-3'>
 									<ViewCard
-										title="equipment_owned"
+										title="EQUIPMENT_OWNED"
 										actions={<Button size='sm' onClick={() => form.setValues({
 											...form.values,
 											equipment_owned: [
