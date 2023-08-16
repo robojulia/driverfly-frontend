@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
-import ViewApplicantDqf from "../../../../../components/applicants/view-applicant-dqf";
 import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 import { ApplicantForm } from "../../../../../components/forms/company/applicant-form";
 import ChildPageLayout from "../../../../../components/layouts/page/child-page-layout";
@@ -11,14 +10,12 @@ import { ApplicantEntity } from "../../../../../models/applicant/applicant.entit
 import { useEffectAsync } from "../../../../../utils/react";
 import ApplicantApi from "../../../../api/applicant";
 import DQF from "../../../../../components/applicants/dqf";
-import { ApplicantStatus } from "../../../../../enums/applicants/applicant-status.enum";
 
 export default function EditApplicant({ id }) {
     const router = useRouter();
     const { t } = useTranslation();
 
     const backPath = `/dashboard/company/applicants/${id}`;
-
 
     // const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
     const goBack = () => window.setTimeout(() => router.back(), 2000);
@@ -44,16 +41,19 @@ export default function EditApplicant({ id }) {
 
     return (
         <ChildPageLayout
-            title={t("EDIT_{name}", { name: "APPLICANT" }, { translateProps: true })}
+            title={t(
+                "EDIT_{name}",
+                { name: "APPLICANT" },
+                { translateProps: true }
+            )}
             backPath={backPath}
         >
-
             <ApplicantForm
                 entity={applicant}
                 onSaveComplete={goBack}
             />
-            {applicant?.id
-                && <Row>
+            {applicant?.id && (
+                <Row>
                     <Col>
                         <DQF
                             title="ONBOARDING_CHECKLIST"
@@ -61,20 +61,28 @@ export default function EditApplicant({ id }) {
                             canEdit={!Boolean(applicant?.is_hired)}
                             showOnboarding={true}
                             showCompleted={true}
-                            canEditSafetyPerformance={
-                                true
-                                // ([
-                                //     ApplicantStatus.COMPLETED_EMPLOYED,
-                                //     ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
-                                //     ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE
-                                // ]).includes(applicant.current_application_status)
-                            }
+                            canEditSafetyPerformance={true}
                             showResendButton={true}
+                            onUpdateDocument={(doc) => {
+                                setApplicant({
+                                    ...applicant,
+                                    documents: [...applicant.documents, { ...doc }],
+                                });
+                            }}
+                            onDeleteDocument={(doc) => {
+                                const updatedDocuments = applicant.documents?.filter(
+                                    (v) => v.id != doc.id
+                                );
+                                setApplicant({
+                                    ...applicant,
+                                    documents: [...updatedDocuments],
+                                });
+                            }}
                         />
                         {/* <ViewApplicantDqf canEdit={true} applicant={applicant} /> */}
                     </Col>
                 </Row>
-            }
+            )}
         </ChildPageLayout>
     );
 }
