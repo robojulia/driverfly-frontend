@@ -23,6 +23,8 @@ import ViewCard from "../view-details/view-card";
 import ViewPdf from "../view-details/view-pdf";
 import BaseCheck from "../forms/base-check";
 import { ApplicantOnBoardingChecklist } from "../../enums/applicants/applicant-onboarding-checklist.enum";
+import { AddDocumentButton, DownloadDocumentButton, ViewDocumentButton } from "../documents/buttons";
+import { handleDownloadDocument, handleViewDocument } from "../../utils/documents/button-actions";
 
 
 export interface DqfTabProps extends ViewApplicantDetailProps {
@@ -120,7 +122,7 @@ const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
                                                     {t(`ApplicantDqf.${value}`)}
                                                 </td>
                                                 <td colSpan={1} className="text-center">
-                                                    <input className="form-check-input" type="radio" disabled checked={Boolean(document?.id)} />
+                                                    <input className="" type="radio" disabled checked={Boolean(document?.id)} />
                                                 </td>
                                                 <td colSpan={2}>
                                                     {document ? <ShowFormattedDate date={document.last_updated_at} /> : <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>}
@@ -132,34 +134,21 @@ const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
                                                         && (
                                                             <div className="d-flex">
 
-                                                                {/* It is checking
-                                                                if the document exists. If it does,
-                                                                it will display view the button. If it
-                                                                doesn't, it will display nothing. */}
-                                                                {document
-                                                                    ? <a
-                                                                        onClick={() => viewDocumentClick(document.id, document?.name)}
-                                                                        href='#'
-                                                                        role="button"
-                                                                        className="btn btn-success p-0 pt-1 mr-2 w-100"
-                                                                    ><Eye /></a>
-                                                                    : null}
+                                                                <ViewDocumentButton
+                                                                    document={document}
+                                                                    onClick={() => handleViewDocument(document.id, setPdf)}
+                                                                />
 
-                                                                {/* A button that will either update or
-                                                                add a document. */}
                                                                 {Boolean(canEdit) && <Button
                                                                     className="mr-2 w-100"
                                                                     onClick={() => { handleUpdateDocument(value, document?.id) }}
                                                                 >{document ? <Pen /> : t('ADD')}</Button>
 
                                                                 }
-                                                                {document
-                                                                    ? <a
-                                                                        href={document?.path}
-                                                                        download
-                                                                        className="btn theme-primary2-btn p-0 pt-1 mr-2"
-                                                                    ><CloudArrowDown /></a>
-                                                                    : null}
+                                                                <DownloadDocumentButton
+                                                                    document={document}
+                                                                    onClick={async () => await handleDownloadDocument(document.id)}
+                                                                />
 
                                                                 {/* A ternary operator. It is checking
                                                                 if the document exists. If it does,
@@ -215,7 +204,7 @@ const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
                                                     {t(`ApplicantOnBoardingChecklist.${value}`)}
                                                 </td>
                                                 <td colSpan={1} className="text-center">
-                                                    <input className="form-check-input" type="radio" disabled checked={Boolean(document?.id)} />
+                                                    <input className="" type="radio" disabled checked={Boolean(document?.id)} />
                                                 </td>
                                                 <td colSpan={2}>
                                                     {document ? <ShowFormattedDate date={document.last_updated_at} /> : <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>}
@@ -283,13 +272,10 @@ const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
 
                                                             }
 
-                                                            {document
-                                                                ? <a
-                                                                    href={document?.path}
-                                                                    download
-                                                                    className="btn theme-primary2-btn p-0 pt-1 mr-2"
-                                                                ><CloudArrowDown /></a>
-                                                                : null}
+                                                            <DownloadDocumentButton
+                                                                document={document}
+                                                                onClick={async () => await handleDownloadDocument(document.id)}
+                                                            />
 
                                                             {/* A ternary operator. It is checking
                                                                 if the document exists. If it does,
