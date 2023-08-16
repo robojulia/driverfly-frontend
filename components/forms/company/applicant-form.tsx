@@ -212,6 +212,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			<Row>
 
 				<Col className="p-0 px-lg-2 mt-3">
+
 					<ViewCard title="BASIC_DETAILS">
 						<Row className="mb-2">
 							<Col md='4'>
@@ -397,7 +398,19 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										formik={form}
 									/>
 								}
+								{
+									form.values.current_application_status && (
+										<div className="col-12 mt-2">
+											<label>{t("REMARKS")}</label>
+											<BaseTextArea
 
+												name="remarks"
+												placeholder="Add a remark"
+												formik={form}
+											/>
+										</div>
+									)
+								}
 							</Col>
 							<Col md="4" className="px-2">
 								<BaseCheckList
