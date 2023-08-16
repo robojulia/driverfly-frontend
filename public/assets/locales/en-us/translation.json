@@ -1917,7 +1917,7 @@
   "STATS": "Stats",
   "LEAD_ASSIGNMENT": "Lead Assignment",
   "HISTORICAL_RANGE": "Historical Range",
-  "SOURCE_BREAKDOWN": "Source breakdown",
+  "SOURCE_BREAKDOWN": "Source Breakdown",
   "NEW_LEADS": "New Leads this week",
   "TOTAL_LEADS": "Total Leads",
   "TOTAL_ACTIVE_EMPLOYEE": "Total Active Employees",
@@ -2088,5 +2088,6 @@
   "NO_JOB_FOUND_{jobId}": "No job found with id {{jobId}}",
   "USER_ALREADY_EXIST_{email}": "User Already exist {{email}}",
   "HIRE_DATE": "Hire Date",
-  "MUST_BE_ATLEAST_EIGHTEEN_YEARS_OLD": "Must be atleast 18 years old"
+  "MUST_BE_ATLEAST_EIGHTEEN_YEARS_OLD": "Must be atleast 18 years old",
+  "REMARKS": "Remarks"
 }

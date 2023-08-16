@@ -54,6 +54,7 @@ export default function DQF(props: ViewApplicantDqfProps) {
                 applicant.documents.push(applicantDocumentUpload)
                 toast.success(t('DOCUMENT_UPLOAD_SUCCESS_MESSAGE'))
                 resetForm()
+                if (props.onUpdateDocument) props.onUpdateDocument(applicantDocumentUpload)
             }
             catch (e) {
                 globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t });
@@ -73,6 +74,7 @@ export default function DQF(props: ViewApplicantDqfProps) {
             ...applicant,
             documents: applicant?.documents?.filter(v => (v.type != docType))
         })
+        if (props.onDeleteDocument) props.onDeleteDocument(applicant?.documents?.find(v => (v.type == docType)))
     }
 
     /**

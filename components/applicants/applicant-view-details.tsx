@@ -15,13 +15,13 @@ export default function ViewApplicantDetail({
 	const { t } = useTranslation();
 
 	const assignTo = !!hideAssignTo ? {} : { ASSIGNED_TO: applicant.assignedUser?.name || t("NONE"), }
-	const currentStatus = !!hideCurrentStatus
-		? {}
-		: {
-			APPLICANT_CURRENT_STATUS: (applicant?.jobs?.length && applicant?.current_application_status)
-				? t(`ApplicantStatus.${applicant?.current_application_status}`)
-				: t("GENERAL_INTAKE"),
-		}
+	// const currentStatus = !!hideCurrentStatus
+	// 	? {}
+	// 	: {
+	// 		APPLICANT_CURRENT_STATUS: (applicant?.jobs?.length && applicant?.current_application_status)
+	// 			? t(`ApplicantStatus.${applicant?.current_application_status}`)
+	// 			: t("GENERAL_INTAKE"),
+	// 	}
 
 	return (
 		<>
@@ -33,7 +33,8 @@ export default function ViewApplicantDetail({
 							default={t("NOT_ANSWERED")}
 							obj={{
 								...assignTo,
-								...currentStatus,
+								APPLICANT_CURRENT_STATUS: applicant?.current_application_status ? t(`ApplicantStatus.${applicant?.current_application_status}`) : t("GENERAL_INTAKE"),
+								REMARKS: Boolean(applicant?.current_application_status && applicant?.remarks) ? `${applicant?.remarks}` : t("N/A"),
 								PHONE: applicant.phone,
 								EMAIL: applicant.email,
 								STREET: applicant.street,
