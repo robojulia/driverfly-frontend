@@ -113,7 +113,7 @@ const ImportEmployees = () => {
                         }))
                     } else if (e?.response?.data?.user) {
                         toast.error(t(e?.response?.data?.user?.message, {
-                            assignedUserId: e?.response?.data?.user?.id
+                            managerId: e?.response?.data?.user?.id
                         }))
                     } else if (e?.response?.data?.user) {
                         toast.error(t(e?.response?.data?.user?.message, {
@@ -166,7 +166,7 @@ const ImportEmployees = () => {
 
                     const desc = schemaDescribe.fields[header];
                     if (col) {
-                        switch (desc.type) {
+                        switch (desc?.type) {
                             case "boolean": entity[header] = col.trim().toLowerCase().startsWith("y") || col.toLowerCase().startsWith("t"); break;
                             case "array": entity[header] = col.split(",").map(v => v.trim()).filter(v => !!v); break;
                             default: entity[header] = col.trim();
