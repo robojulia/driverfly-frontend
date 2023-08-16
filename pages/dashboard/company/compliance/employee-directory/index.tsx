@@ -195,9 +195,8 @@ export default function EmployeeDirectory() {
             {
                 id: "dateHired",
                 name: 'DATE_HIRED',
-                selector: data => data?.created_at,
                 cell: data => <ShowFormattedDate
-                    date={data?.created_at}
+                    date={data?.hire_date}
                 />
             },
             {

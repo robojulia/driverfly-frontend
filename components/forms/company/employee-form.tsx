@@ -127,6 +127,16 @@ export function EmployeeForm(props: EmployeeFormProps) {
 								formik={form}
 							/>
 						</Col>
+						<Col md="4">
+							<BaseInput
+								className="col-12"
+								label="HIRE_DATE"
+								type="date"
+								name="hire_date"
+								placeholder="MM/DD/YYYY"
+								formik={form}
+							/>
+						</Col>
 					</Row >
 					<Row>
 						<Col md="4" className="px-2">

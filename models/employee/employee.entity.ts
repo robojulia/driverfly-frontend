@@ -57,7 +57,7 @@ export class EmployeeEntity {
 	emergency_contact_number?: string;
 	emergency_contact_relationship?: string;
 	company: CompanyEntity;
-
+	hire_date?: Date;
 	manager?: CompanyManagerEntity;
 	documents?: DocumentEntity[] = [];
 
@@ -67,7 +67,17 @@ export class EmployeeEntity {
 			last_name: yup.string().optional().nullable().trim(),
 			phone: yup.string().nullable(),
 			email: yup.string().email().optional().nullable(),
-			birthdate: yup.date().nullable(),
+			birthdate: yup.date()
+				.nullable()
+				.test('age', 'You must be at least 18 years old', function (value) {
+					if (!value) return true;
+
+					const currentDate = new Date();
+					const birthdate = new Date(value);
+					const age = currentDate.getFullYear() - birthdate.getFullYear();
+
+					return age >= 18;
+				}),
 			street: yup.string().nullable(),
 			city: yup.string().nullable(),
 			state: yup.string().nullable(),
@@ -133,6 +143,7 @@ export class EmployeeEntity {
 				yup.array(EmployeeEquipmentEntity.yupSchema()) as any
 			).unique("type", { mapper: EmployeeEquipmentEntity.key }),
 			// managerId: yup.number().optional().nullable()
+			hire_date: yup.date().nullable(),
 		});
 	}
 
@@ -149,7 +160,17 @@ export class EmployeeEntity {
 			last_name: yup.string().optional().nullable().trim(),
 			phone: yup.string().nullable(),
 			email: yup.string().email().optional().nullable(),
-			birthdate: yup.date().max(new Date(), 'Birthdate cannot be in the future').nullable(),
+			birthdate: yup.date()
+				.nullable()
+				.test('age', 'You must be at least 18 years old', function (value) {
+					if (!value) return true;
+
+					const currentDate = new Date();
+					const birthdate = new Date(value);
+					const age = currentDate.getFullYear() - birthdate.getFullYear();
+
+					return age >= 18;
+				}),
 			street: yup.string().nullable(),
 			city: yup.string().nullable(),
 			state: yup.string().nullable(),
@@ -179,7 +200,8 @@ export class EmployeeEntity {
 			// equipment_experience: (
 			// 	yup.array(ApplicantExperienceEntity.yupSchema()) as any
 			// ).unique("type", { mapper: ApplicantExperienceEntity.key }),
-			managerId: yup.number().optional().nullable()
+			managerId: yup.number().optional().nullable(),
+			hire_date: yup.date().nullable(),
 		});
 	}
 }
