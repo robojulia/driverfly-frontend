@@ -16,6 +16,7 @@ import { useEffectAsync } from "../../../utils/react";
 import ApplicantApi from "../../api/applicant";
 import EmployeeApi from "../../api/employee";
 import { EmployeeEntity } from "../../../models/employee/employee.entity";
+import { EmployeeStatus } from "../../../enums/applicants/employee-status.enum";
 
 export default function Dashboard() {
   const { hasPermission, company } = useAuth();
@@ -26,7 +27,7 @@ export default function Dashboard() {
   useEffectAsync(async () => {
     const v = await api.list();
     setData(v);
-    const e = await employeeApi.list()
+    const e = await employeeApi.list({ status: [EmployeeStatus.ACTIVE] })
     setEmployeeData(e)
 
   }, [company.id]);
