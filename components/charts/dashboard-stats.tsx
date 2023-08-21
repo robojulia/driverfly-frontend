@@ -5,7 +5,7 @@ import DashboardChartContext from "../../context/dashboard-chart-context";
 import { useTranslation } from "../../hooks/use-translation";
 export const DashboardStast = () => {
 	const { state } = useContext(DashboardChartContext);
-
+	console.log("skdklaskldsa", state.employee.length)
 	const { t } = useTranslation();
 	const getDays = (date) => {
 		const createdAt = moment(date);
@@ -23,42 +23,20 @@ export const DashboardStast = () => {
 			ACTIVE_JOB_POSTS: 0,
 			CONVERSION_RATE: "0%",
 		};
-		state?.data.forEach((a) => {
-
-			if (a.jobs.length === 0) {
-				stats = {
-					...stats,
-					TOTAL_LEADS: stats.TOTAL_LEADS + 1,
-					NEW_LEADS: stats.NEW_LEADS + 1,
-				};
-				return;
-			}
+		if (state.employee) {
 			stats = {
 				...stats,
-				TOTAL_LEADS: stats.TOTAL_LEADS + a.jobs.length,
-			};
-			a.jobs?.map((b) => {
-				if (b.created_at && getDays(b.created_at) <= 7) {
-					stats = {
-						...stats,
-						NEW_LEADS: stats.NEW_LEADS + 1,
-					};
-				}
-				if (b.status === "COMPLETED_EMPLOYED") {
-					stats = {
-						...stats,
-						TOTAL_ACTIVE_EMPLOYEE: stats.TOTAL_ACTIVE_EMPLOYEE + 1,
-					};
-				}
-			});
-
-			if (!!state.jobs) {
-				stats = {
-					...stats,
-					ACTIVE_JOB_POSTS: state?.jobs?.length
-				}
+				TOTAL_ACTIVE_EMPLOYEE: state.employee.length
 			}
-		});
+		}
+
+		if (state?.jobs) {
+			stats = {
+				...stats,
+				ACTIVE_JOB_POSTS: state?.jobs?.length
+			}
+		}
+
 		state?.employee.forEach((a) => {
 			const d = new Date(a.birthdate);
 			let today = new Date();
@@ -74,18 +52,27 @@ export const DashboardStast = () => {
 				}
 			}
 		})
-		const CONVERSION_RATE =
-			stats.TOTAL_LEADS != 0
-				? stats.TOTAL_ACTIVE_EMPLOYEE / stats.TOTAL_LEADS
-				: 0;
+
 		stats = {
 			...stats,
-			CONVERSION_RATE: `${(CONVERSION_RATE * 100).toFixed(2)}%`
-		};
+			TOTAL_LEADS: state.data.length + state.employee.length
+		}
+
+		stats = {
+			...stats,
+			NEW_LEADS: (state.data.filter(a => moment(a.created_at).isoWeek() === moment().isoWeek())).length
+		}
+
+		// const CONVERSION_RATE =
+		// 	stats.TOTAL_LEADS != 0
+		// 		? stats.TOTAL_ACTIVE_EMPLOYEE / stats.TOTAL_LEADS
+		// 		: 0;
+		// stats = {
+		// 	...stats,
+		// 	CONVERSION_RATE: `${(CONVERSION_RATE * 100).toFixed(2)}%`
+		// };
 		return stats;
 	};
-
-
 
 	const data = useMemo(() => {
 		return fetchData()

@@ -29,12 +29,15 @@ export default function Dashboard() {
   const api = new ApplicantApi();
   const employeeApi = new EmployeeApi()
   const jobApi = new JobApi()
+
+
   useEffectAsync(async () => {
     const v = await api.list();
+    let todayDate = new Date();
     setData(v);
     const e = await employeeApi.list({ status: [EmployeeStatus.ACTIVE] })
     setEmployeeData(e)
-    const j = (await jobApi.list())?.filter(j => j?.status === Status.ACTIVE && new Date()?.toISOString() > j?.expiry_date)
+    const j = (await jobApi.list())?.filter(j => j?.status === Status.ACTIVE && (new Date(j.expiry_date)) >= todayDate)
     setJobData(j)
   }, [company.id]);
 
