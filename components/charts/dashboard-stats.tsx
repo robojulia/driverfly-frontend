@@ -50,23 +50,20 @@ export const DashboardStast = () => {
 						TOTAL_ACTIVE_EMPLOYEE: stats.TOTAL_ACTIVE_EMPLOYEE + 1,
 					};
 				}
-				if (
-					b.status.startsWith("ACTIVE_") &&
-					(!b.job?.expiry_date ||
-						moment(b.job?.expiry_date).isAfter(moment(), "day"))
-				) {
-					stats = {
-						...stats,
-						ACTIVE_JOB_POSTS: stats.ACTIVE_JOB_POSTS + 1,
-					};
-				}
 			});
+
 			const isHired = a.jobs.some((j) => j.status === "COMPLETED_EMPLOYED");
 			if (a.birthdate && getDays(a.birthdate) <= 7 && isHired) {
 				stats = {
 					...stats,
 					EMPLOYEE_BIRTHDAYS: stats.EMPLOYEE_BIRTHDAYS + 1,
 				};
+			}
+			if (!!state.jobs) {
+				stats = {
+					...stats,
+					ACTIVE_JOB_POSTS: state?.jobs?.length
+				}
 			}
 		});
 		const CONVERSION_RATE =
@@ -75,7 +72,7 @@ export const DashboardStast = () => {
 				: 0;
 		stats = {
 			...stats,
-			CONVERSION_RATE: `${(CONVERSION_RATE*100).toFixed(2)}%`
+			CONVERSION_RATE: `${(CONVERSION_RATE * 100).toFixed(2)}%`
 		};
 		return stats;
 	};

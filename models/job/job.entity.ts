@@ -25,6 +25,7 @@ import { BasicEntity } from '../BasicEntity.entity';
 import { JobPayFrequency } from '../../enums/jobs/job-pay-frequency.enum';
 import { JobDrugTestType } from '../../enums/jobs/job-drug-test-type.enum';
 import { numberRangeEnd, numberRangeStart } from '../../utils/yup';
+import { Status } from '../../enums/status.enum';
 
 export class JobEntity {
     id?: number;
@@ -86,6 +87,7 @@ export class JobEntity {
     orientation_end_at?: string | Date;
     created_at?: string | Date;
     applicantsCount?: number;
+    status?: Status
     static yupSchema() {
         return yup.object().shape({
             is_orientation_needed: yup.boolean().default(false),

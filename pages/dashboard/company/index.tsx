@@ -17,19 +17,25 @@ import ApplicantApi from "../../api/applicant";
 import EmployeeApi from "../../api/employee";
 import { EmployeeEntity } from "../../../models/employee/employee.entity";
 import { EmployeeStatus } from "../../../enums/applicants/employee-status.enum";
+import { JobEntity } from "../../../models/job/job.entity";
+import JobApi from "../../api/job";
+import { Status } from "../../../enums/status.enum";
 
 export default function Dashboard() {
   const { hasPermission, company } = useAuth();
   const [data, setData] = useState<ApplicantEntity[]>([]);
   const [employeeData, setEmployeeData] = useState<EmployeeEntity[]>([]);
+  const [jobData, setJobData] = useState<JobEntity[]>([]);
   const api = new ApplicantApi();
   const employeeApi = new EmployeeApi()
+  const jobApi = new JobApi()
   useEffectAsync(async () => {
     const v = await api.list();
     setData(v);
     const e = await employeeApi.list({ status: [EmployeeStatus.ACTIVE] })
     setEmployeeData(e)
-
+    const j = (await jobApi.list())?.filter(j => j?.status === Status.ACTIVE && new Date()?.toISOString() > j?.expiry_date)
+    setJobData(j)
   }, [company.id]);
 
   return (
@@ -40,7 +46,8 @@ export default function Dashboard() {
             value={{
               state: {
                 data: data,
-                employee: employeeData
+                employee: employeeData,
+                jobs: jobData
               },
             }}
           >
