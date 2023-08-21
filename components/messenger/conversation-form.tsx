@@ -1,11 +1,10 @@
 import axios, { CancelTokenSource } from "axios";
 import { useFormik } from "formik";
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { useEffect, useState } from "react";
-import { Card, Col, Form, Row } from "react-bootstrap";
+import { Card, Col, Collapse, Form, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { ChattableType } from "../../enums/conversation/chattable-type.enum";
-import { UserPreferenceCategory } from "../../enums/users/user-preference-category.enum";
 import { UserPreferenceCommunicationLabel } from "../../enums/users/user-preferences-communication-label.enum";
 import { useTranslation } from "../../hooks/use-translation";
 import { ConversationEntity, CreateConversationDto } from "../../models/conversation/conversation.entity";
@@ -15,6 +14,10 @@ import { globalAjaxExceptionHandler } from "../../utils/ajax";
 import ComboBox, { ComboboxItem } from "../controls/combobox";
 import BaseTextArea from "../forms/base-text-area";
 import { Message } from "./message";
+import { ApplicantDocumentType } from "../../enums/applicants/applicant-document-type.enum";
+import BaseCheckList from "../forms/base-check-list";
+import { ApplicantEntity } from "../../models/applicant";
+import { buildArrayQueryString } from "../../utils/common";
 
 export interface ConversationFormProps {
     entity?: ConversationEntity;
@@ -24,6 +27,7 @@ export interface ConversationFormProps {
     onUpdated?: (e: ConversationEntity) => void;
     onConversationToChange?: (e: CreateConversationDto) => void;
     getOptions?: (query: string, cancellationToken: CancelTokenSource) => Promise<ComboboxItem[]>;
+    applicant?: ApplicantEntity;
 }
 
 export function ConversationForm(props: ConversationFormProps) {
@@ -31,13 +35,29 @@ export function ConversationForm(props: ConversationFormProps) {
 
     const { t } = useTranslation();
 
+    const [canAttach, setCanAttach] = useState<boolean>(false)
+    const enableAttachments = (): void => setCanAttach(true)
+    const disableAttachments = (): void => {
+        setCanAttach(false);
+        setDocumentTypes([]);
+    };
+
+    const [documentTypes, setDocumentTypes] = useState<ApplicantDocumentType[]>([])
+    const handleMissingDocumentChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>): void => {
+        setDocumentTypes(
+            documentTypes.includes(value as ApplicantDocumentType)
+                ? documentTypes.filter((t) => t != value)
+                : [...documentTypes, value as ApplicantDocumentType]
+        );
+    }
+
+    const api = new ConversationApi();
     const form = useFormik({
         validateOnChange: false,
         validateOnBlur: false,
         initialValues: new ConversationEntity.CreateDto(),
         validationSchema: ConversationEntity.CreateDto.yupSchema(),
         onSubmit: async (dto) => {
-            const api = new ConversationApi();
 
             let convo: ConversationEntity = {
                 ...entity,
@@ -71,6 +91,7 @@ export function ConversationForm(props: ConversationFormProps) {
                     ...dto,
                     message: null
                 }, false);
+                disableAttachments()
             } catch (e) {
                 console.error("Unable to save convo info", e);
 
@@ -80,13 +101,6 @@ export function ConversationForm(props: ConversationFormProps) {
     });
 
     useEffect(() => {
-        // form.initialValues = {
-        //     ...form.initialValues,
-        //     chattable_type: entity?.chattable_type,
-        //     chattable_name: entity?.chattable_name,
-        //     chattable_id: entity?.chattable_id,
-        //     message: null,
-        // };
         form.setValues({
             ...form.values,
             ...entity,
@@ -146,6 +160,34 @@ export function ConversationForm(props: ConversationFormProps) {
         )
     }
 
+    useEffect(() => {
+        console.log("form.values, form.errors", form.values, form.errors);
+
+    }, [form.values, form.errors])
+
+    useEffect(() => {
+        if (!!documentTypes?.length) {
+            const link: string = `${process.env.FRONTEND_BASE_URL
+                }form/applicant/${props?.applicant?.uuid_token
+                }/documents?${buildArrayQueryString("type", documentTypes)}`;
+
+            const documents: string = documentTypes
+                .map((type) => t(`ApplicantDocumentType.${type}`))
+                .join(",");
+            const message = `${t(
+                "REQUEST_{name}_FOR_MISSING_{documents}_MESSAGE_WITH_{link}",
+                {
+                    name: `${props.applicant.first_name ?? ""} ${props.applicant.last_name ?? ""}`,
+                    documents,
+                    link,
+                }
+            )}`;
+            form.setFieldValue("message", message);
+        } else {
+            form.setFieldValue("message", null);
+        }
+    }, [documentTypes])
+
     return (
         <Card>
             <Card.Header>
@@ -181,31 +223,98 @@ export function ConversationForm(props: ConversationFormProps) {
                     }
                 </ul>
             </Card.Body>
-            
+
             }
-           
-            {
-                (entity.id || canCreate) &&
+
+            {(entity.id || canCreate) &&
                 <Card.Footer>
                     <Form className="form-outline" onSubmit={form.handleSubmit}>
-                        <Row>
-                            <Col md={10}>
-                                <BaseTextArea
-                                    name="message"
-                                    formik={form}
-                                    readOnly={!entity.id && !canCreate}
-                                    required
-                                    placeholder="MESSAGE" />
-                            </Col>
-                            <Col md={2}>
-                                <div className="d-flex justify-content-center align-items-center h-100">
-                                    <button type="submit" className=" btn btn-info float-end">{t("SEND")}</button>
-                                </div>
-                            </Col>
-                        </Row>
+                        {entity.chattable_id &&
+                            <Row>
+                                <Col md={10}>
+                                    <Collapse in={!!!canAttach}>
+                                        <div id="collapse-text">
+                                            <BaseTextArea
+                                                name="message"
+                                                formik={form}
+                                                readOnly={!entity.id && !canCreate}
+                                                required
+                                                placeholder="MESSAGE"
+                                            />
+                                            {entity.chattable_type == ChattableType.APPLICANT
+                                                && <>
+                                                    <BaseCheckList
+                                                        className="mt-2"
+                                                        readOnly
+                                                        disabled
+                                                        label="UPLOADED_DOCUMENTS"
+                                                        enumType={ApplicantDocumentType}
+                                                        value={props.applicant?.documents?.map(v => v.type)}
+                                                    />
+                                                </>
+                                            }
+                                            {props.applicant?.documents?.length != Object.keys(ApplicantDocumentType)?.length
+                                                && (
+                                                    <small
+                                                        className="btn-link"
+                                                        role="button"
+                                                        onClick={enableAttachments}
+                                                        aria-controls="collapse-select"
+                                                        aria-expanded={!!canAttach}
+                                                    >
+                                                        {t("REQUEST_FOR_MISSING_DOCUMENTS")}
+                                                    </small>
+                                                )
+                                            }
+                                        </div>
+                                    </Collapse >
+                                    <Collapse in={!!canAttach}>
+                                        <div id="collapse-select">
+                                            <BaseCheckList
+                                                labelPrefix="ApplicantDocumentType"
+                                                label="REQUEST_FOR_MISSING_DOCUMENTS"
+                                                options={Object.values(ApplicantDocumentType)
+                                                    .filter(
+                                                        (v) =>
+                                                            !props.applicant?.documents
+                                                                ?.map((doc) => doc.type)
+                                                                ?.includes(v)
+                                                    )
+                                                    ?.map((value) => ({
+                                                        label: value,
+                                                        value: value as ApplicantDocumentType,
+                                                    }))}
+                                                value={documentTypes}
+                                                onChange={handleMissingDocumentChange}
+                                            />
+                                            <small
+                                                className="btn-link"
+                                                role="button"
+                                                onClick={disableAttachments}
+                                                aria-controls="collapse-text"
+                                                aria-expanded={!canAttach}
+                                            >
+                                                {t("CANCEL")}
+                                            </small>
+                                        </div>
+                                    </Collapse>
+                                </Col>
+                                <Col md={2}>
+                                    <div className="d-flex justify-content-center align-items-center h-100">
+                                        <button
+                                            disabled={canAttach && !documentTypes.length}
+                                            type="submit"
+                                            className=" btn btn-info float-end"
+                                        >
+                                            {t("SEND")}
+                                        </button>
+                                    </div>
+                                </Col>
+                            </Row>
+                        }
                     </Form>
                 </Card.Footer>
             }
-        </Card>
+        </Card >
     );
 }

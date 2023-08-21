@@ -1,25 +1,29 @@
-import { useRef, useState } from "react";
-import Form from "react-bootstrap/Form";
+import { useEffect, useRef, useState } from "react";
+import { Button, Row } from "react-bootstrap";
+import { Camera, CameraType } from "react-camera-pro";
 import styles from "../../../../../styles/digitalhiringapp.module.css";
-import { Button, Col, Row } from "react-bootstrap";
 import { useTranslation } from "../../../../../hooks/use-translation";
-import { Camera } from "react-camera-pro";
 import { FormikInterface } from "../../../../../utils/formik";
+
 interface CameraCompProps {
-    form?: FormikInterface<any>
+    form?: FormikInterface<any>;
+    name?: string;
 }
 
-export function CameraComponent({ form }: CameraCompProps) {
+export function CameraComponent({ form, name }: CameraCompProps) {
 
-    const camera = useRef(null);
+    const camera = useRef<CameraType>(null);
     const [image, setImage] = useState<string>(null);
+
     const date = new Date()
     const { t } = useTranslation();
 
-    const handleCameraEvents = () => {
-        const img = camera.current.takePhoto()
-        setImage(img)
+    const handleCameraEvents = (): void => {
+        if (!!!(camera?.current?.getNumberOfCameras() > 0)) return
 
+        const img = camera?.current?.takePhoto()
+        if (!!!(image)) return
+        setImage(img)
 
         const byteCharacters = atob(img.split(',')[1]);
         const byteNumbers = new Array(byteCharacters.length);
@@ -30,50 +34,45 @@ export function CameraComponent({ form }: CameraCompProps) {
         const blob = new Blob([byteArray], { type: 'image/jpeg' });
         const imgPath = URL.createObjectURL(blob)
 
-
         let extensionStart = img.indexOf("/") + 1;
         let extensionEnd = img.indexOf(";");
         let extension = img.slice(extensionStart, extensionEnd);
 
-        form.setFieldValue("document.file_base64", img.split(',')[1])
-        form.setFieldValue("document.path", imgPath)
-        form.setFieldValue("document.mime_type", `image/${extension}`)
-        form.setFieldValue("document.name", `${date.toISOString()}.${extension}`)
-
+        form.setFieldValue(`${name ?? "document"}.file_base64`, img.split(',')[1])
+        form.setFieldValue(`${name ?? "document"}.path`, imgPath)
+        form.setFieldValue(`${name ?? "document"}.mime_type`, `image/${extension}`)
+        form.setFieldValue(`${name ?? "document"}.name`, `${date.toISOString()}.${extension}`)
     }
+
     return (
-        <Form>
-            <div className={`${styles.align__text_left} ${styles.bold}`}>
-                {/* testing */}
-                {
-                    !image ? (
-                        <Row className={styles.camera_container_main}>
-                            <div className={styles.camera_container}>
-                                <Camera ref={camera}
-                                    facingMode="environment"
-                                    errorMessages={{
-                                        noCameraAccessible: "",
-                                        permissionDenied: "",
-                                        switchCamera: "",
-                                        canvas: ""
-                                    }} />
-                            </div>
-                            <Button
-                                className={styles.capture_btn}
-                                onClick={handleCameraEvents}>{t('CAPTURE')}</Button>
+        <div className={`${styles.align__text_left} ${styles.bold}`}>
+            {
+                !image ? (
+                    <Row className={styles.camera_container_main}>
+                        <div className={styles.camera_container}>
+                            <Camera ref={camera}
+                                facingMode="environment"
+                                errorMessages={{
+                                    noCameraAccessible: "",
+                                    permissionDenied: "",
+                                    switchCamera: "",
+                                    canvas: ""
+                                }} />
+                        </div>
+                        <Button
+                            disabled={!!!(camera?.current?.getNumberOfCameras() > 0)}
+                            className={styles.capture_btn}
+                            onClick={handleCameraEvents}>{t('CAPTURE')}</Button>
+                    </Row>
+                ) : (
+                    <Row>
+                        <img src={image} alt='Taken photo' />
+                        <Row className="my-3 ml-1 p-2">
+                            <Button className="p-2" onClick={() => setImage(null)}>{t('NEW_IMAGE')}</Button>
                         </Row>
-                    ) : (
-                        <Row>
-                            <img src={image} alt='Taken photo' />
-
-                            <Row className="my-3 ml-1 p-2">
-                                <Button className="p-2" onClick={() => setImage(null)}>{t('NEW_IMAGE')}</Button>
-                            </Row>
-
-                        </Row>
-                    )
-                }
-            </div>
-        </Form>
+                    </Row>
+                )
+            }
+        </div>
     )
 }
