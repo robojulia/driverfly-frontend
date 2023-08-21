@@ -5,74 +5,52 @@ import DashboardChartContext from "../../context/dashboard-chart-context";
 import { useTranslation } from "../../hooks/use-translation";
 export const DashboardStast = () => {
 	const { state } = useContext(DashboardChartContext);
-	console.log("skdklaskldsa", state.employee.length)
 	const { t } = useTranslation();
-	const getDays = (date) => {
-		const createdAt = moment(date);
-		const now = moment();
-		var duration = moment.duration(now.diff(createdAt));
-		return duration.asDays();
-	};
+
 	const fetchData = () => {
+		const applicants = state?.data || [];
+		const employee = state?.employee || [];
+		const jobs = state?.jobs || [];
 
-		var stats = {
-			NEW_LEADS: 0,
-			TOTAL_LEADS: 0,
-			TOTAL_ACTIVE_EMPLOYEE: 0,
-			EMPLOYEE_BIRTHDAYS: 0,
-			ACTIVE_JOB_POSTS: 0,
-			CONVERSION_RATE: "0%",
-		};
-		if (state.employee) {
-			stats = {
-				...stats,
-				TOTAL_ACTIVE_EMPLOYEE: state.employee.length
-			}
-		}
+		const today = new Date();
+		const currentWeek = moment().isoWeek();
 
-		if (state?.jobs) {
-			stats = {
-				...stats,
-				ACTIVE_JOB_POSTS: state?.jobs?.length
-			}
-		}
-
-		state?.employee.forEach((a) => {
-			const d = new Date(a.birthdate);
-			let today = new Date();
-			const weekdays = 7;
-			let weekdaysleft = weekdays - today.getDay();
-			weekdaysleft = today.getDate() + weekdaysleft;
-			if (d.getMonth() === today.getMonth()) {
-				if (d.getDate() >= today.getDate() && d.getDate() <= weekdaysleft) {
-					stats = {
-						...stats,
-						EMPLOYEE_BIRTHDAYS: stats.EMPLOYEE_BIRTHDAYS + 1,
-					};
+		const stats = applicants?.reduce(
+			(acc, a) => {
+				if (moment(a?.created_at).isoWeek() === currentWeek) {
+					acc.NEW_LEADS++;
 				}
+				acc.TOTAL_LEADS++;
+				return acc;
+			},
+			{
+				NEW_LEADS: 0,
+				TOTAL_LEADS: 0,
+				TOTAL_ACTIVE_EMPLOYEE: employee?.length,
+				EMPLOYEE_BIRTHDAYS: 0,
+				ACTIVE_JOB_POSTS: jobs?.length,
+				CONVERSION_RATE: "0%",
 			}
-		})
+		);
 
-		stats = {
-			...stats,
-			TOTAL_LEADS: state.data.length + state.employee.length
-		}
+		employee.forEach((a) => {
+			const birthdate = new Date(a.birthdate);
+			if (
+				birthdate.getMonth() === today.getMonth() &&
+				birthdate.getDate() >= today.getDate() &&
+				birthdate.getDate() <= today.getDate() + (7 - today.getDay())
+			) {
+				stats.EMPLOYEE_BIRTHDAYS++;
+			}
+		});
 
-		stats = {
-			...stats,
-			NEW_LEADS: (state.data.filter(a => moment(a.created_at).isoWeek() === moment().isoWeek())).length
-		}
+		const conversionRate =
+			(employee?.length / applicants?.length) * 100;
+		stats.CONVERSION_RATE = conversionRate.toFixed(2) + "%";
 
-		// const CONVERSION_RATE =
-		// 	stats.TOTAL_LEADS != 0
-		// 		? stats.TOTAL_ACTIVE_EMPLOYEE / stats.TOTAL_LEADS
-		// 		: 0;
-		// stats = {
-		// 	...stats,
-		// 	CONVERSION_RATE: `${(CONVERSION_RATE * 100).toFixed(2)}%`
-		// };
 		return stats;
 	};
+
 
 	const data = useMemo(() => {
 		return fetchData()
