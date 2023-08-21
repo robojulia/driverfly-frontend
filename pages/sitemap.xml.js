@@ -30,7 +30,7 @@ export const getServerSideProps = async ({ res }) => {
     'terms-of-service',
     'third-party-resources',
     'verify-email-token',
-  ].map((staticPagePath) => (`${baseUrl}/${staticPagePath}`))
+  ].map((staticPagePath) => (`${baseUrl}${staticPagePath}`))
 
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -46,7 +46,7 @@ export const getServerSideProps = async ({ res }) => {
       .join("")}
       ${jobs.map(({ id, slug, last_updated_at }) => (`
             <url>
-              <loc>${baseUrl}/jobs/${id}/${slug}</loc>
+              <loc>${baseUrl}jobs/${id}/${slug}</loc>
               <lastmod>${last_updated_at}</lastmod>
               <changefreq>weekly</changefreq>
               <priority>1.0</priority>
