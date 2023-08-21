@@ -1,23 +1,19 @@
 import { useEffect, useState } from "react";
+import { useFormik } from "formik";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import styles from "../../../../../styles/digitalhiringapp.module.css";
 import {
     ApplicantEntity,
-    ApplicantExtrasEntity,
 } from "../../../../../models/applicant";
-import JotformContext from "../../../../../context/jotform-context";
-import {
-    getLongFormStyle,
-    getMissingDocumentsPages,
-} from "../../../../../components/forms/jotform/jotform-pages";
 import ApplicantApi from "../../../../api/applicant";
 import { ApplicantDocumentType } from "../../../../../enums/applicants/applicant-document-type.enum";
-import { Button, Col, Form, Row } from "react-bootstrap";
-import { useFormik } from "formik";
 import { ApplicantMissingDocumentsDto } from "../../../../../models/applicant/applicant-missing-documents.dto";
 import BaseCheck from "../../../../../components/forms/base-check";
 import { CameraComponent } from "../../../../../components/forms/jotform/longForm/camera";
 import FileInput from "../../../../../components/forms/file-input";
 import { useTranslation } from "../../../../../hooks/use-translation";
+import { DocumentEntity } from "../../../../../models/documents/document.entity";
+import { toast } from "react-toastify";
 
 export interface MissingDocumentsProps {
     entity: ApplicantEntity;
@@ -25,101 +21,104 @@ export interface MissingDocumentsProps {
 }
 
 export default function MissingDocuments({ entity, types }: MissingDocumentsProps) {
-    console.log("type", types);
 
-
+    const applicantApi = new ApplicantApi()
     const { t } = useTranslation();
+
+    const [showThankYou, setThankYou] = useState<boolean>(false)
 
     const form = useFormik({
         initialValues: new ApplicantMissingDocumentsDto(),
         validationSchema: ApplicantMissingDocumentsDto.yupSchema(),
-        onSubmit: (values, { resetForm }) => {
-            console.log("values", values);
+        validateOnMount: false,
+        validateOnBlur: false,
+        validateOnChange: false,
+        onSubmit: async ({ documents }, { resetForm }) => {
+            await applicantApi.jotform.updateDocuments(entity.id, documents)
 
-            // const { document } = values;
-
-            // if (!!document?.file_base64) {
-            //     const documents: DocumentEntity[] =
-            //         applicant?.documents?.filter(isNotDriverLicense) || [];
-            //     setApplicant({
-            //         ...applicant,
-            //         documents: [...documents, { ...document }],
-            //     });
-            // }
-
-            // // resetForm();
-            // stepNext();
-        },
-        onReset: (values) => {
-            // stepBack();
+            resetForm();
+            setThankYou(true)
+            toast.success(t("successfully_saved_information"))
         },
     });
 
     useEffect(() => {
-        console.log("form.values, form.errors", form.values, form.errors);
-
-    }, [form.values, form.errors])
+        if (types?.length) form.setValues({
+            documents: types?.map((type, i) => ({ ...(new DocumentEntity), type })),
+            mediaOptions: types?.map((type, i) => (false))
+        });
+    }, [types])
 
     return (
-        <div className={styles.container}>
-            <div className={styles.main}>
-                <div className={styles.main_form}>
-
-                    <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-
-                        {types?.map((type) => (
-                            <Row className={styles.align__text_left}>
-                                <h3>{t(`ApplicantDocumentType.${type}`)}</h3>
-                                <BaseCheck
-                                    className="mx-3 col float-left p-0"
-                                    label="MEDIA_PREFERENCE"
-                                    name={`mediaOptions[${type}]`}
-                                    formik={form}
-                                />
-                                {
-                                    Boolean(form.values.mediaOptions[type]) ? (
-                                        <CameraComponent form={form} />
-                                    ) : (
-                                        <FileInput
-                                            className="my-3"
-                                            name={`documents[${type}]`}
-                                            accept="application/pdf"
-                                            allowedSizeInByte={3145728}
-                                            formik={form}
-                                        />
-                                    )
-                                }
-                                <hr />
-                            </Row>
-                        ))}
-
-                        <Row className="mt-3">
-                            <Col>
-                                <Button className="float-left" type="submit">
-                                    {t("NEXT")}
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Form>
+        <>
+            <div className={styles.container}>
+                <div className={styles.main}>
+                    <div className={styles.main_form}>
+                        {/* <ToastContainer /> */}
+                        {showThankYou
+                            ?
+                            (<h4 className={styles.Application}>{t("THANK_YOU")}</h4>)
+                            : (<>
+                                <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
+                                    {form.values?.documents?.map((document, i) => (
+                                        <Row key={i} className={styles.align__text_left}>
+                                            <h3>{t(`ApplicantDocumentType.${document?.type}`)}</h3>
+                                            <BaseCheck
+                                                className="mx-3 col float-left p-0"
+                                                label="MEDIA_PREFERENCE"
+                                                name={`mediaOptions[${i}]`}
+                                                formik={form}
+                                            />
+                                            {Boolean(form.values?.mediaOptions[i]) ? (
+                                                <CameraComponent name={`documents[${i}]`} form={form} />
+                                            ) : (
+                                                <FileInput
+                                                    className="my-3"
+                                                    name={`documents[${i}]`}
+                                                    accept="application/pdf"
+                                                    allowedSizeInByte={3145728}
+                                                    formik={form}
+                                                />
+                                            )}
+                                            <hr />
+                                        </Row>
+                                    ))}
+                                    <Row className="mt-3">
+                                        <Col>
+                                            <Button
+                                                disabled={form.isSubmitting || form.isValidating || !form.isValid}
+                                                className="float-left"
+                                                type="submit"
+                                            >
+                                                {t("NEXT")}
+                                            </Button>
+                                        </Col>
+                                    </Row>
+                                </Form>
+                            </>)
+                        }
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 
 export async function getServerSideProps({ query }) {
     try {
         const { applicant_uuid, type } = query || {};
+        const types = Boolean(Array.isArray(type)) ? type : [type]
 
         if (!!!applicant_uuid) return { notFound: true };
-        if (!!!type.length) return { notFound: true };
+
+        if (!!!types.length) return { notFound: true };
 
         const applicantApi = new ApplicantApi();
         const entity: ApplicantEntity = await applicantApi.getByUuidToken(applicant_uuid);
 
         if (!!!entity) return { notFound: true };
 
-        return { props: { entity, types: type } };
+        return { props: { entity, types } };
     } catch (error) {
         console.log("error", error.message);
 
