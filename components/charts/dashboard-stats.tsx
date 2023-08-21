@@ -19,8 +19,8 @@ export const DashboardStast = () => {
 			NEW_LEADS: 0,
 			TOTAL_LEADS: 0,
 			TOTAL_ACTIVE_EMPLOYEE: 0,
-			EMPLOYEE_BIRTHDAYS: 1,
-			ACTIVE_JOB_POSTS: 10,
+			EMPLOYEE_BIRTHDAYS: 0,
+			ACTIVE_JOB_POSTS: 0,
 			CONVERSION_RATE: "0%",
 		};
 		state?.data.forEach((a) => {
@@ -50,32 +50,37 @@ export const DashboardStast = () => {
 						TOTAL_ACTIVE_EMPLOYEE: stats.TOTAL_ACTIVE_EMPLOYEE + 1,
 					};
 				}
-				if (
-					b.status.startsWith("ACTIVE_") &&
-					(!b.job?.expiry_date ||
-						moment(b.job?.expiry_date).isAfter(moment(), "day"))
-				) {
-					stats = {
-						...stats,
-						ACTIVE_JOB_POSTS: stats.ACTIVE_JOB_POSTS + 1,
-					};
-				}
 			});
-			const isHired = a.jobs.some((j) => j.status === "COMPLETED_EMPLOYED");
-			if (a.birthdate && getDays(a.birthdate) <= 7 && isHired) {
+
+			if (!!state.jobs) {
 				stats = {
 					...stats,
-					EMPLOYEE_BIRTHDAYS: stats.EMPLOYEE_BIRTHDAYS + 1,
-				};
+					ACTIVE_JOB_POSTS: state?.jobs?.length
+				}
 			}
 		});
+		state?.employee.forEach((a) => {
+			const d = new Date(a.birthdate);
+			let today = new Date();
+			const weekdays = 7;
+			let weekdaysleft = weekdays - today.getDay();
+			weekdaysleft = today.getDate() + weekdaysleft;
+			if (d.getMonth() === today.getMonth()) {
+				if (d.getDate() >= today.getDate() && d.getDate() <= weekdaysleft) {
+					stats = {
+						...stats,
+						EMPLOYEE_BIRTHDAYS: stats.EMPLOYEE_BIRTHDAYS + 1,
+					};
+				}
+			}
+		})
 		const CONVERSION_RATE =
 			stats.TOTAL_LEADS != 0
 				? stats.TOTAL_ACTIVE_EMPLOYEE / stats.TOTAL_LEADS
 				: 0;
 		stats = {
 			...stats,
-			CONVERSION_RATE: `${(CONVERSION_RATE*100).toFixed(2)}%`
+			CONVERSION_RATE: `${(CONVERSION_RATE * 100).toFixed(2)}%`
 		};
 		return stats;
 	};
