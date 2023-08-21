@@ -4,10 +4,12 @@ import DashboardChartContext from "../../../context/dashboard-chart-context";
 import { useTranslation } from "../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../models/applicant/applicant.entity";
 import { BarChart } from "../bar-chart";
+import { EmployeeEntity } from "../../../models/employee/employee.entity";
 
 export function TotalApplicantBarChart() {
   const { state } = useContext(DashboardChartContext);
   const { t } = useTranslation();
+
   const getWeeksWithInMonth = () => {
     const startOfMonth = moment().startOf("month");
     const endOfMonth = moment().endOf("month");
@@ -20,6 +22,7 @@ export function TotalApplicantBarChart() {
     }
     return weeks;
   };
+
   const labels: string[] = getWeeksWithInMonth().map((el) =>
     moment(el).format("DD-MM-YYYY")
   );
@@ -40,41 +43,32 @@ export function TotalApplicantBarChart() {
       moment(created_at).isSameOrBefore(weekEnd, "day")
     );
   };
+
   const fetchData = () => {
-    // const months = moment.months().map(v => ({ name: v.toUpperCase(), count: 0 ,hired:0 }))
     const applicants: ApplicantEntity[] = state?.data;
+    const employees: EmployeeEntity[] = state?.employee || []; 
     const weeks = getWeeksWithInMonth();
     const applicantData = [];
     const hiredData = [];
-    weeks.map((week) => {
+
+    weeks.forEach((week) => {
       const weekEnd = week.clone().endOf("week");
-      let count = 0;
+      let applicantCount = 0;
       let hiredCount = 0;
 
       applicants.forEach((a) => {
-        if (
-          a.jobs.length == 0 &&
-          isWeekData({ created_at: a.created_at, week: week, weekEnd: weekEnd })
-        ) {
-          count++;
-          return;
+        if (isWeekData({ created_at: a.created_at, week, weekEnd })) {
+          applicantCount++;
         }
-        a.jobs.map((j) => {
-          if (
-            isWeekData({
-              created_at: j.created_at,
-              week: week,
-              weekEnd: weekEnd,
-            })
-          ) {
-            count++;
-            if (j.status.startsWith("COMPLETED_")) {
-              hiredCount++;
-            }
-          }
-        });
       });
-      applicantData.push(count);
+
+      employees.forEach((e) => {
+        if (isWeekData({ created_at: e.created_at, week, weekEnd })) {
+          hiredCount++;
+        }
+      });
+
+      applicantData.push(applicantCount);
       hiredData.push(hiredCount);
     });
 

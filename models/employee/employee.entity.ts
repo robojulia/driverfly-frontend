@@ -30,7 +30,6 @@ export class EmployeeEntity {
 	created_at?: string;
 	last_updated_at?: string;
 	active_status?: Status;
-	assignedUser?: UserEntity;
 	first_name?: string;
 	last_name?: string;
 	phone?: string;
@@ -58,7 +57,7 @@ export class EmployeeEntity {
 	emergency_contact_number?: string;
 	emergency_contact_relationship?: string;
 	company: CompanyEntity;
-
+	hire_date?: Date;
 	manager?: CompanyManagerEntity;
 	documents?: DocumentEntity[] = [];
 
@@ -68,7 +67,17 @@ export class EmployeeEntity {
 			last_name: yup.string().optional().nullable().trim(),
 			phone: yup.string().nullable(),
 			email: yup.string().email().optional().nullable(),
-			birthdate: yup.date().nullable(),
+			birthdate: yup.date()
+				.nullable()
+				.test('age', 'You must be at least 18 years old', function (value) {
+					if (!value) return true;
+
+					const currentDate = new Date();
+					const birthdate = new Date(value);
+					const age = currentDate.getFullYear() - birthdate.getFullYear();
+
+					return age >= 18;
+				}),
 			street: yup.string().nullable(),
 			city: yup.string().nullable(),
 			state: yup.string().nullable(),
@@ -133,7 +142,8 @@ export class EmployeeEntity {
 			equipment_owned: (
 				yup.array(EmployeeEquipmentEntity.yupSchema()) as any
 			).unique("type", { mapper: EmployeeEquipmentEntity.key }),
-			assignedUserId: yup.number().optional().nullable()
+			// managerId: yup.number().optional().nullable()
+			hire_date: yup.date().nullable(),
 		});
 	}
 
@@ -150,7 +160,17 @@ export class EmployeeEntity {
 			last_name: yup.string().optional().nullable().trim(),
 			phone: yup.string().nullable(),
 			email: yup.string().email().optional().nullable(),
-			birthdate: yup.date().min(new Date(Date.now() - 567648000000), "You must be at least 18 years").nullable(),
+			birthdate: yup.date()
+				.nullable()
+				.test('age', 'You must be at least 18 years old', function (value) {
+					if (!value) return true;
+
+					const currentDate = new Date();
+					const birthdate = new Date(value);
+					const age = currentDate.getFullYear() - birthdate.getFullYear();
+
+					return age >= 18;
+				}),
 			street: yup.string().nullable(),
 			city: yup.string().nullable(),
 			state: yup.string().nullable(),
@@ -180,7 +200,8 @@ export class EmployeeEntity {
 			// equipment_experience: (
 			// 	yup.array(ApplicantExperienceEntity.yupSchema()) as any
 			// ).unique("type", { mapper: ApplicantExperienceEntity.key }),
-			assignedUserId: yup.number().optional().nullable()
+			managerId: yup.number().optional().nullable(),
+			hire_date: yup.date().nullable(),
 		});
 	}
 }

@@ -117,19 +117,6 @@ export function EmployeeForm(props: EmployeeFormProps) {
 					<Row className="mb-2">
 						<Col md='4'>
 							<BaseSelect
-								// className="col-12 my-2"
-								readOnly={!Boolean(isSuperAdmin)}
-								label="ASSIGNED_RECRUITER"
-								name="assignedUserId"
-								placeholder
-								options={companyUsers}
-								valueKey="id"
-								createLabel={c => `${c.name} (#${c.id})`}
-								formik={form}
-							/>
-						</Col>
-						<Col md='4'>
-							<BaseSelect
 								name={`manager.id`}
 								label="MANAGER"
 								required
@@ -137,6 +124,16 @@ export function EmployeeForm(props: EmployeeFormProps) {
 								options={managers}
 								labelKey="name"
 								valueKey="id"
+								formik={form}
+							/>
+						</Col>
+						<Col md="4">
+							<BaseInput
+								className="col-12"
+								label="HIRE_DATE"
+								type="date"
+								name="hire_date"
+								placeholder="MM/DD/YYYY"
 								formik={form}
 							/>
 						</Col>
@@ -411,7 +408,7 @@ export function EmployeeForm(props: EmployeeFormProps) {
 								form.values.is_owner_operator &&
 								<Col xs="12" className='mt-3'>
 									<ViewCard
-										title="equipment_owned"
+										title="EQUIPMENT_OWNED"
 										actions={<Button size='sm' onClick={() => form.setValues({
 											...form.values,
 											equipment_owned: [

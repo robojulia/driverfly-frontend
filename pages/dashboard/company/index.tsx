@@ -14,15 +14,22 @@ import { useAuth } from "../../../hooks/use-auth";
 import { ApplicantEntity } from "../../../models/applicant";
 import { useEffectAsync } from "../../../utils/react";
 import ApplicantApi from "../../api/applicant";
+import EmployeeApi from "../../api/employee";
+import { EmployeeEntity } from "../../../models/employee/employee.entity";
+import { EmployeeStatus } from "../../../enums/applicants/employee-status.enum";
 
 export default function Dashboard() {
   const { hasPermission, company } = useAuth();
   const [data, setData] = useState<ApplicantEntity[]>([]);
+  const [employeeData, setEmployeeData] = useState<EmployeeEntity[]>([]);
   const api = new ApplicantApi();
-
+  const employeeApi = new EmployeeApi()
   useEffectAsync(async () => {
     const v = await api.list();
     setData(v);
+    const e = await employeeApi.list({ status: [EmployeeStatus.ACTIVE] })
+    setEmployeeData(e)
+
   }, [company.id]);
 
   return (
@@ -33,6 +40,7 @@ export default function Dashboard() {
             value={{
               state: {
                 data: data,
+                employee: employeeData
               },
             }}
           >

@@ -1917,7 +1917,7 @@
   "STATS": "Stats",
   "LEAD_ASSIGNMENT": "Lead Assignment",
   "HISTORICAL_RANGE": "Historical Range",
-  "SOURCE_BREAKDOWN": "Source breakdown",
+  "SOURCE_BREAKDOWN": "Source Breakdown",
   "NEW_LEADS": "New Leads this week",
   "TOTAL_LEADS": "Total Leads",
   "TOTAL_ACTIVE_EMPLOYEE": "Total Active Employees",
@@ -2084,10 +2084,12 @@
   "IMPORT_EMPLOYEES": "Import Employees",
   "NO_APPLICANT_PROFILE_FOUND": "No Applicant Profile Attached",
   "EMPLOYEE": "Employee",
-  "ASSIGNED_USER_NOT_FOUND_{assignedUserId}": "Assigned user not found with {{assignedUserId}}",
+  "REQUEST_FOR_MISSING_DOCUMENTS": "Request to upload missing documents",
+  "REQUEST_{name}_FOR_MISSING_{documents}_MESSAGE_WITH_{link}": "Dear {{name}}, \n Your {{documents}} are missing. Please update your document to proceed with the job process by following this link: \n {{link}}",
+  "MANGER_NOT_FOUND_{managerId}": "Manager not found with {{managerId}}",
   "NO_JOB_FOUND_{jobId}": "No job found with id {{jobId}}",
   "USER_ALREADY_EXIST_{email}": "User Already exist {{email}}",
-  "REMARKS": "Remarks",
-  "REQUEST_FOR_MISSING_DOCUMENTS": "Request to upload missing documents",
-  "REQUEST_{name}_FOR_MISSING_{documents}_MESSAGE_WITH_{link}": "Dear {{name}}, \n Your {{documents}} are missing. Please update your document to proceed with the job process by following this link: \n {{link}}"
+  "HIRE_DATE": "Hire Date",
+  "MUST_BE_ATLEAST_EIGHTEEN_YEARS_OLD": "Must be atleast 18 years old",
+  "REMARKS": "Remarks"
 }
