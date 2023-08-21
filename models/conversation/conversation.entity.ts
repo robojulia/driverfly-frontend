@@ -20,7 +20,7 @@ export class CreateConversationDto {
             chattable_type: (yup.string() as any).enum(ChattableType).required().nullable(),
             chattable_id: yup.number().required().nullable(),
             chattable_name: yup.string().required().nullable(),
-            message: yup.string().max(250).required().nullable(),
+            message: yup.string().required().nullable(),
         });
     }
 }
@@ -32,7 +32,7 @@ export class UpdateConversationDto {
     static yupSchema() {
         return yup.object({
             chattable_name: yup.string().required().nullable(),
-            message: yup.string().max(250).required().nullable(),
+            message: yup.string().required().nullable(),
         });
     }
 }

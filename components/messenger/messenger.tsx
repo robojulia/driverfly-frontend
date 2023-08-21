@@ -19,6 +19,10 @@ import { ComboboxItem } from "../controls/combobox";
 import { ConversationForm } from "./conversation-form";
 import { ConversationList, ConversationListItem } from "./conversation-list";
 import { ConversationMessageEntity } from "../../models/conversation/conversation-message.entity";
+import { ApplicantEntity } from "../../models/applicant";
+import ApplicantApi from "../../pages/api/applicant";
+import { ApplicantDocumentType } from "../../enums/applicants/applicant-document-type.enum";
+import { DocumentEntity } from "../../models/documents/document.entity";
 
 /* Initializing a socket connection to the server. */
 const socket: Socket = io(
@@ -103,6 +107,8 @@ export function Messenger(props) {
 
     const [conversation, setConversation] = useState<ConversationEntity>(new ConversationEntity());
 
+    const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
+
     useEffectAsync(async () => {
         const api = new ConversationApi();
         const c = await api.list();
@@ -115,7 +121,8 @@ export function Messenger(props) {
     }
 
     const onConversationClick = async (c: ConversationEntity) => {
-        const api = new ConversationApi();
+        const conversationApi = new ConversationApi();
+        const applicantApi = new ApplicantApi()
 
         /* Resetting the user preferences to null, and then if the chattable type is a user, it is setting the
         user preferences to the preferences of the user. */
@@ -131,9 +138,17 @@ export function Messenger(props) {
                     }
                 )
             setUserPreferences(preferences)
+        } else if (c.chattable_type == ChattableType.APPLICANT) {
+            const res = await applicantApi.getById(c.chattable_id)
+            const docs = res?.documents?.filter((v) =>
+                Object.values(ApplicantDocumentType).includes(
+                    v.type as ApplicantDocumentType
+                )
+            );
+            setApplicant({ ...res, documents: docs ?? [] })
         }
 
-        c = await api.markRead(c.id);
+        c = await conversationApi.markRead(c.id);
 
         onConversationUpdated(c);
     }
@@ -219,6 +234,7 @@ export function Messenger(props) {
             <Col md="6" lg="7" xl="8">
                 <Card>
                     <ConversationForm
+                        applicant={applicant}
                         entity={conversation}
                         userPreferences={userPreferences}
                         canCreate={canCreate}
