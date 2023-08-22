@@ -18,6 +18,7 @@ export const DashboardStast = () => {
 		const stats = applicants?.reduce(
 			(acc, a) => {
 				if (moment(a?.created_at).isoWeek() === currentWeek) {
+					console.log("askdkjsadl", a)
 					acc.NEW_LEADS++;
 				}
 				acc.TOTAL_LEADS++;
