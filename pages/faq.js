@@ -3,6 +3,7 @@ import { Accordion } from 'react-bootstrap';
 import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import { useTranslation } from "../hooks/use-translation";
 import Link from "next/link";
+import Head from "next/head";
 
 export default function FAQ() {
 
@@ -10,6 +11,15 @@ export default function FAQ() {
 
     return (
         <>
+        <Head>
+        <title>
+        FAQ - Frequently Asked Questions About DriverFly </title>
+        <meta
+          name="description"
+          content="Find answers to frequently asked questions about DriverFly. Get clarity on our services, processes, and how we can empower your driving career."
+          key="desc"
+        />
+        </Head>
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">

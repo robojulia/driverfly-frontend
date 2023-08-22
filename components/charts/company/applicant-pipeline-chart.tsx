@@ -28,6 +28,9 @@ export function ApplicantPieChart() {
     })
     return [leads, inProcess, hired];
   };
+console.log("This is data getting from api : ",state)
+
+
 
   const data = useMemo(() => {
     return fetchData();

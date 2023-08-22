@@ -3,6 +3,7 @@ import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import { PublicLayout } from "../components/layouts/public-layout";
 import resource from '../public/css/third-party-resources.module.css'
 import { useTranslation } from '../hooks/use-translation';
+import Head from 'next/head';
 
 export default function ThirdPartyResources() {
 
@@ -409,6 +410,14 @@ export default function ThirdPartyResources() {
 
     return (
         <>
+        <Head>
+        <title>Third-Party Resources - Valuable Trucking Industry Partnerships </title>
+        <meta
+          name="description"
+          content="Explore valuable third-party resources and partnerships within the trucking industry. Enhance your driving career with DriverFly's connections."
+          key="desc"
+        />
+        </Head>
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">

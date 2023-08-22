@@ -8,6 +8,7 @@ import CdlInfo from '../components/cdl-info/cdlInfo'
 import SchoolApi from "./api/school"
 import { useTranslation } from "../hooks/use-translation";
 import Breadcrumb from '../components/breadcrumbs/breadcrumb';
+import Head from 'next/head';
 
 export default function FindSchools(props) {
 
@@ -133,6 +134,15 @@ export default function FindSchools(props) {
         applyFilters: fetchSchools
       },
     }}>
+     <Head>
+        <title>
+        Find Schools - Find Accredited Trucking Schools</title>
+        <meta
+          name="description"
+          content="Find accredited trucking schools with DriverFly's comprehensive directory. Start your journey towards a successful trucking career."
+          key="desc"
+        />
+      </Head>
       <div className="top-links-sec">
         <div className="container">
           <div className="top-links-inner d-flex align-items-center justify-content-between">

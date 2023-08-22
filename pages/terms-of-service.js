@@ -3,6 +3,7 @@ import Breadcrumb from '../components/breadcrumbs/breadcrumb';
 import { PublicLayout } from "../components/layouts/public-layout";
 import Terms from "../public/css/terms.module.css"
 import { useTranslation } from '../hooks/use-translation';
+import Head from 'next/head';
 
 export default function TermsOfService() {
 
@@ -10,6 +11,14 @@ export default function TermsOfService() {
     
     return (
         <>
+        <Head>
+        <title>Terms of Service - Your Agreement With DriverFly  </title>
+        <meta
+          name="description"
+          content="Review the terms of service agreement with DriverFly. Ensure a clear understanding of your rights and responsibilities within the platform."
+          key="desc"
+        />
+        </Head>
           <div className="top-links-sec">
               <div className="container">
                   <div className="top-links-inner d-flex align-items-center justify-content-between">

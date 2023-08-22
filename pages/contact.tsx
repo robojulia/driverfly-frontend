@@ -13,6 +13,7 @@ import { Row, Col } from "reactstrap"
 import { ToastContainer, toast } from 'react-toastify'
 import ContactApi from './api/contact';
 import { globalAjaxExceptionHandler } from '../utils/ajax';
+import Head from 'next/head';
 
 export default function Contact() {
 
@@ -40,6 +41,15 @@ export default function Contact() {
 
     return (
         <>
+        <Head>
+        <title>
+        Contact Us - Get in Touch With DriverFly</title>
+        <meta
+          name="description"
+          content="Get in touch with DriverFly for inquiries, solutions, and support. Contact our team for expert assistance in your trucking journey."
+          key="desc"
+        />
+        </Head>
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">

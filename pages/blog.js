@@ -3,6 +3,7 @@ import Blog from '../public/css/blog.module.css'
 import BlogSidebar from '../components/blog-sidebar/blog-sidebar';
 import { ArrowRight, Chat, Clock } from 'react-bootstrap-icons';
 import { useTranslation } from '../hooks/use-translation';
+import Head from "next/head";
 import Breadcrumb from '../components/breadcrumbs/breadcrumb';
 export default function Blogs() {
 
@@ -10,6 +11,15 @@ export default function Blogs() {
 
     return (
         <>
+        <Head>
+        <title>
+        DriverFly Blog - Stay Informed and Inspired</title>
+        <meta
+          name="description"
+          content="Drivers and motor carriers, explore articles covering trucking, driver resources, industry news, and more." 
+          key="desc"
+        />
+        </Head>
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">

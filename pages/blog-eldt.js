@@ -2,10 +2,21 @@ import Link from 'next/link';
 import { PublicLayout } from "../components/layouts/public-layout";
 import BlogDetail from '../public/css/blog-detail.module.css'
 import SocilShare from '../components/share-link/share-link';
+import Head from 'next/head';
+
 
 export default function EldtBlog() {
     return (
         <>
+         <Head>
+        <title>
+        New changes with Entry-Level Driver Training (ELDT)        </title>
+        <meta
+          name="description"
+          content="Explore expert insights into effective driver training. Stay informed about industry trends and regulatory updates."
+            key="desc"
+        />
+        </Head>
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">

@@ -3,6 +3,8 @@ import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import Slider from '../components/testominial-slider/slider';
 import { useTranslation } from "../hooks/use-translation";
 import Companies from "../components/works/companies"
+import Head from 'next/head'; 
+
 
 export default function About() {
 
@@ -10,6 +12,16 @@ export default function About() {
 
     return (
         <>
+        <Head>
+        <title>
+        About DriverFly - Revolutionizing the Trucking Industry 
+        </title>
+        <meta
+          name="description"
+          content="Learn about DriverFly's mission to revolutionize the trucking industry. Discover our innovative solutions and commitment to drivers' success."
+          key="desc"
+        />
+        </Head>
             <div className="top-links-sec">
                 <div className="container p-0">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
