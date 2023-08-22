@@ -1,6 +1,9 @@
 import { useContext, useMemo } from "react";
 import DashboardChartContext from "../../../context/dashboard-chart-context";
 import { PieChart } from "../pie-chart";
+import { ApplicantStatus } from "../../../enums/applicants/applicant-status.enum";
+import { Status } from "../../../enums/status.enum";
+import { EmployeeStatus } from "../../../enums/applicants/employee-status.enum";
 
 export function ApplicantPieChart() {
   const { state } = useContext(DashboardChartContext);
@@ -9,13 +12,20 @@ export function ApplicantPieChart() {
     let inProcess = 0;
     let hired = 0;
     state?.data.forEach((v) => {
-      v.jobs.forEach((j) => {
-        if (!j.status) return;
-        if (j.status.startsWith("NEW_")) leads++;
-        else if (j.status.startsWith("IN_PROCESS_")) inProcess++;
-        else if (j.status.startsWith("COMPLETED_")) hired++;
-      });
+      if (v) {
+        if (v.current_application_status?.startsWith("NEW_")) {
+          leads++
+        }
+        if (v.current_application_status?.startsWith("IN_PROCESS_")) {
+          inProcess++
+        }
+      }
     });
+    state?.employee?.forEach(e => {
+      if (e) {
+        if (e.status === EmployeeStatus.ACTIVE) hired++
+      }
+    })
     return [leads, inProcess, hired];
   };
 console.log("This is data getting from api : ",state)
@@ -29,7 +39,7 @@ console.log("This is data getting from api : ",state)
   const labels = ["LEADS", "IN_PROCESS", "HIRED"].map(
     (v) => `ApplicantPipelineChartLabel.${v}`
   );
- 
+
   return (
     <PieChart
       title="APPLICANTS"
