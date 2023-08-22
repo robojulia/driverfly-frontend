@@ -24,6 +24,7 @@ import { SignUpDto } from "../models/auth/sign-up.dto";
 import { PublicPage } from "../components/layouts/public/public-page";
 import BaseTextArea from "../components/forms/base-text-area";
 import { useEffectAsync } from "../utils/react";
+import Head from "next/head";
 
 export default function Signup() {
 
@@ -77,6 +78,14 @@ export default function Signup() {
 		<PublicPage
 			title="SIGN_UP"
 		>
+		<Head>
+        <title>Sign Up - Join the DriverFly Community </title>
+        <meta
+          name="description"
+          content="Join the DriverFly community by signing up for an account. Access exclusive resources, opportunities, and support for your trucking journey."
+		  key="desc"
+        />
+        </Head>
 			<Row className={`${SignupStyle.banner}`}>
 				<Col>
 					<h1>{t("SignUp.DRIVERS_HAVE_ACCESS")}<br />{t("SignUp.TO_OVER_1000_JOBS")}</h1>

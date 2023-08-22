@@ -3,6 +3,7 @@ import Owneroperator from '../public/css/owner-operator.module.css'
 import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import { useRouter } from 'next/router'
 import { useTranslation } from '../hooks/use-translation';
+import Head from "next/head";
 
 export default function Owneroperators() {
 
@@ -18,6 +19,14 @@ export default function Owneroperators() {
 
     return (
         <>
+        <Head>
+        <title>Owner Operators - Empowering Independent Truckers </title>
+        <meta
+          name="description"
+          content="Explore how DriverFly empowers owner operators. Discover resources and opportunities tailored to independent trucking professionals."
+          key="desc"
+        />
+      </Head>
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">

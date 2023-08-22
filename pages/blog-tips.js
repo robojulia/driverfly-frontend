@@ -2,10 +2,20 @@ import Link from 'next/link';
 import { PublicLayout } from "../components/layouts/public-layout";
 import BlogDetail from '../public/css/blog-detail.module.css'
 import SocilShare from '../components/share-link/share-link';
+import Head from 'next/head';
 
 export default function TipsBlog() {
     return (
         <>
+         <Head>
+        <title>
+        Valuable Tips for Professional Drivers </title>
+        <meta
+          name="description"
+          content="Discover valuable tips for professional drivers on DriverFly's Tips Blog. Elevate your driving career with practical advice and strategies."
+          key="desc"
+        />
+        </Head>
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">

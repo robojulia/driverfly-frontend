@@ -2,12 +2,21 @@ import Link from 'next/link';
 import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import { PublicLayout } from "../components/layouts/public-layout";
 import { useTranslation } from '../hooks/use-translation';
+import Head from 'next/head';
 
 export default function TermsAndPolicies() {
 
     const { t } = useTranslation();
     return (
         <>
+        <Head>
+        <title>Terms and Policies - Understand DriverFly's Terms and Policies </title>
+        <meta
+          name="description"
+          content="Understand DriverFly's terms and policies for a seamless experience. Learn about our commitment to transparency and user satisfaction."
+          key="desc"
+        />
+        </Head>
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">

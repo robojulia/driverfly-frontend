@@ -15,8 +15,10 @@ import AuthApi from "../api/auth";
 
 import { globalAjaxExceptionHandler } from '../../utils/ajax';
 import { LoginDto } from '../../models/auth/login.dto';
+import Head from 'next/head';
 
 export default function Login() {
+
 
     const { t } = useTranslation();
 
@@ -45,6 +47,14 @@ export default function Login() {
         <PublicPage
             title="LOGIN"
         >
+        <Head>
+        <title>Login - Access Your DriverFly Account </title>
+        <meta
+          name="description"
+          content="Access your DriverFly account securely. Log in to explore personalized driver resources and find exciting opportunities."
+          key="desc"
+        />
+        </Head>
             <Row className='mb-2 mt-3'>
                 <Col>
                     <p className=" text-secondary">

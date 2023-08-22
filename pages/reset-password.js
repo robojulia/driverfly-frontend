@@ -11,7 +11,7 @@ import BaseInput from '../components/forms/base-input';
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { Col, Container, Row } from "react-bootstrap";
-
+import Head from 'next/head';
 export default function ResetPassword({ passwordResetToken }) {
 
   const router = useRouter();
@@ -65,6 +65,14 @@ export default function ResetPassword({ passwordResetToken }) {
 
   return (
     <>
+    <Head>
+        <title>Reset Password - Regain Access to Your DriverFly Account </title>
+        <meta
+          name="description"
+          content="Regain access to your DriverFly account by resetting your password. Ensure a secure and seamless experience in the trucking industry."
+          key="desc"
+        />
+        </Head>
       <ToastContainer />
       <div className="top-links-sec">
         <Container>

@@ -10,6 +10,7 @@ import { useTranslation } from "../hooks/use-translation"
 import { useFormik } from "formik";
 import * as yup from "yup";
 
+import Head from 'next/head';
 import BaseInput from "../components/forms/base-input";
 
 export default function Forgot() {
@@ -51,7 +52,15 @@ export default function Forgot() {
 
   return (
     <>
-
+      <Head>
+        <title>
+        Forgot Password - Reset Your DriverFly Account Password</title>
+        <meta
+          name="description"
+          content="Reset your DriverFly account password hassle-free. Regain access to your account and continue exploring opportunities in the trucking industry."
+          key="desc"
+        />
+      </Head>
 
       <div className="top-links-sec">
         <div className="container">

@@ -3,7 +3,7 @@ import { useTransition } from 'react';
 import Breadcrumb from "../../components/breadcrumbs/breadcrumb";
 import { PublicLayout } from "../../components/layouts/public-layout";
 import { useTranslation } from '../../hooks/use-translation';
-
+import Head from 'next/head';
 
 export default function TermsAndPolicies2() {
 
@@ -11,6 +11,14 @@ export default function TermsAndPolicies2() {
 
     return (
         <>
+        <Head>
+        <title>Privacy Policy - Your Privacy Matters to DriverFly</title>
+        <meta
+          name="description"
+          content="Your privacy matters to DriverFly. Explore our privacy policy to understand how we safeguard your personal information."
+          key="desc"
+        />
+        </Head>
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">

@@ -6,13 +6,21 @@ import { PublicLayout } from "../components/layouts/public-layout";
 import RelatedJobs from '../components/related-jobs/related-jobs'
 import SocilShare from '../components/share-link/share-link'
 import { ArrowRight } from 'react-bootstrap-icons';
-
+import Head from "next/head";
 
 export default function Apply({ data }) {
   const jobDetail = data
 
   return (
     <>
+      <Head>
+        <title>OTR General Freight Drivers - Thrive in Over-The-Road Trucking  </title>
+        <meta
+          name="description"
+          content="Thrive in over-the-road trucking as a general freight driver. Discover opportunities, resources, and support with DriverFly."
+          key="desc"
+        />
+      </Head>
       <section className="top-links-sec ort-general">
         <div className="container">
           <div className="row">
