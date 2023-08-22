@@ -22,6 +22,8 @@ export interface MissingDocumentsProps {
 
 export default function MissingDocuments({ entity, types }: MissingDocumentsProps) {
 
+    console.log("types", types);
+
     const applicantApi = new ApplicantApi()
     const { t } = useTranslation();
 
