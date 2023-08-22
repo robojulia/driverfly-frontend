@@ -18,13 +18,9 @@ import { toast } from "react-toastify";
 export interface MissingDocumentsProps {
     entity: ApplicantEntity;
     types: ApplicantDocumentType[];
-    type: any;
 }
 
-export default function MissingDocuments({ entity, types, type }: MissingDocumentsProps) {
-
-    console.log("types", types);
-    console.log("type", type);
+export default function MissingDocuments({ entity, types }: MissingDocumentsProps) {
 
     const applicantApi = new ApplicantApi()
     const { t } = useTranslation();
@@ -66,7 +62,7 @@ export default function MissingDocuments({ entity, types, type }: MissingDocumen
                                 <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
                                     {form.values?.documents?.map((document, i) => (
                                         <Row key={i} className={styles.align__text_left}>
-                                            <h3>{t(`ApplicantDocumentType.${document?.type}`)}</h3>
+                                            <h3 className="text-dark">{t(`ApplicantDocumentType.${document?.type}`)}</h3>
                                             <BaseCheck
                                                 className="mx-3 col float-left p-0"
                                                 label="MEDIA_PREFERENCE"
@@ -122,7 +118,7 @@ export async function getServerSideProps({ query }) {
 
         if (!!!entity) return { notFound: true };
 
-        return { props: { entity, types, type } };
+        return { props: { entity, types } };
     } catch (error) {
         console.log("error", error.message);
 
