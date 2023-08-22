@@ -17,6 +17,7 @@ import { GetServerSidePropsContext } from 'next'
 import { toast } from "react-toastify";
 import { useTranslation } from '../hooks/use-translation'
 import { Pagination, PagingMeta } from '../types/pagination.type'
+import Head from 'next/head'
 
 export default function FindJobs(props) {
 
@@ -164,6 +165,15 @@ export default function FindJobs(props) {
                 handlePaging: setPagingMeta,
             },
         }}>
+        <Head>
+        <title>
+        Find Jobs - Discover Your Next Driving Opportunity </title>
+        <meta
+          name="description"
+          content="Get matched with your next driving opportunity with DriverFly's job search. Explore a wide range of job listings tailored to professional drivers."
+          key="desc"
+        />
+        </Head>
             <div className="filter-sec">
                 <div className="container">
                     <div className="row">
