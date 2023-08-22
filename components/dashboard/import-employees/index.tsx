@@ -97,6 +97,9 @@ const ImportEmployees = () => {
                 if (!!dto.birthdate) {
                     dto.birthdate = (new Date(dto.birthdate)).toISOString()
                 }
+                if (!!dto.hire_date) {
+                    dto.hire_date = (new Date(dto.hire_date)).toISOString()
+                }
                 if (!!dto.license_expiry) {
                     dto.license_expiry = (new Date(dto.license_expiry)).toISOString()
                 }
