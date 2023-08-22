@@ -111,7 +111,7 @@ export default function MissingDocuments({ entity, types, type }: MissingDocumen
 export async function getServerSideProps({ query }) {
     try {
         const { applicant_uuid, type } = query || {};
-        const types = Boolean(Array.isArray(type)) ? type : type?.split('')
+        const types = Boolean(Array.isArray(type)) ? type : type?.split(',')
 
         if (!!!applicant_uuid) return { notFound: true };
 
