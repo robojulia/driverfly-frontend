@@ -18,11 +18,13 @@ import { toast } from "react-toastify";
 export interface MissingDocumentsProps {
     entity: ApplicantEntity;
     types: ApplicantDocumentType[];
+    type: any;
 }
 
-export default function MissingDocuments({ entity, types }: MissingDocumentsProps) {
+export default function MissingDocuments({ entity, types, type }: MissingDocumentsProps) {
 
     console.log("types", types);
+    console.log("type", type);
 
     const applicantApi = new ApplicantApi()
     const { t } = useTranslation();
@@ -120,7 +122,7 @@ export async function getServerSideProps({ query }) {
 
         if (!!!entity) return { notFound: true };
 
-        return { props: { entity, types } };
+        return { props: { entity, types, type } };
     } catch (error) {
         console.log("error", error.message);
 
