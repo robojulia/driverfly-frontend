@@ -16,6 +16,7 @@ import { CompanyEntity } from '../company/company.entity';
 import { CompanyManagerEntity } from '../company/company-manager.entity';
 import { EmployeeExperienceEntity } from './employee-experience.entity';
 import { EmployeeEquipmentEntity } from './employee-equipment.entity';
+import { EmployeeReasonCodeFired, EmployeeReasonCodeQuit } from '../../enums/employee/employee-reason-codes.enum';
 
 export class EmployeeEntity {
 	id?: number;
@@ -60,6 +61,7 @@ export class EmployeeEntity {
 	hire_date?: Date;
 	manager?: CompanyManagerEntity;
 	documents?: DocumentEntity[] = [];
+	termination_date?: Date;
 
 	static yupSchema() {
 		return yup.object({
@@ -109,31 +111,8 @@ export class EmployeeEntity {
 			job: yup.object({
 				id: yup.number().required().nullable()
 			}).required().nullable(),
-			// status: (yup.string() as any).enum(ApplicantStatus).required().nullable(),
 			// status_other: yup.string().when("status", {
-			// 	is: ApplicantStatus.OTHER,
-			// 	then: yup.string().required().nullable(),
-			// }).nullable(),
-			// reason_codes: (yup.array(yup.string())
-			// 	.when("status", {
-			// 		is: ApplicantStatus.INACTIVE_CONTACTED_NOT_QUALIFIED,
-			// 		then: yup.array((yup.string() as any).enum(ApplicantReasonCodeNotQualified)).min(1).nullable()
-			// 	})
-			// 	.when("status", {
-			// 		is: ApplicantStatus.INACTIVE_CONTACTED_UNINTERESTED,
-			// 		then: yup.array((yup.string() as any).enum(ApplicantReasonCodeNotInterested)).min(1).nullable()
-			// 	})
-			// 	.when("status", {
-			// 		is: ApplicantStatus.INACTIVE_QUIT,
-			// 		then: yup.array((yup.string() as any).enum(ApplicantReasonCodeQuit)).min(1).nullable()
-			// 	})
-			// 	.when("status", {
-			// 		is: ApplicantStatus.INACTIVE_FIRED,
-			// 		then: yup.array((yup.string() as any).enum(ApplicantReasonCodeFired)).min(1).nullable()
-			// 	}) as any)
-			// 	.unique().nullable(),
-			// reason_codes_other: yup.string().when("reason_codes", {
-			// 	is: v => v && v.includes("OTHER"),
+			// 	is: EmployeeStatus.OTHER,
 			// 	then: yup.string().required().nullable(),
 			// }).nullable(),
 			equipment_experience: (
@@ -151,6 +130,21 @@ export class EmployeeEntity {
 		return yup.object({
 			id: yup.number().required().nullable(),
 			status: (yup.string() as any).enum(EmployeeStatus).required().nullable(),
+			reason_codes: (yup.array(yup.string())
+				.when("status", {
+					is: EmployeeStatus.QUIT,
+					then: yup.array((yup.string() as any).enum(EmployeeReasonCodeQuit)).min(1, "SELECT_ONE_PLACEHOLDER").nullable()
+				})
+				.when("status", {
+					is: EmployeeStatus.FIRED,
+					then: yup.array((yup.string() as any).enum(EmployeeReasonCodeFired)).min(1, "SELECT_ONE_PLACEHOLDER").nullable()
+				}) as any)
+				.unique().nullable(),
+			reason_codes_other: yup.string().when("reason_codes", {
+				is: v => v && v.includes("OTHER"),
+				then: yup.string().required().nullable(),
+			}).nullable(),
+
 		});
 	}
 
