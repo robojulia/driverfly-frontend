@@ -931,6 +931,33 @@
     "FAILED_DRUG_TEST": "Failed drug test",
     "OTHER": "Other"
   },
+  "EmployeeReasonCodeQuit": {
+    "MISSING_PAY": "Missing pay",
+    "UNSAFE_WORKING_CONDITIONS": "Unsafe working conditions",
+    "PAY_RATE": "Pay rate",
+    "PAY_STRUCTURE": "Pay structure",
+    "SCHEDULE": "Schedule",
+    "EMPLOYMENT_STATUS_TYPE": "Employment status type (W2 vs 1099)",
+    "LOOKING_FOR_OWNER_OP_ROLE": "Looking for owner op role",
+    "TEAM_DRIVER": "Team driver",
+    "EQUIPMENT_TYPE": "Equipment type",
+    "BETTER_OFFER_ELSEWHERE": "Better offer elsewhere",
+    "GEOGRAPHY_COVERED": "Geography covered",
+    "DELIVERY_MODE": "Mode of delivery (live loads, drop & hook, manual unloading, etc)",
+    "OTHER": "Other"
+  },
+  "EmployeeReasonCodeFired": {
+    "TOO_INEXPERIENCED": "Too inexperienced",
+    "UNSAFE_DRIVING_BEHAVIOR": "Unsafe driving behavior",
+    "VEHICLE_DAMAGE": "Vehicle damage",
+    "NO_SHOW": "No show",
+    "VIOLATIONS": "Violations",
+    "INSUFFICIENT_DOCUMENTATION": "Insufficient documentation",
+    "INAPPROPRIATE_BEHAVIOR": "Inappropriate behavior",
+    "INABILITY_TO_MEET_JOB_SPECIFICATIONS": "Inability to meet job specifications",
+    "FAILED_DRUG_TEST": "Failed drug test",
+    "OTHER": "Other"
+  },
   "CHANGE_STATUS": "Change status",
   "REASON_CODES": "Reason Codes",
   "REASONS": "Reasons",
