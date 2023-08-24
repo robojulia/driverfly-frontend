@@ -2111,7 +2111,7 @@
   "IMPORT_EMPLOYEES": "Import Employees",
   "NO_APPLICANT_PROFILE_FOUND": "No Applicant Profile Attached",
   "EMPLOYEE": "Employee",
-  "REQUEST_FOR_MISSING_DOCUMENTS": "Request to upload missing documents",
+  "REQUEST_FOR_MISSING_DOCUMENTS": "Click to Request for missing documents",
   "REQUEST_{name}_FOR_MISSING_{documents}_MESSAGE_WITH_{link}": "Dear {{name}}, \n Your {{documents}} are missing. Please update your document to proceed with the job process by following this link: \n {{link}}",
   "MANGER_NOT_FOUND_{managerId}": "Manager not found with {{managerId}}",
   "NO_JOB_FOUND_{jobId}": "No job found with id {{jobId}}",
