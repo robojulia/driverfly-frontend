@@ -11,6 +11,7 @@ import BaseInput from '../components/forms/base-input';
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { Col, Container, Row } from "react-bootstrap";
+import Head from 'next/head';
 
 export default function ResetPassword({ passwordResetToken }) {
 
@@ -65,6 +66,10 @@ export default function ResetPassword({ passwordResetToken }) {
 
   return (
     <>
+        <Head>
+        <title>{t("RESET_PASSWORD_META_TITLE")}</title>
+        <meta name="description" content={t("RESET_PASSWORD_META_DESC")} key="desc" />
+      </Head>
       <ToastContainer />
       <div className="top-links-sec">
         <Container>

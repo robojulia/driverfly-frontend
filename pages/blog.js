@@ -4,12 +4,23 @@ import BlogSidebar from '../components/blog-sidebar/blog-sidebar';
 import { ArrowRight, Chat, Clock } from 'react-bootstrap-icons';
 import { useTranslation } from '../hooks/use-translation';
 import Breadcrumb from '../components/breadcrumbs/breadcrumb';
+import Head from "next/head";
+
+
 export default function Blogs() {
 
     const { t } = useTranslation();
 
     return (
         <>
+        <Head>
+        <title>{t("BLOG_META_TITLE")}</title>
+        <meta
+          name="description"
+          content={t("BLOG_META_DESC")}
+          key="desc"
+        />
+      </Head>
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">

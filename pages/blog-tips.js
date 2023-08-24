@@ -2,10 +2,18 @@ import Link from 'next/link';
 import { PublicLayout } from "../components/layouts/public-layout";
 import BlogDetail from '../public/css/blog-detail.module.css'
 import SocilShare from '../components/share-link/share-link';
-
+import Head from 'next/head';
 export default function TipsBlog() {
     return (
         <>
+             <Head>
+        <title>{t("BLOG_TIPS_META_TITLE")}</title>
+        <meta
+          name="description"
+          content={t("BLOG_TIPS_META_DESC")}
+          key="desc"
+        />
+      </Head>
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">

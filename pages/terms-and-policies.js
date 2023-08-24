@@ -2,12 +2,17 @@ import Link from 'next/link';
 import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import { PublicLayout } from "../components/layouts/public-layout";
 import { useTranslation } from '../hooks/use-translation';
+import Head from 'next/head';
 
 export default function TermsAndPolicies() {
 
     const { t } = useTranslation();
     return (
         <>
+          <Head>
+        <title>{t("TERMS_AND_POLICIES_META_TITLE")}</title>
+        <meta name="description" content={t("TERMS_AND_POLICIES_META_DESC")} key="desc" />
+      </Head>
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">

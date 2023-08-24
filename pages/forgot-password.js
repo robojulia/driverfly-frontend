@@ -10,6 +10,7 @@ import { useTranslation } from "../hooks/use-translation"
 import { useFormik } from "formik";
 import * as yup from "yup";
 
+import Head from 'next/head';
 import BaseInput from "../components/forms/base-input";
 
 export default function Forgot() {
@@ -51,7 +52,10 @@ export default function Forgot() {
 
   return (
     <>
-
+ <Head>
+        <title>{t("FORGET_PASSWORD_META_TITLE")}</title>
+        <meta name="description" content={t("FORGET_PASSWORD_META_DESC")} key="desc" />
+      </Head>
 
       <div className="top-links-sec">
         <div className="container">

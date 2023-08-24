@@ -13,7 +13,7 @@ import { Row, Col } from "reactstrap"
 import { ToastContainer, toast } from 'react-toastify'
 import ContactApi from './api/contact';
 import { globalAjaxExceptionHandler } from '../utils/ajax';
-
+import Head from 'next/head';
 export default function Contact() {
 
     const { t } = useTranslation();
@@ -40,6 +40,14 @@ export default function Contact() {
 
     return (
         <>
+         <Head>
+        <title>{t("CONTACT_META_TITLE")}</title>
+        <meta
+          name="description"
+          content={t("CONTACT_META_DESC")}
+          key="desc"
+        />
+      </Head>
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">

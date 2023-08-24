@@ -3,7 +3,7 @@ import { useTransition } from 'react';
 import Breadcrumb from "../../components/breadcrumbs/breadcrumb";
 import { PublicLayout } from "../../components/layouts/public-layout";
 import { useTranslation } from '../../hooks/use-translation';
-
+import Head from 'next/head';
 
 export default function TermsAndPolicies2() {
 
@@ -11,6 +11,10 @@ export default function TermsAndPolicies2() {
 
     return (
         <>
+         <Head>
+        <title>{t("PRIVACY_POLICY_META_TITLE")}</title>
+        <meta name="description" content={t("PRIVACY_POLICY_META_DESC")} key="desc" />
+      </Head>
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">

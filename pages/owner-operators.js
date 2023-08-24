@@ -3,6 +3,7 @@ import Owneroperator from '../public/css/owner-operator.module.css'
 import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import { useRouter } from 'next/router'
 import { useTranslation } from '../hooks/use-translation';
+import Head from "next/head";
 
 export default function Owneroperators() {
 
@@ -18,6 +19,10 @@ export default function Owneroperators() {
 
     return (
         <>
+          <Head>
+        <title>{t("OWNER_OPERATOR_META_TITLE")}</title>
+        <meta name="description" content={t("OWNER_OPERATOR_META_DESC")} key="desc" />
+      </Head>
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
