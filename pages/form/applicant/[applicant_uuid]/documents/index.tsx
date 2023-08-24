@@ -62,7 +62,7 @@ export default function MissingDocuments({ entity, types }: MissingDocumentsProp
                                 <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
                                     {form.values?.documents?.map((document, i) => (
                                         <Row key={i} className={styles.align__text_left}>
-                                            <h3>{t(`ApplicantDocumentType.${document?.type}`)}</h3>
+                                            <h3 className="text-dark">{t(`ApplicantDocumentType.${document?.type}`)}</h3>
                                             <BaseCheck
                                                 className="mx-3 col float-left p-0"
                                                 label="MEDIA_PREFERENCE"
@@ -107,7 +107,7 @@ export default function MissingDocuments({ entity, types }: MissingDocumentsProp
 export async function getServerSideProps({ query }) {
     try {
         const { applicant_uuid, type } = query || {};
-        const types = Boolean(Array.isArray(type)) ? type : [type]
+        const types = Boolean(Array.isArray(type)) ? type : type?.split(', ')
 
         if (!!!applicant_uuid) return { notFound: true };
 

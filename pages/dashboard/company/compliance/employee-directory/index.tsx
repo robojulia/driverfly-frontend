@@ -32,6 +32,9 @@ import { EmployeeEntity } from "../../../../../models/employee/employee.entity";
 import { ListActionOptions } from "../../../../../components/list-actions/list-actions";
 import EmployeeApi from "../../../../api/employee";
 import { EmployeeStatus } from "../../../../../enums/applicants/employee-status.enum";
+import BaseCheckList from "../../../../../components/forms/base-check-list";
+import { EmployeeReasonCodeFired, EmployeeReasonCodeQuit } from "../../../../../enums/employee/employee-reason-codes.enum";
+import BaseTextArea from "../../../../../components/forms/base-text-area";
 
 export default function EmployeeDirectory() {
 
@@ -100,6 +103,8 @@ export default function EmployeeDirectory() {
     const moveToPastForm = useFormik({
         initialValues: new EmployeeEntity(),
         validationSchema: EmployeeEntity.yupSchemaForMarking(),
+        validateOnBlur: false,
+        validateOnMount: false,
         onSubmit: async (values) => {
             try {
                 await employeeApi.mark(values?.id, values)
@@ -111,19 +116,18 @@ export default function EmployeeDirectory() {
             }
         },
     });
-    useEffect(() => console.log(moveToPastForm.errors), [moveToPastForm.errors])
-    useEffect(() => console.log("viewMode", viewMode), [viewMode])
+    // useEffect(() => console.log("moveToPastForm", moveToPastForm.errors), [moveToPastForm.errors])
+    // useEffect(() => console.log("viewMode", viewMode), [viewMode])
 
     const onViewClick = async (entity: EmployeeEntity): Promise<void> => {
         const v = await employeeApi.getById(entity?.id)
         setModalAction({ entity: v, type: "VIEW" })
     }
 
-
     const onEditClick = (data) => router.push(`/dashboard/company/compliance/employee-directory/${data?.id}/edit`)
+
     const onTrashClick = async (entity: EmployeeEntity): Promise<void> =>
         setModalAction({ entity, type: "DELETE" });
-
 
     const onDeleteClick = async (): Promise<void> => {
         try {
@@ -212,36 +216,45 @@ export default function EmployeeDirectory() {
             },
         ]
         if (viewMode == ViewModeType.PAST_EMPLOYEE) {
-            // data.push({
-            //     id: "end_of_employment",
-            //     name: "END_OF_EMPLOYMENT",
-            //     cell: (data) => (
-            //         <ShowFormattedDate
-            //             date={data?.end_of_employment}
-            //         />
-            //     ),
-            // });
-            // data.push({
-            //     id: "reason_codes",
-            //     name: "REASON_CODES",
-            //     // selector: data => data?.applicantJob?.reason_codes,
-            //     cell: (data) => (
-            //         <ShowEnumFromString
-            //             popover
-            //             labelPrefix={
-            //                 data.status == EmployeeStatus.INACTIVE_QUIT
-            //                     ? "ApplicantReasonCodeQuit"
-            //                     : "ApplicantReasonCodeFired"
-            //             }
-            //             enumArray={
-            //                 data.status == EmployeeStatus.INACTIVE_FIRED
-            //                     ? ApplicantReasonCodeQuit
-            //                     : ApplicantReasonCodeFired
-            //             }
-            //             value={data?.reason_codes}
-            //         />
-            //     ),
-            // });
+            data.push({
+                id: "end_of_employment",
+                name: "END_OF_EMPLOYMENT",
+                cell: (data) => (
+                    <ShowFormattedDate
+                        date={data?.termination_date}
+                    />
+                ),
+            });
+            data.push({
+                id: "reason_codes",
+                name: "REASON_CODES",
+                cell: (data) =>
+                    data?.reason_codes && (
+                        <ShowEnumFromString
+                            popover
+                            labelPrefix={
+                                data.status == EmployeeStatus.QUIT
+                                    ? "EmployeeReasonCodeQuit"
+                                    : "EmployeeReasonCodeFired"
+                            }
+                            enumArray={
+                                data.status == EmployeeStatus.QUIT
+                                    ? EmployeeReasonCodeQuit
+                                    : EmployeeReasonCodeFired
+                            }
+                            value={data?.reason_codes}
+                        />
+                    ),
+            });
+            data.push({
+                id: "reason_codes_other",
+                name: "OTHER",
+                cell: data => (<OverlyPopover
+                    skipTranslate
+                    slice_at={10}
+                    str={data?.reason_codes_other}
+                />),
+            });
         } else {
         }
 
@@ -275,14 +288,17 @@ export default function EmployeeDirectory() {
             actions={
                 <Row>
                     <Col>
-                        <p className="mt-2 mb-2">
-                            {t("WANT_TO_ADD_TO_THIS_LIST")}
-                            <u className="ml-1">
-                                <Link href="/dashboard/company/compliance/employee-directory/import">
-                                    <a className="here_link">{t("HERE")}</a>
-                                </Link>
-                            </u>
-                        </p>
+                        {viewMode == ViewModeType.EMPLOYEE
+                            && (<p className="mt-2 mb-2">
+                                {t("WANT_TO_ADD_TO_THIS_LIST")}
+                                <u className="ml-1">
+                                    <Link href="/dashboard/company/compliance/employee-directory/import">
+                                        <a className="here_link">{t("HERE")}</a>
+                                    </Link>
+                                </u>
+                            </p>)
+                        }
+
                         <FormGroup style={{ float: "right" }}>
                             <FormControlLabel
                                 control={<Switch
@@ -355,7 +371,7 @@ export default function EmployeeDirectory() {
                     canSubmit={moveToPastForm.isValid}
                 >
                     <Row className="py-3 px-5">
-                        <Col>
+                        <Col md="12">
                             <BaseSelect
                                 label="STATUS"
                                 formik={moveToPastForm}
@@ -366,6 +382,46 @@ export default function EmployeeDirectory() {
                                 showOptions={[EmployeeStatus.FIRED, EmployeeStatus.QUIT]}
                                 enumType={EmployeeStatus}
                             />
+                        </Col>
+                        <Col md="12" className="mt-2">
+                            {
+                                moveToPastForm.values.status === EmployeeStatus.QUIT &&
+                                <BaseCheckList
+                                    className="col-12"
+                                    label="REASON_CODES"
+                                    name="reason_codes"
+                                    required
+                                    cols={2}
+                                    formik={moveToPastForm}
+                                    labelPrefix="EmployeeReasonCodeQuit"
+                                    enumType={EmployeeReasonCodeQuit}
+                                />
+                            }
+                            {
+                                moveToPastForm.values.status === EmployeeStatus.FIRED &&
+                                <BaseCheckList
+                                    className="col-12"
+                                    label="REASON_CODES"
+                                    name="reason_codes"
+                                    required
+                                    cols={2}
+                                    formik={moveToPastForm}
+                                    labelPrefix="EmployeeReasonCodeFired"
+                                    enumType={EmployeeReasonCodeFired}
+                                />
+                            }
+                            {
+                                moveToPastForm.values.reason_codes?.includes("OTHER") &&
+                                <BaseTextArea
+                                    className="col-12"
+                                    placeholder="REASONS"
+                                    name="reason_codes_other"
+                                    required
+                                    maxLength={100}
+                                    formik={moveToPastForm}
+                                />
+                            }
+
                         </Col>
                     </Row>
                 </EntityForm>
