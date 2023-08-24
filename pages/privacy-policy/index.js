@@ -12,11 +12,10 @@ export default function TermsAndPolicies2() {
     return (
         <>
         <Head>
-        <title>Privacy Policy - Your Privacy Matters to DriverFly</title>
+        <title>{t("PRIVACY_POLICY_META_TITLE")} </title>
         <meta
           name="description"
-          content="Your privacy matters to DriverFly. Explore our privacy policy to understand how we safeguard your personal information."
-          key="desc"
+          content={t("PRIVACY_POLICY_META_DESC")}       key="desc"
         />
         </Head>
             <div className="top-links-sec">

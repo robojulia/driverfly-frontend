@@ -14,11 +14,11 @@ export default function About() {
         <>
         <Head>
         <title>
-        About DriverFly - Revolutionizing the Trucking Industry 
+            {t("ABOUT_META_TITLE")}
         </title>
         <meta
           name="description"
-          content="Learn about DriverFly's mission to revolutionize the trucking industry. Discover our innovative solutions and commitment to drivers' success."
+          content={t("ABOUT_META_DESC")}
           key="desc"
         />
         </Head>

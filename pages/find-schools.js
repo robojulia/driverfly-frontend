@@ -136,11 +136,10 @@ export default function FindSchools(props) {
     }}>
      <Head>
         <title>
-        Find Schools - Find Accredited Trucking Schools</title>
+        {t("FIND_SCHOOL_META_TITLE")} </title>
         <meta
           name="description"
-          content="Find accredited trucking schools with DriverFly's comprehensive directory. Start your journey towards a successful trucking career."
-          key="desc"
+          content=  {t("FIND_SCHOOL_META_DESC")}           key="desc"
         />
       </Head>
       <div className="top-links-sec">

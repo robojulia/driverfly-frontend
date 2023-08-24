@@ -167,11 +167,10 @@ export default function FindJobs(props) {
         }}>
         <Head>
         <title>
-        Find Jobs - Discover Your Next Driving Opportunity </title>
+        {t("FIND_JOBS_META_TITLE")}</title>
         <meta
           name="description"
-          content="Get matched with your next driving opportunity with DriverFly's job search. Explore a wide range of job listings tailored to professional drivers."
-          key="desc"
+          content= {t("FIND_JOBS_META_DESC")}        key="desc"
         />
         </Head>
             <div className="filter-sec">

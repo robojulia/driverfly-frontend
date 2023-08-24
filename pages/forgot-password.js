@@ -54,11 +54,10 @@ export default function Forgot() {
     <>
       <Head>
         <title>
-        Forgot Password - Reset Your DriverFly Account Password</title>
+        {t("FORGET_PASSWORD_META_TITLE")} </title>
         <meta
           name="description"
-          content="Reset your DriverFly account password hassle-free. Regain access to your account and continue exploring opportunities in the trucking industry."
-          key="desc"
+          content=  {t("FORGET_PASSWORD_META_DESC")}      key="desc"
         />
       </Head>
 

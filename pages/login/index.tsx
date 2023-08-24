@@ -48,11 +48,10 @@ export default function Login() {
             title="LOGIN"
         >
         <Head>
-        <title>Login - Access Your DriverFly Account </title>
+        <title> {t("LOGIN_META_TITLE")}  </title>
         <meta
           name="description"
-          content="Access your DriverFly account securely. Log in to explore personalized driver resources and find exciting opportunities."
-          key="desc"
+          content= {t("LOGIN_META_DESC")}           key="desc"
         />
         </Head>
             <Row className='mb-2 mt-3'>

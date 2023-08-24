@@ -411,11 +411,10 @@ export default function ThirdPartyResources() {
     return (
         <>
         <Head>
-        <title>Third-Party Resources - Valuable Trucking Industry Partnerships </title>
+        <title>{t("THIRD_PARTY_RESOURCES_META_TITLE")}</title>
         <meta
           name="description"
-          content="Explore valuable third-party resources and partnerships within the trucking industry. Enhance your driving career with DriverFly's connections."
-          key="desc"
+          content={t("THIRD_PARTY_RESOURCES_META_DESC")}       key="desc"
         />
         </Head>
             <div className="top-links-sec">
