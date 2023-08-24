@@ -14,11 +14,10 @@ export default function Apply({ data }) {
   return (
     <>
       <Head>
-        <title>OTR General Freight Drivers - Thrive in Over-The-Road Trucking  </title>
+        <title>{t("OTR_GENERAL_META_TITLE")}  </title>
         <meta
           name="description"
-          content="Thrive in over-the-road trucking as a general freight driver. Discover opportunities, resources, and support with DriverFly."
-          key="desc"
+          content={t("OTR_GENERAL_META_DESC")}         key="desc"
         />
       </Head>
       <section className="top-links-sec ort-general">

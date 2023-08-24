@@ -12,11 +12,10 @@ export default function TermsOfService() {
     return (
         <>
         <Head>
-        <title>Terms of Service - Your Agreement With DriverFly  </title>
+        <title>{t("TERMS_OF_SERVICES_META_TITLE")}  </title>
         <meta
           name="description"
-          content="Review the terms of service agreement with DriverFly. Ensure a clear understanding of your rights and responsibilities within the platform."
-          key="desc"
+          content={t("TERMS_OF_SERVICES_META_DESC")}        key="desc"
         />
         </Head>
           <div className="top-links-sec">

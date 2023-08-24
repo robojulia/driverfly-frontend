@@ -10,11 +10,12 @@ export default function EldtBlog() {
         <>
          <Head>
         <title>
-        New changes with Entry-Level Driver Training (ELDT)        </title>
+            {t("BLOG_EIDT_META_TITLE")}
+        </title>
         <meta
           name="description"
-          content="Explore expert insights into effective driver training. Stay informed about industry trends and regulatory updates."
-            key="desc"
+          content={t("BLOG_EDIT_META_DESC")}
+           key="desc"
         />
         </Head>
             <div className="top-links-sec">

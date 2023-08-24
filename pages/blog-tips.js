@@ -9,11 +9,12 @@ export default function TipsBlog() {
         <>
          <Head>
         <title>
-        Valuable Tips for Professional Drivers </title>
+        {t("BLOG_TIPS_META_TITLE")}           
+        </title>     
         <meta
           name="description"
-          content="Discover valuable tips for professional drivers on DriverFly's Tips Blog. Elevate your driving career with practical advice and strategies."
-          key="desc"
+          content={t("BLOG_TIPS_META_DESC")}  
+                  key="desc"
         />
         </Head>
             <div className="top-links-sec">

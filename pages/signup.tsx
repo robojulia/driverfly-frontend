@@ -79,11 +79,10 @@ export default function Signup() {
 			title="SIGN_UP"
 		>
 		<Head>
-        <title>Sign Up - Join the DriverFly Community </title>
+        <title>{t("SIGNUP_META_TITLE")} </title>
         <meta
           name="description"
-          content="Join the DriverFly community by signing up for an account. Access exclusive resources, opportunities, and support for your trucking journey."
-		  key="desc"
+          content={t("SIGNUP_META_DESC")} 		  key="desc"
         />
         </Head>
 			<Row className={`${SignupStyle.banner}`}>
