@@ -3,6 +3,8 @@ import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import { PublicLayout } from "../components/layouts/public-layout";
 import resource from '../public/css/third-party-resources.module.css'
 import { useTranslation } from '../hooks/use-translation';
+import Head from 'next/head';
+
 
 export default function ThirdPartyResources() {
 
@@ -409,6 +411,10 @@ export default function ThirdPartyResources() {
 
     return (
         <>
+         <Head>
+        <title>{t("THIRD_PARTY_RESOURCES_META_TITLE")}</title>
+        <meta name="description" content={t("THIRD_PARTY_RESOURCES_META_DESC")} key="desc" />
+      </Head>
             <div className="top-links-sec">
                 <div className="container">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">

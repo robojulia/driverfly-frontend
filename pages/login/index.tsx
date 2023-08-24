@@ -15,6 +15,7 @@ import AuthApi from "../api/auth";
 
 import { globalAjaxExceptionHandler } from '../../utils/ajax';
 import { LoginDto } from '../../models/auth/login.dto';
+import Head from 'next/head';
 
 export default function Login() {
 
@@ -45,6 +46,10 @@ export default function Login() {
         <PublicPage
             title="LOGIN"
         >
+             <Head>
+        <title>{t("LOGIN_META_TITLE")}</title>
+        <meta name="description" content={t("LOGIN_META_DESC")} key="desc" />
+      </Head>
             <Row className='mb-2 mt-3'>
                 <Col>
                     <p className=" text-secondary">

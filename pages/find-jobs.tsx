@@ -16,6 +16,7 @@ import { useEffectAsync } from '../utils/react'
 import { GetServerSidePropsContext } from 'next'
 import { toast } from "react-toastify";
 import { useTranslation } from '../hooks/use-translation'
+import Head from 'next/head'
 
 export default function FindJobs(props) {
 
@@ -163,6 +164,10 @@ export default function FindJobs(props) {
                 handlePaging: setPagingMeta,
             },
         }}>
+              <Head>
+        <title>{t("FIND_JOBS_META_TITLE")}</title>
+        <meta name="description" content={t("FIND_JOBS_META_DESC")} key="desc" />
+      </Head>
             <div className="filter-sec">
                 <div className="container">
                     <div className="row">

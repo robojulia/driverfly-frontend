@@ -6,13 +6,17 @@ import { PublicLayout } from "../components/layouts/public-layout";
 import RelatedJobs from '../components/related-jobs/related-jobs'
 import SocilShare from '../components/share-link/share-link'
 import { ArrowRight } from 'react-bootstrap-icons';
-
+import Head from "next/head";
 
 export default function Apply({ data }) {
   const jobDetail = data
 
   return (
     <>
+     <Head>
+        <title>{t("OTR_GENERAL_META_TITLE")}</title>
+        <meta name="description" content={t("OTR_GENERAL_META_DESC")} key="desc" />
+      </Head>
       <section className="top-links-sec ort-general">
         <div className="container">
           <div className="row">

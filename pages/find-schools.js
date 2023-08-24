@@ -8,6 +8,7 @@ import CdlInfo from '../components/cdl-info/cdlInfo'
 import SchoolApi from "./api/school"
 import { useTranslation } from "../hooks/use-translation";
 import Breadcrumb from '../components/breadcrumbs/breadcrumb';
+import Head from 'next/head';
 
 export default function FindSchools(props) {
 
@@ -133,6 +134,10 @@ export default function FindSchools(props) {
         applyFilters: fetchSchools
       },
     }}>
+     <Head>
+        <title>{t("FIND_SCHOOL_META_TITLE")}</title>
+        <meta name="description" content={t("FIND_SCHOOL_META_DESC")} key="desc" />
+      </Head>
       <div className="top-links-sec">
         <div className="container">
           <div className="top-links-inner d-flex align-items-center justify-content-between">
