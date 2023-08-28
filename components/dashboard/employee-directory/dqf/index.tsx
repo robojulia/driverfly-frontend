@@ -91,57 +91,54 @@ export default function DQF(props: ViewEmployeeDqfProps) {
     ViewDocumentButton, AddDocumentButton, DownloadDocumentButton, DeleteDocumentButton, and
     ViewDocumentHistory. If the type is SAFETY_PERFORMANCE_HISTORY, it renders the
     SafetyPerformanceHistory component instead of the buttons. */
-    const ButtonList = ({ document, type }): JSX.Element => (
-        <>
-            {(!form.values.document?.type || form.values.document?.type !== type)
-                && (<div className="d-flex">
-                    {type != EmployeeDocumentType.SAFETY_PERFORMANCE_HISTORY
-                        ? (<>
-                            <ViewDocumentButton
+    const ButtonList = ({ document, type }): JSX.Element =>
+        (!form.values.document?.type || form.values.document?.type !== type) && (
+            <div className="d-flex">
+                {type != EmployeeDocumentType.SAFETY_PERFORMANCE_HISTORY ? (
+                    <>
+                        <ViewDocumentButton
+                            document={document}
+                            onClick={() => handleViewDocument(document.id, setPdf)}
+                        />
+                        {Boolean(props.canEdit) && (
+                            <AddDocumentButton
                                 document={document}
-                                onClick={() => handleViewDocument(document.id, setPdf)}
-                            />
-                            {Boolean(props.canEdit)
-                                && <AddDocumentButton
-                                    document={document}
-                                    type={type}
-                                    t={t}
-                                    onClick={() => handleUpdateDocument(type, document?.id)}
-                                />
-                            }
-                            <DownloadDocumentButton
-                                document={document}
-                                onClick={() => handleDownloadDocument(document.id)}
-                            />
-                            {Boolean(props.canEdit)
-                                && <DeleteDocumentButton
-                                    document={document}
-                                    onClick={() => handleDeleteDocument(type)}
-                                />
-                            }
-                            {Boolean(props.showHistory)
-                                && <ViewDocumentHistory
-                                    document={document}
-                                    type={type}
-                                    typePrefix="EmployeeDocumentType"
-                                    documentable_id={employee.id}
-                                    documentable_type={DocumentableType.EMPLOYEE}
-                                />
-                            }
-                        </>)
-                        : (
-                            // <></>
-                            <SafetyPerformanceHistory
-                                employee={employee}
-                                canEditSafetyPerformance={props.canEditSafetyPerformance}
-                                showHistory={props.showHistory}
-                                showResendButton={props.showResendButton}
+                                type={type}
+                                t={t}
+                                onClick={() => handleUpdateDocument(type, document?.id)}
                             />
                         )}
-                </div>)
-            }
-        </>
-    )
+                        <DownloadDocumentButton
+                            document={document}
+                            onClick={() => handleDownloadDocument(document.id)}
+                        />
+                        {Boolean(props.canEdit) && (
+                            <DeleteDocumentButton
+                                document={document}
+                                onClick={() => handleDeleteDocument(type)}
+                            />
+                        )}
+                        {Boolean(props.showHistory) && (
+                            <ViewDocumentHistory
+                                document={document}
+                                type={type}
+                                typePrefix="EmployeeDocumentType"
+                                documentable_id={employee.id}
+                                documentable_type={DocumentableType.EMPLOYEE}
+                            />
+                        )}
+                    </>
+                ) : (
+                    // <></>
+                    <SafetyPerformanceHistory
+                        employee={employee}
+                        canEditSafetyPerformance={props.canEditSafetyPerformance}
+                        showHistory={props.showHistory}
+                        showResendButton={props.showResendButton}
+                    />
+                )}
+            </div>
+        );
 
     /**
      * This is a TypeScript React component that displays the last updated date of a document, unless the
