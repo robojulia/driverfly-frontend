@@ -13,11 +13,10 @@ export default function FAQ() {
         <>
         <Head>
         <title>
-        FAQ - Frequently Asked Questions About DriverFly </title>
+        {t("FAQ_META_TITLE")}</title>
         <meta
           name="description"
-          content="Find answers to frequently asked questions about DriverFly. Get clarity on our services, processes, and how we can empower your driving career."
-          key="desc"
+          content={t("FAQ_META_DESC")}  key="desc"
         />
         </Head>
             <div className="top-links-sec">

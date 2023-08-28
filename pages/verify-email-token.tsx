@@ -1,16 +1,18 @@
 import { PublicLayout } from "../components/layouts/public-layout";
 import Head from "next/head";
+import { useTranslation } from '../hooks/use-translation';
+
 
 // PAGE DEPRECATED IN FAVOR OF /login/verify-email
 export default function VerifyEmailToken() {
+  const { t } = useTranslation();
   return (
     <>
         <Head>
-        <title>Verify Email Token - Securely Verify Your DriverFly Account</title>
+        <title>{t("VERIFY_EMAIL_META_TITLE")}</title>
         <meta
           name="description"
-          content="Securely verify your DriverFly account through an email token. Confirm your account and unlock a world of opportunities in trucking."
-          key="desc"
+          content={t("VERIFY_EMAIL_META_DESC")}             key="desc"
         />
         </Head>
     Oops... not sure how you got to this page, it has been deprecated</>

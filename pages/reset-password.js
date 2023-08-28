@@ -66,11 +66,10 @@ export default function ResetPassword({ passwordResetToken }) {
   return (
     <>
     <Head>
-        <title>Reset Password - Regain Access to Your DriverFly Account </title>
+        <title>{t("RESET_PASSWORD_META_TITLE")}  </title>
         <meta
           name="description"
-          content="Regain access to your DriverFly account by resetting your password. Ensure a secure and seamless experience in the trucking industry."
-          key="desc"
+          content={t("RESET_PASSWORD_META_DESC")}      key="desc"
         />
         </Head>
       <ToastContainer />

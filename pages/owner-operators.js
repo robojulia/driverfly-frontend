@@ -20,11 +20,10 @@ export default function Owneroperators() {
     return (
         <>
         <Head>
-        <title>Owner Operators - Empowering Independent Truckers </title>
+        <title>{t("OWNER_OPERATOR_META_TITLE")}  </title>
         <meta
           name="description"
-          content="Explore how DriverFly empowers owner operators. Discover resources and opportunities tailored to independent trucking professionals."
-          key="desc"
+          content={t("OWNER_OPERATOR_META_DESC")}           key="desc"
         />
       </Head>
             <div className="top-links-sec">
