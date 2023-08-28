@@ -1,117 +1,147 @@
 import { Button, Col, Form, Row, Table } from "react-bootstrap";
-import { useFormik } from "formik";
+import { FormikErrors, useFormik } from "formik";
 import { toast } from "react-toastify";
-import { CloudArrowDown, Pen, Eye, Trash } from "react-bootstrap-icons";
 import { useState } from "react";
-import { ThreeCircles } from 'react-loader-spinner';
+import { ThreeCircles } from "react-loader-spinner";
 import { useAuth } from "../../../../hooks/use-auth";
 import { useEffectAsync } from "../../../../utils/react";
 import { useTranslation } from "../../../../hooks/use-translation";
-import { ViewApplicantDetailProps } from "../../../../types/applicant/view-application-detail-props.type";
-import ApplicantApi from "../../../../pages/api/applicant";
 import ViewCard from "../../../view-details/view-card";
-import FileInput from '../../../forms/file-input';
+import FileInput from "../../../forms/file-input";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import ShowFormattedDate from "../../../jobs/show-formatted-date";
-import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
-import DocumentApi from "../../../../pages/api/document";
 import ViewPdf from "../../../view-details/view-pdf";
-import { ApplicantAdditionalFilesDto } from "../../../../models/applicant/additional-files.dto";
-import { ApplicantAdditionalFilesEnum } from "../../../../enums/applicants/applicant-additional-files.enum";
-import { DocumentEntity } from "../../../../models/documents/document.entity";
+import { EmployeeAdditionalFilesProps } from "../../../../types/employee/employee-additional-files-props.type";
+import EmployeeApi from "../../../../pages/api/employee";
+import { EmployeeDocumentDto } from "../../../../models/employee/employee-document-dto";
+import { EmployeeEntity } from "../../../../models/employee/employee.entity";
 
-export interface AdditionalFilesProps extends ViewApplicantDetailProps { }
+import {
+    AddDocumentButton,
+    DeleteDocumentButton,
+    DownloadDocumentButton,
+    ViewDocumentButton,
+} from "../../../documents/buttons";
+import {
+    handleDownloadDocument,
+    handleViewDocument,
+} from "../../../../utils/documents/button-actions";
+import ViewDocumentHistory from "../../../documents/view-history";
+import { DocumentableType } from "../../../../enums/documents/documentable-type.enum";
+import { EmployeeAdditionalFilesEnum } from "../../../../enums/employee/employee-additional-files.enum";
+import { LoaderIcon } from "../../../loading/loader-icon";
 
-const AdditionalFiles = (props: AdditionalFilesProps) => {
-
+export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
     const { t } = useTranslation();
     const { user } = useAuth();
-    const applicantApi = new ApplicantApi();
+    const employeeApi = new EmployeeApi();
 
-    const [applicant, setApplicant] = useState<ApplicantEntity>(null)
-
-    const form = useFormik({
-        initialValues: new ApplicantAdditionalFilesDto(),
-        validationSchema: ApplicantAdditionalFilesDto.yupSchema(),
-        onSubmit: async ({ document }, { resetForm }) => {
-            try {
-                const data = await applicantApi.documents.create(applicant.id, document)
-
-                if (document.id) {
-                    applicant.documents = applicant.documents.filter(v => (v.id != data.id))
-                }
-                applicant.documents.push(data)
-                toast.success(t('DOCUMENT_UPLOAD_SUCCESS_MESSAGE'))
-                resetForm()
-            }
-            catch (e) {
-                globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t });
-            }
-        }
-    });
+    const [employee, setEmployee] = useState<EmployeeEntity>(null);
 
     useEffectAsync(async () => {
-        const v = await applicantApi.getById(props.applicant.id)
-        setApplicant(v)
-    }, [user], () => {
-        form.resetForm()
-    });
+        if (props.employee?.id) setEmployee(props.employee);
+    }, [user]);
 
     const [pdf, setPdf] = useState({});
 
-    const viewDocumentClick = async (id, name) => {
-        const api = new DocumentApi();
+    const form = useFormik({
+        initialValues: new EmployeeDocumentDto(),
+        validationSchema: EmployeeDocumentDto.yupSchema(),
+        onSubmit: async ({ document }, { resetForm }) => {
+            try {
+                const employeeDocumentUpload = await employeeApi.documents.create(
+                    employee.id,
+                    document
+                );
 
-        const document = await api.getSignedUrl(id);
+                if (document.id) {
+                    employee.documents = employee.documents.filter(
+                        (v) => v.id !== employeeDocumentUpload.id
+                    );
+                }
+                employee.documents.push(employeeDocumentUpload);
+                toast.success(t("DOCUMENT_UPLOAD_SUCCESS_MESSAGE"));
+                resetForm();
+            } catch (e) {
+                globalAjaxExceptionHandler(e, { formik: form, toast: toast, t: t });
+            }
+        },
+    });
 
-        if (document) {
-            setPdf({
-                name: `${t(name)} (${document.name})`,
-                url: document.path
-            });
-        }
-    }
+    /**
+     * It deletes a document from the employee's profile.
+     * @param {EmployeeAdditionalFilesEnum | string} docType - The type of document you want to
+     * delete.
+     */
+    const handleDeleteDocument = async (
+        docType: EmployeeAdditionalFilesEnum | string
+    ): Promise<void> => {
+        await employeeApi.documents.delete(employee?.id, docType);
+        setEmployee({
+            ...employee,
+            documents: employee?.documents?.filter((v) => v.type != docType),
+        });
+    };
 
-    const handleUpdateDocument = async (type: ApplicantAdditionalFilesEnum, documentId?: number) => {
-        form.setFieldValue("document", { type: type, id: documentId || null })
-    }
+    /**
+     * It takes a type and an optional documentId, and sets the form's document field to an object with the
+     * type and id
+     * @param {EmployeeAdditionalFilesEnum} type - EmployeeAdditionalFilesEnum - this is the type of document that is being uploaded.
+     * @param {number} [documentId] - The id of the document to be updated.
+     */
+    const handleUpdateDocument = (
+        type: EmployeeAdditionalFilesEnum,
+        documentId?: number
+    ): Promise<void> | Promise<FormikErrors<EmployeeDocumentDto>> =>
+        form.setFieldValue("document", { type, id: documentId ?? null });
 
-    const deleteDocument = async (type: ApplicantAdditionalFilesEnum) => {
-        await applicantApi.documents.delete(props.applicant?.id, type)
-        setApplicant({ ...applicant, documents: applicant.documents.filter(v => (v.type != type)) })
-    }
+    const ButtonList = ({ document, type }): JSX.Element =>
+        (!form.values.document?.type || form.values.document?.type !== type) && (
+            <div className="d-flex">
+                <ViewDocumentButton
+                    document={document}
+                    onClick={() => handleViewDocument(document.id, setPdf)}
+                />
+                <AddDocumentButton
+                    document={document}
+                    type={type}
+                    t={t}
+                    onClick={() => handleUpdateDocument(type, document?.id)}
+                />
+                <DownloadDocumentButton
+                    document={document}
+                    onClick={() => handleDownloadDocument(document.id)}
+                />
+                <DeleteDocumentButton
+                    document={document}
+                    onClick={() => handleDeleteDocument(type)}
+                />
+                <ViewDocumentHistory
+                    document={document}
+                    type={type}
+                    typePrefix="EmployeeDocumentType"
+                    documentable_id={employee.id}
+                    documentable_type={DocumentableType.EMPLOYEE}
+                />
+            </div>
+        );
 
-    const downloadDocumentClick = async (id: number): Promise<void> => {
-
-        const api = new DocumentApi();
-        const doc: DocumentEntity = await api.getSignedUrl(id);
-
-        // Make a request to get the file data
-        const response = await fetch(doc.path);
-        const fileBlob = await response.blob();
-
-        // Create a temporary link element
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(fileBlob);
-        link.download = doc.name;
-
-        document.body.appendChild(link);
-
-        // Simulate a click on the link to trigger the download
-        link.click();
-
-        // Clean up the temporary link
-        document.body.removeChild(link);
-        link.remove();
-    }
+    const UpdatedAt = ({ document, type }): JSX.Element => (
+        <>
+            {document ? (
+                <ShowFormattedDate date={document.last_updated_at} />
+            ) : (
+                <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>
+            )}
+        </>
+    );
 
     return (
         <div className="employee_directory_tabs">
             <Row>
                 <Col>
-                    {!!applicant ? (
+                    {!!employee ? (
                         <ViewCard title="DOCUMENTS">
-
                             <Table striped>
                                 <thead>
                                     <tr>
@@ -122,60 +152,62 @@ const AdditionalFiles = (props: AdditionalFilesProps) => {
                                 </thead>
 
                                 <tbody>
-                                    {
-                                        Object.values(ApplicantAdditionalFilesEnum).map((value: ApplicantAdditionalFilesEnum, i) => {
-
-                                            const document: any = applicant?.documents?.find(v => (v.type === value))
+                                    {Object.values(EmployeeAdditionalFilesEnum).map(
+                                        (type: EmployeeAdditionalFilesEnum, i) => {
+                                            const document: any = employee?.documents?.find(
+                                                (v) => v.type === type
+                                            );
                                             return (
                                                 <tr key={i}>
                                                     <td colSpan={2}>
-                                                        {t(`ApplicantAdditionalFilesEnum.${value}`)}
+                                                        {t(`EmployeeAdditionalFilesEnum.${type}`)}
                                                     </td>
                                                     <td colSpan={2}>
-                                                        {document ? <ShowFormattedDate date={document.last_updated_at} /> : <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>}
+                                                        <UpdatedAt document={document} type={type} />
                                                     </td>
                                                     <td colSpan={1} className="border border-2 w-50">
-                                                        {
-                                                            (!form.values.document?.type || form.values.document?.type !== value) &&
-                                                            <div className="d-flex">
-                                                                {document ? <a onClick={() => viewDocumentClick(document.id, document.name)} href='#' role="button" className="btn btn-success p-0 pt-1 mr-2 w-100"><Eye /></a> : null}
-                                                                <Button className="mr-2 w-100" onClick={() => { handleUpdateDocument(value, document?.id) }}>
-                                                                    {document ? <Pen /> : t('ADD')}
-                                                                </Button>
-                                                                {document ? <a onClick={() => downloadDocumentClick(document.id)} href='#' role="button" className="btn theme-primary2-btn p-0 pt-1 mr-2"><CloudArrowDown /></a> : null}
-                                                                {document ? <a onClick={() => deleteDocument(document.type)} href='#' role="button" className="btn btn-danger  p-0 pt-1 mr-2 w-100"><Trash /></a> : null}
-                                                            </div>
-                                                        }
-
-                                                        {
-                                                            (form.values?.document?.type === value) &&
-                                                            <Form onSubmit={form.handleSubmit} >
+                                                        <ButtonList document={document} type={type} />
+                                                        {form.values?.document?.type === type && (
+                                                            <Form onSubmit={form.handleSubmit}>
                                                                 <FileInput
                                                                     name={`document`}
                                                                     accept="application/pdf"
-                                                                    allowedSizeInByte={3145728}
                                                                     formik={form}
+                                                                    allowedSizeInByte={3145728}
                                                                 />
                                                                 <div className="mt-2 d-flex w-100 ">
-                                                                    <Button disabled={form.isSubmitting || !form.isValid || form.isValidating} className="mr-2 w-50 theme-primary-btn" type="submit">
-                                                                        {t(`SAVE`)}
+                                                                    <Button
+                                                                        disabled={
+                                                                            form.isSubmitting ||
+                                                                            !form.isValid ||
+                                                                            form.isValidating
+                                                                        }
+                                                                        className="mr-2 w-50 theme-primary-btn"
+                                                                        type="submit"
+                                                                    >
+                                                                        {t(`SAVE`)}{" "}
+                                                                        <LoaderIcon isLoading={form.isSubmitting} />
                                                                     </Button>
-                                                                    <Button type="button" className="mr-2 w-50 bg-danger" onClick={() => { form.resetForm() }}                                                            >
+                                                                    <Button
+                                                                        type="button"
+                                                                        className="mr-2 w-50 bg-danger"
+                                                                        onClick={() => {
+                                                                            form.resetForm();
+                                                                        }}
+                                                                    >
                                                                         {t(`CANCEL`)}
                                                                     </Button>
                                                                 </div>
                                                             </Form>
-                                                        }
-
+                                                        )}
                                                     </td>
                                                 </tr>
-                                            )
-                                        })
-                                    }
+                                            );
+                                        }
+                                    )}
                                 </tbody>
                             </Table>
                             <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
-
                         </ViewCard>
                     ) : (
                         <div className="d-flex justify-content-center align-items-center">
@@ -188,12 +220,8 @@ const AdditionalFiles = (props: AdditionalFilesProps) => {
                             />
                         </div>
                     )}
-
-
                 </Col>
             </Row>
         </div>
     );
-};
-
-export default AdditionalFiles;
+}

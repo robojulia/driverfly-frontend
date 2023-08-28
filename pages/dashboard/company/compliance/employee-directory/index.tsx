@@ -95,7 +95,7 @@ export default function EmployeeDirectory() {
         BACKGROUND: <Background employee={modalAction?.entity} />,
         DQF: < DQF employee={modalAction?.entity} canEdit={true} showHistory={true} />,
         // DRIVER_ONBOARDING_CHECKLIST: < DAC applicant={modalAction?.entity.applicant} />,
-        // ADDITIONAL_FILES: < AdditionalFiles applicant={modalAction?.entity.applicant} />,
+        ADDITIONAL_FILES: < AdditionalFiles employee={modalAction?.entity} />,
 
         // VEHICLES: < VehicleInformationTab />  //according to wireframe this tab (vehichled are pushed to phase 3)
     };
