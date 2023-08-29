@@ -133,11 +133,11 @@ export default function EmployeeDirectory() {
         try {
             const data = await employeeApi.remove(modalAction?.entity?.id)
 
-            if (data && data?.active_status == Status.DELETED) {
+            if (data && data?.status == EmployeeStatus.DELETED) {
                 filterEmployees(modalAction?.entity?.id)
-                toast(t("successfully_saved_information"))
+                toast.success(t("successfully_saved_information"))
             } else {
-                toast(t("ERROR_MESSAGE_DEFAULT"))
+                toast.error(t("ERROR_MESSAGE_DEFAULT"))
             }
         } catch (error) {
             toast(t("ERROR_MESSAGE_DEFAULT"))
