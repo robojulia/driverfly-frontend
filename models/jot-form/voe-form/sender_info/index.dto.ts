@@ -15,10 +15,10 @@ export class SenderInfoDto {
         .matches(/^[A-Za-z ]*$/, "Please enter valid name")
         .required()
         .nullable(),
-      title: yup.string().optional().nullable(),
-      phone: yup.string().optional().nullable(),
+      title: yup.string().required().nullable(),
+      phone: yup.string().required().nullable(),
       email: yup.string().email().required().nullable(),
-      date: yup.date().optional().nullable(),
+      date: yup.date().required().nullable(),
     });
   }
 }
