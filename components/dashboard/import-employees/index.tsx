@@ -64,11 +64,13 @@ const ImportEmployees = () => {
                     const matches = await api.list({ email: employee.email })
 
                     if (matches.some(v => v.company?.id != null)) rowError.email = t("{name}_ALREADY_EXISTS", { name: "EMAIL" }, { translateProps: true });
-                    else if (matches.some(v => v.company == null)) rowError.email = t("{name}_ALREADY_EXISTS_NO_MERGE", { name: "EMAIL" }, { translateProps: true });
+                    else if (matches.some(v => v.company == null)) rowError.email = t("{name}_ALREADY_EXISTS", { name: "EMAIL" }, { translateProps: true });
+                    // else if (matches.some(v => v.company == null)) rowError.email = t("{name}_ALREADY_EXISTS_NO_MERGE", { name: "EMAIL" }, { translateProps: true });
 
                     if (employee.phone) {
                         if (matches.some(v => v.company?.id != null)) rowError.phone = t("{name}_ALREADY_EXISTS", { name: "PHONE" }, { translateProps: true });
-                        else if (matches.some(v => v.company == null)) rowError.phone = t("{name}_ALREADY_EXISTS_NO_MERGE", { name: "PHONE" }, { translateProps: true });
+                        else if (matches.some(v => v.company == null)) rowError.phone = t("{name}_ALREADY_EXISTS", { name: "PHONE" }, { translateProps: true });
+                        // else if (matches.some(v => v.company == null)) rowError.phone = t("{name}_ALREADY_EXISTS_NO_MERGE", { name: "PHONE" }, { translateProps: true });
                     }
                     if (rowError) {
                         errors[i] = rowError
