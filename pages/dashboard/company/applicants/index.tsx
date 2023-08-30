@@ -212,9 +212,10 @@ export default function Applicants() {
                 onCloseClick={applicantJobForm.resetForm}
                 closeText="CANCEL"
                 title={"CHANGE_STATUS"}
+                className="bg-secondary "
             >
                 <form onSubmit={applicantJobForm.handleSubmit}>
-                    <Row>
+                    <Row className="py-3 px-5">
                         <BaseSelect
                             className="col-12"
                             label="STATUS"
@@ -300,7 +301,7 @@ export default function Applicants() {
                             />
                         }
                     </Row>
-                    <Row>
+                    <Row className="py-3 px-5">
                         <Button type="submit" variant="primary">
                             {t("SUBMIT")}
                         </Button>
