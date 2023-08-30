@@ -12,6 +12,7 @@ export interface ViewModalProps {
     size?: 'sm' | 'lg' | 'xl';
     onCloseClick?: () => void;
     readonly children?: React.ReactChildren | React.ReactChild;
+    className?: string;
 }
 
 export default function ViewModal(props: ViewModalProps) {
@@ -27,7 +28,7 @@ export default function ViewModal(props: ViewModalProps) {
     }
 
     return (
-        <Modal show={show} size={props.size} onHide={props.onCloseClick ?? hideModelHandler}>
+        <Modal show={show} size={props.size} onHide={props.onCloseClick ?? hideModelHandler} className={props.className}>
             <Modal.Header className="justify-content-between">
                 <div className="d-flex align-items-center">
                     {props.title && (
