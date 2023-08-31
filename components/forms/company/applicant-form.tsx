@@ -191,6 +191,10 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		const data = await userApi.list()
 		setCompanyUsers(data)
 	}, [])
+
+	const today = new Date()
+	const OldThan18Year = new Date((today.getFullYear() - 18), today.getMonth(), today.getDate()).toISOString().split("T")[0]
+
 	return (
 		<EntityForm
 			id={entity?.id}
@@ -257,6 +261,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									name="birthdate"
 									placeholder="MM/DD/YYYY"
 									formik={form}
+									max={OldThan18Year}
 								/>
 
 								<BaseInputPhone

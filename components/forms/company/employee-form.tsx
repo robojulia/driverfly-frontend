@@ -100,6 +100,8 @@ export function EmployeeForm(props: EmployeeFormProps) {
 		console.log("form val", form.values)
 	}, [form.errors, form.values]);
 
+	const today = new Date()
+	const OldThan18Year = new Date((today.getFullYear() - 18), today.getMonth(), today.getDate()).toISOString().split("T")[0]
 
 	useEffectAsync(async () => {
 		const data = await userApi.list()
@@ -163,6 +165,7 @@ export function EmployeeForm(props: EmployeeFormProps) {
 								name="birthdate"
 								placeholder="MM/DD/YYYY"
 								formik={form}
+								max={OldThan18Year}
 							/>
 
 							<BaseInputPhone
