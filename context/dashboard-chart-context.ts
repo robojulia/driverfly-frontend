@@ -3,18 +3,18 @@ import { ApplicantEntity } from "../models/applicant";
 import { EmployeeEntity } from "../models/employee/employee.entity";
 import { JobEntity } from "../models/job/job.entity";
 
-type DashboardChartContext = {
+type DashboardChartContextType = {
     state: {
-        data: ApplicantEntity[],
-        employee: EmployeeEntity[],
+        applicants: ApplicantEntity[],
+        employees: EmployeeEntity[],
         jobs: JobEntity[]
     }
 }
 
-const DashboardChartContext = createContext<DashboardChartContext>({
+const DashboardChartContext = createContext<DashboardChartContextType>({
     state: {
-        data: [],
-        employee: [],
+        applicants: [],
+        employees: [],
         jobs: []
     },
 });
