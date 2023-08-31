@@ -99,6 +99,7 @@ export default class ApplicantApi extends BaseApi {
 		jobId?: number;
 		email?: string;
 		status?: ApplicantStatus | ApplicantStatus[];
+		withHired?: boolean;
 	}): Promise<ApplicantEntity[]> {
 		const { data } = await this.get(
 			this.buildUrl(this.baseUrl + "/list", params)

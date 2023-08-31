@@ -4,36 +4,32 @@ import { PieChart } from "../pie-chart";
 import { ApplicantType } from "../../../enums/applicants/applicant-type.enum";
 
 export function SourceBreakdownChart() {
-  const { state } = useContext(DashboardChartContext);
-  const fetchData = () => {
-    let dha = 0;
-    let user = 0;
-    let company = 0;
-    state.data.forEach((a) => {
-      switch (a.type) {
-        case ApplicantType.DHA:
-          dha++;
-          break;
-        case ApplicantType.USER:
-          user++;
-          break;
-        case ApplicantType.COMPANY:
-          company++;
-          break;
-        default:
-          break;
-      }
-    });
-    return [dha, user, company];
-  };
+	const { state } = useContext(DashboardChartContext);
+	const fetchData = () => {
+		let dha = 0;
+		let user = 0;
+		let company = 0;
+		let jobApply = 0;
+		state.applicants.forEach((a) => {
+			(
+				{
+					[ApplicantType.DHA]: dha++,
+					[ApplicantType.USER]: user++,
+					[ApplicantType.COMPANY]: company++,
+					[ApplicantType.DIRECT_JOB_APPLY]: jobApply++,
+				}[a.type]
+			)
+		});
+		return [dha, user, company, jobApply];
+	};
 
-  const data = useMemo(() => {
-    return fetchData();
-  }, [state]);
+	const data = useMemo(() => {
+		return fetchData();
+	}, [state]);
 
-  const labels = ["DIGITAL_HIRING_APP", "DRIVERFLY", "UPLOADED"].map(
-    (v) => `SourceBreakdownChartLabel.${v}`
-  );
+	const labels = ["DIGITAL_HIRING_APP", "DRIVERFLY", "UPLOADED", "DIRECT_JOB_APPLY"].map(
+		(v) => `SourceBreakdownChartLabel.${v}`
+	);
 
-  return <PieChart title="APPLICANTS" labels={labels} data={data} />;
+	return <PieChart title="APPLICANTS" labels={labels} data={data} />;
 }
