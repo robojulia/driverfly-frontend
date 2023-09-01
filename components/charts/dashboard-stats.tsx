@@ -26,13 +26,12 @@ export const DashboardStats = () => {
 			CONVERSION_RATE?: string;
 		} = applicants?.reduce(
 			(acc, a) => {
-				if (
-					moment(a?.created_at).isoWeek() === currentWeek &&
-					a?.current_application_status?.startsWith("NEW_")
-				) {
-					acc.NEW_LEADS++;
+				if (a?.current_application_status?.startsWith("NEW_")) {
+					acc.TOTAL_LEADS++;
+					if (moment(a?.created_at).isoWeek() === currentWeek) {
+						acc.NEW_LEADS++;
+					}
 				}
-				acc.TOTAL_LEADS++;
 				return acc;
 			},
 			{
@@ -78,7 +77,9 @@ export const DashboardStats = () => {
 			(applicants?.filter((a) => Boolean(a?.is_hired))?.length /
 				applicants?.length) *
 			100;
-		stats.CONVERSION_RATE = (conversionRate ? Number(conversionRate?.toFixed(2)) + "%" : "-");
+		stats.CONVERSION_RATE = conversionRate
+			? Number(conversionRate?.toFixed(2)) + "%"
+			: "-";
 
 		return stats;
 	};
