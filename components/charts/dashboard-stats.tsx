@@ -38,20 +38,25 @@ export const DashboardStats = () => {
 				NEW_LEADS: 0,
 				TOTAL_LEADS: 0,
 				TOTAL_ACTIVE_EMPLOYEE: (
-					<Link href={`/dashboard/company/jobs`}>
-						<a className="text-dark text-decoration-none">
-							{
-								employees?.filter((v) => v?.status === EmployeeStatus.ACTIVE)
-									?.length
-							}
-						</a>
-					</Link>
+					<>{
+						employees?.filter((v) => v?.status === EmployeeStatus.ACTIVE)
+							?.length
+					}</>
+					// <Link href={`/dashboard/company/jobs`}>
+					// 	<a className="text-dark text-decoration-none">
+					// 		{
+					// 			employees?.filter((v) => v?.status === EmployeeStatus.ACTIVE)
+					// 				?.length
+					// 		}
+					// 	</a>
+					// </Link>
 				),
 				EMPLOYEE_BIRTHDAYS: 0,
 				ACTIVE_JOB_POSTS: (
-					<Link href={`/dashboard/company/jobs`}>
-						<a className="text-dark text-decoration-none">{jobs?.length}</a>
-					</Link>
+					<>{jobs?.length}</>
+					// <Link href={`/dashboard/company/jobs`}>
+					// 	<a className="text-dark text-decoration-none">{jobs?.length}</a>
+					// </Link>
 				),
 				CONVERSION_RATE: "0%",
 			}
