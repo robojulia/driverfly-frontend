@@ -78,7 +78,7 @@ export const DashboardStats = () => {
 			(applicants?.filter((a) => Boolean(a?.is_hired))?.length /
 				applicants?.length) *
 			100;
-		stats.CONVERSION_RATE = Number(conversionRate?.toFixed(2)) + "%";
+		stats.CONVERSION_RATE = (conversionRate ? Number(conversionRate?.toFixed(2)) + "%" : "-");
 
 		return stats;
 	};
