@@ -66,8 +66,13 @@ export default function Dashboard() {
 								<ApplicantPieChart />
 							</ChartWrapper>
 
-							<ChartWrapper title="LEAD_ASSIGNMENT" md="6" lg="6">
-								<ApplicantsPerRecruiterChart />
+							<ChartWrapper
+								title="SOURCE_BREAKDOWN"
+								md="6"
+								className="p-0"
+								titleClassName="text-center justify-content-center"
+							>
+								<SourceBreakdownChart />
 							</ChartWrapper>
 
 							<ChartWrapper
@@ -79,13 +84,8 @@ export default function Dashboard() {
 								<TotalApplicantBarChart />
 							</ChartWrapper>
 
-							<ChartWrapper
-								title="SOURCE_BREAKDOWN"
-								md="6"
-								className="p-0"
-								titleClassName="text-center justify-content-center"
-							>
-								<SourceBreakdownChart />
+							<ChartWrapper title="LEAD_ASSIGNMENT" md="6" lg="6">
+								<ApplicantsPerRecruiterChart />
 							</ChartWrapper>
 						</Row>
 					</DashboardChartContext.Provider>

@@ -13,11 +13,11 @@ export function SourceBreakdownChart() {
 		state.applicants.forEach((a) => {
 			(
 				{
-					[ApplicantType.DHA]: dha++,
-					[ApplicantType.USER]: user++,
-					[ApplicantType.COMPANY]: company++,
-					[ApplicantType.DIRECT_JOB_APPLY]: jobApply++,
-				}[a.type]
+					[ApplicantType.DHA]: (() => dha++),
+					[ApplicantType.USER]: (() => user++),
+					[ApplicantType.COMPANY]: (() => company++),
+					[ApplicantType.DIRECT_JOB_APPLY]: (() => jobApply++),
+				}[a.type]()
 			)
 		});
 		return [dha, user, company, jobApply];
