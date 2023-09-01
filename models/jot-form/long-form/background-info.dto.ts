@@ -14,7 +14,7 @@ export class BackgroundInfoDto {
       birthdate: yup
         .date()
         .required()
-        .typeError("INVALID_DATE")
+        .typeError("Invalid Date")
         .max(moment().endOf("day").subtract(18, "years"), "TOO YOUNG TO DRIVE"),
       LINE_ADDRESS: ApplicantExtrasEntity.yupSchema(),
       city: yup.string().required().nullable(),

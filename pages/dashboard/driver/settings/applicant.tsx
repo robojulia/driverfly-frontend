@@ -84,6 +84,9 @@ export default function Applicant() {
         setApplicant(data)
     }, []);
 
+    const today = new Date()
+    const OldThan18Year = new Date((today.getFullYear() - 18), today.getMonth(), today.getDate()).toISOString().split("T")[0]
+
     return (<>
         <ToastContainer />
         <form onSubmit={form.handleSubmit}>
@@ -133,6 +136,7 @@ export default function Applicant() {
                                     name="birthdate"
                                     placeholder="MM/DD/YYYY"
                                     formik={form}
+                                    max={OldThan18Year}
                                 />
 
                                 <BaseInputPhone
