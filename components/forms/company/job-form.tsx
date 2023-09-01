@@ -857,7 +857,6 @@ export function JobForm(props: JobFormProps) {
                                         className="col-12"
                                         label="MINIMUM_CDL_CLASS"
                                         name="cdl_class"
-                                        placeholder="DriverLicenseType.NONE"
                                         labelPrefix="DriverLicenseType"
                                         required
                                         enumType={DriverLicenseType}
