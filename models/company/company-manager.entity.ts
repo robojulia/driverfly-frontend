@@ -15,7 +15,7 @@ export class CompanyManagerEntity {
 		const { t } = useTranslation()
 		return yup.object({
 			name: yup.string().required().nullable().max(255),
-			email: yup.string().required().nullable().max(255),
+			email: yup.string().email().required().nullable().max(255),
 			phone: yup.string().required().nullable().max(255),
 		});
 	}
