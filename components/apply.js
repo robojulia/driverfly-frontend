@@ -148,6 +148,7 @@ export default function JobApply({ job, setEncourageModal }) {
                     <Row>
                         <BaseInput
                             readOnly={user && !user.company ? true : false}
+                            required
                             type="email"
                             className=" col-md-6 mt-3"
                             label="email"
