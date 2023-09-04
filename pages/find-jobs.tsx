@@ -165,18 +165,19 @@ export default function FindJobs(props) {
                 handlePaging: setPagingMeta,
             },
         }}>
-        <Head>
-        <title>
-        {t("FIND_JOBS_META_TITLE")}</title>
-        <meta
-          name="description"
-          content= {t("FIND_JOBS_META_DESC")}        key="desc"
-        />
-        </Head>
+            <Head>
+                <title>
+                    {t("FIND_JOBS_META_TITLE")}</title>
+                <meta
+                    name="description"
+                    content={t("FIND_JOBS_META_DESC")}
+                    key="desc"
+                />
+            </Head>
             <div className="filter-sec">
                 <div className="container">
                     <div className="row">
-                        <div className="col-12 col-lg-3 lg-mt-0 mt-5">
+                        <div className="col-12 col-lg-3 lg-mt-0 mt-4">
                             < FilterResult />
                         </div>
                         <div className="col-md-9 outer pl-4 ">

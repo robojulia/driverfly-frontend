@@ -4,7 +4,6 @@ import { Card, Col, Row } from "react-bootstrap";
 import DashboardChartContext from "../../context/dashboard-chart-context";
 import { useTranslation } from "../../hooks/use-translation";
 import { EmployeeStatus } from "../../enums/applicants/employee-status.enum";
-import Link from "next/link";
 
 export const DashboardStats = () => {
 	const { state } = useContext(DashboardChartContext);
