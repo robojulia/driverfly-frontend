@@ -79,7 +79,7 @@ export default function Dashboard() {
 								title="HISTORICAL_RANGE"
 								md="6"
 								className="p-0"
-								titleClassName="text-left justify-content-start ml-4"
+								titleClassName="text-center justify-content-start ml-4"
 							>
 								<TotalApplicantBarChart />
 							</ChartWrapper>
