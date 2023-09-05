@@ -10,11 +10,15 @@ import { Status } from "../../../../enums/status.enum";
 import { CompanyEntity } from "../../../../models/company/company.entity";
 import BaseInput from "../../../../components/forms/base-input";
 import { JobEntity } from "../../../../models/job/job.entity";
+import { CompanyPreferenceEntity } from "../../../../models/company/company-preferences.entity";
 
 export interface FullFormProps {
-	employer: CompanyEntity
+	employer: CompanyEntity;
+	preferences: CompanyPreferenceEntity[];
 }
-export default function FullForm({ employer }: FullFormProps) {
+export default function FullForm({ employer, preferences }: FullFormProps) {
+	console.log("preferences", preferences);
+
 
 	const [jobs, setJobs] = useState<JobEntity[]>([]);
 	const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
@@ -26,7 +30,8 @@ export default function FullForm({ employer }: FullFormProps) {
 				? [...oldApx, { ...applicantExtrasEntity }]
 				: [{ ...applicantExtrasEntity }];
 		});
-	const [steps, setSteps] = useState<number>(0);
+
+	const [steps, setSteps] = useState<number>(28);
 	const stepNext = (): void => setSteps(steps + 1);
 	const stepBack = (): void => setSteps(steps - 1);
 
@@ -41,6 +46,7 @@ export default function FullForm({ employer }: FullFormProps) {
 					applicant,
 					jobs,
 					applicantExtras,
+					companyPreferences: preferences,
 					steps
 				},
 				method: {
@@ -85,6 +91,7 @@ export async function getServerSideProps({ query }: NextPageContext) {
 
 		const companyApi = new CompanyApi();
 		const employer: CompanyEntity = await companyApi.employer.getById(companyId);
+		const preferences: CompanyPreferenceEntity[] = await companyApi.preferences.list(companyId)
 
 		if (employer?.status !== Status.ACTIVE) {
 			if (employer == null) {
@@ -95,7 +102,7 @@ export async function getServerSideProps({ query }: NextPageContext) {
 			return { notFound: true };
 		}
 
-		return { props: { employer } }
+		return { props: { employer, preferences } }
 	} catch (error) {
 		console.error(`form/jotform: Exception when attempting to fetch details for companyId: ${query?.companyId}`, error);
 		return { notFound: true }

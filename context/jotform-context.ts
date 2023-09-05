@@ -3,11 +3,13 @@ import { ApplicantEmployerEntity } from "../models/applicant";
 import { ApplicantExtrasEntity } from "../models/applicant/applicant-extras.entity";
 import { ApplicantEntity } from "../models/applicant/applicant.entity";
 import { JobEntity } from "../models/job/job.entity";
+import { CompanyPreferenceEntity } from "../models/company/company-preferences.entity";
 
 export type JotFormContextType = {
 	state: {
 		applicant?: ApplicantEntity;
 		jobs?: JobEntity[];
+		companyPreferences?: CompanyPreferenceEntity[];
 		applicantExtras?: ApplicantExtrasEntity[];
 		steps?: number;
 	};
@@ -25,6 +27,8 @@ const JotformContext = createContext<JotFormContextType>({
 	state: {
 		applicant: null,
 		applicantExtras: [],
+		jobs: [],
+		companyPreferences: [],
 		steps: 0,
 	},
 	method: {

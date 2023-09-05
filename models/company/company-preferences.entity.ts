@@ -7,6 +7,7 @@ import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
 import { CompanyPreferenceJotformLabel } from "../../enums/company/company-preferences-jotform-label.enum";
 import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
 import { JobGeography } from "../../enums/jobs/job-geography.enum";
+import { CompanyPreferenceEnhancementLabel } from '../../enums/company/company-preference-enhancement-label.enum';
 
 export class CompanyPreferenceEntity {
     constructor() { }
@@ -60,6 +61,14 @@ export class CompanyPreferenceEntity {
                         .when("label", {
                             is: CompanyPreferenceJotformLabel.JOB_GEOGRAPHY,
                             then: yup.array((yup.string() as any).required().enum(JobGeography)).nullable()
+                        })
+                })
+                .when("category", {
+                    is: CompanyPreferenceCategory.ENHANCEMENT,
+                    then: yup.mixed()
+                        .when("label", {
+                            is: CompanyPreferenceEnhancementLabel.ADD_SSN_ON_DHA,
+                            then: yup.boolean().optional().nullable()
                         })
                 })
         });
