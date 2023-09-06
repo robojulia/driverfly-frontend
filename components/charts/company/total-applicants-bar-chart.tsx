@@ -32,7 +32,7 @@ export function TotalApplicantBarChart() {
 		week,
 		weekEnd,
 	}: {
-		created_at: string;
+		created_at: string | Date;
 		week: string;
 		weekEnd: string;
 	}) => {
@@ -54,7 +54,13 @@ export function TotalApplicantBarChart() {
 
 			state?.applicants?.forEach(applicant => {
 				if (isWeekData({ created_at: applicant.created_at, week, weekEnd })) {
-					applicant.is_hired ? hiredCount++ : applicantCount++;
+					applicantCount++;
+				}
+			})
+
+			state?.employees?.forEach(employee => {
+				if (isWeekData({ created_at: employee.hire_date, week, weekEnd })) {
+					hiredCount++;
 				}
 			})
 
