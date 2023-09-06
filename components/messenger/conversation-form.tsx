@@ -193,13 +193,15 @@ export function ConversationForm(props: ConversationFormProps) {
                 .map((type) => t(`ApplicantDocumentType.${type}`))
                 .join(",");
             const message = `${t(
-                "REQUEST_{name}_FOR_MISSING_{documents}_MESSAGE_WITH_{link}",
+                "REQUEST_{name}_FOR_MISSING_{documents}_MESSAGE_WITH_{link}_{hv}",
                 {
                     name: `${props.applicant.first_name ?? ""} ${props.applicant.last_name ?? ""
                         }`,
                     documents,
                     link,
-                }
+                    hv: documentTypes.length == 1 ? "IS" : "ARE",
+                },
+                { translateProps: true }
             )}`;
             form.setFieldValue("message", message);
         } else {
