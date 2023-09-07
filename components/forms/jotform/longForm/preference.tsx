@@ -9,10 +9,13 @@ import { useFormik } from "formik";
 import { OtherRequirementType } from "../../../../enums/users/other-requirements.enum";
 import { BooleanPreferenceType } from "../../../../enums/users/boolean-preferences.enum";
 import BaseSelect from "../../base-select";
-import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
+import JotformContext, {
+	JotFormContextType,
+} from "../../../../context/jotform-context";
 import { PreferencesDto } from "../../../../models/jot-form/long-form/preferences.dto";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
+import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
 
 export function Preferences() {
 	const {
@@ -26,8 +29,13 @@ export function Preferences() {
 		validationSchema: PreferencesDto.yupSchema(),
 		onSubmit: (values) => {
 			console.log("values", values);
-			const { ROUTES, REQUIRE_W2_EMPLOYMENT, OTHER_ABSOLUTELY_REQUIREMENTS } =
-				values;
+			const {
+				ROUTES,
+				REQUIRE_W2_EMPLOYMENT,
+				OTHER_ABSOLUTELY_REQUIREMENTS,
+				preferred_location,
+			} = values;
+			setApplicant({ ...applicant, preferred_location })
 			updateApplicantExtras(ROUTES);
 			updateApplicantExtras(REQUIRE_W2_EMPLOYMENT);
 			updateApplicantExtras(OTHER_ABSOLUTELY_REQUIREMENTS);
@@ -38,10 +46,10 @@ export function Preferences() {
 		},
 	});
 
-	useEffect(() => {
-		console.log("form values", form.values);
-		console.log("form error", form.errors);
-	}, [form.values, form.errors]);
+	// useEffect(() => {
+	// 	console.log("form values", form.values);
+	// 	console.log("form error", form.errors);
+	// }, [form.values, form.errors]);
 
 	useEffect(() => {
 		const apx_routes = applicantExtras?.find(
@@ -66,15 +74,33 @@ export function Preferences() {
 				: new ApplicantExtrasEntity(
 					ApplicantExtras.OTHER_ABSOLUTELY_REQUIREMENTS
 				),
+			preferred_location: applicant.preferred_location
 		});
 	}, [applicant, applicantExtras]);
+
 	return (
 		<>
-			{" "}
 			<h1 className={`${styles.heading__sty}`}>{t("PREFERENCES")}</h1>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row className={styles.align__text_left}>
-					<p className={`${styles.paragraph}  ${styles.align__text_left}`}>{t("ROUTES_YOU_OPEN_FOR")}</p>
+					<p className={`${styles.paragraph}  ${styles.align__text_left}`}>
+						{t("PREFERRED_LOCATION")}
+					</p>
+				</Row>
+				<Row className={`${styles.align__text_left}`}>
+					<BaseCheckList
+						cols={1}
+						className="col-12 mb-2"
+						name="preferred_location"
+						formik={form}
+						labelPrefix="JobGeography"
+						enumType={JobGeography}
+					/>
+				</Row>
+				<Row className={styles.align__text_left}>
+					<p className={`${styles.paragraph}  ${styles.align__text_left}`}>
+						{t("ROUTES_YOU_OPEN_FOR")}
+					</p>
 				</Row>
 				<Row className={`${styles.align__text_left}  other_req `}>
 					<BaseCheckList
@@ -98,7 +124,9 @@ export function Preferences() {
 					/>
 				</Row>
 				<Row className={styles.align__text_left}>
-					<p className={`${styles.paragraph}  ${styles.align__text_left}`}>{t("NECESSARY_REQUIREMENTS")}</p>
+					<p className={`${styles.paragraph}  ${styles.align__text_left}`}>
+						{t("NECESSARY_REQUIREMENTS")}
+					</p>
 				</Row>
 				<BaseCheckList
 					className={`${styles.paragraph}  ${styles.align__text_left} other_req p-0`}

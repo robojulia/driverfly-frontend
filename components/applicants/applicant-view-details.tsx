@@ -6,6 +6,7 @@ import { calculateAge } from "../../utils/date";
 import ViewCard from "../view-details/view-card";
 import ViewDetails from "../view-details/view-details";
 import { ViewApplicantDetailProps } from "../../types/applicant/view-application-detail-props.type";
+import { ApplicantExtras } from "../../enums/applicants/applicant-extras.enum";
 export default function ViewApplicantDetail({
 	applicant,
 	protectedFields,
@@ -66,6 +67,9 @@ export default function ViewApplicantDetail({
 								AUTHORIZED_TO_WORK_IN_THE_US: applicant.authorized_to_work_in_us,
 								PREFERRED_LOCATION: applicant.preferred_location?.map((v) =>
 									t(`JobGeography.${v}`)
+								),
+								ROUTE_TYPE: applicant.extras?.find(v => v.type == ApplicantExtras.ROUTES)?.value?.map((v) =>
+									t(`RouteType.${v}`)
 								),
 							}}
 						/>

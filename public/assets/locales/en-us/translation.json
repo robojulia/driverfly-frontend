@@ -129,13 +129,14 @@
     "REGIONAL": "Regional",
     "LOCAL": "Local"
   },
+  "ROUTE_TYPE": "Route Type",
   "RouteType": {
-    "LOCAL": "Local (home every night)",
-    "REGIONAL_NIGHT": "Regional (home every night)",
-    "REGIONAL_WEEKEND": "Regional (home every weekend)",
-    "REGIONAL_ROAD": "Regional (2+ weeks on the road)",
-    "OTR_WEEKEND": "OTR (home every weekend)",
-    "OTR_ROAD": "OTR (2+ weeks on the road)"
+    "MULTIPLE_WEEKS_ON_ROAD": "Multiple weeks on the road",
+    "MOST_WEEKENDS_OFF": "Most weekends off",
+    "WEEKENDS_OFF": "Weekends off",
+    "HOME_EVERY_NIGHT": "Home every night",
+    "HOME_EVERY_OTHER_NIGHT": "Home every other night",
+    "NIGHT_SHIFT": "Night shift"
   },
   "OtherRequirementType": {
     "HEALTH_BENEFITS": "Health Benefits",

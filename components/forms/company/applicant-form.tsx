@@ -3,7 +3,12 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import { Button, Col, Row, Table } from "react-bootstrap";
-import { ChevronUp, DashCircle, PlusCircle, XCircle } from "react-bootstrap-icons";
+import {
+	ChevronUp,
+	DashCircle,
+	PlusCircle,
+	XCircle,
+} from "react-bootstrap-icons";
 import { useFormik } from "formik";
 
 import { useEffectAsync } from "../../../utils/react";
@@ -48,14 +53,16 @@ import { UserEntity } from "../../../models/user/user.entity";
 import { JobForm } from "./job-form";
 import { HireApplicantDto } from "../../../models/applicant/hire-applicant.dto";
 import EmployeeApi from "../../../pages/api/employee";
+import { RouteType } from "../../../enums/vehicles/routes-type.enum";
+import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
+import { ApplicantExtrasEntity } from "../../../models/applicant";
 
-export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> {
-}
+export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
 export function ApplicantForm(props: ApplicantFormProps) {
-	const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([])
+	const [companyUsers, setCompanyUsers] = useState<UserEntity[]>([]);
 	const { t } = useTranslation();
-	const router = useRouter()
+	const router = useRouter();
 	const applicantApi = new ApplicantApi();
 	let { className, entity, onSaveComplete, onSaveError } = props;
 
@@ -63,17 +70,18 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
 	const [protectedFields, setProtectedFields] = useState({
 		license_number: false,
-		social_security_number: false
+		social_security_number: false,
 	});
 
 	const form = useFormik({
 		initialValues: new ApplicantEntity(),
 		validationSchema: ApplicantEntity.yupSchema(),
 		onSubmit: async (values) => {
-
+			values.extras = values.extras?.filter(
+				(v) => v.value != undefined || v.value != null
+			);
 			const jobs = values.jobs || [];
-			if ("jobs" in values)
-				delete values.jobs;
+			if ("jobs" in values) delete values.jobs;
 
 			try {
 				if (entity?.id) {
@@ -82,19 +90,21 @@ export function ApplicantForm(props: ApplicantFormProps) {
 						documents: [
 							...values.documents,
 							...entity.documents?.filter(
-								(v) => !Object.values(ApplicantDocumentType).includes(v.type as ApplicantDocumentType)
+								(v) =>
+									!Object.values(ApplicantDocumentType).includes(
+										v.type as ApplicantDocumentType
+									)
 							),
-						]?.filter(v => !!v),
+						]?.filter((v) => !!v),
 					} as ApplicantEntity);
-				}
-				else {
+				} else {
 					values = await applicantApi.create(values);
 				}
 
 				for (let i = 0; i < entity?.jobs?.length; i++) {
 					let job = entity.jobs[i];
 
-					if (!jobs.some(v => v.job?.id === job.job.id)) {
+					if (!jobs.some((v) => v.job?.id === job.job.id)) {
 						await applicantApi.jobs.remove(values.id, job.job.id);
 					}
 				}
@@ -104,8 +114,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 
 					if (job.id) {
 						await applicantApi.jobs.update(values.id, job.job.id, job);
-					}
-					else {
+					} else {
 						await applicantApi.jobs.create(values.id, job.job.id, job);
 					}
 				}
@@ -114,12 +123,14 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				if (onSaveComplete) onSaveComplete(values);
 			} catch (e) {
 				console.error("Unable to save applicant info", e);
-				if (!globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast }))
+				if (
+					!globalAjaxExceptionHandler(e, { formik: form, t: t, toast: toast })
+				)
 					formFailed(t, entity?.id ? "update" : "create", "APPLICANT");
 
 				if (onSaveError) onSaveError(e);
 			}
-		}
+		},
 	});
 
 	const [jobs, setJobs] = useState<JobEntity[]>([]);
@@ -127,7 +138,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	useEffectAsync(async () => {
 		setProtectedFields({
 			license_number: hasPermission("CanViewApplicant.license_number"),
-			social_security_number: hasPermission("CanViewApplicant.social_security_number"),
+			social_security_number: hasPermission(
+				"CanViewApplicant.social_security_number"
+			),
 		});
 
 		const api = new JobApi();
@@ -137,27 +150,51 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	}, [user]);
 
 	useEffect(() => {
-		if (entity && !form.dirty) {
-			form.setValues({
-				...entity,
-				documents: entity.documents?.filter((v) =>
-					Object.values(ApplicantDocumentType).includes(
-						v.type as ApplicantDocumentType
-					)
-				),
-			});
-		}
+		console.log("entity", entity);
+
+		form.setValues(() => {
+			let values: ApplicantEntity;
+			if (!!entity?.id) {
+				// if (form.dirty) return values;
+				let extras: ApplicantExtrasEntity[] = entity.extras;
+				if (!extras?.find((v) => v.type == ApplicantExtras.ROUTES))
+					extras?.push({
+						...new ApplicantExtrasEntity(),
+						type: ApplicantExtras.ROUTES,
+					});
+				values = {
+					...entity,
+					documents: entity.documents?.filter((v) =>
+						Object.values(ApplicantDocumentType).includes(
+							v.type as ApplicantDocumentType
+						)
+					),
+					extras,
+				};
+			} else {
+				values = {
+					extras: [
+						{
+							...new ApplicantExtrasEntity(),
+							type: ApplicantExtras.ROUTES,
+						},
+					],
+				};
+			}
+			return values;
+		});
 	}, [entity]);
 
-	const [jobHired, setJobHired] = useState<ApplicantJobEntity>(null)
+	const [jobHired, setJobHired] = useState<ApplicantJobEntity>(null);
 
 	useEffect(() => {
 		setJobHired(
-			form.values.jobs?.find((j) => j?.status?.startsWith("COMPLETED")) ?? null
+			form.values?.jobs?.find((j) => j?.status?.startsWith("COMPLETED")) ?? null
 		);
-	}, [form.values.jobs]);
+	}, [form.values?.jobs]);
 
-	const routeToEmployees = () => router.push('/dashboard/company/compliance/employee-directory')
+	const routeToEmployees = () =>
+		router.push("/dashboard/company/compliance/employee-directory");
 
 	const hireApplicantForm = useFormik({
 		initialValues: new HireApplicantDto(),
@@ -165,13 +202,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		validateOnMount: false,
 		onSubmit: async (values, { resetForm }) => {
 			try {
-				const employeeApi = new EmployeeApi()
-				await employeeApi.hire(values)
+				const employeeApi = new EmployeeApi();
+				await employeeApi.hire(values);
 				resetForm();
 				formSuccess(t, "hired", "STATUS");
-				routeToEmployees()
+				routeToEmployees();
 			} catch (e) {
-				globalAjaxExceptionHandler(e, { formik: hireApplicantForm, t: t, toast: toast });
+				globalAjaxExceptionHandler(e, {
+					formik: hireApplicantForm,
+					t: t,
+					toast: toast,
+				});
 			}
 		},
 	});
@@ -179,21 +220,29 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	const [createJob, setCreateJob] = useState<boolean>(false);
 
 	const onJobAdded = (job: JobEntity) => {
-		setJobs([
-			...jobs,
-			job
-		])
+		setJobs([...jobs, job]);
 		setCreateJob(false);
-	}
+	};
 
 	useEffectAsync(async () => {
-		const userApi = new UserApi()
-		const data = await userApi.list()
-		setCompanyUsers(data)
-	}, [])
+		const userApi = new UserApi();
+		const data = await userApi.list();
+		setCompanyUsers(data);
+	}, []);
 
-	const today = new Date()
-	const OldThan18Year = new Date((today.getFullYear() - 18), today.getMonth(), today.getDate()).toISOString().split("T")[0]
+	const today = new Date();
+	const OldThan18Year = new Date(
+		today.getFullYear() - 18,
+		today.getMonth(),
+		today.getDate()
+	)
+		.toISOString()
+		.split("T")[0];
+
+	// useEffect(() => {
+	// 	console.log("form.values", form.values);
+	// 	console.log("form.errors", form.errors);
+	// }, [form.values, form.errors]);
 
 	return (
 		<EntityForm
@@ -206,20 +255,18 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				{
 					label: "HIRE",
 					className: "btn theme-primary-btn",
-					hide: !Boolean(form.values.id) || Boolean(entity?.is_hired),
+					hide: !Boolean(form.values?.id) || Boolean(entity?.is_hired),
 					disabled: form.isSubmitting,
-					onClick: () => hireApplicantForm.setValues({ applicantId: entity.id }),
-				}
+					onClick: () =>
+						hireApplicantForm.setValues({ applicantId: entity.id }),
+				},
 			]}
 		>
-
 			<Row>
-
 				<Col className="p-0 px-lg-2 mt-3">
-
 					<ViewCard title="BASIC_DETAILS">
 						<Row className="mb-2">
-							<Col md='4'>
+							<Col md="4">
 								<BaseSelect
 									// className="col-12 my-2"
 									readOnly={!Boolean(isSuperAdmin) || Boolean(entity?.is_hired)}
@@ -228,7 +275,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									placeholder
 									options={companyUsers}
 									valueKey="id"
-									createLabel={c => `${c.name} (#${c.id})`}
+									createLabel={(c) => `${c.name} (#${c.id})`}
 									formik={form}
 								/>
 							</Col>
@@ -298,7 +345,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									placeholder="CITY"
 									formik={form}
 								/>
-								<Row className='px-3'>
+								<Row className="px-3">
 									<StateSelect
 										className="col-6"
 										readOnly={Boolean(entity?.is_hired)}
@@ -324,7 +371,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									name="license_number"
 									placeholder="driver_license_number"
 									formik={form}
-									readOnly={!protectedFields.license_number || Boolean(entity?.is_hired)}
+									readOnly={
+										!protectedFields.license_number || Boolean(entity?.is_hired)
+									}
 								/>
 								<BaseInput
 									className="col-12"
@@ -381,17 +430,26 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								<BaseCheckList
 									className="col-12 mt-2"
 									disabled={Boolean(entity?.is_hired)}
-
 									label="PREFERRED_LOCATION"
 									name="preferred_location"
 									formik={form}
 									labelPrefix="JobGeography"
 									enumType={JobGeography}
-
+								/>
+								<BaseCheckList
+									className="col-12 mt-2"
+									disabled={Boolean(entity?.is_hired)}
+									label="ROUTE_TYPE"
+									name={`extras[${form.values?.extras?.findIndex(
+										(v) => v.type == ApplicantExtras.ROUTES
+									)}].value`}
+									formik={form}
+									labelPrefix="RouteType"
+									enumType={RouteType}
 								/>
 
-								{form.values.id
-									&& <BaseSelect
+								{form.values?.id && (
+									<BaseSelect
 										className="col-12 mt-2"
 										readOnly={Boolean(entity?.is_hired)}
 										name={`current_application_status`}
@@ -402,20 +460,17 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										enumType={ApplicantStatus}
 										formik={form}
 									/>
-								}
-								{
-									form.values.current_application_status && (
-										<div className="col-12 mt-2">
-											<label>{t("REMARKS")}</label>
-											<BaseTextArea
-
-												name="remarks"
-												placeholder="Add a remark"
-												formik={form}
-											/>
-										</div>
-									)
-								}
+								)}
+								{form.values?.current_application_status && (
+									<div className="col-12 mt-2">
+										<label>{t("REMARKS")}</label>
+										<BaseTextArea
+											name="remarks"
+											placeholder="Add a remark"
+											formik={form}
+										/>
+									</div>
+								)}
 							</Col>
 							<Col md="4" className="px-2">
 								<BaseCheckList
@@ -448,7 +503,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									labelPrefix="EducationLevel"
 									enumType={EducationLevel}
 								/>
-								<Col xs="12" className='mt-2'>
+								<Col xs="12" className="mt-2">
 									<ViewCard title="EMERGENCY_CONTACT">
 										<BaseInput
 											className="col-12"
@@ -475,193 +530,240 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											placeholder="RELATIONSHIP"
 											formik={form}
 										/>
-
 									</ViewCard>
 								</Col>
 							</Col>
 						</Row>
-
 					</ViewCard>
 				</Col>
 			</Row>
 			<Row>
 				<Row>
 					<Col className="col-md-6">
-						<Col xs="12" className='p-2 mt-2' >
+						<Col xs="12" className="p-2 mt-2">
 							<ViewCard
 								title="equipment_experience"
-								actions={<Button disabled={Boolean(entity?.is_hired)} size='sm' onClick={() => form.setValues({
-									...form.values,
-									equipment_experience: [
-										...(form.values.equipment_experience || []),
-										new ApplicantExperienceEntity()
-									]
-								})}><PlusCircle /> {t("ADD")}</Button>}
+								actions={
+									<Button
+										disabled={Boolean(entity?.is_hired)}
+										size="sm"
+										onClick={() =>
+											form.setValues({
+												...form.values,
+												equipment_experience: [
+													...(form.values?.equipment_experience || []),
+													new ApplicantExperienceEntity(),
+												],
+											})
+										}
+									>
+										<PlusCircle /> {t("ADD")}
+									</Button>
+								}
 							>
-								{
-									form.values.equipment_experience?.length > 0 &&
+								{form.values?.equipment_experience?.length > 0 && (
 									<>
-										{form.values
-											.equipment_experience
-											.map((entity, i) => (
-												<Row key={i}>
-													<div className="col-md-6 mt-2">
-														<Col className="p-0"><strong>{t("TYPE")}</strong></Col>
+										{form.values?.equipment_experience.map((entity, i) => (
+											<Row key={i}>
+												<div className="col-md-6 mt-2">
+													<Col className="p-0">
+														<strong>{t("TYPE")}</strong>
+													</Col>
 
+													<BaseSelect
+														readOnly={Boolean(props?.entity?.is_hired)}
+														name={`equipment_experience[${i}].type`}
+														placeholder="TYPE"
+														labelPrefix="JobEquipmentType"
+														enumType={JobEquipmentType}
+														formik={form}
+													/>
+												</div>
+												<div className="col-md-5 mt-2">
+													<Col className="p-0">
+														<strong>{t("YEARS")}</strong>
+													</Col>
+
+													<BaseInput
+														readOnly={Boolean(props?.entity?.is_hired)}
+														name={`equipment_experience[${i}].years`}
+														placeholder="YEARS"
+														type="int"
+														min="1"
+														formik={form}
+													/>
+												</div>
+												{entity.type === JobEquipmentType.OTHER && (
+													<div>
+														<BaseInput
+															readOnly={Boolean(props?.entity?.is_hired)}
+															className="my-2"
+															name={`equipment_experience[${i}].type_other`}
+															placeholder="TYPE"
+															formik={form}
+														/>
+													</div>
+												)}
+												<div className="pl-sm-1 pt-lg-2 col-lg-1 col-md-12">
+													<Col className="mt-4"></Col>
+													<a
+														href="#"
+														onClick={() =>
+															form.setValues({
+																...form.values,
+																equipment_experience:
+																	form.values?.equipment_experience?.filter(
+																		(v, idx) => i != idx
+																	),
+															})
+														}
+													>
+														<DashCircle color="red" />
+													</a>
+												</div>
+												<div className="12">
+													<hr />
+												</div>
+											</Row>
+										))}
+									</>
+								)}
+							</ViewCard>
+						</Col>
+					</Col>
+					<Col md="6" className="px-2">
+						{form.values?.is_owner_operator && (
+							<Col xs="12" className="mt-3">
+								<ViewCard
+									title="EQUIPMENT_OWNED"
+									actions={
+										<Button
+											disabled={Boolean(entity?.is_hired)}
+											size="sm"
+											onClick={() =>
+												form.setValues({
+													...form.values,
+													equipment_owned: [
+														...form.values?.equipment_owned,
+														new ApplicantEquipmentEntity(),
+													],
+												})
+											}
+										>
+											<PlusCircle /> {t("ADD")}
+										</Button>
+									}
+								>
+									{form.values?.equipment_owned?.length > 0 && (
+										<>
+											<Row className="d-sm-none d-md-flex">
+												<Col>
+													<strong>{t("TYPE")}</strong>
+												</Col>
+												<Col>
+													<strong>{t("QUANTITY")}</strong>
+												</Col>
+											</Row>
+											{form.values?.equipment_owned?.map((entity, i) => (
+												<Row key={i}>
+													<Col xs="12" className="d-sm-flex d-md-none">
+														<Col>
+															<strong>{t("TYPE")}</strong>
+														</Col>
+														<Col>
+															<strong>{t("QUANTITY")}</strong>
+														</Col>
+													</Col>
+													<Col xs="6">
 														<BaseSelect
 															readOnly={Boolean(props?.entity?.is_hired)}
-															name={`equipment_experience[${i}].type`}
+															name={`equipment_owned[${i}].type`}
 															placeholder="TYPE"
 															labelPrefix="JobEquipmentType"
 															enumType={JobEquipmentType}
 															formik={form}
 														/>
-													</div >
-													<div className="col-md-5 mt-2">
-														<Col className="p-0"><strong>{t("YEARS")}</strong></Col>
-
+													</Col>
+													<Col xs="5">
 														<BaseInput
 															readOnly={Boolean(props?.entity?.is_hired)}
-															name={`equipment_experience[${i}].years`}
-															placeholder="YEARS"
+															name={`equipment_owned[${i}].quantity`}
+															placeholder="QUANTITY"
 															type="int"
 															min="1"
 															formik={form}
 														/>
-													</div >
-													{
-														entity.type === JobEquipmentType.OTHER &&
-														<div >
+													</Col>
+													{entity.type === JobEquipmentType.OTHER && (
+														<Col xs="11">
 															<BaseInput
 																readOnly={Boolean(props?.entity?.is_hired)}
-																className="my-2"
-																name={`equipment_experience[${i}].type_other`}
+																name={`equipment_owned[${i}].type_other`}
 																placeholder="TYPE"
 																formik={form}
 															/>
-														</div >
-													}
-													<div className="pl-sm-1 pt-lg-2 col-lg-1 col-md-12">
-														<Col className="mt-4"></Col>
-														<a href="#" onClick={() => form.setValues({
-															...form.values,
-															equipment_experience: form.values.equipment_experience.filter((v, idx) => i != idx)
-														})}><DashCircle color="red" /></a>
-													</div >
-													<div className="12">
+														</Col>
+													)}
+													<Col xs="1">
+														<a
+															href="#"
+															onClick={() =>
+																form.setValues({
+																	...form.values,
+																	equipment_owned:
+																		form.values?.equipment_owned?.filter(
+																			(v, idx) => i != idx
+																		),
+																})
+															}
+														>
+															<DashCircle color="red" />
+														</a>
+													</Col>
+													<Col xs="12">
 														<hr />
-													</div >
-
+													</Col>
 												</Row>
 											))}
-									</>
-								}
-							</ViewCard>
-						</Col>
-					</Col>
-					<Col md="6" className='px-2'>
-						{
-							form.values.is_owner_operator &&
-							<Col xs="12" className='mt-3'>
-								<ViewCard
-									title="EQUIPMENT_OWNED"
-									actions={<Button disabled={Boolean(entity?.is_hired)} size='sm' onClick={() => form.setValues({
-										...form.values,
-										equipment_owned: [
-											...form.values.equipment_owned,
-											new ApplicantEquipmentEntity()
-										]
-									})}><PlusCircle /> {t("ADD")}</Button>}
-								>
-									{
-										form.values.equipment_owned.length > 0 &&
-										<>
-											<Row className='d-sm-none d-md-flex'>
-												<Col><strong>{t("TYPE")}</strong></Col>
-												<Col><strong>{t("QUANTITY")}</strong></Col>
-											</Row>
-											{form.values
-												.equipment_owned
-												.map((entity, i) => (
-													<Row key={i}>
-														<Col xs="12" className='d-sm-flex d-md-none'>
-															<Col><strong>{t("TYPE")}</strong></Col>
-															<Col><strong>{t("QUANTITY")}</strong></Col>
-														</Col>
-														<Col xs="6">
-															<BaseSelect
-																readOnly={Boolean(props?.entity?.is_hired)}
-																name={`equipment_owned[${i}].type`}
-																placeholder="TYPE"
-																labelPrefix="JobEquipmentType"
-																enumType={JobEquipmentType}
-																formik={form}
-															/>
-														</Col>
-														<Col xs="5">
-															<BaseInput
-																readOnly={Boolean(props?.entity?.is_hired)}
-																name={`equipment_owned[${i}].quantity`}
-																placeholder="QUANTITY"
-																type="int"
-																min="1"
-																formik={form}
-															/>
-														</Col>
-														{
-															entity.type === JobEquipmentType.OTHER &&
-															<Col xs="11">
-																<BaseInput
-																	readOnly={Boolean(props?.entity?.is_hired)}
-																	name={`equipment_owned[${i}].type_other`}
-																	placeholder="TYPE"
-																	formik={form}
-																/>
-															</Col>
-														}
-														<Col xs="1">
-															<a href="#" onClick={() => form.setValues({
-																...form.values,
-																equipment_owned: form.values.equipment_owned.filter((v, idx) => i != idx)
-															})}><DashCircle color="red" /></a>
-														</Col>
-														<Col xs="12">
-															<hr />
-														</Col>
-
-													</Row>
-												))}
 										</>
-									}
+									)}
 								</ViewCard>
 							</Col>
-						}
+						)}
 					</Col>
-
 				</Row>
 			</Row>
 			<Row>
 				<Col md="4" className="p-0 px-lg-2">
 					<ViewCard
 						title="WORK_HISTORY"
-						actions={<Button disabled={Boolean(entity?.is_hired)} size='sm' onClick={() => form.setValues({
-							...form.values,
-							employers: [
-								...(form.values.employers || []),
-								new ApplicantEmployerEntity()
-							]
-						})}><PlusCircle /> {t("ADD")}</Button>}
-					>
-						{!form.values.employers?.length &&
-							<>{t("NONE")}</>
+						actions={
+							<Button
+								disabled={Boolean(entity?.is_hired)}
+								size="sm"
+								onClick={() =>
+									form.setValues({
+										...form.values,
+										employers: [
+											...(form.values?.employers || []),
+											new ApplicantEmployerEntity(),
+										],
+									})
+								}
+							>
+								<PlusCircle /> {t("ADD")}
+							</Button>
 						}
-						{form.values.employers?.length > 0 &&
+					>
+						{!form.values?.employers?.length && <>{t("NONE")}</>}
+						{form.values?.employers?.length > 0 && (
 							<>
-								{form.values.employers.map((e, i) => {
-
+								{form.values?.employers?.map((e, i) => {
 									const meta = form.getFieldMeta(`employers[${i}]`);
 
-									const hasError = Object.keys(e || {}).some(v => form.getFieldMeta(`employers[${i}].${v}`).error);
+									const hasError = Object.keys(e || {}).some(
+										(v) => form.getFieldMeta(`employers[${i}].${v}`).error
+									);
 
 									return (
 										<Accordion
@@ -669,22 +771,26 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											defaultExpanded={i === 0 || !meta.touched || hasError}
 											expanded={hasError || undefined}
 										>
-											<AccordionSummary
-												expandIcon={<ChevronUp />}
-											>
-												<Button disabled={Boolean(entity?.is_hired)}
+											<AccordionSummary expandIcon={<ChevronUp />}>
+												<Button
+													disabled={Boolean(entity?.is_hired)}
 													type="button"
 													size="sm"
 													variant="danger"
-													onClick={v => form.setValues({
-														...form.values,
-														employers: form.values.employers.filter((v, idx) => idx !== i),
-													})}
+													onClick={(v) =>
+														form.setValues({
+															...form.values,
+															employers: form.values?.employers?.filter(
+																(v, idx) => idx !== i
+															),
+														})
+													}
 												>
 													<XCircle /> {t("REMOVE")}
 												</Button>
-												<span style={{ marginLeft: "10px" }} >{e.name || t("NEW_EMPLOYER")}</span>
-
+												<span style={{ marginLeft: "10px" }}>
+													{e.name || t("NEW_EMPLOYER")}
+												</span>
 											</AccordionSummary>
 											<AccordionDetails>
 												<Row>
@@ -788,7 +894,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									);
 								})}
 							</>
-						}
+						)}
 					</ViewCard>
 				</Col>
 				<Col md="8" className="p-0 px-lg-2">
@@ -809,22 +915,29 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									name="has_past_dui"
 									formik={form}
 								/>
-								{
-									form.values.has_past_dui &&
-									<Col xs="12" className='mt-2'>
+								{form.values?.has_past_dui && (
+									<Col xs="12" className="mt-2">
 										<ViewCard
 											title="PAST_DUIS"
-											actions={<Button disabled={Boolean(entity?.is_hired)} size='sm' onClick={() => form.setValues({
-												...form.values,
-												dui_years: [
-													...(form.values.dui_years || []),
-													""
-												]
-											})}><PlusCircle /> {t("ADD")}</Button>}
+											actions={
+												<Button
+													disabled={Boolean(entity?.is_hired)}
+													size="sm"
+													onClick={() =>
+														form.setValues({
+															...form.values,
+															dui_years: [
+																...(form.values?.dui_years || []),
+																"",
+															],
+														})
+													}
+												>
+													<PlusCircle /> {t("ADD")}
+												</Button>
+											}
 										>
-											{
-												form.values.dui_years?.length > 0 &&
-
+											{form.values?.dui_years?.length > 0 && (
 												<Table striped>
 													<thead>
 														<tr>
@@ -832,37 +945,44 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														</tr>
 													</thead>
 													<tbody>
-														{form.values
-															.dui_years
-															.map((entity, i) => (
-																<tr key={i}>
-																	<td className='w-100'>
-																		<BaseInput
-																			name={`dui_years[${i}]`}
-																			readOnly={Boolean(props?.entity?.is_hired)}
-																			placeholder="YEAR"
-																			type="int"
-																			required
-																			min={new Date().getFullYear() - 5}
-																			max={new Date().getFullYear()}
-																			formik={form}
-																		/>
-																	</td>
-																	<td>
-																		<a href="#" onClick={() => form.setValues({
-																			...form.values,
-																			dui_years: form.values.dui_years.filter((v, idx) => i != idx)
-																		})}><DashCircle color="red" /></a>
-																	</td>
-
-																</tr>
-															))}
+														{form.values?.dui_years?.map((entity, i) => (
+															<tr key={i}>
+																<td className="w-100">
+																	<BaseInput
+																		name={`dui_years[${i}]`}
+																		readOnly={Boolean(props?.entity?.is_hired)}
+																		placeholder="YEAR"
+																		type="int"
+																		required
+																		min={new Date().getFullYear() - 5}
+																		max={new Date().getFullYear()}
+																		formik={form}
+																	/>
+																</td>
+																<td>
+																	<a
+																		href="#"
+																		onClick={() =>
+																			form.setValues({
+																				...form.values,
+																				dui_years:
+																					form.values?.dui_years?.filter(
+																						(v, idx) => i != idx
+																					),
+																			})
+																		}
+																	>
+																		<DashCircle color="red" />
+																	</a>
+																</td>
+															</tr>
+														))}
 													</tbody>
 												</Table>
-											}
+											)}
 										</ViewCard>
 									</Col>
-								}
+								)}
 								<BaseTextArea
 									className="col-12 mt-2"
 									readOnly={Boolean(entity?.is_hired)}
@@ -879,8 +999,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									min="0"
 									formik={form}
 								/>
-								{
-									form.values.accident_count > 0 &&
+								{form.values?.accident_count > 0 && (
 									<BaseTextArea
 										className="col-12 mt-2"
 										readOnly={Boolean(entity?.is_hired)}
@@ -888,7 +1007,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										name="accident_details"
 										formik={form}
 									/>
-								}
+								)}
 							</Col>
 							<Col md="6">
 								<Row>
@@ -899,8 +1018,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										name="license_revoked"
 										formik={form}
 									/>
-									{
-										form.values.license_revoked &&
+									{form.values?.license_revoked && (
 										<BaseTextArea
 											className="col-12 mt-2"
 											readOnly={Boolean(entity?.is_hired)}
@@ -908,7 +1026,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											name="license_revoked_details"
 											formik={form}
 										/>
-									}
+									)}
 									<BaseCheck
 										className="col-12 mt-2"
 										disabled={Boolean(entity?.is_hired)}
@@ -916,8 +1034,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										name="psp_violations"
 										formik={form}
 									/>
-									{
-										form.values.psp_violations &&
+									{form.values?.psp_violations && (
 										<BaseTextArea
 											className="col-12 mt-2"
 											readOnly={Boolean(entity?.is_hired)}
@@ -925,7 +1042,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											name="violations_details"
 											formik={form}
 										/>
-									}
+									)}
 									<BaseCheck
 										className="col-12 mt-2"
 										disabled={Boolean(entity?.is_hired)}
@@ -933,8 +1050,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										name="tickets"
 										formik={form}
 									/>
-									{
-										form.values.tickets &&
+									{form.values?.tickets && (
 										<BaseTextArea
 											className="col-12 mt-2"
 											readOnly={Boolean(entity?.is_hired)}
@@ -942,7 +1058,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											name="tickets_details"
 											formik={form}
 										/>
-									}
+									)}
 									<BaseCheck
 										className="col-12 mt-2"
 										disabled={Boolean(entity?.is_hired)}
@@ -950,8 +1066,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										name="positive_drug_test"
 										formik={form}
 									/>
-									{
-										form.values.positive_drug_test &&
+									{form.values?.positive_drug_test && (
 										<BaseTextArea
 											className="col-12 mt-2"
 											readOnly={Boolean(entity?.is_hired)}
@@ -959,7 +1074,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 											name="positive_drug_test_details"
 											formik={form}
 										/>
-									}
+									)}
 								</Row>
 							</Col>
 						</Row>
@@ -970,22 +1085,31 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				<Col md="12" className="p-0 px-lg-2">
 					<ViewCard
 						title="UPLOADED_DOCUMENTS"
-						actions={<Button size='sm'
-							disabled={Boolean(form.values.documents?.length === Object.keys(ApplicantDocumentType).length) || Boolean(entity?.is_hired)}
-							onClick={() => form.setValues({
-								...form.values,
-								documents: [
-									...(form.values.documents || []),
-									new DocumentEntity()
-								]
-							})}><PlusCircle /> {t("ADD")}</Button>}
-					>
-						{!form.values.documents?.length &&
-							<>{t("NONE")}</>
+						actions={
+							<Button
+								size="sm"
+								disabled={
+									Boolean(
+										form.values?.documents?.length ===
+										Object.keys(ApplicantDocumentType).length
+									) || Boolean(entity?.is_hired)
+								}
+								onClick={() =>
+									form.setValues({
+										...form.values,
+										documents: [
+											...(form.values?.documents || []),
+											new DocumentEntity(),
+										],
+									})
+								}
+							>
+								<PlusCircle /> {t("ADD")}
+							</Button>
 						}
-						{
-							form.values.documents?.length > 0 &&
-
+					>
+						{!form.values?.documents?.length && <>{t("NONE")}</>}
+						{form.values?.documents?.length > 0 && (
 							<Table striped>
 								<thead>
 									<tr>
@@ -995,43 +1119,52 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									</tr>
 								</thead>
 								<tbody>
-									{form.values
-										?.documents
-										?.map((entity, i) => (
-											<tr key={i}>
-												<td>
-													<BaseSelect
-														name={`documents[${i}].type`}
-														required
-														placeholder="TYPE"
-														labelPrefix="ApplicantDocumentType"
-														enumType={ApplicantDocumentType}
-														readOnly={Boolean(!!entity.id && !entity.file_base64) || Boolean(props?.entity?.is_hired)}
-														formik={form}
-													/>
-												</td>
-												<td>
-													<FileInput
-														name={`documents[${i}]`}
-														readOnly={Boolean(props?.entity?.is_hired)}
-														required
-														accept="application/pdf"
-														allowedSizeInByte={3145728}
-														formik={form}
-													/>
-												</td>
-												<td>
-													<a href="#" onClick={() => form.setValues({
-														...form.values,
-														documents: form.values.documents.filter((v, idx) => i != idx)
-													})}><DashCircle color="red" /></a>
-												</td>
-
-											</tr>
-										))}
+									{form.values?.documents?.map((entity, i) => (
+										<tr key={i}>
+											<td>
+												<BaseSelect
+													name={`documents[${i}].type`}
+													required
+													placeholder="TYPE"
+													labelPrefix="ApplicantDocumentType"
+													enumType={ApplicantDocumentType}
+													readOnly={
+														Boolean(!!entity.id && !entity.file_base64) ||
+														Boolean(props?.entity?.is_hired)
+													}
+													formik={form}
+												/>
+											</td>
+											<td>
+												<FileInput
+													name={`documents[${i}]`}
+													readOnly={Boolean(props?.entity?.is_hired)}
+													required
+													accept="application/pdf"
+													allowedSizeInByte={3145728}
+													formik={form}
+												/>
+											</td>
+											<td>
+												<a
+													href="#"
+													onClick={() =>
+														form.setValues({
+															...form.values,
+															documents: form.values?.documents?.filter(
+																(v, idx) => i != idx
+															),
+														})
+													}
+												>
+													<DashCircle color="red" />
+												</a>
+											</td>
+										</tr>
+									))}
 								</tbody>
 							</Table>
-						}
+						)}
 					</ViewCard>
 				</Col>
 			</Row>
@@ -1039,21 +1172,26 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				<Col md="12" className="p-0 px-lg-2">
 					<ViewCard
 						title="JOBS_APPLIED_TO_WITH_YOU"
-						actions={<Button disabled={Boolean(entity?.is_hired)} size='sm'
-							onClick={() => form.setValues({
-								...form.values,
-								jobs: [
-									...(form.values.jobs || []),
-									new ApplicantJobEntity()
-								]
-							})}><PlusCircle /> {t("ADD")}</Button>}
-					>
-						{!form.values.jobs?.length &&
-							<>{t("NONE")}</>
+						actions={
+							<Button
+								disabled={Boolean(entity?.is_hired)}
+								size="sm"
+								onClick={() =>
+									form.setValues({
+										...form.values,
+										jobs: [
+											...(form.values?.jobs || []),
+											new ApplicantJobEntity(),
+										],
+									})
+								}
+							>
+								<PlusCircle /> {t("ADD")}
+							</Button>
 						}
-						{
-							form.values.jobs?.length > 0 &&
-
+					>
+						{!form.values?.jobs?.length && <>{t("NONE")}</>}
+						{form.values?.jobs?.length > 0 && (
 							<Table striped>
 								<thead>
 									<tr>
@@ -1063,65 +1201,75 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									</tr>
 								</thead>
 								<tbody>
-									{form.values
-										.jobs
-										.map((entity, i) => {
-											const hideStatus = (jobHired && (jobHired?.job?.id != entity?.job?.id)) ? [
-												ApplicantStatus.COMPLETED_EMPLOYED,
-												ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
-												ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE
-											] : []
-											return (
-												<tr key={i}>
-													<td>
-														{entity.id
-															? entity.job.title
-															: <BaseSelect
-																name={`jobs[${i}].job.id`}
-																readOnly={Boolean(props?.entity?.is_hired)}
-																required
-																placeholder="JOB"
-																options={jobs}
-																labelKey="title"
-																valueKey="id"
-																formik={form}
-															/>
-														}
-													</td>
-													<td>
+									{form.values?.jobs?.map((entity, i) => {
+										const hideStatus =
+											jobHired && jobHired?.job?.id != entity?.job?.id
+												? [
+													ApplicantStatus.COMPLETED_EMPLOYED,
+													ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
+													ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE,
+												]
+												: [];
+										return (
+											<tr key={i}>
+												<td>
+													{entity.id ? (
+														entity.job.title
+													) : (
 														<BaseSelect
-															name={`jobs[${i}].status`}
+															name={`jobs[${i}].job.id`}
 															readOnly={Boolean(props?.entity?.is_hired)}
 															required
-															placeholder="STATUS"
-															labelPrefix="ApplicantStatus"
-															hideOptions={hideStatus}
-															enumType={ApplicantStatus}
+															placeholder="JOB"
+															options={jobs}
+															labelKey="title"
+															valueKey="id"
 															formik={form}
 														/>
-													</td>
-													<td>
-														<a href="#" onClick={() => form.setValues({
-															...form.values,
-															jobs: form.values.jobs.filter((v, idx) => i != idx)
-														})}><DashCircle color="red" /></a>
-													</td>
-
-												</tr>
-											)
-										})}
+													)}
+												</td>
+												<td>
+													<BaseSelect
+														name={`jobs[${i}].status`}
+														readOnly={Boolean(props?.entity?.is_hired)}
+														required
+														placeholder="STATUS"
+														labelPrefix="ApplicantStatus"
+														hideOptions={hideStatus}
+														enumType={ApplicantStatus}
+														formik={form}
+													/>
+												</td>
+												<td>
+													<a
+														href="#"
+														onClick={() =>
+															form.setValues({
+																...form.values,
+																jobs: form.values?.jobs?.filter(
+																	(v, idx) => i != idx
+																),
+															})
+														}
+													>
+														<DashCircle color="red" />
+													</a>
+												</td>
+											</tr>
+										);
+									})}
 								</tbody>
 							</Table>
-						}
+						)}
 					</ViewCard>
 				</Col>
 			</Row>
 
 			<ViewModal
 				title={t("HIRE")}
-				show={Boolean(hireApplicantForm.values.applicantId)}
+				show={Boolean(hireApplicantForm.values?.applicantId)}
 				onCloseClick={() => hireApplicantForm.resetForm()}
-				size='sm'
+				size="sm"
 			>
 				<EntityForm
 					onSubmit={hireApplicantForm.handleSubmit}
@@ -1135,14 +1283,19 @@ export function ApplicantForm(props: ApplicantFormProps) {
 								name={`jobId`}
 								readOnly={Boolean(entity?.is_hired)}
 								required
-								placeholder={t("SELECT_{name}", { name: "JOB" }, { translateProps: true })}
+								placeholder={t(
+									"SELECT_{name}",
+									{ name: "JOB" },
+									{ translateProps: true }
+								)}
 								options={jobs}
 								labelKey="title"
 								label="JOB"
 								valueKey="id"
 								formik={hireApplicantForm}
 							/>
-							<button disabled={Boolean(entity?.is_hired)}
+							<button
+								disabled={Boolean(entity?.is_hired)}
 								type="button"
 								onClick={() => setCreateJob(true)}
 								className="my-2 btn btn-link"
@@ -1158,9 +1311,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				show={createJob}
 				onCloseClick={() => setCreateJob(false)}
 			>
-				<JobForm
-					onSaveComplete={onJobAdded}
-				/>
+				<JobForm onSaveComplete={onJobAdded} />
 			</ViewModal>
 		</EntityForm>
 	);
