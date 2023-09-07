@@ -178,6 +178,8 @@ export class ApplicantEntity {
 			assignedUserId: yup.number().optional().nullable(),
 			is_hired: yup.bool().nullable(),
 			remarks: yup.string().optional().nullable(),
+
+			extras: yup.array(ApplicantExtrasEntity.yupSchema()),
 		});
 	}
 }

@@ -38,12 +38,7 @@ import ApplicantWorkHistory from "../../../../../components/applicants/applicant
 import ApplicantSafetyBackground from "../../../../../components/applicants/applicant-safety-background";
 import ApplicantJobsApplied from "../../../../../components/applicants/applicant-jobs-applied";
 import ApplicantConsiderFor from "../../../../../components/applicants/applicant-consider-for";
-import ViewApplicantDAC from "../../../../../components/applicants/view-applicant-dac";
 import ViewApplicantDqf from "../../../../../components/applicants/view-applicant-dqf";
-import UserApi from "../../../../api/user";
-import { UserContext, useUserContext } from "../../../../../context/user-context";
-import BaseSelect from "../../../../../components/forms/base-select";
-import { UserEntity } from "../../../../../models/user/user.entity";
 
 export default function ViewApplicant({ id }) {
 
