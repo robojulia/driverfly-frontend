@@ -148,7 +148,6 @@ export function ConversationForm(props: ConversationFormProps) {
     };
 
     const onConversationToChangeProxy = (e) => {
-        alert();
         const { name, value } = e.target;
 
         form.setValues({

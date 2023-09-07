@@ -8,9 +8,9 @@ export class ConversationMessageEntity {
     id?: number;
     status?: MessageStatus;
     conversation?: ConversationEntity;
-    direction?: MessageDirection; 
+    direction?: MessageDirection;
     text?: string;
-    created_at?: Date;
+    created_at?: string | Date;
 
     static yupSchema() {
         return yup.object({
