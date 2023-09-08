@@ -138,6 +138,7 @@ export function Messenger(props) {
                     }
                 )
             setUserPreferences(preferences)
+            await userApi.findById(c.chattable_id)
         } else if (c.chattable_type == ChattableType.APPLICANT) {
             const res = await applicantApi.getById(c.chattable_id)
             const docs = res?.documents?.filter((v) =>
