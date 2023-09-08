@@ -56,7 +56,7 @@ export default function JobApply({ job, setEncourageModal }) {
             const userApi = new UserApi();
             try {
                 if (!user.company) {
-                    const applicant = await api.getByUserId();
+                    const applicant = await api.me.get();
                     applicant.documents = applicant.documents.filter(v => Object.values(ApplicantDocumentType).includes(v.type))
 
                     if (applicant) {

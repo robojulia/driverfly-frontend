@@ -120,8 +120,8 @@ export default class ApplicantApi extends BaseApi {
 	}
 
 	// user specific actions
-	async getByUserId(): Promise<ApplicantEntity> {
-		const { data } = await this.get(this.baseUrl);
+	async getByUserId(userId: number): Promise<ApplicantEntity> {
+		const { data } = await this.get(`${this.baseUrl}/user/${userId}`);
 
 		return data;
 	}

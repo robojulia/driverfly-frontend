@@ -127,6 +127,7 @@ export function Messenger(props) {
         /* Resetting the user preferences to null, and then if the chattable type is a user, it is setting the
         user preferences to the preferences of the user. */
         setUserPreferences(null)
+        let applicantProfile: ApplicantEntity;
         if (c.chattable_type == ChattableType.USER) {
             const userApi = new UserApi();
             const preferences: UserPreferenceEntity[] = await userApi.preferences
@@ -138,19 +139,17 @@ export function Messenger(props) {
                     }
                 )
             setUserPreferences(preferences)
-            await userApi.findById(c.chattable_id)
+            applicantProfile = await applicantApi.getByUserId(c.chattable_id)
         } else if (c.chattable_type == ChattableType.APPLICANT) {
-            const res = await applicantApi.getById(c.chattable_id)
-            const docs = res?.documents?.filter((v) =>
-                Object.values(ApplicantDocumentType).includes(
-                    v.type as ApplicantDocumentType
-                )
-            );
-            setApplicant({ ...res, documents: docs ?? [] })
+            applicantProfile = await applicantApi.getById(c.chattable_id)
         }
-
+        const docs = applicantProfile?.documents?.filter((v) =>
+            Object.values(ApplicantDocumentType).includes(
+                v.type as ApplicantDocumentType
+            )
+        );
+        setApplicant({ ...applicantProfile, documents: docs ?? [] })
         c = await conversationApi.markRead(c.id);
-
         onConversationUpdated(c);
     }
 
