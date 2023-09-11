@@ -2,7 +2,6 @@ import { useContext, useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import styles from "../../../../styles/digitalhiringapp.module.css";
 import Form from "react-bootstrap/Form";
-import { RouteType } from "../../../../enums/vehicles/routes-type.enum";
 import { useTranslation } from "../../../../hooks/use-translation";
 import BaseCheckList from "../../base-check-list";
 import { useFormik } from "formik";
@@ -16,6 +15,7 @@ import { PreferencesDto } from "../../../../models/jot-form/long-form/preference
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 import { JobGeography } from "../../../../enums/jobs/job-geography.enum";
+import { JobSchedule } from "../../../../enums/jobs/job-schedule.enum";
 
 export function Preferences() {
 	const {
@@ -107,8 +107,8 @@ export function Preferences() {
 						className="mb-3"
 						labelKey="ROUTES_OPEN_TO"
 						name="ROUTES.value"
-						labelPrefix="RouteType"
-						enumType={RouteType}
+						labelPrefix="JobSchedule"
+						enumType={JobSchedule}
 						formik={form}
 					/>
 				</Row>
