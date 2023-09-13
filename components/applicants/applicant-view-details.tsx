@@ -54,7 +54,7 @@ export default function ViewApplicantDetail({
 								driver_license_number: protectedFields?.license_number
 									? applicant.license_number
 									: t("HIDDEN"),
-								// expiration_date: applicant.license_expiry ? new Date(applicant.license_expiry) : null,
+								expiration_date: applicant.license_expiry ? new Date(applicant.license_expiry) : t("NOT_ANSWERED"),
 								state_issued: applicant.license_state,
 								cdl_class_type: applicant.license_type
 									? t(`DriverLicenseType.${applicant.license_type}`)
