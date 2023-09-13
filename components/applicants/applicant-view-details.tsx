@@ -53,12 +53,23 @@ export default function ViewApplicantDetail({
 							obj={{
 								driver_license_number: protectedFields?.license_number
 									? applicant.license_number
+										? applicant.license_number
+										: t("NOT_ANSWERED")
 									: t("HIDDEN"),
-								expiration_date: applicant.license_expiry ? new Date(applicant.license_expiry) : t("NOT_ANSWERED"),
-								state_issued: applicant.license_state,
-								cdl_class_type: applicant.license_type
-									? t(`DriverLicenseType.${applicant.license_type}`)
-									: null,
+								expiration_date: protectedFields?.license_number
+									? ((applicant.license_number && applicant.license_expiry)
+										? new Date(applicant.license_expiry)
+										: t("NOT_ANSWERED"))
+									: t("HIDDEN"),
+								state_issued: protectedFields?.license_number
+									? ((applicant.license_number && applicant.license_state)
+										? applicant.license_state
+										: t("NOT_ANSWERED"))
+									: t("HIDDEN"),
+								cdl_class_type:
+									applicant.license_type
+										? t(`DriverLicenseType.${applicant.license_type}`)
+										: t("NOT_ANSWERED"),
 								years_cdl_experience: applicant.years_cdl_experience,
 								OWNER_OPERATOR: {
 									text: applicant.is_owner_operator,
