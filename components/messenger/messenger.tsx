@@ -178,13 +178,17 @@ export function Messenger(props) {
     }
 
     const onConversationUpdated = (e: ConversationEntity) => {
-        const newConversations = conversations.map(v => (
-            v.id === e.id ? {
-                ...v,
-                lastMessage: e.lastMessage,
-                unread: e.unread,
-            } : v
-        ));
+        const newConversations = conversations
+            .map((v) =>
+                v.id === e.id
+                    ? {
+                        ...v,
+                        lastMessage: e.lastMessage,
+                        unread: e.unread,
+                    }
+                    : v
+            )
+            ?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id);
         setConversation(e);
         setConversations(newConversations);
     }
@@ -199,10 +203,7 @@ export function Messenger(props) {
     }
 
     const lastMessage = React.createRef<HTMLLIElement>();
-    useEffect(() => {
-        setConversations(conversations.sort((a, b) => ((new Date(b.lastMessage.created_at)).getTime() - (new Date(a?.lastMessage?.created_at)).getTime())))
-        lastMessage.current?.scrollIntoView({ behavior: "smooth" })
-    }, [lastMessage])
+    useEffect(() => lastMessage.current?.scrollIntoView({ behavior: "smooth" }), [lastMessage])
 
     const canCreate = !!getOptions;
 
