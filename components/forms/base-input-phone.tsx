@@ -72,8 +72,6 @@ function BaseInputPhone({ formik, required, className, label, handleBlur, placeh
 				onChange={onChangeProxy}
 				onKeyDown={onKeyDown}
 				onBlur={handleBlur}
-				disableCountryCode
-			// countryCodeEditable
 			/>
 		</BaseControl>
 	)
