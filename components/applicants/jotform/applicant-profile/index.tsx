@@ -235,7 +235,7 @@ export default function ApplicantExtrasDetails({
 								fmcsr: current_employer?.is_subject_to_fmcsrs
 									? `${t("YES")}`
 									: `${t("NO")}`,
-								START_DATE: new Date(current_employer?.start_at),
+								START_DATE: !!current_employer?.start_at ? new Date(current_employer?.start_at) : t("NOT_ANSWERED"),
 								state: current_employer?.state,
 							}}
 						/>
@@ -254,8 +254,8 @@ export default function ApplicantExtrasDetails({
 												obj={{
 													NAME: past_employer?.name,
 													city: past_employer?.city,
-													START_DATE: new Date(past_employer?.start_at),
-													END_DATE: new Date(past_employer?.end_at),
+													START_DATE: !!past_employer?.start_at ? new Date(past_employer?.start_at) : t("NOT_ANSWERED"),
+													END_DATE: !!past_employer?.end_at ? new Date(past_employer?.end_at) : t("NOT_ANSWERED"),
 													fcr: past_employer?.is_subject_to_drug_tests,
 													fmcsr: past_employer?.is_subject_to_fmcsrs
 														? `${t("YES")}`

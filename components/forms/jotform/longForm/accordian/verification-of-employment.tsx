@@ -251,7 +251,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                     )}
                 </Row>
                 <Row className={styles.align__text_left}>
-                    {applicant?.employers?.map(
+                    {applicant?.employers.filter(e => !!e.name)?.map(
                         (v) =>
                             !!!v.is_current && (
                                 <>
