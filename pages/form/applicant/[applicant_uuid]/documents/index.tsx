@@ -35,7 +35,6 @@ export default function MissingDocuments({ entity, types }: MissingDocumentsProp
         validateOnChange: false,
         onSubmit: async ({ documents }, { resetForm }) => {
             const dta = await applicantApi.jotform.updateDocuments(entity.id, documents)
-            console.log(dta,"================================")
 
             resetForm();
             setThankYou(true)
@@ -91,7 +90,7 @@ export default function MissingDocuments({ entity, types }: MissingDocumentsProp
                                                 className="float-left"
                                                 type="submit"
                                             >
-                                                {t("NEXT")}
+                                                {t("SUBMIT")}
                                             </Button>
                                         </Col>
                                     </Row>
