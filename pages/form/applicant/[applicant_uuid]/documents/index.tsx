@@ -34,7 +34,8 @@ export default function MissingDocuments({ entity, types }: MissingDocumentsProp
         validateOnBlur: false,
         validateOnChange: false,
         onSubmit: async ({ documents }, { resetForm }) => {
-            await applicantApi.jotform.updateDocuments(entity.id, documents)
+            const dta = await applicantApi.jotform.updateDocuments(entity.id, documents)
+            console.log(dta,"================================")
 
             resetForm();
             setThankYou(true)
