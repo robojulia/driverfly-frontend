@@ -93,9 +93,9 @@ export default function EmployeeDirectory() {
 
     const tabs = {
         BACKGROUND: <Background employee={modalAction?.entity} />,
-        DQF: < DQF employee={modalAction?.entity} canEdit={true} showHistory={true} />,
+        DQF: < DQF employee={modalAction?.entity} canEdit={(modalAction?.entity.status == EmployeeStatus.ACTIVE)} showHistory={true} />,
         // DRIVER_ONBOARDING_CHECKLIST: < DAC applicant={modalAction?.entity.applicant} />,
-        ADDITIONAL_FILES: < AdditionalFiles employee={modalAction?.entity} />,
+        ADDITIONAL_FILES: < AdditionalFiles employee={modalAction?.entity} canEdit={(modalAction?.entity.status == EmployeeStatus.ACTIVE)} />,
 
         // VEHICLES: < VehicleInformationTab />  //according to wireframe this tab (vehichled are pushed to phase 3)
     };

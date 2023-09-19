@@ -149,15 +149,15 @@ export function ConversationForm(props: ConversationFormProps) {
 
     const onConversationToChangeProxy = (e) => {
         const { name, value } = e.target;
-
-        form.setValues({
+        const values = {
             ...form.values,
             chattable_type: value?.chattable_type,
             chattable_id: value?.chattable_id,
             chattable_name: value?.chattable_name,
-        });
+        }
+        form.setValues(values);
 
-        if (onConversationToChange) onConversationToChange(form.values);
+        if (onConversationToChange) onConversationToChange(values);
     };
 
     const lastMessage = React.createRef<HTMLLIElement>();

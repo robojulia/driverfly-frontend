@@ -1,7 +1,6 @@
 import * as yup from "yup";
 import { ApplicantExtras } from "../../enums/applicants/applicant-extras.enum";
 import { OtherRequirementType } from "../../enums/users/other-requirements.enum";
-import { RouteType } from "../../enums/vehicles/routes-type.enum";
 import { AccidentHistoryEntity } from "../jot-form/long-form/accident-last-5-years/index.dto";
 import { AccordianExtras } from "../jot-form/long-form/accordian-info/index.dto";
 import { BackgroundInfoLineAddress } from "../jot-form/long-form/backgorund-info/index.dto";
@@ -9,6 +8,7 @@ import { CdlExtras } from "../jot-form/long-form/cdl-object/index.dto";
 import { VioalationExtrasEntity } from "../jot-form/long-form/violaton-history/index.dto";
 import { WorkedBeforeExtrasDto } from "../jot-form/long-form/worked-before/index.dto";
 import { BooleanTypeExtra } from "../../enums/jotform/bool-and-not-sure.enum";
+import { JobSchedule } from "../../enums/jobs/job-schedule.enum";
 
 export class ApplicantExtrasEntity {
 	constructor(type?: ApplicantExtras) {
@@ -67,7 +67,7 @@ export class ApplicantExtrasEntity {
 				.when("type", {
 					is: ApplicantExtras.ROUTES,
 					then: yup
-						.array((yup.string() as any).enum(RouteType))
+						.array((yup.string() as any).enum(JobSchedule))
 						.min(0)
 						.typeError("Choose atleast one!")
 						.nullable(),

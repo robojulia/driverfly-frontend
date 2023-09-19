@@ -102,20 +102,24 @@ export default function AdditionalFiles(props: EmployeeAdditionalFilesProps) {
                     document={document}
                     onClick={() => handleViewDocument(document.id, setPdf)}
                 />
-                <AddDocumentButton
-                    document={document}
-                    type={type}
-                    t={t}
-                    onClick={() => handleUpdateDocument(type, document?.id)}
-                />
+                {props.canEdit &&
+                    <AddDocumentButton
+                        document={document}
+                        type={type}
+                        t={t}
+                        onClick={() => handleUpdateDocument(type, document?.id)}
+                    />
+                }
                 <DownloadDocumentButton
                     document={document}
                     onClick={() => handleDownloadDocument(document.id)}
                 />
-                <DeleteDocumentButton
-                    document={document}
-                    onClick={() => handleDeleteDocument(type)}
-                />
+                {props.canEdit &&
+                    <DeleteDocumentButton
+                        document={document}
+                        onClick={() => handleDeleteDocument(type)}
+                    />
+                }
                 <ViewDocumentHistory
                     document={document}
                     type={type}
