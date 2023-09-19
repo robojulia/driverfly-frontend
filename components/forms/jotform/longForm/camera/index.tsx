@@ -76,3 +76,5 @@ export function CameraComponent({ form, name }: CameraCompProps) {
         </div>
     )
 }
+
+
