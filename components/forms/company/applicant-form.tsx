@@ -53,9 +53,9 @@ import { UserEntity } from "../../../models/user/user.entity";
 import { JobForm } from "./job-form";
 import { HireApplicantDto } from "../../../models/applicant/hire-applicant.dto";
 import EmployeeApi from "../../../pages/api/employee";
-import { RouteType } from "../../../enums/vehicles/routes-type.enum";
 import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../models/applicant";
+import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
@@ -444,8 +444,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 										(v) => v.type == ApplicantExtras.ROUTES
 									)}].value`}
 									formik={form}
-									labelPrefix="RouteType"
-									enumType={RouteType}
+									labelPrefix="JobSchedule"
+									enumType={JobSchedule}
 								/>
 
 								{form.values?.id && (
