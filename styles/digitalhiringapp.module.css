@@ -129,7 +129,9 @@
 
 .bold {
   font-weight: bold;
-  color:black;
+}
+.txtcolor{
+  color: black;
 }
 
 .camera_container_main {

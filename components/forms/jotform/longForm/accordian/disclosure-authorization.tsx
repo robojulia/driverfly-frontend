@@ -111,7 +111,7 @@ export function DisclosureAuthorization({ form }: AccordianProps) {
             </Row>
             <Row>
                 <Col>
-                    <h6 className={`${styles.bold}`}>{t("SIGNATURE")}</h6>
+                    <h6 className={`${styles.txtcolor}`}>{t("SIGNATURE")}</h6>
                     <SignatureCanvas
                         name="SIGNATURE_DISCLOSURE_AUTHORIZATION.value"
                         required
