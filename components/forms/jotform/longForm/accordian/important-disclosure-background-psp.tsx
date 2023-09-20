@@ -58,7 +58,7 @@ export function ImportantDisclosureBackgroundPsp({ form }: AccordianProps) {
 
         <>
             <Row>
-                <h1>
+                <h1 className={`${styles.paragraph} ${styles.align__text_left}`}>
                     {t(
                         "{COMPANY_NAME}",
                         { COMPANY_NAME: applicant?.company?.name },
@@ -67,7 +67,7 @@ export function ImportantDisclosureBackgroundPsp({ form }: AccordianProps) {
                 </h1>
             </Row>
             <Row>
-                <h3>{t("IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")}</h3>
+                <h3 className={`${styles.paragraph} ${styles.align__text_left}`}>{t("IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")}</h3>
             </Row>
             <Row>
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
@@ -140,7 +140,7 @@ export function ImportantDisclosureBackgroundPsp({ form }: AccordianProps) {
             </Row>
             <Row>
                 <Col>
-                    <h6>{t("SIGNATURE")}</h6>
+                    <h6 className="text-black">{t("SIGNATURE")}</h6>
                     <SignatureCanvas
                         name="SIGNATURE_IMPORTANT_BACKGROUND.value"
                         required

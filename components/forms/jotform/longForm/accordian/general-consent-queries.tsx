@@ -50,7 +50,8 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
     return (
         <>
             <Row >
-                <h1>
+                <h1 
+                    className={`${styles.paragraph} ${styles.align__text_left}`} >
                     {t(
                         "{COMPANY_NAME}",
                         { COMPANY_NAME: applicant?.company?.name },
@@ -59,7 +60,7 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                 </h1>
             </Row>
             <Row>
-                <h3>{t("GENERAL_CONSENT_QUERIES")}</h3>
+                <h3 className={`${styles.paragraph} ${styles.align__text_left}`}>{t("GENERAL_CONSENT_QUERIES")}</h3>
             </Row>
 
             <Row>
@@ -68,7 +69,10 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                 </p>
             </Row>
             <Row className={styles.align__text_left}>
-                <h6>
+                <h6 
+                    className={`${styles.paragraph} ${styles.align__text_left}`}
+                
+                >
                     {t(
                         "APPLICANT_FULL_NAME_{NAME}",
                         { NAME: `${applicant?.first_name} ${applicant?.last_name}` },
@@ -78,7 +82,10 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
             </Row>
 
             <Row className={styles.align__text_left}>
-                <h6>
+                <h6
+                    className={`${styles.paragraph} ${styles.align__text_left}`}
+                
+                >
                     {t(
                         "APPLICANT_{cdl_number}",
                         { cdl_number: applicant?.license_number },
@@ -87,7 +94,10 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                 </h6>
             </Row>
             <Row className={styles.align__text_left}>
-                <h6>
+                <h6
+                    className={`${styles.paragraph} ${styles.align__text_left}`}
+                
+                >
                     {t(
                         "APPLICANT_{COMPANY_NAME}",
                         { COMPANY_NAME: applicant?.company?.name },
@@ -96,7 +106,10 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
                 </h6>
             </Row>
             <Row className={styles.align__text_left}>
-                <h6>
+                <h6
+                    className={`${styles.paragraph} ${styles.align__text_left}`}
+                
+                >
                     {t(
                         "APPLICANT_{APPLY_DATE}",
                         { APPLY_DATE: `${apply_date?.value}` },
@@ -142,7 +155,7 @@ export function GeneralConsentQueries({ eventKey, form }: AccordianProps) {
             </Row>
             <Row>
                 <Col>
-                    <h6>{t("SIGNATURE")}</h6>
+                    <h6 className="text-black"> {t("SIGNATURE")}</h6>
                     <SignatureCanvas
                         name="SIGNATURE_GENERAL_CONSENT.value"
                         required

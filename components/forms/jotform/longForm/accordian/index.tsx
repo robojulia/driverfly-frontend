@@ -15,6 +15,9 @@ import { DisclosureAuthorization } from "./disclosure-authorization";
 import { ImportantDisclosureBackgroundPsp } from "./important-disclosure-background-psp";
 import { GeneralConsentQueries } from "./general-consent-queries";
 import { LoaderIcon } from "../../../../loading/loader-icon";
+import styles from "../../../../../styles/digitalhiringapp.module.css";
+
+
 export function AccordianPage() {
 	const {
 		state: { applicantExtras, applicant, jobs },
@@ -99,8 +102,8 @@ export function AccordianPage() {
 				</div>
 			) : null}
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<h1 className="my-3">{t("FORMS_TO_SIGNUP")}</h1>
-				<h6 className="my-3">{t("PLEASE_CLICK_EACH_ARROW")}</h6>
+				<h1 className="my-3 text-black">{t("FORMS_TO_SIGNUP")}</h1>
+				<h6 className={`${styles.paragraph} my-3`}>{t("PLEASE_CLICK_EACH_ARROW")}</h6>
 				<button
 					type="button"
 					className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline "

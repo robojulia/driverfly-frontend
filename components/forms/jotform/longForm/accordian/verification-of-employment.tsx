@@ -76,10 +76,10 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
     return (
         <>
             <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-                <h2>{t("VERIFICATION_OF_EMPLOYMENT")}</h2>
-                <h6>{t("SAFETY_PERFORMANCE_HISTORY_RECORDS_REQUEST")}</h6>
+                <h2 className={`${styles.paragraph} ${styles.align__text_left}`}>{t("VERIFICATION_OF_EMPLOYMENT")}</h2>
+                <h6 className={`${styles.paragraph} ${styles.align__text_left}`}>{t("SAFETY_PERFORMANCE_HISTORY_RECORDS_REQUEST")}</h6>
                 <Row className={styles.align__text_left}>
-                    <h3>{t("SECTION_I")}</h3>
+                    <h3 className={`${styles.paragraph} ${styles.align__text_left}`}>{t("SECTION_I")}</h3>
                 </Row>
                 <Row className={styles.align__text_left}>
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
@@ -87,7 +87,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                     </p>
                 </Row>
                 <Row className={styles.align__text_left}>
-                    <h6>
+                    <h6 className={`${styles.paragraph} ${styles.align__text_left}`}>
                         {t(
                             "EMPLOYEE_NAME_NAUTILUS_{employee_name}",
                             {
@@ -153,7 +153,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                 </Row>
                 <Row className={styles.align__text_left}>
                     <Col>
-                        <h6>{t("SIGNATURE")}</h6>
+                        <h6 className={`${styles.bold}`}>{t("SIGNATURE")}</h6>
                         <SignatureCanvas
                             name="SIGNATURE_VOE_AUTHORIZATION.value"
                             onEnd={handleSignatureEnd}
@@ -182,7 +182,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                     </Col>
                 </Row>
                 <Row className={styles.align__text_left}>
-                    <h4 className="mt-3">{t("I_A")}</h4>
+                    <h4 className={`${styles.titlechildren} mt-3`} >{t("I_A")}</h4>
                     <p className={`${styles.paragraph} ${styles.align__text_left}`}>
                         {t(
                             "NEW_EMPLOYER_NAME_{company_name}",
@@ -195,7 +195,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                     <h6>{t("PLEASE_NOTE_THE_FOLLOWING_EMPLOYERS")} </h6>
                 </Row>
                 <Row className={styles.align__text_left}>
-                    <h4 className="mt-3">{t("I-B")}</h4>
+                    <h4  className={`${styles.titlechildren} mt-3`}>{t("I-B")}</h4>
                     {!!current_company?.is_current && (
                         <>
                             <b>
@@ -318,7 +318,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                 <Row className={styles.blur}>
                     <Row className={styles.align__text_left}>
                         <Col>
-                            <h3 className="mt-3">{t("SECTION_II")}</h3>
+                            <h3 className={`${styles.paragraph} ${styles.align__text_left}`}>{t("SECTION_II")}</h3>
                         </Col>
                     </Row>
                     <Row className={styles.align__text_left}>
@@ -328,7 +328,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                     </Row>
                     <Row className={styles.align__text_left}>
                         <Col>
-                            <h4>{t("II_A_ACCIDENT_HISTORY")}</h4>
+                            <h4 className={`${styles.paragraph} ${styles.align__text_left}`}>{t("II_A_ACCIDENT_HISTORY")}</h4>
                         </Col>
                     </Row>
                     <Row className={styles.align__text_left}>
@@ -438,7 +438,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                     </Row>
                     <Row className={styles.align__text_left}>
                         <Col>
-                            <h4>{t("II_B")}</h4>
+                            <h4 className={`${styles.paragraph} ${styles.align__text_left}`}>{t("II_B")}</h4>
                         </Col>
                     </Row>
                     <Row className={styles.align__text_left}>
@@ -483,7 +483,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                     </Row>
                     <Row className={styles.align__text_left}>
                         <Col>
-                            <h4>{t("II_C")}</h4>
+                            <h4 className={`${styles.paragraph} ${styles.align__text_left}`}>{t("II_C")}</h4>
                         </Col>
                     </Row>
                     <Row className={styles.align__text_left}>

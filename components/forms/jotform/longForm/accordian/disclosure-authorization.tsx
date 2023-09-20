@@ -56,7 +56,7 @@ export function DisclosureAuthorization({ form }: AccordianProps) {
     return (
         <>
             <Row className="mb-3">
-                <h1>
+                <h1 className={`${styles.paragraph} ${styles.align__text_left}`}>
                     {t(
                         "{COMPANY_NAME}",
                         { COMPANY_NAME: applicant?.company?.name },
@@ -65,10 +65,10 @@ export function DisclosureAuthorization({ form }: AccordianProps) {
                 </h1>
             </Row>
             <Row>
-                <h3>{t("DISCLOSURE_AUTHORIZATION")}</h3>
+                <h3 className={`${styles.paragraph} ${styles.align__text_left}`}>{t("DISCLOSURE_AUTHORIZATION")}</h3>
             </Row>
             <Row className="my-3">
-                <h6>{t("DISCLOSURE")}</h6>
+                <h6 className={`${styles.paragraph} ${styles.align__text_left}`}>{t("DISCLOSURE")}</h6>
             </Row>
             <Row>
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
@@ -85,7 +85,7 @@ export function DisclosureAuthorization({ form }: AccordianProps) {
                 </p>
             </Row>
             <Row>
-                <h6>{t("AUTHORIZATION")}</h6>
+                <h6 className={`${styles.paragraph} ${styles.align__text_left}`}>{t("AUTHORIZATION")}</h6>
             </Row>
             <Row>
                 <p className={`${styles.paragraph} ${styles.align__text_left}`}>
@@ -111,7 +111,7 @@ export function DisclosureAuthorization({ form }: AccordianProps) {
             </Row>
             <Row>
                 <Col>
-                    <h6>{t("SIGNATURE")}</h6>
+                    <h6 className={`${styles.bold}`}>{t("SIGNATURE")}</h6>
                     <SignatureCanvas
                         name="SIGNATURE_DISCLOSURE_AUTHORIZATION.value"
                         required
