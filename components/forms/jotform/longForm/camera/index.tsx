@@ -22,7 +22,7 @@ export function CameraComponent({ form, name }: CameraCompProps) {
         if (!!!(camera?.current?.getNumberOfCameras() > 0)) return
 
         const img = camera?.current?.takePhoto()
-        if (!!!(image)) return
+        if (!!!(img)) return
         setImage(img)
 
         const byteCharacters = atob(img.split(',')[1]);
@@ -60,7 +60,7 @@ export function CameraComponent({ form, name }: CameraCompProps) {
                                 }} />
                         </div>
                         <Button
-                            disabled={!!!(camera?.current?.getNumberOfCameras() > 0)}
+                            disabled={!!(camera?.current?.getNumberOfCameras() > 0)}//one ! removed
                             className={styles.capture_btn}
                             onClick={handleCameraEvents}>{t('CAPTURE')}</Button>
                     </Row>
@@ -76,3 +76,5 @@ export function CameraComponent({ form, name }: CameraCompProps) {
         </div>
     )
 }
+
+
