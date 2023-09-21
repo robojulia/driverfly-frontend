@@ -1,4 +1,4 @@
-import { Button } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
 import { useState } from "react";
@@ -18,6 +18,8 @@ import EmployeeApi from "../../../pages/api/employee";
 import { EmployeeEmployerDocumentDto } from "../../../models/employee/employee-employer-document-dto";
 import { EmployeeDocumentType } from "../../../enums/employee/employee-document-types.enum";
 import { EmployeeEmployerEntity } from "../../../models/employee/employee-employer.entity";
+import ViewDetails from "../../view-details/view-details";
+import ShowFormattedDate from "../../jobs/show-formatted-date";
 
 
 export default function SafetyPerformanceHistory({
@@ -192,22 +194,10 @@ export default function SafetyPerformanceHistory({
                     }}
                     columns={[
                         {
-                            name: "NAME",
+                            name: "COMPANY_NAME",
                             selector: emp => emp.name,
                             hidable: false,
-                            width: '20%',
-                        },
-                        {
-                            name: "EMAIL",
-                            selector: emp => emp.email,
-                            hidable: false,
-                            width: '20%',
-                        },
-                        {
-                            name: "VOE_ATTEMPT_COUNT",
-                            selector: emp => emp.voe_attempts ?? 0,
-                            hidable: false,
-                            width: '10%',
+                            width: '50%',
                         },
                         {
                             width: '50%',
@@ -243,6 +233,47 @@ export default function SafetyPerformanceHistory({
                         },
                     ]}
                     items={employers}
+                    expandableRowsComponent={({ data }) => (
+                        <>
+                            <Row className="mt-2">
+                                <Col>
+                                    <ViewDetails
+                                        default={t("NOT_ANSWERED")}
+                                        obj={{
+                                            APPLICANT_NAME: `${employee.first_name} ${employee.last_name}`,
+                                            MANAGER_OR_REPRESENTATIVE: data.manager_name,
+                                            EMAIL: data.email,
+                                        }}
+                                    />
+                                </Col>
+                                <Col>
+                                    <ViewDetails
+                                        default={t("NOT_ANSWERED")}
+                                        obj={{
+                                            VOE_SUBMITTED: data.voe_submitted ? t('YES') : t('NO'),
+                                            AUTHORIZED_TO_COMMUNICATE: Boolean(data.can_contact) ? t('YES') : t('NO'),
+                                            SUBJECT_TO_FMCR: Boolean(data.is_subject_to_fmcsrs) ? t('YES') : t('NO'),
+                                        }}
+                                    />
+                                </Col>
+                            </Row>
+                            <Row className="mb-3">
+                                <Col md={6}>
+                                    <label>{t("VOE_ATTEMPT_COUNT")}</label>
+                                    <ol className="list-group">
+                                        {data.voe_attempts?.length
+                                            ? data.voe_attempts?.map((v, i) => (
+                                                <li className="list-group-item">
+                                                    <strong>{i + 1}</strong>: <ShowFormattedDate date={v} />
+                                                </li>
+                                            ))
+                                            : <li className="list-group-item">0</li>}
+                                    </ol>
+                                </Col>
+                            </Row>
+                        </>
+                    )}
+
                 />
             </ViewModal >
             <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
