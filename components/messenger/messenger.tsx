@@ -204,10 +204,9 @@ export function Messenger(props) {
 
     const lastMessage = React.createRef<HTMLLIElement>();
 
-    useEffect(() => {
-        setConversations(conversations.sort((a, b) => ((new Date(b?.lastMessage?.created_at)).getTime() - (new Date(a?.lastMessage?.created_at)).getTime())))
-        lastMessage.current?.scrollIntoView({ behavior: "smooth" })
-    }, [lastMessage])
+    useEffect(() => lastMessage.current?.scrollIntoView({ behavior: "smooth" }), [lastMessage])
+
+
 
     const canCreate = !!getOptions;
 
