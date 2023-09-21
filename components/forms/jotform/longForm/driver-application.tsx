@@ -143,7 +143,7 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
 						formik={form}
 					/>
 				</Row>
-				<Row className={styles.align__text_left}>
+				<Row className={`${styles.align__text_left}  ${styles.txtcolor}`}>
 					<Col md="10" className="my-3">
 						<h6 className={styles.bold}>{t("SIGNATURE")}</h6>
 						<SignatureCanvas

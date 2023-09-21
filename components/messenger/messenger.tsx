@@ -203,7 +203,10 @@ export function Messenger(props) {
     }
 
     const lastMessage = React.createRef<HTMLLIElement>();
+
     useEffect(() => lastMessage.current?.scrollIntoView({ behavior: "smooth" }), [lastMessage])
+
+
 
     const canCreate = !!getOptions;
 

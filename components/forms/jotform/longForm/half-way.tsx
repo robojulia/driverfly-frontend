@@ -30,7 +30,7 @@ export function HalfWay() {
 					<img src='/img/gifs/simpsonRunning.gif' alt="simpsons" />
 				</div>
 				<h1 className={`${styles.heading__sty} mt-0 pt-0`}>{t("HARD_QUESTIONS")}</h1>
-				<h3 className="text-center">{t("ANSWER_FOLLOWIN_QUESTIONS")}</h3>
+				<h3 className="text-center text-black">{t("ANSWER_FOLLOWIN_QUESTIONS")}</h3>
 				<p className={`${styles.paragraph} my-4`}>{t("EXCLUDE_CONSIDERATION")}</p>
 				<Row className="mt-4">
 
