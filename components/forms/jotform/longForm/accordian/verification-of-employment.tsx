@@ -153,7 +153,7 @@ export function VerificationOfEmployment({ form }: AccordianProps) {
                 </Row>
                 <Row className={styles.align__text_left}>
                     <Col>
-                        <h6 className={`${styles.bold}`}>{t("SIGNATURE")}</h6>
+                        <h6 className={`${styles.txtcolor} ${styles.align__text_left}`}>{t("SIGNATURE")}</h6>
                         <SignatureCanvas
                             name="SIGNATURE_VOE_AUTHORIZATION.value"
                             onEnd={handleSignatureEnd}
