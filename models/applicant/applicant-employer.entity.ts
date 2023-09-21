@@ -28,7 +28,7 @@ export class ApplicantEmployerEntity {
     is_current: boolean;
 
     voe_submitted?: boolean;
-    voe_attempts?: number;
+    voe_attempts?: any;
 
     documents: DocumentEntity[];
 
