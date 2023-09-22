@@ -6,10 +6,12 @@ import { Button, Col, Row, Table } from "react-bootstrap";
 import {
 	ChevronUp,
 	DashCircle,
+	Pass,
 	PlusCircle,
 	XCircle,
 } from "react-bootstrap-icons";
-import { useFormik } from "formik";
+import { useFormik , ErrorMessage} from "formik";
+import moment from 'moment';
 
 import { useEffectAsync } from "../../../utils/react";
 import { useTranslation } from "../../../hooks/use-translation";
@@ -77,6 +79,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		initialValues: new ApplicantEntity(),
 		validationSchema: ApplicantEntity.yupSchema(),
 		onSubmit: async (values) => {
+	
 			values.extras = values.extras?.filter(
 				(v) => v.value != undefined || v.value != null
 			);
@@ -132,6 +135,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 			}
 		},
 	});
+
 
 	const [jobs, setJobs] = useState<JobEntity[]>([]);
 
@@ -239,10 +243,18 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		.toISOString()
 		.split("T")[0];
 
-	// useEffect(() => {
-	// 	console.log("form.values", form.values);
-	// 	console.log("form.errors", form.errors);
-	// }, [form.values, form.errors]);
+		
+	useEffect(() => {
+		form?.values?.employers?.map((employer)=>{
+
+		const startDate = moment(employer.start_at);
+		const endDate = moment(employer.end_at);
+		
+		if(!endDate.isAfter(startDate)){
+				form.setFieldError('end_at', 'End Date must be before than Start Date');
+		}})
+
+	}, [form.values, form.errors]);
 
 	return (
 		<EntityForm
@@ -783,6 +795,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 															employers: form.values?.employers?.filter(
 																(v, idx) => idx !== i
 															),
+																
 														})
 													}
 												>
@@ -808,17 +821,21 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														className="col-6"
 														name={`employers[${i}].start_at`}
 														label="DATES_EMPLOYED"
+														required
 														type="date"
 														formik={form}
 													/>
+													
 													<BaseInput
 														className="col-6"
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].end_at`}
 														label="THROUGH_OPTIONAL"
+														required
 														type="date"
 														formik={form}
 													/>
+													
 													<BaseInput
 														className="col-12"
 														readOnly={Boolean(entity?.is_hired)}

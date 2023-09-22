@@ -34,16 +34,33 @@ export class ApplicantEmployerEntity {
 
     static yupSchema() {
         return yup.object({
-            name: yup.string().required().nullable(),
+            name: yup.string().required().nullable().trim(),
             manager_name: yup.string().optional().nullable(),
-            email: yup.string().optional().nullable(),
+            email: yup.string().email().optional().nullable(),
             address: yup.string().optional().nullable(),
             address_2: yup.string().optional().nullable(),
-            start_at: yup.date().nullable(),
-            end_at: yup.date().nullable(),
-            title: yup.string().nullable(),
-            street: yup.string().nullable(),
-            city: yup.string().nullable(),
+            start_at: yup.date().nullable().max(new Date(), 'Start Date cannot be in future')
+            .test(
+              'is-less-than-current-date',
+              'Start Date must be before Current Date',
+              function (value) {
+                const currentDate = new Date();
+                return value < currentDate;
+              }
+            ),
+            end_at: yup.date().nullable().max(new Date(), 'End Date cannot be in the future')
+            .test(
+              'is-less-than-current-date',
+              'End Date must be before Current Date',
+              function (value) {
+                // `this` refers to the Yup context
+                const currentDate = new Date();
+                return value < currentDate;
+              }
+            ),
+            title: yup.string().required().nullable().trim(),
+            street: yup.string().nullable().trim(),
+            city: yup.string().nullable().trim(),
             state: yup.string().nullable(),
             zip_code: yup.string().nullable(),
             phone: yup.string().nullable(),
