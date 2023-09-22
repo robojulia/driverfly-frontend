@@ -34,30 +34,26 @@ export class ApplicantEmployerEntity {
 
     static yupSchema() {
         return yup.object({
-            name: yup.string().required().nullable().trim(),
-            manager_name: yup.string().optional().nullable(),
+            name: yup.string().required().trim().nullable(),
+            manager_name: yup.string().optional().trim().nullable(),
             email: yup.string().email().optional().nullable(),
-            address: yup.string().optional().nullable(),
-            address_2: yup.string().optional().nullable(),
-            start_at: yup.date().nullable().max(new Date(), 'Start Date cannot be in future')
-            .test(
-              'is-less-than-current-date',
-              'Start Date must be before Current Date',
-              function (value) {
-                const currentDate = new Date();
-                return value < currentDate;
+            address: yup.string().optional().trim().nullable(),
+            address_2: yup.string().optional().trim().nullable(),
+            start_at: yup.date().required().max(new Date()).nullable(),
+            end_at: yup.date().required()
+            .test({
+              test : (value , context)=>{
+                const start_date = context.resolve(yup.ref('start_at'));
+                if(!Boolean(value)) return true;
+                if (value > start_date) return true;
+
+                return context.createError({
+                  path:context.path,
+                  message : 'END_DATE_MUST_BE_AFTER_START_DATE'
+                })
               }
-            ),
-            end_at: yup.date().nullable().max(new Date(), 'End Date cannot be in the future')
-            .test(
-              'is-less-than-current-date',
-              'End Date must be before Current Date',
-              function (value) {
-                // `this` refers to the Yup context
-                const currentDate = new Date();
-                return value < currentDate;
-              }
-            ),
+            }
+            ).nullable(),
             title: yup.string().required().nullable().trim(),
             street: yup.string().nullable().trim(),
             city: yup.string().nullable().trim(),

@@ -244,17 +244,8 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		.split("T")[0];
 
 		
-	useEffect(() => {
-		form?.values?.employers?.map((employer)=>{
-
-		const startDate = moment(employer.start_at);
-		const endDate = moment(employer.end_at);
-		
-		if(!endDate.isAfter(startDate)){
-				form.setFieldError('end_at', 'End Date must be before than Start Date');
-		}})
-
-	}, [form.values, form.errors]);
+	// useEffect(() => {
+	// }, [form.values, form.errors]);
 
 	return (
 		<EntityForm
@@ -823,6 +814,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														label="DATES_EMPLOYED"
 														required
 														type="date"
+														max={(new Date()).toISOString().split("T")[0]}
 														formik={form}
 													/>
 													
