@@ -21,19 +21,16 @@ export class WorkedBeforeDto {
           then: ApplicantExtrasEntity.yupSchema(),
         })
         .nullable(),
-      // from_date: yup.date().required().max(new Date()).nullable(),
-      end_date:  yup.date().required()
-      .test({
-        test : (value , context)=>{
-          const start_date = context.resolve(yup.ref('ALREADY_WORKED_TO_COMPANY'));
-          if(!Boolean(value)) return true;
-          if (value > start_date) return true;
-          return context.createError({
-            path:context.path,
-            message : 'END_DATE_MUST_BE_AFTER_START_DATE'
-          })
-        }
-      }).nullable(),
+      // from_date: yup.date().when("worked_before", {
+      //   is: (v) => !!v,
+      //   then: yup.date().required().nullable(),
+      //   otherwise: yup.date().optional().nullable(),
+      // }),
+      // to_date: yup.date().when("worked_before", {
+      //   is: (v) => !!v,
+      //   then: yup.date().required().nullable(),
+      //   otherwise: yup.date().optional().nullable(),
+      // }),
     });
   }
 }
