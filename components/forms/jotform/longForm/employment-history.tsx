@@ -153,6 +153,7 @@ export function EmploymentHistory() {
 								className="col-md-6 my-3"
 								name="employer.email"
 								label="CURRENT_COMPANY_EMAIL"
+								required
 								placeholder="email"
 								formik={form}
 							/>
