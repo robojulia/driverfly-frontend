@@ -86,17 +86,16 @@ export function WorkedBefore() {
 								<BaseInput
 									className="col-md-6 my-3"
 									type="date"
-									name="from_date"
+									name="ALREADY_WORKED_TO_COMPANY.value.start_date"
 									placeholder="DATE"
 									label="FROM"
-									required
-									max={(new Date()).toISOString().split("T")[0]}
+									max={`9999-12-31`}	
 									formik={form}
 								/>
 								<BaseInput
 									className="col-md-6 my-3"
 									type="date"
-									name="to_date"
+									name="ALREADY_WORKED_TO_COMPANY.value.end_date"
 									placeholder="DATE"
 									required
 									label="TO"

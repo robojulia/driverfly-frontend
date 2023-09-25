@@ -6,12 +6,10 @@ import { Button, Col, Row, Table } from "react-bootstrap";
 import {
 	ChevronUp,
 	DashCircle,
-	Pass,
 	PlusCircle,
 	XCircle,
 } from "react-bootstrap-icons";
-import { useFormik , ErrorMessage} from "formik";
-import moment from 'moment';
+import { useFormik } from "formik";
 
 import { useEffectAsync } from "../../../utils/react";
 import { useTranslation } from "../../../hooks/use-translation";
@@ -812,7 +810,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														className="col-6"
 														name={`employers[${i}].start_at`}
 														label="DATES_EMPLOYED"
-														required
 														type="date"
 														max={(new Date()).toISOString().split("T")[0]}
 														formik={form}
@@ -823,7 +820,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														readOnly={Boolean(entity?.is_hired)}
 														name={`employers[${i}].end_at`}
 														label="THROUGH_OPTIONAL"
-														required
 														type="date"
 														formik={form}
 													/>

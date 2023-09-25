@@ -34,13 +34,13 @@ export class ApplicantEmployerEntity {
 
     static yupSchema() {
         return yup.object({
-            name: yup.string().required().trim().nullable(),
+            name: yup.string().trim().nullable(),
             manager_name: yup.string().optional().trim().nullable(),
             email: yup.string().email().optional().nullable(),
             address: yup.string().optional().trim().nullable(),
             address_2: yup.string().optional().trim().nullable(),
-            start_at: yup.date().required().max(new Date()).nullable(),
-            end_at: yup.date().required()
+            start_at: yup.date().max(new Date()).nullable(),
+            end_at: yup.date().nullable()
             .test({
               test : (value , context)=>{
                 const start_date = context.resolve(yup.ref('start_at'));
@@ -54,7 +54,7 @@ export class ApplicantEmployerEntity {
               }
             }
             ).nullable(),
-            title: yup.string().required().nullable().trim(),
+            title: yup.string().nullable().trim(),
             street: yup.string().nullable().trim(),
             city: yup.string().nullable().trim(),
             state: yup.string().nullable(),
