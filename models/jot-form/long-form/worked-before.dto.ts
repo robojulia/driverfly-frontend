@@ -25,7 +25,7 @@ export class WorkedBeforeDto {
       .test({
         test : (value , context)=>{
           const start_date = context.resolve(yup.ref('ALREADY_WORKED_TO_COMPANY'));
-          // if(!Boolean(value)) return true;
+          if(!Boolean(value)) return true;
           if (value > start_date) return true;
 
           return context.createError({

@@ -99,7 +99,7 @@ export function WorkedBefore() {
 									placeholder="DATE"
 									required
 									label="TO"
-									max={(new Date()).toISOString().split("T")[0]}
+									max={`9999-12-31`}
 									formik={form}
 								/>
 

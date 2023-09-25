@@ -34,7 +34,7 @@ export class ApplicantEmployerEntity {
 
     static yupSchema() {
         return yup.object({
-            name: yup.string().trim().nullable(),
+            name: yup.string().required().trim().nullable(),
             manager_name: yup.string().optional().trim().nullable(),
             email: yup.string().email().optional().nullable(),
             address: yup.string().optional().trim().nullable(),
