@@ -10,8 +10,8 @@ export class CurrentEmploymentHistoryDto extends ApplicantEmployerEntity {
 
 	static derivedYupSchema() {
 		return yup.object({
-			name: yup.string().required().nullable(),
-			manager_name: yup.string().optional().nullable(),
+			name: yup.string().required().trim().nullable(),
+			manager_name: yup.string().optional().trim().nullable(),
 			phone: yup.string().optional().nullable(),
 			city: yup.string().required().nullable()
 				.matches(/^[aA-zZ\s]+$/, "Only character are allowed for this field "),
@@ -20,7 +20,7 @@ export class CurrentEmploymentHistoryDto extends ApplicantEmployerEntity {
 			is_current: yup.boolean().default(true).nullable(),
 
 			state: yup.string().required().nullable(),
-			email: yup.string().optional().nullable(),
+			email: yup.string().email().optional().nullable(),
 			start_at: yup.date().required().nullable(),
 			can_contact: yup.boolean().default(false).optional().nullable(),
 			address: yup.string().required().nullable(),

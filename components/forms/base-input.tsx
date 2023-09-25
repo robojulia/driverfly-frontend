@@ -43,7 +43,7 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
     step = 1;
     onKeyDown = onKeyDown ||
       /**
-       * @param {React.KeyboardEvent<HTMLInputElement} e
+       * @param {React.KeyboardEvent<HTMLInputElement>} e
        */
       function (e) {
         // prevent negative if the min value is set to 0
@@ -58,7 +58,7 @@ function BaseInput({ formik, accept, required, className, label, handleBlur, typ
   else if (type === "number") {
     onKeyDown = onKeyDown ||
       /**
-       * @param {React.KeyboardEvent<HTMLInputElement} e
+       * @param {React.KeyboardEvent<HTMLInputElement>} e
        */
       function (e) {
         // prevent negative if the min value is set to 0

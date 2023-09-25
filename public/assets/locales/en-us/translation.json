@@ -1104,6 +1104,7 @@
     "notType": "Not a valid {{type}}",
     "defined": "Field must exist"
   },
+  "END_DATE_MUST_BE_AFTER_START_DATE":"End date must be after start date",
   "THIS_IS_THE_CANDIDATE_YOU_ARE_LOOKING_FOR": "This is the candidate you are looking for",
   "PLEASE_UPLOAD_A_FILE_WITH_AT_LEAST_ONE_ROW": "Please upload a file with at least one row in it",
   "{name}_ALREADY_EXISTS": "{{name}} already exists and will be merged",

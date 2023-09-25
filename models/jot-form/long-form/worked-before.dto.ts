@@ -6,12 +6,13 @@ export class WorkedBeforeDto {
   ALREADY_WORKED_TO_COMPANY: ApplicantExtrasEntity
   is_worked_before: boolean
   // ALREADY_WORKED_TO_COMPANY: boolean = false;
-  // from_date: string | Date;
-  // to_date: string | Date;
+  from_date: string ;
+  to_date: string ;
 
   static yupSchema() {
     return yup.object({
       ALREADY_APPLIED_TO_COMPANY: ApplicantExtrasEntity.yupSchema(),
+      
       is_worked_before: yup.boolean().default(false).optional().nullable(),
       ALREADY_WORKED_TO_COMPANY: yup
         .object()
