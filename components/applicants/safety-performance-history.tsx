@@ -255,10 +255,10 @@ export default function SafetyPerformanceHistory({
                             name: "COMPANY_NAME",
                             selector: (emp) => emp.name,
                             // cell: (emp) => <OverlyPopover slice_at={5} str={emp.name} />,
-                            width: "50%",
+                            width: "25%",
                         },
                         {
-                            width: "50%",
+                            width: "70%",
                             cell: (emp) => {
                                 const doc = emp.documents?.find(
                                     (v) => v.type == ApplicantDqf.SAFETY_PERFORMANCE_HISTORY
