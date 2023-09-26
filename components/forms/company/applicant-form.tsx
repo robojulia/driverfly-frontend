@@ -77,7 +77,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		initialValues: new ApplicantEntity(),
 		validationSchema: ApplicantEntity.yupSchema(),
 		onSubmit: async (values) => {
-	
+
 			values.extras = values.extras?.filter(
 				(v) => v.value != undefined || v.value != null
 			);
@@ -241,9 +241,11 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		.toISOString()
 		.split("T")[0];
 
-		
-	// useEffect(() => {
-	// }, [form.values, form.errors]);
+
+	useEffect(() => {
+		console.log("form.values", form.values);
+		console.log("form.errors", form.errors);
+	}, [form.values, form.errors]);
 
 	return (
 		<EntityForm
@@ -784,7 +786,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 															employers: form.values?.employers?.filter(
 																(v, idx) => idx !== i
 															),
-																
+
 														})
 													}
 												>
@@ -814,7 +816,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														max={(new Date()).toISOString().split("T")[0]}
 														formik={form}
 													/>
-													
+
 													<BaseInput
 														className="col-6"
 														readOnly={Boolean(entity?.is_hired)}
@@ -823,7 +825,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														type="date"
 														formik={form}
 													/>
-													
+
 													<BaseInput
 														className="col-12"
 														readOnly={Boolean(entity?.is_hired)}
