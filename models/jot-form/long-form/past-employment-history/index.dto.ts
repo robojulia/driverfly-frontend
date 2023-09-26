@@ -11,6 +11,7 @@ export class PastEmploymentHistoryDto extends ApplicantEmployerEntity {
 	static derivedYupSchema() {
 		return yup.object({
 			name: yup.string().required().trim().nullable(),
+			title: yup.string().required().trim().nullable(),
 			manager_name: yup.string().required().trim().nullable(),
 			phone: yup.string().optional().nullable(),
 			city: yup.string().required().trim().nullable()
