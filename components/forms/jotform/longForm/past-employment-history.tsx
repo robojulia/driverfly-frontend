@@ -111,6 +111,13 @@ export function PastEmploymentHistory() {
 								<Row className={styles.bold}>
 									<BaseInput
 										className="col-md-6 my-3"
+										name={`employers[${i}].title`}
+										label="PREVIOUS_COMPANY_TITLE"
+										required
+										formik={form}
+									/>
+									<BaseInput
+										className="col-md-6 my-3"
 										name={`employers[${i}].name`}
 										label="PREVIOUS_COMPANY_NAME"
 										required
