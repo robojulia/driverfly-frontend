@@ -106,7 +106,7 @@ export function SubmissionDetails() {
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row className={`${styles.align__text_left}`}>
 					<Col md="10">
-						<h6 className={styles.bold}>{t("SIGNATURE")}</h6>
+						<h6 className={`${styles.bold} text-black ${styles.bold}`}>{t("SIGNATURE")}</h6>
 						<SignatureCanvas
 							name="SIGNATURE_VOE.value"
 							ref={padRef}
