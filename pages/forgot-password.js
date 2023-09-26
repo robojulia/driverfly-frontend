@@ -30,8 +30,8 @@ export default function Forgot() {
         const dto = {
           email: values.email
         };
-
-        await api.forgotPassword(dto);
+        const apicall = await api.forgotPassword(dto);
+        console.log(apicall,"++++++++++++++++++++++++++")
 
         toast.success(t("PLEASE_CHECK_EMAIL"));
       }
