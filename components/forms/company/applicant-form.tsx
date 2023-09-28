@@ -230,7 +230,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	useEffectAsync(async () => {
 		const userApi = new UserApi();
 		const data = await userApi.list();
-		setCompanyUsers(data.filter(u=>u.status==Status.ACTIVE));
+		setCompanyUsers(data?.filter(u=>u.status==Status.ACTIVE))
 	}, []);
 
 	const today = new Date();
