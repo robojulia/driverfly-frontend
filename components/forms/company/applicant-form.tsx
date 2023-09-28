@@ -56,6 +56,7 @@ import EmployeeApi from "../../../pages/api/employee";
 import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../models/applicant";
 import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
+import { Status } from "../../../enums/status.enum";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
@@ -229,7 +230,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	useEffectAsync(async () => {
 		const userApi = new UserApi();
 		const data = await userApi.list();
-		setCompanyUsers(data);
+		setCompanyUsers(data.filter(u=>u.status==Status.ACTIVE));
 	}, []);
 
 	const today = new Date();
@@ -278,7 +279,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									placeholder
 									options={companyUsers}
 									valueKey="id"
-									createLabel={(c) => `${c.name} (#${c.id})`}
+									createLabel={(c) => `${c.name} (#${c.id}) `}
 									formik={form}
 								/>
 							</Col>
