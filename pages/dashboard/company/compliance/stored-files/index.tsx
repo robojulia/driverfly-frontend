@@ -198,6 +198,7 @@ export default function StoredFiles() {
                 <EntityForm
                     formik={form}
                     className="mx-3"
+                    submitLabel="UPLOAD"
                 >
                     <Row>
                         <BaseSelect
