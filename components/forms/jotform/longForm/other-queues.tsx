@@ -1,27 +1,23 @@
 import { useContext, useEffect } from "react";
 import Form from "react-bootstrap/Form";
-import styles from "../../../../styles/digitalhiringapp.module.css";
+import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import { Button, Col, Row } from "react-bootstrap";
-import BaseInput from "../../base-input";
-import BaseSelect from "../../base-select";
 import { useFormik } from "formik";
+import styles from "../../../../styles/digitalhiringapp.module.css";
+import BaseInput from "../../base-input";
 import { useTranslation } from "../../../../hooks/use-translation";
-import { DriverEndorsement } from "../../../../enums/users/driver-endorsement.enum";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import { OtherQueuesDto } from "../../../../models/jot-form/long-form/other-queues.dto";
-import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import { CdlExtras } from "../../../../models/jot-form/long-form/cdl-object/index.dto";
-import BaseCheckList from "../../base-check-list";
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
-import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 import StateSelect from "../../state-select";
 
 export function OtherQueues() {
 
     const {
         state: { applicant, applicantExtras },
-        method: { setApplicant, updateApplicantExtras, stepNext, stepBack },
+        method: { updateApplicantExtras, stepNext, stepBack },
     }: JotFormContextType = useContext(JotformContext);
 
     const { t } = useTranslation();
@@ -32,15 +28,8 @@ export function OtherQueues() {
         onSubmit: (values) => {
             try {
                 console.log("valuesDTO", values);
-                const { endorsements, QUALIFIED_FOR_MANUAL_TRANSMISSION, CDL_NUMBER } =
-                    values;
+                const { CDL_NUMBER } = values;
 
-                setApplicant({
-                    ...applicant,
-                    endorsements,
-                });
-
-                updateApplicantExtras(QUALIFIED_FOR_MANUAL_TRANSMISSION);
                 updateApplicantExtras(CDL_NUMBER);
             } catch (error) { }
             stepNext();
@@ -52,50 +41,19 @@ export function OtherQueues() {
 
     useEffect(() => {
         console.log("applicant extras", applicantExtras);
-        const { endorsements } = applicant;
-        const apx_qualified = applicantExtras?.find(
-            (v) => v.type === ApplicantExtras.QUALIFIED_FOR_MANUAL_TRANSMISSION
-        );
         const apx_cdl = applicantExtras?.find(
             (v) => v.type === ApplicantExtras.CDL_NUMBER
         );
         form.setValues({
             ...form.values,
-            QUALIFIED_FOR_MANUAL_TRANSMISSION: !!apx_qualified?.type
-                ? apx_qualified
-                : new ApplicantExtrasEntity(
-                    ApplicantExtras.QUALIFIED_FOR_MANUAL_TRANSMISSION
-                ),
             CDL_NUMBER: !!apx_cdl?.type
                 ? apx_cdl
                 : new ApplicantExtrasEntity(ApplicantExtras.CDL_NUMBER),
-            endorsements: endorsements || null,
         });
     }, [applicant, applicantExtras]);
 
     return (
         <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-            <Row>
-                <BaseSelect
-                    className={`${styles.bold} col-12 my-3`}
-                    labelPrefix="BooleanType"
-                    enumType={BooleanType}
-                    name="QUALIFIED_FOR_MANUAL_TRANSMISSION.value"
-                    placeholder="CHOOSE"
-                    label="QUALIFIED_TO_MANUAL_DRIVING"
-                    formik={form}
-                />
-                <p className="text-black mt-2 mbb-0"><strong>{t('PLEASE_SELECT_ENDORSEMENT')}</strong></p>
-                <BaseCheckList
-                    className="col-12"
-                    label="ENDORSEMENTS"
-                    name="endorsements"
-                    labelPrefix="DriverEndorsement"
-                    enumType={DriverEndorsement}
-                    formik={form}
-                    cols="2"
-                />
-            </Row>
             {form.values.CDL_NUMBER?.value?.length > 0 && (
                 <>
                     {form.values.CDL_NUMBER?.value?.map((entity, i) => (
