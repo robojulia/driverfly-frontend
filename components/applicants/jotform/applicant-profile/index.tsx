@@ -8,6 +8,7 @@ import { ViewApplicantDetailProps } from "../../../../types/applicant/view-appli
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import ViewTable from "../../../view-details/view-table";
 import ShowFormattedDate from "../../../jobs/show-formatted-date";
+import { VehicleTransmissionType } from "../../../../enums/vehicles/vehicle-transmission-type.enum";
 
 interface ApplicantSafetyBackgroundProps extends ViewApplicantDetailProps { }
 
@@ -24,8 +25,8 @@ export default function ApplicantExtrasDetails({
 	const job_apply_date = applicant.extras.find(
 		(ex) => ex?.type === ApplicantExtras.APPLY_DATE
 	);
-	const qualified_for_manual_transmission = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.QUALIFIED_FOR_MANUAL_TRANSMISSION
+	const qualified_for_manual_transmission = applicant.transmission_type.includes(
+		VehicleTransmissionType.MANUAL
 	);
 
 	const past_license_suspension = applicant.extras.find(
@@ -86,7 +87,7 @@ export default function ApplicantExtrasDetails({
 								hear_about_us: hear_about_us?.value && t(`HearAboutUsType.${hear_about_us?.value}`),
 								job_apply_date: job_apply_date?.value,
 								qualified_for_manual_transmission:
-									qualified_for_manual_transmission?.value,
+									!!qualified_for_manual_transmission,
 							}}
 						/>
 					</ViewCard>
