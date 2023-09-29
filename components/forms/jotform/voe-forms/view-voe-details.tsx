@@ -130,7 +130,7 @@ export function ViewVoeDetails({
 			</ViewCard>
 
 			<Row className={`${styles.align__text_left}`}>
-				<label className={`${styles.bold}`}>{t("SIGNATURE")}</label>
+				<label className={`${styles.bold} text-black`}>{t("SIGNATURE")}</label>
 				<Col className="">
 					{!!signature?.value ? (
 						<img

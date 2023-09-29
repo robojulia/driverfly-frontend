@@ -93,7 +93,7 @@ function BaseCheckList({
 
   return (
     <div className={className}>
-      {label && <span style={{ marginRight: "20px" }}>{t(label)}{required ? "*" : ""}:</span>}
+      {label && <span style={{ marginRight: "20px", color:"black" }}>{t(label)}{required ? "*" : ""}:</span>}
       {cols ?
         ColLayout(t, options, +cols, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix, disabled)
         : InlineLayout(t, options, value, name, labelKey, valueKey, onChange, handleBlur, readOnly, error, labelPrefix, disabled)}
