@@ -48,12 +48,7 @@ export function PastEmploymentHistory() {
 
 		form.setValues({
 			...form.values,
-			employers: employers.length > 0 ? employers : [{
-				...(new PastEmploymentHistoryDto()),
-				is_subject_to_fmcsrs: true,
-				is_subject_to_drug_tests: true,
-				is_current: false
-			}],
+			employers: employers.length > 0 ? employers : [],
 			is_previous_employed: !!employers?.length,
 		});
 	}, [applicant]);

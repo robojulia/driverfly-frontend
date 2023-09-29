@@ -34,6 +34,8 @@ import {
 } from "./shortForm";
 import { ThankyouPage } from "./thankyou-screen";
 import { AtsJobs } from "./shortForm/ats-jobs";
+import { TransmissionAndEndorsement } from "./shortForm/transmission-and-endorsement";
+import { DuiAndEquipment } from "./shortForm/dui-and-equipment";
 
 const getFullFormPages = (step: number): JSX.Element =>
 ({
@@ -44,29 +46,31 @@ const getFullFormPages = (step: number): JSX.Element =>
 	4: <BasicInfo />,
 	5: <CdlExperience />,
 	6: <AccidentViolation />,
-	7: <Preferences />,
-	8: <HearAbout />,
-	9: <ContinueLongForm />,
-	10: <DriverApplication />,
-	11: <BackgroundInfo />,
-	12: <HighestLevelEducation />,
-	13: <DrivingExperience />,
-	14: <OtherQueues />,
-	15: <DriverLicense />,
-	16: <MedicalCard />,
-	17: <EmergencyContact />,
-	18: <EmploymentHistory />,
-	19: <PastEmploymentHistory />,
-	20: <HalfWay />,
-	21: <WorkedBefore />,
-	22: <AccidentHistory />,
-	23: <ViolationHistory />,
-	24: <PastSuspension />,
-	25: <UnableForJob />,
-	26: <FelonyConviction />,
-	27: <DrugTest />,
-	28: <AccordianPage />,
-	29: <ThankyouPage />,
+	7: <TransmissionAndEndorsement />,
+	8: <DuiAndEquipment />,
+	9: <Preferences />,
+	10: <HearAbout />,
+	11: <ContinueLongForm />,
+	12: <DriverApplication />,
+	13: <BackgroundInfo />,
+	14: <HighestLevelEducation />,
+	15: <DrivingExperience />,
+	16: <OtherQueues />,
+	17: <DriverLicense />,
+	18: <MedicalCard />,
+	19: <EmergencyContact />,
+	20: <EmploymentHistory />,
+	21: <PastEmploymentHistory />,
+	22: <HalfWay />,
+	23: <WorkedBefore />,
+	24: <AccidentHistory />,
+	25: <ViolationHistory />,
+	26: <PastSuspension />,
+	27: <UnableForJob />,
+	28: <FelonyConviction />,
+	29: <DrugTest />,
+	30: <AccordianPage />,
+	31: <ThankyouPage />,
 }[step]);
 
 const getFullFormStyle = (step: number): CSSProperties | undefined =>
