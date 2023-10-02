@@ -120,7 +120,7 @@ export class EmployeeEntity {
 			).unique("type", { mapper: EmployeeExperienceEntity.key }),
 			equipment_owned: (
 				yup.array(EmployeeEquipmentEntity.yupSchema()) as any
-			)("type", { mapper: EmployeeEquipmentEntity.key }),
+			).unique("type", { mapper: EmployeeEquipmentEntity.key }),
 			// managerId: yup.number().optional().nullable()
 			hire_date: yup.date().nullable(),
 		});
