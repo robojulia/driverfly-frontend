@@ -89,8 +89,7 @@ export function WorkedBefore() {
 									name="ALREADY_WORKED_TO_COMPANY.value.start_date"
 									placeholder="DATE"
 									label="FROM"
-									required
-									max={`9999-12-31`}
+									max={`9999-12-31`}	
 									formik={form}
 								/>
 								<BaseInput

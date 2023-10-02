@@ -7,7 +7,9 @@ import { CurrencyDollar } from 'react-bootstrap-icons';
 import { buildAddress } from '../../utils/common'
 import { JobGeography } from '../../enums/jobs/job-geography.enum'
 import JobApi from '../../pages/api/job'
-
+import { Pagination, PagingMeta } from '../../types/pagination.type'
+import { JobEntity } from '../../models/job/job.entity'
+import { useEffectAsync } from '../../utils/react'
 
 export default function OtrJobsList() {
 
@@ -15,7 +17,7 @@ export default function OtrJobsList() {
     const jobApi = new JobApi();
 
     const [otrJobs, setOtrJobs] = useState([])
-    const [otrPagingMeta, setOtrPagingMeta] = useState({
+    const [pagingMeta, setPagingMeta] = useState<PagingMeta>({
         currentPage: 1,
         itemCount: 0,
         itemsPerPage: 0,
@@ -23,20 +25,20 @@ export default function OtrJobsList() {
         totalPages: 1
     })
 
-    const currentPageIndex = parseInt(otrPagingMeta.currentPage)
+    const currentPageIndex = (pagingMeta.currentPage)
     const previousPageIndex = currentPageIndex - 1
     const nextPageIndex = currentPageIndex + 1
 
     const fetchOtrJobs = async (page = 1) => {
-        await jobApi.search({ areas_covered: JobGeography.OTR, page: parseInt(page) })
-            .then(({ items, meta }) => {
+        await jobApi.search({ areas_covered: JobGeography.OTR, page })
+            .then(({ items, meta }: Pagination<JobEntity>) => {
                 setOtrJobs(items)
-                setOtrPagingMeta(meta)
+                setPagingMeta(meta)
             })
             .catch((e) => { console.error('exception is here: ', e.response) })
     }
 
-    useEffect(async () => { await fetchOtrJobs() }, [])
+    useEffectAsync(async () => await fetchOtrJobs(), [])
 
     return (
         <>
@@ -44,15 +46,15 @@ export default function OtrJobsList() {
 
             <div className="results-count mt-4 ">
                 {t('SHOWING')} {
-                    otrPagingMeta.itemCount !== 0 &&
+                    pagingMeta.itemCount !== 0 &&
                     <>
                         <span className="first">
-                            {((otrPagingMeta.currentPage - 1) * otrPagingMeta.itemsPerPage) + 1}
+                            {((pagingMeta.currentPage - 1) * pagingMeta.itemsPerPage) + 1}
                         </span> – <span className="last">
-                            {(((otrPagingMeta.currentPage - 1) * otrPagingMeta.itemsPerPage) + otrPagingMeta.itemCount)}
+                            {(((pagingMeta.currentPage - 1) * pagingMeta.itemsPerPage) + pagingMeta.itemCount)}
                         </span> {t('OF')}
                     </>
-                } {otrPagingMeta.totalItems} {t('RESULT')}
+                } {pagingMeta.totalItems} {t('RESULT')}
             </div>
 
             <div className="filter-outer mt-5">
@@ -88,7 +90,7 @@ export default function OtrJobsList() {
                                         <>
                                             <p>
                                                 <span className='mr-4'>
-                                                    {buildAddress(job.location || {}, { street: false, zip_code: false })}
+                                                    {buildAddress(job.location || {})}
                                                 </span></p>
                                         </>
                                     }
@@ -112,7 +114,7 @@ export default function OtrJobsList() {
                 <div className="filter-outer mt-5">
 
                     {
-                        otrPagingMeta.totalPages !== 0 &&
+                        pagingMeta.totalPages !== 0 &&
 
                         <ul className="pagination ">
                             {
@@ -144,7 +146,7 @@ export default function OtrJobsList() {
                             }
 
                             {
-                                currentPageIndex < otrPagingMeta.totalPages &&
+                                currentPageIndex < pagingMeta.totalPages &&
                                 <li onClick={() => { fetchOtrJobs(nextPageIndex) }} >
                                     <span className="page-numbers " role="button" >
                                         {nextPageIndex}
@@ -153,8 +155,8 @@ export default function OtrJobsList() {
                             }
 
                             {
-                                currentPageIndex < otrPagingMeta.totalPages &&
-                                <li onClick={() => { fetchOtrJobs(otrPagingMeta.totalPages) }}>
+                                currentPageIndex < pagingMeta.totalPages &&
+                                <li onClick={() => { fetchOtrJobs(pagingMeta.totalPages) }}>
                                     <span className="next page-numbers " role="button" >
                                         {t('LAST_PAGE')}
                                     </span>

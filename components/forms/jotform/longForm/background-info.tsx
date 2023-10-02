@@ -55,6 +55,9 @@ export function BackgroundInfo() {
 		});
 	}, [applicant]);
 
+	const today = new Date()
+	const OldThan18Year = new Date((today.getFullYear() - 18), today.getMonth(), today.getDate()).toISOString().split("T")[0]
+
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<h4 className={styles.heading__sty}>{t("BACKGROUND_INFO")}</h4>
@@ -67,8 +70,7 @@ export function BackgroundInfo() {
 					placeholder="birthdate"
 					label="birthdate"
 					formik={form}
-					max={new Date().toISOString().split("T")[0]}
-
+					max={OldThan18Year}
 				/>
 			</Row>
 			<p

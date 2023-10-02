@@ -1,7 +1,11 @@
+import { PlusCircle } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
+
+import { Button, Col, InputGroup, Row } from "react-bootstrap";
 
 import { useEffect, useState } from "react";
 import { useFormik } from "formik";
+
 import { useTranslation } from "../../../hooks/use-translation";
 import { useEffectAsync } from "../../../utils/react";
 import { useAuth } from "../../../hooks/use-auth";
@@ -9,11 +13,7 @@ import { useAuth } from "../../../hooks/use-auth";
 import { BaseFormProps } from "./base-form-props";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { counts, year2Only, year3Only, year5Only, years } from "../../../utils/jobs";
-import router, { useRouter } from 'next/router';
 
-import { PlusCircle } from "react-bootstrap-icons";
-
-import { Button, Col, InputGroup, Row } from "react-bootstrap";
 import EntityForm from "../../layouts/page/entity-form";
 import ViewCard from "../../view-details/view-card";
 import ViewModal from "../../view-details/view-modal";
@@ -92,6 +92,11 @@ export function JobForm(props: JobFormProps) {
     useEffect(() => {
         if (entity && !form.dirty) form.setValues(entity)
     }, [entity]);
+
+    // useEffect(() => {
+    //     console.log("form.values", form.values)
+    //     console.log("form.errors", form.errors)
+    // }, [form.values, form.errors]);
 
     const [locations, setLocations] = useState<LocationEntity[]>([]);
     const [vehicles, setVehicles] = useState<VehicleEntity[]>([]);
@@ -412,8 +417,8 @@ export function JobForm(props: JobFormProps) {
                 ...form.values,
             };
             if (dto.expiry_date) dto.expiry_date = new Date(dto.expiry_date).toISOString();
-            if (dto.orientation_start_at) dto.orientation_start_at = new Date(dto.orientation_start_at).toISOString();
-            if (dto.orientation_end_at) dto.orientation_end_at = new Date(dto.orientation_end_at).toISOString();
+            // if (dto.orientation_start_at) dto.orientation_start_at = new Date(dto.orientation_start_at).toISOString();
+            // if (dto.orientation_end_at) dto.orientation_end_at = new Date(dto.orientation_end_at).toISOString();
             if (dto.min_experience_in_months) {
                 dto.min_experience_in_years += dto.min_experience_in_months / 12;
             }
@@ -857,7 +862,6 @@ export function JobForm(props: JobFormProps) {
                                         className="col-12"
                                         label="MINIMUM_CDL_CLASS"
                                         name="cdl_class"
-                                        placeholder="DriverLicenseType.NONE"
                                         labelPrefix="DriverLicenseType"
                                         required
                                         enumType={DriverLicenseType}
@@ -1231,7 +1235,7 @@ export function JobForm(props: JobFormProps) {
                                                     <BaseSelect
                                                         className="col-12 p-0"
                                                         label="location"
-                                                        name="orientation_location.id"
+                                                        name="orientation.location.id"
                                                         required
                                                         placeholder
                                                         formik={form}
@@ -1245,7 +1249,7 @@ export function JobForm(props: JobFormProps) {
                                                     <BaseInput
                                                         className="col-md-6 p-0"
                                                         label="START_DATE"
-                                                        name="orientation_start_at"
+                                                        name="orientation.start_datetime"
                                                         placeholder
                                                         type="date"
                                                         min={new Date().toISOString().split("T")[0]}
@@ -1254,7 +1258,7 @@ export function JobForm(props: JobFormProps) {
                                                     <BaseInput
                                                         className="col-md-6 mt-2 m-lg-0 p-0"
                                                         label="END_DATE"
-                                                        name="orientation_end_at"
+                                                        name="orientation.end_datetime"
                                                         placeholder="END_DATE"
                                                         type="date"
                                                         min={new Date().toISOString().split("T")[0]}

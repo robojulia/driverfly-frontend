@@ -1,60 +1,94 @@
 import { Button, Col, Row } from 'react-bootstrap';
 import { useTranslation } from '../../../../hooks/use-translation';
-import React from 'react';
-import { ViewApplicantDetailProps } from '../../../../types/applicant/view-application-detail-props.type';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import ViewApplicantDetail from '../../../applicants/applicant-view-details';
-
-export default function Background({ applicant, protectedFields }: ViewApplicantDetailProps) {
-    const router = useRouter()
-    const { t } = useTranslation();
-    const onViewProfileCLick = () => router.push(`/dashboard/company/applicants/${applicant?.id}`)
-    
-    const employeePosition = applicant?.jobs?.find(v => v.status)
-
-	const onEditClick = () => router.push(`/dashboard/company/applicants/${applicant?.id}/edit`)
+import { ViewApplicantBackgroundProps } from '../../../../types/applicant/view-application-background-props.type';
+import ViewDetails from '../../../view-details/view-details';
+import ViewEmployeeDetails from '../../../employee/view-employee-detail';
+import { useAuth } from '../../../../hooks/use-auth';
+import { EmployeeStatus } from '../../../../enums/applicants/employee-status.enum';
 
 
-    return (
-        <div className="employee_directory_tabs">
-            {applicant && (
-                <>
-                <div>
-				<Row className="my-2">
-					<Col>
-						<strong><h5>{t(`${applicant.first_name} ${applicant.last_name}`)}</h5></strong>
-					</Col>
-					<Col>
-						<Button onClick={onEditClick} className="float-right">{t("EDIT")}</Button>
-					</Col>
-					
-				</Row>
+export default function Background({ employee }: ViewApplicantBackgroundProps) {
 
-				<div className="my-2 d-flex">
-					<p>
-						{t("{rank}_position", { rank: employeePosition?.status ? `ApplicantStatus.${employeePosition?.status}` : "N/A" }, { translateProps: true })}
-					</p>
-					<p className="ml-4">
-						{t("{terminal}_terimanl", { terminal: employeePosition?.job?.location?.city }, { translateProps: true })}
-					</p>
-					<p className="ml-4">
-						{t("{name}_manager", { name: "N/A" }, { translateProps: true })}
-					</p>
-				</div>
-				<div className="my-2 d-flex">
-					<p>
-						{t("{date}_hireDate", { date: "N/A" }, { translateProps: true })}
-					</p>
-					<p className="ml-4">
-						{t("{date}_birthdate", { date: applicant?.birthdate }, { translateProps: true })}
-					</p>
-				</div>
-			</div>
-                    <ViewApplicantDetail applicant={applicant} />
-                    <Button onClick={onViewProfileCLick}>{t(`view_applicant_profile`)}</Button>
-                </>
-            )}
+	const router = useRouter()
+	const { t } = useTranslation();
 
-        </div>
-    )
+	const onViewProfileCLick = () => router.push(`/dashboard/company/applicants/${employee?.applicant?.id}`)
+	const onEditClick = () => router.push(`/dashboard/company/compliance/employee-directory/${employee?.id}/edit`)
+
+	let { user, hasPermission } = useAuth();
+
+	const [protectedFields, setProtectedFields] = useState({
+		license_number: false,
+	});
+
+	useEffect(() => {
+		setProtectedFields({
+			license_number: hasPermission("CanViewEmployee.license_number"),
+		});
+	}, [user]);
+
+
+	return (
+		<div className="employee_directory_tabs">
+			{employee && (
+				<>
+					<Row className="my-2">
+						<Col>
+							<strong><h5>{t(`${employee?.first_name} ${employee?.last_name}`)}</h5></strong>
+						</Col>
+						{
+							!!!(employee.status === EmployeeStatus.FIRED || employee.status === EmployeeStatus.QUIT) ? <Col>
+								<Button onClick={onEditClick} className="float-right">
+									{t("EDIT")}
+								</Button>
+							</Col> : null
+						}
+
+					</Row>
+					<Row>
+						<Col>
+							<ViewDetails
+								default={t("NOT_ANSWERED")}
+								obj={{
+									POSITION: employee?.job?.title,
+									TERMINAL: employee?.job?.location?.city,
+									MANAGER: employee?.manager?.name ? employee?.manager?.name : t('NO_MANAGER_ASSIGNED'),
+								}}
+							/>
+						</Col>
+						<Col>
+							<ViewDetails
+								default={t("NOT_ANSWERED")}
+								obj={{
+									// DATE_HIRED: job?.hired_at ? new Date(job?.hired_at).toDateString() : t("N/A"),
+									BIRTHDATE: employee?.birthdate ? new Date(employee?.birthdate).toDateString() : t("N/A"),
+									HIRE_DATE: employee?.hire_date ? new Date(employee?.hire_date).toDateString() : t("N/A"),
+								}}
+							/>
+						</Col>
+					</Row>
+
+
+					<ViewEmployeeDetails employee={employee} />
+					<Button disabled={!Boolean(employee?.applicant)} onClick={onViewProfileCLick}>
+						{
+							Boolean(employee?.applicant) ? (
+								<>
+									{t(`view_applicant_profile`)}
+								</>
+							) : (
+								<>
+									{t(`NO_APPLICANT_PROFILE_FOUND`)}
+								</>
+							)
+						}
+
+					</Button>
+				</>
+			)}
+
+		</div>
+	)
 }

@@ -3,6 +3,7 @@ import { Dropdown, FormControl } from "react-bootstrap";
 import { useTranslation } from "../../hooks/use-translation";
 
 import style from "../../public/components/styles/css/ComboBox.module.css";
+import { ApplicantEntity } from "../../models/applicant";
 
 
 export interface ComboboxProps {
@@ -134,7 +135,7 @@ export default function Combobox(props: ComboboxProps) {
             })
         }
     };
-
+    console.log("00000000", state.options)
     return (
         <>
             {label && <label htmlFor={name}>{t(label)}</label>}
@@ -143,9 +144,10 @@ export default function Combobox(props: ComboboxProps) {
                 <Dropdown.Menu className="w-100">
                     {state.options.length === 0 && <span className="text-warning small">{t("NO_MATCHING_RESULTS")}</span>}
                     {state.options.map((o, i) =>
-                    (o && <a key={i} href="#" className={`dropdown-item ${style.form_combobox_item}`} onClick={e => onOptionClick(e, o.value)}>
-                        {o.parts[0]}<em>{o.parts[1]}</em>{o.parts[2]}
-                    </a>)
+                    (
+                        o && <a key={i} href="#" className={`dropdown-item ${style.form_combobox_item}`} onClick={e => onOptionClick(e, o.value)}>
+                            {o.parts[0]}<em>{o.parts[1]}</em>{o.parts[2]}
+                        </a>)
                     )}
                 </Dropdown.Menu>
             </Dropdown>

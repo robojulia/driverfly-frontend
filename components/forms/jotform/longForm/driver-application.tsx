@@ -10,9 +10,12 @@ import JotformContext, { JotFormContextType } from "../../../../context/jotform-
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-extras.entity";
 
-export function DriverApplication() {
+export interface DriverApplicationProps {
+	isAutoRecruitmentLead?: boolean | (() => boolean)
+}
+export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationProps) {
 	const {
-		state: { applicant, applicantExtras },
+		state: { applicant, applicantExtras, jobs },
 		method: { setApplicant, updateApplicantExtras, stepNext },
 	}: JotFormContextType = useContext(JotformContext);
 
@@ -29,10 +32,11 @@ export function DriverApplication() {
 		validationSchema: DriverApplicationDto.yupSchema(),
 		onSubmit: (values) => {
 			try {
-				const { first_name, last_name, APPLY_DATE, SIGNATURE } = values;
+				const { first_name, last_name, APPLY_DATE, SIGNATURE, AUTOMATED_RECRUITING_LEAD } = values;
 				setApplicant({ ...applicant, first_name, last_name });
 				updateApplicantExtras(APPLY_DATE);
 				updateApplicantExtras(SIGNATURE);
+				updateApplicantExtras(AUTOMATED_RECRUITING_LEAD);
 				stepNext();
 			} catch (error) {
 				console.log(error);
@@ -48,6 +52,8 @@ export function DriverApplication() {
 	useEffect(() => {
 		console.log("form.values", form.values);
 		console.log("form.errors", form.errors);
+		console.log("jobs", jobs);
+
 	}, [form.values, form.errors]);
 
 	useEffect(() => {
@@ -74,7 +80,13 @@ export function DriverApplication() {
 				: new ApplicantExtrasEntity(ApplicantExtras.SIGNATURE),
 			first_name: first_name || null,
 			last_name: last_name || null,
+			AUTOMATED_RECRUITING_LEAD: Boolean(isAutoRecruitmentLead) ? {
+				type: ApplicantExtras.AUTOMATED_RECRUITING_LEAD,
+				value: true
+			} : new ApplicantExtrasEntity(ApplicantExtras.AUTOMATED_RECRUITING_LEAD)
+
 		});
+
 	}, [applicant]);
 
 	return (
@@ -131,7 +143,7 @@ export function DriverApplication() {
 						formik={form}
 					/>
 				</Row>
-				<Row className={styles.align__text_left}>
+				<Row className={`${styles.align__text_left}  ${styles.txtcolor}`}>
 					<Col md="10" className="my-3">
 						<h6 className={styles.bold}>{t("SIGNATURE")}</h6>
 						<SignatureCanvas

@@ -1,45 +1,55 @@
+import { useState } from "react";
+import { useFormik } from "formik";
+import { toast } from "react-toastify";
+import { ThreeCircles } from 'react-loader-spinner';
 import { Button, Col, Form, Row, Table } from "react-bootstrap";
 import { useAuth } from "../../../../hooks/use-auth";
 import { useEffectAsync } from "../../../../utils/react";
 import { useTranslation } from "../../../../hooks/use-translation";
-import { ViewApplicantDetailProps } from "../../../../types/applicant/view-application-detail-props.type";
-import { useFormik } from "formik";
-import ApplicantApi from "../../../../pages/api/applicant";
 import ViewCard from "../../../view-details/view-card";
 import FileInput from '../../../forms/file-input';
-import { ApplicantDocumentType } from '../../../../enums/applicants/applicant-document-type.enum';
-import { toast } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import ShowFormattedDate from "../../../jobs/show-formatted-date";
-import { ApplicantDocumentDto } from "../../../../models/applicant/applicant-document-dto";
-import { CloudArrowDown, Pen } from "react-bootstrap-icons";
-import { ApplicantEntity } from "../../../../models/applicant/applicant.entity";
-import { useState } from "react";
-import { ThreeCircles } from 'react-loader-spinner';
-import DocumentApi from "../../../../pages/api/document";
 import ViewPdf from "../../../view-details/view-pdf";
+import { EmployeeDocumentType } from "../../../../enums/employee/employee-document-types.enum";
+import { DocumentableType } from "../../../../enums/documents/documentable-type.enum";
+import { DocumentEntity } from "../../../../models/documents/document.entity";
+import SafetyPerformanceHistory from "../safety-performance-history";
+import ViewDocumentHistory from "../../../documents/view-history";
+import { AddDocumentButton, DeleteDocumentButton, DownloadDocumentButton, ViewDocumentButton } from "../../../documents/buttons";
+import { handleDownloadDocument, handleViewDocument } from "../../../../utils/documents/button-actions";
+import EmployeeApi from "../../../../pages/api/employee";
+import { EmployeeEntity } from "../../../../models/employee/employee.entity";
+import { EmployeeDocumentDto } from "../../../../models/employee/employee-document-dto";
+import { EmployeeOnBoardingChecklist } from "../../../../enums/employee/employee-onboarding-checklist.enum";
+import { LoaderIcon } from "../../../loading/loader-icon";
+import { ViewEmployeeDqfProps } from "../../../../types/employee/view-employee-dqf-props.type";
 
-export interface DqfTabProps extends ViewApplicantDetailProps { }
-
-const DqfTab = ({ applicant }: DqfTabProps) => {
-
-    const [applicantUser, setApplicantUser] = useState<ApplicantEntity>(null)
+export default function DQF(props: ViewEmployeeDqfProps) {
 
     const { t } = useTranslation();
     const { user } = useAuth();
-    const applicantApi = new ApplicantApi();
+    const employeeApi = new EmployeeApi();
+
+    const [pdf, setPdf] = useState({});
+
+    const [employee, setEmployee] = useState<EmployeeEntity>(null)
+
+    useEffectAsync(async () => {
+        if (props.employee?.id) setEmployee(props.employee)
+    }, [user]);
 
     const form = useFormik({
-        initialValues: new ApplicantDocumentDto(),
-        validationSchema: ApplicantDocumentDto.yupSchema(),
+        initialValues: new EmployeeDocumentDto(),
+        validationSchema: EmployeeDocumentDto.yupSchema(),
         onSubmit: async ({ document }, { resetForm }) => {
             try {
-                const applicantDocumentUpload = await applicantApi.documents.create(applicantUser.id, document)
+                const employeeDocumentUpload = await employeeApi.documents.create(employee.id, document)
 
                 if (document.id) {
-                    applicantUser.documents = applicantUser.documents.filter(v => (v.id !== applicantDocumentUpload.id))
+                    employee.documents = employee.documents.filter(v => (v.id !== employeeDocumentUpload.id))
                 }
-                applicantUser.documents.push(applicantDocumentUpload)
+                employee.documents.push(employeeDocumentUpload)
                 toast.success(t('DOCUMENT_UPLOAD_SUCCESS_MESSAGE'))
                 resetForm()
             }
@@ -49,99 +59,214 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
         }
     });
 
-    const [pdf, setPdf] = useState({});
-
-    const viewDocumentClick = async (id, name) => {
-        const api = new DocumentApi();
-
-        const document = await api.getSignedUrl(id);
-
-        if (document) {
-            setPdf({
-                name: `${t(name)} (${document.name})`,
-                url: document.path
-            });
-        }
-    }
-    const handleUpdateDocument = async (type: ApplicantDocumentType, documentId?: number) => {
-        form.setFieldValue("document", { type: type, id: documentId || null })
+    /**
+     * It deletes a document from the employee's profile.
+     * @param {EmployeeDocumentType | string} docType - The type of document you want to
+     * delete.
+     */
+    const handleDeleteDocument = async (docType: EmployeeDocumentType | string): Promise<void> => {
+        await employeeApi.documents.delete(employee?.id, docType)
+        setEmployee({
+            ...employee,
+            documents: employee?.documents?.filter(v => (v.type != docType))
+        })
     }
 
-    useEffectAsync(async () => {
-        const v = await applicantApi.getById(applicant.id)
-        setApplicantUser(v)
-    }, [user], () => {
-        form.resetForm()
-    });
+    /**
+     * It takes a type and an optional documentId, and sets the form's document field to an object with the
+     * type and id
+     * @param {EmployeeDocumentType} type - EmployeeDocumentType - this is the type of document that is being uploaded.
+     * @param {number} [documentId] - The id of the document to be updated.
+     */
+    const handleUpdateDocument = (
+        type: EmployeeDocumentType,
+        documentId?: number
+    ): void => {
+        form.setFieldValue("document", { type, id: documentId ?? null })
+    }
+
+    /* This is a functional component in TypeScript React that renders a list of buttons for a
+    given document and type. It conditionally renders the buttons based on whether the document type
+    matches the given type and whether the type is SAFETY_PERFORMANCE_HISTORY. The buttons include
+    ViewDocumentButton, AddDocumentButton, DownloadDocumentButton, DeleteDocumentButton, and
+    ViewDocumentHistory. If the type is SAFETY_PERFORMANCE_HISTORY, it renders the
+    SafetyPerformanceHistory component instead of the buttons. */
+    const ButtonList = ({ document, type }): JSX.Element =>
+        (!form.values.document?.type || form.values.document?.type !== type) && (
+            <div className="d-flex">
+                {type != EmployeeDocumentType.SAFETY_PERFORMANCE_HISTORY ? (
+                    <>
+                        <ViewDocumentButton
+                            document={document}
+                            onClick={() => handleViewDocument(document.id, setPdf)}
+                        />
+                        {Boolean(props.canEdit) && (
+                            <AddDocumentButton
+                                document={document}
+                                type={type}
+                                t={t}
+                                onClick={() => handleUpdateDocument(type, document?.id)}
+                            />
+                        )}
+                        <DownloadDocumentButton
+                            document={document}
+                            onClick={() => handleDownloadDocument(document.id)}
+                        />
+                        {Boolean(props.canEdit) && (
+                            <DeleteDocumentButton
+                                document={document}
+                                onClick={() => handleDeleteDocument(type)}
+                            />
+                        )}
+                        {Boolean(props.showHistory) && (
+                            <ViewDocumentHistory
+                                document={document}
+                                type={type}
+                                typePrefix="EmployeeDocumentType"
+                                documentable_id={employee.id}
+                                documentable_type={DocumentableType.EMPLOYEE}
+                            />
+                        )}
+                    </>
+                ) : (
+                    // <></>
+                    <SafetyPerformanceHistory
+                        employee={employee}
+                        canEditSafetyPerformance={props.canEditSafetyPerformance}
+                        showHistory={props.showHistory}
+                        showResendButton={props.showResendButton}
+                    />
+                )}
+            </div>
+        );
+
+    /**
+     * This is a TypeScript React component that displays the last updated date of a document, unless the
+     * document type is EmployeeDocumentType.SAFETY_PERFORMANCE_HISTORY.
+     * @param  - The function `UpdatedAt` takes two parameters:
+     */
+    const UpdatedAt = ({ document, type }): JSX.Element => {
+        if (type == EmployeeDocumentType.SAFETY_PERFORMANCE_HISTORY) return (<></>)
+
+        return (<>
+            {document
+                ? <ShowFormattedDate date={document.last_updated_at} />
+                : <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>}
+        </>)
+    }
 
     return (
         <div className="employee_directory_tabs">
             <Row>
                 <Col>
-                    {!!applicantUser ? (
-                        <ViewCard title="DOCUMENTS">
-
+                    {!!employee ? (
+                        <ViewCard title={props.title ?? "DOCUMENTS"}>
                             <Table striped>
                                 <thead>
                                     <tr>
                                         <th colSpan={2}>{t("TYPE")}</th>
+                                        {
+                                            Boolean(props.showCompleted) && <th colSpan={2}>{t("COMPLETED?")}</th>
+                                        }
                                         <th colSpan={2}>{t("UPDATED_AT")}</th>
                                         <th colSpan={1}></th>
                                     </tr>
                                 </thead>
-
                                 <tbody>
-                                    {
-                                        Object.values(ApplicantDocumentType).map((value: ApplicantDocumentType, i) => {
-
-                                            const document: any = applicantUser?.documents?.find(v => (v.type === value))
+                                    {Object.values(EmployeeDocumentType).map((type: EmployeeDocumentType, i) => {
+                                        /* Finding the document in the employee.documents array that has the same type. */
+                                        const document: DocumentEntity = employee?.documents?.find(v => (v.type === type))
+                                        return (
+                                            <tr key={i}>
+                                                <td colSpan={2}>
+                                                    {t(`EmployeeDocumentType.${type}`)}
+                                                </td>
+                                                {Boolean(props.showCompleted)
+                                                    &&
+                                                    <td colSpan={1} className="text-center">
+                                                        <input className="form-check-input" type="radio" disabled checked={Boolean(document?.id)} />
+                                                    </td>
+                                                }
+                                                <td colSpan={2}>
+                                                    <UpdatedAt document={document} type={type} />
+                                                </td>
+                                                <td colSpan={1} className="border border-2 w-50">
+                                                    <ButtonList document={document} type={type} />
+                                                    {(form.values?.document?.type === type)
+                                                        && <Form onSubmit={form.handleSubmit} >
+                                                            <FileInput
+                                                                name={`document`}
+                                                                accept="application/pdf"
+                                                                formik={form}
+                                                                allowedSizeInByte={3145728}
+                                                            />
+                                                            <div className="mt-2 d-flex w-100 ">
+                                                                <Button
+                                                                    disabled={form.isSubmitting || !form.isValid || form.isValidating}
+                                                                    className="mr-2 w-50 theme-primary-btn"
+                                                                    type="submit"
+                                                                >{t(`SAVE`)} <LoaderIcon isLoading={form.isSubmitting} /></Button>
+                                                                <Button
+                                                                    type="button"
+                                                                    className="mr-2 w-50 bg-danger"
+                                                                    onClick={() => { form.resetForm() }}
+                                                                >{t(`CANCEL`)}</Button>
+                                                            </div>
+                                                        </Form>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
+                                    {props.showOnboarding
+                                        && Object.values(EmployeeOnBoardingChecklist).map((type: EmployeeOnBoardingChecklist, i) => {
+                                            /* Finding the document in the employee.documents array that has the same type. */
+                                            const document: DocumentEntity = employee?.documents?.find(v => (v.type === type))
                                             return (
                                                 <tr key={i}>
                                                     <td colSpan={2}>
-                                                        {t(`ApplicantDocumentType.${value}`)}
+                                                        {t(`EmployeeOnBoardingChecklist.${type}`)}
                                                     </td>
+                                                    {Boolean(props.showCompleted)
+                                                        &&
+                                                        <td colSpan={1} className="text-center">
+                                                            <input className="form-check-input" type="radio" disabled checked={Boolean(document?.id)} />
+                                                        </td>
+                                                    }
                                                     <td colSpan={2}>
-                                                        {document ? <ShowFormattedDate date={document.last_updated_at} /> : <span className="text-danger font-italic">{t(`NOT_AVAILABLE`)}</span>}
+                                                        <UpdatedAt document={document} type={type} />
                                                     </td>
-                                                    <td colSpan={1} >
-                                                        {
-                                                            (!form.values.document?.type || form.values.document?.type !== value) &&
-                                                            <div className="d-flex">
-                                                                <Button className="mr-2 w-100" onClick={() => { handleUpdateDocument(value, document?.id) }}>
-                                                                    {document ? <Pen /> : t('ADD')}
-                                                                </Button>
-                                                                {document ? <a onClick={() => viewDocumentClick(document.id, document.name)} href='#' role="button" className="btn theme-primary2-btn p-0 pt-1 mr-2"><CloudArrowDown /></a> : null}
-                                                            </div>
-                                                        }
-
-                                                        {
-                                                            (form.values?.document?.type === value) &&
-                                                            <Form onSubmit={form.handleSubmit} >
+                                                    <td colSpan={1} className="border border-2 w-50">
+                                                        <ButtonList document={document} type={type} />
+                                                        {(form.values?.document?.type === type)
+                                                            && <Form onSubmit={form.handleSubmit} >
                                                                 <FileInput
                                                                     name={`document`}
                                                                     accept="application/pdf"
                                                                     formik={form}
+                                                                    allowedSizeInByte={3145728}
                                                                 />
                                                                 <div className="mt-2 d-flex w-100 ">
-                                                                    <Button disabled={form.isSubmitting || !form.isValid || form.isValidating} className="mr-2 w-50 theme-primary-btn" type="submit">
-                                                                        {t(`SAVE`)}
-                                                                    </Button>
-                                                                    <Button type="button" className="mr-2 w-50 bg-danger" onClick={() => { form.resetForm() }}                                                            >
-                                                                        {t(`CANCEL`)}
-                                                                    </Button>
+                                                                    <Button
+                                                                        disabled={form.isSubmitting || !form.isValid || form.isValidating}
+                                                                        className="mr-2 w-50 theme-primary-btn"
+                                                                        type="submit"
+                                                                    >{t(`SAVE`)}</Button>
+                                                                    <Button
+                                                                        type="button"
+                                                                        className="mr-2 w-50 bg-danger"
+                                                                        onClick={() => { form.resetForm() }}
+                                                                    >{t(`CANCEL`)}</Button>
                                                                 </div>
                                                             </Form>
                                                         }
-
                                                     </td>
                                                 </tr>
                                             )
-                                        })
-                                    }
+                                        })}
                                 </tbody>
                             </Table>
                             <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
-
                         </ViewCard>
                     ) : (
                         <div className="d-flex justify-content-center align-items-center">
@@ -154,12 +279,8 @@ const DqfTab = ({ applicant }: DqfTabProps) => {
                             />
                         </div>
                     )}
-
-
                 </Col>
             </Row>
-        </div>
+        </div >
     );
 };
-
-export default DqfTab;

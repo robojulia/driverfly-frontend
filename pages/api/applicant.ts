@@ -1,21 +1,21 @@
 import { AxiosRequestConfig } from "axios";
+import { ApplicantDocumentType } from "../../enums/applicants/applicant-document-type.enum";
+import { ApplicantDqf } from "../../enums/applicants/applicant-dqf-types.enum";
 import { ApplicantFormStatus } from "../../enums/applicants/applicant-form-status.enum";
 import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
 import { ApplicantEmployerEntity } from "../../models/applicant";
 import { ApplicantDacEntity } from "../../models/applicant/applicant-dac.entity";
 import { ApplicantJobEntity } from "../../models/applicant/applicant-job.entity";
 import { ApplicantNoteEntity } from "../../models/applicant/applicant-note.entity";
-import { ApplicantOTPEntity } from "../../models/applicant/applicant-otp.entity";
 import { ApplicantSuggestedJobEntity } from "../../models/applicant/applicant-suggested-job.entity";
 import { ApplicantEntity } from "../../models/applicant/applicant.entity";
 import { DocumentEntity } from "../../models/documents/document.entity";
-import { ApplicantJobsByStatusDto } from "../../models/job/applicant-jobs-by-status.dto";
 import { VerifyOTPDto } from "../../models/jot-form/OTP/verify-otp.dto";
 import { UpsertApplicantJotformDto } from "../../models/jot-form/upsert-applicant-jotform.dto";
 import { UpsertApplicantVoeformDto } from "../../models/jot-form/upsert-applicant-voe.dto";
 import BaseApi from "./_baseApi";
 
-class ApplicantApi extends BaseApi {
+export default class ApplicantApi extends BaseApi {
 	baseUrl: string = "applicants";
 	constructor() {
 		super();
@@ -29,6 +29,12 @@ class ApplicantApi extends BaseApi {
 
 	async update(id: number, dto: ApplicantEntity): Promise<ApplicantEntity> {
 		const { data } = await this.put(this.baseUrl + "/" + id, dto);
+
+		return data;
+	}
+
+	async remove(id: number): Promise<ApplicantEntity | void> {
+		const { data } = await this.delete(`${this.baseUrl}/${id}`);
 
 		return data;
 	}
@@ -92,7 +98,8 @@ class ApplicantApi extends BaseApi {
 	async list(params?: {
 		jobId?: number;
 		email?: string;
-		status?: ApplicantStatus;
+		status?: ApplicantStatus | ApplicantStatus[];
+		withHired?: boolean;
 	}): Promise<ApplicantEntity[]> {
 		const { data } = await this.get(
 			this.buildUrl(this.baseUrl + "/list", params)
@@ -113,8 +120,8 @@ class ApplicantApi extends BaseApi {
 	}
 
 	// user specific actions
-	async getByUserId(): Promise<ApplicantEntity> {
-		const { data } = await this.get(this.baseUrl);
+	async getByUserId(userId: number): Promise<ApplicantEntity> {
+		const { data } = await this.get(`${this.baseUrl}/user/${userId}`);
 
 		return data;
 	}
@@ -168,6 +175,14 @@ class ApplicantApi extends BaseApi {
 
 			return data;
 		},
+		delete: async (
+			applicantId: number,
+			type: ApplicantDocumentType | ApplicantDqf | string
+		): Promise<DocumentEntity> => {
+			const { data } = await this.delete(`${this.documents.baseUrl(applicantId)}/${type}`);
+
+			return data;
+		},
 	};
 
 	jotform = {
@@ -218,11 +233,49 @@ class ApplicantApi extends BaseApi {
 	};
 
 	employer = {
+		baseUrl: (applicantId: number) => `${this.baseUrl}/${applicantId}/employer`,
 		getByUuidToken: async (uuid_token: string): Promise<ApplicantEmployerEntity> => {
 			const { data } = await this.get(this.buildUrl(`${this.baseUrl}/fetch-employer/${uuid_token}`));
 
 			return data;
-		}
+		},
+		list: async (applicantId: number): Promise<ApplicantEmployerEntity[]> => {
+			const { data } = await this.get(`${this.employer.baseUrl(applicantId)}`);
+
+			return data;
+		},
+		sendVoeRequest: async (applicantId: number, employerId: number): Promise<ApplicantEmployerEntity> => {
+			const { data } = await this.get(`${this.employer.baseUrl(applicantId)}/${employerId}/send-voew-request`);
+
+			return data;
+		},
+		documents: {
+			baseUrl: (applicantId: number, employerId: number) =>
+				`${this.employer.baseUrl(applicantId)}/${employerId}/documents`,
+			create: async (
+				applicantId: number,
+				employerId: number,
+				dto: DocumentEntity
+			): Promise<DocumentEntity> => {
+				const { data } = await this.post(
+					`${this.employer.documents.baseUrl(applicantId, employerId)}`,
+					dto
+				);
+
+				return data;
+			},
+			delete: async (
+				applicantId: number,
+				employerId: number,
+				type: ApplicantDocumentType | ApplicantDqf | string
+			): Promise<void> => {
+				const { data } = await this.delete(
+					`${this.employer.documents.baseUrl(applicantId, employerId)}/${type}`
+				);
+
+				return data;
+			},
+		},
 	};
 
 	notes = {
@@ -323,6 +376,3 @@ class ApplicantApi extends BaseApi {
 		},
 	};
 }
-
-export default ApplicantApi;
-export { ApplicantApi };

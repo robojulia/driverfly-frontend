@@ -1,3 +1,4 @@
+import { CompanyPreferenceAutoRecrutingLabel } from './../../enums/company/company-preferences-auto-recruiting-label.enum';
 import { CompanyPreferenceCategory } from "../../enums/company/company-preference-category.enum";
 import * as yup from "yup";
 import "../../utils/yup";
@@ -6,6 +7,7 @@ import { DriverLicenseType } from "../../enums/users/driver-license-type.enum";
 import { CompanyPreferenceJotformLabel } from "../../enums/company/company-preferences-jotform-label.enum";
 import { JobEmploymentType } from "../../enums/jobs/job-employment-type.enum";
 import { JobGeography } from "../../enums/jobs/job-geography.enum";
+import { CompanyPreferenceEnhancementLabel } from '../../enums/company/company-preference-enhancement-label.enum';
 
 export class CompanyPreferenceEntity {
     constructor() { }
@@ -61,6 +63,34 @@ export class CompanyPreferenceEntity {
                             then: yup.array((yup.string() as any).required().enum(JobGeography)).nullable()
                         })
                 })
+                .when("category", {
+                    is: CompanyPreferenceCategory.ENHANCEMENT,
+                    then: yup.mixed()
+                        .when("label", {
+                            is: CompanyPreferenceEnhancementLabel.ADD_SSN_ON_DHA,
+                            then: yup.boolean().optional().nullable()
+                        })
+                })
         });
+    }
+
+    static autoRecruitingYupScehma() {
+        return yup.object({
+            category: (yup.string().optional().nullable() as any).enum(CompanyPreferenceCategory),
+            label: yup.string().optional().nullable()
+                .when("category", {
+                    is: CompanyPreferenceCategory.AUTO_RECRUITING,
+                    then: (yup.string().required().nullable() as any).enum(CompanyPreferenceJotformLabel)
+                }),
+            value: yup.mixed()
+                .when("category", {
+                    is: CompanyPreferenceCategory.AUTO_RECRUITING,
+                    then: yup.mixed()
+                        .when("label", {
+                            is: CompanyPreferenceAutoRecrutingLabel.ENROLL_IN_AUTO_RECRUITING,
+                            then: yup.boolean().optional().nullable()
+                        })
+                })
+        })
     }
 }

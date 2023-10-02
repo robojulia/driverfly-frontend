@@ -1,258 +1,509 @@
+import { useFormik } from "formik";
+import { toast } from "react-toastify";
+import { Row, Col, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
+import * as yup from "yup";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
 import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 import PageLayout from "../../../../../components/layouts/page/page-layout";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import BaseClickToCopyInput from "../../../../../components/forms/base-click-to-copy-input";
 import { DriverLicenseType } from "../../../../../enums/users/driver-license-type.enum";
-
-import { useFormik } from "formik";
-import { toast } from "react-toastify";
 import { useAuth } from "../../../../../hooks/use-auth";
 import CompanyApi from "../../../../api/company";
-import { Row, Col, Button } from "react-bootstrap";
 import { CompanyPreferenceEntity } from "../../../../../models/company/company-preferences.entity";
 
-import * as yup from "yup";
 import { CompanyPreferenceCategory } from "../../../../../enums/company/company-preference-category.enum";
 import { CompanyPreferenceJotformLabel } from "../../../../../enums/company/company-preferences-jotform-label.enum";
 import { useEffectAsync } from "../../../../../utils/react";
 import BaseCheckList from "../../../../../components/forms/base-check-list";
-import BaseCheck from "../../../../../components/forms/base-check";
 import BaseInput from "../../../../../components/forms/base-input";
 import { JobEmploymentType } from "../../../../../enums/jobs/job-employment-type.enum";
 import { JobGeography } from "../../../../../enums/jobs/job-geography.enum";
+import ViewModal from "../../../../../components/view-details/view-modal";
+import BaseCheck from "../../../../../components/forms/base-check";
+import { CompanyPreferenceAutoRecrutingLabel } from "../../../../../enums/company/company-preferences-auto-recruiting-label.enum";
+import { CompanyPreferenceEnhancementLabel } from "../../../../../enums/company/company-preference-enhancement-label.enum";
 
 export default function CompanyPreference() {
-  const { user } = useAuth();
+	enum WhatsThisOptionsEnum {
+		SHOW_AUTO_RECRUITING_MODAL = "SHOW_AUTO_RECRUITING_MODAL",
+		SHOW_REFER_BACK_MODAL = "SHOW_REFER_BACK_MODAL",
+	}
 
-  const { t } = useTranslation();
-  const removeEmploymentTypes = [JobEmploymentType.SEASONAL, JobEmploymentType.PART_TIME, JobEmploymentType.ONE_TIME_GIG]
-  const FilteredEmploymentTypes = Object.values(JobEmploymentType).filter(v => !removeEmploymentTypes.includes(v))
-  const form = useFormik({
-    initialValues: {
-      cdl_class: {
-        ...new CompanyPreferenceEntity(),
-        category: CompanyPreferenceCategory.JOTFORM,
-        label: CompanyPreferenceJotformLabel.CDL_CLASS,
-        value: [],
-      } as CompanyPreferenceEntity,
-      // owner_operator: {
-      //   ...new CompanyPreferenceEntity(),
-      //   category: CompanyPreferenceCategory.JOTFORM,
-      //   label: CompanyPreferenceJotformLabel.OWNER_OPERATOR,
-      //   value: false,
-      // } as CompanyPreferenceEntity,
-      employment_type: {
-        ...new CompanyPreferenceEntity(),
-        category: CompanyPreferenceCategory.JOTFORM,
-        label: CompanyPreferenceJotformLabel.EMPLOYMENT_TYPE,
-        value: [],
-      } as CompanyPreferenceEntity,
-      job_geography: {
-        ...new CompanyPreferenceEntity(),
-        category: CompanyPreferenceCategory.JOTFORM,
-        label: CompanyPreferenceJotformLabel.JOB_GEOGRAPHY,
-        value: [],
-      } as CompanyPreferenceEntity,
-      // drug_test_pass: {
-      //   ...new CompanyPreferenceEntity(),
-      //   category: CompanyPreferenceCategory.JOTFORM,
-      //   label: CompanyPreferenceJotformLabel.DRUG_TEST_PASS,
-      //   value: false,
-      // } as CompanyPreferenceEntity,
-      minimum_accidents: {
-        ...new CompanyPreferenceEntity(),
-        category: CompanyPreferenceCategory.JOTFORM,
-        label: CompanyPreferenceJotformLabel.MINIMUM_ACCIDENTS,
-        value: 0,
-      } as CompanyPreferenceEntity,
-      minimum_moving_violations: {
-        ...new CompanyPreferenceEntity(),
-        category: CompanyPreferenceCategory.JOTFORM,
-        label: CompanyPreferenceJotformLabel.MIN_MOVING_VIOLATIONS,
-        value: 0,
-      } as CompanyPreferenceEntity,
-      years_cdl_experience: {
-        ...new CompanyPreferenceEntity(),
-        category: CompanyPreferenceCategory.JOTFORM,
-        label: CompanyPreferenceJotformLabel.YEARS_CDL_EXPERIENCE,
-        value: 0,
-      },
-    } as CompanyPreferenceEntity,
+	const [preferences, setPreferences] = useState<CompanyPreferenceEntity[]>([]);
 
-    validationSchema: yup.object({
-      cdl_clas: CompanyPreferenceEntity.yupSchema(),
-      // owner_operator: CompanyPreferenceEntity.yupSchema(),
-      // drug_test_pass: CompanyPreferenceEntity.yupSchema(),
-      minimum_moving_violations: CompanyPreferenceEntity.yupSchema(),
-      minimum_accidents: CompanyPreferenceEntity.yupSchema(),
-      years_cdl_experience: CompanyPreferenceEntity.yupSchema(),
-      employment_type: CompanyPreferenceEntity.yupSchema(),
-      job_geography: CompanyPreferenceEntity.yupSchema(),
-    }),
-    onSubmit: async (values) => {
-      const api = new CompanyApi();
+	const [showModal, setShowModal] = useState<boolean>(false);
+	const [showReferModal, setShowReferModal] = useState<boolean>(false);
+	const [showAutoRecruitingModal, setShowAutoRecruitingModal] =
+		useState<boolean>(false);
 
-      try {
-        const preferences = await Promise.all(
-          Object.values(values).map(async (preference) => {
-            console.log('preference ----', preference);
-            if (preference.value) {
-              if (preference.id)
-                preference = await api.preferences.update(
-                  user?.company.id,
-                  preference.id,
-                  preference
-                );
-              else {
-                preference = await api.preferences.create(
-                  user?.company.id,
-                  preference
-                );
-              }
-            } else if (preference.id) {
-              await api.preferences.remove(user.id, preference.id);
-              delete preference.id;
-            }
+	const [modalAction, setModalAction] = useState<{
+		label:
+		| CompanyPreferenceAutoRecrutingLabel.ENROLL_IN_AUTO_RECRUITING
+		| CompanyPreferenceAutoRecrutingLabel.PARTICIPATE_IN_REFER_BACK_PROGRAM;
+	}>(null);
 
-            return preference;
-          })
-        );
-        populateForm(preferences);
-        toast.success(t("successfully_saved_information"));
-      } catch (e) {
-        console.error("Unable to save preferences", e);
-        toast.error(t("unable_to_save_information"));
-      }
-    },
-  });
+	const { user, isSuperAdmin } = useAuth();
 
-  useEffectAsync(async () => {
-    if (user.company) {
-      const api = new CompanyApi();
-      const preferences = await api.preferences.list(user.company.id, {
-        category: CompanyPreferenceCategory.JOTFORM,
-      });
-      populateForm(preferences);
-    }
-  }, []);
+	const { t } = useTranslation();
+	const removeEmploymentTypes = [
+		JobEmploymentType.SEASONAL,
+		JobEmploymentType.PART_TIME,
+		JobEmploymentType.ONE_TIME_GIG,
+	];
+	const FilteredEmploymentTypes = Object.values(JobEmploymentType).filter(
+		(v) => !removeEmploymentTypes.includes(v)
+	);
 
-  /**
-   *
-   * @param {CompanyPreferenceEntity[]} preferences
-   */
-  const populateForm = function (preferences) {
-    preferences.forEach((v) => {
-      console.log('v.label', v)
-      const label = v.label?.toLowerCase();
-      if (label in form.values) {
-        form.initialValues[label] = v;
-        form.setFieldValue(label, v);
-      }
-    });
-  };
+	const api = new CompanyApi();
 
-  return (
-    <>
-      <PageLayout title="DIGITAL_HIRING_APPLICATION">
-      <p className="pt-2 pb-2">{t("DHA_PREFERENCE_POINT_1")}</p>
-        <BaseClickToCopyInput
-          label="DIGITAL_HIRING_APP_URL"
-          className="my-2 border p-3 rounded"
-          value={`${process.env.FRONTEND_BASE_URL ?? ""}form/digitalhiringapp/${user?.company?.id
-            }`}
-          tooltipText={t("CLICK_TO_COPY")}
-        />
+	const form = useFormik({
+		initialValues: {
+			cdl_class: {
+				...new CompanyPreferenceEntity(),
+				category: CompanyPreferenceCategory.JOTFORM,
+				label: CompanyPreferenceJotformLabel.CDL_CLASS,
+				value: [],
+			} as CompanyPreferenceEntity,
+			employment_type: {
+				...new CompanyPreferenceEntity(),
+				category: CompanyPreferenceCategory.JOTFORM,
+				label: CompanyPreferenceJotformLabel.EMPLOYMENT_TYPE,
+				value: [],
+			} as CompanyPreferenceEntity,
+			job_geography: {
+				...new CompanyPreferenceEntity(),
+				category: CompanyPreferenceCategory.JOTFORM,
+				label: CompanyPreferenceJotformLabel.JOB_GEOGRAPHY,
+				value: [],
+			} as CompanyPreferenceEntity,
+			minimum_accidents: {
+				...new CompanyPreferenceEntity(),
+				category: CompanyPreferenceCategory.JOTFORM,
+				label: CompanyPreferenceJotformLabel.MINIMUM_ACCIDENTS,
+				value: 0,
+			} as CompanyPreferenceEntity,
+			minimum_moving_violations: {
+				...new CompanyPreferenceEntity(),
+				category: CompanyPreferenceCategory.JOTFORM,
+				label: CompanyPreferenceJotformLabel.MIN_MOVING_VIOLATIONS,
+				value: 0,
+			} as CompanyPreferenceEntity,
+			years_cdl_experience: {
+				...new CompanyPreferenceEntity(),
+				category: CompanyPreferenceCategory.JOTFORM,
+				label: CompanyPreferenceJotformLabel.YEARS_CDL_EXPERIENCE,
+				value: 0,
+			},
+			add_ssn_on_dha: {
+				...new CompanyPreferenceEntity(),
+				category: CompanyPreferenceCategory.ENHANCEMENT,
+				label: CompanyPreferenceEnhancementLabel.ADD_SSN_ON_DHA,
+				value: false,
+			},
+		} as CompanyPreferenceEntity,
 
-          <p className="pt-2 pb-2">{t("DHA_PREFERENCE_POINT_2")}</p>
+		validationSchema: yup.object({
+			cdl_clas: CompanyPreferenceEntity.yupSchema(),
+			minimum_moving_violations: CompanyPreferenceEntity.yupSchema(),
+			minimum_accidents: CompanyPreferenceEntity.yupSchema(),
+			years_cdl_experience: CompanyPreferenceEntity.yupSchema(),
+			employment_type: CompanyPreferenceEntity.yupSchema(),
+			job_geography: CompanyPreferenceEntity.yupSchema(),
+			add_ssn_on_dha: CompanyPreferenceEntity.yupSchema(),
+		}),
+		onSubmit: async (values) => {
+			try {
+				const data = await Promise.all(
+					Object.values(values).map(async (preference) => {
+						console.log("preference ----", preference);
+						if (preference.value) {
+							if (preference.id)
+								preference = await api.preferences.update(
+									user?.company.id,
+									preference.id,
+									preference
+								);
+							else {
+								preference = await api.preferences.create(
+									user?.company.id,
+									preference
+								);
+							}
+						} else if (preference.id) {
+							await api.preferences.remove(user.id, preference.id);
+							delete preference.id;
+						}
 
-        <form onSubmit={form.handleSubmit} className="py-4 px-3 border rounded mt-4" style={{ background: '#e9ecef' }}>
-          <Row>
-            <BaseCheckList
-              className="col-12 mt-2"
-              label="CDL_CLASS"
-              name="cdl_class.value"
-              labelPrefix="DriverLicenseType"
-              required
-              enumType={DriverLicenseType}
-              formik={form}
-            />
-            <BaseCheckList
-              className="col-12 mt-2"
-              label="EMPLOYMENT_TYPE"
-              name="employment_type.value"
-              labelPrefix="JobEmploymentType"
-              required
-              enumType={FilteredEmploymentTypes}
-              formik={form}
-            />
-            <BaseCheckList
-              className="col-12 mt-2"
-              label="PREFERRED_LOCATION"
-              name="job_geography.value"
-              labelPrefix="JobGeography"
-              required
-              enumType={JobGeography}
-              formik={form}
-            />
-            {/* <BaseCheck
-              className="col-12 mt-4"
-              label="OWNER_OPERATOR"
-              name="owner_operator.value"
-              formik={form}
-            /> */}
+						return preference;
+					})
+				);
+				setPreferences([...preferences, ...data]);
+				populateForm(data);
+				toast.success(t("successfully_saved_information"));
+			} catch (e) {
+				console.error("Unable to save preferences", e);
+				toast.error(t("unable_to_save_information"));
+			}
+		},
+	});
 
-            {/* <BaseCheck
-              className="col-12 mt-4"
-              label="DRUG_TEST_PASS"
-              name="drug_test_pass.value"
-              formik={form}
-            /> */}
+	useEffectAsync(async () => {
+		setShowModal(true)
+		if (user.company) {
+			const api = new CompanyApi();
+			let data = await api.preferences.list(user.company.id);
+			console.log(" pre first time ", data);
+			if (
+				!data?.find(
+					(d) =>
+						d?.label ==
+						CompanyPreferenceAutoRecrutingLabel.PARTICIPATE_IN_REFER_BACK_PROGRAM
+				)
+			) {
+				console.log("first time ");
+				const referProgram: CompanyPreferenceEntity =
+					await api.preferences.create(user?.company?.id, {
+						category: CompanyPreferenceCategory.AUTO_RECRUITING,
+						label:
+							CompanyPreferenceAutoRecrutingLabel.PARTICIPATE_IN_REFER_BACK_PROGRAM,
+						value: true,
+					});
+				console.log("second time ", referProgram);
+				data = [...data, { ...referProgram }];
+			}
+			setPreferences(data);
+			populateForm(
+				data?.filter(
+					(pref) => pref?.category == CompanyPreferenceCategory.JOTFORM || pref?.category == CompanyPreferenceCategory.ENHANCEMENT
+				)
+			);
+		}
+	}, []);
 
-            <BaseInput
-              className="col-md-4 mt-4"
-              label="years_cdl_experience"
-              name="years_cdl_experience.value"
-              type="number"
-              placeholder
-              formik={form}
-            />
+	/**
+	 *
+	 * @param {CompanyPreferenceEntity[]} preferences
+	 */
+	const populateForm = function (preferences) {
+		preferences.forEach((v) => {
+			console.log("v.label", v);
+			const label = v.label?.toLowerCase();
+			if (label in form.values) {
+				form.initialValues[label] = v;
+				form.setFieldValue(label, v);
+			}
+		});
+	};
 
-            <BaseInput
-              className="col-md-4 mt-4"
-              label="MIN_ACCIDENTS"
-              name="minimum_accidents.value"
-              type="number"
-              placeholder
-              formik={form}
-            />
+	const handleAdditinonalPreferenceChange = async ({ label }) => {
+		let pref = await preferences?.find((p) => p?.label == label);
+		if (pref?.id) {
+			pref = await api.preferences.update(user?.company?.id, pref?.id, {
+				...pref,
+				value: !pref.value,
+			});
+		} else {
+			pref = await api.preferences.create(user?.company?.id, {
+				category: CompanyPreferenceCategory.AUTO_RECRUITING,
+				label,
+				value: true,
+			});
+		}
+		if (!!pref) setModalAction(null);
+		setPreferences([
+			...(preferences?.filter((p) => p?.id != pref?.id) ?? []),
+			{ ...pref },
+		]);
+	};
 
-            <BaseInput
-              className="col-md-4 mt-4"
-              label="MIN_MOVING_VIOLATIONS"
-              name="minimum_moving_violations.value"
-              type="number"
-              placeholder
-              formik={form}
-            />
-          </Row>
+	const tooltip = <Tooltip id="my-tooltip">{t("REFER_BACK_DETAILS")}</Tooltip>;
+	const tooltipReferBack = (
+		<Tooltip id="my-tooltip">{t("TOOLTIP_REFER_BACK")}</Tooltip>
+	);
 
-          <Row className="mt-3">
-            <Col className="text-end">
-              <Button
-                type="submit"
-                variant="primary"
-                disabled={form.isSubmitting || !form.isValid || !form.dirty}
-              >
-                {t("UPDATE")}
-              </Button>
-            </Col>
-          </Row>
-        </form>
-      </PageLayout>
-    </>
-  );
+	return (
+		<>
+			<PageLayout title="DIGITAL_HIRING_APPLICATION">
+				{showModal && (
+					<ViewModal
+						show={showModal}
+						onCloseClick={() => setShowModal(false)}
+						closeText="CANCEL"
+					>
+						<div className="text-center">
+							<h2>{t("DHA_welcome_note")}</h2>
+							<p
+								dangerouslySetInnerHTML={{
+									__html: t("COMPANY_PREFERENCE_DHA_NOTE"),
+								}}
+							/>
+							<p>
+								{t("LEARN_MORE_ABOUT_BENEFITS")}
+								<span className="text-blue">
+									<span> </span>
+									<Link href="https://digitalhiringapp.com/">
+										<a target="_blank">{t("DHA_LINK")}</a>
+									</Link>
+								</span>
+							</p>
+						</div>
+					</ViewModal>
+				)}
+				{/* refer back program modal */}
+
+				{showReferModal && (
+					<ViewModal
+						show={showReferModal}
+						onCloseClick={() => setShowReferModal(false)}
+						closeText="CANCEL"
+					>
+						<div className="text-center">
+							<h2>{t("REFER_BACK_PROGRAM")}</h2>
+							<p>{t("REFER_BACK_PROGRAM_TEXT_1")}</p>
+
+							<p>{t("REFER_BACK_PROGRAM_TEXT_2")}</p>
+							<p>
+								<span> {t("REFER_BACK_PROGRAM_TEXT_3_PART_1")}</span>
+								<span> </span>
+								<span className="text-primary">
+									{t("REFER_BACK_PROGRAM_TEXT_3_PART_2")}
+								</span>
+								<span>{t("REFER_BACK_PROGRAM_TEXT_3_PART_3")}</span>
+							</p>
+						</div>
+					</ViewModal>
+				)}
+				{/* auto recruiting */}
+				{showAutoRecruitingModal && (
+					<ViewModal
+						show={showAutoRecruitingModal}
+						onCloseClick={() => setShowAutoRecruitingModal(false)}
+						closeText="CANCEL"
+					>
+						<div>
+							<h2 className="text-center">{t("AUTO_RECRUITING")}</h2>
+							<p className="text-center">{t("LOOKING_TO_SCALE_UP")}</p>
+							<p>{t("AUTO_RECRUITING_TEXT_1")}</p>
+							<p>{t("AUTO_RECRUITING_TEXT_2")}</p>
+							<p>{t("AUTO_RECRUITING_TEXT_3")}</p>
+							<p>{t("AUTO_RECRUITING_TEXT_4")}</p>
+							<p className="text-center">
+								<span> {t("REFER_BACK_PROGRAM_TEXT_3_PART_1")}</span>
+								<span> </span>
+								<span className="text-primary">
+									{t("REFER_BACK_PROGRAM_TEXT_3_PART_2")}
+								</span>
+								<span>{t("REFER_BACK_PROGRAM_TEXT_3_PART_3")}</span>
+							</p>
+						</div>
+					</ViewModal>
+				)}
+				{/* confirm auto recruiting */}
+				{Boolean(modalAction) && (
+					<ViewModal
+						size="sm"
+						show={Boolean(modalAction)}
+						onCloseClick={() => setModalAction(null)}
+						closeText="CANCEL"
+					>
+						<>
+							{console.log("lskdlksldklsd", modalAction)}
+							<h2 className="text-center">
+								{t("AUTO_RECURUITING_REGISTRATION")}
+							</h2>
+							<p>{t("AUTO_RECURUITING_REGISTRATION_TEXT_1")}</p>
+							<div className="d-flex justify-content-center">
+								<Button
+									onClick={() => handleAdditinonalPreferenceChange(modalAction)}
+								>
+									{t("CONFIRM")}
+								</Button>
+							</div>
+						</>
+					</ViewModal>
+				)}
+
+				<p className="pt-2 pb-2">{t("DHA_PREFERENCE_POINT_1")}</p>
+				<BaseClickToCopyInput
+					label="DIGITAL_HIRING_APP_URL"
+					className="my-2 border p-3 rounded"
+					value={`${process.env.FRONTEND_BASE_URL ?? ""}form/digitalhiringapp/${user?.company?.id
+						}?source=indeed`}
+					tooltipText={t("CLICK_TO_COPY")}
+				/>
+				<p className="pt-2 pb-2">{t("DHA_URL_TIP_TEXT")}</p>
+				<div className="d-flex align-item-start my-4">
+					<p>{t("PARTICIPE_IN_REFER_BACK_PROGRAM")}</p>
+					<p
+						className="ml-1 text-blue cursor-pointer hover:underline"
+						onClick={() => setShowReferModal(true)}
+						style={{ fontSize: "12px" }}
+					>
+						{!Boolean(isSuperAdmin) ? (
+							<OverlayTrigger
+								trigger={["hover"]}
+								delay={{ show: 0, hide: 0 }}
+								overlay={tooltipReferBack}
+							>
+								<em>{t("WHATS_THIS")}</em>
+							</OverlayTrigger>
+						) : (
+							<em>{t("WHATS_THIS")}</em>
+						)}
+					</p>
+					<BaseCheck
+						className="mt-2 col float-left"
+						name="is_current_employed"
+						disabled={!Boolean(isSuperAdmin)}
+						checked={Boolean(
+							preferences?.find(
+								(pref) =>
+									pref?.label ==
+									CompanyPreferenceAutoRecrutingLabel.PARTICIPATE_IN_REFER_BACK_PROGRAM
+							)?.value
+						)}
+						onChange={() =>
+							handleAdditinonalPreferenceChange({
+								label:
+									CompanyPreferenceAutoRecrutingLabel.PARTICIPATE_IN_REFER_BACK_PROGRAM,
+							})
+						}
+					/>
+				</div>
+
+				<div className="d-flex align-item-start my-4">
+					<p>{t("ENROLL_IN_AUTO_RECURUITING")}</p>
+					<p
+						className="ml-1 text-blue cursor-pointer hover:underline"
+						onClick={() => setShowAutoRecruitingModal(true)}
+						style={{ fontSize: "12px" }}
+					>
+						<em>{t("WHATS_THIS")}</em>
+					</p>
+
+					<BaseCheck
+						className="mt-2 col float-left"
+						checked={Boolean(
+							preferences?.find(
+								(pref) =>
+									pref?.label ==
+									CompanyPreferenceAutoRecrutingLabel.ENROLL_IN_AUTO_RECRUITING
+							)?.value
+						)}
+						onChange={() =>
+							setModalAction({
+								label:
+									CompanyPreferenceAutoRecrutingLabel.ENROLL_IN_AUTO_RECRUITING,
+							})
+						}
+					/>
+				</div>
+
+				<h3 className="pt-2 pb-2">{t("MATCH_CRITERIA")}</h3>
+				<p className="pt-2 pb-2">{t("MATCH_CRITERIA_MESSAGE")}</p>
+
+				<h3 className="pt-2 pb-2">{t("COMPANY_PREFERENCE")}</h3>
+				<p className="pt-2 pb-2">{t("DHA_PREFERENCE_POINT_2")}</p>
+
+				<form
+					onSubmit={form.handleSubmit}
+					className="py-4 px-3 border rounded mt-4"
+					style={{ background: "#e9ecef" }}
+				>
+					<Row>
+						<div className="d-flex align-item-start col-md-12">
+							<p>{t("ADD_SSN_ON_DHA")}</p>
+							<BaseCheck
+								className="col float-left"
+								name="add_ssn_on_dha.value"
+								formik={form}
+							/>
+						</div>
+
+						<BaseCheckList
+							className="col-12 mt-2"
+							label="CDL_CLASS"
+							name="cdl_class.value"
+							labelPrefix="DriverLicenseType"
+							required
+							enumType={DriverLicenseType}
+							formik={form}
+						/>
+						<BaseCheckList
+							className="col-12 mt-2"
+							label="EMPLOYMENT_TYPE"
+							name="employment_type.value"
+							labelPrefix="JobEmploymentType"
+							required
+							enumType={FilteredEmploymentTypes}
+							formik={form}
+						/>
+						<BaseCheckList
+							className="col-12 mt-2"
+							label="DRIVER_DISTANCE"
+							name="job_geography.value"
+							labelPrefix="JobGeography"
+							required
+							enumType={JobGeography}
+							formik={form}
+						/>
+						<BaseInput
+							className="col-md-4 mt-4"
+							label="years_cdl_experience"
+							name="years_cdl_experience.value"
+							type="number"
+							placeholder
+							formik={form}
+						/>
+
+						<BaseInput
+							className="col-md-4 mt-4"
+							label="MAX_ACCIDENTS"
+							name="minimum_accidents.value"
+							type="number"
+							placeholder
+							formik={form}
+						/>
+
+						<BaseInput
+							className="col-md-4 mt-4"
+							label="MIN_MOVING_VIOLATIONS"
+							name="minimum_moving_violations.value"
+							type="number"
+							placeholder
+							formik={form}
+						/>
+					</Row>
+
+					<Row className="mt-3">
+						<Col className="">
+							<OverlayTrigger
+								trigger={["hover", "focus"]}
+								delay={{ show: 0, hide: 0 }}
+								overlay={tooltip}
+							>
+								<Button>{t("REFER_BACK_QUESTION")}</Button>
+							</OverlayTrigger>
+						</Col>
+						<Col className="text-end">
+							<Button
+								type="submit"
+								variant="primary"
+								disabled={form.isSubmitting || !form.isValid || !form.dirty}
+							>
+								{t("UPDATE")}
+							</Button>
+						</Col>
+					</Row>
+				</form>
+			</PageLayout>
+		</>
+	);
 }
 
 CompanyPreference.getLayout = function getLayout(page) {
-  return <FullLayout>{page}</FullLayout>;
+	return <FullLayout>{page}</FullLayout>;
 };

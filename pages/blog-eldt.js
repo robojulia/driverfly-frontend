@@ -1,14 +1,13 @@
 import Link from "next/link";
+import Head from "next/head";
 import { PublicLayout } from "../components/layouts/public-layout";
 import BlogDetail from "../public/css/blog-detail.module.css";
 import SocilShare from "../components/share-link/share-link";
-import Head from "next/head";
 
 
 export default function EldtBlog() {
   return (
     <>
-      {" "}
       <Head>
         <title>{t("BLOG_EIDT_META_TITLE")}</title>
         <meta

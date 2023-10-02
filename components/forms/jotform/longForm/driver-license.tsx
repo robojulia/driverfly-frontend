@@ -71,7 +71,7 @@ export function DriverLicense() {
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row>
-				<h3>{t("DRIVER_LICENSE_PHOTO")}</h3>
+				<h3 className={`${styles.align__text_left}  ${styles.txtcolor}`}>{t("DRIVER_LICENSE_PHOTO")}</h3>
 			</Row>
 			<BaseCheck
 				className="my-3 col float-left p-0"
@@ -89,7 +89,7 @@ export function DriverLicense() {
 							className="my-3"
 							name="document"
 							accept="application/pdf"
-							allowedSizeInByte={3000000}
+							allowedSizeInByte={3145728}
 							formik={form}
 						/>
 					)

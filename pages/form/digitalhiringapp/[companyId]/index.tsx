@@ -1,6 +1,7 @@
+import { NextPageContext } from "next";
 import { useEffect, useState } from "react";
-import styles from "../../../../styles/digitalhiringapp.module.css";
 import "react-toastify/dist/ReactToastify.css";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { ApplicantEntity, ApplicantExtrasEntity } from "../../../../models/applicant";
 import JotformContext from "../../../../context/jotform-context";
 import { getFullFormPages, getFullFormStyle } from "../../../../components/forms/jotform/jotform-pages";
@@ -8,13 +9,18 @@ import CompanyApi from "../../../api/company";
 import { Status } from "../../../../enums/status.enum";
 import { CompanyEntity } from "../../../../models/company/company.entity";
 import BaseInput from "../../../../components/forms/base-input";
-import { NextPageContext } from "next";
+import { JobEntity } from "../../../../models/job/job.entity";
+import { CompanyPreferenceEntity } from "../../../../models/company/company-preferences.entity";
 
 export interface FullFormProps {
-	employer: CompanyEntity
+	employer: CompanyEntity;
+	preferences: CompanyPreferenceEntity[];
 }
-export default function FullForm({ employer }: FullFormProps) {
+export default function FullForm({ employer, preferences }: FullFormProps) {
+	console.log("preferences", preferences);
 
+
+	const [jobs, setJobs] = useState<JobEntity[]>([]);
 	const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
 	const [applicantExtras, setApplicantExtras] = useState<ApplicantExtrasEntity[]>([]);
 	const updateApplicantExtras = (applicantExtrasEntity: ApplicantExtrasEntity) =>
@@ -24,6 +30,7 @@ export default function FullForm({ employer }: FullFormProps) {
 				? [...oldApx, { ...applicantExtrasEntity }]
 				: [{ ...applicantExtrasEntity }];
 		});
+
 	const [steps, setSteps] = useState<number>(0);
 	const stepNext = (): void => setSteps(steps + 1);
 	const stepBack = (): void => setSteps(steps - 1);
@@ -37,11 +44,14 @@ export default function FullForm({ employer }: FullFormProps) {
 			value={{
 				state: {
 					applicant,
+					jobs,
 					applicantExtras,
+					companyPreferences: preferences,
 					steps
 				},
 				method: {
 					setApplicant,
+					setJobs,
 					updateApplicantExtras,
 					setApplicantExtras,
 					stepNext,
@@ -81,6 +91,7 @@ export async function getServerSideProps({ query }: NextPageContext) {
 
 		const companyApi = new CompanyApi();
 		const employer: CompanyEntity = await companyApi.employer.getById(companyId);
+		const preferences: CompanyPreferenceEntity[] = await companyApi.preferences.list(companyId)
 
 		if (employer?.status !== Status.ACTIVE) {
 			if (employer == null) {
@@ -91,7 +102,7 @@ export async function getServerSideProps({ query }: NextPageContext) {
 			return { notFound: true };
 		}
 
-		return { props: { employer } }
+		return { props: { employer, preferences } }
 	} catch (error) {
 		console.error(`form/jotform: Exception when attempting to fetch details for companyId: ${query?.companyId}`, error);
 		return { notFound: true }

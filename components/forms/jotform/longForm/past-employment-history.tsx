@@ -52,7 +52,10 @@ export function PastEmploymentHistory() {
 			is_previous_employed: !!employers?.length,
 		});
 	}, [applicant]);
-
+	useEffect(() => {
+		console.log("form.values", form.values)
+		console.log("form.errors", form.errors)
+	}, [form.values, form.errors])
 	return (
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 
@@ -74,6 +77,7 @@ export function PastEmploymentHistory() {
 			>
 				{t("PAST_EMPLOYMENT_HISTORY")}
 			</h4>
+
 			<p className={`${styles.paragraph} ${styles.align__text_left}`}>
 				{t("HONEST_ABOUT_PAST_EMPLOYMENT")}
 			</p>
@@ -85,7 +89,6 @@ export function PastEmploymentHistory() {
 					formik={form}
 				/>
 			</Row>
-
 			{(!!form?.values?.is_previous_employed && form?.values?.employers?.length > 0) &&
 				<>
 					{form?.values?.employers?.map((entity, i) => (
@@ -101,6 +104,13 @@ export function PastEmploymentHistory() {
 									/>
 								</Row>
 								<Row className={styles.bold}>
+									<BaseInput
+										className="col-md-6 my-3"
+										name={`employers[${i}].title`}
+										label="PREVIOUS_COMPANY_TITLE"
+										required
+										formik={form}
+									/>
 									<BaseInput
 										className="col-md-6 my-3"
 										name={`employers[${i}].name`}
@@ -229,35 +239,40 @@ export function PastEmploymentHistory() {
 					))}
 				</>
 			}
-			<>
-				{
-					Boolean((form?.values?.employers)?.length !== 12) && (
-						<Row>
-							{!!form?.values?.is_previous_employed && (
-								<>
-									<Col className="mt-2">
-										<Button
-											className="w-100 py-2"
-											size="sm"
-											onClick={() =>
-												form.setFieldValue("employers", [
-													...(form.values?.employers || []),
-													{
-														...(new PastEmploymentHistoryDto()),
-														is_current: false
-													},
-												])
-											}
-										>
-											<PlusCircle /> {t("ADD_PAST_EMPLOYMENT_HISTORY")}
-										</Button>
-									</Col>
-								</>
-							)}
-						</Row>
-					)
-				}
-			</>
+			{(!!form?.values?.is_previous_employed && form?.values?.employers?.length > 0) &&
+				<>
+					{
+						Boolean((form?.values?.employers)?.length !== 12) && (
+							<Row>
+								{!!form?.values?.is_previous_employed && (
+									<>
+										<Col className="mt-2">
+											<Button
+												className="w-100 py-2"
+												size="sm"
+												onClick={() =>
+													form.setFieldValue("employers", [
+														...(form.values?.employers || []),
+														{
+															...(new PastEmploymentHistoryDto()),
+															is_subject_to_fmcsrs: true,
+															is_subject_to_drug_tests: true,
+															is_current: false
+														},
+													])
+												}
+											>
+												<PlusCircle /> {t("ADD_PAST_EMPLOYMENT_HISTORY")}
+											</Button>
+										</Col>
+									</>
+								)}
+							</Row>
+						)
+					}
+				</>
+			}
+
 
 
 

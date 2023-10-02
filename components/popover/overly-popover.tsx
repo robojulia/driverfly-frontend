@@ -6,29 +6,34 @@ export interface OverlyPopoverProps {
     str?: string;
     skipTranslate?: boolean;
     labelPrefix?: string;
-    header?: string|ReactNode;
+    header?: string | ReactNode;
     icon?: ReactNode;
     slice_at?: number;
-
     readonly children?: string | React.ReactChildren | React.ReactChild;
 }
 
-export default function OverlyPopover(props: OverlyPopoverProps) {
+export default function OverlyPopover({
+    str,
+    skipTranslate,
+    labelPrefix,
+    header,
+    icon,
+    slice_at,
+    children
+}: OverlyPopoverProps) {
     const { t } = useTranslation();
-    if (!props.str) {
-        return <></>
-    }
+    if (!str) return (<></>)
 
-    const templateString = props.skipTranslate ? props.str : t((props.labelPrefix ? props.labelPrefix + "." : "") + props.str)
+    const templateString = skipTranslate ? str : t((labelPrefix ? labelPrefix + "." : "") + str)
 
     const popover = (
         <Popover id="popover-basic">
             {
-                props.header &&
-                <Popover.Header as="h3">{props.header}</Popover.Header>
+                header &&
+                <Popover.Header as="h3">{header}</Popover.Header>
             }
             <Popover.Body>
-                {props.icon ? props.icon : null}
+                {icon ?? null}
                 {templateString}
             </Popover.Body>
         </Popover>
@@ -39,12 +44,12 @@ export default function OverlyPopover(props: OverlyPopoverProps) {
         delay={{ show: 250, hide: 400 }}
         overlay={popover}
     >
-        {props.children ? 
-            <span>{props.children}</span>
+        {children ?
+            <span>{children}</span>
             :
             <span >
-                {props.icon ? props.icon : null}
-                {props.slice_at ? templateString.slice(0, props.slice_at) : templateString}...
+                {icon ?? null}
+                {slice_at ? templateString.slice(0, slice_at) : templateString}...
             </span>
         }
     </OverlayTrigger>

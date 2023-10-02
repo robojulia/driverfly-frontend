@@ -1,9 +1,8 @@
-import { left } from "@popperjs/core";
 import { useState } from "react";
 import { useEffectAsync } from "../../utils/react";
 
 export interface LoadingProps {
-    fetch: (() => void|boolean)|(() => Promise<void|boolean>);
+    fetch: (() => void | boolean) | (() => Promise<void | boolean>);
     triggers?: any[];
     loadingText?: string;
     destructor?: () => void;
@@ -13,7 +12,7 @@ export interface LoadingProps {
 export function Loading(props: LoadingProps) {
     const { fetch, children, triggers, loadingText, destructor } = props;
 
-    const [ loading, setLoading ] = useState(true);
+    const [loading, setLoading] = useState(true);
 
     useEffectAsync(async () => {
         let result = fetch();
@@ -22,7 +21,7 @@ export function Loading(props: LoadingProps) {
             result = await result;
         }
 
-        setLoading(typeof result === "boolean" ? !result: false);
+        setLoading(typeof result === "boolean" ? !result : false);
     }, triggers || [], destructor);
 
     // todo: build spash screen

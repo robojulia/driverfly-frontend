@@ -20,6 +20,10 @@ import {
 	ApplicantExtrasEntity
 } from "./index"
 import { ApplicantVoeFormEntity } from "./applicant-voe-form.entity";
+import { Status } from "../../enums/status.enum";
+import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
+import { ApplicantJobStatusHistoryEntity } from "./applicant-job-status-history.entity";
+import { EmployeeEntity } from "../employee/employee.entity";
 
 
 export class ApplicantEntity {
@@ -28,6 +32,7 @@ export class ApplicantEntity {
 	user?: UserEntity;
 	company?: CompanyEntity;
 	assignedUser?: UserEntity;
+	assignedUserId?: number;
 	type?: ApplicantType;
 	first_name?: string;
 	last_name?: string;
@@ -88,11 +93,17 @@ export class ApplicantEntity {
 	extras?: ApplicantExtrasEntity[] = []
 	voeData?: ApplicantVoeFormEntity[] = []
 	uuid_token?: string;
+	status?: Status;
+	current_application_status?: ApplicantStatus;
+	job_history?: ApplicantJobStatusHistoryEntity;
+	employee?: EmployeeEntity;
+	is_hired?: boolean = false;
+	remarks?: string;
 
 	static yupSchema() {
 		return yup.object({
-			first_name: yup.string().required().nullable(),
-			last_name: yup.string().required().nullable(),
+			first_name: yup.string().required().nullable().trim(),
+			last_name: yup.string().required().nullable().trim(),
 			phone: yup.string().nullable(),
 			email: yup.string().email().required().nullable(),
 			birthdate: yup.date().nullable(),
@@ -164,6 +175,11 @@ export class ApplicantEntity {
 				yup.array(DocumentEntity.yupSchema(ApplicantDocumentType)) as any
 			).unique("type"),
 			jobs: (yup.array(ApplicantJobEntity.yupSchema()) as any).unique("job.id"),
+			assignedUserId: yup.number().optional().nullable(),
+			is_hired: yup.bool().nullable(),
+			remarks: yup.string().optional().nullable(),
+
+			extras: yup.array(ApplicantExtrasEntity.yupSchema()),
 		});
 	}
 }

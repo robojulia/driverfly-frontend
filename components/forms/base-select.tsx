@@ -6,6 +6,7 @@ import BaseControl, { BaseControlProps } from './base-control';
 export interface BaseSelectProps extends BaseControlProps {
   enumType?: object;
   hideOptions?: string[];
+  showOptions?: string[];
   options?: { value?: string, label?: string }[] | any[];
   valueKey?: string;
   labelKey?: string;
@@ -18,7 +19,7 @@ export interface BaseSelectProps extends BaseControlProps {
   readOnly?: boolean;
 }
 
-function BaseSelect({ append, prepend, formik, required, className, enumType, options, valueKey = "value", labelKey = "label", labelPrefix, createLabel, label, placeholder, value, onChange, handleBlur, readOnly, name, touched, error, hideOptions }: BaseSelectProps) {
+function BaseSelect({ append, prepend, formik, required, className, enumType, options, valueKey = "value", labelKey = "label", labelPrefix, createLabel, label, placeholder, value, onChange, handleBlur, readOnly, name, touched, error, hideOptions, showOptions }: BaseSelectProps) {
   const { t } = useTranslation();
 
   if (formik) {
@@ -43,6 +44,7 @@ function BaseSelect({ append, prepend, formik, required, className, enumType, op
     }))
 
     if (hideOptions?.length) options = options?.filter(v => !hideOptions.includes(v.value))
+    if (showOptions?.length) options = options?.filter(v => showOptions.includes(v.value))
 
   }
   else if (options && options.length > 0 && typeof options[0] !== "object") {

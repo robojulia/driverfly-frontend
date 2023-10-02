@@ -25,11 +25,12 @@ export function HalfWay() {
 	return (
 		<>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<div className="d-flex justify-content-center mt-n4 w-100" style={{height: '200px'}}>
+				<h1 className={`${styles.heading__sty} mt-0 pt-0`}>{t("HALF_WAY_DONE")}</h1>
+				<div className="d-flex justify-content-center mt-n4 w-100" style={{ height: '200px' }}>
 					<img src='/img/gifs/simpsonRunning.gif' alt="simpsons" />
 				</div>
 				<h1 className={`${styles.heading__sty} mt-0 pt-0`}>{t("HARD_QUESTIONS")}</h1>
-				<h3 className="text-center">{t("ANSWER_FOLLOWIN_QUESTIONS")}</h3>
+				<h3 className="text-center text-black">{t("ANSWER_FOLLOWIN_QUESTIONS")}</h3>
 				<p className={`${styles.paragraph} my-4`}>{t("EXCLUDE_CONSIDERATION")}</p>
 				<Row className="mt-4">
 

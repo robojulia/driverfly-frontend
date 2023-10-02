@@ -1,27 +1,34 @@
+import { toast, ToastContainer } from "react-toastify";
+import { ArrowDownCircleFill, ArrowUpCircleFill } from "react-bootstrap-icons";
 import { useFormik } from "formik";
 import { useContext, useEffect, useState } from "react";
 import { Button, Col, Row, Form } from "react-bootstrap";
 import { useTranslation } from "../../../../../hooks/use-translation";
-import JotformContext, { JotFormContextType } from "../../../../../context/jotform-context";
+import JotformContext, {
+	JotFormContextType,
+} from "../../../../../context/jotform-context";
 import ApplicantApi from "../../../../../pages/api/applicant";
-import { toast, ToastContainer } from "react-toastify";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
 import { AccordianDto } from "../../../../../models/jot-form/long-form/accordian.dto";
 import { VerificationOfEmployment } from "./verification-of-employment";
 import { DisclosureAuthorization } from "./disclosure-authorization";
 import { ImportantDisclosureBackgroundPsp } from "./important-disclosure-background-psp";
 import { GeneralConsentQueries } from "./general-consent-queries";
-import styles from "../../../../../styles/digitalhiringapp.module.css";
 import { LoaderIcon } from "../../../../loading/loader-icon";
-import { ArrowDownCircleFill, ArrowUpCircleFill } from 'react-bootstrap-icons'
-import { ApplicantExtras } from "../../../../../enums/applicants/applicant-extras.enum";
-export function AccordianPage() {
+import styles from "../../../../../styles/digitalhiringapp.module.css";
 
+
+export function AccordianPage() {
 	const {
-		state: { applicantExtras, applicant },
+		state: { applicantExtras, applicant, jobs },
 		method: { stepBack, updateApplicantExtras, stepNext },
 	}: JotFormContextType = useContext(JotformContext);
-	const [showTab, setShowTab] = useState<boolean[]>([false, false, false, false])
+	const [showTab, setShowTab] = useState<boolean[]>([
+		false,
+		false,
+		false,
+		false,
+	]);
 	const { t } = useTranslation();
 
 	const form = useFormik({
@@ -35,9 +42,10 @@ export function AccordianPage() {
 				const response = await applicantApi.jotform.update(applicant.id, {
 					applicant,
 					applicantExtras: filtered_extras,
+					jobs,
 				});
 
-				if (response) stepNext()
+				if (response) stepNext();
 			} catch (error) {
 				console.log(error);
 				globalAjaxExceptionHandler(error, { formik: form, toast: toast, t: t });
@@ -59,14 +67,10 @@ export function AccordianPage() {
 		updateApplicantExtras(form.values.SIGNATURE_GENERAL_CONSENT);
 	}, [form.values]);
 
-
-
-
 	useEffect(() => {
 		console.log("form values", form.values);
 		console.log("form errors", form.errors);
 		console.log("boolean errors", Object.keys(form.errors));
-
 	}, [form.values, form.errors]);
 
 	// useEffect(() => {
@@ -89,83 +93,90 @@ export function AccordianPage() {
 	return (
 		<>
 			<ToastContainer />
-			{
-				Boolean(Object.keys(form.errors).length) ? (
-					<div className="alert alert-warning alert-dismissible fade show text-center" role="alert">
-						<strong>{t("ACCORDIAN_ALERT")}</strong>
-					</div>
-				) : null
-			}
+			{Boolean(Object.keys(form.errors).length) ? (
+				<div
+					className="alert alert-warning alert-dismissible fade show text-center"
+					role="alert"
+				>
+					<strong>{t("ACCORDIAN_ALERT")}</strong>
+				</div>
+			) : null}
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-				<h1 className="my-3">{t("FORMS_TO_SIGNUP")}</h1>
-				<h6 className="my-3">{t("PLEASE_CLICK_EACH_ARROW")}</h6>
-				<button type="button" className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline " onClick={() => setShowTab([!!!showTab[0], false, false, false])}>
+				<h1 className="my-3 text-black">{t("FORMS_TO_SIGNUP")}</h1>
+				<h6 className={`${styles.paragraph} my-3`}>{t("PLEASE_CLICK_EACH_ARROW")}</h6>
+				<button
+					type="button"
+					className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline "
+					onClick={() => setShowTab([!!!showTab[0], false, false, false])}
+				>
 					{showTab[0] ? (
 						<>
 							{t("HIDE_VERIFICATION_OF_EMPLOYMENT")}
-							< ArrowUpCircleFill />
+							<ArrowUpCircleFill />
 						</>
-
 					) : (
 						<>
 							{t("SHOW_VERIFICATION_OF_EMPLOYMENT")}
-							< ArrowDownCircleFill />
+							<ArrowDownCircleFill />
 						</>
 					)}
-
 				</button>
 				{showTab[0] && <VerificationOfEmployment form={form} />}
 
-
-				<button type="button" className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline" onClick={() => setShowTab([false, !!!showTab[1], false, false])}>
+				<button
+					type="button"
+					className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline"
+					onClick={() => setShowTab([false, !!!showTab[1], false, false])}
+				>
 					{showTab[1] ? (
 						<>
 							{t("HIDE_DISCLOSURE_AUTHORIZATION")}
-							< ArrowUpCircleFill />
+							<ArrowUpCircleFill />
 						</>
-
 					) : (
 						<>
 							{t("SHOW_DISCLOSURE_AUTHORIZATION")}
-							< ArrowDownCircleFill />
+							<ArrowDownCircleFill />
 						</>
 					)}
-
 				</button>
 				{showTab[1] && <DisclosureAuthorization form={form} />}
 
-				<button type="button" className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline" onClick={() => setShowTab([false, false, !!!showTab[2], false])}>
+				<button
+					type="button"
+					className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline"
+					onClick={() => setShowTab([false, false, !!!showTab[2], false])}
+				>
 					{showTab[2] ? (
 						<>
 							{t("HIDE_IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")}
-							< ArrowUpCircleFill />
+							<ArrowUpCircleFill />
 						</>
-
 					) : (
 						<>
 							{t("SHOW_IMPORTANT_DISCLOSURE_BACKGROUND_PSP_OS")}
-							< ArrowDownCircleFill />
+							<ArrowDownCircleFill />
 						</>
 					)}
-
 				</button>
 				{showTab[2] && <ImportantDisclosureBackgroundPsp form={form} />}
 
-
-				<button type="button" className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline" onClick={() => setShowTab([false, false, false, !!!showTab[3]])}>
+				<button
+					type="button"
+					className="w-100 d-flex justify-content-between align-items-center text-left py-3 my-2 tab__wid_for_jot theme-primary-btn-outline"
+					onClick={() => setShowTab([false, false, false, !!!showTab[3]])}
+				>
 					{showTab[3] ? (
 						<>
 							{t("HIDE_GENERAL_CONSENT_QUERIES")}
-							< ArrowUpCircleFill />
+							<ArrowUpCircleFill />
 						</>
-
 					) : (
 						<>
 							{t("SHOW_GENERAL_CONSENT_QUERIES")}
-							< ArrowDownCircleFill />
+							<ArrowDownCircleFill />
 						</>
 					)}
-
 				</button>
 				{showTab[3] && <GeneralConsentQueries form={form} />}
 				<Row className="mt-4">
@@ -181,7 +192,8 @@ export function AccordianPage() {
 							className="float-left"
 							type="submit"
 						>
-							{t("SUBMIT")}<LoaderIcon isLoading={!!form?.isSubmitting} />
+							{t("SUBMIT")}
+							<LoaderIcon isLoading={!!form?.isSubmitting} />
 						</Button>
 					</Col>
 				</Row>

@@ -4,6 +4,8 @@ import JobApi from "../../api/job"
 import StructuredData from "../../../components/seo/structured-data"
 import ViewJobDetail from "../../../components/jobs/view-job-detail";
 import { JobDetailProps } from "../../../types/job/job-detail-props.type";
+import { Pagination } from "../../../types/pagination.type";
+import { JobEntity } from "../../../models/job/job.entity";
 
 export default function Detail({ job, relatedJobs }: JobDetailProps) {
 
@@ -34,7 +36,7 @@ export async function getServerSideProps(context) {
     if (!!!job)
       return { notFound: true }
 
-    const { items } = await new JobApi().search({ exclude: { jobId: jobId }, companyId: job.company?.id, take: 3 });
+    const { items } = await new JobApi().search({ exclude: { jobId: jobId }, companyId: job.company?.id, take: 3 }) as Pagination<JobEntity>;
     return {
       props: { job: job, relatedJobs: items }
     }

@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { useState } from 'react';
 import { Button, ButtonGroup, InputGroup } from 'react-bootstrap';
 import { Eye, Trash } from 'react-bootstrap-icons';
@@ -56,7 +55,11 @@ export default function FileInput({ documentType, formik, accept, required, clas
         if (!onChange) return;
 
         if (!!allowedSizeInByte && e.target.files[0].size >= allowedSizeInByte) {
-            alert(t('FILE_MUST_BE_OF_{size}_{unit}', { size: allowedSizeInByte / 1000000, unit: "MB" }))
+            if (formik) {
+                formik.setFieldError(name, t('FILE_MUST_BE_OF_{size}_{unit}', { size: allowedSizeInByte / 1048576, unit: "MB" }))
+            } else {
+                alert(t('FILE_MUST_BE_OF_{size}_{unit}', { size: allowedSizeInByte / 1048576, unit: "MB" }))
+            }
             return;
         }
 
@@ -118,7 +121,6 @@ export default function FileInput({ documentType, formik, accept, required, clas
     const [viewDoc, setViewDoc] = useState("");
 
     async function view(e) {
-        console.log("valuueeeeee filr inputtt",value);
         if (value?.id) {
             const api = new DocumentApi();
             const document = await api.getSignedUrl(value.id);

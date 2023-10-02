@@ -1,21 +1,23 @@
-
+import { ArrowRight } from 'react-bootstrap-icons';
+import Head from "next/head";
 import JobApply from "../components/apply"
 import JobDescription from '../components/job-description/job-description'
 import JonInformation from '../components/job-information-sidebar/job-information'
 import { PublicLayout } from "../components/layouts/public-layout";
 import RelatedJobs from '../components/related-jobs/related-jobs'
 import SocilShare from '../components/share-link/share-link'
-import { ArrowRight } from 'react-bootstrap-icons';
-import Head from "next/head";
 
 export default function Apply({ data }) {
   const jobDetail = data
 
   return (
     <>
-     <Head>
-        <title>{t("OTR_GENERAL_META_TITLE")}</title>
-        <meta name="description" content={t("OTR_GENERAL_META_DESC")} key="desc" />
+      <Head>
+        <title>{t("OTR_GENERAL_META_TITLE")}  </title>
+        <meta
+          name="description"
+          content={t("OTR_GENERAL_META_DESC")} key="desc"
+        />
       </Head>
       <section className="top-links-sec ort-general">
         <div className="container">

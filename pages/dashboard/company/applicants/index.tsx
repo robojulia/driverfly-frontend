@@ -28,6 +28,9 @@ import { ApplicantReasonCodeFired, ApplicantReasonCodeNotInterested, ApplicantRe
 import { globalAjaxExceptionHandler } from "../../../../utils/ajax";
 import OverlyPopover from "../../../../components/popover/overly-popover";
 import Link from "next/link";
+import ShowFormattedDate from "../../../../components/jobs/show-formatted-date";
+import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
+import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 
 const ViewMode = {
     job: "job",
@@ -186,6 +189,7 @@ export default function Applicants() {
                             className="col-md-3"
                             placeholder="STATUS"
                             labelPrefix="ApplicantStatus"
+                            hideOptions={[ApplicantStatus.OTHER]}
                             enumType={ApplicantStatus}
                             onChange={({ target: { value } }) => setApplicantStatus(value as ApplicantStatus)}
                             value={applicantStatus}
@@ -208,9 +212,10 @@ export default function Applicants() {
                 onCloseClick={applicantJobForm.resetForm}
                 closeText="CANCEL"
                 title={"CHANGE_STATUS"}
+                className="bg-secondary "
             >
                 <form onSubmit={applicantJobForm.handleSubmit}>
-                    <Row>
+                    <Row className="py-3 px-5">
                         <BaseSelect
                             className="col-12"
                             label="STATUS"
@@ -296,7 +301,7 @@ export default function Applicants() {
                             />
                         }
                     </Row>
-                    <Row>
+                    <Row className="py-3 px-5">
                         <Button type="submit" variant="primary">
                             {t("SUBMIT")}
                         </Button>
@@ -357,12 +362,12 @@ function evaluateJobRequirements(applicant: ApplicantEntity, job: JobEntity) {
             results.meets_basic_qualifications = false;
             results.qualification_fail_reason.push("DOES_NOT_HAVE_CLEAN_MVR");
         }
-        else {
+        else if (job?.mvr_requirements?.length) {
             // complicated check around max violations
             // since violation count isn't specific
             // we just want to pull the max number
             // and check against that
-            const mvr = job.mvr_requirements?.reduce((p, c) => {
+            const mvr = job?.mvr_requirements?.reduce((p, c) => {
                 if (p.max_count >= c.max_count) return p;
 
                 return c;
@@ -450,7 +455,6 @@ function ApplicantView(props: ViewProps) {
                         name: 'ID',
                         selector: applicant => applicant.id,
                     },
-
                     {
                         id: "name",
                         name: "NAME",
@@ -461,11 +465,6 @@ function ApplicantView(props: ViewProps) {
                             </Link>
                         ),
                         hidable: false,
-                    },
-                    {
-                        id: "member",
-                        name: "IS_MMEMBER",
-                        selector: applicant => !!!applicant.user?.id ? t('MMEMBER') : t('NON_MMEMBER'),
                     },
                     {
                         id: "city",
@@ -488,9 +487,23 @@ function ApplicantView(props: ViewProps) {
                         selector: applicant => applicant.email,
                     },
                     {
-                        id: "type",
-                        name: "type",
+                        id: "source",
+                        name: "LEAD_TYPE",
                         selector: applicant => applicant.type ? t(`ApplicantType.${applicant.type}`) : "",
+                    },
+                    {
+                        id: "AUTOMATED_RECRUITING_LEAD",
+                        name: "AUTOMATED_RECRUITING_LEAD",
+                        selector: applicant => Boolean(applicant?.extras?.find(ap => ap?.type == ApplicantExtras.AUTOMATED_RECRUITING_LEAD && ap?.value)) ? BooleanType.YES : BooleanType.NO,
+                    },
+                    {
+                        id: "date_added",
+                        name: "DATE_ADDED",
+                        selector: applicant => applicant.created_at,
+                        cell: applicant => (
+                            <ShowFormattedDate date={applicant.created_at} />
+                        ),
+                        hidable: false,
                     },
                     {
                         id: "assigned_to",
@@ -566,16 +579,26 @@ function ApplicantView(props: ViewProps) {
                                 hidable: false,
                             },
                             {
-                                cell: aJob => (
-                                    <BaseSelect
-                                        name={data.id.toString()}
-                                        value=""
-                                        onChange={e => onChangeStatus(e, data, aJob.job)}
-                                        placeholder={"CHANGE_STATUS"}
-                                        labelPrefix="ApplicantStatus"
-                                        enumType={ApplicantStatus}
-                                    />
-                                )
+                                cell: aJob => {
+                                    const hideStatus = Boolean(data?.jobs?.find(j => j?.id != aJob?.id && j?.status?.startsWith("COMPLETED_")))
+                                        ? [
+                                            ApplicantStatus.COMPLETED_EMPLOYED,
+                                            ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
+                                            ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE
+                                        ]
+                                        : [];
+                                    return (
+                                        <BaseSelect
+                                            hideOptions={hideStatus}
+                                            name={data.id.toString()}
+                                            value=""
+                                            onChange={e => onChangeStatus(e, data, aJob.job)}
+                                            placeholder={"CHANGE_STATUS"}
+                                            labelPrefix="ApplicantStatus"
+                                            enumType={ApplicantStatus}
+                                        />
+                                    )
+                                }
                             },
                         ]}
                         hideSearch
@@ -735,21 +758,40 @@ function JobView(props: ViewProps) {
                         hidable: false,
                     },
                     {
+                        id: "date_added",
+                        name: "DATE_ADDED",
+                        selector: aJob => aJob.applicant.created_at,
+                        cell: aJob => (
+                            <ShowFormattedDate date={aJob.applicant.created_at} />
+                        ),
+                        hidable: false,
+                    },
+                    {
                         name: "ASSIGNED_TO",
                         selector: aJob => aJob.applicant.assignedUser?.name || t("NONE"),
                         hidable: false,
                     },
                     {
-                        cell: aJob => (
-                            <BaseSelect
-                                name={aJob.applicant.id.toString()}
-                                value=""
-                                onChange={e => onChangeStatus(e, aJob.applicant, data)}
-                                placeholder={"CHANGE_STATUS"}
-                                labelPrefix="ApplicantStatus"
-                                enumType={ApplicantStatus}
-                            />
-                        )
+                        cell: aJob => {
+                            const hideStatus = Boolean(applicants?.find(a => a.id == aJob.applicant.id)?.jobs?.find(j => j?.id != aJob?.id && j?.status?.startsWith("COMPLETED_")))
+                                ? [
+                                    ApplicantStatus.COMPLETED_EMPLOYED,
+                                    ApplicantStatus.COMPLETED_PROMOTED_TO_ROLE,
+                                    ApplicantStatus.COMPLETED_TRANSFERED_TO_ROLE
+                                ]
+                                : [];
+                            return (
+                                <BaseSelect
+                                    hideOptions={hideStatus}
+                                    name={aJob.applicant.id.toString()}
+                                    value=""
+                                    onChange={e => onChangeStatus(e, aJob.applicant, data)}
+                                    placeholder={"CHANGE_STATUS"}
+                                    labelPrefix="ApplicantStatus"
+                                    enumType={ApplicantStatus}
+                                />
+                            )
+                        }
                     },
                 ]}
                 hideSearch

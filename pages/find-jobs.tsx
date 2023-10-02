@@ -1,7 +1,10 @@
-import 'bootstrap/dist/css/bootstrap.css'
 import { useRouter } from 'next/router'
 import { ChangeEvent, useState } from "react"
+import { GetServerSidePropsContext } from 'next'
+import Head from 'next/head'
+import { toast } from "react-toastify";
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css'
+import 'bootstrap/dist/css/bootstrap.css'
 import FilterResult from '../components/filter-results/filter-results'
 import JobsList from '../components/jobslisting/jobslist'
 import { PublicLayout } from "../components/layouts/public-layout";
@@ -10,13 +13,11 @@ import JobApi from "./api/job"
 import Sort from "../components/find-jobs/sort"
 import ResultCount from "../components/find-jobs/result-count"
 import { JobEntity } from '../models/job/job.entity'
-import { filtersInitialsValues, pagingMetaInitialValues, PagingMetaProps } from '../utils/job-filter'
+import { filtersInitialsValues, pagingMetaInitialValues } from '../utils/job-filter'
 import { JobSearchLocation, SearchJobsDto } from '../models/job/search-jobs-dto'
 import { useEffectAsync } from '../utils/react'
-import { GetServerSidePropsContext } from 'next'
-import { toast } from "react-toastify";
 import { useTranslation } from '../hooks/use-translation'
-import Head from 'next/head'
+import { Pagination, PagingMeta } from '../types/pagination.type'
 
 export default function FindJobs(props) {
 
@@ -28,7 +29,7 @@ export default function FindJobs(props) {
 
     const [jobs, setJobs] = useState<JobEntity[]>([])
 
-    const [pagingMeta, setPagingMeta] = useState<PagingMetaProps>(pagingMetaInitialValues)
+    const [pagingMeta, setPagingMeta] = useState<PagingMeta>(pagingMetaInitialValues)
     const resetPagingMeta = (): void => setPagingMeta(pagingMetaInitialValues)
 
     const [searchQuery, setSearchQuery] = useState<string>()
@@ -121,7 +122,7 @@ export default function FindJobs(props) {
             });
 
             await jobApi.search({ ...filters as any })
-                .then(({ items, meta }) => {
+                .then(({ items, meta }: Pagination<JobEntity>) => {
                     console.log({ items, meta, filters });
                     setJobs(items)
                     setPagingMeta(meta)
@@ -164,14 +165,19 @@ export default function FindJobs(props) {
                 handlePaging: setPagingMeta,
             },
         }}>
-              <Head>
-        <title>{t("FIND_JOBS_META_TITLE")}</title>
-        <meta name="description" content={t("FIND_JOBS_META_DESC")} key="desc" />
-      </Head>
+            <Head>
+                <title>
+                    {t("FIND_JOBS_META_TITLE")}</title>
+                <meta
+                    name="description"
+                    content={t("FIND_JOBS_META_DESC")}
+                    key="desc"
+                />
+            </Head>
             <div className="filter-sec">
                 <div className="container">
                     <div className="row">
-                        <div className="col-12 col-lg-3 lg-mt-0 mt-5">
+                        <div className="col-12 col-lg-3 lg-mt-0 mt-4">
                             < FilterResult />
                         </div>
                         <div className="col-md-9 outer pl-4 ">
@@ -188,7 +194,7 @@ export default function FindJobs(props) {
                     </div>
                 </div>
             </div>
-        </JobContext.Provider>
+        </JobContext.Provider >
     )
 }
 

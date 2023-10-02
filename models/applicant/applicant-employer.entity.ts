@@ -1,5 +1,6 @@
 import * as yup from "yup";
 import { ApplicantEntity } from "./applicant.entity";
+import { DocumentEntity } from "../documents/document.entity";
 
 export class ApplicantEmployerEntity {
     id?: number;
@@ -26,18 +27,36 @@ export class ApplicantEmployerEntity {
     uuid_token?: string;
     is_current: boolean;
 
+    voe_submitted?: boolean;
+    voe_attempts?: any;
+
+    documents: DocumentEntity[];
+
     static yupSchema() {
         return yup.object({
-            name: yup.string().required().nullable(),
-            manager_name: yup.string().optional().nullable(),
-            email: yup.string().optional().nullable(),
-            address: yup.string().optional().nullable(),
-            address_2: yup.string().optional().nullable(),
-            start_at: yup.date().nullable(),
-            end_at: yup.date().nullable(),
-            title: yup.string().nullable(),
-            street: yup.string().nullable(),
-            city: yup.string().nullable(),
+            name: yup.string().required().trim().nullable(),
+            manager_name: yup.string().optional().trim().nullable(),
+            email: yup.string().email().optional().nullable(),
+            address: yup.string().optional().trim().nullable(),
+            address_2: yup.string().optional().trim().nullable(),
+            start_at: yup.date().max(new Date()).nullable(),
+            end_at: yup.date().nullable()
+            .test({
+              test : (value , context)=>{
+                const start_date = context.resolve(yup.ref('start_at'));
+                if(!Boolean(value)) return true;
+                if (value > start_date) return true;
+
+                return context.createError({
+                  path:context.path,
+                  message : 'END_DATE_MUST_BE_AFTER_START_DATE'
+                })
+              }
+            }
+            ).nullable(),
+            title: yup.string().nullable().trim(),
+            street: yup.string().nullable().trim(),
+            city: yup.string().nullable().trim(),
             state: yup.string().nullable(),
             zip_code: yup.string().nullable(),
             phone: yup.string().nullable(),

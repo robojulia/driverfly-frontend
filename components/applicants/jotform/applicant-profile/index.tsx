@@ -8,6 +8,7 @@ import { ViewApplicantDetailProps } from "../../../../types/applicant/view-appli
 import { ApplicantExtras } from "../../../../enums/applicants/applicant-extras.enum";
 import ViewTable from "../../../view-details/view-table";
 import ShowFormattedDate from "../../../jobs/show-formatted-date";
+import { VehicleTransmissionType } from "../../../../enums/vehicles/vehicle-transmission-type.enum";
 
 interface ApplicantSafetyBackgroundProps extends ViewApplicantDetailProps { }
 
@@ -24,8 +25,8 @@ export default function ApplicantExtrasDetails({
 	const job_apply_date = applicant.extras.find(
 		(ex) => ex?.type === ApplicantExtras.APPLY_DATE
 	);
-	const qualified_for_manual_transmission = applicant.extras.find(
-		(ex) => ex?.type === ApplicantExtras.QUALIFIED_FOR_MANUAL_TRANSMISSION
+	const qualified_for_manual_transmission = applicant.transmission_type.includes(
+		VehicleTransmissionType.MANUAL
 	);
 
 	const past_license_suspension = applicant.extras.find(
@@ -86,7 +87,7 @@ export default function ApplicantExtrasDetails({
 								hear_about_us: hear_about_us?.value && t(`HearAboutUsType.${hear_about_us?.value}`),
 								job_apply_date: job_apply_date?.value,
 								qualified_for_manual_transmission:
-									qualified_for_manual_transmission?.value,
+									!!qualified_for_manual_transmission,
 							}}
 						/>
 					</ViewCard>
@@ -235,7 +236,7 @@ export default function ApplicantExtrasDetails({
 								fmcsr: current_employer?.is_subject_to_fmcsrs
 									? `${t("YES")}`
 									: `${t("NO")}`,
-								START_DATE: new Date(current_employer?.start_at),
+								START_DATE: !!current_employer?.start_at ? new Date(current_employer?.start_at) : t("NOT_ANSWERED"),
 								state: current_employer?.state,
 							}}
 						/>
@@ -254,8 +255,8 @@ export default function ApplicantExtrasDetails({
 												obj={{
 													NAME: past_employer?.name,
 													city: past_employer?.city,
-													START_DATE: new Date(past_employer?.start_at),
-													END_DATE: new Date(past_employer?.end_at),
+													START_DATE: !!past_employer?.start_at ? new Date(past_employer?.start_at) : t("NOT_ANSWERED"),
+													END_DATE: !!past_employer?.end_at ? new Date(past_employer?.end_at) : t("NOT_ANSWERED"),
 													fcr: past_employer?.is_subject_to_drug_tests,
 													fmcsr: past_employer?.is_subject_to_fmcsrs
 														? `${t("YES")}`

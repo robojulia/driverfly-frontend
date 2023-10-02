@@ -1,8 +1,18 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useTranslation } from "../../../hooks/use-translation";
 import { FormikInterface } from "../../../utils/formik";
 import { LoaderIcon } from "../../loading/loader-icon";
+import { Icon } from "react-bootstrap-icons";
+
+export interface FormActionOptions {
+    icon?: Icon;
+    label?: string | ReactNode | (() => string | ReactNode);
+    className?: string;
+    onClick?: (e: React.MouseEvent) => void;
+    hide?: boolean;
+    disabled?: boolean;
+}
 
 export interface EntityFormProps {
     id?: number;
@@ -10,15 +20,18 @@ export interface EntityFormProps {
     formik?: FormikInterface;
     onSubmit?: (e: React.FormEvent) => void;
     className?: string;
-    readonly children?: JSX.Element | JSX.Element[]
+    readonly children?: JSX.Element | JSX.Element[];
+    actions?: FormActionOptions[];
+    submitLabel?: string;
+    forbidSubmit?: boolean;
 }
 
 export default function EntityForm(props: EntityFormProps) {
     const { t } = useTranslation();
 
-    let { id, canSubmit, formik, className, onSubmit, children } = props;
+    let { id, canSubmit, forbidSubmit, formik, className, onSubmit, children } = props;
 
-    const action = t(id ? "UPDATE" : "CREATE");
+    const action = t(props.submitLabel ?? (id ? "UPDATE" : "CREATE"));
 
     if (formik) {
         canSubmit = !formik.isValidating && !formik.isSubmitting && formik.isValid;
@@ -29,7 +42,26 @@ export default function EntityForm(props: EntityFormProps) {
         <Form className={className} onSubmit={onSubmit}>
             <Row>
                 <Col xs="12" className="text-end">
-                    <Button type="submit" className="theme-secondary-btn" disabled={canSubmit == null || !!!canSubmit}>
+                    {props.actions?.map(({ icon: IconComp, label, className, disabled, onClick, hide }, index) => (
+                        (!hide && <Button
+                            key={index}
+                            type="button"
+                            className={`${className} mr-2`}
+                            disabled={disabled}
+                            onClick={onClick}
+                        >
+                            {/* {<IconComp style={{ marginRight: "5px" }} />} */}
+                            {
+                                typeof label === "string"
+                                    ? t(label)
+                                    : (typeof label === "function")
+                                        ? label()
+                                        : label
+                            }
+                        </Button>)
+                    ))}
+
+                    <Button type="submit" className="theme-secondary-btn" disabled={canSubmit == null || !!!canSubmit || forbidSubmit}>
                         <LoaderIcon isLoading={!!formik?.isSubmitting} /> {action}
                     </Button>
                 </Col>

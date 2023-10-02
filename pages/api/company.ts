@@ -3,6 +3,7 @@ import BaseApi from "./_baseApi";
 import { FindManyOptions } from "../../models/general/find-many-options.dto";
 import { CompanyPreferenceCategory } from "../../enums/company/company-preference-category.enum";
 import { CompanyPreferenceEntity } from "../../models/company/company-preferences.entity";
+import { CompanyManagerEntity } from "../../models/company/company-manager.entity";
 
 export default class CompanyApi extends BaseApi {
     baseUrl: string = "companies"
@@ -49,8 +50,8 @@ export default class CompanyApi extends BaseApi {
 
     employer = {
         baseUrl: "employer",
-        getById: async (id: number): Promise<CompanyEntity> => {
-            const { data } = await this.get(`${this.employer.baseUrl}/${id}`);
+        getById: async (id: number, withJobs?: boolean): Promise<CompanyEntity> => {
+            const { data } = await this.get(`${this.employer.baseUrl}/${id}?withJobs=${Boolean(withJobs)}`);
 
             return data;
         },
@@ -87,5 +88,33 @@ export default class CompanyApi extends BaseApi {
             await this.delete(`${this.preferences.baseUrl(companyId)}/${id}`);
         }
     }
+
+    manager = {
+        baseUrl: (id?: number) => `company/manager/${id ?? ''}`,
+        findById: async (id: number): Promise<CompanyManagerEntity> => {
+            const { data } = await this.get(`${this.manager.baseUrl(id)}`);
+
+            return data;
+        },
+        list: async (params?: FindManyOptions): Promise<CompanyManagerEntity[]> => {
+            const { data } = await this.get(`${this.manager.baseUrl()}`, { params });
+
+            return data;
+        },
+        create: async (dto: CompanyManagerEntity): Promise<CompanyManagerEntity> => {
+            const { data } = await this.post(this.manager.baseUrl(), dto);
+
+            return data;
+        },
+        update: async (id: number, dto: CompanyManagerEntity): Promise<CompanyManagerEntity> => {
+            const { data } = await this.put(`${this.manager.baseUrl(id)}`, dto);
+
+            return data;
+        },
+        remove: async (companyId: number, id: number): Promise<void> => {
+            await this.delete(`${this.manager.baseUrl(companyId)}/${id}`);
+        }
+    }
+
 
 }

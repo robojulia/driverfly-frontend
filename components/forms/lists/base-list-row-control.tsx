@@ -18,11 +18,11 @@ export function BaseListRowControl(props: BaseListRowControlProps) {
                         <InputGroup.Text>{index + 1}</InputGroup.Text>
                     </div>
                     {children}
-                    <div className="input-group-append">
+                    <div className="input-group-append " style={{ height: "38px" }}>
                         <Button variant="outline-danger close_btn" name={index.toString()} onClick={(e) => onRemoveClick(index, e)}><DashCircle /></Button>
                     </div>
                 </InputGroup>
             </Col>
-        </Row>
+        </Row >
     );
 }

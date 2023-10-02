@@ -50,17 +50,19 @@ export function EmploymentHistory() {
 			...form.values,
 			employer: {
 				...employer,
+				is_subject_to_fmcsrs: Boolean(employer) ? employer?.is_subject_to_fmcsrs : true,
+				is_subject_to_drug_tests: Boolean(employer) ? employer?.is_subject_to_drug_tests : true,
 				is_current: true
 			},
 			is_current_employed: !!employer,
 		});
 	}, [applicant]);
 
-	useEffect(() => {
+	// useEffect(() => {
 
-		console.log("values", form.values);
-		console.log("error", form.errors);
-	}, [form.values, form.errors]);
+	// 	console.log("values", form.values);
+	// 	console.log("error", form.errors);
+	// }, [form.values, form.errors]);
 
 	return (
 		<>
@@ -149,9 +151,9 @@ export function EmploymentHistory() {
 							/>
 							<BaseInput
 								className="col-md-6 my-3"
-								required
 								name="employer.email"
 								label="CURRENT_COMPANY_EMAIL"
+								required
 								placeholder="email"
 								formik={form}
 							/>

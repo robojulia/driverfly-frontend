@@ -8,6 +8,7 @@ export class SignUpDto {
 	first_name: string;
 	last_name: string;
 	phone: string;
+	contact_number: string;
 	email: string;
 	password: string;
 	confirmPassword?: string;

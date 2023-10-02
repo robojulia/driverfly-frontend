@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { Col, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 import { ApplicantForm } from "../../../../../components/forms/company/applicant-form";
@@ -8,6 +9,7 @@ import { useTranslation } from "../../../../../hooks/use-translation";
 import { ApplicantEntity } from "../../../../../models/applicant/applicant.entity";
 import { useEffectAsync } from "../../../../../utils/react";
 import ApplicantApi from "../../../../api/applicant";
+import DQF from "../../../../../components/applicants/dqf";
 
 export default function EditApplicant({ id }) {
     const router = useRouter();
@@ -15,8 +17,8 @@ export default function EditApplicant({ id }) {
 
     const backPath = `/dashboard/company/applicants/${id}`;
 
-
-    const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
+    // const goBack = () => window.setTimeout(() => router.push(backPath), 2000);
+    const goBack = () => window.setTimeout(() => router.back(), 2000);
 
     const [applicant, setApplicant] = useState(new ApplicantEntity());
 
@@ -39,13 +41,48 @@ export default function EditApplicant({ id }) {
 
     return (
         <ChildPageLayout
-            title={t("EDIT_{name}", { name: "APPLICANT" }, { translateProps: true })}
+            title={t(
+                "EDIT_{name}",
+                { name: "APPLICANT" },
+                { translateProps: true }
+            )}
             backPath={backPath}
         >
             <ApplicantForm
                 entity={applicant}
                 onSaveComplete={goBack}
             />
+            {applicant?.id && (
+                <Row>
+                    <Col>
+                        <DQF
+                            title="ONBOARDING_CHECKLIST"
+                            applicant={applicant}
+                            canEdit={!Boolean(applicant?.is_hired)}
+                            showOnboarding={true}
+                            showCompleted={true}
+                            canEditSafetyPerformance={true}
+                            showResendButton={true}
+                            onUpdateDocument={(doc) => {
+                                setApplicant({
+                                    ...applicant,
+                                    documents: [...applicant.documents, { ...doc }],
+                                });
+                            }}
+                            onDeleteDocument={(doc) => {
+                                const updatedDocuments = applicant.documents?.filter(
+                                    (v) => v.id != doc.id
+                                );
+                                setApplicant({
+                                    ...applicant,
+                                    documents: [...updatedDocuments],
+                                });
+                            }}
+                        />
+                        {/* <ViewApplicantDqf canEdit={true} applicant={applicant} /> */}
+                    </Col>
+                </Row>
+            )}
         </ChildPageLayout>
     );
 }

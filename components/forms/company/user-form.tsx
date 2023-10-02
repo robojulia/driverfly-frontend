@@ -28,6 +28,9 @@ export function UserForm(props: UserFormProps) {
         initialValues: new UserEntity(),
         validationSchema: UserEntity.yupSchema(),
         onSubmit: async (dto) => {
+            if (dto.cell_number?.length < 7) delete dto.cell_number
+            if (dto.contact_number?.length < 7) delete dto.contact_number
+
             const api = new UserApi();
             try {
                 let user = null;

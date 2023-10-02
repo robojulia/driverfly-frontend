@@ -1,12 +1,13 @@
 import { createContext } from "react";
 import { JobEntity } from "../models/job/job.entity";
 import { JobSearchLocation, SearchJobsDto } from "../models/job/search-jobs-dto";
-import { pagingMetaInitialValues, PagingMetaProps } from "../utils/job-filter";
+import { pagingMetaInitialValues } from "../utils/job-filter";
+import { PagingMeta } from "../types/pagination.type";
 
 type JobContextType = {
     state: {
         jobs?: JobEntity[],
-        pagingMeta: PagingMetaProps,
+        pagingMeta: PagingMeta,
         filters?: SearchJobsDto,
         location?: JobSearchLocation,
         range?: string,

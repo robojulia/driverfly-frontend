@@ -22,7 +22,7 @@ export default function ApplicantWorkHistory({ applicant }: ApplicantWorkHistory
             }
             {
                 <>
-                    {applicant.employers?.map((e, i) => (
+                    {applicant.employers.filter(e => !!e.name)?.map((e, i) => (
                         <Accordion>
                             <AccordionSummary className='p-0'
                                 expandIcon={<ArrowsExpand />}

@@ -1,11 +1,10 @@
 import React, { useEffect, useContext, useState } from "react";
-import Form from "react-bootstrap/Form";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import { Button, Col, Row } from "react-bootstrap";
-import BaseInput from "../../base-input";
-import BaseInputPhone from "../../base-input-phone";
-import BaseSelect from "../../base-select";
 import { useFormik } from "formik";
+import Form from "react-bootstrap/Form";
+import { Button, Col, Row } from "react-bootstrap";
+import styles from "../../../../styles/digitalhiringapp.module.css";
+import BaseInput from "../../base-input";
+import BaseSelect from "../../base-select";
 import { useTranslation } from "../../../../hooks/use-translation";
 import { ContactDto } from "../../../../models/jot-form/short-form/contact.dto";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
@@ -14,8 +13,6 @@ import { ApplicantExtrasEntity } from "../../../../models/applicant/applicant-ex
 import { BooleanTypeExtra } from "../../../../enums/jotform/bool-and-not-sure.enum";
 import ApplicantApi from "../../../../pages/api/applicant";
 import { LoaderIcon } from "../../../loading/loader-icon";
-import ViewModal from "../../../view-details/view-modal";
-import OtpInputField from 'react-otp-input';
 
 
 export function BasicInfo() {
@@ -25,25 +22,15 @@ export function BasicInfo() {
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
-	const [openModal, setOpenModal] = useState<boolean>(false)
-	const [otp, setOtp] = useState<string>('')
-	const [showOtpField, seShowtOtpField] = useState<boolean>(false)
 
 	const form = useFormik({
 		initialValues: new ContactDto(),
 		validationSchema: ContactDto.yupSchema(),
-		onSubmit: async (values, { setErrors }) => {
+		onSubmit: async (values) => {
 			console.log("values", values);
 			try {
 				const { email, zip_code, AUTHORIZE_TO_COMMUNICATE } = values;
-				const applicantApi = new ApplicantApi()
-				// const applicantEmailExists = await applicantApi.searchByPublic({ email })
 
-				// if (applicantEmailExists) {
-				setOpenModal(true)
-				// } else if (applicantPhoneExists) {
-				// 	setErrors({ phone: 'ALREADY_EXISTS' })
-				// } else {
 				setApplicant({
 					...applicant,
 					email,
@@ -53,7 +40,7 @@ export function BasicInfo() {
 				updateApplicantExtras(AUTHORIZE_TO_COMMUNICATE);
 
 				stepNext();
-				// }
+
 			} catch (error) {
 				console.log("error", error);
 			}
@@ -71,10 +58,14 @@ export function BasicInfo() {
 			...form.values,
 			AUTHORIZE_TO_COMMUNICATE: !!apx?.type
 				? apx
-				: new ApplicantExtrasEntity(ApplicantExtras.AUTHORIZE_TO_COMMUNICATE),
+				: {
+					...new ApplicantExtrasEntity(ApplicantExtras.AUTHORIZE_TO_COMMUNICATE),
+					value: BooleanTypeExtra.YES
+				},
 			email: applicant.email,
 			zip_code: applicant.zip_code,
 		});
+
 	}, []);
 	return (
 		<>

@@ -33,38 +33,44 @@ import {
 	PhoneNumber
 } from "./shortForm";
 import { ThankyouPage } from "./thankyou-screen";
+import { AtsJobs } from "./shortForm/ats-jobs";
+import { TransmissionAndEndorsement } from "./shortForm/transmission-and-endorsement";
+import { DuiAndEquipment } from "./shortForm/dui-and-equipment";
 
 const getFullFormPages = (step: number): JSX.Element =>
 ({
 	0: <SplashPage />,
-	1: <PhoneNumber />,
-	2: <Names />,
-	3: <BasicInfo />,
-	4: <CdlExperience />,
-	5: <AccidentViolation />,
-	6: <Preferences />,
-	7: <HearAbout />,
-	8: <ContinueLongForm />,
-	9: <DriverApplication />,
-	10: <BackgroundInfo />,
-	11: <HighestLevelEducation />,
-	12: <DrivingExperience />,
-	13: <OtherQueues />,
-	14: <DriverLicense />,
-	15: <MedicalCard />,
-	16: <EmergencyContact />,
-	17: <EmploymentHistory />,
-	18: <PastEmploymentHistory />,
-	19: <HalfWay />,
-	20: <WorkedBefore />,
-	21: <AccidentHistory />,
-	22: <ViolationHistory />,
-	23: <PastSuspension />,
-	24: <UnableForJob />,
-	25: <FelonyConviction />,
-	26: <DrugTest />,
-	27: <AccordianPage />,
-	28: <ThankyouPage />
+	1: <AtsJobs />,
+	2: <PhoneNumber />,
+	3: <Names />,
+	4: <BasicInfo />,
+	5: <CdlExperience />,
+	6: <AccidentViolation />,
+	7: <TransmissionAndEndorsement />,
+	8: <DuiAndEquipment />,
+	9: <Preferences />,
+	10: <HearAbout />,
+	11: <ContinueLongForm />,
+	12: <DriverApplication />,
+	13: <BackgroundInfo />,
+	14: <HighestLevelEducation />,
+	15: <DrivingExperience />,
+	16: <OtherQueues />,
+	17: <DriverLicense />,
+	18: <MedicalCard />,
+	19: <EmergencyContact />,
+	20: <EmploymentHistory />,
+	21: <PastEmploymentHistory />,
+	22: <HalfWay />,
+	23: <WorkedBefore />,
+	24: <AccidentHistory />,
+	25: <ViolationHistory />,
+	26: <PastSuspension />,
+	27: <UnableForJob />,
+	28: <FelonyConviction />,
+	29: <DrugTest />,
+	30: <AccordianPage />,
+	31: <ThankyouPage />,
 }[step]);
 
 const getFullFormStyle = (step: number): CSSProperties | undefined =>
@@ -103,6 +109,13 @@ const getMissingDocumentsPages = (step: number): JSX.Element =>
 	2: <SubmitMissingDocuments />,
 	3: <ThankyouPage />
 }[step]);
+const getSuggestedJobPages = (step: number, jobId?: number): JSX.Element =>
+({
+	0: <DriverApplication isAutoRecruitmentLead={Boolean(jobId)} />,
+	1: <WorkedBefore />,
+	2: <AccordianPage />,
+	3: <ThankyouPage />
+}[step]);
 const getLongFormStyle = (step: number): CSSProperties | undefined =>
 	({}[step]);
 
@@ -112,4 +125,5 @@ export {
 	getLongFormPages,
 	getLongFormStyle,
 	getMissingDocumentsPages,
+	getSuggestedJobPages
 };

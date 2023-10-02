@@ -1,18 +1,16 @@
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import Breadcrumb from "../components/breadcrumbs/breadcrumb";
-import { PublicLayout } from "../components/layouts/public-layout";
-import Forgotpassword from '../public/css/forgot.module.css'
-import ResetPasswordAPI from "./api/reset-account"
 import { ToastContainer, toast } from 'react-toastify'
-
-import { useTranslation } from "../hooks/use-translation";
-import BaseInput from '../components/forms/base-input';
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { Col, Container, Row } from "react-bootstrap";
 import Head from 'next/head';
-
+import Breadcrumb from "../components/breadcrumbs/breadcrumb";
+import { PublicLayout } from "../components/layouts/public-layout";
+import Forgotpassword from '../public/css/forgot.module.css'
+import ResetPasswordAPI from "./api/reset-account"
+import { useTranslation } from "../hooks/use-translation";
+import BaseInput from '../components/forms/base-input';
 export default function ResetPassword({ passwordResetToken }) {
 
   const router = useRouter();
@@ -66,9 +64,12 @@ export default function ResetPassword({ passwordResetToken }) {
 
   return (
     <>
-        <Head>
-        <title>{t("RESET_PASSWORD_META_TITLE")}</title>
-        <meta name="description" content={t("RESET_PASSWORD_META_DESC")} key="desc" />
+      <Head>
+        <title>{t("RESET_PASSWORD_META_TITLE")}  </title>
+        <meta
+          name="description"
+          content={t("RESET_PASSWORD_META_DESC")} key="desc"
+        />
       </Head>
       <ToastContainer />
       <div className="top-links-sec">

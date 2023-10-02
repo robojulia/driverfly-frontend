@@ -14,7 +14,6 @@ export default function Driver() {
                 <div className="col-md-4">
                     <div className="card">
                         < FileEarmarkZip />
-
                         <div className="card-body px-0">
                             <h5 className="card-title">{t("CREATE_AN_ACCOUNT")}</h5>
                             <p className="card-text">{t("TAKE_5_MINUTES_TO_QUICKLY_SET_UP")}</p>

@@ -1,16 +1,18 @@
 import * as yup from "yup";
 import { ApplicantExtras } from "../../enums/applicants/applicant-extras.enum";
 import { OtherRequirementType } from "../../enums/users/other-requirements.enum";
-import { RouteType } from "../../enums/vehicles/routes-type.enum";
 import { AccidentHistoryEntity } from "../jot-form/long-form/accident-last-5-years/index.dto";
 import { AccordianExtras } from "../jot-form/long-form/accordian-info/index.dto";
 import { BackgroundInfoLineAddress } from "../jot-form/long-form/backgorund-info/index.dto";
 import { CdlExtras } from "../jot-form/long-form/cdl-object/index.dto";
 import { VioalationExtrasEntity } from "../jot-form/long-form/violaton-history/index.dto";
 import { WorkedBeforeExtrasDto } from "../jot-form/long-form/worked-before/index.dto";
+import { BooleanTypeExtra } from "../../enums/jotform/bool-and-not-sure.enum";
+import { JobSchedule } from "../../enums/jobs/job-schedule.enum";
 
 export class ApplicantExtrasEntity {
 	constructor(type?: ApplicantExtras) {
+		console.log("type===", type)
 		if (!!type) this.type = type;
 	}
 	id?: number;
@@ -24,7 +26,7 @@ export class ApplicantExtrasEntity {
 				.mixed()
 				.when("type", {
 					is: ApplicantExtras.AUTHORIZE_TO_COMMUNICATE,
-					then: yup.string().required().nullable(),
+					then: yup.string().required().nullable().default(BooleanTypeExtra.YES),
 				})
 				.when("type", {
 					is: ApplicantExtras.ACCIDENT_DETAILS,
@@ -51,8 +53,8 @@ export class ApplicantExtrasEntity {
 					then: yup.string().required().nullable(),
 				})
 				.when("type", {
-					is: ApplicantExtras.QUALIFIED_FOR_MANUAL_TRANSMISSION,
-					then: yup.string().optional().nullable(),
+					is: ApplicantExtras.REFERAL_NAME,
+					then: yup.string().required().nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.CDL_NUMBER,
@@ -61,8 +63,8 @@ export class ApplicantExtrasEntity {
 				.when("type", {
 					is: ApplicantExtras.ROUTES,
 					then: yup
-						.array((yup.string() as any).enum(RouteType))
-						.min(1)
+						.array((yup.string() as any).enum(JobSchedule))
+						.min(0)
 						.typeError("Choose atleast one!")
 						.nullable(),
 				})
@@ -108,7 +110,7 @@ export class ApplicantExtrasEntity {
 				})
 				.when("type", {
 					is: ApplicantExtras.EMPLOYEE_SS_OR_ID,
-					then: yup.string().required().nullable(),
+					then: yup.string().optional().nullable(),
 				})
 				.when("type", {
 					is: ApplicantExtras.IMPORTANT_DISCLOSURE_BACKGROUND_DATE,
@@ -133,6 +135,22 @@ export class ApplicantExtrasEntity {
 				.when("type", {
 					is: ApplicantExtras.SIGNATURE_GENERAL_CONSENT,
 					then: yup.string().required().nullable(),
+				})
+				.when("type", {
+					is: ApplicantExtras.BUSINESS_NAME,
+					then: yup.string().optional().nullable(),
+				})
+				.when("type", {
+					is: ApplicantExtras.DOT_NUMBER,
+					then: yup.string().optional().nullable(),
+				})
+				.when("type", {
+					is: ApplicantExtras.GOOD_FIT,
+					then: yup.boolean().optional().nullable(),
+				})
+				.when("type", {
+					is: ApplicantExtras.AUTOMATED_RECRUITING_LEAD,
+					then: yup.boolean().optional().nullable(),
 				})
 		});
 	}

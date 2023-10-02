@@ -2,6 +2,7 @@ import { JobEntity } from "../../models/job/job.entity";
 import BaseApi from "./_baseApi";
 import { ApplicantEntity } from "../../models/applicant/applicant.entity";
 import { SearchJobsDto } from "../../models/job/search-jobs-dto";
+import { Pagination } from "../../types/pagination.type";
 
 export default class JobApi extends BaseApi {
     baseUrl: string = "jobs";
@@ -36,7 +37,7 @@ export default class JobApi extends BaseApi {
         return data;
     }
 
-    async search(params: SearchJobsDto): Promise<{ items: JobEntity[], meta: any }> {
+    async search(params: SearchJobsDto): Promise<Pagination<JobEntity> | JobEntity[]> {
         const { data } = await this.get(`${this.baseUrl}/search`, { params });
         return data;
     }

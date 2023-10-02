@@ -59,7 +59,7 @@ export function ContinueLongForm() {
 		}
 	}, [applicant?.company])
 
-	// console.log("company prefsss ----", companyPref);
+
 	const OwnerOperator: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.EMPLOYMENT_TYPE)
 	const CompanyPrefferedMinExperience: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.YEARS_CDL_EXPERIENCE)
 	const CompanyPrefferedAccidentCountLimit: CompanyPreferenceEntity = companyPref?.find(v => v.label === CompanyPreferenceJotformLabel.MINIMUM_ACCIDENTS)
@@ -80,11 +80,6 @@ export function ContinueLongForm() {
 	}
 
 	const hasJobGeographyInRouteType = checkJobGeographyInRouteType(ApplicantAddedRoutes?.value, CompanyPreferedLocations?.value);
-	console.log("company prefered Location----", CompanyPreferedLocations?.value)
-	console.log("applicant prefered routes----", ApplicantAddedRoutes?.value)
-	console.log("final result----", hasJobGeographyInRouteType)
-
-
 	return (
 		<>
 			<ToastContainer />
@@ -125,7 +120,7 @@ export function ContinueLongForm() {
 									</Row>
 								</>
 							) : (
-								<form onSubmit={form.handleSubmit}>
+								<form >
 									<Row>
 										<h4 className={styles.heading__sty}>
 											{t(
@@ -137,7 +132,7 @@ export function ContinueLongForm() {
 									</Row>
 									<Row className="mt-3">
 										{(
-											Boolean(companyCdlPreferences.length > 0)
+											Boolean(companyCdlPreferences?.length > 0)
 											&& !Boolean(companyCdlPreferences.includes(t(`DriverLicenseType.${applicant?.license_type}`)))
 										) ? (
 											<h6 className={`${styles.paragraph} ${styles.margin__top} bg-danger text-light  p-1`}>
@@ -275,7 +270,7 @@ export function ContinueLongForm() {
 									</Row>
 									<Row className="mt-3">
 										<Col className="text-center" >
-											<Button type="submit">
+											<Button onClick={() => form.handleSubmit()}>
 												{t("CONTINUE_APPLICATION")}
 											</Button>
 										</Col>
