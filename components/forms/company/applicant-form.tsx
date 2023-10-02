@@ -66,7 +66,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	const router = useRouter();
 	const applicantApi = new ApplicantApi();
 	let { className, entity, onSaveComplete, onSaveError } = props;
-
+	const current_date = new Date();
 	let { user, hasPermission, isSuperAdmin } = useAuth();
 
 	const [protectedFields, setProtectedFields] = useState({
@@ -384,7 +384,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									readOnly={Boolean(entity?.is_hired)}
 									label="expiration_date"
 									name="license_expiry"
-									min={(new Date()).toISOString().split("T")[0]}
+									min={(new Date(current_date.getFullYear(), current_date.getMonth() + 6, current_date.getDate())).toISOString().split("T")[0]}
 									type="date"
 									placeholder="expiration_date"
 									formik={form}

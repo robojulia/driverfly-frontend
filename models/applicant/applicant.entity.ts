@@ -24,6 +24,7 @@ import { Status } from "../../enums/status.enum";
 import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
 import { ApplicantJobStatusHistoryEntity } from "./applicant-job-status-history.entity";
 import { EmployeeEntity } from "../employee/employee.entity";
+import moment from "moment";
 
 
 export class ApplicantEntity {
@@ -112,18 +113,10 @@ export class ApplicantEntity {
 			state: yup.string().nullable(),
 			zip_code: yup.string().nullable(),
 			license_number: yup.string().nullable(),
-			license_expiry: yup.date().test({
-				test: (value, context) => {
-					const current_date = new Date();
-					if(!Boolean(value)) return true;
-					if(value > current_date) return true;
-
-					return context.createError({
-						path:context.path,
-						message : 'LICENSE_EXPIRATION_MUST_BE_IN_FUTUTR'
-					  })
-				}
-			}).nullable(),
+			license_expiry: yup.date().typeError("INVALID_DATE").min(
+				moment().endOf("day").add(0.5, "years"),
+				"LICENSE_MUST_BE_VALID_FOR_6_MONTHS"
+			),
 			license_state: yup.string().nullable(),
 			license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
 			years_cdl_experience: yup.number().min(0).nullable(),
