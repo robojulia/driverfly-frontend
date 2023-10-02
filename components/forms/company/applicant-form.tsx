@@ -384,6 +384,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									readOnly={Boolean(entity?.is_hired)}
 									label="expiration_date"
 									name="license_expiry"
+									min={(new Date()).toISOString().split("T")[0]}
 									type="date"
 									placeholder="expiration_date"
 									formik={form}
