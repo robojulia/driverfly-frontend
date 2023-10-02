@@ -53,7 +53,7 @@ export function PastEmploymentHistory() {
 		});
 	}, [applicant]);
 	useEffect(() => {
-		console.log("form.values", form.values)
+		console.log("form.values", { employerslength: form?.values?.employers?.length, values: form.values })
 		console.log("form.errors", form.errors)
 	}, [form.values, form.errors])
 	return (
@@ -242,7 +242,7 @@ export function PastEmploymentHistory() {
 			{(!!form?.values?.is_previous_employed && form?.values?.employers?.length > 0) &&
 				<>
 					{
-						Boolean((form?.values?.employers)?.length < 12) && (
+						Boolean((form?.values?.employers?.length) < 12) && (
 							<Row>
 								{!!form?.values?.is_previous_employed && (
 									<>
