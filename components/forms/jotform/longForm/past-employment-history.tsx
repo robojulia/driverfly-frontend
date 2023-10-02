@@ -242,7 +242,7 @@ export function PastEmploymentHistory() {
 			{(!!form?.values?.is_previous_employed && form?.values?.employers?.length > 0) &&
 				<>
 					{
-						Boolean((form?.values?.employers)?.length !== 12) && (
+						Boolean((form?.values?.employers)?.length < 12) && (
 							<Row>
 								{!!form?.values?.is_previous_employed && (
 									<>
