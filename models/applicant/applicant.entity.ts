@@ -173,7 +173,7 @@ export class ApplicantEntity {
 			employers: yup.array(ApplicantEmployerEntity.yupSchema()),
 			documents: (
 				yup.array(DocumentEntity.yupSchema(ApplicantDocumentType)) as any
-			).unique("type"),
+			).unique("type"), //modify file error messages
 			jobs: (yup.array(ApplicantJobEntity.yupSchema()) as any).unique("job.id"),
 			assignedUserId: yup.number().optional().nullable(),
 			is_hired: yup.bool().nullable(),
