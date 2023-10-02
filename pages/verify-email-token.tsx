@@ -1,5 +1,5 @@
-import { PublicLayout } from "../components/layouts/public-layout";
 import Head from "next/head";
+import { PublicLayout } from "../components/layouts/public-layout";
 import { useTranslation } from '../hooks/use-translation';
 
 
@@ -8,14 +8,14 @@ export default function VerifyEmailToken() {
   const { t } = useTranslation();
   return (
     <>
-        <Head>
+      <Head>
         <title>{t("VERIFY_EMAIL_META_TITLE")}</title>
         <meta
           name="description"
-          content={t("VERIFY_EMAIL_META_DESC")}             key="desc"
+          content={t("VERIFY_EMAIL_META_DESC")} key="desc"
         />
-        </Head>
-    Oops... not sure how you got to this page, it has been deprecated</>
+      </Head>
+      Oops... not sure how you got to this page, it has been deprecated</>
   )
 }
 export async function getServerSideProps({ res, query }) {

@@ -56,6 +56,7 @@ import EmployeeApi from "../../../pages/api/employee";
 import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../models/applicant";
 import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
+import { Status } from "../../../enums/status.enum";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
@@ -77,7 +78,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		initialValues: new ApplicantEntity(),
 		validationSchema: ApplicantEntity.yupSchema(),
 		onSubmit: async (values) => {
-	
+
 			values.extras = values.extras?.filter(
 				(v) => v.value != undefined || v.value != null
 			);
@@ -229,7 +230,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	useEffectAsync(async () => {
 		const userApi = new UserApi();
 		const data = await userApi.list();
-		setCompanyUsers(data);
+		setCompanyUsers(data?.filter(u=>u.status==Status.ACTIVE))
 	}, []);
 
 	const today = new Date();
@@ -241,9 +242,11 @@ export function ApplicantForm(props: ApplicantFormProps) {
 		.toISOString()
 		.split("T")[0];
 
-		
-	// useEffect(() => {
-	// }, [form.values, form.errors]);
+
+	useEffect(() => {
+		console.log("form.values", form.values);
+		console.log("form.errors", form.errors);
+	}, [form.values, form.errors]);
 
 	return (
 		<EntityForm
@@ -276,7 +279,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									placeholder
 									options={companyUsers}
 									valueKey="id"
-									createLabel={(c) => `${c.name} (#${c.id})`}
+									createLabel={(c) => `${c.name} (#${c.id}) `}
 									formik={form}
 								/>
 							</Col>
@@ -784,7 +787,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 															employers: form.values?.employers?.filter(
 																(v, idx) => idx !== i
 															),
-																
+
 														})
 													}
 												>
@@ -814,7 +817,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														max={(new Date()).toISOString().split("T")[0]}
 														formik={form}
 													/>
-													
+
 													<BaseInput
 														className="col-6"
 														readOnly={Boolean(entity?.is_hired)}
@@ -823,7 +826,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 														type="date"
 														formik={form}
 													/>
-													
+
 													<BaseInput
 														className="col-12"
 														readOnly={Boolean(entity?.is_hired)}

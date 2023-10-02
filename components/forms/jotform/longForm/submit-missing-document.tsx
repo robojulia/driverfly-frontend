@@ -6,6 +6,7 @@ import { useTranslation } from "../../../../hooks/use-translation";
 import JotformContext, {
 	JotFormContextType,
 } from "../../../../context/jotform-context";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import { DocumentEntity } from "../../../../models/documents/document.entity";
 import { ApplicantDocumentType } from "../../../../enums/applicants/applicant-document-type.enum";
 import { DocumentsDto } from "../../../../models/jot-form/long-form/documents.dto";
@@ -67,7 +68,7 @@ export function SubmitMissingDocuments() {
 			<ToastContainer />
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row>
-					<h3>{t("SUBMIT_THIS_FORM")}</h3>
+					<h3 className={`text-black ${styles.bold}`}>{t("SUBMIT_THIS_FORM")}</h3>
 				</Row>
 				<Row className="mt-3">
 					<Col>

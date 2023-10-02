@@ -65,10 +65,10 @@ export class EmployeeEntity {
 
 	static yupSchema() {
 		return yup.object({
-			first_name: yup.string().optional().nullable().trim(),
-			last_name: yup.string().optional().nullable().trim(),
+			first_name: yup.string().required().nullable().trim(),
+			last_name: yup.string().required().nullable().trim(),
 			phone: yup.string().nullable(),
-			email: yup.string().email().optional().nullable(),
+			email: yup.string().email().required().nullable(),
 			birthdate: yup.date()
 				.nullable()
 				.test('age', 'You must be at least 18 years old', function (value) {
@@ -92,8 +92,8 @@ export class EmployeeEntity {
 			can_pass_drug_test: yup.bool().nullable(),
 			is_owner_operator: yup.bool().nullable(),
 			manager: yup.object({
-				id: yup.number().optional().nullable()
-			}).optional().nullable(),
+				id: yup.number().required().nullable()
+			}).required().nullable(),
 			transmission_type: yup
 				.array((yup.string() as any).enum(VehicleTransmissionType))
 				.nullable(),
