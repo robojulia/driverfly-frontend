@@ -2,24 +2,19 @@ import { Button, Col, Row } from 'react-bootstrap';
 
 import Link from 'next/link';
 import { toast } from 'react-toastify'
+import { useFormik } from "formik";
+import Head from 'next/head';
 
 import { PublicLayout } from "../../components/layouts/public-layout";
 import { PublicPage } from '../../components/layouts/public/public-page';
 import BaseInput from '../../components/forms/base-input';
-
-import { useFormik } from "formik";
 import { useAuth } from '../../hooks/use-auth';
 import { useTranslation } from "../../hooks/use-translation";
-
 import AuthApi from "../api/auth";
-
 import { globalAjaxExceptionHandler } from '../../utils/ajax';
 import { LoginDto } from '../../models/auth/login.dto';
-import Head from 'next/head';
 
 export default function Login() {
-
-
     const { t } = useTranslation();
 
     const { login } = useAuth();
@@ -37,7 +32,7 @@ export default function Login() {
                 toast.success(t('LOGIN_SUCCESSFULL'));
                 login(user);
             } catch (e) {
-                globalAjaxExceptionHandler(e, { formik: form, t: t, defaultMessage: "INVALID_CREDENTIALS", toast: toast});
+                globalAjaxExceptionHandler(e, { formik: form, t: t, defaultMessage: "INVALID_CREDENTIALS", toast: toast });
             }
         }
     })
@@ -47,13 +42,13 @@ export default function Login() {
         <PublicPage
             title="LOGIN"
         >
-        <Head>
-        <title> {t("LOGIN_META_TITLE")}  </title>
-        <meta
-          name="description"
-          content= {t("LOGIN_META_DESC")}           key="desc"
-        />
-        </Head>
+            <Head>
+                <title> {t("LOGIN_META_TITLE")}  </title>
+                <meta
+                    name="description"
+                    content={t("LOGIN_META_DESC")} key="desc"
+                />
+            </Head>
             <Row className='mb-2 mt-3'>
                 <Col>
                     <p className=" text-secondary">

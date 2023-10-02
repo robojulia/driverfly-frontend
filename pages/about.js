@@ -1,9 +1,9 @@
+import Head from 'next/head';
 import { PublicLayout } from "../components/layouts/public-layout";
 import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import Slider from '../components/testominial-slider/slider';
 import { useTranslation } from "../hooks/use-translation";
 import Companies from "../components/works/companies"
-import Head from 'next/head'; 
 
 
 export default function About() {
@@ -12,16 +12,14 @@ export default function About() {
 
     return (
         <>
-        <Head>
-        <title>
-            {t("ABOUT_META_TITLE")}
-        </title>
-        <meta
-          name="description"
-          content={t("ABOUT_META_DESC")}
-          key="desc"
-        />
-        </Head>
+            <Head>
+                <title>{t("ABOUT_META_TITLE")}</title>
+                <meta
+                    name="description"
+                    content={t("ABOUT_META_DESC")} key="desc"
+                />
+            </Head>
+
             <div className="top-links-sec">
                 <div className="container p-0">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">

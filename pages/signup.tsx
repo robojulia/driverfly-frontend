@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 import { useEffect } from "react";
 import { useFormik } from "formik";
 import { Row, Col, Button } from "react-bootstrap"
-
+import Head from "next/head";
 import 'react-toastify/dist/ReactToastify.css'
 
 import { PublicLayout } from "../components/layouts/public-layout";
@@ -13,18 +13,14 @@ import BaseInput from "../components/forms/base-input";
 import BaseSelect from "../components/forms/base-select";
 import BaseCheck from "../components/forms/base-check";
 import BaseInputPhone from "../components/forms/base-input-phone";
-
 import AuthApi from "./api/auth";
-
 import { useTranslation } from "../hooks/use-translation";
 import { SignUpRole } from "../enums/auth/sign-up-role.enum"
-
 import { globalAjaxExceptionHandler } from "../utils/ajax";
 import { SignUpDto } from "../models/auth/sign-up.dto";
 import { PublicPage } from "../components/layouts/public/public-page";
 import BaseTextArea from "../components/forms/base-text-area";
 import { useEffectAsync } from "../utils/react";
-import Head from "next/head";
 
 export default function Signup() {
 
@@ -78,13 +74,13 @@ export default function Signup() {
 		<PublicPage
 			title="SIGN_UP"
 		>
-		<Head>
-        <title>{t("SIGNUP_META_TITLE")} </title>
-        <meta
-          name="description"
-          content={t("SIGNUP_META_DESC")} 		  key="desc"
-        />
-        </Head>
+			<Head>
+				<title>{t("SIGNUP_META_TITLE")} </title>
+				<meta
+					name="description"
+					content={t("SIGNUP_META_DESC")} key="desc"
+				/>
+			</Head>
 			<Row className={`${SignupStyle.banner}`}>
 				<Col>
 					<h1>{t("SignUp.DRIVERS_HAVE_ACCESS")}<br />{t("SignUp.TO_OVER_1000_JOBS")}</h1>

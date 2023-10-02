@@ -1,9 +1,9 @@
+import Head from "next/head";
+import { ArrowRight, Chat, Clock } from "react-bootstrap-icons";
 import { PublicLayout } from "../components/layouts/public-layout";
 import Blog from "../public/css/blog.module.css";
 import BlogSidebar from "../components/blog-sidebar/blog-sidebar";
-import { ArrowRight, Chat, Clock } from "react-bootstrap-icons";
 import { useTranslation } from "../hooks/use-translation";
-import Head from "next/head";
 import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 export default function Blogs() {
   const { t } = useTranslation();

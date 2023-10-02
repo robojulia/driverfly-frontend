@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import schoolContext from "../context/school-context"
 import { Table } from "react-bootstrap";
+import Head from 'next/head';
+import schoolContext from "../context/school-context"
 import { PublicLayout } from "../components/layouts/public-layout";
 import FilterSchools from '../components/filter-schools/filter-schools'
 import CdlInfo from '../components/cdl-info/cdlInfo'
 import SchoolApi from "./api/school"
 import { useTranslation } from "../hooks/use-translation";
 import Breadcrumb from '../components/breadcrumbs/breadcrumb';
-import Head from 'next/head';
 
 export default function FindSchools(props) {
 
@@ -134,12 +134,12 @@ export default function FindSchools(props) {
         applyFilters: fetchSchools
       },
     }}>
-     <Head>
+      <Head>
         <title>
-        {t("FIND_SCHOOL_META_TITLE")} </title>
+          {t("FIND_SCHOOL_META_TITLE")} </title>
         <meta
           name="description"
-          content=  {t("FIND_SCHOOL_META_DESC")}           key="desc"
+          content={t("FIND_SCHOOL_META_DESC")} key="desc"
         />
       </Head>
       <div className="top-links-sec">

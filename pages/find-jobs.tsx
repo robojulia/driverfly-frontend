@@ -1,7 +1,10 @@
-import 'bootstrap/dist/css/bootstrap.css'
 import { useRouter } from 'next/router'
 import { ChangeEvent, useState } from "react"
+import { GetServerSidePropsContext } from 'next'
+import Head from 'next/head'
+import { toast } from "react-toastify";
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css'
+import 'bootstrap/dist/css/bootstrap.css'
 import FilterResult from '../components/filter-results/filter-results'
 import JobsList from '../components/jobslisting/jobslist'
 import { PublicLayout } from "../components/layouts/public-layout";
@@ -13,11 +16,8 @@ import { JobEntity } from '../models/job/job.entity'
 import { filtersInitialsValues, pagingMetaInitialValues } from '../utils/job-filter'
 import { JobSearchLocation, SearchJobsDto } from '../models/job/search-jobs-dto'
 import { useEffectAsync } from '../utils/react'
-import { GetServerSidePropsContext } from 'next'
-import { toast } from "react-toastify";
 import { useTranslation } from '../hooks/use-translation'
 import { Pagination, PagingMeta } from '../types/pagination.type'
-import Head from 'next/head'
 
 export default function FindJobs(props) {
 
@@ -194,7 +194,7 @@ export default function FindJobs(props) {
                     </div>
                 </div>
             </div>
-        </JobContext.Provider>
+        </JobContext.Provider >
     )
 }
 
