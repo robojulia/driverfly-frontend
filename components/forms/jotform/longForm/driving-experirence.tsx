@@ -17,6 +17,7 @@ export function DrivingExperience() {
 	}: JotFormContextType = useContext(JotformContext);
 
 	const { t } = useTranslation();
+	const current_date = new Date();
 
 	const form = useFormik({
 		initialValues: new DrivingExperienceDto(),
@@ -41,6 +42,9 @@ export function DrivingExperience() {
 			stepBack();
 		},
 	});
+
+
+
 
 	useEffect(() => {
 		const { license_number, state, license_expiry, license_state } = applicant;
@@ -84,8 +88,8 @@ export function DrivingExperience() {
 					placeholder="expiration_date"
 					label="expiration_date"
 					formik={form}
-					max={`9999-12-31`}
-				/>
+					min={(new Date(current_date.getFullYear(), current_date.getMonth() + 6, current_date.getDate())).toISOString().split("T")[0]}
+					/>
 				<StateSelect
 					className="col-md-6  my-3"
 					required

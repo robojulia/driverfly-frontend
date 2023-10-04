@@ -1,20 +1,19 @@
 import { useContext, useEffect } from "react";
-import styles from "../../../../styles/digitalhiringapp.module.css";
-import { Form, Button, Col, Row } from "react-bootstrap";
-import { useTranslation } from "../../../../hooks/use-translation";
 import { useFormik } from "formik";
+import { DashCircle, PlusCircle } from "react-bootstrap-icons";
+import { Form, Button, Col, Row } from "react-bootstrap";
+import styles from "../../../../styles/digitalhiringapp.module.css";
+import { useTranslation } from "../../../../hooks/use-translation";
 import BaseInput from "../../base-input";
 import BaseInputPhone from "../../base-input-phone";
 import BaseCheck from "../../base-check";
 import JotformContext, { JotFormContextType } from "../../../../context/jotform-context";
 import StateSelect from "../../state-select";
-import { DashCircle, PlusCircle } from "react-bootstrap-icons";
 import { PastEmploymentPageDto } from "../../../../models/jot-form/long-form/past-employment-page.dto";
 import { PastEmploymentHistoryDto } from "../../../../models/jot-form/long-form/past-employment-history/index.dto";
 import { ApplicantEmployerEntity } from "../../../../models/applicant";
 
 export function PastEmploymentHistory() {
-
 	const {
 		state: { applicant },
 		method: { setApplicant, stepNext, stepBack },
@@ -24,16 +23,14 @@ export function PastEmploymentHistory() {
 	const form = useFormik({
 		initialValues: new PastEmploymentPageDto(),
 		validationSchema: PastEmploymentPageDto.yupSchema(),
-		onSubmit: (values) => {
-			const { employers } = values;
-
-			const employer: ApplicantEmployerEntity = applicant.employers?.find(v => !!v.is_current)
-
-			if (employer) employers.push(employer)
+		onSubmit: ({ employers: past_employers, is_previous_employed }: PastEmploymentPageDto) => {
+			const all_employers: ApplicantEmployerEntity[] = is_previous_employed ? past_employers : [];
+			const current_employer: ApplicantEmployerEntity = applicant?.employers?.find(v => !!v.is_current)
+			if (current_employer) all_employers.push(current_employer)
 
 			setApplicant({
 				...applicant,
-				employers
+				employers: all_employers
 			});
 
 			stepNext();
@@ -53,7 +50,7 @@ export function PastEmploymentHistory() {
 		});
 	}, [applicant]);
 	useEffect(() => {
-		console.log("form.values", form.values)
+		console.log("form.values", { employerslength: form?.values?.employers?.length, values: form.values })
 		console.log("form.errors", form.errors)
 	}, [form.values, form.errors])
 	return (
@@ -239,42 +236,30 @@ export function PastEmploymentHistory() {
 					))}
 				</>
 			}
-			{(!!form?.values?.is_previous_employed && form?.values?.employers?.length > 0) &&
-				<>
-					{
-						Boolean((form?.values?.employers)?.length !== 12) && (
-							<Row>
-								{!!form?.values?.is_previous_employed && (
-									<>
-										<Col className="mt-2">
-											<Button
-												className="w-100 py-2"
-												size="sm"
-												onClick={() =>
-													form.setFieldValue("employers", [
-														...(form.values?.employers || []),
-														{
-															...(new PastEmploymentHistoryDto()),
-															is_subject_to_fmcsrs: true,
-															is_subject_to_drug_tests: true,
-															is_current: false
-														},
-													])
-												}
-											>
-												<PlusCircle /> {t("ADD_PAST_EMPLOYMENT_HISTORY")}
-											</Button>
-										</Col>
-									</>
-								)}
-							</Row>
-						)
-					}
-				</>
+
+			{(Boolean(form?.values?.is_previous_employed) && form?.values?.employers?.length < 12) &&
+				<Row>
+					<Col className="mt-2">
+						<Button
+							className="w-100 py-2"
+							size="sm"
+							onClick={() =>
+								form.setFieldValue("employers", [
+									...(form.values?.employers || []),
+									{
+										...(new PastEmploymentHistoryDto()),
+										is_subject_to_fmcsrs: true,
+										is_subject_to_drug_tests: true,
+										is_current: false
+									},
+								])
+							}
+						>
+							<PlusCircle /> {t("ADD_PAST_EMPLOYMENT_HISTORY")}
+						</Button>
+					</Col>
+				</Row>
 			}
-
-
-
 
 			<Row className="mt-5">
 				<Col>
