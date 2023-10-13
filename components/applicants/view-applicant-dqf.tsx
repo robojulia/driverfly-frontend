@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 
 import { toast } from "react-toastify";
 
-import { CloudArrowDown, Pen, Eye, Trash } from "react-bootstrap-icons";
+import { CloudArrowDown, Pen, Eye, Trash, App } from "react-bootstrap-icons";
 
 import { useState } from "react";
 import { ThreeCircles } from 'react-loader-spinner';
@@ -113,7 +113,7 @@ const ViewApplicantDqf = ({ applicant, canEdit }: DqfTabProps) => {
 
                             <tbody>
                                 {
-                                    Object.values(ApplicantDqf).map((value: ApplicantDqf, i) => {
+                                    Object.values(ApplicantDqf)?.filter(v => v != ApplicantDqf.SAFETY_PERFORMANCE_HISTORY)?.map((value: ApplicantDqf, i) => {
 
                                         const document: any = applicantUser?.documents?.find(v => (v.type === value))
                                         return (
