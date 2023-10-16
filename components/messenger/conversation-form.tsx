@@ -184,6 +184,12 @@ export function ConversationForm(props: ConversationFormProps) {
     }, [form.values, form.errors]);
 
     useEffect(() => {
+        console.log("useEffect props?.applicant", props?.applicant);
+    }, [props?.applicant]);
+
+    useEffect(() => {
+        console.log("props?.applicant", props?.applicant);
+
         if (!!documentTypes?.length) {
             const link: string = `${process.env.FRONTEND_BASE_URL}form/applicant/${props?.applicant?.uuid_token
                 }/documents?${buildArrayQueryString("type", documentTypes)}`;
