@@ -298,8 +298,9 @@ export function ConversationForm(props: ConversationFormProps) {
                                                     />
                                                 </>
                                             )}
-                                            {props.applicant?.documents?.length !=
-                                                Object.keys(ApplicantDocumentType)?.length && (
+                                            {props.applicant.uuid_token
+                                                && props.applicant?.documents?.length != Object.keys(ApplicantDocumentType)?.length
+                                                && (
                                                     <small
                                                         className="btn-link"
                                                         role="button"
