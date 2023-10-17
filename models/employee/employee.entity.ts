@@ -17,6 +17,7 @@ import { CompanyManagerEntity } from '../company/company-manager.entity';
 import { EmployeeExperienceEntity } from './employee-experience.entity';
 import { EmployeeEquipmentEntity } from './employee-equipment.entity';
 import { EmployeeReasonCodeFired, EmployeeReasonCodeQuit } from '../../enums/employee/employee-reason-codes.enum';
+import moment from 'moment';
 
 export class EmployeeEntity {
 	id?: number;
@@ -169,9 +170,12 @@ export class EmployeeEntity {
 			city: yup.string().nullable(),
 			state: yup.string().nullable(),
 			zip_code: yup.string().nullable(),
-			license_number: yup.string().nullable(),
-			license_expiry: yup.date().nullable(),
-			license_state: yup.string().nullable(),
+			license_number: yup.string().required().nullable(),
+			license_expiry: yup.date().typeError("INVALID_DATE").min(
+				moment().endOf("day").add(0.5, "years"),
+				"LICENSE_MUST_BE_VALID_FOR_6_MONTHS"
+			).required().nullable(),
+			license_state: yup.string().nullable().required(),
 			license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
 			years_cdl_experience: yup.number().min(0).nullable(),
 			can_pass_drug_test: yup.bool().nullable(),
