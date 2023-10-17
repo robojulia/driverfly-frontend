@@ -119,17 +119,11 @@ export function ConversationForm(props: ConversationFormProps) {
     });
 
     useEffect(() => {
-        console.log("useEffect on entity", entity);
-
-        // if (entity?.id) {
-        //     form.setValues({
-        //         ...form.values,
-        //         ...entity,
-        //         message: null,
-        //     });
-        // } else {
-
-        // }
+        form.setValues({
+            ...form.values,
+            ...entity,
+            message: null,
+        });
     }, [entity]);
 
     const [cancelTokenSource, setCancelTokenSource] = useState(null);

@@ -156,18 +156,18 @@ export function Messenger(props) {
     const onDeleteConversation = async (e: ConversationEntity) => {
         console.log("onDeleteConversation", e);
 
-        const { id } = e;
+        // const { id } = e;
 
-        if (id) {
-            const api = new ConversationApi();
+        // if (id) {
+        //     const api = new ConversationApi();
 
-            await api.remove(id);
+        //     await api.remove(id);
 
-            const c = conversations.filter(v => v?.id != id);
-            setConversations(c);
+        //     const c = conversations.filter(v => v?.id != id);
+        //     setConversations(c);
 
-            if (conversation?.id == id) setConversation(new ConversationEntity());
-        }
+        //     if (conversation?.id == id) setConversation(new ConversationEntity());
+        // }
     }
 
     const onConversationCreated = async (c: ConversationEntity) => {
