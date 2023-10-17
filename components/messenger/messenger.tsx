@@ -168,13 +168,37 @@ export function Messenger(props) {
         }
     }
 
-    const onConversationCreated = (e: ConversationEntity) => {
+    const onConversationCreated = async (c: ConversationEntity) => {
+        const conversationApi = new ConversationApi();
+        const applicantApi = new ApplicantApi()
         setConversations([
             ...conversations,
-            e
+            c
         ]);
-        setConversation(e);
-        onConversationClick(e)
+        setConversation(c);
+        setUserPreferences(null)
+        let applicantProfile: ApplicantEntity;
+        if (c.chattable_type == ChattableType.USER) {
+            const userApi = new UserApi();
+            const preferences: UserPreferenceEntity[] = await userApi.preferences
+                .list(
+                    c.chattable_id,
+                    {
+                        category: UserPreferenceCategory.COMMUNICATION,
+                        label: UserPreferenceCommunicationLabel.PREFERRED_HOURS
+                    }
+                )
+            setUserPreferences(preferences)
+            applicantProfile = await applicantApi.getByUserId(c.chattable_id)
+        } else if (c.chattable_type == ChattableType.APPLICANT) {
+            applicantProfile = await applicantApi.getById(c.chattable_id)
+        }
+        const docs = applicantProfile?.documents?.filter((v) =>
+            Object.values(ApplicantDocumentType).includes(
+                v.type as ApplicantDocumentType
+            )
+        );
+        setApplicant({ ...applicantProfile, documents: docs ?? [] })
     }
 
     const onConversationUpdated = (e: ConversationEntity) => {
