@@ -74,6 +74,7 @@ export function MedicalCard() {
 						<CameraComponent form={form} />
 					) : (
 						<FileInput
+							hideView={Boolean(form.values?.document?.id)}
 							className="my-3"
 							name="document"
 							accept="application/pdf"
