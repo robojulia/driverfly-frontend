@@ -720,11 +720,6 @@ function JobView(props: ViewProps) {
                         hidable: false,
                     },
                     {
-                        id: "member",
-                        name: "IS_MMEMBER",
-                        selector: aJob => !!!aJob.applicant.user?.id ? t('MMEMBER') : t('NON_MMEMBER'),
-                    },
-                    {
                         name: "CITY",
                         selector: aJob => aJob.applicant.city,
                     },
