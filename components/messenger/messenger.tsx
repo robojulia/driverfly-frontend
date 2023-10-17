@@ -154,6 +154,8 @@ export function Messenger(props) {
     }
 
     const onDeleteConversation = async (e: ConversationEntity) => {
+        console.log("onDeleteConversation", e);
+
         const { id } = e;
 
         if (id) {
