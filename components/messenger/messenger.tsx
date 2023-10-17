@@ -164,17 +164,18 @@ export function Messenger(props) {
             const c = conversations.filter(v => v.id != id);
             setConversations(c);
 
-            if (conversation.id == id) setConversation(new ConversationEntity());
+            if (conversation.id == id) setConversation(null);
         }
     }
 
     const onConversationCreated = async (c: ConversationEntity) => {
         const conversationApi = new ConversationApi();
         const applicantApi = new ApplicantApi()
-        setConversations([
+        const Cons = ([
             ...conversations,
             c
-        ]);
+        ])?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id)
+        setConversations(Cons);
         setConversation(c);
         setUserPreferences(null)
         let applicantProfile: ApplicantEntity;
