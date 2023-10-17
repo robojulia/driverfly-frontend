@@ -37,7 +37,7 @@ export default function CreateJob() {
 
                         </Col>
                     </Row>
-                    <Row className="mt-90">
+                    {/* <Row className="mt-90">
                         <Col md="12" lg="6">
                             <FacebookShare jobUrl={jobUrl} />
                         </Col>
@@ -45,8 +45,8 @@ export default function CreateJob() {
                             <button className="theme-secondary-btn w-100 p-4">{t("SHARE_ON_DRIVERFLY_FACEBOOK_PAGE")}</button>
 
                         </Col>
-                    </Row>
-                    <Row className="mt-90">
+                    </Row> */}
+                    {/* <Row className="mt-90">
                         <Col md="12">
                             <p className="mb-5 text-center ">{t("WANT_TO_POST_OUTSIDE_JOB_BOARDS")}</p>
                         </Col>
@@ -54,13 +54,12 @@ export default function CreateJob() {
                             <button type="button" className="theme-primary-btn btn-block btn-theme w-50 p-3 m-auto" > {t("COPY_FULL_JOB_DETAILS")}</button>
 
                         </Col>
-
-                    </Row>
+                    </Row> */}
                 </Container>
             }
         </ChildPageLayout >
     );
-    
+
 }
 
 CreateJob.getLayout = function getLayout(page) {
