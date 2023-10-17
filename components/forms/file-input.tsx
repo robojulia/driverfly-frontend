@@ -18,9 +18,10 @@ export interface FileInputProps extends BaseControlProps {
     onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     readOnly?: boolean;
     allowedSizeInByte?: number;
+    hideView?: boolean | (() => boolean)
 }
 
-export default function FileInput({ documentType, formik, accept, required, className, label, handleBlur, placeholder, value, onChange, readOnly, name, touched, error, allowedSizeInByte }: FileInputProps) {
+export default function FileInput({ documentType, formik, accept, required, className, label, handleBlur, placeholder, value, onChange, readOnly, name, touched, error, allowedSizeInByte, hideView }: FileInputProps) {
     const { t } = useTranslation();
     if (formik) {
         const meta = formik.getFieldMeta(name);
@@ -158,7 +159,7 @@ export default function FileInput({ documentType, formik, accept, required, clas
                     {value?.name &&
                         <div className='input-group-append'>
                             <ButtonGroup>
-                                {canView &&
+                                {!Boolean(hideView) && canView &&
                                     <Button name={name} type="button" onClick={view}>
                                         <Eye />
                                     </Button>
