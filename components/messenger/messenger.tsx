@@ -161,10 +161,10 @@ export function Messenger(props) {
 
             await api.remove(id);
 
-            const c = conversations.filter(v => v.id != id);
+            const c = conversations.filter(v => v?.id != id);
             setConversations(c);
 
-            if (conversation.id == id) setConversation(null);
+            if (conversation?.id == id) setConversation(null);
         }
     }
 
