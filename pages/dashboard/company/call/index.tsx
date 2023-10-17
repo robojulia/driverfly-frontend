@@ -131,7 +131,7 @@ export default function Call() {
             handleShowCaller()
             setloading(false)
         } else {
-            toast.error(t('COULD_NOT_MAKE_CALL'))
+            // toast.error(t('COULD_NOT_MAKE_CALL'))
         }
     }, [ready])
 
