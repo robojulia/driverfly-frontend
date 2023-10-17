@@ -166,7 +166,7 @@ export function Messenger(props) {
             const c = conversations.filter(v => v?.id != id);
             setConversations(c);
 
-            if (conversation?.id == id) setConversation(null);
+            if (conversation?.id == id) setConversation(new ConversationEntity());
         }
     }
 
