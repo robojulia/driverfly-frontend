@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { Container, Modal } from "react-bootstrap";
 import { toast } from 'react-toastify'
 import { Spinner, Button } from 'react-bootstrap'
+import { TelephoneFill, TelephoneOutboundFill, TelephoneXFill } from "react-bootstrap-icons";
 import ViewMissedCalls from "../../../../components/call/view-missed-calls";
-import { TelephoneFill, TelephoneMinusFill, TelephoneOutboundFill, TelephoneXFill } from "react-bootstrap-icons";
 import FullLayout from "../../../../components/dashboard/layouts/layout/full-layout";
 import TwilioApi from "../../../api/twilio"
 import ApplicantApi from "../../../api/applicant"
@@ -43,9 +43,9 @@ export default function Call() {
             .catch(error => toast.error(t(error?.response?.data?.message || "NO_TWILIO_NUMBER_AVAILABLE")))
 
         await applicantApi.list()
-            .then(data => {
+            ?.then(data => {
                 setloading(false)
-                setApplicants(data)
+                setApplicants(data?.filter(v => Boolean(v.phone)))
             })
             .catch(error => console.error("applicantApi.list error....", error.response));
     }, [])
@@ -158,7 +158,7 @@ export default function Call() {
                         }}
                         columns={[
                             {
-                                name: "id",
+                                name: "ID",
                                 selector: applicant => applicant.id
                             },
                             {
