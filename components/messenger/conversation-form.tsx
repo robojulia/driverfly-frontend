@@ -21,6 +21,7 @@ import { ApplicantDocumentType } from "../../enums/applicants/applicant-document
 import BaseCheckList from "../forms/base-check-list";
 import { ApplicantEntity } from "../../models/applicant";
 import { buildArrayQueryString } from "../../utils/common";
+import { LoaderIcon } from "../loading/loader-icon";
 
 export interface ConversationFormProps {
     entity?: ConversationEntity;
@@ -346,11 +347,12 @@ export function ConversationForm(props: ConversationFormProps) {
                                 <Col md={2}>
                                     <div className="d-flex justify-content-center align-items-center h-100">
                                         <button
-                                            disabled={canAttach && !documentTypes.length}
+                                            disabled={(canAttach && !documentTypes.length) || form.isSubmitting}
                                             type="submit"
                                             className=" btn btn-info float-end"
                                         >
                                             {t("SEND")}
+                                            <LoaderIcon isLoading={form.isSubmitting} />
                                         </button>
                                     </div>
                                 </Col>
