@@ -37,10 +37,8 @@ export default function ViewEmployeeDetails({
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
 							obj={{
-								driver_license_number: protectedFields?.license_number
-									? employee.license_number
-									: t("HIDDEN"),
-								expiration_date: new Date(employee.license_expiry),
+								driver_license_number: employee.license_number,
+								expiration_date: employee.license_expiry ? new Date(employee.license_expiry) : null,
 								state_issued: employee.license_state,
 								cdl_class_type: employee.license_type
 									? t(`DriverLicenseType.${employee.license_type}`)
