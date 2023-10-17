@@ -99,6 +99,7 @@ export function AtsJobs() {
                                 label="POSITION"
                                 formik={form}
                                 name="jobId"
+                                placeholder="SELECT_ONE_PLACEHOLDER"
                                 options={companyJobs}
                                 labelKey="title"
                                 valueKey="id"
