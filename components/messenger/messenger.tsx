@@ -114,6 +114,9 @@ export function Messenger(props) {
         const c = await api.list();
 
         setConversations(c);
+
+        /* initialize the socket connection to the server. */
+        socketInitializer(user, conversations, onConversationClick, t, toast)
     }, [user]);
 
     const onCreateClick = (e) => {
@@ -154,20 +157,18 @@ export function Messenger(props) {
     }
 
     const onDeleteConversation = async (e: ConversationEntity) => {
-        console.log("onDeleteConversation", e);
+        const { id } = e;
 
-        // const { id } = e;
+        if (id) {
+            const api = new ConversationApi();
 
-        // if (id) {
-        //     const api = new ConversationApi();
+            await api.remove(id);
 
-        //     await api.remove(id);
+            const c = conversations.filter(v => v?.id != id);
+            setConversations(c);
 
-        //     const c = conversations.filter(v => v?.id != id);
-        //     setConversations(c);
-
-        //     if (conversation?.id == id) setConversation(new ConversationEntity());
-        // }
+            if (conversation?.id == id) setConversation(new ConversationEntity());
+        }
     }
 
     const onConversationCreated = async (c: ConversationEntity) => {
@@ -222,8 +223,6 @@ export function Messenger(props) {
 
 
     const onConversationToChange = (e: CreateConversationDto) => {
-        console.log("onConversationToChange", e);
-
         if (e.chattable_id) {
             const existing = conversations.find(v => v.chattable_id === e.chattable_id && v.chattable_type === e.chattable_type);
 
@@ -235,13 +234,7 @@ export function Messenger(props) {
 
     useEffect(() => lastMessage.current?.scrollIntoView({ behavior: "smooth" }), [lastMessage])
 
-
-
     const canCreate = !!getOptions;
-
-    /* A hook that is used to initialize the socket connection to the server. */
-    useEffectAsync(() => socketInitializer(user, conversations, onConversationClick, t, toast), [user]);
-    console.log("entity form masseger parent", conversation)
 
     return (
         <Row>
