@@ -25,8 +25,8 @@ export function ConversationList(props: ConversationListProps) {
     return (
         <ul className="list-unstyled mb-0 w-100" style={{ overflowY: "auto", height: "50vh" }}>
             {
-                items.map(c => (
-                    <li key={c.id} className="p-2 border-bottom" style={{ backgroundColor: c.id === selected?.id ? "#fff" : "#eee", cursor: "pointer" }} onClick={e => onItemClick(c)}>
+                items?.filter(Boolean)?.map(c => (
+                    <li key={c?.id} className="p-2 border-bottom" style={{ backgroundColor: c?.id === selected?.id ? "#fff" : "#eee", cursor: "pointer" }} onClick={e => onItemClick(c)}>
                         <ConversationListItem entity={c} onDelete={onItemDelete} />
                     </li>
                 ))
