@@ -2116,6 +2116,7 @@
   "ENROLL_IN_AUTO_RECURUITING": "Enroll in Auto Recruiting",
   "AUTO_RECURUITING_REGISTRATION": "Auto Recruiting Registration",
   "AUTO_RECURUITING_REGISTRATION_TEXT_1": "By clicking confirm below, I authorize DriverFly to debit my account in the amount of $100 per driver application forwarded to me through the Auto Recruiting system",
+  "AUTO_RECURUITING_REGISTRATION_TEXT_2": "Are you sure you want to stop receiving candidates through auto recruiting? This may reduce your influx of hires.",
   "WHATS_THIS": "what's this?",
   "TOOLTIP_REFER_BACK": "Please reach out to your admin to have this option enabled/disabled",
   "MATCH_CRITERIA": "Match Criteria",
