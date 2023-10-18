@@ -316,7 +316,7 @@ export default function CompanyPreference() {
 							</h2>
 							<p>
 								{Boolean(preferences?.find((v) => v?.label == CompanyPreferenceAutoRecrutingLabel.ENROLL_IN_AUTO_RECRUITING)?.value)
-									? t("AUTO_RECURUITING_REGISTRATION_TEXT_2F")
+									? t("AUTO_RECURUITING_REGISTRATION_TEXT_2")
 									: t("AUTO_RECURUITING_REGISTRATION_TEXT_1")
 								}
 							</p>
