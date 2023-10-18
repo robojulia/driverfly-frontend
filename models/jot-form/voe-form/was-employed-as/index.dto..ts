@@ -10,7 +10,7 @@ export class WasEmployedAsDto {
     return yup.object({
       position: yup.string().required().nullable(),
       start_date: yup.date().required().nullable(),
-      end_at: yup.date().required()
+      end_date: yup.date().required()
         .test({
           test: (value, context) => {
             const start_date = context.resolve(yup.ref('start_date'));
