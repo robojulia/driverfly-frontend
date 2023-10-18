@@ -31,6 +31,11 @@ export default class CompanyApi extends BaseApi {
         await this.delete(`${this.baseUrl}/${id}`);
     }
 
+    async keywordSearchQuery(params?: string): Promise<Partial<CompanyEntity>[]> {
+        const { data } = await this.get(`${this.baseUrl}/keyword-search-query`, { params });
+        return data;
+    }
+
     me = {
         get: async (): Promise<CompanyEntity> => {
             const { data } = await this.get(this.baseUrl);
