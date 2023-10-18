@@ -1247,6 +1247,7 @@
   "WANT_TO_ADD_TO_THIS_LIST": "Got hires you want to add to this list? Upload xls",
   "SEARCH_KEYWORD": "Job Title or Keywords",
   "KEYWORD_PLACEHOLDER": "e.g. flatbed",
+  "COMPANY_KEYWORD_PLACEHOLDER": "e.g. ATS",
   "SORT_BY": "Sort By",
   "SORT_DEFAULT": "Default",
   "SORT_NEWEST": "Newest",
