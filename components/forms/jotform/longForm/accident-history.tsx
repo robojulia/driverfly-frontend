@@ -53,7 +53,7 @@ export function AccidentHistory() {
 			ACCIDENT_DETAILS: !!apx?.type
 				? apx
 				: new ApplicantExtrasEntity(ApplicantExtras.ACCIDENT_DETAILS),
-			accident_count: applicant.accident_count || null,
+			accident_count: applicant.accident_count || 0,
 		});
 	}, [applicant, applicantExtras]);
 
