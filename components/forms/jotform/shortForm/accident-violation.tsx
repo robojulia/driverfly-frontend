@@ -50,9 +50,9 @@ export function AccidentViolation() {
 		} = applicant;
 		form.setValues({
 			can_pass_drug_test: can_pass_drug_test || null,
-			moving_violations_count: moving_violations_count || null,
+			moving_violations_count: moving_violations_count || 0,
 			authorized_to_work_in_us: authorized_to_work_in_us || null,
-			accident_count: accident_count || null,
+			accident_count: accident_count || 0,
 		});
 	}, []);
 	useEffect(() => {
