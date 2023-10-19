@@ -175,12 +175,12 @@ export default function JobListing() {
                         label: "EDIT",
                         hide: !can.editJob
                     },
-                    {
-                        onClick: e => onDeleteClick(j.id),
-                        icon: TrashFill,
-                        label: "DELETE",
-                        hide: !can.deleteJob
-                    },
+                    // {
+                    //     onClick: e => onDeleteClick(j.id),
+                    //     icon: TrashFill,
+                    //     label: "DELETE",
+                    //     hide: !can.deleteJob
+                    // },
                 ])}
                 items={jobs}
             />

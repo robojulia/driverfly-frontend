@@ -1,24 +1,24 @@
-import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 import { useEffect, useState } from "react";
 import React from "react";
 import { Eye, Plus, Send } from 'react-bootstrap-icons';
+import { Button, Row } from "react-bootstrap";
+import { useFormik } from "formik";
+import { toast } from 'react-toastify'
+import FullLayout from "../../../../../components/dashboard/layouts/layout/full-layout";
 import PageLayout from "../../../../../components/layouts/page/page-layout";
 import { useTranslation } from "../../../../../hooks/use-translation";
 import ViewDataTable, { getDataTableColumnKey } from "../../../../../components/view-details/view-data-table";
 import { useAuth } from "../../../../../hooks/use-auth";
 import { useEffectAsync } from "../../../../../utils/react";
-import { Button, Row } from "react-bootstrap";
 import ViewModal from "../../../../../components/view-details/view-modal";
 import FileInput from "../../../../../components/forms/file-input";
 import BaseSelect from "../../../../../components/forms/base-select";
 import ComplianceApi from "../../../../api/compliance";
 import { DocumentEntity } from "../../../../../models/documents/document.entity";
 import { StoredFileDto } from "../../../../../models/compiance/stored-file.dto";
-import { useFormik } from "formik";
 import { CompanyDocumentType } from "../../../../../enums/compliance/company-document-type.enum";
 import EntityForm from "../../../../../components/layouts/page/entity-form";
 import { globalAjaxExceptionHandler } from "../../../../../utils/ajax";
-import { toast } from 'react-toastify'
 import ShowFormattedDate from "../../../../../components/jobs/show-formatted-date";
 import ShowEnumFromString from "../../../../../components/enum-filters/show-enum-from-string";
 import ApplicantApi from "../../../../api/applicant";
@@ -26,6 +26,7 @@ import { ApplicantEntity } from "../../../../../models/applicant/applicant.entit
 import ViewPdf from "../../../../../components/view-details/view-pdf";
 import DocumentApi from "../../../../api/document";
 import { SendFileDto } from "../../../../../models/compiance/send-file.dto";
+import OverlyPopover from "../../../../../components/popover/overly-popover";
 
 export default function StoredFiles() {
 
@@ -144,18 +145,24 @@ export default function StoredFiles() {
                     {
                         id: "id",
                         name: "ID",
+                        maxWidth: "20%",
+                        minWidth: "20%",
                         selector: file => file.id,
                         hidable: false
                     },
                     {
                         id: "file_name",
                         name: "file_name",
-                        selector: file => file.name,
+                        maxWidth: "25%",
+                        minWidth: "25%",
+                        cell: file => <OverlyPopover str={file.name} slice_at={50} />,
                         hidable: false
                     },
                     {
                         id: "type",
                         name: "type",
+                        maxWidth: "20%",
+                        minWidth: "20%",
                         cell: file =>
                         (<ShowEnumFromString
                             popover
@@ -168,14 +175,34 @@ export default function StoredFiles() {
                     {
                         id: "upload_date",
                         name: "upload_date",
+                        maxWidth: "20%",
+                        minWidth: "20%",
                         selector: file => file.created_at,
                         cell: file => <ShowFormattedDate date={file.created_at} />
                     },
                     {
+                        maxWidth: "15%",
+                        minWidth: "15%",
+                        style: {
+                            "justify-content": "flex-end",
+                            "padding-right": "0px",
+                        },
                         cell: (file) => (
                             <>
-                                <button type="button" className="theme-primary-btn mr-2 px-4 py-2" onClick={() => setDocumentId(file.id)}><Send /></button>
-                                <a onClick={() => viewDocumentClick(file.id, file.name)} href="#" role="button" className="theme-secondary-btn mr-2 px-4 py-2"><Eye /></a>
+                                <button
+                                    type="button"
+                                    className="theme-primary-btn mr-2 px-4 py-2"
+                                    onClick={() => setDocumentId(file.id)}
+                                >
+                                    <Send />
+                                </button>
+                                <button
+                                    type="button"
+                                    className="theme-secondary-btn mr-0 px-4 py-2"
+                                    onClick={() => viewDocumentClick(file.id, file.name)}
+                                >
+                                    <Eye />
+                                </button>
                             </>
 
                         ),

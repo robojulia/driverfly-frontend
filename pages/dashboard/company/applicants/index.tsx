@@ -460,7 +460,7 @@ function ApplicantView(props: ViewProps) {
                         name: "NAME",
                         selector: applicant => getApplicantName(applicant),
                         cell: applicant => (
-                            <Link href={`${router.pathname}/${applicant.id}`}>
+                            <Link href={`${router.pathname}/${applicant.id}/edit`}>
                                 <a>{getApplicantName(applicant)}</a>
                             </Link>
                         ),
@@ -713,16 +713,11 @@ function JobView(props: ViewProps) {
                         name: "NAME",
                         selector: aJob => getApplicantName(aJob.applicant),
                         cell: aJob => (
-                            <Link href={`${router.pathname}/${aJob.applicant.id}`}>
+                            <Link href={`${router.pathname}/${aJob.applicant.id}/edit`}>
                                 <a>{getApplicantName(aJob.applicant)}</a>
                             </Link>
                         ),
                         hidable: false,
-                    },
-                    {
-                        id: "member",
-                        name: "IS_MMEMBER",
-                        selector: aJob => !!!aJob.applicant.user?.id ? t('MMEMBER') : t('NON_MMEMBER'),
                     },
                     {
                         name: "CITY",

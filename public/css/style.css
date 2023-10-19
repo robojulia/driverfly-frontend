@@ -2354,3 +2354,7 @@ button:focus,
 button:active {
     color: #1976d2;
 }
+
+.basic-single {
+    z-index: 99999;
+}

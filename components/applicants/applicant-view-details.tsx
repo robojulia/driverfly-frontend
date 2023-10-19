@@ -51,21 +51,24 @@ export default function ViewApplicantDetail({
 						<ViewDetails
 							default={t("NOT_ANSWERED")}
 							obj={{
-								driver_license_number: protectedFields?.license_number
-									? applicant.license_number
-										? applicant.license_number
-										: t("NOT_ANSWERED")
-									: t("HIDDEN"),
-								expiration_date: protectedFields?.license_number
-									? ((applicant.license_number && applicant.license_expiry)
-										? new Date(applicant.license_expiry)
-										: t("NOT_ANSWERED"))
-									: t("HIDDEN"),
-								state_issued: protectedFields?.license_number
-									? ((applicant.license_number && applicant.license_state)
-										? applicant.license_state
-										: t("NOT_ANSWERED"))
-									: t("HIDDEN"),
+								driver_license_number: applicant.license_number,
+								// driver_license_number: protectedFields?.license_number
+								// 	? applicant.license_number
+								// 		? applicant.license_number
+								// 		: t("NOT_ANSWERED")
+								// 	: t("HIDDEN"),
+								expiration_date: applicant.license_expiry ? new Date(applicant.license_expiry) : null,
+								// expiration_date: protectedFields?.license_number
+								// 	? ((applicant.license_number && applicant.license_expiry)
+								// 		? new Date(applicant.license_expiry)
+								// 		: t("NOT_ANSWERED"))
+								// 	: t("HIDDEN"),
+								state_issued: applicant.license_state,
+								// state_issued: protectedFields?.license_number
+								// 	? ((applicant.license_number && applicant.license_state)
+								// 		? applicant.license_state
+								// 		: t("NOT_ANSWERED"))
+								// 	: t("HIDDEN"),
 								cdl_class_type:
 									applicant.license_type
 										? t(`DriverLicenseType.${applicant.license_type}`)

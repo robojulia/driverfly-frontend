@@ -65,7 +65,7 @@ export default function UserList() {
 				columns={[
 					{
 						id: "id",
-						name: "id",
+						name: "ID",
 						selector: j => j?.id,
 						cell: (j) => <a>{j?.id}</a>,
 						hidable: false

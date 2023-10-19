@@ -230,7 +230,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	useEffectAsync(async () => {
 		const userApi = new UserApi();
 		const data = await userApi.list();
-		setCompanyUsers(data?.filter(u=>u.status==Status.ACTIVE))
+		setCompanyUsers(data?.filter(u => u.status == Status.ACTIVE))
 	}, []);
 
 	const today = new Date();
@@ -270,7 +270,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				<Col className="p-0 px-lg-2 mt-3">
 					<ViewCard title="BASIC_DETAILS">
 						<Row className="mb-2">
-							<Col md="4">
+							<Col md="4" className="px-2">
 								<BaseSelect
 									// className="col-12 my-2"
 									readOnly={!Boolean(isSuperAdmin) || Boolean(entity?.is_hired)}
@@ -282,10 +282,6 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									createLabel={(c) => `${c.name} (#${c.id}) `}
 									formik={form}
 								/>
-							</Col>
-						</Row>
-						<Row>
-							<Col md="4" className="px-2">
 								<BaseInput
 									className="col-12"
 									readOnly={Boolean(entity?.is_hired)}
@@ -375,9 +371,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									name="license_number"
 									placeholder="driver_license_number"
 									formik={form}
-									readOnly={
-										!protectedFields.license_number || Boolean(entity?.is_hired)
-									}
+								// readOnly={
+								// 	!protectedFields.license_number || Boolean(entity?.is_hired)
+								// }
 								/>
 								<BaseInput
 									className="col-12"
