@@ -1,11 +1,8 @@
 .theme-secondary-btn {
     background: #1D4354 !important;
     border-radius: 3px;
-    border: 1px solid #1D4354 !important;
-    border-color: #0062cc00 !important;
     color: #fff !important;
     padding: 12px 40px;
-    /* font-size: 1rem; */
 }
 
 .theme-secondary-btn:hover {
@@ -15,10 +12,8 @@
 .theme-primary-btn {
     background: linear-gradient(to bottom right, #1b4454, #2ec8c4) !important;
     border-radius: 3px;
-    border: none !important;
-    border-color: #2EC8C4;
-    padding: 12px 40px;
     color: #fff !important;
+    padding: 12px 40px;
 }
 
 .hero-search .theme-primary-btn:hover {

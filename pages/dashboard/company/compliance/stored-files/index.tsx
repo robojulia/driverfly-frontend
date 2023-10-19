@@ -155,7 +155,7 @@ export default function StoredFiles() {
                         name: "file_name",
                         maxWidth: "25%",
                         minWidth: "25%",
-                        cell: file => <OverlyPopover str={file.name} slice_at={50}/>,
+                        cell: file => <OverlyPopover str={file.name} slice_at={50} />,
                         hidable: false
                     },
                     {
@@ -183,8 +183,12 @@ export default function StoredFiles() {
                     {
                         maxWidth: "15%",
                         minWidth: "15%",
+                        style: {
+                            "justify-content": "flex-end",
+                            "padding-right": "0px",
+                        },
                         cell: (file) => (
-                            <div className="float-right">
+                            <>
                                 <button
                                     type="button"
                                     className="theme-primary-btn mr-2 px-4 py-2"
@@ -194,12 +198,12 @@ export default function StoredFiles() {
                                 </button>
                                 <button
                                     type="button"
-                                    className="theme-secondary-btn mr-2 px-4 py-2"
+                                    className="theme-secondary-btn mr-0 px-4 py-2"
                                     onClick={() => viewDocumentClick(file.id, file.name)}
                                 >
                                     <Eye />
                                 </button>
-                            </div>
+                            </>
 
                         ),
                     },
