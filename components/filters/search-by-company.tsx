@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Select, { StylesConfig } from "react-select";
 import { useTranslation } from "../../hooks/use-translation";
 import CompanyApi from "../../pages/api/company";
@@ -18,6 +18,11 @@ export default function SearchByCompany(props) {
     const [options, setOptions] = useState<
         { value: number | string; label: string }[]
     >([]);
+
+    const selectInputRef = useRef(null);
+    const onClear = () => {
+        selectInputRef?.current?.clearValue();
+    };
 
     useEffectAsync(
         async () =>
@@ -40,20 +45,27 @@ export default function SearchByCompany(props) {
         },
     };
 
+    useEffect(() => {
+        if (!Boolean(filters?.companyId)) onClear();
+    }, [filters?.companyId]);
+
     return (
         <>
             <label className={labelClassName || "heading-label my-4"}>
                 {label || t("COMPANY_NAME")}{" "}
             </label>
             <Select
+                ref={selectInputRef}
+                name="companyId"
                 styles={csutomStyles}
                 className="basic-single"
                 classNamePrefix="select"
                 isClearable={true}
                 isSearchable={true}
                 options={options}
+                // value={options.find(v => v?.value == filters?.companyId)}
                 defaultValue={filters?.companyId}
-                onChange={(v) => setFiltersByKeyValue("companyId", v?.value)}
+                onChange={(v: any) => setFiltersByKeyValue("companyId", v?.value)}
             />
         </>
     );
