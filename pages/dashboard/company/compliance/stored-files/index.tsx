@@ -194,7 +194,7 @@ export default function StoredFiles() {
                                 </button>
                                 <button
                                     type="button"
-                                    className="theme-secondary-btn mr-2 px-4"
+                                    className="theme-secondary-btn mr-2 px-4 py-2"
                                     onClick={() => viewDocumentClick(file.id, file.name)}
                                 >
                                     <Eye />
