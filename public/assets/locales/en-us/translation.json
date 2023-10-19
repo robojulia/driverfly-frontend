@@ -747,6 +747,7 @@
   "USER_INVALID": "User account invalid",
   "USER_INACTIVE": "User account inactive",
   "EMAIL_ALREADY_EXISTS": "Email already exists",
+  "NUMBER_ALREADY_EXISTS": "Number already exists",
   "COMPANY_NAME_ALREADY_EXISTS": "Company name already exists",
   "CREATE_NEW_ACCOUNT": "Create New Account",
   "SIGN_UP": "Sign Up",
