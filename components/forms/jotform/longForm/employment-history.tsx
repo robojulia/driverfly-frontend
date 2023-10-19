@@ -146,6 +146,7 @@ export function EmploymentHistory() {
 							<BaseInput
 								className="col-md-6 my-3"
 								name="employer.manager_name"
+								required
 								label="MANAGER_OR_REPRESENTATIVE"
 								formik={form}
 							/>
