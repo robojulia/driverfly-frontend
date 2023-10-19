@@ -39,7 +39,7 @@ export default function FilterResults() {
 				</div>
 				<form>
 					<Search state={state} method={method} />
-					{/* < SearchByCompany state={state} method={method} /> */}
+					< SearchByCompany state={state} method={method} />
 					<div className="bs-example">
 						<div className="tab-content">
 							<div className="accordion bg-transparent" id="accordionExample">
