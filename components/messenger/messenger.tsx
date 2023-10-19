@@ -223,6 +223,7 @@ export function Messenger(props) {
 
 
     const onConversationToChange = (e: CreateConversationDto) => {
+        setApplicant(new ApplicantEntity())
         if (e.chattable_id) {
             const existing = conversations.find(v => v.chattable_id === e.chattable_id && v.chattable_type === e.chattable_type);
 

@@ -11,7 +11,7 @@ export class CurrentEmploymentHistoryDto extends ApplicantEmployerEntity {
 	static derivedYupSchema() {
 		return yup.object({
 			name: yup.string().required().trim().nullable(),
-			manager_name: yup.string().optional().trim().nullable(),
+			manager_name: yup.string().required().trim().nullable(),
 			phone: yup.string().optional().nullable(),
 			city: yup.string().required().nullable()
 				.matches(/^[aA-zZ\s]+$/, "Only character are allowed for this field "),
