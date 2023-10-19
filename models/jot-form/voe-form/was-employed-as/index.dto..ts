@@ -10,7 +10,7 @@ export class WasEmployedAsDto {
     return yup.object({
       position: yup.string().required().nullable(),
       start_date: yup.date().required().nullable(),
-      end_date: yup.date().required().nullable(),
+      end_date: yup.date().nullable(),
     });
   }
 }
