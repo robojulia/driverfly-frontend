@@ -128,7 +128,7 @@ export function PhoneNumber() {
             <ToastContainer />
             <ViewModal
                 show={openModal}
-                title="EMAIL_ALREADY_EXISTS"
+                title="NUMBER_ALREADY_EXISTS"
                 size="lg"
                 onCloseClick={onCloseClick}
                 footer={
