@@ -4,6 +4,7 @@ import { useToken } from "../../hooks/use-auth";
 import { UserContext } from "../../context/user-context";
 import { UserGuard } from "./user-guard";
 import { TranslationProvider } from "./translation-provider";
+import { ManyChatScript } from "../scripts/manychat/manychat";
 
 export interface AuthProviderProps {
     Component: React.ElementType;
@@ -14,11 +15,11 @@ export function AuthProvider(props: AuthProviderProps) {
     const { Component, pageProps } = props;
     const { getUser } = useToken();
 
-    const [ userContext, setUserContext ] = useState({
+    const [userContext, setUserContext] = useState({
         user: getUser(),
         setUser: updateUserContext
-      });
-    
+    });
+
     function updateUserContext(u) {
         setUserContext({ user: u, setUser: updateUserContext })
     }
@@ -29,7 +30,10 @@ export function AuthProvider(props: AuthProviderProps) {
         <UserContext.Provider value={userContext}>
             <TranslationProvider>
                 <UserGuard permissions={getPermissions}>
-                    {getLayout(<Component {...pageProps} />)}
+                    <>
+                        {/* {!Boolean(userContext?.user?.id) && <ManyChatScript />} */}
+                        {getLayout(<Component {...pageProps} />)}
+                    </>
                 </UserGuard>
             </TranslationProvider>
         </UserContext.Provider>
