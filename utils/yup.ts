@@ -36,6 +36,7 @@ function unique(thisObj, list, field, options, message) {
 
     for (let i = 0; i < list.length; i++) {
       let value;
+      console.log(list,"#############################################################################")
       if (mapper) value = mapper(list[i]);
       else if (field) value = yup.ref(field).getter(list[i]);
       else value = list[i];
