@@ -12,7 +12,6 @@ import BaseSelect from "../../base-select";
 import BaseTextArea from "../../base-text-area";
 import { ApplicantVoeFormEnum } from "../../../../enums/applicants/applicant-voe-form.enum";
 import { ApplicantVoeFormEntity } from "../../../../models/applicant/applicant-voe-form.entity";
-import { PastEmploymentHistoryDto } from "../../../../models/jot-form/long-form/past-employment-history/index.dto";
 
 
 export function AccidentHistory() {
