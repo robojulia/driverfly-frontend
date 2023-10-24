@@ -112,13 +112,26 @@ export class ApplicantEntity {
 			city: yup.string().nullable(),
 			state: yup.string().nullable(),
 			zip_code: yup.string().nullable(),
-			license_number: yup.string().required().nullable(),
-			license_expiry: yup.date().typeError("INVALID_DATE").min(
-				moment().endOf("day").add(0.5, "years"),
-				"LICENSE_MUST_BE_VALID_FOR_6_MONTHS"
-			).required().nullable(),
-			license_state: yup.string().nullable().required(),
-			license_type: (yup.string() as any).enum(DriverLicenseType).nullable().required(),
+			license_number: yup.string().nullable(),
+			license_expiry: yup.date().typeError("INVALID_DATE")
+			.test({
+				test : (value, context) => {
+					if(!Boolean(value)) return true;
+					else {
+						return yup.date()
+						.min(
+							moment().endOf("day").add(6, "months")
+						)
+						.isValidSync(value) || context.createError({
+							path: context.path,
+							message: "LICENSE_MUST_BE_VALID_FOR_6_MONTHS"
+						});
+					}
+				}
+			})
+			.nullable(),
+			license_state: yup.string().nullable(),
+			license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
 			years_cdl_experience: yup.number().min(0).nullable(),
 			preferred_location: yup
 				.array((yup.string() as any).enum(JobGeography))
