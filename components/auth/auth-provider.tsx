@@ -31,7 +31,7 @@ export function AuthProvider(props: AuthProviderProps) {
             <TranslationProvider>
                 <UserGuard permissions={getPermissions}>
                     <>
-                        {!Boolean(userContext?.user?.id) && <ManyChatScript />}
+                        {/* {!Boolean(userContext?.user?.id) && <ManyChatScript />} */}
                         {getLayout(<Component {...pageProps} />)}
                     </>
                 </UserGuard>
