@@ -13,6 +13,7 @@ import BaseTextArea from "../../base-text-area";
 import { ApplicantVoeFormEnum } from "../../../../enums/applicants/applicant-voe-form.enum";
 import { ApplicantVoeFormEntity } from "../../../../models/applicant/applicant-voe-form.entity";
 
+
 export function AccidentHistory() {
 	const {
 		state: { applicantVoe, applicant },
@@ -129,6 +130,7 @@ export function AccidentHistory() {
 						type="date"
 						formik={form}
 						placeholder="MM/YY"
+						max={(new Date()).toISOString().split("T")[0]}
 					/>
 				</div>
 				<div className={`${styles.align__text_left} ${styles.bold}`}>
@@ -139,6 +141,7 @@ export function AccidentHistory() {
 						label="END_DATE"
 						formik={form}
 						placeholder="MM/YY"
+						max={(new Date()).toISOString().split("T")[0]}
 					/>
 				</div>
 			</Row>
