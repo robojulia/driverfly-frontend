@@ -336,7 +336,7 @@ export default function CompanyPreference() {
 					label="DIGITAL_HIRING_APP_URL"
 					className="my-2 border p-3 rounded"
 					value={`${process.env.FRONTEND_BASE_URL ?? ""}form/digitalhiringapp/${user?.company?.id
-						}?source=indeed`}
+						}?`}
 					tooltipText={t("CLICK_TO_COPY")}
 				/>
 				<p className="pt-2 pb-2">{t("DHA_URL_TIP_TEXT")}</p>
