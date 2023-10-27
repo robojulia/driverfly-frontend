@@ -69,13 +69,13 @@ export function Messenger(props) {
         if (message?.conversation?.id == conversation?.id) {
             const updatedConversation: ConversationEntity = {
                 ...conversation,
-                messages: [...conversation?.messages, message]?.sort(
-                    (a, b) => a?.id - b?.id
-                ),
+                messages: (([...conversation?.messages, message])?.sort(
+                    (a, b) => (b?.id - a?.id)
+                )),
                 lastMessage:
-                    conversation?.lastMessage?.id < message?.id
-                        ? message
-                        : conversation?.lastMessage,
+                    conversation?.lastMessage?.id > message?.id
+                        ? conversation?.lastMessage
+                        : message,
             };
             setConversation(updatedConversation);
         } else {
