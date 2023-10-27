@@ -89,6 +89,8 @@ const socketInitializer = async (
     socket.on(
         `reply-to-user-${user?.id}`,
         async (message: ConversationMessageEntity): Promise<void> => {
+            console.log(`reply-to-user-${user?.id}`);
+
             const c = conversations?.find((v) => v.id == message?.conversation?.id);
             if (Boolean(c)) {
                 toast(
@@ -108,6 +110,8 @@ const socketInitializer = async (
     socket.on(
         `outbound-sms-status-for-user-${user?.id}`,
         async (message: ConversationMessageEntity): Promise<void> => {
+            console.log(`outbound-sms-status-for-user-${user?.id}`, message);
+
             const newConversations = conversations?.map((c) => {
                 if (c?.id == message?.conversation?.id)
                     return {
