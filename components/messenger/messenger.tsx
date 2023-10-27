@@ -95,9 +95,9 @@ export function Messenger(props) {
         if (message?.conversation?.id == conversation.id) {
             console.log("testing message?.conversation?.id == conversation.id", message?.conversation?.id == conversation.id);
 
-            const updatedConversation = {
+            const updatedConversation: ConversationEntity = {
                 ...conversation,
-                message: conversation?.messages?.map(m => {
+                messages: conversation?.messages?.map(m => {
                     console.log("m.id == message.id", m.id == message.id, m.id, message.id);
                     return (m.id == message.id ? message : m)
                 }),
