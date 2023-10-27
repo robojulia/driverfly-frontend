@@ -7,9 +7,7 @@ import { ChattableType } from "../../enums/conversation/chattable-type.enum";
 import { UserPreferenceCategory } from "../../enums/users/user-preference-category.enum";
 import { UserPreferenceCommunicationLabel } from "../../enums/users/user-preferences-communication-label.enum";
 import { useAuth } from "../../hooks/use-auth";
-import {
-    useTranslation,
-} from "../../hooks/use-translation";
+import { useTranslation } from "../../hooks/use-translation";
 import {
     ConversationEntity,
     CreateConversationDto,
@@ -50,7 +48,7 @@ export function Messenger(props) {
         event: SocketEventType;
         message: ConversationMessageEntity;
     }>(null);
-    const resetSocketData = () => setSocketData(null)
+    const resetSocketData = () => setSocketData(null);
 
     const [conversations, setConversations] = useState<ConversationEntity[]>([]);
     const [userPreferences, setUserPreferences] = useState<
@@ -65,76 +63,72 @@ export function Messenger(props) {
         new ApplicantEntity()
     );
 
-    async function handleInboundMessage(message: ConversationMessageEntity): Promise<void> {
-        console.log(`reply-to-user-${user?.id}`, message);
-
-        console.log("conversations", conversations);
-        toast(
-            t(
-                "NEW_MESSAGE_{from}",
-                { from: message?.conversation?.chattable_name ?? "APPLICANT" },
-                { translateProps: true }
-            )
-        );
-        // const newConversations = conversations?.map((c) => {
-        //     if (c?.id == message?.conversation?.id)
-        //         return {
-        //             ...c,
-        //             messages: ([...c.messages, message]).sort((a, b) => a?.id - b?.id),
-        //         };
-        //     return c;
-        // });
-        // console.log("newConversations", newConversations);
-
-        // setConversations(newConversations);
-    }
-
-    function updateConversationsForOutboundMessageStatus(message: ConversationMessageEntity) {
-        console.log("testing conversation message", message);
-        console.log("testing active conversation", conversation);
-        if (message?.conversation?.id == conversation.id) {
-            console.log("testing message?.conversation?.id == conversation.id", message?.conversation?.id == conversation.id);
-
+    function updateConversationsForInboundMessage(
+        message: ConversationMessageEntity
+    ): void {
+        if (message?.conversation?.id == conversation?.id) {
             const updatedConversation: ConversationEntity = {
                 ...conversation,
-                messages: conversation?.messages?.map(m => {
-                    console.log("m.id == message.id", m.id == message.id, m.id, message.id);
-                    return (m.id == message.id ? message : m)
-                }),
-                lastMessage: (conversation?.lastMessage?.id == message?.id ? message : conversation?.lastMessage)
-            }
-            console.log("testing updatedConversation", updatedConversation);
-
-            setConversation(updatedConversation)
+                messages: [...conversation?.messages, message]?.sort(
+                    (a, b) => a?.id - b?.id
+                ),
+                lastMessage:
+                    conversation?.lastMessage?.id < message?.id
+                        ? message
+                        : conversation?.lastMessage,
+            };
+            setConversation(updatedConversation);
+        } else {
+            toast(
+                t(
+                    "NEW_MESSAGE_{from}",
+                    { from: message?.conversation?.chattable_name ?? "APPLICANT" },
+                    { translateProps: true }
+                )
+            );
         }
-        // const newConversations = conversations?.map((c) => {
-        //     if (c?.id == message?.conversation?.id)
-        //         return {
-        //             ...c,
-        //             messages: c.messages.map((m) => (m.id == message.id ? message : m)),
-        //         };
-        //     return c;
-        // });
-        // console.log("newConversations", newConversations);
-
-        // setConversations(newConversations);
-        resetSocketData()
+        resetSocketData();
     }
 
-    async function handleOutboundMessageStatus(message: ConversationMessageEntity): Promise<void> {
-        console.log(`outbound-sms-status-for-user-${user?.id}`, message);
-        setSocketData({ event: SocketEventType.INBOUND_MESSAGE, message })
-        // updateConversationsForOutboundMessageStatus(message)
+    function updateConversationsForOutboundMessageStatus(
+        message: ConversationMessageEntity
+    ): void {
+        if (message?.conversation?.id == conversation.id) {
+            const updatedConversation: ConversationEntity = {
+                ...conversation,
+                messages: conversation?.messages?.map((m) =>
+                    m.id == message.id ? message : m
+                ),
+                lastMessage:
+                    conversation?.lastMessage?.id == message?.id
+                        ? message
+                        : conversation?.lastMessage,
+            };
+            setConversation(updatedConversation);
+        }
+        resetSocketData();
+    }
+
+    function handleInboundMessage(message: ConversationMessageEntity): void {
+        setSocketData({ event: SocketEventType.INBOUND_MESSAGE, message });
+    }
+
+    function handleOutboundMessageStatus(
+        message: ConversationMessageEntity
+    ): void {
+        setSocketData({ event: SocketEventType.INBOUND_MESSAGE, message });
     }
 
     useEffect(() => {
         if (socketData?.event)
             ({
-                // [SocketEventType.INBOUND_MESSAGE]:,
+                [SocketEventType.INBOUND_MESSAGE]: updateConversationsForInboundMessage(
+                    socketData?.message
+                ),
                 [SocketEventType.OUTBOUND_MESSAGE_STATUS]:
                     updateConversationsForOutboundMessageStatus(socketData?.message),
             })[socketData?.event];
-    }, [socketData])
+    }, [socketData]);
 
     async function fetchConversations() {
         const api = new ConversationApi();
@@ -143,12 +137,12 @@ export function Messenger(props) {
     }
 
     useEffectAsync(async () => {
-        await fetchConversations()
+        await fetchConversations();
         /* initialize the socket connection to the server. */
         messengerSocketInitializer(
             user,
             handleInboundMessage,
-            handleOutboundMessageStatus,
+            handleOutboundMessageStatus
         );
     }, [user]);
 
@@ -161,7 +155,7 @@ export function Messenger(props) {
         const applicantApi = new ApplicantApi();
 
         /* Resetting the user preferences to null, and then if the chattable type is a user, it is setting the
-                user preferences to the preferences of the user. */
+                                user preferences to the preferences of the user. */
         setUserPreferences(null);
         let applicantProfile: ApplicantEntity;
         if (c.chattable_type == ChattableType.USER) {
