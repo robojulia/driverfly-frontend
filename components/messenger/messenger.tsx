@@ -114,7 +114,7 @@ export function Messenger(props) {
     }
 
     useEffect(() => {
-        if (socketData.event)
+        if (socketData?.event)
             ({
                 // [SocketEventType.INBOUND_MESSAGE]:,
                 [SocketEventType.OUTBOUND_MESSAGE_STATUS]:
