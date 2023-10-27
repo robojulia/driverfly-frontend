@@ -65,34 +65,34 @@ export function Messenger(props) {
                 { translateProps: true }
             )
         );
-        const newConversations = conversations?.map((c) => {
-            if (c?.id == message?.conversation?.id)
-                return {
-                    ...c,
-                    messages: ([...c.messages, message]).sort((a, b) => a?.id - b?.id),
-                };
-            return c;
-        });
-        console.log("newConversations", newConversations);
+        // const newConversations = conversations?.map((c) => {
+        //     if (c?.id == message?.conversation?.id)
+        //         return {
+        //             ...c,
+        //             messages: ([...c.messages, message]).sort((a, b) => a?.id - b?.id),
+        //         };
+        //     return c;
+        // });
+        // console.log("newConversations", newConversations);
 
-        setConversations(newConversations);
+        // setConversations(newConversations);
     }
 
     function updateConversationsForOutboundMessageStatus(message: ConversationMessageEntity) {
         console.log("conversation message", message);
         console.log("conversation", conversation);
         console.log("conversations", conversations);
-        const newConversations = conversations?.map((c) => {
-            if (c?.id == message?.conversation?.id)
-                return {
-                    ...c,
-                    messages: c.messages.map((m) => (m.id == message.id ? message : m)),
-                };
-            return c;
-        });
-        console.log("newConversations", newConversations);
+        // const newConversations = conversations?.map((c) => {
+        //     if (c?.id == message?.conversation?.id)
+        //         return {
+        //             ...c,
+        //             messages: c.messages.map((m) => (m.id == message.id ? message : m)),
+        //         };
+        //     return c;
+        // });
+        // console.log("newConversations", newConversations);
 
-        setConversations(newConversations);
+        // setConversations(newConversations);
     }
 
     async function handleOutboundMessageStatus(message: ConversationMessageEntity): Promise<void> {
