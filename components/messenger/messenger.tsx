@@ -93,6 +93,10 @@ export function Messenger(props) {
         console.log("conversation message", message);
         console.log("conversation", conversation);
         console.log("conversations", conversations);
+        if (message?.conversation?.id == conversation.id) {
+            const updatedConversation = { ...conversation, message: conversation?.messages?.map(m => (m.id == message ? message : m)) }
+            setConversation(updatedConversation)
+        }
         // const newConversations = conversations?.map((c) => {
         //     if (c?.id == message?.conversation?.id)
         //         return {
