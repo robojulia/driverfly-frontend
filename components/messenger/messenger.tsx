@@ -54,8 +54,10 @@ export function Messenger(props) {
         new ApplicantEntity()
     );
 
-    const handleInboundMessage = async (message: ConversationMessageEntity): Promise<void> => {
+    async function handleInboundMessage(message: ConversationMessageEntity): Promise<void> {
         console.log(`reply-to-user-${user?.id}`, message);
+
+        console.log("conversations", conversations);
         toast(
             t(
                 "NEW_MESSAGE_{from}",
@@ -76,9 +78,7 @@ export function Messenger(props) {
         setConversations(newConversations);
     }
 
-    const handleOutboundMessageStatus = async (message: ConversationMessageEntity): Promise<void> => {
-        console.log(`outbound-sms-status-for-user-${user?.id}`, message);
-
+    function updateConversationsForOutboundMessageStatus(message: ConversationMessageEntity) {
         console.log("conversations", conversations);
         const newConversations = conversations?.map((c) => {
             if (c?.id == message?.conversation?.id)
@@ -91,6 +91,11 @@ export function Messenger(props) {
         console.log("newConversations", newConversations);
 
         setConversations(newConversations);
+    }
+
+    async function handleOutboundMessageStatus(message: ConversationMessageEntity): Promise<void> {
+        console.log(`outbound-sms-status-for-user-${user?.id}`, message);
+        updateConversationsForOutboundMessageStatus(message)
     }
 
 
