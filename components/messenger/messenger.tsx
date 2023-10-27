@@ -112,6 +112,7 @@ const socketInitializer = async (
         async (message: ConversationMessageEntity): Promise<void> => {
             console.log(`outbound-sms-status-for-user-${user?.id}`, message);
 
+            console.log("conversations", conversations);
             const newConversations = conversations?.map((c) => {
                 if (c?.id == message?.conversation?.id)
                     return {
@@ -120,6 +121,8 @@ const socketInitializer = async (
                     };
                 return c;
             });
+            console.log("newConversations", newConversations);
+
             setConversations(newConversations);
         }
     );
