@@ -41,6 +41,17 @@ export function Messenger(props) {
 
     const { user } = useAuth();
 
+    enum SocketEventType {
+        INBOUND_MESSAGE = "inbound-message",
+        OUTBOUND_MESSAGE_STATUS = "outbound-message-status",
+    }
+
+    const [socketData, setSocketData] = useState<{
+        event: SocketEventType;
+        message: ConversationMessageEntity;
+    }>(null);
+    const resetSocketData = () => setSocketData(null)
+
     const [conversations, setConversations] = useState<ConversationEntity[]>([]);
     const [userPreferences, setUserPreferences] = useState<
         UserPreferenceEntity[]
@@ -93,12 +104,21 @@ export function Messenger(props) {
         // console.log("newConversations", newConversations);
 
         // setConversations(newConversations);
+        resetSocketData()
     }
 
     async function handleOutboundMessageStatus(message: ConversationMessageEntity): Promise<void> {
         console.log(`outbound-sms-status-for-user-${user?.id}`, message);
-        updateConversationsForOutboundMessageStatus(message)
+        setSocketData({ event: SocketEventType.INBOUND_MESSAGE, message })
+        // updateConversationsForOutboundMessageStatus(message)
     }
+
+    useEffect(() => {
+        ({
+            // [SocketEventType.INBOUND_MESSAGE]:,
+            [SocketEventType.OUTBOUND_MESSAGE_STATUS]: updateConversationsForOutboundMessageStatus(socketData.message),
+        }[socketData.event])
+    }, [socketData])
 
     async function fetchConversations() {
         const api = new ConversationApi();
