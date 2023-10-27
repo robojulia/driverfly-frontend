@@ -79,6 +79,8 @@ export function Messenger(props) {
     }
 
     function updateConversationsForOutboundMessageStatus(message: ConversationMessageEntity) {
+        console.log("conversation message", message);
+        console.log("conversation", conversation);
         console.log("conversations", conversations);
         const newConversations = conversations?.map((c) => {
             if (c?.id == message?.conversation?.id)
@@ -98,13 +100,14 @@ export function Messenger(props) {
         updateConversationsForOutboundMessageStatus(message)
     }
 
-
-    useEffectAsync(async () => {
+    async function fetchConversations() {
         const api = new ConversationApi();
         const c = await api.list();
-
         setConversations(c);
+    }
 
+    useEffectAsync(async () => {
+        await fetchConversations()
         /* initialize the socket connection to the server. */
         messengerSocketInitializer(
             user,
