@@ -90,10 +90,10 @@ export function Messenger(props) {
     }
 
     function updateConversationsForOutboundMessageStatus(message: ConversationMessageEntity) {
-        console.log("conversation message", message);
-        console.log("active conversation", conversation);
+        console.log("testing conversation message", message);
+        console.log("testing active conversation", conversation);
         if (message?.conversation?.id == conversation.id) {
-            console.log("message?.conversation?.id == conversation.id", message?.conversation?.id == conversation.id);
+            console.log("testing message?.conversation?.id == conversation.id", message?.conversation?.id == conversation.id);
 
             const updatedConversation = {
                 ...conversation,
@@ -102,6 +102,8 @@ export function Messenger(props) {
                     return (m.id == message.id ? message : m)
                 })
             }
+            console.log("testing updatedConversation", updatedConversation);
+
             setConversation(updatedConversation)
         }
         // const newConversations = conversations?.map((c) => {
