@@ -31,10 +31,9 @@ export default function QuickLinks() {
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link href="/blog">
+                        <Link href="https://blog.driverfly.co/">
                             <a className="nav-link" target="_blank">{t("THE_DRIVERFLY_ON_THE_WALL_BLOG")}</a>
                         </Link>
-
                     </li>
                     <li className="nav-item">
                         <Link href="/contact">

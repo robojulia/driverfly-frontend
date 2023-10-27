@@ -290,11 +290,10 @@ export default function EmployeeDirectory() {
                     <Col>
                         {viewMode == ViewModeType.EMPLOYEE
                             && (<p className="mt-2 mb-2">
-                                {t("WANT_TO_ADD_TO_THIS_LIST")}
                                 <u className="ml-1">
-                                    <Link href="/dashboard/company/compliance/employee-directory/import">
-                                        <a className="here_link">{t("HERE")}</a>
-                                    </Link>
+                                    <Button variant="" className="theme-general-btn" onClick={() => router.push("/dashboard/company/compliance/employee-directory/import")}>
+                                        + {t("IMPORT_EMPLOYEES")}
+                                    </Button>
                                 </u>
                             </p>)
                         }
