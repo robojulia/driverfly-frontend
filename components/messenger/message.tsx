@@ -18,23 +18,23 @@ export function Message(props: MessageProps) {
     const { conversation, message, showHeader, lastMessageRef } = props;
 
     return (
-    <li ref={lastMessageRef} className="d-flex justify-content-between p-0">
-        <Card className="w-100 m-0">
-            {showHeader &&
-                <Card.Header className={`d-flex justify-content-${message.direction === MessageDirection.OUT ? "end" : "start"} p-3`}>
-                    <p className="fw-bold mb-0">{message.direction === MessageDirection.OUT ? conversation.user.name : conversation.chattable_name}</p>
-                </Card.Header>
-            }
-            <Card.Body className="pb-0 pt-1">
-                <Row className={`justify-content-${message.direction === MessageDirection.OUT ? "end" : "start"}`}>
-                    <Col sm="8" md="7" lg="6" className="rounded p-2" style={{backgroundColor: message.direction === MessageDirection.OUT ? "#cdf3f2" : "#e9fafa"}}>
-                        {message.text}
-                        <p className="text-muted small mb-0"><Clock /> <When date={message.created_at} /></p>
-                    </Col>
-                </Row>
-            </Card.Body>
-        </Card>
-    </li>
+        <li ref={lastMessageRef} className="d-flex justify-content-between p-0">
+            <Card className="w-100 m-0">
+                {showHeader &&
+                    <Card.Header className={`d-flex justify-content-${message.direction === MessageDirection.OUT ? "end" : "start"} p-3`}>
+                        <p className="fw-bold mb-0">{message.direction === MessageDirection.OUT ? conversation.user.name : conversation.chattable_name}</p>
+                    </Card.Header>
+                }
+                <Card.Body className="pb-0 pt-1">
+                    <Row className={`justify-content-${message.direction === MessageDirection.OUT ? "end" : "start"}`}>
+                        <Col sm="8" md="7" lg="6" className="rounded p-2" style={{ backgroundColor: message.direction === MessageDirection.OUT ? "#cdf3f2" : "#e9fafa" }}>
+                            {message.text}
+                            <p className="text-muted small mb-0"><Clock /> <When date={message.created_at} /> {message.status && <> -- {message.status}</>}</p>
+                        </Col>
+                    </Row>
+                </Card.Body>
+            </Card>
+        </li>
     );
 
 }
