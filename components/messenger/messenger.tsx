@@ -4,7 +4,7 @@ import { CancelTokenSource } from "axios";
 import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Navbar, Row } from "react-bootstrap";
 import { Plus } from "react-bootstrap-icons";
-import { toast, toast, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { ChattableType } from "../../enums/conversation/chattable-type.enum";
 import { UserPreferenceCategory } from "../../enums/users/user-preference-category.enum";
 import { UserPreferenceCommunicationLabel } from "../../enums/users/user-preferences-communication-label.enum";
