@@ -114,10 +114,12 @@ export function Messenger(props) {
     }
 
     useEffect(() => {
-        ({
-            // [SocketEventType.INBOUND_MESSAGE]:,
-            [SocketEventType.OUTBOUND_MESSAGE_STATUS]: updateConversationsForOutboundMessageStatus(socketData.message),
-        }[socketData.event])
+        if (socketData.event)
+            ({
+                // [SocketEventType.INBOUND_MESSAGE]:,
+                [SocketEventType.OUTBOUND_MESSAGE_STATUS]:
+                    updateConversationsForOutboundMessageStatus(socketData?.message),
+            })[socketData?.event];
     }, [socketData])
 
     async function fetchConversations() {
