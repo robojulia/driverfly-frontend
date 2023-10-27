@@ -1,6 +1,6 @@
 import { CancelTokenSource } from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Navbar, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Navbar, Row } from "react-bootstrap";
 import { Plus } from "react-bootstrap-icons";
 import { toast } from "react-toastify";
 import { ChattableType } from "../../enums/conversation/chattable-type.enum";
@@ -24,6 +24,7 @@ import ApplicantApi from "../../pages/api/applicant";
 import { ApplicantDocumentType } from "../../enums/applicants/applicant-document-type.enum";
 import { messengerSocketInitializer } from "./socketInitializer";
 import { ConversationMessageEntity } from "../../models/conversation/conversation-message.entity";
+import { CardBody } from "reactstrap";
 
 export interface MessengerProps {
     getOptions?: (
@@ -88,7 +89,9 @@ export function Messenger(props) {
         } else {
             const updatedConversations = conversations
                 ?.map((c) =>
-                    c.id == message?.conversation?.id ? { ...c, ...message?.conversation, lastMessage: message } : c
+                    c.id == message?.conversation?.id
+                        ? { ...c, ...message?.conversation, lastMessage: message }
+                        : c
                 )
                 ?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id);
             setConversations(updatedConversations);
@@ -175,7 +178,7 @@ export function Messenger(props) {
         const applicantApi = new ApplicantApi();
 
         /* Resetting the user preferences to null, and then if the chattable type is a user, it is setting the
-                                                user preferences to the preferences of the user. */
+                                                    user preferences to the preferences of the user. */
         setUserPreferences(null);
         let applicantProfile: ApplicantEntity;
         if (c.chattable_type == ChattableType.USER) {
@@ -284,40 +287,30 @@ export function Messenger(props) {
     const canCreate = !!getOptions;
 
     return (
-        <Row>
-            <Col md="6" lg="5" xl="4" className="messages_container">
-                <Card>
-                    <Card.Body className="p-2">
-                        <Navbar expand="lg">
-                            <Navbar.Toggle
-                                aria-controls="convo-navbar-nav "
-                                className="w-100"
-                            >
-                                {conversation && <ConversationListItem entity={conversation} />}
-                            </Navbar.Toggle>
-                            <Navbar.Collapse id="convo-navbar-nav">
-                                <ConversationList
-                                    items={conversations}
-                                    selected={conversation}
-                                    onItemClick={onConversationClick}
-                                    onItemDelete={onDeleteConversation}
-                                />
-                            </Navbar.Collapse>
-                        </Navbar>
-                        {canCreate && (
-                            <Button
-                                className="w-100 mt-1"
-                                variant="primary"
-                                onClick={onCreateClick}
-                            >
-                                <Plus /> {t("CREATE_NEW_MESSAGE")}
-                            </Button>
-                        )}
-                    </Card.Body>
-                </Card>
-            </Col>
-            <Col md="6" lg="7" xl="8">
-                <Card>
+        <section className="p-2" style={{ backgroundColor: "#eee" }}>
+            <Row>
+                <Col md="6" lg="5" xl="4" className="mb-4 mb-md-0">
+                    <Card>
+                        <Card.Body >
+                            {canCreate && (
+                                <Button
+                                    className="w-100 mt-0 mb-2"
+                                    variant="primary"
+                                    onClick={onCreateClick}
+                                >
+                                    <Plus /> {t("CREATE_NEW_MESSAGE")}
+                                </Button>
+                            )}
+                            <ConversationList
+                                items={conversations}
+                                selected={conversation}
+                                onItemClick={onConversationClick}
+                                onItemDelete={onDeleteConversation}
+                            />
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col md="6" lg="7" xl="8">
                     <ConversationForm
                         applicant={applicant}
                         entity={conversation}
@@ -328,8 +321,8 @@ export function Messenger(props) {
                         onConversationToChange={onConversationToChange}
                         getOptions={getOptions}
                     />
-                </Card>
-            </Col>
-        </Row>
+                </Col>
+            </Row>
+        </section>
     );
 }
