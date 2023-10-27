@@ -63,12 +63,13 @@ export function Messenger(props) {
         new ApplicantEntity()
     );
 
-    function updateConversationsForInboundMessage(
+    async function updateConversationsForInboundMessage(
         message: ConversationMessageEntity
-    ): void {
+    ): Promise<void> {
         if (message?.conversation?.id == conversation?.id) {
-            let messages: ConversationMessageEntity[] = conversation.messages ?? [];
-            messages.push(message);
+            let messages: ConversationMessageEntity[] =
+                conversation?.messages?.filter((m) => m?.id != message?.id) ?? [];
+            messages?.push(message);
             messages = messages?.sort((a, b) => a?.id - b?.id);
             const lastMessage: ConversationMessageEntity =
                 conversation?.lastMessage?.id > message?.id
@@ -85,6 +86,12 @@ export function Messenger(props) {
                 ?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id);
             setConversations(updatedConversations);
         } else {
+            const updatedConversations = conversations
+                ?.map((c) =>
+                    c.id == message?.conversation?.id ? message?.conversation : c
+                )
+                ?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id);
+            setConversations(updatedConversations);
             toast(
                 t(
                     "NEW_MESSAGE_{from}",
@@ -102,9 +109,9 @@ export function Messenger(props) {
         resetSocketData();
     }
 
-    function updateConversationsForOutboundMessageStatus(
+    async function updateConversationsForOutboundMessageStatus(
         message: ConversationMessageEntity
-    ): void {
+    ): Promise<void> {
         if (message?.conversation?.id == conversation.id) {
             const updatedConversation: ConversationEntity = {
                 ...conversation,
@@ -131,14 +138,15 @@ export function Messenger(props) {
         setSocketData({ event: SocketEventType.INBOUND_MESSAGE, message });
     }
 
-    useEffect(() => {
+    useEffectAsync(async () => {
         if (socketData?.event)
             ({
-                [SocketEventType.INBOUND_MESSAGE]: updateConversationsForInboundMessage(
-                    socketData?.message
-                ),
+                [SocketEventType.INBOUND_MESSAGE]:
+                    await updateConversationsForInboundMessage(socketData?.message),
                 [SocketEventType.OUTBOUND_MESSAGE_STATUS]:
-                    updateConversationsForOutboundMessageStatus(socketData?.message),
+                    await updateConversationsForOutboundMessageStatus(
+                        socketData?.message
+                    ),
             })[socketData?.event];
     }, [socketData]);
 
@@ -167,7 +175,7 @@ export function Messenger(props) {
         const applicantApi = new ApplicantApi();
 
         /* Resetting the user preferences to null, and then if the chattable type is a user, it is setting the
-                                        user preferences to the preferences of the user. */
+                                                user preferences to the preferences of the user. */
         setUserPreferences(null);
         let applicantProfile: ApplicantEntity;
         if (c.chattable_type == ChattableType.USER) {
