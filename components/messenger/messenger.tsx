@@ -67,18 +67,19 @@ export function Messenger(props) {
         message: ConversationMessageEntity
     ): void {
         if (message?.conversation?.id == conversation?.id) {
+            let messages: ConversationMessageEntity[] = conversation.messages ?? [];
+            messages.push(message);
+            messages = messages?.sort((a, b) => a?.id - b?.id);
+            const lastMessage: ConversationMessageEntity =
+                conversation?.lastMessage?.id > message?.id
+                    ? conversation?.lastMessage
+                    : message;
             const updatedConversation: ConversationEntity = {
                 ...conversation,
-                messages: [message, ...conversation?.messages]?.sort(
-                    (a, b) => a?.id - b?.id
-                ),
-                lastMessage:
-                    conversation?.lastMessage?.id > message?.id
-                        ? conversation?.lastMessage
-                        : message,
+                messages,
+                lastMessage,
             };
             setConversation(updatedConversation);
-
             const updatedConversations = conversations
                 ?.map((c) => (c.id == updatedConversation.id ? updatedConversation : c))
                 ?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id);
@@ -166,7 +167,7 @@ export function Messenger(props) {
         const applicantApi = new ApplicantApi();
 
         /* Resetting the user preferences to null, and then if the chattable type is a user, it is setting the
-                                    user preferences to the preferences of the user. */
+                                        user preferences to the preferences of the user. */
         setUserPreferences(null);
         let applicantProfile: ApplicantEntity;
         if (c.chattable_type == ChattableType.USER) {
