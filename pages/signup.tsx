@@ -85,7 +85,7 @@ export default function Signup() {
 				<Col>
 					<h1>{t("SignUp.DRIVERS_HAVE_ACCESS")}<br />{t("SignUp.TO_OVER_1000_JOBS")}</h1>
 					<p>{t("SignUp.ARE_YOU_A_MOTOR_CARRIER")} {t("SignUp.VIEW_OUR_PACKAGES")}
-						<Link href="http://go.driverfly.co/motor-carriers">
+						<Link href="http://driverfly.co/motor-carriers">
 							<a className="mx-1" target="__blank">{t("HERE")}</a>
 						</Link>
 						{t("OR")}
