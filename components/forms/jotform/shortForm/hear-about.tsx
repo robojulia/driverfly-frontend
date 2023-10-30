@@ -97,8 +97,7 @@ export function HearAbout() {
 			setCompanyPref(companyPref)
 
 
-
-			if (applicant?.can_pass_drug_test) toast.success(t("successfully_saved_information"));
+			// if (applicant?.can_pass_drug_test) toast.success(t("successfully_saved_information"));
 		}
 	}, [applicant?.company])
 
