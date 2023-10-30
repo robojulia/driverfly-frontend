@@ -70,7 +70,7 @@ export function Messenger(props) {
     ): Promise<void> {
         console.log("message received", message);
         if (message?.conversation?.id == conversation?.id) {
-            console.log("message received for current conversation");
+            // console.log("message received for current conversation");
 
             // let messages: ConversationMessageEntity[] =
             //     conversation?.messages?.filter((m) => m?.id != message?.id) ?? [];
@@ -91,7 +91,7 @@ export function Messenger(props) {
             const updatedConversations = conversations
                 ?.map((c) => (c.id == updatedConversation.id ? updatedConversation : c))
                 ?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id);
-            // setConversations(updatedConversations);
+            setConversations(updatedConversations);
         } else {
             console.log("message received for other conversation");
 
@@ -160,9 +160,6 @@ export function Messenger(props) {
                     ),
             })[socketData?.event];
     }, [socketData]);
-    useEffectAsync(async () => {
-        console.log("message conversation", conversation);
-    }, [conversation]);
 
     async function fetchConversations() {
         const c = await conversationApi.list();
