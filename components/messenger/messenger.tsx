@@ -37,8 +37,9 @@ export function Messenger(props) {
     const { getOptions } = props;
 
     const { t } = useTranslation();
-
     const { user } = useAuth();
+
+    const conversationApi = new ConversationApi();
 
     enum SocketEventType {
         INBOUND_MESSAGE = "inbound-message",
@@ -70,20 +71,21 @@ export function Messenger(props) {
         console.log("message received", message);
         if (message?.conversation?.id == conversation?.id) {
 
-            let messages: ConversationMessageEntity[] =
-                conversation?.messages?.filter((m) => m?.id != message?.id) ?? [];
-            messages?.push(message);
-            messages = messages?.sort((a, b) => a?.id - b?.id);
-            const lastMessage: ConversationMessageEntity =
-                conversation?.lastMessage?.id > message?.id
-                    ? conversation?.lastMessage
-                    : message;
-            const updatedConversation: ConversationEntity = {
-                ...conversation,
-                messages,
-                lastMessage,
-            };
-            console.log("message received for current conversation", updatedConversation);
+            // let messages: ConversationMessageEntity[] =
+            //     conversation?.messages?.filter((m) => m?.id != message?.id) ?? [];
+            // messages?.push(message);
+            // messages = messages?.sort((a, b) => a?.id - b?.id);
+            // const lastMessage: ConversationMessageEntity =
+            //     conversation?.lastMessage?.id > message?.id
+            //         ? conversation?.lastMessage
+            //         : message;
+            // const updatedConversation: ConversationEntity = {
+            //     ...conversation,
+            //     messages,
+            //     lastMessage,
+            // };
+            // console.log("message received for current conversation", updatedConversation);
+            const updatedConversation = await conversationApi.markRead(conversation?.id)
             setConversation(updatedConversation);
             const updatedConversations = conversations
                 ?.map((c) => (c.id == updatedConversation.id ? updatedConversation : c))
@@ -160,8 +162,7 @@ export function Messenger(props) {
     }, [conversation]);
 
     async function fetchConversations() {
-        const api = new ConversationApi();
-        const c = await api.list();
+        const c = await conversationApi.list();
         setConversations(c);
     }
 
@@ -180,7 +181,6 @@ export function Messenger(props) {
     };
 
     const onConversationClick = async (c: ConversationEntity) => {
-        const conversationApi = new ConversationApi();
         const applicantApi = new ApplicantApi();
 
         /* Resetting the user preferences to null, and then if the chattable type is a user, it is setting the
@@ -213,9 +213,7 @@ export function Messenger(props) {
         const { id } = e;
 
         if (id) {
-            const api = new ConversationApi();
-
-            await api.remove(id);
+            await conversationApi.remove(id);
 
             const c = conversations.filter((v) => v?.id != id);
             setConversations(c);
@@ -225,7 +223,6 @@ export function Messenger(props) {
     };
 
     const onConversationCreated = async (c: ConversationEntity) => {
-        const conversationApi = new ConversationApi();
         const applicantApi = new ApplicantApi();
         const updatedConversations = [...conversations, c]?.sort(
             (a, b) => b?.lastMessage?.id - a?.lastMessage?.id
