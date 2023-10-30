@@ -63,7 +63,7 @@ export default function MyNav() {
                                 href="http://driverfly.co/motor-carriers" target="_blank" >{t("OPTIOS_&_PRICING")}
                             </NavDropdown.Item>
                             <NavDropdown.Item
-                                className="dropdown-item" href="http://driverfly.co/sign-up" target="_blank">{t("REQUESR_AQUOTE")}
+                                className="dropdown-item" href="https://driverfly.co/request-a-quote" target="_blank">{t("REQUESR_AQUOTE")}
                             </NavDropdown.Item>
                             <NavDropdown.Item
                                 className="dropdown-item" href="https://digitalhiringapp.com/" target="_blank">{t("FREE_DIGITAL_APPLICATION")}
