@@ -67,7 +67,10 @@ export function Messenger(props) {
     async function updateConversationsForInboundMessage(
         message: ConversationMessageEntity
     ): Promise<void> {
+        console.log("message received", message);
         if (message?.conversation?.id == conversation?.id) {
+            console.log("message received for current conversation");
+
             let messages: ConversationMessageEntity[] =
                 conversation?.messages?.filter((m) => m?.id != message?.id) ?? [];
             messages?.push(message);
