@@ -100,7 +100,7 @@ export default function ViewJobDetail(props: ViewJobDetailProps) {
                         <Col lg={8}>
                             < JobDescription job={job} />
                             {!!!hideVehicles && < JobVehicles job={job} />}
-                            {!!!hideSocialLinks && < SocilShare />}
+                            {/* {!!!hideSocialLinks && < SocilShare />} */}
                             {relatedJobs || <></>}
                         </Col>
                         <Col lg={4}>
