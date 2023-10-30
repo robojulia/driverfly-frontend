@@ -28,7 +28,7 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      <ManyChatScript />
+      {/* <ManyChatScript /> */}
       <AuthProvider
         Component={Component}
         pageProps={pageProps}

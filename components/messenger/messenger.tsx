@@ -114,6 +114,9 @@ export function Messenger(props) {
         const c = await api.list();
 
         setConversations(c);
+
+        /* initialize the socket connection to the server. */
+        socketInitializer(user, conversations, onConversationClick, t, toast)
     }, [user]);
 
     const onCreateClick = (e) => {
@@ -161,20 +164,45 @@ export function Messenger(props) {
 
             await api.remove(id);
 
-            const c = conversations.filter(v => v.id !== id);
+            const c = conversations.filter(v => v?.id != id);
             setConversations(c);
 
-            if (conversation.id === id) setConversation(new ConversationEntity());
+            if (conversation?.id == id) setConversation(new ConversationEntity());
         }
-
     }
 
-    const onConversationCreated = (e: ConversationEntity) => {
-        setConversations([
+    const onConversationCreated = async (c: ConversationEntity) => {
+        const conversationApi = new ConversationApi();
+        const applicantApi = new ApplicantApi()
+        const Cons = ([
             ...conversations,
-            e
-        ]);
-        setConversation(e);
+            c
+        ])?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id)
+        setConversations(Cons);
+        setConversation(c);
+        setUserPreferences(null)
+        let applicantProfile: ApplicantEntity;
+        if (c.chattable_type == ChattableType.USER) {
+            const userApi = new UserApi();
+            const preferences: UserPreferenceEntity[] = await userApi.preferences
+                .list(
+                    c.chattable_id,
+                    {
+                        category: UserPreferenceCategory.COMMUNICATION,
+                        label: UserPreferenceCommunicationLabel.PREFERRED_HOURS
+                    }
+                )
+            setUserPreferences(preferences)
+            applicantProfile = await applicantApi.getByUserId(c.chattable_id)
+        } else if (c.chattable_type == ChattableType.APPLICANT) {
+            applicantProfile = await applicantApi.getById(c.chattable_id)
+        }
+        const docs = applicantProfile?.documents?.filter((v) =>
+            Object.values(ApplicantDocumentType).includes(
+                v.type as ApplicantDocumentType
+            )
+        );
+        setApplicant({ ...applicantProfile, documents: docs ?? [] })
     }
 
     const onConversationUpdated = (e: ConversationEntity) => {
@@ -195,6 +223,7 @@ export function Messenger(props) {
 
 
     const onConversationToChange = (e: CreateConversationDto) => {
+        setApplicant(new ApplicantEntity())
         if (e.chattable_id) {
             const existing = conversations.find(v => v.chattable_id === e.chattable_id && v.chattable_type === e.chattable_type);
 
@@ -206,13 +235,7 @@ export function Messenger(props) {
 
     useEffect(() => lastMessage.current?.scrollIntoView({ behavior: "smooth" }), [lastMessage])
 
-
-
     const canCreate = !!getOptions;
-
-    /* A hook that is used to initialize the socket connection to the server. */
-    useEffectAsync(() => socketInitializer(user, conversations, onConversationClick, t, toast), [user]);
-    console.log("entity form masseger parent", conversation)
 
     return (
         <Row>

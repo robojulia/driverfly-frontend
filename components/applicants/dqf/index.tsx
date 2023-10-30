@@ -160,131 +160,128 @@ export default function DQF(props: ViewApplicantDqfProps) {
     }
 
     return (
-        <div className="employee_directory_tabs">
-            <Row>
-                <Col>
-                    {!!applicant ? (
-                        <ViewCard title={props.title ?? "DOCUMENTS"}>
-                            <Table striped>
-                                <thead>
-                                    <tr>
-                                        <th colSpan={2}>{t("TYPE")}</th>
-                                        {
-                                            Boolean(props.showCompleted) && <th colSpan={2}>{t("COMPLETED?")}</th>
+        <>
+            {!!applicant ? (
+                <ViewCard title={props.title ?? "DOCUMENTS"}>
+                    <Table striped>
+                        <thead>
+                            <tr>
+                                <th colSpan={2}>{t("TYPE")}</th>
+                                {
+                                    Boolean(props.showCompleted) && <th colSpan={1}>{t("COMPLETED?")}</th>
+                                }
+                                <th colSpan={2}>{t("UPDATED_AT")}</th>
+                                <th colSpan={1}></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {Object.values(ApplicantDqf).map((type: ApplicantDqf, i) => {
+                                /* Finding the document in the applicant.documents array that has the same type. */
+                                const document: DocumentEntity = applicant?.documents?.find(v => (v.type === type))
+                                return (
+                                    <tr key={i}>
+                                        <td colSpan={2}>
+                                            {t(`ApplicantDqf.${type}`)}
+                                        </td>
+                                        {Boolean(props.showCompleted)
+                                            &&
+                                            <td colSpan={1} className="text-center">
+                                                <input className="" type="radio" disabled checked={Boolean(document?.id)} />
+                                            </td>
                                         }
-                                        <th colSpan={2}>{t("UPDATED_AT")}</th>
-                                        <th colSpan={1}></th>
+                                        <td colSpan={2}>
+                                            <UpdatedAt document={document} type={type} />
+                                        </td>
+                                        <td colSpan={1} className="border border-2 w-50">
+                                            <ButtonList document={document} type={type} />
+                                            {(form.values?.document?.type === type)
+                                                && <Form onSubmit={form.handleSubmit} >
+                                                    <FileInput
+                                                        name={`document`}
+                                                        accept="application/pdf"
+                                                        formik={form}
+                                                        allowedSizeInByte={3145728}
+                                                    />
+                                                    <div className="mt-2 d-flex w-100 ">
+                                                        <Button
+                                                            disabled={form.isSubmitting || !form.isValid || form.isValidating}
+                                                            className="mr-2 w-50 theme-primary-btn"
+                                                            type="submit"
+                                                        >{t(`SAVE`)}</Button>
+                                                        <Button
+                                                            type="button"
+                                                            className="mr-2 w-50 bg-danger"
+                                                            onClick={() => { form.resetForm() }}
+                                                        >{t(`CANCEL`)}</Button>
+                                                    </div>
+                                                </Form>
+                                            }
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {Object.values(ApplicantDqf).map((type: ApplicantDqf, i) => {
-                                        /* Finding the document in the applicant.documents array that has the same type. */
-                                        const document: DocumentEntity = applicant?.documents?.find(v => (v.type === type))
-                                        return (
-                                            <tr key={i}>
-                                                <td colSpan={2}>
-                                                    {t(`ApplicantDqf.${type}`)}
+                                )
+                            })}
+                            {props.showOnboarding
+                                && Object.values(ApplicantOnBoardingChecklist).map((type: ApplicantOnBoardingChecklist, i) => {
+                                    /* Finding the document in the applicant.documents array that has the same type. */
+                                    const document: DocumentEntity = applicant?.documents?.find(v => (v.type === type))
+                                    return (
+                                        <tr key={i}>
+                                            <td colSpan={2}>
+                                                {t(`ApplicantOnBoardingChecklist.${type}`)}
+                                            </td>
+                                            {Boolean(props.showCompleted)
+                                                &&
+                                                <td colSpan={1} className="text-center">
+                                                    <input className="" type="radio" disabled checked={Boolean(document?.id)} />
                                                 </td>
-                                                {Boolean(props.showCompleted)
-                                                    &&
-                                                    <td colSpan={1} className="text-center">
-                                                        <input className="" type="radio" disabled checked={Boolean(document?.id)} />
-                                                    </td>
+                                            }
+                                            <td colSpan={2}>
+                                                <UpdatedAt document={document} type={type} />
+                                            </td>
+                                            <td colSpan={1} className="border border-2 w-50">
+                                                <ButtonList document={document} type={type} />
+                                                {(form.values?.document?.type === type)
+                                                    && <Form onSubmit={form.handleSubmit} >
+                                                        <FileInput
+                                                            name={`document`}
+                                                            accept="application/pdf"
+                                                            formik={form}
+                                                            allowedSizeInByte={3145728}
+                                                        />
+                                                        <div className="mt-2 d-flex w-100 ">
+                                                            <Button
+                                                                disabled={form.isSubmitting || !form.isValid || form.isValidating}
+                                                                className="mr-2 w-50 theme-primary-btn"
+                                                                type="submit"
+                                                            >{t(`SAVE`)}</Button>
+                                                            <Button
+                                                                type="button"
+                                                                className="mr-2 w-50 bg-danger"
+                                                                onClick={() => { form.resetForm() }}
+                                                            >{t(`CANCEL`)}</Button>
+                                                        </div>
+                                                    </Form>
                                                 }
-                                                <td colSpan={2}>
-                                                    <UpdatedAt document={document} type={type} />
-                                                </td>
-                                                <td colSpan={1} className="border border-2 w-50">
-                                                    <ButtonList document={document} type={type} />
-                                                    {(form.values?.document?.type === type)
-                                                        && <Form onSubmit={form.handleSubmit} >
-                                                            <FileInput
-                                                                name={`document`}
-                                                                accept="application/pdf"
-                                                                formik={form}
-                                                                allowedSizeInByte={3145728}
-                                                            />
-                                                            <div className="mt-2 d-flex w-100 ">
-                                                                <Button
-                                                                    disabled={form.isSubmitting || !form.isValid || form.isValidating}
-                                                                    className="mr-2 w-50 theme-primary-btn"
-                                                                    type="submit"
-                                                                >{t(`SAVE`)}</Button>
-                                                                <Button
-                                                                    type="button"
-                                                                    className="mr-2 w-50 bg-danger"
-                                                                    onClick={() => { form.resetForm() }}
-                                                                >{t(`CANCEL`)}</Button>
-                                                            </div>
-                                                        </Form>
-                                                    }
-                                                </td>
-                                            </tr>
-                                        )
-                                    })}
-                                    {props.showOnboarding
-                                        && Object.values(ApplicantOnBoardingChecklist).map((type: ApplicantOnBoardingChecklist, i) => {
-                                            /* Finding the document in the applicant.documents array that has the same type. */
-                                            const document: DocumentEntity = applicant?.documents?.find(v => (v.type === type))
-                                            return (
-                                                <tr key={i}>
-                                                    <td colSpan={2}>
-                                                        {t(`ApplicantOnBoardingChecklist.${type}`)}
-                                                    </td>
-                                                    {Boolean(props.showCompleted)
-                                                        &&
-                                                        <td colSpan={1} className="text-center">
-                                                            <input className="" type="radio" disabled checked={Boolean(document?.id)} />
-                                                        </td>
-                                                    }
-                                                    <td colSpan={2}>
-                                                        <UpdatedAt document={document} type={type} />
-                                                    </td>
-                                                    <td colSpan={1} className="border border-2 w-50">
-                                                        <ButtonList document={document} type={type} />
-                                                        {(form.values?.document?.type === type)
-                                                            && <Form onSubmit={form.handleSubmit} >
-                                                                <FileInput
-                                                                    name={`document`}
-                                                                    accept="application/pdf"
-                                                                    formik={form}
-                                                                    allowedSizeInByte={3145728}
-                                                                />
-                                                                <div className="mt-2 d-flex w-100 ">
-                                                                    <Button
-                                                                        disabled={form.isSubmitting || !form.isValid || form.isValidating}
-                                                                        className="mr-2 w-50 theme-primary-btn"
-                                                                        type="submit"
-                                                                    >{t(`SAVE`)}</Button>
-                                                                    <Button
-                                                                        type="button"
-                                                                        className="mr-2 w-50 bg-danger"
-                                                                        onClick={() => { form.resetForm() }}
-                                                                    >{t(`CANCEL`)}</Button>
-                                                                </div>
-                                                            </Form>
-                                                        }
-                                                    </td>
-                                                </tr>
-                                            )
-                                        })}
-                                </tbody>
-                            </Table>
-                            <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
-                        </ViewCard>
-                    ) : (
-                        <div className="d-flex justify-content-center align-items-center">
-                            <ThreeCircles
-                                height={50}
-                                width={50}
-                                color="#5bb0b9"
-                                ariaLabel="ball-triangle-loading"
-                                visible={true}
-                            />
-                        </div>
-                    )}
-                </Col>
-            </Row>
-        </div >
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                        </tbody>
+                    </Table>
+                    <ViewPdf {...pdf} onCloseClick={() => setPdf({})} />
+                </ViewCard>
+            ) : (
+                <div className="d-flex justify-content-center align-items-center">
+                    <ThreeCircles
+                        height={50}
+                        width={50}
+                        color="#5bb0b9"
+                        ariaLabel="ball-triangle-loading"
+                        visible={true}
+                    />
+                </div>
+            )
+            }
+        </>
     );
 };

@@ -1,16 +1,14 @@
 import Link from 'next/link'
+import { ToastContainer, toast } from 'react-toastify'
+import { useFormik } from "formik";
+import * as yup from "yup";
+import Head from 'next/head';
 import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import Back from '../components/back-to-login/back-login'
 import { PublicLayout } from "../components/layouts/public-layout";
 import Forgotpassword from '../public/css/forgot.module.css'
 import AuthApi from "./api/auth";
-import { ToastContainer, toast } from 'react-toastify'
-
 import { useTranslation } from "../hooks/use-translation"
-import { useFormik } from "formik";
-import * as yup from "yup";
-
-import Head from 'next/head';
 import BaseInput from "../components/forms/base-input";
 
 export default function Forgot() {
@@ -31,7 +29,7 @@ export default function Forgot() {
           email: values.email
         };
         const apicall = await api.forgotPassword(dto);
-        console.log(apicall,"++++++++++++++++++++++++++")
+        console.log(apicall, "++++++++++++++++++++++++++")
 
         toast.success(t("PLEASE_CHECK_EMAIL"));
       }
@@ -54,10 +52,10 @@ export default function Forgot() {
     <>
       <Head>
         <title>
-        {t("FORGET_PASSWORD_META_TITLE")} </title>
+          {t("FORGET_PASSWORD_META_TITLE")} </title>
         <meta
           name="description"
-          content=  {t("FORGET_PASSWORD_META_DESC")}      key="desc"
+          content={t("FORGET_PASSWORD_META_DESC")} key="desc"
         />
       </Head>
 

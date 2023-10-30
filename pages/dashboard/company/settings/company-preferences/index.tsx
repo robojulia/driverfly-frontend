@@ -314,7 +314,12 @@ export default function CompanyPreference() {
 							<h2 className="text-center">
 								{t("AUTO_RECURUITING_REGISTRATION")}
 							</h2>
-							<p>{t("AUTO_RECURUITING_REGISTRATION_TEXT_1")}</p>
+							<p>
+								{Boolean(preferences?.find((v) => v?.label == CompanyPreferenceAutoRecrutingLabel.ENROLL_IN_AUTO_RECRUITING)?.value)
+									? t("AUTO_RECURUITING_REGISTRATION_TEXT_2")
+									: t("AUTO_RECURUITING_REGISTRATION_TEXT_1")
+								}
+							</p>
 							<div className="d-flex justify-content-center">
 								<Button
 									onClick={() => handleAdditinonalPreferenceChange(modalAction)}
@@ -331,7 +336,7 @@ export default function CompanyPreference() {
 					label="DIGITAL_HIRING_APP_URL"
 					className="my-2 border p-3 rounded"
 					value={`${process.env.FRONTEND_BASE_URL ?? ""}form/digitalhiringapp/${user?.company?.id
-						}?source=indeed`}
+						}?`}
 					tooltipText={t("CLICK_TO_COPY")}
 				/>
 				<p className="pt-2 pb-2">{t("DHA_URL_TIP_TEXT")}</p>

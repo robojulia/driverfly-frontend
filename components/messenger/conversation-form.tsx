@@ -21,6 +21,7 @@ import { ApplicantDocumentType } from "../../enums/applicants/applicant-document
 import BaseCheckList from "../forms/base-check-list";
 import { ApplicantEntity } from "../../models/applicant";
 import { buildArrayQueryString } from "../../utils/common";
+import { LoaderIcon } from "../loading/loader-icon";
 
 export interface ConversationFormProps {
     entity?: ConversationEntity;
@@ -119,6 +120,8 @@ export function ConversationForm(props: ConversationFormProps) {
     });
 
     useEffect(() => {
+        if (entity?.chattable_id != form?.values?.chattable_id) disableAttachments()
+
         form.setValues({
             ...form.values,
             ...entity,
@@ -179,11 +182,16 @@ export function ConversationForm(props: ConversationFormProps) {
         );
     };
 
-    useEffect(() => {
-        console.log("form.values, form.errors", form.values, form.errors);
-    }, [form.values, form.errors]);
+    // useEffect(() => {
+    //     console.log("form.values, form.errors", form.values, form.errors);
+    // }, [form.values, form.errors]);
+
+    // useEffect(() => {
+    //     console.log("useEffect props?.applicant", props?.applicant);
+    // }, [props?.applicant]);
 
     useEffect(() => {
+        // console.log("props?.applicant", props?.applicant);
         if (!!documentTypes?.length) {
             const link: string = `${process.env.FRONTEND_BASE_URL}form/applicant/${props?.applicant?.uuid_token
                 }/documents?${buildArrayQueryString("type", documentTypes)}`;
@@ -292,8 +300,9 @@ export function ConversationForm(props: ConversationFormProps) {
                                                     />
                                                 </>
                                             )}
-                                            {props.applicant?.documents?.length !=
-                                                Object.keys(ApplicantDocumentType)?.length && (
+                                            {props.applicant.uuid_token
+                                                && props.applicant?.documents?.length != Object.keys(ApplicantDocumentType)?.length
+                                                && (
                                                     <small
                                                         className="btn-link"
                                                         role="button"
@@ -340,11 +349,12 @@ export function ConversationForm(props: ConversationFormProps) {
                                 <Col md={2}>
                                     <div className="d-flex justify-content-center align-items-center h-100">
                                         <button
-                                            disabled={canAttach && !documentTypes.length}
+                                            disabled={(canAttach && !documentTypes.length) || form.isSubmitting}
                                             type="submit"
                                             className=" btn btn-info float-end"
                                         >
                                             {t("SEND")}
+                                            <LoaderIcon isLoading={form.isSubmitting} />
                                         </button>
                                     </div>
                                 </Col>

@@ -49,7 +49,7 @@ export default function OverlyPopover({
             :
             <span >
                 {icon ?? null}
-                {slice_at ? templateString.slice(0, slice_at) : templateString}...
+                {slice_at && slice_at < templateString?.length ? `${templateString.slice(0, slice_at)}...` : templateString}
             </span>
         }
     </OverlayTrigger>

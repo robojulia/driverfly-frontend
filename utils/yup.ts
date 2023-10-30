@@ -28,12 +28,15 @@ yup.addMethod(yup.string, "enum", function(enumType, message) {
  * @param {string} message
  */
 function unique(thisObj, list, field, options, message) {
+
+ 
   if (list) {
     const { mapper } = options;
     const set = new Set();
 
     for (let i = 0; i < list.length; i++) {
       let value;
+      console.log(list,"#############################################################################")
       if (mapper) value = mapper(list[i]);
       else if (field) value = yup.ref(field).getter(list[i]);
       else value = list[i];
@@ -66,11 +69,13 @@ function unique(thisObj, list, field, options, message) {
  * @this import("yup/lib/array").OptionalArraySchema
  */
 unique.addTest = function (field, options, message) {
+  const { t } = useTranslation();
+  
   if (typeof options === "string") {
     message = options;
     options = null;
   }
-  if (!message) message = "yup.array.unique";
+  if (!message) message = t("yup.array.unique");
   if (!options) options = {};
 
   if (message) {

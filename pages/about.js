@@ -1,10 +1,10 @@
+import Head from 'next/head';
 import { PublicLayout } from "../components/layouts/public-layout";
 import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import Slider from '../components/testominial-slider/slider';
 import { useTranslation } from "../hooks/use-translation";
 import Companies from "../components/works/companies"
-import Head from 'next/head'; 
-
+import Link from 'next/link';
 
 export default function About() {
 
@@ -12,16 +12,14 @@ export default function About() {
 
     return (
         <>
-        <Head>
-        <title>
-            {t("ABOUT_META_TITLE")}
-        </title>
-        <meta
-          name="description"
-          content={t("ABOUT_META_DESC")}
-          key="desc"
-        />
-        </Head>
+            <Head>
+                <title>{t("ABOUT_META_TITLE")}</title>
+                <meta
+                    name="description"
+                    content={t("ABOUT_META_DESC")} key="desc"
+                />
+            </Head>
+
             <div className="top-links-sec">
                 <div className="container p-0">
                     <div className="top-links-inner d-flex align-items-center justify-content-between">
@@ -67,7 +65,6 @@ export default function About() {
                                     <div className="who-we-serve-inner">
                                         <h3>{t("PROSPECTIVE_DRIVERS")}</h3>
                                         <p>{t("CONSIDERING_A_NEW_CAREER_AS_A_DRIVER")}</p>
-                                        <button type="button" className="theme-general-btn">{t("LEARN_MORE")}</button>
                                     </div>
                                     <div className="who-we-serve-inner">
                                         <h3>{t("OWNER_OPS")}</h3>
@@ -103,7 +100,8 @@ export default function About() {
                             <div className="who-we-serve-inner mb-3">
                                 <h3>{t("NOT_SURE_WHRE_TO_START?")}</h3>
                                 <p>{t("WITH_OVER_400+_CLIENTS_ACROSS_THE_US")}</p>
-                                <button type="button" className="theme-general-btn">{t("CONTACT_US")}</button>
+                                <Link href={'/contact'}>
+                                <button type='button' className="theme-general-btn">{t("CONTACT_US")}</button></Link>
                             </div>
                         </div>
                     </div>

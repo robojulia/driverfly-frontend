@@ -39,6 +39,7 @@ import ApplicantSafetyBackground from "../../../../../components/applicants/appl
 import ApplicantJobsApplied from "../../../../../components/applicants/applicant-jobs-applied";
 import ApplicantConsiderFor from "../../../../../components/applicants/applicant-consider-for";
 import ViewApplicantDqf from "../../../../../components/applicants/view-applicant-dqf";
+import { ApplicantDocumentType } from "../../../../../enums/applicants/applicant-document-type.enum";
 
 export default function ViewApplicant({ id }) {
 
@@ -336,20 +337,27 @@ export default function ViewApplicant({ id }) {
 									document: "DOCUMENT",
 									date_added: "DATE_ADDED",
 								}}
-								items={applicant?.documents?.map((document) => ({
-									type: t(`ApplicantDocumentType.${document.type}`),
-									document: (
-										<a
-											onClick={() =>
-												viewDocumentClick(document.id, document.name)
-											}
-											href="#"
-										>
-											{document.name}
-										</a>
-									),
-									date_added: new Date(document.created_at).toDateString(),
-								}))}
+								items={applicant?.documents
+									?.filter(
+										(v) =>
+											Object.values(ApplicantDocumentType).includes(
+												v.type as ApplicantDocumentType
+											)
+									)
+									?.map((document) => ({
+										type: t(`ApplicantDocumentType.${document.type}`),
+										document: (
+											<a
+												onClick={() =>
+													viewDocumentClick(document.id, document.name)
+												}
+												href="#"
+											>
+												{document.name}
+											</a>
+										),
+										date_added: new Date(document.created_at).toDateString(),
+									}))}
 							/>
 						</ViewCard>
 					</Col>

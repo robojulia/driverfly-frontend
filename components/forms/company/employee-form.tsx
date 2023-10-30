@@ -222,7 +222,7 @@ export function EmployeeForm(props: EmployeeFormProps) {
 								name="license_number"
 								placeholder="driver_license_number"
 								formik={form}
-								readOnly={!protectedFields.license_number}
+							// readOnly={!protectedFields.license_number}
 							/>
 							<BaseInput
 								className="col-12"

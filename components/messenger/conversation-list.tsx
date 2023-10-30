@@ -25,9 +25,9 @@ export function ConversationList(props: ConversationListProps) {
     return (
         <ul className="list-unstyled mb-0 w-100" style={{ overflowY: "auto", height: "50vh" }}>
             {
-                items.map(c => (
-                    <li key={c.id} className="p-2 border-bottom" style={{ backgroundColor: c.id === selected?.id ? "#fff" : "#eee", cursor: "pointer" }} onClick={e => onItemClick(c)}>
-                        <ConversationListItem entity={c} onDelete={onItemDelete} />
+                items?.filter(Boolean)?.map(c => (
+                    <li key={c?.id} className="p-2 border-bottom" style={{ backgroundColor: c?.id === selected?.id ? "#fff" : "#eee", cursor: "pointer" }} >
+                        <ConversationListItem entity={c} onDelete={onItemDelete} onClick={onItemClick} />
                     </li>
                 ))
             }
@@ -36,30 +36,33 @@ export function ConversationList(props: ConversationListProps) {
 
 export interface ConversationListItemProps {
     entity: ConversationEntity;
+    onClick?: (e: ConversationEntity) => void;
     onDelete?: (e: ConversationEntity) => void;
 }
 
 export function ConversationListItem(props: ConversationListItemProps) {
-    const { entity, onDelete } = props;
+    const { entity, onDelete, onClick } = props;
     console.log("entity form masseger child", entity)
     return (
         <div className="d-flex justify-content-between text-start">
-            <div className="pt-1">
-                <p className="fw-bold mb-0">{entity.chattable_name}</p>
-                {
-                    entity.lastMessage &&
-                    <p title={entity.lastMessage.text} className="small text-muted text-truncate" style={{ width: "200px" }}>{entity.lastMessage.text}</p>
-                }
-            </div>
-            <div className="pt-1">
-                {
-                    entity.lastMessage &&
-                    <p className="small text-muted mb-1"><When date={entity.lastMessage.created_at} /></p>
-                }
-                {
-                    entity.lastMessage && entity.unread > 0 &&
-                    <span className="badge bg-danger float-end">{entity.unread}</span>
-                }
+            <div className="" onClick={e => onClick(entity)}>
+                <div className="pt-1" >
+                    <p className="fw-bold mb-0">{entity.chattable_name}</p>
+                    {
+                        entity.lastMessage &&
+                        <p title={entity.lastMessage.text} className="small text-muted text-truncate" style={{ width: "200px" }}>{entity.lastMessage.text}</p>
+                    }
+                </div>
+                <div className="pt-1">
+                    {
+                        entity.lastMessage &&
+                        <p className="small text-muted mb-1"><When date={entity.lastMessage.created_at} /></p>
+                    }
+                    {
+                        entity.lastMessage && entity.unread > 0 &&
+                        <span className="badge bg-danger float-end">{entity.unread}</span>
+                    }
+                </div>
             </div>
             {onDelete && <XCircle color="red" onClick={e => onDelete(entity)} />}
         </div>

@@ -56,6 +56,7 @@ import EmployeeApi from "../../../pages/api/employee";
 import { ApplicantExtras } from "../../../enums/applicants/applicant-extras.enum";
 import { ApplicantExtrasEntity } from "../../../models/applicant";
 import { JobSchedule } from "../../../enums/jobs/job-schedule.enum";
+import { Status } from "../../../enums/status.enum";
 
 export interface ApplicantFormProps extends BaseFormProps<ApplicantEntity> { }
 
@@ -65,7 +66,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	const router = useRouter();
 	const applicantApi = new ApplicantApi();
 	let { className, entity, onSaveComplete, onSaveError } = props;
-
+	const current_date = new Date();
 	let { user, hasPermission, isSuperAdmin } = useAuth();
 
 	const [protectedFields, setProtectedFields] = useState({
@@ -229,7 +230,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 	useEffectAsync(async () => {
 		const userApi = new UserApi();
 		const data = await userApi.list();
-		setCompanyUsers(data);
+		setCompanyUsers(data?.filter(u => u.status == Status.ACTIVE))
 	}, []);
 
 	const today = new Date();
@@ -269,7 +270,7 @@ export function ApplicantForm(props: ApplicantFormProps) {
 				<Col className="p-0 px-lg-2 mt-3">
 					<ViewCard title="BASIC_DETAILS">
 						<Row className="mb-2">
-							<Col md="4">
+							<Col md="4" className="px-2">
 								<BaseSelect
 									// className="col-12 my-2"
 									readOnly={!Boolean(isSuperAdmin) || Boolean(entity?.is_hired)}
@@ -278,13 +279,9 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									placeholder
 									options={companyUsers}
 									valueKey="id"
-									createLabel={(c) => `${c.name} (#${c.id})`}
+									createLabel={(c) => `${c.name} (#${c.id}) `}
 									formik={form}
 								/>
-							</Col>
-						</Row>
-						<Row>
-							<Col md="4" className="px-2">
 								<BaseInput
 									className="col-12"
 									readOnly={Boolean(entity?.is_hired)}
@@ -374,15 +371,16 @@ export function ApplicantForm(props: ApplicantFormProps) {
 									name="license_number"
 									placeholder="driver_license_number"
 									formik={form}
-									readOnly={
-										!protectedFields.license_number || Boolean(entity?.is_hired)
-									}
+								// readOnly={
+								// 	!protectedFields.license_number || Boolean(entity?.is_hired)
+								// }
 								/>
 								<BaseInput
 									className="col-12"
 									readOnly={Boolean(entity?.is_hired)}
 									label="expiration_date"
 									name="license_expiry"
+									min={(new Date(current_date.getFullYear(), current_date.getMonth() + 6, current_date.getDate())).toISOString().split("T")[0]}
 									type="date"
 									placeholder="expiration_date"
 									formik={form}
