@@ -70,6 +70,7 @@ export function Messenger(props) {
     ): Promise<void> {
         console.log("message received", message);
         if (message?.conversation?.id == conversation?.id) {
+            console.log("message received for current conversation");
 
             // let messages: ConversationMessageEntity[] =
             //     conversation?.messages?.filter((m) => m?.id != message?.id) ?? [];
@@ -92,6 +93,8 @@ export function Messenger(props) {
                 ?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id);
             // setConversations(updatedConversations);
         } else {
+            console.log("message received for other conversation");
+
             const updatedConversations = conversations
                 ?.map((c) =>
                     c.id == message?.conversation?.id
