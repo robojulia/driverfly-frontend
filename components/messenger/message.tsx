@@ -29,7 +29,7 @@ export function Message(props: MessageProps) {
                     <Row className={`justify-content-${message.direction === MessageDirection.OUT ? "end" : "start"}`}>
                         <Col sm="8" md="7" lg="6" className="rounded-lg p-2" style={{ backgroundColor: message.direction === MessageDirection.OUT ? "#cdf3f2" : "#e9fafa" }}>
                             {message.text}
-                            <p className="text-muted small mb-0"><Clock /> <When date={message.created_at} /> {message.status && <> -- {message.status}</>}</p>
+                            <p className="text-muted small mb-0"><Clock /> <When date={message.created_at} /> {message.status && <> -- <span title={message.error_code == 21211 && message.error_message} >{message.status}</span></>}</p>
                         </Col>
                     </Row>
                 </Card.Body>
