@@ -65,7 +65,6 @@ export default function About() {
                                     <div className="who-we-serve-inner">
                                         <h3>{t("PROSPECTIVE_DRIVERS")}</h3>
                                         <p>{t("CONSIDERING_A_NEW_CAREER_AS_A_DRIVER")}</p>
-                                        <button type="button" className="theme-general-btn">{t("LEARN_MORE")}</button>
                                     </div>
                                     <div className="who-we-serve-inner">
                                         <h3>{t("OWNER_OPS")}</h3>
