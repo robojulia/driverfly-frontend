@@ -57,13 +57,13 @@ export default function MyNav() {
                         </NavDropdown>
                         <NavDropdown title="Motor Carrier Solutions" id="collasible-nav-dropdown" >
                             <NavDropdown.Item
-                                href="http://go.driverfly.co/motor-carriers" target="_blank" >{t("OUR_SOLUTION")}
+                                href="http://driverfly.co/motor-carriers" target="_blank" >{t("OUR_SOLUTION")}
                             </NavDropdown.Item>
                             <NavDropdown.Item
-                                href="http://go.driverfly.co/motor-carriers" target="_blank" >{t("OPTIOS_&_PRICING")}
+                                href="http://driverfly.co/motor-carriers" target="_blank" >{t("OPTIOS_&_PRICING")}
                             </NavDropdown.Item>
                             <NavDropdown.Item
-                                className="dropdown-item" href="http://go.driverfly.co/sign-up" target="_blank">{t("REQUESR_AQUOTE")}
+                                className="dropdown-item" href="http://driverfly.co/sign-up" target="_blank">{t("REQUESR_AQUOTE")}
                             </NavDropdown.Item>
                             <NavDropdown.Item
                                 className="dropdown-item" href="https://digitalhiringapp.com/" target="_blank">{t("FREE_DIGITAL_APPLICATION")}
