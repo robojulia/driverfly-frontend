@@ -75,9 +75,9 @@ export function Messenger(props) {
             messages?.push(message);
             messages = messages?.sort((a, b) => a?.id - b?.id);
             const lastMessage: ConversationMessageEntity =
-            conversation?.lastMessage?.id > message?.id
-            ? conversation?.lastMessage
-            : message;
+                conversation?.lastMessage?.id > message?.id
+                    ? conversation?.lastMessage
+                    : message;
             const updatedConversation: ConversationEntity = {
                 ...conversation,
                 messages,
@@ -155,6 +155,9 @@ export function Messenger(props) {
                     ),
             })[socketData?.event];
     }, [socketData]);
+    useEffectAsync(async () => {
+        console.log("message conversation", conversation);
+    }, [conversation]);
 
     async function fetchConversations() {
         const api = new ConversationApi();
