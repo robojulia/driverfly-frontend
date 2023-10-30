@@ -90,7 +90,7 @@ export function Messenger(props) {
             const updatedConversations = conversations
                 ?.map((c) => (c.id == updatedConversation.id ? updatedConversation : c))
                 ?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id);
-            setConversations(updatedConversations);
+            // setConversations(updatedConversations);
         } else {
             const updatedConversations = conversations
                 ?.map((c) =>
