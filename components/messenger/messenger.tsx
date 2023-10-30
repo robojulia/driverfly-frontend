@@ -69,21 +69,21 @@ export function Messenger(props) {
     ): Promise<void> {
         console.log("message received", message);
         if (message?.conversation?.id == conversation?.id) {
-            console.log("message received for current conversation");
 
             let messages: ConversationMessageEntity[] =
                 conversation?.messages?.filter((m) => m?.id != message?.id) ?? [];
             messages?.push(message);
             messages = messages?.sort((a, b) => a?.id - b?.id);
             const lastMessage: ConversationMessageEntity =
-                conversation?.lastMessage?.id > message?.id
-                    ? conversation?.lastMessage
-                    : message;
+            conversation?.lastMessage?.id > message?.id
+            ? conversation?.lastMessage
+            : message;
             const updatedConversation: ConversationEntity = {
                 ...conversation,
                 messages,
                 lastMessage,
             };
+            console.log("message received for current conversation", updatedConversation);
             setConversation(updatedConversation);
             const updatedConversations = conversations
                 ?.map((c) => (c.id == updatedConversation.id ? updatedConversation : c))
