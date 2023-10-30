@@ -4,7 +4,7 @@ import Breadcrumb from "../components/breadcrumbs/breadcrumb";
 import Slider from '../components/testominial-slider/slider';
 import { useTranslation } from "../hooks/use-translation";
 import Companies from "../components/works/companies"
-
+import Link from 'next/link';
 
 export default function About() {
 
@@ -101,7 +101,8 @@ export default function About() {
                             <div className="who-we-serve-inner mb-3">
                                 <h3>{t("NOT_SURE_WHRE_TO_START?")}</h3>
                                 <p>{t("WITH_OVER_400+_CLIENTS_ACROSS_THE_US")}</p>
-                                <button type="button" className="theme-general-btn">{t("CONTACT_US")}</button>
+                                <Link href={'/contact'}>
+                                <button type='button' className="theme-general-btn">{t("CONTACT_US")}</button></Link>
                             </div>
                         </div>
                     </div>
