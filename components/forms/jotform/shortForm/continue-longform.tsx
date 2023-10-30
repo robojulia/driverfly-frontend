@@ -32,6 +32,8 @@ export function ContinueLongForm() {
 		}
 	});
 
+		
+
 	useEffectAsync(async () => {
 		if (applicant?.company) {
 			const companyApi = new CompanyApi();
@@ -53,9 +55,11 @@ export function ContinueLongForm() {
 				)
 			setCompanyPref(companyPref)
 
-
-
-			if (applicant?.can_pass_drug_test) toast.success(t("successfully_saved_information"));
+			if (!Boolean(applicant?.can_pass_drug_test)) {
+				toast.error(t("UNABLE_TO_SAVE_INFORMATION"))
+			}else{
+				toast.success(t("successfully_saved_information"))
+			}
 		}
 	}, [applicant?.company])
 
