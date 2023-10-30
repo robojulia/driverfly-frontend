@@ -57,7 +57,7 @@ export default function FreeResources() {
                     {t("refer_a_friend_paragraph")}
                 </ViewCard>
             </Col>
-            <Col lg="4" sm="12">
+            {/* <Col lg="4" sm="12">
                 <ViewCard
                     title="enter_sweepstakes"
                 // actions={(
@@ -74,7 +74,7 @@ export default function FreeResources() {
                 >
                     {t("enter_sweepstakes_paragraph")}
                 </ViewCard>
-            </Col>
+            </Col> */}
             <Col lg="4" sm="12">
                 <ViewCard
                     title="become_your_own_boss"
@@ -83,26 +83,27 @@ export default function FreeResources() {
                     {t("become_your_own_boss_paragraph")}
                 </ViewCard>
             </Col>
-        </Row>
-        <Row>
             <Col lg="4" sm="12">
                 <ViewCard
                     title="connect_with_our_community"
-                // actions={(
-                //     <Link href="/dashboard/driver/settings/applicant">
-                //         <Button
-                //             size="sm"
-                //             variant="primary"
-                //         >
-                //             <ArrowUpRightSquare />
+                actions={(
+                    <Link href="https://www.facebook.com/DriverFlyJobs" >
+                        <Button
+                            size="sm"
+                            variant="primary"
+                        >
+                            <ArrowUpRightSquare />
 
-                //         </Button>
-                //     </Link>
-                // )}
+                        </Button>
+                    </Link>
+                )}
                 >
                     {t("join_our_driverfly_community")}
                 </ViewCard>
             </Col>
+        </Row>
+        <Row>
+  
             <Col lg="4" sm="12">
                 <ViewCard
                     title="follow_us"
@@ -131,17 +132,17 @@ export default function FreeResources() {
             <Col lg="4" sm="12">
                 <ViewCard
                     title="sign_up_for_newsletter"
-                // actions={(
-                //     <Link href="https://drivergrowth.com/">
-                //         <Button
-                //             size="sm"
-                //             variant="primary"
-                //         >
-                //             <ArrowUpRightSquare />
+                actions={(
+                    <Link href="#footer" >
+                        <Button
+                            size="sm"
+                            variant="primary"
+                        >
+                            <ArrowUpRightSquare />
 
-                //         </Button>
-                //     </Link>
-                // )}
+                        </Button>
+                    </Link>
+                )}
                 >
                     {t("sign_up_for_newsletter_paragraph")}
                 </ViewCard>
