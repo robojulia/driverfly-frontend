@@ -60,7 +60,7 @@ export default function MyNav() {
                                 href="http://driverfly.co/motor-carriers" target="_blank" >{t("OUR_SOLUTION")}
                             </NavDropdown.Item>
                             <NavDropdown.Item
-                                href="http://driverfly.co/motor-carriers" target="_blank" >{t("OPTIOS_&_PRICING")}
+                                href="https://driverfly.co/pricing" target="_blank" >{t("OPTIOS_&_PRICING")}
                             </NavDropdown.Item>
                             <NavDropdown.Item
                                 className="dropdown-item" href="https://driverfly.co/request-a-quote" target="_blank">{t("REQUESR_AQUOTE")}
