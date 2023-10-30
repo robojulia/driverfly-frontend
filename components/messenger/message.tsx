@@ -1,11 +1,13 @@
 import React from "react";
 import { Card, Col, Row } from "react-bootstrap";
-import { Clock } from "react-bootstrap-icons";
+import { Clock, InfoCircleFill } from "react-bootstrap-icons";
 import { MessageDirection } from "../../enums/conversation/message-direction.enum";
 
 import { ConversationMessageEntity } from "../../models/conversation/conversation-message.entity";
 import { ConversationEntity } from "../../models/conversation/conversation.entity";
 import When from "../view-details/when";
+import OverlyPopover from "../popover/overly-popover";
+import { MessageStatus } from "../../enums/conversation/message-status.enum";
 
 export interface MessageProps {
     conversation: ConversationEntity;
@@ -29,7 +31,15 @@ export function Message(props: MessageProps) {
                     <Row className={`justify-content-${message.direction === MessageDirection.OUT ? "end" : "start"}`}>
                         <Col sm="8" md="7" lg="6" className="rounded-lg p-2" style={{ backgroundColor: message.direction === MessageDirection.OUT ? "#cdf3f2" : "#e9fafa" }}>
                             {message.text}
-                            <p className="text-muted small mb-0"><Clock /> <When date={message.created_at} /> {message.status && <> -- <span title={message.error_code == 21211 && message.error_message} >{message.status}</span></>}</p>
+                            <p className="text-muted small mb-0">
+                                <Clock /> <When date={message.created_at} />
+                                {message.status && <> -- <span className={message.status == MessageStatus.FAILED ? "text-danger" : ""} >{message.status}</span></>}
+                                {Boolean(message.error_message)
+                                    && message.error_code == 21211
+                                    && <OverlyPopover str={message.error_message}>
+                                        <InfoCircleFill role="button" className="ml-2 text-danger" />
+                                    </OverlyPopover>}
+                            </p>
                         </Col>
                     </Row>
                 </Card.Body>
