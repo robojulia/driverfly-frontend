@@ -84,7 +84,7 @@ export function CompanyForm(props: CompanyFormProps) {
                 />
               <FileInput
                 className="col-12"
-                label={`photo`}
+                label={`photo_logo`}
                 id="imgpurpose"
                 name={`photo`}
                 accept="image/*"
