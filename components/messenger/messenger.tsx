@@ -70,7 +70,7 @@ export function Messenger(props) {
     ): Promise<void> {
         console.log("message received", message);
         if (message?.conversation?.id == conversation?.id) {
-            // console.log("message received for current conversation");
+            console.log("message received for current conversation");
 
             // let messages: ConversationMessageEntity[] =
             //     conversation?.messages?.filter((m) => m?.id != message?.id) ?? [];
@@ -87,8 +87,8 @@ export function Messenger(props) {
             // };
             // console.log("message received for current conversation", updatedConversation);
             const c = await conversationApi.markRead(message?.conversation?.id)
-            // onConversationUpdated(c)
-            setConversation(new ConversationEntity());
+            onConversationUpdated(c)
+            // setConversation(new ConversationEntity());
             // setConversation(updatedConversation);
             // const updatedConversations = conversations
             //     ?.map((c) => (c.id == updatedConversation.id ? updatedConversation : c))
@@ -254,7 +254,7 @@ export function Messenger(props) {
     };
 
     const onConversationUpdated = (e: ConversationEntity) => {
-        console.log("conversation onConversationUpdated ", e);
+        console.log("message onConversationUpdated ", e);
 
         const newConversations = conversations
             .map((v) =>
