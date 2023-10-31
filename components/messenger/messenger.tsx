@@ -253,6 +253,8 @@ export function Messenger(props) {
     };
 
     const onConversationUpdated = (e: ConversationEntity) => {
+        console.log("conversation onConversationUpdated ", e);
+
         const newConversations = conversations
             .map((v) =>
                 v.id === e.id
