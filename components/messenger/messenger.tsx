@@ -86,14 +86,28 @@ export function Messenger(props) {
             //     lastMessage,
             // };
             // console.log("message received for current conversation", updatedConversation);
-            const c = await conversationApi.markRead(message?.conversation?.id)
-            onConversationUpdated(c)
+            // const c = await conversationApi.markRead(message?.conversation?.id)
+            // onConversationUpdated(c)
             // setConversation(new ConversationEntity());
             // setConversation(updatedConversation);
             // const updatedConversations = conversations
             //     ?.map((c) => (c.id == updatedConversation.id ? updatedConversation : c))
             //     ?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id);
             // setConversations(updatedConversations);
+
+
+            const updatedConversation: ConversationEntity = {
+                ...conversation,
+                messages: conversation?.messages?.map((m) =>
+                    m.id == message.id ? message : m
+                ),
+                lastMessage:
+                    conversation?.lastMessage?.id == message?.id
+                        ? message
+                        : conversation?.lastMessage,
+            };
+            setConversation(updatedConversation);
+
         } else {
             console.log("message received for other conversation");
 
@@ -152,7 +166,7 @@ export function Messenger(props) {
     }
 
     useEffectAsync(async () => {
-        if (socketData?.event)
+        if (Boolean(socketData?.event))
             ({
                 [SocketEventType.INBOUND_MESSAGE]:
                     await updateConversationsForInboundMessage(socketData?.message),
