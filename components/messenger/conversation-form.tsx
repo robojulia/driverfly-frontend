@@ -120,10 +120,8 @@ export function ConversationForm(props: ConversationFormProps) {
     });
 
     useEffect(() => {
-
         if (entity?.chattable_id != form?.values?.chattable_id) disableAttachments()
 
-        console.log("message entity", entity);
         form.setValues({
             ...form.values,
             ...entity,

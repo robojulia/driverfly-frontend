@@ -68,10 +68,7 @@ export function Messenger(props) {
     async function updateConversationsForInboundMessage(
         message: ConversationMessageEntity
     ): Promise<void> {
-        console.log("message received", message);
         if (message?.conversation?.id == conversation?.id) {
-            console.log("message received for current conversation");
-
             // let messages: ConversationMessageEntity[] =
             //     conversation?.messages?.filter((m) => m?.id != message?.id) ?? [];
             // messages?.push(message);
@@ -109,8 +106,6 @@ export function Messenger(props) {
             setConversation(updatedConversation);
 
         } else {
-            console.log("message received for other conversation");
-
             const updatedConversations = conversations
                 ?.map((c) =>
                     c.id == message?.conversation?.id
@@ -268,8 +263,6 @@ export function Messenger(props) {
     };
 
     const onConversationUpdated = (e: ConversationEntity) => {
-        console.log("message onConversationUpdated ", e);
-
         const newConversations = conversations
             .map((v) =>
                 v.id === e.id
