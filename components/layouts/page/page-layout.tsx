@@ -6,12 +6,13 @@ import { Row, Col } from "react-bootstrap";
 
 export interface PageLayoutProps {
     title?: string;
+    desciption?: string;
     actions?: JSX.Element | JSX.Element[];
     readonly children?: JSX.Element | JSX.Element[];
 }
 
 export default function PageLayout(props: PageLayoutProps) {
-    const { title, actions, children } = props;
+    const { title, actions, children, desciption } = props;
 
     const { t } = useTranslation();
 
@@ -25,6 +26,9 @@ export default function PageLayout(props: PageLayoutProps) {
                             <h2>
                                 {t(title)}
                             </h2>
+                            {
+                                desciption &&  <p className="small text-secondary">{t(desciption)}</p>
+                            }
                         </Col>
                 }
                 {

@@ -84,6 +84,8 @@ export default function LocationList() {
   return (
     <PageLayout
       title="TERMINALS"
+			desciption="TERMINALS_DESC"
+
       actions={(<ButtonGroup>
         {can.create &&
           <Button onClick={onAddClick}>

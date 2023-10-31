@@ -108,6 +108,7 @@ export default function UserList() {
 	return (
 		<PageLayout
 			title="MANAGERS"
+			desciption="MANAGERS_DESC"
 			actions={
 				<Button variant='primary' onClick={onAddClick}>
 					+ {t("CREATE")}

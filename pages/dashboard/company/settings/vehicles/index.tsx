@@ -91,6 +91,7 @@ export default function VehicleList() {
   return (
     <PageLayout
       title="VEHICLES"
+			desciption="VEHICLES_DESC"
       actions={(<ButtonGroup>
         {canCreate && 
           <Button onClick={onAddClick}>

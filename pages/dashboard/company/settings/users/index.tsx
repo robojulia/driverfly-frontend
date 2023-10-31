@@ -176,6 +176,7 @@ export default function UserList() {
   return (
     <PageLayout
       title="USERS"
+      desciption="USERS_DESC"
       actions={
         <>
           {
