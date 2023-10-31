@@ -125,6 +125,7 @@ export default function StoredFiles() {
     return (
         <PageLayout
             title="STORED_FILES"
+            desciption="STORED_FILES_DESC"
             actions={
                 <Button variant="primary" onClick={openFileUploadModel}>
                     <Plus /> {t("UPLOAD_NEW_FILE")}

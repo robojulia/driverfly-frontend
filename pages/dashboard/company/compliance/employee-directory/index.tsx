@@ -338,6 +338,12 @@ export default function EmployeeDirectory() {
                 onCloseClick={resetModalAction}
                 size='sm'
             >
+                <>
+                <Row >
+                    <Col className="d-flex justify-content-center align-items-center">
+                    <h4 className="mt-4">{t("ARE_YOU_SURE_TO_DELETE_OR_MOVE_TO_PAST_EMPLOYEE")}</h4>
+                    </Col>
+                </Row>
                 <Row className="mt-90 my-10">
                     <Col>
                         <button
@@ -354,6 +360,7 @@ export default function EmployeeDirectory() {
                         > {t("MOVE_TO_PAST_EMPLOYEE")}</button>
                     </Col>
                 </Row>
+                </>
             </ViewModal>
 
             {/* modal that displays a table for moving employee to past employee list */}
