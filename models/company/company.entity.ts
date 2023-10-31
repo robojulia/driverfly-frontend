@@ -11,7 +11,6 @@ export class CompanyEntity {
 	about?: string;
 	website?: string;
 	photo?: DocumentEntity;
-
 	status?: Status;
 
 	users?: UserEntity[];
