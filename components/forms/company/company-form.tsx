@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useTranslation } from "../../../hooks/use-translation";
 import { CompanyEntity } from "../../../models/company/company.entity";
 import CompanyApi from "../../../pages/api/company";
+import { useAuth } from "../../../hooks/use-auth";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { formSuccess } from "../../../utils/toast";
 import EntityForm from "../../layouts/page/entity-form";
@@ -16,6 +17,7 @@ import { BaseFormProps } from "./base-form-props";
 export interface CompanyFormProps extends BaseFormProps<CompanyEntity> {}
 
 export function CompanyForm(props: CompanyFormProps) {
+    const { user } = useAuth();
     const { t } = useTranslation();
     let { className, entity, onSaveComplete, onSaveError } = props;
 
@@ -70,6 +72,15 @@ export function CompanyForm(props: CompanyFormProps) {
                 label={t("WEBSITE")}
                 name={`website`}
                 placeholder="http://www.example.com"
+                formik={form}
+                />
+                <BaseInput
+                className="col-12"
+                label={t("COMPANY_JOBS_PAGE")}
+                name={`compnay_jobs`}
+                readOnly={true}
+                placeholder={`${process.env.FRONTEND_BASE_URL ?? ""}/employer/${user?.company?.id
+                }?`}
                 formik={form}
                 />
               <BaseTextArea
