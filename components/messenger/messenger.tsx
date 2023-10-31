@@ -86,12 +86,13 @@ export function Messenger(props) {
             //     lastMessage,
             // };
             // console.log("message received for current conversation", updatedConversation);
-            const updatedConversation = await conversationApi.markRead(conversation?.id)
-            setConversation(updatedConversation);
-            const updatedConversations = conversations
-                ?.map((c) => (c.id == updatedConversation.id ? updatedConversation : c))
-                ?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id);
-            setConversations(updatedConversations);
+            const c = await conversationApi.markRead(message?.conversation?.id)
+            onConversationUpdated(c)
+            // setConversation(updatedConversation);
+            // const updatedConversations = conversations
+            //     ?.map((c) => (c.id == updatedConversation.id ? updatedConversation : c))
+            //     ?.sort((a, b) => b?.lastMessage?.id - a?.lastMessage?.id);
+            // setConversations(updatedConversations);
         } else {
             console.log("message received for other conversation");
 
