@@ -87,7 +87,8 @@ export function Messenger(props) {
             // };
             // console.log("message received for current conversation", updatedConversation);
             const c = await conversationApi.markRead(message?.conversation?.id)
-            onConversationUpdated(c)
+            // onConversationUpdated(c)
+            setConversation(new ConversationEntity());
             // setConversation(updatedConversation);
             // const updatedConversations = conversations
             //     ?.map((c) => (c.id == updatedConversation.id ? updatedConversation : c))
