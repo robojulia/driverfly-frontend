@@ -133,7 +133,7 @@
   color: #000 !important;
 }
 
-.btn-check:focus + .btn-secondary,
+.btn-check:focus+.btn-secondary,
 .btn-secondary:focus,
 .btn-secondary:hover {
   background-color: transparent !important;
@@ -145,7 +145,7 @@
   border-color: #1b4454;
 }
 
-.dashboardsidebar .btn-check:focus + .btn-info,
+.dashboardsidebar .btn-check:focus+.btn-info,
 .dashboardsidebar .btn-info:focus,
 .dashboardsidebar .btn-info:hover {
   color: #fff;
@@ -267,7 +267,8 @@
 }
 
 /* Hide scrollbar for Chrome, Safari and Opera */
-.bSqufN::-webkit-scrollbar, .dashboardsidebar .header::-webkit-scrollbar {
+.bSqufN::-webkit-scrollbar,
+.dashboardsidebar .header::-webkit-scrollbar {
   display: none;
 }
 
@@ -449,17 +450,17 @@ textarea {
   border-bottom: 1px solid #dee2e6 !important;
 }
 
-.table > :not(:first-child) {
+.table> :not(:first-child) {
   border-top: 0px solid currentColor !important;
 }
 
-.table-striped > tbody > tr:nth-child(odd) > td,
-.table-striped > tbody > tr:nth-child(odd) > th {
+.table-striped>tbody>tr:nth-child(odd)>td,
+.table-striped>tbody>tr:nth-child(odd)>th {
   box-shadow: inset 0 0 0 0 var(--bs-table-accent-bg);
 }
 
-.table-striped > tbody > tr:nth-child(even) > td,
-.table-striped > tbody > tr:nth-child(even) > th {
+.table-striped>tbody>tr:nth-child(even)>td,
+.table-striped>tbody>tr:nth-child(even)>th {
   background-color: #cdf3f2;
 }
 
@@ -534,6 +535,7 @@ textarea {
 }
 
 @media screen and (max-width: 992px) {
+
   .dashboardsidebar aside,
   .dashboardsidebar aside:hover {
     height: auto;
@@ -602,13 +604,16 @@ textarea {
 .my_chart canvas {
   height: 270px;
 }
+
 .my_chart p {
   font-size: 10px;
   font-weight: 300;
 }
+
 .my_chart .h-10 {
   height: 60px;
 }
+
 .stats_card {
   width: 300px;
 }
@@ -787,18 +792,28 @@ a.here_link {
 button:active {
   color: #000 !important;
 }
+
 .tab__wid_for_jot svg {
   width: 4%;
 }
+
 .mt-90 {
   margin-top: 90px !important;
 }
+
 .mt-150 {
-  margin-top: 150px !important;}
+  margin-top: 150px !important;
+}
+
 .stats_card {
   background: linear-gradient(to bottom right, #1b4454ba, #2ec8c4);
   color: #fff;
 }
+
 .stats_card h6 {
   color: #fff;
+}
+
+.hover-grey:hover {
+  background-color: #eee !important;
 }
