@@ -10,9 +10,7 @@ export class CompanyEntity {
 	name?: string;
 	about?: string;
 	website?: string;
-	compnay_jobs?: string;
 	photo?: DocumentEntity;
-
 	status?: Status;
 
 	users?: UserEntity[];
@@ -37,7 +35,6 @@ export class CompanyEntity {
 					}
 				}),
 			website: yup.string().url().nullable(),
-			compnay_jobs: yup.string().url().nullable(),
 			photo: yup.mixed().when({
 				is: v => !!v,
 				then: DocumentEntity.yupSchema()

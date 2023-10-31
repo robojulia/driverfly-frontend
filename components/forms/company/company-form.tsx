@@ -8,6 +8,8 @@ import CompanyApi from "../../../pages/api/company";
 import { useAuth } from "../../../hooks/use-auth";
 import { globalAjaxExceptionHandler } from "../../../utils/ajax";
 import { formSuccess } from "../../../utils/toast";
+import BaseClickToCopyInput from "../../../components/forms/base-click-to-copy-input";
+
 import EntityForm from "../../layouts/page/entity-form";
 import BaseInput from "../base-input";
 import BaseTextArea from "../base-text-area";
@@ -74,15 +76,13 @@ export function CompanyForm(props: CompanyFormProps) {
                 placeholder="http://www.example.com"
                 formik={form}
                 />
-                <BaseInput
-                className="col-12"
-                label={t("COMPANY_JOBS_PAGE")}
-                name={`compnay_jobs`}
-                readOnly={true}
-                placeholder={`${process.env.FRONTEND_BASE_URL ?? ""}/employer/${user?.company?.id
-                }?`}
-                formik={form}
-                />
+             	<BaseClickToCopyInput
+                label="COMPANY_JOBS_PAGE"
+                className="rounded"
+                value={`${process.env.FRONTEND_BASE_URL ?? ""}/employer/${user?.company?.id
+                  }?`}
+                tooltipText={t("CLICK_TO_COPY")}
+              />
               <BaseTextArea
                 className="col-12"
                 label={t("ABOUT")}
