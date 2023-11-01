@@ -40,9 +40,10 @@ export default function Forgot() {
         console.error("Unable to submit password reset", e);
 
         const response = e.response?.data;
-        console.log("Response DATA from catch block : ",response.email);
-        if(response.email === 'NOT_FOUND') {
-        toast.error(t('EMAIL_NOT_FOUND'));     
+        console.log("Response DATA: ",response.email);
+        if(response?.email === 'NOT_FOUND') 
+        {
+          toast.error(t('EMAIL_NOT_FOUND'));     
         }
         else{
           toast.error(t("UNABLE_TO_SEND_PASSWORD_RESET_EMAIL"))
