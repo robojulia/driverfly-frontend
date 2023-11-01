@@ -3,16 +3,16 @@ import { Table } from "react-bootstrap";
 import { useTranslation } from "../../hooks/use-translation";
 
 export interface ViewDetailProps {
-    obj: Record<string, number|string|boolean|Date|ListValue|Array<string|boolean|Date|ListValue>|any>;
+    obj: Record<string, number | string | boolean | Date | ListValue | Array<string | boolean | Date | ListValue> | any>;
     default?: string | (() => string);
 }
 
 interface ListValue {
-    show?: boolean|(() => boolean);
+    show?: boolean | (() => boolean);
     label?: string;
-    items?: Array<string|boolean|Date|ListValue>;
-    text?: ListValue|string|number|boolean|Date|Array<string|boolean|Date|ListValue>;
-    default?: string|(() => string);
+    items?: Array<string | boolean | Date | ListValue>;
+    text?: ListValue | string | number | boolean | Date | Array<string | boolean | Date | ListValue>;
+    default?: string | (() => string);
 }
 
 function isListValue(obj: unknown): obj is ListValue {
@@ -23,11 +23,11 @@ function isListValue(obj: unknown): obj is ListValue {
 export default function ViewDetails(props: ViewDetailProps) {
     const { t } = useTranslation();
 
-    const resolveText = (value: string|boolean|Date|ListValue|Function) => {
+    const resolveText = (value: string | boolean | Date | ListValue | Function) => {
         return resolveValue(value) || (isListValue(value) ? resolveValue(value?.default || props.default) : null);
     }
 
-    const resolveValue = (value: number|string|boolean|Date|ListValue|Function|Array<string|boolean|Date|ListValue>) => {
+    const resolveValue = (value: number | string | boolean | Date | ListValue | Function | Array<string | boolean | Date | ListValue>) => {
         switch (typeof value) {
             case "function": return value();
             case "boolean":
@@ -42,7 +42,7 @@ export default function ViewDetails(props: ViewDetailProps) {
                 }
 
                 if (value instanceof Array) {
-                    return value.map(v=> t(v.toString())).join(", ");
+                    return value.map(v => t(v.toString())).join(", ");
                 }
                 if (isListValue(value))
                     return resolveValue(value.text);
@@ -52,10 +52,9 @@ export default function ViewDetails(props: ViewDetailProps) {
 
     }
 
-    const resolveItem = (key: string, value: string|boolean|Date|ListValue, i: number) => {
+    const resolveItem = (key: string, value: string | boolean | Date | ListValue, i: number) => {
         // coherse value into ListValue compatible type
-        if (value && typeof value === "object")
-        {
+        if (value && typeof value === "object") {
             if (value instanceof Array) {
                 value = {
                     label: key,
@@ -69,7 +68,7 @@ export default function ViewDetails(props: ViewDetailProps) {
                 }
             }
             else {
-                value.label = value.label || key;
+                value.label = value?.label || key;
             }
         }
         else {
@@ -94,8 +93,7 @@ export default function ViewDetails(props: ViewDetailProps) {
             if (value.items) {
                 // nested table
                 const firstValue = value.items[0];
-                if (typeof firstValue === "object")
-                {
+                if (typeof firstValue === "object") {
                     return (
                         <tr key={key}>
                             <td colSpan={2}>
@@ -110,15 +108,15 @@ export default function ViewDetails(props: ViewDetailProps) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {
-                                        value.items.map((v, i) => (
-                                        <tr key={i}>
-                                            {Object.values(v).map((subValue, subI) => (
-                                                <td key={subI}>{resolveText(subValue)}</td>
-                                            ))}
-                                        </tr>
-                                        ))
-                                    }
+                                        {
+                                            value.items.map((v, i) => (
+                                                <tr key={i}>
+                                                    {Object.values(v).map((subValue, subI) => (
+                                                        <td key={subI}>{resolveText(subValue)}</td>
+                                                    ))}
+                                                </tr>
+                                            ))
+                                        }
                                     </tbody>
                                 </Table>
                             </td>
@@ -147,7 +145,7 @@ export default function ViewDetails(props: ViewDetailProps) {
             <tbody>
                 {Object
                     .entries(props.obj)
-                    .map(([ key, value ], i) => resolveItem(key, value, i))}
+                    .map(([key, value], i) => resolveItem(key, value, i))}
             </tbody>
         </Table>
     );

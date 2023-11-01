@@ -42,7 +42,7 @@ export default function ViewReferral({ id, host }) {
             const api = new ReferralSourceApi();
 
             let data = null
-            
+
             try {
                 data = await api.getById(+id);
             }
@@ -62,36 +62,36 @@ export default function ViewReferral({ id, host }) {
             goBack(true);
         }
 
-    }, [ user, id ]);
+    }, [user, id]);
 
     async function onEditClick() {
         await router.push(router.asPath + `/edit`);
     };
 
-    async function onDeleteClick () {
+    async function onDeleteClick() {
         try {
-           const api = new ReferralSourceApi();
-   
-           const newEntity = await api.remove(entity.id);
+            const api = new ReferralSourceApi();
 
-           setEntity(newEntity);
+            const newEntity = await api.remove(entity.id);
+
+            setEntity(newEntity);
         }
         catch (e) {
-          globalAjaxExceptionHandler(e, { t: t, toast: toast, defaultMessage: "UNABLE_TO_DELETE" });
+            globalAjaxExceptionHandler(e, { t: t, toast: toast, defaultMessage: "UNABLE_TO_DELETE" });
         }
-     }
-   
-     async function onRestoreClick() {
-       try {
-          const api = new ReferralSourceApi();
-  
-          const newEntity = await api.restore(entity.id);
-  
-          setEntity(newEntity);
+    }
+
+    async function onRestoreClick() {
+        try {
+            const api = new ReferralSourceApi();
+
+            const newEntity = await api.restore(entity.id);
+
+            setEntity(newEntity);
         }
-       catch (e) {
-         globalAjaxExceptionHandler(e, { t: t, toast: toast, defaultMessage: "UNABLE_TO_RESTORE" });
-       }
+        catch (e) {
+            globalAjaxExceptionHandler(e, { t: t, toast: toast, defaultMessage: "UNABLE_TO_RESTORE" });
+        }
     }
 
     return (
@@ -104,7 +104,7 @@ export default function ViewReferral({ id, host }) {
                         entity.status === Status.ACTIVE &&
                         <DeleteButton
                             onDelete={onDeleteClick}
-                            />
+                        />
                     }
                     {
                         entity.status === Status.DELETED &&
@@ -122,21 +122,21 @@ export default function ViewReferral({ id, host }) {
                 )
             }
         >
-        <Row>
-            <Col>
-                <ViewDetails
-                    obj={{
-                        ID: entity.id,
-                        NAME: entity.name,
-                        REFERRAL_CODE: entity.code,
-                        URL: entity.code ? ReferralSourceEntity.getReferralUrl(host, entity) : null,
-                        REFERRALS: entity.referrals,
-                        CREATED_AT: (typeof entity.createdAt === "string" ? new Date(entity.createdAt) : entity.createdAt)?.toLocaleString()
-                    }}
+            <Row>
+                <Col>
+                    <ViewDetails
+                        obj={{
+                            ID: entity.id,
+                            NAME: entity.name,
+                            REFERRAL_CODE: entity.code,
+                            URL: entity.code ? ReferralSourceEntity.getReferralUrl(host, entity, user?.company?.id) : null,
+                            REFERRALS: entity.referrals,
+                            CREATED_AT: (typeof entity.createdAt === "string" ? new Date(entity.createdAt) : entity.createdAt)?.toLocaleString()
+                        }}
                     />
-            </Col>
-        </Row>
-    </ChildPageLayout>);
+                </Col>
+            </Row>
+        </ChildPageLayout>);
 }
 
 ViewReferral.getLayout = function getLayout(page) {

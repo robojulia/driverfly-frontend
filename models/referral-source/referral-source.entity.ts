@@ -19,7 +19,7 @@ export class ReferralSourceEntity {
         });
     }
 
-    static getReferralUrl(host: string, entity: ReferralSourceEntity) {
-        return `${host}/signup?utm_source=rep&utm_medium=rep&utm_campaign=${entity.code}`;
+    static getReferralUrl(host: string, entity: ReferralSourceEntity, companyId: number) {
+        return `${host}/form/digitalhiringapp/${companyId}?utm_source=rep&utm_medium=rep&utm_campaign=${entity.code}`;
     }
 }

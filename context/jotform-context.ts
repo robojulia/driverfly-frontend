@@ -12,6 +12,12 @@ export type JotFormContextType = {
 		companyPreferences?: CompanyPreferenceEntity[];
 		applicantExtras?: ApplicantExtrasEntity[];
 		steps?: number;
+		utm?: {
+			utm_source?: string;
+			utm_medium?: string;
+			utm_campaign?: string;
+			utm_content?: string;
+		}
 	};
 	method: {
 		setApplicant?: (e?: any) => void;
@@ -30,6 +36,12 @@ const JotformContext = createContext<JotFormContextType>({
 		jobs: [],
 		companyPreferences: [],
 		steps: 0,
+		utm: {
+			utm_source: null,
+			utm_medium: null,
+			utm_campaign: null,
+			utm_content: null,
+		}
 	},
 	method: {
 		setApplicant: (e?: any) => { },

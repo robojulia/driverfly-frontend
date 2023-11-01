@@ -7,6 +7,17 @@ import ViewCard from "../view-details/view-card";
 import ViewDetails from "../view-details/view-details";
 import { ViewApplicantDetailProps } from "../../types/applicant/view-application-detail-props.type";
 import { ApplicantExtras } from "../../enums/applicants/applicant-extras.enum";
+import { BooleanType } from "../../enums/jotform/boolean-type.enum";
+import { UtmReferral } from "../../models/auth/utm-referral.interface";
+export function ViewApplicantUtm({ utm }) {
+	const { t } = useTranslation();
+	return (<ul>
+		<li>{t("UtmReferral.utm_source")}:{utm?.utm_source}</li>
+		<li>{t("UtmReferral.utm_medium")}:{utm?.utm_medium}</li>
+		<li>{t("UtmReferral.utm_campaign")}:{utm?.utm_campaign}</li>
+		<li>{t("UtmReferral.utm_content")}:{utm?.utm_content}</li>
+	</ul>)
+}
 export default function ViewApplicantDetail({
 	applicant,
 	protectedFields,
@@ -107,6 +118,13 @@ export default function ViewApplicantDetail({
 								emergency_contact: applicant.emergency_contact_name,
 								phone: applicant.emergency_contact_number,
 								relationship: applicant.emergency_contact_relationship,
+								AUTOMATED_RECRUITING_LEAD: Boolean(applicant?.extras?.find(ap => ap?.type == ApplicantExtras.AUTOMATED_RECRUITING_LEAD && ap?.value)) ? BooleanType.YES : BooleanType.NO,
+								LEAD_TYPE: applicant.type ? t(`ApplicantType.${applicant.type}`) : null,
+								UTM_SOURCE: applicant.utm?.utm_source,
+								UTM_MEDIUM: applicant.utm?.utm_medium,
+								UTM_CAMPAIGN: applicant.utm?.utm_campaign,
+								UTM_CONTENT: applicant.utm?.utm_content,
+
 							}}
 						/>
 					</Col>

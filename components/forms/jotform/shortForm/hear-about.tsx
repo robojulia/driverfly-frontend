@@ -23,7 +23,7 @@ import { BooleanType } from "../../../../enums/jotform/boolean-type.enum";
 
 export function HearAbout() {
 	const {
-		state: { applicantExtras, applicant, jobs },
+		state: { applicantExtras, applicant, jobs, utm },
 		method: { setApplicantExtras, stepNext, stepBack, setApplicant },
 	}: JotFormContextType = useContext(JotformContext);
 
@@ -52,7 +52,8 @@ export function HearAbout() {
 					const data = await applicantApi.jotform.create({
 						applicant,
 						applicantExtras: filteredExtras,
-						jobs
+						jobs,
+						utm
 					});
 					setApplicantExtras(filteredExtras)
 					setApplicant({

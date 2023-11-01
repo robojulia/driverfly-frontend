@@ -15,10 +15,16 @@ import { CompanyPreferenceEntity } from "../../../../models/company/company-pref
 export interface FullFormProps {
 	employer: CompanyEntity;
 	preferences: CompanyPreferenceEntity[];
+	utm?: {
+		utm_source?: string;
+		utm_medium?: string;
+		utm_campaign?: string;
+		utm_content?: string;
+	}
 }
-export default function FullForm({ employer, preferences }: FullFormProps) {
+export default function FullForm({ employer, preferences, utm }: FullFormProps) {
 	console.log("preferences", preferences);
-
+	console.log("utm", utm);
 
 	const [jobs, setJobs] = useState<JobEntity[]>([]);
 	const [applicant, setApplicant] = useState<ApplicantEntity>(new ApplicantEntity());
@@ -47,7 +53,8 @@ export default function FullForm({ employer, preferences }: FullFormProps) {
 					jobs,
 					applicantExtras,
 					companyPreferences: preferences,
-					steps
+					steps,
+					utm
 				},
 				method: {
 					setApplicant,
@@ -84,6 +91,13 @@ export async function getServerSideProps({ query }: NextPageContext) {
 	try {
 		let companyId = +(query?.companyId); // { companyId } = query || {};
 
+		const utm = {
+			utm_source: query?.utm_source ?? null,
+			utm_medium: query?.utm_medium ?? null,
+			utm_campaign: query?.utm_campaign ?? null,
+			utm_content: query?.utm_content ?? null,
+		};
+
 		if (!companyId) {
 			console.error(`form/jotform: Unable to fetch details for companyId: ${query?.companyId}`);
 			return { notFound: true }
@@ -102,7 +116,7 @@ export async function getServerSideProps({ query }: NextPageContext) {
 			return { notFound: true };
 		}
 
-		return { props: { employer, preferences } }
+		return { props: { employer, preferences, utm } }
 	} catch (error) {
 		console.error(`form/jotform: Exception when attempting to fetch details for companyId: ${query?.companyId}`, error);
 		return { notFound: true }
