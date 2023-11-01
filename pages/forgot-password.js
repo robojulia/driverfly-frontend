@@ -30,9 +30,6 @@ export default function Forgot() {
         };
         const apicall = await api.forgotPassword(dto);
         console.log(apicall, "++++++++++++++++++++++++++")
-        // const response = apicall.response?.data;
-        console.log("Response DATA from try block: ",apicall);
-
 
         toast.success(t("PLEASE_CHECK_EMAIL"));
       }
@@ -40,12 +37,11 @@ export default function Forgot() {
         console.error("Unable to submit password reset", e);
 
         const response = e.response?.data;
-        console.log("Response DATA: ",response.email);
-        if(response?.email === 'NOT_FOUND') 
-        {
-          toast.error(t('EMAIL_NOT_FOUND'));     
+
+        if (response) {
+          toast.error(t(response.message));
         }
-        else{
+        else {
           toast.error(t("UNABLE_TO_SEND_PASSWORD_RESET_EMAIL"))
         }
       }
