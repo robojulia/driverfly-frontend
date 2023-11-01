@@ -52,6 +52,9 @@ export function UnableForJob() {
 	}, [form.values, form.errors]);
 
 	return (
+		<>
+		<h4 className={`${styles.align__text_center} text-black  ${styles.bold}`}>{t("DISABLE_FOR_JOB")}</h4>
+
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={styles.paragraph__left}>
 				<BaseCheck
@@ -86,5 +89,6 @@ export function UnableForJob() {
 				</Col>
 			</Row>
 		</Form>
+		</>
 	);
 }
