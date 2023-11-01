@@ -102,6 +102,8 @@ export function SubmissionDetails() {
 
 	return (
 		<>
+		<h4 className={`${styles.carrierName}`}>{t("SUBMISSION_DETAILS")}</h4>
+
 			<ToastContainer />
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row className={`${styles.align__text_left}`}>

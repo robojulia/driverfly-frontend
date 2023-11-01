@@ -65,6 +65,8 @@ export function TransmissionAndEndorsement() {
     }, [applicant]);
 
     return (
+        <>
+ 			<h4 className={`${styles.align__text_center} text-black  ${styles.bold}`}>{t("TRANSMISSION_AND_ENDORSEMENT")}</h4>
         <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
             <Row>
                 <BaseSelect
@@ -103,5 +105,6 @@ export function TransmissionAndEndorsement() {
                 </Col>
             </Row>
         </Form>
+        </>
     );
 }

@@ -68,24 +68,18 @@ export function AtsJobs() {
 
     return (
         <>
+        <h4 className={`${styles.align__text_center} text-black  ${styles.bold}`}>{t("COMPANY_JOBS")}</h4>
             <Form
                 className={styles.align__text_left}
                 onSubmit={form.handleSubmit}
                 onReset={form.handleReset}
             >
-                <Row className="w-100 d-flex justify-content-center mb-2 mt-4 ">
-                    <strong>
-                        <em>
-                            <h5 className="text-dark text-center" >
-                                {t("are_you_applying_to_particular_job")}
-                            </h5>
-                        </em>
-                    </strong>
-                </Row>
+               
                 <Row className="w-100 d-flex justify-content-center">
                     <BaseCheck
                         disabled={jobCount == -1}
-                        className="col-md-6 my-3"
+                        label="are_you_applying_to_particular_job"
+                        className="col-md-6 my-3 "
                         required
                         name="applying_for_job"
                         formik={form}
@@ -95,7 +89,7 @@ export function AtsJobs() {
                     <Col md="6">
                         {jobCount > 0 && <>
                             <BaseSelect
-                                className="my-3"
+                                className="my-3 font-weight-bold"
                                 label="POSITION"
                                 formik={form}
                                 name="jobId"
