@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import { Button, Col, Row, Table } from "react-bootstrap";
 import { useFormik } from "formik";
 import { DashCircle, PlusCircle } from "react-bootstrap-icons";
+import styles from "../../../../styles/digitalhiringapp.module.css";
 import BaseSelect from "../../base-select";
 import { useTranslation } from "../../../../hooks/use-translation";
 import JotformContext, {
@@ -69,6 +70,8 @@ export function DuiAndEquipment() {
     }, [applicant]);
 
     return (
+        <>
+		<h4 className={`${styles.align__text_center} text-black  ${styles.bold}`}>{t("DUI_AND_EQUIPEMENTS")}</h4>
         <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
             <Row>
                 <ViewCard
@@ -236,5 +239,6 @@ export function DuiAndEquipment() {
                 </Col>
             </Row>
         </Form>
+        </>
     );
 }

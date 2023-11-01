@@ -49,6 +49,9 @@ export function DrugTest() {
 	}, [form.values, form.errors]);
 
 	return (
+		<>
+		<h4 className={`${styles.align__text_center} text-black  ${styles.bold}`}>{t("DRUG_TEST")}</h4>
+
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={styles.paragraph__left}>
 				<BaseCheck
@@ -82,5 +85,6 @@ export function DrugTest() {
 				</Col>
 			</Row>
 		</Form>
+		</>
 	);
 }

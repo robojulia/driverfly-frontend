@@ -53,6 +53,9 @@ export function OtherQueues() {
     }, [applicant, applicantExtras]);
 
     return (
+        <>
+		<h4 className={`${styles.align__text_center} text-black  ${styles.bold}`}>{t("Other_queues")}</h4>
+
         <Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
             {form.values.CDL_NUMBER?.value?.length > 0 && (
                 <>
@@ -145,5 +148,6 @@ export function OtherQueues() {
                 </Col>
             </Row>
         </Form>
+        </>
     );
 }

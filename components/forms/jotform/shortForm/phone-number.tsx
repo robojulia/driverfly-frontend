@@ -126,6 +126,7 @@ export function PhoneNumber() {
     return (
         <>
             <ToastContainer />
+            <h4 className={`${styles.align__text_center} text-black  ${styles.bold}`}>{t("phone")}</h4>
             <ViewModal
                 show={openModal}
                 title="NUMBER_ALREADY_EXISTS"
@@ -207,20 +208,12 @@ export function PhoneNumber() {
                 onSubmit={form.handleSubmit}
                 onReset={form.handleReset}
             >
-                <Row className="w-100 d-flex justify-content-center mb-2 mt-4 ">
-                    <strong>
-                        <em>
-                            <h5 className="text-dark text-center" >
-                                {t("ENTER_PHONE_NUMBER")}
-                            </h5>
-                        </em>
-                    </strong>
-                </Row>
                 <Row className="w-100 d-flex justify-content-center">
                     <BaseInputPhone
-                        className="col-md-6 my-3"
+                        className="col-md-6 my-3 font-weight-bold"
                         required
                         name="phone"
+                        label="ENTER_PHONE_NUMBER"
                         formik={form}
                     />
                 </Row>

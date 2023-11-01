@@ -83,7 +83,7 @@ export function Preferences() {
 			<h1 className={`${styles.heading__sty}`}>{t("PREFERENCES")}</h1>
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row className={styles.align__text_left}>
-					<p className={`${styles.paragraph}  ${styles.align__text_left}`}>
+					<p className={`${styles.paragraph} ${styles.bold} ${styles.align__text_left}`}>
 						{t("PREFERRED_LOCATION")}
 					</p>
 				</Row>
@@ -98,7 +98,7 @@ export function Preferences() {
 					/>
 				</Row>
 				<Row className={styles.align__text_left}>
-					<p className={`${styles.paragraph}  ${styles.align__text_left}`}>
+					<p className={`${styles.paragraph} ${styles.bold} ${styles.align__text_left}`}>
 						{t("ROUTES_YOU_OPEN_FOR")}
 					</p>
 				</Row>
@@ -114,7 +114,7 @@ export function Preferences() {
 				</Row>
 				<Row className={styles.align__text_left}>
 					<BaseSelect
-						className="col mb-3"
+						className="col mb-3 font-weight-bold"
 						label="Do you require W2 employment?"
 						name="REQUIRE_W2_EMPLOYMENT.value"
 						placeholder="CHOOSE"
@@ -124,7 +124,7 @@ export function Preferences() {
 					/>
 				</Row>
 				<Row className={styles.align__text_left}>
-					<p className={`${styles.paragraph}  ${styles.align__text_left}`}>
+					<p className={`${styles.paragraph} ${styles.bold} ${styles.align__text_left}`}>
 						{t("NECESSARY_REQUIREMENTS")}
 					</p>
 				</Row>
