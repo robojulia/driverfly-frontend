@@ -1886,6 +1886,8 @@
   "VIOLATION_DETAILS": "Violation Details",
   "charge": "Charge",
   "penalty": "Penalty",
+  "VIEW_BY_PAST_EMP":"Past Employee",
+  "VIEW_BY_EMP":"Employee",
   "EMAIL_NOT_FOUND":"Email Not Found",
   "PAST_EMPLOYER": "Past Employer",
   "PAST_EMPLOYEE": "Past Employees",
