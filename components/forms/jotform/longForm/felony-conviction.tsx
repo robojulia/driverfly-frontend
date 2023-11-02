@@ -50,7 +50,7 @@ export function FelonyConviction() {
 
 	return (
 		<>
-		<h4 className={`${styles.align__text_center} text-black  ${styles.bold}`}>{t("FELONY_CONVICTION")}</h4>
+		<h1 className={styles.carrierName}>{t("FELONY_CONVICTION")}</h1>
 
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={styles.paragraph__left}>

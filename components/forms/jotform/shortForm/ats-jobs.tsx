@@ -68,7 +68,7 @@ export function AtsJobs() {
 
     return (
         <>
-        <h4 className={`${styles.align__text_center} text-black  ${styles.bold}`}>{t("COMPANY_JOBS")}</h4>
+        <h1 className={styles.carrierName}>{t("COMPANY_JOBS")}</h1>
             <Form
                 className={styles.align__text_left}
                 onSubmit={form.handleSubmit}
