@@ -120,11 +120,11 @@ export default function ViewApplicantDetail({
 								relationship: applicant.emergency_contact_relationship,
 								AUTOMATED_RECRUITING_LEAD: Boolean(applicant?.extras?.find(ap => ap?.type == ApplicantExtras.AUTOMATED_RECRUITING_LEAD && ap?.value)) ? BooleanType.YES : BooleanType.NO,
 								LEAD_TYPE: applicant.type ? t(`ApplicantType.${applicant.type}`) : null,
+								REFERRAL_NAME: applicant.utm?.referral_name,
 								UTM_SOURCE: applicant.utm?.utm_source,
 								UTM_MEDIUM: applicant.utm?.utm_medium,
 								UTM_CAMPAIGN: applicant.utm?.utm_campaign,
 								UTM_CONTENT: applicant.utm?.utm_content,
-
 							}}
 						/>
 					</Col>

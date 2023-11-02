@@ -11,17 +11,12 @@ import { CompanyEntity } from "../../../../models/company/company.entity";
 import BaseInput from "../../../../components/forms/base-input";
 import { JobEntity } from "../../../../models/job/job.entity";
 import { CompanyPreferenceEntity } from "../../../../models/company/company-preferences.entity";
+import { UtmReferral } from "../../../../models/auth/utm-referral.interface";
 
 export interface FullFormProps {
 	employer: CompanyEntity;
 	preferences: CompanyPreferenceEntity[];
-	utm?: {
-		utm_source?: string;
-		utm_medium?: string;
-		utm_campaign?: string;
-		utm_content?: string;
-		referral_name?: string;
-	}
+	utm?: UtmReferral;
 }
 export default function FullForm({ employer, preferences, utm }: FullFormProps) {
 	console.log("preferences", preferences);
@@ -92,12 +87,12 @@ export async function getServerSideProps({ query }: NextPageContext) {
 	try {
 		let companyId = +(query?.companyId); // { companyId } = query || {};
 
-		const utm = {
-			utm_source: query?.utm_source ?? null,
-			utm_medium: query?.utm_medium ?? null,
-			utm_campaign: query?.utm_campaign ?? null,
-			utm_content: query?.utm_content ?? null,
-			referral_name: query?.referral_name ?? null,
+		const utm: UtmReferral = {
+			utm_source: query?.utm_source as string ?? null,
+			utm_medium: query?.utm_medium as string ?? null,
+			utm_campaign: query?.utm_campaign as string ?? null,
+			utm_content: query?.utm_content as string ?? null,
+			referral_name: query?.referral_name as string ?? null,
 		};
 
 		if (!companyId) {
