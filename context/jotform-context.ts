@@ -4,6 +4,7 @@ import { ApplicantExtrasEntity } from "../models/applicant/applicant-extras.enti
 import { ApplicantEntity } from "../models/applicant/applicant.entity";
 import { JobEntity } from "../models/job/job.entity";
 import { CompanyPreferenceEntity } from "../models/company/company-preferences.entity";
+import { UtmReferral } from "../models/auth/utm-referral.interface";
 
 export type JotFormContextType = {
 	state: {
@@ -12,6 +13,7 @@ export type JotFormContextType = {
 		companyPreferences?: CompanyPreferenceEntity[];
 		applicantExtras?: ApplicantExtrasEntity[];
 		steps?: number;
+		utm?: UtmReferral
 	};
 	method: {
 		setApplicant?: (e?: any) => void;
@@ -30,6 +32,13 @@ const JotformContext = createContext<JotFormContextType>({
 		jobs: [],
 		companyPreferences: [],
 		steps: 0,
+		utm: {
+			utm_source: null,
+			utm_medium: null,
+			utm_campaign: null,
+			utm_content: null,
+			referral_name: null,
+		}
 	},
 	method: {
 		setApplicant: (e?: any) => { },

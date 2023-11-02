@@ -27,7 +27,8 @@ import {
 	ShieldFillCheck,
 	Sliders,
 	PersonBadgeFill,
-	PersonLinesFill
+	PersonLinesFill,
+	Link45deg
 } from 'react-bootstrap-icons';
 import CompanyProfileNav from "../header/company-profile-nav";
 import { useAuth } from "../../../../hooks/use-auth";
@@ -160,9 +161,9 @@ const FullLayout = ({ children }) => {
 
 		// superadmin panel
 		{
-			icon: UmbrellaFill,
-			text: "ADMIN",
-			visible: isSuperAdmin,
+			icon: Link45deg,
+			text: "REFERRALS",
+			// visible: isSuperAdmin,
 			items: [
 				{
 					pathname: "/dashboard/company/admin/referral",

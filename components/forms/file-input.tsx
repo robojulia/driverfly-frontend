@@ -11,6 +11,7 @@ import { BaseControlProps } from './base-control';
 export interface FileInputProps extends BaseControlProps {
     documentType?: string;
     accept?: string;
+    id?: string;
     handleBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
     placeholder?: string | boolean;
     value?: any;
@@ -21,7 +22,7 @@ export interface FileInputProps extends BaseControlProps {
     hideView?: boolean | (() => boolean)
 }
 
-export default function FileInput({ documentType, formik, accept, required, className, label, handleBlur, placeholder, value, onChange, readOnly, name, touched, error, allowedSizeInByte, hideView }: FileInputProps) {
+export default function FileInput({ documentType, formik, accept, required, className, label, handleBlur, placeholder, value, onChange, readOnly, name, id, touched, error, allowedSizeInByte, hideView }: FileInputProps) {
     const { t } = useTranslation();
     if (formik) {
         const meta = formik.getFieldMeta(name);
@@ -142,7 +143,7 @@ export default function FileInput({ documentType, formik, accept, required, clas
     return (
         <>
             <div className={className}>
-                {label && <><label>{t(label)}{required ? "*" : ""}:</label><br /></>}
+                {label && <><label id={id}>{t(label)}{required ? "*" : ""}:</label><br /></>}
                 <InputGroup>
                     <input
                         accept={accept}

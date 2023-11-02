@@ -25,6 +25,7 @@ import { ApplicantStatus } from "../../enums/applicants/applicant-status.enum";
 import { ApplicantJobStatusHistoryEntity } from "./applicant-job-status-history.entity";
 import { EmployeeEntity } from "../employee/employee.entity";
 import moment from "moment";
+import { UtmReferral } from "../auth/utm-referral.interface";
 
 
 export class ApplicantEntity {
@@ -101,6 +102,8 @@ export class ApplicantEntity {
 	is_hired?: boolean = false;
 	remarks?: string;
 
+	utm?: UtmReferral;
+
 	static yupSchema() {
 		return yup.object({
 			first_name: yup.string().required().nullable().trim(),
@@ -114,22 +117,22 @@ export class ApplicantEntity {
 			zip_code: yup.string().nullable(),
 			license_number: yup.string().nullable(),
 			license_expiry: yup.date().typeError("INVALID_DATE")
-			.test({
-				test : (value, context) => {
-					if(!Boolean(value)) return true;
-					else {
-						return yup.date()
-						.min(
-							moment().endOf("day").add(6, "months")
-						)
-						.isValidSync(value) || context.createError({
-							path: context.path,
-							message: "LICENSE_MUST_BE_VALID_FOR_6_MONTHS"
-						});
+				.test({
+					test: (value, context) => {
+						if (!Boolean(value)) return true;
+						else {
+							return yup.date()
+								.min(
+									moment().endOf("day").add(6, "months")
+								)
+								.isValidSync(value) || context.createError({
+									path: context.path,
+									message: "LICENSE_MUST_BE_VALID_FOR_6_MONTHS"
+								});
+						}
 					}
-				}
-			})
-			.nullable(),
+				})
+				.nullable(),
 			license_state: yup.string().nullable(),
 			license_type: (yup.string() as any).enum(DriverLicenseType).nullable(),
 			years_cdl_experience: yup.number().min(0).nullable(),

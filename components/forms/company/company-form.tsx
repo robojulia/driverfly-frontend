@@ -15,6 +15,8 @@ import BaseInput from "../base-input";
 import BaseTextArea from "../base-text-area";
 import FileInput from "../file-input";
 import { BaseFormProps } from "./base-form-props";
+import {  UncontrolledTooltip } from "reactstrap";
+
 
 export interface CompanyFormProps extends BaseFormProps<CompanyEntity> {}
 
@@ -93,13 +95,17 @@ export function CompanyForm(props: CompanyFormProps) {
                 />
               <FileInput
                 className="col-12"
-                label={`photo`}
+                label={`photo_logo`}
+                id="imgpurpose"
                 name={`photo`}
                 accept="image/*"
                 allowedSizeInByte={3145728}
                 documentType={"PHOTO"}
                 formik={form}
               />
+              <UncontrolledTooltip delay={0} placement="top" target="imgpurpose">
+                {t("IMAGE_PURPOSE")}
+              </UncontrolledTooltip>
             </Row>
         </EntityForm>
     );

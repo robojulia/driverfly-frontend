@@ -220,32 +220,30 @@ export function ConversationForm(props: ConversationFormProps) {
         <Card>
             <Card.Header>
                 {(() => {
-                    if (entity.id)
-                        return (
-                            <>
-                                <>{entity.chattable_name}</> <br />
-                                <small>
-                                    <b>{t("PREFERRED_HOURS")}: </b>
-                                    {<PreferredHours />}
-                                </small>
-                            </>
-                        );
+                    if (entity.id) return (
+                        <>
+                            <>{entity.chattable_name}</> <br />
+                            <small>
+                                <b>{t("PREFERRED_HOURS")}: </b>
+                                {<PreferredHours />}
+                            </small>
+                        </>
+                    );
 
-                    if (canCreate)
-                        return (
-                            <>
-                                <ComboBox
-                                    options={getOptionsProxy}
-                                    onChange={onConversationToChangeProxy}
-                                    minLength={3}
-                                />
-                                {typeof form.errors?.chattable_id === "string" && (
-                                    <span className="text-danger small">
-                                        {t(form.errors.chattable_id)}
-                                    </span>
-                                )}
-                            </>
-                        );
+                    if (canCreate) return (
+                        <>
+                            <ComboBox
+                                options={getOptionsProxy}
+                                onChange={onConversationToChangeProxy}
+                                minLength={3}
+                            />
+                            {typeof form.errors?.chattable_id === "string" && (
+                                <span className="text-danger small">
+                                    {t(form.errors.chattable_id)}
+                                </span>
+                            )}
+                        </>
+                    );
 
                     return t("NONE");
                 })()}
@@ -272,9 +270,9 @@ export function ConversationForm(props: ConversationFormProps) {
             )}
 
             {(entity.id || canCreate) && (
-                <Card.Footer>
-                    <Form className="form-outline" onSubmit={form.handleSubmit}>
-                        {form.values?.chattable_name && (
+                form.values?.chattable_name && (
+                    <Card.Footer>
+                        <Form className="form-outline" onSubmit={form.handleSubmit}>
                             <Row>
                                 <Col md={10}>
                                     <Collapse in={!!!canAttach}>
@@ -359,9 +357,9 @@ export function ConversationForm(props: ConversationFormProps) {
                                     </div>
                                 </Col>
                             </Row>
-                        )}
-                    </Form>
-                </Card.Footer>
+                        </Form>
+                    </Card.Footer>
+                )
             )}
         </Card>
     );

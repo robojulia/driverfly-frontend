@@ -43,7 +43,7 @@ export function Names() {
 
 	return (
 		<>
-			<h4 className={`${styles.align__text_left} text-black ${styles.bold}`}>{t("name")}</h4>
+			<h4 className={`${styles.align__text_center} text-black  ${styles.bold}`}>{t("name")}</h4>
 			<form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row className={styles.bold}>
 					<BaseInput
@@ -57,7 +57,7 @@ export function Names() {
 				</Row>
 				<Row className={styles.bold}>
 					<BaseInput
-						className="col-12 my-3"
+						className="col-12 my-3 "
 						required
 						name="last_name"
 						label="LAST_NAME"
