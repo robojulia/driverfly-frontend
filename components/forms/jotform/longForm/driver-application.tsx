@@ -101,9 +101,8 @@ export function DriverApplication({ isAutoRecruitmentLead }: DriverApplicationPr
 						)}
 					</h1>
 				</h6>
-				<h6 className={styles.heading__sty}>
-					{t("DRIVER_APPLICATION")}
-				</h6>
+				<h1 className={styles.carrierName}>{t("DRIVER_APPLICATION")}</h1>
+
 				<p className={`${styles.paragraph} ${styles.align__text_left}`}>
 					{t(
 						"{COMPANY_NAME}_MVR_AND_DMV_AUTHORIZATION",

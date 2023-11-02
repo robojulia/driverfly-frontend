@@ -50,7 +50,7 @@ export function DrugTest() {
 
 	return (
 		<>
-		<h4 className={`${styles.align__text_center} text-black  ${styles.bold}`}>{t("DRUG_TEST")}</h4>
+		<h1 className={styles.carrierName}>{t("DRUG_TEST")}</h1>
 
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={styles.paragraph__left}>

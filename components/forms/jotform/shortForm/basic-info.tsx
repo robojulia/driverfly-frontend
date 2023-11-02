@@ -69,7 +69,8 @@ export function BasicInfo() {
 	}, []);
 	return (
 		<>
- 			<h4 className={`${styles.align__text_center} text-black  ${styles.bold}`}>{t("basic_info")}</h4>
+            <h1 className={styles.carrierName}>{t("basic_info")}</h1>
+
 			<Form
 				className={styles.align__text_left}
 				onSubmit={form.handleSubmit}

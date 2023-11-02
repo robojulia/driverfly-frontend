@@ -80,7 +80,8 @@ export function Preferences() {
 
 	return (
 		<>
-			<h1 className={`${styles.heading__sty}`}>{t("PREFERENCES")}</h1>
+            <h1 className={styles.carrierName}>{t("PREFERENCES")}</h1>
+
 			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row className={styles.align__text_left}>
 					<p className={`${styles.paragraph} ${styles.bold} ${styles.align__text_left}`}>

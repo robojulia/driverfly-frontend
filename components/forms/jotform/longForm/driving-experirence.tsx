@@ -61,8 +61,10 @@ export function DrivingExperience() {
 
 	}, [form.values])
 	return (
-		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
-			<h4 className={styles.heading__sty}> {t("DRVING_EXPERIENCE")}</h4>
+		<>
+			<h1 className={styles.carrierName}>{t("DRVING_EXPERIENCE")}</h1>
+
+			<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			<Row className={styles.bold}>
 				<BaseInput
 					className="col-md-6 my-3"
@@ -113,5 +115,6 @@ export function DrivingExperience() {
 				</Col>
 			</Row>
 		</Form>
+		</>
 	);
 }

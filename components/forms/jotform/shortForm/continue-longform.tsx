@@ -126,13 +126,9 @@ export function ContinueLongForm() {
 							) : (
 								<form >
 									<Row>
-										<h4 className={styles.heading__sty}>
-											{t(
-												"{company_name}_THANKS",
+									<h1 className={styles.carrierName}>{t("{company_name}_THANKS",
 												{ company_name: applicant?.company?.name },
-												{ translateProps: true }
-											)}
-										</h4>
+												{ translateProps: true })}</h1>
 									</Row>
 									<Row className="mt-3">
 										{(

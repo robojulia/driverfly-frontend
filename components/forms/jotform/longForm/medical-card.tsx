@@ -58,8 +58,7 @@ export function MedicalCard() {
 
 	return (
 		<>
-		<h4 className={`${styles.align__text_center} text-black  ${styles.bold}`}>{t("MEDICAL_CARD_UPLOAD_TITLE")}</h4>
-
+		<h1 className={styles.carrierName}>{t("MEDICAL_CARD_UPLOAD_TITLE")}</h1>
 		<Form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 			
 			<BaseCheck

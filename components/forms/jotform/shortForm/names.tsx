@@ -43,7 +43,7 @@ export function Names() {
 
 	return (
 		<>
-			<h4 className={`${styles.align__text_center} text-black  ${styles.bold}`}>{t("name")}</h4>
+            <h1 className={styles.carrierName}>{t("name")}</h1>
 			<form onSubmit={form.handleSubmit} onReset={form.handleReset}>
 				<Row className={styles.bold}>
 					<BaseInput

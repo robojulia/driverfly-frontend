@@ -126,7 +126,7 @@ export function PhoneNumber() {
     return (
         <>
             <ToastContainer />
-            <h4 className={`${styles.align__text_center} text-black  ${styles.bold}`}>{t("phone")}</h4>
+            <h1 className={styles.carrierName}>{t("phone")}</h1>
             <ViewModal
                 show={openModal}
                 title="NUMBER_ALREADY_EXISTS"
